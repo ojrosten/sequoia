@@ -196,6 +196,33 @@ namespace sequoia::runtime
       return WIFEXITED(status) ? WEXITSTATUS(status) : -1;
     }
   #endif
+
+    /** \brief Describes how a command failed, in the words of a POSIX shell, on a platform which
+               numbers its signals from 1 to `highestSignal`.
+     */
+    [[nodiscard]]
+    std::string describe_posix_failure(const int status, const int highestSignal)
+    {
+      if(status == 0)
+        return "succeeded (exit status 0)";
+
+      if(status < 0)
+        return "did not run to completion";
+
+      if(status == 126)
+        return "could not be executed by the shell (exit status 126)";
+
+      if(status == 127)
+        return "was not found by the shell (exit status 127)";
+
+      constexpr int signalOffset{128};
+      if((status > signalOffset) && (status - signalOffset <= highestSignal))
+        return std::format("failed with exit status {}, which may mean it was killed by signal {}",
+                           status,
+                           status - signalOffset);
+
+      return std::format("failed with exit status {}", status);
+    }
   }
 
   shell_command::shell_command(std::string cmd, const std::filesystem::path& output, append_mode app)
@@ -254,6 +281,9 @@ namespace sequoia::runtime
   [[nodiscard]]
   std::string describe_failure(const int status, windows_type)
   {
+    if(status == 0)
+      return "succeeded (exit status 0)";
+
     if(status == -1)
       return "did not run to completion, or exited with status 0xFFFFFFFF, which cannot be told apart";
 
@@ -266,34 +296,25 @@ namespace sequoia::runtime
   [[nodiscard]]
   std::string describe_failure(const int status, macos_type)
   {
-    if(status < 0)
-      return "did not run to completion";
-
-    if(status == 126)
-      return "could not be executed by the shell (exit status 126)";
-
-    if(status == 127)
-      return "was not found by the shell (exit status 127)";
-
-    constexpr int signalOffset{128};
-    if(status > signalOffset)
-      return std::format("failed with exit status {}, which may mean it was killed by signal {}",
-                         status,
-                         status - signalOffset);
-
-    return std::format("failed with exit status {}", status);
+    // macOS numbers its signals up to 31: NSIG is 32.
+    constexpr int highestSignal{31};
+    return describe_posix_failure(status, highestSignal);
   }
 
   [[nodiscard]]
   std::string describe_failure(const int status, linux_type)
   {
-    return describe_failure(status, macos_type{});
+    // Linux numbers its signals up to SIGRTMAX, which is 64 with glibc on x86-64.
+    constexpr int highestSignal{64};
+    return describe_posix_failure(status, highestSignal);
   }
 
   [[nodiscard]]
   std::string describe_failure(const int status, other_os_type)
   {
-    return describe_failure(status, macos_type{});
+    // A status of 128 plus the signal has 8 bits, so it carries a signal of at most 127.
+    constexpr int highestSignal{127};
+    return describe_posix_failure(status, highestSignal);
   }
 
   void throw_unless_succeeded(const int status, std::string_view step, std::string_view advice)

@@ -61,7 +61,7 @@ namespace sequoia::testing
       [](std::invocable<int> auto describe) {
         constexpr std::array statuses{
           std::numeric_limits<int>::min(), static_cast<int>(0xC0000005u), -2, -1,
-          0, 1, 2, 125, 126, 127, 128, 129, 130, 255, 256
+          0, 1, 2, 125, 126, 127, 128, 129, 130, 159, 160, 192, 193, 255, 256
         };
 
         auto row{[&describe](int status) { return std::format("{}: {}\n", status, describe(status)); }};
@@ -94,15 +94,13 @@ namespace sequoia::testing
                       tabulate(describerFor(macos_type{})),
                       "MacOSFailureDescriptions.txt");
 
-    check(equality,
-          "Linux describes failures as macOS does",
-          tabulate(describerFor(linux_type{})),
-          tabulate(describerFor(macos_type{})));
+    checkDescriptions("Failures as described on Linux",
+                      tabulate(describerFor(linux_type{})),
+                      "LinuxFailureDescriptions.txt");
 
-    check(equality,
-          "Any other platform describes failures as macOS does",
-          tabulate(describerFor(other_os_type{})),
-          tabulate(describerFor(macos_type{})));
+    checkDescriptions("Failures as described on any other platform",
+                      tabulate(describerFor(other_os_type{})),
+                      "OtherOSFailureDescriptions.txt");
 
     check(equality,
           "By default, failures are described as on the platform the program is built for",

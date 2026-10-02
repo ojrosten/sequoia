@@ -12,8 +12,8 @@
 129: failed with exit status 129, which may mean it was killed by signal 1
 130: failed with exit status 130, which may mean it was killed by signal 2
 159: failed with exit status 159, which may mean it was killed by signal 31
-160: failed with exit status 160
-192: failed with exit status 192
+160: failed with exit status 160, which may mean it was killed by signal 32
+192: failed with exit status 192, which may mean it was killed by signal 64
 193: failed with exit status 193
 255: failed with exit status 255
 256: failed with exit status 256

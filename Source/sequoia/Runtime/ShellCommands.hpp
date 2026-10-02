@@ -98,6 +98,7 @@ namespace sequoia::runtime
              for it.
 
       \returns A phrase to follow the command's name:
+      -# If `status` is 0, a phrase saying that the command succeeded;
       -# If `status` is -1, a phrase saying that the command either did not run to completion or
          exited with 0xFFFFFFFF, and that the two cannot be told apart;
       -# If `status` is any other negative value, a phrase giving the exit status in hex;
@@ -113,21 +114,44 @@ namespace sequoia::runtime
              for it.
 
       \returns A phrase to follow the command's name:
+      -# If `status` is 0, a phrase saying that the command succeeded;
       -# If `status` is negative, a phrase saying that the command did not run to completion;
       -# If `status` is 126, a phrase saying that the shell could not execute the command;
       -# If `status` is 127, a phrase saying that the shell could not find the command;
-      -# If `status` is above 128, a phrase giving the exit status, and saying that signal number
-         `status` minus 128 may have killed the command;
+      -# If `status` is from 129 to 159, a phrase giving the exit status, and saying that signal
+         number `status` minus 128 may have killed the command;
       -# Otherwise, a phrase giving the exit status.
    */
   [[nodiscard]]
   std::string describe_failure(int status, macos_type);
 
-  /** \brief Describes how a command failed on Linux, in the same words as on macOS. */
+  /** \brief Describes how a command failed on Linux, given the `status` which `invoke` returned
+             for it.
+
+      \returns A phrase to follow the command's name:
+      -# If `status` is 0, a phrase saying that the command succeeded;
+      -# If `status` is negative, a phrase saying that the command did not run to completion;
+      -# If `status` is 126, a phrase saying that the shell could not execute the command;
+      -# If `status` is 127, a phrase saying that the shell could not find the command;
+      -# If `status` is from 129 to 192, a phrase giving the exit status, and saying that signal
+         number `status` minus 128 may have killed the command;
+      -# Otherwise, a phrase giving the exit status.
+   */
   [[nodiscard]]
   std::string describe_failure(int status, linux_type);
 
-  /** \brief Describes how a command failed on any other platform, in the same words as on macOS. */
+  /** \brief Describes how a command failed on any other platform, given the `status` which
+             `invoke` returned for it.
+
+      \returns A phrase to follow the command's name:
+      -# If `status` is 0, a phrase saying that the command succeeded;
+      -# If `status` is negative, a phrase saying that the command did not run to completion;
+      -# If `status` is 126, a phrase saying that the shell could not execute the command;
+      -# If `status` is 127, a phrase saying that the shell could not find the command;
+      -# If `status` is from 129 to 255, a phrase giving the exit status, and saying that signal
+         number `status` minus 128 may have killed the command;
+      -# Otherwise, a phrase giving the exit status.
+   */
   [[nodiscard]]
   std::string describe_failure(int status, other_os_type);
 
