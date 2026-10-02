@@ -495,6 +495,8 @@ namespace sequoia
 
     /** \brief Base class for partitioned sequences where data is contiguous across all partitions.
 
+        The partition accessors treat an index at or beyond `num_partitions()` as the index of an empty partition.
+
         A derived class must ensure that `index_type` can count the sequence's elements and its partitions, since
         `index_type` holds both the offset at which each partition ends and each partition's index. The maximum of
         `index_type` is reserved for `npos`.
@@ -981,7 +983,11 @@ namespace sequoia
       constexpr PartitionIterator get_begin_iterator(const index_type i, Iterator iter) const noexcept
       {
         const index_type index{i >= m_Partitions.size() ? npos : i};
-        const auto offset{(i > 0 && i < m_Partitions.size()) ? m_Partitions[i-1] : index_type{}};
+        const auto offset{
+            i >= m_Partitions.size() ? static_cast<index_type>(m_Data.size())
+          : i > 0                    ? m_Partitions[i-1]
+          : index_type{}
+        };
         return PartitionIterator::reversed() ? PartitionIterator{iter, index} - offset : PartitionIterator{iter, index} + offset;
       }
 
@@ -989,7 +995,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr PartitionIterator get_end_iterator(const index_type i, Iterator iter) const noexcept
       {
-        index_type index{PartitionIterator::reversed() ? index_type{} : npos};
+        index_type index{npos};
         // The cast is lossless: each derived class is contractually obliged to ensure
         // index_type is sufficiently wide to hold the maximum size m_Data can reach
         index_type offset{static_cast<index_type>(m_Data.size())};
