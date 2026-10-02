@@ -27,7 +27,7 @@ namespace sequoia::testing
     void serialize(const fs::path& file, const failure_output& output)
     {
       fs::create_directories(file.parent_path());
-      if(std::ofstream ofile{file})
+      if(std::ofstream ofile{file, std::ios_base::binary})
       {
         ofile << output;
       }

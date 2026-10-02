@@ -8,6 +8,7 @@
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/TestFramework/DumpComparison.hpp"
 
+#include <format>
 #include <fstream>
 
 namespace sequoia::testing
@@ -107,13 +108,13 @@ namespace sequoia::testing
       {
         if(failure_detected()) logger.end_message(m_Mode, test_logger_base::is_critical::no);
 
-        auto fpMessageMaker{
+        auto falseNegativeFailureMessage{
           [&logger](){
-            
-            auto mess{append_lines("False Negative Failure:", logger.top_level_message())};
-            end_block(mess, 2_linebreaks, footer());
-
-            return mess;
+            return end_block(
+                     append_lines("False Negative Failure:", logger.top_level_message()),
+                     2_linebreaks,
+                     footer()
+                   );
           }
         };
 
@@ -124,12 +125,15 @@ namespace sequoia::testing
 
         if(modeSpecificFailure)
         {
-          logger.log_top_level_failure(m_Mode, (m_Mode == test_mode::false_negative) ? fpMessageMaker() : "");
+          logger.log_top_level_failure(
+            m_Mode,
+            (m_Mode == test_mode::false_negative) ? falseNegativeFailureMessage() : ""
+          );
         }
         else if (m_Mode == test_mode::false_positive)
         {
           if(!critical_failure_detected())
-            logger.append_to_diagnostics_output(fpMessageMaker());
+            logger.append_to_diagnostics_output(falseNegativeFailureMessage());
         }
 
         record_check_ended(get().recovery().recovery_file);
@@ -202,10 +206,10 @@ namespace sequoia::testing
 
   void test_logger_base::log_caught_exception_message(std::string_view message)
   {
-    auto mess{std::string{top_level_message()}.append("\n").append(message)};
-    end_block(mess, 2_linebreaks, footer());
-
-    add_to_output(m_Results.caught_exception_messages, mess);
+    add_to_output(
+      m_Results.caught_exception_messages,
+      end_block(std::format("{}\n{}", top_level_message(), message), 2_linebreaks, footer())
+    );
   }
 
   void test_logger_base::append_to_diagnostics_output(std::string message)
@@ -294,11 +298,6 @@ namespace sequoia::testing
     }
   }
 
-  void log_summary::clear() noexcept
-  {
-    *this = log_summary{""};
-  }
-
   [[nodiscard]]
   std::size_t log_summary::soft_failures() const noexcept
   {
@@ -342,12 +341,5 @@ namespace sequoia::testing
     m_RunnerOverhead     += rhs.m_RunnerOverhead;
 
     return *this;
-  }
-
-  [[nodiscard]]
-  log_summary operator+(const log_summary& lhs, const log_summary& rhs)
-  {
-    log_summary s{lhs};
-    return s += rhs;
   }
 }

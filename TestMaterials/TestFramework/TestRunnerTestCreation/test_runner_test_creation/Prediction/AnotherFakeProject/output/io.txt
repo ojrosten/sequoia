@@ -152,6 +152,23 @@ Creating files for new test:
 "Tests/Stuff/FooAllocationTest.cpp"
 
 Creating files for new test:
+"Source/curlew/Memory/Pool.hpp"
+"Source/curlew/Memory/Pool.cpp"
+"Tests/Memory/PoolAllocationTest.hpp"
+"Tests/Memory/PoolAllocationTest.cpp"
+
+Creating files for new test:
+"Source/curlew/Memory/Arena.hpp"
+"Source/curlew/Memory/Arena.cpp"
+"Tests/Memory/ArenaAllocationTest.hpp"
+"Tests/Memory/ArenaAllocationTest.cpp"
+
+Creating files for new test:
+  Warning: Source/curlew/Stuff/Widget.hpp already exists, so not generated
+"Tests/Stuff/WidgetAllocationTest.hpp"
+"Tests/Stuff/WidgetAllocationTest.cpp"
+
+Creating files for new test:
 "Tests/Stuff/ContainerPerformanceTest.hpp"
 "Tests/Stuff/ContainerPerformanceTest.cpp"
 
