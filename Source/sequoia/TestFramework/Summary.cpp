@@ -36,9 +36,10 @@ namespace sequoia::testing
   {
     using namespace std::chrono;
     const auto count{duration_cast<nanoseconds>(d).count()};
-    if(count >= 1'000'000'000) return {to_string<std::ratio<1>>(d), "s"};
-    if(count >= 1'000'000)     return {to_string<std::milli>(d),   "ms"};
-    if(count >= 1'000)         return {to_string<std::micro>(d),   "us"};
+    // A count is written in the larger of two units once it rounds to a thousand of the smaller, at three significant figures
+    if(count >= 999'500'000) return {to_string<std::ratio<1>>(d), "s"};
+    if(count >= 999'500)     return {to_string<std::milli>(d),   "ms"};
+    if(count >= 1'000)       return {to_string<std::micro>(d),   "us"};
 
     return {std::to_string(count), "ns"};
   }
