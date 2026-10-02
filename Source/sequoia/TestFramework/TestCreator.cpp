@@ -554,7 +554,11 @@ namespace sequoia::testing
     {
       auto addToCMake{
         [this, outputFile](const fs::path& mainCMake) {
-          add_to_cmake(mainCMake, m_Paths.tests().repo(), outputFile, "target_sources(", ")\n", "${TestDir}/");
+          add_to_cmake(mainCMake,
+                       {.name{"target_sources"}},
+                       {.file_to_add{outputFile},
+                        .directory{m_Paths.tests().repo()},
+                        .directory_spelling{"${TestDir}"}});
         }
       };
 
@@ -672,7 +676,9 @@ namespace sequoia::testing
 
     read_modify_write(srcPath, setCppText);
 
-    add_to_cmake(paths().source().cmake_lists(), paths().source().project(), srcPath, "set(SourceList", ")\n", "");
+    add_to_cmake(paths().source().cmake_lists(),
+                 {.name{"set"}, .leading_arguments{"SourceList"}},
+                 {.file_to_add{srcPath}, .directory{paths().source().project()}});
 
     auto uncommentMarkedLines{
       [](const fs::path& cmakeLists) {

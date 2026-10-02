@@ -192,31 +192,25 @@ namespace sequoia::testing
   }
 
   void add_to_cmake(const fs::path& cmakeLists,
-                    const fs::path& hostDir,
-                    const fs::path& file,
-                    std::string_view patternOpen,
-                    std::string_view patternClose,
-                    std::string_view cmakeEntryPrefix)
+                    const cmake_command& command,
+                    const cmake_entry& entry)
   {
-    const auto parenthesisPos{patternOpen.find('(')};
-    if(parenthesisPos == std::string_view::npos)
-      throw std::logic_error{
-        std::format("'{}' has no parenthesis, so the entries of {} have no column to align with",
-                    patternOpen,
-                    cmakeLists.generic_string())
-      };
-
     auto addEntry{
-      [file{file.lexically_relative(hostDir)}, &cmakeLists, patternOpen, patternClose, cmakeEntryPrefix,
-       numSpaces{parenthesisPos + 1}] (std::string& text) {
+      [&cmakeLists, &command, &entry] (std::string& text) {
         constexpr auto npos{std::string::npos};
+        constexpr std::string_view closing{")\n"};
+        const auto opening{std::format("{}({}", command.name, command.leading_arguments)};
 
-        if(auto startPos{text.find(patternOpen)}; startPos != npos)
+        if(auto startPos{text.find(opening)}; startPos != npos)
         {
-          if(auto endPos{text.find(patternClose, startPos + patternOpen.size())}; endPos != npos)
+          if(auto endPos{text.find(closing, startPos + opening.size())}; endPos != npos)
           {
-            std::vector<std::string> entries{{std::string{cmakeEntryPrefix}.append(file.generic_string())}};
-            auto newlinePos{npos}, next{startPos + patternOpen.size()};
+            const auto newEntry{
+              fs::path{entry.directory_spelling} / entry.file_to_add.lexically_relative(entry.directory)
+            };
+
+            std::vector<std::string> entries{{newEntry.generic_string()}};
+            auto newlinePos{npos}, next{startPos + opening.size()};
             while((newlinePos = text.find("\n", next)) < endPos)
             {
               next = std::ranges::min(text.find("\n", newlinePos + 1), endPos);
@@ -225,12 +219,14 @@ namespace sequoia::testing
               entries.push_back(text.substr(entryStart, next - entryStart));
             }
 
+            const auto numSpaces{command.name.size() + 1};
+
             std::ranges::sort(entries);
             std::string sorted{};
             std::ranges::for_each(entries, [&sorted, numSpaces](const std::string& e) {
               sorted.append(std::format("\n{:{}}{}", "", numSpaces, e)); });
 
-            const auto startSection{std::ranges::min(text.find("\n", startPos + patternOpen.size()), endPos)};
+            const auto startSection{std::ranges::min(text.find("\n", startPos + opening.size()), endPos)};
             text.replace(startSection, endPos - startSection, sorted);
 
             return;

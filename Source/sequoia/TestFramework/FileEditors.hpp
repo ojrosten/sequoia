@@ -21,20 +21,35 @@ namespace sequoia::testing
 {
   void add_include(const std::filesystem::path& file, std::string_view includePath);
 
-  /** \brief Adds an entry for `file` to the entries between `patternOpen` and `patternClose` in `cmakeLists`.
+  /** \brief A CMake command's name, and the arguments which precede its entries */
+  struct cmake_command
+  {
+    std::string_view name{}, leading_arguments{};
+  };
 
-      The new entry is `cmakeEntryPrefix` followed by `file` relative to `hostDir`. The entries are then sorted.
-      Each entry is aligned one column after the parenthesis that `patternOpen` opens.
+  /** \brief A file to add to a CMake list file, the directory its entry is relative to, and how the list file
+      spells that directory
+   */
+  struct cmake_entry
+  {
+    std::filesystem::path file_to_add{}, directory{};
+    std::string_view directory_spelling{};
+  };
 
-      \throws std::logic_error if `patternOpen` has no parenthesis
-      \throws std::runtime_error if `cmakeLists` cannot be read, or has no section between the patterns
+  /** \brief Adds `entry` to the entries of the first invocation of `command` in `cmakeLists`.
+
+      The invocation is the first place `cmakeLists` spells the command's name, an opening parenthesis and the
+      leading arguments. Its entries are the lines which follow, up to the first `)` that ends a line. The new
+      entry is the path of `entry.file_to_add` relative to `entry.directory`, joined to `entry.directory_spelling`.
+      The entries are then sorted. Each is indented by one more than the length of the command's name, so that it
+      aligns after the parenthesis of a command which starts its line.
+
+      \throws std::runtime_error if `cmakeLists` cannot be read, contains no such invocation with its closing `)`, or
+      cannot be opened to write
    */
   void add_to_cmake(const std::filesystem::path& cmakeLists,
-                    const std::filesystem::path& hostDir,
-                    const std::filesystem::path& file,
-                    std::string_view patternOpen,
-                    std::string_view patternClose,
-                    std::string_view cmakeEntryPrefix);
+                    const cmake_command& command,
+                    const cmake_entry& entry);
 
   /** \brief Registers each of `tests` in `file`, skipping any already registered there.
 
