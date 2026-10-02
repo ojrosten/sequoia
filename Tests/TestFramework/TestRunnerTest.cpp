@@ -678,7 +678,9 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
-    /** \brief A test whose summary discriminator gives it the same summary file as `summary_collider_test_twin` */
+    /** \brief A test whose summary discriminator gives it the summary file of `summary_collider_test_twin`, but
+        for case
+     */
     class summary_collider_test final : public free_test
     {
     public:
@@ -691,7 +693,7 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      static std::string summary_discriminator(const cmake_cache&) { return "twin"; }
+      static std::string summary_discriminator(const cmake_cache&) { return "Twin"; }
 
       void run_tests() {}
     };

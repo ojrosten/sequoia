@@ -1928,6 +1928,17 @@ namespace sequoia::testing
     m_SourcesByLowerCasePrefix.try_emplace(prefix, source);
   }
 
+  void test_runner::register_summary(std::string_view name, const test_summary_path& summary)
+  {
+    const auto& file{summary.file_path()};
+    const auto [admitted, inserted]{
+      m_TestNamesByLowerCaseSummary.try_emplace(ascii::to_lowercase(file.generic_string()), name)
+    };
+
+    if(!inserted)
+      throw std::logic_error{summary_collision_message(admitted->second, name, file)};
+  }
+
   [[nodiscard]]
   std::string test_runner::nesting_message(const fs::path& source, const fs::path& nestedWith)
   {
@@ -1980,7 +1991,7 @@ namespace sequoia::testing
   {
     using namespace parsing::commandline;
 
-    return error(std::format("Tests \"{}\" and \"{}\" would both write their summary to\n\"{}\"\n"
+    return error(std::format("Tests \"{}\" and \"{}\" would write their summaries to one file, ignoring case:\n\"{}\"\n"
                              "Rename one, or change its summary discriminator.\n",
                              firstTest,
                              secondTest,
