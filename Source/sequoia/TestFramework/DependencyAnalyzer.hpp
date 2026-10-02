@@ -176,9 +176,9 @@ namespace sequoia::testing
   /** \brief Folds the repetitions' prune files into the run's, then removes the repetitions' files.
 
       A test to rerun after any repetition is to rerun; a test passing in every repetition passed.
-      -# The run's passes file records each test passing in every repetition with the earliest stamp
-         any repetition gave the test, and the prune stamp does not change. Both hold if `mode` is
-         passive and every repetition wrote a passes file;
+      -# The run's passes file records each test passing in every repetition with the first
+         repetition's stamp, and the prune stamp does not change. Both hold if `mode` is passive and
+         every repetition wrote a passes file;
       -# Otherwise, `timeStamp` becomes the prune stamp, and the run's passes file is removed.
    */
   void aggregate_instability_analysis_prune_files(const project_paths& projPaths,

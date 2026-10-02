@@ -682,13 +682,6 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::vector<prune_record> sort_by_path(std::vector<prune_record> records)
-    {
-      std::ranges::sort(records, {}, path_projector{});
-      return records;
-    }
-
-    [[nodiscard]]
     std::vector<prune_record> aggregate_tests_to_rerun(const prune_paths& prunePaths, const std::size_t numReps)
     {
       return unique_by_path(
@@ -704,7 +697,7 @@ namespace sequoia::testing
         \returns
         -# `nullopt`, if any repetition wrote no passes file;
         -# Otherwise, a record of each test which passed in every repetition. The record carries the
-           earliest of the stamps which the repetitions gave the test.
+           first repetition's stamp.
      */
     [[nodiscard]]
     std::optional<std::vector<prune_record>> aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
@@ -718,37 +711,15 @@ namespace sequoia::testing
       if(!std::ranges::all_of(files, [](const fs::path& file){ return fs::exists(file); }))
         return std::nullopt;
 
-      // Each repetition contributes at most one record per test. The number of records sharing a path is
-      // then the number of repetitions which passed that test.
-      const auto passes{
-        sort_by_path(
-            files
-          | std::views::transform(read_tests)
-          | std::views::transform(unique_by_path)
-          | std::views::join
-          | std::ranges::to<std::vector>()
-        )
+      auto intersect{
+        [](std::vector<prune_record> lhs, const std::vector<prune_record>& rhs) {
+          std::vector<prune_record> common{};
+          std::ranges::set_intersection(lhs, rhs, std::back_inserter(common), {}, path_projector{}, path_projector{});
+          return common;
+        }
       };
 
-      auto samePath{
-        [](const prune_record& lhs, const prune_record& rhs) { return lhs.test_path == rhs.test_path; }
-      };
-
-      auto passedInEveryRepetition{
-        [numReps](const auto& recordsOfOneTest) { return recordsOfOneTest.size() == numReps; }
-      };
-
-      // A file may change after the earliest repetition began and before another repetition began. With the
-      // other repetition's stamp, prune would judge the test fresh and not run it.
-      auto earliestRecord{
-        [](const auto& recordsOfOneTest) { return std::ranges::min(recordsOfOneTest, {}, &prune_record::time_stamp); }
-      };
-
-      return passes
-        | std::views::chunk_by(samePath)
-        | std::views::filter(passedInEveryRepetition)
-        | std::views::transform(earliestRecord)
-        | std::ranges::to<std::vector>();
+      return std::ranges::fold_left_first(files | std::views::transform(read_tests), intersect);
     }
   }
 
