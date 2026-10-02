@@ -409,8 +409,8 @@ namespace sequoia::testing
 
     refused("Plurgh.h does not exist", {"free", "Plurgh.h"});
 
-    // No directory named Pools exists yet. A check after the refusals fails if a creation creates one within
-    // Source or Tests, or amends a CMakeLists.txt, before it refuses.
+    // No directory named Pools exists yet. One check after the refusals fails if a refused creation under -g Pools
+    // creates such a directory within Source or Tests; another fails if any refused creation amends a CMakeLists.txt.
     auto readCMakeLists{
       [&project]() {
         constexpr std::array<std::string_view, 2> cmakeLists{"Source/fakeProject/CMakeLists.txt",
@@ -426,18 +426,20 @@ namespace sequoia::testing
 
     const auto cmakeListsBefore{readCMakeLists()};
 
-    refused("A class generated for an allocation test named with its namespace",
+    refused("An allocation test named with its namespace",
             {"regular_allocation_test", "stuff::pool", "-g", "Pools"});
-    refused("A class generated for an allocation test named as a template-id",
+    refused("An allocation test named with its namespace, of a class whose header exists",
+            {"regular_allocation_test", "stuff::container", "--header", "Container.hpp"});
+    refused("An allocation test named as a template-id",
             {"regular_allocation_test", "pool<T>", "-g", "Pools"});
-    refused("A class generated for an allocation test named with a space",
+    refused("An allocation test named with a space",
             {"regular_allocation_test", "my pool", "-g", "Pools"});
-    refused("A class generated for an allocation test named with a leading digit",
+    refused("An allocation test named with a leading digit",
             {"regular_allocation_test", "2pool", "-g", "Pools"});
-    refused("A class generated for an allocation test with an empty name",
+    refused("An allocation test with an empty name",
             {"regular_allocation_test", "", "-g", "Pools"});
 
-    check("No file written for a refused allocation test",
+    check("No Pools directory created for a refused allocation test",
           !fs::exists(project / "Source/fakeProject/Pools") && !fs::exists(project / "Tests/Pools"));
     check(equality, "No CMakeLists.txt amended for a refused allocation test", readCMakeLists(), cmakeListsBefore);
 

@@ -27,6 +27,7 @@
 #include <algorithm>
 #include <array>
 #include <bit>
+#include <concepts>
 #include <set>
 #include <ranges>
 #include <span>
@@ -972,14 +973,10 @@ namespace sequoia::testing
       "Generate a source file too, in <namespace> (:: for the global one)"
     };
 
-    const option genSemanticsSourceOption{"--gen-source", {"-g"}, {"dir"},
+    const option genClassSourceOption{"--gen-source", {"-g"}, {"dir"},
       updateCurrentNascentTest(
         overloaded{
-          [](nascent_semantics_test& nascent, const arg_list& args) {
-            nascent.generate_source_files(src_opt::yes);
-            nascent.source_dir(args[0]);
-          },
-          [](nascent_allocation_test& nascent, const arg_list& args) {
+          [](std::derived_from<nascent_class_test_base> auto& nascent, const arg_list& args) {
             nascent.generate_source_files(src_opt::yes);
             nascent.source_dir(args[0]);
           },
@@ -987,12 +984,11 @@ namespace sequoia::testing
         }
       ),
       {},
-      "Generate the class's header and source too, under Source/<dir>"
+      "Generate the class's header and source too, under Source/<project>/<dir>"
     };
 
     const std::initializer_list<maths::tree_initializer<option>>
-      semanticsOptions  {{headerOption}, {genSemanticsSourceOption}, {fullnameOption}, {testingUtilitiesOption}},
-      allocationOptions {{headerOption}, {genSemanticsSourceOption}, {fullnameOption}, {testingUtilitiesOption}},
+      classOptions      {{headerOption}, {genClassSourceOption}, {fullnameOption}, {testingUtilitiesOption}},
       performanceOptions{{fullnameOption}},
       freeOptions       {{forenameOption}, {fullnameOption}, {genFreeSourceOption}, {diagnosticsOption}};
 
@@ -1048,19 +1044,19 @@ namespace sequoia::testing
                         "an allocation test takes its bare name"},
                     { {{"regular_test", {"regular"}, {"class", "equivalent_type"},
                         nascent_test_data{"semantic", "regular", *this, nascentTests}, {},
-                        "A regular test of the class against an equivalent type"}, semanticsOptions
+                        "A regular test of the class against an equivalent type"}, classOptions
                       },
                       {{"move_only_test", {"move_only"}, {"class", "equivalent_type"},
                         nascent_test_data{"semantic", "move_only", *this, nascentTests}, {},
-                        "A move-only test of the class against an equivalent type"}, semanticsOptions
+                        "A move-only test of the class against an equivalent type"}, classOptions
                       },
                       {{"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"class"},
                         nascent_test_data{"allocation", "regular_allocation", *this, nascentTests}, {},
-                        "An allocation test of the regular class"}, allocationOptions
+                        "An allocation test of the regular class"}, classOptions
                       },
                       {{"move_only_allocation_test", {"move_only_allocation"}, {"class"},
                         nascent_test_data{"allocation", "move_only_allocation", *this, nascentTests}, {},
-                        "An allocation test of the move-only class"}, allocationOptions
+                        "An allocation test of the move-only class"}, classOptions
                       },
                       {{"free_test", {"free"}, {"header"},
                         nascent_test_data{"behavioural", "free", *this, nascentTests}, {},

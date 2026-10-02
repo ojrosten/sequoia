@@ -702,6 +702,57 @@ namespace sequoia::testing
     tabs_to_spacing(text, code_indent());
   }
 
+  //=========================================== nascent_class_test_base ===========================================//
+
+  [[nodiscard]]
+  fs::path nascent_class_test_base::where_header_absent(const fs::path& filename) const
+  {
+    const auto& project{paths().source().project()};
+    return filename.is_absolute() ? filename : project / rebase_from(m_SourceDir / filename, project);
+  }
+
+  void nascent_class_test_base::generate_header(const fs::path& headerPath,
+                                                std::string_view semantics,
+                                                std::string_view nameSpace,
+                                                const template_data& templateData)
+  {
+    const auto headerTemplate{std::format("My{}Class.hpp", capitalize(to_camel_case(semantics)))};
+
+    stream() << quote_without_escapes(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
+    fs::create_directories(headerPath.parent_path());
+    fs::copy_file(paths().aux_paths().source_templates() / headerTemplate, headerPath);
+
+    read_modify_write(
+      headerPath,
+      [this, nameSpace, &templateData](std::string& text) { set_header_text(text, nameSpace, templateData); }
+    );
+
+    if(templateData.empty())
+    {
+      set_cpp(headerPath, nameSpace);
+    }
+  }
+
+  void nascent_class_test_base::set_header_text(std::string& text,
+                                                std::string_view nameSpace,
+                                                const template_data& templateData) const
+  {
+    process_copyright_and_namespace(text, copyright(), nameSpace);
+    replace_all(text, "?type", forename());
+    if(templateData.empty())
+    {
+      replace_all(text, "\ttemplate<?>\n", "");
+      replace_all(text, "template<?>\n", "");
+    }
+    else
+    {
+      const auto templateSpec{std::string{"template"}.append(to_string(templateData))};
+      replace_all(text, "template<?>", templateSpec);
+    }
+
+    tabs_to_spacing(text, code_indent());
+  }
+
   //=========================================== nascent_semantics_test ===========================================//
 
   [[nodiscard]]
@@ -778,36 +829,13 @@ namespace sequoia::testing
     // value_tester, and the value_tester's false-negative diagnostics belong with it.
     nascent_test_base::finalize([this](const fs::path& filename) { return where_header_absent(filename); },
                                 [this, &nameSpace](const fs::path& headerPath) {
-                                  generate_header(headerPath, nameSpace);
+                                  generate_header(headerPath, test_type(), nameSpace, m_TemplateData);
                                 },
                                 testing_utilities().empty() ? companion_specifications() : std::vector<companion_specification>{},
                                 to_stubs(*this),
                                 test_classes(),
                                 "MyClass",
                                 [this](std::string& text) { transform_file(text); });
-  }
-
-  [[nodiscard]]
-  fs::path nascent_semantics_test::where_header_absent(const fs::path& filename) const
-  {
-    const auto& project{paths().source().project()};
-    return filename.is_absolute() ? filename : project / rebase_from(m_SourceDir / filename, project);
-  }
-
-  void nascent_semantics_test::generate_header(const fs::path& headerPath, const std::string& nameSpace)
-  {
-    const auto headerTemplate{std::format("My{}Class.hpp", capitalize(to_camel_case(test_type())))};
-
-    stream() << quote_without_escapes(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
-    fs::create_directories(headerPath.parent_path());
-    fs::copy_file(paths().aux_paths().source_templates() / headerTemplate, headerPath);
-
-    read_modify_write(headerPath, [this, &nameSpace](std::string& text) { set_header_text(text, copyright(), nameSpace); });
-
-    if(m_TemplateData.empty())
-    {
-      set_cpp(headerPath, nameSpace);
-    }
   }
 
   [[nodiscard]]
@@ -910,24 +938,6 @@ namespace sequoia::testing
                       replacement{"?", test_type()});
   }
 
-  void nascent_semantics_test::set_header_text(std::string& text, std::string_view copyright, std::string_view nameSpace) const
-  {
-    process_copyright_and_namespace(text, copyright, nameSpace);
-    replace_all(text, "?type", forename());
-    if(m_TemplateData.empty())
-    {
-      replace_all(text, "\ttemplate<?>\n", "");
-      replace_all(text, "template<?>\n", "");
-    }
-    else
-    {
-      const auto templateSpec{std::string{"template"}.append(to_string(m_TemplateData))};
-      replace_all(text, "template<?>", templateSpec);
-    }
-
-    tabs_to_spacing(text, code_indent());
-  }
-
   //=========================================== nascent_allocation_test ===========================================//
 
   [[nodiscard]]
@@ -939,51 +949,26 @@ namespace sequoia::testing
 
   void nascent_allocation_test::finalize()
   {
+    if(!is_identifier(forename()))
+      throw std::runtime_error{
+        std::format("An allocation test takes a bare class name: an identifier. '{}' is not an identifier", forename())
+      };
+
     if(surname().empty())
       surname(std::format("allocation_{}", to_surname(flavour())));
     name_files_after_type(forename());
 
+    std::string_view semantics{test_type() == "move_only_allocation" ? "move_only" : "regular"};
+
     nascent_test_base::finalize([this](const fs::path& filename) { return where_header_absent(filename); },
-                                [this](const fs::path& headerPath) { generate_header(headerPath); },
+                                [this, semantics](const fs::path& headerPath) {
+                                  generate_header(headerPath, semantics, "", {});
+                                },
                                 {},
                                 to_stubs(*this),
                                 test_classes(),
                                 "MyClass",
                                 [this](std::string& text) { transform_file(text); });
-  }
-
-  [[nodiscard]]
-  fs::path nascent_allocation_test::where_header_absent(const fs::path& filename) const
-  {
-    const auto& project{paths().source().project()};
-    return filename.is_absolute() ? filename : project / rebase_from(m_SourceDir / filename, project);
-  }
-
-  void nascent_allocation_test::generate_header(const fs::path& headerPath)
-  {
-    if(!is_identifier(forename()))
-      throw std::runtime_error{
-        std::format("An allocation test takes a bare class name: an identifier. "
-                    "'{}' is not an identifier, so no class is generated",
-                    forename())
-      };
-
-    const auto headerTemplate{test_type() == "move_only_allocation" ? "MyMoveOnlyClass.hpp" : "MyRegularClass.hpp"};
-
-    stream() << quote_without_escapes(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
-    fs::create_directories(headerPath.parent_path());
-    fs::copy_file(paths().aux_paths().source_templates() / headerTemplate, headerPath);
-
-    read_modify_write(
-      headerPath,
-      [this](std::string& text) {
-        process_copyright_and_namespace(text, copyright(), "");
-        replace_all(text, replacement{"?type", forename()}, replacement{"template<?>\n", ""});
-        tabs_to_spacing(text, code_indent());
-      }
-    );
-
-    set_cpp(headerPath, "");
   }
 
   [[nodiscard]]

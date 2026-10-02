@@ -274,16 +274,55 @@ namespace sequoia::testing
                             FileTransformer transformer) const;
   };
 
-  class nascent_semantics_test : public nascent_test_base
+  /** \brief The base of a test of a class whose header may be generated.
+
+      `source_dir` sets the directory, within the project's source, in which a header named by a relative path
+      is generated.
+   */
+  class nascent_class_test_base : public nascent_test_base
   {
   public:
     using nascent_test_base::nascent_test_base;
 
+    void source_dir(std::filesystem::path dir) { m_SourceDir = std::move(dir); }
+
+    [[nodiscard]]
+    friend bool operator==(const nascent_class_test_base&, const nascent_class_test_base&) noexcept = default;
+  protected:
+    nascent_class_test_base(const nascent_class_test_base&)     = default;
+    nascent_class_test_base(nascent_class_test_base&&) noexcept = default;
+    nascent_class_test_base& operator=(const nascent_class_test_base&)     = default;
+    nascent_class_test_base& operator=(nascent_class_test_base&&) noexcept = default;
+
+    ~nascent_class_test_base() = default;
+
+    [[nodiscard]]
+    std::filesystem::path where_header_absent(const std::filesystem::path& filename) const;
+
+    /** \brief Generates a header declaring the class `forename()` in `nameSpace`, and a source file if
+        `templateData` is empty.
+
+        The class is a template if `templateData` is not empty, and is regular or move-only as `semantics` is
+        `regular` or `move_only`. The path of each file generated is printed.
+     */
+    void generate_header(const std::filesystem::path& headerPath,
+                         std::string_view semantics,
+                         std::string_view nameSpace,
+                         const template_data& templateData);
+  private:
+    std::filesystem::path m_SourceDir{};
+
+    void set_header_text(std::string& text, std::string_view nameSpace, const template_data& templateData) const;
+  };
+
+  class nascent_semantics_test : public nascent_class_test_base
+  {
+  public:
+    using nascent_class_test_base::nascent_class_test_base;
+
     void qualified_name(std::string name) { m_QualifiedName = std::move(name); }
 
     void add_equivalent_type(std::string name) { m_EquivalentTypes.emplace_back(std::move(name)); }
-
-    void source_dir(std::filesystem::path dir) { m_SourceDir = std::move(dir); }
 
     void finalize();
 
@@ -309,27 +348,16 @@ namespace sequoia::testing
 
     std::vector<std::string> m_EquivalentTypes{};
 
-    std::filesystem::path m_SourceDir{};
-
     void transform_file(std::string& text) const;
-
-    void set_header_text(std::string& text, std::string_view copyright, std::string_view nameSpace) const;
-
-    [[nodiscard]]
-    std::filesystem::path where_header_absent(const std::filesystem::path& filename) const;
-
-    void generate_header(const std::filesystem::path& headerPath, const std::string& nameSpace);
   };
 
-  class nascent_allocation_test : public nascent_test_base
+  class nascent_allocation_test : public nascent_class_test_base
   {
   public:
-    using nascent_test_base::nascent_test_base;
+    using nascent_class_test_base::nascent_class_test_base;
 
     [[nodiscard]]
     static std::vector<std::string> stubs();
-
-    void source_dir(std::filesystem::path dir) { m_SourceDir = std::move(dir); }
 
     void finalize();
 
@@ -339,14 +367,7 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator==(const nascent_allocation_test&, const nascent_allocation_test&) noexcept = default;
   private:
-    std::filesystem::path m_SourceDir{};
-
     void transform_file(std::string& text) const;
-
-    [[nodiscard]]
-    std::filesystem::path where_header_absent(const std::filesystem::path& filename) const;
-
-    void generate_header(const std::filesystem::path& headerPath);
   };
 
   class nascent_behavioural_test : public nascent_test_base
