@@ -191,6 +191,11 @@ namespace sequoia::meta
 
   //==================================================== merge ===================================================//
 
+  /** \brief Merges two lists, each sorted by `Compare`, into one sorted list.
+
+      Types which `Compare` finds equivalent keep their order, and those from the first list come
+      before those from the second.
+   */
   template<class T, class U, template<class, class> class Compare>
   struct merge;
 
@@ -211,14 +216,14 @@ namespace sequoia::meta
   };
 
   template<template<class...> class TT, class T, class U, template<class, class> class Compare>
-    requires (!Compare<T, U>::value)
+    requires (Compare<U, T>::value)
   struct merge<TT<T>, TT<U>, Compare>
   {
     using type = TT<U, T>;
   };
 
   template<template<class...> class TT, class T, class U, template<class, class> class Compare>
-    requires (Compare<T, U>::value)
+    requires (!Compare<U, T>::value)
   struct merge<TT<T>, TT<U>, Compare>
   {
     using type = TT<T, U>;
@@ -249,7 +254,7 @@ namespace sequoia::meta
     template<template<class...> class TT, class T, class... Ts, class... Us, std::size_t I, template<class, class> class Compare>
     struct merge_from_position<TT<T, Ts...>, TT<Us...>, I, Compare>
     {
-      using first_merge = merge_from_position<TT<T>, TT<Us...>, 0, Compare>;
+      using first_merge = merge_from_position<TT<T>, TT<Us...>, I, Compare>;
       using type = merge_from_position_t<TT<Ts...>, typename first_merge::type, first_merge::Pos + 1, Compare>;
     };
   }  
@@ -261,6 +266,7 @@ namespace sequoia::meta
 
   //==================================================== stable_sort ===================================================//
 
+  /** \brief Sorts the list by `Compare`, keeping types which `Compare` finds equivalent in input order. */
   template<class T, template<class, class> class Compare>
   struct stable_sort;
 
