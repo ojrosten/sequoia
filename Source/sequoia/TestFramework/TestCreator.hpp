@@ -24,17 +24,13 @@
 
 namespace sequoia::testing
 {
-  /** \brief Whether `spelling` holds nothing but the following, and so names no type:
-      -# ASCII whitespace;
-      -# `&` and `*`;
-      -# The words `const` and `volatile`, each delimited by the characters above or by the ends of `spelling`.
-   */
+  /** \brief Whether `spelling` is empty or holds only ASCII whitespace, as `ascii::is_whitespace` classifies it. */
   [[nodiscard]]
-  bool names_no_type(std::string_view spelling);
+  bool is_empty_or_whitespace(std::string_view spelling) noexcept;
 
   /** \brief Whether to append `&` to `type` in the declaration of a parameter.
 
-      \throws std::logic_error if `names_no_type(type)`.
+      \throws std::logic_error if `is_empty_or_whitespace(type)`.
    */
   [[nodiscard]]
   bool handle_as_ref(std::string_view type);

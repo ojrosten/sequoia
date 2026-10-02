@@ -39,7 +39,7 @@ namespace sequoia::testing
 
   void test_runner_test_creation::run_tests()
   {
-    test_names_no_type();
+    test_is_empty_or_whitespace();
     test_type_handling();
     test_project_namespace();
     test_template_data_generation();
@@ -48,36 +48,24 @@ namespace sequoia::testing
     test_creation_failure();
   }
 
-  void test_runner_test_creation::test_names_no_type()
+  void test_runner_test_creation::test_is_empty_or_whitespace()
   {
-    check("Empty",                          names_no_type(""));
-    check("A space",                        names_no_type(" "));
-    check("A tab",                          names_no_type("\t"));
-    check("A carriage return",              names_no_type("\r"));
-    check("Whitespace of every kind",       names_no_type(" \t\n\v\f\r"));
-    check("An ampersand",                   names_no_type("&"));
-    check("An asterisk",                    names_no_type("*"));
-    check("Ampersands and asterisks",       names_no_type("* && *"));
-    check("const",                          names_no_type("const"));
-    check("volatile",                       names_no_type("volatile"));
-    check("const volatile, spaced by tabs", names_no_type("\tconst\tvolatile\t"));
-    check("const&",                         names_no_type("const&"));
-    check("volatile*const",                 names_no_type("volatile*const"));
+    check("Empty",                          is_empty_or_whitespace(""));
+    check("A space",                        is_empty_or_whitespace(" "));
+    check("A tab",                          is_empty_or_whitespace("\t"));
+    check("A carriage return",              is_empty_or_whitespace("\r"));
+    check("Whitespace of every kind",       is_empty_or_whitespace(" \t\n\v\f\r"));
 
-    check("int",                            !names_no_type("int"));
-    check("A single letter",                !names_no_type("T"));
-    check("const int",                      !names_no_type("const int"));
-    check("int const&",                     !names_no_type("int const&"));
-    check("const_iterator",                 !names_no_type("const_iterator"));
-    check("volatile_flag",                  !names_no_type("volatile_flag"));
-    check("constvolatile",                  !names_no_type("constvolatile"));
+    check("int",                           !is_empty_or_whitespace("int"));
+    check("A single letter",               !is_empty_or_whitespace("T"));
+    check("Whitespace around a type",      !is_empty_or_whitespace(" \tint "));
+    check("const&, left to the compiler",  !is_empty_or_whitespace("const&"));
   }
 
   void test_runner_test_creation::test_type_handling()
   {
     check_exception_thrown<std::logic_error>("Empty string", []() { return handle_as_ref(""); });
     check_exception_thrown<std::logic_error>("Just spaces", []() { return handle_as_ref(" "); });
-    check_exception_thrown<std::logic_error>("Only qualifiers", []() { return handle_as_ref("const volatile"); });
     check("Letter",        handle_as_ref("a"));
     check("int",          !handle_as_ref("int"));
     check(" int",         !handle_as_ref(" int"));
@@ -467,8 +455,6 @@ namespace sequoia::testing
     // that cannot be found is refused too, so it would mask the removal of the refusal under test.
     refused("An empty equivalent type", {"regular_test", "stuff::sprocket", "", "-g", "Stuff"});
     refused("An equivalent type of only spaces", {"move_only_test", "stuff::sprocket", " ", "-g", "Stuff"});
-    refused("An equivalent type of only a qualifier and an ampersand",
-            {"regular_test", "stuff::sprocket", "const&", "-g", "Stuff"});
     refused("A full name whose file is a companion's",
             {"regular_test", "stuff::sprocket", "int", "-g", "Stuff", "--fullname", "sprocket_testing_utilities"});
 
