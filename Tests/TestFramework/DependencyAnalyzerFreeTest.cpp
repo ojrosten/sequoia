@@ -1806,6 +1806,7 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::test_instability_analysis_prune_upate(const project_paths& projPaths)
   {
+    const auto earlyUpdateTime{m_ResetTime - std::chrono::seconds{1}};
     const auto updateTime{m_ResetTime};
     const auto lateUpdateTime{m_ResetTime + std::chrono::seconds{1}};
     const auto prune{projPaths.prune()};
@@ -1925,13 +1926,25 @@ namespace sequoia::testing
                  [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{}, {}}, updateTime); }
           },
           edge_t{empty_fails_house_passes,
-                 "Passes in both instances, filtered, sandboxed",
+                 "Passes in both instances, filtered, sandboxed with the first starting earlier",
                  [update_filtered_in_sandboxes, updateTime, lateUpdateTime](const test_outcomes& d) {
                    return update_filtered_in_sandboxes(
                             d,
                             {
                               {.executed{{"HouseAllocationTest.cpp"}}, .failures{}, .start{updateTime}},
                               {.executed{{"HouseAllocationTest.cpp"}}, .failures{}, .start{lateUpdateTime}}
+                            }
+                          );
+                 }
+          },
+          edge_t{empty_fails_house_passes,
+                 "Passes in both instances, filtered, sandboxed with the second starting earlier",
+                 [update_filtered_in_sandboxes, earlyUpdateTime, updateTime](const test_outcomes& d) {
+                   return update_filtered_in_sandboxes(
+                            d,
+                            {
+                              {.executed{{"HouseAllocationTest.cpp"}}, .failures{}, .start{updateTime}},
+                              {.executed{{"HouseAllocationTest.cpp"}}, .failures{}, .start{earlyUpdateTime}}
                             }
                           );
                  }
