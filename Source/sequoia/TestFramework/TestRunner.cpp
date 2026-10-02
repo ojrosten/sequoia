@@ -398,6 +398,11 @@ namespace sequoia::testing
       std::visit(
         overloaded{
           [&args,&species = species](nascent_semantics_test& nascent) {
+            if(args[1].find_first_not_of(' ') == std::string::npos)
+              throw std::runtime_error{
+                std::format("{}_test {} '{}': the equivalent_type names no type", species, args[0], args[1])
+              };
+
             nascent.test_type(species);
             nascent.qualified_name(args[0]);
             nascent.add_equivalent_type(args[1]);
