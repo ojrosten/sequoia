@@ -121,7 +121,7 @@ namespace sequoia::testing
       t.check(equality, "size_of_partition is zero", d.size_of_partition(i), 0uz);
     }
 
-    static void check_partition_index_is_npos(regular_test& t, data_type& d, const std::size_t i)
+    static void check_iterator_partition_indices_are_npos(regular_test& t, data_type& d, const std::size_t i)
     {
       constexpr auto npos{data_type::partition_iterator::npos};
 
@@ -196,20 +196,20 @@ namespace sequoia::testing
             },
             {
               data_description::empty,
-              t.report("Partition 0 of an empty sequence is an empty partition, with iterators tagged npos"),
+              t.report("An empty sequence treats index 0 as the index of an empty partition"),
               [&t](data_type d) -> data_type {
                 check_partition_is_empty(t, d, 0);
-                check_partition_index_is_npos(t, d, 0);
+                check_iterator_partition_indices_are_npos(t, d, 0);
                 return d;
               }
             },
             {
               data_description::empty,
-              t.report("Partition 0 of a default-constructed sequence is an empty partition, with iterators tagged npos"),
+              t.report("A default-constructed sequence treats index 0 as the index of an empty partition"),
               [&t](data_type) -> data_type {
                 data_type d{};
                 check_partition_is_empty(t, d, 0);
-                check_partition_index_is_npos(t, d, 0);
+                check_iterator_partition_indices_are_npos(t, d, 0);
                 return d;
               }
             },
@@ -478,11 +478,11 @@ namespace sequoia::testing
             },
             {
               data_description::empty,
-              t.report("Once the only slot is erased, partition 0 is an empty partition, with iterators tagged npos"),
+              t.report("A sequence whose only slot is erased treats index 0 as the index of an empty partition"),
               [&t](data_type d) -> data_type {
                 d.erase_slot(0);
                 check_partition_is_empty(t, d, 0);
-                check_partition_index_is_npos(t, d, 0);
+                check_iterator_partition_indices_are_npos(t, d, 0);
                 return d;
               }
             },
@@ -912,6 +912,15 @@ namespace sequoia::testing
           }, // end 'two__2_3'
           {  // begin 'two_2__3'
             {
+              data_description::two_2__3,
+              t.report("A sequence of two partitions treats index 2 as the index of an empty partition"),
+              [&t](data_type d) -> data_type {
+                check_partition_is_empty(t, d, 2);
+                check_iterator_partition_indices_are_npos(t, d, 2);
+                return d;
+              }
+            },
+            {
               data_description::two_3__2,
               t.report(""),
               [](data_type d) -> data_type {
@@ -978,15 +987,6 @@ namespace sequoia::testing
                   "Inserting beyond the end of a partition other than the first throws",
                   [&d]() { return d.insert_to_partition(1, 2, 4); }
                 );
-                return d;
-              }
-            },
-            {
-              data_description::two_2__3,
-              t.report("An index one past the last partition names an empty partition, with iterators tagged npos"),
-              [&t](data_type d) -> data_type {
-                check_partition_is_empty(t, d, 2);
-                check_partition_index_is_npos(t, d, 2);
                 return d;
               }
             }

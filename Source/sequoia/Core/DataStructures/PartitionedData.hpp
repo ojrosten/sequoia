@@ -475,9 +475,13 @@ namespace sequoia
           return PartitionIterator{typename PartitionIterator::base_iterator_type{}, npos};
 
         if constexpr(PartitionIterator::reversed())
+        {
           return PartitionIterator{buckets.front().rend(), npos};
+        }
         else
+        {
           return PartitionIterator{buckets.back().end(), npos};
+        }
       }
     };
 
