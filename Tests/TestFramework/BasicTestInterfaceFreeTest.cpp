@@ -23,14 +23,6 @@ namespace sequoia::testing
       using free_test::free_test;
     };
 
-    class fake_test_with_discriminated_summary : public free_test {
-    public:
-      using free_test::free_test;
-
-      [[nodiscard]]
-      static std::string summary_discriminator(const cmake_cache&) { return "bar"; }
-    };
-
     class fake_test_with_discriminated_exceptions : public free_test {
     public:
       using free_test::free_test;
@@ -80,13 +72,8 @@ namespace sequoia::testing
     const auto rebasedSource{rebase_from(source_file(), get_project_paths().project_root())};
 
     {
-      fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, null_discriminator, null_discriminator};
+      fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, null_discriminator};
 
-      check(equality,
-            reporter{"Summary File Path"},
-            t.summary_file_path().file_path(),
-            projPaths.output().test_summaries() / rebasedSource.parent_path() / "fake_test.txt");
-      
       check(equality,
             reporter{"Exceptions File Path"},
             t.diagnostics_file_paths().caught_exceptions_file_path(),
@@ -94,12 +81,7 @@ namespace sequoia::testing
     }
 
     {
-      fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, {""}, {""}};
-
-      check(equality,
-        reporter{"Summary File Path"},
-        t.summary_file_path().file_path(),
-        projPaths.output().test_summaries() / rebasedSource.parent_path() / "fake_test.txt");
+      fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, {""}};
 
       check(equality,
         reporter{"Exceptions File Path"},
@@ -108,26 +90,9 @@ namespace sequoia::testing
     }
 
     {
-      fake_test_with_discriminated_summary t{test_name<fake_test_with_discriminated_summary>(), source_file(), projPaths, {}, {}, null_discriminator, {"bar"}};
-
-      check(equality,
-            reporter{"Summary File Path"},
-            t.summary_file_path().file_path(),
-            projPaths.output().test_summaries() / rebasedSource.parent_path() / "fake_test_with_discriminated_summary_bar.txt");
-
-      check(equality,
-            reporter{"Exceptions File Path"},
-            t.diagnostics_file_paths().caught_exceptions_file_path(),
-            projPaths.output().diagnostics() / rebasedSource.parent_path() / "fake_test_with_discriminated_summary_Exceptions.txt");
-    }
-
-    {
-      fake_test_with_discriminated_exceptions t{test_name<fake_test_with_discriminated_exceptions>(), source_file(), projPaths, {}, {}, {"baz"}, null_discriminator};
-
-      check(equality,
-            reporter{"Summary File Path"},
-            t.summary_file_path().file_path(),
-            projPaths.output().test_summaries() / rebasedSource.parent_path() / "fake_test_with_discriminated_exceptions.txt");
+      fake_test_with_discriminated_exceptions t{
+        test_name<fake_test_with_discriminated_exceptions>(), source_file(), projPaths, {}, {}, {"baz"}
+      };
 
       check(equality,
             reporter{"Exceptions File Path"},
@@ -153,7 +118,7 @@ namespace sequoia::testing
         const auto source{projPaths.tests().repo() / "Materials" / std::format("{}.cpp", sourceStem)};
         const individual_materials_paths materials{source, "fake_test", projPaths, null_discriminator};
         prepare_materials(materials);
-        return std::pair{fake_test{"fake_test", source, projPaths, materials, {}, null_discriminator, null_discriminator}, materials};
+        return std::pair{fake_test{"fake_test", source, projPaths, materials, {}, null_discriminator}, materials};
       }
     };
 
@@ -240,7 +205,6 @@ namespace sequoia::testing
         projPaths,
         individual_materials_paths{},
         {},
-        null_discriminator,
         null_discriminator
       };
 

@@ -142,14 +142,12 @@ namespace sequoia::testing
   class test_vessel
   {
   public:
-    template<class Test>
-      requires (!std::is_same_v<Test, test_vessel> && concrete_test<Test>)
-    test_vessel(Test&& t)
+    template<concrete_test Test>
+    test_vessel(Test&& t, test_summary_path summaryFile)
       : m_pTest{std::make_unique<essence<Test>>(std::forward<Test>(t))}
-    {
-      if constexpr(!is_parallelizable_v<Test>)
-        m_Parallelizable = parallelizable_candidate::no;
-    }
+      , m_SummaryFile{std::move(summaryFile)}
+      , m_Parallelizable{is_parallelizable_v<Test> ? parallelizable_candidate::yes : parallelizable_candidate::no}
+    {}
 
     test_vessel(const test_vessel&)     = delete;
     test_vessel(test_vessel&&) noexcept = default;
@@ -166,7 +164,7 @@ namespace sequoia::testing
     [[nodiscard]]
     const test_summary_path& summary_file_path() const noexcept
     {
-      return m_pTest->summary_file_path();
+      return m_SummaryFile;
     }
 
     [[nodiscard]]
@@ -257,9 +255,8 @@ namespace sequoia::testing
     {
       virtual ~soul() = default;
 
-      virtual std::string_view name() const noexcept                      = 0;
-      virtual const test_summary_path& summary_file_path() const noexcept = 0;
-      virtual std::filesystem::path source_file() const                   = 0;
+      virtual std::string_view name() const noexcept                             = 0;
+      virtual std::filesystem::path source_file() const                          = 0;
       virtual const individual_materials_paths& materials_paths() const noexcept = 0;
 
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
@@ -284,12 +281,6 @@ namespace sequoia::testing
       std::string_view name() const noexcept final
       {
         return m_Name;
-      }
-
-      [[nodiscard]]
-      const test_summary_path& summary_file_path() const noexcept final
-      {
-        return m_Test.summary_file_path();
       }
 
       [[nodiscard]]
@@ -327,8 +318,7 @@ namespace sequoia::testing
                         get_discriminator<materials_discriminator_probe, Test>(cache)
                       },
                       make_active_recovery_paths(mode, projPaths),
-                      get_discriminator<output_discriminator_probe, Test>(cache),
-                      get_discriminator<summary_discriminator_probe, Test>(cache)};
+                      get_discriminator<output_discriminator_probe, Test>(cache)};
 
         m_ExecutionRecord = test_execution_record_path{source, m_Name, projPaths};
       }
@@ -422,6 +412,7 @@ namespace sequoia::testing
     enum class parallelizable_candidate : bool { no, yes };
 
     std::unique_ptr<soul> m_pTest{};
+    test_summary_path m_SummaryFile{};
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
@@ -475,16 +466,17 @@ namespace sequoia::testing
       constexpr std::string_view name{test_name<T>()};
       register_name(name, T::source_file());
       register_source(T::source_file());
-      register_summary(name,
-                       test_summary_path{T::source_file(),
-                                         name,
-                                         m_ProjPaths,
-                                         get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)});
+
+      test_summary_path summaryFile{T::source_file(),
+                                    name,
+                                    m_ProjPaths,
+                                    get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)};
+      register_summary(name, summaryFile);
 
       constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
 
       if(m_Filter(T::source_file(), enclosing_suites(T::source_file()), isPerformanceTest))
-        m_Tests.emplace_back(T{});
+        m_Tests.emplace_back(T{}, std::move(summaryFile));
     }
 
     /** \brief Runs the tests, as the command line asked.
