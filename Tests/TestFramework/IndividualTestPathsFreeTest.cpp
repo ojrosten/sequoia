@@ -44,8 +44,15 @@ namespace sequoia::testing
       []() { return test_summary_path{"", "foo_test", project_paths{}, null_discriminator}; }
     );
 
-    check(equality, "", test_summary_path{"Foo.cpp", "foo_test", project_paths{}, null_discriminator}.file_path().generic_string(), "foo_test.txt"s);
-    check(equality, "", test_summary_path{"Foo.cpp", "foo_test", project_paths{}, "xyz"}.file_path().generic_string(), "foo_test_xyz.txt"s);
+    auto summaryFileName{
+      [](const std::optional<std::string>& discriminator) {
+        return test_summary_path{"Foo.cpp", "foo_test", project_paths{}, discriminator}.file_path().generic_string();
+      }
+    };
+
+    check(equality, "Summary with no discriminator",       summaryFileName(null_discriminator), "foo_test.txt"s);
+    check(equality, "Summary with an empty discriminator", summaryFileName(""),                 "foo_test.txt"s);
+    check(equality, "Summary with a discriminator",        summaryFileName("xyz"),              "foo_test_xyz.txt"s);
 
     {
       commandline_arguments args{{minimal_fake_path().generic_string()}};

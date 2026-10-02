@@ -986,6 +986,7 @@ namespace sequoia::testing
     test_serial_verbose_output();
     test_throwing_tests();
     test_execution_records();
+    test_discriminated_summary();
     test_filtered_suites();
     test_prune_basic_output();
     test_prune_with_changed_toolchain();
@@ -1564,6 +1565,33 @@ namespace sequoia::testing
     const bool runStartedFirst{   (runStart <= start_named_by(passingRecord.file_path()))
                                && (runStart <= start_named_by(throwingRecord.file_path()))};
     check("The run started no later than either test", runStartedFirst);
+  }
+
+  /** The runner writes the summary of `summary_collider_test` to the file its summary discriminator names, not to the
+      undiscriminated file. Only this run can have written either file: the summaries directory is removed first.
+   */
+  void test_runner_test::test_discriminated_summary()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    const auto& projPaths{runner.proj_paths()};
+    fs::remove_all(projPaths.output().test_summaries());
+
+    runner.register_test<summary_collider_test>();
+
+    check(equality, "Discriminated summary return code", runner.execute(), return_code::success);
+
+    const auto source{summary_collider_test::source_file()};
+    constexpr auto name{test_name<summary_collider_test>()};
+    const test_summary_path
+      discriminatedSummary  {source, name, projPaths, "Twin"},
+      undiscriminatedSummary{source, name, projPaths, null_discriminator};
+
+    check("The summary is written to the file the discriminator names", fs::exists(discriminatedSummary.file_path()));
+    check("No summary is written to the undiscriminated file", !fs::exists(undiscriminatedSummary.file_path()));
   }
 
   void test_runner_test::test_filtered_suites()
