@@ -1358,10 +1358,12 @@ namespace sequoia::testing
       });
 
     // The check is made whichever tests are selected: a test that runs alone would overwrite the other test's summary
-    for(const auto& selection : {std::vector<std::string>{}, {"select", summary_collider_test_twin::source_file().generic_string()}})
+    for(const auto& selection : {std::vector<std::string>{},
+                                 {"select", summary_collider_test_twin::source_file().generic_string()}})
     {
+      std::string_view selected{selection.empty() ? "both" : "one"};
       check_exception_thrown<std::logic_error>(
-        reporter{std::format("Two tests whose summaries are one file, {} selected", selection.empty() ? "both" : "one")},
+        reporter{std::format("Two tests whose summaries are one file, {} selected", selected)},
         [this, &selection](){
           std::vector<std::string> argList{zeroth_arg()};
           argList.append_range(selection);
@@ -2062,15 +2064,10 @@ namespace sequoia::testing
   {
     auto run{
       [this](std::string_view description, std::string_view outputDirName, std::string_view poolSize) {
-        std::stringstream outputStream{};
         commandline_arguments args{{zeroth_arg(), "--thread-pool", std::string{poolSize}}};
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+
+        std::stringstream outputStream{};
+        auto runner{make_fake_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         check(equality, append_lines(description, "Return code"), runner.execute(), return_code::success);

@@ -476,7 +476,10 @@ namespace sequoia::testing
       register_name(name, T::source_file());
       register_source(T::source_file());
 
-      const test_summary_path summary{T::source_file(), name, m_ProjPaths, get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)};
+      const test_summary_path summary{T::source_file(),
+                                      name,
+                                      m_ProjPaths,
+                                      get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)};
       if(const auto [entry, inserted]{m_SummaryFiles.try_emplace(summary.file_path(), name)}; !inserted)
         throw std::logic_error{summary_collision_message(entry->second, name, summary.file_path())};
 

@@ -836,7 +836,7 @@ namespace sequoia::testing
     }
 
     const auto num{m_EquivalentTypes.size()};
-    const auto prediction{
+    auto prediction{
       [num](const std::size_t i, std::string_view sep) {
         std::string p{"prediction"};
         if(num > 1)
