@@ -607,26 +607,15 @@ namespace sequoia::testing
       std::vector<fs::path> m_FailedTests{}, m_ExecutedTests{}, m_TestsLeftOut{};
       std::vector<std::string> m_PostRunFailures{}, m_MaterialsUpdateReport{};
       std::set<test_paths, paths_comparator> m_Updateables{};
-      std::set<fs::path> m_FilesWrittenTo{};
 
       void to_file(const test_summary_path& summaryFile, const log_summary& summary)
       {
         const auto& filename{summaryFile.file_path()};
         if(filename.empty()) return;
 
-        auto mode{std::ios_base::out | std::ios_base::binary};
-        if(auto found{m_FilesWrittenTo.find(filename)}; found != m_FilesWrittenTo.end())
-        {
-          mode = std::ios_base::app | std::ios_base::binary;
-        }
-        else
-        {
-          m_FilesWrittenTo.insert(filename);
-        }
-
         fs::create_directories(filename.parent_path());
 
-        if(std::ofstream file{filename, mode})
+        if(std::ofstream file{filename, std::ios_base::out | std::ios_base::binary})
         {
           file << summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent);
         }
@@ -1229,7 +1218,7 @@ namespace sequoia::testing
                       }
                       else
                       {
-                        stream() << warning(std::string{"Thread pool size must be non-zero"});
+                        stream() << warning("Thread pool size must be positive\n");
                       }
                     },
                     {},
@@ -1939,6 +1928,17 @@ namespace sequoia::testing
     m_SourcesByLowerCasePrefix.try_emplace(prefix, source);
   }
 
+  void test_runner::register_summary(std::string_view name, const test_summary_path& summary)
+  {
+    const auto& file{summary.file_path()};
+    const auto [admitted, inserted]{
+      m_TestNamesByLowerCaseSummary.try_emplace(ascii::to_lowercase(file.generic_string()), name)
+    };
+
+    if(!inserted)
+      throw std::runtime_error{summary_collision_message(admitted->second, name, file)};
+  }
+
   [[nodiscard]]
   std::string test_runner::nesting_message(const fs::path& source, const fs::path& nestedWith)
   {
@@ -1983,6 +1983,19 @@ namespace sequoia::testing
                              "Each test's materials are kept beneath the path of its source file relative to the tests"
                              " repository, and this source file has no such path.\n",
                              source.generic_string()));
+  }
+
+  std::string test_runner::summary_collision_message(std::string_view firstTest,
+                                                     std::string_view secondTest,
+                                                     const fs::path& summaryFile)
+  {
+    using namespace parsing::commandline;
+
+    return error(std::format("Tests \"{}\" and \"{}\" would write their summaries to one file, ignoring case:\n\"{}\"\n"
+                             "Rename one, or change its summary discriminator.\n",
+                             firstTest,
+                             secondTest,
+                             summaryFile.generic_string()));
   }
 
   void test_runner::build_suite_tree()

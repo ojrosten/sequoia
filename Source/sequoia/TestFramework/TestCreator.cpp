@@ -21,6 +21,7 @@
 #include <array>
 #include <chrono>
 #include <format>
+#include <ranges>
 #include <stdexcept>
 
 namespace sequoia::testing
@@ -554,7 +555,11 @@ namespace sequoia::testing
     {
       auto addToCMake{
         [this, outputFile](const fs::path& mainCMake) {
-          add_to_cmake(mainCMake, m_Paths.tests().repo(), outputFile, "target_sources(", ")\n", "${TestDir}/");
+          add_to_cmake(mainCMake,
+                       {.name{"target_sources"}},
+                       {.file_to_add{outputFile},
+                        .directory{m_Paths.tests().repo()},
+                        .directory_spelling{"${TestDir}"}});
         }
       };
 
@@ -672,12 +677,17 @@ namespace sequoia::testing
 
     read_modify_write(srcPath, setCppText);
 
-    add_to_cmake(paths().source().cmake_lists(), paths().source().project(), srcPath, "set(SourceList", ")\n", "");
+    add_to_cmake(paths().source().cmake_lists(),
+                 {.name{"set"}, .leading_arguments{"SourceList"}},
+                 {.file_to_add{srcPath}, .directory{paths().source().project()}});
 
-    read_modify_write(paths().main().cmake_lists(), [&root = paths().project_root()](std::string& text) {
-        replace_all(text, "#!", "");
+    auto uncommentMarkedLines{
+      [](const fs::path& cmakeLists) {
+        read_modify_write(cmakeLists, [](std::string& text) { replace_all(text, "#!", ""); });
       }
-    );
+    };
+
+    ammend_file(paths(), uncommentMarkedLines, [](const main_paths& info) { return info.cmake_lists(); });
   }
 
   void nascent_test_base::make_common_replacements(std::string& text) const
@@ -832,51 +842,46 @@ namespace sequoia::testing
       }
     }
 
-    if(!m_EquivalentTypes.empty())
-    {
-      const auto num{m_EquivalentTypes.size()};
-      const auto prediction{
-        [num](const std::size_t i, std::string_view sep) {
-          std::string p{"prediction"};
-          if(num > 1) p.append(std::format("_{}", i));
-          if((i < num - 1) && !sep.empty()) p.append(sep).append(" ");
-          return p;
-        }
-      };
+    const auto num{m_EquivalentTypes.size()};
+    auto prediction{
+      [num](const std::size_t i, std::string_view sep) {
+        std::string p{"prediction"};
+        if(num > 1)
+          p.append(std::format("_{}", i));
 
-      std::string args{};
-      for(std::size_t i{}; i < num; ++i)
-      {
-        const auto& type{m_EquivalentTypes[i]};
-        if(!type.empty())
-        {
-          constexpr std::string_view pattern{"const "};
-          if(std::string_view{type}.substr(0, pattern.size()) != pattern)
-          {
-            args.append("const ");
-          }
+        if((i < num - 1) && !sep.empty())
+          p.append(sep).append(" ");
 
-          args.append(type);
-
-          if(handle_as_ref(type)) args.append("&");
-          args.append(" ");
-
-          args.append(prediction(i, ","));
-        }
+        return p;
       }
+    };
 
-      replace_all(text, "?args", args);
-      replace_all(text, "?predictions", prediction(0, ""));
-    }
-    else
-    {
-      const auto start{text.rfind("template<?>")};
-      const auto finish{text.rfind("};")};
-      if((start != npos) && (finish != npos))
-      {
-        text.erase(start, finish + 2 - start);
+    auto isSpecified{
+      [](const auto& indexedType) { return !std::get<1>(indexedType).empty(); }
+    };
+
+    auto argumentOf{
+      [prediction](const auto& indexedType) {
+        const auto& [i, type]{indexedType};
+        return std::format("{}{}{} {}",
+                           type.starts_with("const ") ? "" : "const ",
+                           type,
+                           handle_as_ref(type) ? "&" : "",
+                           prediction(static_cast<std::size_t>(i), ","));
       }
-    }
+    };
+
+    const auto args{
+        m_EquivalentTypes
+      | std::views::enumerate
+      | std::views::filter(isSpecified)
+      | std::views::transform(argumentOf)
+      | std::views::join
+      | std::ranges::to<std::string>()
+    };
+
+    replace_all(text, "?args", args);
+    replace_all(text, "?predictions", prediction(0, ""));
 
     if(!m_TemplateData.empty())
     {

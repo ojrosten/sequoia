@@ -678,6 +678,40 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
+    /** \brief A test whose summary discriminator gives it the summary file of `summary_collider_test_twin`, but
+        for case
+     */
+    class summary_collider_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<summary_collider_test>();
+      }
+
+      [[nodiscard]]
+      static std::string summary_discriminator(const cmake_cache&) { return "Twin"; }
+
+      void run_tests() {}
+    };
+
+    class summary_collider_test_twin final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<summary_collider_test_twin>();
+      }
+
+      void run_tests() {}
+    };
+
     [[nodiscard]]
     test_runner make_fake_runner(commandline_arguments& args, std::stringstream& outputStream)
     {
@@ -967,6 +1001,7 @@ namespace sequoia::testing
     test_excluded_tests();
     test_excluded_tests_are_rerun();
     test_dump_comparison();
+    test_thread_pool();
     test_instability_analysis();
     test_exit_statuses();
   }
@@ -1323,6 +1358,32 @@ namespace sequoia::testing
 
         runner.register_test<sourceless_free_test>();
       });
+
+    // The check is made whichever tests are selected: a test that runs alone would overwrite the other test's summary
+    for(const auto& selection : {std::vector<std::string>{},
+                                 {"select", summary_collider_test_twin::source_file().generic_string()}})
+    {
+      std::string_view selected{selection.empty() ? "both" : "one"};
+      check_exception_thrown<std::runtime_error>(
+        reporter{std::format("Two tests whose summaries are one file, {} selected", selected)},
+        [this, &selection](){
+          std::vector<std::string> argList{zeroth_arg()};
+          argList.append_range(selection);
+          commandline_arguments args{argList};
+          std::stringstream outputStream{};
+
+          test_runner runner{args.size(),
+                             args.get(),
+                             "Oliver J. Rosten",
+                             "  ",
+                             {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                              .common_includes{"TestShared/SharedIncludes.hpp"}},
+                             outputStream};
+
+          runner.register_test<summary_collider_test>();
+          runner.register_test<summary_collider_test_twin>();
+        });
+    }
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Invalid repetitions for instability analysis"},
@@ -1986,6 +2047,38 @@ namespace sequoia::testing
 
     recoveringRunner.register_test<passing_test>();
     check(equality, "recover on a fresh tree", recoveringRunner.execute(), return_code::success);
+    check("A recovery run which ran a check leaves a recovery file", fs::exists(recovery.recovery_file()));
+
+    // A run which records nothing must not leave the previous run's record looking like the new run's
+    std::stringstream emptyRecoveryStream{};
+    test_runner emptyRecoveryRunner{recoveringArgs.size(),
+                                    recoveringArgs.get(),
+                                    "Oliver J. Rosten",
+                                    "  ",
+                                    {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                                    emptyRecoveryStream};
+
+    check(equality, "recover with no tests", emptyRecoveryRunner.execute(), return_code::success);
+    check("A recovery run which ran no check leaves no recovery file", !fs::exists(recovery.recovery_file()));
+  }
+
+  void test_runner_test::test_thread_pool()
+  {
+    auto run{
+      [this](std::string_view description, std::string_view outputDirName, std::string_view poolSize) {
+        commandline_arguments args{{zeroth_arg(), "--thread-pool", std::string{poolSize}}};
+
+        std::stringstream outputStream{};
+        auto runner{make_fake_runner(args, outputStream)};
+
+        runner.register_test<passing_test>();
+        check(equality, append_lines(description, "Return code"), runner.execute(), return_code::success);
+        check_output(description, outputDirName, outputStream);
+      }
+    };
+
+    run("A pool of no threads is refused, and the run goes ahead", "ThreadPoolOfNoThreadsOutput", "0");
+    run("A pool of two threads running one test",                  "ThreadPoolForOneTestOutput",  "2");
   }
 
   void test_runner_test::test_instability_analysis()
