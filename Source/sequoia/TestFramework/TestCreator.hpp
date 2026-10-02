@@ -24,9 +24,13 @@
 
 namespace sequoia::testing
 {
+  /** \brief Whether `spelling` is empty or holds only spaces, and so names no type. */
+  [[nodiscard]]
+  bool names_no_type(std::string_view spelling);
+
   /** \brief Whether to append `&` to `type` in the declaration of a parameter.
 
-      \throws std::logic_error if `type` is empty or holds only spaces.
+      \throws std::logic_error if `names_no_type(type)`.
    */
   [[nodiscard]]
   bool handle_as_ref(std::string_view type);

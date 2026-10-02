@@ -167,14 +167,20 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  bool names_no_type(std::string_view spelling)
+  {
+    return spelling.find_first_not_of(' ') == npos;
+  }
+
+  [[nodiscard]]
   bool handle_as_ref(std::string_view type)
   {
-    const auto startPos{type.find_first_not_of(' ')};
-    if(startPos == npos)
+    if(names_no_type(type))
       throw std::logic_error{"Equivalent type is unspecified"};
 
     if((type.back() == '*') || (type.back() == '&')) return false;
 
+    const auto startPos{type.find_first_not_of(' ')};
     const auto endPos{type.find_first_of(' ', startPos)};
     auto token{std::string_view{type}.substr(startPos, endPos - startPos)};
 
