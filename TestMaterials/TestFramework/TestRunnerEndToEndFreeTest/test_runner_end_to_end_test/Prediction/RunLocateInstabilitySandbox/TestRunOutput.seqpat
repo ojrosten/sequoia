@@ -1,1 +1,2 @@
 : .*s\]
+  Warning: Sleeps of .* ms repeatedly lasted .* ms or more, so timings built on sleeps are unreliable\n +On Windows, the likely cause is that the finest timer resolution is not in effect\n\n

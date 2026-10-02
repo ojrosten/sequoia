@@ -7,6 +7,8 @@
 
 #include "PerformanceTestDiagnostics.hpp"
 
+#include "sequoia/Streaming/Streaming.hpp"
+
 namespace sequoia::testing
 {
   namespace
@@ -78,6 +80,7 @@ namespace sequoia::testing
   void performance_utilities_test::run_tests()
   {
     test_postprocessing();
+    test_coarse_sleep();
   }
 
   void performance_utilities_test::test_postprocessing()
@@ -178,5 +181,26 @@ namespace sequoia::testing
 
       check(equality, "", postprocess(latest, reference), latest);
     }
+  }
+
+  void performance_utilities_test::test_coarse_sleep()
+  {
+    using fractional_milliseconds = std::chrono::duration<double, std::milli>;
+
+    constexpr fractional_milliseconds target{5.0};
+
+    check("Rounded up to Windows' default tick", is_coarse_sleep(fractional_milliseconds{15.2}, target));
+    check("Exactly twice the target", is_coarse_sleep(fractional_milliseconds{10.0}, target));
+    check("Just under twice the target", !is_coarse_sleep(fractional_milliseconds{9.9}, target));
+    check("A 1 ms timer resolution in effect", !is_coarse_sleep(fractional_milliseconds{5.4}, target));
+
+    write_to_file(working_materials() /= "CoarseSleepMessage.txt",
+                  coarse_sleep_message(fractional_milliseconds{15.2}, target),
+                  std::ios_base::out);
+
+    check(equivalence,
+          "Message",
+          working_materials() /= "CoarseSleepMessage.txt",
+          predictive_materials() /= "CoarseSleepMessage.txt");
   }
 }

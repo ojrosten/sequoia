@@ -32,6 +32,7 @@
 #include <format>
 #include <fstream>
 #include <functional>
+#include <mutex>
 #include <utility>
 #include <variant>
 
@@ -47,6 +48,21 @@ namespace sequoia::testing
     std::string started_at(std::chrono::system_clock::time_point start)
     {
       return std::format("started {:%FT%TZ}\n", std::chrono::floor<std::chrono::milliseconds>(start));
+    }
+
+    /** \brief How long a sleep of `target` typically lasts on this machine. */
+    [[nodiscard]]
+    std::chrono::duration<double> typical_sleep_duration(std::chrono::milliseconds target)
+    {
+      auto sleepForTarget{[target]() { std::this_thread::sleep_for(target); }};
+
+      std::array<std::chrono::duration<double>, 3> durations{};
+      std::ranges::generate(durations, [&sleepForTarget]() { return profile(sleepForTarget); });
+      std::ranges::sort(durations);
+
+      // The fastest sleep is not typical: the first sleep can end within the timer tick it starts in, even
+      // when every later sleep is rounded up to a whole tick.
+      return durations[1];
     }
 
     // Written to <file>.partial and renamed over <file>, so that a process dying mid-write leaves the previous contents
@@ -1227,6 +1243,21 @@ namespace sequoia::testing
     }
   }
 
+  void test_runner::check_for_coarse_sleeps()
+  {
+    auto warnIfCoarse{
+      [this]() {
+        constexpr std::chrono::milliseconds target{5};
+        if(const auto typicalSleep{typical_sleep_duration(target)}; is_coarse_sleep(typicalSleep, target))
+          stream() << coarse_sleep_message(typicalSleep, target) << std::flush;
+      }
+    };
+
+    // The timer resolution belongs to the process, so the first runner's check serves every later runner in it
+    static std::once_flag checked{};
+    std::call_once(checked, warnIfCoarse);
+  }
+
   void test_runner::check_for_missing_tests()
   {
     if(m_PruneMode == prune_mode::passive)
@@ -1293,6 +1324,7 @@ namespace sequoia::testing
     {
       fs::remove_all(proj_paths().output().instability_analysis());
       overwrite_quietly(proj_paths().execution_records().stamp(), started_at(std::chrono::system_clock::now()));
+      check_for_coarse_sleeps();
     }
 
     const auto baseline{versioned_output_baseline()};

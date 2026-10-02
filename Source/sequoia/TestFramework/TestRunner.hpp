@@ -661,6 +661,8 @@ namespace sequoia::testing
 
     void check_for_missing_tests();
 
+    void check_for_coarse_sleeps();
+
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }
 
