@@ -906,8 +906,8 @@ namespace sequoia::testing
                   predictionName)
     };
 
-    replace_all(text, "?args", predictionParameter);
-    replace_all(text, "?predictions", predictionName);
+    replace_all(text, "?parameter", predictionParameter);
+    replace_all(text, "?prediction", predictionName);
 
     if(!m_TemplateData.empty())
     {
