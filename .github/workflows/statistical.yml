@@ -23,11 +23,15 @@ name: statistical
 # process and reports the tests that failed in some repetitions and not others.
 # A failure common to every repetition is not an instability, and the analysis
 # says "No instabilities detected" over it; the column is still red, and the
-# summary below reads the step's outcome as well as the phrase. In-process
-# rather than `--sandbox` (N child processes, each fresh) because sandbox
-# aggregation reports nothing - roadmap item 161 - at the cost that the trials
-# share a process, so are less independent than the rule of three assumes; the
-# bound is optimistic by that much. Without `--check-versioned-output`: the gate
+# summary below reads the step's outcome as well as the phrase. `--sandbox`
+# would run each repetition as a fresh child process, but the runner refuses a
+# child whose exit status is not a runner's, and the refusal ends the run. TSan
+# reports a race and carries on, then at exit ends the process with a status of
+# its own (an abort on macOS), so under `--sandbox` the first race would end the
+# sample. Sharing one process makes the trials less independent than the rule
+# of three assumes, so the bound is optimistic by that much. `--sandbox` would
+# give the trials that independence if the runner counted a refused child as a
+# failed trial and carried on. Without `--check-versioned-output`: the gate
 # has already applied it to this tree, and item 160 records the composition as
 # verified locally but not here. The performance tests are excluded for the
 # reason coarse.yml gives.
