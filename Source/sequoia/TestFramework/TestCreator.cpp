@@ -169,9 +169,6 @@ namespace sequoia::testing
   [[nodiscard]]
   bool handle_as_ref(std::string_view type)
   {
-    if(type.empty())
-      throw std::logic_error{"Equivalent type is unspecified"};
-
     const auto startPos{type.find_first_not_of(' ')};
     if(startPos == npos)
       throw std::logic_error{"Equivalent type is unspecified"};
