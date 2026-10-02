@@ -197,7 +197,7 @@ namespace sequoia::runtime
     }
   #endif
 
-    /** \brief Describes how a command failed, in the words of a POSIX shell, on a platform which
+    /** \brief Describes how a command failed, by a POSIX shell's conventions, on a platform which
                numbers its signals from 1 to `highestSignal`.
      */
     [[nodiscard]]
@@ -304,7 +304,7 @@ namespace sequoia::runtime
   [[nodiscard]]
   std::string describe_failure(const int status, linux_type)
   {
-    // Linux numbers its signals up to SIGRTMAX, which is 64 with glibc on x86-64.
+    // Linux numbers its signals up to SIGRTMAX: 64 with glibc on x86-64 and AArch64, but 127 on MIPS.
     constexpr int highestSignal{64};
     return describe_posix_failure(status, highestSignal);
   }
@@ -312,7 +312,7 @@ namespace sequoia::runtime
   [[nodiscard]]
   std::string describe_failure(const int status, other_os_type)
   {
-    // A status of 128 plus the signal has 8 bits, so it carries a signal of at most 127.
+    // An exit status has 8 bits, so 128 plus a signal is at most 255, and the signal at most 127.
     constexpr int highestSignal{127};
     return describe_posix_failure(status, highestSignal);
   }

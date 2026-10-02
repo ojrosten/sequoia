@@ -436,6 +436,13 @@ namespace sequoia::testing
                   "return_code_names does not hold exactly the flags up to the one max_runner_exit_status names; "
                   "give a new return_code enumerator a row, and name it in max_runner_exit_status's initialiser");
 
+    static_assert(runner_exit_offset > 78, "The runner's exit statuses would overlap BSD's sysexits");
+
+    // A POSIX exit status is 8 bits, and a shell's own statuses begin at 126.
+    static_assert(max_runner_exit_status <= 125,
+                  "The runner's exit statuses no longer fit below the shell's; report the return_code "
+                  "to a parent process through a file it names, rather than in the exit status");
+
     [[nodiscard]]
     std::string to_async_option(concurrency_mode mode, std::size_t threadPoolSize)
     {
