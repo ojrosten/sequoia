@@ -95,6 +95,8 @@ namespace sequoia::testing
 
     void test_instability_analysis();
 
+    void test_instability_analysis_in_sandboxes_from_a_path_with_a_space();
+
     void test_exit_statuses();
 
     template<std::invocable<test_runner&> Manipulator, concrete_test... Ts>

@@ -350,7 +350,9 @@ namespace sequoia::testing
           const auto token{back(root)};
           const auto sln{(buildDir / token).concat("Tests.sln")};
 
-          return {"Attempting to open IDE...", std::format("\"{}\" /Run {}", devenv.string(), sln.string()), ""};
+          return {"Attempting to open IDE...",
+                  std::format("{} /Run {}", quote_for_shell(devenv.string()), quote_for_shell(sln.string())),
+                  ""};
         }
       }
     }

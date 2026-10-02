@@ -1,10 +1,38 @@
-Tests/Runtime/ShellCommandsTest.cpp, Line 117
+Tests/Runtime/ShellCommandsTest.cpp, Line 121
 The message names the step, says how the step failed, then gives the advice
 
 Expected Exception Type:
 [std::runtime_error]
 Doing the thing failed with exit status 2
 Some advice
+
+=======================================
+
+Tests/Runtime/ShellCommandsTest.cpp, Line 213
+cmd.exe cannot be given a double quote within quotes
+
+Expected Exception Type:
+[std::runtime_error]
+say "hi" cannot be quoted for cmd.exe: it contains a double quote, which would end the quotation
+
+=======================================
+
+Tests/Runtime/ShellCommandsTest.cpp, Line 217
+cmd.exe cannot be given a percent sign within quotes
+
+Expected Exception Type:
+[std::runtime_error]
+100% cannot be quoted for cmd.exe: it contains a percent sign, which cmd.exe expands within quotes
+
+=======================================
+
+Tests/Runtime/ShellCommandsTest.cpp, Line 221
+cmd.exe cannot be given a line break within quotes
+
+Expected Exception Type:
+[std::runtime_error]
+line
+feed cannot be quoted for cmd.exe: it contains a line break, which would end the command
 
 =======================================
 

@@ -30,5 +30,11 @@ namespace sequoia::testing
     void test_success_requirement();
 
     void test_directory_change();
+
+    void test_quotation();
+
+    void test_quotation_refusals();
+
+    void test_paths_with_spaces();
   };
 }
