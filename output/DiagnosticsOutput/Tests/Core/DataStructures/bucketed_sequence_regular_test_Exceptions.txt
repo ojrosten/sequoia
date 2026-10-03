@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 117
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 153
 Pushing back to non-existent partition throws
 
 Expected Exception Type:
@@ -7,187 +7,7 @@ bucketed_sequence::push_back_to_partition: index 0 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 125
-Inserting to non-existent partition throws
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::begin_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 133
-Inserting to non-existent partition throws
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::insert_to_partition: index 0 out of range
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 31
-begin_partition throws for empty container
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::begin_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 40
-end_partition throws for empty container
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::end_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 49
-begin_partition throws for empty container in const context
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::begin_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 58
-end_partition throws for empty container in const context
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::end_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 67
-rbegin_partition throws for empty container
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::rbegin_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 76
-rend_partition throws for empty container
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::rend_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 85
-rbegin_partition throws for empty container in const context
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::rbegin_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 94
-rend_partition throws for empty container in const context
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::rend_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 103
-cbegin_partition throws for empty container
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::begin_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 112
-cend_partition throws for empty container
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::end_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 121
-crbegin_partition throws for empty container
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::rbegin_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 130
-crend_partition throws for empty container
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::rend_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 139
-partition throws for empty container
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 148
-partition throws for empty container in const context
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 157
-cpartition throws for empty container
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 166
-Erasing from non-existent partition throws
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::begin_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 175
-Erasing from non-existent partition throws
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::erase_from_partition: no buckets
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 175
-Pushing back to non-existent partition throws
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::push_back_to_partition: index 1 out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 183
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 161
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -196,7 +16,34 @@ bucketed_sequence::insert_to_partition: index 18446744073709551615 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 191
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 169
+Inserting to non-existent partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::insert_to_partition: index 0 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 284
+Pushing back to non-existent partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::push_back_to_partition: index 1 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 292
+Inserting to non-existent partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::insert_to_partition: index 18446744073709551615 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 300
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -205,7 +52,7 @@ bucketed_sequence::insert_to_partition: index 1 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 251
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 360
 
 Expected Exception Type:
 [std::domain_error]
@@ -213,7 +60,7 @@ bucketed_sequence::erase - Invalid range specified by iterators belonging to par
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 259
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 368
 
 Expected Exception Type:
 [std::domain_error]
@@ -221,7 +68,7 @@ bucketed_sequence::erase - Invalid range specified by iterators belonging to par
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 447
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 558
 Inserting beyond the end of a partition throws
 
 Expected Exception Type:
@@ -230,7 +77,7 @@ bucketed_sequence::insert_to_partition: pos 2 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 651
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 762
 
 Expected Exception Type:
 [std::domain_error]
@@ -238,7 +85,7 @@ bucketed_sequence::erase - Invalid range specified by iterators belonging to par
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 864
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 993
 Inserting beyond the end of a partition other than the last throws
 
 Expected Exception Type:
@@ -247,7 +94,7 @@ bucketed_sequence::insert_to_partition: pos 2 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 875
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 1004
 Inserting beyond the end of a partition other than the first throws
 
 Expected Exception Type:

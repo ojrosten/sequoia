@@ -59,6 +59,8 @@ namespace sequoia
     //===================================Storage using buckets===================================//
 
     /** \brief Storage for partitioned data such that data within each partition is contiguous.
+
+        The partition accessors treat an index at or beyond `num_partitions()` as the index of an empty partition.
      */
 
     template<class T, class Container=std::vector<std::vector<T>>>
@@ -163,7 +165,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      size_type size_of_partition(size_type i) const
+      size_type size_of_partition(size_type i) const noexcept
       {
         return static_cast<size_type>(std::ranges::distance(partition(i)));
       }
@@ -275,7 +277,7 @@ namespace sequoia
       partition_iterator insert_to_partition(const size_type index, const size_type pos, Args&&... args)
       {
         check_range("insert_to_partition", index, pos);
-        const auto insertionPoint{std::ranges::next(begin_partition_raw(index), pos, end_partition_raw(index))};
+        const auto insertionPoint{std::ranges::next(cbegin_partition(index), pos, cend_partition(index))};
         return insert_to_partition_unchecked(insertionPoint, std::forward<Args>(args)...);
       }
 
@@ -319,117 +321,109 @@ namespace sequoia
 
       partition_iterator erase_from_partition(const size_type index, const size_type pos)
       {
-        check_for_empty("erase_from_partition");
-        return erase_from_partition(std::ranges::next(begin_partition_raw(index), pos, end_partition_raw(index)));
+        return erase_from_partition(std::ranges::next(cbegin_partition(index), pos, cend_partition(index)));
       }
 
       [[nodiscard]]
-      partition_iterator begin_partition(const size_type i)
+      partition_iterator begin_partition(const size_type i) noexcept
       {
-        check_for_empty("begin_partition");
-        return (i < m_Buckets.size()) ? partition_iterator{m_Buckets[i].begin(), i} : partition_iterator{m_Buckets.back().end(), npos};
+        return (i < m_Buckets.size()) ? partition_iterator{m_Buckets[i].begin(), i}
+                                      : get_out_of_range_iterator<partition_iterator>(m_Buckets);
       }
 
       [[nodiscard]]
-      partition_iterator end_partition(const size_type i)
+      partition_iterator end_partition(const size_type i) noexcept
       {
-        check_for_empty("end_partition");
-        return (i < m_Buckets.size()) ? partition_iterator{m_Buckets[i].end(), i} : partition_iterator{m_Buckets.back().end(), npos};
+        return (i < m_Buckets.size()) ? partition_iterator{m_Buckets[i].end(), i}
+                                      : get_out_of_range_iterator<partition_iterator>(m_Buckets);
       }
 
       [[nodiscard]]
-      const_partition_iterator begin_partition(const size_type i) const
+      const_partition_iterator begin_partition(const size_type i) const noexcept
       {
-        check_for_empty("begin_partition");
-        return begin_partition_raw(i);
+        return (i < m_Buckets.size()) ? const_partition_iterator{m_Buckets[i].cbegin(), i}
+                                      : get_out_of_range_iterator<const_partition_iterator>(m_Buckets);
       }
 
       [[nodiscard]]
-      const_partition_iterator end_partition(const size_type i) const
+      const_partition_iterator end_partition(const size_type i) const noexcept
       {
-        check_for_empty("end_partition");
-        return end_partition_raw(i);
+        return (i < m_Buckets.size()) ? const_partition_iterator{m_Buckets[i].cend(), i}
+                                      : get_out_of_range_iterator<const_partition_iterator>(m_Buckets);
       }
 
       [[nodiscard]]
-      reverse_partition_iterator rbegin_partition(const size_type i)
+      reverse_partition_iterator rbegin_partition(const size_type i) noexcept
       {
-        check_for_empty("rbegin_partition");
-        return (i < m_Buckets.size()) ? reverse_partition_iterator{m_Buckets[i].rbegin(), i} : reverse_partition_iterator{m_Buckets.front().rend(), npos};
+        return (i < m_Buckets.size()) ? reverse_partition_iterator{m_Buckets[i].rbegin(), i}
+                                      : get_out_of_range_iterator<reverse_partition_iterator>(m_Buckets);
       }
 
       [[nodiscard]]
-      reverse_partition_iterator rend_partition(const size_type i)
+      reverse_partition_iterator rend_partition(const size_type i) noexcept
       {
-        check_for_empty("rend_partition");
-        return (i < m_Buckets.size()) ? reverse_partition_iterator{m_Buckets[i].rend(), i} : reverse_partition_iterator{m_Buckets.front().rend(), npos};
+        return (i < m_Buckets.size()) ? reverse_partition_iterator{m_Buckets[i].rend(), i}
+                                      : get_out_of_range_iterator<reverse_partition_iterator>(m_Buckets);
       }
 
       [[nodiscard]]
-      const_reverse_partition_iterator rbegin_partition(const size_type i) const
+      const_reverse_partition_iterator rbegin_partition(const size_type i) const noexcept
       {
-        check_for_empty("rbegin_partition");
-        return (i < m_Buckets.size()) ? const_reverse_partition_iterator{m_Buckets[i].crbegin(), i} : const_reverse_partition_iterator{m_Buckets.front().crend(), npos};
-
+        return (i < m_Buckets.size()) ? const_reverse_partition_iterator{m_Buckets[i].crbegin(), i}
+                                      : get_out_of_range_iterator<const_reverse_partition_iterator>(m_Buckets);
       }
 
       [[nodiscard]]
-      const_reverse_partition_iterator rend_partition(const size_type i) const
+      const_reverse_partition_iterator rend_partition(const size_type i) const noexcept
       {
-        check_for_empty("rend_partition");
-        return (i < m_Buckets.size()) ? const_reverse_partition_iterator{m_Buckets[i].crend(), i} : const_reverse_partition_iterator{m_Buckets.front().crend(), npos};
+        return (i < m_Buckets.size()) ? const_reverse_partition_iterator{m_Buckets[i].crend(), i}
+                                      : get_out_of_range_iterator<const_reverse_partition_iterator>(m_Buckets);
       }
 
       [[nodiscard]]
-      const_partition_iterator cbegin_partition(const size_type i) const
+      const_partition_iterator cbegin_partition(const size_type i) const noexcept
       {
         return begin_partition(i);
       }
 
       [[nodiscard]]
-      const_partition_iterator cend_partition(const size_type i) const
+      const_partition_iterator cend_partition(const size_type i) const noexcept
       {
         return end_partition(i);
       }
 
       [[nodiscard]]
-      const_reverse_partition_iterator crbegin_partition(const size_type i) const
+      const_reverse_partition_iterator crbegin_partition(const size_type i) const noexcept
       {
         return rbegin_partition(i);
       }
 
       [[nodiscard]]
-      const_reverse_partition_iterator crend_partition(const size_type i) const
+      const_reverse_partition_iterator crend_partition(const size_type i) const noexcept
       {
         return rend_partition(i);
       }
 
       [[nodiscard]]
-      partition_range partition(const size_type i)
+      partition_range partition(const size_type i) noexcept
       {
-        check_for_empty("partition");
-
-        return (i < m_Buckets.size()) ? partition_range{partition_iterator{m_Buckets[i].begin(), i}, partition_iterator{m_Buckets[i].end(), i}}
-                                      : partition_range{partition_iterator{m_Buckets.back().end(), npos}, partition_iterator{m_Buckets.back().end(), npos}};
+        return {begin_partition(i), end_partition(i)};
       }
 
       [[nodiscard]]
-      const_partition_range partition(const size_type i) const
+      const_partition_range partition(const size_type i) const noexcept
       {
-        check_for_empty("partition");
-
-        return (i < m_Buckets.size()) ? const_partition_range{const_partition_iterator{m_Buckets[i].begin(), i}, const_partition_iterator{m_Buckets[i].end(), i}}
-                                      : const_partition_range{const_partition_iterator{m_Buckets.back().end(), npos}, const_partition_iterator{m_Buckets.back().end(), npos}};
+        return {begin_partition(i), end_partition(i)};
       }
 
       [[nodiscard]]
-      const_partition_range cpartition(const size_type i) const { return partition(i); }
+      const_partition_range cpartition(const size_type i) const noexcept { return partition(i); }
 
       [[nodiscard]]
-      const_partition_iterator operator[](const size_type i) const { return cbegin_partition(i); }
+      const_partition_iterator operator[](const size_type i) const noexcept { return cbegin_partition(i); }
 
       [[nodiscard]]
-      partition_iterator operator[](const size_type i) { return begin_partition(i); }
+      partition_iterator operator[](const size_type i) noexcept { return begin_partition(i); }
 
       void reset(const allocator_type& allocator) noexcept
         requires (std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value)
@@ -470,27 +464,31 @@ namespace sequoia
         return partition_iterator{iter, source};
       }
 
-      void check_for_empty(std::string_view method) const
-      {
-          if(m_Buckets.empty()) throw std::out_of_range{std::string{"bucketed_sequence::"}.append(method).append(": no buckets\n")};
-      }
-
+      template<class PartitionIterator, class Buckets>
       [[nodiscard]]
-      const_partition_iterator begin_partition_raw(const size_type i) const
+      static PartitionIterator get_out_of_range_iterator(Buckets& buckets) noexcept
       {
-        return (i < m_Buckets.size()) ? const_partition_iterator{m_Buckets[i].cbegin(), i} : const_partition_iterator{m_Buckets.back().cend(), npos};
-      }
+        if(buckets.empty())
+        {
+          return PartitionIterator{typename PartitionIterator::base_iterator_type{}, npos};
+        }
 
-      [[nodiscard]]
-      const_partition_iterator end_partition_raw(const size_type i) const
-      {
-        return (i < m_Buckets.size()) ? const_partition_iterator{m_Buckets[i].cend(), i} : const_partition_iterator{m_Buckets.back().cend(), npos};
+        if constexpr(PartitionIterator::reversed())
+        {
+          return PartitionIterator{buckets.front().rend(), npos};
+        }
+        else
+        {
+          return PartitionIterator{buckets.back().end(), npos};
+        }
       }
     };
 
     //===================================Contiguous storage===================================//
 
     /** \brief Base class for partitioned sequences where data is contiguous across all partitions.
+
+        The partition accessors treat an index at or beyond `num_partitions()` as the index of an empty partition.
 
         A derived class must ensure that `index_type` can count the sequence's elements and its partitions, since
         `index_type` holds both the offset at which each partition ends and each partition's index. The maximum of
@@ -525,7 +523,7 @@ namespace sequoia
       constexpr auto size() const noexcept { return m_Data.size(); }
 
       [[nodiscard]]
-      constexpr size_type size_of_partition(index_type i) const
+      constexpr size_type size_of_partition(index_type i) const noexcept
       {
         return static_cast<size_type>(std::ranges::distance(partition(i)));
       }
@@ -975,7 +973,11 @@ namespace sequoia
       constexpr PartitionIterator get_begin_iterator(const index_type i, Iterator iter) const noexcept
       {
         const index_type index{i >= m_Partitions.size() ? npos : i};
-        const auto offset{(i > 0 && i < m_Partitions.size()) ? m_Partitions[i-1] : index_type{}};
+        const auto offset{
+            i >= m_Partitions.size() ? static_cast<index_type>(m_Data.size())
+          : i > 0                    ? m_Partitions[i-1]
+          : index_type{}
+        };
         return PartitionIterator::reversed() ? PartitionIterator{iter, index} - offset : PartitionIterator{iter, index} + offset;
       }
 
@@ -983,7 +985,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr PartitionIterator get_end_iterator(const index_type i, Iterator iter) const noexcept
       {
-        index_type index{PartitionIterator::reversed() ? index_type{} : npos};
+        index_type index{npos};
         // The cast is lossless: each derived class is contractually obliged to ensure
         // index_type is sufficiently wide to hold the maximum size m_Data can reach
         index_type offset{static_cast<index_type>(m_Data.size())};
