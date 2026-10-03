@@ -1,2 +1,2 @@
 test_heterogeneous_static_graph
-Standard Top Level Checks:                 7;  Failures:  0  [Deep checks: 208]
+Standard Top Level Checks:                 7;  Failures:  0  [Deep checks: 202]

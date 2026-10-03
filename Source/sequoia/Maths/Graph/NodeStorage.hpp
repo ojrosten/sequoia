@@ -326,6 +326,6 @@ namespace sequoia::maths
 
     constexpr node_storage& operator=(node_storage&&) noexcept = default;
 
-    void swap(node_storage&) noexcept {};
+    constexpr void swap(node_storage&) noexcept {}
   };
 }

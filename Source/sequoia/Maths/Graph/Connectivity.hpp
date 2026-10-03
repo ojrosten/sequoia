@@ -1362,7 +1362,7 @@ namespace sequoia
       }
 
       template<class... Args>
-      constexpr void set_source_edge_weight(edge_iterator iter, Args&&... args)
+      constexpr static void set_source_edge_weight(edge_iterator iter, Args&&... args)
       {
         iter->weight(std::forward<Args>(args)...);
       }
