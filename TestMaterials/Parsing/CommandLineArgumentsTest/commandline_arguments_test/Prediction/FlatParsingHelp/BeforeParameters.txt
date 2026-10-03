@@ -1,0 +1,1 @@
+Usage: foo create <class_name> <directory>

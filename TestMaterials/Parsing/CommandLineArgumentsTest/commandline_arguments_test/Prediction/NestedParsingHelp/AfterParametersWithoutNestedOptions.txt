@@ -1,0 +1,1 @@
+Usage: create <class_name> <directory>

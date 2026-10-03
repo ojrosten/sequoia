@@ -147,12 +147,8 @@ namespace sequoia::testing
         && precedes_all<dual<Space>,       space_list<dual<displacement>>>::value};
     };
 
-    /** What production code actually consults is `meta::stable_sort`, not the comparator directly,
-        and the two are not interchangeable: `merge`'s two-element case selects between an
-        unconstrained specialization and one constrained on `Compare<T, U>::value`, so a comparator
-        which is *ill-formed* for a pair leaves the constraint merely unsatisfied and the pair
-        silently transposed. Asserting the sort therefore covers a failure mode that asserting the
-        comparator cannot.
+    /** Production code consults `meta::stable_sort`, not the comparator directly, so the sort is
+        asserted as well as the comparator.
      */
     template<class T, class List>
     struct sorts_the_same_either_way;

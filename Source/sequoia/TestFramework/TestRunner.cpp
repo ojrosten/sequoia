@@ -26,6 +26,8 @@
 
 #include <algorithm>
 #include <array>
+#include <bit>
+#include <concepts>
 #include <set>
 #include <ranges>
 #include <span>
@@ -415,13 +417,15 @@ namespace sequoia::testing
       nascent_tests.emplace_back(std::move(nascentTest));
     }
 
-    constexpr std::array<std::pair<return_code, std::string_view>, 5> return_code_names{{
-      {return_code::versioned_output_diffs, "versioned_output_diffs"},
-      {return_code::soft_failures,          "soft_failures"         },
-      {return_code::critical_failures,      "critical_failures"     },
-      {return_code::incomplete_run,         "incomplete_run"        },
-      {return_code::post_run_failures,      "post_run_failures"     }
-    }};
+    constexpr auto return_code_names{
+      std::to_array<std::pair<return_code, std::string_view>>({
+        {return_code::versioned_output_diffs, "versioned_output_diffs"},
+        {return_code::soft_failures,          "soft_failures"         },
+        {return_code::critical_failures,      "critical_failures"     },
+        {return_code::incomplete_run,         "incomplete_run"        },
+        {return_code::post_run_failures,      "post_run_failures"     }
+      })
+    };
 
     constexpr return_code dirty_return_codes{
       std::ranges::fold_left(
@@ -430,6 +434,38 @@ namespace sequoia::testing
         [](return_code acc, const auto& entry) { return acc | entry.first; }
       )
     };
+
+    static_assert(std::has_single_bit(std::to_underlying(dirty_return_codes) + 1),
+                  "The flags with rows in return_code_names do not occupy consecutive bits from the lowest; "
+                  "give every return_code flag a row, and keep the flags consecutive");
+
+    /** \brief The number a runner adds to its `return_code` to give its exit status, unless the
+               code is success.
+
+        A runner therefore exits either with 0 or with a status from `runner_exit_offset + 1` to
+        `max_runner_exit_status`. That range is clear of these statuses, which a process gives when
+        it fails for reasons of its own:
+        -# 1 and 2, generically;
+        -# 23, from LeakSanitizer;
+        -# 64 to 78, from BSD's sysexits;
+        -# 66 and 77, from ThreadSanitizer and MemorySanitizer;
+        -# 126 and above, from a shell.
+
+        TestRunner.hpp states this value in the contract of `to_exit_code`.
+     */
+    constexpr int runner_exit_offset{80};
+
+    /** \brief The highest exit status a runner gives: the one which carries every flag. */
+    constexpr int max_runner_exit_status{
+      runner_exit_offset + static_cast<int>(std::to_underlying(dirty_return_codes))
+    };
+
+    static_assert(runner_exit_offset > 78, "The runner's exit statuses would overlap BSD's sysexits");
+
+    // A POSIX exit status is 8 bits, and a shell's own statuses begin at 126.
+    static_assert(max_runner_exit_status <= 125,
+                  "The runner's exit statuses no longer fit below the shell's; report the return_code "
+                  "to a parent process through a file it names, rather than in the exit status");
 
     [[nodiscard]]
     std::string to_async_option(concurrency_mode mode, std::size_t threadPoolSize)
@@ -572,26 +608,15 @@ namespace sequoia::testing
       std::vector<fs::path> m_FailedTests{}, m_ExecutedTests{}, m_TestsLeftOut{};
       std::vector<std::string> m_PostRunFailures{}, m_MaterialsUpdateReport{};
       std::set<test_paths, paths_comparator> m_Updateables{};
-      std::set<fs::path> m_FilesWrittenTo{};
 
       void to_file(const test_summary_path& summaryFile, const log_summary& summary)
       {
         const auto& filename{summaryFile.file_path()};
         if(filename.empty()) return;
 
-        auto mode{std::ios_base::out | std::ios_base::binary};
-        if(auto found{m_FilesWrittenTo.find(filename)}; found != m_FilesWrittenTo.end())
-        {
-          mode = std::ios_base::app | std::ios_base::binary;
-        }
-        else
-        {
-          m_FilesWrittenTo.insert(filename);
-        }
-
         fs::create_directories(filename.parent_path());
 
-        if(std::ofstream file{filename, mode})
+        if(std::ofstream file{filename, std::ios_base::out | std::ios_base::binary})
         {
           file << summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent);
         }
@@ -691,14 +716,25 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  return_code child_return_code(const int exitStatus)
+  return_code child_return_code(const int exitStatus, std::string_view childDescription)
   {
-    const auto code{static_cast<return_code>(exitStatus)};
+    if(exitStatus == 0)
+      return return_code::success;
 
-    if((exitStatus < 0) || ((code & ~dirty_return_codes) != return_code::success))
-      throw std::runtime_error{std::format("Unrecognized return code from child process: {}", exitStatus)};
+    // The range is checked before the offset is subtracted. A Windows status of 0x80000000 or more
+    // is negative, and near INT_MIN the subtraction would overflow.
+    if((exitStatus <= runner_exit_offset) || (exitStatus > max_runner_exit_status))
+      throw std::runtime_error{
+        std::format("{} {}.\nThat is not one of a test runner's exit statuses, which are 0 and {} to {}, so "
+                    "it did not complete a test run: it may not have been built, may be misconfigured, "
+                    "or may have crashed.\n",
+                    childDescription,
+                    runtime::describe_exit_status(exitStatus),
+                    runner_exit_offset + 1,
+                    max_runner_exit_status)
+      };
 
-    return code;
+    return static_cast<return_code>(exitStatus - runner_exit_offset);
   }
 
   [[nodiscard]]
@@ -715,7 +751,14 @@ namespace sequoia::testing
   [[nodiscard]]
   int to_exit_code(const return_code code) noexcept
   {
-    return static_cast<int>(code);
+    if(code == return_code::success)
+      return 0;
+
+    const auto carried{(code & ~dirty_return_codes) == return_code::success
+                         ? code
+                         : (code & dirty_return_codes) | return_code::incomplete_run};
+
+    return runner_exit_offset + static_cast<int>(std::to_underlying(carried));
   }
 
   void prepare_materials(const individual_materials_paths& materials)
@@ -930,10 +973,10 @@ namespace sequoia::testing
       "Generate a source file too, in <namespace> (:: for the global one)"
     };
 
-    const option genSemanticsSourceOption{"--gen-source", {"-g"}, {"dir"},
+    const option genClassSourceOption{"--gen-source", {"-g"}, {"dir"},
       updateCurrentNascentTest(
         overloaded{
-          [](nascent_semantics_test& nascent, const arg_list& args) {
+          [](std::derived_from<nascent_class_test_base> auto& nascent, const arg_list& args) {
             nascent.generate_source_files(src_opt::yes);
             nascent.source_dir(args[0]);
           },
@@ -941,12 +984,11 @@ namespace sequoia::testing
         }
       ),
       {},
-      "Generate the class's header and source too, under Source/<dir>"
+      "Generate the class's header and source too, under Source/<project>/<dir>"
     };
 
     const std::initializer_list<maths::tree_initializer<option>>
-      semanticsOptions  {{headerOption}, {genSemanticsSourceOption}, {fullnameOption}, {testingUtilitiesOption}},
-      allocationOptions {{headerOption}, {fullnameOption}, {testingUtilitiesOption}},
+      classOptions      {{headerOption}, {genClassSourceOption}, {fullnameOption}, {testingUtilitiesOption}},
       performanceOptions{{fullnameOption}},
       freeOptions       {{forenameOption}, {fullnameOption}, {genFreeSourceOption}, {diagnosticsOption}};
 
@@ -1002,19 +1044,19 @@ namespace sequoia::testing
                         "an allocation test takes its bare name"},
                     { {{"regular_test", {"regular"}, {"class", "equivalent_type"},
                         nascent_test_data{"semantic", "regular", *this, nascentTests}, {},
-                        "A regular test of the class against an equivalent type"}, semanticsOptions
+                        "A regular test of the class against an equivalent type"}, classOptions
                       },
                       {{"move_only_test", {"move_only"}, {"class", "equivalent_type"},
                         nascent_test_data{"semantic", "move_only", *this, nascentTests}, {},
-                        "A move-only test of the class against an equivalent type"}, semanticsOptions
+                        "A move-only test of the class against an equivalent type"}, classOptions
                       },
                       {{"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"class"},
                         nascent_test_data{"allocation", "regular_allocation", *this, nascentTests}, {},
-                        "An allocation test of the regular class"}, allocationOptions
+                        "An allocation test of the regular class"}, classOptions
                       },
                       {{"move_only_allocation_test", {"move_only_allocation"}, {"class"},
                         nascent_test_data{"allocation", "move_only_allocation", *this, nascentTests}, {},
-                        "An allocation test of the move-only class"}, allocationOptions
+                        "An allocation test of the move-only class"}, classOptions
                       },
                       {{"free_test", {"free"}, {"header"},
                         nascent_test_data{"behavioural", "free", *this, nascentTests}, {},
@@ -1176,7 +1218,7 @@ namespace sequoia::testing
                       }
                       else
                       {
-                        stream() << warning(std::string{"Thread pool size must be non-zero"});
+                        stream() << warning("Thread pool size must be positive\n");
                       }
                     },
                     {},
@@ -1391,7 +1433,7 @@ namespace sequoia::testing
       for(const auto& [file, found] : *items)
       {
         if(found)
-          options += std::format(" select {}", file.path().generic_string());
+          options += std::format(" select {}", runtime::quote_for_shell(file.path().generic_string()));
       }
     }
 
@@ -1400,14 +1442,14 @@ namespace sequoia::testing
       for(const auto& [name, found] : *suites)
       {
         if(found)
-          options += std::format(" test {}", name);
+          options += std::format(" test {}", runtime::quote_for_shell(name));
       }
     }
 
     for(const auto& [file, found] : m_Filter.excluded_items())
     {
       if(found)
-        options += std::format(" exclude {}", file.path().generic_string());
+        options += std::format(" exclude {}", runtime::quote_for_shell(file.path().generic_string()));
     }
 
     if(m_Filter.excludes_performance_tests())
@@ -1428,9 +1470,15 @@ namespace sequoia::testing
     auto code{return_code::success};
     for(std::size_t i{}; i < m_NumReps; ++i)
     {
-      code |= child_return_code(
-                invoke(runtime::shell_command{std::format("{} locate {} --runner-id {}{}{}",
-                                                          proj_paths().executable().string(), m_NumReps, i, selection, async)}));
+      const auto command{std::format("{} locate {} --runner-id {}{}{}",
+                                     runtime::quote_for_shell(proj_paths().executable().string()),
+                                     m_NumReps,
+                                     i,
+                                     selection,
+                                     async)};
+
+      code |= child_return_code(invoke(runtime::shell_command{command}),
+                                std::format("Sandbox run {}, {},", i, command));
     }
 
     return code;
@@ -1822,12 +1870,10 @@ namespace sequoia::testing
   {
     using namespace parsing::commandline;
 
-    return error(std::format("Test: \"{}\"\n"
-                             "Source file: \"{}\"\n"
-                             "A test's name is that of its class, and determines where its output is written,"
-                             " so no two tests may share a name, ignoring case.\n",
-                             testName,
-                             source.generic_string()));
+    return error({std::format("Test: \"{}\"", testName),
+                  std::format("Source file: \"{}\"", source.generic_string()),
+                  "A test's name is that of its class, and determines where its output is written,"
+                  " so no two tests may share a name, ignoring case."});
   }
 
   namespace
@@ -1884,6 +1930,17 @@ namespace sequoia::testing
     m_SourcesByLowerCasePrefix.try_emplace(prefix, source);
   }
 
+  void test_runner::register_summary(std::string_view name, const test_summary_path& summary)
+  {
+    const auto& file{summary.file_path()};
+    const auto [admitted, inserted]{
+      m_TestNamesByLowerCaseSummary.try_emplace(ascii::to_lowercase(file.generic_string()), name)
+    };
+
+    if(!inserted)
+      throw std::runtime_error{summary_collision_message(admitted->second, name, file)};
+  }
+
   [[nodiscard]]
   std::string test_runner::nesting_message(const fs::path& source, const fs::path& nestedWith)
   {
@@ -1928,6 +1985,19 @@ namespace sequoia::testing
                              "Each test's materials are kept beneath the path of its source file relative to the tests"
                              " repository, and this source file has no such path.\n",
                              source.generic_string()));
+  }
+
+  std::string test_runner::summary_collision_message(std::string_view firstTest,
+                                                     std::string_view secondTest,
+                                                     const fs::path& summaryFile)
+  {
+    using namespace parsing::commandline;
+
+    return error(std::format("Tests \"{}\" and \"{}\" would write their summaries to one file, ignoring case:\n\"{}\"\n"
+                             "Rename one, or change its summary discriminator.\n",
+                             firstTest,
+                             secondTest,
+                             summaryFile.generic_string()));
   }
 
   void test_runner::build_suite_tree()

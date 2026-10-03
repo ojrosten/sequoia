@@ -10,13 +10,13 @@ unwritable_output_free_test:
 
 
 	Error -- Output Writing Exception:
-	Unable to open file /Users/oliver/sequoia-guard-writes/output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/output/DiagnosticsOutput/Tests/Output/unwritable_output_free_test_Exceptions.txt  for writing
+	Unable to open file /Users/oliver/sequoia-exit-statuses/output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/output/DiagnosticsOutput/Tests/Output/unwritable_output_free_test_Exceptions.txt  for writing
 
 
 	Exception thrown after check completed
 	Last Recorded Message:
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 2202
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 2405
 	Run, though its versioned output cannot be written
 
 	[bool]
@@ -25,9 +25,9 @@ unwritable_output_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.05ms]
-[Execution Time: 442us]
-[Runner Overhead: 743us]
+[Total Run Time: 17.7ms]
+[Execution Time: 33.1us]
+[Runner Overhead: 17.2ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

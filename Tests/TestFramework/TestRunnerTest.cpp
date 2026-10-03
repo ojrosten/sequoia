@@ -11,6 +11,9 @@
 #include "Utilities/TestUtilities.hpp"
 #include "TestFramework/BuildArtefactsTestingUtilities.hpp"
 
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
+#include "sequoia/Runtime/ShellCommands.hpp"
+
 #include <fstream>
 
 namespace sequoia::testing
@@ -678,6 +681,40 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
+    /** \brief A test whose summary discriminator gives it the summary file of `summary_collider_test_twin`, but
+        for case
+     */
+    class summary_collider_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<summary_collider_test>();
+      }
+
+      [[nodiscard]]
+      static std::string summary_discriminator(const cmake_cache&) { return "Twin"; }
+
+      void run_tests() {}
+    };
+
+    class summary_collider_test_twin final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<summary_collider_test_twin>();
+      }
+
+      void run_tests() {}
+    };
+
     [[nodiscard]]
     test_runner make_fake_runner(commandline_arguments& args, std::stringstream& outputStream)
     {
@@ -950,6 +987,7 @@ namespace sequoia::testing
     test_throwing_tests();
     test_execution_records();
     test_filtered_suites();
+    test_suites_not_found();
     test_prune_basic_output();
     test_prune_with_changed_toolchain();
     test_prune_selects_a_test_this_executable_lacks();
@@ -967,7 +1005,10 @@ namespace sequoia::testing
     test_excluded_tests();
     test_excluded_tests_are_rerun();
     test_dump_comparison();
+    test_thread_pool();
     test_instability_analysis();
+    test_instability_analysis_in_sandboxes_from_a_path_with_a_space();
+    test_exit_statuses();
   }
 
   void test_runner_test::test_discriminator_hooks()
@@ -1323,6 +1364,32 @@ namespace sequoia::testing
         runner.register_test<sourceless_free_test>();
       });
 
+    // The check is made whichever tests are selected: a test that runs alone would overwrite the other test's summary
+    for(const auto& selection : {std::vector<std::string>{},
+                                 {"select", summary_collider_test_twin::source_file().generic_string()}})
+    {
+      std::string_view selected{selection.empty() ? "both" : "one"};
+      check_exception_thrown<std::runtime_error>(
+        reporter{std::format("Two tests whose summaries are one file, {} selected", selected)},
+        [this, &selection](){
+          std::vector<std::string> argList{zeroth_arg()};
+          argList.append_range(selection);
+          commandline_arguments args{argList};
+          std::stringstream outputStream{};
+
+          test_runner runner{args.size(),
+                             args.get(),
+                             "Oliver J. Rosten",
+                             "  ",
+                             {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                              .common_includes{"TestShared/SharedIncludes.hpp"}},
+                             outputStream};
+
+          runner.register_test<summary_collider_test>();
+          runner.register_test<summary_collider_test_twin>();
+        });
+    }
+
     check_exception_thrown<std::runtime_error>(
       reporter{"Invalid repetitions for instability analysis"},
       [this](){
@@ -1515,6 +1582,21 @@ namespace sequoia::testing
 
     check(equality, "Filtered suites return code", runner.execute(), return_code::soft_failures);
     check_output("Filtered Suite Output", "FilteredSuiteOutput", outputStream);
+  }
+
+  void test_runner_test::test_suites_not_found()
+  {
+    // No suite matches either request. Only the request naming a source file draws a hint to use 'select'.
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Absent", "test", "absent_test.cpp"}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<passing_test>();
+    runner.register_test<failing_test>();
+
+    check(equality, "Suites not found return code", runner.execute(), return_code::success);
+    check_output("Suites Not Found Output", "SuitesNotFoundOutput", outputStream);
   }
 
   void test_runner_test::test_prune_basic_output()
@@ -1985,6 +2067,38 @@ namespace sequoia::testing
 
     recoveringRunner.register_test<passing_test>();
     check(equality, "recover on a fresh tree", recoveringRunner.execute(), return_code::success);
+    check("A recovery run which ran a check leaves a recovery file", fs::exists(recovery.recovery_file()));
+
+    // A run which records nothing must not leave the previous run's record looking like the new run's
+    std::stringstream emptyRecoveryStream{};
+    test_runner emptyRecoveryRunner{recoveringArgs.size(),
+                                    recoveringArgs.get(),
+                                    "Oliver J. Rosten",
+                                    "  ",
+                                    {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                                    emptyRecoveryStream};
+
+    check(equality, "recover with no tests", emptyRecoveryRunner.execute(), return_code::success);
+    check("A recovery run which ran no check leaves no recovery file", !fs::exists(recovery.recovery_file()));
+  }
+
+  void test_runner_test::test_thread_pool()
+  {
+    auto run{
+      [this](std::string_view description, std::string_view outputDirName, std::string_view poolSize) {
+        commandline_arguments args{{zeroth_arg(), "--thread-pool", std::string{poolSize}}};
+
+        std::stringstream outputStream{};
+        auto runner{make_fake_runner(args, outputStream)};
+
+        runner.register_test<passing_test>();
+        check(equality, append_lines(description, "Return code"), runner.execute(), return_code::success);
+        check_output(description, outputDirName, outputStream);
+      }
+    };
+
+    run("A pool of no threads is refused, and the run goes ahead", "ThreadPoolOfNoThreadsOutput", "0");
+    run("A pool of two threads running one test",                  "ThreadPoolForOneTestOutput",  "2");
   }
 
   void test_runner_test::test_instability_analysis()
@@ -2121,6 +2235,95 @@ namespace sequoia::testing
   {
     test_instability_analysis(message, outputDirName, numRuns, expected, {}, [](test_runner&){}, std::forward<Ts>(ts)...);
   }
+
+  namespace
+  {
+    class selected_in_spaced_suite_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<selected_in_spaced_suite_free_test>("Spaced Suite");
+      }
+
+      void run_tests() {}
+    };
+
+    class excluded_from_spaced_suite_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<excluded_from_spaced_suite_free_test>("Spaced Suite");
+      }
+
+      void run_tests() {}
+    };
+  }
+
+  /** A copy of the fake project lies in a directory whose name holds a space, and so does the name of
+      its executable. The executable is a script which stands in for the test runner in each sandbox: it
+      records its arguments, one per line, and creates the directory to which a sandboxed run writes its
+      analysis. The run selects a suite and a source, and excludes a source, each named with a space. The
+      shell splits an unquoted word at the space. So if the coordinator does not quote the path, no
+      sandbox runs, and if it does not quote a selection, the sandboxes record it as two arguments.
+   */
+  void test_runner_test::test_instability_analysis_in_sandboxes_from_a_path_with_a_space()
+  {
+    using runtime::quote_for_shell;
+
+    const auto spacedProject{scratchpad_materials() /= "Spaced Fake Project"};
+    fs::remove_all(spacedProject);
+    fs::copy(fake_project(), spacedProject, fs::copy_options::recursive);
+
+    const auto outputDir{working_materials() /= "SandboxesFromAPathWithASpace"};
+    fs::create_directory(outputDir);
+
+    const auto quotedArgumentsFile{quote_for_shell((outputDir / "Arguments.txt").string())},
+               quotedAnalysisDir{quote_for_shell(output_paths::instability_analysis(fs::canonical(spacedProject)).string())};
+
+    const auto executable{spacedProject / "build/CMade" / (with_windows_v ? "Run Tests.bat" : "Run Tests")};
+    const auto script{
+      with_windows_v ? std::format("@echo off\n"
+                                   "mkdir {} 2>nul\n"
+                                   "for %%a in (%*) do >>{} echo %%~a\n"
+                                   "exit /b 0\n",
+                                   quotedAnalysisDir,
+                                   quotedArgumentsFile)
+                     : std::format("#!/bin/sh\n"
+                                   "mkdir -p {}\n"
+                                   "printf '%s\\n' \"$@\" >> {}\n",
+                                   quotedAnalysisDir,
+                                   quotedArgumentsFile)
+    };
+
+    write_to_file(executable, script, std::ios_base::out);
+    fs::permissions(executable, fs::perms::owner_exec, fs::perm_options::add);
+
+    std::stringstream outputStream{};
+    commandline_arguments args{{executable.generic_string(),
+                                "locate", "2", "--sandbox",
+                                "test", "Spaced Suite",
+                                "select", selected_in_spaced_suite_free_test::source_file().generic_string(),
+                                "exclude", excluded_from_spaced_suite_free_test::source_file().generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+    runner.register_test<selected_in_spaced_suite_free_test>();
+    runner.register_test<excluded_from_spaced_suite_free_test>();
+
+    check(equality, "Both sandboxes run, and the run succeeds", runner.execute(), return_code::success);
+    check(equivalence,
+          "Each sandbox is given the repetitions, its runner id and the selections, each as one argument",
+          outputDir,
+          predictive_materials() /= "SandboxesFromAPathWithASpace");
+  }
+
   namespace
   {
     /// Its original materials hold `Stray.txt` beside the working copy, where nothing uses it
@@ -2244,5 +2447,66 @@ namespace sequoia::testing
 
     check(equality, "Versioned output failure return code", runner.execute(), return_code::critical_failures);
     check_output("Versioned Output Failure Output", "VersionedOutputFailureOutput", outputStream);
+  }
+
+  void test_runner_test::test_exit_statuses()
+  {
+    // The expected statuses are literals, so that the expectations do not restate the implementation's formula.
+    check(equality, "Success exits with 0",                   to_exit_code(return_code::success),                0);
+    check(equality, "Versioned output diffs exit with 81",    to_exit_code(return_code::versioned_output_diffs), 81);
+    check(equality, "Soft failures exit with 82",             to_exit_code(return_code::soft_failures),          82);
+    check(equality, "Critical failures exit with 84",         to_exit_code(return_code::critical_failures),      84);
+    check(equality, "An incomplete run exits with 88",        to_exit_code(return_code::incomplete_run),         88);
+    check(equality, "Post-run failures exit with 96",         to_exit_code(return_code::post_run_failures),      96);
+    check(equality, "Every flag together exits with 111",     to_exit_code(static_cast<return_code>(31)),         111);
+    check(equality,
+          "Bits no status can carry exit as an incomplete run",
+          to_exit_code(static_cast<return_code>(64)),
+          88);
+
+    // Every combination of the five flags survives the round trip.
+    const auto codes{std::views::iota(0, 32) | std::views::transform([](int i){ return static_cast<return_code>(i); })};
+    auto roundTrip{[](return_code code){ return child_return_code(to_exit_code(code), "A child"); }};
+    check(equality,
+          "Each exit status decodes to the code it encodes",
+          codes | std::views::transform(roundTrip) | std::ranges::to<std::vector>(),
+          codes | std::ranges::to<std::vector>());
+
+    check(equality,
+          "A child exiting 88 reports an incomplete run",
+          child_return_code(88, "A child"),
+          return_code::incomplete_run);
+
+    // The first seven statuses are those a process gives when it fails for reasons of its own: generic,
+    // LeakSanitizer's, the ends of sysexits' range, ThreadSanitizer's and MemorySanitizer's. The last two lie
+    // either side of the runner's range. Each status is worded alike on every platform, so the whole message is checked.
+    for(const int status : {1, 2, 23, 64, 66, 77, 78, 80, 112})
+    {
+      check_exception_thrown<std::runtime_error>(
+        std::format("Exit status {} is not a runner's", status),
+        [status](){ return child_return_code(status, "A child"); });
+    }
+
+    // The wording for these statuses differs by platform, so only the refusal is checked.
+    auto refused{
+      [](int status) {
+        try
+        {
+          (void)child_return_code(status, "A child");
+        }
+        catch(const std::runtime_error&)
+        {
+          return true;
+        }
+
+        return false;
+      }
+    };
+
+    check("A status of -1 is refused",                refused(-1));
+    check("A status near INT_MIN is refused",         refused(std::numeric_limits<int>::min() + 3));
+    check("A shell's 'not executable' is refused",    refused(126));
+    check("A shell's 'not found' is refused",         refused(127));
+    check("A status above 128 is refused",            refused(139));
   }
 }

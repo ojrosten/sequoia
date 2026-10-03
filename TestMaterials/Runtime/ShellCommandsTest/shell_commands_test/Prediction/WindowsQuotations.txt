@@ -1,0 +1,15 @@
+[plain]: "plain"
+[First Last]: "First Last"
+[]: ""
+[C:\Users\First Last\build]: "C:\Users\First Last\build"
+[C:\]: "C:\\"
+[trailing\\]: "trailing\\\\"
+[$HOME]: "$HOME"
+[`date`]: "`date`"
+[say "hi"]: refused
+[100%]: refused
+[%PATH%]: refused
+[line<LF>feed]: refused
+[carriage<CR>return]: refused
+[a&b|c<d>e^f(g)]: "a&b|c<d>e^f(g)"
+[it's!]: "it's!"

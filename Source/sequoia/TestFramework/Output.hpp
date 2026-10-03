@@ -87,11 +87,11 @@ namespace sequoia::testing
   /** \brief Appends line breaks until a non-empty `s` ends with at least `newlines` of them, then appends `footer`;
              an empty `s` stays empty.
    */
-  void end_block(std::string& s, line_breaks newlines, std::string_view footer="");
+  void end_block(std::string& s, line_breaks newlines, std::string_view footer);
 
   /** \brief `s`, ended as the overload taking a `std::string&` ends it. */
   [[nodiscard]]
-  std::string end_block(std::string_view s, line_breaks newlines, std::string_view footer="");
+  std::string end_block(std::string_view s, line_breaks newlines, std::string_view footer);
 
   /** \brief The report of an exception that escaped a test.
 

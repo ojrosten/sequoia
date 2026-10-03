@@ -10,6 +10,7 @@
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
 
+#include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/TestCreator.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
@@ -200,6 +201,11 @@ namespace sequoia::testing
 
     write_to_file(cmakeSourceDir / "CMakeLists.txt", cmakeLists, std::ios_base::out);
 
+    const main_paths ancillaryMain{projectPath / "TestAncillary" / "TestSandbox.cpp"};
+    fs::create_directories(ancillaryMain.dir());
+    fs::copy(fakeMain.file(), ancillaryMain.file());
+    fs::copy(fakeMain.cmake_lists(), ancillaryMain.cmake_lists());
+
     commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                , "create", "regular", "utilities::iterator", "int*"
@@ -226,6 +232,11 @@ namespace sequoia::testing
                                , "create", "free", std::format("{}/Maths/Angle.hpp", sourceFolderName), "--diagnostics"
                                , "create", "regular_allocation_test", "container"
                                , "create", "move_only_allocation_test", "foo"
+                               , "create", "regular_allocation_test", "pool", "--gen-source", "Memory"
+                               , "create", "move_only_allocation_test", "arena", "-g", "Memory"
+                               // An earlier creation generated Widget.hpp in Stuff, so this one does not generate it
+                               // in Memory
+                               , "create", "regular_allocation_test", "widget", "-g", "Memory"
                                , "create", "performance_test", "Container.hpp"
                                , "create", "performance_test", "Container.hpp"
                                , "create", "free_test", "Utilities.h", "--fullname", "utility_functions_test"
@@ -269,10 +280,17 @@ namespace sequoia::testing
                    "    ",
                    {.source_folder{sourceFolder},
                     .main_cpp{fs::relative(fakeMain.file(), projectPath).generic_string()},
+                    .ancillary_main_cpps{{"TestAncillary/TestSandbox.cpp"}},
                     .common_includes{"TestShared/SharedIncludes.hpp"}},
                    outputStream};
 
     check(equality, "Test creation return code", tr.execute(), return_code::success);
+
+    check(equivalence, "The ancillary main, edited as the main is", ancillaryMain.file(), fakeMain.file());
+    check(equivalence,
+          "The ancillary main's CMakeLists, edited as the main's is",
+          ancillaryMain.cmake_lists(),
+          fakeMain.cmake_lists());
 
     if(std::ofstream file{projectPath / "output" / "io.txt"})
     {
@@ -320,7 +338,9 @@ namespace sequoia::testing
         message = thrown;
         const auto preset{back(projPaths.build().cmake_cache_dir()).generic_string()};
         replace_all(thrown, std::format("/{}/", preset), "/<preset>/");
-        replace_all(thrown, std::format("--preset {}`", preset), "--preset <preset>`");
+        replace_all(thrown,
+                    std::format("--preset {}`", runtime::quote_for_shell(preset)),
+                    std::format("--preset {}`", runtime::quote_for_shell("<preset>")));
         return relative_to_root(projPaths, std::move(thrown));
       }
     };
@@ -391,6 +411,41 @@ namespace sequoia::testing
     };
 
     refused("Plurgh.h does not exist", {"free", "Plurgh.h"});
+
+    // No directory named Pools exists yet. One check after the refusals fails if a refused creation under -g Pools
+    // creates such a directory within Source or Tests; another fails if any refused creation amends a CMakeLists.txt.
+    auto readCMakeLists{
+      [&project]() {
+        constexpr std::array<std::string_view, 2> cmakeLists{"Source/fakeProject/CMakeLists.txt",
+                                                             "TestSandbox/CMakeLists.txt"};
+
+        auto contents{
+          [&project](std::string_view file) { return read_to_string(project / file, std::ios_base::in).value(); }
+        };
+
+        return cmakeLists | std::views::transform(contents) | std::ranges::to<std::vector>();
+      }
+    };
+
+    const auto cmakeListsBefore{readCMakeLists()};
+
+    refused("An allocation test named with its namespace",
+            {"regular_allocation_test", "stuff::pool", "-g", "Pools"});
+    refused("An allocation test named with its namespace, of a class whose header exists",
+            {"regular_allocation_test", "stuff::container", "--header", "Container.hpp"});
+    refused("An allocation test named as a template-id",
+            {"regular_allocation_test", "pool<T>", "-g", "Pools"});
+    refused("An allocation test named with a space",
+            {"regular_allocation_test", "my pool", "-g", "Pools"});
+    refused("An allocation test named with a leading digit",
+            {"regular_allocation_test", "2pool", "-g", "Pools"});
+    refused("An allocation test with an empty name",
+            {"regular_allocation_test", "", "-g", "Pools"});
+
+    check("No Pools directory created for a refused allocation test",
+          !fs::exists(project / "Source/fakeProject/Pools") && !fs::exists(project / "Tests/Pools"));
+    check(equality, "No CMakeLists.txt amended for a refused allocation test", readCMakeLists(), cmakeListsBefore);
+
     refused("Typo in specified class header",
             {"regular_test", "bar::things", "double", "--header", "fakeProject/Stuff/Thingz.hpp"});
 

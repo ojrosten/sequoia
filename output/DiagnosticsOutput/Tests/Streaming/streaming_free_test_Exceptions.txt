@@ -1,4 +1,4 @@
-Tests/Streaming/StreamingFreeTest.cpp, Line 39
+Tests/Streaming/StreamingFreeTest.cpp, Line 52
 
 Expected Exception Type:
 [std::runtime_error]
@@ -6,11 +6,119 @@ Unable to open file output/TestsTemporaryData/Streaming/StreamingFreeTest/stream
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 43
+Tests/Streaming/StreamingFreeTest.cpp, Line 56
 
 Expected Exception Type:
 [std::runtime_error]
 Unable to open file output/TestsTemporaryData/Streaming/StreamingFreeTest/streaming_free_test/WorkingCopy/Baz.txt  for writing
+
+=======================================
+
+Tests/Streaming/StreamingFreeTest.cpp, Line 86
+Characters after the integer
+
+Expected Exception Type:
+[std::runtime_error]
+'42x' is not a count
+
+=======================================
+
+Tests/Streaming/StreamingFreeTest.cpp, Line 88
+Whitespace before the integer
+
+Expected Exception Type:
+[std::runtime_error]
+' 42' is not a count
+
+=======================================
+
+Tests/Streaming/StreamingFreeTest.cpp, Line 90
+No characters at all
+
+Expected Exception Type:
+[std::runtime_error]
+'' is not a count
+
+=======================================
+
+Tests/Streaming/StreamingFreeTest.cpp, Line 92
+An integer beyond the type's range
+
+Expected Exception Type:
+[std::runtime_error]
+'256' is not a count
+
+=======================================
+
+Tests/Streaming/StreamingFreeTest.cpp, Line 94
+A negative integer, for an unsigned type
+
+Expected Exception Type:
+[std::runtime_error]
+'-1' is not a count
+
+=======================================
+
+Tests/Streaming/StreamingFreeTest.cpp, Line 119
+A line not beginning with the key
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a line beginning 'key: ' but found 'other: value'
+
+=======================================
+
+Tests/Streaming/StreamingFreeTest.cpp, Line 120
+No line left
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a line beginning 'key: ' but there are no more lines
+
+=======================================
+
+Tests/Streaming/StreamingFreeTest.cpp, Line 148
+Fewer characters than asked for
+
+Expected Exception Type:
+[std::runtime_error]
+Expected 3 characters but the stream ended after 2
+
+=======================================
+
+Tests/Streaming/StreamingFreeTest.cpp, Line 149
+No line break after the text
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a line break after 3 characters
+
+=======================================
+
+Tests/Streaming/StreamingFreeTest.cpp, Line 150
+The end of the stream after the text
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a line break after 3 characters
+
+=======================================
+
+Tests/Streaming/StreamingFreeTest.cpp, Line 153
+A stream which has failed
+
+Expected Exception Type:
+[std::runtime_error]
+Text cannot be read from a stream which has failed
+
+=======================================
+
+Tests/Streaming/StreamingFreeTest.cpp, Line 162
+A length more than a stream iterator can count
+
+Expected Exception Type:
+[std::runtime_error]
+A length of 18446744073709551615 is more characters than a stream iterator can count
 
 =======================================
 

@@ -13,6 +13,7 @@
 #include <cstdint>
 #include <format>
 #include <iostream>
+#include <ranges>
 #include <stdexcept>
 
 #ifdef _WIN32
@@ -27,7 +28,6 @@
   #include <algorithm>
   #include <array>
   #include <cstddef>
-  #include <ranges>
   #include <vector>
 #else
   #include <cstdlib>
@@ -146,11 +146,17 @@ namespace sequoia::runtime
       // inherits no handles, rather than every inheritable one.
       const BOOL inheritHandles{startupInfo.lpAttributeList != nullptr};
 
-      // cmd.exe receives everything after /c verbatim, so a composite command keeps its quotes
-      // and redirections. `path::wstring` reverses the conversion `path::string` made when the
-      // command was built, so no character changes.
+      // With /s, cmd.exe removes the first and the last double quote after /c, and runs the rest as
+      // written. The command is wrapped in a pair of quotes for /s to remove. Without /s, whether
+      // cmd.exe removes quotes depends on what the command holds, and a command which begins with a
+      // quoted path can lose its first and last quotes.
+      // With /v:off, a `!` is literal even where the registry turns delayed expansion on.
+      // `path::wstring` reverses the conversion `path::string` made when the command was built, so
+      // no character changes.
       // Not const: CreateProcessW may write to this buffer.
-      auto commandLine{std::wstring{L"cmd.exe /c "}.append(std::filesystem::path{command}.wstring())};
+      auto commandLine{
+        std::wstring{L"cmd.exe /v:off /s /c \""}.append(std::filesystem::path{command}.wstring()).append(L"\"")
+      };
 
       // `interpreter` names cmd.exe by its absolute path. Given only the command line, CreateProcessW
       // looks for the interpreter in the current directory before the system directory. sequoia
@@ -196,6 +202,56 @@ namespace sequoia::runtime
       return WIFEXITED(status) ? WEXITSTATUS(status) : -1;
     }
   #endif
+
+    /** \brief Describes how a command ended, by a POSIX shell's conventions.
+
+        The platform numbers its signals from 1 to `highestSignal`.
+     */
+    [[nodiscard]]
+    std::string describe_posix_exit_status(const int status, const int highestSignal)
+    {
+      if(status == 0)
+        return "succeeded (exit status 0)";
+
+      if(status < 0)
+        return "did not run to completion";
+
+      if(status == 126)
+        return "could not be executed by the shell (exit status 126)";
+
+      if(status == 127)
+        return "was not found by the shell (exit status 127)";
+
+      constexpr int signalOffset{128};
+      if((status > signalOffset) && (status - signalOffset <= highestSignal))
+        return std::format("failed with exit status {}, which may mean it was killed by signal {}",
+                           status,
+                           status - signalOffset);
+
+      return std::format("failed with exit status {}", status);
+    }
+
+    [[nodiscard]]
+    std::string quote_for_posix_shell(std::string_view word)
+    {
+      auto escape{
+        [](char c) {
+          // Within double quotes, a POSIX shell interprets these characters and no others. A
+          // backslash before one makes it literal.
+          constexpr std::string_view interpreted{"\\$`\""};
+          return interpreted.contains(c) ? std::string{'\\', c} : std::string{c};
+        }
+      };
+
+      const auto escaped{
+          word
+        | std::views::transform(escape)
+        | std::views::join
+        | std::ranges::to<std::string>()
+      };
+
+      return std::format("\"{}\"", escaped);
+    }
   }
 
   shell_command::shell_command(std::string cmd, const std::filesystem::path& output, append_mode app)
@@ -207,7 +263,7 @@ namespace sequoia::runtime
         m_Command.append(" ");
 
       m_Command.append(app == append_mode::no ? "> " : ">> ");
-      m_Command.append(output.string()).append(" 2>&1");
+      m_Command.append(quote_for_shell(output.string())).append(" 2>&1");
     }
   }
 
@@ -240,9 +296,108 @@ namespace sequoia::runtime
   }
 
   [[nodiscard]]
+  std::string quote_for_shell(std::string_view word)
+  {
+    return quote_for_shell(word, platform_constant{});
+  }
+
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, windows_type)
+  {
+    auto refusalMessage{
+      [word](std::string_view reason) {
+        return std::format("{} cannot be quoted for cmd.exe: it {}", word, reason);
+      }
+    };
+
+    if(word.contains('"'))
+      throw std::runtime_error{refusalMessage("contains a double quote, which would end the quotation")};
+
+    if(word.contains('%'))
+      throw std::runtime_error{refusalMessage("contains a percent sign, which cmd.exe expands within quotes")};
+
+    if(word.contains('\r') || word.contains('\n'))
+      throw std::runtime_error{refusalMessage("contains a line break, which would end the command")};
+
+    // A program which splits its command line as Microsoft's C runtime does reads 2n backslashes
+    // before a quote as n backslashes, and an odd run as escaping the quote. So the backslashes which
+    // end `word` are doubled. cmd.exe's own commands, such as cd, read the doubled backslashes; a
+    // Windows path with a doubled separator names the same file.
+    auto isBackslash{[](char c) { return c == '\\'; }};
+    const auto trailingBackslashes{
+      std::ranges::distance(word | std::views::reverse | std::views::take_while(isBackslash))
+    };
+
+    return std::format("\"{}{}\"", word, std::string(trailingBackslashes, '\\'));
+  }
+
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, macos_type)
+  {
+    return quote_for_posix_shell(word);
+  }
+
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, linux_type)
+  {
+    return quote_for_posix_shell(word);
+  }
+
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, other_os_type)
+  {
+    return quote_for_posix_shell(word);
+  }
+
+  [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir)
   {
-    return std::string{with_windows_v ? "cd /d " : "cd "}.append(dir.string());
+    return std::format("{} {}", with_windows_v ? "cd /d" : "cd", quote_for_shell(dir.string()));
+  }
+
+  [[nodiscard]]
+  std::string describe_exit_status(const int status)
+  {
+    return describe_exit_status(status, platform_constant{});
+  }
+
+  [[nodiscard]]
+  std::string describe_exit_status(const int status, windows_type)
+  {
+    if(status == 0)
+      return "succeeded (exit status 0)";
+
+    if(status == -1)
+      return "did not run to completion, or exited with status 0xFFFFFFFF, which cannot be told apart";
+
+    if(status < 0)
+      return std::format("failed with exit status 0x{:08X}", static_cast<std::uint32_t>(status));
+
+    return std::format("failed with exit status {}", status);
+  }
+
+  [[nodiscard]]
+  std::string describe_exit_status(const int status, macos_type)
+  {
+    // macOS numbers its signals up to 31: NSIG is 32.
+    constexpr int highestSignal{31};
+    return describe_posix_exit_status(status, highestSignal);
+  }
+
+  [[nodiscard]]
+  std::string describe_exit_status(const int status, linux_type)
+  {
+    // Linux numbers its signals up to SIGRTMAX: 64 with glibc on x86-64 and AArch64, but 127 on MIPS.
+    constexpr int highestSignal{64};
+    return describe_posix_exit_status(status, highestSignal);
+  }
+
+  [[nodiscard]]
+  std::string describe_exit_status(const int status, other_os_type)
+  {
+    // An exit status has 8 bits, so 128 plus a signal is at most 255, and the signal at most 127.
+    constexpr int highestSignal{127};
+    return describe_posix_exit_status(status, highestSignal);
   }
 
   void throw_unless_succeeded(const int status, std::string_view step, std::string_view advice)
@@ -250,32 +405,7 @@ namespace sequoia::runtime
     if(status == 0)
       return;
 
-    auto outcome{
-      [status]() -> std::string {
-        if constexpr(with_windows_v)
-        {
-          if(status == -1)
-            return "did not run to completion, or exited with status 0xFFFFFFFF, which cannot be told apart";
-
-          if(status < 0)
-            return std::format("failed with exit status 0x{:08X}", static_cast<std::uint32_t>(status));
-        }
-        else
-        {
-          if(status < 0)
-            return "did not run to completion";
-
-          if(status > 128)
-            return std::format("failed with exit status {}, which may mean it was killed by signal {}",
-                               status,
-                               status - 128);
-        }
-
-        return std::format("failed with exit status {}", status);
-      }
-    };
-
-    throw std::runtime_error{std::format("{} {}\n{}\n", step, outcome(), advice)};
+    throw std::runtime_error{std::format("{} {}\n{}\n", step, describe_exit_status(status), advice)};
   }
 
   [[nodiscard]]

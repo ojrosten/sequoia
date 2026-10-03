@@ -27,6 +27,8 @@ namespace sequoia::testing
 
     void test_materials_paths();
 
+    void test_ancillary_main_cpps();
+
     [[nodiscard]]
     std::filesystem::path fake_project() const;
 

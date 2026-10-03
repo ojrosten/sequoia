@@ -37,6 +37,8 @@ namespace sequoia::testing
 
     void test_filtered_suites();
 
+    void test_suites_not_found();
+
     void test_basic_output();
 
     void test_help_output();
@@ -91,7 +93,13 @@ namespace sequoia::testing
 
     void test_dump_comparison();
 
+    void test_thread_pool();
+
     void test_instability_analysis();
+
+    void test_instability_analysis_in_sandboxes_from_a_path_with_a_space();
+
+    void test_exit_statuses();
 
     template<std::invocable<test_runner&> Manipulator, concrete_test... Ts>
     void test_instability_analysis(std::string_view message,

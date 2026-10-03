@@ -31,6 +31,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/ProbabilityTestingDiagnostics.cpp
                ${TestDir}/Maybe/MaybeTest.cpp
                ${TestDir}/Maybe/MaybeTestingDiagnostics.cpp
+               ${TestDir}/Memory/ArenaAllocationTest.cpp
+               ${TestDir}/Memory/PoolAllocationTest.cpp
                ${TestDir}/Stuff/BazagainFreeTest.cpp
                ${TestDir}/Stuff/BazzerFreeTest.cpp
                ${TestDir}/Stuff/ContainerAllocationTest.cpp
@@ -48,6 +50,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Stuff/GizmoTestingDiagnostics.cpp
                ${TestDir}/Stuff/ThingsTest.cpp
                ${TestDir}/Stuff/ThingsTestingDiagnostics.cpp
+               ${TestDir}/Stuff/WidgetAllocationTest.cpp
                ${TestDir}/Stuff/WidgetTest.cpp
                ${TestDir}/Stuff/WidgetTestingDiagnostics.cpp
                ${TestDir}/Thingummies/ThingummyTest.cpp

@@ -1,0 +1,7 @@
+Usage: create [command] [options]
+
+Commands:
+  regular_test, regular <qualified::class_name<class T>> <equivalent_type>
+
+Options:
+  --help, -h                            Describe the command or option this follows; alone, the top level

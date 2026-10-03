@@ -21,6 +21,7 @@ namespace sequoia::testing
   {
     test_add_include_without_an_existing_block();
     test_add_include_to_an_existing_block();
+    test_add_include_without_a_block_or_an_import();
     test_add_test_registrations();
     test_comparison_of_file_contents();
     test_empty_lines_of_a_seqpat();
@@ -50,6 +51,17 @@ namespace sequoia::testing
     add_include(file, "Stuff/FooTest.hpp");
 
     check(equivalence, "Include added to an existing include block", file, predictive_materials() /= "ExistingBlock/Main.cpp");
+  }
+
+  void file_editors_free_test::test_add_include_without_a_block_or_an_import()
+  {
+    const auto file{working_materials() /= "NoBlockNoImport/Includes.hpp"};
+    add_include(file, "Stuff/FooTest.hpp");
+
+    check(equivalence,
+          "Include added to a file with neither an include nor an import",
+          file,
+          predictive_materials() /= "NoBlockNoImport/Includes.hpp");
   }
 
   /** How an existing registration is recognised, and the position, indentation and order of new

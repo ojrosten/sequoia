@@ -11,6 +11,8 @@
     \brief Utilities for building, composing and running shell commands.
  */
 
+#include "sequoia/PlatformSpecific/PlatformDiscriminators.hpp"
+
 #include <filesystem>
 #include <optional>
 #include <string>
@@ -78,24 +80,121 @@ namespace sequoia::runtime
     shell_command(std::string cmd, const std::filesystem::path& output, append_mode app);
   };
 
+  /** \brief Quotes `word` so that the shell of the platform the program is built for reads it as one word,
+             unchanged.
+   */
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word);
+
+  /** \brief Quotes `word` so that cmd.exe passes it as one word to a program which splits its command
+             line as Microsoft's C runtime does, and the program reads it unchanged.
+
+      cmd.exe's own commands read the same word, except that each backslash which ends it is doubled.
+
+      \throws std::runtime_error if `word` contains any of the following, for which cmd.exe has no
+      escape within double quotes:
+      -# A double quote, which ends the quotation;
+      -# A percent sign, which can begin the name of an environment variable;
+      -# A carriage return or a line feed, which ends the command.
+   */
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, windows_type);
+
+  /** \brief Quotes `word` so that the POSIX shell of macOS reads it as one word, unchanged. */
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, macos_type);
+
+  /** \brief Quotes `word` so that the POSIX shell of Linux reads it as one word, unchanged. */
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, linux_type);
+
+  /** \brief Quotes `word` so that the POSIX shell of any other platform reads it as one word,
+             unchanged.
+   */
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, other_os_type);
+
   /** \brief The shell command to change the current directory to `dir`. On Windows, the command also
              changes the current drive to the drive of `dir`.
+
+      \throws std::runtime_error if `quote_for_shell` cannot quote `dir`.
    */
   [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir);
 
+  /** \brief Describes how a command ended, given the `status` which `invoke` returned for it.
+
+      \returns A phrase to follow the command's name, in the words of the platform the program is
+      built for.
+   */
+  [[nodiscard]]
+  std::string describe_exit_status(int status);
+
+  /** \brief Describes how a command ended on Windows, given the `status` which `invoke` returned
+             for it.
+
+      \returns A phrase to follow the command's name:
+      -# If `status` is 0, a phrase saying that the command succeeded;
+      -# If `status` is -1, a phrase saying that the command either did not run to completion or
+         exited with 0xFFFFFFFF, and that the two cannot be told apart;
+      -# If `status` is any other negative value, a phrase giving the exit status in hex;
+      -# Otherwise, a phrase giving the exit status.
+
+      cmd.exe exits with 1 for a command it cannot find. So a command which is not found cannot be
+      told from a command which exits with 1.
+   */
+  [[nodiscard]]
+  std::string describe_exit_status(int status, windows_type);
+
+  /** \brief Describes how a command ended on macOS, given the `status` which `invoke` returned
+             for it.
+
+      \returns A phrase to follow the command's name:
+      -# If `status` is 0, a phrase saying that the command succeeded;
+      -# If `status` is negative, a phrase saying that the command did not run to completion;
+      -# If `status` is 126, a phrase saying that the shell could not execute the command;
+      -# If `status` is 127, a phrase saying that the shell could not find the command;
+      -# If `status` is from 129 to 159, a phrase giving the exit status, and saying that signal
+         number `status` minus 128 may have killed the command;
+      -# Otherwise, a phrase giving the exit status.
+   */
+  [[nodiscard]]
+  std::string describe_exit_status(int status, macos_type);
+
+  /** \brief Describes how a command ended on Linux, given the `status` which `invoke` returned
+             for it.
+
+      \returns A phrase to follow the command's name:
+      -# If `status` is 0, a phrase saying that the command succeeded;
+      -# If `status` is negative, a phrase saying that the command did not run to completion;
+      -# If `status` is 126, a phrase saying that the shell could not execute the command;
+      -# If `status` is 127, a phrase saying that the shell could not find the command;
+      -# If `status` is from 129 to 192, a phrase giving the exit status, and saying that signal
+         number `status` minus 128 may have killed the command;
+      -# Otherwise, a phrase giving the exit status.
+   */
+  [[nodiscard]]
+  std::string describe_exit_status(int status, linux_type);
+
+  /** \brief Describes how a command ended on any other platform, given the `status` which
+             `invoke` returned for it.
+
+      \returns A phrase to follow the command's name:
+      -# If `status` is 0, a phrase saying that the command succeeded;
+      -# If `status` is negative, a phrase saying that the command did not run to completion;
+      -# If `status` is 126, a phrase saying that the shell could not execute the command;
+      -# If `status` is 127, a phrase saying that the shell could not find the command;
+      -# If `status` is from 129 to 255, a phrase giving the exit status, and saying that signal
+         number `status` minus 128 may have killed the command;
+      -# Otherwise, a phrase giving the exit status.
+   */
+  [[nodiscard]]
+  std::string describe_exit_status(int status, other_os_type);
+
   /** \brief Checks that a status returned by `invoke` is zero.
 
-      \throws std::runtime_error if `status` is not zero. The message names `step`, then says how the
-      command failed, then gives `advice`. The message tells these failures apart:
-      -# On Windows, a status of -1: the command either did not run to completion or exited with
-         0xFFFFFFFF, and the message says that the two cannot be told apart;
-      -# On Windows, any other negative status: an exit status of 0x80000000 or more, which the
-         message gives in hex;
-      -# Elsewhere, a negative status: the command did not run to completion;
-      -# Elsewhere, a status above 128: an exit status which the message says may mean that a signal
-         killed the command;
-      -# Any other non-zero status: an exit status.
+      \throws std::runtime_error if `status` is not zero. The message is `step`, followed by
+      `describe_exit_status(status)` and then `advice`.
    */
   void throw_unless_succeeded(int status, std::string_view step, std::string_view advice);
 

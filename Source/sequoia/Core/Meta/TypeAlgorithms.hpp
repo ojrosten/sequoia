@@ -191,6 +191,11 @@ namespace sequoia::meta
 
   //==================================================== merge ===================================================//
 
+  /** \brief Merges two lists, each sorted by `Compare`, into one sorted list.
+
+      Types which `Compare` finds equivalent keep their order, and those from the first list come
+      before those from the second.
+   */
   template<class T, class U, template<class, class> class Compare>
   struct merge;
 
@@ -210,20 +215,6 @@ namespace sequoia::meta
     using type = TT<Ts...>;
   };
 
-  template<template<class...> class TT, class T, class U, template<class, class> class Compare>
-    requires (!Compare<T, U>::value)
-  struct merge<TT<T>, TT<U>, Compare>
-  {
-    using type = TT<U, T>;
-  };
-
-  template<template<class...> class TT, class T, class U, template<class, class> class Compare>
-    requires (Compare<T, U>::value)
-  struct merge<TT<T>, TT<U>, Compare>
-  {
-    using type = TT<T, U>;
-  };
-
   namespace impl
   {
     template<class T, class U, std::size_t I, template<class, class> class Compare>
@@ -232,16 +223,9 @@ namespace sequoia::meta
     template<class T, class U, std::size_t I, template<class, class> class Compare>
     using merge_from_position_t = merge_from_position<T, U, I, Compare>::type;
 
-    template<template<class...> class TT, class... Us, std::size_t I, template<class, class> class Compare>
-    struct merge_from_position<std::tuple<>, TT<Us...>, I, Compare>
-    {
-      using type = TT<Us...>;
-    };
-    
     template<template<class...> class TT, class T, class... Us, std::size_t I, template<class, class> class Compare>
     struct merge_from_position<TT<T>, TT<Us...>, I, Compare>
     {
-      constexpr static auto N{sizeof...(Us)};
       constexpr static auto Pos{I + lower_bound_v<drop_t<TT<Us...>, I>, T, Compare>};
       using type = insert_t<TT<Us...>, T, Pos>;
     };
@@ -249,7 +233,7 @@ namespace sequoia::meta
     template<template<class...> class TT, class T, class... Ts, class... Us, std::size_t I, template<class, class> class Compare>
     struct merge_from_position<TT<T, Ts...>, TT<Us...>, I, Compare>
     {
-      using first_merge = merge_from_position<TT<T>, TT<Us...>, 0, Compare>;
+      using first_merge = merge_from_position<TT<T>, TT<Us...>, I, Compare>;
       using type = merge_from_position_t<TT<Ts...>, typename first_merge::type, first_merge::Pos + 1, Compare>;
     };
   }  
@@ -261,6 +245,7 @@ namespace sequoia::meta
 
   //==================================================== stable_sort ===================================================//
 
+  /** \brief Sorts the list by `Compare`, keeping types which `Compare` finds equivalent in input order. */
   template<class T, template<class, class> class Compare>
   struct stable_sort;
 

@@ -29,6 +29,7 @@
 #include <set>
 #include <span>
 #include <thread>
+#include <utility>
 
 namespace sequoia::testing
 {
@@ -44,6 +45,11 @@ namespace sequoia::testing
     fixed      /// fixed-size thread pool
   };
 
+  /** \brief The outcome of a test run: `success`, or a set of flags, one for each kind of failure.
+
+      The flags occupy consecutive bits, from the lowest. A new flag needs a row in
+      `return_code_names` (TestRunner.cpp). No check catches a missing row for the highest flag.
+   */
   enum class return_code : unsigned {
     success                = 0,
     versioned_output_diffs = 1 << 0,
@@ -88,11 +94,24 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code to_return_code(const log_summary& summary) noexcept;
 
-  /** Maps the exit status of a process which ran a sequoia test runner back to the code it
-      reported, throwing if the status is not one a runner can produce. */
-  [[nodiscard]]
-  return_code child_return_code(int exitStatus);
+  /** \brief The `return_code` which `exitStatus` carries, as `to_exit_code` encodes it.
 
+      On Windows, a tool can exit with a Win32 error code, such as 87, 110 or 111, which `to_exit_code`
+      also returns. This function reads that status as a runner's.
+
+      \throws std::runtime_error if `exitStatus` is not a status which `to_exit_code` returns. The
+              message begins with `childDescription`.
+   */
+  [[nodiscard]]
+  return_code child_return_code(int exitStatus, std::string_view childDescription);
+
+  /** \brief Encodes `code` as a runner's exit status.
+
+      \returns
+      -# 0, if `code` is `return_code::success`;
+      -# 80 plus the value of `code`, if every bit of `code` is a flag;
+      -# Otherwise, 80 plus the value of the flags of `code`, with `incomplete_run` set.
+   */
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
 
@@ -453,8 +472,14 @@ namespace sequoia::testing
     {
       ++m_Registered;
 
-      register_name(test_name<T>(), T::source_file());
+      constexpr std::string_view name{test_name<T>()};
+      register_name(name, T::source_file());
       register_source(T::source_file());
+      register_summary(name,
+                       test_summary_path{T::source_file(),
+                                         name,
+                                         m_ProjPaths,
+                                         get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)});
 
       constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
 
@@ -638,6 +663,7 @@ namespace sequoia::testing
     std::vector<test_vessel> m_Tests{};
     std::set<std::string> m_LowerCaseTestNames{};
     std::map<std::string, std::filesystem::path> m_SourcesByLowerCasePrefix{};
+    std::map<std::string, std::string_view> m_TestNamesByLowerCaseSummary{};
     std::size_t m_Registered{};
     test_filter m_Filter{path_equivalence{proj_paths().tests().repo()}};
     prune_mode m_PruneMode{prune_mode::passive};
@@ -672,7 +698,9 @@ namespace sequoia::testing
 
     return_code run_tests(std::optional<std::size_t> id);
 
-    /** The `select`/`test` options which reproduce this run's filter, for handing to a child process. */
+    /** The `select`, `test` and `exclude` options which reproduce this run's filter, for handing to a
+        child process. Each value is quoted for the shell.
+     */
     [[nodiscard]]
     std::string selection_options() const;
 
@@ -749,6 +777,13 @@ namespace sequoia::testing
      */
     void register_source(const std::filesystem::path& source);
 
+    /** \brief Admits the summary file of a test being registered.
+
+        \throws std::runtime_error naming both tests and the file, if the file of `summary` is that of a test
+        already admitted, ignoring ASCII case
+     */
+    void register_summary(std::string_view name, const test_summary_path& summary);
+
     [[nodiscard]]
     static std::string nesting_message(const std::filesystem::path& source, const std::filesystem::path& nestedWith);
 
@@ -760,6 +795,11 @@ namespace sequoia::testing
 
     [[nodiscard]]
     static std::string unplaceable_source_message(const std::filesystem::path& source);
+
+    [[nodiscard]]
+    static std::string summary_collision_message(std::string_view firstTest,
+                                                 std::string_view secondTest,
+                                                 const std::filesystem::path& summaryFile);
 
  };
 }
