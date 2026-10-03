@@ -55,6 +55,12 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
+  std::string node_insertion_index_message(std::string_view method, const std::size_t order, const std::size_t pos)
+  {
+    return std::format("{}insertion position {} out of range - graph order is {}", error_prefix(method), pos, order);
+  }
+
+  [[nodiscard]]
   std::string edge_index_range_message(std::string_view method, const edge_indices edgeIndices, std::string_view indexName, const std::size_t size, const std::size_t index)
   {
     return std::format("{}{} index {} out of range - max index is {}",
@@ -94,16 +100,6 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string embedded_edge_message(const std::size_t nodeIndex, const std::size_t source, const std::size_t target)
-  {
-    return std::format("{}At least one of source {} and target {} must match current node {}",
-                       error_prefix("process_complementary_edges"),
-                       source,
-                       target,
-                       nodeIndex);
-  }
-
-  [[nodiscard]]
   std::string erase_edge_error(const std::size_t partner, const edge_indices indices)
   {
     return std::format("{}partner in partition {} not found for edge {}",
@@ -134,9 +130,51 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string absent_reciprocated_partial_edge_message(std::string_view method, edge_indices edgeIndices)
+  std::string absent_reciprocated_partial_edge_message(std::string_view method,
+                                                       const partial_edge_counts counts,
+                                                       const edge_weighting weighting)
   {
-    return error_prefix(method, edgeIndices).append("Reciprocated partial edge does not exist");
+    const bool weighted{weighting == edge_weighting::weighted};
+    std::string_view ofEqualWeight{weighted ? " of equal weight" : ""},
+                     ofThatWeight{weighted ? " of that weight" : ""};
+
+    if(!counts.from_target)
+    {
+      if(counts.to_target == 1)
+        return std::format("{}Node {}'s edge to node {} has no reciprocal{}",
+                           error_prefix(method),
+                           counts.node,
+                           counts.target,
+                           ofEqualWeight);
+
+      return std::format("{}Node {}'s {} edges{} to node {} have no reciprocal{}",
+                         error_prefix(method),
+                         counts.node,
+                         counts.to_target,
+                         ofEqualWeight,
+                         counts.target,
+                         ofThatWeight);
+    }
+
+    const partial_edge_counts reversed{
+      .node{counts.target},
+      .target{counts.node},
+      .to_target{counts.from_target},
+      .from_target{counts.to_target}
+    };
+
+    const auto& [node, target, toTarget, fromTarget]{(counts.to_target > counts.from_target) ? counts : reversed};
+
+    return std::format("{}Node {} has {} edges{} to node {}, but node {} has {}{} to node {}",
+                       error_prefix(method),
+                       node,
+                       toTarget,
+                       ofEqualWeight,
+                       target,
+                       target,
+                       fromTarget,
+                       ofThatWeight,
+                       node);
   }
 
   [[nodiscard]]
@@ -154,21 +192,5 @@ namespace sequoia::maths::graph_errors
                        "Please ensure these numbers are the same",
                        numNodes,
                        edgeParitions);
-  }
-
-  [[nodiscard]]
-  std::string inversion_consistency_message(std::size_t nodeIndex, edge_inversion_info zerothEdge, edge_inversion_info firstEdge)
-  {
-    auto toString{
-      [](edge_inversion_info info){
-        return std::format("{} / {}", info.edge, info.inverted ? "inverted" : "standard");
-      }
-    };
-
-    return std::format("{}mismatched inverson for node {}, edges ({}, {})",
-                       error_prefix("process_complementary_edges"),
-                       nodeIndex,
-                       toString(zerothEdge),
-                       toString(firstEdge));
   }
 }

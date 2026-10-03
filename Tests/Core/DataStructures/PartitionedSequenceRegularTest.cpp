@@ -15,6 +15,23 @@ namespace sequoia::testing
   {
     using namespace partitioned_data;
 
+    // A standard container's size type is std::size_t; these carry only the types the constraint reads.
+    template<std::integral SizeType>
+    struct fake_container
+    {
+      using size_type = SizeType;
+    };
+
+    template<std::integral IndexType, std::integral SizeType>
+    struct fake_partitions
+    {
+      using value_type = IndexType;
+      using size_type  = SizeType;
+    };
+
+    template<class Container, class Partitions>
+    concept sequence_admits = requires { typename data_structures::partitioned_sequence<int, Container, Partitions>; };
+
     template<class PartitionedData>
     struct partitioned_operations : partitioned_data_operations<PartitionedData>
     {
@@ -144,6 +161,23 @@ namespace sequoia::testing
   void partitioned_sequence_regular_test::run_tests()
   {
     using namespace data_structures;
+    test_index_type_constraint();
     partitioned_operations<partitioned_sequence<int>>::execute(*this);
+  }
+
+  void partitioned_sequence_regular_test::test_index_type_constraint()
+  {
+    STATIC_CHECK( sequence_admits<std::vector<int>, maths::monotonic_sequence<std::size_t,  std::ranges::greater>>);
+    STATIC_CHECK(!sequence_admits<std::vector<int>, maths::monotonic_sequence<std::uint8_t, std::ranges::greater>>);
+
+    STATIC_CHECK( sequence_admits<fake_container<std::uint8_t>,  fake_partitions<std::uint8_t,  std::uint8_t>>);
+    STATIC_CHECK( sequence_admits<fake_container<std::uint8_t>,  fake_partitions<std::uint16_t, std::uint8_t>>);
+    STATIC_CHECK(!sequence_admits<fake_container<std::uint8_t>,  fake_partitions<std::int8_t,   std::uint8_t>>);
+    STATIC_CHECK(!sequence_admits<fake_container<std::uint16_t>, fake_partitions<std::uint8_t,  std::uint8_t>>);
+    STATIC_CHECK(!sequence_admits<fake_container<std::uint8_t>,  fake_partitions<std::uint8_t,  std::uint16_t>>);
+
+    // Each index type below counts to both size types, so only its being bool or a character type refuses it.
+    STATIC_CHECK(!sequence_admits<fake_container<bool>,        fake_partitions<bool, bool>>);
+    STATIC_CHECK(!sequence_admits<fake_container<std::int8_t>, fake_partitions<char, std::int8_t>>);
   }
 }

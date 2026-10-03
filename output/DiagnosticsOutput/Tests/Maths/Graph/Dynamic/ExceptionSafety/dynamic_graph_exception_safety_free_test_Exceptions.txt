@@ -1,0 +1,792 @@
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Set edge weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight: failure at fallible step 1
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight: failure at fallible step 2
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 2
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight by a member function: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight by a member function: failure at fallible step 1
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Join: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 5 to 5
+Set the weight of the second of two parallel edges: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 5 to 5
+Mutate the weight of an edge parallel to one already of the new weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 5 to 5
+Mutate the weight of an edge parallel to one already of the new weight: failure at fallible step 1
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 5 to 5
+Mutate the weight of an edge parallel to one already of the new weight: failure at fallible step 2
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 2
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 3 to 3
+Set loop weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 3 to 3
+Mutate loop weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 3 to 3
+Mutate loop weight: failure at fallible step 1
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 3 to 3
+Mutate loop weight: failure at fallible step 2
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 2
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Set edge weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight: failure at fallible step 1
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight: failure at fallible step 2
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 2
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight by a member function: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight by a member function: failure at fallible step 1
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Join: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 5 to 5
+Set the weight of the second of two parallel edges: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 5 to 5
+Mutate the weight of an edge parallel to one already of the new weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 5 to 5
+Mutate the weight of an edge parallel to one already of the new weight: failure at fallible step 1
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 5 to 5
+Mutate the weight of an edge parallel to one already of the new weight: failure at fallible step 2
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 2
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 3 to 3
+Set loop weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 3 to 3
+Mutate loop weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 3 to 3
+Mutate loop weight: failure at fallible step 1
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 3 to 3
+Mutate loop weight: failure at fallible step 2
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 2
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Set edge weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight: failure at fallible step 1
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight: failure at fallible step 2
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 2
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight by a member function: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight by a member function: failure at fallible step 1
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Join: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Insert join ahead of edges whose partners are on another node: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 0 to 0
+Insert loop ahead of edges whose partners are on another node: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 3 to 3
+Insert join mid-node on one side and at the end on the other: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 5 to 5
+Set loop weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 5 to 5
+Mutate loop weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 5 to 5
+Mutate loop weight: failure at fallible step 1
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 5 to 5
+Mutate loop weight: failure at fallible step 2
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 2
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 5 to 5
+Insert join ahead of a loop: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::bucketed_edge_storage_config
+Transition from node 7 to 7
+Set the weight of a loop behind an edge: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Set edge weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight: failure at fallible step 1
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight: failure at fallible step 2
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 2
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight by a member function: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Mutate edge weight by a member function: failure at fallible step 1
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Join: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Insert join ahead of edges whose partners are on another node: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 0 to 0
+Insert loop ahead of edges whose partners are on another node: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 3 to 3
+Insert join mid-node on one side and at the end on the other: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 5 to 5
+Set loop weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 5 to 5
+Mutate loop weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 5 to 5
+Mutate loop weight: failure at fallible step 1
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 5 to 5
+Mutate loop weight: failure at fallible step 2
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 2
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 5 to 5
+Insert join ahead of a loop: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Embedded graph with sequoia::maths::contiguous_edge_storage_config
+Transition from node 7 to 7
+Set the weight of a loop behind an edge: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::testing::shared_weight_bucketed_edge_storage_config
+Transition from node 0 to 0
+Set edge weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::testing::shared_weight_bucketed_edge_storage_config
+Transition from node 0 to 0
+Join: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::testing::shared_weight_bucketed_edge_storage_config
+Transition from node 3 to 3
+Set loop weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::testing::shared_weight_contiguous_edge_storage_config
+Transition from node 0 to 0
+Set edge weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::testing::shared_weight_contiguous_edge_storage_config
+Transition from node 0 to 0
+Join: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Undirected graph with sequoia::testing::shared_weight_contiguous_edge_storage_config
+Transition from node 3 to 3
+Set loop weight: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Directed graph
+Transition from node 0 to 0
+Insert node ahead of the others: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Directed graph
+Transition from node 0 to 0
+Insert node at the end: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 735
+Directed graph
+Transition from node 0 to 0
+Insert node beyond the end
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::insert_node: insertion position 3 out of range - graph order is 2
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 802
+Directed graph
+Transition from node 1 to 1
+Insert node between an edge's ends: failure at fallible step 0
+
+Expected Exception Type:
+[sequoia::testing::(anonymous namespace)::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+

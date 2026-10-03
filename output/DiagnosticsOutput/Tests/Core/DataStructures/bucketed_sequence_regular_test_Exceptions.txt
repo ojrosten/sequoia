@@ -3,7 +3,7 @@ Pushing back to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::push_back_to_partitionindex 0 out of range
+bucketed_sequence::push_back_to_partition: index 0 out of range
 
 =======================================
 
@@ -21,7 +21,7 @@ Inserting to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::insert_to_partitionindex 0 out of range
+bucketed_sequence::insert_to_partition: index 0 out of range
 
 =======================================
 
@@ -183,7 +183,7 @@ Pushing back to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::push_back_to_partitionindex 1 out of range
+bucketed_sequence::push_back_to_partition: index 1 out of range
 
 =======================================
 
@@ -192,7 +192,7 @@ Inserting to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::insert_to_partitionindex 18446744073709551615 out of range
+bucketed_sequence::insert_to_partition: index 18446744073709551615 out of range
 
 =======================================
 
@@ -201,7 +201,7 @@ Inserting to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::insert_to_partitionindex 1 out of range
+bucketed_sequence::insert_to_partition: index 1 out of range
 
 =======================================
 
@@ -221,11 +221,38 @@ bucketed_sequence::erase - Invalid range specified by iterators belonging to par
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 616
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 447
+Inserting beyond the end of a partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::insert_to_partition: pos 2 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 651
 
 Expected Exception Type:
 [std::domain_error]
 bucketed_sequence::erase - Invalid range specified by iterators belonging to partitions [0, 1]
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 864
+Inserting beyond the end of a partition other than the last throws
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::insert_to_partition: pos 2 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 875
+Inserting beyond the end of a partition other than the first throws
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::insert_to_partition: pos 2 out of range
 
 =======================================
 

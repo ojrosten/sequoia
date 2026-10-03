@@ -85,6 +85,7 @@
 #include "Maths/Graph/Dynamic/Directed/DynamicDirectedGraphFundamentalWeightTest.hpp"
 #include "Maths/Graph/Dynamic/Directed/DynamicDirectedGraphUnweightedContiguousTest.hpp"
 #include "Maths/Graph/Dynamic/Directed/DynamicDirectedGraphUnweightedTest.hpp"
+#include "Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.hpp"
 #include "Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphFundamentalWeightContiguousTest.hpp"
 #include "Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphFundamentalWeightTest.hpp"
 #include "Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphMetaDataTest.hpp"
