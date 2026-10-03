@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//                Copyright Oliver J. Rosten 2019.                //
+//                Copyright Oliver J. Rosten 2026.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class type_traits_test final : public free_test
+  class graph_constraints_free_test final : public free_test
   {
   public:
     using free_test::free_test;
@@ -23,29 +23,23 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+    void test_copyability();
 
-    void test_resolve_to_copy();
+    void test_weight_update_constraints();
 
-    void test_is_const_pointer();
+    void test_join_constraints();
 
-    void test_is_const_reference();
+    void test_mutator_constraints();
 
-    void test_is_tuple();
+    template<class EdgeStorageConfig>
+    void test_mutation_results();
 
-    void test_is_initializable();
+    void test_shared_move_only_weights();
 
-    void test_is_nothrow_exchangeable();
+    void test_move_only_meta_data();
 
-    void test_has_allocator_type();
+    void test_shared_weight_copies();
 
-    void test_is_compatible();
-
-    void test_are_same();
-
-    void test_value_type_of();
-
-    void test_is_deep_copy_constructible();
-
-    void test_is_deep_copy_assignable();
+    void test_mutation_by_member_functions();
   };
 }
