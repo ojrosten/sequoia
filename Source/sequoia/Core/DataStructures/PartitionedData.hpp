@@ -62,6 +62,9 @@ namespace sequoia
 
         The partition accessors and `erase_from_partition` treat an index at or beyond `num_partitions()` as the index
         of an empty partition.
+
+        Every non-const operation on a sequence, other than its partition accessors, invalidates every partition
+        iterator into that sequence. The iterator such an operation returns is valid.
      */
 
     template<class T, class Container=std::vector<std::vector<T>>>
@@ -181,7 +184,10 @@ namespace sequoia
       {
         if((i < num_partitions()) && (j < num_partitions()))
         {
-          if(i != j) std::ranges::swap(m_Buckets[i], m_Buckets[j]);
+          if(i != j)
+          {
+            std::ranges::swap(m_Buckets[i], m_Buckets[j]);
+          }
         }
       }
 
@@ -248,13 +254,19 @@ namespace sequoia
 
       void shrink_to_fit(const size_type partition)
       {
-        if(partition < num_partitions()) m_Buckets[partition].shrink_to_fit();
+        if(partition < num_partitions())
+        {
+          m_Buckets[partition].shrink_to_fit();
+        }
       }
 
       void shrink_to_fit()
       {
         shrink_num_partitions_to_fit();
-        for(auto& b : m_Buckets) b.shrink_to_fit();
+        for(auto& b : m_Buckets)
+        {
+          b.shrink_to_fit();
+        }
       }
 
       void clear() noexcept
@@ -495,6 +507,9 @@ namespace sequoia
         The partition accessors and `erase_from_partition` treat an index at or beyond `num_partitions()` as the index
         of an empty partition.
 
+        Every non-const operation on a sequence, other than its partition accessors, invalidates every partition
+        iterator into that sequence. The iterator such an operation returns is valid.
+
         A derived class must ensure that `index_type` can count the sequence's elements and its partitions, since
         `index_type` holds both the offset at which each partition ends and each partition's index. The maximum of
         `index_type` is reserved for `npos`.
@@ -630,7 +645,10 @@ namespace sequoia
         {
           if(i != j)
           {
-            if(i > j) std::ranges::swap(i, j);
+            if(i > j)
+            {
+              std::ranges::swap(i, j);
+            }
 
             const auto len_i{std::ranges::distance(partition(i))};
             const auto len_j{std::ranges::distance(partition(j))};
@@ -860,7 +878,7 @@ namespace sequoia
         const auto next{m_Data.erase(iter.base_iterator())};
         decrement_partition_indices(partition, num_partitions(), 1);
 
-        return {next, iter.partition_index()};
+        return {next, partition};
       }
 
       partition_iterator erase_from_partition(const_partition_iterator first, const_partition_iterator last)
@@ -976,9 +994,10 @@ namespace sequoia
         return partition_iterator{iter, source};
       }
 
-      template<std::random_access_iterator PartitionIterator, std::input_or_output_iterator Iterator>
+      template<std::random_access_iterator PartitionIterator>
       [[nodiscard]]
-      constexpr PartitionIterator get_begin_iterator(const index_type i, Iterator iter) const noexcept
+      constexpr PartitionIterator get_begin_iterator(const index_type i,
+                                                     PartitionIterator::base_iterator_type iter) const noexcept
       {
         if(i >= m_Partitions.size())
         {
@@ -988,9 +1007,10 @@ namespace sequoia
         return get_iterator_at_data_offset<PartitionIterator>(iter, i, i > 0 ? m_Partitions[i-1] : index_type{});
       }
 
-      template<std::random_access_iterator PartitionIterator, std::input_or_output_iterator Iterator>
+      template<std::random_access_iterator PartitionIterator>
       [[nodiscard]]
-      constexpr PartitionIterator get_end_iterator(const index_type i, Iterator iter) const noexcept
+      constexpr PartitionIterator get_end_iterator(const index_type i,
+                                                   PartitionIterator::base_iterator_type iter) const noexcept
       {
         if(i >= m_Partitions.size())
         {
@@ -1000,18 +1020,18 @@ namespace sequoia
         return get_iterator_at_data_offset<PartitionIterator>(iter, i, m_Partitions[i]);
       }
 
-      template<std::random_access_iterator PartitionIterator, std::input_or_output_iterator Iterator>
+      template<std::random_access_iterator PartitionIterator>
       [[nodiscard]]
-      constexpr PartitionIterator get_out_of_range_iterator(Iterator iter) const noexcept
+      constexpr PartitionIterator get_out_of_range_iterator(PartitionIterator::base_iterator_type iter) const noexcept
       {
         // The cast is lossless: each derived class is contractually obliged to ensure
         // index_type is sufficiently wide to hold the maximum size m_Data can reach
         return get_iterator_at_data_offset<PartitionIterator>(iter, npos, static_cast<index_type>(m_Data.size()));
       }
 
-      template<std::random_access_iterator PartitionIterator, std::input_or_output_iterator Iterator>
+      template<std::random_access_iterator PartitionIterator>
       [[nodiscard]]
-      constexpr static PartitionIterator get_iterator_at_data_offset(Iterator iter,
+      constexpr static PartitionIterator get_iterator_at_data_offset(PartitionIterator::base_iterator_type iter,
                                                                      const index_type partitionIndex,
                                                                      const index_type offset) noexcept
       {
