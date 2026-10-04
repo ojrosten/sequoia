@@ -142,7 +142,7 @@ namespace sequoia::testing
     using custom_iter_t = iterator<i_t, identity_dereference_policy<i_t, null_data_policy>>;
 
     STATIC_CHECK(!std::contiguous_iterator<custom_iter_t>);
-    STATIC_CHECK(std::is_same_v<iterator_category_t<custom_iter_t>, std::random_access_iterator_tag>);
+    STATIC_CHECK( std::is_same_v<iterator_category_t<custom_iter_t>, std::random_access_iterator_tag>);
 
     using ci_t = std::array<int, 3>::const_iterator;
     using custom_scaling_iter_t = iterator<ci_t, scaling_dereference_policy<ci_t>>;
@@ -152,33 +152,33 @@ namespace sequoia::testing
     using li_t = std::list<int>::iterator;
     using custom_list_iter_t = iterator<li_t, identity_dereference_policy<li_t, null_data_policy>>;
 
-    STATIC_CHECK(std::bidirectional_iterator<custom_list_iter_t>);
+    STATIC_CHECK( std::bidirectional_iterator<custom_list_iter_t>);
     STATIC_CHECK(!std::random_access_iterator<custom_list_iter_t>);
     STATIC_CHECK(!std::three_way_comparable<custom_list_iter_t>);
-    STATIC_CHECK(std::is_same_v<iterator_category_t<custom_list_iter_t>, std::bidirectional_iterator_tag>);
+    STATIC_CHECK( std::is_same_v<iterator_category_t<custom_list_iter_t>, std::bidirectional_iterator_tag>);
 
     using fli_t = std::forward_list<int>::iterator;
     using custom_forward_list_iter_t = iterator<fli_t, identity_dereference_policy<fli_t, null_data_policy>>;
 
-    STATIC_CHECK(std::forward_iterator<custom_forward_list_iter_t>);
+    STATIC_CHECK( std::forward_iterator<custom_forward_list_iter_t>);
     STATIC_CHECK(!std::bidirectional_iterator<custom_forward_list_iter_t>);
     STATIC_CHECK(!std::three_way_comparable<custom_forward_list_iter_t>);
-    STATIC_CHECK(std::is_same_v<iterator_category_t<custom_forward_list_iter_t>, std::forward_iterator_tag>);
+    STATIC_CHECK( std::is_same_v<iterator_category_t<custom_forward_list_iter_t>, std::forward_iterator_tag>);
 
     using isi_t = std::istream_iterator<int>;
     using custom_istream_iter_t = iterator<isi_t, identity_dereference_policy<isi_t, null_data_policy>>;
 
-    STATIC_CHECK(std::input_iterator<custom_istream_iter_t>);
+    STATIC_CHECK( std::input_iterator<custom_istream_iter_t>);
     STATIC_CHECK(!std::forward_iterator<custom_istream_iter_t>);
-    STATIC_CHECK(std::is_same_v<iterator_category_t<custom_istream_iter_t>, std::input_iterator_tag>);
+    STATIC_CHECK( std::is_same_v<iterator_category_t<custom_istream_iter_t>, std::input_iterator_tag>);
 
     using ncdi_t = non_const_dereferencing_iterator;
     using custom_non_const_dereferencing_iter_t
       = iterator<ncdi_t, identity_dereference_policy<ncdi_t, null_data_policy>>;
 
-    STATIC_CHECK(std::input_iterator<custom_non_const_dereferencing_iter_t>);
+    STATIC_CHECK( std::input_iterator<custom_non_const_dereferencing_iter_t>);
     STATIC_CHECK(!std::forward_iterator<custom_non_const_dereferencing_iter_t>);
-    STATIC_CHECK(std::is_same_v<iterator_category_t<custom_non_const_dereferencing_iter_t>, std::input_iterator_tag>);
+    STATIC_CHECK( std::is_same_v<iterator_category_t<custom_non_const_dereferencing_iter_t>, std::input_iterator_tag>);
 
     using custom_index_iter_t = iterator<int, index_dereference_policy<int>>;
 
@@ -197,12 +197,12 @@ namespace sequoia::testing
     using i_t = std::array<int, 3>::iterator;
     using custom_iter_t = iterator<i_t, identity_dereference_policy<i_t, null_data_policy>>;
 
-    static_assert(std::is_same_v<custom_iter_t::difference_type, std::ptrdiff_t>);
-    static_assert(std::is_same_v<custom_iter_t::value_type, int>);
-    static_assert(std::is_same_v<custom_iter_t::pointer, int*>);
-    static_assert(std::is_same_v<custom_iter_t::reference, int&>);
-    static_assert(std::random_access_iterator<custom_iter_t>);
-    static_assert(std::permutable<custom_iter_t>);
+    STATIC_CHECK(std::is_same_v<custom_iter_t::difference_type, std::ptrdiff_t>);
+    STATIC_CHECK(std::is_same_v<custom_iter_t::value_type, int>);
+    STATIC_CHECK(std::is_same_v<custom_iter_t::pointer, int*>);
+    STATIC_CHECK(std::is_same_v<custom_iter_t::reference, int&>);
+    STATIC_CHECK(std::random_access_iterator<custom_iter_t>);
+    STATIC_CHECK(std::permutable<custom_iter_t>);
  
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_iter_t>(a.begin(), a.end(), a.data(), "Custom iterator from iterator");
@@ -245,12 +245,12 @@ namespace sequoia::testing
     using ci_t = std::array<int, 3>::const_iterator;
     using custom_citer_t = iterator<ci_t, identity_dereference_policy<ci_t, null_data_policy>>;
 
-    static_assert(std::is_same_v<custom_citer_t::difference_type, std::ptrdiff_t>);
-    static_assert(std::is_same_v<custom_citer_t::value_type, int>);
-    static_assert(std::is_same_v<custom_citer_t::pointer, const int*>);
-    static_assert(std::is_same_v<custom_citer_t::reference, const int&>);
-    static_assert(std::random_access_iterator<custom_citer_t>);
-    static_assert(!std::permutable<custom_citer_t>);
+    STATIC_CHECK( std::is_same_v<custom_citer_t::difference_type, std::ptrdiff_t>);
+    STATIC_CHECK( std::is_same_v<custom_citer_t::value_type, int>);
+    STATIC_CHECK( std::is_same_v<custom_citer_t::pointer, const int*>);
+    STATIC_CHECK( std::is_same_v<custom_citer_t::reference, const int&>);
+    STATIC_CHECK( std::random_access_iterator<custom_citer_t>);
+    STATIC_CHECK(!std::permutable<custom_citer_t>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_citer_t>(a.cbegin(), a.cend(), &*a.cbegin(), "Custom const_iterator from const_iterator");
@@ -269,12 +269,12 @@ namespace sequoia::testing
     using ri_t = std::array<int, 3>::reverse_iterator;
     using custom_riter_t = iterator<ri_t, identity_dereference_policy<ri_t, null_data_policy>>;
 
-    static_assert(std::is_same_v<custom_riter_t::difference_type, std::ptrdiff_t>);
-    static_assert(std::is_same_v<custom_riter_t::value_type, int>);
-    static_assert(std::is_same_v<custom_riter_t::pointer, int*>);
-    static_assert(std::is_same_v<custom_riter_t::reference, int&>);
-    static_assert(std::random_access_iterator<custom_riter_t>);
-    static_assert(std::permutable<custom_riter_t>);
+    STATIC_CHECK(std::is_same_v<custom_riter_t::difference_type, std::ptrdiff_t>);
+    STATIC_CHECK(std::is_same_v<custom_riter_t::value_type, int>);
+    STATIC_CHECK(std::is_same_v<custom_riter_t::pointer, int*>);
+    STATIC_CHECK(std::is_same_v<custom_riter_t::reference, int&>);
+    STATIC_CHECK(std::random_access_iterator<custom_riter_t>);
+    STATIC_CHECK(std::permutable<custom_riter_t>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_riter_t>(a.rbegin(), a.rend(), &*a.rbegin(), "Custom reverse_iterator from reverse_iterator");
@@ -307,12 +307,12 @@ namespace sequoia::testing
     using cri_t = std::array<int, 3>::const_reverse_iterator;
     using custom_criter_t = iterator<cri_t, identity_dereference_policy<cri_t, null_data_policy>>;
 
-    static_assert(std::is_same_v<custom_criter_t::difference_type, std::ptrdiff_t>);
-    static_assert(std::is_same_v<custom_criter_t::value_type, int>);
-    static_assert(std::is_same_v<custom_criter_t::pointer, const int*>);
-    static_assert(std::is_same_v<custom_criter_t::reference, const int&>);
-    static_assert(std::random_access_iterator<custom_criter_t>);
-    static_assert(!std::permutable<custom_criter_t>);
+    STATIC_CHECK( std::is_same_v<custom_criter_t::difference_type, std::ptrdiff_t>);
+    STATIC_CHECK( std::is_same_v<custom_criter_t::value_type, int>);
+    STATIC_CHECK( std::is_same_v<custom_criter_t::pointer, const int*>);
+    STATIC_CHECK( std::is_same_v<custom_criter_t::reference, const int&>);
+    STATIC_CHECK( std::random_access_iterator<custom_criter_t>);
+    STATIC_CHECK(!std::permutable<custom_criter_t>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_criter_t>(a.crbegin(), a.crend(), &*a.crbegin(), "Custom const_reverse_iterator from const_reverse_iterator");
@@ -331,11 +331,11 @@ namespace sequoia::testing
     using ci_t = std::array<int, 3>::const_iterator;
     using custom_citer_t = iterator<ci_t, scaling_dereference_policy<ci_t>>;
 
-    static_assert(std::is_same_v<custom_citer_t::difference_type, std::ptrdiff_t>);
-    static_assert(std::is_same_v<custom_citer_t::value_type, int>);
-    static_assert(std::is_same_v<custom_citer_t::pointer, const int*>);
-    static_assert(std::random_access_iterator<custom_citer_t>);
-    static_assert(!std::permutable<custom_citer_t>);
+    STATIC_CHECK( std::is_same_v<custom_citer_t::difference_type, std::ptrdiff_t>);
+    STATIC_CHECK( std::is_same_v<custom_citer_t::value_type, int>);
+    STATIC_CHECK( std::is_same_v<custom_citer_t::pointer, const int*>);
+    STATIC_CHECK( std::random_access_iterator<custom_citer_t>);
+    STATIC_CHECK(!std::permutable<custom_citer_t>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_citer_t>(a.cbegin(), a.cend(), &*a.cbegin(), "Custom scaling iterator from const_iterator", 3);
@@ -353,11 +353,11 @@ namespace sequoia::testing
     using cri_t = std::array<int, 3>::const_reverse_iterator;
     using custom_criter_t = iterator<cri_t, scaling_dereference_policy<cri_t>>;
 
-    static_assert(std::is_same_v<custom_criter_t::difference_type, std::ptrdiff_t>);
-    static_assert(std::is_same_v<custom_criter_t::value_type, int>);
-    static_assert(std::is_same_v<custom_criter_t::pointer, const int*>);
-    static_assert(std::random_access_iterator<custom_criter_t>);
-    static_assert(!std::permutable<custom_criter_t>);
+    STATIC_CHECK( std::is_same_v<custom_criter_t::difference_type, std::ptrdiff_t>);
+    STATIC_CHECK( std::is_same_v<custom_criter_t::value_type, int>);
+    STATIC_CHECK( std::is_same_v<custom_criter_t::pointer, const int*>);
+    STATIC_CHECK( std::random_access_iterator<custom_criter_t>);
+    STATIC_CHECK(!std::permutable<custom_criter_t>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_criter_t>(a.crbegin(), a.crend(), &*a.crbegin(), "Custom reverse scaling iterator from const_reverse_iterator", -1);
@@ -387,7 +387,7 @@ namespace sequoia::testing
 
     CustomIter i{begin, args...};
 
-    static_assert(std::totally_ordered<CustomIter>);
+    STATIC_CHECK(std::totally_ordered<CustomIter>);
 
     const auto scale{
       []([[maybe_unused]] CustomIter iter) -> value_t {

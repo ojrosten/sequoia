@@ -382,7 +382,8 @@ SEQUOIA_GCC_SUPPRESS_END
     constexpr iterator& operator--()
       requires decrementable<Iterator>
     {
-      --m_BaseIterator; return *this;
+      --m_BaseIterator;
+      return *this;
     }
 
     constexpr iterator operator--(int)
@@ -396,7 +397,7 @@ SEQUOIA_GCC_SUPPRESS_END
     constexpr iterator& operator-=(const difference_type n)
       requires steppable<Iterator>
     {
-      m_BaseIterator -=n;
+      m_BaseIterator -= n;
       return *this;
     }
 
