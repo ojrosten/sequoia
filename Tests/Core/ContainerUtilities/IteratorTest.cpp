@@ -83,6 +83,122 @@ namespace sequoia::testing
       constexpr explicit operator int() const noexcept { return value; }
     };
 
+    struct forward_index
+    {
+      using difference_type = int;
+
+      int value{};
+
+      [[nodiscard]]
+      constexpr explicit operator int() const noexcept { return value; }
+
+      constexpr forward_index& operator++() noexcept
+      {
+        ++value;
+        return *this;
+      }
+
+      constexpr forward_index operator++(int) noexcept
+      {
+        forward_index tmp{*this};
+        operator++();
+        return tmp;
+      }
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const forward_index&, const forward_index&) noexcept = default;
+    };
+
+    struct ordered_index
+    {
+      using difference_type = int;
+
+      int value{};
+
+      [[nodiscard]]
+      constexpr explicit operator int() const noexcept { return value; }
+
+      constexpr ordered_index& operator++() noexcept
+      {
+        ++value;
+        return *this;
+      }
+
+      constexpr ordered_index operator++(int) noexcept
+      {
+        ordered_index tmp{*this};
+        operator++();
+        return tmp;
+      }
+
+      constexpr ordered_index& operator--() noexcept
+      {
+        --value;
+        return *this;
+      }
+
+      constexpr ordered_index operator--(int) noexcept
+      {
+        ordered_index tmp{*this};
+        operator--();
+        return tmp;
+      }
+
+      constexpr ordered_index& operator+=(const difference_type n) noexcept
+      {
+        value += n;
+        return *this;
+      }
+
+      constexpr ordered_index& operator-=(const difference_type n) noexcept
+      {
+        value -= n;
+        return *this;
+      }
+
+      [[nodiscard]]
+      friend constexpr ordered_index operator+(ordered_index i, const difference_type n) noexcept { return i += n; }
+
+      [[nodiscard]]
+      friend constexpr ordered_index operator+(const difference_type n, ordered_index i) noexcept { return i += n; }
+
+      [[nodiscard]]
+      friend constexpr ordered_index operator-(ordered_index i, const difference_type n) noexcept { return i -= n; }
+
+      [[nodiscard]]
+      friend constexpr difference_type operator-(const ordered_index& lhs, const ordered_index& rhs) noexcept
+      {
+        return lhs.value - rhs.value;
+      }
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const ordered_index&, const ordered_index&) noexcept = default;
+
+      [[nodiscard]]
+      friend constexpr bool operator<(const ordered_index& lhs, const ordered_index& rhs) noexcept
+      {
+        return lhs.value < rhs.value;
+      }
+
+      [[nodiscard]]
+      friend constexpr bool operator>(const ordered_index& lhs, const ordered_index& rhs) noexcept
+      {
+        return lhs.value > rhs.value;
+      }
+
+      [[nodiscard]]
+      friend constexpr bool operator<=(const ordered_index& lhs, const ordered_index& rhs) noexcept
+      {
+        return lhs.value <= rhs.value;
+      }
+
+      [[nodiscard]]
+      friend constexpr bool operator>=(const ordered_index& lhs, const ordered_index& rhs) noexcept
+      {
+        return lhs.value >= rhs.value;
+      }
+    };
+
     struct non_const_dereferencing_iterator
     {
       using value_type        = int;
@@ -183,6 +299,17 @@ namespace sequoia::testing
     using custom_index_iter_t = iterator<int, index_dereference_policy<int>>;
 
     STATIC_CHECK(std::random_access_iterator<custom_index_iter_t>);
+
+    using custom_forward_index_iter_t = iterator<forward_index, index_dereference_policy<forward_index>>;
+
+    STATIC_CHECK( std::forward_iterator<custom_forward_index_iter_t>);
+    STATIC_CHECK(!std::bidirectional_iterator<custom_forward_index_iter_t>);
+    STATIC_CHECK( std::is_same_v<custom_forward_index_iter_t::iterator_concept, std::forward_iterator_tag>);
+
+    using custom_ordered_index_iter_t = iterator<ordered_index, index_dereference_policy<ordered_index>>;
+
+    STATIC_CHECK(!std::three_way_comparable<ordered_index>);
+    STATIC_CHECK( std::random_access_iterator<custom_ordered_index_iter_t>);
 
     using custom_index_without_equality_iter_t
       = iterator<index_without_equality, index_dereference_policy<index_without_equality>>;

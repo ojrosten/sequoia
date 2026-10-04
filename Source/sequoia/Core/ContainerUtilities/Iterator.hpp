@@ -33,6 +33,13 @@ namespace sequoia::utilities
     { j - n }  -> std::convertible_to<I>;
   };
 
+  template<class I>
+  concept advanceable
+    =  decrementable<I>
+    && std::totally_ordered<I>
+    && steppable<I>
+    && requires(const I i, const I j) { { i - j } -> std::convertible_to<std::iter_difference_t<I>>; };
+
   namespace impl
   {
     template<class Policy>
@@ -223,18 +230,21 @@ namespace sequoia::utilities
   namespace impl
   {
     template<class I>
+    concept incrementable_index = !std::input_or_output_iterator<I> && std::incrementable<I>;
+
+    template<class I>
     [[nodiscard]]
     consteval auto iterator_concept_tag() noexcept
     {
-      if constexpr(std::random_access_iterator<I> || !std::input_or_output_iterator<I>)
+      if constexpr(std::random_access_iterator<I> || (incrementable_index<I> && advanceable<I>))
       {
         return std::random_access_iterator_tag{};
       }
-      else if constexpr(std::bidirectional_iterator<I>)
+      else if constexpr(std::bidirectional_iterator<I> || (incrementable_index<I> && decrementable<I>))
       {
         return std::bidirectional_iterator_tag{};
       }
-      else if constexpr(std::forward_iterator<I>)
+      else if constexpr(std::forward_iterator<I> || incrementable_index<I>)
       {
         return std::forward_iterator_tag{};
       }
@@ -258,10 +268,15 @@ namespace sequoia::utilities
 
       The member `iterator_concept` is the tag of the strongest standard iterator concept which
       `Iterator` satisfies, up to random access. The tag is never `std::contiguous_iterator_tag`: a
-      dereference policy may refer to a member of each element. `iterator_concept` is random access
-      for an `Iterator` which does not satisfy `std::input_or_output_iterator`, such as an index. The
-      tag is an upper bound: each operation this class forwards to `Iterator` is present only if
-      `Iterator` has that operation.
+      dereference policy may refer to a member of each element. For an `Iterator` which does not
+      satisfy `std::input_or_output_iterator`, such as an index, the tag follows the operations
+      `Iterator` has:
+      -# Random access, if it is `std::incrementable` and `advanceable`.
+      -# Otherwise bidirectional, if it is `std::incrementable` and `decrementable`.
+      -# Otherwise forward, if it is `std::incrementable`.
+      -# Otherwise input.
+
+      Each operation this class forwards to `Iterator` is present only if `Iterator` has that operation.
    */
 
   template<class Iterator, dereference_policy_for<Iterator> DereferencePolicy>
@@ -413,6 +428,34 @@ SEQUOIA_GCC_SUPPRESS_END
       requires std::equality_comparable<Iterator>
     {
       return lhs.m_BaseIterator == rhs.m_BaseIterator;
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator<(const iterator& lhs, const iterator& rhs) noexcept
+      requires std::totally_ordered<Iterator>
+    {
+      return lhs.m_BaseIterator < rhs.m_BaseIterator;
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator>(const iterator& lhs, const iterator& rhs) noexcept
+      requires std::totally_ordered<Iterator>
+    {
+      return lhs.m_BaseIterator > rhs.m_BaseIterator;
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator<=(const iterator& lhs, const iterator& rhs) noexcept
+      requires std::totally_ordered<Iterator>
+    {
+      return lhs.m_BaseIterator <= rhs.m_BaseIterator;
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator>=(const iterator& lhs, const iterator& rhs) noexcept
+      requires std::totally_ordered<Iterator>
+    {
+      return lhs.m_BaseIterator >= rhs.m_BaseIterator;
     }
 
     [[nodiscard]]
