@@ -228,7 +228,7 @@ namespace sequoia::utilities
       using type = std::random_access_iterator_tag;
     };
 
-    template<std::input_iterator I>
+    template<std::input_or_output_iterator I>
     struct iterator_concept<I>
     {
       using type = std::input_iterator_tag;
@@ -265,10 +265,11 @@ namespace sequoia::utilities
       indirectly_writable. Therefore, this is forbidden.
 
       The member `iterator_concept` is the tag of the strongest standard iterator concept which
-      `Iterator` models, up to random access. `iterator_concept` never claims contiguity: a
+      `Iterator` satisfies, up to random access. The tag is never `std::contiguous_iterator_tag`: a
       dereference policy may refer to a member of each element. `iterator_concept` is random access
-      if `Iterator` is not an input iterator, as an index is not. The operations which `Iterator`
-      supports then decide which iterator concepts this class models.
+      for an `Iterator` which does not satisfy `std::input_or_output_iterator`, such as an index. The
+      tag is an upper bound: each operation this class forwards to `Iterator` is present only if
+      `Iterator` has that operation.
    */
 
   template<class Iterator, dereference_policy_for<Iterator> DereferencePolicy>

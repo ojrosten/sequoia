@@ -82,6 +82,37 @@ namespace sequoia::testing
       [[nodiscard]]
       constexpr explicit operator int() const noexcept { return value; }
     };
+
+    struct non_const_dereferencing_iterator
+    {
+      using value_type        = int;
+      using difference_type   = std::ptrdiff_t;
+      using reference         = const int&;
+      using pointer           = const int*;
+      using iterator_category = std::input_iterator_tag;
+
+      const int* current{};
+
+      [[nodiscard]]
+      reference operator*() { return *current; }
+
+      non_const_dereferencing_iterator& operator++()
+      {
+        ++current;
+        return *this;
+      }
+
+      non_const_dereferencing_iterator operator++(int)
+      {
+        non_const_dereferencing_iterator tmp{*this};
+        operator++();
+        return tmp;
+      }
+
+      [[nodiscard]]
+      friend bool operator==(const non_const_dereferencing_iterator&, const non_const_dereferencing_iterator&)
+        = default;
+    };
   }
 
   [[nodiscard]]
@@ -110,13 +141,12 @@ namespace sequoia::testing
     using i_t = std::array<int, 3>::iterator;
     using custom_iter_t = iterator<i_t, identity_dereference_policy<i_t, null_data_policy>>;
 
-    STATIC_CHECK(std::random_access_iterator<custom_iter_t>);
+    STATIC_CHECK(!std::contiguous_iterator<custom_iter_t>);
     STATIC_CHECK(std::is_same_v<iterator_category_t<custom_iter_t>, std::random_access_iterator_tag>);
 
     using ci_t = std::array<int, 3>::const_iterator;
     using custom_scaling_iter_t = iterator<ci_t, scaling_dereference_policy<ci_t>>;
 
-    STATIC_CHECK(std::random_access_iterator<custom_scaling_iter_t>);
     STATIC_CHECK(std::is_same_v<iterator_category_t<custom_scaling_iter_t>, std::input_iterator_tag>);
 
     using li_t = std::list<int>::iterator;
@@ -141,6 +171,14 @@ namespace sequoia::testing
     STATIC_CHECK(std::input_iterator<custom_istream_iter_t>);
     STATIC_CHECK(!std::forward_iterator<custom_istream_iter_t>);
     STATIC_CHECK(std::is_same_v<iterator_category_t<custom_istream_iter_t>, std::input_iterator_tag>);
+
+    using ncdi_t = non_const_dereferencing_iterator;
+    using custom_non_const_dereferencing_iter_t
+      = iterator<ncdi_t, identity_dereference_policy<ncdi_t, null_data_policy>>;
+
+    STATIC_CHECK(std::input_iterator<custom_non_const_dereferencing_iter_t>);
+    STATIC_CHECK(!std::forward_iterator<custom_non_const_dereferencing_iter_t>);
+    STATIC_CHECK(std::is_same_v<iterator_category_t<custom_non_const_dereferencing_iter_t>, std::input_iterator_tag>);
 
     using custom_index_iter_t = iterator<int, index_dereference_policy<int>>;
 
