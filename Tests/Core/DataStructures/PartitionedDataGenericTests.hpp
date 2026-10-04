@@ -244,7 +244,7 @@ namespace sequoia::testing
               t.report(""),
               [&t](data_type d) -> data_type {
                 auto i{d.erase_from_partition(0, 0)};
-                t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
+                t.check(equality, "Erase from non-existent partition 0, position 0", i, d.begin_partition(0));
                 return d;
               }
             },
@@ -253,7 +253,7 @@ namespace sequoia::testing
               t.report(""),
               [&t](data_type d) -> data_type {
                 auto i{d.erase_from_partition(1, 0)};
-                t.check(equality, "", i, d.begin_partition(0));
+                t.check(equality, "Erase from non-existent partition 1, position 0", i, d.begin_partition(0));
                 return d;
               }
             },
@@ -262,7 +262,7 @@ namespace sequoia::testing
               t.report(""),
               [&t](data_type d) -> data_type {
                 auto i{d.erase_from_partition(0, 1)};
-                t.check(equality, "", i, d.begin_partition(0));
+                t.check(equality, "Erase from non-existent partition 0, position 1", i, d.begin_partition(0));
                 return d;
               }
             },
@@ -271,7 +271,7 @@ namespace sequoia::testing
               t.report(""),
               [&t](data_type d) -> data_type {
                 auto i{d.erase_from_partition(1, 1)};
-                t.check(equality, "", i, d.begin_partition(0));
+                t.check(equality, "Erase from non-existent partition 1, position 1", i, d.begin_partition(0));
                 return d;
               }
             }
@@ -934,6 +934,30 @@ namespace sequoia::testing
               [&t](data_type d) -> data_type {
                 check_partition_is_empty(t, d, 7);
                 check_iterator_partition_indices_are_npos(t, d, 7);
+                return d;
+              }
+            },
+            {
+              data_description::two_2__3,
+              t.report("Erasing from index 7, position 0 of a sequence of two partitions erases nothing"),
+              [](data_type d) -> data_type {
+                d.erase_from_partition(7, 0);
+                return d;
+              }
+            },
+            {
+              data_description::two_2__3,
+              t.report("Erasing through the begin iterator of index 7 of a sequence of two partitions erases nothing"),
+              [](data_type d) -> data_type {
+                d.erase_from_partition(d.cbegin_partition(7));
+                return d;
+              }
+            },
+            {
+              data_description::two_2__3,
+              t.report("Erasing the range of index 7 of a sequence of two partitions erases nothing"),
+              [](data_type d) -> data_type {
+                d.erase_from_partition(d.cbegin_partition(7), d.cend_partition(7));
                 return d;
               }
             },

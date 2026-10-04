@@ -60,7 +60,8 @@ namespace sequoia
 
     /** \brief Storage for partitioned data such that data within each partition is contiguous.
 
-        The partition accessors treat an index at or beyond `num_partitions()` as the index of an empty partition.
+        The partition accessors and `erase_from_partition` treat an index at or beyond `num_partitions()` as the index
+        of an empty partition.
      */
 
     template<class T, class Container=std::vector<std::vector<T>>>
@@ -467,7 +468,7 @@ namespace sequoia
         return partition_iterator{iter, source};
       }
 
-      template<class PartitionIterator, class Buckets>
+      template<std::random_access_iterator PartitionIterator, class Buckets>
       [[nodiscard]]
       static PartitionIterator get_out_of_range_iterator(Buckets& buckets) noexcept
       {
@@ -491,7 +492,8 @@ namespace sequoia
 
     /** \brief Base class for partitioned sequences where data is contiguous across all partitions.
 
-        The partition accessors treat an index at or beyond `num_partitions()` as the index of an empty partition.
+        The partition accessors and `erase_from_partition` treat an index at or beyond `num_partitions()` as the index
+        of an empty partition.
 
         A derived class must ensure that `index_type` can count the sequence's elements and its partitions, since
         `index_type` holds both the offset at which each partition ends and each partition's index. The maximum of
@@ -974,35 +976,47 @@ namespace sequoia
         return partition_iterator{iter, source};
       }
 
-      template<class PartitionIterator, std::input_or_output_iterator Iterator>
+      template<std::random_access_iterator PartitionIterator, std::input_or_output_iterator Iterator>
       [[nodiscard]]
       constexpr PartitionIterator get_begin_iterator(const index_type i, Iterator iter) const noexcept
       {
-        const index_type index{i >= m_Partitions.size() ? npos : i};
-        const auto offset{
-            i >= m_Partitions.size() ? static_cast<index_type>(m_Data.size())
-          : i > 0                    ? m_Partitions[i-1]
-          : index_type{}
-        };
-        return PartitionIterator::reversed() ? PartitionIterator{iter, index} - offset : PartitionIterator{iter, index} + offset;
+        if(i >= m_Partitions.size())
+        {
+          return get_out_of_range_iterator<PartitionIterator>(iter);
+        }
+
+        return get_iterator_at_data_offset<PartitionIterator>(iter, i, i > 0 ? m_Partitions[i-1] : index_type{});
       }
 
-      template<class PartitionIterator, std::input_or_output_iterator Iterator>
+      template<std::random_access_iterator PartitionIterator, std::input_or_output_iterator Iterator>
       [[nodiscard]]
       constexpr PartitionIterator get_end_iterator(const index_type i, Iterator iter) const noexcept
       {
-        index_type index{npos};
-        // The cast is lossless: each derived class is contractually obliged to ensure
-        // index_type is sufficiently wide to hold the maximum size m_Data can reach
-        index_type offset{static_cast<index_type>(m_Data.size())};
-
-        if(i < m_Partitions.size())
+        if(i >= m_Partitions.size())
         {
-          index = i;
-          offset = m_Partitions[i];
+          return get_out_of_range_iterator<PartitionIterator>(iter);
         }
 
-        return PartitionIterator::reversed() ? PartitionIterator{iter, index} - offset : PartitionIterator{iter, index} + offset;
+        return get_iterator_at_data_offset<PartitionIterator>(iter, i, m_Partitions[i]);
+      }
+
+      template<std::random_access_iterator PartitionIterator, std::input_or_output_iterator Iterator>
+      [[nodiscard]]
+      constexpr PartitionIterator get_out_of_range_iterator(Iterator iter) const noexcept
+      {
+        // The cast is lossless: each derived class is contractually obliged to ensure
+        // index_type is sufficiently wide to hold the maximum size m_Data can reach
+        return get_iterator_at_data_offset<PartitionIterator>(iter, npos, static_cast<index_type>(m_Data.size()));
+      }
+
+      template<std::random_access_iterator PartitionIterator, std::input_or_output_iterator Iterator>
+      [[nodiscard]]
+      constexpr static PartitionIterator get_iterator_at_data_offset(Iterator iter,
+                                                                     const index_type partitionIndex,
+                                                                     const index_type offset) noexcept
+      {
+        return PartitionIterator::reversed() ? PartitionIterator{iter, partitionIndex} - offset
+                                             : PartitionIterator{iter, partitionIndex} + offset;
       }
     };
 
