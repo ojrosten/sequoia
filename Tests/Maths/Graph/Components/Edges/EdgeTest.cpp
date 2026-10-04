@@ -98,10 +98,10 @@ namespace sequoia
     void test_edges::test_plain_partial_edge()
     {
       using edge_t = partial_edge<by_value<null_weight>, null_meta_data>;
-      static_assert(sizeof(std::size_t) == sizeof(edge_t));
+      STATIC_CHECK(sizeof(std::size_t) == sizeof(edge_t));
 
       using compact_edge_t = partial_edge<by_value<null_weight>, null_meta_data, unsigned char>;
-      static_assert(sizeof(unsigned char) == sizeof(compact_edge_t));
+      STATIC_CHECK(sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t e0{0};
       check(equivalence, "Construction", e0, 0);
@@ -123,7 +123,7 @@ namespace sequoia
     void test_edges::test_partial_edge_shared_weight()
     {
       using edge_t = partial_edge<shared<int>, null_meta_data>;
-      static_assert(sizeof(std::shared_ptr<int>) + sizeof(std::size_t) == sizeof(edge_t));
+      STATIC_CHECK(sizeof(std::shared_ptr<int>) + sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{1, 4};
       check(equivalence, "Construction", edge, std::pair{1, 4});
@@ -189,7 +189,7 @@ namespace sequoia
     void test_edges::test_partial_edge_indep_weight()
     {
       using edge_t = partial_edge<by_value<int>, null_meta_data>;
-      static_assert(2 * sizeof(std::size_t) == sizeof(edge_t));
+      STATIC_CHECK(2 * sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 7};
       check(equivalence, "Construction", edge, std::pair{2, 7});
@@ -223,7 +223,7 @@ namespace sequoia
     void test_edges::test_partial_edge_meta_data()
     {
       using edge_t = partial_edge<by_value<null_weight>, float, std::size_t>;
-      static_assert(2 * sizeof(std::size_t) == sizeof(edge_t));
+      STATIC_CHECK(2 * sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 0.5f};
       check(equivalence, "Construction", edge, std::pair{2, 0.5f});
@@ -247,7 +247,7 @@ namespace sequoia
     void test_edges::test_partial_edge_indep_weight_meta_data()
     {
       using edge_t = partial_edge<by_value<double>, float, std::size_t>;
-      static_assert(3 * sizeof(std::size_t) == sizeof(edge_t));
+      STATIC_CHECK(3 * sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 0.5f, 1.0};
       check(equivalence, "Construction", edge, std::tuple{2, 0.5f, 1.0});
@@ -274,7 +274,7 @@ namespace sequoia
     void test_edges::test_partial_edge_shared_weight_meta_data()
     {
       using edge_t = partial_edge<shared<double>, float, std::size_t>;
-      static_assert(sizeof(std::shared_ptr<double>) + 2*sizeof(std::size_t) == sizeof(edge_t));
+      STATIC_CHECK(sizeof(std::shared_ptr<double>) + 2*sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 0.5f, 1.0};
       check(equivalence, "Construction", edge, std::tuple{2, 0.5f, 1.0});
@@ -311,11 +311,11 @@ namespace sequoia
     void test_edges::test_plain_embedded_partial_edge()
     {
       using edge_t = embedded_partial_edge<by_value<null_weight>, null_meta_data>;
-      static_assert(2*sizeof(std::size_t) == sizeof(edge_t));
+      STATIC_CHECK(2*sizeof(std::size_t) == sizeof(edge_t));
 
       using compact_edge_t
         = embedded_partial_edge<by_value<null_weight>, null_meta_data, unsigned char>;
-      static_assert(2*sizeof(unsigned char) == sizeof(compact_edge_t));
+      STATIC_CHECK(2*sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t e1{0, 4};
       check(equivalence, "Construction", e1, std::pair{0, 4});
@@ -335,7 +335,7 @@ namespace sequoia
     void test_edges::test_embedded_partial_edge_indep_weight()
     {
       using edge_t = embedded_partial_edge<by_value<double>, null_meta_data>;
-      static_assert(2*sizeof(std::size_t) + sizeof(double) == sizeof(edge_t));
+      STATIC_CHECK(2*sizeof(std::size_t) + sizeof(double) == sizeof(edge_t));
 
       constexpr edge_t edge1{1, 2, 5.0};
       check(equivalence, "Construction", edge1, std::tuple{1, 2, 5.0});
@@ -358,7 +358,7 @@ namespace sequoia
     void test_edges::test_embedded_partial_edge_shared_weight()
     {
       using edge_t = embedded_partial_edge<shared<double>, null_meta_data>;
-      static_assert(sizeof(std::shared_ptr<double>) + 2*sizeof(std::size_t) == sizeof(edge_t));
+      STATIC_CHECK(sizeof(std::shared_ptr<double>) + 2*sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge1{1, 2, 5.0};
       check(equivalence, "Construction", edge1, std::tuple{1, 2, 5.0});
@@ -391,7 +391,7 @@ namespace sequoia
     void test_edges::test_embedded_partial_edge_meta_data()
     {
       using edge_t = embedded_partial_edge<by_value<null_weight>, float, std::size_t>;
-      static_assert(3 * sizeof(std::size_t) == sizeof(edge_t));
+      STATIC_CHECK(3 * sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 1, 0.5f};
       check(equivalence, "Construction", edge, std::tuple{2, 1, 0.5f});
@@ -418,7 +418,7 @@ namespace sequoia
     void test_edges::test_embedded_partial_edge_indep_weight_meta_data()
     {
       using edge_t = embedded_partial_edge<by_value<double>, float, std::size_t>;
-      static_assert(4 * sizeof(std::size_t) == sizeof(edge_t));
+      STATIC_CHECK(4 * sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 5, 0.5f, 1.0};
       check(equivalence, "Construction", edge, std::tuple{2, 5, 0.5f, 1.0});
@@ -448,7 +448,7 @@ namespace sequoia
     void test_edges::test_embedded_partial_edge_shared_weight_meta_data()
     {
       using edge_t = embedded_partial_edge<shared<double>, float, std::size_t>;
-      static_assert(sizeof(std::shared_ptr<double>) + 3*sizeof(std::size_t) == sizeof(edge_t));
+      STATIC_CHECK(sizeof(std::shared_ptr<double>) + 3*sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 5, 0.5f, 1.0};
       check(equivalence, "Construction", edge, std::tuple{2, 5, 0.5f, 1.0});

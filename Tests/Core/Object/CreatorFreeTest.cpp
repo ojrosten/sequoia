@@ -48,14 +48,14 @@ namespace sequoia::testing
   {
     {
       using producer_t = producer<int, int>;
-      static_assert(creator<producer_t>);
+      STATIC_CHECK(creator<producer_t>);
 
       check(equality, "", producer_t{}.make(42), 42);
     }
 
     {
       using producer_t = producer<int, aggregate_type>;
-      static_assert(creator<producer_t>);
+      STATIC_CHECK(creator<producer_t>);
 
       check(equality, "", producer_t{}.make(42), aggregate_type{42});
     }

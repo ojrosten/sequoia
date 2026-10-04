@@ -73,6 +73,10 @@ namespace sequoia
 {
   //==================================================== filtered_sequence ===================================================//
 
+  /** \brief The positions, in ascending order, of the `Ts` for which `TypeToType<T>::type` is not `Excluded`, as the
+      `std::index_sequence` `type`.
+   */
+
   template<class Excluded, template<class> class TypeToType, class... Ts>
   struct filtered_sequence
   {

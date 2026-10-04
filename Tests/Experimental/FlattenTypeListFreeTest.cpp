@@ -88,28 +88,28 @@ namespace sequoia::testing
 
   void flatten_type_list_free_test::test_flatten()
   {
-    static_assert(std::is_same_v<flatten_t<int>, int>);
-    static_assert(std::is_same_v<flatten_t<type_list<int>>, int>);
-    static_assert(std::is_same_v<flatten_t<type_list<int, char>>, type_list<int, char>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<int>, int>);
+    STATIC_CHECK(std::is_same_v<flatten_t<type_list<int>>, int>);
+    STATIC_CHECK(std::is_same_v<flatten_t<type_list<int, char>>, type_list<int, char>>);
 
-    static_assert(std::is_same_v<flatten_t<int, type_list<char, float>>, type_list<int, char, float>>);
-    static_assert(std::is_same_v<flatten_t<int, type_list<char, float, double>>, type_list<int, char, float, double>>);
-    static_assert(std::is_same_v<flatten_t<type_list<char, float>, int>, type_list<char, float, int>>);
-    static_assert(std::is_same_v<flatten_t<type_list<char, float, double>, int>, type_list<char, float, double, int>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<int, type_list<char, float>>, type_list<int, char, float>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<int, type_list<char, float, double>>, type_list<int, char, float, double>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<type_list<char, float>, int>, type_list<char, float, int>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<type_list<char, float, double>, int>, type_list<char, float, double, int>>);
 
-    static_assert(std::is_same_v<flatten_t<int, double, type_list<char, float>>, type_list<int, double, char, float>>);
-    static_assert(std::is_same_v<flatten_t<type_list<char, float>, int, double>, type_list<char, float, int, double>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<int, double, type_list<char, float>>, type_list<int, double, char, float>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<type_list<char, float>, int, double>, type_list<char, float, int, double>>);
 
 
-    static_assert(std::is_same_v<flatten_t<type_list<int, type_list<char, float>>>, type_list<int, char, float>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<type_list<int, type_list<char, float>>>, type_list<int, char, float>>);
 
-    static_assert(std::is_same_v<flatten_t<type_list<int, type_list<char, type_list<float, double>>>>,
+    STATIC_CHECK(std::is_same_v<flatten_t<type_list<int, type_list<char, type_list<float, double>>>>,
       type_list<int, char, float, double>>);
 
-    static_assert(std::is_same_v<flatten_t<type_list<int, type_list<type_list<char, unsigned>, type_list<float, double>>>>,
+    STATIC_CHECK(std::is_same_v<flatten_t<type_list<int, type_list<type_list<char, unsigned>, type_list<float, double>>>>,
       type_list<int, char, unsigned, float, double>>);
 
-    static_assert(std::is_same_v<flatten_t<type_list<int, type_list<type_list<char, unsigned>, type_list<float, type_list<double, long>>>>>,
+    STATIC_CHECK(std::is_same_v<flatten_t<type_list<int, type_list<type_list<char, unsigned>, type_list<float, type_list<double, long>>>>>,
       type_list<int, char, unsigned, float, double, long>>);
 
     // Could interpret this as:
@@ -119,14 +119,14 @@ namespace sequoia::testing
     //    x
     //    |
     //    x
-    static_assert(std::is_same_v<flatten_t<type_list<type_list<int>>>, int>);
+    STATIC_CHECK(std::is_same_v<flatten_t<type_list<type_list<int>>>, int>);
 
     //       long bool  unsigned
     //         \   /    /
     //     char float int
     //       \   |   /
     //         double
-    static_assert(
+    STATIC_CHECK(
       std::is_same_v<
         flatten_t<type_list<double,
                             type_list<char,

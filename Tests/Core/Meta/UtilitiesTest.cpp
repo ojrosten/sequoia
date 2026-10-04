@@ -13,8 +13,8 @@ namespace sequoia::testing
 {
   namespace
   {
-    double f(int) { return 1.0; }
-    double g(int) noexcept { return 1.0; }
+    double plain_function(int) { return 1.0; }
+    double noexcept_function(int) noexcept { return 1.0; }
 
     struct fn_ob {
       int i{};
@@ -41,90 +41,69 @@ namespace sequoia::testing
 
   void utilities_test::test_function_signature()
   {
-    check("Signature of lambda operator()", []() {
-        auto l{[](int) -> double { return 1.0; }};
-        using clo = decltype(l);
-        using sig = function_signature<decltype(&clo::operator())>;
-        static_assert(std::is_same_v<sig::arg, int>);
-        static_assert(std::is_same_v<sig::ret, double>);
+    {
+      auto l{[](int) -> double { return 1.0; }};
+      using clo = decltype(l);
+      using sig = function_signature<decltype(&clo::operator())>;
+      STATIC_CHECK(std::is_same_v<sig::arg, int>);
+      STATIC_CHECK(std::is_same_v<sig::ret, double>);
+    }
 
-        return true;
-      }()
-    );
+    {
+      struct foo
+      {
+        double operator()(int) { return 1.0; }
+      };
 
-    check("Signature of struct operator() noexcept", []() {
-        struct foo
-        {
-          double operator()(int) { return 1.0; }
-        };
+      using sig = function_signature<decltype(&foo::operator())>;
+      STATIC_CHECK(std::is_same_v<sig::arg, int>);
+      STATIC_CHECK(std::is_same_v<sig::ret, double>);
+    }
 
-        using sig = function_signature<decltype(&foo::operator())>;
-        static_assert(std::is_same_v<sig::arg, int>);
-        static_assert(std::is_same_v<sig::ret, double>);
+    {
+      struct foo
+      {
+        double operator()(int) noexcept { return 1.0; }
+      };
 
-        return true;
-      }()
-    );
+      using sig = function_signature<decltype(&foo::operator())>;
+      STATIC_CHECK(std::is_same_v<sig::arg, int>);
+      STATIC_CHECK(std::is_same_v<sig::ret, double>);
+    }
 
-    check("Signature of struct operator() noexcept", []() {
-        struct foo
-        {
-          double operator()(int) noexcept { return 1.0; }
-        };
+    {
+      struct foo
+      {
+        double operator()(int) const noexcept { return 1.0; }
+      };
 
-        using sig = function_signature<decltype(&foo::operator())>;
-        static_assert(std::is_same_v<sig::arg, int>);
-        static_assert(std::is_same_v<sig::ret, double>);
+      using sig = function_signature<decltype(&foo::operator())>;
+      STATIC_CHECK(std::is_same_v<sig::arg, int>);
+      STATIC_CHECK(std::is_same_v<sig::ret, double>);
+    }
 
-        return true;
-      }()
-    );
+    {
+      struct foo
+      {
+        static double bar(int) noexcept { return 1.0; }
+      };
 
-    check("Signature of struct operator() const noexcept", []() {
-        struct foo
-        {
-          double operator()(int) const noexcept { return 1.0; }
-        };
+      using sig = function_signature<decltype(&foo::bar)>;
+      STATIC_CHECK(std::is_same_v<sig::arg, int>);
+      STATIC_CHECK(std::is_same_v<sig::ret, double>);
+    }
 
-        using sig = function_signature<decltype(&foo::operator())>;
-        static_assert(std::is_same_v<sig::arg, int>);
-        static_assert(std::is_same_v<sig::ret, double>);
+    {
+      using sig = function_signature<decltype(&plain_function)>;
+      STATIC_CHECK(std::is_same_v<sig::arg, int>);
+      STATIC_CHECK(std::is_same_v<sig::ret, double>);
+    }
 
-        return true;
-      }()
-    );
-
-    check("Signature of struct static function noexcept", []() {
-        struct foo
-        {
-          static double bar(int) noexcept { return 1.0; }
-        };
-
-        using sig = function_signature<decltype(&foo::bar)>;
-        static_assert(std::is_same_v<sig::arg, int>);
-        static_assert(std::is_same_v<sig::ret, double>);
-
-        return true;
-      }()
-    );
-
-    check("Signature of function", []() {
-        using sig = function_signature<decltype(&f)>;
-        static_assert(std::is_same_v<sig::arg, int>);
-        static_assert(std::is_same_v<sig::ret, double>);
-
-        return true;
-      }()
-    );
-
-    check("Signature of noexcept function", []() {
-        using sig = function_signature<decltype(&g)>;
-        static_assert(std::is_same_v<sig::arg, int>);
-        static_assert(std::is_same_v<sig::ret, double>);
-
-        return true;
-      }()
-    );
+    {
+      using sig = function_signature<decltype(&noexcept_function)>;
+      STATIC_CHECK(std::is_same_v<sig::arg, int>);
+      STATIC_CHECK(std::is_same_v<sig::ret, double>);
+    }
   }
 
   void utilities_test::test_for_each()
