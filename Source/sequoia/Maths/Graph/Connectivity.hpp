@@ -256,17 +256,17 @@ namespace sequoia
       {
         if constexpr(independent_partner_weights_v)
         {
-          using result_type = std::invoke_result_t<Fn&, edge_weight_type&>;
+          using result_t = std::invoke_result_t<Fn&, edge_weight_type&>;
 
           edge_weight_type weight{citer->weight()};
-          if constexpr(std::is_void_v<result_type>)
+          if constexpr(std::is_void_v<result_t>)
           {
             std::invoke(fn, weight);
             set_source_and_partner_edge_weights(citer, std::move(weight));
           }
           else
           {
-            result_type result(std::invoke(fn, weight));
+            result_t result(std::invoke(fn, weight));
             set_source_and_partner_edge_weights(citer, std::move(weight));
             return result;
           }

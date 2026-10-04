@@ -120,10 +120,10 @@ namespace sequoia::testing
     [[nodiscard]]
     std::ptrdiff_t peak_overlap(std::span<const execution_interval> intervals)
     {
-      using change_type = std::pair<std::chrono::steady_clock::time_point, std::ptrdiff_t>;
+      using change_t = std::pair<std::chrono::steady_clock::time_point, std::ptrdiff_t>;
       auto endpoints{
         [](const execution_interval& interval){
-          return std::array{change_type{interval.start, 1}, change_type{interval.end, -1}};
+          return std::array{change_t{interval.start, 1}, change_t{interval.end, -1}};
         }
       };
 

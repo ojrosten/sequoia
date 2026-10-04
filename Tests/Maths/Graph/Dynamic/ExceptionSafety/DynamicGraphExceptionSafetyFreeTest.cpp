@@ -177,10 +177,10 @@ namespace sequoia::testing
   void dynamic_graph_exception_safety_free_test::test_undirected_edge_mutations()
   {
     using namespace maths;
-    using graph_type     = undirected_graph<fallible_weight, null_weight, null_meta_data, EdgeStorageConfig>;
-    using edge_init_type = graph_type::edge_init_type;
+    using graph_t     = undirected_graph<fallible_weight, null_weight, null_meta_data, EdgeStorageConfig>;
+    using edge_init_t = graph_t::edge_init_type;
 
-    STATIC_CHECK(!graph_impl::has_shared_weight_v<typename graph_type::edge_type>);
+    STATIC_CHECK(!graph_impl::has_shared_weight_v<typename graph_t::edge_type>);
 
     const auto context{
       std::format("Undirected graph with {}", meta::tidy_type_name(meta::type_name<EdgeStorageConfig>()))
@@ -189,76 +189,76 @@ namespace sequoia::testing
     // No mutation reaches edge_5 or loop_5: they are inputs
     enum state : std::size_t { edge_5, edge_6, edge_7, loop_5, loop_7, edges_5_7, edges_5_5, edges_7_7 };
 
-    transition_graph_type<graph_type> trg{};
-    trg.add_node(graph_type{{edge_init_type{1, 5}}, {edge_init_type{0, 5}}});
-    trg.add_node(graph_type{{edge_init_type{1, 6}}, {edge_init_type{0, 6}}});
-    trg.add_node(graph_type{{edge_init_type{1, 7}}, {edge_init_type{0, 7}}});
-    trg.add_node(graph_type{{edge_init_type{0, 5}, edge_init_type{0, 5}}});
-    trg.add_node(graph_type{{edge_init_type{0, 7}, edge_init_type{0, 7}}});
-    trg.add_node(graph_type{
-      {edge_init_type{1, 5}, edge_init_type{1, 7}},
-      {edge_init_type{0, 5}, edge_init_type{0, 7}}
+    transition_graph_type<graph_t> trg{};
+    trg.add_node(graph_t{{edge_init_t{1, 5}}, {edge_init_t{0, 5}}});
+    trg.add_node(graph_t{{edge_init_t{1, 6}}, {edge_init_t{0, 6}}});
+    trg.add_node(graph_t{{edge_init_t{1, 7}}, {edge_init_t{0, 7}}});
+    trg.add_node(graph_t{{edge_init_t{0, 5}, edge_init_t{0, 5}}});
+    trg.add_node(graph_t{{edge_init_t{0, 7}, edge_init_t{0, 7}}});
+    trg.add_node(graph_t{
+      {edge_init_t{1, 5}, edge_init_t{1, 7}},
+      {edge_init_t{0, 5}, edge_init_t{0, 7}}
     });
-    trg.add_node(graph_type{
-      {edge_init_type{1, 5}, edge_init_type{1, 5}},
-      {edge_init_type{0, 5}, edge_init_type{0, 5}}
+    trg.add_node(graph_t{
+      {edge_init_t{1, 5}, edge_init_t{1, 5}},
+      {edge_init_t{0, 5}, edge_init_t{0, 5}}
     });
-    trg.add_node(graph_type{
-      {edge_init_type{1, 7}, edge_init_type{1, 7}},
-      {edge_init_type{0, 7}, edge_init_type{0, 7}}
+    trg.add_node(graph_t{
+      {edge_init_t{1, 7}, edge_init_t{1, 7}},
+      {edge_init_t{0, 7}, edge_init_t{0, 7}}
     });
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edge_5, edge_7, "Set edge weight", 1,
-      [](graph_type& g) { g.set_edge_weight(g.cbegin_edges(0), 7); }
+      [](graph_t& g) { g.set_edge_weight(g.cbegin_edges(0), 7); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edge_5, edge_7, "Mutate edge weight", 3,
-      [](graph_type& g) { g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly); }
+      [](graph_t& g) { g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edge_5, edge_6, "Mutate edge weight by a member function", 2,
-      [](graph_type& g) { g.mutate_edge_weight(g.cbegin_edges(0), &fallible_weight::increment); }
+      [](graph_t& g) { g.mutate_edge_weight(g.cbegin_edges(0), &fallible_weight::increment); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edge_5, edges_5_7, "Join", 1,
-      [](graph_type& g) { g.join(0, 1, 7); }
+      [](graph_t& g) { g.join(0, 1, 7); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edges_5_7, edges_5_5, "Set the weight of the second of two parallel edges", 1,
-      [](graph_type& g) { g.set_edge_weight(g.cbegin_edges(0) + 1, 5); }
+      [](graph_t& g) { g.set_edge_weight(g.cbegin_edges(0) + 1, 5); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edges_5_7, edges_7_7, "Mutate the weight of an edge parallel to one already of the new weight", 3,
-      [](graph_type& g) { g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly); }
+      [](graph_t& g) { g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, loop_5, loop_7, "Set loop weight", 1,
-      [](graph_type& g) { g.set_edge_weight(g.cbegin_edges(0), 7); }
+      [](graph_t& g) { g.set_edge_weight(g.cbegin_edges(0), 7); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, loop_5, loop_7, "Mutate loop weight", 3,
-      [](graph_type& g) { g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly); }
+      [](graph_t& g) { g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly); }
     );
 
-    check_transitions<graph_type>(context, trg);
+    check_transitions<graph_t>(context, trg);
   }
 
   template<class EdgeStorageConfig>
   void dynamic_graph_exception_safety_free_test::test_embedded_edge_mutations()
   {
     using namespace maths;
-    using graph_type     = embedded_graph<fallible_weight, null_weight, null_meta_data, EdgeStorageConfig>;
-    using edge_init_type = graph_type::edge_init_type;
+    using graph_t     = embedded_graph<fallible_weight, null_weight, null_meta_data, EdgeStorageConfig>;
+    using edge_init_t = graph_t::edge_init_type;
 
-    STATIC_CHECK(!graph_impl::has_shared_weight_v<typename graph_type::edge_type>);
+    STATIC_CHECK(!graph_impl::has_shared_weight_v<typename graph_t::edge_type>);
 
     const auto context{
       std::format("Embedded graph with {}", meta::tidy_type_name(meta::type_name<EdgeStorageConfig>()))
@@ -279,128 +279,128 @@ namespace sequoia::testing
       edges_6_6
     };
 
-    transition_graph_type<graph_type> trg{};
-    trg.add_node(graph_type{
-      {edge_init_type{1, 0, 5}, edge_init_type{1, 1, 6}},
-      {edge_init_type{0, 0, 5}, edge_init_type{0, 1, 6}}
+    transition_graph_type<graph_t> trg{};
+    trg.add_node(graph_t{
+      {edge_init_t{1, 0, 5}, edge_init_t{1, 1, 6}},
+      {edge_init_t{0, 0, 5}, edge_init_t{0, 1, 6}}
     });
 
-    trg.add_node(graph_type{
-      {edge_init_type{1, 0, 7}, edge_init_type{1, 1, 6}},
-      {edge_init_type{0, 0, 7}, edge_init_type{0, 1, 6}}
+    trg.add_node(graph_t{
+      {edge_init_t{1, 0, 7}, edge_init_t{1, 1, 6}},
+      {edge_init_t{0, 0, 7}, edge_init_t{0, 1, 6}}
     });
 
-    trg.add_node(graph_type{
-      {edge_init_type{1, 0, 5}, edge_init_type{1, 1, 6}, edge_init_type{1, 2, 7}},
-      {edge_init_type{0, 0, 5}, edge_init_type{0, 1, 6}, edge_init_type{0, 2, 7}}
+    trg.add_node(graph_t{
+      {edge_init_t{1, 0, 5}, edge_init_t{1, 1, 6}, edge_init_t{1, 2, 7}},
+      {edge_init_t{0, 0, 5}, edge_init_t{0, 1, 6}, edge_init_t{0, 2, 7}}
     });
 
-    trg.add_node(graph_type{
-      {edge_init_type{1, 0, 9}, edge_init_type{1, 1, 5}, edge_init_type{1, 2, 6}},
-      {edge_init_type{0, 0, 9}, edge_init_type{0, 1, 5}, edge_init_type{0, 2, 6}}
+    trg.add_node(graph_t{
+      {edge_init_t{1, 0, 9}, edge_init_t{1, 1, 5}, edge_init_t{1, 2, 6}},
+      {edge_init_t{0, 0, 9}, edge_init_t{0, 1, 5}, edge_init_t{0, 2, 6}}
     });
 
-    trg.add_node(graph_type{
-      {edge_init_type{0, 1, 9}, edge_init_type{0, 0, 9}, edge_init_type{1, 0, 5}, edge_init_type{1, 1, 6}},
-      {edge_init_type{0, 2, 5}, edge_init_type{0, 3, 6}}
+    trg.add_node(graph_t{
+      {edge_init_t{0, 1, 9}, edge_init_t{0, 0, 9}, edge_init_t{1, 0, 5}, edge_init_t{1, 1, 6}},
+      {edge_init_t{0, 2, 5}, edge_init_t{0, 3, 6}}
     });
 
-    trg.add_node(graph_type{
-      {edge_init_type{0, 1, 4}, edge_init_type{0, 0, 4}, edge_init_type{1, 0, 5}},
-      {edge_init_type{0, 2, 5}}
+    trg.add_node(graph_t{
+      {edge_init_t{0, 1, 4}, edge_init_t{0, 0, 4}, edge_init_t{1, 0, 5}},
+      {edge_init_t{0, 2, 5}}
     });
 
-    trg.add_node(graph_type{
-      {edge_init_type{0, 1, 7}, edge_init_type{0, 0, 7}, edge_init_type{1, 0, 5}},
-      {edge_init_type{0, 2, 5}}
+    trg.add_node(graph_t{
+      {edge_init_t{0, 1, 7}, edge_init_t{0, 0, 7}, edge_init_t{1, 0, 5}},
+      {edge_init_t{0, 2, 5}}
     });
 
-    trg.add_node(graph_type{
-      {edge_init_type{1, 0, 9}, edge_init_type{0, 2, 4}, edge_init_type{0, 1, 4}, edge_init_type{1, 1, 5}},
-      {edge_init_type{0, 0, 9}, edge_init_type{0, 3, 5}}
+    trg.add_node(graph_t{
+      {edge_init_t{1, 0, 9}, edge_init_t{0, 2, 4}, edge_init_t{0, 1, 4}, edge_init_t{1, 1, 5}},
+      {edge_init_t{0, 0, 9}, edge_init_t{0, 3, 5}}
     });
 
-    trg.add_node(graph_type{
-      {edge_init_type{1, 0, 9}, edge_init_type{0, 2, 7}, edge_init_type{0, 1, 7}, edge_init_type{1, 1, 5}},
-      {edge_init_type{0, 0, 9}, edge_init_type{0, 3, 5}}
+    trg.add_node(graph_t{
+      {edge_init_t{1, 0, 9}, edge_init_t{0, 2, 7}, edge_init_t{0, 1, 7}, edge_init_t{1, 1, 5}},
+      {edge_init_t{0, 0, 9}, edge_init_t{0, 3, 5}}
     });
 
-    trg.add_node(graph_type{
-      {edge_init_type{1, 0, 9}, edge_init_type{1, 3, 8}, edge_init_type{1, 1, 5}, edge_init_type{1, 2, 6}},
-      {edge_init_type{0, 0, 9}, edge_init_type{0, 2, 5}, edge_init_type{0, 3, 6}, edge_init_type{0, 1, 8}}
+    trg.add_node(graph_t{
+      {edge_init_t{1, 0, 9}, edge_init_t{1, 3, 8}, edge_init_t{1, 1, 5}, edge_init_t{1, 2, 6}},
+      {edge_init_t{0, 0, 9}, edge_init_t{0, 2, 5}, edge_init_t{0, 3, 6}, edge_init_t{0, 1, 8}}
     });
 
-    trg.add_node(graph_type{
-      {edge_init_type{1, 0, 6}, edge_init_type{1, 1, 6}},
-      {edge_init_type{0, 0, 6}, edge_init_type{0, 1, 6}}
+    trg.add_node(graph_t{
+      {edge_init_t{1, 0, 6}, edge_init_t{1, 1, 6}},
+      {edge_init_t{0, 0, 6}, edge_init_t{0, 1, 6}}
     });
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edges_5_6, edges_7_6, "Set edge weight", 1,
-      [](graph_type& g) { g.set_edge_weight(g.cbegin_edges(0), 7); }
+      [](graph_t& g) { g.set_edge_weight(g.cbegin_edges(0), 7); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edges_5_6, edges_7_6, "Mutate edge weight", 3,
-      [](graph_type& g) { g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly); }
+      [](graph_t& g) { g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edges_5_6, edges_6_6, "Mutate edge weight by a member function", 2,
-      [](graph_type& g) { g.mutate_edge_weight(g.cbegin_edges(0), &fallible_weight::increment); }
+      [](graph_t& g) { g.mutate_edge_weight(g.cbegin_edges(0), &fallible_weight::increment); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edges_5_6, edges_5_6_7, "Join", 1,
-      [](graph_type& g) { g.join(0, 1, 7); }
+      [](graph_t& g) { g.join(0, 1, 7); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edges_5_6, edges_9_5_6, "Insert join ahead of edges whose partners are on another node", 1,
-      [](graph_type& g) { g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1), 9); }
+      [](graph_t& g) { g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1), 9); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edges_5_6, loop_9_edges_5_6, "Insert loop ahead of edges whose partners are on another node", 1,
-      [](graph_type& g) { g.insert_join(g.cbegin_edges(0), 0, 9); }
+      [](graph_t& g) { g.insert_join(g.cbegin_edges(0), 0, 9); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, loop_4_edge_5, loop_7_edge_5, "Set loop weight", 1,
-      [](graph_type& g) { g.set_edge_weight(g.cbegin_edges(0), 7); }
+      [](graph_t& g) { g.set_edge_weight(g.cbegin_edges(0), 7); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, loop_4_edge_5, loop_7_edge_5, "Mutate loop weight", 3,
-      [](graph_type& g) { g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly); }
+      [](graph_t& g) { g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, loop_4_edge_5, edge_9_loop_4_edge_5, "Insert join ahead of a loop", 1,
-      [](graph_type& g) { g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1), 9); }
+      [](graph_t& g) { g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1), 9); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edge_9_loop_4_edge_5, edge_9_loop_7_edge_5, "Set the weight of a loop behind an edge", 1,
-      [](graph_type& g) { g.set_edge_weight(g.cbegin_edges(0) + 1, 7); }
+      [](graph_t& g) { g.set_edge_weight(g.cbegin_edges(0) + 1, 7); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edges_9_5_6, edges_9_8_5_6, "Insert join mid-node on one side and at the end on the other", 1,
-      [](graph_type& g) { g.insert_join(g.cbegin_edges(0) + 1, g.cbegin_edges(1) + 3, 8); }
+      [](graph_t& g) { g.insert_join(g.cbegin_edges(0) + 1, g.cbegin_edges(1) + 3, 8); }
     );
 
-    check_transitions<graph_type>(context, trg);
+    check_transitions<graph_t>(context, trg);
   }
 
   template<class EdgeStorageConfig>
   void dynamic_graph_exception_safety_free_test::test_shared_weight_edge_mutations()
   {
     using namespace maths;
-    using graph_type     = undirected_graph<fallible_weight, null_weight, null_meta_data, EdgeStorageConfig>;
-    using edge_init_type = graph_type::edge_init_type;
+    using graph_t     = undirected_graph<fallible_weight, null_weight, null_meta_data, EdgeStorageConfig>;
+    using edge_init_t = graph_t::edge_init_type;
 
-    STATIC_CHECK(graph_impl::has_shared_weight_v<typename graph_type::edge_type>);
+    STATIC_CHECK(graph_impl::has_shared_weight_v<typename graph_t::edge_type>);
 
     const auto context{
       std::format("Undirected graph with {}", meta::tidy_type_name(meta::type_name<EdgeStorageConfig>()))
@@ -409,78 +409,78 @@ namespace sequoia::testing
     // No mutation reaches edge_5 or loop_5: they are inputs
     enum state : std::size_t { edge_5, edge_6, edge_7, loop_5, loop_7, edges_5_7 };
 
-    transition_graph_type<graph_type> trg{};
-    trg.add_node(graph_type{{edge_init_type{1, 5}}, {edge_init_type{0, 5}}});
-    trg.add_node(graph_type{{edge_init_type{1, 6}}, {edge_init_type{0, 6}}});
-    trg.add_node(graph_type{{edge_init_type{1, 7}}, {edge_init_type{0, 7}}});
-    trg.add_node(graph_type{{edge_init_type{0, 5}, edge_init_type{0, 5}}});
-    trg.add_node(graph_type{{edge_init_type{0, 7}, edge_init_type{0, 7}}});
-    trg.add_node(graph_type{
-      {edge_init_type{1, 5}, edge_init_type{1, 7}},
-      {edge_init_type{0, 5}, edge_init_type{0, 7}}
+    transition_graph_type<graph_t> trg{};
+    trg.add_node(graph_t{{edge_init_t{1, 5}}, {edge_init_t{0, 5}}});
+    trg.add_node(graph_t{{edge_init_t{1, 6}}, {edge_init_t{0, 6}}});
+    trg.add_node(graph_t{{edge_init_t{1, 7}}, {edge_init_t{0, 7}}});
+    trg.add_node(graph_t{{edge_init_t{0, 5}, edge_init_t{0, 5}}});
+    trg.add_node(graph_t{{edge_init_t{0, 7}, edge_init_t{0, 7}}});
+    trg.add_node(graph_t{
+      {edge_init_t{1, 5}, edge_init_t{1, 7}},
+      {edge_init_t{0, 5}, edge_init_t{0, 7}}
     });
 
     // A weight built in place from an int takes no fallible step, so the transitions copy this one
     const fallible_weight seven{7};
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edge_5, edge_7, "Set edge weight", 1,
-      [seven](graph_type& g) { g.set_edge_weight(g.cbegin_edges(0), seven); }
+      [seven](graph_t& g) { g.set_edge_weight(g.cbegin_edges(0), seven); }
     );
 
     // With shared weights, `mutate_edge_weight` applies the mutation to the weight in place,
     // so the mutation here takes no fallible step
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edge_5, edge_6, "Mutate edge weight by a member function", 0,
-      [](graph_type& g) { g.mutate_edge_weight(g.cbegin_edges(0), &fallible_weight::increment); }
+      [](graph_t& g) { g.mutate_edge_weight(g.cbegin_edges(0), &fallible_weight::increment); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, edge_5, edges_5_7, "Join", 1,
-      [seven](graph_type& g) { g.join(0, 1, seven); }
+      [seven](graph_t& g) { g.join(0, 1, seven); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, loop_5, loop_7, "Set loop weight", 1,
-      [seven](graph_type& g) { g.set_edge_weight(g.cbegin_edges(0), seven); }
+      [seven](graph_t& g) { g.set_edge_weight(g.cbegin_edges(0), seven); }
     );
 
-    check_transitions<graph_type>(context, trg);
+    check_transitions<graph_t>(context, trg);
   }
 
   void dynamic_graph_exception_safety_free_test::test_node_insertion()
   {
     using namespace maths;
-    using graph_type     = directed_graph<null_weight, int, fallible_partitions_edge_storage_config>;
-    using edge_init_type = graph_type::edge_init_type;
-    using node_weights   = std::initializer_list<int>;
+    using graph_t      = directed_graph<null_weight, int, fallible_partitions_edge_storage_config>;
+    using edge_init_t  = graph_t::edge_init_type;
+    using node_weights = std::initializer_list<int>;
 
     const std::string context{"Directed graph"};
 
     // No mutation reaches two_nodes: it is an input
     enum state : std::size_t { two_nodes, inserted_ahead, inserted_at_end, inserted_ahead_then_between };
 
-    transition_graph_type<graph_type> trg{};
-    trg.add_node(graph_type{{{edge_init_type{1}}, {}}, node_weights{1, 2}});
-    trg.add_node(graph_type{{{}, {edge_init_type{2}}, {}}, node_weights{3, 1, 2}});
-    trg.add_node(graph_type{{{edge_init_type{1}}, {}, {}}, node_weights{1, 2, 3}});
-    trg.add_node(graph_type{{{}, {edge_init_type{3}}, {}, {}}, node_weights{3, 1, 4, 2}});
+    transition_graph_type<graph_t> trg{};
+    trg.add_node(graph_t{{{edge_init_t{1}}, {}}, node_weights{1, 2}});
+    trg.add_node(graph_t{{{}, {edge_init_t{2}}, {}}, node_weights{3, 1, 2}});
+    trg.add_node(graph_t{{{edge_init_t{1}}, {}, {}}, node_weights{1, 2, 3}});
+    trg.add_node(graph_t{{{}, {edge_init_t{3}}, {}, {}}, node_weights{3, 1, 4, 2}});
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, two_nodes, inserted_ahead, "Insert node ahead of the others", 1,
-      [](graph_type& g) { g.insert_node(0, 3); }
+      [](graph_t& g) { g.insert_node(0, 3); }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, two_nodes, inserted_at_end, "Insert node at the end", 1,
-      [](graph_type& g) { g.insert_node(2, 3); }
+      [](graph_t& g) { g.insert_node(2, 3); }
     );
 
     trg.join(
       two_nodes,
       two_nodes,
       "Insert node beyond the end",
-      [this, context](graph_type g) -> graph_type {
+      [this, context](graph_t g) -> graph_t {
         check_exception_thrown<std::out_of_range>(
           append_lines(
             context,
@@ -494,12 +494,12 @@ namespace sequoia::testing
       }
     );
 
-    add_fallible_transition<graph_type>(
+    add_fallible_transition<graph_t>(
       trg, context, inserted_ahead, inserted_ahead_then_between, "Insert node between an edge's ends", 1,
-      [](graph_type& g) { g.insert_node(2, 4); }
+      [](graph_t& g) { g.insert_node(2, 4); }
     );
 
-    check_transitions<graph_type>(context, trg);
+    check_transitions<graph_t>(context, trg);
   }
 
   template<class Graph, class Mutation>

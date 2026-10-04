@@ -400,15 +400,15 @@ namespace sequoia::testing
     };
 
     {
-      using graph_type     = undirected_graph<copyable_weight, null_weight, null_meta_data, EdgeStorageConfig>;
-      using edge_init_type = graph_type::edge_init_type;
+      using graph_t     = undirected_graph<copyable_weight, null_weight, null_meta_data, EdgeStorageConfig>;
+      using edge_init_t = graph_t::edge_init_type;
 
-      STATIC_CHECK(!graph_impl::has_shared_weight_v<typename graph_type::edge_type>);
+      STATIC_CHECK(!graph_impl::has_shared_weight_v<typename graph_t::edge_type>);
 
-      const graph_type graph{{edge_init_type{1, 5}}, {edge_init_type{0, 5}}};
+      const graph_t graph{{edge_init_t{1, 5}}, {edge_init_t{0, 5}}};
 
       {
-        graph_type g{graph};
+        graph_t g{graph};
         check(equality,
               describe("an undirected graph", "returns the result of the mutation"),
               g.mutate_edge_weight(g.cbegin_edges(0), replaceWithSeven),
@@ -416,21 +416,22 @@ namespace sequoia::testing
       }
 
       {
-        graph_type g{graph};
+        graph_t g{graph};
         auto returnList{[](copyable_weight&) { return std::vector<std::any>{1, 2, 3}; }};
         check(equality,
               describe("an undirected graph", "returns a result with an initializer-list constructor unchanged"),
               g.mutate_edge_weight(g.cbegin_edges(0), returnList).size(),
               std::size_t{3});
-      }    }
+      }
+    }
 
     {
-      using graph_type     = embedded_graph<copyable_weight, null_weight, null_meta_data, EdgeStorageConfig>;
-      using edge_init_type = graph_type::edge_init_type;
+      using graph_t     = embedded_graph<copyable_weight, null_weight, null_meta_data, EdgeStorageConfig>;
+      using edge_init_t = graph_t::edge_init_type;
 
-      STATIC_CHECK(!graph_impl::has_shared_weight_v<typename graph_type::edge_type>);
+      STATIC_CHECK(!graph_impl::has_shared_weight_v<typename graph_t::edge_type>);
 
-      graph_type g{{edge_init_type{1, 0, 5}}, {edge_init_type{0, 0, 5}}};
+      graph_t g{{edge_init_t{1, 0, 5}}, {edge_init_t{0, 0, 5}}};
       check(equality,
             describe("an embedded graph", "returns the result of the mutation"),
             g.mutate_edge_weight(g.cbegin_edges(0), replaceWithSeven),
