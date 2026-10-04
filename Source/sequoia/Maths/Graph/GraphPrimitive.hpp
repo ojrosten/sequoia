@@ -204,6 +204,10 @@ namespace sequoia
       template<class N>
       constexpr static bool enable_node_allocation_v{!heterogeneous_nodes<graph_primitive> && !std::is_empty_v<N>};
 
+      constexpr static bool copy_constructible_v{
+        std::is_copy_constructible_v<typename Connectivity::edge_type> && is_deep_copy_constructible_v<node_weight_type>
+      };
+
       template
       <
         alloc EdgeAllocator,

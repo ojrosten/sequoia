@@ -24,10 +24,6 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    void test_weight_update_constraints();
-
-    void test_join_constraints();
-
     template<class EdgeStorageConfig>
     void test_undirected_edge_mutations();
 
@@ -38,10 +34,6 @@ namespace sequoia::testing
     void test_shared_weight_edge_mutations();
 
     void test_node_insertion();
-
-    void test_shared_move_only_weights();
-
-    void test_move_only_meta_data();
 
     template<class Graph>
     using transition_graph_type = transition_checker<Graph>::transition_graph;
