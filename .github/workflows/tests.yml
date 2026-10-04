@@ -424,6 +424,23 @@ jobs:
         working-directory: TestAll
         run: cmake --build --preset ${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/build.log"
 
+      # macOS writes a crash report itself, and reads the executable's debug information to
+      # name each frame's source line. "Report any crash" waits about a minute for the report.
+      # Without a dSYM, the system reads the debug information through the object files, and
+      # writes the report too late for that step: 79s after a TestAll crash on a hosted runner.
+      # With a dSYM, the system wrote the report within 8s. Both figures are from Release builds
+      # with line tables, on 2026-10-04. Each executable was new to the system, as every CI
+      # build's is; the system is quicker with an executable it has read before.
+      #
+      # A failure here warns rather than fails: the suite still runs, and a crash is still
+      # reported, if too late for the summary.
+      - name: Link a dSYM (macOS)
+        if: inputs.needs_testing == 'true' && runner.os == 'macOS'
+        timeout-minutes: 5
+        run: |
+          dsymutil "build/TestAll/${{ matrix.configure }}/TestAll" \
+            || echo "::warning title=No dSYM::${{ matrix.name }}: dsymutil failed, so a crash's report may arrive after Report any crash stops waiting."
+
       # Distinct sites rather than raw lines: gcc and clang repeat a warning once per
       # instantiation, so a raw count says more about templates than about code.
       # MSVC spells it "warning Cnnnn"; the others "warning:".
