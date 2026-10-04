@@ -1,0 +1,94 @@
+name: fine-on-retarget
+
+# Starts fine on a pull request that has just been retargeted to staging.
+#
+# Why this exists. fine runs on a pull request's opened, synchronize and reopened
+# events. A stacked pull request, whose base is another pull request's branch, gets
+# no fine run, and needs none while stacked. When the base pull request merges,
+# GitHub retargets the stacked one to staging. The retarget is an `edited` event,
+# so fine never ran, and staging's required "Every job ran and every job gates"
+# never reported. The pull request sat BLOCKED with every visible check green
+# until a push to its head (#178, 2026-10-04).
+#
+# Why fine.yml does not take `edited` itself. A title or body edit is also an
+# `edited` event. A run guarded by `if: github.event.changes.base` would skip
+# every job on such an edit, and a skipped job reports success. GitHub judges a
+# pull request by the latest check run of each name, so the skipped audit
+# replaces a red one. The edit's run would also join the pull request's
+# concurrency group, and so cancel a gate in flight. Both were measured on
+# scratch PR #199 on 2026-10-04. A title edit took mergeStateStatus from
+# UNSTABLE, over a red audit, to CLEAN. A title edit during a run cancelled
+# the run, and the pull request read CLEAN with the gate never finished. Here,
+# the job that an edit skips is not a required check, and the workflow has no
+# concurrency group, so the skip masks nothing and cancels nothing.
+#
+# Why a dispatch. A dispatch is the one way for this workflow's GITHUB_TOKEN to
+# start fine at once. GitHub documents that a pull_request run caused by the
+# GITHUB_TOKEN, as by a reopen, waits for someone's approval.
+#
+# Why the dispatched run makes its own merge. A pull_request run would not test
+# the right tree either: GitHub's merge ref for a pull request stays merged into
+# the old base after a retarget. On scratch PR #201 the ref was still stale three
+# minutes after the retarget. The retarget's own `edited` run checked out the
+# stale merge, and so did a run started by reopening the pull request. So the
+# dispatched fine run merges the head into staging itself, through tests.yml's
+# `merge_into`.
+#
+# What would invalidate this. fine.yml could take the retarget in place of this
+# workflow only if both of these became true: a pull_request trigger could filter
+# on what an edit changed, so that a title edit started no run; and GitHub
+# recomputed the merge ref at a retarget.
+#
+# Not covered, each failing loudly or waiting as before:
+#   - A pull request from a fork: its branch cannot be dispatched here, so the
+#     job fails and says so.
+#   - A head branch cut before this workflow landed: its fine.yml has no
+#     workflow_dispatch, GitHub refuses the dispatch, and the job fails.
+#   - A pull request that conflicts with its new base: GitHub starts no
+#     pull_request run for it, this one included. Resolving the conflict means a
+#     push, which starts fine.
+on:
+  pull_request:
+    types: [edited]
+    branches: [staging]
+
+jobs:
+  dispatch:
+    name: Start fine on a retarget to staging
+    if: github.event.changes.base
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      FROM: ${{ github.event.changes.base.ref.from }}
+      HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+      HEAD_REF: ${{ github.event.pull_request.head.ref }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Dispatch fine on the head branch
+        run: |
+          set -o pipefail
+          echo "Retargeted from $FROM to staging; head $HEAD_REPO:$HEAD_REF at $HEAD_SHA"
+          if [ "$HEAD_REPO" != "$GH_REPO" ]; then
+            echo "::error::the head branch is in $HEAD_REPO, and only a branch of $GH_REPO can be dispatched: push to the pull request to start fine"
+            exit 1
+          fi
+          # The run's details come back from the dispatch itself, so a dispatch
+          # that started nothing cannot pass for one that did.
+          if ! run=$(gh api -X POST "repos/$GH_REPO/actions/workflows/fine.yml/dispatches" \
+                       -f ref="$HEAD_REF" -F return_run_details=true --jq .workflow_run_id); then
+            echo "::error::GitHub refused to dispatch fine on $HEAD_REF: push to the pull request to start fine"
+            exit 1
+          fi
+          if [ -z "$run" ] || [ "$run" = null ]; then
+            echo "::error::the dispatch returned no run: check fine's runs on $HEAD_REF, and push to the pull request if none started"
+            exit 1
+          fi
+          tested=$(gh api "repos/$GH_REPO/actions/runs/$run" --jq .head_sha)
+          echo "fine run $run tests $tested: https://github.com/$GH_REPO/actions/runs/$run"
+          if [ "$tested" != "$HEAD_SHA" ]; then
+            echo "::warning::fine run $run tests $tested, not the head at the retarget, $HEAD_SHA: the branch has moved, and its push starts fine on the new head"
+          fi

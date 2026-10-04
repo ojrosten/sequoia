@@ -34,6 +34,10 @@ on:
         description: 'Whether the change touches anything the suite reads: `true` or `false`, from scope.yml. Anything else fails every column.'
         required: true
         type: string
+      merge_into:
+        description: 'A branch into which each column merges the checked-out commit before building, so that the column tests what a pull request into that branch would merge; empty to test the checked-out commit itself. A merge that conflicts fails the column.'
+        required: true
+        type: string
       false_negative:
         description: 'Corrupt the checkout so that every column MUST go red, one versioned output and one prediction. The control for the gate itself: a run in this mode that comes back green means the gate cannot see. Roadmap item 148.'
         required: false
@@ -79,6 +83,22 @@ jobs:
         with:
           # docs/ is ~96MB of committed doxygen render; nothing here reads it.
           fetch-depth: 1
+
+      # A dispatched run checks out the dispatched commit, with no merge commit of
+      # GitHub's to test, so this step makes the merge itself. fine-on-retarget.yml
+      # says why GitHub's merge ref will not do. The history is fetched without
+      # blobs, as in scope.yml: the merge needs every commit back to the
+      # merge-base, but blobs only for the paths that both sides changed.
+      - name: Merge into the branch named by merge_into
+        if: inputs.merge_into != ''
+        env:
+          BASE: ${{ inputs.merge_into }}
+        run: |
+          git fetch --quiet --no-tags --filter=blob:none --unshallow origin "+refs/heads/$BASE:refs/remotes/origin/$BASE"
+          tested=$(git rev-parse HEAD)
+          git -c user.name=github-actions -c user.email=github-actions@users.noreply.github.com \
+            merge --no-edit "refs/remotes/origin/$BASE"
+          echo "Testing $(git rev-parse HEAD): $tested merged into $BASE at $(git rev-parse "refs/remotes/origin/$BASE")"
 
       # Every column runs whatever changed, so that its check always reports;
       # scope.yml says why. Every step after this one is conditional on

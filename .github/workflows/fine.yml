@@ -38,10 +38,18 @@ name: fine
 on:
   pull_request:
     branches: [staging]
+  # fine-on-retarget.yml dispatches this workflow on the head branch of a pull
+  # request retargeted to staging, because the retarget starts no pull_request
+  # run here. The dispatched run tests the head merged into staging, as the pull
+  # request's own run would, and reports on the head commit, where staging's rule
+  # looks for this workflow's audit.
+  workflow_dispatch:
 
 # A push to a PR that already has a run in flight cancels that run: a superseded
 # run gates nothing, and Windows runners are scarce. The group is per PR, so runs
-# for different PRs never cancel each other.
+# for different PRs never cancel each other. A dispatched run's group is its
+# branch, so a push to the pull request during that run does not cancel it; the
+# push starts a run of its own on the new head.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -59,6 +67,9 @@ jobs:
     uses: ./.github/workflows/tests.yml
     with:
       needs_testing: ${{ needs.scope.outputs.suite }}
+      # A pull_request run checks out GitHub's merge commit, so it needs no merge
+      # of its own. A dispatched run checks out the branch it was dispatched on.
+      merge_into: ${{ github.event_name == 'workflow_dispatch' && 'staging' || '' }}
       # Fatal at the gates, where preventing accumulation interrupts nobody's work.
       warnings_as_errors: true
       exec_args: '--check-versioned-output'
