@@ -9,6 +9,8 @@
 #include "IteratorTestingUtilities.hpp"
 
 #include <array>
+#include <forward_list>
+#include <list>
 
 namespace sequoia::testing
 {
@@ -58,6 +60,28 @@ namespace sequoia::testing
     constexpr bool has_arrow_operator_v{
       requires (I i) { i.operator->(); }
     };
+
+    template<class I>
+    using iterator_category_t = std::iterator_traits<I>::iterator_category;
+
+    template<class Index>
+    struct index_dereference_policy
+    {
+      using value_type      = int;
+      using reference       = int;
+      using difference_type = int;
+
+      [[nodiscard]]
+      constexpr static reference get(Index i) { return static_cast<int>(i); }
+    };
+
+    struct index_without_equality
+    {
+      int value{};
+
+      [[nodiscard]]
+      constexpr explicit operator int() const noexcept { return value; }
+    };
   }
 
   [[nodiscard]]
@@ -68,6 +92,8 @@ namespace sequoia::testing
 
   void iterator_test::run_tests()
   {
+    test_iterator_concepts();
+
     test_iterator();
     test_const_iterator();
     test_reverse_iterator();
@@ -75,6 +101,55 @@ namespace sequoia::testing
 
     test_const_scaling_iterator();
     test_const_reverse_scaling_iterator();
+  }
+
+  void iterator_test::test_iterator_concepts()
+  {
+    using namespace utilities;
+
+    using i_t = std::array<int, 3>::iterator;
+    using custom_iter_t = iterator<i_t, identity_dereference_policy<i_t, null_data_policy>>;
+
+    STATIC_CHECK(std::random_access_iterator<custom_iter_t>);
+    STATIC_CHECK(std::is_same_v<iterator_category_t<custom_iter_t>, std::random_access_iterator_tag>);
+
+    using ci_t = std::array<int, 3>::const_iterator;
+    using custom_scaling_iter_t = iterator<ci_t, scaling_dereference_policy<ci_t>>;
+
+    STATIC_CHECK(std::random_access_iterator<custom_scaling_iter_t>);
+    STATIC_CHECK(std::is_same_v<iterator_category_t<custom_scaling_iter_t>, std::input_iterator_tag>);
+
+    using li_t = std::list<int>::iterator;
+    using custom_list_iter_t = iterator<li_t, identity_dereference_policy<li_t, null_data_policy>>;
+
+    STATIC_CHECK(std::bidirectional_iterator<custom_list_iter_t>);
+    STATIC_CHECK(!std::random_access_iterator<custom_list_iter_t>);
+    STATIC_CHECK(!std::three_way_comparable<custom_list_iter_t>);
+    STATIC_CHECK(std::is_same_v<iterator_category_t<custom_list_iter_t>, std::bidirectional_iterator_tag>);
+
+    using fli_t = std::forward_list<int>::iterator;
+    using custom_forward_list_iter_t = iterator<fli_t, identity_dereference_policy<fli_t, null_data_policy>>;
+
+    STATIC_CHECK(std::forward_iterator<custom_forward_list_iter_t>);
+    STATIC_CHECK(!std::bidirectional_iterator<custom_forward_list_iter_t>);
+    STATIC_CHECK(!std::three_way_comparable<custom_forward_list_iter_t>);
+    STATIC_CHECK(std::is_same_v<iterator_category_t<custom_forward_list_iter_t>, std::forward_iterator_tag>);
+
+    using isi_t = std::istream_iterator<int>;
+    using custom_istream_iter_t = iterator<isi_t, identity_dereference_policy<isi_t, null_data_policy>>;
+
+    STATIC_CHECK(std::input_iterator<custom_istream_iter_t>);
+    STATIC_CHECK(!std::forward_iterator<custom_istream_iter_t>);
+    STATIC_CHECK(std::is_same_v<iterator_category_t<custom_istream_iter_t>, std::input_iterator_tag>);
+
+    using custom_index_iter_t = iterator<int, index_dereference_policy<int>>;
+
+    STATIC_CHECK(std::random_access_iterator<custom_index_iter_t>);
+
+    using custom_index_without_equality_iter_t
+      = iterator<index_without_equality, index_dereference_policy<index_without_equality>>;
+
+    STATIC_CHECK(!std::equality_comparable<custom_index_without_equality_iter_t>);
   }
 
   void iterator_test::test_iterator()

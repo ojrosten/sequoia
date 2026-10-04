@@ -220,6 +220,42 @@ namespace sequoia::utilities
          && !std::indirectly_writable<reference_type_t<DereferencePolicy>, value_type_t<DereferencePolicy>>)
   };
 
+  namespace impl
+  {
+    template<class I>
+    struct iterator_concept
+    {
+      using type = std::random_access_iterator_tag;
+    };
+
+    template<std::input_iterator I>
+    struct iterator_concept<I>
+    {
+      using type = std::input_iterator_tag;
+    };
+
+    template<std::forward_iterator I>
+    struct iterator_concept<I>
+    {
+      using type = std::forward_iterator_tag;
+    };
+
+    template<std::bidirectional_iterator I>
+    struct iterator_concept<I>
+    {
+      using type = std::bidirectional_iterator_tag;
+    };
+
+    template<std::random_access_iterator I>
+    struct iterator_concept<I>
+    {
+      using type = std::random_access_iterator_tag;
+    };
+
+    template<class I>
+    using iterator_concept_t = iterator_concept<I>::type;
+  }
+
   /** \class iterator
       \brief An iterator with policies controlling dereferencing and auxiliary data.
 
@@ -227,6 +263,12 @@ namespace sequoia::utilities
       it is therefore possible that dereferencing will not return a reference, which can be useful.
       However, this can cause the semantics to be confusing if the underlying iterator is
       indirectly_writable. Therefore, this is forbidden.
+
+      The member `iterator_concept` is the tag of the strongest standard iterator concept which
+      `Iterator` models, up to random access. `iterator_concept` never claims contiguity: a
+      dereference policy may refer to a member of each element. `iterator_concept` is random access
+      if `Iterator` is not an input iterator, as an index is not. The operations which `Iterator`
+      supports then decide which iterator concepts this class models.
    */
 
   template<class Iterator, dereference_policy_for<Iterator> DereferencePolicy>
@@ -241,6 +283,10 @@ namespace sequoia::utilities
     using reference       = DereferencePolicy::reference;
     using difference_type = difference_type_t<Iterator, DereferencePolicy>;
     using pointer         = pointer_type_t<Iterator, DereferencePolicy>;
+
+    using iterator_concept = impl::iterator_concept_t<Iterator>;
+    using iterator_category
+      = std::conditional_t<std::is_reference_v<reference>, iterator_concept, std::input_iterator_tag>;
 
     constexpr iterator() = default;
 
@@ -370,12 +416,14 @@ SEQUOIA_GCC_SUPPRESS_END
 
     [[nodiscard]]
     friend constexpr bool operator==(const iterator& lhs, const iterator& rhs) noexcept
+      requires std::equality_comparable<Iterator>
     {
       return lhs.m_BaseIterator == rhs.m_BaseIterator;
     }
 
     [[nodiscard]]
     friend constexpr auto operator<=>(const iterator& lhs, const iterator& rhs) noexcept
+      requires std::three_way_comparable<Iterator>
     {
       return lhs.m_BaseIterator <=> rhs.m_BaseIterator;
     }

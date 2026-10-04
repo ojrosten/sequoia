@@ -33,6 +33,8 @@ namespace sequoia::testing
     >
     void basic_checks(Iter begin, Sentinel end, Pointer pBegin, std::string_view message, Args... args);
 
+    void test_iterator_concepts();
+
     void test_iterator();
     void test_const_iterator();
     void test_reverse_iterator();
