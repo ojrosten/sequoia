@@ -143,8 +143,10 @@ namespace sequoia::maths
 
     constexpr static graph_flavour flavour{graph_flavour::undirected_embedded};
 
+    [[nodiscard]]
     constexpr static std::size_t order() noexcept { return Order; }
 
+    [[nodiscard]]
     constexpr static std::size_t size() noexcept { return Size; }
 
     using

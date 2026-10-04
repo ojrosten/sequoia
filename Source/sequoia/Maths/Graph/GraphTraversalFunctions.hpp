@@ -44,7 +44,7 @@ namespace sequoia::maths
                           ESTF&& edgeSecondTraversalFn              = {},
                           TaskProcessingModel&& taskProcessingModel = {})
   {
-    return graph_impl::traversal_helper<G>{}.traverse(
+    return graph_impl::traversal_helper<G>::traverse(
              tc,
              graph,
              conditions,
@@ -78,7 +78,7 @@ namespace sequoia::maths
                           EFTF&& edgeFirstTraversalFn               = {},
                           TaskProcessingModel&& taskProcessingModel = {})
   {
-    return graph_impl::traversal_helper<G>{}.traverse(
+    return graph_impl::traversal_helper<G>::traverse(
              tc,
              graph,
              conditions,
@@ -110,7 +110,7 @@ namespace sequoia::maths
                             ETUN&& edgeToUndiscoveredNodeFn           = {},
                             TaskProcessingModel&& taskProcessingModel = {})
   {
-    return graph_impl::traversal_helper<G>{}.traverse(
+    return graph_impl::traversal_helper<G>::traverse(
       depth_first,
       graph,
       conditions,
@@ -146,7 +146,7 @@ namespace sequoia::maths
                           ESTF&& edgeSecondTraversalFn              = {},
                           TaskProcessingModel&& taskProcessingModel = {})
   {
-    return graph_impl::traversal_helper<G>{}.traverse(
+    return graph_impl::traversal_helper<G>::traverse(
              priority_first,
              graph,
              conditions,
@@ -181,7 +181,7 @@ namespace sequoia::maths
                           EFTF&& edgeFirstTraversalFn               = {},
                           TaskProcessingModel&& taskProcessingModel = {})
   {
-    return graph_impl::traversal_helper<G>{}.traverse(
+    return graph_impl::traversal_helper<G>::traverse(
              priority_first,
              graph,
              conditions,

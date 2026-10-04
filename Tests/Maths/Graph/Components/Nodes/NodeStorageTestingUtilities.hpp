@@ -123,19 +123,13 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const type& nodes, const type& prediction)
     {
-      if(check(equality, "Node storaage sizes different", logger, nodes.size(), prediction.size()))
-      {
-        check_elements(logger, nodes, prediction);
-      }
+      check_elements(logger, nodes, prediction);
     }
 
     template<test_mode Mode>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& nodes, const equivalent_type& prediction)
     {
-      if (check(equality, "Node storage sizes different", logger, nodes.size(), sizeof...(Ts)))
-      {
-        check_elements(logger, nodes, prediction);
-      }
+      check_elements(logger, nodes, prediction);
     }
 
   private:
