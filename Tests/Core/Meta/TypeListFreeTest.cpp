@@ -24,17 +24,17 @@ namespace sequoia::testing
 
   void type_list_free_test::test_type_list()
   {
-      check("", [](){ static_assert(std::is_same_v<faithful_type_list<>, type_list<>>);                                         return true; }());
-      check("", [](){ static_assert(std::is_same_v<faithful_type_list<int>, type_list<int>>);                                   return true; }());
-      check("", [](){ static_assert(std::is_same_v<faithful_type_list<int, int>, type_list<int>>);                              return true; }());
-      check("", [](){ static_assert(std::is_same_v<faithful_type_list<int, int, int>, type_list<int>>);                         return true; }());
-      check("", [](){ static_assert(std::is_same_v<faithful_type_list<int, double, int, int, double>, type_list<int, double>>); return true; }());
+    STATIC_CHECK(std::is_same_v<faithful_type_list<>, type_list<>>);
+    STATIC_CHECK(std::is_same_v<faithful_type_list<int>, type_list<int>>);
+    STATIC_CHECK(std::is_same_v<faithful_type_list<int, int>, type_list<int>>);
+    STATIC_CHECK(std::is_same_v<faithful_type_list<int, int, int>, type_list<int>>);
+    STATIC_CHECK(std::is_same_v<faithful_type_list<int, double, int, int, double>, type_list<int, double>>);
   }
 
   void type_list_free_test::test_type_list_union()
   {
-      check("", [](){ static_assert(std::is_same_v<type_list<int>, type_list_union_t<type_list<int>>>);                            return true; }());
-      check("", [](){ static_assert(std::is_same_v<type_list<int, double>, type_list_union_t<type_list<int>, type_list<double>>>); return true; }());
-      check("", [](){ static_assert(std::is_same_v<type_list<int>, type_list_union_t<type_list<int>, type_list<int>>>);            return true; }());
+    STATIC_CHECK(std::is_same_v<type_list<int>, type_list_union_t<type_list<int>>>);
+    STATIC_CHECK(std::is_same_v<type_list<int, double>, type_list_union_t<type_list<int>, type_list<double>>>);
+    STATIC_CHECK(std::is_same_v<type_list<int>, type_list_union_t<type_list<int>, type_list<int>>>);
   }
 }

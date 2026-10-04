@@ -160,26 +160,9 @@ namespace sequoia::testing
 
   void sequences_free_test::test_shift_sequence()
   {
-    check("",
-          [](){
-            static_assert(std::is_same_v<shift_sequence_t<std::index_sequence<>, 42>, std::index_sequence<>>);
-            return true;
-          }()
-    );
-
-    check("",
-          [](){
-            static_assert(std::is_same_v<shift_sequence_t<std::index_sequence<0>, 42>, std::index_sequence<42>>);
-            return true;
-          }()
-    );
-
-    check("",
-          [](){
-            static_assert(std::is_same_v<shift_sequence_t<std::index_sequence<0, 7>, 42>, std::index_sequence<42, 49>>);
-            return true;
-          }()
-    );
+    STATIC_CHECK(std::is_same_v<shift_sequence_t<std::index_sequence<>, 42>, std::index_sequence<>>);
+    STATIC_CHECK(std::is_same_v<shift_sequence_t<std::index_sequence<0>, 42>, std::index_sequence<42>>);
+    STATIC_CHECK(std::is_same_v<shift_sequence_t<std::index_sequence<0, 7>, 42>, std::index_sequence<42, 49>>);
   }
 
   void sequences_free_test::test_sequence_partial_sum()

@@ -34,7 +34,7 @@ namespace sequoia::testing
 
   void free_checkers_meta_free_test::run_tests()
   {
-    check("", [](){ static_assert(is_customized_check<general_equivalence_check_t<int>>); return true; }());
-    check("", [](){ static_assert(is_customized_check<general_weak_equivalence_check_t<int>>); return true; }());
+    STATIC_CHECK(is_customized_check<general_equivalence_check_t<int>>);
+    STATIC_CHECK(is_customized_check<general_weak_equivalence_check_t<int>>);
   }
 }
