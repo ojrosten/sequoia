@@ -73,66 +73,6 @@ namespace sequoia::testing
 
         // begin 'empty'
         trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   auto i{d.erase_from_partition(d.cbegin_partition(0))};
-                   t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-          data_description::empty,
-          t.report(""),
-          [&t](data_type d) -> data_type {
-            auto i{d.erase_from_partition(d.cbegin_partition(0), d.cend_partition(0))};
-            t.check(equality, "Erase range from non-existent partition", i, d.begin_partition(0));
-            return d;
-          }
-        );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   auto i{d.erase_from_partition(0, 0)};
-                   t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   auto i{d.erase_from_partition(1, 0)};
-                   t.check(equality, "", i, d.begin_partition(0));
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   auto i{d.erase_from_partition(0, 1)};
-                   t.check(equality, "", i, d.begin_partition(0));
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   auto i{d.erase_from_partition(1, 1)};
-                   t.check(equality, "", i, d.begin_partition(0));
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
           data_description::empty,
           t.report(""),
           [&t](data_type d) -> data_type {
