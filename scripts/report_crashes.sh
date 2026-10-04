@@ -80,6 +80,9 @@ report_linux() {
 # type 309 - since the directory also collects reports of other kinds. What a reader wants of a
 # crash is the exception and the faulting thread's frames, so those come first; the whole report
 # follows, for everything else. A .crash report, the older form, is not JSON, and is printed whole.
+#
+# The system gives a frame its source file and line, and lists the frames inlined into it, when it
+# can read the executable's debug information.
 is_crash_report() {
   case "$1" in
     *.crash) return 0 ;;
@@ -104,7 +107,9 @@ faulting = body["threads"][body["faultingThread"]]
 for frame in faulting["frames"][:int(sys.argv[2])]:
     index = frame.get("imageIndex", -1)
     image = images[index].get("name", "?") if 0 <= index < len(images) else "?"
-    print(f"  {image}: {frame.get('symbol', hex(frame.get('imageOffset', 0)))}")
+    location = f" ({frame['sourceFile']}:{frame['sourceLine']})" if {"sourceFile", "sourceLine"} <= frame.keys() else ""
+    inlined = " [inlined]" if frame.get("inline") else ""
+    print(f"  {image}: {frame.get('symbol', hex(frame.get('imageOffset', 0)))}{location}{inlined}")
 SUMMARY
     echo "-- The whole report --"
     cat "$report"
