@@ -64,7 +64,9 @@ namespace sequoia::maths
     using edges_initializer   = primitive_type::edges_initializer;
     using edge_storage_type   = connectivity_type::edge_storage_type;
     using edge_allocator_type = edge_storage_type::allocator_type;
-
+  protected:
+    using primitive_type::copy_constructible_v;
+  public:
     graph_base() = default;
 
     explicit graph_base(const edge_allocator_type& edgeAllocator)
@@ -106,12 +108,12 @@ namespace sequoia::maths
     graph_base(const graph_base&) = default;
 
     graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator)
-      requires primitive_type::copy_constructible_v
+      requires copy_constructible_v
       : primitive_type{in, edgeAllocator}
     {}
 
     template<alloc EdgePartitionsAllocator>
-      requires (allocatable_partitions<edge_storage_type> && primitive_type::copy_constructible_v)
+      requires (allocatable_partitions<edge_storage_type> && copy_constructible_v)
     graph_base(const graph_base& in,
                const edge_allocator_type& edgeAllocator,
                const EdgePartitionsAllocator& edgePartitionsAllocator)
@@ -186,7 +188,9 @@ namespace sequoia::maths
     using edge_storage_type          = connectivity_type::edge_storage_type;
     using edge_allocator_type        = edge_storage_type::allocator_type;
     using node_weight_allocator_type = node_storage_type::node_weight_container_type::allocator_type;
-
+  protected:
+    using primitive_type::copy_constructible_v;
+  public:
     graph_base() = default;
 
     graph_base(edges_initializer edges) : primitive_type{edges} {}
@@ -241,12 +245,12 @@ namespace sequoia::maths
     graph_base(const graph_base& in,
                const edge_allocator_type& edgeAllocator,
                const node_weight_allocator_type& nodeWeightAllocator)
-      requires primitive_type::copy_constructible_v
+      requires copy_constructible_v
       : primitive_type{in, edgeAllocator, nodeWeightAllocator}
     {}
 
     template<alloc EdgePartitionsAllocator>
-      requires (allocatable_partitions<edge_storage_type> && primitive_type::copy_constructible_v)
+      requires (allocatable_partitions<edge_storage_type> && copy_constructible_v)
     graph_base(const graph_base& in,
                const edge_allocator_type& edgeAllocator,
                const EdgePartitionsAllocator& edgePartitionsAllocator,
