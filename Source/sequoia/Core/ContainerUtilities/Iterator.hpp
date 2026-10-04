@@ -223,37 +223,29 @@ namespace sequoia::utilities
   namespace impl
   {
     template<class I>
-    struct iterator_concept
+    [[nodiscard]]
+    consteval auto iterator_concept_tag() noexcept
     {
-      using type = std::random_access_iterator_tag;
-    };
-
-    template<std::input_or_output_iterator I>
-    struct iterator_concept<I>
-    {
-      using type = std::input_iterator_tag;
-    };
-
-    template<std::forward_iterator I>
-    struct iterator_concept<I>
-    {
-      using type = std::forward_iterator_tag;
-    };
-
-    template<std::bidirectional_iterator I>
-    struct iterator_concept<I>
-    {
-      using type = std::bidirectional_iterator_tag;
-    };
-
-    template<std::random_access_iterator I>
-    struct iterator_concept<I>
-    {
-      using type = std::random_access_iterator_tag;
-    };
+      if constexpr(std::random_access_iterator<I> || !std::input_or_output_iterator<I>)
+      {
+        return std::random_access_iterator_tag{};
+      }
+      else if constexpr(std::bidirectional_iterator<I>)
+      {
+        return std::bidirectional_iterator_tag{};
+      }
+      else if constexpr(std::forward_iterator<I>)
+      {
+        return std::forward_iterator_tag{};
+      }
+      else
+      {
+        return std::input_iterator_tag{};
+      }
+    }
 
     template<class I>
-    using iterator_concept_t = iterator_concept<I>::type;
+    using iterator_concept_t = decltype(iterator_concept_tag<I>());
   }
 
   /** \class iterator
