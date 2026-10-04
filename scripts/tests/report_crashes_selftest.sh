@@ -12,6 +12,9 @@
 #     inlined, and the function it is inlined into is not marked;
 #   - a crash before the since file is not, so a job reports only its own suite's crashes;
 #   - with no crash, the count is zero, rather than the last line being absent;
+#   - a crash reported in any of the directories is reported, with its path, and counted;
+#   - a directory that cannot be read is named, and one that does not exist is not;
+#   - the directories listed are the user's and the system's DiagnosticReports;
 #   - arguments which do not name a directory and a file are refused.
 #
 # Only macOS's branch runs here: the system writes its crash reports itself, a few seconds after
@@ -22,8 +25,10 @@ set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
 script="$here/../report_crashes.sh"
 tmp=$(mktemp -d)
-reports="$HOME/Library/Logs/DiagnosticReports"
-trap 'rm -rf "$tmp"; rm -f "$reports"/CrashingStandIn* "$reports"/InliningStandIn*' EXIT
+source "$here/../macos_crash_reports.sh"
+reports=()
+while IFS= read -r directory; do reports+=("$directory"); done < <(macos_crash_report_directories)
+trap 'rm -rf "$tmp"; for directory in "${reports[@]}"; do rm -f "$directory"/CrashingStandIn* "$directory"/InliningStandIn*; done' EXIT
 fails=0
 
 fail() { echo "FAIL: $1"; fails=$((fails+1)); }
@@ -66,7 +71,7 @@ sleep 1
 # The system writes each report a few seconds after the crash.
 for stand_in in "$name" "$inlining"; do
   for attempt in $(seq 1 60); do
-    find "$reports" -type f -newer "$tmp/before" -name "$stand_in*" 2> /dev/null | grep -q . && break
+    find "${reports[@]}" -type f -newer "$tmp/before" -name "$stand_in*" 2> /dev/null | grep -q . && break
     sleep 1
   done
 done
@@ -83,6 +88,23 @@ check "the inlining caller is not marked inlined"         yes "^  $inlining: cal
 bash "$script" "$tmp/dumps" "$tmp/after" > "$tmp/earlier.txt" 2>&1
 check "a crash before the since file is not reported"     no  "^== Crash: $name" "$tmp/earlier.txt"
 check "with no crash since, the count is zero"            yes "^Crashes found: 0$" "$tmp/earlier.txt"
+
+# A temporary directory stands in for the system's. The first stand-in's report is copied into it,
+# and it is listed after an empty directory, an unreadable one and an absent one.
+mkdir "$tmp/user-directory" "$tmp/system-directory" "$tmp/locked-directory"
+cp "$(find "${reports[@]}" -type f -newer "$tmp/before" -name "$name*" 2> /dev/null | head -1)" "$tmp/system-directory/"
+chmod 000 "$tmp/locked-directory"
+REPORT_CRASHES_MACOS_DIRECTORIES="$tmp/user-directory:$tmp/system-directory:$tmp/locked-directory:$tmp/absent-directory" \
+  bash "$script" "$tmp/dumps" "$tmp/before" > "$tmp/elsewhere.txt" 2>&1
+chmod 700 "$tmp/locked-directory"
+check "a crash in a second directory is reported"         yes "^Report: $tmp/system-directory/$name" "$tmp/elsewhere.txt"
+check "a crash in a second directory is counted"          yes "^Crashes found: 1$" "$tmp/elsewhere.txt"
+check "an unreadable directory is named"                  yes "^Not read: $tmp/locked-directory " "$tmp/elsewhere.txt"
+check "an absent directory is not named"                  no  "absent-directory" "$tmp/elsewhere.txt"
+
+( unset REPORT_CRASHES_MACOS_DIRECTORIES; source "$here/../macos_crash_reports.sh"; macos_crash_report_directories ) > "$tmp/directories.txt"
+check "the user's directory is listed"                    yes "^$HOME/Library/Logs/DiagnosticReports$" "$tmp/directories.txt"
+check "the system's directory is listed"                  yes "^/Library/Logs/DiagnosticReports$" "$tmp/directories.txt"
 
 for arguments in "" "$tmp/dumps" "$tmp/nowhere $tmp/before" "$tmp/dumps $tmp/nothing"; do
   # Word splitting is the point: each case is a list of arguments.
