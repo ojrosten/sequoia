@@ -34,6 +34,10 @@ on:
         description: 'Whether the change touches anything the suite reads: `true` or `false`, from scope.yml. Anything else fails every column.'
         required: true
         type: string
+      merge_into:
+        description: 'A branch into which each column merges the checked-out commit before building, so that the column tests what a pull request into that branch would merge; empty to test the checked-out commit itself. A merge that conflicts fails the column.'
+        required: true
+        type: string
       false_negative:
         description: 'Corrupt the checkout so that every column MUST go red, one versioned output and one prediction. The control for the gate itself: a run in this mode that comes back green means the gate cannot see. Roadmap item 148.'
         required: false
@@ -79,6 +83,35 @@ jobs:
         with:
           # docs/ is ~96MB of committed doxygen render; nothing here reads it.
           fetch-depth: 1
+
+      # When `merge_into` names a branch, this step merges that branch into the
+      # checkout, so that the column tests what a pull request into the branch
+      # would merge. fine's dispatched run is the one caller that names a branch;
+      # fine-on-retarget.yml says why it cannot use GitHub's merge ref.
+      #
+      # A run that merges here builds with the checkout's workflows and scripts,
+      # not the merged ones. So the step fails if the branch has changed .github
+      # or scripts since the merge-base. Otherwise the gate could pass on a recipe
+      # that the branch has replaced.
+      #
+      # The step fetches the history without blobs, as scope.yml does. The merge
+      # needs every commit back to the merge-base, but blobs only for the paths the
+      # branch changed since then.
+      - name: Merge the branch named by merge_into
+        if: inputs.merge_into != ''
+        env:
+          BASE: ${{ inputs.merge_into }}
+        run: |
+          git fetch --quiet --no-tags --filter=blob:none --unshallow origin "+refs/heads/$BASE:refs/remotes/origin/$BASE"
+          tested=$(git rev-parse HEAD)
+          git -c user.name="sequoia CI" -c user.email=ci@example.invalid \
+            merge --no-edit "refs/remotes/origin/$BASE"
+          echo "Testing $(git rev-parse HEAD): $tested merged with $BASE at $(git rev-parse "refs/remotes/origin/$BASE")"
+          if ! git diff --quiet "$tested" HEAD -- .github scripts; then
+            git diff --stat "$tested" HEAD -- .github scripts
+            echo "::error::$BASE has changed .github or scripts since its merge-base with $tested, and this run builds with the old ones: rebase onto $BASE and push"
+            exit 1
+          fi
 
       # Every column runs whatever changed, so that its check always reports;
       # scope.yml says why. Every step after this one is conditional on

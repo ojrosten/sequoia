@@ -223,6 +223,7 @@ jobs:
     uses: ./.github/workflows/tests.yml
     with:
       needs_testing: ${{ needs.scope.outputs.suite }}
+      merge_into: ''
       warnings_as_errors: true
       false_negative: ${{ inputs.false_negative == true }}
       exec_args: '--check-versioned-output'

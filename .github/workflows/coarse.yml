@@ -87,6 +87,7 @@ jobs:
     uses: ./.github/workflows/tests.yml
     with:
       needs_testing: ${{ needs.scope.outputs.suite }}
+      merge_into: ''
       # Counted and annotated, not fatal: a red run here should mean the code is
       # broken rather than untidy. The gates refuse warnings outright.
       warnings_as_errors: false
