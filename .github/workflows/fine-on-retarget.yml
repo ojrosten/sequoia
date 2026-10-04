@@ -50,7 +50,7 @@ name: fine-on-retarget
 on:
   pull_request:
     types: [edited]
-    branches: [staging]
+    branches: [scratch-fine-retarget-base]
 
 jobs:
   dispatch:

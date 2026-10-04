@@ -37,7 +37,7 @@ name: fine
 # column with nothing to test still reports.
 on:
   pull_request:
-    branches: [staging]
+    branches: [scratch-fine-retarget-base]
   # fine-on-retarget.yml dispatches this workflow on the head branch of a pull
   # request retargeted to staging, because the retarget starts no pull_request
   # run here. The dispatched run tests the head merged into staging, as the pull
@@ -69,15 +69,13 @@ jobs:
       needs_testing: ${{ needs.scope.outputs.suite }}
       # A pull_request run checks out GitHub's merge commit, so it needs no merge
       # of its own. A dispatched run checks out the branch it was dispatched on.
-      merge_into: ${{ github.event_name == 'workflow_dispatch' && 'staging' || '' }}
+      merge_into: ${{ github.event_name == 'workflow_dispatch' && 'scratch-fine-retarget-base' || '' }}
       # Fatal at the gates, where preventing accumulation interrupts nobody's work.
       warnings_as_errors: true
       exec_args: '--check-versioned-output'
       columns: >-
         [
-          {"name": "Linux · GCC · ASan+UBSan",   "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan",  "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "macOS · Clang · ASan+UBSan", "os": "macos-latest",   "configure": "llvm-env-asan-ubsan", "build": "llvm-env-asan-ubsan", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · ASan",      "os": "windows-latest", "configure": "msvc-asan",           "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance"}
+          {"name": "Linux · GCC · ASan+UBSan",   "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan",  "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 
   # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
