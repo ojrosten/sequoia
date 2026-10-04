@@ -69,7 +69,7 @@ jobs:
       needs_testing: ${{ needs.scope.outputs.suite }}
       # A pull_request run checks out GitHub's merge commit, so it needs no merge
       # of its own. A dispatched run checks out the branch it was dispatched on.
-      merge_into: ${{ github.event_name == 'workflow_dispatch' && 'scratch-fine-retarget-base' || '' }}
+      merge_into: ''
       # Fatal at the gates, where preventing accumulation interrupts nobody's work.
       warnings_as_errors: true
       exec_args: '--check-versioned-output'

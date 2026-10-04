@@ -55,7 +55,7 @@ on:
 jobs:
   dispatch:
     name: Start fine on a retarget to staging
-    if: github.event.changes.base
+    if: true
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
