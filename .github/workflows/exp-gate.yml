@@ -1,0 +1,30 @@
+name: exp-gate
+# Scratch: option A, `edited` added to the types with every gating job guarded
+# by `if:` so that only a base change runs it. The audit's verdict comes from
+# exp/verdict and the slow job's length from exp/sleep.
+on:
+  pull_request:
+    branches: [scratch-fine-retarget-base]
+    types: [opened, synchronize, reopened, edited]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  slow:
+    name: Exp slow
+    if: github.event.action != 'edited' || github.event.changes.base
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: |
+          echo "action=${{ github.event.action }} sha=$GITHUB_SHA ref=$GITHUB_REF head=${{ github.event.pull_request.head.sha }}"
+          echo 'changes=${{ toJSON(github.event.changes) }}'
+          sleep "$(cat exp/sleep)"
+  audit:
+    name: Exp gate audit
+    needs: [slow]
+    if: ${{ !cancelled() && (github.event.action != 'edited' || github.event.changes.base) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: test "$(cat exp/verdict)" = green
