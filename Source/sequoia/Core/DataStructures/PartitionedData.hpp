@@ -18,9 +18,12 @@
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
+#include <format>
+#include <limits>
 #include <string>
 #include <numeric>
 #include <stdexcept>
+#include <utility>
 
 namespace sequoia
 {
@@ -102,9 +105,11 @@ namespace sequoia
         }
       }
 
-      bucketed_sequence(const bucketed_sequence&) = default;
+      bucketed_sequence(const bucketed_sequence&)
+        requires is_deep_copy_constructible_v<container_type> = default;
 
       bucketed_sequence(const bucketed_sequence& other, const allocator_type& allocator)
+        requires is_deep_copy_constructible_v<container_type>
        : m_Buckets(std::allocator_traits<allocator_type>::select_on_container_copy_construction(allocator))
       {
         m_Buckets.reserve(other.m_Buckets.size());
@@ -130,7 +135,8 @@ namespace sequoia
 
       bucketed_sequence& operator=(bucketed_sequence&&) noexcept = default;
 
-      bucketed_sequence& operator=(const bucketed_sequence&) = default;
+      bucketed_sequence& operator=(const bucketed_sequence&)
+        requires is_deep_copy_assignable_v<container_type> = default;
 
       void swap(bucketed_sequence& other)
         noexcept(noexcept(std::ranges::swap(this->m_Buckets, other.m_Buckets)))
@@ -264,19 +270,16 @@ namespace sequoia
       template<class... Args>
       partition_iterator insert_to_partition(const_partition_iterator pos, Args&&... args)
       {
-        const auto source{pos.partition_index()};
-        check_range("insert_to_partition", source);
-
-        auto iter{m_Buckets[source].emplace(pos.base_iterator(), std::forward<Args>(args)...)};
-
-        return partition_iterator{iter, source};
+        check_range("insert_to_partition", pos.partition_index());
+        return insert_to_partition_unchecked(pos, std::forward<Args>(args)...);
       }
 
       template<class... Args>
       partition_iterator insert_to_partition(const size_type index, const size_type pos, Args&&... args)
       {
         check_range("insert_to_partition", index, pos);
-        return insert_to_partition(std::ranges::next(begin_partition_raw(index), pos, end_partition_raw(index)), std::forward<Args>(args)...);
+        const auto insertionPoint{std::ranges::next(begin_partition_raw(index), pos, end_partition_raw(index))};
+        return insert_to_partition_unchecked(insertionPoint, std::forward<Args>(args)...);
       }
 
       partition_iterator erase_from_partition(const_partition_iterator iter)
@@ -447,7 +450,7 @@ namespace sequoia
       {
         if(index >= m_Buckets.size())
         {
-          throw std::out_of_range{std::string{"bucketed_sequence::"}.append(method).append("index ").append(std::to_string(index)).append(" out of range")};
+          throw std::out_of_range{std::format("bucketed_sequence::{}: index {} out of range", method, index)};
         }
       }
 
@@ -457,8 +460,17 @@ namespace sequoia
         const auto bucketSize{m_Buckets[index].size()};
         if(pos > bucketSize)
         {
-          throw std::out_of_range{std::string{"bucketed_sequence::"}.append(method).append("pos ").append(std::to_string(pos)).append(" out of range")};
+          throw std::out_of_range{std::format("bucketed_sequence::{}: pos {} out of range", method, pos)};
         }
+      }
+
+      template<class... Args>
+      partition_iterator insert_to_partition_unchecked(const_partition_iterator pos, Args&&... args)
+      {
+        const auto source{pos.partition_index()};
+        auto iter{m_Buckets[source].emplace(pos.base_iterator(), std::forward<Args>(args)...)};
+
+        return partition_iterator{iter, source};
       }
 
       void check_for_empty(std::string_view method) const
@@ -482,6 +494,10 @@ namespace sequoia
     //===================================Contiguous storage===================================//
 
     /** \brief Base class for partitioned sequences where data is contiguous across all partitions.
+
+        A derived class must ensure that `index_type` can count the sequence's elements and its partitions, since
+        `index_type` holds both the offset at which each partition ends and each partition's index. The maximum of
+        `index_type` is reserved for `npos`.
      */
 
     template<class T, class Container, class Partitions>
@@ -503,7 +519,8 @@ namespace sequoia
 
       constexpr partitioned_sequence_base() = default;
 
-      constexpr partitioned_sequence_base(const partitioned_sequence_base&) = default;
+      constexpr partitioned_sequence_base(const partitioned_sequence_base&)
+        requires is_deep_copy_constructible_v<container_type> = default;
 
       [[nodiscard]]
       constexpr bool empty() const noexcept { return m_Data.empty(); }
@@ -669,7 +686,8 @@ namespace sequoia
 
       constexpr partitioned_sequence_base& operator=(partitioned_sequence_base&&) noexcept = default;
 
-      constexpr partitioned_sequence_base& operator=(const partitioned_sequence_base&) = default;
+      constexpr partitioned_sequence_base& operator=(const partitioned_sequence_base&)
+        requires is_deep_copy_assignable_v<container_type> = default;
 
       ~partitioned_sequence_base() = default;
 
@@ -713,6 +731,7 @@ namespace sequoia
 
       template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(const partitioned_sequence_base& other, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
+        requires is_deep_copy_constructible_v<container_type>
         : m_Partitions{other.m_Partitions, partitionsAllocator}
         , m_Data(copy(other.m_Data, allocator))
       {}
@@ -733,7 +752,7 @@ namespace sequoia
         if(pos < num_partitions())
         {
           auto iter{m_Partitions.begin() + pos};
-          const index_type newPartitionBound{(pos == 0) ? 0 : *(iter - 1)};
+          const index_type newPartitionBound{(pos == 0) ? index_type{} : m_Partitions[pos - 1]};
           m_Partitions.insert(iter, newPartitionBound);
         }
         else
@@ -814,19 +833,16 @@ namespace sequoia
       template<class... Args>
       partition_iterator insert_to_partition(const_partition_iterator pos, Args&&... args)
       {
-        const auto source{pos.partition_index()};
-        check_range("insert_to_partition", source);
-
-        auto iter{m_Data.emplace(pos.base_iterator(), std::forward<Args>(args)...)};
-        increment_partition_indices(source);
-
-        return partition_iterator{iter, source};
+        check_range("insert_to_partition", pos.partition_index());
+        return insert_to_partition_unchecked(pos, std::forward<Args>(args)...);
       }
 
       template<class... Args>
       partition_iterator insert_to_partition(const size_type index, const size_type pos, Args&&... args)
       {
-        return insert_to_partition(std::ranges::next(cbegin_partition(index), pos, cend_partition(index)), std::forward<Args>(args)...);
+        check_range("insert_to_partition", index, pos);
+        const auto insertionPoint{std::ranges::next(cbegin_partition(index), pos, cend_partition(index))};
+        return insert_to_partition_unchecked(insertionPoint, std::forward<Args>(args)...);
       }
 
       partition_iterator erase_from_partition(const_partition_iterator iter)
@@ -936,18 +952,28 @@ namespace sequoia
       {
         if(index >= m_Partitions.size())
         {
-          throw std::out_of_range{std::string{"partition_sequence::"}.append(method).append("index ").append(std::to_string(index)).append(" out of range")};
+          throw std::out_of_range{std::format("partitioned_sequence::{}: index {} out of range", method, index)};
         }
       }
 
-      void check_range(std::string_view method, const size_type index, const index_type pos) const
+      void check_range(std::string_view method, const size_type index, const size_type pos) const
       {
         check_range(method, index);
         const index_type maxPos{index ? m_Partitions[index] - m_Partitions[index - 1] : m_Partitions[index]};
         if(pos > maxPos)
         {
-          throw std::out_of_range{std::string{"partition_sequence::"}.append(method).append("pos ").append(std::to_string(pos)).append(" out of range")};
+          throw std::out_of_range{std::format("partitioned_sequence::{}: pos {} out of range", method, pos)};
         }
+      }
+
+      template<class... Args>
+      partition_iterator insert_to_partition_unchecked(const_partition_iterator pos, Args&&... args)
+      {
+        const auto source{pos.partition_index()};
+        auto iter{m_Data.emplace(pos.base_iterator(), std::forward<Args>(args)...)};
+        increment_partition_indices(source);
+
+        return partition_iterator{iter, source};
       }
 
       template<class PartitionIterator, std::input_or_output_iterator Iterator>
@@ -961,16 +987,12 @@ namespace sequoia
 
       template<class PartitionIterator, std::input_or_output_iterator Iterator>
       [[nodiscard]]
-      constexpr PartitionIterator get_end_iterator(const index_type i, Iterator iter) const
+      constexpr PartitionIterator get_end_iterator(const index_type i, Iterator iter) const noexcept
       {
         index_type index{PartitionIterator::reversed() ? index_type{} : npos};
-        index_type offset{
-          [sz{m_Data.size()}] () {
-            if (sz > std::numeric_limits<index_type>::max())
-              throw std::out_of_range{"Partition offset out of range"};
-            return static_cast<index_type>(sz);
-          }()
-        };
+        // The cast is lossless: each derived class is contractually obliged to ensure
+        // index_type is sufficiently wide to hold the maximum size m_Data can reach
+        index_type offset{static_cast<index_type>(m_Data.size())};
 
         if(i < m_Partitions.size())
         {
@@ -982,7 +1004,14 @@ namespace sequoia
       }
     };
 
+    /** \brief Growable storage for partitioned data such that data is contiguous across all partitions. */
+
     template<class T, class Container=std::vector<T>, class Partitions=maths::monotonic_sequence<std::size_t, std::ranges::greater>>
+      requires (    integer<typename Partitions::value_type>
+                && std::cmp_less_equal(std::numeric_limits<typename Partitions::size_type>::max(),
+                                        std::numeric_limits<typename Partitions::value_type>::max())
+                && std::cmp_less_equal(std::numeric_limits<typename Container::size_type>::max(),
+                                        std::numeric_limits<typename Partitions::value_type>::max()))
     class partitioned_sequence : public partitioned_sequence_base<T, Container, Partitions>
     {
     private:
@@ -1006,6 +1035,7 @@ namespace sequoia
       partitioned_sequence(const partitioned_sequence&) = default;
 
       partitioned_sequence(const partitioned_sequence& s, const allocator_type& allocator, const partitions_allocator_type& partitionAllocator)
+        requires is_deep_copy_constructible_v<container_type>
         : partitioned_sequence_base<T, Container, Partitions>(s, allocator, partitionAllocator)
       {}
 
@@ -1089,7 +1119,12 @@ namespace sequoia
 
     };
 
+    /** \brief Fixed-size storage for partitioned data such that data is contiguous across all partitions. */
+
     template<class T, std::size_t Npartitions, std::size_t Nelements, class Partitions=maths::static_monotonic_sequence<std::size_t, Npartitions, std::ranges::greater>>
+      requires (    integer<typename Partitions::value_type>
+                && std::cmp_less_equal(Npartitions, std::numeric_limits<typename Partitions::value_type>::max())
+                && std::cmp_less_equal(Nelements,   std::numeric_limits<typename Partitions::value_type>::max()))
     class static_partitioned_sequence :
       public partitioned_sequence_base<T, std::array<T, Nelements>, Partitions>
     {
