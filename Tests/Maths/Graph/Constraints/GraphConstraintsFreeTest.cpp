@@ -422,7 +422,8 @@ namespace sequoia::testing
               describe("an undirected graph", "returns a result with an initializer-list constructor unchanged"),
               g.mutate_edge_weight(g.cbegin_edges(0), returnList).size(),
               std::size_t{3});
-      }    }
+      }
+    }
 
     {
       using graph_t     = embedded_graph<copyable_weight, null_weight, null_meta_data, EdgeStorageConfig>;
