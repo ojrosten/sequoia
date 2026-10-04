@@ -399,6 +399,9 @@ jobs:
               control_pattern='core.*' ;;
             macOS)
               bash -c 'kill -SEGV $$' || true
+              source scripts/macos_crash_reports.sh
+              reports=()
+              while IFS= read -r directory; do reports+=("$directory"); done < <(macos_crash_report_directories)
               control_pattern= ;;
           esac
 
@@ -407,7 +410,7 @@ jobs:
             if [ -n "$control_pattern" ]; then
               found=$(find "$dumps" -maxdepth 1 -name "$control_pattern" | head -1 || true)
             else
-              found=$(find "$HOME/Library/Logs/DiagnosticReports" -newer "$dumps" -name 'bash*' 2> /dev/null | head -1 || true)
+              found=$(find "${reports[@]}" -newer "$dumps" -name 'bash*' 2> /dev/null | head -1 || true)
             fi
             [ -z "$found" ] || break
             sleep 1
@@ -695,8 +698,10 @@ jobs:
       # the crash, so after a failed suite this waits for one, up to a bound, since the
       # steps between the suite and this one can take less time than that. Linux writes a
       # core before the process is gone. On Linux, a core limit the suite step could not
-      # raise is a warning, since its crash would leave no core. The timeout bounds cdb's
-      # downloads of Windows' symbols, and a report which times out does not fail the job.
+      # raise is a warning, since its crash would leave no core. So is a macOS report
+      # directory the step cannot read, since a crash reported there would go uncounted. The
+      # timeout bounds cdb's downloads of Windows' symbols, and a report which times out does
+      # not fail the job.
       - name: Report any crash
         if: ${{ always() && inputs.needs_testing == 'true' }}
         timeout-minutes: 10
@@ -713,15 +718,20 @@ jobs:
           fi
 
           if [ "${{ steps.suite.outcome }}" = failure ] || [ "${{ steps.repeat.outcome }}" = failure ]; then
+            source scripts/macos_crash_reports.sh
+            reports=()
+            while IFS= read -r directory; do reports+=("$directory"); done < <(macos_crash_report_directories)
             case "$RUNNER_OS" in
-              macOS)   written=("$HOME/Library/Logs/DiagnosticReports" -newer "$dumps/since" -name '*.ips'
+              macOS)   written=("${reports[@]}" -newer "$dumps/since" -name '*.ips'
                                 -exec grep -l '"bug_type":"309"' {} +) ;;
               Windows) written=("$dumps" -maxdepth 1 -newer "$dumps/since" -name '*.dmp') ;;
               *)       written=() ;;
             esac
             if [ ${#written[@]} -gt 0 ]; then
               for attempt in $(seq 1 60); do
-                find "${written[@]}" 2> /dev/null | grep -q . && break
+                # The output is tested, not the exit status: under pipefail, find's failure on an
+                # absent or unreadable directory would hide a report found in another.
+                [ -n "$(find "${written[@]}" 2> /dev/null | head -1)" ] && break
                 sleep 1
               done
               sleep 2
@@ -730,6 +740,9 @@ jobs:
 
           report="$RUNNER_TEMP/crashes.txt"
           scripts/report_crashes.sh "$dumps" "$dumps/since" > "$report" 2>&1
+          sed -n '/^== Crash: /q; s/^Not read: //p' "$report" | while IFS= read -r unread; do
+            echo "::warning title=Crash reports unread::${{ matrix.name }}: $unread."
+          done
           count=$(sed -n 's/^Crashes found: //p' "$report")
           if [ "${count:-0}" -gt 0 ]; then
             echo "::error title=Crash::${{ matrix.name }}: $count crash(es); their stacks are below, and in run-log/crashes/."

@@ -6,7 +6,8 @@
 #   - Windows: the minidumps Windows Error Reporting wrote to <dump directory>, read with cdb;
 #   - Linux: the cores the kernel wrote to <dump directory>, each named
 #     core.<process name>.<pid>, read with gdb;
-#   - macOS: the crash reports the system wrote to ~/Library/Logs/DiagnosticReports.
+#   - macOS: the crash reports the system wrote to the directories macos_crash_report_directories
+#     names. A directory that cannot be read is named in a line beginning "Not read:".
 #
 # A suite that crashes ends with an exit status and nothing else, and the stacks are what say
 # where it was. A crash whose stacks cannot be read is still counted, and says why, rather than
@@ -30,6 +31,7 @@ frames_per_thread=50
 found=0
 
 source "$(dirname "$0")/windows_debugger.sh"
+source "$(dirname "$0")/macos_crash_reports.sh"
 
 case "$(uname -s)" in
   MINGW*|MSYS*|CYGWIN*) platform=windows ;;
@@ -91,11 +93,22 @@ is_crash_report() {
 }
 
 report_macos() {
-  local report
+  local directory report directories=()
+  while IFS= read -r directory; do
+    [ -d "$directory" ] || continue
+    if [ -r "$directory" ] && [ -x "$directory" ]; then
+      directories+=("$directory")
+    else
+      echo "Not read: $directory cannot be read as $(id -un), so a crash reported there is not counted"
+    fi
+  done < <(macos_crash_report_directories)
+  [ ${#directories[@]} -gt 0 ] || return 0
+
   while IFS= read -r report; do
     is_crash_report "$report" || continue
     found=$((found + 1))
     echo "== Crash: $(basename "$report") =="
+    echo "Report: $report"
     python3 - "$report" "$frames_per_thread" <<'SUMMARY' || echo "The report could not be summarised; it follows whole."
 import json, sys
 with open(sys.argv[1]) as f:
@@ -114,7 +127,7 @@ SUMMARY
     echo "-- The whole report --"
     cat "$report"
     echo
-  done < <(find "$HOME/Library/Logs/DiagnosticReports" -type f -newer "$since" \( -name '*.ips' -o -name '*.crash' \) 2> /dev/null)
+  done < <(find "${directories[@]}" -type f -newer "$since" \( -name '*.ips' -o -name '*.crash' \) 2> /dev/null)
 }
 
 report_$platform
