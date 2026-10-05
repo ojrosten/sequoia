@@ -66,6 +66,7 @@ namespace sequoia::testing
   {
     check_exception_thrown<std::logic_error>("Empty string", []() { return handle_as_ref(""); });
     check_exception_thrown<std::logic_error>("Just spaces", []() { return handle_as_ref(" "); });
+    check_exception_thrown<std::logic_error>("Just a tab", []() { return handle_as_ref("\t"); });
     check("Letter",        handle_as_ref("a"));
     check("int",          !handle_as_ref("int"));
     check(" int",         !handle_as_ref(" int"));
@@ -493,6 +494,7 @@ namespace sequoia::testing
     // keep these checks green without the refusal under test.
     refused("An empty equivalent type", {"regular_test", "stuff::sprocket", "", "-g", "Stuff"});
     refused("An equivalent type of only spaces", {"move_only_test", "stuff::sprocket", " ", "-g", "Stuff"});
+    refused("An equivalent type of only a tab", {"regular_test", "stuff::sprocket", "\t", "-g", "Stuff"});
     refused("A full name whose file is a companion's",
             {"regular_test", "stuff::sprocket", "int", "-g", "Stuff", "--fullname", "sprocket_testing_utilities"});
 
