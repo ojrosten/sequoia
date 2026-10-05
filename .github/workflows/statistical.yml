@@ -100,6 +100,7 @@ jobs:
     with:
       # A sample of the tree as it stands, whatever last changed in it.
       needs_testing: ${{ 'true' }}
+      merge_into: ''
       warnings_as_errors: false
       exec_args: 'locate;${{ needs.trials.outputs.n }};--exclude-performance'
       suite_timeout_minutes: 200

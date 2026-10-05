@@ -30,7 +30,9 @@ name: scope
 #     pull request's comparison for the usual PR into staging. Should the branch
 #     reach staging before this job runs, the merge-base is the head and the
 #     change looks empty; the push to staging then tests the tree.
-#   - Anything else, a schedule or a dispatch: always tested. Someone asked.
+#   - Anything else, a schedule or a dispatch: always tested. Someone asked, or
+#     fine-on-retarget.yml did for a retargeted pull request, which therefore
+#     pays for a full run even if it touches only docs.
 # A comparison which cannot be made - a fetch that fails, a history with no
 # merge-base - answers "test", with a warning. Skipping is the direction that
 # could let a defect through, so it is taken only on evidence.
