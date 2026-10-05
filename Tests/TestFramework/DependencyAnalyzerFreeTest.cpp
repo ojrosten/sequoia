@@ -1623,7 +1623,7 @@ namespace sequoia::testing
     {
       // A directory at the file's path, over which the written records cannot be renamed. They stay in
       // <file>.partial, which is removed on leaving the scope.
-      const transient_directory blocking{file}, leftover{fs::path{file} += ".partial"};
+      const transient_directory blocking{file}, partial{fs::path{file} += ".partial"};
       fs::create_directories(blocking.path());
 
       check_exception_thrown<std::runtime_error>(
