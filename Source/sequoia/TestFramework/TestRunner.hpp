@@ -25,6 +25,7 @@
 #include <chrono>
 #include <filesystem>
 #include <format>
+#include <future>
 #include <iostream>
 #include <map>
 #include <optional>
@@ -129,33 +130,34 @@ namespace sequoia::testing
   /** \brief An RAII wrapper for a thread which removes each directory passed
              to `enqueue_removal`, with everything within it.
 
-      `join` returns once the thread has finished with every directory queued
-      before the call, and returns the failures. The destructor joins likewise
-      if `join` has not been called. The thread never removes a directory
-      queued after `join`, and leaves in place one which it cannot remove.
+      `enqueue_removal` returns a future which holds the removal's failure, or
+      `std::nullopt` if the removal succeeds. The thread leaves in place a
+      directory which it cannot remove.
+
+      `join` returns once the thread has finished with every directory enqueued
+      before the call. The destructor joins likewise if `join` has not been
+      called. The thread never removes a directory enqueued after `join`: that
+      directory's future becomes ready only when the remover is destroyed, and
+      then holds a `std::future_error`.
    */
   class background_directory_remover
   {
   public:
-    void enqueue_removal(std::filesystem::path dir);
-
     [[nodiscard]]
-    std::vector<removal_failure> join();
-  private:
-    // Declared before the pool, so that the pool's thread is joined before
-    // the failures it writes are destroyed
-    std::vector<removal_failure> m_Failures{};
+    std::future<std::optional<removal_failure>> enqueue_removal(std::filesystem::path dir);
 
+    void join();
+  private:
     // A single pipeline, since only its `push` is safe to call from several
     // threads at once
-    concurrency::thread_pool<void, false> m_Pool{1};
+    concurrency::thread_pool<std::optional<removal_failure>, false> m_Pool{1};
   };
 
   /** \brief Replaces a test's temporary materials root with a fresh copy of
              its materials.
 
       Moves the existing temporary root to
-      `materials.discarded_materials_root()`, and queues the discarded root's
+      `materials.discarded_materials_root()`, and enqueues the discarded root's
       removal with `remover`. If the move fails, removes the temporary root, if
       any, in place instead.
 
@@ -164,6 +166,9 @@ namespace sequoia::testing
       makes an empty `WorkingCopy` within the temporary root instead. For a
       test with no original root, leaves the temporary root empty, as its
       scratchpad.
+
+      \returns The future of the discarded root's removal, as `enqueue_removal`
+      returns it; if the move failed, a future whose `valid()` is false.
 
       \throws std::logic_error if `materials` names no test
       \throws std::runtime_error if the original root holds anything but `WorkingCopy`, `Prediction`
@@ -177,7 +182,9 @@ namespace sequoia::testing
                -# The test's own directory holds an entry which is not a directory, other than a `.keep`
                   or a `.DS_Store`.
    */
-  void prepare_materials(const individual_materials_paths& materials, background_directory_remover& remover);
+  [[nodiscard]]
+  std::future<std::optional<removal_failure>> prepare_materials(const individual_materials_paths& materials,
+                                                                background_directory_remover& remover);
 
   [[nodiscard]]
   active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
@@ -234,6 +241,19 @@ namespace sequoia::testing
     log_summary execute(std::optional<std::size_t> index, background_directory_remover& remover)
     {
       return m_pTest->execute(index, remover);
+    }
+
+    /** \brief Waits for the removal of the discarded materials root which the
+               last `execute` enqueued.
+
+        \returns The removal's failure; `std::nullopt` if the removal
+        succeeded, if `execute` enqueued none, or if this has been called
+        since.
+     */
+    [[nodiscard]]
+    std::optional<removal_failure> await_discarded_materials_removal()
+    {
+      return m_pTest->await_discarded_materials_removal();
     }
 
     void reset()
@@ -306,6 +326,7 @@ namespace sequoia::testing
       virtual const individual_materials_paths& materials_paths() const noexcept = 0;
 
       virtual log_summary execute(std::optional<std::size_t> index, background_directory_remover& remover) = 0;
+      virtual std::optional<removal_failure> await_discarded_materials_removal() = 0;
       virtual void reset() = 0;
       virtual void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode) = 0;
     };
@@ -349,6 +370,15 @@ namespace sequoia::testing
         summary.runner_overhead(executionTimer.runner_overhead());
 
         return summary;
+      }
+
+      [[nodiscard]]
+      std::optional<removal_failure> await_discarded_materials_removal() final
+      {
+        if(!m_DiscardedMaterialsRemovalFuture.valid())
+          return std::nullopt;
+
+        return m_DiscardedMaterialsRemovalFuture.get();
       }
 
       void reset() final
@@ -437,11 +467,12 @@ namespace sequoia::testing
       {
         try
         {
-          prepare_materials(m_Test.materials_paths(), remover);
+          m_DiscardedMaterialsRemovalFuture = prepare_materials(m_Test.materials_paths(), remover);
           return true;
         }
         catch(const std::exception& e)
         {
+          m_DiscardedMaterialsRemovalFuture = {};
           m_Test.log_critical_failure(m_Test.source_file(), "Materials Preparation", e.what());
           return false;
         }
@@ -462,6 +493,7 @@ namespace sequoia::testing
 
       Test m_Test;
       test_execution_record_path m_ExecutionRecord{};
+      std::future<std::optional<removal_failure>> m_DiscardedMaterialsRemovalFuture{};
     };
 
     enum class parallelizable_candidate : bool { no, yes };
@@ -748,6 +780,12 @@ namespace sequoia::testing
      */
     [[nodiscard]]
     std::vector<removal_failure> remove_discarded_materials() const;
+
+    /** \brief Waits for each test's removal of its discarded materials root,
+               returning the failures in the order of the tests.
+     */
+    [[nodiscard]]
+    std::vector<removal_failure> await_discarded_materials_removals();
 
     /** The `select`, `test` and `exclude` options which reproduce this run's filter, for handing to a
         child process. Each value is quoted for the shell.

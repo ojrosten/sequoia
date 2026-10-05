@@ -12,6 +12,9 @@
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
+#include "sequoia/TestFramework/SumTypeCheckers.hpp"
+
+#include <tuple>
 
 namespace sequoia::testing
 {
@@ -156,7 +159,7 @@ namespace sequoia::testing
       [&projPaths, &remover](std::string_view sourceStem) {
         const auto source{projPaths.tests().repo() / "Materials" / std::format("{}.cpp", sourceStem)};
         const individual_materials_paths materials{source, "fake_test", projPaths, null_discriminator};
-        prepare_materials(materials, remover);
+        std::ignore = prepare_materials(materials, remover);
         return std::pair{fake_test{"fake_test", source, projPaths, materials, {}, null_discriminator, null_discriminator}, materials};
       }
     };
@@ -213,7 +216,7 @@ namespace sequoia::testing
       check("Scratch file beneath the temporary data", fs::exists(temporaryRoot("WithNone") / "scratch.txt"));
       check("Scratch file not in the current directory", !fs::exists(fs::current_path() / "scratch.txt"));
 
-      prepare_materials(materials, remover);
+      std::ignore = prepare_materials(materials, remover);
       check("Scratchpad emptied by preparing again", fs::is_empty(temporaryRoot("WithNone")));
     }
 
@@ -222,7 +225,7 @@ namespace sequoia::testing
       write_to_file(test.working_materials() / "input.txt", "Changed", std::ios_base::out);
       write_to_file(test.working_materials() / "extra.txt", "", std::ios_base::out);
 
-      prepare_materials(materials, remover);
+      std::ignore = prepare_materials(materials, remover);
       check(equivalence,
             "Working copy restored by preparing again",
             temporaryRoot("WithInputs") / "WorkingCopy",
@@ -235,7 +238,7 @@ namespace sequoia::testing
 
     check_exception_thrown<std::logic_error>(
       "Preparing the materials of no test",
-      [&remover]() { prepare_materials(individual_materials_paths{}, remover); });
+      [&remover]() { return prepare_materials(individual_materials_paths{}, remover); });
 
     {
       const fake_test test{
@@ -270,12 +273,12 @@ namespace sequoia::testing
     auto prepareMaterials{
       [&projPaths, &remover](std::string_view sourceStem, std::string discriminator) {
         const auto source{projPaths.tests().repo() / "Materials" / std::format("{}.cpp", sourceStem)};
-        prepare_materials(individual_materials_paths{source, "fake_test", projPaths, std::move(discriminator)},
-                          remover);
+        return prepare_materials(individual_materials_paths{source, "fake_test", projPaths, std::move(discriminator)},
+                                 remover);
       }
     };
 
-    prepareMaterials("Discriminated", "Platypus");
+    std::ignore = prepareMaterials("Discriminated", "Platypus");
     const auto temporaryWorkingCopy{
       projPaths.output().tests_temporary_data() / "Materials/Discriminated/fake_test/WorkingCopy"
     };
@@ -321,7 +324,7 @@ namespace sequoia::testing
       std::string message{};
       try
       {
-        prepare_materials(materials, remover);
+        std::ignore = prepare_materials(materials, remover);
       }
       catch(const std::runtime_error& e)
       {
@@ -347,7 +350,8 @@ namespace sequoia::testing
       -# `prepare_materials` removes in place a temporary root which it cannot
          move, since something is at the discarded root, and leaves alone what
          is at the discarded root;
-      -# A directory which cannot be removed is a failure which `join` returns.
+      -# A directory which cannot be removed is a failure, which the future of
+         its removal holds.
    */
   void basic_test_interface_free_test::test_discarded_materials(const project_paths& projPaths)
   {
@@ -359,9 +363,10 @@ namespace sequoia::testing
       write_to_file(materials.temporary_materials_root() / "Previous.txt", "", std::ios_base::out);
 
       background_directory_remover remover{};
-      check("A remover with nothing queued has no failures", remover.join().empty());
+      remover.join();
 
-      prepare_materials(materials, remover);
+      const auto removalFuture{prepare_materials(materials, remover)};
+      check("The moved temporary root's removal is enqueued", removalFuture.valid());
       check("The temporary root is moved to the discarded root",
             fs::exists(materials.discarded_materials_root() / "Previous.txt"));
       check("The fresh temporary root holds nothing of the moved one",
@@ -376,8 +381,8 @@ namespace sequoia::testing
       write_to_file(materials.discarded_materials_root() / "Blocking.txt", "", std::ios_base::out);
 
       background_directory_remover remover{};
-      prepare_materials(materials, remover);
-      check("Nothing blocked is a removal failure", remover.join().empty());
+      const auto removalFuture{prepare_materials(materials, remover)};
+      check("No removal is enqueued for a temporary root which cannot be moved", !removalFuture.valid());
 
       check("A temporary root which cannot be moved is removed in place",
             fs::is_empty(materials.temporary_materials_root()));
@@ -388,13 +393,12 @@ namespace sequoia::testing
       const unremovable_directory unremovable{projPaths.output().tests_temporary_data() / "Unremovable"};
 
       background_directory_remover remover{};
-      remover.enqueue_removal(unremovable.path());
-      const auto failures{remover.join()};
+      auto removalFuture{remover.enqueue_removal(unremovable.path())};
 
       check(equality,
             "The directory which could not be removed is the failure",
-            failures | std::views::transform(&removal_failure::dir) | std::ranges::to<std::vector>(),
-            std::vector{unremovable.path()});
+            removalFuture.get().transform([](const removal_failure& failure){ return failure.dir; }),
+            std::optional{unremovable.path()});
     }
   }
 }

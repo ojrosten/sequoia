@@ -32,7 +32,6 @@
 #include <ranges>
 #include <span>
 #include <format>
-#include <tuple>
 #include <fstream>
 #include <functional>
 #include <mutex>
@@ -348,12 +347,15 @@ namespace sequoia::testing
       }
     }
 
-    void remove_all_noting_failure(const fs::path& dir, std::vector<removal_failure>& failures)
+    [[nodiscard]]
+    std::optional<removal_failure> try_remove_all(const fs::path& dir)
     {
       std::error_code error{};
       fs::remove_all(dir, error);
       if(error)
-        failures.emplace_back(dir, error);
+        return removal_failure{dir, error};
+
+      return std::nullopt;
     }
 
     [[nodiscard]]
@@ -826,22 +828,20 @@ namespace sequoia::testing
     return runner_exit_offset + static_cast<int>(std::to_underlying(carried));
   }
 
-  void background_directory_remover::enqueue_removal(fs::path dir)
+  [[nodiscard]]
+  std::future<std::optional<removal_failure>> background_directory_remover::enqueue_removal(fs::path dir)
   {
-    // The future is discarded, since `join` returns the failures. Only the
-    // pool's thread writes them, and `join` reads them after joining that
-    // thread.
-    std::ignore = m_Pool.push([this, dir{std::move(dir)}](){ remove_all_noting_failure(dir, m_Failures); });
+    return m_Pool.push([dir{std::move(dir)}](){ return try_remove_all(dir); });
+  }
+
+  void background_directory_remover::join()
+  {
+    m_Pool.join();
   }
 
   [[nodiscard]]
-  std::vector<removal_failure> background_directory_remover::join()
-  {
-    m_Pool.join();
-    return std::move(m_Failures);
-  }
-
-  void prepare_materials(const individual_materials_paths& materials, background_directory_remover& remover)
+  std::future<std::optional<removal_failure>> prepare_materials(const individual_materials_paths& materials,
+                                                                background_directory_remover& remover)
   {
     const auto& temporaryRoot{materials.temporary_materials_root()};
     if(temporaryRoot.empty())
@@ -865,8 +865,10 @@ namespace sequoia::testing
 
     // If copying throws, the discarded root stays until the next run
     // removes it
-    if(!moveError)
-      remover.enqueue_removal(discardedRoot);
+    if(moveError)
+      return {};
+
+    return remover.enqueue_removal(discardedRoot);
   }
 
   void test_vessel::versioned_write(const fs::path& file, std::string_view text)
@@ -1742,7 +1744,8 @@ namespace sequoia::testing
 
     // Before the grand totals, so that their total run time includes any
     // wait for the removals
-    const auto backgroundRemovalFailures{remover.join()};
+    remover.join();
+    const auto backgroundRemovalFailures{await_discarded_materials_removals()};
 
     if(m_Verbosity == verbosity::verbose)
     {
@@ -1848,8 +1851,27 @@ namespace sequoia::testing
     std::vector<removal_failure> failures{};
     for(const auto& node : m_Suites.cnode_weights())
     {
-      if(node.optTest)
-        remove_all_noting_failure(node.optTest->materials_paths().discarded_materials_root(), failures);
+      if(!node.optTest)
+        continue;
+
+      if(auto failure{try_remove_all(node.optTest->materials_paths().discarded_materials_root())})
+        failures.push_back(std::move(*failure));
+    }
+
+    return failures;
+  }
+
+  [[nodiscard]]
+  std::vector<removal_failure> test_runner::await_discarded_materials_removals()
+  {
+    std::vector<removal_failure> failures{};
+    for(auto& node : m_Suites.node_weights())
+    {
+      if(!node.optTest)
+        continue;
+
+      if(auto failure{node.optTest->await_discarded_materials_removal()})
+        failures.push_back(std::move(*failure));
     }
 
     return failures;
