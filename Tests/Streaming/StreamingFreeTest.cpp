@@ -11,6 +11,8 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
+#include "Utilities/TestUtilities.hpp"
+
 #include <cstdint>
 #include <fstream>
 #include <functional>
@@ -30,6 +32,7 @@ namespace sequoia::testing
   void streaming_free_test::run_tests()
   {
     test_files();
+    test_replace_contents();
     test_peek_for_more();
     test_parse_integer();
     test_extract_field();
@@ -68,6 +71,60 @@ namespace sequoia::testing
 
     read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });
     check(equivalence, "", working_materials() /= "Foo.txt", predictive_materials() /= "Foo.txt");
+  }
+
+  void streaming_free_test::test_replace_contents()
+  {
+    using namespace std::string_literals;
+
+    const auto file{working_materials() /= "Replaced.txt"};
+    const auto partial{fs::path{file} += ".partial"};
+
+    write_to_file(file, "Previous", std::ios_base::out);
+    replace_contents(file, "Replacement", std::ios_base::out);
+    check(equality, "Replaced contents", read_to_string(file, std::ios_base::in), std::optional{"Replacement"s});
+    check("No partial file remains after a replacement", !fs::exists(partial));
+
+    auto checkFailedWrite{
+      [this, &file]() {
+        check("A replacement whose write fails is reported", !try_replace_contents(file, "Lost", std::ios_base::out));
+        check(equality,
+              "A replacement whose write fails leaves the previous contents",
+              read_to_string(file, std::ios_base::in),
+              std::optional{"Replacement"s});
+        check_exception_thrown<std::runtime_error>(
+          "A replacement whose write fails",
+          [&file]() { replace_contents(file, "Lost", std::ios_base::out); });
+      }
+    };
+
+    // Under Linux, <file>.partial links to /dev/full, which opens and then
+    // fails every write. No portable path behaves so. Elsewhere a read-only
+    // file stands in, failing at the open instead, so the check count is the
+    // same on every platform. A directory would not do: renaming it over
+    // <file> also fails, so a replacement which ignored a failed write would
+    // still report failure.
+    if constexpr(with_linux_v)
+    {
+      fs::create_symlink("/dev/full", partial);
+      check("The stand-in for a failing write is present", fs::is_character_file(partial));
+      checkFailedWrite();
+    }
+    else
+    {
+      const read_only_file standIn{partial, ""};
+      check("The stand-in for a failing write is present",
+            (fs::status(partial).permissions() & write_permissions) == fs::perms::none);
+      checkFailedWrite();
+    }
+
+    const auto directory{working_materials() /= "Directory"};
+    fs::create_directory(directory);
+
+    check("A replacement whose rename fails is reported", !try_replace_contents(directory, "Lost", std::ios_base::out));
+    check_exception_thrown<std::runtime_error>(
+      "A replacement whose rename fails",
+      [&directory]() { replace_contents(directory, "Lost", std::ios_base::out); });
   }
 
   void streaming_free_test::test_peek_for_more()

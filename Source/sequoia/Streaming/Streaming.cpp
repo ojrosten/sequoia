@@ -115,4 +115,45 @@ namespace sequoia
     if(!try_write_to_file(file, text, mode))
       throw std::runtime_error{report_failed_write(file)};
   }
+
+  namespace
+  {
+    /** \brief Replaces the contents of `file` with `text`, written in `mode`
+               through `<file>.partial`.
+
+        \returns The path at which the replacement failed:
+        -# `<file>.partial`, if writing it failed;
+        -# `file`, if renaming `<file>.partial` over it failed;
+        -# `std::nullopt`, if the replacement succeeded.
+     */
+    [[nodiscard]]
+    std::optional<std::filesystem::path>
+      replace_contents_or_locate_failure(const std::filesystem::path& file,
+                                         std::string_view text,
+                                         std::ios_base::openmode mode)
+    {
+      const auto partial{std::filesystem::path{file} += ".partial"};
+      if(!try_write_to_file(partial, text, mode))
+        return partial;
+
+      std::error_code error{};
+      std::filesystem::rename(partial, file, error);
+      if(error)
+        return file;
+
+      return std::nullopt;
+    }
+  }
+
+  [[nodiscard]]
+  bool try_replace_contents(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode)
+  {
+    return !replace_contents_or_locate_failure(file, text, mode);
+  }
+
+  void replace_contents(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode)
+  {
+    if(const auto failurePath{replace_contents_or_locate_failure(file, text, mode)})
+      throw std::runtime_error{report_failed_write(*failurePath)};
+  }
 }
