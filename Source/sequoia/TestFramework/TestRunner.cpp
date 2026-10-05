@@ -1747,7 +1747,7 @@ namespace sequoia::testing
     // Before the grand totals, so that their total run time includes any
     // wait for the removals
     remover.join();
-    const auto backgroundRemovalFailures{await_discarded_materials_removals()};
+    const auto backgroundRemovalFailures{extract_discarded_materials_removal_failures()};
 
     if(m_Verbosity == verbosity::verbose)
     {
@@ -1864,7 +1864,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::vector<removal_failure> test_runner::await_discarded_materials_removals()
+  std::vector<removal_failure> test_runner::extract_discarded_materials_removal_failures()
   {
     std::vector<removal_failure> failures{};
     for(auto& node : m_Suites.node_weights())
@@ -1872,7 +1872,7 @@ namespace sequoia::testing
       if(!node.optTest)
         continue;
 
-      if(auto failure{node.optTest->await_discarded_materials_removal()})
+      if(auto failure{node.optTest->extract_discarded_materials_removal_failure()})
         failures.push_back(std::move(*failure));
     }
 

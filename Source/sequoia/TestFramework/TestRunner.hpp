@@ -244,17 +244,18 @@ namespace sequoia::testing
       return m_pTest->execute(index, remover);
     }
 
-    /** \brief Waits for the removal of the discarded materials root which the
-               last `execute` enqueued.
+    /** \brief Extracts the failure of the removal of the discarded materials
+               root which the last `execute` enqueued, waiting for the removal
+               if it has not finished.
 
-        \returns The removal's failure; `std::nullopt` if the removal
-        succeeded, if `execute` enqueued none, or if this has been called
-        since. A removal which threw is a failure, its message the exception's.
+        \returns The failure; `std::nullopt` if the removal succeeded, if
+        `execute` enqueued none, or if the failure has been extracted since. A
+        removal which threw is a failure, its message the exception's.
      */
     [[nodiscard]]
-    std::optional<removal_failure> await_discarded_materials_removal()
+    std::optional<removal_failure> extract_discarded_materials_removal_failure()
     {
-      return m_pTest->await_discarded_materials_removal();
+      return m_pTest->extract_discarded_materials_removal_failure();
     }
 
     void reset()
@@ -327,7 +328,7 @@ namespace sequoia::testing
       virtual const individual_materials_paths& materials_paths() const noexcept = 0;
 
       virtual log_summary execute(std::optional<std::size_t> index, background_directory_remover& remover) = 0;
-      virtual std::optional<removal_failure> await_discarded_materials_removal() = 0;
+      virtual std::optional<removal_failure> extract_discarded_materials_removal_failure() = 0;
       virtual void reset() = 0;
       virtual void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode) = 0;
     };
@@ -374,7 +375,7 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      std::optional<removal_failure> await_discarded_materials_removal() final
+      std::optional<removal_failure> extract_discarded_materials_removal_failure() final
       {
         if(!m_DiscardedMaterialsRemovalFuture.valid())
           return std::nullopt;
@@ -793,12 +794,11 @@ namespace sequoia::testing
     [[nodiscard]]
     std::vector<removal_failure> remove_discarded_materials() const;
 
-    /** \brief Waits for each test's removal of its discarded materials root,
-               returning the failures in the order in which `m_Suites` holds
-               the tests.
+    /** \brief Extracts each test's discarded materials removal failure, in the
+               order in which `m_Suites` holds the tests.
      */
     [[nodiscard]]
-    std::vector<removal_failure> await_discarded_materials_removals();
+    std::vector<removal_failure> extract_discarded_materials_removal_failures();
 
     /** The `select`, `test` and `exclude` options which reproduce this run's filter, for handing to a
         child process. Each value is quoted for the shell.

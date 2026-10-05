@@ -2576,7 +2576,7 @@ namespace sequoia::testing
 
     check(equality,
           "A removal which threw is a failure naming the discarded root",
-          vessel.await_discarded_materials_removal().value_or(removal_failure{}).dir,
+          vessel.extract_discarded_materials_removal_failure().value_or(removal_failure{}).dir,
           materials.discarded_materials_root());
   }
 
