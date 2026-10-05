@@ -365,8 +365,8 @@ namespace sequoia::testing
       background_directory_remover remover{};
       remover.join();
 
-      const auto removalFuture{prepare_materials(materials, remover)};
-      check("The moved temporary root's removal is enqueued", removalFuture.valid());
+      const auto removalFailureFuture{prepare_materials(materials, remover)};
+      check("The moved temporary root's removal is enqueued", removalFailureFuture.valid());
       check("The temporary root is moved to the discarded root",
             fs::exists(materials.discarded_materials_root() / "Previous.txt"));
       check("The fresh temporary root holds nothing of the moved one",
@@ -381,8 +381,8 @@ namespace sequoia::testing
       write_to_file(materials.discarded_materials_root() / "Blocking.txt", "", std::ios_base::out);
 
       background_directory_remover remover{};
-      const auto removalFuture{prepare_materials(materials, remover)};
-      check("No removal is enqueued for a temporary root which cannot be moved", !removalFuture.valid());
+      const auto removalFailureFuture{prepare_materials(materials, remover)};
+      check("No removal is enqueued for a temporary root which cannot be moved", !removalFailureFuture.valid());
 
       check("A temporary root which cannot be moved is removed in place",
             fs::is_empty(materials.temporary_materials_root()));
@@ -393,11 +393,11 @@ namespace sequoia::testing
       const unremovable_directory unremovable{projPaths.output().tests_temporary_data() / "Unremovable"};
 
       background_directory_remover remover{};
-      auto removalFuture{remover.enqueue_removal(unremovable.path())};
+      auto removalFailureFuture{remover.enqueue_removal(unremovable.path())};
 
       check(equality,
             "The directory which could not be removed is the failure",
-            removalFuture.get().transform([](const removal_failure& failure){ return failure.dir; }),
+            removalFailureFuture.get().transform([](const removal_failure& failure){ return failure.dir; }),
             std::optional{unremovable.path()});
     }
   }

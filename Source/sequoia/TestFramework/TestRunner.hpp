@@ -377,12 +377,12 @@ namespace sequoia::testing
       [[nodiscard]]
       std::optional<removal_failure> extract_discarded_materials_removal_failure() final
       {
-        if(!m_DiscardedMaterialsRemovalFuture.valid())
+        if(!m_DiscardedMaterialsRemovalFailureFuture.valid())
           return std::nullopt;
 
         try
         {
-          return m_DiscardedMaterialsRemovalFuture.get();
+          return m_DiscardedMaterialsRemovalFailureFuture.get();
         }
         catch(const std::exception& e)
         {
@@ -480,12 +480,12 @@ namespace sequoia::testing
       {
         try
         {
-          m_DiscardedMaterialsRemovalFuture = prepare_materials(m_Test.materials_paths(), remover);
+          m_DiscardedMaterialsRemovalFailureFuture = prepare_materials(m_Test.materials_paths(), remover);
           return true;
         }
         catch(const std::exception& e)
         {
-          m_DiscardedMaterialsRemovalFuture = {};
+          m_DiscardedMaterialsRemovalFailureFuture = {};
           m_Test.log_critical_failure(m_Test.source_file(), "Materials Preparation", e.what());
           return false;
         }
@@ -506,7 +506,7 @@ namespace sequoia::testing
 
       Test m_Test;
       test_execution_record_path m_ExecutionRecord{};
-      background_directory_remover::future_type m_DiscardedMaterialsRemovalFuture{};
+      background_directory_remover::future_type m_DiscardedMaterialsRemovalFailureFuture{};
     };
 
     enum class parallelizable_candidate : bool { no, yes };
