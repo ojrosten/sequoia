@@ -554,11 +554,11 @@ namespace sequoia::testing
     const std::string& convert(const std::string& s) { return s; }
     std::string convert(const fs::path& p) { return p.generic_string(); }
 
-    // TO DO: std::views::concat | std::ranges::to<std::vector>, once the
-    // MS STL has concat (P2542)
     [[nodiscard]]
     std::vector<fs::path> concatenate(std::span<const fs::path> first, std::span<const fs::path> second)
     {
+      // TO DO: std::views::concat | std::ranges::to<std::vector>, once the
+      // MS STL has concat (P2542)
       std::vector<fs::path> both{first.begin(), first.end()};
       both.append_range(second);
       return both;
