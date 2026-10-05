@@ -81,20 +81,20 @@ namespace sequoia::testing
     const auto partial{fs::path{file} += ".partial"};
 
     write_to_file(file, "Previous", std::ios_base::out);
-    replace_contents(file, "Replacement", std::ios_base::out);
+    replace_contents(file, "Replacement", write_mode::text);
     check(equality, "Replaced contents", read_to_string(file, std::ios_base::in), std::optional{"Replacement"s});
     check("No partial file remains after a replacement", !fs::exists(partial));
 
     auto checkFailedWrite{
       [this, &file]() {
-        check("A replacement whose write fails is reported", !try_replace_contents(file, "Lost", std::ios_base::out));
+        check("A replacement whose write fails is reported", !try_replace_contents(file, "Lost", write_mode::text));
         check(equality,
               "A replacement whose write fails leaves the previous contents",
               read_to_string(file, std::ios_base::in),
               std::optional{"Replacement"s});
         check_exception_thrown<std::runtime_error>(
           "A replacement whose write fails",
-          [&file]() { replace_contents(file, "Lost", std::ios_base::out); });
+          [&file]() { replace_contents(file, "Lost", write_mode::text); });
       }
     };
 
@@ -122,10 +122,10 @@ namespace sequoia::testing
     const auto directory{scratchpad_materials() /= "Directory"};
     fs::create_directory(directory);
 
-    check("A replacement whose rename fails is reported", !try_replace_contents(directory, "Lost", std::ios_base::out));
+    check("A replacement whose rename fails is reported", !try_replace_contents(directory, "Lost", write_mode::text));
     check_exception_thrown<std::runtime_error>(
       "A replacement whose rename fails",
-      [&directory]() { replace_contents(directory, "Lost", std::ios_base::out); });
+      [&directory]() { replace_contents(directory, "Lost", write_mode::text); });
   }
 
   void streaming_free_test::test_peek_for_more()

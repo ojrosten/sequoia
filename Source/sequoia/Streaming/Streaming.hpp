@@ -52,16 +52,22 @@ namespace sequoia
    */
   void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode);
 
+  /** \brief Whether a file is written as text, whose line endings the
+             platform may translate, or as binary, byte for byte.
+   */
+  enum class write_mode { text, binary };
+
   /** \brief Replaces the contents of `file` with `text`, written in `mode`,
              and returns whether the replacement succeeded.
 
       Writes `text` to `<file>.partial`, and renames `<file>.partial` over
       `file` only if the write succeeded. So `file` keeps its previous
       contents if the replacement fails, or the process dies mid-write. A
-      failed replacement may leave `<file>.partial` behind.
+      failed replacement may leave `<file>.partial` behind; the next
+      replacement truncates it.
    */
   [[nodiscard]]
-  bool try_replace_contents(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode);
+  bool try_replace_contents(const std::filesystem::path& file, std::string_view text, write_mode mode);
 
   /** \brief Replaces the contents of `file` with `text`, written in `mode`,
              through `<file>.partial` as `try_replace_contents` does.
@@ -70,7 +76,7 @@ namespace sequoia
               `<file>.partial` if the write failed, and `file` if the rename
               failed.
    */
-  void replace_contents(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode);
+  void replace_contents(const std::filesystem::path& file, std::string_view text, write_mode mode);
 
   /** \brief Peeks at `s`, consuming nothing, and sets `failbit` on `s` if no character can be peeked.
 

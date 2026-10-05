@@ -73,7 +73,7 @@ namespace sequoia::testing
       std::error_code selectsTheNonThrowingOverload{};
       fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
 
-      std::ignore = try_replace_contents(file, text, std::ios_base::out | std::ios_base::trunc | std::ios_base::binary);
+      std::ignore = try_replace_contents(file, text, write_mode::binary);
     }
 
     [[nodiscard]]

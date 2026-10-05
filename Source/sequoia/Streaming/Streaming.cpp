@@ -122,10 +122,13 @@ namespace sequoia
     std::optional<std::filesystem::path>
       replace_contents_or_locate_failure(const std::filesystem::path& file,
                                          std::string_view text,
-                                         std::ios_base::openmode mode)
+                                         write_mode mode)
     {
       const auto partial{std::filesystem::path{file} += ".partial"};
-      if(!try_write_to_file(partial, text, mode))
+      const auto binary{mode == write_mode::binary ? std::ios_base::binary : std::ios_base::openmode{}};
+      const auto openMode{std::ios_base::out | std::ios_base::trunc | binary};
+
+      if(!try_write_to_file(partial, text, openMode))
         return partial;
 
       std::error_code error{};
@@ -138,12 +141,12 @@ namespace sequoia
   }
 
   [[nodiscard]]
-  bool try_replace_contents(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode)
+  bool try_replace_contents(const std::filesystem::path& file, std::string_view text, write_mode mode)
   {
     return !replace_contents_or_locate_failure(file, text, mode);
   }
 
-  void replace_contents(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode)
+  void replace_contents(const std::filesystem::path& file, std::string_view text, write_mode mode)
   {
     if(const auto failurePath{replace_contents_or_locate_failure(file, text, mode)})
       throw std::runtime_error{report_failed_write(*failurePath)};

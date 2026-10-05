@@ -762,7 +762,7 @@ namespace sequoia::testing
 
     // Replaced rather than overwritten: a truncated <file> would parse, and
     // prune would then silently leave out the tests lost to the truncation
-    replace_contents(file, std::move(records).str(), std::ios_base::out);
+    replace_contents(file, std::move(records).str(), write_mode::text);
   }
 
   namespace
