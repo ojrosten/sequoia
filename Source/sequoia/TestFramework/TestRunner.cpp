@@ -31,6 +31,7 @@
 #include <set>
 #include <ranges>
 #include <span>
+#include <system_error>
 #include <format>
 #include <fstream>
 #include <functional>
@@ -353,7 +354,7 @@ namespace sequoia::testing
       std::error_code error{};
       fs::remove_all(dir, error);
       if(error)
-        return removal_failure{dir, error};
+        return removal_failure{dir, error.message()};
 
       return std::nullopt;
     }
@@ -363,7 +364,7 @@ namespace sequoia::testing
     {
       return std::format("Discarded materials not removed from {}:\n{}",
                          failure.dir.lexically_relative(projectRoot).generic_string(),
-                         failure.error.message());
+                         failure.error_message);
     }
 
     // TO DO: std::views::concat | std::ranges::to<std::vector>, once the

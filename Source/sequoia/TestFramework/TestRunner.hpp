@@ -31,7 +31,6 @@
 #include <optional>
 #include <set>
 #include <span>
-#include <system_error>
 #include <thread>
 #include <utility>
 #include <vector>
@@ -124,7 +123,7 @@ namespace sequoia::testing
   struct removal_failure
   {
     std::filesystem::path dir{};
-    std::error_code error{};
+    std::string error_message{};
   };
 
   /** \brief An RAII wrapper for a thread which removes each directory passed
@@ -248,9 +247,7 @@ namespace sequoia::testing
 
         \returns The removal's failure; `std::nullopt` if the removal
         succeeded, if `execute` enqueued none, or if this has been called
-        since.
-
-        Rethrows any exception the removal threw.
+        since. A removal which threw is a failure, its message the exception's.
      */
     [[nodiscard]]
     std::optional<removal_failure> await_discarded_materials_removal()
@@ -380,7 +377,18 @@ namespace sequoia::testing
         if(!m_DiscardedMaterialsRemovalFuture.valid())
           return std::nullopt;
 
-        return m_DiscardedMaterialsRemovalFuture.get();
+        try
+        {
+          return m_DiscardedMaterialsRemovalFuture.get();
+        }
+        catch(const std::exception& e)
+        {
+          return removal_failure{m_Test.materials_paths().discarded_materials_root(), e.what()};
+        }
+        catch(...)
+        {
+          return removal_failure{m_Test.materials_paths().discarded_materials_root(), "Unknown exception"};
+        }
       }
 
       void reset() final

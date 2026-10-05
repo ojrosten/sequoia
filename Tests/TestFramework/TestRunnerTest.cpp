@@ -1000,6 +1000,7 @@ namespace sequoia::testing
     test_versioned_output_failure();
     test_discarded_materials_removal();
     test_discarded_materials_removal_failure();
+    test_discarded_materials_removal_exception();
     test_nested_suite();
     test_nested_suite_verbose();
     test_suite_named_as_a_sibling_test();
@@ -2542,6 +2543,41 @@ namespace sequoia::testing
           return_code::post_run_failures);
 
     check_output("Discarded Materials Removal Failure Output", "DiscardedMaterialsRemovalFailureOutput", outputStream);
+  }
+
+  /** A removal enqueued after its remover has joined never runs, so once the
+      remover is destroyed, the removal's future holds a `std::future_error`.
+      The test's vessel reports that as a failure naming the discarded root.
+      The exception's message is the library's, so it is not checked.
+   */
+  void test_runner_test::test_discarded_materials_removal_exception()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    const auto runner{make_fake_runner(args, outputStream)};
+    const auto& projPaths{runner.proj_paths()};
+
+    test_vessel vessel{scratch_writing_free_test{}};
+    vessel.initialize(projPaths, cmake_cache{projPaths.build()}, recovery_mode::none);
+
+    const auto& materials{vessel.materials_paths()};
+    fs::remove_all(materials.discarded_materials_root());
+    fs::create_directories(materials.temporary_materials_root());
+
+    {
+      background_directory_remover remover{};
+      remover.join();
+      check(equality,
+            "Materials prepared, so the removal enqueued",
+            vessel.execute(std::nullopt, remover).critical_failures(),
+            0uz);
+    }
+
+    check(equality,
+          "A removal which threw is a failure naming the discarded root",
+          vessel.await_discarded_materials_removal().value_or(removal_failure{}).dir,
+          materials.discarded_materials_root());
   }
 
   void test_runner_test::test_exit_statuses()
