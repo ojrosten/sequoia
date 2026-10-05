@@ -77,8 +77,7 @@ namespace sequoia::testing
 
   /** \brief Writes `tests` to `file`, each source path made relative to the tests repository.
 
-      \throws std::runtime_error naming `file`, if `tests` cannot be written to it; the file then keeps its previous
-              contents
+      \throws std::runtime_error if writing `tests` to `file` fails; `file` then keeps its previous contents
    */
   void write_tests(const project_paths& projPaths, const std::filesystem::path& file, std::span<const prune_record> tests);
 
