@@ -89,9 +89,9 @@ namespace sequoia::testing
       fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, {""}};
 
       check(equality,
-        reporter{"Exceptions File Path"},
-        t.diagnostics_file_paths().caught_exceptions_file_path(),
-        projPaths.output().diagnostics() / rebasedSource.parent_path() / "fake_test_Exceptions.txt");
+            reporter{"Exceptions File Path"},
+            t.diagnostics_file_paths().caught_exceptions_file_path(),
+            projPaths.output().diagnostics() / rebasedSource.parent_path() / "fake_test_Exceptions.txt");
     }
 
     {
