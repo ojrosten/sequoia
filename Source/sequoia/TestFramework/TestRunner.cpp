@@ -847,7 +847,8 @@ namespace sequoia::testing
     // Moving or removing the whole of this test's temporary tree is safe because `test_runner::register_test`
     // admits each name once, ignoring case, and no source whose materials prefix nests with another's.
     // The move is one metadata operation, whereas a removal visits every entry. The move fails if the temporary
-    // root does not exist, if the discarded root holds anything, and under Windows if a file within the tree is open.
+    // root does not exist, or if the discarded root exists and, under POSIX, holds anything. Under Windows, the move
+    // also fails if a file within the tree is open.
     const auto discardedRoot{materials.discarded_materials_root()};
     std::error_code moveError{};
     fs::rename(temporaryRoot, discardedRoot, moveError);
