@@ -2566,7 +2566,7 @@ namespace sequoia::testing
     fs::create_directories(materials.temporary_materials_root());
 
     {
-      background_directory_remover remover{};
+      discarded_materials_remover remover{};
       remover.join();
       check(equality,
             "Materials prepared, so the removal enqueued",

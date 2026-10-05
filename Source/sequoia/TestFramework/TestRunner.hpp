@@ -126,26 +126,28 @@ namespace sequoia::testing
     std::string error_message{};
   };
 
-  /** \brief An RAII wrapper for a thread which removes each directory passed
-             to `enqueue_removal`, with everything within it.
+  /** \brief An RAII wrapper for a thread which removes each discarded
+             materials root passed to `enqueue_removal`, with everything within
+             it, off the paths of the tests.
 
-      `enqueue_removal` returns a future which holds the removal's failure, or
-      `std::nullopt` if the removal succeeds, or the exception if it throws.
-      The thread leaves in place a directory which it cannot remove.
+      `enqueue_removal` returns at once, with a future which holds the
+      removal's failure, or `std::nullopt` if the removal succeeds, or the
+      exception if it throws. The thread leaves in place a discarded root
+      which it cannot remove.
 
-      `join` returns once the thread has finished with every directory enqueued
-      before the call. The destructor joins likewise if `join` has not been
-      called. The thread never removes a directory enqueued after `join`: that
-      directory's future becomes ready only when the remover is destroyed, and
+      `join` returns once the thread has finished with every discarded root
+      enqueued before the call. The destructor joins likewise if `join` has not
+      been called. The thread never removes a discarded root enqueued after
+      `join`: its future becomes ready only when the remover is destroyed, and
       then holds a `std::future_error`.
    */
-  class background_directory_remover
+  class discarded_materials_remover
   {
   public:
     using future_type = std::future<std::optional<removal_failure>>;
 
     [[nodiscard]]
-    future_type enqueue_removal(std::filesystem::path dir);
+    future_type enqueue_removal(std::filesystem::path discardedRoot);
 
     void join();
   private:
@@ -190,8 +192,8 @@ namespace sequoia::testing
                   or a `.DS_Store`.
    */
   [[nodiscard]]
-  background_directory_remover::future_type prepare_materials(const individual_materials_paths& materials,
-                                                              background_directory_remover& remover);
+  discarded_materials_remover::future_type prepare_materials(const individual_materials_paths& materials,
+                                                             discarded_materials_remover& remover);
 
   [[nodiscard]]
   active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
@@ -245,7 +247,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    log_summary execute(std::optional<std::size_t> index, background_directory_remover& remover)
+    log_summary execute(std::optional<std::size_t> index, discarded_materials_remover& remover)
     {
       return m_pTest->execute(index, remover);
     }
@@ -333,7 +335,7 @@ namespace sequoia::testing
       virtual std::filesystem::path source_file() const                   = 0;
       virtual const individual_materials_paths& materials_paths() const noexcept = 0;
 
-      virtual log_summary execute(std::optional<std::size_t> index, background_directory_remover& remover) = 0;
+      virtual log_summary execute(std::optional<std::size_t> index, discarded_materials_remover& remover) = 0;
       virtual std::optional<removal_failure> extract_discarded_materials_removal_failure() = 0;
       virtual void reset() = 0;
       virtual void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode) = 0;
@@ -371,7 +373,7 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      log_summary execute(std::optional<std::size_t> index, background_directory_remover& remover) final
+      log_summary execute(std::optional<std::size_t> index, discarded_materials_remover& remover) final
       {
         execution_timer executionTimer{};
         auto summary{execute_and_record(index, executionTimer, remover)};
@@ -433,7 +435,7 @@ namespace sequoia::testing
       [[nodiscard]]
       log_summary execute_and_record(std::optional<std::size_t> index,
                                      execution_timer& executionTimer,
-                                     background_directory_remover& remover)
+                                     discarded_materials_remover& remover)
       {
         // Also installed per test, since under MSVC each thread has its own terminate handler
         const scoped_terminate_handler terminationReported{report_termination};
@@ -482,7 +484,7 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      bool try_prepare_materials(background_directory_remover& remover)
+      bool try_prepare_materials(discarded_materials_remover& remover)
       {
         try
         {
@@ -512,7 +514,7 @@ namespace sequoia::testing
 
       Test m_Test;
       test_execution_record_path m_ExecutionRecord{};
-      background_directory_remover::future_type m_DiscardedMaterialsRemovalFailureFuture{};
+      discarded_materials_remover::future_type m_DiscardedMaterialsRemovalFailureFuture{};
     };
 
     enum class parallelizable_candidate : bool { no, yes };

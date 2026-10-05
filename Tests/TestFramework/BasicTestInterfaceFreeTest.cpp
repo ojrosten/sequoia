@@ -153,7 +153,7 @@ namespace sequoia::testing
       }
     };
 
-    background_directory_remover remover{};
+    discarded_materials_remover remover{};
 
     const auto preparedTest{
       [&projPaths, &remover](std::string_view sourceStem) {
@@ -268,7 +268,7 @@ namespace sequoia::testing
    */
   void basic_test_interface_free_test::test_discriminated_materials(const project_paths& projPaths)
   {
-    background_directory_remover remover{};
+    discarded_materials_remover remover{};
 
     auto prepareMaterials{
       [&projPaths, &remover](std::string_view sourceStem, std::string discriminator) {
@@ -368,7 +368,7 @@ namespace sequoia::testing
       fs::create_directories(materials.temporary_materials_root());
       write_to_file(materials.temporary_materials_root() / "Previous.txt", "", std::ios_base::out);
 
-      background_directory_remover remover{};
+      discarded_materials_remover remover{};
       remover.join();
 
       const auto removalFailureFuture{prepare_materials(materials, remover)};
@@ -389,7 +389,7 @@ namespace sequoia::testing
       write_to_file(materials.temporary_materials_root() / "Previous.txt", "", std::ios_base::out);
       write_to_file(materials.discarded_materials_root() / "Leftover.txt", "", std::ios_base::out);
 
-      background_directory_remover remover{};
+      discarded_materials_remover remover{};
       remover.join();
 
       const auto removalFailureFuture{prepare_materials(materials, remover)};
@@ -403,7 +403,7 @@ namespace sequoia::testing
       write_to_file(materials.temporary_materials_root() / "Previous.txt", "", std::ios_base::out);
       const unremovable_directory leftover{materials.discarded_materials_root()};
 
-      background_directory_remover remover{};
+      discarded_materials_remover remover{};
       auto removalFailureFuture{prepare_materials(materials, remover)};
 
       // An invalid future's `get` is undefined, so a regression to one must
@@ -422,7 +422,7 @@ namespace sequoia::testing
       const unremovable_directory leftover{materials.discarded_materials_root()},
                                   stuck{materials.temporary_materials_root() / "Stuck"};
 
-      background_directory_remover remover{};
+      discarded_materials_remover remover{};
       check_exception_thrown<std::runtime_error>(
         "A removal in place which fails after the leftover's names both roots",
         [&materials, &remover]() { return prepare_materials(materials, remover); },
@@ -436,7 +436,7 @@ namespace sequoia::testing
       const individual_materials_paths materials{source, "unprepared_test", projPaths, null_discriminator};
       fs::remove_all(materials.temporary_materials_root());
 
-      background_directory_remover remover{};
+      discarded_materials_remover remover{};
       auto removalFailureFuture{prepare_materials(materials, remover)};
       check("With no temporary root, the future holds no failure",
             removalFailureFuture.valid() && !removalFailureFuture.get());
@@ -445,7 +445,7 @@ namespace sequoia::testing
     {
       const unremovable_directory unremovable{projPaths.output().tests_temporary_data() / "Unremovable"};
 
-      background_directory_remover remover{};
+      discarded_materials_remover remover{};
       auto removalFailureFuture{remover.enqueue_removal(unremovable.path())};
 
       check(equality,

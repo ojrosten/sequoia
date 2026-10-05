@@ -395,7 +395,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    background_directory_remover::future_type ready_future_of(std::optional<removal_failure> failure)
+    discarded_materials_remover::future_type ready_future_of(std::optional<removal_failure> failure)
     {
       std::promise<std::optional<removal_failure>> promise{};
       promise.set_value(std::move(failure));
@@ -872,19 +872,19 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  background_directory_remover::future_type background_directory_remover::enqueue_removal(fs::path dir)
+  discarded_materials_remover::future_type discarded_materials_remover::enqueue_removal(fs::path discardedRoot)
   {
-    return m_Pool.push([dir{std::move(dir)}](){ return try_remove_all(dir); });
+    return m_Pool.push([discardedRoot{std::move(discardedRoot)}](){ return try_remove_all(discardedRoot); });
   }
 
-  void background_directory_remover::join()
+  void discarded_materials_remover::join()
   {
     m_Pool.join();
   }
 
   [[nodiscard]]
-  background_directory_remover::future_type prepare_materials(const individual_materials_paths& materials,
-                                                              background_directory_remover& remover)
+  discarded_materials_remover::future_type prepare_materials(const individual_materials_paths& materials,
+                                                             discarded_materials_remover& remover)
   {
     const auto& temporaryRoot{materials.temporary_materials_root()};
     if(temporaryRoot.empty())
@@ -1687,7 +1687,7 @@ namespace sequoia::testing
     // Without the flush, a run killed while the tests are silent would never show that they had begun
     stream() << running_tests_message(m_ConcurrencyMode) << std::flush;
 
-    background_directory_remover remover{};
+    discarded_materials_remover remover{};
 
     std::optional<run_durations> concurrentDurations{};
     if(concurrent_execution())
