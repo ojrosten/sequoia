@@ -367,8 +367,6 @@ namespace sequoia::testing
                          failure.error_message);
     }
 
-    // TO DO: std::views::concat | std::ranges::to<std::vector>, once the
-    // MS STL has concat (P2542)
     [[nodiscard]]
     std::vector<std::string> post_run_failure_messages(std::span<const std::string> trackerFailures,
                                                        std::span<const removal_failure> preRunRemovalFailures,
@@ -378,6 +376,9 @@ namespace sequoia::testing
       auto removalMessage{
         [&projectRoot](const removal_failure& failure) { return removal_failure_message(failure, projectRoot); }
       };
+
+      // TO DO: std::views::concat | std::ranges::to<std::vector>, once the
+      // MS STL has concat (P2542)
 
       std::vector<std::string> messages{trackerFailures.begin(), trackerFailures.end()};
       messages.append_range(preRunRemovalFailures | std::views::transform(removalMessage));
