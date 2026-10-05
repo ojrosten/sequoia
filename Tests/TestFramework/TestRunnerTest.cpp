@@ -1009,6 +1009,7 @@ namespace sequoia::testing
     test_serial_verbose_output();
     test_throwing_tests();
     test_execution_records();
+    test_summary_collision_with_an_unselected_test();
     test_discriminated_summary();
     test_filtered_suites();
     test_suites_not_found();
@@ -1394,31 +1395,24 @@ namespace sequoia::testing
         runner.register_test<sourceless_free_test>();
       });
 
-    // The check is made whichever tests are selected: a test that runs alone would overwrite the other test's summary
-    for(const auto& selection : {std::vector<std::string>{},
-                                 {"select", summary_collider_test_twin::source_file().generic_string()}})
-    {
-      std::string_view selected{selection.empty() ? "both" : "one"};
-      check_exception_thrown<std::runtime_error>(
-        reporter{std::format("Two tests whose summaries are one file, {} selected", selected)},
-        [this, &selection](){
-          std::vector<std::string> argList{zeroth_arg()};
-          argList.append_range(selection);
-          commandline_arguments args{argList};
-          std::stringstream outputStream{};
+    check_exception_thrown<std::runtime_error>(
+      reporter{"Two tests whose summaries are one file"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
 
-          test_runner runner{args.size(),
-                             args.get(),
-                             "Oliver J. Rosten",
-                             "  ",
-                             {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                              .common_includes{"TestShared/SharedIncludes.hpp"}},
-                             outputStream};
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
 
-          runner.register_test<summary_collider_test>();
-          runner.register_test<summary_collider_test_twin>();
-        });
-    }
+        runner.register_test<summary_collider_test>();
+        runner.register_test<summary_collider_test_twin>();
+        return runner.execute();
+      });
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Invalid repetitions for instability analysis"},
@@ -1632,6 +1626,24 @@ namespace sequoia::testing
     const bool runStartedFirst{   (runStart <= start_named_by(passingRecord.file_path()))
                                && (runStart <= start_named_by(throwingRecord.file_path()))};
     check("The run started no later than either test", runStartedFirst);
+  }
+
+  /** The runner checks for colliding summaries among the tests it runs, so
+      a collision with a test which is not selected goes unreported.
+   */
+  void test_runner_test::test_summary_collision_with_an_unselected_test()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(),
+                                "select",
+                                summary_collider_test_twin::source_file().generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<summary_collider_test>();
+    runner.register_test<summary_collider_test_twin>();
+
+    check(equality, "Summary collision with an unselected test return code", runner.execute(), return_code::success);
   }
 
   /** The runner writes the summary of `summary_collider_test` to the file
@@ -2816,7 +2828,7 @@ namespace sequoia::testing
     const auto runner{make_fake_runner(args, outputStream)};
     const auto& projPaths{runner.proj_paths()};
 
-    test_vessel vessel{scratch_writing_free_test{}, test_summary_path{}};
+    test_vessel vessel{scratch_writing_free_test{}};
     vessel.initialize(projPaths, cmake_cache{projPaths.build()}, recovery_mode::none);
 
     const auto& materials{vessel.materials_paths()};
