@@ -1698,7 +1698,8 @@ namespace sequoia::testing
         if(serial)
         {
           auto& wt{s.begin_node_weights()[n]};
-          if(wt.optTest) { wt.summary = wt.optTest->execute(id, remover); }
+          if(wt.optTest)
+            wt.summary = wt.optTest->execute(id, remover);
         }
       }
     };

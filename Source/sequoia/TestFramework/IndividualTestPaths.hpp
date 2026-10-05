@@ -33,7 +33,7 @@ namespace sequoia::testing
       -# The temporary root, `temporary_materials_root()`, is in `output/TestsTemporaryData`, and holds
          what the test works with as it runs;
       -# The discarded root, `discarded_materials_root()`, is the temporary root's sibling, and holds the
-         temporary root of the test's previous run until that tree is removed.
+         temporary root of the test's previous run until the runner removes it.
 
       The original and temporary roots mirror the path of the test's source file, less its extension, with the
       name of the test's class as the leaf. If a materials discriminator was given, the original root is one level

@@ -342,8 +342,8 @@ namespace sequoia::testing
 
   /** Each test here has no original materials, and paths of its own, so that no other preparation touches them.
       -# A remover which has been joined removes nothing, so the discarded root keeps the moved temporary root;
-      -# A temporary root which cannot be moved, since something is at the discarded root, is removed in place, and
-         what is at the discarded root is left alone;
+      -# `prepare_materials` removes in place a temporary root which it cannot move, since something is at the
+         discarded root, and leaves alone what is at the discarded root;
       -# A directory which cannot be removed is a failure which `join` returns.
    */
   void basic_test_interface_free_test::test_discarded_materials(const project_paths& projPaths)
@@ -355,10 +355,10 @@ namespace sequoia::testing
       fs::create_directories(materials.temporary_materials_root());
       write_to_file(materials.temporary_materials_root() / "Previous.txt", "", std::ios_base::out);
 
-      background_directory_remover joinedRemover{};
-      check("A remover with nothing queued has no failures", joinedRemover.join().empty());
+      background_directory_remover remover{};
+      check("A remover with nothing queued has no failures", remover.join().empty());
 
-      prepare_materials(materials, joinedRemover);
+      prepare_materials(materials, remover);
       check("The temporary root is moved to the discarded root",
             fs::exists(materials.discarded_materials_root() / "Previous.txt"));
       check("The fresh temporary root holds nothing of the moved one",

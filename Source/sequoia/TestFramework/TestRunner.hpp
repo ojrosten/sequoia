@@ -29,6 +29,7 @@
 #include <optional>
 #include <set>
 #include <span>
+#include <system_error>
 #include <thread>
 #include <utility>
 
@@ -127,8 +128,8 @@ namespace sequoia::testing
              within it.
 
       `join` returns once the thread has finished with every directory queued before the call, and returns the
-      failures. The destructor joins likewise if `join` has not been called. A directory queued after `join` is never
-      removed, and one which cannot be removed is left in place.
+      failures. The destructor joins likewise if `join` has not been called. The thread never removes a directory
+      queued after `join`, and leaves in place one which it cannot remove.
    */
   class background_directory_remover
   {
@@ -148,12 +149,11 @@ namespace sequoia::testing
   /** \brief Replaces a test's temporary materials root with a fresh copy of its materials.
 
       Moves the existing temporary root to `materials.discarded_materials_root()`, and queues the discarded root's
-      removal with `remover`.
+      removal with `remover`. If the move fails, removes the temporary root, if any, in place instead.
 
-      The `WorkingCopy` and `Auxiliary` in the original root are copied into the temporary root.
-      If the original root exists but holds no `WorkingCopy`, an empty `WorkingCopy` is made within
-      the temporary root instead. A test with no original root is left an empty temporary root, which
-      is its scratchpad.
+      Copies the `WorkingCopy` and `Auxiliary` in the original root into the temporary root. If the original root
+      exists but holds no `WorkingCopy`, makes an empty `WorkingCopy` within the temporary root instead. For a test
+      with no original root, leaves the temporary root empty, as its scratchpad.
 
       \throws std::logic_error if `materials` names no test
       \throws std::runtime_error if the original root holds anything but `WorkingCopy`, `Prediction`
