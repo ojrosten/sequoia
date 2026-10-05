@@ -794,12 +794,12 @@ namespace sequoia::testing
 
     void reset_tests();
 
+    return_code run_tests(std::optional<std::size_t> id);
+
     struct run_durations
     {
       log_summary::duration execution_duration{}, runner_overhead{};
     };
-
-    return_code run_tests(std::optional<std::size_t> id);
 
     /** \brief Executes each test, returning once every removal of a discarded
                materials root which the tests enqueued has finished.
@@ -811,6 +811,13 @@ namespace sequoia::testing
     [[nodiscard]]
     std::optional<run_durations> execute_tests(std::optional<std::size_t> id);
 
+    /** \brief Executes the tests which are not parallelizable, then the rest
+               concurrently.
+
+        \returns The run's execution duration, the non-parallelizable tests'
+        summed and then the busiest thread's; and its runner overhead, the wall
+        clock less that.
+     */
     [[nodiscard]]
     run_durations execute_concurrently(std::optional<std::size_t> id, discarded_materials_remover& remover);
 
