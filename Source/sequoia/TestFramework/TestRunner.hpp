@@ -23,6 +23,7 @@
 #include "sequoia/TextProcessing/Indent.hpp"
 
 #include <chrono>
+#include <filesystem>
 #include <format>
 #include <iostream>
 #include <map>
@@ -32,6 +33,7 @@
 #include <system_error>
 #include <thread>
 #include <utility>
+#include <vector>
 
 namespace sequoia::testing
 {

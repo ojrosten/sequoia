@@ -366,18 +366,18 @@ namespace sequoia::testing
 
     // TO DO: std::views::concat | std::ranges::to<std::vector>, once the MS STL has concat (P2542)
     [[nodiscard]]
-    std::vector<std::string> run_failure_messages(std::span<const std::string> postRunFailures,
-                                                  std::span<const removal_failure> discardedMaterialsFailures,
-                                                  std::span<const removal_failure> removalFailures,
-                                                  const fs::path& projectRoot)
+    std::vector<std::string> post_run_failure_messages(std::span<const std::string> trackerFailures,
+                                                       std::span<const removal_failure> preRunRemovalFailures,
+                                                       std::span<const removal_failure> backgroundRemovalFailures,
+                                                       const fs::path& projectRoot)
     {
       auto removalMessage{
         [&projectRoot](const removal_failure& failure) { return removal_failure_message(failure, projectRoot); }
       };
 
-      std::vector<std::string> messages{postRunFailures.begin(), postRunFailures.end()};
-      messages.append_range(discardedMaterialsFailures | std::views::transform(removalMessage));
-      messages.append_range(removalFailures | std::views::transform(removalMessage));
+      std::vector<std::string> messages{trackerFailures.begin(), trackerFailures.end()};
+      messages.append_range(preRunRemovalFailures | std::views::transform(removalMessage));
+      messages.append_range(backgroundRemovalFailures | std::views::transform(removalMessage));
       return messages;
     }
 
@@ -1631,7 +1631,7 @@ namespace sequoia::testing
     // Without the flush, a run killed while the tests are silent would never show that they had begun
     stream() << running_tests_message(m_ConcurrencyMode) << std::flush;
 
-    const auto discardedMaterialsFailures{remove_discarded_materials()};
+    const auto preRunRemovalFailures{remove_discarded_materials()};
     background_directory_remover remover{};
 
     std::optional<run_durations> concurrentDurations{};
@@ -1734,7 +1734,7 @@ namespace sequoia::testing
     tracker.update_materials_and_prune_info();
 
     // Before the grand totals, so that their total run time includes any wait for the removals
-    const auto removalFailures{remover.join()};
+    const auto backgroundRemovalFailures{remover.join()};
 
     if(m_Verbosity == verbosity::verbose)
     {
@@ -1815,10 +1815,10 @@ namespace sequoia::testing
 
     // Not folded into the totals, which count what the tests found: these are failures of the run itself
     const auto postRunFailures{
-      run_failure_messages(tracker.post_run_failures(),
-                           discardedMaterialsFailures,
-                           removalFailures,
-                           proj_paths().project_root())
+      post_run_failure_messages(tracker.post_run_failures(),
+                                preRunRemovalFailures,
+                                backgroundRemovalFailures,
+                                proj_paths().project_root())
     };
     if(!postRunFailures.empty())
     {
