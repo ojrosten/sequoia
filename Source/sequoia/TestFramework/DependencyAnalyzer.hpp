@@ -75,9 +75,11 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<prune_record> read_tests(const std::filesystem::path& file);
 
-  /** \brief Writes `tests` to `file`, each source path made relative to the tests repository.
+  /** \brief Writes `tests` to `file`, each source path made relative to the
+             tests repository.
 
-      \throws std::runtime_error if writing `tests` to `file` fails; `file` then keeps its previous contents
+      \throws std::runtime_error if writing `tests` to `file` fails; `file`
+              then keeps its previous contents
    */
   void write_tests(const project_paths& projPaths, const std::filesystem::path& file, std::span<const prune_record> tests);
 

@@ -103,7 +103,8 @@ namespace sequoia
   [[nodiscard]]
   bool try_write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode)
   {
-    // A stream which fails to open is failed already, so the write does nothing and `try_close` reports the failure
+    // A stream which fails to open is failed already: the write does nothing,
+    // and `try_close` reports the failure
     std::ofstream ofile{file, mode};
     ofile.write(text.data(), static_cast<std::streamsize>(text.size()));
     return try_close(ofile);

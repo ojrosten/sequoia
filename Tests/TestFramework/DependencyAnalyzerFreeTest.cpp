@@ -1605,8 +1605,10 @@ namespace sequoia::testing
     }
 
     {
-      // The records are written first to <file>.partial, a name this pins. A read-only file there, holding other
-      // records, cannot be opened to write them, but could be renamed over the file if the failure went unseen.
+      // write_tests writes the records to <file>.partial first, and this test
+      // pins that name. A read-only file there cannot be opened for writing.
+      // It holds other records, which would be renamed over <file> if the
+      // failure went unseen.
       const transient_file previous{file, "path: HouseAllocationTest.cpp\ntimestamp: 0\n"};
       const read_only_file stale{fs::path{file} += ".partial", "path: Maths/ProbabilityTest.cpp\ntimestamp: 0\n"};
 
@@ -1621,8 +1623,9 @@ namespace sequoia::testing
     }
 
     {
-      // A directory at the file's path, over which the written records cannot be renamed. They stay in
-      // <file>.partial, which is removed on leaving the scope.
+      // The written records cannot be renamed over a directory at <file>, so
+      // they stay in <file>.partial, which `partial` removes on leaving the
+      // scope.
       const transient_directory blocking{file}, partial{fs::path{file} += ".partial"};
       fs::create_directories(blocking.path());
 

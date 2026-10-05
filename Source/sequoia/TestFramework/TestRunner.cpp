@@ -67,8 +67,9 @@ namespace sequoia::testing
       return durations[1];
     }
 
-    // Written to <file>.partial and renamed over <file> only once all of `text` is written, so that neither a process
-    // dying mid-write nor a failed write disturbs the previous contents
+    // Writing to <file>.partial, then renaming it over <file> once the write
+    // succeeds, keeps the previous contents if the process dies mid-write or
+    // the write fails
     void overwrite_quietly(const fs::path& file, std::string_view text)
     {
       std::error_code selectsTheNonThrowingOverload{};

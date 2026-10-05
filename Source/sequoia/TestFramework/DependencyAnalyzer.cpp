@@ -755,8 +755,9 @@ namespace sequoia::testing
       }
     };
 
-    // Written to <file>.partial and renamed over <file>, so that a failed write leaves the previous records in place.
-    // A truncated file would parse, and prune would then silently leave out the tests it no longer names.
+    // Writing to <file>.partial, then renaming it over <file>, keeps the
+    // previous records if the write fails. A truncated <file> would parse,
+    // and prune would then silently leave out the tests lost to truncation.
     const auto partial{fs::path{file} += ".partial"};
     std::ofstream ostream{partial};
     std::ranges::copy(tests | std::views::transform(rebased), std::ostream_iterator<prune_record>{ostream});

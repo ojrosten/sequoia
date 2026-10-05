@@ -57,8 +57,10 @@ namespace sequoia::testing
       reporter{""},
       [this]() { write_to_file(working_materials() /= "Baz.txt", "Hello!", std::ios_base::out | std::ios_base::noreplace); });
 
-    // Under Linux, /dev/full opens and then fails every write, which is the failure this check is for. No path does
-    // that portably, so elsewhere a directory, which fails to open, stands in and keeps the check count the same.
+    // Under Linux, /dev/full opens and then fails every write: the failure
+    // this check is for. No portable path behaves so. Elsewhere a directory
+    // stands in, failing at the open instead, so the check count is the same
+    // on every platform.
     const fs::path unwritable{with_linux_v ? fs::path{"/dev/full"} : working_materials()};
     check("The stand-in for a failing write is present",
           with_linux_v ? fs::is_character_file(unwritable) : fs::is_directory(unwritable));

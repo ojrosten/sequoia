@@ -131,11 +131,12 @@ namespace sequoia::testing
     }
   };
 
-  /** \brief A file with the given contents and no write permissions, which exists for precisely the lifetime of the
-             object.
+  /** \brief A file with the given contents and no write permissions, which
+             exists for precisely the lifetime of the object.
 
-      Opening the file to write it fails, for any user but root. The object restores the permissions before removing
-      the file, which Windows refuses to remove while it is read-only.
+      Opening the file to write it fails, for any user but root. The object
+      restores the permissions before removing the file, since Windows refuses
+      to remove a read-only file.
    */
   class read_only_file
   {
