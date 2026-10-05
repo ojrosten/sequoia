@@ -155,8 +155,8 @@ namespace sequoia::testing
     constexpr std::string_view suffix{".discarded"};
     throw_if_empty_root(m_TemporaryMaterialsRoot, suffix);
 
-    // The temporary root ends in the test's name. A test's name holds no '.', so this is no test's temporary root,
-    // and since no two materials prefixes nest, no test's temporary root lies within it.
+    // The temporary root ends in the test's name, which cannot contain '.', so this path is no test's temporary root.
+    // Nor does any test's temporary root lie within it, since `register_test` refuses materials prefixes which nest.
     return fs::path{m_TemporaryMaterialsRoot} += suffix;
   }
 
