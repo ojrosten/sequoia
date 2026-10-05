@@ -88,26 +88,18 @@ namespace sequoia
   }
 
   [[nodiscard]]
-  bool try_close(std::ofstream& stream)
-  {
-    stream.close();
-    return !stream.fail();
-  }
-
-  void throw_unless_closed(std::ofstream& stream, const std::filesystem::path& file)
-  {
-    if(!try_close(stream))
-      throw std::runtime_error{report_failed_write(file)};
-  }
-
-  [[nodiscard]]
   bool try_write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode)
   {
     // A stream which fails to open is failed already: the write does nothing,
-    // and `try_close` reports the failure
+    // and the check after the close reports the failure
     std::ofstream ofile{file, mode};
     ofile.write(text.data(), static_cast<std::streamsize>(text.size()));
-    return try_close(ofile);
+
+    // Only a caller of close learns whether closing failed; the destructor
+    // reports nothing. A networked filesystem may report a full disk, an
+    // exceeded quota or an I/O error only then.
+    ofile.close();
+    return !ofile.fail();
   }
 
   void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode)

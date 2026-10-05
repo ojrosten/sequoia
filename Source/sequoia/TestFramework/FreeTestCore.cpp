@@ -10,7 +10,7 @@
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <format>
-#include <fstream>
+#include <sstream>
 
 namespace sequoia::testing
 {
@@ -28,9 +28,9 @@ namespace sequoia::testing
     {
       fs::create_directories(file.parent_path());
 
-      std::ofstream ofile{file, std::ios_base::binary};
-      ofile << output;
-      throw_unless_closed(ofile, file);
+      std::ostringstream text{};
+      text << output;
+      write_to_file(file, std::move(text).str(), std::ios_base::binary);
     }
   }
 
