@@ -1891,15 +1891,24 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<removal_failure> test_runner::extract_discarded_materials_removal_failures()
   {
-    std::vector<removal_failure> failures{};
-    for(auto& node : m_Suites.node_weights())
-    {
-      if(!node.optTest)
-        continue;
+    auto holdsTest{[](const suite_node& node) { return node.optTest.has_value(); }};
 
-      if(auto failure{node.optTest->extract_discarded_materials_removal_failure()})
-        failures.push_back(std::move(*failure));
-    }
+    auto failureOf{
+      [](suite_node& node) -> std::vector<removal_failure> {
+        if(auto failure{node.optTest->extract_discarded_materials_removal_failure()})
+          return {std::move(*failure)};
+
+        return {};
+      }
+    };
+
+    const auto failures{
+        m_Suites.node_weights()
+      | std::views::filter(holdsTest)
+      | std::views::transform(failureOf)
+      | std::views::join
+      | std::ranges::to<std::vector>()
+    };
 
     return failures;
   }
