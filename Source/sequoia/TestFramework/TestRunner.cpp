@@ -826,7 +826,7 @@ namespace sequoia::testing
     return runner_exit_offset + static_cast<int>(std::to_underlying(carried));
   }
 
-  void background_directory_remover::queue_removal(fs::path dir)
+  void background_directory_remover::enqueue_removal(fs::path dir)
   {
     // The future is discarded, since `join` returns the failures. Only the
     // pool's thread writes them, and `join` reads them after joining that
@@ -866,7 +866,7 @@ namespace sequoia::testing
     // If copying throws, the discarded root stays until the next run
     // removes it
     if(!moveError)
-      remover.queue_removal(discardedRoot);
+      remover.enqueue_removal(discardedRoot);
   }
 
   void test_vessel::versioned_write(const fs::path& file, std::string_view text)

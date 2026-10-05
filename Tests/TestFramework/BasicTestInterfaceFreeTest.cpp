@@ -388,7 +388,7 @@ namespace sequoia::testing
       const unremovable_directory unremovable{projPaths.output().tests_temporary_data() / "Unremovable"};
 
       background_directory_remover remover{};
-      remover.queue_removal(unremovable.path());
+      remover.enqueue_removal(unremovable.path());
       const auto failures{remover.join()};
 
       check(equality,

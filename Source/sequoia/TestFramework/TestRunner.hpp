@@ -127,7 +127,7 @@ namespace sequoia::testing
   };
 
   /** \brief An RAII wrapper for a thread which removes each directory passed
-             to `queue_removal`, with everything within it.
+             to `enqueue_removal`, with everything within it.
 
       `join` returns once the thread has finished with every directory queued
       before the call, and returns the failures. The destructor joins likewise
@@ -137,7 +137,7 @@ namespace sequoia::testing
   class background_directory_remover
   {
   public:
-    void queue_removal(std::filesystem::path dir);
+    void enqueue_removal(std::filesystem::path dir);
 
     [[nodiscard]]
     std::vector<removal_failure> join();
