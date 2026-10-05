@@ -2535,10 +2535,7 @@ namespace sequoia::testing
           runner.execute(),
           return_code::post_run_failures);
 
-    check("The failure names the discarded root",
-          outputStream.str().contains(
-            "Discarded materials not removed from output/TestsTemporaryData/Discarding/ScratchWritingFreeTest/"
-            "scratch_writing_free_test.discarded"));
+    check_output("Discarded Materials Removal Failure Output", "DiscardedMaterialsRemovalFailureOutput", outputStream);
   }
 
   void test_runner_test::test_exit_statuses()
