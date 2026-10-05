@@ -1659,8 +1659,10 @@ namespace sequoia::testing
       discriminatedSummary  {source, name, projPaths, "Twin"},
       undiscriminatedSummary{source, name, projPaths, null_discriminator};
 
-    check("The summary is written to the file the discriminator names", fs::exists(discriminatedSummary.file_path()));
-    check("No summary is written to the undiscriminated file", !fs::exists(undiscriminatedSummary.file_path()));
+    check("The runner writes the summary to the file the discriminator names",
+          fs::exists(discriminatedSummary.file_path()));
+    check("The runner writes no summary to the undiscriminated file",
+          !fs::exists(undiscriminatedSummary.file_path()));
   }
 
   void test_runner_test::test_filtered_suites()
