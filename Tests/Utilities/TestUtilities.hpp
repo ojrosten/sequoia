@@ -82,6 +82,10 @@ namespace sequoia::testing
     std::filesystem::path m_Dir{};
   };
 
+  inline constexpr std::filesystem::perms write_permissions{
+    std::filesystem::perms::owner_write | std::filesystem::perms::group_write | std::filesystem::perms::others_write
+  };
+
   /** \brief An RAII wrapper to make a directory which cannot be removed while
              the object lives.
 
@@ -99,7 +103,7 @@ namespace sequoia::testing
       , m_OpenFile{open_file_in(m_Dir)}
       , m_Permissions{std::filesystem::status(m_Dir).permissions()}
     {
-      std::filesystem::permissions(m_Dir, st_WritePermissions, std::filesystem::perm_options::remove);
+      std::filesystem::permissions(m_Dir, write_permissions, std::filesystem::perm_options::remove);
     }
 
     unremovable_directory(const unremovable_directory&) = delete;
@@ -115,10 +119,6 @@ namespace sequoia::testing
     [[nodiscard]]
     const std::filesystem::path& path() const noexcept { return m_Dir; }
   private:
-    constexpr static auto st_WritePermissions{
-      std::filesystem::perms::owner_write | std::filesystem::perms::group_write | std::filesystem::perms::others_write
-    };
-
     std::filesystem::path  m_Dir{};
     std::ofstream          m_OpenFile{};
     std::filesystem::perms m_Permissions{};
@@ -143,22 +143,18 @@ namespace sequoia::testing
     read_only_file(std::filesystem::path file, std::string_view contents)
       : m_File{std::move(file), contents}
     {
-      std::filesystem::permissions(m_File.path(), st_WritePermissions, std::filesystem::perm_options::remove);
+      std::filesystem::permissions(m_File.path(), write_permissions, std::filesystem::perm_options::remove);
     }
 
     ~read_only_file()
     {
       std::error_code ignored{};
-      std::filesystem::permissions(m_File.path(), st_WritePermissions, std::filesystem::perm_options::add, ignored);
+      std::filesystem::permissions(m_File.path(), write_permissions, std::filesystem::perm_options::add, ignored);
     }
 
     [[nodiscard]]
     const std::filesystem::path& path() const noexcept { return m_File.path(); }
   private:
-    constexpr static auto st_WritePermissions{
-      std::filesystem::perms::owner_write | std::filesystem::perms::group_write | std::filesystem::perms::others_write
-    };
-
     transient_file m_File;
   };
 
