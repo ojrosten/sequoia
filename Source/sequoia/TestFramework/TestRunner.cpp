@@ -831,7 +831,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::future<std::optional<removal_failure>> background_directory_remover::enqueue_removal(fs::path dir)
+  background_directory_remover::future_type background_directory_remover::enqueue_removal(fs::path dir)
   {
     return m_Pool.push([dir{std::move(dir)}](){ return try_remove_all(dir); });
   }
@@ -842,8 +842,8 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::future<std::optional<removal_failure>> prepare_materials(const individual_materials_paths& materials,
-                                                                background_directory_remover& remover)
+  background_directory_remover::future_type prepare_materials(const individual_materials_paths& materials,
+                                                              background_directory_remover& remover)
   {
     const auto& temporaryRoot{materials.temporary_materials_root()};
     if(temporaryRoot.empty())

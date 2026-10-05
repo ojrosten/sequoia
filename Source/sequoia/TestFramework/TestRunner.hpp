@@ -142,8 +142,10 @@ namespace sequoia::testing
   class background_directory_remover
   {
   public:
+    using future_type = std::future<std::optional<removal_failure>>;
+
     [[nodiscard]]
-    std::future<std::optional<removal_failure>> enqueue_removal(std::filesystem::path dir);
+    future_type enqueue_removal(std::filesystem::path dir);
 
     void join();
   private:
@@ -182,8 +184,8 @@ namespace sequoia::testing
                   or a `.DS_Store`.
    */
   [[nodiscard]]
-  std::future<std::optional<removal_failure>> prepare_materials(const individual_materials_paths& materials,
-                                                                background_directory_remover& remover);
+  background_directory_remover::future_type prepare_materials(const individual_materials_paths& materials,
+                                                              background_directory_remover& remover);
 
   [[nodiscard]]
   active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
@@ -503,7 +505,7 @@ namespace sequoia::testing
 
       Test m_Test;
       test_execution_record_path m_ExecutionRecord{};
-      std::future<std::optional<removal_failure>> m_DiscardedMaterialsRemovalFuture{};
+      background_directory_remover::future_type m_DiscardedMaterialsRemovalFuture{};
     };
 
     enum class parallelizable_candidate : bool { no, yes };
