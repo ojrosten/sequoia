@@ -173,8 +173,8 @@ namespace sequoia::testing
       normally the current run's: the start while the test executes, then the
       whole record once the test has finished. If a write fails, an earlier
       run's record remains. A record naming a start and no execution duration
-      therefore marks a test that was executing when the run which wrote the
-      record ended.
+      marks a test which did not finish in the run that wrote the record, or
+      whose finished record could not be written.
 
       The path is empty for default project paths.
    */

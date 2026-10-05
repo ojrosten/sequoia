@@ -68,7 +68,7 @@ namespace sequoia
 
       \throws std::runtime_error if the replacement fails. The message names
               `<file>.partial` if the write failed, and `file` if the rename
-              failed. `file` keeps its previous contents.
+              failed.
    */
   void replace_contents(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode);
 

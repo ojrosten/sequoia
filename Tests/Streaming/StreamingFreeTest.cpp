@@ -77,7 +77,7 @@ namespace sequoia::testing
   {
     using namespace std::string_literals;
 
-    const auto file{working_materials() /= "Replaced.txt"};
+    const auto file{scratchpad_materials() /= "Replaced.txt"};
     const auto partial{fs::path{file} += ".partial"};
 
     write_to_file(file, "Previous", std::ios_base::out);
@@ -101,9 +101,10 @@ namespace sequoia::testing
     // Under Linux, <file>.partial links to /dev/full, which opens and then
     // fails every write. No portable path behaves so. Elsewhere a read-only
     // file stands in, failing at the open instead, so the check count is the
-    // same on every platform. A directory would not do: renaming it over
-    // <file> also fails, so a replacement which ignored a failed write would
-    // still report failure.
+    // same on every platform.
+    //
+    // A directory would not do: renaming it over <file> also fails, so a
+    // replacement which ignored a failed write would still report failure.
     if constexpr(with_linux_v)
     {
       fs::create_symlink("/dev/full", partial);
@@ -118,7 +119,7 @@ namespace sequoia::testing
       checkFailedWrite();
     }
 
-    const auto directory{working_materials() /= "Directory"};
+    const auto directory{scratchpad_materials() /= "Directory"};
     fs::create_directory(directory);
 
     check("A replacement whose rename fails is reported", !try_replace_contents(directory, "Lost", std::ios_base::out));
