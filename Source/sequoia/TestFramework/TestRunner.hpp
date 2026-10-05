@@ -202,8 +202,10 @@ namespace sequoia::testing
   {
   public:
     template<concrete_test Test>
-    test_vessel(Test&& t)
-      : m_pTest{std::make_unique<essence<Test>>(std::forward<Test>(t))}
+    test_vessel(Test&& t, test_summary_path summaryFile, test_execution_record_path executionRecord)
+      : m_pTest{std::make_unique<essence<Test>>(std::forward<Test>(t),
+                                                std::move(summaryFile),
+                                                std::move(executionRecord))}
       , m_Parallelizable{is_parallelizable_v<Test> ? parallelizable_candidate::yes : parallelizable_candidate::no}
     {}
 
@@ -268,9 +270,7 @@ namespace sequoia::testing
       m_pTest->reset();
     }
 
-    /** \brief Replaces the held test with one which knows where its files are,
-               and builds the path which `summary_file_path()` returns.
-     */
+    /** \brief Replaces the held test with one which knows where its files are. */
 
     void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode)
     {
@@ -347,7 +347,10 @@ namespace sequoia::testing
     class essence final : public soul
     {
     public:
-      essence(Test&& t) : m_Test{std::forward<Test>(t)}
+      essence(Test&& t, test_summary_path summaryFile, test_execution_record_path executionRecord)
+        : m_Test{std::forward<Test>(t)}
+        , m_SummaryFile{std::move(summaryFile)}
+        , m_ExecutionRecord{std::move(executionRecord)}
       {}
 
       [[nodiscard]]
@@ -424,12 +427,6 @@ namespace sequoia::testing
                       },
                       make_active_recovery_paths(mode, projPaths),
                       get_discriminator<output_discriminator_probe, Test>(cache)};
-
-        m_ExecutionRecord = test_execution_record_path{source, m_Name, projPaths};
-        m_SummaryFile     = test_summary_path{source,
-                                              m_Name,
-                                              projPaths,
-                                              get_discriminator<summary_discriminator_probe, Test>(cache)};
       }
     private:
       static constexpr std::string_view m_Name{test_name<Test>()};
@@ -518,8 +515,8 @@ namespace sequoia::testing
       }
 
       Test m_Test;
-      test_execution_record_path m_ExecutionRecord{};
       test_summary_path m_SummaryFile{};
+      test_execution_record_path m_ExecutionRecord{};
       discarded_materials_remover::future_type m_DiscardedMaterialsRemovalFailureFuture{};
     };
 
@@ -580,10 +577,18 @@ namespace sequoia::testing
       register_name(name, T::source_file());
       register_source(T::source_file());
 
+      test_summary_path summaryFile{T::source_file(),
+                                    name,
+                                    m_ProjPaths,
+                                    get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)};
+      register_summary(name, summaryFile);
+
       constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
 
       if(m_Filter(T::source_file(), enclosing_suites(T::source_file()), isPerformanceTest))
-        m_Tests.emplace_back(T{});
+        m_Tests.emplace_back(T{},
+                             std::move(summaryFile),
+                             test_execution_record_path{T::source_file(), name, m_ProjPaths});
     }
 
     /** \brief Runs the tests, as the command line asked.
@@ -911,11 +916,10 @@ namespace sequoia::testing
      */
     void register_source(const std::filesystem::path& source);
 
-    /** \brief Admits the summary file of a test which this execution runs.
+    /** \brief Admits the summary file of a test being registered.
 
-        \throws std::runtime_error naming both tests and the file, if the file
-        of `summary` is that of a test already admitted by this execution,
-        ignoring ASCII case
+        \throws std::runtime_error naming both tests and the file, if the file of `summary` is that of a test
+        already admitted, ignoring ASCII case
      */
     void register_summary(std::string_view name, const test_summary_path& summary);
 

@@ -2166,7 +2166,6 @@ namespace sequoia::testing
     // registered since the previous one.
     auto tests{std::exchange(m_Tests, {})};
     m_Suites = suite_type{};
-    m_TestNamesByLowerCaseSummary.clear();
     const auto root{m_Suites.add_node(suite_type::npos)};
 
     // By name, so that where a registration sits in a main does not decide what the output says.
@@ -2199,7 +2198,6 @@ namespace sequoia::testing
       };
 
       vessel.initialize(proj_paths(), m_CMakeCache, m_RecoveryMode);
-      register_summary(vessel.name(), vessel.summary_file_path());
 
       m_Suites.add_node(enclosingSuiteNode,
                         suite_node{.summary{log_summary{vessel.name()}}, .optTest{std::move(vessel)}});
