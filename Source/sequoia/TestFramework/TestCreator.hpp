@@ -24,7 +24,9 @@
 
 namespace sequoia::testing
 {
-  /** \brief Whether `spelling` is empty or holds only ASCII whitespace, as `ascii::is_whitespace` classifies it. */
+  /** \brief Whether `spelling` is empty or holds only whitespace, as
+             `ascii::is_whitespace` classifies it.
+   */
   [[nodiscard]]
   bool is_empty_or_whitespace(std::string_view spelling) noexcept;
 

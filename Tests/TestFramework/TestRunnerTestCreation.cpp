@@ -487,9 +487,10 @@ namespace sequoia::testing
              "--testing-utilities", "ProbabilityTestingUtilities.hpp",
              "--fullname", "widget_test"});
 
-    // The type sprocket is new, so every file for it would be new too: the checks below then see any file
-    // written before a refusal. Each creation generates sprocket's header rather than seeking it. A header
-    // that cannot be found is refused too, so it would mask the removal of the refusal under test.
+    // The type sprocket is new, so every file for it would be new too: the
+    // checks below then see any file written before a refusal. Each creation
+    // generates sprocket's header: a search for the header would fail, and
+    // keep these checks green without the refusal under test.
     refused("An empty equivalent type", {"regular_test", "stuff::sprocket", "", "-g", "Stuff"});
     refused("An equivalent type of only spaces", {"move_only_test", "stuff::sprocket", " ", "-g", "Stuff"});
     refused("A full name whose file is a companion's",
