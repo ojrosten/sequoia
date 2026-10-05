@@ -794,7 +794,29 @@ namespace sequoia::testing
 
     void reset_tests();
 
+    struct run_durations
+    {
+      log_summary::duration execution_duration{}, runner_overhead{};
+    };
+
     return_code run_tests(std::optional<std::size_t> id);
+
+    /** \brief Executes each test, returning once every removal of a discarded
+               materials root which the tests enqueued has finished.
+
+        \returns The run's durations if the tests ran concurrently; otherwise
+        `std::nullopt`, since a serial run's durations are the sums of its
+        tests'.
+     */
+    [[nodiscard]]
+    std::optional<run_durations> execute_tests(std::optional<std::size_t> id);
+
+    [[nodiscard]]
+    run_durations execute_concurrently(std::optional<std::size_t> id, discarded_materials_remover& remover);
+
+    void execute_serially(std::optional<std::size_t> id, discarded_materials_remover& remover);
+
+    void report_results();
 
     /** \brief Extracts each test's discarded materials removal failure, in the
                order in which `m_Suites` holds the tests.

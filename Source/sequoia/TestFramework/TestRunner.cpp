@@ -129,11 +129,6 @@ namespace sequoia::testing
       }
     }
 
-    struct run_durations
-    {
-      log_summary::duration execution_duration{}, runner_overhead{};
-    };
-
     struct execution_info
     {
       std::thread::id       thread_id{};
@@ -1687,79 +1682,13 @@ namespace sequoia::testing
     // Without the flush, a run killed while the tests are silent would never show that they had begun
     stream() << running_tests_message(m_ConcurrencyMode) << std::flush;
 
-    discarded_materials_remover remover{};
-
-    std::optional<run_durations> concurrentDurations{};
-    if(concurrent_execution())
-    {
-      auto first{std::ranges::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
-      auto next{std::ranges::find_if(first, m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest->parallelizable(); })};
-
-      auto executor{
-        [id, &remover](suite_node& wt){
-          wt.summary             = wt.optTest->execute(id, remover);
-          wt.executing_thread_id = std::this_thread::get_id();
-        }
-      };
-
-      std::span nonParallelizable{first, next}, parallelizable{next, m_Suites.end_node_weights()};
-
-      const timer asyncTimer{};
-      std::ranges::for_each(nonParallelizable, executor);
-
-      switch(m_ConcurrencyMode)
-      {
-        using enum concurrency_mode;
-      case dynamic:
-        accelerate(sequoia::execution::par, parallelizable, executor);
-        break;
-      case fixed:
-        accelerate(thread_pool_policy{.num{m_PoolSize}}, parallelizable, executor);
-        break;
-      default:
-        throw std::logic_error{"Unexpected concurrency_mode"};
-      }
-
-      const auto wallClock{asyncTimer.time_elapsed()};
-
-      auto executionInfoOf{
-        [](const suite_node& wt){
-          return execution_info{.thread_id{wt.executing_thread_id}, .duration{wt.summary.execution_duration()}};
-        }
-      };
-
-      auto executionInfos{
-        [executionInfoOf](std::span<const suite_node> nodes){
-          return nodes | std::views::transform(executionInfoOf) | std::ranges::to<std::vector>();
-        }
-      };
-
-      // The longest the tests ran one after another: those which are not parallelizable, then the busiest thread's
-      const auto executionDuration{
-          summed_duration(executionInfos(nonParallelizable))
-        + busiest_thread_execution_duration(executionInfos(parallelizable))
-      };
-      concurrentDurations = run_durations{
-        .execution_duration{executionDuration},
-        .runner_overhead{wallClock - executionDuration}
-      };
-    }
+    const auto concurrentDurations{execute_tests(id)};
+    const auto removalFailures{extract_discarded_materials_removal_failures()};
 
     test_tracker tracker{proj_paths(), id, m_Filter.selects() ? is_filtered::yes : is_filtered::no, m_Filter.tests_left_out()};
 
     using namespace maths;
-    auto nodeEarly{
-      [&s = m_Suites,id,serial{!concurrent_execution()},&remover](auto n) {
-        if(serial)
-        {
-          auto& wt{s.begin_node_weights()[n]};
-          if(wt.optTest)
-            wt.summary = wt.optTest->execute(id, remover);
-        }
-      }
-    };
-
-    auto nodeLate{
+    auto summarizeAndTrack{
       [this,&tracker](auto n) {
         m_Suites.mutate_node_weight(
           std::ranges::next(m_Suites.cbegin_node_weights(), n),
@@ -1785,14 +1714,133 @@ namespace sequoia::testing
       }
     };
 
-    traverse(depth_first, m_Suites, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
+    traverse(depth_first, m_Suites, find_disconnected_t{}, null_func_obj{}, summarizeAndTrack, null_func_obj{});
     tracker.update_materials_and_prune_info();
 
-    // Before the grand totals, so that their total run time includes any
-    // wait for the removals
-    remover.join();
-    const auto removalFailures{extract_discarded_materials_removal_failures()};
+    report_results();
 
+    if(concurrentDurations)
+    {
+      auto& rootSummary{m_Suites.begin_node_weights()->summary};
+      rootSummary.execution_duration(concurrentDurations->execution_duration);
+      rootSummary.runner_overhead(concurrentDurations->runner_overhead);
+    }
+
+    stream() << "\n-----------Grand Totals-----------\n";
+    stream() << summarize(root_summary(), "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+
+    if(const auto materialsUpdateReport{tracker.materials_update_report()}; !materialsUpdateReport.empty())
+    {
+      stream() << "\n-----------Materials Update-----------\n";
+      for(const auto& entry : materialsUpdateReport)
+      {
+        stream() << sequoia::indent(entry, indentation{"\t"}) << "\n\n";
+      }
+    }
+
+    // Not folded into the totals, which count what the tests found: these are failures of the run itself
+    const auto postRunFailures{
+      post_run_failure_messages(tracker.post_run_failures(),
+                                removalFailures,
+                                proj_paths().project_root())
+    };
+    if(!postRunFailures.empty())
+    {
+      stream() << "\n-----------Post-Run Failures-----------\n";
+      for(const auto& failure : postRunFailures)
+      {
+        stream() << sequoia::indent(failure, indentation{"\t"}) << "\n\n";
+      }
+    }
+
+    return to_return_code(root_summary()) | (postRunFailures.empty() ? return_code::success : return_code::post_run_failures);
+  }
+
+  [[nodiscard]]
+  std::optional<test_runner::run_durations> test_runner::execute_tests(const std::optional<std::size_t> id)
+  {
+    discarded_materials_remover remover{};
+    if(concurrent_execution())
+      return execute_concurrently(id, remover);
+
+    execute_serially(id, remover);
+    return std::nullopt;
+  }
+
+  [[nodiscard]]
+  test_runner::run_durations test_runner::execute_concurrently(const std::optional<std::size_t> id,
+                                                               discarded_materials_remover& remover)
+  {
+    auto first{std::ranges::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
+    auto next{std::ranges::find_if(first, m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest->parallelizable(); })};
+
+    auto executor{
+      [id, &remover](suite_node& wt){
+        wt.summary             = wt.optTest->execute(id, remover);
+        wt.executing_thread_id = std::this_thread::get_id();
+      }
+    };
+
+    std::span nonParallelizable{first, next}, parallelizable{next, m_Suites.end_node_weights()};
+
+    const timer asyncTimer{};
+    std::ranges::for_each(nonParallelizable, executor);
+
+    switch(m_ConcurrencyMode)
+    {
+      using enum concurrency_mode;
+    case dynamic:
+      accelerate(sequoia::execution::par, parallelizable, executor);
+      break;
+    case fixed:
+      accelerate(thread_pool_policy{.num{m_PoolSize}}, parallelizable, executor);
+      break;
+    default:
+      throw std::logic_error{"Unexpected concurrency_mode"};
+    }
+
+    const auto wallClock{asyncTimer.time_elapsed()};
+
+    auto executionInfoOf{
+      [](const suite_node& wt){
+        return execution_info{.thread_id{wt.executing_thread_id}, .duration{wt.summary.execution_duration()}};
+      }
+    };
+
+    auto executionInfos{
+      [executionInfoOf](std::span<const suite_node> nodes){
+        return nodes | std::views::transform(executionInfoOf) | std::ranges::to<std::vector>();
+      }
+    };
+
+    // The longest the tests ran one after another: those which are not parallelizable, then the busiest thread's
+    const auto executionDuration{
+        summed_duration(executionInfos(nonParallelizable))
+      + busiest_thread_execution_duration(executionInfos(parallelizable))
+    };
+    return run_durations{
+      .execution_duration{executionDuration},
+      .runner_overhead{wallClock - executionDuration}
+    };
+  }
+
+  void test_runner::execute_serially(const std::optional<std::size_t> id, discarded_materials_remover& remover)
+  {
+    using namespace maths;
+    auto execute{
+      [&s = m_Suites, id, &remover](auto n) {
+        auto& wt{s.begin_node_weights()[n]};
+        if(wt.optTest)
+          wt.summary = wt.optTest->execute(id, remover);
+      }
+    };
+
+    traverse(depth_first, m_Suites, find_disconnected_t{}, execute, null_func_obj{}, null_func_obj{});
+  }
+
+  void test_runner::report_results()
+  {
+    using namespace maths;
     if(m_Verbosity == verbosity::verbose)
     {
       // One step per level of the tree, a test's report being a level below the test. Spaces
@@ -1850,42 +1898,6 @@ namespace sequoia::testing
 
       traverse(depth_first, m_Suites, find_disconnected_t{}, printTest, null_func_obj{}, null_func_obj{});
     }
-
-    if(concurrentDurations)
-    {
-      auto& rootSummary{m_Suites.begin_node_weights()->summary};
-      rootSummary.execution_duration(concurrentDurations->execution_duration);
-      rootSummary.runner_overhead(concurrentDurations->runner_overhead);
-    }
-
-    stream() << "\n-----------Grand Totals-----------\n";
-    stream() << summarize(root_summary(), "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
-
-    if(const auto materialsUpdateReport{tracker.materials_update_report()}; !materialsUpdateReport.empty())
-    {
-      stream() << "\n-----------Materials Update-----------\n";
-      for(const auto& entry : materialsUpdateReport)
-      {
-        stream() << sequoia::indent(entry, indentation{"\t"}) << "\n\n";
-      }
-    }
-
-    // Not folded into the totals, which count what the tests found: these are failures of the run itself
-    const auto postRunFailures{
-      post_run_failure_messages(tracker.post_run_failures(),
-                                removalFailures,
-                                proj_paths().project_root())
-    };
-    if(!postRunFailures.empty())
-    {
-      stream() << "\n-----------Post-Run Failures-----------\n";
-      for(const auto& failure : postRunFailures)
-      {
-        stream() << sequoia::indent(failure, indentation{"\t"}) << "\n\n";
-      }
-    }
-
-    return to_return_code(root_summary()) | (postRunFailures.empty() ? return_code::success : return_code::post_run_failures);
   }
 
   [[nodiscard]]
