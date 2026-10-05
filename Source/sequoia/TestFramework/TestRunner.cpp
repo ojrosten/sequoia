@@ -395,7 +395,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    background_directory_remover::future_type ready_future_of(removal_failure failure)
+    background_directory_remover::future_type ready_future_of(std::optional<removal_failure> failure)
     {
       std::promise<std::optional<removal_failure>> promise{};
       promise.set_value(std::move(failure));
@@ -915,8 +915,7 @@ namespace sequoia::testing
     if(moved)
       return remover.enqueue_removal(discardedRoot);
 
-    return leftoverFailure.transform([](const removal_failure& failure){ return ready_future_of(failure); })
-                          .value_or(background_directory_remover::future_type{});
+    return ready_future_of(leftoverFailure);
   }
 
   void test_vessel::versioned_write(const fs::path& file, std::string_view text)

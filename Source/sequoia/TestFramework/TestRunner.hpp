@@ -172,9 +172,7 @@ namespace sequoia::testing
       \returns
       -# The future of the discarded root's removal, as `enqueue_removal`
          returns it, if the temporary root was moved;
-      -# A ready future holding the failure, if the leftover could not be
-         removed;
-      -# Otherwise, a future whose `valid()` is false.
+      -# Otherwise, a ready future holding the leftover's failure, if any.
 
       \throws std::logic_error if `materials` names no test
       \throws std::filesystem::filesystem_error if the temporary root cannot be

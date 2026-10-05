@@ -354,7 +354,8 @@ namespace sequoia::testing
       -# If the removal in place fails too, the error names both roots. Only
          its first line is checked, since the lines after it hold the
          platform's messages;
-      -# With no temporary root, nothing is moved, and no removal is enqueued;
+      -# With no temporary root, nothing is moved, and the future holds no
+         failure;
       -# A directory which cannot be removed is a failure, which the future of
          its removal holds.
    */
@@ -371,7 +372,10 @@ namespace sequoia::testing
       remover.join();
 
       const auto removalFailureFuture{prepare_materials(materials, remover)};
-      check("The moved temporary root's removal is enqueued", removalFailureFuture.valid());
+      // The remover has joined, so an enqueued removal never runs, whereas a
+      // ready future would be one which prepare_materials made itself
+      check("The moved temporary root's removal is enqueued",
+            removalFailureFuture.wait_for(std::chrono::seconds{}) == std::future_status::timeout);
       check("The temporary root is moved to the discarded root",
             fs::exists(materials.discarded_materials_root() / "Previous.txt"));
       check("The fresh temporary root holds nothing of the moved one",
@@ -433,8 +437,9 @@ namespace sequoia::testing
       fs::remove_all(materials.temporary_materials_root());
 
       background_directory_remover remover{};
-      const auto removalFailureFuture{prepare_materials(materials, remover)};
-      check("With no temporary root, no removal is enqueued", !removalFailureFuture.valid());
+      auto removalFailureFuture{prepare_materials(materials, remover)};
+      check("With no temporary root, the future holds no failure",
+            removalFailureFuture.valid() && !removalFailureFuture.get());
     }
 
     {
