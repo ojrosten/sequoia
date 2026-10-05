@@ -177,6 +177,9 @@ namespace sequoia::testing
       -# Otherwise, a future whose `valid()` is false.
 
       \throws std::logic_error if `materials` names no test
+      \throws std::filesystem::filesystem_error if the temporary root cannot be
+               removed in place; if the leftover could not be removed either,
+               a `std::runtime_error` naming both
       \throws std::runtime_error if the original root holds anything but `WorkingCopy`, `Prediction`
                and `Auxiliary`, besides a `.keep` or `.DS_Store`, naming what else it holds
       \throws std::runtime_error if the test declares a materials discriminator, and one of these holds:

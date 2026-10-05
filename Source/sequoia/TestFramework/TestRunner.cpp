@@ -367,6 +367,33 @@ namespace sequoia::testing
       return !error;
     }
 
+    // If the leftover could not be removed either, the error names both, since
+    // the two failures usually share a cause
+    void remove_temporary_root_in_place(const fs::path& temporaryRoot,
+                                        const std::optional<removal_failure>& leftoverFailure)
+    {
+      try
+      {
+        fs::remove_all(temporaryRoot);
+      }
+      catch(const fs::filesystem_error& e)
+      {
+        if(!leftoverFailure)
+          throw;
+
+        throw std::runtime_error{
+          std::format("Unable to remove the temporary root {} in place, "
+                      "after its discarded root {} could not be removed\n"
+                      "The temporary root: {}\n"
+                      "The discarded root: {}",
+                      temporaryRoot.generic_string(),
+                      leftoverFailure->dir.generic_string(),
+                      e.code().message(),
+                      leftoverFailure->error_message)
+        };
+      }
+    }
+
     [[nodiscard]]
     background_directory_remover::future_type ready_future_of(removal_failure failure)
     {
@@ -878,7 +905,7 @@ namespace sequoia::testing
     // Windows, if a file within the tree is open.
     const bool moved{!leftoverFailure && try_rename(temporaryRoot, discardedRoot)};
     if(!moved)
-      fs::remove_all(temporaryRoot);
+      remove_temporary_root_in_place(temporaryRoot, leftoverFailure);
 
     fs::create_directories(temporaryRoot);
     copy_original_materials(materials);

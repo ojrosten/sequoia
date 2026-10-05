@@ -196,3 +196,12 @@ The materials in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeT
 
 =======================================
 
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 423
+A removal in place which fails after the leftover's names both roots
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to remove the temporary root output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/output/TestsTemporaryData/Materials/WithNone/unremovable_twice_test in place, after its discarded root output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/output/TestsTemporaryData/Materials/WithNone/unremovable_twice_test.discarded could not be removed
+
+=======================================
+

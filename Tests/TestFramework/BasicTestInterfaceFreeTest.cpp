@@ -351,6 +351,9 @@ namespace sequoia::testing
          behind, then moves the temporary root;
       -# A leftover which cannot be removed is the failure which the returned
          future holds, and the temporary root is removed in place;
+      -# If the removal in place fails too, the error names both roots. Only
+         its first line is checked, since the lines after it hold the
+         platform's messages;
       -# With no temporary root, nothing is moved, and no removal is enqueued;
       -# A directory which cannot be removed is a failure, which the future of
          its removal holds.
@@ -408,6 +411,21 @@ namespace sequoia::testing
             std::optional{materials.discarded_materials_root()});
 
       check("The temporary root is then removed in place", fs::is_empty(materials.temporary_materials_root()));
+    }
+
+    {
+      const individual_materials_paths materials{source, "unremovable_twice_test", projPaths, null_discriminator};
+      const unremovable_directory leftover{materials.discarded_materials_root()},
+                                  stuck{materials.temporary_materials_root() / "Stuck"};
+
+      background_directory_remover remover{};
+      check_exception_thrown<std::runtime_error>(
+        "A removal in place which fails after the leftover's names both roots",
+        [&materials, &remover]() { return prepare_materials(materials, remover); },
+        [](const project_paths& paths, std::string message) {
+          return default_exception_message_postprocessor{}(paths, message.substr(0, message.find('\n')));
+        }
+      );
     }
 
     {
