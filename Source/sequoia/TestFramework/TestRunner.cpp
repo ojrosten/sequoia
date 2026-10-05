@@ -2170,12 +2170,14 @@ namespace sequoia::testing
 
   void test_runner::build_suite_tree()
   {
-    // A runner may be executed more than once, with tests registered in between.
+    // A runner may be executed more than once. Each execution runs the tests
+    // registered since the previous one.
+    auto tests{std::exchange(m_Tests, {})};
     m_Suites = suite_type{};
     const auto root{m_Suites.add_node(suite_type::npos)};
 
     // By name, so that where a registration sits in a main does not decide what the output says.
-    std::ranges::sort(m_Tests, {}, [](const test_vessel& v){ return v.name(); });
+    std::ranges::sort(tests, {}, [](const test_vessel& v){ return v.name(); });
 
     const auto findOrAddSuite{
       [this](const suite_node_index enclosingSuiteNode, const std::string& suiteName) {
@@ -2197,7 +2199,7 @@ namespace sequoia::testing
       }
     };
 
-    for(auto& vessel : m_Tests)
+    for(auto& vessel : tests)
     {
       const auto enclosingSuiteNode{
         std::ranges::fold_left(enclosing_suites(vessel.source_file()), root, findOrAddSuite)

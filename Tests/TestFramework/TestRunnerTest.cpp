@@ -715,6 +715,27 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
+    /// The runner calls the output discriminator while building the suite tree
+    class throwing_discriminator_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<throwing_discriminator_test>();
+      }
+
+      [[nodiscard]]
+      static std::string output_discriminator(const cmake_cache&)
+      {
+        throw std::runtime_error{"No output discriminator"};
+      }
+
+      void run_tests() {}
+    };
+
     [[nodiscard]]
     test_runner make_fake_runner(commandline_arguments& args, std::stringstream& outputStream)
     {
@@ -981,6 +1002,8 @@ namespace sequoia::testing
     test_exceptions();
     test_critical_errors();
     test_basic_output();
+    test_tests_registered_between_executions();
+    test_execution_after_an_execution_which_threw();
     test_help_output();
     test_verbose_output();
     test_serial_verbose_output();
@@ -1460,6 +1483,46 @@ namespace sequoia::testing
 
     check(equality, "Basic output return code", runner.execute(), return_code::soft_failures);
     check_output("Basic Output", "BasicOutput", outputStream);
+  }
+
+  /** The second execution must run `passing_test` alone:
+      -# If `failing_test` ran again, the return code would show soft failures.
+      -# If no test ran, the output would not name `passing_test`.
+   */
+  void test_runner_test::test_tests_registered_between_executions()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<failing_test>();
+    check(equality, "First execution return code", runner.execute(), return_code::soft_failures);
+    check_output("First execution", "FirstExecutionOutput", outputStream);
+
+    runner.register_test<passing_test>();
+    check(equality, "Second execution return code", runner.execute(), return_code::success);
+    check_output("Second execution", "SecondExecutionOutput", outputStream);
+  }
+
+  /** The suite tree is built in name order, so the first execution moves
+      `failing_test` into the tree and then throws. The second execution must
+      run `passing_test` alone.
+   */
+  void test_runner_test::test_execution_after_an_execution_which_threw()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<failing_test>();
+    runner.register_test<throwing_discriminator_test>();
+    check_exception_thrown<std::runtime_error>("First execution", [&runner](){ return runner.execute(); });
+
+    runner.register_test<passing_test>();
+    check(equality, "Second execution return code", runner.execute(), return_code::success);
+    check_output("Second execution", "ExecutionAfterAnExecutionWhichThrewOutput", outputStream);
   }
 
   void test_runner_test::test_help_output()
