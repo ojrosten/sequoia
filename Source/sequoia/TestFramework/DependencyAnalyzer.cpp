@@ -21,10 +21,12 @@
 #include <format>
 #include <fstream>
 #include <functional>
+#include <iterator>
 #include <map>
 #include <optional>
 #include <ranges>
 #include <source_location>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <variant>
@@ -755,18 +757,12 @@ namespace sequoia::testing
       }
     };
 
-    // Writing to <file>.partial, then renaming it over <file>, keeps the
-    // previous records if the write fails. A truncated <file> would parse,
-    // and prune would then silently leave out the tests lost to truncation.
-    const auto partial{fs::path{file} += ".partial"};
-    std::ofstream ostream{partial};
-    std::ranges::copy(tests | std::views::transform(rebased), std::ostream_iterator<prune_record>{ostream});
-    throw_unless_closed(ostream, partial);
+    std::ostringstream records{};
+    std::ranges::copy(tests | std::views::transform(rebased), std::ostream_iterator<prune_record>{records});
 
-    std::error_code error{};
-    fs::rename(partial, file, error);
-    if(error)
-      throw std::runtime_error{report_failed_write(file)};
+    // A truncated <file> would parse, and prune would then silently leave out
+    // the tests lost to the truncation
+    replace_contents(file, std::move(records).str(), std::ios_base::out);
   }
 
   namespace

@@ -32,6 +32,7 @@
 #include <ranges>
 #include <span>
 #include <system_error>
+#include <tuple>
 #include <format>
 #include <functional>
 #include <mutex>
@@ -67,17 +68,12 @@ namespace sequoia::testing
       return durations[1];
     }
 
-    // Writing to <file>.partial, then renaming it over <file> once the write
-    // succeeds, keeps the previous contents if the process dies mid-write or
-    // the write fails
     void overwrite_quietly(const fs::path& file, std::string_view text)
     {
       std::error_code selectsTheNonThrowingOverload{};
       fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
 
-      const auto partial{fs::path{file} += ".partial"};
-      if(try_write_to_file(partial, text, std::ios_base::out | std::ios_base::trunc | std::ios_base::binary))
-        fs::rename(partial, file, selectsTheNonThrowingOverload);
+      std::ignore = try_replace_contents(file, text, std::ios_base::out | std::ios_base::trunc | std::ios_base::binary);
     }
 
     [[nodiscard]]
