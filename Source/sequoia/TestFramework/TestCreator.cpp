@@ -173,7 +173,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  bool handle_as_ref(std::string_view type)
+  bool passed_by_reference(std::string_view type)
   {
     if(is_empty_or_whitespace(type))
       throw std::logic_error{"Equivalent type is unspecified"};
@@ -886,7 +886,7 @@ namespace sequoia::testing
       std::format("{}{}{} {}",
                   m_EquivalentType.starts_with("const ") ? "" : "const ",
                   m_EquivalentType,
-                  handle_as_ref(m_EquivalentType) ? "&" : "",
+                  passed_by_reference(m_EquivalentType) ? "&" : "",
                   predictionName)
     };
 

@@ -64,25 +64,25 @@ namespace sequoia::testing
 
   void test_runner_test_creation::test_type_handling()
   {
-    check_exception_thrown<std::logic_error>("Empty string", []() { return handle_as_ref(""); });
-    check_exception_thrown<std::logic_error>("Just spaces", []() { return handle_as_ref(" "); });
-    check_exception_thrown<std::logic_error>("Just a tab", []() { return handle_as_ref("\t"); });
-    check("Letter",        handle_as_ref("a"));
-    check("int",          !handle_as_ref("int"));
-    check(" int",         !handle_as_ref(" int"));
-    check("  int",        !handle_as_ref("  int"));
-    check("int*",         !handle_as_ref("int*"));
-    check("int&",         !handle_as_ref("int&"));
-    check("int *",        !handle_as_ref("int *"));
-    check(" int ",        !handle_as_ref(" int "));
-    check("long",         !handle_as_ref("long"));
-    check("longint",      handle_as_ref("longint"));
-    check("long int",     !handle_as_ref("long int"));
-    check("double",       !handle_as_ref("double"));
-    check("std::size_t",  !handle_as_ref("std::size_t"));
-    check("tuple<int>",    handle_as_ref("tuple<int>"));
-    check("tuple<int >",   handle_as_ref("tuple<int >"));
-    check("tuple< int >",  handle_as_ref("tuple< int >"));
+    check_exception_thrown<std::logic_error>("Empty string", []() { return passed_by_reference(""); });
+    check_exception_thrown<std::logic_error>("Just spaces", []() { return passed_by_reference(" "); });
+    check_exception_thrown<std::logic_error>("Just a tab", []() { return passed_by_reference("\t"); });
+    check("Letter",        passed_by_reference("a"));
+    check("int",          !passed_by_reference("int"));
+    check(" int",         !passed_by_reference(" int"));
+    check("  int",        !passed_by_reference("  int"));
+    check("int*",         !passed_by_reference("int*"));
+    check("int&",         !passed_by_reference("int&"));
+    check("int *",        !passed_by_reference("int *"));
+    check(" int ",        !passed_by_reference(" int "));
+    check("long",         !passed_by_reference("long"));
+    check("longint",      passed_by_reference("longint"));
+    check("long int",     !passed_by_reference("long int"));
+    check("double",       !passed_by_reference("double"));
+    check("std::size_t",  !passed_by_reference("std::size_t"));
+    check("tuple<int>",    passed_by_reference("tuple<int>"));
+    check("tuple<int >",   passed_by_reference("tuple<int >"));
+    check("tuple< int >",  passed_by_reference("tuple< int >"));
   }
 
   void test_runner_test_creation::test_project_namespace()

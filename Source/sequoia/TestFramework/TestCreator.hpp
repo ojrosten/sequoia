@@ -35,7 +35,7 @@ namespace sequoia::testing
       \throws std::logic_error if `is_empty_or_whitespace(type)`.
    */
   [[nodiscard]]
-  bool handle_as_ref(std::string_view type);
+  bool passed_by_reference(std::string_view type);
 
   struct template_spec
   {
