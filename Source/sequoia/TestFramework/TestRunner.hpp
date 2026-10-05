@@ -306,10 +306,13 @@ namespace sequoia::testing
       log_summary::duration m_ExecutionDuration{};
     };
 
-    /** \brief An RAII wrapper to write a test's execution record: when the test started and, on destruction, its
-               execution duration and the runner's overhead so far, as `executionTimer` gives them.
+    /** \brief An RAII wrapper to write a test's execution record: when the
+               test started and, on destruction, its execution duration and
+               the runner's overhead so far, as `executionTimer` gives them.
 
-        A record which cannot be written is skipped rather than reported; an allocation failure is not caught.
+        A record which cannot be written is skipped rather than reported. The
+        file then keeps the last record the runner managed to write, which
+        may be an earlier run's. An allocation failure is not caught.
      */
     class [[nodiscard]] scoped_execution_record
     {
