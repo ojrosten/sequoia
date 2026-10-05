@@ -1634,8 +1634,10 @@ namespace sequoia::testing
     check("The run started no later than either test", runStartedFirst);
   }
 
-  /** The runner writes the summary of `summary_collider_test` to the file its summary discriminator names, not to the
-      undiscriminated file. Only this run can have written either file: the summaries directory is removed first.
+  /** The runner writes the summary of `summary_collider_test` to the file
+      which the test's summary discriminator names, not to the undiscriminated
+      file. The summaries directory is removed first, so that only this run can
+      have written either file.
    */
   void test_runner_test::test_discriminated_summary()
   {
