@@ -131,8 +131,8 @@ namespace sequoia::testing
              to `enqueue_removal`, with everything within it.
 
       `enqueue_removal` returns a future which holds the removal's failure, or
-      `std::nullopt` if the removal succeeds. The thread leaves in place a
-      directory which it cannot remove.
+      `std::nullopt` if the removal succeeds, or the exception if it throws.
+      The thread leaves in place a directory which it cannot remove.
 
       `join` returns once the thread has finished with every directory enqueued
       before the call. The destructor joins likewise if `join` has not been
@@ -249,6 +249,8 @@ namespace sequoia::testing
         \returns The removal's failure; `std::nullopt` if the removal
         succeeded, if `execute` enqueued none, or if this has been called
         since.
+
+        Rethrows any exception the removal threw.
      */
     [[nodiscard]]
     std::optional<removal_failure> await_discarded_materials_removal()
@@ -782,7 +784,8 @@ namespace sequoia::testing
     std::vector<removal_failure> remove_discarded_materials() const;
 
     /** \brief Waits for each test's removal of its discarded materials root,
-               returning the failures in the order of the tests.
+               returning the failures in the order in which `m_Suites` holds
+               the tests.
      */
     [[nodiscard]]
     std::vector<removal_failure> await_discarded_materials_removals();
