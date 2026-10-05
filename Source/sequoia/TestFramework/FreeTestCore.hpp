@@ -183,11 +183,11 @@ namespace sequoia::testing
 
     basic_test(std::string_view name,
                const normal_path& srcFile,
-               const project_paths& projPaths,
+               project_paths projPaths,
                individual_materials_paths materials,
                active_recovery_files files,
                const std::optional<std::string>& outputDiscriminator)
-      : test_base{name, Mode, srcFile, projPaths, std::move(materials), outputDiscriminator}
+      : test_base{name, Mode, srcFile, std::move(projPaths), std::move(materials), outputDiscriminator}
       , checker<Mode, Extender>{std::move(files)}
     {}
 
