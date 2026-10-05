@@ -36,16 +36,20 @@ namespace sequoia::testing
       throw std::logic_error{"Unrecognized case for test_mode"};
     }
 
+    // A path built on an empty root would be relative: resolved, silently,
+    // against the current directory
+    void throw_if_empty_root(const fs::path& root, std::string_view derivedPath)
+    {
+      if(root.empty())
+        throw std::logic_error{
+          std::format("Empty materials root: '{}' would resolve against the current directory", derivedPath)
+        };
+    }
+
     [[nodiscard]]
     fs::path materials_directory(const fs::path& root, std::string_view subdirectory)
     {
-      // An empty root names no test, and the joined path would be relative: resolved, silently, against
-      // the current directory
-      if(root.empty())
-        throw std::logic_error{
-          std::format("No materials root to hold '{}': these materials paths name no test", subdirectory)
-        };
-
+      throw_if_empty_root(root, subdirectory);
       return root / subdirectory;
     }
 
@@ -144,6 +148,19 @@ namespace sequoia::testing
   fs::path individual_materials_paths::original_materials_root() const
   {
     return m_MaterialsDiscriminator ? m_OriginalTestRoot / m_MaterialsDiscriminator.value() : m_OriginalTestRoot;
+  }
+
+  [[nodiscard]]
+  fs::path individual_materials_paths::discarded_materials_root() const
+  {
+    constexpr std::string_view suffix{".discarded"};
+    throw_if_empty_root(m_TemporaryMaterialsRoot, suffix);
+
+    // The temporary root ends in the test's name, which cannot contain '.',
+    // so this path is no test's temporary root. Nor does any test's temporary
+    // root lie within it, since `register_test` refuses materials prefixes
+    // which nest.
+    return fs::path{m_TemporaryMaterialsRoot} += suffix;
   }
 
   [[nodiscard]]

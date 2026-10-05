@@ -17,12 +17,15 @@
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/TestFramework/VersionedOutput.hpp"
 
+#include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 #include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
 #include <chrono>
+#include <filesystem>
 #include <format>
+#include <future>
 #include <iostream>
 #include <map>
 #include <optional>
@@ -30,6 +33,7 @@
 #include <span>
 #include <thread>
 #include <utility>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -115,14 +119,67 @@ namespace sequoia::testing
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
 
-  /** \brief Wipes a test's temporary materials root and copies its materials afresh.
+  /** \brief A directory for which removal failed, and the associated error. */
+  struct removal_failure
+  {
+    std::filesystem::path dir{};
+    std::string error_message{};
+  };
 
-      The `WorkingCopy` and `Auxiliary` in the original root are copied beneath the temporary root.
-      If the original root exists but holds no `WorkingCopy`, an empty `WorkingCopy` is made beneath
-      the temporary root instead. A test with no original root is left an empty temporary root, which
-      is its scratchpad.
+  /** \brief An RAII wrapper for a thread which removes each discarded
+             materials root passed to `enqueue_removal`, with everything within
+             it, off the paths of the tests.
+
+      `enqueue_removal` returns at once, with a future which holds the
+      removal's failure, or `std::nullopt` if the removal succeeds, or the
+      exception if it throws. The thread leaves in place a discarded root
+      which it cannot remove.
+
+      `join` returns once the thread has finished with every discarded root
+      enqueued before the call. The destructor joins likewise if `join` has not
+      been called. The thread never removes a discarded root enqueued after
+      `join`: its future becomes ready only when the remover is destroyed, and
+      then holds a `std::future_error`.
+   */
+  class discarded_materials_remover
+  {
+  public:
+    using future_type = std::future<std::optional<removal_failure>>;
+
+    [[nodiscard]]
+    future_type enqueue_removal(std::filesystem::path discardedRoot);
+
+    void join();
+  private:
+    // A single pipeline, since only its `push` is safe to call from several
+    // threads at once
+    concurrency::thread_pool<std::optional<removal_failure>, false> m_Pool{1};
+  };
+
+  /** \brief Replaces a test's temporary materials root with a fresh copy of
+             its materials.
+
+      Removes the discarded root which an earlier run left behind, if any. Then
+      moves the existing temporary root to
+      `materials.discarded_materials_root()`, and enqueues the discarded root's
+      removal with `remover`. If the leftover cannot be removed, or the move
+      fails, removes the temporary root, if any, in place instead.
+
+      Copies the `WorkingCopy` and `Auxiliary` in the original root into the
+      temporary root. If the original root exists but holds no `WorkingCopy`,
+      makes an empty `WorkingCopy` within the temporary root instead. For a
+      test with no original root, leaves the temporary root empty, as its
+      scratchpad.
+
+      \returns
+      -# The future of the discarded root's removal, as `enqueue_removal`
+         returns it, if the temporary root was moved;
+      -# Otherwise, a ready future holding the leftover's failure, if any.
 
       \throws std::logic_error if `materials` names no test
+      \throws std::filesystem::filesystem_error if the temporary root cannot be
+               removed in place; if the leftover could not be removed either,
+               a `std::runtime_error` naming both
       \throws std::runtime_error if the original root holds anything but `WorkingCopy`, `Prediction`
                and `Auxiliary`, besides a `.keep` or `.DS_Store`, naming what else it holds
       \throws std::runtime_error if the test declares a materials discriminator, and one of these holds:
@@ -134,7 +191,9 @@ namespace sequoia::testing
                -# The test's own directory holds an entry which is not a directory, other than a `.keep`
                   or a `.DS_Store`.
    */
-  void prepare_materials(const individual_materials_paths& materials);
+  [[nodiscard]]
+  discarded_materials_remover::future_type prepare_materials(const individual_materials_paths& materials,
+                                                             discarded_materials_remover& remover);
 
   [[nodiscard]]
   active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
@@ -188,9 +247,23 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    log_summary execute(std::optional<std::size_t> index)
+    log_summary execute(std::optional<std::size_t> index, discarded_materials_remover& remover)
     {
-      return m_pTest->execute(index);
+      return m_pTest->execute(index, remover);
+    }
+
+    /** \brief Extracts the failure of the removal of the discarded materials
+               root which the last `execute` enqueued, waiting for the removal
+               if it has not finished.
+
+        \returns The failure; `std::nullopt` if the removal succeeded, if
+        `execute` enqueued none, or if the failure has been extracted since. A
+        removal which threw is a failure, its message the exception's.
+     */
+    [[nodiscard]]
+    std::optional<removal_failure> extract_discarded_materials_removal_failure()
+    {
+      return m_pTest->extract_discarded_materials_removal_failure();
     }
 
     void reset()
@@ -262,7 +335,8 @@ namespace sequoia::testing
       virtual std::filesystem::path source_file() const                   = 0;
       virtual const individual_materials_paths& materials_paths() const noexcept = 0;
 
-      virtual log_summary execute(std::optional<std::size_t> index) = 0;
+      virtual log_summary execute(std::optional<std::size_t> index, discarded_materials_remover& remover) = 0;
+      virtual std::optional<removal_failure> extract_discarded_materials_removal_failure() = 0;
       virtual void reset() = 0;
       virtual void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode) = 0;
     };
@@ -299,13 +373,33 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      log_summary execute(std::optional<std::size_t> index) final
+      log_summary execute(std::optional<std::size_t> index, discarded_materials_remover& remover) final
       {
         execution_timer executionTimer{};
-        auto summary{execute_and_record(index, executionTimer)};
+        auto summary{execute_and_record(index, executionTimer, remover)};
         summary.runner_overhead(executionTimer.runner_overhead());
 
         return summary;
+      }
+
+      [[nodiscard]]
+      std::optional<removal_failure> extract_discarded_materials_removal_failure() final
+      {
+        if(!m_DiscardedMaterialsRemovalFailureFuture.valid())
+          return std::nullopt;
+
+        try
+        {
+          return m_DiscardedMaterialsRemovalFailureFuture.get();
+        }
+        catch(const std::exception& e)
+        {
+          return removal_failure{m_Test.materials_paths().discarded_materials_root(), e.what()};
+        }
+        catch(...)
+        {
+          return removal_failure{m_Test.materials_paths().discarded_materials_root(), "Unknown exception"};
+        }
       }
 
       void reset() final
@@ -339,13 +433,15 @@ namespace sequoia::testing
           record finishes only after this function has made the summary.
        */
       [[nodiscard]]
-      log_summary execute_and_record(std::optional<std::size_t> index, execution_timer& executionTimer)
+      log_summary execute_and_record(std::optional<std::size_t> index,
+                                     execution_timer& executionTimer,
+                                     discarded_materials_remover& remover)
       {
         // Also installed per test, since under MSVC each thread has its own terminate handler
         const scoped_terminate_handler terminationReported{report_termination};
         const scoped_execution_record record{m_ExecutionRecord.file_path(), executionTimer};
 
-        if(try_prepare_materials())
+        if(try_prepare_materials(remover))
           executionTimer.time_execution([this](){ try_run_tests(); });
 
         return write_output(executionTimer.execution_duration(), index);
@@ -388,15 +484,16 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      bool try_prepare_materials()
+      bool try_prepare_materials(discarded_materials_remover& remover)
       {
         try
         {
-          prepare_materials(m_Test.materials_paths());
+          m_DiscardedMaterialsRemovalFailureFuture = prepare_materials(m_Test.materials_paths(), remover);
           return true;
         }
         catch(const std::exception& e)
         {
+          m_DiscardedMaterialsRemovalFailureFuture = {};
           m_Test.log_critical_failure(m_Test.source_file(), "Materials Preparation", e.what());
           return false;
         }
@@ -417,6 +514,7 @@ namespace sequoia::testing
 
       Test m_Test;
       test_execution_record_path m_ExecutionRecord{};
+      discarded_materials_remover::future_type m_DiscardedMaterialsRemovalFailureFuture{};
     };
 
     enum class parallelizable_candidate : bool { no, yes };
@@ -697,6 +795,41 @@ namespace sequoia::testing
     void reset_tests();
 
     return_code run_tests(std::optional<std::size_t> id);
+
+    struct run_durations
+    {
+      log_summary::duration execution_duration{}, runner_overhead{};
+    };
+
+    /** \brief Executes each test, returning once every removal of a discarded
+               materials root which the tests enqueued has finished.
+
+        \returns The run's durations if the tests ran concurrently; otherwise
+        `std::nullopt`, since a serial run's durations are the sums of its
+        tests'.
+     */
+    [[nodiscard]]
+    std::optional<run_durations> execute_tests(std::optional<std::size_t> id);
+
+    /** \brief Executes the tests which are not parallelizable, then the rest
+               concurrently.
+
+        \returns The run's execution duration, the non-parallelizable tests'
+        summed and then the busiest thread's; and its runner overhead, the wall
+        clock less that.
+     */
+    [[nodiscard]]
+    run_durations execute_concurrently(std::optional<std::size_t> id, discarded_materials_remover& remover);
+
+    void execute_serially(std::optional<std::size_t> id, discarded_materials_remover& remover);
+
+    void report_results();
+
+    /** \brief Extracts each test's discarded materials removal failure, in the
+               order in which `m_Suites` holds the tests.
+     */
+    [[nodiscard]]
+    std::vector<removal_failure> extract_discarded_materials_removal_failures();
 
     /** The `select`, `test` and `exclude` options which reproduce this run's filter, for handing to a
         child process. Each value is quoted for the shell.
