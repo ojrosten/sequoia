@@ -360,6 +360,14 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    bool try_rename(const fs::path& from, const fs::path& to)
+    {
+      std::error_code error{};
+      fs::rename(from, to, error);
+      return !error;
+    }
+
+    [[nodiscard]]
     background_directory_remover::future_type ready_future_of(removal_failure failure)
     {
       std::promise<std::optional<removal_failure>> promise{};
@@ -868,11 +876,7 @@ namespace sequoia::testing
     // The move is one metadata operation, whereas a removal visits every
     // entry. The move fails if the temporary root does not exist and, under
     // Windows, if a file within the tree is open.
-    std::error_code moveError{};
-    if(!leftoverFailure)
-      fs::rename(temporaryRoot, discardedRoot, moveError);
-
-    const bool moved{!leftoverFailure && !moveError};
+    const bool moved{!leftoverFailure && try_rename(temporaryRoot, discardedRoot)};
     if(!moved)
       fs::remove_all(temporaryRoot);
 
@@ -881,13 +885,11 @@ namespace sequoia::testing
 
     // If copying throws, the discarded root stays until the test's next
     // preparation removes it
-    if(leftoverFailure)
-      return ready_future_of(*leftoverFailure);
+    if(moved)
+      return remover.enqueue_removal(discardedRoot);
 
-    if(!moved)
-      return {};
-
-    return remover.enqueue_removal(discardedRoot);
+    return leftoverFailure.transform([](const removal_failure& failure){ return ready_future_of(failure); })
+                          .value_or(background_directory_remover::future_type{});
   }
 
   void test_vessel::versioned_write(const fs::path& file, std::string_view text)
