@@ -119,9 +119,7 @@ namespace sequoia::testing
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
 
-  /** \brief A directory which could not be removed, and the error which
-             removing it gave.
-   */
+  /** \brief A directory for which removal failed, and the associated error. */
   struct removal_failure
   {
     std::filesystem::path dir{};
