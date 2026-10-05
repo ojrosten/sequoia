@@ -2476,8 +2476,8 @@ namespace sequoia::testing
   /** Before the run, the fake test's temporary root holds `PreviousRun.txt`,
       and its discarded root holds `DeadRun.txt`, as a run which died would
       leave it. After the run:
-      -# `DeadRun.txt` is gone. The run removes it before preparing any
-         materials. Otherwise the temporary root could not be moved to the
+      -# `DeadRun.txt` is gone. The test's preparation removes it before
+         moving the temporary root, which otherwise could not be moved to the
          discarded root, and would be removed in place;
       -# `PreviousRun.txt` is gone from both roots. Once the temporary root has
          moved, only the remover can remove it;

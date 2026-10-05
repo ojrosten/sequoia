@@ -157,10 +157,11 @@ namespace sequoia::testing
   /** \brief Replaces a test's temporary materials root with a fresh copy of
              its materials.
 
-      Moves the existing temporary root to
+      Removes the discarded root which an earlier run left behind, if any. Then
+      moves the existing temporary root to
       `materials.discarded_materials_root()`, and enqueues the discarded root's
-      removal with `remover`. If the move fails, removes the temporary root, if
-      any, in place instead.
+      removal with `remover`. If the leftover cannot be removed, or the move
+      fails, removes the temporary root, if any, in place instead.
 
       Copies the `WorkingCopy` and `Auxiliary` in the original root into the
       temporary root. If the original root exists but holds no `WorkingCopy`,
@@ -168,8 +169,12 @@ namespace sequoia::testing
       test with no original root, leaves the temporary root empty, as its
       scratchpad.
 
-      \returns The future of the discarded root's removal, as `enqueue_removal`
-      returns it; if the move failed, a future whose `valid()` is false.
+      \returns
+      -# The future of the discarded root's removal, as `enqueue_removal`
+         returns it, if the temporary root was moved;
+      -# A ready future holding the failure, if the leftover could not be
+         removed;
+      -# Otherwise, a future whose `valid()` is false.
 
       \throws std::logic_error if `materials` names no test
       \throws std::runtime_error if the original root holds anything but `WorkingCopy`, `Prediction`
@@ -787,12 +792,6 @@ namespace sequoia::testing
     void reset_tests();
 
     return_code run_tests(std::optional<std::size_t> id);
-
-    /** \brief Removes the discarded materials root of each test to be run,
-               returning the failures.
-     */
-    [[nodiscard]]
-    std::vector<removal_failure> remove_discarded_materials() const;
 
     /** \brief Extracts each test's discarded materials removal failure, in the
                order in which `m_Suites` holds the tests.

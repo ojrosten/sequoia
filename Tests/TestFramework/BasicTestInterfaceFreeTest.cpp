@@ -347,9 +347,11 @@ namespace sequoia::testing
       no other preparation touches them.
       -# A remover which has been joined removes nothing, so the discarded root
          keeps the moved temporary root;
-      -# `prepare_materials` removes in place a temporary root which it cannot
-         move, since something is at the discarded root, and leaves alone what
-         is at the discarded root;
+      -# `prepare_materials` removes a discarded root which an earlier run left
+         behind, then moves the temporary root;
+      -# A leftover which cannot be removed is the failure which the returned
+         future holds, and the temporary root is removed in place;
+      -# With no temporary root, nothing is moved, and no removal is enqueued;
       -# A directory which cannot be removed is a failure, which the future of
          its removal holds.
    */
@@ -374,19 +376,47 @@ namespace sequoia::testing
     }
 
     {
-      const individual_materials_paths materials{source, "blocked_test", projPaths, null_discriminator};
+      const individual_materials_paths materials{source, "leftover_test", projPaths, null_discriminator};
       fs::create_directories(materials.temporary_materials_root());
       fs::create_directories(materials.discarded_materials_root());
       write_to_file(materials.temporary_materials_root() / "Previous.txt", "", std::ios_base::out);
-      write_to_file(materials.discarded_materials_root() / "Blocking.txt", "", std::ios_base::out);
+      write_to_file(materials.discarded_materials_root() / "Leftover.txt", "", std::ios_base::out);
+
+      background_directory_remover remover{};
+      remover.join();
+
+      const auto removalFailureFuture{prepare_materials(materials, remover)};
+      check("A leftover discarded root is removed", !fs::exists(materials.discarded_materials_root() / "Leftover.txt"));
+      check("The temporary root is then moved", fs::exists(materials.discarded_materials_root() / "Previous.txt"));
+    }
+
+    {
+      const individual_materials_paths materials{source, "unremovable_leftover_test", projPaths, null_discriminator};
+      fs::create_directories(materials.temporary_materials_root());
+      write_to_file(materials.temporary_materials_root() / "Previous.txt", "", std::ios_base::out);
+      const unremovable_directory leftover{materials.discarded_materials_root()};
+
+      background_directory_remover remover{};
+      auto removalFailureFuture{prepare_materials(materials, remover)};
+
+      // An invalid future's `get` is undefined, so a regression to one must
+      // fail the check rather than crash the run
+      const auto leftoverFailure{removalFailureFuture.valid() ? removalFailureFuture.get() : std::nullopt};
+      check(equality,
+            "A leftover which cannot be removed is the failure",
+            leftoverFailure.transform([](const removal_failure& failure){ return failure.dir; }),
+            std::optional{materials.discarded_materials_root()});
+
+      check("The temporary root is then removed in place", fs::is_empty(materials.temporary_materials_root()));
+    }
+
+    {
+      const individual_materials_paths materials{source, "unprepared_test", projPaths, null_discriminator};
+      fs::remove_all(materials.temporary_materials_root());
 
       background_directory_remover remover{};
       const auto removalFailureFuture{prepare_materials(materials, remover)};
-      check("No removal is enqueued for a temporary root which cannot be moved", !removalFailureFuture.valid());
-
-      check("A temporary root which cannot be moved is removed in place",
-            fs::is_empty(materials.temporary_materials_root()));
-      check("What blocks the move is left alone", fs::exists(materials.discarded_materials_root() / "Blocking.txt"));
+      check("With no temporary root, no removal is enqueued", !removalFailureFuture.valid());
     }
 
     {

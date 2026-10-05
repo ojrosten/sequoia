@@ -360,6 +360,14 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    background_directory_remover::future_type ready_future_of(removal_failure failure)
+    {
+      std::promise<std::optional<removal_failure>> promise{};
+      promise.set_value(std::move(failure));
+      return promise.get_future();
+    }
+
+    [[nodiscard]]
     std::string removal_failure_message(const removal_failure& failure, const fs::path& projectRoot)
     {
       return std::format("Discarded materials not removed from {}:\n{}",
@@ -369,8 +377,7 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::vector<std::string> post_run_failure_messages(std::span<const std::string> trackerFailures,
-                                                       std::span<const removal_failure> preRunRemovalFailures,
-                                                       std::span<const removal_failure> backgroundRemovalFailures,
+                                                       std::span<const removal_failure> removalFailures,
                                                        const fs::path& projectRoot)
     {
       auto removalMessage{
@@ -381,8 +388,7 @@ namespace sequoia::testing
       // MS STL has concat (P2542)
 
       std::vector<std::string> messages{trackerFailures.begin(), trackerFailures.end()};
-      messages.append_range(preRunRemovalFailures | std::views::transform(removalMessage));
-      messages.append_range(backgroundRemovalFailures | std::views::transform(removalMessage));
+      messages.append_range(removalFailures | std::views::transform(removalMessage));
       return messages;
     }
 
@@ -849,25 +855,36 @@ namespace sequoia::testing
     if(temporaryRoot.empty())
       throw std::logic_error{"Unable to prepare materials whose paths name no test"};
 
-    // Moving or removing the whole of this test's temporary tree is safe
-    // because `test_runner::register_test` admits each name once, ignoring
-    // case, and no source whose materials prefix nests with another's.
-    // The move is one metadata operation, whereas a removal visits every
-    // entry. The move fails if the temporary root does not exist, or if the
-    // discarded root exists and, under POSIX, holds anything. Under Windows,
-    // the move also fails if a file within the tree is open.
+    // Moving or removing the whole of this test's temporary tree, or of its
+    // discarded root, is safe because `test_runner::register_test` admits each
+    // name once, ignoring case, and no source whose materials prefix nests
+    // with another's.
     const auto discardedRoot{materials.discarded_materials_root()};
+
+    // A run which died, or which could not remove it, leaves the discarded
+    // root behind, and the move cannot replace it
+    const auto leftoverFailure{try_remove_all(discardedRoot)};
+
+    // The move is one metadata operation, whereas a removal visits every
+    // entry. The move fails if the temporary root does not exist and, under
+    // Windows, if a file within the tree is open.
     std::error_code moveError{};
-    fs::rename(temporaryRoot, discardedRoot, moveError);
-    if(moveError)
+    if(!leftoverFailure)
+      fs::rename(temporaryRoot, discardedRoot, moveError);
+
+    const bool moved{!leftoverFailure && !moveError};
+    if(!moved)
       fs::remove_all(temporaryRoot);
 
     fs::create_directories(temporaryRoot);
     copy_original_materials(materials);
 
-    // If copying throws, the discarded root stays until the next run
-    // removes it
-    if(moveError)
+    // If copying throws, the discarded root stays until the test's next
+    // preparation removes it
+    if(leftoverFailure)
+      return ready_future_of(*leftoverFailure);
+
+    if(!moved)
       return {};
 
     return remover.enqueue_removal(discardedRoot);
@@ -1642,7 +1659,6 @@ namespace sequoia::testing
     // Without the flush, a run killed while the tests are silent would never show that they had begun
     stream() << running_tests_message(m_ConcurrencyMode) << std::flush;
 
-    const auto preRunRemovalFailures{remove_discarded_materials()};
     background_directory_remover remover{};
 
     std::optional<run_durations> concurrentDurations{};
@@ -1747,7 +1763,7 @@ namespace sequoia::testing
     // Before the grand totals, so that their total run time includes any
     // wait for the removals
     remover.join();
-    const auto backgroundRemovalFailures{extract_discarded_materials_removal_failures()};
+    const auto removalFailures{extract_discarded_materials_removal_failures()};
 
     if(m_Verbosity == verbosity::verbose)
     {
@@ -1829,8 +1845,7 @@ namespace sequoia::testing
     // Not folded into the totals, which count what the tests found: these are failures of the run itself
     const auto postRunFailures{
       post_run_failure_messages(tracker.post_run_failures(),
-                                preRunRemovalFailures,
-                                backgroundRemovalFailures,
+                                removalFailures,
                                 proj_paths().project_root())
     };
     if(!postRunFailures.empty())
@@ -1843,24 +1858,6 @@ namespace sequoia::testing
     }
 
     return to_return_code(root_summary()) | (postRunFailures.empty() ? return_code::success : return_code::post_run_failures);
-  }
-
-  [[nodiscard]]
-  std::vector<removal_failure> test_runner::remove_discarded_materials() const
-  {
-    // A previous run left its discarded roots in place if it died, or if it
-    // could not remove them
-    std::vector<removal_failure> failures{};
-    for(const auto& node : m_Suites.cnode_weights())
-    {
-      if(!node.optTest)
-        continue;
-
-      if(auto failure{try_remove_all(node.optTest->materials_paths().discarded_materials_root())})
-        failures.push_back(std::move(*failure));
-    }
-
-    return failures;
   }
 
   [[nodiscard]]
