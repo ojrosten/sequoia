@@ -364,7 +364,8 @@ namespace sequoia::testing
                          failure.error.message());
     }
 
-    // TO DO: std::views::concat | std::ranges::to<std::vector>, once the MS STL has concat (P2542)
+    // TO DO: std::views::concat | std::ranges::to<std::vector>, once the
+    // MS STL has concat (P2542)
     [[nodiscard]]
     std::vector<std::string> post_run_failure_messages(std::span<const std::string> trackerFailures,
                                                        std::span<const removal_failure> preRunRemovalFailures,
@@ -549,7 +550,8 @@ namespace sequoia::testing
     const std::string& convert(const std::string& s) { return s; }
     std::string convert(const fs::path& p) { return p.generic_string(); }
 
-    // TO DO: std::views::concat | std::ranges::to<std::vector>, once the MS STL has concat (P2542)
+    // TO DO: std::views::concat | std::ranges::to<std::vector>, once the
+    // MS STL has concat (P2542)
     [[nodiscard]]
     std::vector<fs::path> concatenate(std::span<const fs::path> first, std::span<const fs::path> second)
     {
@@ -826,8 +828,9 @@ namespace sequoia::testing
 
   void background_directory_remover::queue_removal(fs::path dir)
   {
-    // The future is discarded, since `join` returns the failures. Only the pool's thread writes them, and `join`
-    // reads them after joining that thread.
+    // The future is discarded, since `join` returns the failures. Only the
+    // pool's thread writes them, and `join` reads them after joining that
+    // thread.
     std::ignore = m_Pool.push([this, dir{std::move(dir)}](){ remove_all_noting_failure(dir, m_Failures); });
   }
 
@@ -844,11 +847,13 @@ namespace sequoia::testing
     if(temporaryRoot.empty())
       throw std::logic_error{"Unable to prepare materials whose paths name no test"};
 
-    // Moving or removing the whole of this test's temporary tree is safe because `test_runner::register_test`
-    // admits each name once, ignoring case, and no source whose materials prefix nests with another's.
-    // The move is one metadata operation, whereas a removal visits every entry. The move fails if the temporary
-    // root does not exist, or if the discarded root exists and, under POSIX, holds anything. Under Windows, the move
-    // also fails if a file within the tree is open.
+    // Moving or removing the whole of this test's temporary tree is safe
+    // because `test_runner::register_test` admits each name once, ignoring
+    // case, and no source whose materials prefix nests with another's.
+    // The move is one metadata operation, whereas a removal visits every
+    // entry. The move fails if the temporary root does not exist, or if the
+    // discarded root exists and, under POSIX, holds anything. Under Windows,
+    // the move also fails if a file within the tree is open.
     const auto discardedRoot{materials.discarded_materials_root()};
     std::error_code moveError{};
     fs::rename(temporaryRoot, discardedRoot, moveError);
@@ -858,7 +863,8 @@ namespace sequoia::testing
     fs::create_directories(temporaryRoot);
     copy_original_materials(materials);
 
-    // If copying throws, the discarded root stays until the next run removes it
+    // If copying throws, the discarded root stays until the next run
+    // removes it
     if(!moveError)
       remover.queue_removal(discardedRoot);
   }
@@ -1734,7 +1740,8 @@ namespace sequoia::testing
     traverse(depth_first, m_Suites, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
     tracker.update_materials_and_prune_info();
 
-    // Before the grand totals, so that their total run time includes any wait for the removals
+    // Before the grand totals, so that their total run time includes any
+    // wait for the removals
     const auto backgroundRemovalFailures{remover.join()};
 
     if(m_Verbosity == verbosity::verbose)
@@ -1836,7 +1843,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<removal_failure> test_runner::remove_discarded_materials() const
   {
-    // A previous run left its discarded roots in place if it died, or if it could not remove them
+    // A previous run left its discarded roots in place if it died, or if it
+    // could not remove them
     std::vector<removal_failure> failures{};
     for(const auto& node : m_Suites.cnode_weights())
     {

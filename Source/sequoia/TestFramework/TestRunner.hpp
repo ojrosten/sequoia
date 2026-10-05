@@ -119,18 +119,21 @@ namespace sequoia::testing
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
 
-  /** \brief A directory which could not be removed, and the error which removing it gave. */
+  /** \brief A directory which could not be removed, and the error which
+             removing it gave.
+   */
   struct removal_failure
   {
     std::filesystem::path dir{};
     std::error_code error{};
   };
 
-  /** \brief An RAII wrapper for a thread which removes each directory passed to `queue_removal`, with everything
-             within it.
+  /** \brief An RAII wrapper for a thread which removes each directory passed
+             to `queue_removal`, with everything within it.
 
-      `join` returns once the thread has finished with every directory queued before the call, and returns the
-      failures. The destructor joins likewise if `join` has not been called. The thread never removes a directory
+      `join` returns once the thread has finished with every directory queued
+      before the call, and returns the failures. The destructor joins likewise
+      if `join` has not been called. The thread never removes a directory
       queued after `join`, and leaves in place one which it cannot remove.
    */
   class background_directory_remover
@@ -141,21 +144,28 @@ namespace sequoia::testing
     [[nodiscard]]
     std::vector<removal_failure> join();
   private:
-    // Declared before the pool, so that the pool's thread is joined before the failures it writes are destroyed
+    // Declared before the pool, so that the pool's thread is joined before
+    // the failures it writes are destroyed
     std::vector<removal_failure> m_Failures{};
 
-    // A single pipeline, since only its `push` is safe to call from several threads at once
+    // A single pipeline, since only its `push` is safe to call from several
+    // threads at once
     concurrency::thread_pool<void, false> m_Pool{1};
   };
 
-  /** \brief Replaces a test's temporary materials root with a fresh copy of its materials.
+  /** \brief Replaces a test's temporary materials root with a fresh copy of
+             its materials.
 
-      Moves the existing temporary root to `materials.discarded_materials_root()`, and queues the discarded root's
-      removal with `remover`. If the move fails, removes the temporary root, if any, in place instead.
+      Moves the existing temporary root to
+      `materials.discarded_materials_root()`, and queues the discarded root's
+      removal with `remover`. If the move fails, removes the temporary root, if
+      any, in place instead.
 
-      Copies the `WorkingCopy` and `Auxiliary` in the original root into the temporary root. If the original root
-      exists but holds no `WorkingCopy`, makes an empty `WorkingCopy` within the temporary root instead. For a test
-      with no original root, leaves the temporary root empty, as its scratchpad.
+      Copies the `WorkingCopy` and `Auxiliary` in the original root into the
+      temporary root. If the original root exists but holds no `WorkingCopy`,
+      makes an empty `WorkingCopy` within the temporary root instead. For a
+      test with no original root, leaves the temporary root empty, as its
+      scratchpad.
 
       \throws std::logic_error if `materials` names no test
       \throws std::runtime_error if the original root holds anything but `WorkingCopy`, `Prediction`
@@ -735,7 +745,9 @@ namespace sequoia::testing
 
     return_code run_tests(std::optional<std::size_t> id);
 
-    /** \brief Removes the discarded materials root of each test to be run, returning the failures. */
+    /** \brief Removes the discarded materials root of each test to be run,
+               returning the failures.
+     */
     [[nodiscard]]
     std::vector<removal_failure> remove_discarded_materials() const;
 

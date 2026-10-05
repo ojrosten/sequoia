@@ -340,10 +340,13 @@ namespace sequoia::testing
       [&prepareMaterials]() { prepareMaterials("DiscriminatedBeside", "Platypus"); });
   }
 
-  /** Each test here has no original materials, and paths of its own, so that no other preparation touches them.
-      -# A remover which has been joined removes nothing, so the discarded root keeps the moved temporary root;
-      -# `prepare_materials` removes in place a temporary root which it cannot move, since something is at the
-         discarded root, and leaves alone what is at the discarded root;
+  /** Each test here has no original materials, and paths of its own, so that
+      no other preparation touches them.
+      -# A remover which has been joined removes nothing, so the discarded root
+         keeps the moved temporary root;
+      -# `prepare_materials` removes in place a temporary root which it cannot
+         move, since something is at the discarded root, and leaves alone what
+         is at the discarded root;
       -# A directory which cannot be removed is a failure which `join` returns.
    */
   void basic_test_interface_free_test::test_discarded_materials(const project_paths& projPaths)

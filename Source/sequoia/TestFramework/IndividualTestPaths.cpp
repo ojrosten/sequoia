@@ -36,7 +36,8 @@ namespace sequoia::testing
       throw std::logic_error{"Unrecognized case for test_mode"};
     }
 
-    // A path built on an empty root would be relative: resolved, silently, against the current directory
+    // A path built on an empty root would be relative: resolved, silently,
+    // against the current directory
     void throw_if_empty_root(const fs::path& root, std::string_view derivedPath)
     {
       if(root.empty())
@@ -155,8 +156,10 @@ namespace sequoia::testing
     constexpr std::string_view suffix{".discarded"};
     throw_if_empty_root(m_TemporaryMaterialsRoot, suffix);
 
-    // The temporary root ends in the test's name, which cannot contain '.', so this path is no test's temporary root.
-    // Nor does any test's temporary root lie within it, since `register_test` refuses materials prefixes which nest.
+    // The temporary root ends in the test's name, which cannot contain '.',
+    // so this path is no test's temporary root. Nor does any test's temporary
+    // root lie within it, since `register_test` refuses materials prefixes
+    // which nest.
     return fs::path{m_TemporaryMaterialsRoot} += suffix;
   }
 

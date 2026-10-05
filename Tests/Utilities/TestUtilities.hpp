@@ -82,11 +82,14 @@ namespace sequoia::testing
     std::filesystem::path m_Dir{};
   };
 
-  /** \brief An RAII wrapper to make a directory which cannot be removed while the object lives.
+  /** \brief An RAII wrapper to make a directory which cannot be removed while
+             the object lives.
 
-      The object makes the directory, keeps a file within it open, and removes the directory's write permissions.
-      Under Windows the open file stops the directory's removal; elsewhere the permissions do, for any user but root.
-      The object restores the permissions on destruction, and leaves the directory in place.
+      The object makes the directory, keeps a file within it open, and removes
+      the directory's write permissions. Under Windows the open file stops the
+      directory's removal; elsewhere the permissions do, for any user but root.
+      The object restores the permissions on destruction, and leaves the
+      directory in place.
    */
   class unremovable_directory
   {

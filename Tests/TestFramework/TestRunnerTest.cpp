@@ -2472,12 +2472,16 @@ namespace sequoia::testing
     };
   }
 
-  /** Before the run, the fake test's temporary root holds `PreviousRun.txt`, and its discarded root holds
-      `DeadRun.txt`, as a run which died would leave it. After the run:
-      -# `DeadRun.txt` is gone. The run removes it before preparing any materials. Otherwise the temporary root
-         could not be moved to the discarded root, and would be removed in place;
-      -# `PreviousRun.txt` is gone from both roots. Once the temporary root has moved, only the remover can remove it;
-      -# The file the test wrote to its scratchpad remains, so the remover never removed the fresh temporary root.
+  /** Before the run, the fake test's temporary root holds `PreviousRun.txt`,
+      and its discarded root holds `DeadRun.txt`, as a run which died would
+      leave it. After the run:
+      -# `DeadRun.txt` is gone. The run removes it before preparing any
+         materials. Otherwise the temporary root could not be moved to the
+         discarded root, and would be removed in place;
+      -# `PreviousRun.txt` is gone from both roots. Once the temporary root has
+         moved, only the remover can remove it;
+      -# The file the test wrote to its scratchpad remains, so the remover
+         never removed the fresh temporary root.
    */
   void test_runner_test::test_discarded_materials_removal()
   {
@@ -2511,7 +2515,9 @@ namespace sequoia::testing
     check("The fresh temporary root keeps what the test wrote",   fs::exists(temporaryRoot / "Written.txt"));
   }
 
-  /** A discarded root which cannot be removed is a post-run failure, though the test it belongs to passes. */
+  /** A discarded root which cannot be removed is a post-run failure, though
+      the test it belongs to passes.
+   */
   void test_runner_test::test_discarded_materials_removal_failure()
   {
     std::stringstream outputStream{};
