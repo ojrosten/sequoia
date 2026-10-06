@@ -16,8 +16,9 @@ Every file of the capture must satisfy one of these:
      as removed, and listed on every run rather than kept, so that the loss stays visible and a
      newly dropped file shows.
 
-Every run lists the files absent under the third case too. No measure of the
-tracefile can see such a file.
+Every run lists the files of the third case too. They are the project's own
+files, and no figure drawn from the filtered tracefile covers them. A file which
+a removal pattern matches counts under the second case, whatever its records.
 
 And the figures `lcov --summary` gives for the filtered tracefile must be the counts of its
 records: lines found and hit are the DA records and those with a non-zero count, functions
@@ -92,9 +93,9 @@ def has_only_function_records(lines):
 
 
 def check_filtering(captured, filtered, patterns):
-    """The number of files removed by a pattern, and the sorted lists of those
-    removed for having no coverage points and for having function records but
-    no line records."""
+    """The number of files removed by a pattern; the sorted list of those
+    removed for having no coverage points; and the sorted list of those removed
+    for having function records but no line records."""
     for source, lines in filtered.items():
         if source not in captured:
             raise Failure(f'{source} is in the filtered tracefile but not the capture')
