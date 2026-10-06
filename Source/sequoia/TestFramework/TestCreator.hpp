@@ -24,8 +24,10 @@
 
 namespace sequoia::testing
 {
-  /** \brief Whether to append `&` to `spelling`, the spelling of a
-             parameter's type, judging by the spelling alone.
+  /** \brief Whether to append `&` to `spelling`, which spells a parameter's
+             type.
+
+      The function reads only the text of `spelling`; it looks up no type.
 
       \throws std::logic_error if `ascii::is_empty_or_whitespace(spelling)`.
    */
