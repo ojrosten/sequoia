@@ -28,7 +28,7 @@ namespace sequoia::maths::graph_impl
     using bitset = std::vector<bool>;
 
     [[nodiscard]]
-    static bitset make_bitset(const G& g)
+    constexpr static bitset make_bitset(const G& g)
     {
       return bitset(g.order(), false);
     }

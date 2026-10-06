@@ -23,31 +23,31 @@ namespace sequoia
   public:
     using size_type = std::string::size_type;
 
-    indentation() = default;
+    constexpr indentation() = default;
 
-    explicit indentation(std::string s)
+    constexpr explicit indentation(std::string s)
       : m_Data{std::move(s)}
     {}
 
     [[nodiscard]]
-    operator std::string_view() const noexcept
+    constexpr operator std::string_view() const noexcept
     {
       return m_Data;
     }
 
-    indentation& append(size_type count, char c)
+    constexpr indentation& append(size_type count, char c)
     {
       m_Data.append(count, c);
       return *this;
     }
 
-    indentation& append(const std::string& s)
+    constexpr indentation& append(const std::string& s)
     {
       m_Data.append(s);
       return *this;
     }
 
-    indentation& trim(size_type count)
+    constexpr indentation& trim(size_type count)
     {
       const auto pos{m_Data.size() - std::ranges::min(count, m_Data.size())};
       m_Data.erase(pos);
@@ -55,13 +55,13 @@ namespace sequoia
     }
 
     [[nodiscard]]
-    friend indentation operator+(const indentation& lhs, const indentation& rhs)
+    friend constexpr indentation operator+(const indentation& lhs, const indentation& rhs)
     {
       return indentation{lhs.m_Data + rhs.m_Data};
     }
 
     [[nodiscard]]
-    friend bool operator==(const indentation&, const indentation&) noexcept = default;
+    friend constexpr bool operator==(const indentation&, const indentation&) noexcept = default;
   private:
     std::string m_Data;
   };
