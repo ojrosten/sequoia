@@ -96,7 +96,12 @@ namespace sequoia::testing
 
     {
       fake_test_with_discriminated_exceptions t{
-        test_name<fake_test_with_discriminated_exceptions>(), source_file(), projPaths, {}, {}, {"baz"}
+        test_name<fake_test_with_discriminated_exceptions>(),
+        source_file(),
+        projPaths,
+        {},
+        {},
+        {"baz"}
       };
 
       check(equality,
