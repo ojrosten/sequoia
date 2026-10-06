@@ -218,6 +218,13 @@ namespace sequoia::testing
           "coordinates<my_vec_space<1> >"s
     );
 
+    // Each of the other compilers' overloads would change this name
+    check(equality,
+          "An unrecognised compiler's name is left as it is",
+          tidy_name("struct foo<0ul> (__cdecl*)(void)", other_compiler_type{}),
+          "struct foo<0ul> (__cdecl*)(void)"s
+    );
+
     const std::string normalizedLong{(sizeof(unsigned long) == sizeof(unsigned long long)) ? "long long" : "long"};
 
     check(equality, "long",                                   tidy_name("long",             clang_type{}), normalizedLong);

@@ -372,7 +372,7 @@ namespace sequoia::testing::impl
           auto makeMessage{
             [order](){
               std::string mess{"Prerequisite - for ordered semantics, it is assumed that "};
-              return order == 0 ? mess.append("x < y") : mess.append("y > x");
+              return order < 0 ? mess.append("x < y") : mess.append("x > y");
             }
           };
 

@@ -18,7 +18,7 @@ Broken check invariant
 --Regular Semantics--
 [sequoia::testing::orderable_regular_beast<int, std::allocator<int> >]
 
-  Prerequisite - for ordered semantics, it is assumed that y > x
+  Prerequisite - for ordered semantics, it is assumed that x > y
   [bool]
   operator== returned false
   Obtained : false
@@ -95,7 +95,7 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 60
 --Regular Semantics--
 [sequoia::testing::regular_inverted_comparisons<int, std::allocator<int> >]
 
-  Prerequisite - for ordered semantics, it is assumed that y > x
+  Prerequisite - for ordered semantics, it is assumed that x < y
   [bool]
   operator== returned false
   Obtained : false
