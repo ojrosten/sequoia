@@ -1,2 +1,2 @@
 streaming_free_test
-Standard Top Level Checks:                32;  Failures:  0  [Deep checks: 41]
+Standard Top Level Checks:                47;  Failures:  0  [Deep checks: 63]

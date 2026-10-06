@@ -1603,6 +1603,29 @@ namespace sequoia::testing
 
       check_exception_thrown<std::runtime_error>("A path with no time stamp after it", [&file]() { return read_tests(file); });
     }
+
+    {
+      // No file can be created in a directory which does not exist
+      const auto orphan{file.parent_path() / "Absent" / file.filename()};
+
+      check_exception_thrown<std::runtime_error>(
+        "Prune records which cannot be written",
+        [&projPaths, &orphan, stamp]() {
+          write_tests(projPaths, orphan, prune_records{{"Maths/ProbabilityTest.cpp", stamp}});
+        });
+    }
+
+    {
+      // The written records cannot be renamed over a directory at <file>
+      const transient_directory blocking{file};
+      fs::create_directories(blocking.path());
+
+      check_exception_thrown<std::runtime_error>(
+        "Prune records which cannot replace the file",
+        [&projPaths, &file, stamp]() {
+          write_tests(projPaths, file, prune_records{{"HouseAllocationTest.cpp", stamp}});
+        });
+    }
   }
 
   void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)

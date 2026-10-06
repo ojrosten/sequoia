@@ -62,7 +62,7 @@ namespace sequoia::testing
 
   /** Writes `text` to `log` in the tracker's encoding: UTF-16, little-endian, behind a byte order mark.
 
-      \throws std::runtime_error if `log` cannot be opened.
+      \throws std::runtime_error if `log` cannot be opened, written or closed.
    */
   void write_tlog(const std::filesystem::path& log, std::u16string_view text);
 

@@ -165,11 +165,18 @@ namespace sequoia::testing
     std::filesystem::path m_Summary;
   };
 
-  /** \brief Where a test records its last execution: when it started and, once it has finished, its execution
-             duration and the runner's overhead.
+  /** \brief Where a test records its last execution: when it started and,
+             once it has finished, its execution duration and the runner's
+             overhead.
 
-      A record naming a start and no execution duration marks a test that was executing when its run ended. The path is
-      empty for default project paths.
+      A test's record is the last one the runner managed to write. That is
+      normally the current run's: the start while the test executes, then the
+      whole record once the test has finished. If a write fails, an earlier
+      run's record remains. A record naming a start and no execution duration
+      marks a test which did not finish in the run that wrote the record, or
+      whose finished record could not be written.
+
+      The path is empty for default project paths.
    */
   class test_execution_record_path
   {

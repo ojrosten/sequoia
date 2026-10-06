@@ -145,10 +145,7 @@ namespace sequoia::testing
 
       check(equality, "Project creation return code", tr.execute(), return_code::success);
 
-      if(std::ofstream file{fake_project() / "output" / "io.txt"})
-      {
-        file << outputStream.rdbuf();
-      }
+      write_to_file(fake_project() / "output" / "io.txt", outputStream.str(), std::ios_base::out);
 
       check(equivalence, "", hostDir, predictive_materials() /= "GeneratedProject");
       check(equivalence, "", fake_project(), predictive_materials() /= "FakeProject");

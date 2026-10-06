@@ -75,6 +75,19 @@ namespace sequoia::testing
     s >> readBack;
 
     check(equality, "operator>> reads back what operator<< writes, in place of what it held", readBack, written);
+
+    const failure_info tenth{10, "foo"};
+    std::stringstream infoStream{}, outputStream{};
+    infoStream   << std::hex << tenth;
+    outputStream << std::hex << failure_output{tenth};
+
+    failure_info infoReadBack{};
+    infoStream >> infoReadBack;
+    check(equality, "A hexadecimal stream does not change a failure_info's text", infoReadBack, tenth);
+
+    failure_output outputReadBack{};
+    outputStream >> outputReadBack;
+    check(equality, "A hexadecimal stream does not change a failure_output's text", outputReadBack, failure_output{tenth});
   }
 
   void failure_info_test::check_end_of_stream()

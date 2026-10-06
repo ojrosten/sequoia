@@ -11,13 +11,13 @@
 
 #include "BuildArtefactsTestingUtilities.hpp"
 
+#include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Characters.hpp"
 
 #include <cstdint>
-#include <fstream>
 #include <map>
 #include <ranges>
-#include <stdexcept>
+#include <sstream>
 
 namespace sequoia::testing
 {
@@ -66,9 +66,7 @@ namespace sequoia::testing
    */
   void write_ninja_deps(const fs::path& log, std::span<const compilation_record> records)
   {
-    std::ofstream out{log, std::ios_base::binary};
-    if(!out)
-      throw std::runtime_error{"Unable to open " + log.generic_string()};
+    std::ostringstream out{};
 
     constexpr std::string_view signature{"# ninjadeps\n"};
     constexpr std::uint32_t depsFlag{0x80000000u};
@@ -113,6 +111,8 @@ namespace sequoia::testing
         write_word(out, id);
       }
     }
+
+    write_to_file(log, std::move(out).str(), std::ios_base::binary);
   }
 
   [[nodiscard]]
@@ -143,9 +143,7 @@ namespace sequoia::testing
 
   void write_tlog(const fs::path& log, std::u16string_view text)
   {
-    std::ofstream out{log, std::ios_base::binary};
-    if(!out)
-      throw std::runtime_error{"Unable to write tracker log " + log.generic_string()};
+    std::ostringstream out{};
 
     out.write("\xFF\xFE", 2);
     for(const char16_t unit : text)
@@ -153,6 +151,8 @@ namespace sequoia::testing
       out.put(static_cast<char>(unit & 0xFF));
       out.put(static_cast<char>(unit >> 8));
     }
+
+    write_to_file(log, std::move(out).str(), std::ios_base::binary);
   }
 
   /* The read log and the write log both have a line naming the first input of each record with inputs. Beneath it,
