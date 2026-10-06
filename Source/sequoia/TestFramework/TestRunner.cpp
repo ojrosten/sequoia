@@ -2170,18 +2170,18 @@ namespace sequoia::testing
       Beyond ASCII they equate names by rules of their own - case folding, and on macOS Unicode
       normalization - so a name or prefix containing anything non-ASCII is refused.
    */
-  void test_runner::register_name(std::string_view name, const fs::path& source)
+  void test_runner::throw_if_name_refused(std::string_view name, const fs::path& source) const
   {
     if(contains_non_ascii(name))
       throw std::logic_error{non_ascii_name_message(source)};
 
-    if(!m_LowerCaseTestNames.insert(ascii::to_lowercase(name)).second)
+    if(m_LowerCaseTestNames.contains(ascii::to_lowercase(name)))
       throw std::logic_error{duplication_message(name, source)};
   }
 
-  void test_runner::register_source(const fs::path& source)
+  void test_runner::throw_if_source_refused(const fs::path& source) const
   {
-    const auto prefix{ascii::to_lowercase(materials_prefix(source, proj_paths()).lexically_normal().generic_string())};
+    const auto prefix{lower_case_materials_prefix(source)};
     if(prefix.empty())
       throw std::logic_error{unplaceable_source_message(source)};
 
@@ -2204,19 +2204,36 @@ namespace sequoia::testing
 
     if(nestedWith != m_SourcesByLowerCasePrefix.end())
       throw std::logic_error{nesting_message(source, nestedWith->second)};
+  }
 
-    m_SourcesByLowerCasePrefix.try_emplace(prefix, source);
+  void test_runner::throw_if_summary_refused(std::string_view name, const test_summary_path& summary) const
+  {
+    const auto& file{summary.file_path()};
+    const auto registered{m_TestNamesByLowerCaseSummary.find(ascii::to_lowercase(file.generic_string()))};
+
+    if(registered != m_TestNamesByLowerCaseSummary.end())
+      throw std::runtime_error{summary_collision_message(registered->second, name, file)};
+  }
+
+  void test_runner::register_name(std::string_view name)
+  {
+    m_LowerCaseTestNames.insert(ascii::to_lowercase(name));
+  }
+
+  void test_runner::register_source(const fs::path& source)
+  {
+    m_SourcesByLowerCasePrefix.try_emplace(lower_case_materials_prefix(source), source);
   }
 
   void test_runner::register_summary(std::string_view name, const test_summary_path& summary)
   {
-    const auto& file{summary.file_path()};
-    const auto [admitted, inserted]{
-      m_TestNamesByLowerCaseSummary.try_emplace(ascii::to_lowercase(file.generic_string()), name)
-    };
+    m_TestNamesByLowerCaseSummary.try_emplace(ascii::to_lowercase(summary.file_path().generic_string()), name);
+  }
 
-    if(!inserted)
-      throw std::runtime_error{summary_collision_message(admitted->second, name, file)};
+  [[nodiscard]]
+  std::string test_runner::lower_case_materials_prefix(const fs::path& source) const
+  {
+    return ascii::to_lowercase(materials_prefix(source, proj_paths()).lexically_normal().generic_string());
   }
 
   [[nodiscard]]
@@ -2314,8 +2331,6 @@ namespace sequoia::testing
       const auto enclosingSuiteNode{
         std::ranges::fold_left(enclosing_suites(test.source_file()), root, findOrAddSuite)
       };
-
-      test.initialize(proj_paths(), m_CMakeCache, m_RecoveryMode);
 
       m_Suites.add_node(enclosingSuiteNode,
                         suite_node{.summary{log_summary{test.name()}}, .optTest{std::move(test)}});

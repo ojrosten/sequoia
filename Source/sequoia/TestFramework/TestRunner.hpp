@@ -259,14 +259,6 @@ namespace sequoia::testing
     {
       m_pTest->reset_results();
     }
-
-    /** \brief Replaces the held test with one which knows its materials,
-               diagnostics and recovery paths.
-     */
-    void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode)
-    {
-      m_pTest->initialize(projPaths, cache, mode);
-    }
   private:
     friend class test_to_run;
 
@@ -297,11 +289,10 @@ namespace sequoia::testing
       virtual log_summary summarize(log_summary::duration delta) const                    = 0;
       virtual bool has_critical_failures() const noexcept                                 = 0;
 
-      virtual void run_tests()                                                                              = 0;
-      virtual void log_critical_failure(std::string_view tag, std::string_view what)                        = 0;
-      virtual void write_instability_analysis_output(std::optional<std::size_t> index) const                = 0;
-      virtual void reset_results()                                                                          = 0;
-      virtual void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode) = 0;
+      virtual void run_tests()                                                               = 0;
+      virtual void log_critical_failure(std::string_view tag, std::string_view what)         = 0;
+      virtual void write_instability_analysis_output(std::optional<std::size_t> index) const = 0;
+      virtual void reset_results()                                                           = 0;
     };
 
     template<concrete_test Test>
@@ -366,23 +357,6 @@ namespace sequoia::testing
       void reset_results() final
       {
         m_Test.reset_results();
-      }
-
-      void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode) final
-      {
-        const auto source{Test::source_file()};
-
-        m_Test = Test{st_Name,
-                      source,
-                      projPaths,
-                      individual_materials_paths{
-                        source,
-                        st_Name,
-                        projPaths,
-                        get_discriminator<materials_discriminator_probe, Test>(cache)
-                      },
-                      make_active_recovery_paths(mode, projPaths),
-                      get_discriminator<output_discriminator_probe, Test>(cache)};
       }
     private:
       static constexpr std::string_view st_Name{test_name<Test>()};
@@ -461,11 +435,6 @@ namespace sequoia::testing
     void reset_results()
     {
       m_Vessel.reset_results();
-    }
-
-    void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode)
-    {
-      m_Vessel.initialize(projPaths, cache, mode);
     }
   private:
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
@@ -562,6 +531,31 @@ namespace sequoia::testing
       return null_discriminator;
   }
 
+  /** \brief Makes a test of type `T` for the project at `projPaths`.
+
+      The test's discriminators are read from `cache`, and `mode` chooses its
+      recovery files.
+   */
+  template<concrete_test T>
+  [[nodiscard]]
+  T make_test(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode)
+  {
+    constexpr std::string_view name{test_name<T>()};
+    const auto source{T::source_file()};
+
+    return T{name,
+             source,
+             projPaths,
+             individual_materials_paths{
+               source,
+               name,
+               projPaths,
+               get_discriminator<materials_discriminator_probe, T>(cache)
+             },
+             make_active_recovery_paths(mode, projPaths),
+             get_discriminator<output_discriminator_probe, T>(cache)};
+  }
+
   /** \brief Consumes command-line arguments and holds all test suites.
 
       If no arguments are specified, all tests are run; run with --help
@@ -587,22 +581,33 @@ namespace sequoia::testing
     template<concrete_test T>
     void register_test()
     {
-      ++m_Registered;
-
       constexpr std::string_view name{test_name<T>()};
-      register_name(name, T::source_file());
-      register_source(T::source_file());
+      constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
+
+      // The registration is recorded only once every check has passed and
+      // every hook has returned, so a registration which throws is not
+      // recorded
+      throw_if_name_refused(name, T::source_file());
+      throw_if_source_refused(T::source_file());
 
       test_summary_path summaryFile{T::source_file(),
                                     name,
                                     m_ProjPaths,
                                     get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)};
+      throw_if_summary_refused(name, summaryFile);
+
+      const bool toRun{m_Filter(T::source_file(), enclosing_suites(T::source_file()), isPerformanceTest)};
+      auto vessel{
+        toRun ? std::optional<test_vessel>{make_test<T>(m_ProjPaths, m_CMakeCache, m_RecoveryMode)} : std::nullopt
+      };
+
+      ++m_Registered;
+      register_name(name);
+      register_source(T::source_file());
       register_summary(name, summaryFile);
 
-      constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
-
-      if(m_Filter(T::source_file(), enclosing_suites(T::source_file()), isPerformanceTest))
-        m_Tests.emplace_back(test_vessel{T{}},
+      if(vessel)
+        m_Tests.emplace_back(std::move(*vessel),
                              std::move(summaryFile),
                              test_execution_record_path{T::source_file(), name, m_ProjPaths});
     }
@@ -916,28 +921,37 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string duplication_message(std::string_view testName, const std::filesystem::path& source);
 
-    /** \brief Admits the name of a test being registered.
+    /** \brief Checks the name of a test being registered.
 
         \throws std::logic_error naming `source`, if `name` contains anything non-ASCII
-        \throws std::logic_error naming both, if a test of the same name, ignoring case, was admitted
+        \throws std::logic_error naming both, if a test of the same name, ignoring case, was registered
      */
-    void register_name(std::string_view name, const std::filesystem::path& source);
+    void throw_if_name_refused(std::string_view name, const std::filesystem::path& source) const;
 
-    /** \brief Admits the source of a test being registered.
+    /** \brief Checks the source of a test being registered.
 
         \throws std::logic_error naming `source`, if its materials prefix is empty
         \throws std::logic_error naming `source`, if its materials prefix contains anything non-ASCII
         \throws std::logic_error naming both sources, if the materials prefix of `source` lies beneath
-        that of a source already admitted, or has one beneath it, ignoring ASCII case
+        that of a source already registered, or has one beneath it, ignoring ASCII case
      */
-    void register_source(const std::filesystem::path& source);
+    void throw_if_source_refused(const std::filesystem::path& source) const;
 
-    /** \brief Admits the summary file of a test being registered.
+    /** \brief Checks the summary file of a test being registered.
 
         \throws std::runtime_error naming both tests and the file, if the file of `summary` is that of a test
-        already admitted, ignoring ASCII case
+        already registered, ignoring ASCII case
      */
+    void throw_if_summary_refused(std::string_view name, const test_summary_path& summary) const;
+
+    void register_name(std::string_view name);
+
+    void register_source(const std::filesystem::path& source);
+
     void register_summary(std::string_view name, const test_summary_path& summary);
+
+    [[nodiscard]]
+    std::string lower_case_materials_prefix(const std::filesystem::path& source) const;
 
     [[nodiscard]]
     static std::string nesting_message(const std::filesystem::path& source, const std::filesystem::path& nestedWith);
