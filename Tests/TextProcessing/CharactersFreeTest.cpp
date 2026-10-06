@@ -126,6 +126,9 @@ namespace sequoia::testing
     STATIC_CHECK(!std::invocable<decltype(ascii::is_empty_or_whitespace), const unsigned char*>);
     STATIC_CHECK(!std::invocable<decltype(ascii::is_empty_or_whitespace), const std::filesystem::path&>);
     STATIC_CHECK(!std::invocable<decltype(ascii::is_empty_or_whitespace), const volatile char*>);
+
+    STATIC_CHECK(noexcept(ascii::same_ignoring_case("", "")));
+    STATIC_CHECK(noexcept(ascii::is_empty_or_whitespace("")));
   }
 
   void characters_free_test::test_same_ignoring_case()

@@ -161,7 +161,7 @@ namespace sequoia
       template<character_string Lhs, character_string Rhs>
         requires std::same_as<character_of_t<Lhs>, character_of_t<Rhs>>
       [[nodiscard]]
-      constexpr bool operator()(const Lhs& lhs, const Rhs& rhs) const
+      constexpr bool operator()(const Lhs& lhs, const Rhs& rhs) const noexcept
       {
         auto sameIgnoringCase{
           [](auto l, auto r){ return to_lowercase_character{}(l) == to_lowercase_character{}(r); }
@@ -174,7 +174,7 @@ namespace sequoia
     {
       template<character_string Text>
       [[nodiscard]]
-      constexpr bool operator()(const Text& text) const
+      constexpr bool operator()(const Text& text) const noexcept
       {
         return std::ranges::all_of(impl::as_string_view(text), ascii::is_whitespace);
       }
