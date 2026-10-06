@@ -360,16 +360,18 @@ jobs:
           g++-15 --version | head -1
           "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin/cmake" --version | head -1
 
-      # Telemetry for roadmap 234's gate, which demangles the tracefile's names
-      # with GNU c++filt and llvm-cxxfilt, and records their versions in its
-      # baseline. The step reports which demanglers the image offers, and fails
-      # on nothing. Remove it once the gate's own step locates its demanglers.
+      # Telemetry for roadmap 234's gate, which is to demangle the tracefile's
+      # names with GNU c++filt and llvm-cxxfilt, and to record their versions
+      # in its baseline. The step reports which demanglers the image offers, and
+      # never fails the job. Remove it once the gate's own step locates its
+      # demanglers.
       - name: Name the demanglers on the image
         if: env.NEEDS_TESTING == 'true'
         run: |
           for tool in c++filt llvm-cxxfilt /usr/bin/llvm-cxxfilt-* /usr/lib/llvm-*/bin/llvm-cxxfilt; do
             path=$(command -v "$tool") || { echo "$tool: absent"; continue; }
-            echo "$path: $("$path" --version | grep -m1 -E '[0-9]+\.[0-9]+')"
+            version=$({ "$path" --version 2>&1 || true; } | grep -m1 -E '[0-9]+\.[0-9]+') || version="no version found"
+            echo "$path -> $(readlink -f "$path"): $version"
           done
 
       - name: Give git an identity
