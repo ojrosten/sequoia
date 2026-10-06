@@ -243,9 +243,8 @@ namespace sequoia::testing
 
      The fake build names a directory of the real sequoia as one of the toolchain's. The toolchain
      headers which a unit reads from that directory therefore exist, and lie outside the fake project,
-     as a toolchain's headers would. Sequoia is modules here, so its interface units stand in for
-     those headers. A modules build records no such dependency: the deps of a test importing sequoia
-     are its own files and the macros headers.
+     as a toolchain's headers would. Sequoia is modules here, so an interface unit stands in for such
+     a header.
    */
   namespace
   {

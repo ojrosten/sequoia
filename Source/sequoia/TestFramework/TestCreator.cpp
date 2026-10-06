@@ -893,9 +893,9 @@ namespace sequoia::testing
 
     if(!testing_utilities().empty())
     {
-      constexpr std::string_view generatedUtilities{"#include \"?ClassTestingUtilities.hpp\"\n\nimport std;"};
+      constexpr std::string_view generatedUtilitiesPreamble{"#include \"?ClassTestingUtilities.hpp\"\n\nimport std;"};
       replace_all(text,
-                  generatedUtilities,
+                  generatedUtilitiesPreamble,
                   std::format("#include \"{}\"\n\nimport std;\nimport sequoia.test_framework;",
                               testing_utilities_include()));
     }
@@ -963,7 +963,9 @@ namespace sequoia::testing
     if(!testing_utilities().empty())
     {
       constexpr std::string_view frameworkImports{"import std;\nimport sequoia.test_framework;"};
-      replace_all(text, frameworkImports, std::format("#include \"{}\"\n\n{}", testing_utilities_include(), frameworkImports));
+      replace_all(text,
+                  frameworkImports,
+                  std::format("#include \"{}\"\n\n{}", testing_utilities_include(), frameworkImports));
     }
 
     replace_all(text, replacement{"?Allocation", to_camel_case(test_type())},
