@@ -369,10 +369,11 @@ namespace sequoia::testing::impl
         if(check_ordering_consistency(logger, actions, x, y, args...))
         {
           const bool cond{order < 0 ? x < y : x > y};
-          const auto message{
-            [&]() {
+          auto message{
+            [&x, &y, order, cond]() {
               auto mess{
-                std::format("Prerequisite - for ordered semantics, it is assumed that {}", order < 0 ? "x < y" : "x > y")
+                std::format("Prerequisite - for ordered semantics, it is assumed that {}",
+                            order < 0 ? "x < y" : "x > y")
               };
 
               if constexpr(serializable<T>)
@@ -385,7 +386,7 @@ namespace sequoia::testing::impl
             }()
           };
 
-          return check(message, logger, cond);
+          return check(std::move(message), logger, cond);
         }
       }
     }
