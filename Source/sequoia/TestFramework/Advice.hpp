@@ -136,7 +136,7 @@ namespace sequoia::testing
          advice will be produced when the top-level comparison of the two
          values using `operator==` is performed.
 
-      These two checks are not mutually exclusive. The philosophy is that as
+      These two cases are not mutually exclusive. The philosophy is that as
       the check for a type is decomposed into its constituent parts, `sequoia`
       will apply the advice wherever the types match. Another example is when
       a `check` is applied to a range: the `tutor` is (recursively) passed on
@@ -163,7 +163,11 @@ namespace sequoia::testing
       </pre>
       the advice will be silently ignored. One fix for this is to instead
       construct the `tutor` from a function object with the signature
-      `std::string operator()(bool, bool)`.
+      `std::string operator()(bool, bool)`, which captures the values it
+      reports:
+      <pre>
+      [&x, &y](bool, bool) { return std::format("x is {}, y is {}", x, y); }
+      </pre>
 
       \anchor tutor_primary
    */
