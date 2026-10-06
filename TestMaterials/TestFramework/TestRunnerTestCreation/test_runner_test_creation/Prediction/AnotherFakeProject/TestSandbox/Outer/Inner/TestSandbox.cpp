@@ -18,26 +18,64 @@ int main(int argc, char** argv)
 	try
 	{
 		using namespace myProject::testing;
-		using namespace std::literals::chrono_literals;
 
 		sequoia::testing::test_runner runner{argc, argv, "Oliver J. Rosten", "\t"};
-runner.register_test<maybe_false_negative_test>();
-        runner.register_test<maybe_test>();runner.register_test<iterator_false_negative_test>();
-        runner.register_test<iterator_test>();runner.register_test<widget_false_negative_test>();
-        runner.register_test<widget_test>();runner.register_test<probability_false_negative_test>();
-        runner.register_test<probability_test>();runner.register_test<angle_false_negative_test>();
-        runner.register_test<angle_test>();runner.register_test<human_false_negative_test>();
-        runner.register_test<human_test>();runner.register_test<thingummy_false_negative_test>();
-        runner.register_test<thingummy_test>();runner.register_test<container_false_negative_test>();
-        runner.register_test<container_test>();runner.register_test<couple_false_negative_test>();
-        runner.register_test<couple_test>();runner.register_test<things_false_negative_test>();
-        runner.register_test<things_test>();runner.register_test<foo_false_negative_test>();
-        runner.register_test<foo_test>();runner.register_test<variadic_false_negative_test>();
-        runner.register_test<variadic_test>();runner.register_test<multiple_false_negative_test>();
-        runner.register_test<multiple_test>();runner.register_test<cloud_false_negative_test>();
-        runner.register_test<cloud_test>();runner.register_test<utilities_free_test>();runner.register_test<bazzer_free_test>();runner.register_test<bazagain_free_test>();runner.register_test<doohicky_free_test>();runner.register_test<global_free_test>();runner.register_test<defs_free_test>();runner.register_test<angle_false_positive_free_diagnostics>();
-        runner.register_test<angle_false_negative_free_diagnostics>();runner.register_test<container_allocation_test>();runner.register_test<foo_allocation_test>();runner.register_test<container_performance_test>();
-		code = runner.execute(sequoia::timer_resolution{1ms});
+		runner.register_test<maybe_false_negative_test>();
+		runner.register_test<maybe_test>();
+		runner.register_test<iterator_false_negative_test>();
+		runner.register_test<iterator_test>();
+		runner.register_test<widget_false_negative_test>();
+		runner.register_test<widget_test>();
+		runner.register_test<probability_false_negative_test>();
+		runner.register_test<probability_test>();
+		runner.register_test<angle_false_negative_test>();
+		runner.register_test<angle_test>();
+		runner.register_test<human_false_negative_test>();
+		runner.register_test<human_test>();
+		runner.register_test<thingummy_false_negative_test>();
+		runner.register_test<thingummy_test>();
+		runner.register_test<container_false_negative_test>();
+		runner.register_test<container_test>();
+		runner.register_test<couple_false_negative_test>();
+		runner.register_test<couple_test>();
+		runner.register_test<things_false_negative_test>();
+		runner.register_test<things_test>();
+		runner.register_test<foo_false_negative_test>();
+		runner.register_test<foo_test>();
+		runner.register_test<variadic_false_negative_test>();
+		runner.register_test<variadic_test>();
+		runner.register_test<multiple_false_negative_test>();
+		runner.register_test<multiple_test>();
+		runner.register_test<cloud_false_negative_test>();
+		runner.register_test<cloud_test>();
+		runner.register_test<utilities_free_test>();
+		runner.register_test<bazzer_free_test>();
+		runner.register_test<bazagain_free_test>();
+		runner.register_test<doohicky_free_test>();
+		runner.register_test<global_free_test>();
+		runner.register_test<defs_free_test>();
+		runner.register_test<angle_false_negative_free_diagnostics>();
+		runner.register_test<angle_false_positive_free_diagnostics>();
+		runner.register_test<container_allocation_test>();
+		runner.register_test<foo_allocation_test>();
+		runner.register_test<pool_allocation_test>();
+		runner.register_test<arena_allocation_test>();
+		runner.register_test<widget_allocation_test>();
+		runner.register_test<container_performance_test>();
+		runner.register_test<utility_functions_test>();
+		runner.register_test<angle_regular_test>();
+		runner.register_test<cloud_move_only_test>();
+		runner.register_test<probability_family_test>();
+		runner.register_test<human_shared_tester_test>();
+		runner.register_test<gizmo_false_negative_test>();
+		runner.register_test<gizmo_semantics_test>();
+		runner.register_test<gadget_family_test>();
+		runner.register_test<angle_family_test>();
+		runner.register_test<string_utilities>();
+		runner.register_test<container_family_allocation_test>();
+		runner.register_test<container_speed_test>();
+
+		code = runner.execute();
 	}
 	catch(const std::exception& e)
 	{

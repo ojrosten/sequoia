@@ -1,0 +1,18 @@
+
+Running tests, synchronously...
+
+slow_to_summarize_test_0:
+[Execution Time: 23.6ms]
+[Runner Overhead: 64.4ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+
+-----------Grand Totals-----------
+[Total Run Time: 89.4ms]
+[Execution Time: 23.6ms]
+[Runner Overhead: 64.4ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

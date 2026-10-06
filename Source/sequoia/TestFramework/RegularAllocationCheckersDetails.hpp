@@ -148,8 +148,8 @@ namespace sequoia::testing::impl
                                actions,
                                x,
                                y,
-                               optional_ref<const T>{},
-                               optional_ref<const T>{},
+                               opt_ref<const T>{},
+                               opt_ref<const T>{},
                                m,
                                individualCheckers...);
       }

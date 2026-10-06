@@ -26,5 +26,13 @@ namespace sequoia::testing
     void check_exceptions();
 
     void check_failure_info();
+
+    void check_round_trip();
+
+    void check_end_of_stream();
+
+    void check_instability_analysis();
+
+    void check_written_format();
   };
 }

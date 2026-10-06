@@ -13,7 +13,9 @@
 #include <complex>
 #include <map>
 #include <set>
+#include <tuple>
 #include <utility>
+#include <variant>
 #include <vector>
 
 namespace sequoia::testing
@@ -38,6 +40,33 @@ namespace sequoia::testing
       throwing_copy_assignment(throwing_copy_assignment&&) noexcept = default;
       throwing_copy_assignment& operator=(const throwing_copy_assignment&) noexcept(false) { return *this; }
       throwing_copy_assignment& operator=(throwing_copy_assignment&&) noexcept = default;
+    };
+
+    struct move_only
+    {
+      int value{};
+
+      move_only() = default;
+
+      move_only(move_only&&) noexcept = default;
+
+      move_only& operator=(move_only&&) noexcept = default;
+    };
+
+    struct assign_only
+    {
+      int value{};
+
+      assign_only() = default;
+
+      assign_only(const assign_only&) = delete;
+
+      assign_only& operator=(const assign_only&) = default;
+    };
+
+    struct non_assignable
+    {
+      const int value{};
     };
 
     /** Whether the trait agrees with the standard library's own `noexcept` on `std::exchange`. */
@@ -65,6 +94,8 @@ namespace sequoia::testing
     test_is_compatible();
     test_are_same();
     test_value_type_of();
+    test_is_deep_copy_constructible();
+    test_is_deep_copy_assignable();
   }
 
   void type_traits_test::test_resolve_to_copy()
@@ -72,155 +103,57 @@ namespace sequoia::testing
     {
       using d = resolve_to_copy<int>;
 
-      check("", []() {
-          static_assert(std::is_same_v<std::false_type, d::type>);
-          return true;
-        }()
-      );
-
-      check("", []() {
-          static_assert(std::is_same_v<std::false_type, resolve_to_copy_t<int>>);
-          return true;
-        }()
-      );
-
-      check("", []() {
-          static_assert(!resolve_to_copy_v<int>);
-          return true;
-        }()
-      );
+      STATIC_CHECK( std::is_same_v<std::false_type, d::type>);
+      STATIC_CHECK( std::is_same_v<std::false_type, resolve_to_copy_t<int>>);
+      STATIC_CHECK(!resolve_to_copy_v<int>);
     }
 
     {
       using d = resolve_to_copy<int, int>;
 
-      check("", []() {
-          static_assert(std::is_same_v<std::true_type, d::type>);
-          return true;
-        }()
-      );
-
-      check("", []() {
-          static_assert(std::is_same_v<std::true_type, resolve_to_copy_t<int, int>>);
-          return true;
-        }()
-      );
-
-      check("", []() {
-          static_assert(resolve_to_copy_v<int, int>);
-          return true;
-        }()
-      );
+      STATIC_CHECK(std::is_same_v<std::true_type, d::type>);
+      STATIC_CHECK(std::is_same_v<std::true_type, resolve_to_copy_t<int, int>>);
+      STATIC_CHECK(resolve_to_copy_v<int, int>);
     }
 
     {
       using d = resolve_to_copy<int&, int>;
 
-      check("", []() {
-          static_assert(std::is_same_v<std::true_type, d::type>);
-          return true;
-        }()
-      );
-
-      check("", []() {
-          static_assert(std::is_same_v<std::true_type, resolve_to_copy_t<int&, int>>);
-          return true;
-        }()
-      );
-
-      check("", []() {
-          static_assert(resolve_to_copy_v<int&, int>);
-          return true;
-        }()
-      );
+      STATIC_CHECK(std::is_same_v<std::true_type, d::type>);
+      STATIC_CHECK(std::is_same_v<std::true_type, resolve_to_copy_t<int&, int>>);
+      STATIC_CHECK(resolve_to_copy_v<int&, int>);
     }
 
     {
       using d = resolve_to_copy<int, int&>;
 
-      check("", []() {
-          static_assert(std::is_same_v<std::true_type, d::type>);
-          return true;
-        }()
-      );
-
-      check("", []() {
-          static_assert(std::is_same_v<std::true_type, resolve_to_copy_t<int, int&>>);
-          return true;
-        }()
-      );
-
-      check("", []() {
-          static_assert(resolve_to_copy_v<int, int&>);
-          return true;
-        }()
-      );
+      STATIC_CHECK(std::is_same_v<std::true_type, d::type>);
+      STATIC_CHECK(std::is_same_v<std::true_type, resolve_to_copy_t<int, int&>>);
+      STATIC_CHECK(resolve_to_copy_v<int, int&>);
     }
 
     {
       using d = resolve_to_copy<const int&, volatile int&>;
 
-      check("", []() {
-          static_assert(std::is_same_v<std::true_type, d::type>);
-          return true;
-        }()
-      );
-
-      check("", []() {
-          static_assert(std::is_same_v<std::true_type, resolve_to_copy_t<const int&, volatile int&>>);
-          return true;
-        }()
-      );
-
-      check("", []() {
-          static_assert(resolve_to_copy_v<const int&, volatile int&>);
-          return true;
-        }()
-      );
+      STATIC_CHECK(std::is_same_v<std::true_type, d::type>);
+      STATIC_CHECK(std::is_same_v<std::true_type, resolve_to_copy_t<const int&, volatile int&>>);
+      STATIC_CHECK(resolve_to_copy_v<const int&, volatile int&>);
     }
 
     {
       using d = resolve_to_copy<int, double>;
 
-      check("", []() {
-          static_assert(std::is_same_v<std::false_type, d::type>);
-          return true;
-        }()
-      );
-
-      check("", []() {
-          static_assert(std::is_same_v<std::false_type, resolve_to_copy_t<int, double>>);
-          return true;
-        }()
-      );
-
-      check("", []() {
-          static_assert(!resolve_to_copy_v<int, double>);
-          return true;
-        }()
-      );
+      STATIC_CHECK( std::is_same_v<std::false_type, d::type>);
+      STATIC_CHECK( std::is_same_v<std::false_type, resolve_to_copy_t<int, double>>);
+      STATIC_CHECK(!resolve_to_copy_v<int, double>);
     }
 
     {
       using d = resolve_to_copy<int, int, int>;
 
-      check("", []() {
-          static_assert(std::is_same_v<std::false_type, d::type>);
-          return true;
-        }()
-      );
-
-      check("", []() {
-          static_assert(std::is_same_v<std::false_type, resolve_to_copy_t<int, int, double>>);
-          return true;
-        }()
-      );
-
-      check("", []() {
-          static_assert(!resolve_to_copy_v<int, int, int>);
-          return true;
-        }()
-      );
+      STATIC_CHECK( std::is_same_v<std::false_type, d::type>);
+      STATIC_CHECK( std::is_same_v<std::false_type, resolve_to_copy_t<int, int, double>>);
+      STATIC_CHECK(!resolve_to_copy_v<int, int, int>);
     }
   }
 
@@ -228,128 +161,40 @@ namespace sequoia::testing
 
   void type_traits_test::test_is_const_pointer()
   {
-
-    check("", []() {
-        static_assert(std::is_same_v<std::true_type, is_const_pointer_t<const int*>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(is_const_pointer_v<const int*>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(std::is_same_v<std::false_type, is_const_pointer_t<int*>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(!is_const_pointer_v<int*>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(std::is_same_v<std::false_type, is_const_pointer_t<int* const>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(!is_const_pointer_v<int* const>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(std::is_same_v<std::true_type, is_const_pointer_t<const int* const>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(is_const_pointer_v<const int* const>);
-        return true;
-      }()
-    );
+    STATIC_CHECK( std::is_same_v<std::true_type, is_const_pointer_t<const int*>>);
+    STATIC_CHECK( is_const_pointer_v<const int*>);
+    STATIC_CHECK( std::is_same_v<std::false_type, is_const_pointer_t<int*>>);
+    STATIC_CHECK(!is_const_pointer_v<int*>);
+    STATIC_CHECK( std::is_same_v<std::false_type, is_const_pointer_t<int* const>>);
+    STATIC_CHECK(!is_const_pointer_v<int* const>);
+    STATIC_CHECK( std::is_same_v<std::true_type, is_const_pointer_t<const int* const>>);
+    STATIC_CHECK( is_const_pointer_v<const int* const>);
   }
 
   void type_traits_test::test_is_const_reference()
   {
-    check("", []() {
-        static_assert(std::is_same_v<std::true_type, is_const_reference_t<const int&>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(is_const_reference_v<const int&>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(std::is_same_v<std::true_type, is_const_reference_t<const volatile int&>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(is_const_reference_v<const volatile int&>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(std::is_same_v<std::false_type, is_const_reference_t<int&>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(!is_const_reference_v<int&>);
-        return true;
-      }()
-    );
+    STATIC_CHECK( std::is_same_v<std::true_type, is_const_reference_t<const int&>>);
+    STATIC_CHECK( is_const_reference_v<const int&>);
+    STATIC_CHECK( std::is_same_v<std::true_type, is_const_reference_t<const volatile int&>>);
+    STATIC_CHECK( is_const_reference_v<const volatile int&>);
+    STATIC_CHECK( std::is_same_v<std::false_type, is_const_reference_t<int&>>);
+    STATIC_CHECK(!is_const_reference_v<int&>);
   }
 
   void type_traits_test::test_is_initializable()
   {
-    check("", []() {
-        static_assert(std::is_same_v<std::false_type, is_initializable_t<foo, std::vector<int>>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(!is_initializable_v<foo, std::vector<int>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(std::is_same_v<std::true_type, is_initializable_t<foo, int>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(is_initializable_v<foo, int>);
-        return true;
-      }()
-    );
+    STATIC_CHECK( std::is_same_v<std::false_type, is_initializable_t<foo, std::vector<int>>>);
+    STATIC_CHECK(!is_initializable_v<foo, std::vector<int>>);
+    STATIC_CHECK( std::is_same_v<std::true_type, is_initializable_t<foo, int>>);
+    STATIC_CHECK( is_initializable_v<foo, int>);
   }
 
   void type_traits_test::test_is_nothrow_exchangeable()
   {
-    STATIC_CHECK(is_nothrow_exchangeable_v<int, int>);
-    STATIC_CHECK(std::is_same_v<is_nothrow_exchangeable_t<int, const int&>, std::true_type>);
+    STATIC_CHECK( is_nothrow_exchangeable_v<int, int>);
+    STATIC_CHECK( std::is_same_v<is_nothrow_exchangeable_t<int, const int&>, std::true_type>);
     STATIC_CHECK(!is_nothrow_exchangeable_v<throwing_move_construction, throwing_move_construction>);
-    STATIC_CHECK(is_nothrow_exchangeable_v<throwing_copy_assignment, throwing_copy_assignment>);
+    STATIC_CHECK( is_nothrow_exchangeable_v<throwing_copy_assignment, throwing_copy_assignment>);
     STATIC_CHECK(!is_nothrow_exchangeable_v<throwing_copy_assignment, const throwing_copy_assignment&>);
 
     STATIC_CHECK(   agrees_with_library_v<int, int>
@@ -361,102 +206,40 @@ namespace sequoia::testing
 
   void type_traits_test::test_is_tuple()
   {
-    check("", []() {
-        static_assert(!is_tuple_v<int>);
-        static_assert(std::is_same_v<std::false_type, is_tuple_t<int>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(is_tuple_v<std::tuple<>>);
-        static_assert(std::is_same_v<std::true_type, is_tuple_t<std::tuple<>>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(is_tuple_v<std::tuple<int>>);
-        static_assert(std::is_same_v<std::true_type, is_tuple_t<std::tuple<int>>>);
-        return true;
-      }()
-    );
+    STATIC_CHECK(!is_tuple_v<int>);
+    STATIC_CHECK( std::is_same_v<std::false_type, is_tuple_t<int>>);
+    STATIC_CHECK( is_tuple_v<std::tuple<>>);
+    STATIC_CHECK( std::is_same_v<std::true_type, is_tuple_t<std::tuple<>>>);
+    STATIC_CHECK( is_tuple_v<std::tuple<int>>);
+    STATIC_CHECK( std::is_same_v<std::true_type, is_tuple_t<std::tuple<int>>>);
   }
 
   void type_traits_test::test_has_allocator_type()
   {
-    check("", []() {
-        static_assert(has_allocator_type_v<std::vector<double>>);
-        static_assert(std::is_same_v<std::true_type, has_allocator_type_t<std::vector<double>>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(!has_allocator_type_v<double>);
-        static_assert(std::is_same_v<std::false_type, has_allocator_type_t<double>>);
-        return true;
-      }()
-    );
+    STATIC_CHECK( has_allocator_type_v<std::vector<double>>);
+    STATIC_CHECK( std::is_same_v<std::true_type, has_allocator_type_t<std::vector<double>>>);
+    STATIC_CHECK(!has_allocator_type_v<double>);
+    STATIC_CHECK( std::is_same_v<std::false_type, has_allocator_type_t<double>>);
   }
 
   void type_traits_test::test_is_compatible()
   {
-    check("", []() {
-        static_assert(is_compatible_v<double, float>);
-        static_assert(std::is_same_v<std::true_type, is_compatible_t<double, float>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(is_compatible_v<double, double>);
-        static_assert(std::is_same_v<std::true_type, is_compatible_t<double, double>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(is_compatible_v<double, int>);
-        static_assert(std::is_same_v<std::true_type, is_compatible_t<double, int>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(!is_compatible_v<float, double>);
-        static_assert(std::is_same_v<std::false_type, is_compatible_t<float, double>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-        static_assert(is_compatible_v<float, float>);
-        static_assert(std::is_same_v<std::true_type, is_compatible_t<float, float>>);
-        return true;
-      }()
-    );
-
-    check("", []() {
-      static_assert(is_compatible_v<float, int>);
-      static_assert(std::is_same_v<std::true_type, is_compatible_t<float, int>>);
-      return true;
-      }()
-    );
-
-    check("", []() {
-      static_assert(has_allocator_type_v<std::vector<double>>);
-      static_assert(std::is_same_v<std::true_type, has_allocator_type_t<std::vector<double>>>);
-      return true;
-      }()
-    );
-
-    check("", []() {
-      static_assert(!has_allocator_type_v<double>);
-      static_assert(std::is_same_v<std::false_type, has_allocator_type_t<double>>);
-      return true;
-      }()
-    );
+    STATIC_CHECK( is_compatible_v<double, float>);
+    STATIC_CHECK( std::is_same_v<std::true_type, is_compatible_t<double, float>>);
+    STATIC_CHECK( is_compatible_v<double, double>);
+    STATIC_CHECK( std::is_same_v<std::true_type, is_compatible_t<double, double>>);
+    STATIC_CHECK( is_compatible_v<double, int>);
+    STATIC_CHECK( std::is_same_v<std::true_type, is_compatible_t<double, int>>);
+    STATIC_CHECK(!is_compatible_v<float, double>);
+    STATIC_CHECK( std::is_same_v<std::false_type, is_compatible_t<float, double>>);
+    STATIC_CHECK( is_compatible_v<float, float>);
+    STATIC_CHECK( std::is_same_v<std::true_type, is_compatible_t<float, float>>);
+    STATIC_CHECK( is_compatible_v<float, int>);
+    STATIC_CHECK( std::is_same_v<std::true_type, is_compatible_t<float, int>>);
+    STATIC_CHECK( has_allocator_type_v<std::vector<double>>);
+    STATIC_CHECK( std::is_same_v<std::true_type, has_allocator_type_t<std::vector<double>>>);
+    STATIC_CHECK(!has_allocator_type_v<double>);
+    STATIC_CHECK( std::is_same_v<std::false_type, has_allocator_type_t<double>>);
   }
 
   void type_traits_test::test_are_same()
@@ -468,9 +251,9 @@ namespace sequoia::testing
     STATIC_CHECK(are_same_v<int, int>);
     STATIC_CHECK(std::same_as<are_same_t<int, int>, std::true_type>);
 
-    STATIC_CHECK(are_same_v<float, float>);
+    STATIC_CHECK( are_same_v<float, float>);
     STATIC_CHECK(!are_same_v<int, float>);
-    STATIC_CHECK(std::same_as<are_same_t<int, float>, std::false_type>);
+    STATIC_CHECK( std::same_as<are_same_t<int, float>, std::false_type>);
   }
 
   void type_traits_test::test_value_type_of()
@@ -478,5 +261,62 @@ namespace sequoia::testing
     struct foo{ using value_type = int; };
 
     STATIC_CHECK(std::is_same_v<value_type_of_t<foo>, int>);
+  }
+
+  void type_traits_test::test_is_deep_copy_constructible()
+  {
+    STATIC_CHECK( is_deep_copy_constructible_v<int>);
+    STATIC_CHECK( std::is_same_v<is_deep_copy_constructible_t<int>, std::true_type>);
+    STATIC_CHECK(!is_deep_copy_constructible_v<move_only>);
+
+    // Homogeneous containers
+    STATIC_CHECK( std::is_copy_constructible_v<std::vector<move_only>>);
+    STATIC_CHECK(!is_deep_copy_constructible_v<std::vector<move_only>>);
+    STATIC_CHECK(!is_deep_copy_constructible_v<std::vector<std::vector<move_only>>>);
+    STATIC_CHECK( is_deep_copy_constructible_v<std::vector<std::vector<int>>>);
+
+    // Heterogeneous containers
+    STATIC_CHECK( std::is_copy_constructible_v<std::tuple<int, std::vector<move_only>>>);
+    STATIC_CHECK(!is_deep_copy_constructible_v<std::tuple<int, std::vector<move_only>>>);
+    STATIC_CHECK( is_deep_copy_constructible_v<std::pair<int, std::vector<int>>>);
+    STATIC_CHECK( std::is_copy_constructible_v<std::variant<int, std::vector<move_only>>>);
+    STATIC_CHECK(!is_deep_copy_constructible_v<std::variant<int, std::vector<move_only>>>);
+
+    // Maps
+    STATIC_CHECK( is_deep_copy_constructible_v<std::map<int, std::vector<int>>>);
+    STATIC_CHECK(!is_deep_copy_constructible_v<std::map<int, std::vector<move_only>>>);
+  }
+
+  void type_traits_test::test_is_deep_copy_assignable()
+  {
+    STATIC_CHECK( is_deep_copy_assignable_v<int>);
+    STATIC_CHECK( std::is_same_v<is_deep_copy_assignable_t<int>, std::true_type>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<move_only>);
+    STATIC_CHECK( is_deep_copy_assignable_v<assign_only>);
+
+    // Homogeneous containers require elements that are both copy constructible and copy assignable
+    STATIC_CHECK( std::is_copy_assignable_v<std::vector<non_assignable>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::vector<non_assignable>>);
+    STATIC_CHECK( std::is_copy_assignable_v<std::vector<assign_only>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::vector<assign_only>>);
+    STATIC_CHECK( std::is_copy_assignable_v<std::array<assign_only, 2>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::array<assign_only, 2>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::vector<std::vector<assign_only>>>);
+    STATIC_CHECK( is_deep_copy_assignable_v<std::vector<std::vector<int>>>);
+
+    // Heterogeneous containers require elements that are copy assignable
+    STATIC_CHECK( is_deep_copy_assignable_v<std::tuple<int, assign_only>>);
+    STATIC_CHECK( std::is_copy_assignable_v<std::tuple<int, std::vector<assign_only>>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::tuple<int, std::vector<assign_only>>>);
+    STATIC_CHECK( std::is_copy_assignable_v<std::variant<int, std::vector<assign_only>>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::variant<int, std::vector<assign_only>>>);
+
+    // Maps require keys and mapped values that are copy assignable, disregarding the key's const
+    STATIC_CHECK( is_deep_copy_assignable_v<std::map<int, int>>);
+    STATIC_CHECK( is_deep_copy_assignable_v<std::map<int, std::vector<int>>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::map<int, non_assignable>>);
+    STATIC_CHECK( std::is_copy_assignable_v<std::map<int, std::vector<assign_only>>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::map<int, std::vector<assign_only>>>);
+    STATIC_CHECK( is_deep_copy_assignable_v<std::set<int>>);
   }
 }

@@ -1,0 +1,207 @@
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 149
+No predictions
+
+Expected Exception Type:
+[std::runtime_error]
+No predictions for test 'fake_test'; they belong in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/TestMaterials/Materials/WithInputs/fake_test/Prediction
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 153
+No auxiliary materials
+
+Expected Exception Type:
+[std::runtime_error]
+No auxiliary materials for test 'fake_test'; they belong in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/TestMaterials/Materials/WithInputs/fake_test/Auxiliary
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 181
+No materials
+
+Expected Exception Type:
+[std::runtime_error]
+No materials for test 'fake_test'; they belong in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/TestMaterials/Materials/WithNone/fake_test
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 206
+Stray original materials
+
+Expected Exception Type:
+[std::runtime_error]
+The materials in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/TestMaterials/Materials/WithStray/fake_test hold stray.txt, which would be ignored: only WorkingCopy, Prediction and Auxiliary are used
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 210
+Preparing the materials of no test
+
+Expected Exception Type:
+[std::logic_error]
+Unable to prepare materials whose paths name no test
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 223
+Working copy of a test with no materials paths
+
+Expected Exception Type:
+[std::logic_error]
+Test 'fake_test' has no materials paths: it was not constructed with any
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 225
+Predictions of a test with no materials paths
+
+Expected Exception Type:
+[std::logic_error]
+Test 'fake_test' has no materials paths: it was not constructed with any
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 227
+Auxiliary materials of a test with no materials paths
+
+Expected Exception Type:
+[std::logic_error]
+Test 'fake_test' has no materials paths: it was not constructed with any
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 229
+Scratchpad of a test with no materials paths
+
+Expected Exception Type:
+[std::logic_error]
+Test 'fake_test' has no materials paths: it was not constructed with any
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 275
+An empty discriminator
+
+Expected Exception Type:
+[std::runtime_error]
+The materials discriminator "" must not be empty
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 275
+A discriminator naming the parent
+
+Expected Exception Type:
+[std::runtime_error]
+The materials discriminator ".." must name a directory of its own
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 275
+An absolute discriminator
+
+Expected Exception Type:
+[std::runtime_error]
+The materials discriminator "/Platypus" must not contain '/'
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 275
+A discriminator holding a separator
+
+Expected Exception Type:
+[std::runtime_error]
+The materials discriminator "Platypus/Echidna" must not contain '/'
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 275
+A discriminator holding a colon
+
+Expected Exception Type:
+[std::runtime_error]
+The materials discriminator "Platypus:Echidna" must not contain ':'
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 275
+A discriminator ending in a dot
+
+Expected Exception Type:
+[std::runtime_error]
+The materials discriminator "Platypus." must not end in a dot or a space
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 275
+A discriminator naming a Windows device
+
+Expected Exception Type:
+[std::runtime_error]
+The materials discriminator "COM1" must not be a device name on Windows
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 275
+A Windows device numbered with superscript one
+
+Expected Exception Type:
+[std::runtime_error]
+The materials discriminator "COM¹" must not be a device name on Windows
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 275
+A Windows device numbered with superscript two
+
+Expected Exception Type:
+[std::runtime_error]
+The materials discriminator "Lpt²" must not be a device name on Windows
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 275
+A Windows device numbered with superscript three
+
+Expected Exception Type:
+[std::runtime_error]
+The materials discriminator "lpt³.txt" must not be a device name on Windows
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 275
+A discriminator naming a kind of material
+
+Expected Exception Type:
+[std::runtime_error]
+The materials discriminator "prediction" must not name a kind of material
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 275
+A discriminator differing only in case from a sibling
+
+Expected Exception Type:
+[std::runtime_error]
+The materials discriminator "platypus" must not differ only in case from Platypus
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 311
+Materials beside the discriminated directories
+
+Expected Exception Type:
+[std::runtime_error]
+The materials in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/TestMaterials/Materials/DiscriminatedBeside/fake_test hold Prediction, stray.txt beside the discriminated directories, which would be ignored: only Platypus is read
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 396
+A removal in place which fails after the leftover's names both roots
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to remove the temporary root output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/output/TestsTemporaryData/Materials/WithNone/unremovable_twice_test in place, after its discarded root output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/output/TestsTemporaryData/Materials/WithNone/unremovable_twice_test.discarded could not be removed
+
+=======================================
+

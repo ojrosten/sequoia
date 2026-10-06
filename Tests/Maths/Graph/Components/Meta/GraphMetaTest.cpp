@@ -36,8 +36,8 @@ namespace sequoia::testing
 
     using namespace data_structures;
 
-    static_assert(has_reservable_partitions<bucketed_sequence<int>>);
-    static_assert(!has_reservable_partitions<partitioned_sequence<int>>);
+    STATIC_CHECK( has_reservable_partitions<bucketed_sequence<int>>);
+    STATIC_CHECK(!has_reservable_partitions<partitioned_sequence<int>>);
   }
 
   void test_graph_meta::test_static_edge_index_type()
@@ -48,15 +48,15 @@ namespace sequoia::testing
     // Each type's boundary, reached through the order and through the number of edges separately
 
     STATIC_CHECK((std::is_same_v<unsigned char,  static_edge_index_type<10, 12>>));
-    STATIC_CHECK((std::is_same_v<unsigned char,  static_edge_index_type<256, 255>>));
-    STATIC_CHECK((std::is_same_v<unsigned short, static_edge_index_type<257, 0>>));
+    STATIC_CHECK((std::is_same_v<unsigned char,  static_edge_index_type<255, 255>>));
+    STATIC_CHECK((std::is_same_v<unsigned short, static_edge_index_type<256, 0>>));
     STATIC_CHECK((std::is_same_v<unsigned short, static_edge_index_type<0, 256>>));
     STATIC_CHECK((std::is_same_v<unsigned short, static_edge_index_type<3, 300>>));
-    STATIC_CHECK((std::is_same_v<unsigned short, static_edge_index_type<65536, 65535>>));
-    STATIC_CHECK((std::is_same_v<unsigned int,   static_edge_index_type<65537, 0>>));
+    STATIC_CHECK((std::is_same_v<unsigned short, static_edge_index_type<65535, 65535>>));
+    STATIC_CHECK((std::is_same_v<unsigned int,   static_edge_index_type<65536, 0>>));
     STATIC_CHECK((std::is_same_v<unsigned int,   static_edge_index_type<0, 65536>>));
-    STATIC_CHECK((std::is_same_v<unsigned int,   static_edge_index_type<4294967296, 4294967295>>));
-    STATIC_CHECK((std::is_same_v<std::size_t,    static_edge_index_type<4294967297, 0>>));
+    STATIC_CHECK((std::is_same_v<unsigned int,   static_edge_index_type<4294967295, 4294967295>>));
+    STATIC_CHECK((std::is_same_v<std::size_t,    static_edge_index_type<4294967296, 0>>));
     STATIC_CHECK((std::is_same_v<std::size_t,    static_edge_index_type<0, 4294967296>>));
 
     // Through the configuration, every flavour but `directed` stores two edges for each one declared
@@ -85,12 +85,12 @@ namespace sequoia::testing
     using namespace graph_impl;
     using namespace data_structures;
 
-    static_assert(!big_weight<EdgeWeight>());
+    STATIC_CHECK(!big_weight<EdgeWeight>());
 
     using gen_t     = edge_storage_generator<GraphFlavour, EdgeWeight, EdgeMetaData, std::size_t, contiguous_edge_storage_config>;
     using edge_t    = gen_t::edge_type;
     using handler_t = shared_to_handler_t<false, EdgeWeight>;
-    static_assert(std::is_same_v<edge_t, EdgeType<handler_t, EdgeMetaData, std::size_t>>);
+    STATIC_CHECK(std::is_same_v<edge_t, EdgeType<handler_t, EdgeMetaData, std::size_t>>);
   }
 
   template
@@ -106,12 +106,12 @@ namespace sequoia::testing
     using namespace graph_impl;
     using namespace data_structures;
 
-    static_assert(big_weight<EdgeWeight>());
+    STATIC_CHECK(big_weight<EdgeWeight>());
 
     using gen_t     = edge_storage_generator<GraphFlavour, EdgeWeight, EdgeMetaData, std::size_t, contiguous_edge_storage_config>;
     using edge_t    = gen_t::edge_type;
     using handler_t = shared_to_handler_t<true, EdgeWeight>;
-    static_assert(std::is_same_v<edge_t, EdgeType<handler_t, EdgeMetaData, std::size_t>>);
+    STATIC_CHECK(std::is_same_v<edge_t, EdgeType<handler_t, EdgeMetaData, std::size_t>>);
   }
 
 
@@ -145,7 +145,7 @@ namespace sequoia::testing
     using gen_t     = edge_storage_generator<graph_flavour::directed, EdgeWeight, null_meta_data, std::size_t, contiguous_edge_storage_config>;
     using edge_t    = gen_t::edge_type;
     using handler_t = shared_to_handler_t<false, EdgeWeight>;
-    static_assert(std::is_same_v<edge_t, partial_edge<handler_t, null_meta_data>>);
+    STATIC_CHECK(std::is_same_v<edge_t, partial_edge<handler_t, null_meta_data>>);
   }
 
   void test_graph_meta::test_directed()

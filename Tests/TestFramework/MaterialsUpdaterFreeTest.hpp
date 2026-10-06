@@ -22,5 +22,15 @@ namespace sequoia::testing
     static std::filesystem::path source_file();
 
     void run_tests();
+  private:
+    void test_incomplete_update_copies();
+
+    void test_update();
+
+    void test_update_of_disjoint_directories();
+
+    void test_deletions_recorded_before_a_throw();
+
+    void test_unsupported_entry_type();
   };
 }

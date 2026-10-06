@@ -303,13 +303,17 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string operator()(const project_paths& projPaths, std::string message) const
     {
-      constexpr auto npos{std::string::npos};
-      if(const auto pos{message.find(projPaths.project_root().generic_string())}; pos < npos)
+      const auto root{projPaths.project_root().generic_string()};
+      if(root.empty())
+        return message;
+
+      // The separator is matched too, so that a root which merely begins another path's name is left
+      const auto rootDirectory{root + '/'};
+      for(auto pos{message.find(rootDirectory)}; pos != std::string::npos; pos = message.find(rootDirectory, pos))
       {
-        const auto len{projPaths.project_root().generic_string().size()};
-        message.erase(pos, len + 1);
+        message.erase(pos, rootDirectory.size());
       }
-      
+
       return message;
     }
   };
@@ -346,7 +350,7 @@ namespace sequoia::testing
     }
     catch(const std::exception& e)
     {
-      std::string msg{append_lines("Unexpected exception thrown (caught by std::exception&):", "\"").append(e.what()).append("\"\n")};
+      std::string msg{append_lines("Unexpected exception thrown (caught by std::exception&):", std::format("\"{}\"\n", e.what()))};
 
       sentry.log_failure(msg);
       return false;
@@ -900,9 +904,9 @@ namespace sequoia::testing
     ~checker() = default;
 
     [[nodiscard]]
-    const uncaught_exception_info& exceptions_detected_by_sentinel() const noexcept
+    const opt_top_level_check_exit_info& last_check_exit_info() const noexcept
     {
-      return m_Logger.exceptions_detected_by_sentinel();
+      return m_Logger.last_check_exit_info();
     }
 
     [[nodiscard]]

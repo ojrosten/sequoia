@@ -22,6 +22,13 @@ namespace sequoia::testing
       using namespace std::chrono;
       return std::format("{:.3}", duration_cast<duration<double, Period>>(d).count());
     }
+
+    [[nodiscard]]
+    std::string timing_line(std::string_view label, const log_summary::duration& d)
+    {
+      const auto [dur, unit]{stringify_duration(d)};
+      return std::format("[{}: {}{}]\n", label, dur, unit);
+    }
   }
 
   [[nodiscard]]
@@ -29,9 +36,10 @@ namespace sequoia::testing
   {
     using namespace std::chrono;
     const auto count{duration_cast<nanoseconds>(d).count()};
-    if(count >= 1'000'000'000) return {to_string<std::ratio<1>>(d), "s"};
-    if(count >= 1'000'000)     return {to_string<std::milli>(d),   "ms"};
-    if(count >= 1'000)         return {to_string<std::micro>(d),   "us"};
+    // A count is written in the larger of two units once it rounds to a thousand of the smaller, at three significant figures
+    if(count >= 999'500'000) return {to_string<std::ratio<1>>(d), "s"};
+    if(count >= 999'500)     return {to_string<std::milli>(d),   "ms"};
+    if(count >= 1'000)       return {to_string<std::micro>(d),   "us"};
 
     return {std::to_string(count), "ns"};
   }
@@ -39,17 +47,10 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_time(const log_summary& log, const opt_duration duration)
   {
-    std::string mess{};
-    if(duration)
-    {
-      const auto [dur, unit]{stringify_duration(*duration)};
-      mess.append("[Total Run Time: ").append(dur).append(unit).append("]\n");
-    }
-
-    const auto[dur, unit]{stringify_duration(log.execution_time())};
-    mess.append("[Execution Time: ").append(dur).append(unit).append("]\n");
-
-    return mess;
+    return std::format("{}{}{}",
+                       duration ? timing_line("Total Run Time", *duration) : "",
+                       timing_line("Execution Time",  log.execution_duration()),
+                       timing_line("Runner Overhead", log.runner_overhead()));
   }
 
   [[nodiscard]]
@@ -90,7 +91,7 @@ namespace sequoia::testing
 
     for(std::size_t i{}; i<entries; ++i)
     {
-      summaries[i].append(checkNums[i] + ";").append(len, ' ').append("Failures: ");
+      summaries[i].append(std::format("{};{:{}}Failures: ", checkNums[i], "", len));
     }
 
     std::array<std::string, entries> failures{
@@ -110,7 +111,7 @@ namespace sequoia::testing
     }
 
     if(log.standard_top_level_checks())
-      summaries.front().append("  [Deep checks: " + std::to_string(log.standard_deep_checks()) + "]");
+      summaries.front().append(std::format("  [Deep checks: {}]", log.standard_deep_checks()));
 
     const std::string name{log.name().empty() ? "" : std::string{log.name()} += namesuffix};
     std::string summary{sequoia::indent(name, ind_0)};
@@ -147,9 +148,7 @@ namespace sequoia::testing
 
     if(log.critical_failures())
     {
-      summary.append("\n******  Critical Failures:  ")
-        .append(std::to_string(log.critical_failures()))
-        .append("  ******\n\n");
+      summary.append(std::format("\n******  Critical Failures:  {}  ******\n\n", log.critical_failures()));
     }
 
     if((verbosity & summary_detail::failure_messages) == summary_detail::failure_messages)

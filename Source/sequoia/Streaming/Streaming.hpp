@@ -13,9 +13,15 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
+#include <charconv>
 #include <filesystem>
+#include <format>
 #include <ios>
+#include <istream>
 #include <optional>
+#include <stdexcept>
+#include <string>
+#include <string_view>
 
 namespace sequoia
 {
@@ -33,7 +39,92 @@ namespace sequoia
   [[nodiscard]]
   std::optional<std::string> read_to_string(const std::filesystem::path& file, std::ios_base::openmode mode);
 
+  /** \brief Writes `text` to `file`, opened in `mode`.
+
+      \throws std::runtime_error naming `file`, if the open, the write or the
+              close fails
+   */
   void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode);
+
+  /** \brief Whether a file is written as text, whose line endings the
+             platform may translate, or as binary, byte for byte.
+   */
+  enum class write_mode { text, binary };
+
+  /** \brief Replaces the contents of `file` with `text`, written in `mode`.
+
+      Writes `text` to a temporary file, which it creates beside `file`
+      without overwriting any entry. It renames the temporary file over `file`
+      only if the write succeeded. So `file` keeps its previous contents if
+      the replacement fails, or if the process dies mid-write; in either case
+      the temporary file may be left behind.
+
+      \throws std::runtime_error if the replacement fails. The message names
+              the temporary file if the write failed, and `file` if the rename
+              failed.
+   */
+  void replace_contents(const std::filesystem::path& file, std::string_view text, write_mode mode);
+
+  /** \brief Replaces the contents of `file` with `text`, written in `mode`,
+             as `replace_contents` does, but returns a failure rather than
+             throwing it.
+
+      \returns The path which `replace_contents`' message would name if the
+               replacement failed, and `std::nullopt` otherwise.
+   */
+  std::optional<std::filesystem::path>
+    replace_contents_quietly(const std::filesystem::path& file, std::string_view text, write_mode mode);
+
+  /** \brief Peeks at `s`, consuming nothing, and sets `failbit` on `s` if no character can be peeked.
+
+      \returns `s`, which converts to `false` if no character could be peeked.
+   */
+  std::istream& peek_for_more(std::istream& s);
+
+  /** \brief Reads the next line of `s`, and returns `parse` applied to the rest of the line after `key`.
+
+      \throws std::runtime_error if `s` has no next line, or the line does not begin with `key`. Whatever `parse`
+      throws propagates.
+   */
+  template<std::invocable<std::string> Parser>
+  [[nodiscard]]
+  auto extract_field(std::istream& s, std::string_view key, Parser parse)
+  {
+    std::string line{};
+    if(!std::getline(s, line))
+      throw std::runtime_error{std::format("Expected a line beginning '{}' but there are no more lines", key)};
+
+    if(!line.starts_with(key))
+      throw std::runtime_error{std::format("Expected a line beginning '{}' but found '{}'", key, line)};
+
+    return parse(line.substr(key.size()));
+  }
+
+  /** \brief Reads the next `length` characters of `s`, then a line break, and returns the characters.
+
+      \throws std::runtime_error if
+      -# `s` has failed;
+      -# `length` is more characters than a stream iterator can count;
+      -# Fewer than `length` characters remain, or they are not followed by a line break.
+   */
+  [[nodiscard]]
+  std::string extract_text(std::istream& s, std::size_t length);
+
+  /** \brief Parses the whole of `text` as an integer of type `T`: an optional `-`, then decimal digits.
+
+      \throws std::runtime_error if `text` is not, in its entirety, such an integer representable as `T`. The
+      message says that `text` is not `description`.
+   */
+  template<integer T>
+  [[nodiscard]]
+  T parse_integer(std::string_view text, std::string_view description)
+  {
+    const auto last{text.data() + text.size()};
+    if(T value{}; std::from_chars(text.data(), last, value) == std::from_chars_result{last, std::errc{}})
+      return value;
+
+    throw std::runtime_error{std::format("'{}' is not {}", text, description)};
+  }
 
   template<std::invocable<std::string&> Fn>
   void read_modify_write(const std::filesystem::path& file, Fn fn)

@@ -88,7 +88,7 @@ namespace sequoia::testing
   std::string to_string(comparison_flavour f);
 
   template<class T>
-  using optional_ref = std::optional<std::reference_wrapper<T>>;
+  using opt_ref = std::optional<std::reference_wrapper<T>>;
 
   template<test_mode Mode, std::equality_comparable T, class U>
   inline constexpr bool checkable_against_for_semantics{
@@ -241,7 +241,7 @@ namespace sequoia::testing::impl
   template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_exact_r<bool, T> Fn, class... Args>
   bool do_check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, [[maybe_unused]] const Actions& actions, const T& x, std::string_view tag, Fn fn, [[maybe_unused]] const Args&... args)
   {
-    if(!check(std::string{"operator"}.append(to_string(comparison.value)).append(" is inconsistent ").append(tag), logger, fn(x)))
+    if(!check(std::format("operator{} is inconsistent {}", to_string(comparison.value), tag), logger, fn(x)))
       return false;
 
     if constexpr (has_post_comparison_action<Actions, test_logger<Mode>, comparison_constant<C>, T, std::string_view, Args...>)
@@ -369,23 +369,24 @@ namespace sequoia::testing::impl
         if(check_ordering_consistency(logger, actions, x, y, args...))
         {
           const bool cond{order < 0 ? x < y : x > y};
-          auto makeMessage{
-            [order](){
-              std::string mess{"Prerequisite - for ordered semantics, it is assumed that "};
-              return order == 0 ? mess.append("x < y") : mess.append("y > x");
+          auto messageMaker{
+            [&x, &y, order, cond]() {
+              auto mess{
+                std::format("Prerequisite - for ordered semantics, it is assumed that {}",
+                            order < 0 ? "x < y" : "x > y")
+              };
+
+              if constexpr(serializable<T>)
+              {
+                if(!cond)
+                  append_lines(mess, std::format("x: {}", to_string(x)), std::format("y: {}", to_string(y)));
+              }
+
+              return mess;
             }
           };
 
-          if constexpr(serializable<T>)
-          {
-            return check(makeMessage(), logger, cond,
-                       tutor{[](const T& u, const T& v) {
-                               return prediction_message(to_string(u), to_string(v)); } });
-          }
-          else
-          {
-            return check(makeMessage(), logger, cond);
-          }
+          return check(messageMaker(), logger, cond);
         }
       }
     }
@@ -401,7 +402,7 @@ namespace sequoia::testing::impl
                                               [[maybe_unused]] const Actions& actions,
                                               T&& z,
                                               const U& y,
-                                              optional_ref<const V> movedFrom,
+                                              opt_ref<const V> movedFrom,
                                               const Args&... args)
   {
     T w{std::move(z)};
@@ -427,7 +428,7 @@ namespace sequoia::testing::impl
                                            const Actions& actions,
                                            T&& z,
                                            const U& y,
-                                           optional_ref<const V> movedFrom)
+                                           opt_ref<const V> movedFrom)
   {
     return do_check_move_construction(logger, actions, std::forward<T>(z), y, movedFrom);
   }
@@ -441,7 +442,7 @@ namespace sequoia::testing::impl
                             T& z,
                             T&& y,
                             const U& yEquivalent,
-                            optional_ref<const V> movedFrom,
+                            opt_ref<const V> movedFrom,
                             [[maybe_unused]] Mutator&& yMutator,
                             const Args&... args)
   {
@@ -467,7 +468,7 @@ namespace sequoia::testing::impl
                          T& z,
                          T&& y,
                          const U& yEquivalent,
-                         optional_ref<const V> movedFrom,
+                         opt_ref<const V> movedFrom,
                          Mutator m)
   {
     do_check_move_assign(logger, actions, z, std::forward<T>(y), yEquivalent, movedFrom, std::move(m));

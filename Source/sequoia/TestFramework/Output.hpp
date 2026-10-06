@@ -17,8 +17,12 @@
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <cmath>
+#include <cstdint>
 #include <filesystem>
+#include <format>
 #include <source_location>
+#include <type_traits>
+#include <typeinfo>
 
 namespace sequoia::testing
 {
@@ -50,41 +54,41 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string emphasise(std::string_view s);
 
-  template<class Char>
-  inline constexpr bool is_character_v{
-       std::is_same_v<std::remove_cvref_t<Char>, char>
-    || std::is_same_v<std::remove_cvref_t<Char>, wchar_t>
-    || std::is_same_v<std::remove_cvref_t<Char>, char8_t>
-    || std::is_same_v<std::remove_cvref_t<Char>, char16_t>
-    || std::is_same_v<std::remove_cvref_t<Char>, char32_t>
-  };
-
-  /** \brief A character as a failure report shows it: an alert, backspace, form feed, newline, carriage return,
-             tab, vertical tab or NUL as its escape sequence, and a space as itself, each in single quotes; any other
-             character as itself, narrowed to a `char`, so that a wide character keeps only its low-order byte.
+  /** \brief The code unit `c` as a failure report shows it.
+      \returns
+      -# For an alert, backspace, form feed, newline, carriage return, tab, vertical tab or NUL: its escape sequence,
+         in single quotes;
+      -# For a space: the space, in single quotes;
+      -# For any other printable ASCII character: the character;
+      -# Otherwise: the code unit's value as a hexadecimal escape sequence, in single quotes. A byte of a multi-byte
+         UTF-8 character shows as, for example, `'\xc3'`, and U+010A shows as `'\x10a'`.
    */
-  template<class Char>
-    requires is_character_v<Char>
+  template<character Char>
   [[nodiscard]]
   std::string display_character(Char c)
   {
-    if(c == '\a') return "'\\a'";
-    if(c == '\b') return "'\\b'";
-    if(c == '\f') return "'\\f'";
-    if(c == '\n') return "'\\n'";
-    if(c == '\r') return "'\\r'";
-    if(c == '\t') return "'\\t'";
-    if(c == '\v') return "'\\v'";
-    if(c == '\0') return "'\\0'";
-    if(c == ' ')  return "' '";
+    const auto codeUnit{static_cast<std::uint32_t>(static_cast<std::make_unsigned_t<Char>>(c))};
+    switch(codeUnit)
+    {
+    case '\a': return "'\\a'";
+    case '\b': return "'\\b'";
+    case '\f': return "'\\f'";
+    case '\n': return "'\\n'";
+    case '\r': return "'\\r'";
+    case '\t': return "'\\t'";
+    case '\v': return "'\\v'";
+    case '\0': return "'\\0'";
+    case ' ':  return "' '";
+    }
 
-    return std::string(1, static_cast<char>(c));
+    const bool printableAscii{(codeUnit > ' ') && (codeUnit <= '~')};
+    return printableAscii ? std::string(1, static_cast<char>(codeUnit)) : std::format("'\\x{:02x}'", codeUnit);
   }
 
   /** \brief Appends line breaks until a non-empty `s` ends with at least `newlines` of them, then appends `footer`;
              an empty `s` stays empty.
    */
-  constexpr void end_block(std::string& s, const line_breaks newlines, std::string_view footer="")
+  constexpr void end_block(std::string& s, const line_breaks newlines, std::string_view footer)
   {
     if(!s.empty())
     {
@@ -105,7 +109,7 @@ namespace sequoia::testing
 
   /** \brief `s`, ended as the overload taking a `std::string&` ends it. */
   [[nodiscard]]
-  constexpr std::string end_block(std::string_view s, const line_breaks newlines, std::string_view footer="")
+  constexpr std::string end_block(std::string_view s, const line_breaks newlines, std::string_view footer)
   {
     std::string text{s};
     end_block(text, newlines, footer);
@@ -113,14 +117,17 @@ namespace sequoia::testing
     return text;
   }
 
-  /** \brief The report of an exception that escaped a test: `tag` and `exceptionMessage`, then, if `info` holds a
-             non-empty message from the last top-level check, that message and whether the exception was thrown
-             during that check or after it; otherwise, the test's `filename`.
+  /** \brief The report of an exception that escaped a test.
+
+      The report gives `tag` and `exceptionMessage`, then:
+      -# If `lastCheckExitInfo` holds a top-level check's exit: whether the exception was thrown during that check
+         or after it, and the check's message;
+      -# Otherwise: the test's `filename`.
    */
   [[nodiscard]]
   std::string exception_message(std::string_view tag,
                                 const std::filesystem::path& filename,
-                                const uncaught_exception_info& info,
+                                const opt_top_level_check_exit_info& lastCheckExitInfo,
                                 std::string_view exceptionMessage);
 
   /** \brief A message of the form `operator== returned false`. */
@@ -172,8 +179,7 @@ namespace sequoia::testing
     return default_prediction_message(obtained, prediction);
   }
 
-  template<class Char>
-    requires is_character_v<Char>
+  template<character Char>
   [[nodiscard]]
   constexpr std::string prediction_message(Char obtained, Char prediction)
   {
@@ -189,7 +195,7 @@ namespace sequoia::testing
   }
 
   template<serializable T>
-    requires (!is_character_v<T> && !std::is_pointer_v<T> && !is_const_pointer_v<T>)
+    requires (!character<T> && !std::is_pointer_v<T> && !is_const_pointer_v<T>)
   [[nodiscard]]
   constexpr std::string prediction_message(const T& obtained, const T& prediction)
   {
@@ -209,7 +215,7 @@ namespace sequoia::testing
   inline constexpr is_not_final_message_t is_not_final_message{};
 
   template<class T>
-  concept reportable = serializable<T> || is_character_v<T>;
+  concept reportable = serializable<T> || character<T>;
 
   template<reportable T>
   [[nodiscard]]
@@ -250,8 +256,8 @@ namespace sequoia::testing
   /** \brief `file` as a report shows it.
       \returns
       -# For a relative `file`: `file` without its leading `..` components;
-      -# For an absolute `file` and a non-empty `repository`: the last component of `repository`, followed by the part
-         of `file` after its common prefix with `repository`, compared component by component;
+      -# For an absolute `file` and an absolute `repository`: the name of the directory `repository`, followed by the
+         components of `file` after the leading components that `file` shares with the directory `repository`;
       -# Otherwise: `file`.
    */
   [[nodiscard]]
@@ -337,14 +343,19 @@ namespace sequoia::testing
     return tidy(demangle({typeid(T).name()}));
   }
 
-  /** \brief The name of `T` in the spelling shared by every supported toolchain. If `T` is itself a 32- or 64-bit
-             unsigned type, the name is that of the fixed-width type of its size, as the platform spells it.
+  /** \brief The name of the type `info` describes, in the spelling shared by every supported toolchain. */
+  [[nodiscard]]
+  std::string demangle(const std::type_info& info);
+
+  /** \brief The name of `T` in the spelling shared by every supported toolchain.
+
+      A 32- or 64-bit unsigned integer type is named as the fixed-width type of its size, in the platform's spelling.
    */
   template<class T>
   [[nodiscard]]
   std::string demangle()
   {
-    return demangle<type_normalizer_t<T>>([](std::string name) -> std::string { return tidy_name(name, compiler_constant{}); });
+    return demangle(typeid(type_normalizer_t<T>));
   }
 
   /** \brief Specialize this struct template to customize the way in which type info is generated for a given class.

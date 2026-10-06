@@ -19,6 +19,7 @@ set(SourceList
     TestFramework/DependencyAnalyzer.cpp
     TestFramework/DumpComparison.cpp
     TestFramework/FailureInfo.cpp
+    TestFramework/FailureReporting.cpp
     TestFramework/FileEditors.cpp
     TestFramework/FileSystemUtilities.cpp
     TestFramework/FreeTestCore.cpp
@@ -42,6 +43,8 @@ set(SourceList
     TextProcessing/Substitutions.cpp)
 
 add_library(sequoia STATIC ${SourceList})
+
+target_compile_definitions(sequoia PRIVATE SEQUOIA_BUILD_CONFIGURATION="$<CONFIG>")
 
 target_include_directories(sequoia PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../)
 

@@ -12,6 +12,7 @@
 
  */
 
+#include <functional>
 #include <tuple>
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
@@ -40,7 +41,7 @@ namespace sequoia::maths
     {}
 
     [[nodiscard]]
-    constexpr std::size_t size() const noexcept
+    constexpr static std::size_t size() noexcept
     {
       return std::tuple_size_v<std::tuple<Ts...>>;
     }
@@ -72,15 +73,17 @@ namespace sequoia::maths
     }
 
     template<std::size_t I, class Fn>
-    constexpr decltype(auto) mutate_node_weight(Fn fn)
+      requires std::invocable<Fn&, std::tuple_element_t<I, std::tuple<Ts...>>&>
+    constexpr std::invoke_result_t<Fn&, std::tuple_element_t<I, std::tuple<Ts...>>&> mutate_node_weight(Fn fn)
     {
-      return fn(std::get<I>(m_Weights));
+      return std::invoke(fn, std::get<I>(m_Weights));
     }
 
     template<class T, class Fn>
-    constexpr decltype(auto) mutate_node_weight(Fn fn)
+      requires std::invocable<Fn&, T&>
+    constexpr std::invoke_result_t<Fn&, T&> mutate_node_weight(Fn fn)
     {
-      return fn(std::get<T>(m_Weights));
+      return std::invoke(fn, std::get<T>(m_Weights));
     }
 
     [[nodiscard]]
@@ -89,13 +92,15 @@ namespace sequoia::maths
   protected:
     using weight_type = heterogeneous_node_weights_t;
 
-    constexpr heterogeneous_node_storage(const heterogeneous_node_storage&) = default;
+    constexpr heterogeneous_node_storage(const heterogeneous_node_storage&)
+      requires is_deep_copy_constructible_v<std::tuple<Ts...>> = default;
 
     constexpr heterogeneous_node_storage(heterogeneous_node_storage&&) noexcept = default;
 
     ~heterogeneous_node_storage() = default;
 
-    constexpr heterogeneous_node_storage& operator=(const heterogeneous_node_storage&) = default;
+    constexpr heterogeneous_node_storage& operator=(const heterogeneous_node_storage&)
+      requires is_deep_copy_assignable_v<std::tuple<Ts...>> = default;
 
     constexpr heterogeneous_node_storage& operator=(heterogeneous_node_storage&&) noexcept = default;
   private:

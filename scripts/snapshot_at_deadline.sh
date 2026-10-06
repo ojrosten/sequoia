@@ -34,6 +34,8 @@ if ! [[ $seconds =~ ^[1-9][0-9]*$ ]]; then
   exit 2
 fi
 
+source "$(dirname "$0")/windows_debugger.sh"
+
 cdb_frames_per_thread=50
 sample_duration_seconds=1
 
@@ -62,22 +64,19 @@ find_processes() {
   esac
 }
 
-# The Windows debugger comes with the SDK's Debugging Tools, when they were
-# installed; -pv attaches without stopping the process for good, and `q` then
-# detaches rather than killing it. Linux restricts attaching to a process which
-# is not a child, hence sudo where it can be had without a password.
+# cdb's -pv attaches without stopping the process for good, and `q` then detaches
+# rather than killing it. Linux restricts attaching to a process which is not a
+# child, hence sudo where it can be had without a password.
 dump_stacks() { # dump_stacks <pid>
   case $platform in
     windows)
       local cdb
-      for cdb in "/c/Program Files (x86)/Windows Kits/10/Debuggers/x64/cdb.exe" \
-                 "/c/Program Files/Windows Kits/10/Debuggers/x64/cdb.exe"; do
-        if [ -x "$cdb" ]; then
-          "$cdb" -pv -p "$1" -c "~*k $cdb_frames_per_thread; q"
-          return
-        fi
-      done
-      echo "No stacks: cdb.exe is not installed where the Windows SDK puts it."
+      cdb=$(windows_debugger_path)
+      if [ -n "$cdb" ]; then
+        "$cdb" -pv -p "$1" -c "~*k $cdb_frames_per_thread; q"
+      else
+        echo "No stacks: cdb.exe is not installed where the Windows SDK puts it."
+      fi
       ;;
     macos)
       sample "$1" "$sample_duration_seconds" -file /dev/stdout

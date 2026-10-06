@@ -23,14 +23,26 @@ name: statistical
 # process and reports the tests that failed in some repetitions and not others.
 # A failure common to every repetition is not an instability, and the analysis
 # says "No instabilities detected" over it; the column is still red, and the
-# summary below reads the step's outcome as well as the phrase. In-process
-# rather than `--sandbox` (N child processes, each fresh) because sandbox
-# aggregation reports nothing - roadmap item 161 - at the cost that the trials
-# share a process, so are less independent than the rule of three assumes; the
-# bound is optimistic by that much. Without `--check-versioned-output`: the gate
-# has already applied it to this tree, and item 160 records the composition as
-# verified locally but not here. The performance tests are excluded for the
-# reason coarse.yml gives.
+# summary below reads the step's outcome as well as the phrase.
+#
+# The repetitions share one process rather than each running as a fresh child
+# under `--sandbox`, and the TSan column is the reason. TSan reports a race and
+# carries on. At exit it ends the process with a status that no test runner
+# gives: on macOS an abort, where a racy program exited 134. The test runner
+# refuses a child with such a status and stops, so no later repetition starts.
+# Under `--sandbox` the first race would therefore end the sample. In one
+# process, TSan's status arrives only after all N repetitions. The other two
+# columns' sanitizers end the process at the first error, so for them the two
+# modes stop at the same point. `exec_args` is shared, so the TSan column
+# decides. Sharing one process makes the trials less independent than the rule
+# of three assumes, so the bound is optimistic. `--sandbox` would give the
+# trials that independence if the test runner counted a refused child as a
+# failed trial and carried on.
+#
+# The column runs without `--check-versioned-output`: the gate has already
+# applied it to this tree, and item 160 records the composition as verified
+# locally but not here. The performance tests are excluded for the reason
+# coarse.yml gives.
 #
 # Which columns: the ones whose failures are rare by mechanism. TSan reports only
 # the interleavings that actually execute, so repetition is what widens its
@@ -88,6 +100,7 @@ jobs:
     with:
       # A sample of the tree as it stands, whatever last changed in it.
       needs_testing: ${{ 'true' }}
+      merge_into: ''
       warnings_as_errors: false
       exec_args: 'locate;${{ needs.trials.outputs.n }};--exclude-performance'
       suite_timeout_minutes: 200

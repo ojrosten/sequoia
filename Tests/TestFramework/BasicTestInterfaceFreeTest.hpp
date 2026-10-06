@@ -23,6 +23,14 @@ namespace sequoia::testing
 
     void run_tests();
 
+    void test_file_paths(const project_paths& projPaths);
+
+    void test_materials(const project_paths& projPaths);
+
+    void test_discriminated_materials(const project_paths& projPaths);
+
+    void test_discarded_materials(const project_paths& projPaths);
+
     [[nodiscard]]
     std::filesystem::path fake_project() const;
 

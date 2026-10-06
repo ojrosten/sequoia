@@ -31,7 +31,9 @@ namespace sequoia::testing
       Test::template execute_tests<unsigned, unsigned>();
       Test::template execute_tests<unsigned, long_t>();
       Test::template execute_tests<long_t, unsigned>();
-      
+      Test::template execute_tests<int, long_t>();
+      Test::template execute_tests<long_t, int>();
+
       Test::template execute_tests<double, int>();
       Test::template execute_tests<int, double>();
       Test::template execute_tests<double, unsigned>();

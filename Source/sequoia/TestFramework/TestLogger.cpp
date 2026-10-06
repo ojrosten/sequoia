@@ -87,7 +87,7 @@ namespace sequoia::testing
     , m_DiagnosticsOutput{to_reduced_string(logger.results().diagnostics_output)}
     , m_CaughtExceptionMessages{to_reduced_string(logger.results().caught_exception_messages)}
     , m_CriticalFailures{logger.results().critical_failures}
-    , m_Duration{delta}
+    , m_ExecutionDuration{delta}
   {
     switch(mode)
     {
@@ -112,11 +112,6 @@ namespace sequoia::testing
       m_FalseNegativePerformanceChecks   = logger.results().performance_checks;
       break;
     }
-  }
-
-  void log_summary::clear() noexcept
-  {
-    *this = log_summary{""};
   }
 
   [[nodiscard]]
@@ -158,15 +153,9 @@ namespace sequoia::testing
 
     m_CriticalFailures   += rhs.m_CriticalFailures;
     m_ExceptionsInFlight += rhs.m_ExceptionsInFlight;
-    m_Duration           += rhs.m_Duration;
+    m_ExecutionDuration  += rhs.m_ExecutionDuration;
+    m_RunnerOverhead     += rhs.m_RunnerOverhead;
 
     return *this;
-  }
-
-  [[nodiscard]]
-  log_summary operator+(const log_summary& lhs, const log_summary& rhs)
-  {
-    log_summary s{lhs};
-    return s += rhs;
   }
 }

@@ -103,6 +103,42 @@ namespace sequoia::testing
       return d;
     }
 
+    static void check_partition_is_empty(regular_test& t, data_type& d, const std::size_t i)
+    {
+      const data_type& c{d};
+
+      t.check("begin_partition equals end_partition",           d.begin_partition(i)   == d.end_partition(i));
+      t.check("begin_partition equals end_partition (const)",   c.begin_partition(i)   == c.end_partition(i));
+      t.check("cbegin_partition equals cend_partition",         d.cbegin_partition(i)  == d.cend_partition(i));
+      t.check("rbegin_partition equals rend_partition",         d.rbegin_partition(i)  == d.rend_partition(i));
+      t.check("rbegin_partition equals rend_partition (const)", c.rbegin_partition(i)  == c.rend_partition(i));
+      t.check("crbegin_partition equals crend_partition",       d.crbegin_partition(i) == d.crend_partition(i));
+      t.check("operator[] equals end_partition",                d[i]                   == d.end_partition(i));
+      t.check("operator[] equals end_partition (const)",        c[i]                   == c.end_partition(i));
+      t.check("partition is empty",                             d.partition(i).empty());
+      t.check("partition is empty (const)",                     c.partition(i).empty());
+      t.check("cpartition is empty",                            d.cpartition(i).empty());
+      t.check(equality, "size_of_partition is zero", d.size_of_partition(i), 0uz);
+    }
+
+    /** The contract does not say which partition index the iterators of a missing partition carry.
+        These checks pin the implementation's choice, and change with it.
+     */
+    static void check_iterator_partition_indices_are_npos(regular_test& t, data_type& d, const std::size_t i)
+    {
+      constexpr auto npos{data_type::partition_iterator::npos};
+      const data_type& c{d};
+
+      t.check(equality, "Partition index of begin_partition",          d.begin_partition(i).partition_index(),  npos);
+      t.check(equality, "Partition index of end_partition",            d.end_partition(i).partition_index(),    npos);
+      t.check(equality, "Partition index of rbegin_partition",         d.rbegin_partition(i).partition_index(), npos);
+      t.check(equality, "Partition index of rend_partition",           d.rend_partition(i).partition_index(),   npos);
+      t.check(equality, "Partition index of begin_partition (const)",  c.begin_partition(i).partition_index(),  npos);
+      t.check(equality, "Partition index of end_partition (const)",    c.end_partition(i).partition_index(),    npos);
+      t.check(equality, "Partition index of rbegin_partition (const)", c.rbegin_partition(i).partition_index(), npos);
+      t.check(equality, "Partition index of rend_partition (const)",   c.rend_partition(i).partition_index(),   npos);
+    }
+
     [[nodiscard]]
     static transition_graph make_transition_graph(regular_test& t)
     {
@@ -163,6 +199,79 @@ namespace sequoia::testing
               t.report("Insert slot to empty container"),
               [](data_type d) -> data_type {
                 d.insert_slot(0);
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report("An empty sequence treats index 0 as the index of an empty partition"),
+              [&t](data_type d) -> data_type {
+                check_partition_is_empty(t, d, 0);
+                check_iterator_partition_indices_are_npos(t, d, 0);
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report("A default-constructed sequence treats index 0 as the index of an empty partition"),
+              [&t](data_type) -> data_type {
+                data_type d{};
+                check_partition_is_empty(t, d, 0);
+                check_iterator_partition_indices_are_npos(t, d, 0);
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                auto i{d.erase_from_partition(d.cbegin_partition(0))};
+                t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                auto i{d.erase_from_partition(d.cbegin_partition(0), d.cend_partition(0))};
+                t.check(equality, "Erase range from non-existent partition", i, d.begin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                auto i{d.erase_from_partition(0, 0)};
+                t.check(equality, "Erase from non-existent partition 0, position 0", i, d.begin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                auto i{d.erase_from_partition(1, 0)};
+                t.check(equality, "Erase from non-existent partition 1, position 0", i, d.begin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                auto i{d.erase_from_partition(0, 1)};
+                t.check(equality, "Erase from non-existent partition 0, position 1", i, d.begin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                auto i{d.erase_from_partition(1, 1)};
+                t.check(equality, "Erase from non-existent partition 1, position 1", i, d.begin_partition(0));
                 return d;
               }
             }
@@ -326,6 +435,14 @@ namespace sequoia::testing
               }
             },
             {
+              data_description::one_2,
+              t.report(""),
+              [](data_type d) -> data_type {
+                d.insert_to_partition(0, 0, 2);
+                return d;
+              }
+            },
+            {
               data_description::two_empty_partitions,
               t.report(""),
               [](data_type d) -> data_type {
@@ -369,9 +486,11 @@ namespace sequoia::testing
             },
             {
               data_description::empty,
-              t.report(""),
-              [](data_type d) -> data_type {
+              t.report("A sequence whose only slot is erased treats index 0 as the index of an empty partition"),
+              [&t](data_type d) -> data_type {
                 d.erase_slot(0);
+                check_partition_is_empty(t, d, 0);
+                check_iterator_partition_indices_are_npos(t, d, 0);
                 return d;
               }
             },
@@ -424,6 +543,25 @@ namespace sequoia::testing
               }
             },
             {
+              data_description::one_2_3,
+              t.report(""),
+              [](data_type d) -> data_type {
+                d.insert_to_partition(0, 1, 3);
+                return d;
+              }
+            },
+            {
+              data_description::one_2,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                t.check_exception_thrown<std::out_of_range>(
+                  "Inserting beyond the end of a partition throws",
+                  [&d]() { return d.insert_to_partition(0, 2, 3); }
+                );
+                return d;
+              }
+            },
+            {
               data_description::two_2__,
               t.report(""),
               [](data_type d) -> data_type {
@@ -462,6 +600,14 @@ namespace sequoia::testing
               t.report(""),
               [](data_type d) -> data_type {
                 d.insert_to_partition(d.cbegin_partition(0), 2);
+                return d;
+              }
+            },
+            {
+              data_description::one_2_3,
+              t.report(""),
+              [](data_type d) -> data_type {
+                d.insert_to_partition(0, 0, 2);
                 return d;
               }
             }
@@ -706,6 +852,14 @@ namespace sequoia::testing
                 d.swap_partitions(1, 0);
                 return d;
               }
+            },
+            {
+              data_description::two_2__3,
+              t.report(""),
+              [](data_type d) -> data_type {
+                d.insert_to_partition(1, 0, 3);
+                return d;
+              }
             }
           }, // end 'two_2__'
           {  // begin 'two_3__'
@@ -766,6 +920,48 @@ namespace sequoia::testing
           }, // end 'two__2_3'
           {  // begin 'two_2__3'
             {
+              data_description::two_2__3,
+              t.report("A sequence of two partitions treats index 2 as the index of an empty partition"),
+              [&t](data_type d) -> data_type {
+                check_partition_is_empty(t, d, 2);
+                check_iterator_partition_indices_are_npos(t, d, 2);
+                return d;
+              }
+            },
+            {
+              data_description::two_2__3,
+              t.report("A sequence of two partitions treats index 7 as the index of an empty partition"),
+              [&t](data_type d) -> data_type {
+                check_partition_is_empty(t, d, 7);
+                check_iterator_partition_indices_are_npos(t, d, 7);
+                return d;
+              }
+            },
+            {
+              data_description::two_2__3,
+              t.report("Erasing from index 7, position 0 of a sequence of two partitions erases nothing"),
+              [](data_type d) -> data_type {
+                d.erase_from_partition(7, 0);
+                return d;
+              }
+            },
+            {
+              data_description::two_2__3,
+              t.report("Erasing through the begin iterator of index 7 of a sequence of two partitions erases nothing"),
+              [](data_type d) -> data_type {
+                d.erase_from_partition(d.cbegin_partition(7));
+                return d;
+              }
+            },
+            {
+              data_description::two_2__3,
+              t.report("Erasing the range of index 7 of a sequence of two partitions erases nothing"),
+              [](data_type d) -> data_type {
+                d.erase_from_partition(d.cbegin_partition(7), d.cend_partition(7));
+                return d;
+              }
+            },
+            {
               data_description::two_3__2,
               t.report(""),
               [](data_type d) -> data_type {
@@ -810,6 +1006,28 @@ namespace sequoia::testing
               t.report(""),
               [](data_type d) -> data_type {
                 d.insert_slot(2);
+                return d;
+              }
+            },
+            {
+              data_description::two_2__3,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                t.check_exception_thrown<std::out_of_range>(
+                  "Inserting beyond the end of a partition other than the last throws",
+                  [&d]() { return d.insert_to_partition(0, 2, 4); }
+                );
+                return d;
+              }
+            },
+            {
+              data_description::two_2__3,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                t.check_exception_thrown<std::out_of_range>(
+                  "Inserting beyond the end of a partition other than the first throws",
+                  [&d]() { return d.insert_to_partition(1, 2, 4); }
+                );
                 return d;
               }
             }

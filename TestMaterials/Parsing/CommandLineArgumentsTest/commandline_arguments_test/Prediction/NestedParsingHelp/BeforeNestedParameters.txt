@@ -1,0 +1,1 @@
+Usage: create regular_test <qualified::class_name<class T>> <equivalent_type>

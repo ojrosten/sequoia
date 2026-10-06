@@ -8,10 +8,39 @@
 #include "BucketedSequenceRegularTest.hpp"
 #include "PartitionedDataGenericTests.hpp"
 
+#include <map>
+
 namespace sequoia::testing
 {
   namespace
   {
+    struct non_assignable_element
+    {
+      const int value{};
+    };
+
+    struct move_only_element
+    {
+      int value{};
+
+      move_only_element() = default;
+
+      move_only_element(move_only_element&&) noexcept = default;
+
+      move_only_element& operator=(move_only_element&&) noexcept = default;
+    };
+
+    struct assign_only_element
+    {
+      int value{};
+
+      assign_only_element() = default;
+
+      assign_only_element(const assign_only_element&) = delete;
+
+      assign_only_element& operator=(const assign_only_element&) = default;
+    };
+
     using namespace partitioned_data;
 
     template<class PartitionedData>
@@ -24,159 +53,6 @@ namespace sequoia::testing
         auto trg{partitioned_data_operations<PartitionedData>::make_transition_graph(t)};
 
         // begin 'empty'
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("begin_partition throws for empty container", [&d]() { return d.begin_partition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("end_partition throws for empty container", [&d]() { return d.end_partition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](const data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("begin_partition throws for empty container in const context", [&d]() { return d.begin_partition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](const data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("end_partition throws for empty container in const context", [&d]() { return d.end_partition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("rbegin_partition throws for empty container", [&d]() { return d.rbegin_partition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("rend_partition throws for empty container", [&d]() { return d.rend_partition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](const data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("rbegin_partition throws for empty container in const context", [&d]() { return d.rbegin_partition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](const data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("rend_partition throws for empty container in const context", [&d]() { return d.rend_partition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("cbegin_partition throws for empty container", [&d]() { return d.cbegin_partition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("cend_partition throws for empty container", [&d]() { return d.cend_partition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("crbegin_partition throws for empty container", [&d]() { return d.crbegin_partition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("crend_partition throws for empty container", [&d]() { return d.crend_partition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("partition throws for empty container", [&d]() { return d.partition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](const data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("partition throws for empty container in const context", [&d]() { return d.partition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("cpartition throws for empty container", [&d]() { return d.cpartition(0); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("Erasing from non-existent partition throws", [&d]() { return d.erase_from_partition(d.cbegin_partition(0)); });
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   t.check_exception_thrown<std::out_of_range>("Erasing from non-existent partition throws", [&d]() { return d.erase_from_partition(0, 0); });
-                   return d;
-                 }
-        );
-
         trg.join(data_description::empty,
           data_description::empty,
           t.report(""),
@@ -267,6 +143,44 @@ namespace sequoia::testing
   void bucketed_sequence_regular_test::run_tests()
   {
     using namespace data_structures;
+    test_copyability();
     bucketed_operations<bucketed_sequence<int>>::execute(*this);
+  }
+
+  void bucketed_sequence_regular_test::test_copyability()
+  {
+    using namespace data_structures;
+    using move_only_sequence = bucketed_sequence<move_only_element>;
+    using copyable_sequence  = bucketed_sequence<int>;
+    using move_only_vector_sequence = bucketed_sequence<std::vector<move_only_element>>;
+
+    STATIC_CHECK(!std::is_copy_constructible_v<move_only_sequence>);
+    STATIC_CHECK(!std::is_copy_assignable_v<move_only_sequence>);
+    STATIC_CHECK(!std::is_constructible_v<move_only_sequence,
+                                          const move_only_sequence&,
+                                          move_only_sequence::allocator_type>);
+    STATIC_CHECK( std::is_nothrow_move_constructible_v<move_only_sequence>);
+
+    STATIC_CHECK( std::is_copy_constructible_v<copyable_sequence>);
+    STATIC_CHECK( std::is_copy_assignable_v<copyable_sequence>);
+
+    STATIC_CHECK( std::is_copy_constructible_v<bucketed_sequence<non_assignable_element>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<bucketed_sequence<non_assignable_element>>);
+    STATIC_CHECK( std::is_constructible_v<copyable_sequence,
+                                          const copyable_sequence&,
+                                          copyable_sequence::allocator_type>);
+
+    STATIC_CHECK(!std::is_copy_constructible_v<bucketed_sequence<assign_only_element>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<bucketed_sequence<assign_only_element>>);
+
+    STATIC_CHECK(!std::is_copy_constructible_v<move_only_vector_sequence>);
+    STATIC_CHECK(!std::is_copy_assignable_v<move_only_vector_sequence>);
+    STATIC_CHECK(!std::is_constructible_v<move_only_vector_sequence,
+                                          const move_only_vector_sequence&,
+                                          move_only_vector_sequence::allocator_type>);
+
+    STATIC_CHECK( std::is_copy_constructible_v<bucketed_sequence<std::vector<int>>>);
+    STATIC_CHECK( std::is_copy_assignable_v<bucketed_sequence<std::vector<int>>>);
+    STATIC_CHECK( std::is_copy_assignable_v<bucketed_sequence<std::map<int, int>>>);
   }
 }

@@ -48,5 +48,36 @@ namespace sequoia::testing
       // The right number, the wrong product: `make_if` admits "int" alone.
       check(equality, "make_if", f.make_if([](std::string_view name){ return name == "int"; }), vessels{{0.0}});
     }
+
+    {
+      using vessel       = std::variant<int, double>;
+      using prediction_t = std::array<std::pair<std::string, vessel>, 2>;
+
+      erasing_factory<vessel> f{};
+      f.register_product<int>("int");
+      f.register_product<double>("double");
+
+      check(equivalence, "", f, prediction_t{{{"int", 0}, {"double", 5.0}}});
+
+      // The product predicted is right, but the factory also makes a product the prediction lacks
+      check(equivalence, "", f, std::array<std::pair<std::string, vessel>, 1>{{{"int", 0}}});
+
+      // The prediction names a product the factory does not know
+      check(equivalence, "", f, prediction_t{{{"int", 0}, {"float", 0.0}}});
+
+      // The prediction names one product twice, so the other product is checked only if the names are compared
+      check(equivalence, "", f, prediction_t{{{"int", 0}, {"int", 0}}});
+    }
+
+    {
+      using vessel       = std::variant<int>;
+      using prediction_t = std::array<std::pair<std::string, vessel>, 1>;
+
+      erasing_factory<vessel, int> f{};
+      f.register_product<int>("int");
+      using check_t = value_tester<erasing_factory<vessel, int>>::factory_check_type;
+
+      check(check_t{4}, "", f, prediction_t{{{"int", 5}}});
+    }
   }
 }

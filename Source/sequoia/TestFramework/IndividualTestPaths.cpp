@@ -12,6 +12,7 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
+#include <format>
 
 namespace sequoia::testing
 {
@@ -33,6 +34,23 @@ namespace sequoia::testing
       }
 
       throw std::logic_error{"Unrecognized case for test_mode"};
+    }
+
+    // A path built on an empty root would be relative: resolved, silently,
+    // against the current directory
+    void throw_if_empty_root(const fs::path& root, std::string_view derivedPath)
+    {
+      if(root.empty())
+        throw std::logic_error{
+          std::format("Empty materials root: '{}' would resolve against the current directory", derivedPath)
+        };
+    }
+
+    [[nodiscard]]
+    fs::path materials_directory(const fs::path& root, std::string_view subdirectory)
+    {
+      throw_if_empty_root(root, subdirectory);
+      return root / subdirectory;
     }
 
     /** \brief The directory a test's versioned output belongs in: the mirror of its source
@@ -67,6 +85,15 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    fs::path execution_record_file(const fs::path& sourceFile,
+                                   std::string_view testName,
+                                   const project_paths& projectPaths)
+    {
+      return test_output_directory(sourceFile, projectPaths.execution_records().dir(), projectPaths)
+               /= fs::path{testName}.concat(".txt");
+    }
+
+    [[nodiscard]]
     fs::path versioned_diagnostics(const fs::path& source, std::string_view testName, const project_paths& projectPaths, test_mode mode, std::string_view suffix, const std::optional<std::string>& platform)
     {
       const auto file{
@@ -92,49 +119,78 @@ namespace sequoia::testing
 
   //===================================== individual_materials_paths =====================================//
 
-  individual_materials_paths::individual_materials_paths(const fs::path& sourceFile, std::string_view testName, const project_paths& projPaths)
-    : individual_materials_paths{rebase_from(sourceFile, projPaths.tests().repo()).replace_extension("") /= testName, projPaths.test_materials(), projPaths.output()}
+  [[nodiscard]]
+  fs::path materials_prefix(const fs::path& sourceFile, const project_paths& projPaths)
+  {
+    return rebase_from(sourceFile, projPaths.tests().repo()).replace_extension("");
+  }
+
+  individual_materials_paths::individual_materials_paths(const fs::path& sourceFile,
+                                                         std::string_view testName,
+                                                         const project_paths& projPaths,
+                                                         const std::optional<std::string>& materialsDiscriminator)
+    : individual_materials_paths{materials_prefix(sourceFile, projPaths) /= testName,
+                                 projPaths.test_materials(),
+                                 projPaths.output(),
+                                 materialsDiscriminator}
   {}
 
-  individual_materials_paths::individual_materials_paths(const fs::path& relativePath, const test_materials_paths& materials, const output_paths& output)
-    : m_Materials{materials.repo() / relativePath}
-    , m_TemporaryMaterials{output.tests_temporary_data() / relativePath}
+  individual_materials_paths::individual_materials_paths(const fs::path& relativePath,
+                                                         const test_materials_paths& materials,
+                                                         const output_paths& output,
+                                                         const std::optional<std::string>& materialsDiscriminator)
+    : m_OriginalTestRoot{materials.repo() / relativePath}
+    , m_TemporaryMaterialsRoot{output.tests_temporary_data() / relativePath}
+    , m_MaterialsDiscriminator{materialsDiscriminator}
   {}
 
   [[nodiscard]]
-  fs::path individual_materials_paths::working() const
+  fs::path individual_materials_paths::original_materials_root() const
   {
-    if(m_Materials.empty()) return "";
+    return m_MaterialsDiscriminator ? m_OriginalTestRoot / m_MaterialsDiscriminator.value() : m_OriginalTestRoot;
+  }
 
-    return fs::exists(prediction()) ? m_TemporaryMaterials / "WorkingCopy" : m_TemporaryMaterials;
+  [[nodiscard]]
+  fs::path individual_materials_paths::discarded_materials_root() const
+  {
+    constexpr std::string_view suffix{".discarded"};
+    throw_if_empty_root(m_TemporaryMaterialsRoot, suffix);
+
+    // The temporary root ends in the test's name, which cannot contain '.',
+    // so this path is no test's temporary root. Nor does any test's temporary
+    // root lie within it, since `register_test` refuses materials prefixes
+    // which nest.
+    return fs::path{m_TemporaryMaterialsRoot} += suffix;
   }
 
   [[nodiscard]]
   fs::path individual_materials_paths::original_working() const
   {
-    if(m_Materials.empty()) return "";
-
-    return fs::exists(prediction()) ? m_Materials / "WorkingCopy" : m_Materials;
+    return materials_directory(original_materials_root(), "WorkingCopy");
   }
 
   [[nodiscard]]
-  fs::path individual_materials_paths::original_auxiliary() const
+  fs::path individual_materials_paths::working() const
   {
-    return fs::exists(prediction()) ? m_Materials / "Auxiliary" : "";
-  }
-
-  [[nodiscard]]
-  fs::path individual_materials_paths::auxiliary() const
-  {
-    return fs::exists(prediction()) ? m_TemporaryMaterials / "Auxiliary" : "";
+    return materials_directory(m_TemporaryMaterialsRoot, "WorkingCopy");
   }
 
   [[nodiscard]]
   fs::path individual_materials_paths::prediction() const
   {
-    const auto p{m_Materials / "Prediction"};
+    return materials_directory(original_materials_root(), "Prediction");
+  }
 
-    return fs::exists(p) ? p : "";
+  [[nodiscard]]
+  fs::path individual_materials_paths::original_auxiliary() const
+  {
+    return materials_directory(original_materials_root(), "Auxiliary");
+  }
+
+  [[nodiscard]]
+  fs::path individual_materials_paths::auxiliary() const
+  {
+    return materials_directory(m_TemporaryMaterialsRoot, "Auxiliary");
   }
 
   //===================================== individual_diagnostics_paths =====================================//
@@ -144,9 +200,17 @@ namespace sequoia::testing
     , m_CaughtExceptions{versioned_diagnostics(source, testName, projPaths, mode, "Exceptions", platform)}
   {}
 
-  //===================================== individual_diagnostics_paths =====================================//
+  //===================================== test_summary_path =====================================//
 
   test_summary_path::test_summary_path(const fs::path& sourceFile, std::string_view testName, const project_paths& projectPaths, const std::optional<std::string>& summaryDiscriminator)
     : m_Summary{test_summary_filename(sourceFile, testName, projectPaths, summaryDiscriminator)}
+  {}
+
+  //===================================== test_execution_record_path =====================================//
+
+  test_execution_record_path::test_execution_record_path(const fs::path& sourceFile,
+                                                         std::string_view testName,
+                                                         const project_paths& projectPaths)
+    : m_Record{execution_record_file(sourceFile, testName, projectPaths)}
   {}
 }

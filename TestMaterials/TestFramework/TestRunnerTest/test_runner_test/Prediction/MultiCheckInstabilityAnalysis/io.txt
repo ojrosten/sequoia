@@ -3,11 +3,13 @@ Running tests, synchronously...
 
 multi_periodic_free_test:
 [Execution Time: 115us]
+[Runner Overhead: 599us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
 [Total Run Time: 287us]
 [Execution Time: 115us]
+[Runner Overhead: 599us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -19,9 +21,10 @@ Running tests, synchronously...
 
 multi_periodic_free_test:
 [Execution Time: 60.8us]
+[Runner Overhead: 475us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 239
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 242
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -35,6 +38,7 @@ multi_periodic_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 230us]
 [Execution Time: 60.8us]
+[Runner Overhead: 475us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -46,9 +50,10 @@ Running tests, synchronously...
 
 multi_periodic_free_test:
 [Execution Time: 53.8us]
+[Runner Overhead: 441us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 240
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 243
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -62,6 +67,7 @@ multi_periodic_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 210us]
 [Execution Time: 53.8us]
+[Runner Overhead: 441us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -73,9 +79,10 @@ Running tests, synchronously...
 
 multi_periodic_free_test:
 [Execution Time: 58us]
+[Runner Overhead: 436us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 239
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 242
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -89,6 +96,7 @@ multi_periodic_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 217us]
 [Execution Time: 58us]
+[Runner Overhead: 436us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -100,11 +108,13 @@ Running tests, synchronously...
 
 multi_periodic_free_test:
 [Execution Time: 42.7us]
+[Runner Overhead: 457us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
 [Total Run Time: 192us]
 [Execution Time: 42.7us]
+[Runner Overhead: 457us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -116,9 +126,10 @@ Running tests, synchronously...
 
 multi_periodic_free_test:
 [Execution Time: 57.7us]
+[Runner Overhead: 545us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 239
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 242
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -128,7 +139,7 @@ multi_periodic_free_test:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 240
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 243
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -142,6 +153,7 @@ multi_periodic_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 211us]
 [Execution Time: 57.7us]
+[Runner Overhead: 545us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -157,7 +169,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 239
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 242
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -169,7 +181,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 239
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 242
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -179,7 +191,7 @@ vs.
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 240
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 243
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -191,7 +203,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 240
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 243
 	Period 3: Pass/Pass/Fail
 
 	[bool]

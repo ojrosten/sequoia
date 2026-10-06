@@ -2,43 +2,67 @@
 Running tests, synchronously...
 
 bar_free_test:
-[Execution Time: 959ns]
+[Execution Time: 2.92us]
+[Runner Overhead: 400us]
 foo_false_negative_test:
-[Execution Time: 1.21us]
+[Execution Time: 2.83us]
+[Runner Overhead: 444us]
 foo_test:
-[Execution Time: 1.29us]
+[Execution Time: 1.83us]
+[Runner Overhead: 424us]
 oldschool_false_negative_test:
-[Execution Time: 1.38us]
+[Execution Time: 2.62us]
+[Runner Overhead: 601us]
 oldschool_test:
-[Execution Time: 1.33us]
+[Execution Time: 2.71us]
+[Runner Overhead: 563us]
 container_allocation_test:
-[Execution Time: 1.12us]
+[Execution Time: 2.79us]
+[Runner Overhead: 528us]
 container_performance_test:
-[Execution Time: 1.25us]
+[Execution Time: 2.04us]
+[Runner Overhead: 489us]
 unique_thing_false_negative_test:
-[Execution Time: 1.29us]
+[Execution Time: 3.38us]
+[Runner Overhead: 551us]
 unique_thing_test:
-[Execution Time: 1.12us]
+[Execution Time: 2.92us]
+[Runner Overhead: 488us]
 useful_things_free_test:
-[Execution Time: 1.04us]
+[Execution Time: 2us]
+[Runner Overhead: 600us]
+utilities_false_negative_free_diagnostics:
+[Execution Time: 2.67us]
+[Runner Overhead: 551us]
+utilities_false_positive_free_diagnostics:
+[Execution Time: 4.04us]
+[Runner Overhead: 557us]
 utilities_free_test:
-[Execution Time: 1.04us]
+[Execution Time: 2.12us]
+[Runner Overhead: 507us]
 flipper_free_test:
-[Execution Time: 833ns]
+[Execution Time: 2.38us]
+[Runner Overhead: 432us]
 house_allocation_test:
-[Execution Time: 1.12us]
+[Execution Time: 4.33us]
+[Runner Overhead: 430us]
 maybe_false_negative_test:
-[Execution Time: 1.08us]
+[Execution Time: 2.67us]
+[Runner Overhead: 398us]
 maybe_test:
-[Execution Time: 917ns]
+[Execution Time: 3us]
+[Runner Overhead: 409us]
 probability_false_negative_test:
-[Execution Time: 1.21us]
+[Execution Time: 3.29us]
+[Runner Overhead: 1.09ms]
 probability_test:
-[Execution Time: 917ns]
+[Execution Time: 2.88us]
+[Runner Overhead: 475us]
 
 -----------Grand Totals-----------
-[Total Run Time: 1.47ms]
-[Execution Time: 19.1us]
+[Total Run Time: 2.22ms]
+[Execution Time: 53.4us]
+[Runner Overhead: 9.94ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

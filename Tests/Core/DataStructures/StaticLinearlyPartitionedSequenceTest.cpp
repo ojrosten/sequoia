@@ -21,7 +21,7 @@ namespace sequoia::testing
 
     {
       using sequence = static_linearly_partitioned_sequence<int, 1, 1>;
-      static_assert(sizeof(sequence) == sizeof(int));
+      STATIC_CHECK(sizeof(sequence) == sizeof(int));
 
       constexpr sequence a{};
       sequence b{{1}};
@@ -33,7 +33,7 @@ namespace sequoia::testing
 
     {
       using sequence = static_linearly_partitioned_sequence<int, 2, 3>;
-      static_assert(sizeof(sequence) == 6 * sizeof(int));
+      STATIC_CHECK(sizeof(sequence) == 6 * sizeof(int));
 
       constexpr sequence a{{1,2,-1}, {3,-2,1}};
       sequence b{};

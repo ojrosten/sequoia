@@ -18,7 +18,6 @@ int main(int argc, char** argv)
     using namespace sequoia;
     using namespace object;
     using namespace testing;
-    using namespace std::literals::chrono_literals;
 
     test_runner runner{argc,
                        argv,
@@ -41,6 +40,8 @@ int main(int argc, char** argv)
     runner.register_test<commands_free_test>();
     runner.register_test<failure_info_test>();
     runner.register_test<failure_info_false_negative_test>();
+    runner.register_test<failure_reporting_free_test>();
+    runner.register_test<failure_reporting_in_parallel_free_test>();
     runner.register_test<file_system_utilities_free_test>();
     runner.register_test<output_free_test>();
     runner.register_test<dependency_analyzer_free_test>();
@@ -99,6 +100,7 @@ int main(int argc, char** argv)
     runner.register_test<regular_state_transition_false_positive_diagnostics>();
     runner.register_test<move_only_state_transition_false_positive_diagnostics>();
     runner.register_test<move_only_state_transition_false_negative_diagnostics>();
+    runner.register_test<characters_free_test>();
     runner.register_test<indent_free_test>();
     runner.register_test<patterns_free_test>();
     runner.register_test<substitutions_free_test>();
@@ -175,6 +177,8 @@ int main(int argc, char** argv)
     runner.register_test<dynamic_undirected_embedded_graph_shared_fundamental_weight_test>();
     runner.register_test<dynamic_undirected_embedded_graph_shared_fundamental_weight_contiguous_test>();
     runner.register_test<dynamic_undirected_embedded_graph_meta_data_test>();
+    runner.register_test<dynamic_graph_exception_safety_free_test>();
+    runner.register_test<graph_constraints_free_test>();
     runner.register_test<static_directed_graph_unweighted_test>();
     runner.register_test<static_directed_graph_fundamental_weight_test>();
     runner.register_test<static_undirected_graph_unweighted_test>();
@@ -244,7 +248,9 @@ int main(int argc, char** argv)
     runner.register_test<reset_on_move_regular_test>();
     runner.register_test<reset_on_move_false_negative_test>();
     runner.register_test<state_transition_utilities_free_test>();
-    code = runner.execute(timer_resolution{1ms});
+    runner.register_test<project_paths_free_test>();
+    runner.register_test<summary_free_test>();
+    code = runner.execute();
   }
   catch(const std::exception& e)
   {

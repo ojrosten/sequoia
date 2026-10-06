@@ -69,7 +69,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Geometry/BoundsFreeTest.cpp
                ${TestDir}/Maths/Geometry/ComplexVectorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/FreeModuleCoordinatesTest.cpp
-               ${TestDir}/Maths/Geometry/M_AffineCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/MAffineCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/NumericRingsMetaFreeTest.cpp
                ${TestDir}/Maths/Geometry/PartialMTorsorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
@@ -88,6 +88,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/Components/Nodes/HeterogeneousNodeStorageTest.cpp
                ${TestDir}/Maths/Graph/Components/Nodes/NodeStorageAllocationTest.cpp
                ${TestDir}/Maths/Graph/Components/Nodes/NodeStorageTest.cpp
+               ${TestDir}/Maths/Graph/Constraints/GraphConstraintsFreeTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Allocations/DynamicGraphUnweightedAllocationBucketedTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Allocations/DynamicGraphUnweightedAllocationContiguousTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Allocations/DynamicGraphWeightedAllocationBucketedTest.cpp
@@ -97,6 +98,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphFundamentalWeightTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphUnweightedContiguousTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphFundamentalWeightContiguousTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphFundamentalWeightTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphMetaDataTest.cpp
@@ -179,6 +181,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/ExceptionsFreeDiagnostics.cpp
                ${TestDir}/TestFramework/FailureInfoTest.cpp
                ${TestDir}/TestFramework/FailureInfoTestingDiagnostics.cpp
+               ${TestDir}/TestFramework/FailureReportingFreeTest.cpp
                ${TestDir}/TestFramework/FileEditorsFreeTest.cpp
                ${TestDir}/TestFramework/FileSystemUtilitiesFreeTest.cpp
                ${TestDir}/TestFramework/FreeCheckersMetaFreeTest.cpp
@@ -192,6 +195,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PathFreeDiagnostics.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
+               ${TestDir}/TestFramework/ProjectPathsFreeTest.cpp
                ${TestDir}/TestFramework/RegularStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/RegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
@@ -199,6 +203,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/StateTransitionUtilitiesFreeTest.cpp
                ${TestDir}/TestFramework/StringFreeDiagnostics.cpp
                ${TestDir}/TestFramework/SumTypesFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/SummaryFreeTest.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnosticsUtilities.cpp
                ${TestDir}/TestFramework/TestRunnerEndToEndFreeTest.cpp
@@ -208,6 +213,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/TestRunnerTest.cpp
                ${TestDir}/TestFramework/TestRunnerTestCreation.cpp
                ${TestDir}/TestFramework/VersionedOutputFreeTest.cpp
+               ${TestDir}/TextProcessing/CharactersFreeTest.cpp
                ${TestDir}/TextProcessing/IndentFreeTest.cpp
                ${TestDir}/TextProcessing/PatternsFreeTest.cpp
                ${TestDir}/TextProcessing/SubstitutionsFreeTest.cpp)

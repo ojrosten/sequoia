@@ -95,33 +95,79 @@ namespace sequoia::testing
   struct null_advisor
   {};
 
-  /** \brief class template used to wrap function objects which proffer advice.
+  /** \brief Class template used to wrap function objects which proffer advice.
 
-      An appropriate instantiation of this class template may be supplied as the
-      final argument of many of the check methods. For example, consider
+      An appropriate instantiation of this class template may be supplied as
+      the final argument of many of the check methods. For example, consider
       checking equality of an `int`:
 
       <pre>
-      check(equality, "", x, 41, tutor{[](int value, int prediction) {
-          return value == 42 ? "Are you sure the universe isn't trying to tell you something?" : "";
-      }});
+      check(
+        equality,
+        "",
+        x,
+        41,
+        tutor{
+          [](int value, int prediction) {
+            return value == 42 ? "Are you sure the universe isn't trying to tell you something?" : "";
+          }
+        }
+      );
       </pre>
 
-      In the case the `x != 41`, not only will failure be reported in the usual manner
-      but, if `x == 42`, some spectacularly useful advice will be proffered.
+      In the case that `x != 41`, not only will failure be reported in the
+      usual manner but, if `x == 42`, some spectacularly useful advice will be
+      proffered.
 
-      Matters are similar, though somewhat more subtle for types which specialize
-      \ref value_tester_primary "value_tester". Consider some type, `T` for which this
-      is done. Perhaps `T` wraps an `int` in which case the specialization of `value_tester`
-      will invoke a `check` for `int`s. In this case, the advice function object should
-      generally provide an overload for `int`s, as above. Suppose instead that the
-      overload is for `T`s. This will only be called in this particular example if `T`
-      can be implicitly constructed from an `int`; otherwise the advice function object
-      will simply be ignored.
+      Matters are similar, though somewhat more subtle, for types which
+      specialize \ref value_tester_primary "value_tester". Consider some type,
+      `T`, for which this is done. Perhaps `T` wraps an `int`, in which case
+      the specialization of `value_tester` will invoke a `check` for `int`s.
+      In this case, there are several pieces of advice that could be produced,
+      since the `tutor` is propagated down through the nested checks, and is
+      invoked wherever the values are accepted by its wrapped advisor.
 
-      Note that in the case where the advice function object provides a single binary
-      overload of `operator()` then narrowing conversions are forbidden. However, if
-      there are multiple binary overloads, narrowing conversions may occur.
+      -# If the `tutor` is of the same form as above, then the same advice
+         will be proffered, at the point where the `value_tester` performs a
+         `check` of the wrapped `int`s.
+
+      -# If the `tutor` is constructed from an `Advisor` that supplies an
+         overload of `operator()` that accepts two values of type `T`, then
+         advice will be produced when the top-level comparison of the two
+         values using `operator==` is performed.
+
+      These two cases are not mutually exclusive. The philosophy is that as
+      the check for a type is decomposed into its constituent parts, `sequoia`
+      will apply the advice wherever the types match. Another example is when
+      a `check` is applied to a range: the `tutor` is (recursively) passed on
+      to the elements of the range and invoked wherever there's a match. In
+      the case that there is no match, the `tutor` is silently ignored.
+
+      Note that in the case where the advice function object provides a
+      single binary overload of `operator()`, narrowing conversions are
+      forbidden. However, if there are multiple binary overloads, narrowing
+      conversions may occur.
+
+      One pitfall to be aware of is that directly checking the result of a
+      comparison boils down to checking two `bool`s. Thus, in this case,
+      <pre>
+      check(
+        "x is assumed to be less than y",
+        x < y,
+        tutor{
+          [](float a, float b) {
+            return std::format("x is {}, y is {}", a, b);
+          }
+        }
+      );
+      </pre>
+      the advice will be silently ignored. One fix for this is to instead
+      construct the `tutor` from a function object with the signature
+      `std::string operator()(bool, bool)`, which captures the values it
+      reports:
+      <pre>
+      [&x, &y](bool, bool) { return std::format("x is {}, y is {}", x, y); }
+      </pre>
 
       \anchor tutor_primary
    */

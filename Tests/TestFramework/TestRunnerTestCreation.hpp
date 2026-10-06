@@ -26,7 +26,6 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-
     void test_type_handling();
 
     void test_project_namespace();
@@ -37,10 +36,10 @@ namespace sequoia::testing
                        std::optional<std::string> sourceFolder,
                        main_location mainLocation);
 
-    void test_foreign_source_dir_refusal(std::string_view projectName,
-                                         const std::optional<std::string>& sourceFolder,
-                                         const std::filesystem::path& cacheFile,
-                                         const main_paths& fakeMain);
+    void test_cmake_rerun_failures(std::string_view projectName,
+                                   const std::optional<std::string>& sourceFolder,
+                                   const std::filesystem::path& cacheFile,
+                                   const main_paths& fakeMain);
 
     void record_cmake_source_dir(const std::filesystem::path& cacheFile, const std::filesystem::path& sourceDir);
 

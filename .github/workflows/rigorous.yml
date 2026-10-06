@@ -63,24 +63,19 @@ name: rigorous
 # regenerate. It is fixed, so the flag can go on. A macOS run matched all 340.
 #
 # TestRunnerProjectFiles compares a generated TestAll.vcxproj against a prediction
-# stored per preset - `ProjectFiles/<preset>`, taken from the build directory's
-# name - so a Visual Studio column needs its prediction generated on Windows and
-# committed before it can run the test. The test is a no-op on clang, so the macOS
-# columns need nothing.
+# stored per preset, in `visual_studio/Prediction/ProjectFiles/<preset>`. The
+# directory `visual_studio` is the name the test's materials discriminator gives the
+# Visual Studio generator. The test checks every preset committed there. So a new
+# Visual Studio preset needs its prediction generated on Windows and committed
+# before a column uses it. Under Ninja the test checks only that the generated
+# build.ninja has an edge for TestAll, and reads no predictions.
 #
-# Note this column configures with `msvc-release`, not `msvc`. The Visual Studio
-# generator is multi-config, so one configure preset can serve both Debug and
-# Release out of a single build tree - and Commands.cpp derives BOTH halves of the
-# nested project's build from that tree's NAME: `cmake --preset <dir>` at :31 and
-# `cmake --build --preset <dir>` at :41. That is why the fix had to add a configure
-# preset and not merely rename a build one: without `msvc-release` in the configure
-# namespace the nested configure would fail outright. Pointed at a
-# tree called `msvc`, it therefore rebuilt the nested end-to-end project as Debug
-# while this column was Release, so the executable was never where the test looked.
-# The run reported `versioned_output_diffs`, which was an artefact of
-# `child_return_code` casting a child's exit status of 1 straight onto the
-# bitmask - see roadmap item 146 - and not drift at all. A configure preset per
-# configuration keeps directory, preset and configuration in agreement.
+# Note the MSVC Release column configures with `msvc-release`, a tree of its own
+# pinned to Release. The nested end-to-end project is configured from the preset
+# named after that tree. The nested project is built in the configuration in which
+# the runner itself was built, since `build_cmd` passes CMake's `$<CONFIG>` as
+# `--config`. So the nested executable lands in the configuration directory which
+# the test searches, whatever configurations the tree holds.
 #
 # Note the flag must be spelt out per column here, since `exec_args` REPLACES the
 # tier's rather than adding to it - a column naming only its exclusions silently
@@ -228,6 +223,7 @@ jobs:
     uses: ./.github/workflows/tests.yml
     with:
       needs_testing: ${{ needs.scope.outputs.suite }}
+      merge_into: ''
       warnings_as_errors: true
       false_negative: ${{ inputs.false_negative == true }}
       exec_args: '--check-versioned-output'
@@ -363,6 +359,20 @@ jobs:
           done
           g++-15 --version | head -1
           "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin/cmake" --version | head -1
+
+      # Telemetry for roadmap 234's gate, which is to demangle the tracefile's
+      # names with GNU c++filt and llvm-cxxfilt, and to record their versions
+      # in its baseline. The step reports which demanglers the image offers, and
+      # never fails the job. Remove it once the gate's own step locates its
+      # demanglers.
+      - name: Name the demanglers on the image
+        if: env.NEEDS_TESTING == 'true'
+        run: |
+          for tool in c++filt llvm-cxxfilt /usr/bin/llvm-cxxfilt-* /usr/lib/llvm-*/bin/llvm-cxxfilt; do
+            path=$(command -v "$tool") || { echo "$tool: absent"; continue; }
+            version=$({ "$path" --version 2>&1 || true; } | grep -m1 -E '[0-9]+\.[0-9]+') || version="no version found"
+            echo "$path -> $(readlink -f "$path"): $version"
+          done
 
       - name: Give git an identity
         if: env.NEEDS_TESTING == 'true'
@@ -527,10 +537,16 @@ jobs:
   #
   # Main requires this job and none of the others, so a job missing from this
   # job's `needs` would gate nothing, however red. The second step fails if any
-  # other job is missing. In the false-negative control this job passes on red
-  # columns, so it takes another name there: under main's required name it would
-  # satisfy main's rule for the commit it ran on, a promotion PR's head if the
-  # control was dispatched on staging.
+  # other job is missing. The third fails unless main's rule names this job,
+  # pinned to the app that reports this job, so that a rename here, or an edit to
+  # the rule, shows as a red check rather than only as a promotion that waits on a
+  # name nothing reports, or merges ungated. The second and third steps run even
+  # when an earlier step fails, so each reports independently.
+  #
+  # In the false-negative control this job passes on red columns, so it takes
+  # another name there, and the third step insists main does not require that
+  # name: if main did, the control would satisfy main's rule for the commit it ran
+  # on, a promotion PR's head if the control was dispatched on staging.
   audit:
     name: ${{ inputs.false_negative == true && 'Every column failed, as the false-negative control requires' || 'Every job ran as this run''s mode requires' }}
     needs: [staging, scope, rigorous, docs, coverage, promote]
@@ -584,6 +600,7 @@ jobs:
           exit $failed
 
       - name: Insist this job needs every other job of the workflow
+        if: ${{ !cancelled() }}
         run: |
           # The workflow file is fetched at GITHUB_WORKFLOW_SHA, the commit this run
           # read it from. Its jobs and this job's `needs` are compared both ways, so
@@ -601,3 +618,29 @@ jobs:
             exit 1
           fi
           echo "$GITHUB_JOB needs every other job of $workflow"
+
+      - name: Insist main requires this job, pinned to the app that reports it - or, in the false-negative control, does not
+        if: ${{ !cancelled() }}
+        env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+        run: |
+          # The branches endpoint returns a branch's required checks to any token;
+          # the protection endpoint would need admin rights.
+          check=$(gh api "repos/$GH_REPO/check-runs/$CHECK_RUN_ID" --jq '"\(.app.id) \(.name)"')
+          gh api "repos/$GH_REPO/branches/main" \
+              --jq '.protection.required_status_checks.checks[] | "\(.app_id) \(.context)"' > required.txt
+          echo "this check, as app and name: $check"
+          echo "required on main:"; sed 's/^/  /' required.txt
+          if [ "$FALSE_NEGATIVE" = true ]; then
+            if cut -d' ' -f2- required.txt | grep -qxF "${check#* }"; then
+              echo "::error::main requires '${check#* }', which passes on red columns"
+              exit 1
+            fi
+            echo "main does not require the false-negative control's audit"
+            exit 0
+          fi
+          if ! grep -qxF "$check" required.txt; then
+            echo "::error::main does not require '${check#* }' from app ${check%% *}: a promotion would wait on a name nothing reports, or merge without this check"
+            exit 1
+          fi
+          echo "main requires this job, pinned to the app that reports it"

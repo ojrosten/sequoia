@@ -8,21 +8,21 @@
 #include "sequoia/TestFramework/Output.hpp"
 
 #include "sequoia/FileSystem/FileSystem.hpp"
+#include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
 #include <array>
 #include <bit>
-#include <cctype>
 #include <charconv>
 #include <cstdint>
 #include <cstdlib>
 #include <format>
 #include <limits>
-#include <numeric>
 #include <optional>
 #include <ranges>
+#include <span>
 #include <type_traits>
 
 #ifndef _MSC_VER
@@ -38,19 +38,11 @@ namespace sequoia::testing
     constexpr auto npos{std::string::npos};
     using size_type = std::string::size_type;
 
-    constexpr auto is_digit    {[](char c){ return std::isdigit( static_cast<unsigned char>(c)) != 0; }};
-    constexpr auto is_hex_digit{[](char c){ return std::isxdigit(static_cast<unsigned char>(c)) != 0; }};
-    constexpr auto is_alpha    {[](char c){ return std::isalpha( static_cast<unsigned char>(c)) != 0; }};
-
-    constexpr auto is_word_delimiter{
-      [](char c){ return !(std::isalnum(static_cast<unsigned char>(c)) || (c == '_')); }
-    };
-    
     /** Whether a number, a digit or a `-` then a digit, begins at `pos`. */
     [[nodiscard]]
     bool begins_number(std::string_view text, size_type pos)
     {
-      auto digitAt{[text](size_type i){ return (i < text.size()) && is_digit(text[i]); }};
+      auto digitAt{[text](size_type i){ return (i < text.size()) && ascii::is_digit(text[i]); }};
       return digitAt(pos) || ((pos < text.size()) && (text[pos] == '-') && digitAt(pos + 1));
     }
 
@@ -255,7 +247,7 @@ namespace sequoia::testing
       }
       else
       {
-        const bool wholeBytes{!hex.empty() && (hex.size() % 2 == 0) && std::ranges::all_of(hex, is_hex_digit)};
+        const bool wholeBytes{!hex.empty() && (hex.size() % 2 == 0) && std::ranges::all_of(hex, ascii::is_hex_digit)};
         if(!wholeBytes || (hex.size() > 2 * sizeof(T)))
           return std::nullopt;
 
@@ -325,7 +317,7 @@ namespace sequoia::testing
 
       auto beginsBitPattern{[name](size_type pos){ return (name[pos - 1] == '[') && (name[pos - 2] == ')'); }};
       auto mayBeginLiteral{
-        [name, &beginsBitPattern](size_type pos){ return is_digit(name[pos]) || beginsBitPattern(pos); }
+        [name, &beginsBitPattern](size_type pos){ return ascii::is_digit(name[pos]) || beginsBitPattern(pos); }
       };
 
       const auto candidates{std::views::iota(from, name.size() - 1)};
@@ -395,7 +387,7 @@ namespace sequoia::testing
     [[nodiscard]]
     size_type erase_literal_suffix(std::string& name, size_type pos)
     {
-      if((pos >= name.size()) || !is_alpha(name[pos]))
+      if((pos >= name.size()) || !ascii::is_alphabetic(name[pos]))
         return pos;
 
       const auto suffixEnd{name.find_first_of(",>}", pos)};
@@ -423,10 +415,10 @@ namespace sequoia::testing
         if(pos == npos)
           break;
 
-        const bool continuesIdentifier{!is_word_delimiter(name[pos - 1])};
+        const bool continuesIdentifier{!is_identifier_delimiter(name[pos - 1])};
         if(continuesIdentifier)
         {
-          const auto identifierEnd{std::ranges::find_if(name.begin() + pos, name.end(), is_word_delimiter)};
+          const auto identifierEnd{std::ranges::find_if(name.begin() + pos, name.end(), is_identifier_delimiter)};
           pos = std::ranges::distance(name.begin(), identifierEnd);
           continue;
         }
@@ -438,7 +430,7 @@ namespace sequoia::testing
 
         if(pos + 1 < name.size())
         {
-          const auto digitsEnd{std::ranges::find_if_not(name.begin() + pos + 1, name.end(), is_digit)};
+          const auto digitsEnd{std::ranges::find_if_not(name.begin() + pos + 1, name.end(), ascii::is_digit)};
           pos = std::ranges::distance(name.begin(), digitsEnd);
         }
 
@@ -448,30 +440,42 @@ namespace sequoia::testing
       return name;
     }
 
-    /** Respells the dynamic extent of the first `span` in `name`, if its element type holds no `>`: libc++ and
-        libstdc++ write the extent as the maximum `std::size_t`, MSVC as `-1`, which is the spelling kept.
+    /** Respells the dynamic extent of every `std::span` in `name` as `-1`. MSVC writes the extent as `-1`, and
+        libc++ and libstdc++ write the extent as the maximum `std::size_t`. A `std::span` whose `<` has no matching
+        `>` is left unchanged.
      */
     std::string& process_spans(std::string& name)
     {
-      if(auto[start, end]{find_sandwiched_text(name, "::span<", ">")}; (end != npos) && (start != end))
-      {
-        start = name.find(',', start);
-        if(start < end - 1)
-        {
-          ++start;
-          if(name[start] == ' ') ++start;
+      constexpr std::string_view spanOpening{"std::span<"};
+      const auto dynamicExtent{std::to_string(std::dynamic_extent)};
 
-          auto startPtr{std::ranges::next(name.data(), start)}, endPtr{std::ranges::next(name.data(), end)};
-          std::size_t val{};
-          const auto[ptr, ec]{std::from_chars(startPtr, endPtr, val)};
-          if((ptr == endPtr) && (val == std::numeric_limits<std::size_t>::max()))
-          {
-            // Use the MSVC convention
-            name.replace(start, end-start, "-1");
-          }
+      // Excludes, for example, mystd::span and foo::std::span
+      auto startsQualifiedName{
+        [&name](size_type pos) {
+          return (pos == 0) || (is_identifier_delimiter(name[pos - 1]) && (name[pos - 1] != ':'));
         }
+      };
+
+      for(auto start{name.find(spanOpening)}; start != npos; start = name.find(spanOpening, start + 1))
+      {
+        if(!startsQualifiedName(start))
+          continue;
+
+        const auto [open, close]{find_matched_delimiters(name, '<', '>', start)};
+        if(close == open)
+          continue;
+
+        const auto closingBracket{close - 1};
+        const auto lastComma     {name.rfind(',', closingBracket)};
+        if((lastComma == npos) || (lastComma < open))
+          continue;
+
+        const auto extentStart {name.find_first_not_of(' ', lastComma + 1)};
+        const auto extentLength{closingBracket - extentStart};
+        if(std::string_view{name}.substr(extentStart, extentLength) == dynamicExtent)
+          name.replace(extentStart, extentLength, "-1");
       }
-      
+
       return name;
     }
 
@@ -514,11 +518,11 @@ namespace sequoia::testing
       if constexpr(sizeof(unsigned long) == sizeof(unsigned long long))
       {
         // Collapse before expanding; the other way round, the collapse undoes the expansion
-        replace_all(name, is_word_delimiter, "long long", is_word_delimiter, "long");
-        replace_all(name, is_word_delimiter, "long",      is_word_delimiter, "long long");
+        replace_all(name, is_identifier_delimiter, "long long", is_identifier_delimiter, "long");
+        replace_all(name, is_identifier_delimiter, "long",      is_identifier_delimiter, "long long");
 
         // The expansion cannot see that `long double` is not a `long`
-        replace_all(name, is_word_delimiter, "long long double", is_word_delimiter, "long double");
+        replace_all(name, is_identifier_delimiter, "long long double", is_identifier_delimiter, "long double");
       }
 
       // It is a pity to have to make the following substitutions, but it appears
@@ -584,7 +588,7 @@ namespace sequoia::testing
       else
       {
         using layout = bit_layout<T>;
-        if((hex.size() != layout::digit_count) || !std::ranges::all_of(hex, is_hex_digit))
+        if((hex.size() != layout::digit_count) || !std::ranges::all_of(hex, ascii::is_hex_digit))
           return std::nullopt;
 
         auto isSet{[hex](std::size_t bitFromBottom){ return pattern_bit(hex, bitFromBottom); }};
@@ -626,7 +630,7 @@ namespace sequoia::testing
       auto respell{
         [&demangled, mangled](std::string_view from, std::string_view to){
           if(!may_hold_source_name(mangled, from))
-            replace_all(demangled, is_word_delimiter, from, is_word_delimiter, to);
+            replace_all(demangled, is_identifier_delimiter, from, is_identifier_delimiter, to);
         }
       };
 
@@ -705,22 +709,26 @@ namespace sequoia::testing
     if(s.empty()) return "";
 
     constexpr std::string_view emph{"--"};
-    return std::string{emph}.append(s).append(emph);
+    return std::format("{}{}{}", emph, s, emph);
   }
 
   [[nodiscard]]
   std::string exception_message(std::string_view tag,
                                 const fs::path& filename,
-                                const uncaught_exception_info& info,
+                                const opt_top_level_check_exit_info& lastCheckExitInfo,
                                 std::string_view exceptionMessage)
   {
-    auto mess{append_lines(std::string{"Error -- "}.append(tag).append(" Exception:"), exceptionMessage).append("\n")};
+    auto mess{append_lines(std::format("Error -- {} Exception:", tag), exceptionMessage).append("\n")};
 
-    const auto& currentMessage{info.top_level_message};
-    if(!currentMessage.empty())
+    if(lastCheckExitInfo)
     {
-      std::string_view suffix{info.num ? "during last check" : "after check completed"};
-      append_lines(mess, std::string{"Exception thrown "}.append(suffix), "Last Recorded Message:\n", currentMessage);
+      const std::string_view suffix{lastCheckExitInfo->via_exception ? "during last check" : "after check completed"};
+      append_lines(
+        mess,
+        std::string{"Exception thrown "}.append(suffix),
+        "Last Recorded Message:\n",
+        lastCheckExitInfo->message
+      );
     }
     else
     {
@@ -733,15 +741,24 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path path_for_reporting(const fs::path& file, const fs::path& repository)
   {
+    auto append{
+      [](fs::path lhs, const fs::path& rhs){
+        lhs /= rhs;
+        return lhs;
+      }
+    };
+
     if(file.is_relative())
     {
-      auto it{std::ranges::find_if_not(file, [](const fs::path& p) { return p == ".."; })};
-      return std::accumulate(it, file.end(), fs::path{}, [](fs::path lhs, const fs::path& rhs){ return lhs /= rhs; });
+      const auto firstKept{std::ranges::find_if_not(file, [](const fs::path& p) { return p == ".."; })};
+      return std::ranges::fold_left(firstKept, file.end(), fs::path{}, append);
     }
-    else if(!repository.empty())
+
+    if(repository.is_absolute())
     {
-      auto [filepathIter, repoIter]{std::ranges::mismatch(file, repository)};
-      return std::accumulate(filepathIter, file.end(), back(repository), [](fs::path lhs, const fs::path& rhs){ return lhs /= rhs; });
+      const auto repositoryDirectory{repository.has_filename() ? repository : repository.parent_path()};
+      const auto firstBeyond{std::ranges::mismatch(file, repositoryDirectory).in1};
+      return std::ranges::fold_left(firstBeyond, file.end(), back(repositoryDirectory), append);
     }
 
     return file;
@@ -750,7 +767,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_line(std::string_view message, const fs::path& repository, const std::source_location loc)
   {
-    return append_lines(path_for_reporting(loc.file_name(), repository).generic_string().append(", Line ").append(std::to_string(loc.line())), message).append("\n");
+    return append_lines(std::format("{}, Line {}", path_for_reporting(loc.file_name(), repository).generic_string(), loc.line()), message).append("\n");
   }
 
   [[nodiscard]]
@@ -836,6 +853,12 @@ namespace sequoia::testing
   std::string tidy_name(std::string name, other_compiler_type)
   {
     return name;
+  }
+
+  [[nodiscard]]
+  std::string demangle(const std::type_info& info)
+  {
+    return tidy_name(demangle(std::string{info.name()}), compiler_constant{});
   }
 
   [[nodiscard]]

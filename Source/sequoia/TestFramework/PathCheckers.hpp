@@ -169,29 +169,37 @@ namespace sequoia::testing
     {
       namespace fs = std::filesystem;
 
+      if(!path.is_absolute() || !prediction.is_absolute())
+        throw std::logic_error{path_check_preamble("Refusing to check a path which is not absolute", path, prediction)};
+
       const auto pathType{fs::status(path).type()};
       const auto predictionType{fs::status(prediction).type()};
 
+      if(!check(path_check_preamble("Path existence", path, prediction),
+                logger,
+                predictionType != fs::file_type::not_found,
+                tutor{[](bool, bool) { return "The predicted path does not exist"; }}))
+        return;
+
       if(check(equality, path_check_preamble("Path type", path, prediction), logger, pathType, predictionType))
       {
-        if(!path.empty())
+        const auto pathFinalToken{back(path)};
+        const auto predictionFinalToken{back(prediction)};
+        if(compare(pathFinalToken, predictionFinalToken))
         {
-          const auto pathFinalToken{back(path)};
-          const auto predictionFinalToken{back(prediction)};
-          if(compare(pathFinalToken, predictionFinalToken))
+          switch(pathType)
           {
-            switch(pathType)
-            {
-            case fs::file_type::regular:
-              check_file(logger, custom, path, prediction);
-              break;
-            case fs::file_type::directory:
-              check_directory(logger, custom, path, prediction, compare);
-              break;
-            default:
-              throw std::logic_error{std::string{"Detailed equivalance check for paths of type '"}
-                .append(serializer<fs::file_type>::make(pathType)).append("' not currently implemented")};
-            }
+          case fs::file_type::regular:
+            check_file(logger, custom, path, prediction);
+            break;
+          case fs::file_type::directory:
+            check_directory(logger, custom, path, prediction, compare);
+            break;
+          default:
+            throw std::logic_error{
+              std::format("Detailed equivalence check for paths of type '{}' not currently implemented",
+                          serializer<fs::file_type>::make(pathType))
+            };
           }
         }
       }

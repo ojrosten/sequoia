@@ -13,15 +13,9 @@ namespace sequoia
   {
     if(text.empty()) return text;
 
-    auto upper{
-      [](char c) {
-        return static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
-      }
-    };
-
-    if(std::isalpha(text.front()))
+    if(ascii::is_alphabetic(text.front()))
     {
-      text.front() = upper(text.front());
+      text.front() = ascii::to_uppercase(text.front());
     }
 
     using size_t = std::string::size_type;
@@ -31,9 +25,9 @@ namespace sequoia
     {
       text.replace(pos, 1, separator);
       const auto next{pos + separator.size()};
-      if((next < text.length()) && std::isalpha(text[next]))
+      if((next < text.length()) && ascii::is_alphabetic(text[next]))
       {
-        text[next] = upper(text[next]);
+        text[next] = ascii::to_uppercase(text[next]);
       }
 
       pos += (separator.size() + 1);
@@ -51,7 +45,7 @@ namespace sequoia
 
   std::string& to_snake_case(std::string& text)
   {
-    return camel_to_words(text, "_", [](char c) { return static_cast<char>(std::tolower(static_cast<unsigned char>(c))); });
+    return camel_to_words(text, "_", ascii::to_lowercase);
   }
 
   [[nodiscard]]
@@ -65,8 +59,7 @@ namespace sequoia
   {
     if(!text.empty())
     {
-      auto& c{text.front()};
-      c = static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+      text.front() = ascii::to_uppercase(text.front());
     }
 
     return text;
@@ -83,8 +76,7 @@ namespace sequoia
   {
     if(!text.empty())
     {
-      auto& c{text.front()};
-      c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+      text.front() = ascii::to_lowercase(text.front());
     }
 
     return text;

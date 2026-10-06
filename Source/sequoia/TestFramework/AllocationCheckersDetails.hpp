@@ -17,6 +17,8 @@
 #include "sequoia/TestFramework/SemanticsCheckersDetails.hpp"
 #include "sequoia/TestFramework/FreeCheckers.hpp"
 
+#include <format>
+
 namespace sequoia::testing::impl
 {
   struct allocation_advice
@@ -617,7 +619,7 @@ namespace sequoia::testing::impl
     {
       sentinel<Mode> s{logger, ""};
 
-      const auto mess{std::string{"for operator"}.append(to_string(comparison.value)).append(" ").append(tag)};
+      const auto mess{std::format("for operator{} {}", to_string(comparison.value), tag)};
       check_no_allocation<C>(logger, x, mess, checkers...);
 
       return !s.failure_detected();
@@ -691,14 +693,14 @@ namespace sequoia::testing::impl
 
   template<test_mode Mode, class Actions, movable_comparable T, class U, alloc_getter<T>... Getters>
     requires checkable_against_for_semantics<Mode, T, U> && (sizeof...(Getters) > 0)
-  std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const U& y, optional_ref<const U> movedFrom, const dual_allocation_checker<T, Getters>&... checkers)
+  std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const U& y, opt_ref<const U> movedFrom, const dual_allocation_checker<T, Getters>&... checkers)
   {
     return do_check_move_construction(logger, actions, std::forward<T>(z), y, movedFrom, allocation_checker{checkers.info(), z}...);
   }
 
   template<test_mode Mode, class Actions, movable_comparable T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
     requires checkable_against_for_semantics<Mode, T, U> && (sizeof...(Getters) > 0)
-  void check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& u, T&& v, const U& y, optional_ref<const U> movedFrom, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
+  void check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& u, T&& v, const U& y, opt_ref<const U> movedFrom, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
   {
     do_check_move_assign(logger, actions, u, std::forward<T>(v), y, movedFrom, std::move(yMutator), dual_allocation_checker{checkers.info(), u, v}...);
   }

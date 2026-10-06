@@ -8,12 +8,17 @@
 #include "TestRunnerTestCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
 
+#include "sequoia/Runtime/ShellCommands.hpp"
+#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/TestCreator.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <array>
+#include <format>
 #include <fstream>
 
 namespace sequoia::testing
@@ -44,24 +49,38 @@ namespace sequoia::testing
 
   void test_runner_test_creation::test_type_handling()
   {
-    check_exception_thrown<std::logic_error>("Empty string", []() { return handle_as_ref(""); });
-    check_exception_thrown<std::logic_error>("Just spaces", []() { return handle_as_ref(" "); });
-    check("Letter",        handle_as_ref("a"));
-    check("int",          !handle_as_ref("int"));
-    check(" int",         !handle_as_ref(" int"));
-    check("  int",        !handle_as_ref("  int"));
-    check("int*",         !handle_as_ref("int*"));
-    check("int&",         !handle_as_ref("int&"));
-    check("int *",        !handle_as_ref("int *"));
-    check(" int ",        !handle_as_ref(" int "));
-    check("long",         !handle_as_ref("long"));
-    check("longint",      handle_as_ref("longint"));
-    check("long int",     !handle_as_ref("long int"));
-    check("double",       !handle_as_ref("double"));
-    check("std::size_t",  !handle_as_ref("std::size_t"));
-    check("tuple<int>",    handle_as_ref("tuple<int>"));
-    check("tuple<int >",   handle_as_ref("tuple<int >"));
-    check("tuple< int >",  handle_as_ref("tuple< int >"));
+    check_exception_thrown<std::logic_error>("Empty string", []() { return needs_reference_suffix(""); });
+    check_exception_thrown<std::logic_error>("Just spaces", []() { return needs_reference_suffix(" "); });
+    check_exception_thrown<std::logic_error>("Just a tab", []() { return needs_reference_suffix("\t"); });
+    check("Letter",        needs_reference_suffix("a"));
+    check("int",          !needs_reference_suffix("int"));
+    check(" int",         !needs_reference_suffix(" int"));
+    check("  int",        !needs_reference_suffix("  int"));
+    check("int*",         !needs_reference_suffix("int*"));
+    check("int&",         !needs_reference_suffix("int&"));
+    check("int *",        !needs_reference_suffix("int *"));
+    check(" int ",        !needs_reference_suffix(" int "));
+    check("long",         !needs_reference_suffix("long"));
+    check("longint",      needs_reference_suffix("longint"));
+    check("long int",     !needs_reference_suffix("long int"));
+    check("double",       !needs_reference_suffix("double"));
+    check("std::size_t",  !needs_reference_suffix("std::size_t"));
+    check("tuple<int>",    needs_reference_suffix("tuple<int>"));
+    check("tuple<int >",   needs_reference_suffix("tuple<int >"));
+    check("tuple< int >",  needs_reference_suffix("tuple< int >"));
+
+    // Each spelling below contains a shorter spelling from the list, such as
+    // "signed", "int" or "char". Only a whole first token matches the list.
+    check("unsigned int",        !needs_reference_suffix("unsigned int"));
+    check("uint8_t",             !needs_reference_suffix("uint8_t"));
+    check("int64_t",             !needs_reference_suffix("int64_t"));
+    check("std::int64_t",        !needs_reference_suffix("std::int64_t"));
+    check("char16_t",            !needs_reference_suffix("char16_t"));
+    check("wchar_t",             !needs_reference_suffix("wchar_t"));
+    check("std::intptr_t",        needs_reference_suffix("std::intptr_t"));
+
+    // The first token is compared, so a listed alias may be followed by more
+    check("std::size_t const",   !needs_reference_suffix("std::size_t const"));
   }
 
   void test_runner_test_creation::test_project_namespace()
@@ -143,6 +162,12 @@ namespace sequoia::testing
     const auto cmakeCacheDir{projectPath / "build" / back(get_project_paths().build().cmake_cache_dir())};
     fs::create_directory(cmakeCacheDir);
     fs::copy(auxiliary_materials() / "FakeExe.txt", cmakeCacheDir);
+
+    // The test makes the fake executable older than the directory of sequoia's sources. `create`'s check of whether
+    // sequoia has changed since the build then reads the fake tree's build record. The check cannot read that record,
+    // and says so in a warning.
+    const auto sequoiaTime{fs::last_write_time(sequoia_sources())};
+    fs::last_write_time(cmakeCacheDir / "FakeExe.txt", sequoiaTime - std::chrono::hours{1});
     fs::copy(get_project_paths().build().cmake_cache_dir() / "CMakeCache.txt", cmakeCacheDir);
 
     // The copied cache records this build's top-level source directory, and `create` runs CMake from
@@ -190,6 +215,11 @@ namespace sequoia::testing
 
     write_to_file(cmakeSourceDir / "CMakeLists.txt", cmakeLists, std::ios_base::out);
 
+    const main_paths ancillaryMain{projectPath / "TestAncillary" / "TestSandbox.cpp"};
+    fs::create_directories(ancillaryMain.dir());
+    fs::copy(fakeMain.file(), ancillaryMain.file());
+    fs::copy(fakeMain.cmake_lists(), ancillaryMain.cmake_lists());
+
     commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                , "create", "regular", "utilities::iterator", "int*"
@@ -208,15 +238,53 @@ namespace sequoia::testing
                                , "create", "move_only_test", "cloud", "double", "--gen-source", "Weather"
                                , "create", "free_test", "Utilities.h"
                                , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazzer"
-                               , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazagain"
+                               , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazagain",
+                                              "--fullname", "bazagain_free_test"
                                , "create", "free_test", "Stuff/Doohicky.hpp", "--gen-source", "bar::things"
                                , "create", "free_test", "Global/Stuff/Global.hpp", "--gen-source", "::"
                                , "create", "free_test", "Global/Stuff/Defs.hpp", "--gen-source", ""
                                , "create", "free", std::format("{}/Maths/Angle.hpp", sourceFolderName), "--diagnostics"
                                , "create", "regular_allocation_test", "container"
                                , "create", "move_only_allocation_test", "foo"
+                               , "create", "regular_allocation_test", "pool", "--gen-source", "Memory"
+                               , "create", "move_only_allocation_test", "arena", "-g", "Memory"
+                               // An earlier creation generated Widget.hpp in Stuff, so this one does not generate it
+                               // in Memory
+                               , "create", "regular_allocation_test", "widget", "-g", "Memory"
                                , "create", "performance_test", "Container.hpp"
-                               , "create", "performance_test", "Container.hpp"}
+                               , "create", "performance_test", "Container.hpp"
+                               , "create", "free_test", "Utilities.h", "--fullname", "utility_functions_test"
+                               , "create", "regular_test", "maths::angle", "long double",
+                                              "--fullname", "angle_regular_test"
+                               , "create", "move_only_test", "cloud", "double", "--fullname", "cloud_move_only_test"
+                               // The testing utilities are named by a path that needs normalising, and lie in the
+                               // test's own directory, so the test includes them by file name
+                               , "create", "regular_test", "maths::probability", "double",
+                                              "--fullname", "probability_family_test",
+                                              "--testing-utilities", "Stuff/../Maths/ProbabilityTestingUtilities.hpp"
+                               // The testing utilities are named by file name alone, and lie in another directory,
+                               // so the test includes them by their path relative to Tests
+                               , "create", "regular_test", "human", "std::string",
+                                              "--fullname", "human_shared_tester_test",
+                                              "--testing-utilities", "WidgetTestingUtilities.hpp"
+                               // The next two creations use new types, so every class they register is new
+                               , "create", "regular_test", "stuff::gizmo", "int", "-g", "Stuff",
+                                              "--fullname", "gizmo_semantics_test"
+                               , "create", "move_only_test", "stuff::gadget", "int", "-g", "Stuff",
+                                              "--fullname", "gadget_family_test",
+                                              "--testing-utilities", "WidgetTestingUtilities.hpp"
+                               // The testing utilities are named by their full path
+                               , "create", "regular_test", "maths::angle", "long double",
+                                              "--fullname", "angle_family_test",
+                                              "--testing-utilities",
+                                              (projectPath / "Tests/Maths/AngleTestingUtilities.hpp").generic_string()
+                               // The test's name ends in `utilities`, yet the test's header is added to the common
+                               // includes
+                               , "create", "free_test", "Utilities.h", "--fullname", "string_utilities"
+                               , "create", "regular_allocation_test", "container",
+                                              "--fullname", "container_family_allocation_test",
+                                              "--testing-utilities", "ContainerTestingUtilities.hpp"
+                               , "create", "performance_test", "Container.hpp", "--fullname", "container_speed_test"}
     };
 
     std::stringstream outputStream{};
@@ -226,29 +294,34 @@ namespace sequoia::testing
                    "    ",
                    {.source_folder{sourceFolder},
                     .main_cpp{fs::relative(fakeMain.file(), projectPath).generic_string()},
+                    .ancillary_main_cpps{{"TestAncillary/TestSandbox.cpp"}},
                     .common_includes{"TestShared/SharedIncludes.hpp"}},
                    outputStream};
 
     check(equality, "Test creation return code", tr.execute(), return_code::success);
 
-    if(std::ofstream file{projectPath / "output" / "io.txt"})
-    {
-      file << outputStream.str();
-    }
+    check(equivalence, "The ancillary main, edited as the main is", ancillaryMain.file(), fakeMain.file());
+    check(equivalence,
+          "The ancillary main's CMakeLists, edited as the main's is",
+          ancillaryMain.cmake_lists(),
+          fakeMain.cmake_lists());
+
+    write_to_file(projectPath / "output" / "io.txt", outputStream.str(), std::ios_base::out);
 
     check_directory(projectName, "output");
     check_directory(projectName, "Source");
     check_directory(projectName, "Tests");
     check_directory(projectName, "TestSandbox");
+    check_directory(projectName, "TestShared");
 
-    test_foreign_source_dir_refusal(projectName, sourceFolder, cmakeCacheDir / "CMakeCache.txt", fakeMain);
+    test_cmake_rerun_failures(projectName, sourceFolder, cmakeCacheDir / "CMakeCache.txt", fakeMain);
     record_cmake_source_dir(cmakeCacheDir / "CMakeCache.txt", cmakeSourceDir);
   }
 
-  void test_runner_test_creation::test_foreign_source_dir_refusal(std::string_view projectName,
-                                                                 const std::optional<std::string>& sourceFolder,
-                                                                 const std::filesystem::path& cacheFile,
-                                                                 const main_paths& fakeMain)
+  void test_runner_test_creation::test_cmake_rerun_failures(std::string_view projectName,
+                                                           const std::optional<std::string>& sourceFolder,
+                                                           const std::filesystem::path& cacheFile,
+                                                           const main_paths& fakeMain)
   {
     const auto projectPath{auxiliary_materials() / projectName};
 
@@ -267,21 +340,35 @@ namespace sequoia::testing
       }
     };
 
-    // The refusal names two paths, and the default postprocessor makes only the first relative.
-    auto relativeToRoot{
-      [](const project_paths& projPaths, std::string message) {
-        replace_all(message, projPaths.project_root().generic_string() + "/", "");
-        return message;
+    // The fake project's build tree is named for this project's preset, and the messages name the tree,
+    // so `stabilizeMessage` masks the preset. `stabilizeMessage` also keeps the whole message, so that a
+    // check can tell which step threw, not only that one did.
+    std::string message{};
+    auto stabilizeMessage{
+      [&message](const project_paths& projPaths, std::string thrown) {
+        message = thrown;
+        const auto preset{back(projPaths.build().cmake_cache_dir()).generic_string()};
+        replace_all(thrown, std::format("/{}/", preset), "/<preset>/");
+        replace_all(thrown,
+                    std::format("--preset {}`", runtime::quote_for_shell(preset)),
+                    std::format("--preset {}`", runtime::quote_for_shell("<preset>")));
+        return relative_to_root(projPaths, std::move(thrown));
       }
     };
 
     record_cmake_source_dir(cacheFile, projectPath / "Absent");
-    check_exception_thrown<std::runtime_error>(reporter{"Source directory absent"}, createAgain, relativeToRoot);
+    check_exception_thrown<std::runtime_error>(reporter{"Source directory absent"}, createAgain, stabilizeMessage);
 
     record_cmake_source_dir(cacheFile, auxiliary_materials());
     check_exception_thrown<std::runtime_error>(reporter{"Source directory outside the project"},
                                                createAgain,
-                                               relativeToRoot);
+                                               stabilizeMessage);
+
+    // The source directory recorded now holds no presets, so CMake itself fails
+    record_cmake_source_dir(cacheFile, projectPath / "Source");
+    message.clear();
+    check_exception_thrown<std::runtime_error>(reporter{"CMake fails"}, createAgain, stabilizeMessage);
+    check("The failure reported is CMake's", message.starts_with("Running CMake on the new tests failed"));
   }
 
   void test_runner_test_creation::record_cmake_source_dir(const std::filesystem::path& cacheFile,
@@ -304,22 +391,130 @@ namespace sequoia::testing
 
   void test_runner_test_creation::test_creation_failure()
   {
-      check_exception_thrown<std::runtime_error>(
-        reporter{"Plurgh.h does not exist"},
-        [this]() {
-          std::stringstream outputStream{};
-          commandline_arguments args{{zeroth_arg("FakeProject"), "create", "free", "Plurgh.h"}};
-          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
-          return tr.execute();
-        });
+    const auto project{auxiliary_materials() / "FakeProject"};
 
-      check_exception_thrown<std::runtime_error>(
-        reporter{"Typo in specified class header"},
-        [this]() {
-          std::stringstream outputStream{};
-          commandline_arguments args{{zeroth_arg("FakeProject"), "create", "regular_test", "bar::things", "double", "--header", "fakeProject/Stuff/Thingz.hpp"}};
-          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
-        });
+    auto create{
+      [this](std::initializer_list<std::string> creationArgs) {
+        const auto argList{
+          [&]() {
+            std::vector<std::string> list{zeroth_arg("FakeProject"), "create"};
+            list.append_range(creationArgs);
+            return list;
+          }()
+        };
+
+        std::stringstream outputStream{};
+        commandline_arguments args{argList};
+        test_runner tr{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+      }
+    };
+
+    auto refused{
+      [this, &create](std::string_view description, std::initializer_list<std::string> creationArgs) {
+        check_exception_thrown<std::runtime_error>(reporter{description},
+                                                   [&create, creationArgs]() { create(creationArgs); });
+      }
+    };
+
+    refused("Plurgh.h does not exist", {"free", "Plurgh.h"});
+
+    // No directory named Pools exists yet. One check after the refusals fails if a refused creation under -g Pools
+    // creates such a directory within Source or Tests; another fails if any refused creation amends a CMakeLists.txt.
+    auto readCMakeLists{
+      [&project]() {
+        constexpr std::array<std::string_view, 2> cmakeLists{"Source/fakeProject/CMakeLists.txt",
+                                                             "TestSandbox/CMakeLists.txt"};
+
+        auto contents{
+          [&project](std::string_view file) { return read_to_string(project / file, std::ios_base::in).value(); }
+        };
+
+        return cmakeLists | std::views::transform(contents) | std::ranges::to<std::vector>();
+      }
+    };
+
+    const auto cmakeListsBefore{readCMakeLists()};
+
+    refused("An allocation test named with its namespace",
+            {"regular_allocation_test", "stuff::pool", "-g", "Pools"});
+    refused("An allocation test named with its namespace, of a class whose header exists",
+            {"regular_allocation_test", "stuff::container", "--header", "Container.hpp"});
+    refused("An allocation test named as a template-id",
+            {"regular_allocation_test", "pool<T>", "-g", "Pools"});
+    refused("An allocation test named with a space",
+            {"regular_allocation_test", "my pool", "-g", "Pools"});
+    refused("An allocation test named with a leading digit",
+            {"regular_allocation_test", "2pool", "-g", "Pools"});
+    refused("An allocation test with an empty name",
+            {"regular_allocation_test", "", "-g", "Pools"});
+
+    check("No Pools directory created for a refused allocation test",
+          !fs::exists(project / "Source/fakeProject/Pools") && !fs::exists(project / "Tests/Pools"));
+    check(equality, "No CMakeLists.txt amended for a refused allocation test", readCMakeLists(), cmakeListsBefore);
+
+    refused("Typo in specified class header",
+            {"regular_test", "bar::things", "double", "--header", "fakeProject/Stuff/Thingz.hpp"});
+
+    refused("A forename and a full name which disagree",
+            {"free", "Utilities.h", "--forename", "utils", "--fullname", "utility_functions_test"});
+    refused("A full name for a framework-diagnostics pair",
+            {"free", "Utilities.h", "--diagnostics", "--fullname", "utilities_diagnostics"});
+    refused("An empty full name", {"free", "Utilities.h", "--fullname", ""});
+    refused("A full name which is not an identifier", {"free", "Utilities.h", "--fullname", "2nd_utilities_test"});
+    refused("A full name already registered", {"free", "Utilities.h", "--fullname", "widget_test"});
+    refused("A full name whose file is present, ignoring case",
+            {"free", "Stuff/Doohicky.hpp", "--fullname", "widgettest"});
+
+    refused("Testing utilities absent",
+            {"regular_test", "bar::things", "double", "--testing-utilities", "AbsentTestingUtilities.hpp"});
+    refused("Testing utilities outside the tests repository",
+            {"regular_test", "bar::things", "double", "--testing-utilities", "../TestSandbox/TestSandbox.cpp"});
+
+    // A second file of the same name makes a bare name ambiguous; a directory of that name does not.
+    fs::copy(project / "Tests/Stuff/WidgetTestingUtilities.hpp", project / "Tests/Utilities");
+    refused("Testing utilities ambiguous",
+            {"regular_test", "bar::things", "double", "--testing-utilities", "WidgetTestingUtilities.hpp"});
+
+    fs::create_directories(project / "Tests/Decoy/ProbabilityTestingUtilities.hpp");
+    refused("Testing utilities found past a directory of their name, then a full name already registered",
+            {"regular_test", "stuff::widget", "std::vector<int>",
+             "--testing-utilities", "ProbabilityTestingUtilities.hpp",
+             "--fullname", "widget_test"});
+
+    // The type sprocket is new, so every file for it would be new too: the
+    // checks below then see any file written before a refusal. Each creation
+    // generates sprocket's header: a search for the header would fail, and
+    // keep these checks green without the refusal under test.
+    refused("An empty equivalent type", {"regular_test", "stuff::sprocket", "", "-g", "Stuff"});
+    refused("An equivalent type of only spaces", {"move_only_test", "stuff::sprocket", " ", "-g", "Stuff"});
+    refused("An equivalent type of only a tab", {"regular_test", "stuff::sprocket", "\t", "-g", "Stuff"});
+    refused("A full name whose file is a companion's",
+            {"regular_test", "stuff::sprocket", "int", "-g", "Stuff", "--fullname", "sprocket_testing_utilities"});
+
+    auto namesSprocket{
+      [](const fs::directory_entry& entry) { return entry.path().filename().string().contains("Sprocket"); }
+    };
+
+    check("No file written for a refused test",
+          std::ranges::none_of(fs::recursive_directory_iterator{project}, namesSprocket));
+
+    auto mentionsSprocket{
+      [&project](std::string_view file) {
+        const auto text{read_to_string(project / file, std::ios_base::in).value()};
+        return text.contains("sprocket") || text.contains("Sprocket");
+      }
+    };
+
+    check("No registration for a refused test",
+          std::ranges::none_of(std::array<std::string_view, 3>{"TestSandbox/TestSandbox.cpp",
+                                                               "TestSandbox/CMakeLists.txt",
+                                                               "TestShared/SharedIncludes.hpp"},
+                               mentionsSprocket));
   }
 
   void test_runner_test_creation::check_directory(std::string_view projectName, std::string_view dirName)

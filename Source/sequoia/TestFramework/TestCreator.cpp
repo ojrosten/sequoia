@@ -15,11 +15,14 @@
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TestFramework/Commands.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <algorithm>
 #include <array>
 #include <chrono>
 #include <format>
+#include <ranges>
 #include <stdexcept>
 
 namespace sequoia::testing
@@ -27,6 +30,19 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   constexpr auto npos{std::string::npos};
+
+  namespace
+  {
+    constexpr auto path_of{[](const fs::directory_entry& entry) { return entry.path(); }};
+
+    [[nodiscard]]
+    bool is_identifier(std::string_view name)
+    {
+      return !name.empty()
+          && !ascii::is_digit(name.front())
+          && std::ranges::all_of(name, ascii::is_identifier_character);
+    }
+  }
 
   [[nodiscard]]
   std::string project_namespace_for(const fs::path& sourceProject)
@@ -45,15 +61,7 @@ namespace sequoia::testing
 
     const auto name{back(sourceProject).string()};
 
-    const auto isIdentifier{
-      [&name]() {
-        if(name.empty() || std::isdigit(static_cast<unsigned char>(name.front()))) return false;
-
-        return std::ranges::all_of(name, [](char c){ return std::isalnum(static_cast<unsigned char>(c)) || (c == '_'); });
-      }
-    };
-
-    if(!isIdentifier())
+    if(!is_identifier(name))
       throw std::runtime_error{
               std::format(
                 "The project's namespace is taken from its source directory, {}, which in this case is not a\n"
@@ -76,7 +84,7 @@ namespace sequoia::testing
 
         This is not a general substitute. `std::quoted` escapes `"` and `\`; this escapes
         nothing, and would be wrong for a string containing either. It is exact for what
-        both call sites pass - a project-relative `generic_string()` - and the generated
+        every call site passes - a project-relative `generic_string()` - and the generated
         `io.txt` is byte-identical either way, which was checked rather than assumed.
      */
     [[nodiscard]]
@@ -160,38 +168,29 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  bool handle_as_ref(std::string_view type)
+  bool needs_reference_suffix(std::string_view spelling)
   {
-    if(type.empty())
+    if(ascii::is_empty_or_whitespace(spelling))
       throw std::logic_error{"Equivalent type is unspecified"};
 
-    const auto startPos{type.find_first_not_of(' ')};
-    if(startPos == npos)
-      throw std::logic_error{"Equivalent type is unspecified"};
+    if((spelling.back() == '*') || (spelling.back() == '&'))
+      return false;
 
-    if((type.back() == '*') || (type.back() == '&')) return false;
+    const auto startPos{spelling.find_first_not_of(' ')};
+    const auto endPos{spelling.find_first_of(' ', startPos)};
+    const auto token{spelling.substr(startPos, endPos - startPos)};
 
-    const auto endPos{type.find_first_of(' ', startPos)};
-    auto token{std::string_view{type}.substr(startPos, endPos - startPos)};
+    constexpr auto unsuffixed{std::to_array<std::string_view>({
+      "int", "float", "double", "bool", "char", "short", "long", "signed", "unsigned",
+      "wchar_t", "char8_t", "char16_t", "char32_t",
+      "size_t", "ptrdiff_t",
+      "uint8_t", "uint16_t", "uint32_t", "uint64_t", "int8_t", "int16_t", "int32_t", "int64_t",
+      "std::size_t", "std::ptrdiff_t",
+      "std::uint8_t", "std::uint16_t", "std::uint32_t", "std::uint64_t",
+      "std::int8_t", "std::int16_t", "std::int32_t", "std::int64_t"
+    })};
 
-    constexpr std::array<std::string_view, 9> funTypes{"int", "float", "double", "bool", "char", "short", "long", "signed", "unsigned"};
-    for(auto t : funTypes)
-    {
-      if(const auto pos{token.find(t)}; pos != npos)
-      {
-        if(token.size() == t.size()) return false;
-
-        return (t.size() < token.size()) && (token[t.size()] != ' ');
-      }
-    }
-
-    constexpr std::array<std::string_view, 10> types{"std::size_t", "size_t", "uint8_t", "uint16_t", "uint32_t", "uint64_t", "int8_t", "int16_t", "int32_t", "int64_t"};
-    for(auto t : types)
-    {
-      if(type == t) return false;
-    }
-
-    return true;
+    return !std::ranges::contains(unsuffixed, token);
   }
 
   [[nodiscard]]
@@ -202,7 +201,7 @@ namespace sequoia::testing
     std::string str{"<"};
     for(const auto& d : data)
     {
-      str.append(d.species).append(" ").append(d.symbol).append(", ");
+      str.append(std::format("{} {}, ", d.species, d.symbol));
     }
     str.replace(str.size() - 2, 2, ">");
 
@@ -217,7 +216,7 @@ namespace sequoia::testing
 
     auto mess{
       [str](std::string_view details){
-        return std::string{"<"}.append(str).append(">: ").append(details);
+        return std::format("<{}>: {}", str, details);
       }
     };
 
@@ -300,7 +299,14 @@ namespace sequoia::testing
     // Removed first, so that a run which writes nothing cannot hand back the previous run's output.
     const auto outputPath{build.cmake_cache_dir() / "CMakeOutput.txt"};
     fs::remove(outputPath);
-    invoke(cd_cmd(sourceDir) && cmake_cmd(build, outputPath));
+    throw_unless_succeeded(invoke(cd_cmd(sourceDir) && cmake_cmd(build, outputPath)),
+                           "Running CMake on the new tests",
+                           std::format("The new tests' files and registrations are in place.\n"
+                                       "CMake's output is {}.\n"
+                                       "Once the cause is fixed, run `{}` from {}",
+                                       describe_output_location(sourceDir, outputPath),
+                                       cmake_invocation(build),
+                                       sourceDir.generic_string()));
 
     return read_to_string(outputPath, std::ios_base::in).value_or(std::string{});
   }
@@ -308,13 +314,18 @@ namespace sequoia::testing
 
   //=========================================== nascent_test_base ===========================================//
 
-  void nascent_test_base::camel_name(std::string name) { m_CamelName = to_camel_case(std::move(name)); }
+  void nascent_test_base::name_files_after_type(std::string_view typeName)
+  {
+    m_TypeFileStem = to_camel_case(typeName);
+    if(m_Header.empty())
+      m_Header = fs::path{m_TypeFileStem}.concat(".hpp");
+  }
 
   [[nodiscard]]
   std::vector<std::string> nascent_test_base::framework_diagnostics_stubs()
   {
     return {"Diagnostics.hpp", "Diagnostics.cpp"};
-  };
+  }
 
   [[nodiscard]]
   fs::path nascent_test_base::build_source_path(const fs::path& filename) const
@@ -338,11 +349,167 @@ namespace sequoia::testing
     return {};
   }
 
+  [[nodiscard]]
+  std::string nascent_test_base::test_name() const
+  {
+    return m_FullName.value_or(name_from_forename_and_surname());
+  }
+
+  [[nodiscard]]
+  std::string nascent_test_base::name_from_forename_and_surname() const
+  {
+    return std::format("{}_{}", m_Forename, m_Surname);
+  }
+
+  [[nodiscard]]
+  std::string nascent_test_base::test_file_stem() const
+  {
+    return to_camel_case(test_name());
+  }
+
+  [[nodiscard]]
+  std::string nascent_test_base::testing_utilities_include() const
+  {
+    const auto withinHostDir{m_TestingUtilities.lexically_relative(m_HostDir)};
+    const bool isWithin     {!withinHostDir.empty() && (*withinHostDir.begin() != "..")};
+
+    return (isWithin ? withinHostDir : m_TestingUtilities.lexically_relative(m_Paths.tests().repo())).generic_string();
+  }
+
+  /** The given path is normalised, and made relative to the tests repository if it is absolute. So
+      `./Stuff/X.hpp`, `Stuff/../Maths/X.hpp` and a full path all find their file. The candidates are
+      the regular files whose paths end with the given path, sought anywhere within the repository; a
+      directory is never a candidate. Exactly one file must be a candidate.
+   */
+  void nascent_test_base::locate_testing_utilities()
+  {
+    const auto& repo    {m_Paths.tests().repo()};
+    const auto  repoName{fs::relative(repo, m_Paths.project_root()).generic_string()};
+    const auto  sought  {m_TestingUtilities.lexically_normal()};
+
+    auto failureMessage{
+      [&sought, &repoName](std::string_view problem) {
+        return std::format("The testing utilities {} {} the tests repository {}",
+                           sought.generic_string(),
+                           problem,
+                           repoName);
+      }
+    };
+
+    const auto withinRepo{sought.is_absolute() ? sought.lexically_relative(repo) : sought};
+    if(withinRepo.empty() || (*withinRepo.begin() == ".."))
+      throw std::runtime_error{failureMessage("do not lie within")};
+
+    auto endsWithSought{
+      [&repo, suffix{withinRepo.generic_string()}](const fs::directory_entry& entry) {
+        const auto relative{entry.path().lexically_relative(repo).generic_string()};
+        return entry.is_regular_file() && ((relative == suffix) || relative.ends_with("/" + suffix));
+      }
+    };
+
+    auto candidates{
+        fs::recursive_directory_iterator{repo}
+      | std::views::filter(endsWithSought)
+      | std::views::transform(path_of)
+      | std::ranges::to<std::vector>()
+    };
+
+    if(candidates.empty())
+      throw std::runtime_error{failureMessage("cannot be found in")};
+
+    if(candidates.size() > 1)
+    {
+      std::ranges::sort(candidates);
+      auto relativeToRepo{[&repo](const fs::path& p) { return p.lexically_relative(repo).generic_string(); }};
+
+      const auto candidateList{
+          candidates
+        | std::views::transform(relativeToRepo)
+        | std::views::join_with('\n')
+        | std::ranges::to<std::string>()
+      };
+
+      throw std::runtime_error{
+        std::format("The testing utilities {} are ambiguous in the tests repository {}; they may be any of\n{}",
+                    sought.generic_string(),
+                    repoName,
+                    candidateList)
+      };
+    }
+
+    m_TestingUtilities = candidates.front();
+  }
+
+  void nascent_test_base::check_full_name(std::span<const fs::path> companionFiles,
+                                          std::span<const fs::path> ownFiles) const
+  {
+    const auto& name{m_FullName.value()};
+
+    if(!is_identifier(name))
+      throw std::runtime_error{std::format("--fullname '{}' is not an identifier, so cannot name a test class", name)};
+
+    auto registers{
+      [registration{std::format("register_test<{}>", name)}](const fs::path& mainCpp) {
+        const auto text{read_to_string(mainCpp, std::ios_base::in)};
+        if(!text)
+          throw std::runtime_error{report_failed_read(mainCpp)};
+
+        return text->contains(registration);
+      }
+    };
+
+    auto registersIn{[&registers](const main_paths& main) { return registers(main.file()); }};
+    if(registersIn(m_Paths.main()) || std::ranges::any_of(m_Paths.ancillary_main_cpps(), registersIn))
+      throw std::runtime_error{std::format("--fullname {} names a test which is already registered", name)};
+
+    // Case is ignored, since the filesystems of macOS and Windows ignore it.
+    auto sameIgnoringCase{
+      [](const fs::path& lhs, const fs::path& rhs) {
+        return ascii::same_ignoring_case(lhs.filename().native(), rhs.filename().native());
+      }
+    };
+
+    // The path is made relative lexically, to keep the spelling requested; resolving the path would give the
+    // spelling of the file already present.
+    auto relativeToRoot{
+      [this](const fs::path& p) { return p.lexically_relative(m_Paths.project_root()).generic_string(); }
+    };
+
+    for(const auto& own : ownFiles)
+    {
+      auto collides{[&own, &sameIgnoringCase](const fs::path& other) { return sameIgnoringCase(own, other); }};
+
+      if(const auto companion{std::ranges::find_if(companionFiles, collides)}; companion != companionFiles.end())
+        throw std::runtime_error{
+          std::format("--fullname {} would name the test's file {}, which clashes with {}, a file to be written for the type under test",
+                      name,
+                      relativeToRoot(own),
+                      relativeToRoot(*companion))
+        };
+
+      if(fs::is_directory(own.parent_path()))
+      {
+        auto entries{fs::directory_iterator{own.parent_path()} | std::views::transform(path_of)};
+
+        if(const auto existing{std::ranges::find_if(entries, collides)}; existing != entries.end())
+          throw std::runtime_error{
+            std::format("--fullname {} would name the test's file {}, but {} is already present",
+                        name,
+                        relativeToRoot(own),
+                        relativeToRoot(*existing))
+          };
+      }
+    }
+  }
+
   template<std::invocable<std::string&> FileTransformer>
   [[nodiscard]]
-  std::string nascent_test_base::create_file(std::string_view nameStub, std::string_view nameEnding, FileTransformer transformer) const
+  std::string nascent_test_base::create_file(std::string_view nameStub,
+                                             std::string_view nameEnding,
+                                             const fs::path& outputFile,
+                                             add_to_common_includes include,
+                                             FileTransformer transformer) const
   {
-    const auto outputFile{(host_dir() / camel_name()) += nameEnding};
     auto stringify{[root{m_Paths.project_root()}] (const fs::path file) { return fs::relative(file, root).generic_string();  }};
 
     if(fs::exists(outputFile))
@@ -371,7 +538,7 @@ namespace sequoia::testing
 
     if(outputFile.extension() == ".hpp")
     {
-      if(const auto str{outputFile.string()}; str.find("Utilities.hpp") == npos)
+      if(include == add_to_common_includes::yes)
       {
         add_include(m_Paths.main().common_includes(), fs::relative(outputFile, m_Paths.tests().repo()).generic_string());
       }
@@ -380,47 +547,87 @@ namespace sequoia::testing
     {
       auto addToCMake{
         [this, outputFile](const fs::path& mainCMake) {
-          add_to_cmake(mainCMake, m_Paths.tests().repo(), outputFile, "target_sources(", ")\n", "${TestDir}/");
+          add_to_cmake(mainCMake,
+                       {.name{"target_sources"}},
+                       {.file_to_add{outputFile},
+                        .directory{m_Paths.tests().repo()},
+                        .directory_spelling{"${TestDir}"}});
         }
       };
 
       ammend_file(m_Paths, addToCMake, [](const main_paths& info) { return info.cmake_lists(); });
     }
 
-    return std::string{"\""}.append(stringify(outputFile)).append("\"");
+    return std::format("\"{}\"", stringify(outputFile));
   }
 
-  template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::invocable<std::string&> FileTransformer>
-  void nascent_test_base::finalize(WhenAbsent fn,
-                                   const std::vector<std::string>& stubs,
+  // The template head spells std::filesystem as the declaration does, not through fs: MSVC matches a
+  // constrained definition to its declaration token by token (C2244).
+  template<invocable_exact_r<std::filesystem::path, std::filesystem::path> GeneratedHeaderPath,
+           std::invocable<std::filesystem::path> Generator,
+           std::invocable<std::string&> FileTransformer>
+  void nascent_test_base::finalize(GeneratedHeaderPath generatedHeaderPath,
+                                   Generator generate,
+                                   const std::vector<companion_specification>& companionSpecifications,
+                                   const std::vector<std::string>& ownStubs,
                                    const std::vector<std::string>& testClasses,
                                    std::string_view nameStub,
                                    FileTransformer transformer)
   {
+    if(!m_TestingUtilities.empty())
+      locate_testing_utilities();
+
     stream() << "Creating files for new test:\n";
 
-    const auto srcPath{[this, fn]() {
-        auto pth{build_source_path(m_Header)};
-        if(pth.empty() && (m_SourceOption == gen_source_option::yes))
-          pth = fn(m_Header);
+    const auto existingSource{build_source_path(m_Header)};
+    const bool generateSource{existingSource.empty() && (m_SourceOption == gen_source_option::yes)};
+    const auto srcPath       {generateSource ? generatedHeaderPath(m_Header) : existingSource};
+    if(srcPath.empty())
+      on_source_path_error();
 
-        if(pth.empty())
-          on_source_path_error();
-
-        return pth;
-      }()
-    };
+    if(!generateSource && (m_SourceOption == gen_source_option::yes))
+    {
+      using namespace parsing::commandline;
+      stream() << warning(std::format("{} already exists, so not generated",
+                                      fs::relative(srcPath, m_Paths.project_root()).generic_string()))
+               << '\n';
+    }
 
     finalize_header(srcPath);
 
-    for(const auto& stub : stubs)
+    auto companionFile{
+      [this](const companion_specification& specification) { return (host_dir() / type_file_stem()) += specification.stub; }
+    };
+
+    auto ownFile{
+      [this](const std::string& stub) { return (host_dir() / test_file_stem()) += fs::path{stub}.extension(); }
+    };
+
+    const auto companionFiles{companionSpecifications | std::views::transform(companionFile) | std::ranges::to<std::vector>()};
+    const auto ownFiles      {ownStubs                | std::views::transform(ownFile)       | std::ranges::to<std::vector>()};
+
+    // Everything is checked before anything is written.
+    if(m_FullName)
+      check_full_name(companionFiles, ownFiles);
+
+    if(generateSource)
+      generate(srcPath);
+
+    fs::create_directories(host_dir());
+
+    for(const auto& [specification, file] : std::views::zip(companionSpecifications, companionFiles))
     {
-      stream() << create_file(nameStub, stub, transformer) << '\n';
+      stream() << create_file(nameStub, specification.stub, file, specification.include, transformer) << '\n';
+    }
+
+    for(const auto& [stub, file] : std::views::zip(ownStubs, ownFiles))
+    {
+      stream() << create_file(nameStub, stub, file, add_to_common_includes::yes, transformer) << '\n';
     }
 
     auto registerTests{
       [this, &testClasses](const fs::path& mainCpp) {
-        add_test_registrations(mainCpp, m_CodeIndent, testClasses);
+        add_test_registrations(mainCpp, testClasses);
       }
     };
 
@@ -432,10 +639,7 @@ namespace sequoia::testing
   void nascent_test_base::finalize_header(const fs::path& sourcePath)
   {
     const auto relSourcePath{fs::relative(sourcePath, m_Paths.source().project())};
-    const auto dir{(m_Paths.tests().repo() / relSourcePath).parent_path()};
-    fs::create_directories(dir);
-
-    m_HostDir = dir;
+    m_HostDir = (m_Paths.tests().repo() / relSourcePath).parent_path();
     m_HeaderPath = fs::relative(sourcePath, m_Paths.source().repo());
   }
 
@@ -473,21 +677,78 @@ namespace sequoia::testing
 
     read_modify_write(srcPath, setCppText);
 
-    add_to_cmake(paths().source().cmake_lists(), paths().source().project(), srcPath, "set(SourceList", ")\n", "");
+    add_to_cmake(paths().source().cmake_lists(),
+                 {.name{"set"}, .leading_arguments{"SourceList"}},
+                 {.file_to_add{srcPath}, .directory{paths().source().project()}});
 
-    read_modify_write(paths().main().cmake_lists(), [&root = paths().project_root()](std::string& text) {
-        replace_all(text, "#!", "");
+    auto uncommentMarkedLines{
+      [](const fs::path& cmakeLists) {
+        read_modify_write(cmakeLists, [](std::string& text) { replace_all(text, "#!", ""); });
       }
-    );
+    };
+
+    ammend_file(paths(), uncommentMarkedLines, [](const main_paths& info) { return info.cmake_lists(); });
   }
 
   void nascent_test_base::make_common_replacements(std::string& text) const
   {
-    
-    replace_all(text, replacement{"?::testing", std::format("{}::testing", project_namespace())},
+    replace_all(text, replacement{"?test_name", test_name()},
+                      replacement{"?TestFile", test_file_stem()},
+                      replacement{"?::testing", std::format("{}::testing", project_namespace())},
                       replacement{"using namespace sequoia::testing;", project_namespace() == "sequoia" ? "" : "using namespace sequoia::testing;\n\n\t"},
                       replacement{"?forename", forename()},
                       replacement{"?surname", surname()});
+
+    tabs_to_spacing(text, code_indent());
+  }
+
+  //=========================================== nascent_class_test_base ===========================================//
+
+  [[nodiscard]]
+  fs::path nascent_class_test_base::generated_header_path(const fs::path& filename) const
+  {
+    const auto& project{paths().source().project()};
+    return filename.is_absolute() ? filename : project / rebase_from(m_SourceDir / filename, project);
+  }
+
+  void nascent_class_test_base::generate_header(const fs::path& headerPath,
+                                                std::string_view semantics,
+                                                std::string_view nameSpace,
+                                                const template_data& templateData)
+  {
+    const auto headerTemplate{std::format("My{}Class.hpp", capitalize(to_camel_case(semantics)))};
+
+    stream() << quote_without_escapes(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
+    fs::create_directories(headerPath.parent_path());
+    fs::copy_file(paths().aux_paths().source_templates() / headerTemplate, headerPath);
+
+    read_modify_write(
+      headerPath,
+      [this, nameSpace, &templateData](std::string& text) { set_header_text(text, nameSpace, templateData); }
+    );
+
+    if(templateData.empty())
+    {
+      set_cpp(headerPath, nameSpace);
+    }
+  }
+
+  void nascent_class_test_base::set_header_text(std::string& text,
+                                                std::string_view nameSpace,
+                                                const template_data& templateData) const
+  {
+    process_copyright_and_namespace(text, copyright(), nameSpace);
+    replace_all(text, "?type", forename());
+    if(templateData.empty())
+    {
+      replace_all(text, "\ttemplate<?>\n", "");
+      replace_all(text, "template<?>\n", "");
+    }
+    else
+    {
+      const auto templateSpec{std::string{"template"}.append(to_string(templateData))};
+      replace_all(text, "template<?>", templateSpec);
+    }
 
     tabs_to_spacing(text, code_indent());
   }
@@ -497,12 +758,16 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_semantics_test::stubs()
   {
-    return {"TestingUtilities.hpp",
-            "TestingDiagnostics.hpp",
-            "TestingDiagnostics.cpp",
-            "Test.hpp",
-            "Test.cpp"};
-  };
+    return {"Test.hpp", "Test.cpp"};
+  }
+
+  [[nodiscard]]
+  std::vector<companion_specification> nascent_semantics_test::companion_specifications()
+  {
+    return {{"TestingUtilities.hpp",   add_to_common_includes::no},
+            {"TestingDiagnostics.hpp", add_to_common_includes::yes},
+            {"TestingDiagnostics.cpp", add_to_common_includes::no}};
+  }
 
   void nascent_semantics_test::finalize()
   {
@@ -555,12 +820,18 @@ namespace sequoia::testing
       }
     }
 
-    if(surname().empty()) surname(to_surname(flavour()));
+    if(surname().empty())
+      surname(to_surname(flavour()));
 
-    camel_name(forename());
-    if(header().empty()) header(fs::path{camel_name()}.concat(".hpp"));
+    name_files_after_type(forename());
 
-    nascent_test_base::finalize([this, &nameSpace](const fs::path& filename) { return when_header_absent(filename, nameSpace); },
+    // No companion is generated if testing utilities were named on the commandline: they hold the
+    // value_tester, and the value_tester's false-negative diagnostics belong with it.
+    nascent_test_base::finalize([this](const fs::path& filename) { return generated_header_path(filename); },
+                                [this, &nameSpace](const fs::path& headerPath) {
+                                  generate_header(headerPath, test_type(), nameSpace, m_TemplateData);
+                                },
+                                testing_utilities().empty() ? companion_specifications() : std::vector<companion_specification>{},
                                 to_stubs(*this),
                                 test_classes(),
                                 "MyClass",
@@ -568,31 +839,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path nascent_semantics_test::when_header_absent(const fs::path& filename, const std::string& nameSpace)
-  {
-    const auto headerTemplate{std::string{"My"}.append(capitalize(to_camel_case(test_type()))).append("Class.hpp")};
-
-    const auto headerPath{filename.is_absolute() ? filename : paths().source().project() / rebase_from(m_SourceDir / filename, paths().source().project())};
-
-    stream() << quote_without_escapes(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
-    fs::create_directories(headerPath.parent_path());
-    fs::copy_file(paths().aux_paths().source_templates() / headerTemplate, headerPath);
-
-    read_modify_write(headerPath, [this, &nameSpace](std::string& text) { set_header_text(text, copyright(), nameSpace); });
-
-    if(m_TemplateData.empty())
-    {
-      set_cpp(headerPath, nameSpace);
-    }
-
-    return headerPath;
-  }
-
-  [[nodiscard]]
   std::vector<std::string> nascent_semantics_test::test_classes() const
   {
-    return { {std::string{forename()}.append("_false_negative_").append(surname())},
-             {std::string{forename()}.append("_").append(surname())}};
+    if(!testing_utilities().empty())
+      return { test_name() };
+
+    return { std::format("{}_false_negative_{}", forename(), surname()), test_name() };
   }
 
   void nascent_semantics_test::transform_file(std::string& text) const
@@ -618,55 +870,21 @@ namespace sequoia::testing
       }
     }
 
-    if(!m_EquivalentTypes.empty())
-    {
-      const auto num{m_EquivalentTypes.size()};
-      const auto prediction{
-        [num](const std::size_t i, std::string_view sep) {
-          std::string p{"prediction"};
-          if(num > 1) p.append("_").append(std::to_string(i));
-          if((i < num - 1) && !sep.empty()) p.append(sep).append(" ");
-          return p;
-        }
-      };
+    constexpr std::string_view predictionName{"prediction"};
+    const auto predictionParameter{
+      std::format("{}{}{} {}",
+                  m_EquivalentType.starts_with("const ") ? "" : "const ",
+                  m_EquivalentType,
+                  needs_reference_suffix(m_EquivalentType) ? "&" : "",
+                  predictionName)
+    };
 
-      std::string args{};
-      for(std::size_t i{}; i < num; ++i)
-      {
-        const auto& type{m_EquivalentTypes[i]};
-        if(!type.empty())
-        {
-          constexpr std::string_view pattern{"const "};
-          if(std::string_view{type}.substr(0, pattern.size()) != pattern)
-          {
-            args.append("const ");
-          }
-
-          args.append(type);
-
-          if(handle_as_ref(type)) args.append("&");
-          args.append(" ");
-
-          args.append(prediction(i, ","));
-        }
-      }
-
-      replace_all(text, "?args", args);
-      replace_all(text, "?predictions", prediction(0, ""));
-    }
-    else
-    {
-      const auto start{text.rfind("template<?>")};
-      const auto finish{text.rfind("};")};
-      if((start != npos) && (finish != npos))
-      {
-        text.erase(start, finish + 2 - start);
-      }
-    }
+    replace_all(text, "?parameter", predictionParameter);
+    replace_all(text, "?prediction", predictionName);
 
     if(!m_TemplateData.empty())
     {
-      replace_all(text, "<?> ", to_string(m_TemplateData).append("\n").append(code_indent()));
+      replace_all(text, "<?> ", std::format("{}\n{}", to_string(m_TemplateData), std::string_view{code_indent()}));
     }
     else
     {
@@ -675,29 +893,20 @@ namespace sequoia::testing
 
     make_common_replacements(text);
 
+    if(!testing_utilities().empty())
+    {
+      constexpr std::string_view generatedUtilities{"#include \"?ClassTestingUtilities.hpp\""};
+      replace_all(text,
+                  generatedUtilities,
+                  std::format("#include \"{}\"\n\n#include \"sequoia/TestFramework/?TestCore.hpp\"",
+                              testing_utilities_include()));
+    }
+
     replace_all(text, replacement{"::?_class", m_QualifiedName},
                       replacement{"?Class.hpp", header_path().generic_string()},
-                      replacement{"?Class", camel_name()},
+                      replacement{"?Class", type_file_stem()},
                       replacement{"?Test", to_camel_case(test_type()).append("Test")},
                       replacement{"?", test_type()});
-  }
-
-  void nascent_semantics_test::set_header_text(std::string& text, std::string_view copyright, std::string_view nameSpace) const
-  {
-    process_copyright_and_namespace(text, copyright, nameSpace);
-    replace_all(text, "?type", forename());
-    if(m_TemplateData.empty())
-    {
-      replace_all(text, "\ttemplate<?>\n", "");
-      replace_all(text, "template<?>\n", "");
-    }
-    else
-    {
-      const auto templateSpec{std::string{"template"}.append(to_string(m_TemplateData))};
-      replace_all(text, "template<?>", templateSpec);
-    }
-
-    tabs_to_spacing(text, code_indent());
   }
 
   //=========================================== nascent_allocation_test ===========================================//
@@ -711,11 +920,22 @@ namespace sequoia::testing
 
   void nascent_allocation_test::finalize()
   {
-    if(surname().empty()) surname(std::string{"allocation_"}.append(to_surname(flavour())));
-    camel_name(forename());
-    if(header().empty()) header(fs::path{camel_name()}.concat(".hpp"));
+    if(!is_identifier(forename()))
+      throw std::runtime_error{
+        std::format("An allocation test takes a bare class name: an identifier. '{}' is not an identifier", forename())
+      };
 
-    nascent_test_base::finalize([](const fs::path& p) { return p; },
+    if(surname().empty())
+      surname(std::format("allocation_{}", to_surname(flavour())));
+    name_files_after_type(forename());
+
+    std::string_view semantics{test_type() == "move_only_allocation" ? "move_only" : "regular"};
+
+    nascent_test_base::finalize([this](const fs::path& filename) { return generated_header_path(filename); },
+                                [this, semantics](const fs::path& headerPath) {
+                                  generate_header(headerPath, semantics, "", {});
+                                },
+                                {},
                                 to_stubs(*this),
                                 test_classes(),
                                 "MyClass",
@@ -725,7 +945,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_allocation_test::test_classes() const
   {
-    return { {std::string{forename()}.append("_").append(surname())} };
+    return { test_name() };
   }
 
   void nascent_allocation_test::transform_file(std::string& text) const
@@ -734,8 +954,13 @@ namespace sequoia::testing
 
     make_common_replacements(text);
 
-    replace_all(text, replacement{"?Class", camel_name()},
-                      replacement{"?Allocation", to_camel_case(test_type())},
+    if(!testing_utilities().empty())
+    {
+      constexpr std::string_view testCore{"#include \"sequoia/TestFramework/?AllocationTestCore.hpp\""};
+      replace_all(text, testCore, std::format("#include \"{}\"\n\n{}", testing_utilities_include(), testCore));
+    }
+
+    replace_all(text, replacement{"?Allocation", to_camel_case(test_type())},
                       replacement{"?_allocation", test_type()});
 
     if (test_type() == "move_only_allocation")
@@ -754,15 +979,33 @@ namespace sequoia::testing
 
   void nascent_behavioural_test::finalize()
   {
-    const auto fallbackSuite{capitalize(forename().empty() ? header().filename().replace_extension().string() : forename())};
+    if(surname().empty())
+      surname(std::format("{}_{}", test_type(), to_surname(flavour())));
 
-    if(forename().empty()) forename(to_snake_case(fallbackSuite));
+    if(full_name())
+    {
+      if(!forename().empty() && (full_name() != name_from_forename_and_surname()))
+        throw std::runtime_error{
+          std::format("--forename {} names the test class {}, but --fullname names it {}: give one, or make them agree",
+                      forename(),
+                      name_from_forename_and_surname(),
+                      full_name().value())
+        };
 
-    if(surname().empty()) surname(std::string{test_type()}.append("_").append(to_surname(flavour())));
+      if(flavour() == nascent_test_flavour::framework_diagnostics)
+        throw std::runtime_error{"--fullname names one test class, but --framework-diagnostics creates two"};
+    }
 
-    camel_name(std::string{forename()}.append("_").append(test_type()));
+    const auto fallbackSuite{
+      capitalize(forename().empty() ? header().filename().replace_extension().string() : forename())
+    };
 
-    nascent_test_base::finalize([this](const fs::path& filename) { return when_header_absent(filename); },
+    if(forename().empty())
+      forename(to_snake_case(fallbackSuite));
+
+    nascent_test_base::finalize([this](const fs::path& filename) { return generated_header_path(filename); },
+                                [this](const fs::path& headerPath) { generate_header(headerPath); },
+                                {},
                                 to_stubs(*this),
                                 test_classes(),
                                 "MyBehavioural",
@@ -770,10 +1013,14 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path nascent_behavioural_test::when_header_absent(const fs::path& filename)
+  fs::path nascent_behavioural_test::generated_header_path(const fs::path& filename) const
   {
-    const auto headerPath{filename.is_absolute() ? filename : paths().source().project() / rebase_from(filename, paths().source().project())};
+    const auto& project{paths().source().project()};
+    return filename.is_absolute() ? filename : project / rebase_from(filename, project);
+  }
 
+  void nascent_behavioural_test::generate_header(const fs::path& headerPath)
+  {
     stream() << fs::relative(headerPath, paths().project_root()).generic_string() << '\n';
     fs::create_directories(headerPath.parent_path());
     fs::copy_file(paths().aux_paths().source_templates() / "MyFreeFunctions.hpp", headerPath);
@@ -784,33 +1031,21 @@ namespace sequoia::testing
     );
 
     set_cpp(headerPath, m_Namespace);
-
-    return headerPath;
   }
 
   [[nodiscard]]
   std::vector<std::string> nascent_behavioural_test::test_classes() const
   {
-    auto makeClassName{
-      [this](std::string_view middlename) -> std::string {
-        auto testClass{std::string{forename()}.append("_")};
-        if(!middlename.empty()) testClass.append(middlename).append("_");
-        return testClass.append(surname());
-      }
-    };
-
-    auto make{
-      [makeClassName](std::string_view middlename) -> std::string {
-        return makeClassName(middlename);
-      }
+    auto diagnostics{
+      [this](std::string_view polarity) { return std::format("{}_{}_{}", forename(), polarity, surname()); }
     };
 
     switch(flavour())
     {
     case nascent_test_flavour::standard:
-      return { make("") };
+      return { test_name() };
     case nascent_test_flavour::framework_diagnostics:
-      return { make("false_positive"), make("false_negative")};
+      return { diagnostics("false_negative"), diagnostics("false_positive") };
     }
 
     throw std::logic_error{"Unrecognized option for nascent_test_flavour"};
@@ -820,8 +1055,7 @@ namespace sequoia::testing
   {
     make_common_replacements(text);
 
-    replace_all(text, replacement{"?Behavioural", camel_name()},
-                      replacement{"?Test", to_camel_case(test_type()).append("Test")},
+    replace_all(text, replacement{"?Test", to_camel_case(test_type()).append("Test")},
                       replacement{"?Header.hpp", header_path().generic_string()},
                       replacement{"?", test_type()});
   }

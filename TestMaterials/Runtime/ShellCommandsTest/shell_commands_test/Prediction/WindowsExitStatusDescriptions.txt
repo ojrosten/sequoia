@@ -1,0 +1,19 @@
+-2147483648: failed with exit status 0x80000000
+-1073741819: failed with exit status 0xC0000005
+-2: failed with exit status 0xFFFFFFFE
+-1: did not run to completion, or exited with status 0xFFFFFFFF, which cannot be told apart
+0: succeeded (exit status 0)
+1: failed with exit status 1
+2: failed with exit status 2
+125: failed with exit status 125
+126: failed with exit status 126
+127: failed with exit status 127
+128: failed with exit status 128
+129: failed with exit status 129
+130: failed with exit status 130
+159: failed with exit status 159
+160: failed with exit status 160
+192: failed with exit status 192
+193: failed with exit status 193
+255: failed with exit status 255
+256: failed with exit status 256

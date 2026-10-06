@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "?BehaviouralDiagnostics.hpp"
+#include "?TestFile.hpp"
 #include "?Header.hpp"
 
 namespace ?::testing
@@ -22,12 +22,12 @@ namespace ?::testing
 	}
 
 	[[nodiscard]]
-	std::filesystem::path ?forename_false_negative_?surname::source_file()
+	std::filesystem::path ?forename_false_positive_?surname::source_file()
 	{
 		return std::source_location::current().file_name();
 	}
 
-	void ?forename_false_negative_?surname::run_tests()
+	void ?forename_false_positive_?surname::run_tests()
 	{
 		// e.g. check(equality, "Useful description", some_function(), 42);
 	}

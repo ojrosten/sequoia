@@ -10,6 +10,12 @@
 #include "sequoia/FileSystem/FileSystem.hpp"
 
 #include <format>
+#include <string_view>
+
+#ifndef SEQUOIA_BUILD_CONFIGURATION
+  #warning "SEQUOIA_BUILD_CONFIGURATION is not defined, so build_cmd omits --config; CMake defines it for the sequoia target"
+  #define SEQUOIA_BUILD_CONFIGURATION ""
+#endif
 
 namespace sequoia::testing
 {
@@ -17,12 +23,25 @@ namespace sequoia::testing
 
   namespace fs = std::filesystem;
 
+  namespace
+  {
+    /// The configuration in which this library was built, as CMake's `$<CONFIG>` gives it. The configuration
+    /// is empty for a single-config build given no build type.
+    constexpr std::string_view library_configuration{SEQUOIA_BUILD_CONFIGURATION};
+  }
+
+  [[nodiscard]]
+  std::string cmake_invocation(const build_paths& buildPaths)
+  {
+    return std::format("cmake --preset {}", quote_for_shell(back(buildPaths.cmake_cache_dir()).generic_string()));
+  }
+
   [[nodiscard]]
   shell_command cmake_cmd(const build_paths& buildPaths,
                           const fs::path& output,
                           const std::optional<std::string>& cacheOverride)
   {
-    auto cmd{std::format("cmake --preset {}", back(buildPaths.cmake_cache_dir()).generic_string())};
+    auto cmd{cmake_invocation(buildPaths)};
     if(cacheOverride) cmd.append(" -D ").append(cacheOverride.value());
 
     return {"Running CMake...", cmd, output};
@@ -31,8 +50,10 @@ namespace sequoia::testing
   [[nodiscard]]
   shell_command build_cmd(const build_paths& buildPaths, const fs::path& output)
   {
-    return {"Building...",
-            std::format("cmake --build --preset {}", back(buildPaths.cmake_cache_dir()).generic_string()),
-            output};
+    auto cmd{std::format("cmake --build {}", quote_for_shell(buildPaths.cmake_cache_dir().generic_string()))};
+    if(!library_configuration.empty())
+      cmd.append(std::format(" --config {}", library_configuration));
+
+    return {"Building...", cmd, output};
   }
 }

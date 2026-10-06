@@ -67,14 +67,22 @@ namespace sequoia::testing
       }
       else
       {
-        return
-	  tutor{
-            [=](const auto&, const auto&) {
-	      return build_preliminary_message(info, obtained, prediction, pos);
-	    },
-            "\n"
-          };
+        return make_preliminary_advisor(info, obtained, prediction, pos);
       }
+    }
+
+    [[nodiscard]]
+    static auto make_preliminary_advisor(std::string_view info,
+                                         string_view_type obtained,
+                                         string_view_type prediction,
+                                         size_type pos)
+    {
+      return tutor{
+               [=](const auto&, const auto&) {
+                 return build_preliminary_message(info, obtained, prediction, pos);
+               },
+               "\n"
+             };
     }
 
     [[nodiscard]]
@@ -142,13 +150,8 @@ namespace sequoia::testing
         const auto numLines{std::count(prediction.begin(), iters.in2, '\n')};
 
         const auto mess{
-          [dist,numLines]() {
-            std::string m{"First difference detected "};
-            numLines > 0 ? m.append("on line ").append(std::to_string(numLines+1))
-                         : m.append("at character ").append(std::to_string(dist));
-
-            return m.append(":");
-          }()
+          numLines > 0 ? std::format("First difference detected on line {}:", numLines + 1)
+                       : std::format("First difference detected at character {}:", dist)
         };
 
         check(equality, mess, logger, *(iters.in1), *(iters.in2), adv);
@@ -156,10 +159,10 @@ namespace sequoia::testing
       else if((iters.in1 != obtained.end()) || (iters.in2 != prediction.end()))
       {
         auto checker{
-          [&logger, obtained, prediction, &advisor](auto begin, auto iter, std::string_view state, std::string_view adjective){
+          [&logger, obtained, prediction](auto begin, auto iter, std::string_view state, std::string_view adjective){
             const auto dist{std::ranges::distance(begin, iter)};
-            const auto info{std::string{"First "}.append(state).append(" character: ").append(display_character(*iter))};
-            auto adv{make_advisor(info, obtained, prediction, dist, advisor)};
+            const auto info{std::format("First {} character: {}", state, display_character(*iter))};
+            auto adv{make_preliminary_advisor(info, obtained, prediction, dist)};
 
             const auto mess{append_lines("Lengths differ", std::string{"Obtained string is too "}.append(adjective))};
 
