@@ -1003,7 +1003,8 @@ namespace sequoia::testing
     test_critical_errors();
     test_basic_output();
     test_tests_registered_between_executions();
-    test_execution_after_an_execution_which_threw();
+    test_execution_after_a_registration_which_threw();
+    test_registration_outside_a_run();
     test_help_output();
     test_verbose_output();
     test_serial_verbose_output();
@@ -1499,11 +1500,13 @@ namespace sequoia::testing
     check_output("Second execution", "SecondExecutionOutput", outputStream);
   }
 
-  /** The suite tree is built in name order, so the first execution moves
-      `failing_test` into the tree and then throws. The second execution must
-      run `passing_test` alone.
+  /** A registration whose hook throws must leave no registration behind:
+      -# Registering the test again throws the hook's `std::runtime_error`,
+         not the `std::logic_error` which refuses a duplicate name.
+      -# The execution runs the tests registered before and after it.
+      -# A runner whose only registration threw has nothing registered.
    */
-  void test_runner_test::test_execution_after_an_execution_which_threw()
+  void test_runner_test::test_execution_after_a_registration_which_threw()
   {
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
@@ -1511,12 +1514,38 @@ namespace sequoia::testing
     auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<failing_test>();
-    runner.register_test<throwing_discriminator_test>();
-    check_exception_thrown<std::runtime_error>("First execution", [&runner](){ return runner.execute(); });
+
+    auto registerThrowingTest{[&runner](){ runner.register_test<throwing_discriminator_test>(); }};
+    check_exception_thrown<std::runtime_error>("Registration whose hook throws", registerThrowingTest);
+    check_exception_thrown<std::runtime_error>("The same registration again", registerThrowingTest);
 
     runner.register_test<passing_test>();
-    check(equality, "Second execution return code", runner.execute(), return_code::success);
-    check_output("Second execution", "ExecutionAfterAnExecutionWhichThrewOutput", outputStream);
+    check(equality, "Execution return code", runner.execute(), return_code::soft_failures);
+    check_output("Execution", "ExecutionAfterARegistrationWhichThrewOutput", outputStream);
+
+    std::stringstream nothingRegisteredStream{};
+    auto nothingRegisteredRunner{make_fake_runner(args, nothingRegisteredStream)};
+    check_exception_thrown<std::runtime_error>(
+      "The only registration, whose hook throws",
+      [&nothingRegisteredRunner](){ nothingRegisteredRunner.register_test<throwing_discriminator_test>(); }
+    );
+
+    check(equality, "Nothing registered return code", nothingRegisteredRunner.execute(), return_code::success);
+    check_output("Nothing registered", "NothingRegisteredOutput", nothingRegisteredStream);
+  }
+
+  /** Outside a run no test is built, so a test whose output discriminator
+      throws is registered without its hook being called.
+   */
+  void test_runner_test::test_registration_outside_a_run()
+  {
+    commandline_arguments args{{zeroth_arg(), "--help"}};
+    std::stringstream outputStream{};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<throwing_discriminator_test>();
+    check(equality, "Return code", runner.execute(), return_code::success);
   }
 
   void test_runner_test::test_help_output()
@@ -2857,10 +2886,9 @@ namespace sequoia::testing
     constexpr auto name{test_name<scratch_writing_free_test>()};
     const auto summaryDiscriminator{get_discriminator<summary_discriminator_probe, scratch_writing_free_test>(cache)};
 
-    test_to_run testToRun{test_vessel{scratch_writing_free_test{}},
+    test_to_run testToRun{test_vessel{make_test<scratch_writing_free_test>(projPaths, cache, recovery_mode::none)},
                           test_summary_path{source, name, projPaths, summaryDiscriminator},
                           test_execution_record_path{source, name, projPaths}};
-    testToRun.initialize(projPaths, cache, recovery_mode::none);
 
     const auto& materials{testToRun.materials_paths()};
     fs::remove_all(materials.discarded_materials_root());

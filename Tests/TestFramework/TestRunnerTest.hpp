@@ -45,7 +45,9 @@ namespace sequoia::testing
 
     void test_tests_registered_between_executions();
 
-    void test_execution_after_an_execution_which_threw();
+    void test_execution_after_a_registration_which_threw();
+
+    void test_registration_outside_a_run();
 
     void test_help_output();
 
