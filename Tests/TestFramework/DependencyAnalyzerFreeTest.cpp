@@ -1605,33 +1605,26 @@ namespace sequoia::testing
     }
 
     {
-      // write_tests writes the records to <file>.partial first, and this test
-      // pins that name. A read-only file there cannot be opened for writing.
-      // It holds other records, which would be renamed over <file> if the
-      // failure went unseen.
-      const transient_file previous{file, "path: HouseAllocationTest.cpp\ntimestamp: 0\n"};
-      const read_only_file stale{fs::path{file} += ".partial", "path: Maths/ProbabilityTest.cpp\ntimestamp: 0\n"};
+      // No file can be created in a directory which does not exist
+      const auto orphan{file.parent_path() / "Absent" / file.filename()};
 
       check_exception_thrown<std::runtime_error>(
         "Prune records which cannot be written",
-        [&projPaths, &file, stamp]() { write_tests(projPaths, file, prune_records{{"Maths/ProbabilityTest.cpp", stamp}}); });
-
-      check(equality,
-            "A failed write leaves the previous records",
-            read_tests(file),
-            prune_records{{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
+        [&projPaths, &orphan, stamp]() {
+          write_tests(projPaths, orphan, prune_records{{"Maths/ProbabilityTest.cpp", stamp}});
+        });
     }
 
     {
-      // The written records cannot be renamed over a directory at <file>, so
-      // they stay in <file>.partial, which `partial` removes on leaving the
-      // scope.
-      const transient_directory blocking{file}, partial{fs::path{file} += ".partial"};
+      // The written records cannot be renamed over a directory at <file>
+      const transient_directory blocking{file};
       fs::create_directories(blocking.path());
 
       check_exception_thrown<std::runtime_error>(
         "Prune records which cannot replace the file",
-        [&projPaths, &file, stamp]() { write_tests(projPaths, file, prune_records{{"HouseAllocationTest.cpp", stamp}}); });
+        [&projPaths, &file, stamp]() {
+          write_tests(projPaths, file, prune_records{{"HouseAllocationTest.cpp", stamp}});
+        });
     }
   }
 

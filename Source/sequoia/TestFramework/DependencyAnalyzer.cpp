@@ -26,7 +26,6 @@
 #include <optional>
 #include <ranges>
 #include <source_location>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <variant>
@@ -50,11 +49,16 @@ namespace sequoia::testing
     }
   }
 
-  std::ostream& operator<<(std::ostream& s, const prune_record& record)
+  [[nodiscard]]
+  std::string to_string(const prune_record& record)
   {
     const auto stamp{checked_conversion_to<stream_rep_t>(record.time_stamp.time_since_epoch().count())};
-    return s << "path: "      << record.test_path.generic_string() << '\n'
-             << "timestamp: " << std::format("{}", stamp)            << '\n';
+    return std::format("path: {}\ntimestamp: {}\n", record.test_path.generic_string(), stamp);
+  }
+
+  std::ostream& operator<<(std::ostream& s, const prune_record& record)
+  {
+    return s << to_string(record);
   }
 
   std::istream& operator>>(std::istream& s, prune_record& record)
@@ -757,12 +761,19 @@ namespace sequoia::testing
       }
     };
 
-    std::ostringstream records{};
-    std::ranges::copy(tests | std::views::transform(rebased), std::ostream_iterator<prune_record>{records});
+    auto recordText{[](const prune_record& test) { return to_string(test); }};
+
+    const auto records{
+        tests
+      | std::views::transform(rebased)
+      | std::views::transform(recordText)
+      | std::views::join
+      | std::ranges::to<std::string>()
+    };
 
     // Replaced rather than overwritten: a truncated <file> would parse, and
     // prune would then silently leave out the tests lost to the truncation
-    replace_contents(file, std::move(records).str(), write_mode::text);
+    replace_contents(file, records, write_mode::text);
   }
 
   namespace

@@ -32,7 +32,6 @@
 #include <ranges>
 #include <span>
 #include <system_error>
-#include <tuple>
 #include <format>
 #include <functional>
 #include <mutex>
@@ -73,7 +72,7 @@ namespace sequoia::testing
       std::error_code selectsTheNonThrowingOverload{};
       fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
 
-      std::ignore = try_replace_contents(file, text, write_mode::binary);
+      replace_contents_quietly(file, text, write_mode::binary);
     }
 
     [[nodiscard]]

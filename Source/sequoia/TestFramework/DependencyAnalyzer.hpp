@@ -53,6 +53,9 @@ namespace sequoia::testing
     friend std::istream& operator>>(std::istream& s, prune_record& record);
   };
 
+  [[nodiscard]]
+  std::string to_string(const prune_record& record);
+
   /** \brief The time after which a modification counts as later than the run which wrote `stamp`.
 
       -# Where the filesystem records sub-second times, the threshold is the stamp itself.

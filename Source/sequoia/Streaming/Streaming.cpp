@@ -9,6 +9,7 @@
 
 #include <format>
 #include <fstream>
+#include <functional>
 #include <iterator>
 #include <ranges>
 #include <limits>
@@ -87,68 +88,102 @@ namespace sequoia
     return text;
   }
 
-  [[nodiscard]]
-  bool try_write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode)
+  namespace
   {
-    // A stream which fails to open is failed already: the write does nothing,
-    // and the check after the close reports the failure
-    std::ofstream ofile{file, mode};
-    ofile.write(text.data(), static_cast<std::streamsize>(text.size()));
+    /** \brief How far a write got: its open failed, its write or close
+               failed, or all three succeeded.
+     */
+    enum class write_outcome { open_failed, write_failed, written };
 
-    // Only a caller of close learns whether closing failed; the destructor
-    // reports nothing. A networked filesystem may report a full disk, an
-    // exceeded quota or an I/O error only then.
-    ofile.close();
-    return !ofile.fail();
+    /** \brief Writes `text` to `file`, opened in `mode`. */
+    [[nodiscard]]
+    write_outcome
+      try_write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode)
+    {
+      std::ofstream ofile{file, mode};
+      if(!ofile.is_open())
+        return write_outcome::open_failed;
+
+      ofile.write(text.data(), static_cast<std::streamsize>(text.size()));
+
+      // Only a caller of close learns whether closing failed; the destructor
+      // reports nothing. A networked filesystem may report a full disk, an
+      // exceeded quota or an I/O error only then.
+      ofile.close();
+      return ofile.fail() ? write_outcome::write_failed : write_outcome::written;
+    }
+
+    /** \brief Renames `from` over `to`.
+
+        \returns `to` if the rename failed, and `std::nullopt` otherwise.
+     */
+    [[nodiscard]]
+    std::optional<std::filesystem::path> try_rename(const std::filesystem::path& from, const std::filesystem::path& to)
+    {
+      std::error_code error{};
+      std::filesystem::rename(from, to, error);
+      return error ? std::optional{to} : std::nullopt;
+    }
+
+    /** \brief A path at which no directory entry exists, for a temporary file
+               beside `file`.
+     */
+    [[nodiscard]]
+    std::filesystem::path unused_partial_path(const std::filesystem::path& file)
+    {
+      auto partialPath{
+        [&file](std::size_t n) {
+          return std::filesystem::path{file} += ((n == 0) ? std::string{".partial"} : std::format(".{}.partial", n));
+        }
+      };
+
+      auto namesAnEntry{
+        [](const std::filesystem::path& path) {
+          std::error_code selectsTheNonThrowingOverload{};
+          return std::filesystem::exists(std::filesystem::symlink_status(path, selectsTheNonThrowingOverload));
+        }
+      };
+
+      auto unused{
+          std::views::iota(0uz)
+        | std::views::transform(partialPath)
+        | std::views::filter(std::not_fn(namesAnEntry))
+      };
+
+      return unused.front();
+    }
   }
 
   void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode)
   {
-    if(!try_write_to_file(file, text, mode))
+    if(try_write_to_file(file, text, mode) != write_outcome::written)
       throw std::runtime_error{report_failed_write(file)};
-  }
-
-  namespace
-  {
-    /** \brief Replaces the contents of `file` with `text`, written in `mode`
-               through `<file>.partial`.
-
-        \returns The path at which the replacement failed:
-        -# `<file>.partial`, if writing it failed;
-        -# `file`, if renaming `<file>.partial` over it failed;
-        -# `std::nullopt`, if the replacement succeeded.
-     */
-    [[nodiscard]]
-    std::optional<std::filesystem::path>
-      replace_contents_or_locate_failure(const std::filesystem::path& file,
-                                         std::string_view text,
-                                         write_mode mode)
-    {
-      const auto partial{std::filesystem::path{file} += ".partial"};
-      const auto binary{mode == write_mode::binary ? std::ios_base::binary : std::ios_base::openmode{}};
-      const auto openMode{std::ios_base::out | std::ios_base::trunc | binary};
-
-      if(!try_write_to_file(partial, text, openMode))
-        return partial;
-
-      std::error_code error{};
-      std::filesystem::rename(partial, file, error);
-      if(error)
-        return file;
-
-      return std::nullopt;
-    }
-  }
-
-  [[nodiscard]]
-  bool try_replace_contents(const std::filesystem::path& file, std::string_view text, write_mode mode)
-  {
-    return !replace_contents_or_locate_failure(file, text, mode);
   }
 
   void replace_contents(const std::filesystem::path& file, std::string_view text, write_mode mode)
   {
-    if(const auto failurePath{replace_contents_or_locate_failure(file, text, mode)})
+    if(const auto failurePath{replace_contents_quietly(file, text, mode)})
       throw std::runtime_error{report_failed_write(*failurePath)};
+  }
+
+  std::optional<std::filesystem::path>
+    replace_contents_quietly(const std::filesystem::path& file, std::string_view text, write_mode mode)
+  {
+    const auto partial{unused_partial_path(file)};
+    const auto binary{mode == write_mode::binary ? std::ios_base::binary : std::ios_base::openmode{}};
+
+    // Another process may create partial between the search and this open.
+    // With noreplace the open then fails, rather than overwriting that file.
+    const auto outcome{try_write_to_file(partial, text, std::ios_base::out | std::ios_base::noreplace | binary)};
+    const auto failurePath{(outcome == write_outcome::written) ? try_rename(partial, file) : std::optional{partial}};
+
+    // A successful open created partial, which this function may then remove
+    if(failurePath && (outcome != write_outcome::open_failed))
+    {
+      std::error_code selectsTheNonThrowingOverload{};
+      std::filesystem::remove(partial, selectsTheNonThrowingOverload);
+    }
+
+    return failurePath;
   }
 }

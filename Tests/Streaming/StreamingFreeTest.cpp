@@ -60,14 +60,25 @@ namespace sequoia::testing
       reporter{""},
       [this]() { write_to_file(working_materials() /= "Baz.txt", "Hello!", std::ios_base::out | std::ios_base::noreplace); });
 
-    // Under Linux, /dev/full opens and then fails every write: the failure
-    // this check is for. No portable path behaves so. Elsewhere a directory
-    // stands in, failing at the open instead, so the check count is the same
-    // on every platform.
-    const fs::path unwritable{with_linux_v ? fs::path{"/dev/full"} : working_materials()};
-    check("The stand-in for a failing write is present",
-          with_linux_v ? fs::is_character_file(unwritable) : fs::is_directory(unwritable));
-    check("A write which fails is reported", !try_write_to_file(unwritable, "Hello!", std::ios_base::out));
+    // Under Linux, Unwritable links to /dev/full, which opens and then fails
+    // every write: the failure this check is for. No portable path behaves
+    // so. Elsewhere a directory stands in, failing at the open instead, so
+    // the check count and the message are the same on every platform.
+    const auto unwritable{scratchpad_materials() /= "Unwritable"};
+    if constexpr(with_linux_v)
+    {
+      fs::create_symlink("/dev/full", unwritable);
+      check("The stand-in for a failing write is present", fs::is_character_file(unwritable));
+    }
+    else
+    {
+      fs::create_directory(unwritable);
+      check("The stand-in for a failing write is present", fs::is_directory(unwritable));
+    }
+
+    check_exception_thrown<std::runtime_error>(
+      "A write which fails",
+      [&unwritable]() { write_to_file(unwritable, "Hello!", std::ios_base::out); });
 
     read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });
     check(equivalence, "", working_materials() /= "Foo.txt", predictive_materials() /= "Foo.txt");
@@ -81,48 +92,62 @@ namespace sequoia::testing
     const auto partial{fs::path{file} += ".partial"};
 
     write_to_file(file, "Previous", std::ios_base::out);
+    check(equality,
+          "A quiet replacement which succeeds",
+          replace_contents_quietly(file, "Quiet", write_mode::text),
+          std::optional<fs::path>{});
+    check(equality, "Quietly replaced contents", read_to_string(file, std::ios_base::in), std::optional{"Quiet"s});
+
     replace_contents(file, "Replacement", write_mode::text);
     check(equality, "Replaced contents", read_to_string(file, std::ios_base::in), std::optional{"Replacement"s});
-    check("No partial file remains after a replacement", !fs::exists(partial));
+    check("No temporary file remains after a replacement", !fs::exists(partial));
 
-    auto checkFailedWrite{
-      [this, &file]() {
-        check("A replacement whose write fails is reported", !try_replace_contents(file, "Lost", write_mode::text));
-        check(equality,
-              "A replacement whose write fails leaves the previous contents",
-              read_to_string(file, std::ios_base::in),
-              std::optional{"Replacement"s});
-        check_exception_thrown<std::runtime_error>(
-          "A replacement whose write fails",
-          [&file]() { replace_contents(file, "Lost", write_mode::text); });
-      }
-    };
+    {
+      // A client's entries hold the first two names tried for the created
+      // file: a file, then a symbolic link whose target does not exist. The
+      // names are the implementation's choice, which these checks pin.
+      // Making a symbolic link under Windows needs a privilege, so there a
+      // directory stands in for the link.
+      const transient_file clientsFile{partial, "The client's"};
+      const auto secondName{fs::path{file} += ".1.partial"};
+      if constexpr(with_windows_v)
+        fs::create_directory(secondName);
+      else
+        fs::create_symlink(scratchpad_materials() /= "Nowhere", secondName);
 
-    // Under Linux, <file>.partial links to /dev/full, which opens and then
-    // fails every write. No portable path behaves so. Elsewhere a read-only
-    // file stands in, failing at the open instead, so the check count is the
-    // same on every platform.
-    //
-    // A directory would not do: renaming it over <file> also fails, so a
-    // replacement which ignored a failed write would still report failure.
-    if constexpr(with_linux_v)
-    {
-      fs::create_symlink("/dev/full", partial);
-      check("The stand-in for a failing write is present", fs::is_character_file(partial));
-      checkFailedWrite();
+      replace_contents(file, "Beside the client's", write_mode::text);
+      check(equality,
+            "A replacement beside a client's entries",
+            read_to_string(file, std::ios_base::in),
+            std::optional{"Beside the client's"s});
+      check(equality,
+            "A replacement leaves a client's file at <file>.partial",
+            read_to_string(partial, std::ios_base::in),
+            std::optional{"The client's"s});
+      check("A replacement leaves a client's entry at <file>.1.partial",
+            with_windows_v ? fs::is_directory(secondName) : fs::is_symlink(secondName));
+      check("No temporary file remains beside a client's entries", !fs::exists(fs::path{file} += ".2.partial"));
     }
-    else
-    {
-      const read_only_file standIn{partial, ""};
-      check("The stand-in for a failing write is present",
-            (fs::status(partial).permissions() & write_permissions) == fs::perms::none);
-      checkFailedWrite();
-    }
+
+    // No file can be created in a directory which does not exist
+    const auto orphan{scratchpad_materials() /= "Absent/Replaced.txt"};
+    check(equality,
+          "A quiet replacement whose write fails",
+          replace_contents_quietly(orphan, "Lost", write_mode::text),
+          std::optional{fs::path{orphan} += ".partial"});
+    check_exception_thrown<std::runtime_error>(
+      "A replacement whose write fails",
+      [&orphan]() { replace_contents(orphan, "Lost", write_mode::text); });
 
     const auto directory{scratchpad_materials() /= "Directory"};
     fs::create_directory(directory);
 
-    check("A replacement whose rename fails is reported", !try_replace_contents(directory, "Lost", write_mode::text));
+    check(equality,
+          "A quiet replacement whose rename fails",
+          replace_contents_quietly(directory, "Lost", write_mode::text),
+          std::optional{directory});
+    check("A quiet replacement whose rename fails removes its temporary file",
+          !fs::exists(fs::path{directory} += ".partial"));
     check_exception_thrown<std::runtime_error>(
       "A replacement whose rename fails",
       [&directory]() { replace_contents(directory, "Lost", write_mode::text); });

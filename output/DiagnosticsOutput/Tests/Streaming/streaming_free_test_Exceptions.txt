@@ -14,16 +14,25 @@ Unable to write to file output/TestsTemporaryData/Streaming/StreamingFreeTest/st
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 96
+Tests/Streaming/StreamingFreeTest.cpp, Line 80
+A write which fails
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to write to file output/TestsTemporaryData/Streaming/StreamingFreeTest/streaming_free_test/Unwritable
+
+=======================================
+
+Tests/Streaming/StreamingFreeTest.cpp, Line 139
 A replacement whose write fails
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to write to file output/TestsTemporaryData/Streaming/StreamingFreeTest/streaming_free_test/Replaced.txt.partial
+Unable to write to file output/TestsTemporaryData/Streaming/StreamingFreeTest/streaming_free_test/Absent/Replaced.txt.partial
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 127
+Tests/Streaming/StreamingFreeTest.cpp, Line 152
 A replacement whose rename fails
 
 Expected Exception Type:
@@ -32,7 +41,7 @@ Unable to write to file output/TestsTemporaryData/Streaming/StreamingFreeTest/st
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 154
+Tests/Streaming/StreamingFreeTest.cpp, Line 179
 Characters after the integer
 
 Expected Exception Type:
@@ -41,7 +50,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 156
+Tests/Streaming/StreamingFreeTest.cpp, Line 181
 Whitespace before the integer
 
 Expected Exception Type:
@@ -50,7 +59,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 158
+Tests/Streaming/StreamingFreeTest.cpp, Line 183
 No characters at all
 
 Expected Exception Type:
@@ -59,7 +68,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 160
+Tests/Streaming/StreamingFreeTest.cpp, Line 185
 An integer beyond the type's range
 
 Expected Exception Type:
@@ -68,7 +77,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 162
+Tests/Streaming/StreamingFreeTest.cpp, Line 187
 A negative integer, for an unsigned type
 
 Expected Exception Type:
@@ -77,7 +86,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 187
+Tests/Streaming/StreamingFreeTest.cpp, Line 212
 A line not beginning with the key
 
 Expected Exception Type:
@@ -86,7 +95,7 @@ Expected a line beginning 'key: ' but found 'other: value'
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 188
+Tests/Streaming/StreamingFreeTest.cpp, Line 213
 No line left
 
 Expected Exception Type:
@@ -95,7 +104,7 @@ Expected a line beginning 'key: ' but there are no more lines
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 216
+Tests/Streaming/StreamingFreeTest.cpp, Line 241
 Fewer characters than asked for
 
 Expected Exception Type:
@@ -104,7 +113,7 @@ Expected 3 characters but the stream ended after 2
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 217
+Tests/Streaming/StreamingFreeTest.cpp, Line 242
 No line break after the text
 
 Expected Exception Type:
@@ -113,7 +122,7 @@ Expected a line break after 3 characters
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 218
+Tests/Streaming/StreamingFreeTest.cpp, Line 243
 The end of the stream after the text
 
 Expected Exception Type:
@@ -122,7 +131,7 @@ Expected a line break after 3 characters
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 221
+Tests/Streaming/StreamingFreeTest.cpp, Line 246
 A stream which has failed
 
 Expected Exception Type:
@@ -131,7 +140,7 @@ Text cannot be read from a stream which has failed
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 230
+Tests/Streaming/StreamingFreeTest.cpp, Line 255
 A length more than a stream iterator can count
 
 Expected Exception Type:
