@@ -72,12 +72,16 @@ export namespace sequoia::testing
   public:
     test_base() = default;
 
-    test_base(std::string_view name, test_mode mode, const normal_path& srcFile, project_paths projPaths, individual_materials_paths materials, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
+    test_base(std::string_view name,
+              test_mode mode,
+              const normal_path& srcFile,
+              project_paths projPaths,
+              individual_materials_paths materials,
+              const std::optional<std::string>& outputDiscriminator)
       : m_Name{name}
       , m_ProjectPaths{std::move(projPaths)}
       , m_Materials{std::move(materials)}
       , m_Diagnostics{m_ProjectPaths, m_Name, srcFile, mode, outputDiscriminator}
-      , m_SummaryFile{srcFile, m_Name, m_ProjectPaths, summaryDiscriminator}
     {}
 
     test_base(const test_base&)            = delete;
@@ -89,22 +93,47 @@ export namespace sequoia::testing
       return m_Name;
     }
 
+    /** \brief The temporary copy of the test's original working copy, or an empty directory if the
+               test has materials but no working copy.
+
+        \throws std::logic_error if the test was constructed with no materials paths
+        \throws std::runtime_error if the test has no materials, naming where they belong
+     */
     [[nodiscard]]
-    std::filesystem::path working_materials() const
-    {
-      return m_Materials.working();
-    }
+    std::filesystem::path working_materials() const;
+
+    /** \brief The test's original predictions: predictions have no temporary copy.
+
+        \throws std::logic_error if the test was constructed with no materials paths
+        \throws std::runtime_error if there are none, naming where they belong
+     */
+    [[nodiscard]]
+    std::filesystem::path predictive_materials() const;
+
+    /** \brief The temporary copy of the test's original auxiliary materials.
+
+        \throws std::logic_error if the test was constructed with no materials paths
+        \throws std::runtime_error if there are none, naming where they belong
+     */
+    [[nodiscard]]
+    std::filesystem::path auxiliary_materials() const;
+
+    /** \brief A directory for the test's own use, with no original counterpart, holding nothing
+               but the temporary copies of the working copy and auxiliary materials whenever the
+               materials are prepared.
+
+        It is the root beneath which those copies are made, so `WorkingCopy` and `Auxiliary` are
+        reserved names within it; nothing enforces this.
+
+        \throws std::logic_error if the test was constructed with no materials paths
+     */
+    [[nodiscard]]
+    std::filesystem::path scratchpad_materials() const;
 
     [[nodiscard]]
-    std::filesystem::path predictive_materials() const
+    const individual_materials_paths& materials_paths() const noexcept
     {
-      return m_Materials.prediction();
-    }
-
-    [[nodiscard]]
-    std::filesystem::path auxiliary_materials() const
-    {
-      return m_Materials.auxiliary();
+      return m_Materials;
     }
 
     [[nodiscard]]
@@ -120,12 +149,6 @@ export namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const test_summary_path& summary_file_path() const noexcept
-    {
-      return m_SummaryFile;
-    }
-
-    [[nodiscard]]
     std::string report(const reporter& rep) const
     {
         return rep.location() ? testing::report_line(rep.message(), m_ProjectPaths.tests().repo(), rep.location().value()) : rep.message();
@@ -138,11 +161,17 @@ export namespace sequoia::testing
 
     void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index, const failure_output& output) const;
   private:
+    void throw_if_no_materials_paths() const;
+
+    [[nodiscard]]
+    std::filesystem::path materials_or_throw(std::string_view kind,
+                                             const std::filesystem::path& original,
+                                             std::filesystem::path usable) const;
+
     std::string m_Name{};
     project_paths m_ProjectPaths{};
     individual_materials_paths m_Materials{};
     individual_diagnostics_paths m_Diagnostics{};
-    test_summary_path m_SummaryFile{};
   };
 
   /** \brief class template from which all concrete tests should derive.
@@ -168,8 +197,13 @@ export namespace sequoia::testing
 
     basic_test() = default;
 
-    basic_test(std::string_view name, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
-      : test_base{name, Mode, srcFile, projPaths, std::move(materials), outputDiscriminator, summaryDiscriminator}
+    basic_test(std::string_view name,
+               const normal_path& srcFile,
+               project_paths projPaths,
+               individual_materials_paths materials,
+               active_recovery_files files,
+               const std::optional<std::string>& outputDiscriminator)
+      : test_base{name, Mode, srcFile, std::move(projPaths), std::move(materials), outputDiscriminator}
       , checker<Mode, Extender>{std::move(files)}
     {}
 
@@ -196,7 +230,7 @@ export namespace sequoia::testing
     void log_critical_failure(const normal_path& srcFile, std::string_view tag, std::string_view what)
     {
       auto sentry{checker_type::make_sentinel("")};
-      sentry.log_critical_failure(exception_message(tag, srcFile, checker_type::exceptions_detected_by_sentinel(), what));
+      sentry.log_critical_failure(exception_message(tag, srcFile, checker_type::last_check_exit_info(), what));
     }
 
     void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index) const
@@ -252,21 +286,95 @@ export namespace sequoia::testing
     return unqualified;
   }
 
-  /** \brief Whether a test forks its diagnostics output, by a static `output_discriminator(const cmake_cache&)`. */
-  template<concrete_test T>
-  inline constexpr bool has_discriminated_output_v{
-    requires(const cmake_cache& cache){
-      { T::output_discriminator(cache) } -> std::convertible_to<std::string>;
+  /** \name discriminator_probes
+      \brief Probes for the hooks a test may declare to discriminate what it records.
+
+      Each hook is a public static member function which takes `const cmake_cache&` and returns
+      something convertible to `std::string`. A hook may compute the string from the cache or from any
+      other source, such as hardware found at run time. There are three hooks:
+      -# `output_discriminator` discriminates the diagnostics files;
+      -# `summary_discriminator` discriminates the summary;
+      -# `materials_discriminator` discriminates the original materials.
+
+      Each probe is for one hook. For a test `T`, it asks two things:
+      -# `declared_v`: whether the test declares the hook in any form. A member of that name counts,
+         whether static or not, and whatever its signature. Where the name is overloaded, a member
+         callable through `T&`, either with a `const cmake_cache&` or with no arguments, counts;
+      -# `conforming_v`: whether the hook can be called through the class with a `const cmake_cache&`,
+         and whether that call returns something convertible to `std::string`.
+
+      Each probe's `discriminator` makes that call, and returns the result as a `std::string`.
+
+      The hooks must be public: a hook which is not public is invisible to every probe. The cache does
+      not record the active configuration of a multi-config build tree. A hook which discriminates
+      between Debug and Release must find the configuration some other way, such as by whether `NDEBUG`
+      is defined.
+   */
+  ///@{
+  template<class T>
+  struct output_discriminator_probe
+  {
+    static constexpr bool declared_v{
+         requires { &T::output_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.output_discriminator(cache); }
+      || requires(T& t){ t.output_discriminator(); }
+    };
+
+    static constexpr bool conforming_v{
+      requires(const cmake_cache& cache){ { T::output_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::output_discriminator(cache);
     }
   };
 
-  /** \brief Whether a test forks its summary, by a static `summary_discriminator(const cmake_cache&)`. */
-  template<concrete_test T>
-  inline constexpr bool has_discriminated_summary_v{
-    requires(const cmake_cache& cache){
-      { T::summary_discriminator(cache) } -> std::convertible_to<std::string>;
+  template<class T>
+  struct summary_discriminator_probe
+  {
+    static constexpr bool declared_v{
+         requires { &T::summary_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.summary_discriminator(cache); }
+      || requires(T& t){ t.summary_discriminator(); }
+    };
+
+    static constexpr bool conforming_v{
+      requires(const cmake_cache& cache){ { T::summary_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::summary_discriminator(cache);
     }
   };
+
+  template<class T>
+  struct materials_discriminator_probe
+  {
+    static constexpr bool declared_v{
+         requires { &T::materials_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.materials_discriminator(cache); }
+      || requires(T& t){ t.materials_discriminator(); }
+    };
+
+    static constexpr bool conforming_v{
+      requires(const cmake_cache& cache){ { T::materials_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::materials_discriminator(cache);
+    }
+  };
+
+  ///@}
 
   /** \brief Temporary workaround while waiting for variadic friends */
   class trivial_extender

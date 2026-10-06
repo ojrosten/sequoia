@@ -8,6 +8,8 @@
 #include "TestRunnerProjectCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "Runtime/ShellCommandsTestingUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
 
 import std;
 
@@ -25,6 +27,8 @@ namespace sequoia::testing
   {
     test_exceptions();
     test_project_creation();
+    test_init_failures();
+    test_ide_launch_commands();
   }
 
   void test_runner_project_creation::test_exceptions()
@@ -138,10 +142,7 @@ namespace sequoia::testing
 
       check(equality, "Project creation return code", tr.execute(), return_code::success);
 
-      if(std::ofstream file{fake_project() / "output" / "io.txt"})
-      {
-        file << outputStream.rdbuf();
-      }
+      write_to_file(fake_project() / "output" / "io.txt", outputStream.str(), std::ios_base::out);
 
       check(equivalence, "", hostDir, predictive_materials() /= "GeneratedProject");
       check(equivalence, "", fake_project(), predictive_materials() /= "FakeProject");
@@ -151,6 +152,11 @@ namespace sequoia::testing
       const auto hostDir{working_materials() /= "Another_Generated-Project"};
       commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ", "--no-git", "--no-build"}};
 
+      // The .git of a worktree or of a submodule checkout is a file. It is made here because git cannot track a path
+      // named .git, and before the runner because constructing the runner performs the init.
+      const transient_file gitFile{fake_project() / "dependencies/sequoia/.git",
+                                   "gitdir: ../../.git/modules/dependencies/sequoia\n"};
+
       std::stringstream outputStream{};
       test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "\t ",  make_project_paths(), outputStream};
 
@@ -158,5 +164,177 @@ namespace sequoia::testing
 
       check(equivalence, "", hostDir, predictive_materials() /= "Another_Generated-Project");
     }
+  }
+
+  void test_runner_project_creation::test_init_failures()
+  {
+    // Runs init into `hostDir`, and checks that init throws. Returns the message thrown, so that
+    // the caller can check which step failed, not only that one did.
+    auto initFailure{
+      [this](std::string_view description, const fs::path& hostDir, std::initializer_list<std::string> options) {
+        std::string message{};
+        check_exception_thrown<std::runtime_error>(
+          reporter{description},
+          [&]() {
+            const auto argList{
+              [&]() {
+                std::vector<std::string> list{zeroth_arg(),
+                                              "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ",
+                                              "--to-files", "GenerationOutput.txt"};
+                list.append_range(options);
+                return list;
+              }()
+            };
+
+            commandline_arguments args{argList};
+            std::stringstream outputStream{};
+            test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "\t ", make_project_paths(), outputStream};
+          },
+          [&message](const project_paths& projPaths, std::string thrown) {
+            message = thrown;
+            return relative_to_root(projPaths, std::move(thrown));
+          }
+        );
+
+        return message;
+      }
+    };
+
+    // Each trigger goes in the fake project's template. test_project_creation has copied the
+    // template in.
+    const auto fakeTemplate{auxiliary_paths::project_template(fake_project())};
+
+    {
+      // A `.git` which is a file but not a gitfile makes `git init` fail. git's configuration
+      // cannot prevent the failure, but a GIT_DIR in the environment would direct git past the file.
+      const transient_file bogusGit{fakeTemplate / ".git", "not a gitfile"};
+      const transient_directory host{working_materials() /= "UnversionedProject"};
+
+      const auto message{
+        initFailure("git fails when placing the project under version control", host.path(), {"--no-build"})
+      };
+      check("The failure reported is the first git step's",
+            message.starts_with("Placing the new project under version control failed"));
+
+      check("The creation stopped before sequoia was copied",
+            std::ranges::all_of(fs::directory_iterator{dependencies_paths{host.path()}.sequoia_root()},
+                                [](const fs::directory_entry& entry) { return entry.path().filename() == ".keep"; }));
+    }
+
+    {
+      // A failure in the first project ends the run, so init never reaches the second project.
+      const transient_file bogusGit{fakeTemplate / ".git", "not a gitfile"};
+      const transient_directory host{working_materials() /= "FailingProject"};
+      const transient_directory abandoned{working_materials() /= "AbandonedProject"};
+
+      const auto message{
+        initFailure("A failure ends the run before a later project",
+                    host.path(),
+                    {"--no-build",
+                     "init", "Oliver Jacob Rosten", abandoned.path().generic_string(), "  ", "--no-build"})
+      };
+
+      check("The message names the project the failure abandoned",
+            message.contains(std::format("Not attempted, since this failure ended the run: {}",
+                                         abandoned.path().generic_string())));
+    }
+
+    {
+      // Copying sequoia gives git nothing to commit, since everything under dependencies is
+      // ignored. The first commit must succeed, so this case needs a git identity, as init always
+      // needs one.
+      const transient_file ignoreDependencies{fakeTemplate / "dependencies" / ".gitignore", "*\n"};
+      const transient_directory host{working_materials() /= "UncommittedProject"};
+
+      const auto message{initFailure("git fails when committing sequoia", host.path(), {"--no-build"})};
+      check("The failure reported is the second git step's",
+            message.starts_with("Committing sequoia to the new project failed"));
+    }
+
+    {
+      // The new project's configure fails, since the fake project's build tree is named for no preset
+      const transient_directory host{working_materials() /= "UnbuiltProject"};
+
+      const auto message{
+        initFailure("CMake fails when configuring the project", host.path(), {"--no-git", "--no-ide"})
+      };
+      check("The failure reported is the configure and build step's",
+            message.starts_with("Configuring and building the new project failed"));
+    }
+  }
+
+  /** A parent project built by Visual Studio opens the IDE, if the
+      installation recorded in its cache has a `devenv.exe`. A parent
+      project built by any other generator opens nothing.
+   */
+  void test_runner_project_creation::test_ide_launch_commands()
+  {
+    using runtime::shell_command;
+    using runtime::quote_for_shell;
+
+    const auto newProjectRoot{working_materials() /= "GeneratedProject"};
+    const auto newProjectBuildDir{newProjectRoot / "build/CMade"};
+
+    const transient_directory visualStudioBuild{fake_project() / "build/VisualStudio"},
+                              ninjaBuild{fake_project() / "build/Ninja"};
+
+    // CMake records the installation with forward slashes, on every platform
+    const auto installation{(visualStudioBuild.path() / "Installation").generic_string()};
+
+    auto writeFakeBuild{
+      [&installation](const fs::path& dir, std::string_view generator) {
+        fs::create_directories(dir);
+        write_to_file(dir / "CMakeCache.txt",
+                      std::format("CMAKE_GENERATOR:INTERNAL={}\n"
+                                  "CMAKE_GENERATOR_INSTANCE:INTERNAL={}\n",
+                                  generator,
+                                  installation),
+                      std::ios_base::out);
+        write_to_file(dir / "FakeExe.txt", "", std::ios_base::out);
+      }
+    };
+
+    auto launchFrom{
+      [this, &newProjectBuildDir](const fs::path& parentBuildDir, const fs::path& root) {
+        commandline_arguments args{{(parentBuildDir / "FakeExe.txt").generic_string()}};
+        return launch_cmd(project_paths{args.size(), args.get(), make_project_paths()}, root, newProjectBuildDir);
+      }
+    };
+
+    writeFakeBuild(visualStudioBuild.path(), "Visual Studio 17 2022");
+
+    // A Ninja build records an empty installation. This one names the
+    // Visual Studio installation, so only the generator can refuse it.
+    writeFakeBuild(ninjaBuild.path(), "Ninja");
+
+    check(equality,
+          "Visual Studio, without devenv.exe",
+          launchFrom(visualStudioBuild.path(), newProjectRoot),
+          shell_command{});
+
+    const auto devenv{fs::path{installation} / "Common7/IDE/devenv.exe"};
+    fs::create_directories(devenv.parent_path());
+    write_to_file(devenv, "", std::ios_base::out);
+
+    const auto solution{newProjectBuildDir / "GeneratedProjectTests.sln"};
+
+    check(equality,
+          "Visual Studio, with devenv.exe",
+          launchFrom(visualStudioBuild.path(), newProjectRoot),
+          shell_command{"Attempting to open IDE...",
+                        std::format("{} /Run {}",
+                                    quote_for_shell(devenv.string()),
+                                    quote_for_shell(solution.string())),
+                        ""});
+
+    check(equality,
+          "Ninja, with devenv.exe",
+          launchFrom(ninjaBuild.path(), newProjectRoot),
+          shell_command{});
+
+    check(equality,
+          "Visual Studio, with no project to open",
+          launchFrom(visualStudioBuild.path(), ""),
+          shell_command{});
   }
 }

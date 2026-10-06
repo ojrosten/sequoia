@@ -28,6 +28,28 @@ namespace sequoia::testing
     constexpr auto npos{std::string::npos};
 
     [[nodiscard]]
+    std::string recovery_advice(const project_data& project, std::span<const project_data> abandoned)
+    {
+      const auto advice{
+        std::format("To start again, delete {} and run init once more", project.project_root.generic_string())
+      };
+
+      if(abandoned.empty())
+        return advice;
+
+      auto rootOf{[](const project_data& data) { return data.project_root.generic_string(); }};
+
+      const auto roots{
+          abandoned
+        | std::views::transform(rootOf)
+        | std::views::join_with(std::string_view{", "})
+        | std::ranges::to<std::string>()
+      };
+
+      return std::format("{}\nNot attempted, since this failure ended the run: {}", advice, roots);
+    }
+
+    [[nodiscard]]
     bool is_appropriate_root(const fs::path& root)
     {
       if(fs::exists(root))
@@ -61,41 +83,34 @@ namespace sequoia::testing
         stream << ec.message() << '\n';
     }
 
-    void copy_sequoia_output(std::ostream& stream, const project_paths& parentProjectPaths, const output_paths& output, const fs::directory_entry& dir)
-    {
-      if(!fs::exists(output.dir()))
-        fs::create_directory(output.dir());
+    /** Entries at the root of sequoia which a created project has no use for.
 
-      for(auto& entry : fs::directory_iterator{dir})
-      {
-        if(fs::is_directory(entry))
-        {
-          if((entry.path() == parentProjectPaths.output().diagnostics()) || (entry.path() == parentProjectPaths.output().test_summaries()))
-          {
-            copy_sequoia_subdir(stream, output.dir(), entry);
-          }
-        }
-      }
-    }
-
-    /** Directories of sequoia which a created project has no use for.
-
-        `docs` is the committed doxygen render and `coverage_reports` the committed lcov
-        html: generated output, of no interest to a project which merely builds against
-        sequoia, and between them the overwhelming majority of the repository by size and
-        by file count. `.git` is sequoia's own history, which the new project cannot act
-        on: it runs `git init` of its own, and the copy is vendored rather than referenced
-        - `dependencies/sequoia/.keep` ships in the project template, so that path is
-        already tracked by the time sequoia arrives and git never forms a gitlink for it.
-
-        The cost of copying all this is paid on every run of the end-to-end test, which is
-        why it is worth excluding rather than merely untidy.
+        -# `docs` and `coverage_reports`, the committed doxygen render and lcov html. Between
+           them they are the overwhelming majority of the repository by size and by file
+           count, and the end-to-end test would pay for copying them on every run.
+        -# `build`, the build trees of the checkout the project is created from.
+        -# `output`, what sequoia's own test runs write. Sequoia's tests run `init` on sequoia
+           itself while the rest of the suite writes to `output`, so a copy races those
+           writes. On Windows, a file being copied cannot be opened for writing, so the test
+           writing it fails; elsewhere, a half-written file is copied.
+        -# `.git`, sequoia's own history, which the created project cannot act on: it runs
+           `git init` of its own, and its copy of sequoia is vendored rather than referenced -
+           the project template ships `dependencies/sequoia/.keep`, so that path is tracked
+           before sequoia arrives and git never forms a gitlink for it. In a worktree or a
+           submodule checkout, `.git` is a file naming a git directory, and a copy of it would
+           name that directory from the vendored sequoia: a worktree's absolute path would make
+           the vendored sequoia a working tree of the parent's repository, and a submodule's
+           relative path names a directory the created project does not have.
      */
     [[nodiscard]]
-    bool excluded_from_created_projects(const fs::path& dir)
+    bool excluded_from_created_projects(const fs::path& entry)
     {
-      const auto name{back(dir).generic_string()};
-      return (name == "docs") || (name == "coverage_reports") || (name == ".git");
+      const auto name{back(entry).generic_string()};
+      return (name == "docs")
+          || (name == "coverage_reports")
+          || (name == "build")
+          || (name == "output")
+          || (name == ".git");
     }
 
     void copy_sequoia(std::ostream& stream, const project_paths& parentProjectPaths, const project_data& data)
@@ -110,20 +125,12 @@ namespace sequoia::testing
 
       for(auto& entry : fs::directory_iterator{parentSequoiaRoot})
       {
-        if(fs::is_directory(entry))
+        if(!excluded_from_created_projects(entry.path()))
         {
-          if(entry.path() == parentProjectPaths.output().dir())
-          {
-            copy_sequoia_output(stream, parentProjectPaths, output_paths{seqLocation}, entry);
-          }
-          else if((entry.path() != parentProjectPaths.build().dir()) && !excluded_from_created_projects(entry.path()))
-          {
+          if(fs::is_directory(entry))
             copy_sequoia_subdir(stream, seqLocation, entry);
-          }
-        }
-        else
-        {
-          fs::copy(entry, seqLocation);
+          else
+            fs::copy(entry, seqLocation);
         }
       }
 
@@ -202,26 +209,31 @@ namespace sequoia::testing
   {
     stream << "Initializing Project(s)....\n\n";
 
-    for(const auto& data : projects)
+    for(const auto [index, data] : std::views::enumerate(projects))
     {
+      const auto recovery{recovery_advice(data, projects | std::views::drop(index + 1))};
+
       if(data.project_root.empty())
         throw std::runtime_error{"Project path should not be empty\n"};
 
       if(!data.project_root.is_absolute())
-        throw std::runtime_error{std::string{"Project path '"}.append(data.project_root.generic_string()).append("' should be absolute\n")};
+        throw std::runtime_error{std::format("Project path '{}' should be absolute\n", data.project_root.generic_string())};
 
       if(!is_appropriate_root(data.project_root))
-        throw std::runtime_error{std::string{"Project location '"}.append(data.project_root.generic_string()).append("' is in use\n")};
+        throw std::runtime_error{std::format("Project location '{}' is in use\n", data.project_root.generic_string())};
 
       const auto name{back(data.project_root).generic_string()};
       if(name.empty())
         throw std::runtime_error{"Project name, deduced as the last token of path, is empty\n"};
 
-      if(std::ranges::find_if(name, [](char c) { return !(std::isalnum(c) || (c == '_') || (c == '-')); }) != name.cend())
+      auto permitted{[](char c) { return ascii::is_identifier_character(c) || (c == '-'); }};
+      if(!std::ranges::all_of(name, permitted))
       {
-        throw std::runtime_error{std::string{"Please ensure the project name '"}
-          .append(name)
-          .append("' consists of just alpha-numeric characters, underscores and dashes\n")};
+        throw std::runtime_error{
+          std::format("Please ensure the project name '{}' consists of just alpha-numeric characters, "
+                      "underscores and dashes\n",
+                      name)
+        };
       }
 
       check_indent(data.code_indent);
@@ -236,16 +248,42 @@ namespace sequoia::testing
       generate_build_system_files(data.project_root);
 
       if(data.use_git == git_invocation::yes)
-        invoke(cd_cmd(data.project_root) && git_first_cmd(data.project_root, data.output));
+      {
+        throw_unless_succeeded(invoke(git_first_cmd(data.project_root, data.output)),
+                               "Placing the new project under version control",
+                               std::format("The project at {} is created, but sequoia has not been copied into it.\n"
+                                           "git's output is {}. One possible cause is git having no identity "
+                                           "(user.name and user.email), which sequoia does not supply.\n"
+                                           "{}",
+                                           data.project_root.generic_string(),
+                                           describe_output_location(data.project_root, data.output),
+                                           recovery));
+      }
 
       report(stream, "", "\nCopying across sequoia...");
       copy_sequoia(stream, parentProjectPaths, data);
 
       if(data.use_git == git_invocation::yes)
       {
-        invoke(cd_cmd(data.project_root)
-            && shell_command{"git: adding sequoia dependency...", "git add .", data.output }
-            && shell_command{"git: committing...", "git commit -m \"Add sequoia dependency\" --quiet", data.output});
+        const auto commitSequoia{
+             cd_cmd(data.project_root)
+          && shell_command{"git: adding sequoia dependency...", "git add .", data.output }
+          && shell_command{"git: committing...", "git commit -m \"Add sequoia dependency\" --quiet", data.output}
+        };
+
+        std::string_view skipped{
+          data.do_build == build_invocation::no ? "" : ", and it has been neither configured nor built"
+        };
+
+        throw_unless_succeeded(invoke(commitSequoia),
+                               "Committing sequoia to the new project",
+                               std::format("sequoia is copied into {} but not committed{}.\n"
+                                           "git's output is {}.\n"
+                                           "{}",
+                                           data.project_root.generic_string(),
+                                           skipped,
+                                           describe_output_location(data.project_root, data.output),
+                                           recovery));
       }
 
       if(data.do_build != build_invocation::no)
@@ -253,11 +291,29 @@ namespace sequoia::testing
         const auto build{make_new_build_paths(data.project_root, parentProjectPaths.build())};
         const main_paths main{data.project_root / main_paths::default_main_cpp_from_root()};
 
-        invoke(cd_cmd(main.dir())
-            && cmake_cmd(build, data.output, "CODE_COVERAGE=OFF")
-            && build_cmd(build, data.output)
-            && ((data.do_build == build_invocation::launch_ide) ? launch_cmd(parentProjectPaths, data.project_root, build.cmake_cache_dir()) : shell_command{})
-        );
+        const auto configureAndBuild{
+             cd_cmd(main.dir())
+          && cmake_cmd(build, data.output, "CODE_COVERAGE=OFF")
+          && build_cmd(build, data.output)
+        };
+
+        throw_unless_succeeded(invoke(configureAndBuild),
+                               "Configuring and building the new project",
+                               std::format("The project at {} is otherwise complete.\n"
+                                           "The output is {}.\n"
+                                           "{}",
+                                           data.project_root.generic_string(),
+                                           describe_output_location(main.dir(), data.output),
+                                           recovery));
+
+        // A failure to open the IDE is reported rather than thrown: opening the IDE is a
+        // convenience, and the project is complete either way.
+        if(data.do_build == build_invocation::launch_ide)
+        {
+          const auto status{invoke(launch_cmd(parentProjectPaths, data.project_root, build.cmake_cache_dir()))};
+          if(status != 0)
+            stream << std::format("Opening the IDE {}; the project is complete\n", describe_exit_status(status));
+        }
       }
     }
   }
@@ -293,7 +349,9 @@ namespace sequoia::testing
           const auto token{back(root)};
           const auto sln{(buildDir / token).concat("Tests.sln")};
 
-          return {"Attempting to open IDE...", std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string()), ""};
+          return {"Attempting to open IDE...",
+                  std::format("{} /Run {}", quote_for_shell(devenv.string()), quote_for_shell(sln.string())),
+                  ""};
         }
       }
     }

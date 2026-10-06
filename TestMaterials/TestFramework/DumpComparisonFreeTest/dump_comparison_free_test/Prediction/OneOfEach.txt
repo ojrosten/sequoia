@@ -1,0 +1,7 @@
+Dump compared with 'before': 1 check missing, 1 check added
+
+Missing:
+  Tests/Alpha.cpp, Line 10: Alpha holds
+
+Added:
+  Tests/Beta.cpp, Line 20: Beta holds

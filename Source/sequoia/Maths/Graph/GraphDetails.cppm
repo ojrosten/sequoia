@@ -121,7 +121,7 @@ export namespace sequoia
 
         constexpr static bool default_weight_sharing_v{
               !is_directed(GraphFlavour)
-           && (big_weight<EdgeWeight>() || !std::is_copy_constructible_v<EdgeWeight>)
+           && (big_weight<EdgeWeight>() || !is_deep_copy_constructible_v<EdgeWeight>)
         };
 
         constexpr static bool shared_weight_v{

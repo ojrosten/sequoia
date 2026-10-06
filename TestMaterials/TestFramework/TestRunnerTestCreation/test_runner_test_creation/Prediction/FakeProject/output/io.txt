@@ -1,3 +1,4 @@
+  Warning: Whether sequoia has changed since this executable was built cannot be checked: the build's record of what it compiled cannot be read: <build directory> has no dependency log; has anything been built?
 Creating files for new test:
 "Tests/Maybe/MaybeTestingUtilities.hpp"
 "Tests/Maybe/MaybeTestingDiagnostics.hpp"
@@ -151,12 +152,86 @@ Creating files for new test:
 "Tests/Stuff/FooAllocationTest.cpp"
 
 Creating files for new test:
+"Source/fakeProject/Memory/Pool.hpp"
+"Source/fakeProject/Memory/Pool.cpp"
+"Tests/Memory/PoolAllocationTest.hpp"
+"Tests/Memory/PoolAllocationTest.cpp"
+
+Creating files for new test:
+"Source/fakeProject/Memory/Arena.hpp"
+"Source/fakeProject/Memory/Arena.cpp"
+"Tests/Memory/ArenaAllocationTest.hpp"
+"Tests/Memory/ArenaAllocationTest.cpp"
+
+Creating files for new test:
+  Warning: Source/fakeProject/Stuff/Widget.hpp already exists, so not generated
+"Tests/Stuff/WidgetAllocationTest.hpp"
+"Tests/Stuff/WidgetAllocationTest.cpp"
+
+Creating files for new test:
 "Tests/Stuff/ContainerPerformanceTest.hpp"
 "Tests/Stuff/ContainerPerformanceTest.cpp"
 
 Creating files for new test:
   Warning: Tests/Stuff/ContainerPerformanceTest.hpp already exists, so not created
   Warning: Tests/Stuff/ContainerPerformanceTest.cpp already exists, so not created
+
+Creating files for new test:
+"Tests/Utilities/UtilityFunctionsTest.hpp"
+"Tests/Utilities/UtilityFunctionsTest.cpp"
+
+Creating files for new test:
+  Warning: Tests/Maths/AngleTestingUtilities.hpp already exists, so not created
+  Warning: Tests/Maths/AngleTestingDiagnostics.hpp already exists, so not created
+  Warning: Tests/Maths/AngleTestingDiagnostics.cpp already exists, so not created
+"Tests/Maths/AngleRegularTest.hpp"
+"Tests/Maths/AngleRegularTest.cpp"
+
+Creating files for new test:
+  Warning: Tests/Weather/CloudTestingUtilities.hpp already exists, so not created
+  Warning: Tests/Weather/CloudTestingDiagnostics.hpp already exists, so not created
+  Warning: Tests/Weather/CloudTestingDiagnostics.cpp already exists, so not created
+"Tests/Weather/CloudMoveOnlyTest.hpp"
+"Tests/Weather/CloudMoveOnlyTest.cpp"
+
+Creating files for new test:
+"Tests/Maths/ProbabilityFamilyTest.hpp"
+"Tests/Maths/ProbabilityFamilyTest.cpp"
+
+Creating files for new test:
+"Tests/hominins/HumanSharedTesterTest.hpp"
+"Tests/hominins/HumanSharedTesterTest.cpp"
+
+Creating files for new test:
+"Source/fakeProject/Stuff/Gizmo.hpp"
+"Source/fakeProject/Stuff/Gizmo.cpp"
+"Tests/Stuff/GizmoTestingUtilities.hpp"
+"Tests/Stuff/GizmoTestingDiagnostics.hpp"
+"Tests/Stuff/GizmoTestingDiagnostics.cpp"
+"Tests/Stuff/GizmoSemanticsTest.hpp"
+"Tests/Stuff/GizmoSemanticsTest.cpp"
+
+Creating files for new test:
+"Source/fakeProject/Stuff/Gadget.hpp"
+"Source/fakeProject/Stuff/Gadget.cpp"
+"Tests/Stuff/GadgetFamilyTest.hpp"
+"Tests/Stuff/GadgetFamilyTest.cpp"
+
+Creating files for new test:
+"Tests/Maths/AngleFamilyTest.hpp"
+"Tests/Maths/AngleFamilyTest.cpp"
+
+Creating files for new test:
+"Tests/Utilities/StringUtilities.hpp"
+"Tests/Utilities/StringUtilities.cpp"
+
+Creating files for new test:
+"Tests/Stuff/ContainerFamilyAllocationTest.hpp"
+"Tests/Stuff/ContainerFamilyAllocationTest.cpp"
+
+Creating files for new test:
+"Tests/Stuff/ContainerSpeedTest.hpp"
+"Tests/Stuff/ContainerSpeedTest.cpp"
 
 
 
@@ -182,4 +257,4 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- Found Threads: TRUE
 -- Configuring done (0.7s)
 -- Generating done (0.0s)
--- Build files have been written to: /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/Auxiliary/FakeProject/build/TestSandbox/macos-homebrew-llvm
+-- Build files have been written to: /Users/oliver/sequoia-create-names/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Auxiliary/FakeProject/build/TestSandbox/llvm-homebrew-asan

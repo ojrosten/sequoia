@@ -70,10 +70,11 @@ export namespace sequoia
         WeightHandler::get(m_Weight) = weight_type{std::forward<Args>(args)...};
       }
 
-      template<std::invocable<weight_type&> Fn>
-      constexpr std::invoke_result_t<Fn, weight_type&> mutate_weight(Fn fn)
+      template<class Fn>
+        requires std::invocable<Fn&, weight_type&>
+      constexpr std::invoke_result_t<Fn&, weight_type&> mutate_weight(Fn fn)
       {
-        return fn(WeightHandler::get(m_Weight));
+        return std::invoke(fn, WeightHandler::get(m_Weight));
       }
 
       [[nodiscard]]
@@ -92,19 +93,23 @@ export namespace sequoia
       {}
 
       constexpr weighting(const weighting& other)
+        requires is_deep_copy_constructible_v<weight_type>
         : m_Weight{WeightHandler::producer_type::make(WeightHandler::get(other.m_Weight))}
       {}
 
       template<class Other>
-        requires std::is_base_of_v<weighting, std::remove_cvref_t<Other>>
-      constexpr weighting(Other&& other) : m_Weight{other.m_Weight}
+        requires (std::derived_from<std::remove_cvref_t<Other>, weighting> && !resolve_to_copy_v<weighting, Other>)
+      constexpr weighting(Other&& other)
+        : m_Weight{other.m_Weight}
       {}
 
       constexpr weighting(weighting&&) noexcept = default;
 
       constexpr weighting& operator=(const weighting& other)
+        requires is_deep_copy_constructible_v<weight_type>
       {
-        if(&other != this) m_Weight = WeightHandler::producer_type::make(WeightHandler::get(other.m_Weight));
+        if(&other != this)
+          m_Weight = WeightHandler::producer_type::make(WeightHandler::get(other.m_Weight));
         return *this;
       }
 
@@ -249,8 +254,11 @@ export namespace sequoia
         , m_MetaData{other.meta_data()}
       {}
 
-      constexpr decorated_partial_edge_base(const decorated_partial_edge_base&)            = default;
-      constexpr decorated_partial_edge_base& operator=(const decorated_partial_edge_base&) = default;
+      constexpr decorated_partial_edge_base(const decorated_partial_edge_base&)
+        requires is_deep_copy_constructible_v<meta_data_type> = default;
+
+      constexpr decorated_partial_edge_base& operator=(const decorated_partial_edge_base&)
+        requires is_deep_copy_assignable_v<meta_data_type> = default;
 
       [[nodiscard]]
       constexpr const MetaData& meta_data() const noexcept { return m_MetaData; }
@@ -264,10 +272,11 @@ export namespace sequoia
         m_MetaData = {std::forward<Args>(args)...};
       }
 
-      template<std::invocable<meta_data_type&> Fn>
-      constexpr std::invoke_result_t<Fn, meta_data_type&> mutate_meta_data(Fn fn)
+      template<class Fn>
+        requires std::invocable<Fn&, meta_data_type&>
+      constexpr std::invoke_result_t<Fn&, meta_data_type&> mutate_meta_data(Fn fn)
       {
-        return fn(m_MetaData);
+        return std::invoke(fn, m_MetaData);
       }
 
       [[nodiscard]]

@@ -7,6 +7,10 @@
 
 #include "CommandLineArgumentsTest.hpp"
 
+#include "sequoia/Streaming/Streaming.hpp"
+
+#include <utility>
+
 namespace sequoia::testing
 {
   using parsing::commandline::outcome;
@@ -189,141 +193,78 @@ namespace sequoia::testing
 
   void commandline_arguments_test::test_flat_parsing_help()
   {
-    check(weak_equivalence,
-          "Single option help",
-          parse({{"foo", "--help"}}, {{{"--async", {}, {}, fo{}}}}),
-          outcome{"foo", {}, "Usage: foo [options]\n"
-                             "\n"
-                             "Options:\n"
-                             "  --async\n"
-                             "  --help, -h  Describe the command or option this follows; alone, the top level\n"});
+    check_help("Single option help",
+               parse({{"foo", "--help"}}, {{{"--async", {}, {}, fo{}}}}),
+               outcome{"foo", {}},
+               "FlatParsingHelp/SingleOption.txt");
 
-    check(weak_equivalence,
-          "Single option alias help",
-          parse({{"foo", "--help"}}, {{{"--async", {"-a"}, {}, fo{}}}}),
-          outcome{"foo", {}, "Usage: foo [options]\n"
-                             "\n"
-                             "Options:\n"
-                             "  --async, -a\n"
-                             "  --help, -h   Describe the command or option this follows; alone, the top level\n"});
+    check_help("Single option alias help",
+               parse({{"foo", "--help"}}, {{{"--async", {"-a"}, {}, fo{}}}}),
+               outcome{"foo", {}},
+               "FlatParsingHelp/SingleOptionAlias.txt");
 
-    check(weak_equivalence,
-          "Single option multi-alias help",
-          parse({{"foo", "--help"}}, {{{"--async", {"-a","-as"}, {}, fo{}}}}),
-          outcome{"foo", {}, "Usage: foo [options]\n"
-                             "\n"
-                             "Options:\n"
-                             "  --async, -a, -as\n"
-                             "  --help, -h        Describe the command or option this follows; alone, the top level\n"});
+    check_help("Single option multi-alias help",
+               parse({{"foo", "--help"}}, {{{"--async", {"-a","-as"}, {}, fo{}}}}),
+               outcome{"foo", {}},
+               "FlatParsingHelp/SingleOptionMultiAlias.txt");
 
-    check(weak_equivalence,
-          "Multi-option help",
-          parse({{"foo", "--help"}},
-                { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
-                  {{"--async", {}, {}, fo{}}}}),
-          outcome{"foo",
-                  {},
-                  "Usage: foo [command] [options]\n"
-                  "\n"
-                  "Commands:\n"
-                  "  create, -c <class_name> <directory>\n"
-                  "\n"
-                  "Options:\n"
-                  "  --async\n"
-                  "  --help, -h                           Describe the command or option this follows; alone, the top level\n"});
+    check_help("Multi-option help",
+               parse({{"foo", "--help"}},
+                     { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
+                       {{"--async", {}, {}, fo{}}}}),
+               outcome{"foo", {}},
+               "FlatParsingHelp/MultiOption.txt");
 
     {
       commandline_arguments a{{"foo", "--help"}};
 
-      check(weak_equivalence,
-            "Multi-option help, with argument_parser",
-            argument_parser{a.size(), a.get(), { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
-                                                               {{"--async", {}, {}, fo{}}} }},
-            outcome{"foo",
-                    {},
-                    "Usage: foo [command] [options]\n"
-                    "\n"
-                    "Commands:\n"
-                    "  create, -c <class_name> <directory>\n"
-                    "\n"
-                    "Options:\n"
-                    "  --async\n"
-                    "  --help, -h                           Describe the command or option this follows; alone, the top level\n"});
+      check_help("Multi-option help, with argument_parser",
+                 argument_parser{a.size(), a.get(), { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
+                                                                    {{"--async", {}, {}, fo{}}} }}.get(),
+                 outcome{"foo", {}},
+                 "FlatParsingHelp/MultiOptionArgumentParser.txt");
     }
 
-    check(weak_equivalence,
-          "Help requested after an option without parameters or nested options describes that option",
-          parse({{"foo", "--async", "--help"}},
-                { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
-                  {{"--async", {}, {}, fo{}}}}),
-          outcome{"foo", {{{fo{}, nullptr, {}}}}, "Usage: foo --async\n"});
+    check_help("Help requested after an option without parameters or nested options describes that option",
+               parse({{"foo", "--async", "--help"}},
+                     { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
+                       {{"--async", {}, {}, fo{}}}}),
+               outcome{"foo", {{{fo{}, nullptr, {}}}}},
+               "FlatParsingHelp/AfterOptionWithoutParameters.txt");
 
-    check(weak_equivalence,
-          "A description's first line is listed beside the option; the whole of it heads the option's own help",
-          parse({{"foo", "--help"}}, {{{"--async", {}, {}, fo{}, {}, "Run asynchronously\nEach test on its own thread"}}}),
-          outcome{"foo", {}, "Usage: foo [options]\n"
-                             "\n"
-                             "Options:\n"
-                             "  --async     Run asynchronously\n"
-                             "  --help, -h  Describe the command or option this follows; alone, the top level\n"});
+    check_help("A description's first line is listed beside the option; the whole of it heads the option's own help",
+               parse({{"foo", "--help"}},
+                     {{{"--async", {}, {}, fo{}, {}, "Run asynchronously\nEach test on its own thread"}}}),
+               outcome{"foo", {}},
+               "FlatParsingHelp/DescriptionFirstLineListed.txt");
 
-    check(weak_equivalence,
-          "The whole description heads the option's own help",
-          parse({{"foo", "--async", "--help"}}, {{{"--async", {}, {}, fo{}, {}, "Run asynchronously\nEach test on its own thread"}}}),
-          outcome{"foo", {{{fo{}, nullptr, {}}}}, "Usage: foo --async\n"
-                                                  "\n"
-                                                  "Run asynchronously\n"
-                                                  "Each test on its own thread\n"});
+    check_help("The whole description heads the option's own help",
+               parse({{"foo", "--async", "--help"}},
+                     {{{"--async", {}, {}, fo{}, {}, "Run asynchronously\nEach test on its own thread"}}}),
+               outcome{"foo", {{{fo{}, nullptr, {}}}}},
+               "FlatParsingHelp/WholeDescriptionHeadsOwnHelp.txt");
 
-    check(weak_equivalence,
-          "A command's description is listed beside it, and a description column serves both sections",
-          parse({{"foo", "--help"}},
-                { {{"create", {"c"}, {"class"}, fo{}, {}, "Create a test"}},
-                  {{"--async", {}, {}, fo{}, {}, "Run asynchronously"}}}),
-          outcome{"foo",
-                  {},
-                  "Usage: foo [command] [options]\n"
-                  "\n"
-                  "Commands:\n"
-                  "  create, c <class>  Create a test\n"
-                  "\n"
-                  "Options:\n"
-                  "  --async            Run asynchronously\n"
-                  "  --help, -h         Describe the command or option this follows; alone, the top level\n"});
+    check_help("A command's description is listed beside it, and a description column serves both sections",
+               parse({{"foo", "--help"}},
+                     { {{"create", {"c"}, {"class"}, fo{}, {}, "Create a test"}},
+                       {{"--async", {}, {}, fo{}, {}, "Run asynchronously"}}}),
+               outcome{"foo", {}},
+               "FlatParsingHelp/CommandDescriptionColumn.txt");
 
-    check(weak_equivalence,
-          "An entry two short of the column limit keeps its description beside it",
-          parse({{"foo", "--help"}}, {{{"--an-option-which-is-thirty-six-wide", {}, {}, fo{}, {}, "Beside"}}}),
-          outcome{"foo",
-                  {},
-                  "Usage: foo [options]\n"
-                  "\n"
-                  "Options:\n"
-                  "  --an-option-which-is-thirty-six-wide  Beside\n"
-                  "  --help, -h                            Describe the command or option this follows; alone, the top level\n"});
+    check_help("An entry two short of the column limit keeps its description beside it",
+               parse({{"foo", "--help"}}, {{{"--an-option-which-is-thirty-six-wide", {}, {}, fo{}, {}, "Beside"}}}),
+               outcome{"foo", {}},
+               "FlatParsingHelp/TwoShortOfColumnLimit.txt");
 
-    check(weak_equivalence,
-          "An entry one short of the column limit has its description on the following line",
-          parse({{"foo", "--help"}}, {{{"--an-option-which-is-thirty-sevenwide", {}, {}, fo{}, {}, "Below"}}}),
-          outcome{"foo",
-                  {},
-                  "Usage: foo [options]\n"
-                  "\n"
-                  "Options:\n"
-                  "  --an-option-which-is-thirty-sevenwide\n"
-                  "                                        Below\n"
-                  "  --help, -h                            Describe the command or option this follows; alone, the top level\n"});
+    check_help("An entry one short of the column limit has its description on the following line",
+               parse({{"foo", "--help"}}, {{{"--an-option-which-is-thirty-sevenwide", {}, {}, fo{}, {}, "Below"}}}),
+               outcome{"foo", {}},
+               "FlatParsingHelp/OneShortOfColumnLimit.txt");
 
-    check(weak_equivalence,
-          "-h alone describes the top level",
-          parse({{"foo", "-h"}}, {{{"--async", {}, {}, fo{}}}}),
-          outcome{"foo",
-                  {},
-                  "Usage: foo [options]\n"
-                  "\n"
-                  "Options:\n"
-                  "  --async\n"
-                  "  --help, -h  Describe the command or option this follows; alone, the top level\n"});
+    check_help("-h alone describes the top level",
+               parse({{"foo", "-h"}}, {{{"--async", {}, {}, fo{}}}}),
+               outcome{"foo", {}},
+               "FlatParsingHelp/ShortFlagAlone.txt");
 
     check_exception_thrown<std::logic_error>("An option named as a help request", [](){
       return parse({{"foo"}}, {{{"--help", {}, {}, fo{}}}});
@@ -333,40 +274,41 @@ namespace sequoia::testing
       return parse({{"foo"}}, {{{"create", {"c"}, {}, fo{}, {}, "", {{"--header", {"-h"}, {"header"}}}}}});
     });
 
-    check(weak_equivalence,
-          "-h is a help request too",
-          parse({{"foo", "--async", "-h"}},
-                { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
-                  {{"--async", {}, {}, fo{}}}}),
-          outcome{"foo", {{{fo{}, nullptr, {}}}}, "Usage: foo --async\n"});
+    check_help("-h is a help request too",
+               parse({{"foo", "--async", "-h"}},
+                     { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
+                       {{"--async", {}, {}, fo{}}}}),
+               outcome{"foo", {{{fo{}, nullptr, {}}}}},
+               "FlatParsingHelp/ShortFlagAfterOption.txt");
 
-    check(weak_equivalence,
-          "Help requested after a concatenated alias group describes the group's last option",
-          parse({{"foo", "-av", "--help"}},
-                { {{"--async",   {"-a"}, {}, fo{}}},
-                  {{"--verbose", {"-v"}, {}, fo{}}}}),
-          outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}} }, "Usage: foo --verbose\n"});
+    check_help("Help requested after a concatenated alias group describes the group's last option",
+               parse({{"foo", "-av", "--help"}},
+                     { {{"--async",   {"-a"}, {}, fo{}}},
+                       {{"--verbose", {"-v"}, {}, fo{}}}}),
+               outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}} }},
+               "FlatParsingHelp/AfterAliasGroup.txt");
 
-    check(weak_equivalence,
-          "Help requested after a concatenated alias group describes the group's last option, not the forest's last",
-          parse({{"foo", "-va", "--help"}},
-                { {{"--async",   {"-a"}, {}, fo{}}},
-                  {{"--verbose", {"-v"}, {}, fo{}}}}),
-          outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}} }, "Usage: foo --async\n"});
+    check_help("Help requested after a concatenated alias group describes the group's last option, "
+               "not the forest's last",
+               parse({{"foo", "-va", "--help"}},
+                     { {{"--async",   {"-a"}, {}, fo{}}},
+                       {{"--verbose", {"-v"}, {}, fo{}}}}),
+               outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}} }},
+               "FlatParsingHelp/AfterAliasGroupNotForestLast.txt");
 
-    check(weak_equivalence,
-          "Help requested part way through an option's parameters is help, not a parameter",
-          parse({{"foo", "create", "class", "--help"}},
-                { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
-                  {{"--async", {}, {}, fo{}}}}),
-          outcome{"foo", {{{fo{}, nullptr, {"class"}}}}, "Usage: foo create <class_name> <directory>\n"});
+    check_help("Help requested part way through an option's parameters is help, not a parameter",
+               parse({{"foo", "create", "class", "--help"}},
+                     { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
+                       {{"--async", {}, {}, fo{}}}}),
+               outcome{"foo", {{{fo{}, nullptr, {"class"}}}}},
+               "FlatParsingHelp/PartWayThroughParameters.txt");
 
-    check(weak_equivalence,
-          "Help requested before an option's parameters describes that option",
-          parse({{"foo", "create", "--help"}},
-                { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
-                  {{"--async", {}, {}, fo{}}}}),
-          outcome{"foo", {{{fo{}, nullptr, {}}}}, "Usage: foo create <class_name> <directory>\n"});
+    check_help("Help requested before an option's parameters describes that option",
+               parse({{"foo", "create", "--help"}},
+                     { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
+                       {{"--async", {}, {}, fo{}}}}),
+               outcome{"foo", {{{fo{}, nullptr, {}}}}},
+               "FlatParsingHelp/BeforeParameters.txt");
   }
 
   void commandline_arguments_test::test_nested_parsing()
@@ -525,222 +467,179 @@ namespace sequoia::testing
 
   void commandline_arguments_test::test_nested_parsing_help()
   {
-     check(weak_equivalence,
-           "Nested help",
-           parse({{"", "--help"}},
-                 { {{"create", {"c"}, {}, fo{}, {}, "",
-                      {{"regular_test",
-                         {"regular"},
-                         {"qualified::class_name<class T>", "equivalent_type"},
-                         fo{}
-                      }}
-                    }} }),
-           outcome{"",
-                   {},
-                   "Usage: [command] [options]\n"
-                   "\n"
-                   "Commands:\n"
-                   "  create, c [command] [options]\n"
-                   "\n"
-                   "Options:\n"
-                   "  --help, -h                     Describe the command or option this follows; alone, the top level\n"});
+    check_help("Nested help",
+               parse({{"", "--help"}},
+                     { {{"create", {"c"}, {}, fo{}, {}, "",
+                          {{"regular_test",
+                             {"regular"},
+                             {"qualified::class_name<class T>", "equivalent_type"},
+                             fo{}
+                          }}
+                        }} }),
+               outcome{"", {}},
+               "NestedParsingHelp/TopLevel.txt");
 
-      check(weak_equivalence,
-            "Help requested after an option without parameters but with nested options describes that option",
-            parse({{"", "create", "--help"}},
-                  { {{"create", {"c"}, {}, fo{}, {}, "",
-                       {{"regular_test",
-                          {"regular"},
-                          {"qualified::class_name<class T>", "equivalent_type"},
-                          fo{}
-                       }}
-                  }} }),
-            outcome{"",
-                    {{{fo{}, nullptr, {}}}},
-                    "Usage: create [command] [options]\n"
-                    "\n"
-                    "Commands:\n"
-                    "  regular_test, regular <qualified::class_name<class T>> <equivalent_type>\n"
-                    "\n"
-                    "Options:\n"
-                    "  --help, -h                            Describe the command or option this follows; alone, the top level\n"});
+    check_help("Help requested after an option without parameters but with nested options describes that option",
+               parse({{"", "create", "--help"}},
+                     { {{"create", {"c"}, {}, fo{}, {}, "",
+                          {{"regular_test",
+                             {"regular"},
+                             {"qualified::class_name<class T>", "equivalent_type"},
+                             fo{}
+                          }}
+                     }} }),
+               outcome{"", {{{fo{}, nullptr, {}}}}},
+               "NestedParsingHelp/AfterOptionWithNestedOptions.txt");
 
-      check(weak_equivalence,
-            "Help requested after an option's parameters describes that option",
-            parse({{"", "create", "class", "dir", "--help"}},
-                  {{ {"create", {}, {"class_name", "directory"}, fo{}, {}, "",
-                       { {{"--equivalent-type", {}, {"type"}}} } } }}),
-            outcome{"",
-                    {{{fo{}, nullptr, {"class", "dir"}}}},
-                    "Usage: create <class_name> <directory> [options]\n"
-                    "\n"
-                    "Options:\n"
-                    "  --equivalent-type <type>\n"
-                    "  --help, -h                Describe the command or option this follows; alone, the top level\n"});
+    check_help("Help requested after an option's parameters describes that option",
+               parse({{"", "create", "class", "dir", "--help"}},
+                     {{ {"create", {}, {"class_name", "directory"}, fo{}, {}, "",
+                          { {{"--equivalent-type", {}, {"type"}}} } } }}),
+               outcome{"", {{{fo{}, nullptr, {"class", "dir"}}}}},
+               "NestedParsingHelp/AfterParametersWithNestedOptions.txt");
 
-      check(weak_equivalence,
-            "Help requested after the parameters of an option without nested options describes that option",
-            parse({{"", "create", "class", "dir", "--help"}},
-                  { {{"create", {}, {"class_name", "directory"}, fo{}}},
-                    {{"--async", {}, {}, fo{}}}}),
-            outcome{"", {{{fo{}, nullptr, {"class", "dir"}}}}, "Usage: create <class_name> <directory>\n"});
+    check_help("Help requested after the parameters of an option without nested options describes that option",
+               parse({{"", "create", "class", "dir", "--help"}},
+                     { {{"create", {}, {"class_name", "directory"}, fo{}}},
+                       {{"--async", {}, {}, fo{}}}}),
+               outcome{"", {{{fo{}, nullptr, {"class", "dir"}}}}},
+               "NestedParsingHelp/AfterParametersWithoutNestedOptions.txt");
 
-      check(weak_equivalence,
-            "Help requested after a completed nested option describes that option, not the enclosing one",
-            parse({{"", "create", "class", "dir", "--equivalent-type", "foo", "--help"}},
-                  {{ {"create", {}, {"class_name", "directory"}, fo{}, {}, "",
-                       { {{"--equivalent-type", {}, {"type"}}} } } }}),
-            outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}}, "Usage: create --equivalent-type <type>\n"});
+    check_help("Help requested after a completed nested option describes that option, not the enclosing one",
+               parse({{"", "create", "class", "dir", "--equivalent-type", "foo", "--help"}},
+                     {{ {"create", {}, {"class_name", "directory"}, fo{}, {}, "",
+                          { {{"--equivalent-type", {}, {"type"}}} } } }}),
+               outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}}},
+               "NestedParsingHelp/AfterCompletedNestedOption.txt");
 
-      check(weak_equivalence,
-            "Help requested after a top-level option which follows a nested one describes the top-level option",
-            parse({{"", "create", "class", "dir", "--equivalent-type", "foo", "-v", "--help"}},
-                  { {{"create", {}, {"class_name", "directory"}, fo{}, {}, "",
-                       { {"--equivalent-type", {}, {"type"}} }
-                    }},
-                    {{"--verbose", {"-v"}, {}, fo{}}}}),
-            outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}, {{fo{}, nullptr, {}}}}, "Usage: --verbose\n"});
+    check_help("Help requested after a top-level option which follows a nested one describes the top-level option",
+               parse({{"", "create", "class", "dir", "--equivalent-type", "foo", "-v", "--help"}},
+                     { {{"create", {}, {"class_name", "directory"}, fo{}, {}, "",
+                          { {"--equivalent-type", {}, {"type"}} }
+                       }},
+                       {{"--verbose", {"-v"}, {}, fo{}}}}),
+               outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}, {{fo{}, nullptr, {}}}}},
+               "NestedParsingHelp/AfterTopLevelFollowingNested.txt");
 
-      check(weak_equivalence,
-            "Help requested before a nested option's parameters describes that option",
-            parse({{"", "create", "regular_test", "--help"}},
-                  { {{"create", {"c"}, {}, fo{}, {}, "",
-                       {{"regular_test",
-                          {"regular"},
-                          {"qualified::class_name<class T>", "equivalent_type"},
-                          fo{}
-                       }}
-                  }} }),
-            outcome{"",
-                    {{{fo{}, nullptr, {}, {{fo{}, nullptr, {}}}}}},
-                    "Usage: create regular_test <qualified::class_name<class T>> <equivalent_type>\n"});
+    check_help("Help requested before a nested option's parameters describes that option",
+               parse({{"", "create", "regular_test", "--help"}},
+                     { {{"create", {"c"}, {}, fo{}, {}, "",
+                          {{"regular_test",
+                             {"regular"},
+                             {"qualified::class_name<class T>", "equivalent_type"},
+                             fo{}
+                          }}
+                     }} }),
+               outcome{"", {{{fo{}, nullptr, {}, {{fo{}, nullptr, {}}}}}}},
+               "NestedParsingHelp/BeforeNestedParameters.txt");
 
-      check(weak_equivalence,
-            "Help requested before the parameters of an option with nested options describes its whole sub-tree",
-            parse({{"", "init", "--help"}},
-                  { {{"init", {"i"}, {"copyright owner", "path"}, fo{}, {}, "",
-                       {{"--no-build", {}, {}, fo{}}}
-                  }} }),
-            outcome{"",
-                    {{{fo{}, nullptr, {}}}},
-                    "Usage: init <copyright owner> <path> [options]\n"
-                    "\n"
-                    "Options:\n"
-                    "  --no-build\n"
-                    "  --help, -h  Describe the command or option this follows; alone, the top level\n"});
+    check_help("Help requested before the parameters of an option with nested options describes its whole sub-tree",
+               parse({{"", "init", "--help"}},
+                     { {{"init", {"i"}, {"copyright owner", "path"}, fo{}, {}, "",
+                          {{"--no-build", {}, {}, fo{}}}
+                     }} }),
+               outcome{"", {{{fo{}, nullptr, {}}}}},
+               "NestedParsingHelp/BeforeParametersWithNestedOptions.txt");
 
-      check(weak_equivalence,
-            "Help requested while a nested option's parameters are being collected, with arguments after it",
-            parse({{"", "create", "regular_test", "--help", "unrecognized"}},
-                  { {{"create", {"c"}, {}, fo{}, {}, "",
-                       {{"regular_test",
-                          {"regular"},
-                          {"qualified::class_name<class T>", "equivalent_type"},
-                          fo{}
-                       }}
-                  }} }),
-            outcome{"",
-                    {{{fo{}, nullptr, {}, {{fo{}, nullptr, {}}}}}},
-                    "Usage: create regular_test <qualified::class_name<class T>> <equivalent_type>\n"});
+    check_help("Help requested while a nested option's parameters are being collected, with arguments after it",
+               parse({{"", "create", "regular_test", "--help", "unrecognized"}},
+                     { {{"create", {"c"}, {}, fo{}, {}, "",
+                          {{"regular_test",
+                             {"regular"},
+                             {"qualified::class_name<class T>", "equivalent_type"},
+                             fo{}
+                          }}
+                     }} }),
+               outcome{"", {{{fo{}, nullptr, {}, {{fo{}, nullptr, {}}}}}}},
+               "NestedParsingHelp/CollectingNestedParametersWithArgumentsAfter.txt");
 
-      check(weak_equivalence,
-            "Help requested while the parameters of a nested option without a function object are being collected",
-            parse({{"", "create", "class", "dir", "--equivalent-type", "--help"}},
-                  {{ {"create", {}, {"class_name", "directory"}, fo{}, {}, "",
-                       { {{"--equivalent-type", {}, {"type"}}} } } }}),
-            outcome{"", {{{fo{}, nullptr, {"class", "dir"}}}}, "Usage: create --equivalent-type <type>\n"});
+    check_help("Help requested while the parameters of a nested option without a function object are being collected",
+               parse({{"", "create", "class", "dir", "--equivalent-type", "--help"}},
+                     {{ {"create", {}, {"class_name", "directory"}, fo{}, {}, "",
+                          { {{"--equivalent-type", {}, {"type"}}} } } }}),
+               outcome{"", {{{fo{}, nullptr, {"class", "dir"}}}}},
+               "NestedParsingHelp/CollectingParametersWithoutFunctionObject.txt");
 
-      check(weak_equivalence,
-            "Help requested part way through an option's parameters leaves the partial operation in the forest",
-            parse({{"", "init", "owner", "--help"}},
-                  { {{"init", {"i"}, {"copyright owner", "path"}, fo{}, {}, "",
-                       {{"--no-build", {}, {}, fo{}}}
-                  }} }),
-            outcome{"",
-                    {{{fo{}, nullptr, {"owner"}}}},
-                    "Usage: init <copyright owner> <path> [options]\n"
-                    "\n"
-                    "Options:\n"
-                    "  --no-build\n"
-                    "  --help, -h  Describe the command or option this follows; alone, the top level\n"});
+    check_help("Help requested part way through an option's parameters leaves the partial operation in the forest",
+               parse({{"", "init", "owner", "--help"}},
+                     { {{"init", {"i"}, {"copyright owner", "path"}, fo{}, {}, "",
+                          {{"--no-build", {}, {}, fo{}}}
+                     }} }),
+               outcome{"", {{{fo{}, nullptr, {"owner"}}}}},
+               "NestedParsingHelp/PartWayThroughParameters.txt");
 
-      check(weak_equivalence,
-            "Help requested between a nested option's parameters and one of its own nested options "
-            "describes that option and parses nothing further",
-            parse({{"", "create", "regular_test", "a", "b", "--help", "--header", "h"}},
-                  { {{"create", {"c"}, {}, fo{}, {}, "",
-                       {{"regular_test",
-                          {"regular"},
-                          {"qualified::class_name<class T>", "equivalent_type"},
-                          fo{},
-                          {},
-                          "",
-                          {{"--header", {"-H"}, {"header"}}}
-                       }}
-                  }} }),
-            outcome{"",
-                    {{{fo{}, nullptr, {}, {{fo{}, nullptr, {"a", "b"}}}}}},
-                    "Usage: create regular_test <qualified::class_name<class T>> <equivalent_type> [options]\n"
-                    "\n"
-                    "Options:\n"
-                    "  --header, -H <header>\n"
-                    "  --help, -h             Describe the command or option this follows; alone, the top level\n"});
+    check_help("Help requested between a nested option's parameters and one of its own nested options "
+               "describes that option and parses nothing further",
+               parse({{"", "create", "regular_test", "a", "b", "--help", "--header", "h"}},
+                     { {{"create", {"c"}, {}, fo{}, {}, "",
+                          {{"regular_test",
+                             {"regular"},
+                             {"qualified::class_name<class T>", "equivalent_type"},
+                             fo{},
+                             {},
+                             "",
+                             {{"--header", {"-H"}, {"header"}}}
+                          }}
+                     }} }),
+               outcome{"", {{{fo{}, nullptr, {}, {{fo{}, nullptr, {"a", "b"}}}}}}},
+               "NestedParsingHelp/BetweenParametersAndNestedOption.txt");
 
-      check(weak_equivalence,
-            "Help two levels down: the usage line carries the commands entered, and the level lists a command and an option",
-            parse({{"", "create", "regular_test", "a", "b", "--header", "h", "--help"}},
-                  { {{"create", {"c"}, {}, fo{}, {}, "",
-                       {{"regular_test", {"regular"}, {"class", "equivalent_type"}, fo{}, {}, "A regular test",
-                          { {{"--header", {"-H"}, {"header"}, {}, {}, "The header"}},
-                            {{"gen-source", {"g"}, {"dir"}, {}, {}, "Generate a source"}} }
-                       }}
-                  }} }),
-            outcome{"",
-                    {{{fo{}, nullptr, {}, {{fo{}, nullptr, {"a", "b", "h"}}}}}},
-                    "Usage: create regular_test --header <header>\n"
-                    "\n"
-                    "The header\n"});
+    check_help("Help two levels down: the usage line carries the commands entered, "
+               "and the level lists a command and an option",
+               parse({{"", "create", "regular_test", "a", "b", "--header", "h", "--help"}},
+                     { {{"create", {"c"}, {}, fo{}, {}, "",
+                          {{"regular_test", {"regular"}, {"class", "equivalent_type"}, fo{}, {}, "A regular test",
+                             { {{"--header", {"-H"}, {"header"}, {}, {}, "The header"}},
+                               {{"gen-source", {"g"}, {"dir"}, {}, {}, "Generate a source"}} }
+                          }}
+                     }} }),
+               outcome{"", {{{fo{}, nullptr, {}, {{fo{}, nullptr, {"a", "b", "h"}}}}}}},
+               "NestedParsingHelp/TwoLevelsDown.txt");
 
-      check(weak_equivalence,
-            "A nested level with a command and an option: [command] [options] in the usage line, one column for both sections",
-            parse({{"", "create", "regular_test", "a", "b", "--help"}},
-                  { {{"create", {"c"}, {}, fo{}, {}, "",
-                       {{"regular_test", {"regular"}, {"class", "equivalent_type"}, fo{}, {}, "A regular test",
-                          { {{"--header", {"-H"}, {"header"}, {}, {}, "The header"}},
-                            {{"gen-source", {"g"}, {"dir"}, {}, {}, "Generate a source"}} }
-                       }}
-                  }} }),
-            outcome{"",
-                    {{{fo{}, nullptr, {}, {{fo{}, nullptr, {"a", "b"}}}}}},
-                    "Usage: create regular_test <class> <equivalent_type> [command] [options]\n"
-                    "\n"
-                    "A regular test\n"
-                    "\n"
-                    "Commands:\n"
-                    "  gen-source, g <dir>    Generate a source\n"
-                    "\n"
-                    "Options:\n"
-                    "  --header, -H <header>  The header\n"
-                    "  --help, -h             Describe the command or option this follows; alone, the top level\n"});
+    check_help("A nested level with a command and an option: [command] [options] in the usage line, "
+               "one column for both sections",
+               parse({{"", "create", "regular_test", "a", "b", "--help"}},
+                     { {{"create", {"c"}, {}, fo{}, {}, "",
+                          {{"regular_test", {"regular"}, {"class", "equivalent_type"}, fo{}, {}, "A regular test",
+                             { {{"--header", {"-H"}, {"header"}, {}, {}, "The header"}},
+                               {{"gen-source", {"g"}, {"dir"}, {}, {}, "Generate a source"}} }
+                          }}
+                     }} }),
+               outcome{"", {{{fo{}, nullptr, {}, {{fo{}, nullptr, {"a", "b"}}}}}}},
+               "NestedParsingHelp/NestedCommandAndOption.txt");
 
-      check(weak_equivalence,
-            "Nothing after help is parsed",
-            parse({{"", "create", "--help", "unrecognized"}},
-                  { {{"create", {"c"}, {}, fo{}, {}, "",
-                       {{"regular_test",
-                          {"regular"},
-                          {"qualified::class_name<class T>", "equivalent_type"},
-                          fo{}
-                       }}
-                  }} }),
-            outcome{"",
-                    {{{fo{}, nullptr, {}}}},
-                    "Usage: create [command] [options]\n"
-                    "\n"
-                    "Commands:\n"
-                    "  regular_test, regular <qualified::class_name<class T>> <equivalent_type>\n"
-                    "\n"
-                    "Options:\n"
-                    "  --help, -h                            Describe the command or option this follows; alone, the top level\n"});
-    }
+    check_help("Nothing after help is parsed",
+               parse({{"", "create", "--help", "unrecognized"}},
+                     { {{"create", {"c"}, {}, fo{}, {}, "",
+                          {{"regular_test",
+                             {"regular"},
+                             {"qualified::class_name<class T>", "equivalent_type"},
+                             fo{}
+                          }}
+                     }} }),
+               outcome{"", {{{fo{}, nullptr, {}}}}},
+               "NestedParsingHelp/NothingAfterHelpParsed.txt");
+  }
+
+  /** Checks the outcome of a help request: all but its help against `prediction`, which holds no help, and its help
+      against the prediction file `helpFile`. Both checks cite the location of `description`.
+   */
+  void commandline_arguments_test::check_help(const reporter& description,
+                                              outcome obtained,
+                                              const outcome& prediction,
+                                              const std::filesystem::path& helpFile)
+  {
+    const auto workingFile{working_materials() /= helpFile};
+    std::filesystem::create_directories(workingFile.parent_path());
+    write_to_file(workingFile, std::exchange(obtained.help, {}), std::ios_base::out);
+
+    const auto helpMessage{append_lines(description.message(), "Help")};
+    const auto helpDescription{
+      description.location() ? reporter{helpMessage, *description.location()}
+                             : reporter{helpMessage, no_source_location}
+    };
+
+    check(weak_equivalence, description, obtained, prediction);
+    check(equivalence, helpDescription, workingFile, predictive_materials() /= helpFile);
+  }
 }

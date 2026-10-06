@@ -1,6 +1,6 @@
 
 Analyzing dependencies...
-[2.53ms]
+[2.47ms]
 
 
 Running tests...
@@ -8,7 +8,7 @@ Running tests...
 useful_things_free_test:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
 
 	[int]
 	operator== returned false
@@ -19,8 +19,9 @@ useful_things_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 506us]
-[Execution Time: 163us]
+[Total Run Time: 472us]
+[Execution Time: 124us]
+[Runner Overhead: 492us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

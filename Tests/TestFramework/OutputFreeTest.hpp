@@ -31,7 +31,11 @@ namespace sequoia::testing
 
     void test_display_character();
 
+    void test_exception_message();
+
     void test_tidy_name();
+
+    void test_spans();
 
     void test_template_argument_values();
 

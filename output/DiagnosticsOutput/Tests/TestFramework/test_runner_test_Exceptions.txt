@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTest.cpp, Line 495
+Tests/TestFramework/TestRunnerTest.cpp, Line 1129
 Test Main has empty path
 
 Expected Exception Type:
@@ -9,7 +9,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 503
+Tests/TestFramework/TestRunnerTest.cpp, Line 1137
 Test Main does not exist
 
 Expected Exception Type:
@@ -20,7 +20,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 511
+Tests/TestFramework/TestRunnerTest.cpp, Line 1145
 Include Target has empty path
 
 Expected Exception Type:
@@ -31,7 +31,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 519
+Tests/TestFramework/TestRunnerTest.cpp, Line 1153
 Include Target does not exist
 
 Expected Exception Type:
@@ -42,7 +42,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 527
+Tests/TestFramework/TestRunnerTest.cpp, Line 1161
 Project root is empty
 
 Expected Exception Type:
@@ -51,7 +51,7 @@ Unable to locate project root as no commandline arguments supplied.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 535
+Tests/TestFramework/TestRunnerTest.cpp, Line 1169
 Project root does not exist
 
 Expected Exception Type:
@@ -60,7 +60,7 @@ canonical - file not found: /output/TestsTemporaryData/TestFramework/TestRunnerT
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 554
+Tests/TestFramework/TestRunnerTest.cpp, Line 1188
 Project root not findable
 
 Expected Exception Type:
@@ -71,29 +71,147 @@ Please ensure that the build directory is a subdirectory of <project>/build.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 563
+Tests/TestFramework/TestRunnerTest.cpp, Line 1197
 The same test registered twice
 
 Expected Exception Type:
 [std::logic_error]
   Error: Test: "foo_test"
-Source file: "Tests/foo_test.cpp"
-A test's name is that of its class, and determines where its output is written, so each may be registered only once.
+         Source file: "Tests/foo_test.cpp"
+         A test's name is that of its class, and determines where its output is written, so no two tests may share a name, ignoring case.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 580
+Tests/TestFramework/TestRunnerTest.cpp, Line 1209
 Two tests whose unqualified names coincide
 
 Expected Exception Type:
 [std::logic_error]
   Error: Test: "foo_test"
-Source file: "Tests/foo_test.cpp"
-A test's name is that of its class, and determines where its output is written, so each may be registered only once.
+         Source file: "Tests/foo_test.cpp"
+         A test's name is that of its class, and determines where its output is written, so no two tests may share a name, ignoring case.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 598
+Tests/TestFramework/TestRunnerTest.cpp, Line 1221
+A source in the directory sharing another's materials prefix
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/Nesting/outer_free_test/inner_free_test.cpp"
+Nests with:  "Tests/Nesting/outer_free_test.cpp"
+Each test's materials are kept beneath the path of its source file less the extension, so, ignoring case, that path must not name a directory holding another test's source file.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1239
+A source whose materials prefix is a directory holding another's source
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/Nesting/outer_free_test.cpp"
+Nests with:  "Tests/Nesting/outer_free_test/inner_free_test.cpp"
+Each test's materials are kept beneath the path of its source file less the extension, so, ignoring case, that path must not name a directory holding another test's source file.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1257
+A source in a directory sharing another's materials prefix but for case
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/Nesting/OUTER_FREE_TEST/differently_cased_inner_free_test.cpp"
+Nests with:  "Tests/Nesting/outer_free_test.cpp"
+Each test's materials are kept beneath the path of its source file less the extension, so, ignoring case, that path must not name a directory holding another test's source file.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1275
+Two tests whose names differ only in case
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Test: "Foo_test"
+         Source file: "Tests/Cased/Foo_test.cpp"
+         A test's name is that of its class, and determines where its output is written, so no two tests may share a name, ignoring case.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1293
+A source two directories beneath another's materials prefix
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/Nesting/outer_free_test/Deeper/deeply_inner_free_test.cpp"
+Nests with:  "Tests/Nesting/outer_free_test.cpp"
+Each test's materials are kept beneath the path of its source file less the extension, so, ignoring case, that path must not name a directory holding another test's source file.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1311
+A source whose materials prefix, but for case, is a directory holding another's source
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/Nesting/outer_free_test.cpp"
+Nests with:  "Tests/Nesting/OUTER_FREE_TEST/differently_cased_inner_free_test.cpp"
+Each test's materials are kept beneath the path of its source file less the extension, so, ignoring case, that path must not name a directory holding another test's source file.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1329
+Sources beside a materials prefix and sharing it are admitted; one beneath it then is not
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/Nesting/outer_free_test/inner_free_test.cpp"
+Nests with:  "Tests/Nesting/outer_free_test.cpp"
+Each test's materials are kept beneath the path of its source file less the extension, so, ignoring case, that path must not name a directory holding another test's source file.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1349
+A source whose materials prefix contains a non-ASCII byte
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/Nesting/Café/non_ascii_free_test.cpp"
+The path of this source file relative to the tests repository must be ASCII.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1366
+A test whose name contains a non-ASCII letter
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/NonAscii/CafeFreeTest.cpp"
+A test's name is that of its class, and the names of the tests in this source file must be ASCII.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1383
+A test with no source file
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: ""
+Each test's materials are kept beneath the path of its source file relative to the tests repository, and this source file has no such path.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1400
+Two tests whose summaries are one file, both selected
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: Tests "summary_collider_test" and "summary_collider_test_twin" would write their summaries to one file, ignoring case:
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/output/TestSummaries/Tests/summary_collider_test_twin.txt"
+Rename one, or change its summary discriminator.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1418
 Invalid repetitions for instability analysis
 
 Expected Exception Type:
@@ -102,7 +220,7 @@ locate-instabilities: unable to interpret 'foo' as an integer number of repetiti
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 605
+Tests/TestFramework/TestRunnerTest.cpp, Line 1425
 Insufficient repetitions for instability analysis
 
 Expected Exception Type:
@@ -111,7 +229,56 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1133
+Tests/TestFramework/TestRunnerTest.cpp, Line 1519
+Registration whose hook throws
+
+Expected Exception Type:
+[std::runtime_error]
+No output discriminator
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1520
+The same registration again
+
+Expected Exception Type:
+[std::runtime_error]
+No output discriminator
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1529
+The only registration, whose hook throws
+
+Expected Exception Type:
+[std::runtime_error]
+No output discriminator
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1677
+An unselected test whose summary file is a selected test's
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: Tests "summary_collider_test_twin" and "summary_collider_test" would write their summaries to one file, ignoring case:
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/output/TestSummaries/Tests/summary_collider_test_Twin.txt"
+Rename one, or change its summary discriminator.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1689
+A selected test whose summary file is an unselected test's
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: Tests "summary_collider_test" and "summary_collider_test_twin" would write their summaries to one file, ignoring case:
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/output/TestSummaries/Tests/summary_collider_test_twin.txt"
+Rename one, or change its summary discriminator.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2278
 Comparison against a dump never kept
 
 Expected Exception Type:
@@ -120,7 +287,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1133
+Tests/TestFramework/TestRunnerTest.cpp, Line 2278
 A dump kept under no name
 
 Expected Exception Type:
@@ -129,12 +296,111 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1133
+Tests/TestFramework/TestRunnerTest.cpp, Line 2278
 Comparison against no name
 
 Expected Exception Type:
 [std::runtime_error]
   Error: a dump is kept under, and compared against, a name; none was given
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2946
+Exit status 1 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 1.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2946
+Exit status 2 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 2.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2946
+Exit status 23 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 23.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2946
+Exit status 64 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 64.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2946
+Exit status 66 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 66.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2946
+Exit status 77 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 77.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2946
+Exit status 78 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 78.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2946
+Exit status 80 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 80.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2946
+Exit status 112 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 112.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2990
+Bits no flag occupies
+
+Expected Exception Type:
+[std::logic_error]
+Unrecognized bits in return_code: 64
 
 =======================================
 

@@ -237,9 +237,9 @@ namespace sequoia::testing
       g.register_product<int>("bar");
       g.register_product<double>("foo");
 
-      check(equality, "Number of products", f.size(), std::size_t{2});
+      check(equivalence, "", f, prediction_t{{{"int", 0}, {"double", 0.0}}});
+      check(equivalence, "", g, prediction_t{{{"bar", 0}, {"foo", 0.0}}});
 
-      // The prediction the typed factory is held to, and the helper written for it.
       check_bulk_creation("Erased over the same products", f, prediction_t{{{"int", 0}, {"double", 0.0}}});
       check_bulk_creation("Erased, named differently", g, prediction_t{{{"bar", 0}, {"foo", 0.0}}});
 
@@ -250,7 +250,7 @@ namespace sequoia::testing
       check_exception_thrown<std::logic_error>("Duplicated name", [&f](){ f.register_product<int>("int"); });
 
       // None of those took effect.
-      check(equality, "Number of products after the refusals", f.size(), std::size_t{2});
+      check(equivalence, "After the refusals", f, prediction_t{{{"int", 0}, {"double", 0.0}}});
     }
 
     {
@@ -260,6 +260,9 @@ namespace sequoia::testing
       erasing_factory<vessel, int> f{};
       f.register_product<regular_type>("x");
       f.register_product<move_only_type>("y");
+      using check_t = value_tester<erasing_factory<vessel, int>>::factory_check_type;
+
+      check(check_t{1}, "", f, prediction_t{{{"x", regular_type{1}}, {"y", move_only_type{1}}}});
 
       check_bulk_creation("Erased, taking an argument, one product move-only",
                           f,
@@ -268,9 +271,9 @@ namespace sequoia::testing
     }
 
     {
-      // Registered out of order, and with the two product types alternating once sorted, so that
-      // an ordering error changes which alternative each element holds. Five identical products
-      // would make this check unfalsifiable.
+      // The products are registered out of order, and the two product types alternate once the
+      // products are sorted. So an ordering error changes which alternative each element holds.
+      // Five identical products would make these checks unfalsifiable.
       using vessel       = std::variant<int, double>;
       using prediction_t = std::array<std::pair<std::string, vessel>, 5>;
 
@@ -280,6 +283,11 @@ namespace sequoia::testing
       f.register_product<int>("delta");
       f.register_product<int>("alpha");
       f.register_product<int>("gamma");
+
+      check(equivalence,
+            "",
+            f,
+            prediction_t{{{"epsilon", 0.0}, {"beta", 0.0}, {"delta", 0}, {"alpha", 0}, {"gamma", 0}}});
 
       check_bulk_creation("Erased, registered out of order",
                           f,

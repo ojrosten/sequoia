@@ -120,19 +120,13 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const type& nodes, const type& prediction)
     {
-      if(check(equality, "Node storaage sizes different", logger, nodes.size(), prediction.size()))
-      {
-        check_elements(logger, nodes, prediction);
-      }
+      check_elements(logger, nodes, prediction);
     }
 
     template<test_mode Mode>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& nodes, const equivalent_type& prediction)
     {
-      if (check(equality, "Node storage sizes different", logger, nodes.size(), sizeof...(Ts)))
-      {
-        check_elements(logger, nodes, prediction);
-      }
+      check_elements(logger, nodes, prediction);
     }
 
   private:
@@ -143,7 +137,7 @@ namespace sequoia::testing
     {
       if constexpr(I < sizeof...(Ts))
       {
-        const std::string message{std::to_string(I) + "th element incorrect"};
+        const std::string message{std::format("{}th element incorrect", I)};
         check(equality, message, logger, nodes.template node_weight<I>(), prediction.template get_node_weight<I>());
         check_elements<Mode, I+1>(logger, nodes, prediction);
       }
@@ -156,7 +150,7 @@ namespace sequoia::testing
     {
       if constexpr (I < sizeof...(Ts))
       {
-        const auto message{ std::to_string(I).append("th element incorrect") };
+        const auto message{ std::format("{}th element incorrect", I) };
         check(equality, message, logger, nodes.template get_node_weight<I>(), std::get<I>(prediction));
         check_elements<Mode, I + 1>(logger, nodes, prediction);
       }

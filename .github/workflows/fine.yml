@@ -13,9 +13,9 @@ name: fine
 #
 # Every column runs with `--exclude-performance`: TestRunnerPerformanceTest
 # asserts 60ms +- 35 for eight 25ms sleeps run concurrently, which a hosted
-# runner cannot hold - Windows returned 196ms and then 603ms for the same
-# commit, and Linux 164ms under ASan's slowdown on 2026-09-10 - so excluding
-# those buys back everything else.
+# runner may not hold - as wall-clock times, Windows returned 196ms and then
+# 603ms for the same commit, and Linux 164ms under ASan's slowdown on
+# 2026-09-10 - so excluding those buys back everything else.
 #
 # Every column also carries `--check-versioned-output`, spelt out per column
 # because a column's `exec_args` REPLACES the tier's rather than adding to it.
@@ -38,10 +38,18 @@ name: fine
 on:
   pull_request:
     branches: [staging]
+  # fine-on-retarget.yml dispatches this workflow on the head branch of a pull
+  # request retargeted to staging, because the retarget starts no pull_request
+  # run here. The dispatched run tests the head merged into staging, as the pull
+  # request's own run would, and reports on the head commit, where staging's rule
+  # looks for this workflow's audit.
+  workflow_dispatch:
 
 # A push to a PR that already has a run in flight cancels that run: a superseded
 # run gates nothing, and Windows runners are scarce. The group is per PR, so runs
-# for different PRs never cancel each other.
+# for different PRs never cancel each other. A dispatched run's group is its
+# branch, so a push to the pull request during that run does not cancel it; the
+# push starts a run of its own on the new head.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -59,6 +67,9 @@ jobs:
     uses: ./.github/workflows/tests.yml
     with:
       needs_testing: ${{ needs.scope.outputs.suite }}
+      # A pull_request run checks out GitHub's merge commit, so it needs no merge
+      # of its own. A dispatched run checks out the branch it was dispatched on.
+      merge_into: ${{ github.event_name == 'workflow_dispatch' && 'staging' || '' }}
       # Fatal at the gates, where preventing accumulation interrupts nobody's work.
       warnings_as_errors: true
       exec_args: '--check-versioned-output'
@@ -73,7 +84,12 @@ jobs:
   # as one that passed; `needs` reports `skipped` where the tick shows green.
   # Staging requires this job and none of the others, so a job missing from this
   # job's `needs` would gate nothing, however red. The second step fails if any
-  # other job is missing. Same shape as rigorous's audit, without the modes.
+  # other job is missing. The third fails unless staging's rule names this job,
+  # pinned to the app that reports this job, so that a rename here, or an edit to
+  # the rule, shows as a red check rather than only as a PR that waits on a name
+  # nothing reports, or merges ungated. The second and third steps run even when
+  # an earlier step fails, so each reports independently. Same shape as
+  # rigorous's audit, without the modes.
   audit:
     name: Every job ran and every job gates
     needs: [scope, fine]
@@ -96,6 +112,7 @@ jobs:
           exit $failed
 
       - name: Insist this job needs every other job of the workflow
+        if: ${{ !cancelled() }}
         run: |
           # The workflow file is fetched at GITHUB_WORKFLOW_SHA, the commit this run
           # read it from. Its jobs and this job's `needs` are compared both ways, so
@@ -113,3 +130,21 @@ jobs:
             exit 1
           fi
           echo "$GITHUB_JOB needs every other job of $workflow"
+
+      - name: Insist staging requires this job, pinned to the app that reports it
+        if: ${{ !cancelled() }}
+        env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+        run: |
+          # The branches endpoint returns a branch's required checks to any token;
+          # the protection endpoint would need admin rights.
+          check=$(gh api "repos/$GH_REPO/check-runs/$CHECK_RUN_ID" --jq '"\(.app.id) \(.name)"')
+          gh api "repos/$GH_REPO/branches/staging" \
+              --jq '.protection.required_status_checks.checks[] | "\(.app_id) \(.context)"' > required.txt
+          echo "this check, as app and name: $check"
+          echo "required on staging:"; sed 's/^/  /' required.txt
+          if ! grep -qxF "$check" required.txt; then
+            echo "::error::staging does not require '${check#* }' from app ${check%% *}: a PR would wait on a name nothing reports, or merge without this check"
+            exit 1
+          fi
+          echo "staging requires this job, pinned to the app that reports it"

@@ -42,8 +42,8 @@ export namespace sequoia::testing::impl
                        T&& y,
                        const U& xEquivalent,
                        const U& yEquivalent,
-                       optional_ref<const V> movedFromPostConstruction,
-                       optional_ref<const V> movedFromPostAssignment,
+                       opt_ref<const V> movedFromPostConstruction,
+                       opt_ref<const V> movedFromPostAssignment,
                        Mutator m,
                        const Args&... args)
   {

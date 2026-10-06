@@ -16,6 +16,8 @@ import sequoia.test_framework;
 
 /** \file */
 
+#include <format>
+
 namespace sequoia::testing
 {
   template<class... Ts>

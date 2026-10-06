@@ -26,9 +26,6 @@ namespace sequoia::testing
 
       friend std::ostream& operator<<(std::ostream&, const foo&);
     };
-
-    // TO DO: move this and add more, once https://github.com/llvm/llvm-project/issues/121648 is fixed
-    static_assert(!checkable_against<equality_check_t, test_mode::standard, foo, foo, int>);
   }
   
   [[nodiscard]]
@@ -39,7 +36,9 @@ namespace sequoia::testing
 
   void free_checkers_meta_free_test::run_tests()
   {
-    check("", [](){ static_assert(is_customized_check<general_equivalence_check_t<int>>); return true; }());
-    check("", [](){ static_assert(is_customized_check<general_weak_equivalence_check_t<int>>); return true; }());
+    STATIC_CHECK( is_customized_check<general_equivalence_check_t<int>>);
+    STATIC_CHECK( is_customized_check<general_weak_equivalence_check_t<int>>);
+    STATIC_CHECK( checkable_against<equality_check_t, test_mode::standard, foo, foo, tutor<null_advisor>>);
+    STATIC_CHECK(!checkable_against<equality_check_t, test_mode::standard, foo, foo, int>);
   }
 }

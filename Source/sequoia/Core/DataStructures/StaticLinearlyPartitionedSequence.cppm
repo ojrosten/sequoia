@@ -39,6 +39,6 @@ export namespace sequoia::data_structures
     }
   };
 
-  template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, std::integral IndexType=std::size_t>
+  template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, integer IndexType=std::size_t>
   using static_linearly_partitioned_sequence = static_partitioned_sequence<T, Npartitions, Npartitions*NelementsPerPartition, maths::static_linear_sequence<IndexType, NelementsPerPartition, NelementsPerPartition, Npartitions, IndexType>>;
 }

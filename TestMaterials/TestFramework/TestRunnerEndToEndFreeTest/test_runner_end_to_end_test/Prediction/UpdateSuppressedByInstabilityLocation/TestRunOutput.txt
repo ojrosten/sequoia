@@ -1,15 +1,15 @@
   Warning: Update of materials suppressed when checking for instabilities
 
 Analyzing dependencies...
-[2.76ms]
+[57.3ms]
 
 
 Running tests...
 
 foo_test:
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 52]
 
-	Tests/Stuff/FooTest.cpp, Line 43
+	Tests/Stuff/FooTest.cpp, Line 42
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
@@ -17,9 +17,9 @@ foo_test:
 	[std::filesystem::path]
 
 	  Contents of
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
 	  vs
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -35,9 +35,9 @@ foo_test:
 	    Predicted: Old
 
 	  Contents of
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
 	  vs
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -53,9 +53,9 @@ foo_test:
 	    Predicted: Old
 
 	  Contents of
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
 	  vs
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -71,9 +71,9 @@ foo_test:
 	    Predicted: Old
 
 	  Contents of
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
 	  vs
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -89,9 +89,9 @@ foo_test:
 	    Predicted: Old
 
 	  Contents of
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
 	  vs
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -110,9 +110,10 @@ foo_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 2.16ms]
-[Execution Time: 1.87ms]
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
+[Total Run Time: 4.98ms]
+[Execution Time: 4.57ms]
+[Runner Overhead: 2.19ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 52]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
@@ -122,9 +123,9 @@ foo_test:
 Running tests...
 
 foo_test:
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 52]
 
-	Tests/Stuff/FooTest.cpp, Line 43
+	Tests/Stuff/FooTest.cpp, Line 42
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
@@ -132,9 +133,9 @@ foo_test:
 	[std::filesystem::path]
 
 	  Contents of
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
 	  vs
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -150,9 +151,9 @@ foo_test:
 	    Predicted: Old
 
 	  Contents of
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
 	  vs
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -168,9 +169,9 @@ foo_test:
 	    Predicted: Old
 
 	  Contents of
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
 	  vs
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -186,9 +187,9 @@ foo_test:
 	    Predicted: Old
 
 	  Contents of
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
 	  vs
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -204,9 +205,9 @@ foo_test:
 	    Predicted: Old
 
 	  Contents of
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
 	  vs
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -225,9 +226,10 @@ foo_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.92ms]
-[Execution Time: 1.68ms]
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
+[Total Run Time: 4.57ms]
+[Execution Time: 4.23ms]
+[Runner Overhead: 2.1ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 52]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0

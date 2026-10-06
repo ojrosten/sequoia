@@ -28,6 +28,7 @@ module sequoia.runtime;
 import std;
 
 import sequoia.platform_specific;
+import sequoia.text_processing;
 
 namespace sequoia::runtime
 {
@@ -44,58 +45,60 @@ namespace sequoia::runtime
           && (flags & HANDLE_FLAG_INHERIT);
     }
 
-    /** \brief The command interpreter, named absolutely.
+    /** \brief The absolute path of `cmd.exe` in the Windows system directory.
 
-        Supplying this as the application name matters. Left to resolve the interpreter from the
-        command line alone, CreateProcessW searches the **current directory** ahead of the system
-        one, and sequoia spawns from directories it has itself just generated - so a stray
-        executable among a generated project's artefacts would be run in preference to the shell.
-        The runtime's own system() had no such exposure, resolving through COMSPEC.
+        \returns
+        -# The path, if Windows reports the path of the system directory;
+        -# Otherwise, an empty string.
      */
     [[nodiscard]]
     std::wstring command_interpreter()
     {
       std::wstring directory(MAX_PATH, L'\0');
       const auto length{GetSystemDirectoryW(directory.data(), static_cast<UINT>(directory.size()))};
-      if(!length || (length > directory.size())) return {};
+      if(!length || (length > directory.size()))
+        return {};
 
       directory.resize(length);
       return directory.append(L"\\cmd.exe");
     }
 
-    /** \brief Runs a command through the interpreter, passing on the standard streams and nothing else.
+    /** \brief Runs `command` through `cmd.exe`, and waits for the command to finish. The child
+               inherits at most the standard streams.
 
-        std::system would do the same job in a line, but spawns with bInheritHandles = TRUE, which
-        hands the child a duplicate of *every* inheritable handle the process holds at that instant
-        - and the MSVC runtime opens files inheritably by default. Since sequoia runs its top-level
-        tests concurrently, a spawn on one thread can therefore capture a file another thread has
-        open, and on Windows a file cannot be deleted while any handle to it remains. The duplicate
-        outlives the stream that created it, so a delete issued long afterwards fails with a
-        sharing violation - intermittently, according to which thread was where.
+        \returns
+        -# -1, if the child fails to start, or its exit status is unavailable;
+        -# Otherwise, the child's exit status.
 
-        Restricting inheritance to an explicit list closes that off at the only point where sequoia
-        creates a process, rather than at the delete sites where it happened to show.
+        `std::system` would make the child inherit every inheritable handle the process holds, and
+        the MSVC runtime opens files inheritably by default. sequoia runs tests concurrently, so a
+        child spawned on one thread could hold a duplicate of a handle to a file another thread has
+        open. The duplicate stays open after that thread closes the file. On Windows, a file cannot
+        be deleted while any handle to it remains, so a later delete of the file would fail with a
+        sharing violation, intermittently.
      */
     [[nodiscard]]
     int spawn_and_wait(const std::string& command)
     {
       const auto interpreter{command_interpreter()};
-      if(interpreter.empty()) return -1;
+      if(interpreter.empty())
+        return -1;
 
       const std::array<HANDLE, 3> standardStreams{GetStdHandle(STD_INPUT_HANDLE),
                                                   GetStdHandle(STD_OUTPUT_HANDLE),
                                                   GetStdHandle(STD_ERROR_HANDLE)};
 
-      // All three or none. Passing only some, with STARTF_USESTDHANDLES set, would leave the child
-      // holding nothing at all for the remainder, whereas inheriting nothing lets it fall back to
-      // the console it is attached to.
+      // The child inherits either all three standard streams or none of them. With
+      // STARTF_USESTDHANDLES set, the child gets no handle at all for a stream missing from the
+      // list. A child which inherits no streams uses its console.
       // Not const: UpdateProcThreadAttribute takes the handle list through a PVOID.
       auto inherited{
         [&standardStreams]() -> std::vector<HANDLE> {
-          if(!std::ranges::all_of(standardStreams, is_inheritable)) return {};
+          if(!std::ranges::all_of(standardStreams, [](HANDLE handle) { return is_inheritable(handle); }))
+            return {};
 
-          // A handle may appear more than once - stdout and stderr are the same when one is
-          // redirected onto the other - and the attribute list will not accept a duplicate.
+          // The attribute list refuses a duplicate handle. stdout and stderr share a handle when
+          // one is redirected onto the other.
           auto handles{standardStreams | std::ranges::to<std::vector>()};
           std::ranges::sort(handles);
           handles.erase(std::ranges::unique(handles).begin(), handles.end());
@@ -118,7 +121,8 @@ namespace sequoia::runtime
         if(auto* candidate{reinterpret_cast<LPPROC_THREAD_ATTRIBUTE_LIST>(attributeStorage.data())};
            InitializeProcThreadAttributeList(candidate, 1, 0, &size))
         {
-          // Initialized, and so owed a matching deletion however the rest of this turns out.
+          // An initialized list needs a matching DeleteProcThreadAttributeList, whatever happens
+          // next. `attributes` holds the list only once the list is initialized.
           attributes = candidate;
 
           if(UpdateProcThreadAttribute(attributes, 0, PROC_THREAD_ATTRIBUTE_HANDLE_LIST, inherited.data(), inherited.size() * sizeof(HANDLE), nullptr, nullptr))
@@ -133,15 +137,26 @@ namespace sequoia::runtime
         }
       }
 
-      // With no attribute list there is nothing to inherit selectively, so inherit nothing at all.
+      // The child inherits handles only through the attribute list. Without the list, the child
+      // inherits no handles, rather than every inheritable one.
       const BOOL inheritHandles{startupInfo.lpAttributeList != nullptr};
 
-      // Everything after /c reaches the interpreter verbatim, which is what lets a composite
-      // command carrying quotes and redirections through unaltered. Widening via path is exactly
-      // the inverse of the conversion which built the narrow string, so the two cannot disagree.
-      // Not const: CreateProcessW is documented to modify this buffer in place.
-      auto commandLine{std::wstring{L"cmd.exe /c "}.append(std::filesystem::path{command}.wstring())};
+      // With /s, cmd.exe removes the first and the last double quote after /c, and runs the rest as
+      // written. The command is wrapped in a pair of quotes for /s to remove. Without /s, whether
+      // cmd.exe removes quotes depends on what the command holds, and a command which begins with a
+      // quoted path can lose its first and last quotes.
+      // With /v:off, a `!` is literal even where the registry turns delayed expansion on.
+      // `path::wstring` reverses the conversion `path::string` made when the command was built, so
+      // no character changes.
+      // Not const: CreateProcessW may write to this buffer.
+      auto commandLine{
+        std::wstring{L"cmd.exe /v:off /s /c \""}.append(std::filesystem::path{command}.wstring()).append(L"\"")
+      };
 
+      // `interpreter` names cmd.exe by its absolute path. Given only the command line, CreateProcessW
+      // looks for the interpreter in the current directory before the system directory. sequoia
+      // runs commands from directories it has just generated, so a stray `cmd.exe` there would run
+      // in place of the shell.
       PROCESS_INFORMATION processInfo{};
       const auto created{
         CreateProcessW(interpreter.data(),
@@ -156,14 +171,16 @@ namespace sequoia::runtime
                        &processInfo)
       };
 
-      if(attributes) DeleteProcThreadAttributeList(attributes);
+      if(attributes)
+        DeleteProcThreadAttributeList(attributes);
 
-      if(!created) return -1;
+      if(!created)
+        return -1;
 
       const auto waited{WaitForSingleObject(processInfo.hProcess, INFINITE) == WAIT_OBJECT_0};
 
-      // Without a successful wait the exit code reads as STILL_ACTIVE, which would otherwise be
-      // returned as though it were the child's own status.
+      // `reported` requires a successful wait. Before the child ends, GetExitCodeProcess reports
+      // STILL_ACTIVE, and that value would pass for the child's status.
       DWORD exitCode{};
       const auto reported{waited && GetExitCodeProcess(processInfo.hProcess, &exitCode)};
 
@@ -180,6 +197,56 @@ namespace sequoia::runtime
       return WIFEXITED(status) ? WEXITSTATUS(status) : -1;
     }
   #endif
+
+    /** \brief Describes how a command ended, by a POSIX shell's conventions.
+
+        The platform numbers its signals from 1 to `highestSignal`.
+     */
+    [[nodiscard]]
+    std::string describe_posix_exit_status(const int status, const int highestSignal)
+    {
+      if(status == 0)
+        return "succeeded (exit status 0)";
+
+      if(status < 0)
+        return "did not run to completion";
+
+      if(status == 126)
+        return "could not be executed by the shell (exit status 126)";
+
+      if(status == 127)
+        return "was not found by the shell (exit status 127)";
+
+      constexpr int signalOffset{128};
+      if((status > signalOffset) && (status - signalOffset <= highestSignal))
+        return std::format("failed with exit status {}, which may mean it was killed by signal {}",
+                           status,
+                           status - signalOffset);
+
+      return std::format("failed with exit status {}", status);
+    }
+
+    [[nodiscard]]
+    std::string quote_for_posix_shell(std::string_view word)
+    {
+      auto escape{
+        [](char c) {
+          // Within double quotes, a POSIX shell interprets these characters and no others. A
+          // backslash before one makes it literal.
+          constexpr std::string_view interpreted{"\\$`\""};
+          return interpreted.contains(c) ? std::string{'\\', c} : std::string{c};
+        }
+      };
+
+      const auto escaped{
+          word
+        | std::views::transform(escape)
+        | std::views::join
+        | std::ranges::to<std::string>()
+      };
+
+      return std::format("\"{}\"", escaped);
+    }
   }
 
   shell_command::shell_command(std::string cmd, const std::filesystem::path& output, append_mode app)
@@ -187,11 +254,11 @@ namespace sequoia::runtime
   {
     if(!output.empty())
     {
-      if(!m_Command.empty() && std::isdigit(m_Command.back()))
+      if(!m_Command.empty() && ascii::is_digit(m_Command.back()))
         m_Command.append(" ");
 
       m_Command.append(app == append_mode::no ? "> " : ">> ");
-      m_Command.append(output.string()).append(" 2>&1");
+      m_Command.append(quote_for_shell(output.string())).append(" 2>&1");
     }
   }
 
@@ -217,14 +284,129 @@ namespace sequoia::runtime
   int invoke(const shell_command& cmd)
   {
     std::cout << std::flush;
-    if(cmd.empty()) return 0;
+    if(cmd.empty())
+      return 0;
 
     return spawn_and_wait(cmd.m_Command);
   }
 
   [[nodiscard]]
+  std::string quote_for_shell(std::string_view word)
+  {
+    return quote_for_shell(word, platform_constant{});
+  }
+
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, windows_type)
+  {
+    auto refusalMessage{
+      [word](std::string_view reason) {
+        return std::format("{} cannot be quoted for cmd.exe: it {}", word, reason);
+      }
+    };
+
+    if(word.contains('"'))
+      throw std::runtime_error{refusalMessage("contains a double quote, which would end the quotation")};
+
+    if(word.contains('%'))
+      throw std::runtime_error{refusalMessage("contains a percent sign, which cmd.exe expands within quotes")};
+
+    if(word.contains('\r') || word.contains('\n'))
+      throw std::runtime_error{refusalMessage("contains a line break, which would end the command")};
+
+    // A program which splits its command line as Microsoft's C runtime does reads 2n backslashes
+    // before a quote as n backslashes, and an odd run as escaping the quote. So the backslashes which
+    // end `word` are doubled. cmd.exe's own commands, such as cd, read the doubled backslashes; a
+    // Windows path with a doubled separator names the same file.
+    auto isBackslash{[](char c) { return c == '\\'; }};
+    const auto trailingBackslashes{
+      std::ranges::distance(word | std::views::reverse | std::views::take_while(isBackslash))
+    };
+
+    return std::format("\"{}{}\"", word, std::string(trailingBackslashes, '\\'));
+  }
+
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, macos_type)
+  {
+    return quote_for_posix_shell(word);
+  }
+
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, linux_type)
+  {
+    return quote_for_posix_shell(word);
+  }
+
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, other_os_type)
+  {
+    return quote_for_posix_shell(word);
+  }
+
+  [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir)
   {
-    return std::string{"cd "}.append(dir.string());
+    return std::format("{} {}", with_windows_v ? "cd /d" : "cd", quote_for_shell(dir.string()));
+  }
+
+  [[nodiscard]]
+  std::string describe_exit_status(const int status)
+  {
+    return describe_exit_status(status, platform_constant{});
+  }
+
+  [[nodiscard]]
+  std::string describe_exit_status(const int status, windows_type)
+  {
+    if(status == 0)
+      return "succeeded (exit status 0)";
+
+    if(status == -1)
+      return "did not run to completion, or exited with status 0xFFFFFFFF, which cannot be told apart";
+
+    if(status < 0)
+      return std::format("failed with exit status 0x{:08X}", static_cast<std::uint32_t>(status));
+
+    return std::format("failed with exit status {}", status);
+  }
+
+  [[nodiscard]]
+  std::string describe_exit_status(const int status, macos_type)
+  {
+    // macOS numbers its signals up to 31: NSIG is 32.
+    constexpr int highestSignal{31};
+    return describe_posix_exit_status(status, highestSignal);
+  }
+
+  [[nodiscard]]
+  std::string describe_exit_status(const int status, linux_type)
+  {
+    // Linux numbers its signals up to SIGRTMAX: 64 with glibc on x86-64 and AArch64, but 127 on MIPS.
+    constexpr int highestSignal{64};
+    return describe_posix_exit_status(status, highestSignal);
+  }
+
+  [[nodiscard]]
+  std::string describe_exit_status(const int status, other_os_type)
+  {
+    // An exit status has 8 bits, so 128 plus a signal is at most 255, and the signal at most 127.
+    constexpr int highestSignal{127};
+    return describe_posix_exit_status(status, highestSignal);
+  }
+
+  void throw_unless_succeeded(const int status, std::string_view step, std::string_view advice)
+  {
+    if(status == 0)
+      return;
+
+    throw std::runtime_error{std::format("{} {}\n{}\n", step, describe_exit_status(status), advice)};
+  }
+
+  [[nodiscard]]
+  std::string describe_output_location(const std::filesystem::path& dir, const std::filesystem::path& output)
+  {
+    return output.empty() ? std::string{"on the console, above"}
+                          : std::format("in {}", (dir / output).generic_string());
   }
 }

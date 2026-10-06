@@ -179,6 +179,17 @@ namespace sequoia::testing
     STATIC_CHECK((std::is_same_v<merge_t<TT<char, int>,  TT<char>,                comparator>, TT<char, char, int>>));
     STATIC_CHECK((std::is_same_v<merge_t<TT<char, int>,  TT<char, short>,         comparator>, TT<char, char, short, int>>));
     STATIC_CHECK((std::is_same_v<merge_t<TT<short, int>, TT<char, short, double>, comparator>, TT<char, short, short, int, double>>));
+
+    // `char`, `signed char` and `unsigned char` are distinct types of size 1, so the comparator finds
+    // them equivalent. A stable merge keeps them in input order.
+    STATIC_CHECK((std::is_same_v<merge_t<TT<char>,                             TT<signed char>, comparator>,
+                                 TT<char, signed char>>));
+    STATIC_CHECK((std::is_same_v<merge_t<TT<signed char>,                      TT<char>,        comparator>,
+                                 TT<signed char, char>>));
+    STATIC_CHECK((std::is_same_v<merge_t<TT<char, signed char, unsigned char>, TT<int>,         comparator>,
+                                 TT<char, signed char, unsigned char, int>>));
+    STATIC_CHECK((std::is_same_v<merge_t<TT<char, int>,                        TT<signed char>, comparator>,
+                                 TT<char, signed char, int>>));
   }
 
   template<template<class...> class TT>
@@ -189,6 +200,10 @@ namespace sequoia::testing
     STATIC_CHECK((std::is_same_v<stable_sort_t<TT<char, int>,                comparator>, TT<char, int>>));
     STATIC_CHECK((std::is_same_v<stable_sort_t<TT<int, char>,                comparator>, TT<char, int>>));
     STATIC_CHECK((std::is_same_v<stable_sort_t<TT<int, char, double, short>, comparator>, TT<char, short, int, double>>));
+    STATIC_CHECK((std::is_same_v<stable_sort_t<TT<int, char, signed char, unsigned char>,              comparator>,
+                                 TT<char, signed char, unsigned char, int>>));
+    STATIC_CHECK((std::is_same_v<stable_sort_t<TT<char, signed char, unsigned char, int, short, double>, comparator>,
+                                 TT<char, signed char, unsigned char, short, int, double>>));
   }
 
   template<template<class...> class TT>

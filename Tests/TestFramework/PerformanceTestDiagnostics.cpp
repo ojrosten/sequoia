@@ -7,12 +7,12 @@
 
 #include "PerformanceTestDiagnostics.hpp"
 
+#include "sequoia/Streaming/Streaming.hpp"
+
 namespace sequoia::testing
 {
   namespace
   {
-    const static auto delta_t{calibrate(std::chrono::milliseconds{5})};
-
     void wait(std::chrono::milliseconds t)
     {
       std::this_thread::sleep_for(t);
@@ -32,17 +32,19 @@ namespace sequoia::testing
 
   void performance_false_negative_diagnostics::test_relative_performance()
   {
+    const auto deltaT{calibrate(std::chrono::milliseconds{5})};
+
     check_relative_performance("Performance Test for which fast task is too slow, [1, (2.0, 2.0)",
-                               []() { wait(delta_t); },
-                               []() { wait(delta_t); }, 2.0, 2.0);
+                               [deltaT]() { wait(deltaT); },
+                               [deltaT]() { wait(deltaT); }, 2.0, 2.0);
 
     check_relative_performance("Performance Test for which fast task is too slow [1, (2.0, 3.0)",
-                               []() { wait(delta_t); },
-                               []() { wait(delta_t); }, 2.0, 3.0);
+                               [deltaT]() { wait(deltaT); },
+                               [deltaT]() { wait(deltaT); }, 2.0, 3.0);
 
     check_relative_performance("Performance Test for which fast task is too fast [4, (2.0, 2.5)]",
-      []() { wait(delta_t); },
-      []() { wait(4 * delta_t); }, 2.0, 2.5);
+                               [deltaT]() { wait(deltaT); },
+                               [deltaT]() { wait(4 * deltaT); }, 2.0, 2.5);
   }
 
   [[nodiscard]]
@@ -58,8 +60,15 @@ namespace sequoia::testing
 
   void performance_false_positive_diagnostics::test_relative_performance()
   {
-    check_relative_performance("Performance Test which should pass", []() { wait(delta_t); }, []() { wait(2 * delta_t); }, 1.8, 2.1, 5);
-    check_relative_performance("Performance Test which should pass", []() { wait(delta_t); }, []() { wait(4 * delta_t); }, 3.4, 4.1, 5);
+    const auto deltaT{calibrate(std::chrono::milliseconds{5})};
+
+    check_relative_performance("Performance Test which should pass",
+                               [deltaT]() { wait(deltaT); },
+                               [deltaT]() { wait(2 * deltaT); }, 1.8, 2.1, 5);
+
+    check_relative_performance("Performance Test which should pass",
+                               [deltaT]() { wait(deltaT); },
+                               [deltaT]() { wait(4 * deltaT); }, 3.4, 4.1, 5);
   }
 
   [[nodiscard]]
@@ -71,6 +80,7 @@ namespace sequoia::testing
   void performance_utilities_test::run_tests()
   {
     test_postprocessing();
+    test_coarse_sleep();
   }
 
   void performance_utilities_test::test_postprocessing()
@@ -171,5 +181,26 @@ namespace sequoia::testing
 
       check(equality, "", postprocess(latest, reference), latest);
     }
+  }
+
+  void performance_utilities_test::test_coarse_sleep()
+  {
+    using fractional_milliseconds = std::chrono::duration<double, std::milli>;
+
+    constexpr fractional_milliseconds target{5.0};
+
+    check("Rounded up to Windows' default tick", is_coarse_sleep(fractional_milliseconds{15.2}, target));
+    check("Exactly twice the target", is_coarse_sleep(fractional_milliseconds{10.0}, target));
+    check("Just under twice the target", !is_coarse_sleep(fractional_milliseconds{9.9}, target));
+    check("A 1 ms timer resolution in effect", !is_coarse_sleep(fractional_milliseconds{5.4}, target));
+
+    write_to_file(working_materials() /= "CoarseSleepMessage.txt",
+                  coarse_sleep_message(fractional_milliseconds{15.2}, target),
+                  std::ios_base::out);
+
+    check(equivalence,
+          "Message",
+          working_materials() /= "CoarseSleepMessage.txt",
+          predictive_materials() /= "CoarseSleepMessage.txt");
   }
 }

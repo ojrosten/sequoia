@@ -9,6 +9,7 @@ export module sequoia.text_processing:Substitutions;
 
 import std;
 
+import :Characters;
 export import sequoia.core.meta;
 
 /** \file
@@ -40,7 +41,7 @@ export namespace sequoia
     while(i != text.end())
     {
       auto& c{*i};
-      if(std::isupper(c))
+      if(ascii::is_uppercase(c))
       {
         c = onUpper(c);
         if((std::ranges::distance(text.begin(), i) > 0))

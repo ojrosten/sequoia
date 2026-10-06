@@ -1,2 +1,2 @@
 iterator_test
-Standard Top Level Checks:               370;  Failures:  0  [Deep checks: 1058]
+Standard Top Level Checks:               416;  Failures:  0  [Deep checks: 1104]

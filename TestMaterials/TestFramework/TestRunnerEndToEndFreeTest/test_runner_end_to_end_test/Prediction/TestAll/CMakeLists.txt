@@ -33,6 +33,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Utilities/Thing/UniqueThingTest.cpp
                ${TestDir}/Utilities/Thing/UniqueThingTestingDiagnostics.cpp
                ${TestDir}/Utilities/UsefulThingsFreeTest.cpp
+               ${TestDir}/Utilities/UtilitiesFreeDiagnostics.cpp
                ${TestDir}/Utilities/UtilitiesFreeTest.cpp)
 
 target_include_directories(TestAll PRIVATE ${SourceDir})

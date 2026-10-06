@@ -1,0 +1,5 @@
+Usage: foo [options]
+
+Options:
+  --async
+  --help, -h  Describe the command or option this follows; alone, the top level

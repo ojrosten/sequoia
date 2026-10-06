@@ -10,6 +10,8 @@
 import std;
 import sequoia.streaming;
 
+#include <format>
+
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
@@ -39,7 +41,7 @@ namespace sequoia::testing
       std::string dump{};
       for(const auto check : checks)
       {
-        dump.append(check).append("\n").append(dump_format::check_separator);
+        dump.append(std::format("{}\n{}", check, dump_format::check_separator));
       }
 
       return dump;
@@ -75,7 +77,7 @@ namespace sequoia::testing
 
   void dump_comparison_free_test::test_reading()
   {
-    const auto dump{working_materials() /= "Dump.txt"};
+    const auto dump{scratchpad_materials() /= "Dump.txt"};
     write_to_file(dump, dump_of({alpha, beta}), std::ios_base::out);
 
     check(equality, "The checks of a dump, in order, without their surrounding newlines",
@@ -88,13 +90,13 @@ namespace sequoia::testing
     check(equality, "An empty dump holds no checks", read_dump(dump), std::vector<std::string>{});
 
     check_exception_thrown<std::runtime_error>("A dump which does not exist", [this](){
-      return read_dump(working_materials() /= "Absent.txt");
+      return read_dump(scratchpad_materials() /= "Absent.txt");
     });
   }
 
   void dump_comparison_free_test::test_comparison()
   {
-    const auto baseline{working_materials() /= "Baseline.txt"}, dump{working_materials() /= "Dump.txt"};
+    const auto baseline{scratchpad_materials() /= "Baseline.txt"}, dump{scratchpad_materials() /= "Dump.txt"};
 
     auto compare{
       [&](std::string_view description,
@@ -128,26 +130,23 @@ namespace sequoia::testing
 
   void dump_comparison_free_test::test_report()
   {
-    check(equality, "Nothing missing, nothing added",
-          to_string({}, "before"),
-          std::string{"Dump compared with 'before': 0 checks missing, 0 checks added\n"});
+    auto checkReport{
+      [this](const reporter& description, std::string_view report, std::string_view fileName) {
+        write_to_file(working_materials() /= fileName, report, std::ios_base::out);
+        check(equivalence, description, working_materials() /= fileName, predictive_materials() /= fileName);
+      }
+    };
 
-    check(equality, "One of each, as location and description",
-          to_string({.missing{std::string{alpha}}, .added{std::string{beta}}}, "before"),
-          std::string{"Dump compared with 'before': 1 check missing, 1 check added\n"
-                      "\n"
-                      "Missing:\n"
-                      "  Tests/Alpha.cpp, Line 10: Alpha holds\n"
-                      "\n"
-                      "Added:\n"
-                      "  Tests/Beta.cpp, Line 20: Beta holds\n"});
+    checkReport("Nothing missing, nothing added",
+                to_string({}, "before"),
+                "NothingMissingNothingAdded.txt");
 
-    check(equality, "A check without a description shows the first line which says anything",
-          to_string({.missing{std::string{undescribed}, std::string{semantics}}}, "before"),
-          std::string{"Dump compared with 'before': 2 checks missing, 0 checks added\n"
-                      "\n"
-                      "Missing:\n"
-                      "  Tests/Zeta.cpp, Line 60: [bool]\n"
-                      "  Tests/Epsilon.cpp, Line 50: [thing]\n"});
+    checkReport("One of each, as location and description",
+                to_string({.missing{std::string{alpha}}, .added{std::string{beta}}}, "before"),
+                "OneOfEach.txt");
+
+    checkReport("A check without a description shows the first line which says anything",
+                to_string({.missing{std::string{undescribed}, std::string{semantics}}}, "before"),
+                "UndescribedCheck.txt");
   }
 }

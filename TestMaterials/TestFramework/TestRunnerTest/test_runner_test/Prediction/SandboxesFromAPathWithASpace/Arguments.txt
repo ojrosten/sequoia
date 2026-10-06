@@ -1,0 +1,20 @@
+locate
+2
+--runner-id
+0
+select
+/Users/oliver/sequoia-quote-paths/Tests/Spaced Suite/selected_in_spaced_suite_free_test.cpp
+test
+Spaced Suite
+exclude
+/Users/oliver/sequoia-quote-paths/Tests/Spaced Suite/excluded_from_spaced_suite_free_test.cpp
+locate
+2
+--runner-id
+1
+select
+/Users/oliver/sequoia-quote-paths/Tests/Spaced Suite/selected_in_spaced_suite_free_test.cpp
+test
+Spaced Suite
+exclude
+/Users/oliver/sequoia-quote-paths/Tests/Spaced Suite/excluded_from_spaced_suite_free_test.cpp

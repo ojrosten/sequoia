@@ -47,7 +47,7 @@ namespace sequoia::testing
       opt_path cacheFile{get(executableDir)};
       if(!cacheFile)
       {
-        // Try one level back, mainly for MSVC
+        // The executable may lie in a directory directly within the build tree, as a multi-config build puts it
         cacheFile = get(executableDir.parent_path());
       }
 
@@ -86,8 +86,11 @@ namespace sequoia::testing
           }
         }
 
-        throw std::runtime_error{std::string{"Unable to locate project root from path:\n"}.append(zeroth)
-                    .append("\nPlease ensure that the build directory is a subdirectory of <project>/build.")};
+        throw std::runtime_error{
+          std::format("Unable to locate project root from path:\n{}\n"
+                      "Please ensure that the build directory is a subdirectory of <project>/build.",
+                      zeroth)
+        };
       }
     }
 
@@ -150,23 +153,11 @@ namespace sequoia::testing
     : m_Repo{std::move(projectRoot /= "Tests")}
   {}
 
-  [[nodiscard]]
-  fs::path tests_paths::project_root() const
-  {
-    return m_Repo.parent_path();
-  }
-
-  //===================================== tests_paths =====================================//
+  //===================================== dependencies_paths =====================================//
 
   dependencies_paths::dependencies_paths(fs::path projectRoot)
     : m_Repo{std::move(projectRoot /= "dependencies")}
   {}
-
-  [[nodiscard]]
-  fs::path dependencies_paths::project_root() const
-  {
-    return m_Repo.parent_path();
-  }
 
   [[nodiscard]]
   fs::path dependencies_paths::sequoia_root() const
@@ -193,6 +184,13 @@ namespace sequoia::testing
     , m_ExecutableDir{std::move(executableDir)}
     , m_CMakeCacheDir{std::move(cmakeCacheDir)}
   {}
+
+  [[nodiscard]]
+  std::string build_paths::configuration() const
+  {
+    return m_ExecutableDir.parent_path() == m_CMakeCacheDir ? m_ExecutableDir.filename().generic_string()
+                                                            : std::string{};
+  }
 
   //===================================== auxiliary_paths =====================================//
 
@@ -326,6 +324,20 @@ namespace sequoia::testing
     return (directory /= m_Stem).concat(num).concat(extension);
   }
 
+  //===================================== execution_record_paths =====================================//
+
+  execution_record_paths::execution_record_paths(fs::path outputDir,
+                                                 const fs::path& buildRoot,
+                                                 const fs::path& executableDir)
+    : m_Dir{(outputDir /= "ExecutionRecords") /= fs::relative(executableDir, buildRoot)}
+  {}
+
+  [[nodiscard]]
+  fs::path execution_record_paths::stamp() const
+  {
+    return m_Dir / "run.stamp";
+  }
+
   //===================================== output_paths =====================================//
 
   output_paths::output_paths(const fs::path& projectRoot)
@@ -366,7 +378,7 @@ namespace sequoia::testing
     const auto ext{replace(source.filename().extension().string(), ".", "_")};
 
     return (instability_analysis(std::move(projectRoot)) / source.filename().replace_extension().concat(ext))
-      .append(replace_all(name, " ", "_")).append("Output_" + std::to_string(index) + ".txt");
+      .append(replace_all(name, " ", "_")).append(std::format("Output_{}.txt", index));
   }
 
   [[nodiscard]]
@@ -399,5 +411,11 @@ namespace sequoia::testing
   prune_paths project_paths::prune() const
   {
     return output().prune(build().dir(), build().executable_dir());
+  }
+
+  [[nodiscard]]
+  execution_record_paths project_paths::execution_records() const
+  {
+    return output().execution_records(build().dir(), build().executable_dir());
   }
 }

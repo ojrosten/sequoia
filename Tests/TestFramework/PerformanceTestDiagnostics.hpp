@@ -56,5 +56,7 @@ namespace sequoia::testing
   private:
 
     void test_postprocessing();
+
+    void test_coarse_sleep();
   };
 }

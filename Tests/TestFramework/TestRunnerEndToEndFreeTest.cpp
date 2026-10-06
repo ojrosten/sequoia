@@ -74,6 +74,8 @@ namespace sequoia::testing
       return exe.make_preferred().string();
     }
 
+    // The generated project is built after these creations. Nothing else compiles what `create` generates, so a
+    // kind of test dropped from this list leaves its templates uncompiled.
     [[nodiscard]]
     std::string create_cmd()
     {
@@ -81,6 +83,7 @@ namespace sequoia::testing
         " create free_test \"Utilities/UsefulThings.hpp\" --gen-source utils"
         " create free_test \"Source/generatedProject/Stuff/Bar.hpp\""
         " create free \"Unstable/Flipper.hpp\""
+        " create free Utilities.hpp --diagnostics"
         " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" --gen-source Maybe"
         " create regular_test \"stuff::oldschool\" double --header \"NoTemplate.hpp\""
         " create regular \"maths::probability\" double --gen-source Maths"
@@ -110,21 +113,26 @@ namespace sequoia::testing
     if(!options.empty()) cmd.append(" ").append(options);
 
     return child_return_code(
-             invoke(cd_cmd(get_build_paths().executable_dir()) && shell_command{"", std::move(cmd), outputFile}));
+             invoke(cd_cmd(get_build_paths().executable_dir()) && shell_command{"", cmd, outputFile}),
+             std::format("The nested run, {},", cmd));
   }
 
   [[nodiscard]]
   return_code cmd_builder::create_build_run(const fs::path& creationOutput, std::string_view buildOutput, const fs::path& output) const
   {   
-    invoke(
-         cd_cmd(get_build_paths().executable_dir())
-      && shell_command{"", create_cmd(), creationOutput / "CreationOutput.txt"}
-    );
+    const auto creationFile{creationOutput / "CreationOutput.txt"};
+    const auto createTests{cd_cmd(get_build_paths().executable_dir()) && shell_command{"", create_cmd(), creationFile}};
+    throw_unless_succeeded(invoke(createTests),
+                           "Creating tests in the generated project",
+                           std::format("The output is {}",
+                                       describe_output_location(get_build_paths().executable_dir(), creationFile)));
 
-    invoke(
-         cd_cmd(get_main_paths().dir())
-         && build_cmd(get_build_paths(), get_build_paths().executable_dir() / buildOutput)
-    );
+    const auto buildFile{get_build_paths().executable_dir() / buildOutput};
+    const auto buildProject{cd_cmd(get_main_paths().dir()) && build_cmd(get_build_paths(), buildFile)};
+    throw_unless_succeeded(invoke(buildProject),
+                           "Building the generated project",
+                           std::format("The output is {}",
+                                       describe_output_location(get_main_paths().dir(), buildFile)));
 
     // Sequenced rather than chained with `&&`: these runs are independent of one another, and a
     // shell `&&` would silently skip the rest of them as soon as one reported failures.
@@ -150,11 +158,17 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code cmd_builder::rebuild_run(const fs::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
   {
-    invoke(
+    const auto configureAndBuild{
          cd_cmd(get_main_paths().dir())
       && cmake_cmd(get_build_paths(), cmakeOutput, "CODE_COVERAGE=OFF")
       && build_cmd(get_build_paths(), buildOutput)
-    );
+    };
+
+    throw_unless_succeeded(invoke(configureAndBuild),
+                           "Re-running CMake on, and rebuilding, the generated project",
+                           std::format("The output is {} and {}",
+                                       describe_output_location(get_main_paths().dir(), cmakeOutput),
+                                       describe_output_location(get_main_paths().dir(), buildOutput)));
 
     return run_executable(outputDir, options);
   }
@@ -177,7 +191,7 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path test_runner_end_to_end_test::generated_project() const
   {
-    return working_materials().parent_path() /= "GeneratedProject";
+    return scratchpad_materials() /= "GeneratedProject";
   }
 
   /** Cross a filesystem timestamp tick, so that everything written afterwards is distinguishable
@@ -276,10 +290,7 @@ namespace sequoia::testing
     //=================== Initialize, cmake and build new project ===================//
 
     fs::create_directory(working_materials() /= "InitOutput");
-    if(std::ofstream file{working_materials() /= "InitOutput/io.txt"})
-    {
-      file << outputStream.rdbuf();
-    }
+    write_to_file(working_materials() /= "InitOutput/io.txt", outputStream.str(), std::ios_base::out);
 
     const cmd_builder b{generated_project(), get_project_paths().build()};
 
@@ -429,14 +440,14 @@ namespace sequoia::testing
 
     check(equivalence, "Test Runner Output", working_materials() /= "RebuiltOutput", predictive_materials() /= "RebuiltOutput");
     fs::create_directory(working_materials() /= "TestAll");
-    const auto generatedProject{working_materials().parent_path() /= "GeneratedProject"};
+    const auto generatedProject{generated_project()};
 
     const fs::path mainCpp{main_paths::default_main_cpp_from_root()},
                    mainCmake{main_paths::default_cmake_from_root()};
     fs::copy_file(generatedProject / mainCpp,   working_materials() /= mainCpp);
     fs::copy_file(generatedProject / mainCmake, working_materials() /= mainCmake);
     check(equivalence, "TestAllMain.cpp",  working_materials() /= mainCpp,   predictive_materials() /= mainCpp);
-    check(equivalence, "CMakeLists.tt", working_materials() /= mainCmake, predictive_materials() /= mainCmake);
+    check(equivalence, "CMakeLists.txt", working_materials() /= mainCmake, predictive_materials() /= mainCmake);
 
     fs::copy(generated_project() /= "output/TestSummaries", working_materials() /= "TestSummaries_1", fs::copy_options::recursive);
     check(equivalence, "", working_materials() /= "TestSummaries_1", predictive_materials() /= "TestSummaries_1");
@@ -481,7 +492,7 @@ namespace sequoia::testing
     check(equivalence, "Dump File", working_materials() /= "Dump", predictive_materials() /= "Dump");
 
     //=================== Rerun in the presence of an exception ===================//
-    // Rename generated_project() / TestMaterials / Stuff / foo_test / WorkingCopy / RepresentativeCases,
+    // Rename generated_project() / TestMaterials / Stuff / FooTest / foo_test / WorkingCopy / RepresentativeCases,
     // in order to induce a failure in FooTest.cpp. Recovery mode will cause the final executed check
     // to be recorded.
 
@@ -496,13 +507,20 @@ namespace sequoia::testing
     check(equivalence, "Recovery File", working_materials() /= "Recovery", predictive_materials() /= "Recovery");
 
     //=================== Rerun in the presence of an exception mid-check ===================//
-    // Rename generated_project() / TestMaterials / Stuff / foo_test / Prediction / RepresentativeCases,
-    // in order to cause the check in FooTest.cpp to throw mid-check, thereby allowing the recovery
-    // mode to be tested. Also test that the Exceptions file is not overwritten.
+    // Restore generated_project() / TestMaterials / Stuff / FooTest / foo_test / WorkingCopy / RepresentativeCases,
+    // and give one of its predictions a .seqpat holding an invalid regular expression. The check in
+    // FooTest.cpp then throws while comparing that file, thereby allowing the recovery mode to be
+    // tested mid-check. Also test that the Exceptions file is not overwritten.
 
-    const auto generatedPredictive{generated_project() /= "TestMaterials/Stuff/FooTest/foo_test/Prediction"};
-    fs::copy(generatedPredictive / "RepresentativeCases", generatedPredictive / "RepresentativeCasesTemp", fs::copy_options::recursive);
-    fs::remove_all(generatedPredictive / "RepresentativeCases");
+    fs::copy(generatedWorkingCopy / "RepresentativeCasesTemp",
+             generatedWorkingCopy / "RepresentativeCases",
+             fs::copy_options::recursive);
+    fs::remove_all(generatedWorkingCopy / "RepresentativeCasesTemp");
+
+    const auto invalidSeqpat{
+      generated_project() /= "TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.seqpat"
+    };
+    write_to_file(invalidSeqpat, "(", std::ios_base::out);
 
     run_and_check(report("Recovery mode, throw mid-check"), b, "RunRecoveryMidCheck", "recover", return_code::soft_failures | return_code::critical_failures);
 
@@ -529,11 +547,7 @@ namespace sequoia::testing
 
     //=================== Fix a failing test and 'select' it ===================//
 
-    fs::copy(generatedPredictive / "RepresentativeCasesTemp", generatedPredictive / "RepresentativeCases", fs::copy_options::recursive);
-    fs::remove_all(generatedPredictive / "RepresentativeCasesTemp");
-
-    fs::copy(generatedWorkingCopy / "RepresentativeCasesTemp", generatedWorkingCopy / "RepresentativeCases", fs::copy_options::recursive);
-    fs::remove_all(generatedWorkingCopy / "RepresentativeCasesTemp");
+    fs::remove(invalidSeqpat);
 
     run_and_check(report("Critical failure fixed"), b, "RunFixedCriticalFailure", "select FooTest.cpp", return_code::success);
 
@@ -552,5 +566,45 @@ namespace sequoia::testing
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
     run_and_check(report("Final fixed test not included by prune"), b, "FinalPassingTestExcludedByPrune", "prune", return_code::success);
+
+    //=================== Touch an unselected test, break a passing test and 'select' the latter ===================//
+    // --> probability_test is rebuilt and now stale, but not run. foo_test fails, so the run records foo_test as a test to rerun
+
+    await_tick_past_previous_run();
+    copy_aux_materials("ModifiedTests/Maths/ProbabilityTest.cpp", "Tests/Maths");
+
+    fs::copy(
+      generatedWorkingCopy / "RepresentativeCases",
+      generatedWorkingCopy / "RepresentativeCasesTemp",
+      fs::copy_options::recursive
+    );
+    fs::remove_all(generatedWorkingCopy / "RepresentativeCases");
+
+    rebuild_run_and_check(report("Test broken"), b, "RunSelectedBrokenTest", "CMakeOutput7.txt", "BuildOutput7.txt",
+      "select FooTest.cpp", return_code::soft_failures);
+
+    //=================== Fix the test and 'select' it, seeking instabilities in sandbox mode ===================//
+
+    fs::copy(
+      generatedWorkingCopy / "RepresentativeCasesTemp",
+      generatedWorkingCopy / "RepresentativeCases",
+      fs::copy_options::recursive
+    );
+    fs::remove_all(generatedWorkingCopy / "RepresentativeCasesTemp");
+
+    run_and_check(report("Broken test fixed, in sandbox mode"), b, "SelectRunLocateInstabilitySandboxFixedTest",
+      "locate 2 --sandbox select FooTest.cpp", return_code::success);
+
+    //=================== Rerun with prune: the stale test runs, but the sandboxed test does not ===================//
+    // --> The materials were restored before the sandboxes started, so foo_test is not stale. Each sandbox
+    //     stamps its records with its own start. The coordinator matches the sandboxes' passes by path, removes
+    //     foo_test from the tests to rerun, and leaves the prune stamp unchanged. So prune runs only probability_test.
+    //     -# If the coordinator matched records whole, no two sandboxes' records would match, and foo_test would
+    //        rerun too.
+    //     -# If the coordinator did not aggregate the passes, the sandboxes' tests to rerun would replace the
+    //        run's, and the prune stamp would move past the touch, so nothing would run.
+
+    run_and_check(report("Test fixed in sandbox mode not included by prune"), b, "SandboxFixedTestExcludedByPrune",
+      "prune", return_code::success);
   }
 }

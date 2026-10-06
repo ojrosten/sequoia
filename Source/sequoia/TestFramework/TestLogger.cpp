@@ -110,13 +110,13 @@ namespace sequoia::testing
       {
         if(failure_detected()) logger.end_message(m_Mode, test_logger_base::is_critical::no);
 
-        auto fpMessageMaker{
+        auto falseNegativeFailureMessage{
           [&logger](){
-            
-            auto mess{append_lines("False Negative Failure:", logger.top_level_message())};
-            end_block(mess, 2_linebreaks, footer());
-
-            return mess;
+            return end_block(
+                     append_lines("False Negative Failure:", logger.top_level_message()),
+                     2_linebreaks,
+                     footer()
+                   );
           }
         };
 
@@ -127,12 +127,15 @@ namespace sequoia::testing
 
         if(modeSpecificFailure)
         {
-          logger.log_top_level_failure(m_Mode, (m_Mode == test_mode::false_negative) ? fpMessageMaker() : "");
+          logger.log_top_level_failure(
+            m_Mode,
+            (m_Mode == test_mode::false_negative) ? falseNegativeFailureMessage() : ""
+          );
         }
         else if (m_Mode == test_mode::false_positive)
         {
           if(!critical_failure_detected())
-            logger.append_to_diagnostics_output(fpMessageMaker());
+            logger.append_to_diagnostics_output(falseNegativeFailureMessage());
         }
 
         record_check_ended(get().recovery().recovery_file);
@@ -191,28 +194,24 @@ namespace sequoia::testing
 
   void test_logger_base::log_top_level_failure(test_mode mode, std::string message)
   {
-    ++m_Results.top_level_failures;
     if(m_SentinelDepth.empty())
-    {
-      m_SentinelDepth.push_back(level_message{message});
-    }
-    else
-    {
-      m_SentinelDepth.back().message.append(std::move(message));
-    }
+      throw std::logic_error{"Cannot log a top-level failure outside a sentinel"};
+
+    ++m_Results.top_level_failures;
+    m_SentinelDepth.back().message.append(message);
 
     if(mode == test_mode::false_negative)
     {
-      m_Results.failure_messages.push_back(failure_info{m_Results.top_level_checks, std::string{message}});
+      m_Results.failure_messages.push_back(failure_info{m_Results.top_level_checks, std::move(message)});
     }
   }
 
   void test_logger_base::log_caught_exception_message(std::string_view message)
   {
-    auto mess{std::string{top_level_message()}.append("\n").append(message)};
-    end_block(mess, 2_linebreaks, footer());
-
-    add_to_output(m_Results.caught_exception_messages, mess);
+    add_to_output(
+      m_Results.caught_exception_messages,
+      end_block(std::format("{}\n{}", top_level_message(), message), 2_linebreaks, footer())
+    );
   }
 
   void test_logger_base::append_to_diagnostics_output(std::string message)
@@ -232,7 +231,10 @@ namespace sequoia::testing
 
     if(depth() == 1)
     {
-      m_Results.exception_info = {std::uncaught_exceptions(), std::move(m_SentinelDepth.front().message)}; 
+      m_Results.last_check_exit_info = top_level_check_exit_info{
+                                         .via_exception{std::uncaught_exceptions() > 0},
+                                         .message{std::move(m_SentinelDepth.front().message)}
+                                       };
     }
 
     m_SentinelDepth.pop_back();
@@ -271,7 +273,7 @@ namespace sequoia::testing
     , m_DiagnosticsOutput{to_reduced_string(logger.results().diagnostics_output)}
     , m_CaughtExceptionMessages{to_reduced_string(logger.results().caught_exception_messages)}
     , m_CriticalFailures{logger.results().critical_failures}
-    , m_Duration{delta}
+    , m_ExecutionDuration{delta}
   {
     switch(mode)
     {
@@ -296,11 +298,6 @@ namespace sequoia::testing
       m_FalseNegativePerformanceChecks   = logger.results().performance_checks;
       break;
     }
-  }
-
-  void log_summary::clear() noexcept
-  {
-    *this = log_summary{""};
   }
 
   [[nodiscard]]
@@ -342,15 +339,9 @@ namespace sequoia::testing
 
     m_CriticalFailures   += rhs.m_CriticalFailures;
     m_ExceptionsInFlight += rhs.m_ExceptionsInFlight;
-    m_Duration           += rhs.m_Duration;
+    m_ExecutionDuration  += rhs.m_ExecutionDuration;
+    m_RunnerOverhead     += rhs.m_RunnerOverhead;
 
     return *this;
-  }
-
-  [[nodiscard]]
-  log_summary operator+(const log_summary& lhs, const log_summary& rhs)
-  {
-    log_summary s{lhs};
-    return s += rhs;
   }
 }

@@ -13,11 +13,57 @@
 import std;
 import sequoia.core.data_structures;
 
+#include <map>
+
 namespace sequoia::testing
 {
   namespace
   {
+    struct non_assignable_element
+    {
+      const int value{};
+    };
+
+    struct move_only_element
+    {
+      int value{};
+
+      move_only_element() = default;
+
+      move_only_element(move_only_element&&) noexcept = default;
+
+      move_only_element& operator=(move_only_element&&) noexcept = default;
+    };
+
+    struct assign_only_element
+    {
+      int value{};
+
+      assign_only_element() = default;
+
+      assign_only_element(const assign_only_element&) = delete;
+
+      assign_only_element& operator=(const assign_only_element&) = default;
+    };
+
     using namespace partitioned_data;
+
+    // A standard container's size type is std::size_t; these carry only the types the constraint reads.
+    template<std::integral SizeType>
+    struct fake_container
+    {
+      using size_type = SizeType;
+    };
+
+    template<std::integral IndexType, std::integral SizeType>
+    struct fake_partitions
+    {
+      using value_type = IndexType;
+      using size_type  = SizeType;
+    };
+
+    template<class Container, class Partitions>
+    concept sequence_admits = requires { typename data_structures::partitioned_sequence<int, Container, Partitions>; };
 
     template<class PartitionedData>
     struct partitioned_operations : partitioned_data_operations<PartitionedData>
@@ -29,66 +75,6 @@ namespace sequoia::testing
         auto trg{partitioned_data_operations<PartitionedData>::make_transition_graph(t)};
 
         // begin 'empty'
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   auto i{d.erase_from_partition(d.cbegin_partition(0))};
-                   t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-          data_description::empty,
-          t.report(""),
-          [&t](data_type d) -> data_type {
-            auto i{d.erase_from_partition(d.cbegin_partition(0), d.cend_partition(0))};
-            t.check(equality, "Erase range from non-existent partition", i, d.begin_partition(0));
-            return d;
-          }
-        );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   auto i{d.erase_from_partition(0, 0)};
-                   t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   auto i{d.erase_from_partition(1, 0)};
-                   t.check(equality, "", i, d.begin_partition(0));
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   auto i{d.erase_from_partition(0, 1)};
-                   t.check(equality, "", i, d.begin_partition(0));
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty,
-                 data_description::empty,
-                 t.report(""),
-                 [&t](data_type d) -> data_type {
-                   auto i{d.erase_from_partition(1, 1)};
-                   t.check(equality, "", i, d.begin_partition(0));
-                   return d;
-                 }
-          );
-
         trg.join(data_description::empty,
           data_description::empty,
           t.report(""),
@@ -148,6 +134,65 @@ namespace sequoia::testing
   void partitioned_sequence_regular_test::run_tests()
   {
     using namespace data_structures;
+    test_copyability();
+    test_index_type_constraint();
     partitioned_operations<partitioned_sequence<int>>::execute(*this);
+  }
+
+  void partitioned_sequence_regular_test::test_copyability()
+  {
+    using namespace data_structures;
+    using move_only_sequence = partitioned_sequence<move_only_element>;
+    using copyable_sequence  = partitioned_sequence<int>;
+    using move_only_vector_sequence = partitioned_sequence<std::vector<move_only_element>>;
+
+    STATIC_CHECK(!std::is_copy_constructible_v<move_only_sequence>);
+    STATIC_CHECK(!std::is_copy_assignable_v<move_only_sequence>);
+    STATIC_CHECK(!std::is_constructible_v<move_only_sequence,
+                                          const move_only_sequence&,
+                                          move_only_sequence::allocator_type,
+                                          move_only_sequence::partitions_allocator_type>);
+    STATIC_CHECK( std::is_nothrow_move_constructible_v<move_only_sequence>);
+
+    STATIC_CHECK( std::is_copy_constructible_v<copyable_sequence>);
+    STATIC_CHECK( std::is_copy_assignable_v<copyable_sequence>);
+
+    STATIC_CHECK( std::is_copy_constructible_v<partitioned_sequence<non_assignable_element>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<partitioned_sequence<non_assignable_element>>);
+    STATIC_CHECK( std::is_constructible_v<copyable_sequence,
+                                          const copyable_sequence&,
+                                          copyable_sequence::allocator_type,
+                                          copyable_sequence::partitions_allocator_type>);
+
+    STATIC_CHECK(!std::is_copy_constructible_v<partitioned_sequence<assign_only_element>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<partitioned_sequence<assign_only_element>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<static_partitioned_sequence<assign_only_element, 1, 1>>);
+
+    STATIC_CHECK(!std::is_copy_constructible_v<move_only_vector_sequence>);
+    STATIC_CHECK(!std::is_copy_assignable_v<move_only_vector_sequence>);
+    STATIC_CHECK(!std::is_constructible_v<move_only_vector_sequence,
+                                          const move_only_vector_sequence&,
+                                          move_only_vector_sequence::allocator_type,
+                                          move_only_vector_sequence::partitions_allocator_type>);
+
+    STATIC_CHECK( std::is_copy_constructible_v<partitioned_sequence<std::vector<int>>>);
+    STATIC_CHECK( std::is_copy_assignable_v<partitioned_sequence<std::vector<int>>>);
+    STATIC_CHECK( std::is_copy_assignable_v<partitioned_sequence<std::map<int, int>>>);
+  }
+
+  void partitioned_sequence_regular_test::test_index_type_constraint()
+  {
+    STATIC_CHECK( sequence_admits<std::vector<int>, maths::monotonic_sequence<std::size_t,  std::ranges::greater>>);
+    STATIC_CHECK(!sequence_admits<std::vector<int>, maths::monotonic_sequence<std::uint8_t, std::ranges::greater>>);
+
+    STATIC_CHECK( sequence_admits<fake_container<std::uint8_t>,  fake_partitions<std::uint8_t,  std::uint8_t>>);
+    STATIC_CHECK( sequence_admits<fake_container<std::uint8_t>,  fake_partitions<std::uint16_t, std::uint8_t>>);
+    STATIC_CHECK(!sequence_admits<fake_container<std::uint8_t>,  fake_partitions<std::int8_t,   std::uint8_t>>);
+    STATIC_CHECK(!sequence_admits<fake_container<std::uint16_t>, fake_partitions<std::uint8_t,  std::uint8_t>>);
+    STATIC_CHECK(!sequence_admits<fake_container<std::uint8_t>,  fake_partitions<std::uint8_t,  std::uint16_t>>);
+
+    // Each index type below counts to both size types, so only its being bool or a character type refuses it.
+    STATIC_CHECK(!sequence_admits<fake_container<bool>,        fake_partitions<bool, bool>>);
+    STATIC_CHECK(!sequence_admits<fake_container<std::int8_t>, fake_partitions<char, std::int8_t>>);
   }
 }

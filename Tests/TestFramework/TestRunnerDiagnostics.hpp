@@ -29,5 +29,7 @@ namespace sequoia::testing
   private:
 
     void test_template_data_generation();
+
+    void test_prune_fallback_reasons();
   };
 }

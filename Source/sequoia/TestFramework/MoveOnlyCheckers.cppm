@@ -72,8 +72,8 @@ export namespace sequoia::testing
                        T&& y,
                        const U& xEquivalent,
                        const U& yEquivalent,
-                       optional_ref<const V> movedFromPostConstruction,
-                       optional_ref<const V> movedFromPostAssignment)
+                       opt_ref<const V> movedFromPostConstruction,
+                       opt_ref<const V> movedFromPostAssignment)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
 
@@ -108,8 +108,8 @@ export namespace sequoia::testing
                        T&& y,
                        const U& xEquivalent,
                        const U& yEquivalent,
-                       optional_ref<const V> movedFromPostConstruction,
-                       optional_ref<const V> movedFromPostAssignment,
+                       opt_ref<const V> movedFromPostConstruction,
+                       opt_ref<const V> movedFromPostAssignment,
                        std::weak_ordering order)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};

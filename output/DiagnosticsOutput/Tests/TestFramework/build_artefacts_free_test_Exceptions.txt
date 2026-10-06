@@ -1,189 +1,225 @@
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 127
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 113
 A checksum which does not match its record's position
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/corrupted/.ninja_deps: a path record's checksum does not match its position
+Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/corrupted/.ninja_deps: a path record's checksum does not match its position
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 135
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 122
 Not a ninja log
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/not_a_log/.ninja_deps: not a ninja dependency log
+Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/not_a_log/.ninja_deps: not a ninja dependency log
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 135
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 122
 A version which is not understood
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/future_version/.ninja_deps: version 7 is not supported
+Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/future_version/.ninja_deps: version 7 is not supported
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 135
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 122
 A log cut before its version word
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/signature_only/.ninja_deps: a word past the end
+Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/signature_only/.ninja_deps: a word past the end
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 135
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 122
 A record larger than ninja ever writes
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/malformed/.ninja_deps: a record exceeds ninja's maximum size
+Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/malformed/.ninja_deps: a record exceeds ninja's maximum size
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 135
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 122
 A deps record too small to name an output
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/malformed/.ninja_deps: a deps record of impossible size
+Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/malformed/.ninja_deps: a deps record of impossible size
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 135
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 122
 A deps record naming an output not yet seen
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/malformed/.ninja_deps: a deps record names an output not yet seen
+Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/malformed/.ninja_deps: a deps record names an output not yet seen
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 135
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 122
 A deps record naming an input not yet seen
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/malformed/.ninja_deps: a deps record names an input not yet seen
+Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/malformed/.ninja_deps: a deps record names an input not yet seen
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 135
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 122
 A path record too small to hold its checksum
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/malformed/.ninja_deps: a path record of impossible size
+Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/malformed/.ninja_deps: a path record of impossible size
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 135
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 122
 A path record repeating a spelling
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/malformed/.ninja_deps: a path record repeats a spelling
+Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/malformed/.ninja_deps: a path record repeats a spelling
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 173
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 163
 A log which does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/absent has no dependency log; has anything been built?
+output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/absent has no dependency log; has anything been built?
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 303
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 224
+Visual Studio: no configuration
+
+Expected Exception Type:
+[std::runtime_error]
+A configuration is required to read the build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/round, written by the Visual Studio 18 2026 generator
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 227
+Visual Studio: a configuration with no tracker logs
+
+Expected Exception Type:
+[std::runtime_error]
+The build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/round holds no tracker logs of the Release configuration; has it been built in that configuration?
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 327
 An object which bears neither source's name
 
 Expected Exception Type:
 [std::runtime_error]
-The tracker's log in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/collision/Debug/TestAll.tlog does not say which of 2 objects Gadget.cpp produced
+The tracker's log in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/collision/Debug/TestAll.tlog does not say which of 2 objects Gadget.cpp produced
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 330
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 358
 An object which two sources would each be given
 
 Expected Exception Type:
 [std::runtime_error]
-The tracker's log in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/claimed_twice/Debug/TestAll.tlog attributes main_x64.obj to more than one source
+The tracker's log in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/claimed_twice/Debug/TestAll.tlog attributes main_x64.obj to more than one source
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 356
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 387
 A log which is not the tracker's UTF-16
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/narrow/Debug/TestAll.tlog/CL.read.1.tlog: not the tracker's UTF-16
+Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/narrow/Debug/TestAll.tlog/CL.read.1.tlog: not the tracker's UTF-16
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 392
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 484
 A cache which does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-cmake_cache: no CMakeCache.txt in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/elsewhere
+cmake_cache: no CMakeCache.txt in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/elsewhere
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 393
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 487
 A Ninja tree which has not been built has no log
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/build has no dependency log; has anything been built?
+output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/build has no dependency log; has anything been built?
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 419
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 518
 A build statement with no rule
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/build/build.ninja: a build statement with no rule
+Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/build/build.ninja: a build statement with no rule
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 463
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 577
 A log none of whose objects build.ninja names is two spellings of one tree, not an empty build
 
 Expected Exception Type:
 [std::runtime_error]
-None of the objects output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/build/.ninja_deps records is named by build.ninja; are the two spelled differently?
+None of the objects output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/build/.ninja_deps records is named by build.ninja; are the two spelled differently?
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 469
-Ninja Multi-Config: a generator whose record of dependencies is not understood
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 615
+Ninja Multi-Config: a configuration with no statements
 
 Expected Exception Type:
 [std::runtime_error]
-The build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/build was written by the Ninja Multi-Config generator, whose record of dependencies is not understood; Ninja's and Visual Studio's are
+Unable to open output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/multi_config/CMakeFiles/impl-RelWithDebInfo.ninja
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 469
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 618
+Ninja Multi-Config: no configuration
+
+Expected Exception Type:
+[std::runtime_error]
+A configuration is required to read the build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/multi_config, written by the Ninja Multi-Config generator
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 625
+Ninja Multi-Config: a log none of whose objects the configuration's statements name
+
+Expected Exception Type:
+[std::runtime_error]
+None of the objects output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/multi_config/.ninja_deps records is named by CMakeFiles/impl-Release.ninja; are the two spelled differently?
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 631
 Xcode: a generator whose record of dependencies is not understood
 
 Expected Exception Type:
 [std::runtime_error]
-The build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/build was written by the Xcode generator, whose record of dependencies is not understood; Ninja's and Visual Studio's are
+The build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/build was written by the Xcode generator, whose record of dependencies is not understood; Ninja's, Ninja Multi-Config's and Visual Studio's are
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 473
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 636
 A cache which names no generator was not written by CMake
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/build/CMakeCache.txt: no generator is named
+Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/build/CMakeCache.txt: no generator is named
 
 =======================================
 

@@ -26,9 +26,9 @@ namespace sequoia::testing
 		}
 		
 		template<test_mode Mode>
-		static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, ?args)
+		static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, ?parameter)
 		{
-			// e.g. check(equality, "Description", logger, actual.some_method(), ?predictions);
+			// e.g. check(equality, "Description", logger, actual.some_method(), ?prediction);
 		}
 	};
 }

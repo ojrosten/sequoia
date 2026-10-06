@@ -96,7 +96,7 @@ namespace sequoia::testing
     // The intermediate product is named rather than chained: MSVC 14.51 fails to use the result
     // of one operator* as the operand of another within a single unevaluated operand.
     using euc_mass_t = decltype(euc_vec_t{1.0} * mass_t{1.0, kilogram});
-    static_assert(std::same_as<decltype(mlc / current_t{-1.0, ampere}), decltype(euc_mass_t{} * length_t{2.0, metre})>);
+    STATIC_CHECK(std::same_as<decltype(mlc / current_t{-1.0, ampere}), decltype(euc_mass_t{} * length_t{2.0, metre})>);
     
     check(equality, "", mlc / current_t{-1.0, ampere}, euc_vec_t{1.0} * mass_t{1.0, kilogram} * length_t{2.0, metre});
       

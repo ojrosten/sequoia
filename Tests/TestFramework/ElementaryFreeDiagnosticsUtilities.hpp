@@ -15,6 +15,8 @@ import sequoia.test_framework;
 
 /** \file */
 
+#include <format>
+
 namespace sequoia::testing
 {
   struct bland

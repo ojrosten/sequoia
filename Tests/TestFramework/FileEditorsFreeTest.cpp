@@ -25,7 +25,12 @@ namespace sequoia::testing
   {
     test_add_include_without_an_existing_block();
     test_add_include_to_an_existing_block();
+    test_add_include_without_a_block_or_an_import();
+    test_add_test_registrations();
     test_comparison_of_file_contents();
+    test_empty_lines_of_a_seqpat();
+    test_trailing_spaces_of_a_seqpat_pattern();
+    test_refused_lines_of_a_seqpat();
   }
 
   /// A file with no `#include` anywhere has no block to extend. The include must
@@ -52,21 +57,84 @@ namespace sequoia::testing
     check(equivalence, "Include added to an existing include block", file, predictive_materials() /= "ExistingBlock/Main.cpp");
   }
 
+  void file_editors_free_test::test_add_include_without_a_block_or_an_import()
+  {
+    const auto file{working_materials() /= "NoBlockNoImport/Includes.hpp"};
+    add_include(file, "Stuff/FooTest.hpp");
+
+    check(equivalence,
+          "Include added to a file with neither an include nor an import",
+          file,
+          predictive_materials() /= "NoBlockNoImport/Includes.hpp");
+  }
+
+  /** How an existing registration is recognised, and the position, indentation and order of new
+      registrations, are not in `add_test_registrations`' contract. The predictions pin the
+      implementation's choices, and change with them.
+   */
+  void file_editors_free_test::test_add_test_registrations()
+  {
+    auto checkRegistration{
+      [this](std::string_view description, const std::filesystem::path& main, const std::vector<std::string>& tests) {
+        const auto file{working_materials() /= "Registration" / main};
+        add_test_registrations(file, tests);
+
+        check(equivalence, description, file, predictive_materials() /= "Registration" / main);
+      }
+    };
+
+    checkRegistration("After the last registration, which a blank line separates from the execution",
+                      "BlankLineBeforeExecution/Main.cpp",
+                      {"gamma_test"});
+
+    checkRegistration("After the last registration, which the execution immediately follows",
+                      "NoBlankLine/Main.cpp",
+                      {"gamma_test"});
+
+    checkRegistration("After the runner's declaration, with no registration to follow",
+                      "NoRegistrations/Main.cpp",
+                      {"gamma_test"});
+
+    checkRegistration("Indented with tabs, as the execution",
+                      "TabIndentation/Main.cpp",
+                      {"gamma_test"});
+
+    checkRegistration("Indented as the execution, not as the registration it follows",
+                      "DifferentIndentation/Main.cpp",
+                      {"gamma_test"});
+
+    checkRegistration("After an #endif, so that the registration is unconditional",
+                      "ConditionalRegistration/Main.cpp",
+                      {"gamma_test"});
+
+    checkRegistration("Before a registration which shares the execution's line",
+                      "RegistrationOnExecutionLine/Main.cpp",
+                      {"gamma_test"});
+
+    checkRegistration("Despite a commented-out registration and one of another runner",
+                      "LookalikeRegistrations/Main.cpp",
+                      {"gamma_test"});
+
+    checkRegistration("Several tests at once, skipping one already registered",
+                      "SeveralTests/Main.cpp",
+                      {"gamma_test", "alpha_test", "beta_test"});
+
+    check_exception_thrown<std::runtime_error>(
+      "A main with no call to runner.execute",
+      [this]() { add_test_registrations(working_materials() /= "Registration/NoExecution/Main.cpp", {"gamma_test"}); }
+    );
+
+    check_exception_thrown<std::logic_error>(
+      "No tests to register",
+      [this]() { add_test_registrations(working_materials() /= "Registration/NoBlankLine/Main.cpp", {}); }
+    );
+  }
+
   /** The 0x1A checks are aimed at MSVC's text mode, which stops reading at that byte; POSIX text
       mode is binary mode, so there they cannot fail.
    */
   void file_editors_free_test::test_comparison_of_file_contents()
   {
-    auto compares_equivalent{
-      [dir{working_materials()}](std::string_view lhs, std::string_view rhs) {
-        const transient_file a{dir / "ContentsUnderComparison.working", lhs}, b{dir / "ContentsUnderComparison.prediction", rhs};
-
-        const auto contents{get_reduced_file_content(a.path(), b.path())};
-
-        return contents.working.value() == contents.prediction.value();
-      }
-    };
-
     using namespace std::string_view_literals;
 
     check("Text differing only in its line endings",   compares_equivalent("alpha\r\nbeta\r\n", "alpha\nbeta\n"));
@@ -82,5 +150,49 @@ namespace sequoia::testing
           !compares_equivalent("head\x1A" "tail", "head\x1A" "different"));
     check("The same, for a file which is not text",
           !compares_equivalent("\0head\x1A" "tail"sv, "\0head\x1A" "different"sv));
+  }
+
+  void file_editors_free_test::test_empty_lines_of_a_seqpat()
+  {
+    const transient_file patterns{working_materials() /= "ContentsUnderComparison.seqpat", "alpha[0-9]\n\nbeta[0-9]\n"};
+
+    check("A pattern after an empty line is applied", compares_equivalent("alpha1 beta1\n", "alpha2 beta2\n"));
+  }
+
+  void file_editors_free_test::test_trailing_spaces_of_a_seqpat_pattern()
+  {
+    const transient_file patterns{working_materials() /= "ContentsUnderComparison.seqpat", "alpha[0-9] \n"};
+
+    check("A pattern's trailing space is part of the pattern", compares_equivalent("alpha1 text\n", "text\n"));
+  }
+
+  void file_editors_free_test::test_refused_lines_of_a_seqpat()
+  {
+    auto checkRefusal{
+      [this](const reporter& description, std::string_view seqpatContents) {
+        const transient_file patterns{working_materials() /= "ContentsUnderComparison.seqpat", seqpatContents};
+
+        check_exception_thrown<std::runtime_error>(
+          description,
+          [this]() { return compares_equivalent("text\n", "text\n"); }
+        );
+      }
+    };
+
+    checkRefusal("A line of spaces is refused, naming its line", "alpha[0-9]\n\n  \nbeta[0-9]\n");
+    checkRefusal("A line holding only a tab is refused, naming its line", "alpha[0-9]\n\t\n");
+    checkRefusal("An invalid pattern is refused, naming its line, empty lines counted", "alpha[0-9]\n\n(\n");
+  }
+
+  [[nodiscard]]
+  bool file_editors_free_test::compares_equivalent(std::string_view working, std::string_view prediction) const
+  {
+    const auto dir{working_materials()};
+    const transient_file workingFile{dir / "ContentsUnderComparison.working", working},
+                         predictionFile{dir / "ContentsUnderComparison.prediction", prediction};
+
+    const auto contents{get_reduced_file_content(workingFile.path(), predictionFile.path())};
+
+    return contents.working.value() == contents.prediction.value();
   }
 }

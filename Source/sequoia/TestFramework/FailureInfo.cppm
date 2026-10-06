@@ -30,7 +30,13 @@ export namespace sequoia::testing
     friend std::istream& operator>>(std::istream& s, failure_info& info);
   };
 
+  [[nodiscard]]
+  std::string to_string(const failure_info& info);
+
   using failure_output = std::vector<failure_info>;
+
+  [[nodiscard]]
+  std::string to_string(const failure_output& output);
 
   std::ostream& operator<<(std::ostream& s, const failure_output& output);
 

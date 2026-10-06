@@ -39,7 +39,7 @@ namespace sequoia::testing
       [&includePath](std::string& text) {
 
         std::string_view include{"#include"};
-        std::vector<std::string> entries{std::string{include}.append(" \"").append(includePath).append("\"\n")};
+        std::vector<std::string> entries{std::format("{} \"{}\"\n", include, includePath)};
 
         constexpr auto npos{std::string::npos};
 
@@ -115,7 +115,7 @@ namespace sequoia::testing
     read_modify_write(file, inserter);
   }
 
-  void add_test_registrations(const fs::path& file, indentation indent, const std::vector<std::string>& tests)
+  void add_test_registrations(const fs::path& file, const std::vector<std::string>& tests)
   {
     if(tests.empty())
       throw std::logic_error{"No tests specified for registration"};
@@ -126,51 +126,102 @@ namespace sequoia::testing
 
     std::string& contentsStr{contents.value()};
 
-    const auto pos{contentsStr.find("runner.execute")};
-    if(pos == std::string::npos)
-      throw std::runtime_error{std::string{"Unable to find the point of registration in "}.append(file.generic_string())};
+    constexpr auto npos{std::string::npos};
+    const auto executionPos{contentsStr.find("runner.execute")};
+    if(executionPos == npos)
+      throw std::runtime_error{std::format("Unable to find the point of registration in {}", file.generic_string())};
 
-    const auto linePos{contentsStr.rfind('\n', pos)};
-    if(linePos == std::string::npos)
-      throw std::runtime_error{std::string{"Unable to find the point of registration in "}.append(file.generic_string())};
-
-    auto registrations{
-      [&tests, &contentsStr, indent](){
-        std::string str{};
-        for(const auto& test : tests)
-        {
-          auto registration{std::string{"runner.register_test<"}.append(test).append(">();")};
-          if(contentsStr.find(registration) == std::string::npos)
-            append_indented(str, registration, indent + indent);
-        }
-
-        return str;
+    const auto executionLineStart{
+      [&contentsStr, executionPos]() -> std::string::size_type {
+        const auto newlinePos{contentsStr.rfind('\n', executionPos)};
+        return newlinePos == npos ? 0 : newlinePos + 1;
       }()
     };
 
-    if(registrations.empty()) return;
+    // The registrations go straight after the last line before the execution's which holds anything.
+    // Placing them after the last *registration* would put them inside an `#if` or a block which ends
+    // just before the execution, making them conditional; this way the blank lines which separate
+    // the registrations from the execution also stay where they are.
+    const auto insertionPos{
+      [&contentsStr, executionLineStart]() -> std::string::size_type {
+        if(executionLineStart == 0)
+          return 0;
 
-    contentsStr.insert(linePos, registrations);
+        constexpr std::string_view blanksAndNewlines{" \t\r\n"};
+        const auto lastNonBlankPos{contentsStr.find_last_not_of(blanksAndNewlines, executionLineStart - 1)};
+        if(lastNonBlankPos == npos)
+          return 0;
+
+        const auto lineEnd{contentsStr.find('\n', lastNonBlankPos)};
+        return lineEnd + 1;
+      }()
+    };
+
+    constexpr std::string_view blanks{" \t\r"};
+    std::string_view contentsView      {contentsStr};
+    const auto       executionIndentEnd{contentsView.find_first_not_of(blanks, executionLineStart)};
+    std::string_view executionIndent   {contentsView.substr(executionLineStart, executionIndentEnd - executionLineStart)};
+
+    auto registrationOf{
+      [](std::string_view test) { return std::format("runner.register_test<{}>();", test); }
+    };
+
+    auto isRegistered{
+      [contentsView, blanks, registrationOf](std::string_view test) {
+        const auto registration{registrationOf(test)};
+        auto startsWithRegistration{
+          [&registration, blanks](auto&& line) {
+            std::string_view lineView    {std::ranges::begin(line), std::ranges::end(line)};
+            const auto       contentStart{std::ranges::min(lineView.find_first_not_of(blanks), lineView.size())};
+            return lineView.substr(contentStart).starts_with(registration);
+          }
+        };
+
+        return std::ranges::any_of(contentsView | std::views::split('\n'), startsWithRegistration);
+      }
+    };
+
+    auto registrationLineOf{
+      [executionIndent, registrationOf](std::string_view test) {
+        return std::format("{}{}\n", executionIndent, registrationOf(test));
+      }
+    };
+
+    const auto registrations{
+        tests
+      | std::views::filter(std::not_fn(isRegistered))
+      | std::views::transform(registrationLineOf)
+      | std::views::join
+      | std::ranges::to<std::string>()
+    };
+
+    if(registrations.empty())
+      return;
+
+    contentsStr.insert(insertionPos, registrations);
     write_to_file(file, contentsStr, std::ios_base::out);
   }
 
   void add_to_cmake(const fs::path& cmakeLists,
-                    const fs::path& hostDir,
-                    const fs::path& file,
-                    std::string_view patternOpen,
-                    std::string_view patternClose,
-                    std::string_view cmakeEntryPrefix)
+                    const cmake_command& command,
+                    const cmake_entry& entry)
   {
     auto addEntry{
-      [file{file.lexically_relative(hostDir)}, &cmakeLists, patternOpen, patternClose, cmakeEntryPrefix] (std::string& text) {
+      [&cmakeLists, &command, &entry] (std::string& text) {
         constexpr auto npos{std::string::npos};
+        constexpr std::string_view closing{")\n"};
+        const auto opening{std::format("{}({}", command.name, command.leading_arguments)};
 
-        if(auto startPos{text.find(patternOpen)}; startPos != npos)
+        if(auto startPos{text.find(opening)}; startPos != npos)
         {
-          if(auto endPos{text.find(patternClose, startPos + patternOpen.size())}; endPos != npos)
+          if(auto endPos{text.find(closing, startPos + opening.size())}; endPos != npos)
           {
-            std::vector<std::string> entries{{std::string{cmakeEntryPrefix}.append(file.generic_string())}};
-            auto newlinePos{npos}, next{startPos + patternOpen.size()};
+            const auto newEntry{
+              fs::path{entry.directory_spelling} / entry.file_to_add.lexically_relative(entry.directory)
+            };
+
+            std::vector<std::string> entries{{newEntry.generic_string()}};
+            auto newlinePos{npos}, next{startPos + opening.size()};
             while((newlinePos = text.find("\n", next)) < endPos)
             {
               next = std::ranges::min(text.find("\n", newlinePos + 1), endPos);
@@ -179,21 +230,22 @@ namespace sequoia::testing
               entries.push_back(text.substr(entryStart, next - entryStart));
             }
 
-            const auto numSpaces{
-              [patternOpen]() {
-                if(const auto pos{patternOpen.find('(')}; pos < std::string_view::npos)
-                  return pos + 1;
+            std::ranges::sort(entries);
 
-                return patternOpen.size();
-              }()
+            auto entryLineOf{
+              [numSpaces{command.name.size() + 1}](const std::string& entryText) {
+                return std::format("\n{:{}}{}", "", numSpaces, entryText);
+              }
             };
 
-            std::ranges::sort(entries);
-            std::string sorted{};
-            std::ranges::for_each(entries, [&sorted, numSpaces](const std::string& e) {
-              sorted.append("\n").append(numSpaces, ' ').append(e); });
+            const auto sorted{
+                entries
+              | std::views::transform(entryLineOf)
+              | std::views::join
+              | std::ranges::to<std::string>()
+            };
 
-            const auto startSection{std::ranges::min(text.find("\n", startPos + patternOpen.size()), endPos)};
+            const auto startSection{std::ranges::min(text.find("\n", startPos + opening.size()), endPos)};
             text.replace(startSection, endPos - startSection, sorted);
 
             return;
@@ -223,6 +275,54 @@ namespace sequoia::testing
     {
       if(is_text(contents)) replace_all(contents, "\r\n", "\n");
     }
+
+    /** \brief A line of at least one character, every one a space or a tab. A carriage return is not among
+        them: CRLF line endings are normalised to LF before a `.seqpat` is split into lines.
+     */
+    [[nodiscard]]
+    bool is_whitespace_only(std::string_view line) noexcept
+    {
+      return !line.empty() && (line.find_first_not_of(" \t") == std::string_view::npos);
+    }
+
+    [[nodiscard]]
+    std::string seqpat_error_message(const fs::path& seqpatFile, std::size_t line, std::string_view problem)
+    {
+      return std::format("Line {} of a .seqpat {}\n{}", line, problem, seqpatFile.generic_string());
+    }
+
+    /** \brief The regular expression `pattern`, from `line` of `seqpatFile`.
+
+        \throws std::runtime_error naming the line and the file if `pattern` holds only whitespace, or is
+                not a valid regular expression
+     */
+    [[nodiscard]]
+    std::regex seqpat_regex(std::string_view pattern, const fs::path& seqpatFile, std::size_t line)
+    {
+      if(is_whitespace_only(pattern))
+      {
+        throw std::runtime_error{
+          seqpat_error_message(
+            seqpatFile,
+            line,
+            "holds only whitespace, which is ambiguous: delete the line, or write the pattern explicitly, "
+            "such as [ ] or [ \\t]"
+          )
+        };
+      }
+
+      try
+      {
+        return std::regex{pattern.begin(), pattern.end()};
+      }
+      catch(const std::regex_error&)
+      {
+        // Not std::regex_error's own message: each standard library words it differently
+        throw std::runtime_error{
+          seqpat_error_message(seqpatFile, line, std::format("is not a valid regular expression: {}", pattern))
+        };
+      }
+    }
   }
 
   [[nodiscard]]
@@ -247,21 +347,15 @@ namespace sequoia::testing
             auto& expressions{exprContents.value()};
             normalize_line_endings(expressions);
 
-            std::string::size_type pos{};
-            while(pos < expressions.size())
+            for(const auto [index, text] : std::views::split(expressions, '\n') | std::views::enumerate)
             {
-              const auto next{std::min(expressions.find("\n", pos), expressions.size())};
-              if(const auto count{next - pos})
-              {
-                std::basic_regex rgx{expressions.data() + pos, count};
-                contents.working = std::regex_replace(contents.working.value(), rgx, std::string{});
-                contents.prediction = std::regex_replace(contents.prediction.value(), rgx, std::string{});
-                pos = next + 1;
-              }
-              else
-              {
-                break;
-              }
+              std::string_view pattern{text};
+              if(pattern.empty())
+                continue;
+
+              const auto rgx{seqpat_regex(pattern, supplPath, static_cast<std::size_t>(index) + 1)};
+              contents.working    = std::regex_replace(contents.working.value(),    rgx, std::string{});
+              contents.prediction = std::regex_replace(contents.prediction.value(), rgx, std::string{});
             }
           }
           else

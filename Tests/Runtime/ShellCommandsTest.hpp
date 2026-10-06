@@ -22,5 +22,19 @@ namespace sequoia::testing
     static std::filesystem::path source_file();
 
     void run_tests();
+  private:
+    void test_composition();
+
+    void test_exit_status_descriptions();
+
+    void test_success_requirement();
+
+    void test_directory_change();
+
+    void test_quotation();
+
+    void test_quotation_refusals();
+
+    void test_paths_with_spaces();
   };
 }

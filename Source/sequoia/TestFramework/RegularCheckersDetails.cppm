@@ -77,8 +77,8 @@ export namespace sequoia::testing::impl
                        const Actions& actions,
                        const T& x,
                        const T& y,
-                       optional_ref<const U> movedFromPostConstruction,
-                       optional_ref<const U> movedFromPostAssignment,                       
+                       opt_ref<const U> movedFromPostConstruction,
+                       opt_ref<const U> movedFromPostAssignment,                       
                        Mutator yMutator,
                        const Args&... args)
   {

@@ -124,19 +124,20 @@ export namespace sequoia::maths
     constexpr traversal_conditions& operator=(const traversal_conditions&) = default;
 
     template<class Bitset>
+    [[nodiscard]]
     constexpr std::size_t compute_restart_index(const Bitset&) const noexcept
     {
       return starting_index();
     }
 
     [[nodiscard]]
-    constexpr bool terminate(std::size_t) const noexcept
+    constexpr static bool terminate(std::size_t) noexcept
     {
       return true;
     }
 
     template<class Bitset>
-    constexpr void register_discovered(Bitset& b, const std::size_t index)
+    constexpr static void register_discovered(Bitset& b, const std::size_t index)
     {
       b[index] = true;
     }
@@ -181,12 +182,12 @@ export namespace sequoia::maths
 
     template<class Fn, class... Args>
       requires std::invocable<Fn, Args...>
-    constexpr void push(Fn&& fn, Args&&... args)
+    constexpr static void push(Fn&& fn, Args&&... args)
     {
       concurrency::serial<void>{}.push(std::forward<Fn>(fn), std::forward<Args>(args)...);
     }
 
-    constexpr void extract_results() const noexcept {}
+    constexpr static void extract_results() noexcept {}
   };
 
   template<class R>
@@ -354,15 +355,15 @@ export namespace sequoia::maths::graph_impl
             && (std::invocable<NAEF, edge_index_type>    )
             && (std::invocable<EFTF, const_edge_iterator>)
             && (std::invocable<ESTF, const_edge_iterator>)
-    constexpr auto traverse(traversal_constant<F>,
-                            const G& graph,
-                            traversal_conditions<FindDisconnected> conditions,
-                            NBEF&& nodeBeforeEdgesFn,
-                            NAEF&& nodeAfterEdgesFn,
-                            EFTF&& edgeFirstTraversalFn,
-                            ESTF&& edgeSecondTraversalFn,
-                            TaskProcessingModel&& taskProcessingModel,
-                            QArgs&&... qargs)
+    constexpr static auto traverse(traversal_constant<F>,
+                                   const G& graph,
+                                   traversal_conditions<FindDisconnected> conditions,
+                                   NBEF&& nodeBeforeEdgesFn,
+                                   NAEF&& nodeAfterEdgesFn,
+                                   EFTF&& edgeFirstTraversalFn,
+                                   ESTF&& edgeSecondTraversalFn,
+                                   TaskProcessingModel&& taskProcessingModel,
+                                   QArgs&&... qargs)
     {
       // Note: do not forward any of the Fns as they could in principle end up repeatedly moved from.
       // However, the Fns should not be captured by value as they may have mutable state with
@@ -425,13 +426,13 @@ export namespace sequoia::maths::graph_impl
       requires (std::invocable<NBEF, edge_index_type>)
             && (std::invocable<NAEF, edge_index_type>)
             && (std::invocable<ETUN, typename G::const_edge_iterator>)
-    constexpr auto traverse(depth_first_search_type,
-                            const G& graph,
-                            traversal_conditions<FindDisconnected> conditions,
-                            NBEF&& nodeBeforeEdgesFn,
-                            NAEF&& nodeAfterEdgesFn,
-                            ETUN&& edgeToUndiscoveredNodeFn,
-                            TaskProcessingModel&& taskProcessingModel)
+    constexpr static auto traverse(depth_first_search_type,
+                                   const G& graph,
+                                   traversal_conditions<FindDisconnected> conditions,
+                                   NBEF&& nodeBeforeEdgesFn,
+                                   NAEF&& nodeAfterEdgesFn,
+                                   ETUN&& edgeToUndiscoveredNodeFn,
+                                   TaskProcessingModel&& taskProcessingModel)
     {
       // Note: do not forward any of the Fns as they could in principle end up repeatedly moved from.
       // However, the Fns should not be captured by value as they may have mutable state with
@@ -494,19 +495,19 @@ export namespace sequoia::maths::graph_impl
             && (std::invocable<EFTF, const_edge_iterator>)
             && (std::invocable<ESTF, const_edge_iterator>)
             && (std::invocable<OnDiscovery, edge_index_type> || std::same_as<OnDiscovery, recurse>)
-      constexpr void inner_loop([[maybe_unused]] const G& graph,
-                                const edge_index_type nodeIndex,
-                                traversal_conditions<FindDisconnected>& conditions,
-                                Iter begin,
-                                Iter end,
-                                Bitset& discovered,
-                                Bitset& processed,
-                                OnDiscovery onDiscovery,
-                                NBEF&& nodeBeforeEdgesFn,
-                                NAEF&& nodeAfterEdgesFn,
-                                EFTF&& edgeFirstTraversalFn,
-                                ESTF&& edgeSecondTraversalFn,
-                                results_accumulator<TaskProcessingModel>& resultsAccumulator)
+      constexpr static void inner_loop([[maybe_unused]] const G& graph,
+                                       const edge_index_type nodeIndex,
+                                       traversal_conditions<FindDisconnected>& conditions,
+                                       Iter begin,
+                                       Iter end,
+                                       Bitset& discovered,
+                                       Bitset& processed,
+                                       OnDiscovery onDiscovery,
+                                       NBEF&& nodeBeforeEdgesFn,
+                                       NAEF&& nodeAfterEdgesFn,
+                                       EFTF&& edgeFirstTraversalFn,
+                                       ESTF&& edgeSecondTraversalFn,
+                                       results_accumulator<TaskProcessingModel>& resultsAccumulator)
     {
       constexpr bool hasNodeBeforeFn{!std::same_as<std::remove_cvref_t<NBEF>, null_func_obj>};
       if constexpr(hasNodeBeforeFn)

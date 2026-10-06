@@ -14,6 +14,7 @@ module sequoia.test_framework;
 
 import std;
 
+import sequoia.parsing;
 import sequoia.streaming;
 
 namespace sequoia::testing
@@ -73,6 +74,25 @@ namespace sequoia::testing
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput)
   {
     return acceptable_mismatch(testOutput, referenceOutput) ? referenceOutput : testOutput;
+  }
+
+  [[nodiscard]]
+  bool is_coarse_sleep(std::chrono::duration<double, std::milli> slept,
+                       std::chrono::duration<double, std::milli> target)
+  {
+    return slept >= 2 * target;
+  }
+
+  [[nodiscard]]
+  std::string coarse_sleep_message(std::chrono::duration<double, std::milli> slept,
+                                   std::chrono::duration<double, std::milli> target)
+  {
+    using parsing::commandline::warning;
+    return warning({std::format("Sleeps of {:.1f} ms repeatedly lasted {:.1f} ms or more, "
+                                "so timings built on sleeps are unreliable",
+                                target.count(),
+                                slept.count()),
+                    "On Windows, the likely cause is that the finest timer resolution is not in effect"});
   }
 
   template<test_mode Mode>

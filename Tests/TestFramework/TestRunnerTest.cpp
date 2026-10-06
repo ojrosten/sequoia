@@ -12,6 +12,8 @@
 #include "TestFramework/BuildArtefactsTestingUtilities.hpp"
 
 import std;
+import sequoia.platform_specific;
+import sequoia.runtime;
 
 namespace sequoia::testing
 {
@@ -349,9 +351,9 @@ namespace sequoia::testing
       }
     };
 
-    /// The next two put a suite and a test which are siblings under one name: `namesake_test`
-    /// names the test, and the directory holding `under_namesake_test` beside it. The test sorts
-    /// first, so its node exists by the time the suite of that name is wanted.
+    /// The next two put a suite and a test which are siblings under one name: `namesake_test` names the
+    /// test, and the directory holding `under_namesake_test` beside it; the test's source is named otherwise,
+    /// lest the materials prefixes nest. The test sorts first, so its node exists when the suite is wanted.
     class namesake_test final : public free_test
     {
     public:
@@ -360,7 +362,7 @@ namespace sequoia::testing
       [[nodiscard]]
       static fs::path source_file()
       {
-        return make_fake_file_path<namesake_test>("Namesakes");
+        return make_fake_file_path<namesake_test>("Namesakes").replace_filename("NamesakeTest.cpp");
       }
 
       void run_tests()
@@ -405,14 +407,347 @@ namespace sequoia::testing
       };
     }
 
-    test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
+    /** Makes `test` a candidate for update, by failing a check.
+
+        The function writes a `Kept.txt` into the working materials. The test's predictions hold a
+        `Kept.txt` with other contents, and an `Obsolete.txt`, which the function does not write. So an
+        update overwrites `Kept.txt` and deletes `Obsolete.txt`.
+
+        The source files of the update fakes below are relative, so that their materials resolve
+        inside the fake project.
+     */
+
+    void make_update_candidate(free_test& test)
     {
-      test_runner runner{args.size(),
+      write_to_file(test.working_materials() /= "Kept.txt", "Obtained\n", std::ios_base::out);
+      test.check("Predictions are stale", false);
+    }
+
+    class stale_predictions_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return "Tests/Updating/StalePredictionsFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        make_update_candidate(*this);
+      }
+    };
+
+    class throwing_stale_predictions_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return "Tests/Updating/ThrowingStalePredictionsFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        make_update_candidate(*this);
+        throw std::runtime_error{"Thrown after a failed check"};
+      }
+    };
+
+    /** Writes a regular file `B` where its predictions hold a directory. The update does not handle
+        a change of type, and throws on copying the file over the directory. `A` sorts before `B`, so
+        the update has by then deleted `A/old.txt`, which the predictions hold and the test does not write.
+     */
+    class type_swapped_predictions_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return "Tests/Updating/TypeSwappedPredictionsFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        fs::create_directory(working_materials() /= "A");
+        write_to_file(working_materials() /= "B", "", std::ios_base::out);
+        check("Predictions are stale", false);
+      }
+    };
+
+    /** A variant of `stale_predictions_free_test`, with materials under two discriminators: `Platypus`
+        and `Echidna`. The test's materials discriminator is `Platypus`.
+
+        Under each discriminator, the working copy and the auxiliary materials hold a `Discriminator.txt`
+        which holds the discriminator. The predictions hold the same file, so the update leaves the file
+        alone.
+     */
+    class variant_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return "Tests/Updating/VariantFreeTest.cpp";
+      }
+
+      [[nodiscard]]
+      static std::string materials_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      void run_tests()
+      {
+        check(equality,
+              "Working copy of the declared discriminator",
+              read_to_string(working_materials() /= "Discriminator.txt", std::ios_base::in).value_or(""),
+              std::string{"Platypus\n"});
+
+        check(equality,
+              "Auxiliary materials of the declared discriminator",
+              read_to_string(auxiliary_materials() /= "Discriminator.txt", std::ios_base::in).value_or(""),
+              std::string{"Platypus\n"});
+
+        make_update_candidate(*this);
+      }
+    };
+
+    /** Each fake below declares the discriminator hooks in one shape, for the probes to tell the
+        shapes apart. Each fake declares all three hooks, which differ only in their names.
+     */
+    class static_hooks_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file() { return make_fake_file_path<static_hooks_test>(); }
+
+      [[nodiscard]]
+      static std::string output_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string summary_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string materials_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      void run_tests() {}
+    };
+
+    class const_member_hooks_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file() { return make_fake_file_path<const_member_hooks_test>(); }
+
+      [[nodiscard]]
+      std::string output_discriminator(const cmake_cache&) const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string summary_discriminator(const cmake_cache&) const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string materials_discriminator(const cmake_cache&) const { return "Platypus"; }
+
+      void run_tests() {}
+    };
+
+    class mutable_member_hooks_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file() { return make_fake_file_path<mutable_member_hooks_test>(); }
+
+      [[nodiscard]]
+      std::string output_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string summary_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string materials_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      void run_tests() {}
+    };
+
+    class nullary_hooks_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file() { return make_fake_file_path<nullary_hooks_test>(); }
+
+      [[nodiscard]]
+      static std::string output_discriminator() { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string summary_discriminator() { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string materials_discriminator() { return "Platypus"; }
+
+      void run_tests() {}
+    };
+
+    class overloaded_member_hooks_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file() { return make_fake_file_path<overloaded_member_hooks_test>(); }
+
+      [[nodiscard]]
+      std::string output_discriminator(const cmake_cache&) const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string output_discriminator(int) const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string summary_discriminator(const cmake_cache&) const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string summary_discriminator(int) const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string materials_discriminator(const cmake_cache&) const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string materials_discriminator(int) const { return "Platypus"; }
+
+      void run_tests() {}
+    };
+
+    class overloaded_nullary_hooks_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file() { return make_fake_file_path<overloaded_nullary_hooks_test>(); }
+
+      [[nodiscard]]
+      static std::string output_discriminator() { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string output_discriminator(int) { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string summary_discriminator() { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string summary_discriminator(int) { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string materials_discriminator() { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string materials_discriminator(int) { return "Platypus"; }
+
+      void run_tests() {}
+    };
+
+    class view_valued_hooks_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file() { return make_fake_file_path<view_valued_hooks_test>(); }
+
+      [[nodiscard]]
+      static std::string_view output_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string_view summary_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string_view materials_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      void run_tests() {}
+    };
+
+    /** \brief A test whose summary discriminator gives it the summary file of `summary_collider_test_twin`, but
+        for case
+     */
+    class summary_collider_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<summary_collider_test>();
+      }
+
+      [[nodiscard]]
+      static std::string summary_discriminator(const cmake_cache&) { return "Twin"; }
+
+      void run_tests() {}
+    };
+
+    class summary_collider_test_twin final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<summary_collider_test_twin>();
+      }
+
+      void run_tests() {}
+    };
+
+    /// The runner calls the output discriminator while building the suite tree
+    class throwing_discriminator_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<throwing_discriminator_test>();
+      }
+
+      [[nodiscard]]
+      static std::string output_discriminator(const cmake_cache&)
+      {
+        throw std::runtime_error{"No output discriminator"};
+      }
+
+      void run_tests() {}
+    };
+
+    [[nodiscard]]
+    test_runner make_fake_runner(commandline_arguments& args, std::stringstream& outputStream)
+    {
+      return test_runner{args.size(),
                          args.get(),
                          "Oliver J. Rosten",
                          "  ",
                          {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
+    }
+
+    test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
+    {
+      auto runner{make_fake_runner(args, outputStream)};
 
       runner.register_test<failing_test>();
       runner.register_test<failing_fp_test>();
@@ -420,6 +755,237 @@ namespace sequoia::testing
 
       return runner;
     }
+
+    /// The materials prefixes of the next two nest: `inner_free_test`'s source lies in the directory whose
+    /// path is that of `outer_free_test`'s source less the extension.
+    class outer_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<outer_free_test>("Nesting");
+      }
+
+      void run_tests() {}
+    };
+
+    class inner_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<inner_free_test>("Nesting/outer_free_test");
+      }
+
+      void run_tests() {}
+    };
+
+    /// As `inner_free_test`, but beneath a directory differing from `outer_free_test`'s materials prefix only in case.
+    class differently_cased_inner_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<differently_cased_inner_free_test>("Nesting/OUTER_FREE_TEST");
+      }
+
+      void run_tests() {}
+    };
+
+    /// Beneath a directory whose name begins with `outer_free_test`'s materials prefix but is not it.
+    class adjacent_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<adjacent_free_test>("Nesting/outer_free_test_adjacent");
+      }
+
+      void run_tests() {}
+    };
+
+    /// Shares `outer_free_test`'s source.
+    class cohabiting_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return outer_free_test::source_file();
+      }
+
+      void run_tests() {}
+    };
+
+    /// As `inner_free_test`, but two directories beneath `outer_free_test`'s materials prefix.
+    class deeply_inner_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<deeply_inner_free_test>("Nesting/outer_free_test/Deeper");
+      }
+
+      void run_tests() {}
+    };
+
+    /// Named as `foo_test` but for case, which the filesystems of macOS and Windows ignore.
+    class Foo_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<Foo_test>("Cased");
+      }
+
+      void run_tests() {}
+    };
+
+    /// Beneath a directory whose name has non-ASCII bytes, spelt as escapes so every compiler reads them alike.
+    class non_ascii_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<non_ascii_free_test>("Nesting/Caf\xC3\xA9");
+      }
+
+      void run_tests() {}
+    };
+
+    /// Named with a non-ASCII letter, spelt as a universal character name so every compiler reads it alike.
+    class caf\u00E9_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<caf\u00E9_free_test>("NonAscii").replace_filename("CafeFreeTest.cpp");
+      }
+
+      void run_tests() {}
+    };
+
+    class sourceless_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return {};
+      }
+
+      void run_tests() {}
+    };
+
+    /// The time a record or the run's stamp names after `started`; the times sort as their text does
+    [[nodiscard]]
+    std::string start_named_by(const fs::path& file)
+    {
+      std::ifstream stream{file};
+      std::string word{}, start{};
+      stream >> word >> start;
+
+      return start;
+    }
+
+    /// The label of each line of a test's execution record: the text before the line's last space
+    [[nodiscard]]
+    std::vector<std::string> execution_record_labels(const fs::path& record)
+    {
+      std::vector<std::string> labels{};
+      std::ifstream file{record};
+      for(std::string line{}; std::getline(file, line);)
+      {
+        labels.push_back(line.substr(0, line.rfind(' ')));
+      }
+
+      return labels;
+    }
+
+    /// The value of the line of a test's execution record labelled `label`, or nothing if there is no such line
+    [[nodiscard]]
+    std::string execution_record_value(const fs::path& record, std::string_view label)
+    {
+      std::ifstream file{record};
+      for(std::string line{}; std::getline(file, line);)
+      {
+        if(line.starts_with(label) && (line.size() > label.size()) && (line[label.size()] == ' '))
+          return line.substr(label.size() + 1);
+      }
+
+      return "";
+    }
+
+    /// Checks its own execution record while it executes
+    class record_reading_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<record_reading_free_test>();
+      }
+
+      void run_tests()
+      {
+        const test_execution_record_path record{source_file(), name(), get_project_paths()};
+        check(equality,
+              "While a test executes, its record names its start and no execution duration",
+              execution_record_labels(record.file_path()),
+              std::vector<std::string>{"started"});
+
+        check("While a test executes, the run's stamp already exists",
+              fs::exists(get_project_paths().execution_records().stamp()));
+      }
+    };
+
+    /// An exception escapes the body of this test, rather than being caught by a check
+    class escaping_exception_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<escaping_exception_free_test>();
+      }
+
+      void run_tests()
+      {
+        throw std::runtime_error{"Escapes the test body"};
+      }
+    };
   }
   
   [[nodiscard]]
@@ -430,18 +996,39 @@ namespace sequoia::testing
 
   void test_runner_test::run_tests()
   {
+    test_discriminator_hooks();
     test_exceptions();
     test_critical_errors();
     test_basic_output();
+    test_tests_registered_between_executions();
+    test_execution_after_a_registration_which_threw();
+    test_registration_outside_a_run();
     test_help_output();
     test_verbose_output();
     test_serial_verbose_output();
     test_throwing_tests();
+    test_execution_records();
+    test_summary_collision_with_an_unselected_test();
+    test_discriminated_summary();
     test_filtered_suites();
+    test_suites_not_found();
+    test_selections_not_found();
     test_prune_basic_output();
     test_prune_with_changed_toolchain();
     test_prune_selects_a_test_this_executable_lacks();
+    test_prune_with_nothing_stale();
     test_post_run_failure();
+    test_materials_update();
+    test_no_materials_update_after_critical_failure();
+    test_partial_materials_update();
+    test_discriminated_materials_update();
+    test_materials_update_of_two_tests();
+    test_materials_preparation_failure();
+    test_versioned_output_failure();
+    test_versioned_output_check();
+    test_discarded_materials_removal();
+    test_discarded_materials_removal_failure();
+    test_discarded_materials_removal_exception();
     test_nested_suite();
     test_nested_suite_verbose();
     test_suite_named_as_a_sibling_test();
@@ -449,7 +1036,55 @@ namespace sequoia::testing
     test_excluded_tests();
     test_excluded_tests_are_rerun();
     test_dump_comparison();
+    test_thread_pool();
     test_instability_analysis();
+    test_instability_analysis_in_sandboxes_from_a_path_with_a_space();
+    test_sandboxed_repetition();
+    test_exit_statuses();
+    test_return_code_names();
+  }
+
+  void test_runner_test::test_discriminator_hooks()
+  {
+    test_discriminator_probe<output_discriminator_probe>();
+    test_discriminator_probe<summary_discriminator_probe>();
+    test_discriminator_probe<materials_discriminator_probe>();
+  }
+
+  /** Checks the traits for the hook that `Probe` probes for:
+      -# A static, string-valued hook taking `const cmake_cache&` is declared and conforming;
+      -# A test without the hook is neither;
+      -# Each of these other shapes of hook is declared but not conforming: a const member, a non-const
+         member, a static hook taking no arguments, and a view-valued hook;
+      -# So is an overloaded hook, either a const member with an overload taking `const cmake_cache&`,
+         or static with an overload taking no arguments.
+   */
+  template<template<class> class Probe>
+  void test_runner_test::test_discriminator_probe()
+  {
+    STATIC_CHECK(Probe<static_hooks_test>::declared_v);
+    STATIC_CHECK(Probe<static_hooks_test>::conforming_v);
+
+    STATIC_CHECK(!Probe<throwing_test>::declared_v);
+    STATIC_CHECK(!Probe<throwing_test>::conforming_v);
+
+    STATIC_CHECK(Probe<const_member_hooks_test>::declared_v);
+    STATIC_CHECK(!Probe<const_member_hooks_test>::conforming_v);
+
+    STATIC_CHECK(Probe<mutable_member_hooks_test>::declared_v);
+    STATIC_CHECK(!Probe<mutable_member_hooks_test>::conforming_v);
+
+    STATIC_CHECK(Probe<nullary_hooks_test>::declared_v);
+    STATIC_CHECK(!Probe<nullary_hooks_test>::conforming_v);
+
+    STATIC_CHECK(Probe<view_valued_hooks_test>::declared_v);
+    STATIC_CHECK(!Probe<view_valued_hooks_test>::conforming_v);
+
+    STATIC_CHECK(Probe<overloaded_member_hooks_test>::declared_v);
+    STATIC_CHECK(!Probe<overloaded_member_hooks_test>::conforming_v);
+
+    STATIC_CHECK(Probe<overloaded_nullary_hooks_test>::declared_v);
+    STATIC_CHECK(!Probe<overloaded_nullary_hooks_test>::conforming_v);
   }
 
   [[nodiscard]]
@@ -475,10 +1110,7 @@ namespace sequoia::testing
     const auto outputDir{working_materials() /= dirName};
     fs::create_directory(outputDir);
 
-    if(const auto filePath{outputDir / "io.txt"}; std::ofstream file{filePath})
-    {
-      file << output.str();
-    }
+    write_to_file(outputDir / "io.txt", output.str(), std::ios_base::out);
 
     output.str("");
   }
@@ -565,12 +1197,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
   
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_runner(args, outputStream)};
 
         runner.register_test<foo_test>();
         runner.register_test<foo_test>();
@@ -578,6 +1205,72 @@ namespace sequoia::testing
 
     check_exception_thrown<std::logic_error>(
       reporter{"Two tests whose unqualified names coincide"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        auto runner{make_fake_runner(args, outputStream)};
+
+        runner.register_test<foo_test>();
+        runner.register_test<another_namespace::foo_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A source in the directory sharing another's materials prefix"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<outer_free_test>();
+        runner.register_test<inner_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A source whose materials prefix is a directory holding another's source"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<inner_free_test>();
+        runner.register_test<outer_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A source in a directory sharing another's materials prefix but for case"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<outer_free_test>();
+        runner.register_test<differently_cased_inner_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"Two tests whose names differ only in case"},
       [this](){
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
@@ -591,7 +1284,132 @@ namespace sequoia::testing
                            outputStream};
 
         runner.register_test<foo_test>();
-        runner.register_test<another_namespace::foo_test>();
+        runner.register_test<Foo_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A source two directories beneath another's materials prefix"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<outer_free_test>();
+        runner.register_test<deeply_inner_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A source whose materials prefix, but for case, is a directory holding another's source"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<differently_cased_inner_free_test>();
+        runner.register_test<outer_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"Sources beside a materials prefix and sharing it are admitted; one beneath it then is not"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<outer_free_test>();
+        runner.register_test<adjacent_free_test>();
+        runner.register_test<cohabiting_free_test>();
+        runner.register_test<inner_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A source whose materials prefix contains a non-ASCII byte"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<non_ascii_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A test whose name contains a non-ASCII letter"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<caf\u00E9_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A test with no source file"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<sourceless_free_test>();
+      });
+
+    check_exception_thrown<std::runtime_error>(
+      reporter{"Two tests whose summaries are one file, both selected"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<summary_collider_test>();
+        runner.register_test<summary_collider_test_twin>();
       });
 
     check_exception_thrown<std::runtime_error>(
@@ -618,12 +1436,7 @@ namespace sequoia::testing
     {
       commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v", "recover", "dump"}};
   
-      test_runner runner{args.size(),
-                         args.get(),
-                         "Oliver J. Rosten",
-                         "  ",
-                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                         outputStream};
+      auto runner{make_fake_runner(args, outputStream)};
 
       runner.register_test<bar_free_test>();
       runner.register_test<foo_test>();
@@ -634,10 +1447,7 @@ namespace sequoia::testing
     const auto outputDir{working_materials() /= "RecoveryAndDumpOutput"};
     fs::create_directory(outputDir);
 
-    if(std::ofstream file{outputDir / "io.txt"})
-    {
-      file << outputStream.str();
-    }
+    write_to_file(outputDir / "io.txt", outputStream.str(), std::ios_base::out);
 
     fs::copy(fake_project() / "output" / "Recovery" / "Recovery.txt", working_materials() /= "RecoveryAndDumpOutput");
     fs::copy(fake_project() / "output" / "Recovery" / "Dump.txt", working_materials() /= "RecoveryAndDumpOutput");
@@ -655,12 +1465,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     check(equality, "No tests return code", runner.execute(), return_code::success);
     check_output("No Tests", "NoTests", outputStream);
@@ -671,6 +1476,74 @@ namespace sequoia::testing
 
     check(equality, "Basic output return code", runner.execute(), return_code::soft_failures);
     check_output("Basic Output", "BasicOutput", outputStream);
+  }
+
+  /** The second execution must run `passing_test` alone:
+      -# If `failing_test` ran again, the return code would show soft failures.
+      -# If no test ran, the output would not name `passing_test`.
+   */
+  void test_runner_test::test_tests_registered_between_executions()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<failing_test>();
+    check(equality, "First execution return code", runner.execute(), return_code::soft_failures);
+    check_output("First execution", "FirstExecutionOutput", outputStream);
+
+    runner.register_test<passing_test>();
+    check(equality, "Second execution return code", runner.execute(), return_code::success);
+    check_output("Second execution", "SecondExecutionOutput", outputStream);
+  }
+
+  /** A registration whose hook throws must leave no registration behind:
+      -# Registering the test again throws the hook's `std::runtime_error`,
+         not the `std::logic_error` which refuses a duplicate name.
+      -# The execution runs the tests registered before and after it.
+      -# A runner whose only registration threw has nothing registered.
+   */
+  void test_runner_test::test_execution_after_a_registration_which_threw()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<failing_test>();
+
+    auto registerThrowingTest{[&runner](){ runner.register_test<throwing_discriminator_test>(); }};
+    check_exception_thrown<std::runtime_error>("Registration whose hook throws", registerThrowingTest);
+    check_exception_thrown<std::runtime_error>("The same registration again", registerThrowingTest);
+
+    runner.register_test<passing_test>();
+    check(equality, "Execution return code", runner.execute(), return_code::soft_failures);
+    check_output("Execution", "ExecutionAfterARegistrationWhichThrewOutput", outputStream);
+
+    std::stringstream nothingRegisteredStream{};
+    auto nothingRegisteredRunner{make_fake_runner(args, nothingRegisteredStream)};
+    check_exception_thrown<std::runtime_error>(
+      "The only registration, whose hook throws",
+      [&nothingRegisteredRunner](){ nothingRegisteredRunner.register_test<throwing_discriminator_test>(); }
+    );
+
+    check(equality, "Nothing registered return code", nothingRegisteredRunner.execute(), return_code::success);
+    check_output("Nothing registered", "NothingRegisteredOutput", nothingRegisteredStream);
+  }
+
+  /** Outside a run no test is built, so a test whose output discriminator
+      throws is registered without its hook being called.
+   */
+  void test_runner_test::test_registration_outside_a_run()
+  {
+    commandline_arguments args{{zeroth_arg(), "--help"}};
+    std::stringstream outputStream{};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<throwing_discriminator_test>();
+    check(equality, "Return code", runner.execute(), return_code::success);
   }
 
   void test_runner_test::test_help_output()
@@ -720,12 +1593,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<throwing_test>();
     runner.register_test<platform_specific_throwing_test>();
@@ -740,17 +1608,132 @@ namespace sequoia::testing
     check(equivalence, "Exception Output", predictive_materials() / "ThrowingDiagnostics", diagnosticsDir);
   }
 
-  void test_runner_test::test_filtered_suites()
+  /** The fake tests tell the mechanism from its rivals: `record_reading_free_test` sees its record while it executes,
+      which a start written only at the end would not produce; `escaping_exception_free_test` throws, which an
+      execution duration written only on normal completion would miss. The records directory is removed first, so that
+      only this run can have written the stamp.
+   */
+  void test_runner_test::test_execution_records()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing"}};
-
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
     test_runner runner{args.size(),
                        args.get(),
                        "Oliver J. Rosten",
                        "  ",
                        {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
+
+    const auto& projPaths{runner.proj_paths()};
+    fs::remove_all(projPaths.execution_records().dir());
+
+    runner.register_test<record_reading_free_test>();
+    runner.register_test<escaping_exception_free_test>();
+
+    check(equality, "Execution records return code", runner.execute(), return_code::critical_failures);
+
+    const test_execution_record_path
+      passingRecord{record_reading_free_test::source_file(),     test_name<record_reading_free_test>(),     projPaths},
+      throwingRecord{escaping_exception_free_test::source_file(), test_name<escaping_exception_free_test>(), projPaths};
+
+    const std::vector<std::string> finishedRecordLabels{"started", "execution duration", "runner overhead"};
+    check(equality,
+          "The record of a test which passed names its start, its execution duration and the runner's overhead",
+          execution_record_labels(passingRecord.file_path()),
+          finishedRecordLabels);
+
+    check(equality,
+          "The record of a test whose body threw names its start, its execution duration and the runner's overhead",
+          execution_record_labels(throwingRecord.file_path()),
+          finishedRecordLabels);
+
+    const auto runStart{start_named_by(projPaths.execution_records().stamp())};
+    check("The run's stamp names a start", !runStart.empty());
+    const bool runStartedFirst{   (runStart <= start_named_by(passingRecord.file_path()))
+                               && (runStart <= start_named_by(throwingRecord.file_path()))};
+    check("The run started no later than either test", runStartedFirst);
+  }
+
+  /** `summary_collider_test_twin` is selected and `summary_collider_test` is
+      not. Their summaries are one file, ignoring case. The runner refuses
+      whichever of the two is registered second. When the twin is refused, the
+      run which follows writes no summary to that file. The summaries directory
+      is removed first, so that only this run can have written the file.
+   */
+  void test_runner_test::test_summary_collision_with_an_unselected_test()
+  {
+    commandline_arguments args{{(minimal_fake_path()).generic_string(),
+                                "select",
+                                summary_collider_test_twin::source_file().generic_string()}};
+
+    {
+      std::stringstream outputStream{};
+      auto runner{make_fake_runner(args, outputStream)};
+
+      runner.register_test<summary_collider_test_twin>();
+      check_exception_thrown<std::runtime_error>(
+        reporter{"An unselected test whose summary file is a selected test's"},
+        [&runner](){ runner.register_test<summary_collider_test>(); });
+    }
+
+    std::stringstream outputStream{};
+    auto runner{make_fake_runner(args, outputStream)};
+
+    const auto& projPaths{runner.proj_paths()};
+    fs::remove_all(projPaths.output().test_summaries());
+
+    runner.register_test<summary_collider_test>();
+    check_exception_thrown<std::runtime_error>(
+      reporter{"A selected test whose summary file is an unselected test's"},
+      [&runner](){ runner.register_test<summary_collider_test_twin>(); });
+
+    check(equality, "Summary collision with an unselected test return code", runner.execute(), return_code::success);
+
+    const test_summary_path collidingSummary{summary_collider_test_twin::source_file(),
+                                             test_name<summary_collider_test_twin>(),
+                                             projPaths,
+                                             null_discriminator};
+
+    check("The runner writes no summary to the colliding file", !fs::exists(collidingSummary.file_path()));
+  }
+
+  /** The runner writes the summary of `summary_collider_test` to the file
+      which the test's summary discriminator names, not to the undiscriminated
+      file. The summaries directory is removed first, so that only this run can
+      have written either file.
+   */
+  void test_runner_test::test_discriminated_summary()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    const auto& projPaths{runner.proj_paths()};
+    fs::remove_all(projPaths.output().test_summaries());
+
+    runner.register_test<summary_collider_test>();
+
+    check(equality, "Discriminated summary return code", runner.execute(), return_code::success);
+
+    const auto source{summary_collider_test::source_file()};
+    constexpr auto name{test_name<summary_collider_test>()};
+    const test_summary_path
+      discriminatedSummary  {source, name, projPaths, "Twin"},
+      undiscriminatedSummary{source, name, projPaths, null_discriminator};
+
+    check("The runner writes the summary to the file the discriminator names",
+          fs::exists(discriminatedSummary.file_path()));
+    check("The runner writes no summary to the undiscriminated file",
+          !fs::exists(undiscriminatedSummary.file_path()));
+  }
+
+  void test_runner_test::test_filtered_suites()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing"}};
+
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
 
@@ -762,6 +1745,39 @@ namespace sequoia::testing
     check_output("Filtered Suite Output", "FilteredSuiteOutput", outputStream);
   }
 
+  void test_runner_test::test_suites_not_found()
+  {
+    // No suite matches either request. Only the request naming a source file draws a hint to use 'select'.
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Absent", "test", "absent_test.cpp"}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<passing_test>();
+    runner.register_test<failing_test>();
+
+    check(equality, "Suites not found return code", runner.execute(), return_code::success);
+    check_output("Suites Not Found Output", "SuitesNotFoundOutput", outputStream);
+  }
+
+  void test_runner_test::test_selections_not_found()
+  {
+    // No source file matches either request. Only the request with no
+    // extension draws a hint to use 'test'.
+    std::stringstream outputStream{};
+    commandline_arguments args{
+      {(minimal_fake_path()).generic_string(), "select", "Absent", "select", "absent_test.cpp"}
+    };
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<passing_test>();
+    runner.register_test<failing_test>();
+
+    check(equality, "Selections not found return code", runner.execute(), return_code::success);
+    check_output("Selections Not Found Output", "SelectionsNotFoundOutput", outputStream);
+  }
+
   void test_runner_test::test_prune_basic_output()
   {
     fs::remove_all(output_paths{fake_project()}.dir());
@@ -769,12 +1785,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     check(equality, "Prune with no stamp return code", runner.execute(), return_code::success);
     check_output("Prune with no stamp", "PruneWithNoStamp", outputStream);
@@ -844,12 +1855,7 @@ namespace sequoia::testing
     fs::last_write_time(projPaths.executable(), now);
 
     std::stringstream outputStream{};
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     check(equality, "Prune with changed toolchain return code", runner.execute(), return_code::success);
     check_output("Prune with changed toolchain", "PruneWithChangedToolchain", outputStream);
@@ -879,16 +1885,43 @@ namespace sequoia::testing
     fs::last_write_time(projPaths.executable(), now);
 
     std::stringstream outputStream{};
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     check(equality, "Prune selecting an unregistered test return code", runner.execute(), return_code::success);
     check_output("Prune selecting an unregistered test", "PruneSelectsUnregisteredOutput", outputStream);
+  }
+
+  void test_runner_test::test_prune_with_nothing_stale()
+  {
+    // Every file the build read predates the previous run's stamp. The
+    // registered test is not in the build, so it runs only if prune's empty
+    // selection is taken for a selection of everything.
+    const auto build{write_fake_build()};
+
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
+    const project_paths::customizer customization{
+      .main_cpp{"TestSandbox/TestSandbox.cpp"},
+      .common_includes{"TestShared/SharedIncludes.hpp"}
+    };
+    const project_paths projPaths{args.size(), args.get(), customization};
+    const auto stamp{projPaths.prune().stamp()};
+    fs::create_directories(stamp.parent_path());
+    write_to_file(stamp, "", std::ios_base::out);
+
+    using namespace std::chrono_literals;
+    const auto now{std::chrono::file_clock::now()};
+    fs::last_write_time(build.toolchainHeader, now - 3s);
+    fs::last_write_time(build.source, now - 2s);
+    fs::last_write_time(stamp, now - 1s);
+    fs::last_write_time(projPaths.executable(), now);
+
+    std::stringstream outputStream{};
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<passing_test>();
+    check(equality, "Prune with nothing stale return code", runner.execute(), return_code::success);
+    check_output("Prune with nothing stale", "PruneWithNothingStaleOutput", outputStream);
   }
 
   void test_runner_test::test_post_run_failure()
@@ -896,12 +1929,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing"}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     runner.register_test<failing_test>();
@@ -915,17 +1943,162 @@ namespace sequoia::testing
     check_output("Post-Run Failure Output", "PostRunFailureOutput", outputStream);
   }
 
+  void test_runner_test::test_materials_update()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<stale_predictions_free_test>();
+
+    check(equality, "Materials update return code", runner.execute(), return_code::soft_failures);
+    check_output("Materials Update Output", "MaterialsUpdateOutput", outputStream);
+
+    const auto predictions{
+      fake_project() / "TestMaterials/Updating/StalePredictionsFreeTest" / "stale_predictions_free_test/Prediction"
+    };
+
+    check(equality,
+          "Prediction overwritten",
+          read_to_string(predictions / "Kept.txt", std::ios_base::in).value_or(""),
+          std::string{"Obtained\n"});
+
+    check("Prediction deleted", !fs::exists(predictions / "Obsolete.txt"));
+  }
+
+  /** As `test_materials_update`, which shows the update happening, except that the fake throws after
+      its failed check. The soft failure is still recorded, so only the critical failure can stop the update.
+   */
+  void test_runner_test::test_no_materials_update_after_critical_failure()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<throwing_stale_predictions_free_test>();
+
+    check(equality,
+          "No materials update after a critical failure return code",
+          runner.execute(),
+          return_code::soft_failures | return_code::critical_failures);
+
+    check_output("No Materials Update After a Critical Failure Output",
+                 "NoMaterialsUpdateAfterCriticalFailureOutput",
+                 outputStream);
+
+    const auto predictions{
+      fake_project() / "TestMaterials/Updating/ThrowingStalePredictionsFreeTest" / "throwing_stale_predictions_free_test/Prediction"
+    };
+
+    check(equality,
+          "Prediction not overwritten",
+          read_to_string(predictions / "Kept.txt", std::ios_base::in).value_or(""),
+          std::string{"Predicted\n"});
+
+    check("Prediction not deleted", fs::exists(predictions / "Obsolete.txt"));
+  }
+
+  void test_runner_test::test_partial_materials_update()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<type_swapped_predictions_free_test>();
+
+    check(equality,
+          "Partial materials update return code",
+          runner.execute(),
+          return_code::soft_failures | return_code::post_run_failures);
+
+    check_output("Partial Materials Update Output", "PartialMaterialsUpdateOutput", outputStream);
+  }
+
+  /** The counterpart of `test_materials_update` for a test whose materials are discriminated. The
+      declared discriminator's materials are prepared and updated, and the other's are left alone.
+   */
+  void test_runner_test::test_discriminated_materials_update()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<variant_free_test>();
+
+    check(equality, "Discriminated materials update return code", runner.execute(), return_code::soft_failures);
+    check_output("Discriminated Materials Update Output", "DiscriminatedMaterialsUpdateOutput", outputStream);
+
+    const auto materials{fake_project() / "TestMaterials/Updating/VariantFreeTest/variant_free_test"};
+
+    check(equality,
+          "Declared discriminator's prediction overwritten",
+          read_to_string(materials / "Platypus/Prediction/Kept.txt", std::ios_base::in).value_or(""),
+          std::string{"Obtained\n"});
+
+    check("Declared discriminator's prediction deleted", !fs::exists(materials / "Platypus/Prediction/Obsolete.txt"));
+
+    check(equality,
+          "Other discriminator's prediction not overwritten",
+          read_to_string(materials / "Echidna/Prediction/Kept.txt", std::ios_base::in).value_or(""),
+          std::string{"Predicted\n"});
+
+    check("Other discriminator's prediction not deleted", fs::exists(materials / "Echidna/Prediction/Obsolete.txt"));
+  }
+
+  /** One run updates the materials of two tests. Earlier tests update the
+      same materials, so this test restores their predictions first: each
+      overwrite and deletion checked here is then this run's.
+   */
+  void test_runner_test::test_materials_update_of_two_tests()
+  {
+    const auto firstTestPredictions{
+      fake_project() / "TestMaterials/Updating/StalePredictionsFreeTest/stale_predictions_free_test/Prediction"
+    };
+
+    const auto secondTestPredictions{
+      fake_project() / "TestMaterials/Updating/VariantFreeTest/variant_free_test/Platypus/Prediction"
+    };
+
+    for(const auto& predictions : {firstTestPredictions, secondTestPredictions})
+    {
+      write_to_file(predictions / "Kept.txt",     "Predicted\n",             std::ios_base::out);
+      write_to_file(predictions / "Obsolete.txt", "Nothing produces this\n", std::ios_base::out);
+    }
+
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<stale_predictions_free_test>();
+    runner.register_test<variant_free_test>();
+
+    check(equality, "Two tests' materials update return code", runner.execute(), return_code::soft_failures);
+    check_output("Two Tests' Materials Update Output", "TwoTestsMaterialsUpdateOutput", outputStream);
+
+    check(equality,
+          "First test's prediction overwritten",
+          read_to_string(firstTestPredictions / "Kept.txt", std::ios_base::in).value_or(""),
+          std::string{"Obtained\n"});
+
+    check(equality,
+          "Second test's prediction overwritten",
+          read_to_string(secondTestPredictions / "Kept.txt", std::ios_base::in).value_or(""),
+          std::string{"Obtained\n"});
+
+    check("First test's prediction deleted",  !fs::exists(firstTestPredictions / "Obsolete.txt"));
+    check("Second test's prediction deleted", !fs::exists(secondTestPredictions / "Obsolete.txt"));
+  }
+
   void test_runner_test::test_nested_suite()
   {
       std::stringstream outputStream{};
       commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-      test_runner runner{args.size(),
-                         args.get(),
-                         "Oliver J. Rosten",
-                         "  ",
-                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                         outputStream};
+      auto runner{make_fake_runner(args, outputStream)};
 
       using namespace object;
 
@@ -942,12 +2115,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v"}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<namesake_test>();
     runner.register_test<under_namesake_test>();
@@ -961,12 +2129,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v"}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     using namespace object;
 
@@ -988,12 +2151,7 @@ namespace sequoia::testing
         argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
         commandline_arguments args{argList};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         runner.register_test<fake_performance_test>();
@@ -1018,12 +2176,7 @@ namespace sequoia::testing
         argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
         commandline_arguments args{argList};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         runner.register_test<failing_test>();
@@ -1066,12 +2219,7 @@ namespace sequoia::testing
         commandline_arguments args{argList};
 
         std::stringstream outputStream{};
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         runner.register_test<fake_performance_test>();
@@ -1109,12 +2257,7 @@ namespace sequoia::testing
         commandline_arguments args{argList};
 
         std::stringstream outputStream{};
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         if(registered != registrations::passing)
@@ -1136,12 +2279,7 @@ namespace sequoia::testing
           commandline_arguments args{argList};
 
           std::stringstream outputStream{};
-          test_runner runner{args.size(),
-                             args.get(),
-                             "Oliver J. Rosten",
-                             "  ",
-                             {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                             outputStream};
+          auto runner{make_fake_runner(args, outputStream)};
 
           runner.register_test<passing_test>();
           return runner.execute();
@@ -1185,6 +2323,38 @@ namespace sequoia::testing
 
     recoveringRunner.register_test<passing_test>();
     check(equality, "recover on a fresh tree", recoveringRunner.execute(), return_code::success);
+    check("A recovery run which ran a check leaves a recovery file", fs::exists(recovery.recovery_file()));
+
+    // A run which records nothing must not leave the previous run's record looking like the new run's
+    std::stringstream emptyRecoveryStream{};
+    test_runner emptyRecoveryRunner{recoveringArgs.size(),
+                                    recoveringArgs.get(),
+                                    "Oliver J. Rosten",
+                                    "  ",
+                                    {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                                    emptyRecoveryStream};
+
+    check(equality, "recover with no tests", emptyRecoveryRunner.execute(), return_code::success);
+    check("A recovery run which ran no check leaves no recovery file", !fs::exists(recovery.recovery_file()));
+  }
+
+  void test_runner_test::test_thread_pool()
+  {
+    auto run{
+      [this](std::string_view description, std::string_view outputDirName, std::string_view poolSize) {
+        commandline_arguments args{{zeroth_arg(), "--thread-pool", std::string{poolSize}}};
+
+        std::stringstream outputStream{};
+        auto runner{make_fake_runner(args, outputStream)};
+
+        runner.register_test<passing_test>();
+        check(equality, append_lines(description, "Return code"), runner.execute(), return_code::success);
+        check_output(description, outputDirName, outputStream);
+      }
+    };
+
+    run("A pool of no threads is refused, and the run goes ahead", "ThreadPoolOfNoThreadsOutput", "0");
+    run("A pool of two threads running one test",                  "ThreadPoolForOneTestOutput",  "2");
   }
 
   void test_runner_test::test_instability_analysis()
@@ -1279,12 +2449,7 @@ namespace sequoia::testing
 
     commandline_arguments args{argGenerator()};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     (runner.register_test<std::remove_cvref_t<Ts>>(), ...);
 
@@ -1295,10 +2460,7 @@ namespace sequoia::testing
     const auto outputDir{working_materials() /= outputDirName};
     fs::create_directory(outputDir);
 
-    if(std::ofstream file{outputDir / "io.txt"})
-    {
-      file << outputStream.str();
-    }
+    write_to_file(outputDir / "io.txt", outputStream.str(), std::ios_base::out);
 
     check(equivalence, reporter(append_lines(message, make_type_info<Ts...>())),
                       outputDir,
@@ -1324,5 +2486,506 @@ namespace sequoia::testing
                                                    Ts&&... ts)
   {
     test_instability_analysis(message, outputDirName, numRuns, expected, {}, [](test_runner&){}, std::forward<Ts>(ts)...);
+  }
+
+  namespace
+  {
+    class selected_in_spaced_suite_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<selected_in_spaced_suite_free_test>("Spaced Suite");
+      }
+
+      void run_tests() {}
+    };
+
+    class excluded_from_spaced_suite_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<excluded_from_spaced_suite_free_test>("Spaced Suite");
+      }
+
+      void run_tests() {}
+    };
+  }
+
+  /** A copy of the fake project lies in a directory whose name holds a space, and so does the name of
+      its executable. The executable is a script which stands in for the test runner in each sandbox: it
+      records its arguments, one per line, and creates the directory to which a sandboxed run writes its
+      analysis. The run selects a suite and a source, and excludes a source, each named with a space. The
+      shell splits an unquoted word at the space. So if the coordinator does not quote the path, no
+      sandbox runs, and if it does not quote a selection, the sandboxes record it as two arguments.
+   */
+  void test_runner_test::test_instability_analysis_in_sandboxes_from_a_path_with_a_space()
+  {
+    using runtime::quote_for_shell;
+
+    const auto spacedProject{scratchpad_materials() /= "Spaced Fake Project"};
+    fs::remove_all(spacedProject);
+    fs::copy(fake_project(), spacedProject, fs::copy_options::recursive);
+
+    const auto outputDir{working_materials() /= "SandboxesFromAPathWithASpace"};
+    fs::create_directory(outputDir);
+
+    const auto quotedArgumentsFile{quote_for_shell((outputDir / "Arguments.txt").string())},
+               quotedAnalysisDir{quote_for_shell(output_paths::instability_analysis(fs::canonical(spacedProject)).string())};
+
+    const auto executable{spacedProject / "build/CMade" / (with_windows_v ? "Run Tests.bat" : "Run Tests")};
+    const auto script{
+      with_windows_v ? std::format("@echo off\n"
+                                   "mkdir {} 2>nul\n"
+                                   "for %%a in (%*) do >>{} echo %%~a\n"
+                                   "exit /b 0\n",
+                                   quotedAnalysisDir,
+                                   quotedArgumentsFile)
+                     : std::format("#!/bin/sh\n"
+                                   "mkdir -p {}\n"
+                                   "printf '%s\\n' \"$@\" >> {}\n",
+                                   quotedAnalysisDir,
+                                   quotedArgumentsFile)
+    };
+
+    write_to_file(executable, script, std::ios_base::out);
+    fs::permissions(executable, fs::perms::owner_exec, fs::perm_options::add);
+
+    std::stringstream outputStream{};
+    commandline_arguments args{{executable.generic_string(),
+                                "locate", "2", "--sandbox",
+                                "test", "Spaced Suite",
+                                "select", selected_in_spaced_suite_free_test::source_file().generic_string(),
+                                "exclude", excluded_from_spaced_suite_free_test::source_file().generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+    runner.register_test<selected_in_spaced_suite_free_test>();
+    runner.register_test<excluded_from_spaced_suite_free_test>();
+
+    check(equality, "Both sandboxes run, and the run succeeds", runner.execute(), return_code::success);
+    check(equivalence,
+          "Each sandbox is given the repetitions, its runner id and the selections, each as one argument",
+          outputDir,
+          predictive_materials() /= "SandboxesFromAPathWithASpace");
+  }
+
+  /** A runner given a runner id is one sandbox. The sandbox writes its
+      records under its id. It leaves the other sandboxes' records in
+      place, and leaves the analysis of every sandbox's records to the run
+      which launched them all. The launching side is the subject of
+      `test_instability_analysis_in_sandboxes_from_a_path_with_a_space`.
+   */
+  void test_runner_test::test_sandboxed_repetition()
+  {
+    const auto projectRoot{fs::canonical(fake_project())};
+    auto recordOf{
+      [&projectRoot](std::size_t runnerID) {
+        return output_paths::instability_analysis_file(projectRoot,
+                                                       passing_test::source_file(),
+                                                       test_name<passing_test>(),
+                                                       runnerID);
+      }
+    };
+
+    const std::string anotherRecord{"Another sandbox's record\n"};
+    fs::remove_all(output_paths::instability_analysis(projectRoot));
+    fs::create_directories(recordOf(0).parent_path());
+    write_to_file(recordOf(0), anotherRecord, std::ios_base::out);
+
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "locate", "2", "--runner-id", "1"}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+    runner.register_test<passing_test>();
+
+    // The run which launches the sandboxes prepares this folder first
+    setup_instability_analysis_prune_folder(runner.proj_paths());
+
+    check(equality, "Sandboxed repetition return code", runner.execute(), return_code::success);
+    check_output("Sandboxed Repetition Output", "SandboxedRepetitionOutput", outputStream);
+    check("The sandbox writes its records under its id", fs::exists(recordOf(1)));
+    check(equality,
+          "The sandbox leaves another sandbox's records in place",
+          read_to_string(recordOf(0), std::ios_base::in).value_or(""),
+          anotherRecord);
+  }
+
+  namespace
+  {
+    /// Its original materials hold `Stray.txt` beside the working copy, where nothing uses it
+    class stray_materials_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return "Tests/Preparation/StrayMaterialsFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        check("Run despite stray materials", true);
+      }
+    };
+
+    class unaffected_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return "Tests/Preparation/UnaffectedFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        check("Run beside a test whose materials could not be prepared", true);
+      }
+    };
+  }
+
+  /** A failure to prepare a test's materials is that test's critical failure: it does not run, and
+      the run goes on to the next test.
+   */
+  void test_runner_test::test_materials_preparation_failure()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<stray_materials_free_test>();
+    runner.register_test<unaffected_free_test>();
+
+    check(equality, "Materials preparation failure return code", runner.execute(), return_code::critical_failures);
+    check_output("Materials Preparation Failure Output", "MaterialsPreparationFailureOutput", outputStream);
+
+    const test_execution_record_path
+      record{stray_materials_free_test::source_file(), test_name<stray_materials_free_test>(), runner.proj_paths()};
+
+    check(equality,
+          "A test whose materials could not be prepared has an execution duration of zero: preparing them is overhead",
+          execution_record_value(record.file_path(), "execution duration"),
+          std::string{"0us"});
+  }
+
+  namespace
+  {
+    class unwritable_output_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return "Tests/Output/UnwritableOutputFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        check("Run, though its versioned output cannot be written", true);
+      }
+    };
+
+    class beside_unwritable_output_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return "Tests/Output/BesideUnwritableOutputFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        check("Run beside a test whose versioned output could not be written", true);
+      }
+    };
+  }
+
+  /** A failure to write a test's versioned output is that test's critical failure, and the run
+      completes: the other test's results and the grand totals are still reported. A directory where
+      the test's exceptions file belongs makes the write fail.
+   */
+  void test_runner_test::test_versioned_output_failure()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.register_test<unwritable_output_free_test>();
+    runner.register_test<beside_unwritable_output_free_test>();
+
+    fs::create_directories(fake_project() / "output/DiagnosticsOutput/Tests/Output/unwritable_output_free_test_Exceptions.txt");
+
+    check(equality, "Versioned output failure return code", runner.execute(), return_code::critical_failures);
+    check_output("Versioned Output Failure Output", "VersionedOutputFailureOutput", outputStream);
+  }
+
+  /** With the fake project's output removed, the first checked run finds
+      that its versioned output differs from what was on disk, and writes a
+      patch. The second run finds exactly what the first left.
+   */
+  void test_runner_test::test_versioned_output_check()
+  {
+    fs::remove_all(output_paths{fake_project()}.dir());
+
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "--check-versioned-output"}};
+
+    {
+      std::stringstream outputStream{};
+      auto runner{make_fake_runner(args, outputStream)};
+      runner.register_test<passing_test>();
+
+      check(equality, "Drifted versioned output return code", runner.execute(), return_code::versioned_output_diffs);
+      check_output("Drifted Versioned Output", "DriftedVersionedOutput", outputStream);
+      check("The drifted run writes a patch", fs::exists(runner.proj_paths().output().drift().patch_file()));
+    }
+
+    {
+      std::stringstream outputStream{};
+      auto runner{make_fake_runner(args, outputStream)};
+      runner.register_test<passing_test>();
+
+      check(equality, "Stable versioned output return code", runner.execute(), return_code::success);
+      check_output("Stable Versioned Output", "StableVersionedOutput", outputStream);
+      check("The stable run writes no patch", !fs::exists(runner.proj_paths().output().drift().patch_file()));
+    }
+  }
+
+  namespace
+  {
+    class scratch_writing_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return "Tests/Discarding/ScratchWritingFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        write_to_file(scratchpad_materials() / "Written.txt", "", std::ios_base::out);
+        check("Wrote to its scratchpad", true);
+      }
+    };
+  }
+
+  /** Before the run, the fake test's temporary root holds `PreviousRun.txt`,
+      and its discarded root holds `DeadRun.txt`, as a run which died would
+      leave it. After the run:
+      -# `DeadRun.txt` is gone. The test's preparation removes it before
+         moving the temporary root, which otherwise could not be moved to the
+         discarded root, and would be removed in place;
+      -# `PreviousRun.txt` is gone from both roots. Once the temporary root has
+         moved, only the remover can remove it;
+      -# The file the test wrote to its scratchpad remains, so the remover
+         never removed the fresh temporary root.
+   */
+  void test_runner_test::test_discarded_materials_removal()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<scratch_writing_free_test>();
+
+    const individual_materials_paths materials{
+      scratch_writing_free_test::source_file(),
+      test_name<scratch_writing_free_test>(),
+      runner.proj_paths(),
+      null_discriminator
+    };
+
+    const auto& temporaryRoot{materials.temporary_materials_root()};
+    const auto  discardedRoot{materials.discarded_materials_root()};
+
+    fs::create_directories(temporaryRoot);
+    fs::create_directories(discardedRoot);
+    write_to_file(temporaryRoot / "PreviousRun.txt", "", std::ios_base::out);
+    write_to_file(discardedRoot / "DeadRun.txt",     "", std::ios_base::out);
+
+    check(equality, "Discarded materials removal return code", runner.execute(), return_code::success);
+
+    check("A discarded root left by a run which died is removed", !fs::exists(discardedRoot / "DeadRun.txt"));
+    check("The previous temporary root is not left discarded",    !fs::exists(discardedRoot / "PreviousRun.txt"));
+    check("The previous temporary root is not left in place",     !fs::exists(temporaryRoot / "PreviousRun.txt"));
+    check("The fresh temporary root keeps what the test wrote",   fs::exists(temporaryRoot / "Written.txt"));
+  }
+
+  /** A discarded root which cannot be removed is a post-run failure, though
+      the test it belongs to passes.
+   */
+  void test_runner_test::test_discarded_materials_removal_failure()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<scratch_writing_free_test>();
+
+    const individual_materials_paths materials{
+      scratch_writing_free_test::source_file(),
+      test_name<scratch_writing_free_test>(),
+      runner.proj_paths(),
+      null_discriminator
+    };
+
+    const unremovable_directory unremovable{materials.discarded_materials_root()};
+
+    check(equality,
+          "Discarded materials removal failure return code",
+          runner.execute(),
+          return_code::post_run_failures);
+
+    check_output("Discarded Materials Removal Failure Output", "DiscardedMaterialsRemovalFailureOutput", outputStream);
+  }
+
+  /** A removal enqueued after its remover has joined never runs, so once the
+      remover is destroyed, the removal's future holds a `std::future_error`.
+      The test to run reports that as a failure naming the discarded root.
+      The exception's message is the library's, so it is not checked.
+   */
+  void test_runner_test::test_discarded_materials_removal_exception()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    const auto runner{make_fake_runner(args, outputStream)};
+    const auto& projPaths{runner.proj_paths()};
+
+    const cmake_cache cache{projPaths.build()};
+    const auto source{scratch_writing_free_test::source_file()};
+    constexpr auto name{test_name<scratch_writing_free_test>()};
+    const auto summaryDiscriminator{get_discriminator<summary_discriminator_probe, scratch_writing_free_test>(cache)};
+
+    test_to_run testToRun{test_vessel{make_test<scratch_writing_free_test>(projPaths, cache, recovery_mode::none)},
+                          test_summary_path{source, name, projPaths, summaryDiscriminator},
+                          test_execution_record_path{source, name, projPaths}};
+
+    const auto& materials{testToRun.materials_paths()};
+    fs::remove_all(materials.discarded_materials_root());
+    fs::create_directories(materials.temporary_materials_root());
+
+    {
+      discarded_materials_remover remover{};
+      remover.join();
+      check(equality,
+            "Materials prepared, so the removal enqueued",
+            testToRun.execute(std::nullopt, remover).critical_failures(),
+            0uz);
+    }
+
+    check(equality,
+          "A removal which threw is a failure naming the discarded root",
+          testToRun.extract_discarded_materials_removal_failure().value_or(removal_failure{}).dir,
+          materials.discarded_materials_root());
+  }
+
+  void test_runner_test::test_exit_statuses()
+  {
+    // The expected statuses are literals, so that the expectations do not restate the implementation's formula.
+    check(equality, "Success exits with 0",                   to_exit_code(return_code::success),                0);
+    check(equality, "Versioned output diffs exit with 81",    to_exit_code(return_code::versioned_output_diffs), 81);
+    check(equality, "Soft failures exit with 82",             to_exit_code(return_code::soft_failures),          82);
+    check(equality, "Critical failures exit with 84",         to_exit_code(return_code::critical_failures),      84);
+    check(equality, "An incomplete run exits with 88",        to_exit_code(return_code::incomplete_run),         88);
+    check(equality, "Post-run failures exit with 96",         to_exit_code(return_code::post_run_failures),      96);
+    check(equality, "Every flag together exits with 111",     to_exit_code(static_cast<return_code>(31)),         111);
+    check(equality,
+          "Bits no status can carry exit as an incomplete run",
+          to_exit_code(static_cast<return_code>(64)),
+          88);
+
+    // Every combination of the five flags survives the round trip.
+    const auto codes{std::views::iota(0, 32) | std::views::transform([](int i){ return static_cast<return_code>(i); })};
+    auto roundTrip{[](return_code code){ return child_return_code(to_exit_code(code), "A child"); }};
+    check(equality,
+          "Each exit status decodes to the code it encodes",
+          codes | std::views::transform(roundTrip) | std::ranges::to<std::vector>(),
+          codes | std::ranges::to<std::vector>());
+
+    check(equality,
+          "A child exiting 88 reports an incomplete run",
+          child_return_code(88, "A child"),
+          return_code::incomplete_run);
+
+    // The first seven statuses are those a process gives when it fails for reasons of its own: generic,
+    // LeakSanitizer's, the ends of sysexits' range, ThreadSanitizer's and MemorySanitizer's. The last two lie
+    // either side of the runner's range. Each status is worded alike on every platform, so the whole message is checked.
+    for(const int status : {1, 2, 23, 64, 66, 77, 78, 80, 112})
+    {
+      check_exception_thrown<std::runtime_error>(
+        std::format("Exit status {} is not a runner's", status),
+        [status](){ return child_return_code(status, "A child"); });
+    }
+
+    // The wording for these statuses differs by platform, so only the refusal is checked.
+    auto refused{
+      [](int status) {
+        try
+        {
+          (void)child_return_code(status, "A child");
+        }
+        catch(const std::runtime_error&)
+        {
+          return true;
+        }
+
+        return false;
+      }
+    };
+
+    check("A status of -1 is refused",                refused(-1));
+    check("A status near INT_MIN is refused",         refused(std::numeric_limits<int>::min() + 3));
+    check("A shell's 'not executable' is refused",    refused(126));
+    check("A shell's 'not found' is refused",         refused(127));
+    check("A status above 128 is refused",            refused(139));
+  }
+
+  void test_runner_test::test_return_code_names()
+  {
+    using namespace std::string_literals;
+    using enum return_code;
+
+    check(equality, "Success",                to_string(success),                "success"s);
+    check(equality, "Versioned output diffs", to_string(versioned_output_diffs), "versioned_output_diffs"s);
+    check(equality, "Soft failures",          to_string(soft_failures),          "soft_failures"s);
+    check(equality, "Critical failures",      to_string(critical_failures),      "critical_failures"s);
+    check(equality, "An incomplete run",      to_string(incomplete_run),         "incomplete_run"s);
+    check(equality, "Post-run failures",      to_string(post_run_failures),      "post_run_failures"s);
+    check(equality,
+          "Every flag together, joined in the order of the bits",
+          to_string(static_cast<return_code>(31)),
+          "versioned_output_diffs|soft_failures|critical_failures|incomplete_run|post_run_failures"s);
+
+    check_exception_thrown<std::logic_error>(
+      "Bits no flag occupies",
+      [](){ return to_string(static_cast<return_code>(64)); });
   }
 }

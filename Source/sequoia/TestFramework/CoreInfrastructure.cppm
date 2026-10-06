@@ -60,7 +60,11 @@ export namespace sequoia::testing
     return serializer<T>::make(value);
   }
 
-  /** \brief Primary class template for converting unsigned types of implementation-defined size into fixed-width types. */
+  /** \brief Primary class template mapping a type to itself.
+
+      The specializations map an unsigned integer type of 32 or 64 bits to the fixed-width type of its size. A
+      `character` type is left as it is.
+   */
   template<class T>
   struct type_normalizer
   {
@@ -68,14 +72,14 @@ export namespace sequoia::testing
   };
 
   template<class T>
-    requires (std::is_unsigned_v<T> && (sizeof(T) == sizeof(std::uint64_t)))
+    requires (integer<T> && std::is_unsigned_v<T> && (sizeof(T) == sizeof(std::uint64_t)))
   struct type_normalizer<T>
   {
     using type = std::uint64_t;
   };
 
   template<class T>
-    requires (std::is_unsigned_v<T> && (sizeof(T) == sizeof(std::uint32_t)))
+    requires (integer<T> && std::is_unsigned_v<T> && (sizeof(T) == sizeof(std::uint32_t)))
   struct type_normalizer<T>
   {
     using type = std::uint32_t;
@@ -93,9 +97,11 @@ export namespace sequoia::testing
     return static_cast<type_normalizer_t<U>>(x);
   }
 
-  struct uncaught_exception_info
+  struct top_level_check_exit_info
   {
-    int num{};
-    std::string top_level_message{};
+    bool via_exception{};
+    std::string message{};
   };
+
+  using opt_top_level_check_exit_info = std::optional<top_level_check_exit_info>;
 }

@@ -14,7 +14,7 @@ import sequoia.test_framework;
 
 namespace ?::testing
 {
-	using namespace sequoia::testing;class ?forename_?surname final : public ?_test
+	using namespace sequoia::testing;class ?test_name final : public ?_test
 	{
 	public:
 		using ?_test::?_test;

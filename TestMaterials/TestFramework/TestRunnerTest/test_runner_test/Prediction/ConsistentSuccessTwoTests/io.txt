@@ -3,14 +3,17 @@ Running tests, synchronously...
 
 another_consistently_passing_free_test:
 [Execution Time: 212us]
+[Runner Overhead: 627us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 consistently_passing_free_test:
 [Execution Time: 151us]
+[Runner Overhead: 692us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
 [Total Run Time: 852us]
 [Execution Time: 363us]
+[Runner Overhead: 1.32ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -22,14 +25,17 @@ Running tests, synchronously...
 
 another_consistently_passing_free_test:
 [Execution Time: 49us]
+[Runner Overhead: 566us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 consistently_passing_free_test:
 [Execution Time: 42.5us]
+[Runner Overhead: 573us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
 [Total Run Time: 497us]
 [Execution Time: 91.5us]
+[Runner Overhead: 1.14ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

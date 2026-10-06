@@ -1,0 +1,48 @@
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 119
+A main with no call to runner.execute
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to find the point of registration in output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_test/WorkingCopy/Registration/NoExecution/Main.cpp
+
+=======================================
+
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 124
+No tests to register
+
+Expected Exception Type:
+[std::logic_error]
+No tests specified for registration
+
+=======================================
+
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 178
+A line of spaces is refused, naming its line
+
+Expected Exception Type:
+[std::runtime_error]
+Line 3 of a .seqpat holds only whitespace, which is ambiguous: delete the line, or write the pattern explicitly, such as [ ] or [ \t]
+output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_test/WorkingCopy/ContentsUnderComparison.seqpat
+
+=======================================
+
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 179
+A line holding only a tab is refused, naming its line
+
+Expected Exception Type:
+[std::runtime_error]
+Line 2 of a .seqpat holds only whitespace, which is ambiguous: delete the line, or write the pattern explicitly, such as [ ] or [ \t]
+output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_test/WorkingCopy/ContentsUnderComparison.seqpat
+
+=======================================
+
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 180
+An invalid pattern is refused, naming its line, empty lines counted
+
+Expected Exception Type:
+[std::runtime_error]
+Line 3 of a .seqpat is not a valid regular expression: (
+output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_test/WorkingCopy/ContentsUnderComparison.seqpat
+
+=======================================
+

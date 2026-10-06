@@ -5,8 +5,9 @@ flipper_free_test:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 462us]
-[Execution Time: 162us]
+[Total Run Time: 412us]
+[Execution Time: 147us]
+[Runner Overhead: 1.1ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -19,7 +20,7 @@ Running tests...
 flipper_free_test:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Unstable/FlipperFreeTest.cpp, Line 27
+	Tests/Unstable/FlipperFreeTest.cpp, Line 25
 
 	[bool]
 	operator== returned false
@@ -30,8 +31,9 @@ flipper_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 396us]
-[Execution Time: 125us]
+[Total Run Time: 360us]
+[Execution Time: 127us]
+[Runner Overhead: 1.06ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -47,7 +49,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Unstable/FlipperFreeTest.cpp, Line 27
+	Tests/Unstable/FlipperFreeTest.cpp, Line 25
 
 	[bool]
 	operator== returned false

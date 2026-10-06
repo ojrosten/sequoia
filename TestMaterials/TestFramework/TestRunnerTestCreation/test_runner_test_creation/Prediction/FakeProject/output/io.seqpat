@@ -10,3 +10,4 @@ CMake Warning \(experimental\) at .*\n  CMake's support for `import std;` in C\+
 (?= to: ).*(?=build/TestSandbox/)
 [^/\n]+(?=\n$)
 Preset((.|\n|)*?)(?=--)
+(?=cannot be checked: ).*

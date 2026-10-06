@@ -21,6 +21,9 @@ import :ProjectPaths;
 
     `prune` reads those, and the build's record of what each test was built from, and selects
     the tests which are stale or are to be rerun.
+
+    The same record names the files which the compilations of sequoia's sources read, and so shows
+    whether sequoia itself has changed since the executable's build.
  */
 
 export namespace sequoia::testing
@@ -44,6 +47,9 @@ export namespace sequoia::testing
     friend std::istream& operator>>(std::istream& s, prune_record& record);
   };
 
+  [[nodiscard]]
+  std::string to_string(const prune_record& record);
+
   /** \brief The time after which a modification counts as later than the run which wrote `stamp`.
 
       -# Where the filesystem records sub-second times, the threshold is the stamp itself.
@@ -66,7 +72,12 @@ export namespace sequoia::testing
   [[nodiscard]]
   std::vector<prune_record> read_tests(const std::filesystem::path& file);
 
-  /** \brief Writes `tests` to `file`, each source path made relative to the tests repository. */
+  /** \brief Writes `tests` to `file`, each source path made relative to the
+             tests repository.
+
+      \throws std::runtime_error if writing `tests` to `file` fails; `file`
+              then keeps its previous contents
+   */
   void write_tests(const project_paths& projPaths, const std::filesystem::path& file, std::span<const prune_record> tests);
 
   /** \brief Why a requested prune selects every test. */
@@ -121,12 +132,56 @@ export namespace sequoia::testing
                           std::filesystem::file_time_type updateTime,
                           std::optional<std::size_t> id);
 
+  /** \brief The directory of the sequoia sources from which this binary was built, as the compiler recorded
+             the path in the binary.
+
+      In a project which `init` created, the directory lies within the project's copy of sequoia.
+
+      The path may be relative. If the build remaps the paths which a binary records, the path may name
+      another directory.
+   */
+  [[nodiscard]]
+  std::filesystem::path sequoia_sources();
+
+  /** \brief Throws if sequoia has changed since the executable's build.
+
+      sequoia's sources lie within `sequoiaSources`. sequoia's own files are the files which both:
+      -# Lie within `sequoiaSources`;
+      -# Were read by the compilation of an object whose source lies within `sequoiaSources`.
+
+      So these do not count:
+      -# A header of sequoia's which only the tests, or the project which uses sequoia, read;
+      -# A file of the toolchain's, of another library's, of the tests' or of the project which uses sequoia.
+
+      If the function cannot make the check, the function writes a warning to `stream` and throws nothing.
+      The function cannot make the check if:
+      -# `sequoiaSources` is relative;
+      -# The function cannot find the executable;
+      -# The function needs the build's record, but cannot read the record;
+      -# The function needs the build's record, but the record names no object whose source lies within
+         `sequoiaSources`.
+
+      The function may find from modification times alone that sequoia is unchanged, and then does not need
+      the record.
+
+      \throws std::runtime_error if
+      -# One of sequoia's own files is no older than the executable;
+      -# The function cannot read the modification time of one of sequoia's own files.
+   */
+  void throw_if_sequoia_changed_since_build(const project_paths& projPaths,
+                                            const std::filesystem::path& sequoiaSources,
+                                            std::ostream& stream);
+
   /** \brief Empties the directory in which the repetitions of an instability analysis leave their prune files. */
   void setup_instability_analysis_prune_folder(const project_paths& projPaths);
 
   /** \brief Folds the repetitions' prune files into the run's, then removes the repetitions' files.
 
       A test to rerun after any repetition is to rerun; a test passing in every repetition passed.
+      -# The run's passes file records each test passing in every repetition with the first
+         repetition's stamp, and the prune stamp does not change. Both hold if `mode` is passive and
+         every repetition wrote a passes file;
+      -# Otherwise, `timeStamp` becomes the prune stamp, and the run's passes file is removed.
    */
   void aggregate_instability_analysis_prune_files(const project_paths& projPaths,
                                                   prune_mode mode,

@@ -26,5 +26,9 @@ namespace sequoia::testing
     static std::filesystem::path source_file();
 
     void run_tests();
+  private:
+    void test_copyability();
+
+    void test_index_type_constraint();
   };
 }

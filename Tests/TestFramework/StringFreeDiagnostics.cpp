@@ -76,6 +76,9 @@ namespace sequoia::testing
     check(equivalence, "", String{"foo"}, "fob", tutor{[](char, char) {
         return "Sort your chars out!";
       }});
+    check(equivalence, "Lengths differ, with advice for characters", String{"foo"}, std::string{"fo"}, tutor{[](char, char) {
+        return "Sort your chars out!";
+      }});
   }
 
   template<class String>

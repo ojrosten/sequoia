@@ -1,0 +1,4 @@
+Usage: foo --async
+
+Run asynchronously
+Each test on its own thread

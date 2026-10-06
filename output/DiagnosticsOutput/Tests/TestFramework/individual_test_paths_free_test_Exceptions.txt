@@ -1,4 +1,58 @@
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 43
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 197
+No test: no discarded materials root
+
+Expected Exception Type:
+[std::logic_error]
+Empty materials root: '.discarded' would resolve against the current directory
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 199
+No test: no original working copy
+
+Expected Exception Type:
+[std::logic_error]
+Empty materials root: 'WorkingCopy' would resolve against the current directory
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 201
+No test: no temporary working copy
+
+Expected Exception Type:
+[std::logic_error]
+Empty materials root: 'WorkingCopy' would resolve against the current directory
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 203
+No test: no predictions
+
+Expected Exception Type:
+[std::logic_error]
+Empty materials root: 'Prediction' would resolve against the current directory
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 205
+No test: no original auxiliary
+
+Expected Exception Type:
+[std::logic_error]
+Empty materials root: 'Auxiliary' would resolve against the current directory
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 207
+No test: no temporary auxiliary
+
+Expected Exception Type:
+[std::logic_error]
+Empty materials root: 'Auxiliary' would resolve against the current directory
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 46
 Empty file
 
 Expected Exception Type:

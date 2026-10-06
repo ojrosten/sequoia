@@ -90,8 +90,8 @@ export namespace sequoia::testing
                                std::move(y),
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const U>{movedFromPostConstruction},
-                               optional_ref<const U>{movedFromPostAssignment},
+                               opt_ref<const U>{movedFromPostConstruction},
+                               opt_ref<const U>{movedFromPostAssignment},
                                std::move(yMutator),
                                info...);
     }
@@ -113,8 +113,8 @@ export namespace sequoia::testing
                                std::move(y),
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const U>{},
-                               optional_ref<const U>{},
+                               opt_ref<const U>{},
+                               opt_ref<const U>{},
                                std::move(yMutator),
                                info...);
     }
@@ -142,8 +142,8 @@ export namespace sequoia::testing
                                       self.m_Logger,
                                       std::move(xFn),
                                       std::move(yFn),
-                                      optional_ref<const T>{movedFromPostConstruction},
-                                      optional_ref<const T>{movedFromPostAssignment},
+                                      opt_ref<const T>{movedFromPostConstruction},
+                                      opt_ref<const T>{movedFromPostAssignment},
                                       std::move(yMutator),
                                       info...);
     }
@@ -164,8 +164,8 @@ export namespace sequoia::testing
                                       self.m_Logger,
                                       std::move(xFn),
                                       std::move(yFn),
-                                      optional_ref<const T>{},
-                                      optional_ref<const T>{},
+                                      opt_ref<const T>{},
+                                      opt_ref<const T>{},
                                       std::move(yMutator),
                                       info...);
     }
@@ -190,8 +190,8 @@ export namespace sequoia::testing
                                std::move(y),
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const U>{movedFromPostConstruction},
-                               optional_ref<const U>{movedFromPostAssignment},
+                               opt_ref<const U>{movedFromPostConstruction},
+                               opt_ref<const U>{movedFromPostAssignment},
                                order,
                                std::move(yMutator),
                                info...);
@@ -215,8 +215,8 @@ export namespace sequoia::testing
                                std::move(y),
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const U>{},
-                               optional_ref<const U>{},
+                               opt_ref<const U>{},
+                               opt_ref<const U>{},
                                order,
                                std::move(yMutator),
                                info...);
@@ -246,8 +246,8 @@ export namespace sequoia::testing
                                       self.m_Logger,
                                       std::move(xFn),
                                       std::move(yFn),
-                                      optional_ref<const T>{movedFromPostConstruction},
-                                      optional_ref<const T>{movedFromPostAssignment},
+                                      opt_ref<const T>{movedFromPostConstruction},
+                                      opt_ref<const T>{movedFromPostAssignment},
                                       order,
                                       std::move(yMutator),
                                       info...);
@@ -275,8 +275,8 @@ export namespace sequoia::testing
                                       self.m_Logger,
                                       std::move(xFn),
                                       std::move(yFn),
-                                      optional_ref<const T>{},
-                                      optional_ref<const T>{},
+                                      opt_ref<const T>{},
+                                      opt_ref<const T>{},
                                       order,
                                       std::move(yMutator),
                                       info...);
