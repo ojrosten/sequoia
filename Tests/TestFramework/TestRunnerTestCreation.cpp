@@ -68,6 +68,19 @@ namespace sequoia::testing
     check("tuple<int>",    needs_reference_suffix("tuple<int>"));
     check("tuple<int >",   needs_reference_suffix("tuple<int >"));
     check("tuple< int >",  needs_reference_suffix("tuple< int >"));
+
+    // Each spelling below contains a shorter spelling from the list, such as
+    // "signed", "int" or "char". Only a whole first token matches the list.
+    check("unsigned int",        !needs_reference_suffix("unsigned int"));
+    check("uint8_t",             !needs_reference_suffix("uint8_t"));
+    check("int64_t",             !needs_reference_suffix("int64_t"));
+    check("std::int64_t",        !needs_reference_suffix("std::int64_t"));
+    check("char16_t",            !needs_reference_suffix("char16_t"));
+    check("wchar_t",             !needs_reference_suffix("wchar_t"));
+    check("std::intptr_t",        needs_reference_suffix("std::intptr_t"));
+
+    // The first token is compared, so a listed alias may be followed by more
+    check("std::size_t const",   !needs_reference_suffix("std::size_t const"));
   }
 
   void test_runner_test_creation::test_project_namespace()

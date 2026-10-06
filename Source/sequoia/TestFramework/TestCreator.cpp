@@ -18,6 +18,7 @@
 #include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <algorithm>
 #include <array>
 #include <chrono>
 #include <format>
@@ -177,27 +178,19 @@ namespace sequoia::testing
 
     const auto startPos{spelling.find_first_not_of(' ')};
     const auto endPos{spelling.find_first_of(' ', startPos)};
-    auto token{spelling.substr(startPos, endPos - startPos)};
+    const auto token{spelling.substr(startPos, endPos - startPos)};
 
-    constexpr std::array<std::string_view, 9> funTypes{"int", "float", "double", "bool", "char", "short", "long", "signed", "unsigned"};
-    for(auto t : funTypes)
-    {
-      if(const auto pos{token.find(t)}; pos != npos)
-      {
-        if(token.size() == t.size()) return false;
+    constexpr auto unsuffixed{std::to_array<std::string_view>({
+      "int", "float", "double", "bool", "char", "short", "long", "signed", "unsigned",
+      "wchar_t", "char8_t", "char16_t", "char32_t",
+      "size_t", "ptrdiff_t",
+      "uint8_t", "uint16_t", "uint32_t", "uint64_t", "int8_t", "int16_t", "int32_t", "int64_t",
+      "std::size_t", "std::ptrdiff_t",
+      "std::uint8_t", "std::uint16_t", "std::uint32_t", "std::uint64_t",
+      "std::int8_t", "std::int16_t", "std::int32_t", "std::int64_t"
+    })};
 
-        return (t.size() < token.size()) && (token[t.size()] != ' ');
-      }
-    }
-
-    constexpr std::array<std::string_view, 10> types{"std::size_t", "size_t", "uint8_t", "uint16_t", "uint32_t", "uint64_t", "int8_t", "int16_t", "int32_t", "int64_t"};
-    for(auto t : types)
-    {
-      if(spelling == t)
-        return false;
-    }
-
-    return true;
+    return !std::ranges::contains(unsuffixed, token);
   }
 
   [[nodiscard]]
