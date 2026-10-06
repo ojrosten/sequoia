@@ -1011,16 +1011,20 @@ namespace sequoia::testing
     test_execution_records();
     test_filtered_suites();
     test_suites_not_found();
+    test_selections_not_found();
     test_prune_basic_output();
     test_prune_with_changed_toolchain();
     test_prune_selects_a_test_this_executable_lacks();
+    test_prune_with_nothing_stale();
     test_post_run_failure();
     test_materials_update();
     test_no_materials_update_after_critical_failure();
     test_partial_materials_update();
     test_discriminated_materials_update();
+    test_materials_update_of_two_tests();
     test_materials_preparation_failure();
     test_versioned_output_failure();
+    test_versioned_output_check();
     test_discarded_materials_removal();
     test_discarded_materials_removal_failure();
     test_discarded_materials_removal_exception();
@@ -1034,7 +1038,9 @@ namespace sequoia::testing
     test_thread_pool();
     test_instability_analysis();
     test_instability_analysis_in_sandboxes_from_a_path_with_a_space();
+    test_sandboxed_repetition();
     test_exit_statuses();
+    test_return_code_names();
   }
 
   void test_runner_test::test_discriminator_hooks()
@@ -1659,6 +1665,24 @@ namespace sequoia::testing
     check_output("Suites Not Found Output", "SuitesNotFoundOutput", outputStream);
   }
 
+  void test_runner_test::test_selections_not_found()
+  {
+    // No source file matches either request. Only the request with no
+    // extension draws a hint to use 'test'.
+    std::stringstream outputStream{};
+    commandline_arguments args{
+      {(minimal_fake_path()).generic_string(), "select", "Absent", "select", "absent_test.cpp"}
+    };
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<passing_test>();
+    runner.register_test<failing_test>();
+
+    check(equality, "Selections not found return code", runner.execute(), return_code::success);
+    check_output("Selections Not Found Output", "SelectionsNotFoundOutput", outputStream);
+  }
+
   void test_runner_test::test_prune_basic_output()
   {
     fs::remove_all(output_paths{fake_project()}.dir());
@@ -1771,6 +1795,38 @@ namespace sequoia::testing
     runner.register_test<passing_test>();
     check(equality, "Prune selecting an unregistered test return code", runner.execute(), return_code::success);
     check_output("Prune selecting an unregistered test", "PruneSelectsUnregisteredOutput", outputStream);
+  }
+
+  void test_runner_test::test_prune_with_nothing_stale()
+  {
+    // Every file the build read predates the previous run's stamp. The
+    // registered test is not in the build, so it runs only if prune's empty
+    // selection is taken for a selection of everything.
+    const auto build{write_fake_build()};
+
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
+    const project_paths::customizer customization{
+      .main_cpp{"TestSandbox/TestSandbox.cpp"},
+      .common_includes{"TestShared/SharedIncludes.hpp"}
+    };
+    const project_paths projPaths{args.size(), args.get(), customization};
+    const auto stamp{projPaths.prune().stamp()};
+    fs::create_directories(stamp.parent_path());
+    write_to_file(stamp, "", std::ios_base::out);
+
+    using namespace std::chrono_literals;
+    const auto now{std::chrono::file_clock::now()};
+    fs::last_write_time(build.toolchainHeader, now - 3s);
+    fs::last_write_time(build.source, now - 2s);
+    fs::last_write_time(stamp, now - 1s);
+    fs::last_write_time(projPaths.executable(), now);
+
+    std::stringstream outputStream{};
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<passing_test>();
+    check(equality, "Prune with nothing stale return code", runner.execute(), return_code::success);
+    check_output("Prune with nothing stale", "PruneWithNothingStaleOutput", outputStream);
   }
 
   void test_runner_test::test_post_run_failure()
@@ -1895,6 +1951,51 @@ namespace sequoia::testing
           std::string{"Predicted\n"});
 
     check("Other discriminator's prediction not deleted", fs::exists(materials / "Echidna/Prediction/Obsolete.txt"));
+  }
+
+  /** One run updates the materials of two tests. Earlier tests update the
+      same materials, so this test restores their predictions first: each
+      overwrite and deletion checked here is then this run's.
+   */
+  void test_runner_test::test_materials_update_of_two_tests()
+  {
+    const auto firstTestPredictions{
+      fake_project() / "TestMaterials/Updating/StalePredictionsFreeTest/stale_predictions_free_test/Prediction"
+    };
+
+    const auto secondTestPredictions{
+      fake_project() / "TestMaterials/Updating/VariantFreeTest/variant_free_test/Platypus/Prediction"
+    };
+
+    for(const auto& predictions : {firstTestPredictions, secondTestPredictions})
+    {
+      write_to_file(predictions / "Kept.txt",     "Predicted\n",             std::ios_base::out);
+      write_to_file(predictions / "Obsolete.txt", "Nothing produces this\n", std::ios_base::out);
+    }
+
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<stale_predictions_free_test>();
+    runner.register_test<variant_free_test>();
+
+    check(equality, "Two tests' materials update return code", runner.execute(), return_code::soft_failures);
+    check_output("Two Tests' Materials Update Output", "TwoTestsMaterialsUpdateOutput", outputStream);
+
+    check(equality,
+          "First test's prediction overwritten",
+          read_to_string(firstTestPredictions / "Kept.txt", std::ios_base::in).value_or(""),
+          std::string{"Obtained\n"});
+
+    check(equality,
+          "Second test's prediction overwritten",
+          read_to_string(secondTestPredictions / "Kept.txt", std::ios_base::in).value_or(""),
+          std::string{"Obtained\n"});
+
+    check("First test's prediction deleted",  !fs::exists(firstTestPredictions / "Obsolete.txt"));
+    check("Second test's prediction deleted", !fs::exists(secondTestPredictions / "Obsolete.txt"));
   }
 
   void test_runner_test::test_nested_suite()
@@ -2253,7 +2354,6 @@ namespace sequoia::testing
 
     commandline_arguments args{argGenerator()};
 
-
     auto runner{make_fake_runner(args, outputStream)};
 
     (runner.register_test<std::remove_cvref_t<Ts>>(), ...);
@@ -2381,6 +2481,47 @@ namespace sequoia::testing
           predictive_materials() /= "SandboxesFromAPathWithASpace");
   }
 
+  /** A runner given a runner id is one sandbox. The sandbox writes its
+      records under its id. It leaves the other sandboxes' records in
+      place, and leaves the analysis of every sandbox's records to the run
+      which launched them all. The launching side is the subject of
+      `test_instability_analysis_in_sandboxes_from_a_path_with_a_space`.
+   */
+  void test_runner_test::test_sandboxed_repetition()
+  {
+    const auto projectRoot{fs::canonical(fake_project())};
+    auto recordOf{
+      [&projectRoot](std::size_t runnerID) {
+        return output_paths::instability_analysis_file(projectRoot,
+                                                       passing_test::source_file(),
+                                                       test_name<passing_test>(),
+                                                       runnerID);
+      }
+    };
+
+    const std::string anotherRecord{"Another sandbox's record\n"};
+    fs::remove_all(output_paths::instability_analysis(projectRoot));
+    fs::create_directories(recordOf(0).parent_path());
+    write_to_file(recordOf(0), anotherRecord, std::ios_base::out);
+
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "locate", "2", "--runner-id", "1"}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+    runner.register_test<passing_test>();
+
+    // The run which launches the sandboxes prepares this folder first
+    setup_instability_analysis_prune_folder(runner.proj_paths());
+
+    check(equality, "Sandboxed repetition return code", runner.execute(), return_code::success);
+    check_output("Sandboxed Repetition Output", "SandboxedRepetitionOutput", outputStream);
+    check("The sandbox writes its records under its id", fs::exists(recordOf(1)));
+    check(equality,
+          "The sandbox leaves another sandbox's records in place",
+          read_to_string(recordOf(0), std::ios_base::in).value_or(""),
+          anotherRecord);
+  }
+
   namespace
   {
     /// Its original materials hold `Stray.txt` beside the working copy, where nothing uses it
@@ -2504,6 +2645,37 @@ namespace sequoia::testing
 
     check(equality, "Versioned output failure return code", runner.execute(), return_code::critical_failures);
     check_output("Versioned Output Failure Output", "VersionedOutputFailureOutput", outputStream);
+  }
+
+  /** With the fake project's output removed, the first checked run finds
+      that its versioned output differs from what was on disk, and writes a
+      patch. The second run finds exactly what the first left.
+   */
+  void test_runner_test::test_versioned_output_check()
+  {
+    fs::remove_all(output_paths{fake_project()}.dir());
+
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "--check-versioned-output"}};
+
+    {
+      std::stringstream outputStream{};
+      auto runner{make_fake_runner(args, outputStream)};
+      runner.register_test<passing_test>();
+
+      check(equality, "Drifted versioned output return code", runner.execute(), return_code::versioned_output_diffs);
+      check_output("Drifted Versioned Output", "DriftedVersionedOutput", outputStream);
+      check("The drifted run writes a patch", fs::exists(runner.proj_paths().output().drift().patch_file()));
+    }
+
+    {
+      std::stringstream outputStream{};
+      auto runner{make_fake_runner(args, outputStream)};
+      runner.register_test<passing_test>();
+
+      check(equality, "Stable versioned output return code", runner.execute(), return_code::success);
+      check_output("Stable Versioned Output", "StableVersionedOutput", outputStream);
+      check("The stable run writes no patch", !fs::exists(runner.proj_paths().output().drift().patch_file()));
+    }
   }
 
   namespace
@@ -2693,5 +2865,26 @@ namespace sequoia::testing
     check("A shell's 'not executable' is refused",    refused(126));
     check("A shell's 'not found' is refused",         refused(127));
     check("A status above 128 is refused",            refused(139));
+  }
+
+  void test_runner_test::test_return_code_names()
+  {
+    using namespace std::string_literals;
+    using enum return_code;
+
+    check(equality, "Success",                to_string(success),                "success"s);
+    check(equality, "Versioned output diffs", to_string(versioned_output_diffs), "versioned_output_diffs"s);
+    check(equality, "Soft failures",          to_string(soft_failures),          "soft_failures"s);
+    check(equality, "Critical failures",      to_string(critical_failures),      "critical_failures"s);
+    check(equality, "An incomplete run",      to_string(incomplete_run),         "incomplete_run"s);
+    check(equality, "Post-run failures",      to_string(post_run_failures),      "post_run_failures"s);
+    check(equality,
+          "Every flag together, joined in the order of the bits",
+          to_string(static_cast<return_code>(31)),
+          "versioned_output_diffs|soft_failures|critical_failures|incomplete_run|post_run_failures"s);
+
+    check_exception_thrown<std::logic_error>(
+      "Bits no flag occupies",
+      [](){ return to_string(static_cast<return_code>(64)); });
   }
 }

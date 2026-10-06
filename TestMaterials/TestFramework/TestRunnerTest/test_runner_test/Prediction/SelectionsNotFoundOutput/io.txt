@@ -1,0 +1,3 @@
+  Warning: Test File 'Absent' not found
+    If trying to test a suite use 'test' rather than 'select'
+  Warning: Test File 'absent_test.cpp' not found

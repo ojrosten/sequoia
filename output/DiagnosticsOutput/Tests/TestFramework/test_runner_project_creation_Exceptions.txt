@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 40
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 44
 Project name with space
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Please ensure the project name 'Generated Project' consists of just alpha-numeri
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 51
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 55
 Project name with $
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Please ensure the project name 'Generated$Project' consists of just alpha-numeri
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 62
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 66
 Project path that is not absolute
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Project path 'Generated_Project' should be absolute
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 73
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 77
 Empty project path
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Project path should not be empty
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 84
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 88
 Project name clash
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Project location 'output/TestsTemporaryData/TestFramework/TestRunnerProjectCreat
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 95
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 99
 Illegal indent
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Code indent must comprise only spaces or tabs
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 106
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 110
 Illegal init indent
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ Code indent must comprise only spaces or tabs
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 180
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 184
 git fails when placing the project under version control
 
 Expected Exception Type:
@@ -73,7 +73,7 @@ To start again, delete output/TestsTemporaryData/TestFramework/TestRunnerProject
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 180
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 184
 A failure ends the run before a later project
 
 Expected Exception Type:
@@ -86,7 +86,7 @@ Not attempted, since this failure ended the run: output/TestsTemporaryData/TestF
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 180
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 184
 git fails when committing sequoia
 
 Expected Exception Type:
@@ -98,7 +98,7 @@ To start again, delete output/TestsTemporaryData/TestFramework/TestRunnerProject
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 180
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 184
 CMake fails when configuring the project
 
 Expected Exception Type:
