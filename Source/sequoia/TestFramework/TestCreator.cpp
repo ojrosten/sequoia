@@ -18,6 +18,7 @@
 #include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <algorithm>
 #include <array>
 #include <chrono>
 #include <format>
@@ -167,38 +168,29 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  bool handle_as_ref(std::string_view type)
+  bool needs_reference_suffix(std::string_view spelling)
   {
-    if(type.empty())
+    if(ascii::is_empty_or_whitespace(spelling))
       throw std::logic_error{"Equivalent type is unspecified"};
 
-    const auto startPos{type.find_first_not_of(' ')};
-    if(startPos == npos)
-      throw std::logic_error{"Equivalent type is unspecified"};
+    if((spelling.back() == '*') || (spelling.back() == '&'))
+      return false;
 
-    if((type.back() == '*') || (type.back() == '&')) return false;
+    const auto startPos{spelling.find_first_not_of(' ')};
+    const auto endPos{spelling.find_first_of(' ', startPos)};
+    const auto token{spelling.substr(startPos, endPos - startPos)};
 
-    const auto endPos{type.find_first_of(' ', startPos)};
-    auto token{std::string_view{type}.substr(startPos, endPos - startPos)};
+    constexpr auto unsuffixed{std::to_array<std::string_view>({
+      "int", "float", "double", "bool", "char", "short", "long", "signed", "unsigned",
+      "wchar_t", "char8_t", "char16_t", "char32_t",
+      "size_t", "ptrdiff_t",
+      "uint8_t", "uint16_t", "uint32_t", "uint64_t", "int8_t", "int16_t", "int32_t", "int64_t",
+      "std::size_t", "std::ptrdiff_t",
+      "std::uint8_t", "std::uint16_t", "std::uint32_t", "std::uint64_t",
+      "std::int8_t", "std::int16_t", "std::int32_t", "std::int64_t"
+    })};
 
-    constexpr std::array<std::string_view, 9> funTypes{"int", "float", "double", "bool", "char", "short", "long", "signed", "unsigned"};
-    for(auto t : funTypes)
-    {
-      if(const auto pos{token.find(t)}; pos != npos)
-      {
-        if(token.size() == t.size()) return false;
-
-        return (t.size() < token.size()) && (token[t.size()] != ' ');
-      }
-    }
-
-    constexpr std::array<std::string_view, 10> types{"std::size_t", "size_t", "uint8_t", "uint16_t", "uint32_t", "uint64_t", "int8_t", "int16_t", "int32_t", "int64_t"};
-    for(auto t : types)
-    {
-      if(type == t) return false;
-    }
-
-    return true;
+    return !std::ranges::contains(unsuffixed, token);
   }
 
   [[nodiscard]]
@@ -878,46 +870,17 @@ namespace sequoia::testing
       }
     }
 
-    const auto num{m_EquivalentTypes.size()};
-    auto prediction{
-      [num](const std::size_t i, std::string_view sep) {
-        std::string p{"prediction"};
-        if(num > 1)
-          p.append(std::format("_{}", i));
-
-        if((i < num - 1) && !sep.empty())
-          p.append(sep).append(" ");
-
-        return p;
-      }
+    constexpr std::string_view predictionName{"prediction"};
+    const auto predictionParameter{
+      std::format("{}{}{} {}",
+                  m_EquivalentType.starts_with("const ") ? "" : "const ",
+                  m_EquivalentType,
+                  needs_reference_suffix(m_EquivalentType) ? "&" : "",
+                  predictionName)
     };
 
-    auto isSpecified{
-      [](const auto& indexedType) { return !std::get<1>(indexedType).empty(); }
-    };
-
-    auto argumentOf{
-      [prediction](const auto& indexedType) {
-        const auto& [i, type]{indexedType};
-        return std::format("{}{}{} {}",
-                           type.starts_with("const ") ? "" : "const ",
-                           type,
-                           handle_as_ref(type) ? "&" : "",
-                           prediction(static_cast<std::size_t>(i), ","));
-      }
-    };
-
-    const auto args{
-        m_EquivalentTypes
-      | std::views::enumerate
-      | std::views::filter(isSpecified)
-      | std::views::transform(argumentOf)
-      | std::views::join
-      | std::ranges::to<std::string>()
-    };
-
-    replace_all(text, "?args", args);
-    replace_all(text, "?predictions", prediction(0, ""));
+    replace_all(text, "?parameter", predictionParameter);
+    replace_all(text, "?prediction", predictionName);
 
     if(!m_TemplateData.empty())
     {

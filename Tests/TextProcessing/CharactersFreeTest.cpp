@@ -52,6 +52,7 @@ namespace sequoia::testing
   {
     test_constraints();
     test_same_ignoring_case();
+    test_is_empty_or_whitespace();
     test_character_types();
     test_classification();
     test_is_identifier_character();
@@ -117,6 +118,17 @@ namespace sequoia::testing
     STATIC_CHECK(!std::invocable<decltype(ascii::to_lowercase),        const std::filesystem::path&>);
     STATIC_CHECK(!std::invocable<decltype(ascii::to_lowercase),        const volatile char*>);
     STATIC_CHECK(!std::invocable<decltype(ascii::same_ignoring_case), const std::filesystem::path&, std::string_view>);
+
+    STATIC_CHECK( std::invocable<decltype(ascii::is_empty_or_whitespace), std::string&>);
+    STATIC_CHECK( std::invocable<decltype(ascii::is_empty_or_whitespace), const char(&)[4]>);
+    STATIC_CHECK( std::invocable<decltype(ascii::is_empty_or_whitespace), const char32_t*>);
+    STATIC_CHECK(!std::invocable<decltype(ascii::is_empty_or_whitespace), char>);
+    STATIC_CHECK(!std::invocable<decltype(ascii::is_empty_or_whitespace), const unsigned char*>);
+    STATIC_CHECK(!std::invocable<decltype(ascii::is_empty_or_whitespace), const std::filesystem::path&>);
+    STATIC_CHECK(!std::invocable<decltype(ascii::is_empty_or_whitespace), const volatile char*>);
+
+    STATIC_CHECK(noexcept(ascii::same_ignoring_case("", "")));
+    STATIC_CHECK(noexcept(ascii::is_empty_or_whitespace("")));
   }
 
   void characters_free_test::test_same_ignoring_case()
@@ -151,6 +163,20 @@ namespace sequoia::testing
     STATIC_CHECK(!ascii::same_ignoring_case(u"\u0153", u"s"));
     STATIC_CHECK(!ascii::same_ignoring_case(u"s", u"\u0153"));
     STATIC_CHECK( ascii::same_ignoring_case(std::string{"Tests/Foo.cpp"}, "tests/foo.CPP"));
+  }
+
+  void characters_free_test::test_is_empty_or_whitespace()
+  {
+    STATIC_CHECK( ascii::is_empty_or_whitespace(""));
+    STATIC_CHECK( ascii::is_empty_or_whitespace(" "));
+    STATIC_CHECK( ascii::is_empty_or_whitespace(" \t\n\v\f\r"));
+    STATIC_CHECK(!ascii::is_empty_or_whitespace("a"));
+    STATIC_CHECK(!ascii::is_empty_or_whitespace(" \ta "));
+    STATIC_CHECK(!ascii::is_empty_or_whitespace(std::string_view{"\0", 1}));
+
+    STATIC_CHECK( ascii::is_empty_or_whitespace(u" \t"));
+    STATIC_CHECK( ascii::is_empty_or_whitespace(std::u16string_view{}));
+    STATIC_CHECK(!ascii::is_empty_or_whitespace(std::string{"a"}));
   }
 
   void characters_free_test::test_character_types()

@@ -49,24 +49,38 @@ namespace sequoia::testing
 
   void test_runner_test_creation::test_type_handling()
   {
-    check_exception_thrown<std::logic_error>("Empty string", []() { return handle_as_ref(""); });
-    check_exception_thrown<std::logic_error>("Just spaces", []() { return handle_as_ref(" "); });
-    check("Letter",        handle_as_ref("a"));
-    check("int",          !handle_as_ref("int"));
-    check(" int",         !handle_as_ref(" int"));
-    check("  int",        !handle_as_ref("  int"));
-    check("int*",         !handle_as_ref("int*"));
-    check("int&",         !handle_as_ref("int&"));
-    check("int *",        !handle_as_ref("int *"));
-    check(" int ",        !handle_as_ref(" int "));
-    check("long",         !handle_as_ref("long"));
-    check("longint",      handle_as_ref("longint"));
-    check("long int",     !handle_as_ref("long int"));
-    check("double",       !handle_as_ref("double"));
-    check("std::size_t",  !handle_as_ref("std::size_t"));
-    check("tuple<int>",    handle_as_ref("tuple<int>"));
-    check("tuple<int >",   handle_as_ref("tuple<int >"));
-    check("tuple< int >",  handle_as_ref("tuple< int >"));
+    check_exception_thrown<std::logic_error>("Empty string", []() { return needs_reference_suffix(""); });
+    check_exception_thrown<std::logic_error>("Just spaces", []() { return needs_reference_suffix(" "); });
+    check_exception_thrown<std::logic_error>("Just a tab", []() { return needs_reference_suffix("\t"); });
+    check("Letter",        needs_reference_suffix("a"));
+    check("int",          !needs_reference_suffix("int"));
+    check(" int",         !needs_reference_suffix(" int"));
+    check("  int",        !needs_reference_suffix("  int"));
+    check("int*",         !needs_reference_suffix("int*"));
+    check("int&",         !needs_reference_suffix("int&"));
+    check("int *",        !needs_reference_suffix("int *"));
+    check(" int ",        !needs_reference_suffix(" int "));
+    check("long",         !needs_reference_suffix("long"));
+    check("longint",      needs_reference_suffix("longint"));
+    check("long int",     !needs_reference_suffix("long int"));
+    check("double",       !needs_reference_suffix("double"));
+    check("std::size_t",  !needs_reference_suffix("std::size_t"));
+    check("tuple<int>",    needs_reference_suffix("tuple<int>"));
+    check("tuple<int >",   needs_reference_suffix("tuple<int >"));
+    check("tuple< int >",  needs_reference_suffix("tuple< int >"));
+
+    // Each spelling below contains a shorter spelling from the list, such as
+    // "signed", "int" or "char". Only a whole first token matches the list.
+    check("unsigned int",        !needs_reference_suffix("unsigned int"));
+    check("uint8_t",             !needs_reference_suffix("uint8_t"));
+    check("int64_t",             !needs_reference_suffix("int64_t"));
+    check("std::int64_t",        !needs_reference_suffix("std::int64_t"));
+    check("char16_t",            !needs_reference_suffix("char16_t"));
+    check("wchar_t",             !needs_reference_suffix("wchar_t"));
+    check("std::intptr_t",        needs_reference_suffix("std::intptr_t"));
+
+    // The first token is compared, so a listed alias may be followed by more
+    check("std::size_t const",   !needs_reference_suffix("std::size_t const"));
   }
 
   void test_runner_test_creation::test_project_namespace()
@@ -472,8 +486,13 @@ namespace sequoia::testing
              "--testing-utilities", "ProbabilityTestingUtilities.hpp",
              "--fullname", "widget_test"});
 
-    // The type sprocket is new, so every file for it would be new too: the checks below then see any file
-    // written before the refusal.
+    // The type sprocket is new, so every file for it would be new too: the
+    // checks below then see any file written before a refusal. Each creation
+    // generates sprocket's header: a search for the header would fail, and
+    // keep these checks green without the refusal under test.
+    refused("An empty equivalent type", {"regular_test", "stuff::sprocket", "", "-g", "Stuff"});
+    refused("An equivalent type of only spaces", {"move_only_test", "stuff::sprocket", " ", "-g", "Stuff"});
+    refused("An equivalent type of only a tab", {"regular_test", "stuff::sprocket", "\t", "-g", "Stuff"});
     refused("A full name whose file is a companion's",
             {"regular_test", "stuff::sprocket", "int", "-g", "Stuff", "--fullname", "sprocket_testing_utilities"});
 
