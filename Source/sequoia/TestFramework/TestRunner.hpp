@@ -534,7 +534,8 @@ namespace sequoia::testing
   /** \brief Makes a test of type `T` for the project at `projPaths`.
 
       The test's discriminators are read from `cache`, and `mode` chooses its
-      recovery files.
+      recovery files. An exception which a discriminator hook of `T` throws
+      propagates.
    */
   template<concrete_test T>
   [[nodiscard]]
@@ -583,33 +584,35 @@ namespace sequoia::testing
     {
       constexpr std::string_view name{test_name<T>()};
       constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
+      const auto source{T::source_file()};
 
-      // The registration is recorded only once every check has passed and
-      // every hook has returned, so a registration which throws is not
-      // recorded
-      throw_if_name_refused(name, T::source_file());
-      throw_if_source_refused(T::source_file());
+      // Every check runs, and every hook returns, before the registration is
+      // recorded. So a registration which throws leaves no record behind,
+      // though the filter may have noted that the test matched a selection.
+      throw_if_name_refused(name, source);
+      throw_if_source_refused(source);
 
-      test_summary_path summaryFile{T::source_file(),
-                                    name,
-                                    m_ProjPaths,
-                                    get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)};
+      const test_summary_path summaryFile{source,
+                                          name,
+                                          m_ProjPaths,
+                                          get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)};
       throw_if_summary_refused(name, summaryFile);
 
-      const bool toRun{m_Filter(T::source_file(), enclosing_suites(T::source_file()), isPerformanceTest)};
-      auto vessel{
-        toRun ? std::optional<test_vessel>{make_test<T>(m_ProjPaths, m_CMakeCache, m_RecoveryMode)} : std::nullopt
+      // Only a run builds the test, so that neither `create`, `init` nor
+      // `--help` calls its materials or output hooks.
+      const bool toRun{m_Filter(source, enclosing_suites(source), isPerformanceTest) && in_mode(runner_mode::test)};
+      auto testToRun{
+        toRun ? std::optional<test_to_run>{std::in_place,
+                                           test_vessel{make_test<T>(m_ProjPaths, m_CMakeCache, m_RecoveryMode)},
+                                           summaryFile,
+                                           test_execution_record_path{source, name, m_ProjPaths}}
+              : std::nullopt
       };
 
-      ++m_Registered;
-      register_name(name);
-      register_source(T::source_file());
-      register_summary(name, summaryFile);
+      register_checked_test(name, source, summaryFile);
 
-      if(vessel)
-        m_Tests.emplace_back(std::move(*vessel),
-                             std::move(summaryFile),
-                             test_execution_record_path{T::source_file(), name, m_ProjPaths});
+      if(testToRun)
+        m_Tests.push_back(std::move(*testToRun));
     }
 
     /** \brief Runs the tests, as the command line asked.
@@ -944,11 +947,12 @@ namespace sequoia::testing
      */
     void throw_if_summary_refused(std::string_view name, const test_summary_path& summary) const;
 
-    void register_name(std::string_view name);
-
-    void register_source(const std::filesystem::path& source);
-
-    void register_summary(std::string_view name, const test_summary_path& summary);
+    /** \brief Records a test which has passed `throw_if_name_refused`,
+               `throw_if_source_refused` and `throw_if_summary_refused`.
+     */
+    void register_checked_test(std::string_view name,
+                               const std::filesystem::path& source,
+                               const test_summary_path& summary);
 
     [[nodiscard]]
     std::string lower_case_materials_prefix(const std::filesystem::path& source) const;

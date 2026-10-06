@@ -47,6 +47,8 @@ namespace sequoia::testing
 
     void test_execution_after_a_registration_which_threw();
 
+    void test_registration_outside_a_run();
+
     void test_help_output();
 
     void test_verbose_output();

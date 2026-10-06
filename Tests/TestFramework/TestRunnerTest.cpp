@@ -1004,6 +1004,7 @@ namespace sequoia::testing
     test_basic_output();
     test_tests_registered_between_executions();
     test_execution_after_a_registration_which_threw();
+    test_registration_outside_a_run();
     test_help_output();
     test_verbose_output();
     test_serial_verbose_output();
@@ -1503,6 +1504,7 @@ namespace sequoia::testing
       -# Registering the test again throws the hook's `std::runtime_error`,
          not the `std::logic_error` which refuses a duplicate name.
       -# The execution runs the tests registered before and after it.
+      -# A runner whose only registration threw has nothing registered.
    */
   void test_runner_test::test_execution_after_a_registration_which_threw()
   {
@@ -1520,6 +1522,30 @@ namespace sequoia::testing
     runner.register_test<passing_test>();
     check(equality, "Execution return code", runner.execute(), return_code::soft_failures);
     check_output("Execution", "ExecutionAfterARegistrationWhichThrewOutput", outputStream);
+
+    std::stringstream nothingRegisteredStream{};
+    auto nothingRegisteredRunner{make_fake_runner(args, nothingRegisteredStream)};
+    check_exception_thrown<std::runtime_error>(
+      "The only registration, whose hook throws",
+      [&nothingRegisteredRunner](){ nothingRegisteredRunner.register_test<throwing_discriminator_test>(); }
+    );
+
+    check(equality, "Nothing registered return code", nothingRegisteredRunner.execute(), return_code::success);
+    check_output("Nothing registered", "NothingRegisteredOutput", nothingRegisteredStream);
+  }
+
+  /** Outside a run no test is built, so a test whose output discriminator
+      throws is registered without its hook being called.
+   */
+  void test_runner_test::test_registration_outside_a_run()
+  {
+    commandline_arguments args{{zeroth_arg(), "--help"}};
+    std::stringstream outputStream{};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<throwing_discriminator_test>();
+    check(equality, "Return code", runner.execute(), return_code::success);
   }
 
   void test_runner_test::test_help_output()

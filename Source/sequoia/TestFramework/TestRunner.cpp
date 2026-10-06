@@ -2195,8 +2195,8 @@ namespace sequoia::testing
     };
 
     auto nestsWithPrefix{
-      [&prefix, &isDescendantOf](const auto& admitted) {
-        return isDescendantOf(prefix, admitted.first) || isDescendantOf(admitted.first, prefix);
+      [&prefix, &isDescendantOf](const auto& registered) {
+        return isDescendantOf(prefix, registered.first) || isDescendantOf(registered.first, prefix);
       }
     };
 
@@ -2215,18 +2215,13 @@ namespace sequoia::testing
       throw std::runtime_error{summary_collision_message(registered->second, name, file)};
   }
 
-  void test_runner::register_name(std::string_view name)
+  void test_runner::register_checked_test(std::string_view name,
+                                          const fs::path& source,
+                                          const test_summary_path& summary)
   {
+    ++m_Registered;
     m_LowerCaseTestNames.insert(ascii::to_lowercase(name));
-  }
-
-  void test_runner::register_source(const fs::path& source)
-  {
     m_SourcesByLowerCasePrefix.try_emplace(lower_case_materials_prefix(source), source);
-  }
-
-  void test_runner::register_summary(std::string_view name, const test_summary_path& summary)
-  {
     m_TestNamesByLowerCaseSummary.try_emplace(ascii::to_lowercase(summary.file_path().generic_string()), name);
   }
 
