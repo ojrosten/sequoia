@@ -110,6 +110,12 @@ namespace sequoia::testing
       In the case the `x != 41`, not only will failure be reported in the usual manner
       but, if `x == 42`, some spectacularly useful advice will be proffered.
 
+      The advice function object is called with the two values a `check`
+      compares: `int`s above, and `bool`s for the `check` of a condition. A
+      function object which cannot take them is ignored, silently. A `check`
+      of a range, or of a type with a `value_tester`, passes the function
+      object on to the checks it makes of elements or members.
+
       Matters are similar, though somewhat more subtle for types which specialize
       \ref value_tester_primary "value_tester". Consider some type, `T` for which this
       is done. Perhaps `T` wraps an `int` in which case the specialization of `value_tester`

@@ -24,6 +24,9 @@ Broken check invariant
   Obtained : false
   Predicted: true
 
+  x: 1 
+  y: 2 
+
 =======================================
 
 Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 36
@@ -100,6 +103,9 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 60
   operator== returned false
   Obtained : false
   Predicted: true
+
+  x: 1 
+  y: 2 
 
 =======================================
 

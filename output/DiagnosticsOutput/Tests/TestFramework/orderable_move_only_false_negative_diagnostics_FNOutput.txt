@@ -24,6 +24,9 @@ Broken check invariant
   Obtained : false
   Predicted: true
 
+  x: 2 
+  y: 1 
+
 =======================================
 
 Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 32
@@ -37,6 +40,9 @@ Broken check invariant
   operator== returned false
   Obtained : false
   Predicted: true
+
+  x: 1 
+  y: 2 
 
 =======================================
 
@@ -436,6 +442,9 @@ Broken check invariant
   Obtained : false
   Predicted: true
 
+  x: 2 
+  y: 1 
+
 =======================================
 
 Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 105
@@ -449,6 +458,9 @@ Broken check invariant
   operator== returned false
   Obtained : false
   Predicted: true
+
+  x: 1 
+  y: 2 
 
 =======================================
 

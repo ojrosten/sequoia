@@ -379,8 +379,8 @@ namespace sequoia::testing::impl
           if constexpr(serializable<T>)
           {
             return check(makeMessage(), logger, cond,
-                       tutor{[](const T& u, const T& v) {
-                               return prediction_message(to_string(u), to_string(v)); } });
+                       tutor{[&x, &y](bool, bool) { return std::format("x: {}\ny: {}", to_string(x), to_string(y)); },
+                             "\n"});
           }
           else
           {
