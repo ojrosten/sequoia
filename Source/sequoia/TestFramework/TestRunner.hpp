@@ -590,13 +590,13 @@ namespace sequoia::testing
       // recorded. So a registration which throws leaves no record behind,
       // though the filter may have noted that the test matched a selection.
       throw_if_name_refused(name, source);
-      throw_if_source_refused(source);
+      throw_if_materials_unplaceable(source);
 
       const test_summary_path summaryFile{source,
                                           name,
                                           m_ProjPaths,
                                           get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)};
-      throw_if_summary_refused(name, summaryFile);
+      throw_if_summary_collides(name, summaryFile);
 
       // Only a run builds the test, so that neither `create`, `init` nor
       // `--help` calls its materials or output hooks.
@@ -931,24 +931,30 @@ namespace sequoia::testing
      */
     void throw_if_name_refused(std::string_view name, const std::filesystem::path& source) const;
 
-    /** \brief Checks the source of a test being registered.
+    /** \brief Checks that the materials of a test whose source is `source`
+               can be placed in a directory of their own.
 
-        \throws std::logic_error naming `source`, if its materials prefix is empty
-        \throws std::logic_error naming `source`, if its materials prefix contains anything non-ASCII
-        \throws std::logic_error naming both sources, if the materials prefix of `source` lies beneath
-        that of a source already registered, or has one beneath it, ignoring ASCII case
+        \throws std::logic_error naming `source`, if its materials prefix is
+        empty
+        \throws std::logic_error naming `source`, if its materials prefix
+        contains anything non-ASCII
+        \throws std::logic_error naming both sources, if the materials prefix
+        of `source` lies within that of a source already registered, or has
+        one within it, ignoring ASCII case
      */
-    void throw_if_source_refused(const std::filesystem::path& source) const;
+    void throw_if_materials_unplaceable(const std::filesystem::path& source) const;
 
-    /** \brief Checks the summary file of a test being registered.
+    /** \brief Checks that the summary file of a test being registered is no
+               registered test's.
 
-        \throws std::runtime_error naming both tests and the file, if the file of `summary` is that of a test
-        already registered, ignoring ASCII case
+        \throws std::runtime_error naming both tests and the file, if the file
+        of `summary` is that of a test already registered, ignoring ASCII case
      */
-    void throw_if_summary_refused(std::string_view name, const test_summary_path& summary) const;
+    void throw_if_summary_collides(std::string_view name, const test_summary_path& summary) const;
 
     /** \brief Records a test which has passed `throw_if_name_refused`,
-               `throw_if_source_refused` and `throw_if_summary_refused`.
+               `throw_if_materials_unplaceable` and
+               `throw_if_summary_collides`.
      */
     void register_checked_test(std::string_view name,
                                const std::filesystem::path& source,

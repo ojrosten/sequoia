@@ -2179,7 +2179,7 @@ namespace sequoia::testing
       throw std::logic_error{duplication_message(name, source)};
   }
 
-  void test_runner::throw_if_source_refused(const fs::path& source) const
+  void test_runner::throw_if_materials_unplaceable(const fs::path& source) const
   {
     const auto prefix{lower_case_materials_prefix(source)};
     if(prefix.empty())
@@ -2206,7 +2206,7 @@ namespace sequoia::testing
       throw std::logic_error{nesting_message(source, nestedWith->second)};
   }
 
-  void test_runner::throw_if_summary_refused(std::string_view name, const test_summary_path& summary) const
+  void test_runner::throw_if_summary_collides(std::string_view name, const test_summary_path& summary) const
   {
     const auto& file{summary.file_path()};
     const auto registered{m_TestNamesByLowerCaseSummary.find(ascii::to_lowercase(file.generic_string()))};
