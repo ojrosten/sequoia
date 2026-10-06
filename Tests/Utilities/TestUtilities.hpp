@@ -17,6 +17,7 @@
 
 #include <filesystem>
 #include <format>
+#include <fstream>
 #include <string>
 
 namespace sequoia::testing
@@ -79,6 +80,55 @@ namespace sequoia::testing
     const std::filesystem::path& path() const noexcept { return m_Dir; }
   private:
     std::filesystem::path m_Dir{};
+  };
+
+  /** \brief An RAII wrapper to make a directory which cannot be removed while
+             the object lives.
+
+      The object makes the directory, keeps a file within it open, and removes
+      the directory's write permissions. Under Windows the open file stops the
+      directory's removal; elsewhere the permissions do, for any user but root.
+      The object restores the permissions on destruction, and leaves the
+      directory in place.
+   */
+  class unremovable_directory
+  {
+  public:
+    explicit unremovable_directory(std::filesystem::path dir)
+      : m_Dir{std::move(dir)}
+      , m_OpenFile{open_file_in(m_Dir)}
+      , m_Permissions{std::filesystem::status(m_Dir).permissions()}
+    {
+      std::filesystem::permissions(m_Dir, st_WritePermissions, std::filesystem::perm_options::remove);
+    }
+
+    unremovable_directory(const unremovable_directory&) = delete;
+
+    unremovable_directory& operator=(const unremovable_directory&) = delete;
+
+    ~unremovable_directory()
+    {
+      std::error_code ignored{};
+      std::filesystem::permissions(m_Dir, m_Permissions, std::filesystem::perm_options::replace, ignored);
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& path() const noexcept { return m_Dir; }
+  private:
+    constexpr static auto st_WritePermissions{
+      std::filesystem::perms::owner_write | std::filesystem::perms::group_write | std::filesystem::perms::others_write
+    };
+
+    std::filesystem::path  m_Dir{};
+    std::ofstream          m_OpenFile{};
+    std::filesystem::perms m_Permissions{};
+
+    [[nodiscard]]
+    static std::ofstream open_file_in(const std::filesystem::path& dir)
+    {
+      std::filesystem::create_directories(dir);
+      return std::ofstream{dir / "Open.txt"};
+    }
   };
 
   class no_default_constructor

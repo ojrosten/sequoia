@@ -157,10 +157,12 @@ namespace sequoia::testing
     const auto source{projPaths.tests().repo() / "Foo" / "Bar.cpp"};
     const individual_materials_paths materials{source, "bar_test", projPaths, null_discriminator};
     const auto original{projPaths.test_materials().repo() / "Foo" / "Bar" / "bar_test"},
-               temporary{projPaths.output().tests_temporary_data() / "Foo" / "Bar" / "bar_test"};
+               temporary{projPaths.output().tests_temporary_data() / "Foo" / "Bar" / "bar_test"},
+               discarded{projPaths.output().tests_temporary_data() / "Foo" / "Bar" / "bar_test.discarded"};
 
     check(equality, "Original materials root",   materials.original_materials_root(),  original);
     check(equality, "Temporary materials root",  materials.temporary_materials_root(), temporary);
+    check(equality, "Discarded materials root",  materials.discarded_materials_root(), discarded);
     check(equality, "Original working copy",     materials.original_working(),         original / "WorkingCopy");
     check(equality, "Temporary working copy",    materials.working(),                  temporary / "WorkingCopy");
     check(equality, "Predictions, never copied", materials.prediction(),               original / "Prediction");
@@ -185,6 +187,8 @@ namespace sequoia::testing
     check("No test: no original materials root",  none.original_materials_root().empty());
     check("No test: no temporary materials root", none.temporary_materials_root().empty());
 
+    check_exception_thrown<std::logic_error>("No test: no discarded materials root",
+                                             [&none]() { return none.discarded_materials_root(); });
     check_exception_thrown<std::logic_error>("No test: no original working copy",
                                              [&none]() { return none.original_working(); });
     check_exception_thrown<std::logic_error>("No test: no temporary working copy",

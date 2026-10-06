@@ -715,6 +715,27 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
+    /// The runner calls the output discriminator while building the suite tree
+    class throwing_discriminator_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<throwing_discriminator_test>();
+      }
+
+      [[nodiscard]]
+      static std::string output_discriminator(const cmake_cache&)
+      {
+        throw std::runtime_error{"No output discriminator"};
+      }
+
+      void run_tests() {}
+    };
+
     [[nodiscard]]
     test_runner make_fake_runner(commandline_arguments& args, std::stringstream& outputStream)
     {
@@ -981,6 +1002,8 @@ namespace sequoia::testing
     test_exceptions();
     test_critical_errors();
     test_basic_output();
+    test_tests_registered_between_executions();
+    test_execution_after_an_execution_which_threw();
     test_help_output();
     test_verbose_output();
     test_serial_verbose_output();
@@ -998,6 +1021,9 @@ namespace sequoia::testing
     test_discriminated_materials_update();
     test_materials_preparation_failure();
     test_versioned_output_failure();
+    test_discarded_materials_removal();
+    test_discarded_materials_removal_failure();
+    test_discarded_materials_removal_exception();
     test_nested_suite();
     test_nested_suite_verbose();
     test_suite_named_as_a_sibling_test();
@@ -1457,6 +1483,46 @@ namespace sequoia::testing
 
     check(equality, "Basic output return code", runner.execute(), return_code::soft_failures);
     check_output("Basic Output", "BasicOutput", outputStream);
+  }
+
+  /** The second execution must run `passing_test` alone:
+      -# If `failing_test` ran again, the return code would show soft failures.
+      -# If no test ran, the output would not name `passing_test`.
+   */
+  void test_runner_test::test_tests_registered_between_executions()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<failing_test>();
+    check(equality, "First execution return code", runner.execute(), return_code::soft_failures);
+    check_output("First execution", "FirstExecutionOutput", outputStream);
+
+    runner.register_test<passing_test>();
+    check(equality, "Second execution return code", runner.execute(), return_code::success);
+    check_output("Second execution", "SecondExecutionOutput", outputStream);
+  }
+
+  /** The suite tree is built in name order, so the first execution moves
+      `failing_test` into the tree and then throws. The second execution must
+      run `passing_test` alone.
+   */
+  void test_runner_test::test_execution_after_an_execution_which_threw()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<failing_test>();
+    runner.register_test<throwing_discriminator_test>();
+    check_exception_thrown<std::runtime_error>("First execution", [&runner](){ return runner.execute(); });
+
+    runner.register_test<passing_test>();
+    check(equality, "Second execution return code", runner.execute(), return_code::success);
+    check_output("Second execution", "ExecutionAfterAnExecutionWhichThrewOutput", outputStream);
   }
 
   void test_runner_test::test_help_output()
@@ -2447,6 +2513,134 @@ namespace sequoia::testing
 
     check(equality, "Versioned output failure return code", runner.execute(), return_code::critical_failures);
     check_output("Versioned Output Failure Output", "VersionedOutputFailureOutput", outputStream);
+  }
+
+  namespace
+  {
+    class scratch_writing_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return "Tests/Discarding/ScratchWritingFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        write_to_file(scratchpad_materials() / "Written.txt", "", std::ios_base::out);
+        check("Wrote to its scratchpad", true);
+      }
+    };
+  }
+
+  /** Before the run, the fake test's temporary root holds `PreviousRun.txt`,
+      and its discarded root holds `DeadRun.txt`, as a run which died would
+      leave it. After the run:
+      -# `DeadRun.txt` is gone. The test's preparation removes it before
+         moving the temporary root, which otherwise could not be moved to the
+         discarded root, and would be removed in place;
+      -# `PreviousRun.txt` is gone from both roots. Once the temporary root has
+         moved, only the remover can remove it;
+      -# The file the test wrote to its scratchpad remains, so the remover
+         never removed the fresh temporary root.
+   */
+  void test_runner_test::test_discarded_materials_removal()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<scratch_writing_free_test>();
+
+    const individual_materials_paths materials{
+      scratch_writing_free_test::source_file(),
+      test_name<scratch_writing_free_test>(),
+      runner.proj_paths(),
+      null_discriminator
+    };
+
+    const auto& temporaryRoot{materials.temporary_materials_root()};
+    const auto  discardedRoot{materials.discarded_materials_root()};
+
+    fs::create_directories(temporaryRoot);
+    fs::create_directories(discardedRoot);
+    write_to_file(temporaryRoot / "PreviousRun.txt", "", std::ios_base::out);
+    write_to_file(discardedRoot / "DeadRun.txt",     "", std::ios_base::out);
+
+    check(equality, "Discarded materials removal return code", runner.execute(), return_code::success);
+
+    check("A discarded root left by a run which died is removed", !fs::exists(discardedRoot / "DeadRun.txt"));
+    check("The previous temporary root is not left discarded",    !fs::exists(discardedRoot / "PreviousRun.txt"));
+    check("The previous temporary root is not left in place",     !fs::exists(temporaryRoot / "PreviousRun.txt"));
+    check("The fresh temporary root keeps what the test wrote",   fs::exists(temporaryRoot / "Written.txt"));
+  }
+
+  /** A discarded root which cannot be removed is a post-run failure, though
+      the test it belongs to passes.
+   */
+  void test_runner_test::test_discarded_materials_removal_failure()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    runner.register_test<scratch_writing_free_test>();
+
+    const individual_materials_paths materials{
+      scratch_writing_free_test::source_file(),
+      test_name<scratch_writing_free_test>(),
+      runner.proj_paths(),
+      null_discriminator
+    };
+
+    const unremovable_directory unremovable{materials.discarded_materials_root()};
+
+    check(equality,
+          "Discarded materials removal failure return code",
+          runner.execute(),
+          return_code::post_run_failures);
+
+    check_output("Discarded Materials Removal Failure Output", "DiscardedMaterialsRemovalFailureOutput", outputStream);
+  }
+
+  /** A removal enqueued after its remover has joined never runs, so once the
+      remover is destroyed, the removal's future holds a `std::future_error`.
+      The test's vessel reports that as a failure naming the discarded root.
+      The exception's message is the library's, so it is not checked.
+   */
+  void test_runner_test::test_discarded_materials_removal_exception()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    const auto runner{make_fake_runner(args, outputStream)};
+    const auto& projPaths{runner.proj_paths()};
+
+    test_vessel vessel{scratch_writing_free_test{}};
+    vessel.initialize(projPaths, cmake_cache{projPaths.build()}, recovery_mode::none);
+
+    const auto& materials{vessel.materials_paths()};
+    fs::remove_all(materials.discarded_materials_root());
+    fs::create_directories(materials.temporary_materials_root());
+
+    {
+      discarded_materials_remover remover{};
+      remover.join();
+      check(equality,
+            "Materials prepared, so the removal enqueued",
+            vessel.execute(std::nullopt, remover).critical_failures(),
+            0uz);
+    }
+
+    check(equality,
+          "A removal which threw is a failure naming the discarded root",
+          vessel.extract_discarded_materials_removal_failure().value_or(removal_failure{}).dir,
+          materials.discarded_materials_root());
   }
 
   void test_runner_test::test_exit_statuses()

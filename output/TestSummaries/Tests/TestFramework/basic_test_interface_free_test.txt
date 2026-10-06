@@ -1,2 +1,2 @@
 basic_test_interface_free_test
-Standard Top Level Checks:                46;  Failures:  0  [Deep checks: 55]
+Standard Top Level Checks:                56;  Failures:  0  [Deep checks: 67]

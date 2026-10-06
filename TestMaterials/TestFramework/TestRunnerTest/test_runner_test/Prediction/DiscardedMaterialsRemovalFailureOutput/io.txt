@@ -1,0 +1,21 @@
+
+Running tests...
+
+scratch_writing_free_test:
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+
+-----------Grand Totals-----------
+[Total Run Time: 1.11ms]
+[Execution Time: 86.1us]
+[Runner Overhead: 536us]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+-----------Post-Run Failures-----------
+	Discarded materials not removed from output/TestsTemporaryData/Discarding/ScratchWritingFreeTest/scratch_writing_free_test.discarded:
+	Directory not empty
+

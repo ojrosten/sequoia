@@ -1,45 +1,54 @@
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 188
-No test: no original working copy
-
-Expected Exception Type:
-[std::logic_error]
-No materials root to hold 'WorkingCopy': these materials paths name no test
-
-=======================================
-
 Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 190
-No test: no temporary working copy
+No test: no discarded materials root
 
 Expected Exception Type:
 [std::logic_error]
-No materials root to hold 'WorkingCopy': these materials paths name no test
+Empty materials root: '.discarded' would resolve against the current directory
 
 =======================================
 
 Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 192
-No test: no predictions
+No test: no original working copy
 
 Expected Exception Type:
 [std::logic_error]
-No materials root to hold 'Prediction': these materials paths name no test
+Empty materials root: 'WorkingCopy' would resolve against the current directory
 
 =======================================
 
 Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 194
-No test: no original auxiliary
+No test: no temporary working copy
 
 Expected Exception Type:
 [std::logic_error]
-No materials root to hold 'Auxiliary': these materials paths name no test
+Empty materials root: 'WorkingCopy' would resolve against the current directory
 
 =======================================
 
 Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 196
+No test: no predictions
+
+Expected Exception Type:
+[std::logic_error]
+Empty materials root: 'Prediction' would resolve against the current directory
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 198
+No test: no original auxiliary
+
+Expected Exception Type:
+[std::logic_error]
+Empty materials root: 'Auxiliary' would resolve against the current directory
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 200
 No test: no temporary auxiliary
 
 Expected Exception Type:
 [std::logic_error]
-No materials root to hold 'Auxiliary': these materials paths name no test
+Empty materials root: 'Auxiliary' would resolve against the current directory
 
 =======================================
 

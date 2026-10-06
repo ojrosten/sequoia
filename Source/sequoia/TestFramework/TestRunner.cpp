@@ -31,6 +31,7 @@
 #include <set>
 #include <ranges>
 #include <span>
+#include <system_error>
 #include <format>
 #include <fstream>
 #include <functional>
@@ -127,11 +128,6 @@ namespace sequoia::testing
         accelerate(thread_pool_policy{.num{8}}, weights, std::move(f));
       }
     }
-
-    struct run_durations
-    {
-      log_summary::duration execution_duration{}, runner_overhead{};
-    };
 
     struct execution_info
     {
@@ -347,6 +343,114 @@ namespace sequoia::testing
       }
     }
 
+    [[nodiscard]]
+    std::optional<removal_failure> try_remove_all(const fs::path& dir)
+    {
+      std::error_code error{};
+      fs::remove_all(dir, error);
+      if(error)
+        return removal_failure{dir, error.message()};
+
+      return std::nullopt;
+    }
+
+    [[nodiscard]]
+    bool try_rename(const fs::path& from, const fs::path& to)
+    {
+      std::error_code error{};
+      fs::rename(from, to, error);
+      return !error;
+    }
+
+    // If the leftover could not be removed either, the error names both, since
+    // the two failures usually share a cause
+    void remove_temporary_root_in_place(const fs::path& temporaryRoot,
+                                        const std::optional<removal_failure>& leftoverFailure)
+    {
+      try
+      {
+        fs::remove_all(temporaryRoot);
+      }
+      catch(const fs::filesystem_error& e)
+      {
+        if(!leftoverFailure)
+          throw;
+
+        throw std::runtime_error{
+          std::format("Unable to remove the temporary root {} in place, "
+                      "after its discarded root {} could not be removed\n"
+                      "The temporary root: {}\n"
+                      "The discarded root: {}",
+                      temporaryRoot.generic_string(),
+                      leftoverFailure->dir.generic_string(),
+                      e.code().message(),
+                      leftoverFailure->error_message)
+        };
+      }
+    }
+
+    [[nodiscard]]
+    discarded_materials_remover::future_type ready_future_of(std::optional<removal_failure> failure)
+    {
+      std::promise<std::optional<removal_failure>> promise{};
+      promise.set_value(std::move(failure));
+      return promise.get_future();
+    }
+
+    [[nodiscard]]
+    std::string removal_failure_message(const removal_failure& failure, const fs::path& projectRoot)
+    {
+      return std::format("Discarded materials not removed from {}:\n{}",
+                         failure.dir.lexically_relative(projectRoot).generic_string(),
+                         failure.error_message);
+    }
+
+    [[nodiscard]]
+    std::vector<std::string> post_run_failure_messages(std::span<const std::string> trackerFailures,
+                                                       std::span<const removal_failure> removalFailures,
+                                                       const fs::path& projectRoot)
+    {
+      auto removalMessage{
+        [&projectRoot](const removal_failure& failure) { return removal_failure_message(failure, projectRoot); }
+      };
+
+      // TO DO: std::views::concat | std::ranges::to<std::vector>, once the
+      // MS STL has concat (P2542)
+
+      std::vector<std::string> messages{trackerFailures.begin(), trackerFailures.end()};
+      messages.append_range(removalFailures | std::views::transform(removalMessage));
+      return messages;
+    }
+
+    void copy_original_materials(const individual_materials_paths& materials)
+    {
+      if(materials.materials_discriminator())
+      {
+        throw_if_bad_materials_discriminator(materials);
+        if(fs::exists(materials.original_test_root()))
+          throw_if_materials_beside_discriminated_directories(materials);
+      }
+
+      if(!fs::exists(materials.original_materials_root()))
+        return;
+
+      throw_if_stray_materials(materials);
+
+      if(const auto originalWorking{materials.original_working()}; fs::exists(originalWorking))
+      {
+        fs::copy(originalWorking, materials.working(), fs::copy_options::recursive);
+      }
+      else
+      {
+        fs::create_directory(materials.working());
+      }
+
+      if(const auto originalAuxiliary{materials.original_auxiliary()}; fs::exists(originalAuxiliary))
+      {
+        fs::copy(originalAuxiliary, materials.auxiliary(), fs::copy_options::recursive);
+      }
+    }
+
     struct test_paths
     {
       test_paths(const fs::path& sourceFile,
@@ -486,10 +590,11 @@ namespace sequoia::testing
     const std::string& convert(const std::string& s) { return s; }
     std::string convert(const fs::path& p) { return p.generic_string(); }
 
-    // TO DO: std::views::concat | std::ranges::to<std::vector>, once the MS STL has concat (P2542)
     [[nodiscard]]
     std::vector<fs::path> concatenate(std::span<const fs::path> first, std::span<const fs::path> second)
     {
+      // TO DO: std::views::concat | std::ranges::to<std::vector>, once the
+      // MS STL has concat (P2542)
       std::vector<fs::path> both{first.begin(), first.end()};
       both.append_range(second);
       return both;
@@ -761,43 +866,52 @@ namespace sequoia::testing
     return runner_exit_offset + static_cast<int>(std::to_underlying(carried));
   }
 
-  void prepare_materials(const individual_materials_paths& materials)
+  [[nodiscard]]
+  discarded_materials_remover::future_type discarded_materials_remover::enqueue_removal(fs::path discardedRoot)
   {
-    if(materials.temporary_materials_root().empty())
-      throw std::logic_error{"Unable to prepare materials whose paths name no test"};
-
-    // Wiping the whole of this test's temporary tree is safe because `test_runner::register_test`
-    // admits each name once, ignoring case, and no source whose materials prefix nests with another's.
-    fs::remove_all(materials.temporary_materials_root());
-    fs::create_directories(materials.temporary_materials_root());
-
-    if(materials.materials_discriminator())
-    {
-      throw_if_bad_materials_discriminator(materials);
-      if(fs::exists(materials.original_test_root()))
-        throw_if_materials_beside_discriminated_directories(materials);
-    }
-
-    if(!fs::exists(materials.original_materials_root()))
-      return;
-
-    throw_if_stray_materials(materials);
-
-    if(const auto originalWorking{materials.original_working()}; fs::exists(originalWorking))
-    {
-      fs::copy(originalWorking, materials.working(), fs::copy_options::recursive);
-    }
-    else
-    {
-      fs::create_directory(materials.working());
-    }
-
-    if(const auto originalAuxiliary{materials.original_auxiliary()}; fs::exists(originalAuxiliary))
-    {
-      fs::copy(originalAuxiliary, materials.auxiliary(), fs::copy_options::recursive);
-    }
+    return m_Pool.push([discardedRoot{std::move(discardedRoot)}](){ return try_remove_all(discardedRoot); });
   }
 
+  void discarded_materials_remover::join()
+  {
+    m_Pool.join();
+  }
+
+  [[nodiscard]]
+  discarded_materials_remover::future_type prepare_materials(const individual_materials_paths& materials,
+                                                             discarded_materials_remover& remover)
+  {
+    const auto& temporaryRoot{materials.temporary_materials_root()};
+    if(temporaryRoot.empty())
+      throw std::logic_error{"Unable to prepare materials whose paths name no test"};
+
+    // Moving or removing the whole of this test's temporary tree, or of its
+    // discarded root, is safe because `test_runner::register_test` admits each
+    // name once, ignoring case, and no source whose materials prefix nests
+    // with another's.
+    const auto discardedRoot{materials.discarded_materials_root()};
+
+    // A run which died, or which could not remove it, leaves the discarded
+    // root behind, and the move cannot replace it
+    const auto leftoverFailure{try_remove_all(discardedRoot)};
+
+    // The move is one metadata operation, whereas a removal visits every
+    // entry. The move fails if the temporary root does not exist and, under
+    // Windows, if a file within the tree is open.
+    const bool moved{!leftoverFailure && try_rename(temporaryRoot, discardedRoot)};
+    if(!moved)
+      remove_temporary_root_in_place(temporaryRoot, leftoverFailure);
+
+    fs::create_directories(temporaryRoot);
+    copy_original_materials(materials);
+
+    // If copying throws, the discarded root stays until the test's next
+    // preparation removes it
+    if(moved)
+      return remover.enqueue_removal(discardedRoot);
+
+    return ready_future_of(leftoverFailure);
+  }
 
   void test_vessel::versioned_write(const fs::path& file, std::string_view text)
   {
@@ -1568,76 +1682,13 @@ namespace sequoia::testing
     // Without the flush, a run killed while the tests are silent would never show that they had begun
     stream() << running_tests_message(m_ConcurrencyMode) << std::flush;
 
-    std::optional<run_durations> concurrentDurations{};
-    if(concurrent_execution())
-    {
-      auto first{std::ranges::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
-      auto next{std::ranges::find_if(first, m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest->parallelizable(); })};
-
-      auto executor{
-        [id](suite_node& wt){
-          wt.summary             = wt.optTest->execute(id);
-          wt.executing_thread_id = std::this_thread::get_id();
-        }
-      };
-
-      std::span nonParallelizable{first, next}, parallelizable{next, m_Suites.end_node_weights()};
-
-      const timer asyncTimer{};
-      std::ranges::for_each(nonParallelizable, executor);
-
-      switch(m_ConcurrencyMode)
-      {
-        using enum concurrency_mode;
-      case dynamic:
-        accelerate(sequoia::execution::par, parallelizable, executor);
-        break;
-      case fixed:
-        accelerate(thread_pool_policy{.num{m_PoolSize}}, parallelizable, executor);
-        break;
-      default:
-        throw std::logic_error{"Unexpected concurrency_mode"};
-      }
-
-      const auto wallClock{asyncTimer.time_elapsed()};
-
-      auto executionInfoOf{
-        [](const suite_node& wt){
-          return execution_info{.thread_id{wt.executing_thread_id}, .duration{wt.summary.execution_duration()}};
-        }
-      };
-
-      auto executionInfos{
-        [executionInfoOf](std::span<const suite_node> nodes){
-          return nodes | std::views::transform(executionInfoOf) | std::ranges::to<std::vector>();
-        }
-      };
-
-      // The longest the tests ran one after another: those which are not parallelizable, then the busiest thread's
-      const auto executionDuration{
-          summed_duration(executionInfos(nonParallelizable))
-        + busiest_thread_execution_duration(executionInfos(parallelizable))
-      };
-      concurrentDurations = run_durations{
-        .execution_duration{executionDuration},
-        .runner_overhead{wallClock - executionDuration}
-      };
-    }
+    const auto concurrentDurations{execute_tests(id)};
+    const auto removalFailures{extract_discarded_materials_removal_failures()};
 
     test_tracker tracker{proj_paths(), id, m_Filter.selects() ? is_filtered::yes : is_filtered::no, m_Filter.tests_left_out()};
 
     using namespace maths;
-    auto nodeEarly{
-      [&s = m_Suites,id,serial{!concurrent_execution()}](auto n) {
-        if(serial)
-        {
-          auto& wt{s.begin_node_weights()[n]};
-          if(wt.optTest) { wt.summary = wt.optTest->execute(id); }
-        }
-      }
-    };
-
-    auto nodeLate{
+    auto summarizeAndTrack{
       [this,&tracker](auto n) {
         m_Suites.mutate_node_weight(
           std::ranges::next(m_Suites.cbegin_node_weights(), n),
@@ -1663,9 +1714,133 @@ namespace sequoia::testing
       }
     };
 
-    traverse(depth_first, m_Suites, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
+    traverse(depth_first, m_Suites, find_disconnected_t{}, null_func_obj{}, summarizeAndTrack, null_func_obj{});
     tracker.update_materials_and_prune_info();
 
+    report_results();
+
+    if(concurrentDurations)
+    {
+      auto& rootSummary{m_Suites.begin_node_weights()->summary};
+      rootSummary.execution_duration(concurrentDurations->execution_duration);
+      rootSummary.runner_overhead(concurrentDurations->runner_overhead);
+    }
+
+    stream() << "\n-----------Grand Totals-----------\n";
+    stream() << summarize(root_summary(), "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+
+    if(const auto materialsUpdateReport{tracker.materials_update_report()}; !materialsUpdateReport.empty())
+    {
+      stream() << "\n-----------Materials Update-----------\n";
+      for(const auto& entry : materialsUpdateReport)
+      {
+        stream() << sequoia::indent(entry, indentation{"\t"}) << "\n\n";
+      }
+    }
+
+    // Not folded into the totals, which count what the tests found: these are failures of the run itself
+    const auto postRunFailures{
+      post_run_failure_messages(tracker.post_run_failures(),
+                                removalFailures,
+                                proj_paths().project_root())
+    };
+    if(!postRunFailures.empty())
+    {
+      stream() << "\n-----------Post-Run Failures-----------\n";
+      for(const auto& failure : postRunFailures)
+      {
+        stream() << sequoia::indent(failure, indentation{"\t"}) << "\n\n";
+      }
+    }
+
+    return to_return_code(root_summary()) | (postRunFailures.empty() ? return_code::success : return_code::post_run_failures);
+  }
+
+  [[nodiscard]]
+  std::optional<test_runner::run_durations> test_runner::execute_tests(const std::optional<std::size_t> id)
+  {
+    discarded_materials_remover remover{};
+    if(concurrent_execution())
+      return execute_concurrently(id, remover);
+
+    execute_serially(id, remover);
+    return std::nullopt;
+  }
+
+  [[nodiscard]]
+  test_runner::run_durations test_runner::execute_concurrently(const std::optional<std::size_t> id,
+                                                               discarded_materials_remover& remover)
+  {
+    auto first{std::ranges::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
+    auto next{std::ranges::find_if(first, m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest->parallelizable(); })};
+
+    auto executor{
+      [id, &remover](suite_node& wt){
+        wt.summary             = wt.optTest->execute(id, remover);
+        wt.executing_thread_id = std::this_thread::get_id();
+      }
+    };
+
+    std::span nonParallelizable{first, next}, parallelizable{next, m_Suites.end_node_weights()};
+
+    const timer asyncTimer{};
+    std::ranges::for_each(nonParallelizable, executor);
+
+    switch(m_ConcurrencyMode)
+    {
+      using enum concurrency_mode;
+    case dynamic:
+      accelerate(sequoia::execution::par, parallelizable, executor);
+      break;
+    case fixed:
+      accelerate(thread_pool_policy{.num{m_PoolSize}}, parallelizable, executor);
+      break;
+    default:
+      throw std::logic_error{"Unexpected concurrency_mode"};
+    }
+
+    const auto wallClock{asyncTimer.time_elapsed()};
+
+    auto executionInfoOf{
+      [](const suite_node& wt){
+        return execution_info{.thread_id{wt.executing_thread_id}, .duration{wt.summary.execution_duration()}};
+      }
+    };
+
+    auto executionInfos{
+      [executionInfoOf](std::span<const suite_node> nodes){
+        return nodes | std::views::transform(executionInfoOf) | std::ranges::to<std::vector>();
+      }
+    };
+
+    // The longest the tests ran one after another: those which are not parallelizable, then the busiest thread's
+    const auto executionDuration{
+        summed_duration(executionInfos(nonParallelizable))
+      + busiest_thread_execution_duration(executionInfos(parallelizable))
+    };
+    return run_durations{
+      .execution_duration{executionDuration},
+      .runner_overhead{wallClock - executionDuration}
+    };
+  }
+
+  void test_runner::execute_serially(const std::optional<std::size_t> id, discarded_materials_remover& remover)
+  {
+    using namespace maths;
+    auto execute{
+      [&s = m_Suites, id, &remover](auto n) {
+        auto& wt{s.begin_node_weights()[n]};
+        if(wt.optTest)
+          wt.summary = wt.optTest->execute(id, remover);
+      }
+    };
+
+    traverse(depth_first, m_Suites, find_disconnected_t{}, execute, null_func_obj{}, null_func_obj{});
+  }
+
+  void test_runner::report_results()
+  {
+    using namespace maths;
     if(m_Verbosity == verbosity::verbose)
     {
       // One step per level of the tree, a test's report being a level below the test. Spaces
@@ -1723,38 +1898,31 @@ namespace sequoia::testing
 
       traverse(depth_first, m_Suites, find_disconnected_t{}, printTest, null_func_obj{}, null_func_obj{});
     }
+  }
 
-    if(concurrentDurations)
-    {
-      auto& rootSummary{m_Suites.begin_node_weights()->summary};
-      rootSummary.execution_duration(concurrentDurations->execution_duration);
-      rootSummary.runner_overhead(concurrentDurations->runner_overhead);
-    }
+  [[nodiscard]]
+  std::vector<removal_failure> test_runner::extract_discarded_materials_removal_failures()
+  {
+    auto holdsTest{[](const suite_node& node) { return node.optTest.has_value(); }};
 
-    stream() << "\n-----------Grand Totals-----------\n";
-    stream() << summarize(root_summary(), "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+    auto failureOf{
+      [](suite_node& node) -> std::vector<removal_failure> {
+        if(auto failure{node.optTest->extract_discarded_materials_removal_failure()})
+          return {std::move(*failure)};
 
-    if(const auto materialsUpdateReport{tracker.materials_update_report()}; !materialsUpdateReport.empty())
-    {
-      stream() << "\n-----------Materials Update-----------\n";
-      for(const auto& entry : materialsUpdateReport)
-      {
-        stream() << sequoia::indent(entry, indentation{"\t"}) << "\n\n";
+        return {};
       }
-    }
+    };
 
-    // Not folded into the totals, which count what the tests found: these are failures of the run itself
-    const auto postRunFailures{tracker.post_run_failures()};
-    if(!postRunFailures.empty())
-    {
-      stream() << "\n-----------Post-Run Failures-----------\n";
-      for(const auto& failure : postRunFailures)
-      {
-        stream() << sequoia::indent(failure, indentation{"\t"}) << "\n\n";
-      }
-    }
+    const auto failures{
+        m_Suites.node_weights()
+      | std::views::filter(holdsTest)
+      | std::views::transform(failureOf)
+      | std::views::join
+      | std::ranges::to<std::vector>()
+    };
 
-    return to_return_code(root_summary()) | (postRunFailures.empty() ? return_code::success : return_code::post_run_failures);
+    return failures;
   }
 
   [[nodiscard]]
@@ -2002,12 +2170,14 @@ namespace sequoia::testing
 
   void test_runner::build_suite_tree()
   {
-    // A runner may be executed more than once, with tests registered in between.
+    // A runner may be executed more than once. Each execution runs the tests
+    // registered since the previous one.
+    auto tests{std::exchange(m_Tests, {})};
     m_Suites = suite_type{};
     const auto root{m_Suites.add_node(suite_type::npos)};
 
     // By name, so that where a registration sits in a main does not decide what the output says.
-    std::ranges::sort(m_Tests, {}, [](const test_vessel& v){ return v.name(); });
+    std::ranges::sort(tests, {}, [](const test_vessel& v){ return v.name(); });
 
     const auto findOrAddSuite{
       [this](const suite_node_index enclosingSuiteNode, const std::string& suiteName) {
@@ -2029,7 +2199,7 @@ namespace sequoia::testing
       }
     };
 
-    for(auto& vessel : m_Tests)
+    for(auto& vessel : tests)
     {
       const auto enclosingSuiteNode{
         std::ranges::fold_left(enclosing_suites(vessel.source_file()), root, findOrAddSuite)

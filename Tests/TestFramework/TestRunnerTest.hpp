@@ -41,6 +41,10 @@ namespace sequoia::testing
 
     void test_basic_output();
 
+    void test_tests_registered_between_executions();
+
+    void test_execution_after_an_execution_which_threw();
+
     void test_help_output();
 
     void test_verbose_output();
@@ -78,6 +82,12 @@ namespace sequoia::testing
     void test_materials_preparation_failure();
 
     void test_versioned_output_failure();
+
+    void test_discarded_materials_removal();
+
+    void test_discarded_materials_removal_failure();
+
+    void test_discarded_materials_removal_exception();
 
     void test_nested_suite();
 
