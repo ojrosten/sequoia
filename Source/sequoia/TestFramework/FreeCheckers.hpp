@@ -868,14 +868,13 @@ namespace sequoia::testing
 
         A walk through erased functions needs the cast back from void* in a constant evaluation, which is
         C++26's (P2738). A build without it runs the walk on a fresh logger at run time instead, as one check either
-        way, so that the versioned summary does not depend on the build.
+        way, so that the versioned summary does not depend on the build. clang (17) and gcc (14) gained P2738 together
+        with C++26's static_assert messages (P2741), through which the compiler prints the report.
      */
 #if __cpp_constexpr < 202306L
-#define EVALUATE_STATICALLY_AND_DYNAMICALLY(...) (check("The walk on a fresh logger at run time; the constant evaluation is untried below C++26", constant_evaluation<std::remove_cvref_t<decltype(*this)>::mode>(__VA_ARGS__).size() == 0), (__VA_ARGS__)(this->logger()))
-#elif __cpp_static_assert >= 202306L
-#define EVALUATE_STATICALLY_AND_DYNAMICALLY(...) (check("", [&](){ constexpr auto report{constant_evaluation<std::remove_cvref_t<decltype(*this)>::mode>(__VA_ARGS__)}; static_assert(report.size() == 0, report); return true; }()), (__VA_ARGS__)(this->logger()))
+#define EVALUATE_STATICALLY_AND_DYNAMICALLY(...) (check("The walk on a fresh logger at run time; its constant evaluation needs P2738", constant_evaluation<std::remove_cvref_t<decltype(*this)>::mode>(__VA_ARGS__).size() == 0), (__VA_ARGS__)(this->logger()))
 #else
-#define EVALUATE_STATICALLY_AND_DYNAMICALLY(...) (check("", [&](){ constexpr auto report{constant_evaluation<std::remove_cvref_t<decltype(*this)>::mode>(__VA_ARGS__)}; static_assert(report.size() == 0); return true; }()), (__VA_ARGS__)(this->logger()))
+#define EVALUATE_STATICALLY_AND_DYNAMICALLY(...) (check("", [&](){ constexpr auto report{constant_evaluation<std::remove_cvref_t<decltype(*this)>::mode>(__VA_ARGS__)}; static_assert(report.size() == 0, report); return true; }()), (__VA_ARGS__)(this->logger()))
 #endif
 
     template<class Stream>

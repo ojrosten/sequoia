@@ -482,7 +482,7 @@ namespace sequoia
 
       template<std::random_access_iterator PartitionIterator, class Buckets>
       [[nodiscard]]
-      static constexpr PartitionIterator get_out_of_range_iterator(Buckets& buckets) noexcept
+      constexpr static PartitionIterator get_out_of_range_iterator(Buckets& buckets) noexcept
       {
         if(buckets.empty())
         {
@@ -683,7 +683,7 @@ namespace sequoia
       template<alloc Allocator, alloc PartitionsAllocator>
         requires (std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value
       && std::allocator_traits<PartitionsAllocator>::propagate_on_container_copy_assignment::value)
-        void reset(const Allocator& allocator, const PartitionsAllocator& partitionsAllocator) noexcept
+        constexpr void reset(const Allocator& allocator, const PartitionsAllocator& partitionsAllocator) noexcept
       {
         const partitions_type partitions(partitionsAllocator);
         m_Partitions = partitions;
@@ -1088,7 +1088,7 @@ namespace sequoia
 
       using base_type::swap;
 
-      friend void swap(partitioned_sequence& lhs, partitioned_sequence& rhs)
+      friend constexpr void swap(partitioned_sequence& lhs, partitioned_sequence& rhs)
         noexcept(noexcept(lhs.swap(rhs)))
       {
         lhs.swap(rhs);
@@ -1188,7 +1188,7 @@ namespace sequoia
 
       using base_type::swap;
 
-      friend void swap(static_partitioned_sequence& lhs, static_partitioned_sequence& rhs)
+      friend constexpr void swap(static_partitioned_sequence& lhs, static_partitioned_sequence& rhs)
         noexcept(noexcept(lhs.swap(rhs)))
       {
         lhs.swap(rhs);

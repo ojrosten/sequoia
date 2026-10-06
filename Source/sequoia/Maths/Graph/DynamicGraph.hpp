@@ -242,9 +242,9 @@ namespace sequoia::maths
       : primitive_type{tree, tdc}
     {}
 
-    graph_base(const graph_base& in,
-               const edge_allocator_type& edgeAllocator,
-               const node_weight_allocator_type& nodeWeightAllocator)
+    constexpr graph_base(const graph_base& in,
+                         const edge_allocator_type& edgeAllocator,
+                         const node_weight_allocator_type& nodeWeightAllocator)
       requires copy_constructible_v
       : primitive_type{in, edgeAllocator, nodeWeightAllocator}
     {}
