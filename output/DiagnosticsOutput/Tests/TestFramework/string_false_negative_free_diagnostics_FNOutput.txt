@@ -542,6 +542,28 @@ Checking for equivalence with:
 
 =======================================
 
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 74
+Lengths differ, with advice for characters
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
+Checking for equivalence with:
+[char [3]]
+
+  Lengths differ
+  Obtained string is too long
+  [unsigned long long]
+  operator== returned false
+  Obtained : 3
+  Predicted: 2
+
+  First excess character: o
+  Full strings:
+  Obtained : foo
+  Predicted: fo
+
+=======================================
+
 Tests/TestFramework/StringFreeDiagnostics.cpp, Line 33
 Empty and non-empty strings
 
@@ -1069,7 +1091,21 @@ Tests/TestFramework/StringFreeDiagnostics.cpp, Line 71
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 79
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 74
+Lengths differ, with advice for characters
+
+[std::basic_string_view<char, std::char_traits<char> >]
+
+  Element 2 of range incorrect
+  [char]
+  operator== returned false
+  Obtained : o
+  Predicted: '\0'
+  Advice: Sort your chars out!
+
+=======================================
+
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 82
 Differing strings of same length
 
 [std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >]
@@ -1087,7 +1123,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 80
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 83
 Advice
 
 [std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >]
@@ -1106,7 +1142,7 @@ Advice: Foo, my old nemesis
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 81
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 84
 Missing line
 
 [std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >]
@@ -1124,7 +1160,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 82
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 85
 Extra line
 
 [std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >]
@@ -1142,7 +1178,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 79
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 82
 Differing strings of same length
 
 [std::basic_string_view<wchar_t, std::char_traits<wchar_t> >]
@@ -1160,7 +1196,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 80
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 83
 Advice
 
 [std::basic_string_view<wchar_t, std::char_traits<wchar_t> >]
@@ -1179,7 +1215,7 @@ Advice: Foo, my old nemesis
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 81
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 84
 Missing line
 
 [std::basic_string_view<wchar_t, std::char_traits<wchar_t> >]
@@ -1197,7 +1233,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 82
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 85
 Extra line
 
 [std::basic_string_view<wchar_t, std::char_traits<wchar_t> >]
@@ -1215,7 +1251,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 89
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 92
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
@@ -1234,7 +1270,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 90
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 93
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::basic_string_view<char, std::char_traits<char> > >]
@@ -1253,7 +1289,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 95
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 98
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> > >]
@@ -1272,7 +1308,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 96
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 99
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::basic_string_view<wchar_t, std::char_traits<wchar_t> > >]
