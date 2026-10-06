@@ -18,10 +18,18 @@
 #     is quoted as itself when a count changes, and a changed byte fails; and a dropped file whose
 #     path holds such a byte is listed as itself.
 #
-# One kind of dropped file passes, and is listed: a file with function records but no line
-# records, which lcov deletes on reading any tracefile and llvm-cov writes. Two of them, out
-# of order, so that the listing is shown to be sorted; and the clean pair, which has none,
-# must still print the heading with a count of 0.
+# Two kinds of dropped file pass. The script lists each kind, sorted, under a
+# heading with a count, and prints the heading when the count is 0:
+#
+#   - a file with no coverage points. The clean pair has one. A fixture adds
+#     two more such files, out of order, and a system header with no coverage
+#     points, which belongs under the removal patterns instead;
+#   - a file with function records but no line records, which lcov deletes on
+#     reading any tracefile and llvm-cov writes. A fixture adds two, out of
+#     order.
+#
+# Each control on a listing compares the whole of it, so that a file listed
+# under the wrong heading fails.
 #
 # The capture also holds a file whose path contains a removal pattern's text past its
 # start. lcov removes it, since lcov searches the whole path; a check that anchored the
@@ -102,11 +110,36 @@ edit() { # edit <file> <sed expression>
   sed -e "$2" "$tmp/$1" > "$tmp/edited" && mv "$tmp/edited" "$tmp/$1"
 }
 
+listed() { # listed <name> <line>...; compares the lines after $tmp/out's first
+  local name=$1; shift
+  printf '%s\n' "$@" > "$tmp/listing"
+  if ! tail -n +2 "$tmp/out" | cmp -s - "$tmp/listing"; then
+    echo "FAIL: $name (expected the listing below)"; sed 's/^/    /' "$tmp/listing"
+    echo "    got:"; sed 's/^/    /' "$tmp/out"; fails=$((fails+1))
+  fi
+}
+
+noPoints='Dropped by lcov for having no coverage points'
+functionOnly='Dropped by lcov for having function records but no line records'
+
 reset
 run "a clean pair passes" 0 "1 of 4 captured files kept unchanged; 2 removed by pattern, 1 with no coverage points"
 run "a clean pair reports the figures" 0 "4 of 4 lines, 2 of 4 functions"
 run "a clean pair lists no function-only files" 0 \
     "Dropped by lcov for having function records but no line records: 0 files"
+
+reset; capture | awk '/^SF:\/src\/empty\.hpp$/{skip=1} !skip{print} skip && /^end_of_record$/{skip=0}' > "$tmp/capture"
+run "a capture of files which all have coverage points passes" 0 "0 with no coverage points"
+listed "an empty listing keeps its heading" "$noPoints: 0 files" "$functionOnly: 0 files"
+
+reset
+printf '%s\n' SF:/src/y.hpp LF:0 LH:0 end_of_record           >> "$tmp/capture"
+printf '%s\n' SF:/usr/include/n.h LF:0 LH:0 end_of_record     >> "$tmp/capture"
+printf '%s\n' SF:/src/d.hpp FNF:0 FNH:0 end_of_record         >> "$tmp/capture"
+run "dropped files with no coverage points pass" 0 \
+    "1 of 7 captured files kept unchanged; 3 removed by pattern, 3 with no coverage points"
+listed "dropped files with no coverage points are listed, sorted, under a count" \
+       "$noPoints: 3 files" '  /src/d.hpp' '  /src/empty.hpp' '  /src/y.hpp' "$functionOnly: 0 files"
 
 reset; edit filtered 's/^FNA:1,0,/FNA:1,1,/'; edit summary 's/(2 of 4 functions)/(3 of 4 functions)/'
 run "a lambda marked called is named" 1 \
@@ -139,18 +172,16 @@ LC_ALL=C edit capture  "s/_Z1fv/$nonUtf8Symbol/"
 LC_ALL=C edit filtered $'s/_Z1fv/_ZN15caf\xe8_free_test3runEv/'
 run "a byte which is not UTF-8, changed, fails" 1 "the capture has \"FNA:0,2,$nonUtf8Symbol\""
 reset; printf '%s\n' $'SF:/src/caf\xe9.hpp' FNL:0,12 FNA:0,0,_ZN1b1fEv FNF:1 FNH:0 LF:0 LH:0 end_of_record >> "$tmp/capture"
-run "a dropped file whose path is not UTF-8 is listed as itself" 0 $'^  /src/caf\xe9.hpp$'
+run "a dropped file whose path is not UTF-8 passes" 0 "1 of 5 captured files kept unchanged"
+listed "a dropped file whose path is not UTF-8 is listed as itself" \
+       "$noPoints: 1 files" '  /src/empty.hpp' "$functionOnly: 1 files" $'  /src/caf\xe9.hpp'
 
 reset
 printf '%s\n' SF:/src/z.hpp FNL:0,30 FNA:0,15,_ZN1zC2ERKS_ FNF:1 FNH:1 LF:0 LH:0 end_of_record >> "$tmp/capture"
 printf '%s\n' SF:/src/b.hpp FNL:0,12 FNA:0,0,_ZN1b1fEv     FNF:1 FNH:0 LF:0 LH:0 end_of_record >> "$tmp/capture"
 run "dropped function-only files pass" 0 "1 of 6 captured files kept unchanged"
-printf '%s\n' 'Dropped by lcov for having function records but no line records: 2 files' \
-               '  /src/b.hpp' '  /src/z.hpp' > "$tmp/listing"
-if ! tail -n 3 "$tmp/out" | cmp -s - "$tmp/listing"; then
-  echo "FAIL: dropped function-only files are listed, sorted, under a count"
-  sed 's/^/    /' "$tmp/out"; fails=$((fails+1))
-fi
+listed "dropped function-only files are listed, sorted, under a count" \
+       "$noPoints: 1 files" '  /src/empty.hpp' "$functionOnly: 2 files" '  /src/b.hpp' '  /src/z.hpp'
 
 reset; printf '%s\n' SF:/src/cold.cpp DA:1,0 LF:1 LH:0 end_of_record >> "$tmp/capture"
 run "a dropped file with only unhit lines is named" 1 \
