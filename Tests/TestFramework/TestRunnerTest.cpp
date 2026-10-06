@@ -2857,12 +2857,12 @@ namespace sequoia::testing
     constexpr auto name{test_name<scratch_writing_free_test>()};
     const auto summaryDiscriminator{get_discriminator<summary_discriminator_probe, scratch_writing_free_test>(cache)};
 
-    selected_test test{test_vessel{scratch_writing_free_test{}},
-                       test_summary_path{source, name, projPaths, summaryDiscriminator},
-                       test_execution_record_path{source, name, projPaths}};
-    test.initialize(projPaths, cache, recovery_mode::none);
+    selected_test selectedTest{test_vessel{scratch_writing_free_test{}},
+                               test_summary_path{source, name, projPaths, summaryDiscriminator},
+                               test_execution_record_path{source, name, projPaths}};
+    selectedTest.initialize(projPaths, cache, recovery_mode::none);
 
-    const auto& materials{test.materials_paths()};
+    const auto& materials{selectedTest.materials_paths()};
     fs::remove_all(materials.discarded_materials_root());
     fs::create_directories(materials.temporary_materials_root());
 
@@ -2871,13 +2871,13 @@ namespace sequoia::testing
       remover.join();
       check(equality,
             "Materials prepared, so the removal enqueued",
-            test.execute(std::nullopt, remover).critical_failures(),
+            selectedTest.execute(std::nullopt, remover).critical_failures(),
             0uz);
     }
 
     check(equality,
           "A removal which threw is a failure naming the discarded root",
-          test.extract_discarded_materials_removal_failure().value_or(removal_failure{}).dir,
+          selectedTest.extract_discarded_materials_removal_failure().value_or(removal_failure{}).dir,
           materials.discarded_materials_root());
   }
 

@@ -449,7 +449,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::optional<removal_failure> extract_discarded_materials_removal_failure();
 
-    void reset()
+    void reset_results()
     {
       m_Vessel.reset_results();
     }
@@ -510,9 +510,6 @@ namespace sequoia::testing
       const execution_timer& m_ExecutionTimer;
     };
 
-    /** Returns the test's summary but for the runner's overhead. The overhead includes finishing the record, and the
-        record finishes only after this function has made the summary.
-     */
     [[nodiscard]]
     log_summary execute_and_record(std::optional<std::size_t> index,
                                    execution_timer& executionTimer,

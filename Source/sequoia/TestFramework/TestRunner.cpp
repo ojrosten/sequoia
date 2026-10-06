@@ -965,6 +965,10 @@ namespace sequoia::testing
     }
   }
 
+  /** Returns the test's summary but for the runner's overhead. The overhead
+      includes finishing the record, and the record finishes only after this
+      function has made the summary.
+   */
   [[nodiscard]]
   log_summary selected_test::execute_and_record(std::optional<std::size_t> index,
                                                 execution_timer& executionTimer,
@@ -997,7 +1001,8 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  log_summary selected_test::write_output(const log_summary::duration executionDuration, std::optional<std::size_t> index)
+  log_summary selected_test::write_output(const log_summary::duration executionDuration,
+                                          std::optional<std::size_t> index)
   {
     try
     {
@@ -1038,8 +1043,9 @@ namespace sequoia::testing
 
     if(!m_Vessel.has_critical_failures())
     {
-      versioned_write(m_Vessel.diagnostics_file_paths().false_positive_or_negative_file_path(), summary.diagnostics_output());
-      versioned_write(m_Vessel.diagnostics_file_paths().caught_exceptions_file_path(), summary.caught_exceptions_output());
+      const auto& diagnostics{m_Vessel.diagnostics_file_paths()};
+      versioned_write(diagnostics.false_positive_or_negative_file_path(), summary.diagnostics_output());
+      versioned_write(diagnostics.caught_exceptions_file_path(),          summary.caught_exceptions_output());
     }
 
     return summary;
@@ -2058,7 +2064,7 @@ namespace sequoia::testing
           [&,this](auto& wt){
             if(wt.optTest)
             {
-              wt.optTest->reset();
+              wt.optTest->reset_results();
             }
             else
             {
