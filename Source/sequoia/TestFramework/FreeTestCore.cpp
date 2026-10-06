@@ -10,7 +10,6 @@
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <format>
-#include <sstream>
 
 namespace sequoia::testing
 {
@@ -27,10 +26,7 @@ namespace sequoia::testing
     void serialize(const fs::path& file, const failure_output& output)
     {
       fs::create_directories(file.parent_path());
-
-      std::ostringstream text{};
-      text << output;
-      write_to_file(file, std::move(text).str(), std::ios_base::binary);
+      write_to_file(file, to_string(output), std::ios_base::binary);
     }
   }
 
