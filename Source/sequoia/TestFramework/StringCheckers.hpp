@@ -71,7 +71,11 @@ namespace sequoia::testing
       }
     }
 
-    static auto make_preliminary_advisor(std::string_view info, string_view_type obtained, string_view_type prediction, size_type pos)
+    [[nodiscard]]
+    static auto make_preliminary_advisor(std::string_view info,
+                                         string_view_type obtained,
+                                         string_view_type prediction,
+                                         size_type pos)
     {
       return tutor{
                [=](const auto&, const auto&) {
