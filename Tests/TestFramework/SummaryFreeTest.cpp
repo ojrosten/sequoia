@@ -26,7 +26,7 @@ namespace sequoia::testing
   void summary_free_test::test_stringify_duration()
   {
     using namespace std::chrono;
-    // Under `import std`, `using namespace std::chrono` does not bring in the chrono literals
+    // With libc++'s std module, `using namespace std::chrono` does not bring in the chrono literals
     using namespace std::chrono_literals;
     using namespace std::string_literals;
 
