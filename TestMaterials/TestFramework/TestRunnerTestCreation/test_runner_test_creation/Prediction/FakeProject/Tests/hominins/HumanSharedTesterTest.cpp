@@ -7,6 +7,8 @@
 
 #include "HumanSharedTesterTest.hpp"
 
+import std;
+
 namespace fakeProject::testing
 {
     [[nodiscard]]
@@ -19,7 +21,7 @@ namespace fakeProject::testing
     {
         // For example:
 
-        // human x{args}, y{different args};
+        // ::human x{args}, y{different args};
         // check(equivalence, "Useful Description", x, something equivalent);
         // check(equivalence,"Useful Description", y, something equivalent);
         // For orderable type, with x < y:

@@ -4,7 +4,7 @@ Running tests...
 foo_test:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 3]
 
-	Tests/Stuff/FooTest.cpp, Line 42
+	Tests/Stuff/FooTest.cpp, Line 43
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]

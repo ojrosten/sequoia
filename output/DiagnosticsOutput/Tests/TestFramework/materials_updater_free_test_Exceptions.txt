@@ -1,4 +1,4 @@
-Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 76
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 80
 Empty 'from' path
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ File path is empty
 
 =======================================
 
-Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 77
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 81
 Empty 'to' path
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ File path is empty
 
 =======================================
 
-Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 83
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 87
 'to' path exists but is not a directory
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ output/TestsTemporaryData/TestFramework/MaterialsUpdaterFreeTest/materials_updat
 
 =======================================
 
-Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 87
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 91
 'from' path exists but is not a directory
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ output/TestsTemporaryData/TestFramework/MaterialsUpdaterFreeTest/materials_updat
 
 =======================================
 
-Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 178
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 182
 A regular file in 'from' where 'to' holds a directory
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 209
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 213
 An entry in both that is neither a regular file nor a directory
 
 Expected Exception Type:

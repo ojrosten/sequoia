@@ -8,6 +8,8 @@
 #include "StringUtilities.hpp"
 #include "fakeProject/Utilities/Utilities.h"
 
+import std;
+
 namespace fakeProject::testing
 {
     [[nodiscard]]

@@ -8,6 +8,8 @@
 #include "ContainerSpeedTest.hpp"
 #include "curlew/Stuff/Container.hpp"
 
+import std;
+
 namespace curlew::testing
 {
     [[nodiscard]]

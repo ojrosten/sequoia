@@ -9,7 +9,8 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/FreeTestCore.hpp"
+import std;
+import sequoia.test_framework;
 
 namespace fakeProject::testing
 {

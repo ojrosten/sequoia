@@ -11,6 +11,8 @@
 
 #include "CloudTestingUtilities.hpp"
 
+import std;
+
 namespace curlew::testing
 {
     using namespace sequoia::testing;

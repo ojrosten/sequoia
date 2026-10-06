@@ -12,7 +12,7 @@ foo_test:
 [Runner Overhead: 2.28ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 3]
 
-	Tests/Stuff/FooTest.cpp, Line 42
+	Tests/Stuff/FooTest.cpp, Line 43
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
@@ -56,7 +56,7 @@ useful_things_free_test:
 [Runner Overhead: 517us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
 
 	[int]
 	operator== returned false

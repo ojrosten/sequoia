@@ -11,7 +11,8 @@
 
 #include "ProbabilityTestingUtilities.hpp"
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
+import std;
+import sequoia.test_framework;
 
 namespace curlew::testing
 {

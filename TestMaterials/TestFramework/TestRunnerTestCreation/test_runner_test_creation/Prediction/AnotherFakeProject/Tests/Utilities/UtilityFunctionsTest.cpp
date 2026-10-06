@@ -8,6 +8,8 @@
 #include "UtilityFunctionsTest.hpp"
 #include "curlew/Utilities/Utilities.h"
 
+import std;
+
 namespace curlew::testing
 {
     [[nodiscard]]

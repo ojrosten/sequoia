@@ -20,7 +20,7 @@ Running tests...
 flipper_free_test:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Unstable/FlipperFreeTest.cpp, Line 25
+	Tests/Unstable/FlipperFreeTest.cpp, Line 27
 
 	[bool]
 	operator== returned false
@@ -49,7 +49,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Unstable/FlipperFreeTest.cpp, Line 25
+	Tests/Unstable/FlipperFreeTest.cpp, Line 27
 
 	[bool]
 	operator== returned false

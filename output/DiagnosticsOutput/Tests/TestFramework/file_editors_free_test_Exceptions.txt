@@ -1,4 +1,4 @@
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 119
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 123
 A main with no call to runner.execute
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Unable to find the point of registration in output/TestsTemporaryData/TestFramew
 
 =======================================
 
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 124
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 128
 No tests to register
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ No tests specified for registration
 
 =======================================
 
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 178
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 182
 A line of spaces is refused, naming its line
 
 Expected Exception Type:
@@ -26,7 +26,7 @@ output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_te
 
 =======================================
 
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 179
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 183
 A line holding only a tab is refused, naming its line
 
 Expected Exception Type:
@@ -36,7 +36,7 @@ output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_te
 
 =======================================
 
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 180
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 184
 An invalid pattern is refused, naming its line, empty lines counted
 
 Expected Exception Type:

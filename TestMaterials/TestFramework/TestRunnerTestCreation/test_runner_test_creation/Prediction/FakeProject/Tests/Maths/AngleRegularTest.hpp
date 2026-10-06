@@ -11,6 +11,8 @@
 
 #include "AngleTestingUtilities.hpp"
 
+import std;
+
 namespace fakeProject::testing
 {
     using namespace sequoia::testing;

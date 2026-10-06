@@ -7,6 +7,8 @@
 
 #include "GizmoTestingDiagnostics.hpp"
 
+import std;
+
 namespace fakeProject::testing
 {
     [[nodiscard]]
@@ -19,7 +21,7 @@ namespace fakeProject::testing
     {
         // For example:
 
-        // stuff::gizmo x{args}, y{different args};
+        // ::stuff::gizmo x{args}, y{different args};
         // check(equivalence, "Useful Description", x, something inequivalent - ordinarily this would fail);
         // check(equality, "Useful Description", x, y);
     }

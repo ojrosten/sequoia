@@ -7,6 +7,8 @@
 
 #include "ContainerFamilyAllocationTest.hpp"
 
+import std;
+
 namespace fakeProject::testing
 {
     [[nodiscard]]

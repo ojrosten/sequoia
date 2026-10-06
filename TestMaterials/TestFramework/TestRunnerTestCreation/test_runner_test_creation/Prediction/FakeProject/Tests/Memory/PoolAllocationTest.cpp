@@ -7,6 +7,8 @@
 
 #include "PoolAllocationTest.hpp"
 
+import std;
+
 namespace fakeProject::testing
 {
     [[nodiscard]]

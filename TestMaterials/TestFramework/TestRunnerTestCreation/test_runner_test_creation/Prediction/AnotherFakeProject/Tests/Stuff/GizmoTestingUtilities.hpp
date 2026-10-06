@@ -9,14 +9,15 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "curlew/Stuff/Gizmo.hpp"
+
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {
-    template<> struct value_tester<stuff::gizmo>
+    template<> struct value_tester<::stuff::gizmo>
     {
-        using type = stuff::gizmo;
+        using type = ::stuff::gizmo;
 
         template<test_mode Mode>
         static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)

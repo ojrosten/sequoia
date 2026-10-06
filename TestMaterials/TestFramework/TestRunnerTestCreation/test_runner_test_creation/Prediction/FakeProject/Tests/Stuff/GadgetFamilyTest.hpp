@@ -11,7 +11,8 @@
 
 #include "WidgetTestingUtilities.hpp"
 
-#include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
+import std;
+import sequoia.test_framework;
 
 namespace fakeProject::testing
 {

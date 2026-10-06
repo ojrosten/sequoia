@@ -7,6 +7,8 @@
 
 #include "WidgetAllocationTest.hpp"
 
+import std;
+
 namespace curlew::testing
 {
     [[nodiscard]]

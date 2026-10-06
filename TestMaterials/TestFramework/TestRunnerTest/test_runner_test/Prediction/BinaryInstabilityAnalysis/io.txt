@@ -24,7 +24,7 @@ flipper_free_test:
 [Runner Overhead: 519us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 199
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 198
 	Flipper
 
 	[bool]
@@ -54,7 +54,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 199
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 198
 	Flipper
 
 	[bool]

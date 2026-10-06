@@ -9,7 +9,8 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/MoveOnlyAllocationTestCore.hpp"
+import std;
+import sequoia.test_framework;
 
 namespace curlew::testing
 {

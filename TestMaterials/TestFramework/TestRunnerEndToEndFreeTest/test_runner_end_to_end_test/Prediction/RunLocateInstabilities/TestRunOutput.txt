@@ -16,7 +16,7 @@ unique_thing_test:
 useful_things_free_test:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
 
 	[int]
 	operator== returned false
@@ -66,7 +66,7 @@ unique_thing_test:
 useful_things_free_test:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
 
 	[int]
 	operator== returned false
@@ -81,7 +81,7 @@ utilities_free_test:
 flipper_free_test:
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
-	Tests/Unstable/FlipperFreeTest.cpp, Line 24
+	Tests/Unstable/FlipperFreeTest.cpp, Line 26
 
 	[bool]
 	operator== returned false
@@ -90,7 +90,7 @@ flipper_free_test:
 
 	=======================================
 
-	Tests/Unstable/FlipperFreeTest.cpp, Line 25
+	Tests/Unstable/FlipperFreeTest.cpp, Line 27
 
 	[bool]
 	operator== returned false
@@ -126,7 +126,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Unstable/FlipperFreeTest.cpp, Line 24
+	Tests/Unstable/FlipperFreeTest.cpp, Line 26
 
 	[bool]
 	operator== returned false

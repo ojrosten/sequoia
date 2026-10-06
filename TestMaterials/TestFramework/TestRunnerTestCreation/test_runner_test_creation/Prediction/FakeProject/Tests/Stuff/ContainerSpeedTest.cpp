@@ -8,6 +8,8 @@
 #include "ContainerSpeedTest.hpp"
 #include "fakeProject/Stuff/Container.hpp"
 
+import std;
+
 namespace fakeProject::testing
 {
     [[nodiscard]]

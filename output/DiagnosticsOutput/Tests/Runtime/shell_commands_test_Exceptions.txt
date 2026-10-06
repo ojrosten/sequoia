@@ -1,4 +1,4 @@
-Tests/Runtime/ShellCommandsTest.cpp, Line 121
+Tests/Runtime/ShellCommandsTest.cpp, Line 117
 The message names the step, says how the step failed, then gives the advice
 
 Expected Exception Type:
@@ -8,7 +8,7 @@ Some advice
 
 =======================================
 
-Tests/Runtime/ShellCommandsTest.cpp, Line 213
+Tests/Runtime/ShellCommandsTest.cpp, Line 209
 cmd.exe cannot be given a double quote within quotes
 
 Expected Exception Type:
@@ -17,7 +17,7 @@ say "hi" cannot be quoted for cmd.exe: it contains a double quote, which would e
 
 =======================================
 
-Tests/Runtime/ShellCommandsTest.cpp, Line 217
+Tests/Runtime/ShellCommandsTest.cpp, Line 213
 cmd.exe cannot be given a percent sign within quotes
 
 Expected Exception Type:
@@ -26,7 +26,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Runtime/ShellCommandsTest.cpp, Line 221
+Tests/Runtime/ShellCommandsTest.cpp, Line 217
 cmd.exe cannot be given a line break within quotes
 
 Expected Exception Type:

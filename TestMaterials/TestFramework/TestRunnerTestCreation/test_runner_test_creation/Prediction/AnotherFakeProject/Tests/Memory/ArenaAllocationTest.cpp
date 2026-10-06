@@ -7,6 +7,8 @@
 
 #include "ArenaAllocationTest.hpp"
 
+import std;
+
 namespace curlew::testing
 {
     [[nodiscard]]

@@ -11,7 +11,8 @@
 
 #include "ContainerTestingUtilities.hpp"
 
-#include "sequoia/TestFramework/RegularAllocationTestCore.hpp"
+import std;
+import sequoia.test_framework;
 
 namespace curlew::testing
 {

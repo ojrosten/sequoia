@@ -7,6 +7,8 @@
 
 #include "PoolAllocationTest.hpp"
 
+import std;
+
 namespace curlew::testing
 {
     [[nodiscard]]

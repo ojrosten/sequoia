@@ -7,6 +7,8 @@
 
 #include "CloudMoveOnlyTest.hpp"
 
+import std;
+
 namespace curlew::testing
 {
     [[nodiscard]]
@@ -19,8 +21,8 @@ namespace curlew::testing
     {
         // For example:
 
-        // auto x = []() { return cloud{args}; };
-        // auto y = []() { return cloud{different args}; };
+        // auto x = []() { return ::cloud{args}; };
+        // auto y = []() { return ::cloud{different args}; };
         // check(equivalence, "Useful Description", x(), something equivalent);
         // check(equivalence, "Useful Description", y(), something equivalent);
         // For orderable type, with x < y:
