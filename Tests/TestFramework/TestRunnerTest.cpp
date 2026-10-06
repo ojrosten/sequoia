@@ -1009,6 +1009,8 @@ namespace sequoia::testing
     test_serial_verbose_output();
     test_throwing_tests();
     test_execution_records();
+    test_summary_collision_with_an_unselected_test();
+    test_discriminated_summary();
     test_filtered_suites();
     test_suites_not_found();
     test_selections_not_found();
@@ -1393,31 +1395,23 @@ namespace sequoia::testing
         runner.register_test<sourceless_free_test>();
       });
 
-    // The check is made whichever tests are selected: a test that runs alone would overwrite the other test's summary
-    for(const auto& selection : {std::vector<std::string>{},
-                                 {"select", summary_collider_test_twin::source_file().generic_string()}})
-    {
-      std::string_view selected{selection.empty() ? "both" : "one"};
-      check_exception_thrown<std::runtime_error>(
-        reporter{std::format("Two tests whose summaries are one file, {} selected", selected)},
-        [this, &selection](){
-          std::vector<std::string> argList{zeroth_arg()};
-          argList.append_range(selection);
-          commandline_arguments args{argList};
-          std::stringstream outputStream{};
+    check_exception_thrown<std::runtime_error>(
+      reporter{"Two tests whose summaries are one file, both selected"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
 
-          test_runner runner{args.size(),
-                             args.get(),
-                             "Oliver J. Rosten",
-                             "  ",
-                             {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                              .common_includes{"TestShared/SharedIncludes.hpp"}},
-                             outputStream};
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
 
-          runner.register_test<summary_collider_test>();
-          runner.register_test<summary_collider_test_twin>();
-        });
-    }
+        runner.register_test<summary_collider_test>();
+        runner.register_test<summary_collider_test_twin>();
+      });
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Invalid repetitions for instability analysis"},
@@ -1631,6 +1625,80 @@ namespace sequoia::testing
     const bool runStartedFirst{   (runStart <= start_named_by(passingRecord.file_path()))
                                && (runStart <= start_named_by(throwingRecord.file_path()))};
     check("The run started no later than either test", runStartedFirst);
+  }
+
+  /** `summary_collider_test_twin` is selected and `summary_collider_test` is
+      not. Their summaries are one file, ignoring case. The runner refuses
+      whichever of the two is registered second. When the twin is refused, the
+      run which follows writes no summary to that file. The summaries directory
+      is removed first, so that only this run can have written the file.
+   */
+  void test_runner_test::test_summary_collision_with_an_unselected_test()
+  {
+    commandline_arguments args{{(minimal_fake_path()).generic_string(),
+                                "select",
+                                summary_collider_test_twin::source_file().generic_string()}};
+
+    {
+      std::stringstream outputStream{};
+      auto runner{make_fake_runner(args, outputStream)};
+
+      runner.register_test<summary_collider_test_twin>();
+      check_exception_thrown<std::runtime_error>(
+        reporter{"An unselected test whose summary file is a selected test's"},
+        [&runner](){ runner.register_test<summary_collider_test>(); });
+    }
+
+    std::stringstream outputStream{};
+    auto runner{make_fake_runner(args, outputStream)};
+
+    const auto& projPaths{runner.proj_paths()};
+    fs::remove_all(projPaths.output().test_summaries());
+
+    runner.register_test<summary_collider_test>();
+    check_exception_thrown<std::runtime_error>(
+      reporter{"A selected test whose summary file is an unselected test's"},
+      [&runner](){ runner.register_test<summary_collider_test_twin>(); });
+
+    check(equality, "Summary collision with an unselected test return code", runner.execute(), return_code::success);
+
+    const test_summary_path collidingSummary{summary_collider_test_twin::source_file(),
+                                             test_name<summary_collider_test_twin>(),
+                                             projPaths,
+                                             null_discriminator};
+
+    check("The runner writes no summary to the colliding file", !fs::exists(collidingSummary.file_path()));
+  }
+
+  /** The runner writes the summary of `summary_collider_test` to the file
+      which the test's summary discriminator names, not to the undiscriminated
+      file. The summaries directory is removed first, so that only this run can
+      have written either file.
+   */
+  void test_runner_test::test_discriminated_summary()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+
+    const auto& projPaths{runner.proj_paths()};
+    fs::remove_all(projPaths.output().test_summaries());
+
+    runner.register_test<summary_collider_test>();
+
+    check(equality, "Discriminated summary return code", runner.execute(), return_code::success);
+
+    const auto source{summary_collider_test::source_file()};
+    constexpr auto name{test_name<summary_collider_test>()};
+    const test_summary_path
+      discriminatedSummary  {source, name, projPaths, "Twin"},
+      undiscriminatedSummary{source, name, projPaths, null_discriminator};
+
+    check("The runner writes the summary to the file the discriminator names",
+          fs::exists(discriminatedSummary.file_path()));
+    check("The runner writes no summary to the undiscriminated file",
+          !fs::exists(undiscriminatedSummary.file_path()));
   }
 
   void test_runner_test::test_filtered_suites()
@@ -2784,8 +2852,15 @@ namespace sequoia::testing
     const auto runner{make_fake_runner(args, outputStream)};
     const auto& projPaths{runner.proj_paths()};
 
-    test_vessel vessel{scratch_writing_free_test{}};
-    vessel.initialize(projPaths, cmake_cache{projPaths.build()}, recovery_mode::none);
+    const cmake_cache cache{projPaths.build()};
+    const auto source{scratch_writing_free_test::source_file()};
+    constexpr auto name{test_name<scratch_writing_free_test>()};
+    const auto summaryDiscriminator{get_discriminator<summary_discriminator_probe, scratch_writing_free_test>(cache)};
+
+    test_vessel vessel{scratch_writing_free_test{},
+                       test_summary_path{source, name, projPaths, summaryDiscriminator},
+                       test_execution_record_path{source, name, projPaths}};
+    vessel.initialize(projPaths, cache, recovery_mode::none);
 
     const auto& materials{vessel.materials_paths()};
     fs::remove_all(materials.discarded_materials_root());

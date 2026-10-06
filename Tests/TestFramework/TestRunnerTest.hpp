@@ -57,6 +57,10 @@ namespace sequoia::testing
 
     void test_execution_records();
 
+    void test_summary_collision_with_an_unselected_test();
+
+    void test_discriminated_summary();
+
     void test_prune_basic_output();
 
     void test_prune_with_changed_toolchain();

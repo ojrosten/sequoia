@@ -56,12 +56,16 @@ namespace sequoia::testing
   public:
     test_base() = default;
 
-    test_base(std::string_view name, test_mode mode, const normal_path& srcFile, project_paths projPaths, individual_materials_paths materials, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
+    test_base(std::string_view name,
+              test_mode mode,
+              const normal_path& srcFile,
+              project_paths projPaths,
+              individual_materials_paths materials,
+              const std::optional<std::string>& outputDiscriminator)
       : m_Name{name}
       , m_ProjectPaths{std::move(projPaths)}
       , m_Materials{std::move(materials)}
       , m_Diagnostics{m_ProjectPaths, m_Name, srcFile, mode, outputDiscriminator}
-      , m_SummaryFile{srcFile, m_Name, m_ProjectPaths, summaryDiscriminator}
     {}
 
     test_base(const test_base&)            = delete;
@@ -129,12 +133,6 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const test_summary_path& summary_file_path() const noexcept
-    {
-      return m_SummaryFile;
-    }
-
-    [[nodiscard]]
     std::string report(const reporter& rep) const
     {
         return rep.location() ? testing::report_line(rep.message(), m_ProjectPaths.tests().repo(), rep.location().value()) : rep.message();
@@ -158,7 +156,6 @@ namespace sequoia::testing
     project_paths m_ProjectPaths{};
     individual_materials_paths m_Materials{};
     individual_diagnostics_paths m_Diagnostics{};
-    test_summary_path m_SummaryFile{};
   };
 
   /** \brief class template from which all concrete tests should derive.
@@ -184,8 +181,13 @@ namespace sequoia::testing
 
     basic_test() = default;
 
-    basic_test(std::string_view name, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
-      : test_base{name, Mode, srcFile, projPaths, std::move(materials), outputDiscriminator, summaryDiscriminator}
+    basic_test(std::string_view name,
+               const normal_path& srcFile,
+               project_paths projPaths,
+               individual_materials_paths materials,
+               active_recovery_files files,
+               const std::optional<std::string>& outputDiscriminator)
+      : test_base{name, Mode, srcFile, std::move(projPaths), std::move(materials), outputDiscriminator}
       , checker<Mode, Extender>{std::move(files)}
     {}
 
