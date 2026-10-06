@@ -27,6 +27,8 @@ namespace sequoia::testing
 
     void test_same_ignoring_case();
 
+    void test_is_empty_or_whitespace();
+
     void test_character_types();
 
     void test_classification();

@@ -169,6 +169,16 @@ namespace sequoia
         return std::ranges::equal(impl::as_string_view(lhs), impl::as_string_view(rhs), sameIgnoringCase);
       }
     };
+
+    struct is_empty_or_whitespace_fn
+    {
+      template<character_string Text>
+      [[nodiscard]]
+      constexpr bool operator()(const Text& text) const
+      {
+        return std::ranges::all_of(impl::as_string_view(text), ascii::is_whitespace);
+      }
+    };
   }
 
   namespace ascii
@@ -187,5 +197,8 @@ namespace sequoia
 
     /** \brief Whether two strings of the same character type are equal once each is converted to lowercase. */
     inline constexpr impl::same_ignoring_case_fn same_ignoring_case{};
+
+    /** \brief Whether a string is empty or holds only whitespace. */
+    inline constexpr impl::is_empty_or_whitespace_fn is_empty_or_whitespace{};
   }
 }

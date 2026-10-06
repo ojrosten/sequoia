@@ -39,7 +39,6 @@ namespace sequoia::testing
 
   void test_runner_test_creation::run_tests()
   {
-    test_is_empty_or_whitespace();
     test_type_handling();
     test_project_namespace();
     test_template_data_generation();
@@ -48,41 +47,27 @@ namespace sequoia::testing
     test_creation_failure();
   }
 
-  void test_runner_test_creation::test_is_empty_or_whitespace()
-  {
-    check("Empty",                          is_empty_or_whitespace(""));
-    check("A space",                        is_empty_or_whitespace(" "));
-    check("A tab",                          is_empty_or_whitespace("\t"));
-    check("A carriage return",              is_empty_or_whitespace("\r"));
-    check("Whitespace of every kind",       is_empty_or_whitespace(" \t\n\v\f\r"));
-
-    check("int",                           !is_empty_or_whitespace("int"));
-    check("A single letter",               !is_empty_or_whitespace("T"));
-    check("Whitespace around a type",      !is_empty_or_whitespace(" \tint "));
-    check("const&, left to the compiler",  !is_empty_or_whitespace("const&"));
-  }
-
   void test_runner_test_creation::test_type_handling()
   {
-    check_exception_thrown<std::logic_error>("Empty string", []() { return passed_by_reference(""); });
-    check_exception_thrown<std::logic_error>("Just spaces", []() { return passed_by_reference(" "); });
-    check_exception_thrown<std::logic_error>("Just a tab", []() { return passed_by_reference("\t"); });
-    check("Letter",        passed_by_reference("a"));
-    check("int",          !passed_by_reference("int"));
-    check(" int",         !passed_by_reference(" int"));
-    check("  int",        !passed_by_reference("  int"));
-    check("int*",         !passed_by_reference("int*"));
-    check("int&",         !passed_by_reference("int&"));
-    check("int *",        !passed_by_reference("int *"));
-    check(" int ",        !passed_by_reference(" int "));
-    check("long",         !passed_by_reference("long"));
-    check("longint",      passed_by_reference("longint"));
-    check("long int",     !passed_by_reference("long int"));
-    check("double",       !passed_by_reference("double"));
-    check("std::size_t",  !passed_by_reference("std::size_t"));
-    check("tuple<int>",    passed_by_reference("tuple<int>"));
-    check("tuple<int >",   passed_by_reference("tuple<int >"));
-    check("tuple< int >",  passed_by_reference("tuple< int >"));
+    check_exception_thrown<std::logic_error>("Empty string", []() { return needs_reference_suffix(""); });
+    check_exception_thrown<std::logic_error>("Just spaces", []() { return needs_reference_suffix(" "); });
+    check_exception_thrown<std::logic_error>("Just a tab", []() { return needs_reference_suffix("\t"); });
+    check("Letter",        needs_reference_suffix("a"));
+    check("int",          !needs_reference_suffix("int"));
+    check(" int",         !needs_reference_suffix(" int"));
+    check("  int",        !needs_reference_suffix("  int"));
+    check("int*",         !needs_reference_suffix("int*"));
+    check("int&",         !needs_reference_suffix("int&"));
+    check("int *",        !needs_reference_suffix("int *"));
+    check(" int ",        !needs_reference_suffix(" int "));
+    check("long",         !needs_reference_suffix("long"));
+    check("longint",      needs_reference_suffix("longint"));
+    check("long int",     !needs_reference_suffix("long int"));
+    check("double",       !needs_reference_suffix("double"));
+    check("std::size_t",  !needs_reference_suffix("std::size_t"));
+    check("tuple<int>",    needs_reference_suffix("tuple<int>"));
+    check("tuple<int >",   needs_reference_suffix("tuple<int >"));
+    check("tuple< int >",  needs_reference_suffix("tuple< int >"));
   }
 
   void test_runner_test_creation::test_project_namespace()

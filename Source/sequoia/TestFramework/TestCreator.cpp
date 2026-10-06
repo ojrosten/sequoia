@@ -167,22 +167,17 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  bool is_empty_or_whitespace(std::string_view spelling) noexcept
+  bool needs_reference_suffix(std::string_view spelling)
   {
-    return std::ranges::all_of(spelling, ascii::is_whitespace);
-  }
-
-  [[nodiscard]]
-  bool passed_by_reference(std::string_view type)
-  {
-    if(is_empty_or_whitespace(type))
+    if(ascii::is_empty_or_whitespace(spelling))
       throw std::logic_error{"Equivalent type is unspecified"};
 
-    if((type.back() == '*') || (type.back() == '&')) return false;
+    if((spelling.back() == '*') || (spelling.back() == '&'))
+      return false;
 
-    const auto startPos{type.find_first_not_of(' ')};
-    const auto endPos{type.find_first_of(' ', startPos)};
-    auto token{std::string_view{type}.substr(startPos, endPos - startPos)};
+    const auto startPos{spelling.find_first_not_of(' ')};
+    const auto endPos{spelling.find_first_of(' ', startPos)};
+    auto token{spelling.substr(startPos, endPos - startPos)};
 
     constexpr std::array<std::string_view, 9> funTypes{"int", "float", "double", "bool", "char", "short", "long", "signed", "unsigned"};
     for(auto t : funTypes)
@@ -198,7 +193,8 @@ namespace sequoia::testing
     constexpr std::array<std::string_view, 10> types{"std::size_t", "size_t", "uint8_t", "uint16_t", "uint32_t", "uint64_t", "int8_t", "int16_t", "int32_t", "int64_t"};
     for(auto t : types)
     {
-      if(type == t) return false;
+      if(spelling == t)
+        return false;
     }
 
     return true;
@@ -886,7 +882,7 @@ namespace sequoia::testing
       std::format("{}{}{} {}",
                   m_EquivalentType.starts_with("const ") ? "" : "const ",
                   m_EquivalentType,
-                  passed_by_reference(m_EquivalentType) ? "&" : "",
+                  needs_reference_suffix(m_EquivalentType) ? "&" : "",
                   predictionName)
     };
 

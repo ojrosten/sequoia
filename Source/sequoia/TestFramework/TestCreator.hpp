@@ -24,18 +24,13 @@
 
 namespace sequoia::testing
 {
-  /** \brief Whether `spelling` is empty or holds only whitespace, as
-             `ascii::is_whitespace` classifies it.
+  /** \brief Whether to append `&` to `spelling`, the spelling of a
+             parameter's type, judging by the spelling alone.
+
+      \throws std::logic_error if `ascii::is_empty_or_whitespace(spelling)`.
    */
   [[nodiscard]]
-  bool is_empty_or_whitespace(std::string_view spelling) noexcept;
-
-  /** \brief Whether to append `&` to `type` in the declaration of a parameter.
-
-      \throws std::logic_error if `is_empty_or_whitespace(type)`.
-   */
-  [[nodiscard]]
-  bool passed_by_reference(std::string_view type);
+  bool needs_reference_suffix(std::string_view spelling);
 
   struct template_spec
   {
