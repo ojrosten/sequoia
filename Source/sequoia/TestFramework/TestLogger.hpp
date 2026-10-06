@@ -166,7 +166,7 @@ namespace sequoia::testing
         }
       };
 
-      indentation ind{no_indent};
+      indentation ind{};
       std::size_t activeLevels{};
       for(auto& info : m_SentinelDepth)
       {

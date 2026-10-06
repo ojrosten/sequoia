@@ -66,6 +66,10 @@ namespace sequoia
     std::string m_Data;
   };
 
+  // Not constexpr: MSVC's debug runtime allocates for every std::string, so none may outlive a constant evaluation
+  const indentation tab{"\t"};
+  const indentation no_indent{""};
+
   /// For a non-empty string_view prepends with an indentation; otherwise returns an empty string
   [[nodiscard]]
   constexpr std::string indent(std::string_view sv, indentation ind)
@@ -131,9 +135,6 @@ namespace sequoia
     return append_indented(str, sv2, std::move(ind));
   }
 
-  inline constexpr indentation tab{"\t"};
-  inline constexpr indentation no_indent{""};
-
   namespace impl
   {
     template<class... Ts, std::size_t... I>
@@ -186,7 +187,7 @@ namespace sequoia
     requires (sizeof...(Ts) > 0)
   constexpr std::string& append_lines(std::string& s, Ts&&... strs)
   {
-    return append_indented(s, std::forward<Ts>(strs)..., no_indent);
+    return append_indented(s, std::forward<Ts>(strs)..., indentation{});
   }
 
   template<class... Ts>
