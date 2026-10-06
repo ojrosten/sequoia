@@ -369,7 +369,7 @@ namespace sequoia::testing::impl
         if(check_ordering_consistency(logger, actions, x, y, args...))
         {
           const bool cond{order < 0 ? x < y : x > y};
-          auto message{
+          auto messageMaker{
             [&x, &y, order, cond]() {
               auto mess{
                 std::format("Prerequisite - for ordered semantics, it is assumed that {}",
@@ -383,10 +383,10 @@ namespace sequoia::testing::impl
               }
 
               return mess;
-            }()
+            }
           };
 
-          return check(std::move(message), logger, cond);
+          return check(messageMaker(), logger, cond);
         }
       }
     }
