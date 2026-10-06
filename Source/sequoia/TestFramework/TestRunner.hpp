@@ -268,7 +268,7 @@ namespace sequoia::testing
       m_pTest->initialize(projPaths, cache, mode);
     }
   private:
-    friend class selected_test;
+    friend class test_to_run;
 
     [[nodiscard]]
     log_summary summarize(log_summary::duration delta) const
@@ -396,23 +396,23 @@ namespace sequoia::testing
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
-  /** \brief A test selected to run, with the paths of the files which the
-             runner writes for it.
+  /** \brief A test to run, with the paths of the files which the runner
+             writes for it.
    */
-  class selected_test
+  class test_to_run
   {
   public:
-    selected_test(test_vessel vessel, test_summary_path summaryFile, test_execution_record_path executionRecord)
+    test_to_run(test_vessel vessel, test_summary_path summaryFile, test_execution_record_path executionRecord)
       : m_Vessel{std::move(vessel)}
       , m_SummaryFile{std::move(summaryFile)}
       , m_ExecutionRecord{std::move(executionRecord)}
     {}
 
-    selected_test(const selected_test&)     = delete;
-    selected_test(selected_test&&) noexcept = default;
+    test_to_run(const test_to_run&)     = delete;
+    test_to_run(test_to_run&&) noexcept = default;
 
-    selected_test& operator=(const selected_test&)     = delete;
-    selected_test& operator=(selected_test&&) noexcept = default;
+    test_to_run& operator=(const test_to_run&)     = delete;
+    test_to_run& operator=(test_to_run&&) noexcept = default;
 
     [[nodiscard]]
     std::string_view name() const noexcept
@@ -766,7 +766,7 @@ namespace sequoia::testing
     struct suite_node
     {
       log_summary summary{};
-      std::optional<selected_test> optTest{};
+      std::optional<test_to_run> optTest{};
       std::thread::id executing_thread_id{};
     };
 
@@ -780,7 +780,7 @@ namespace sequoia::testing
     std::ostream*    m_Stream;
 
     suite_type m_Suites{};
-    std::vector<selected_test> m_Tests{};
+    std::vector<test_to_run> m_Tests{};
     std::set<std::string> m_LowerCaseTestNames{};
     std::map<std::string, std::filesystem::path> m_SourcesByLowerCasePrefix{};
     std::map<std::string, std::string_view> m_TestNamesByLowerCaseSummary{};

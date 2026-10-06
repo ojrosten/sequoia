@@ -905,7 +905,7 @@ namespace sequoia::testing
     return ready_future_of(leftoverFailure);
   }
 
-  void selected_test::versioned_write(const fs::path& file, std::string_view text)
+  void test_to_run::versioned_write(const fs::path& file, std::string_view text)
   {
     if(!text.empty() || fs::exists(file))
     {
@@ -916,8 +916,8 @@ namespace sequoia::testing
     }
   }
 
-  selected_test::scoped_execution_record::scoped_execution_record(std::filesystem::path file,
-                                                                  const execution_timer& executionTimer)
+  test_to_run::scoped_execution_record::scoped_execution_record(std::filesystem::path file,
+                                                                const execution_timer& executionTimer)
     : m_File{std::move(file)}
     , m_Start{std::chrono::system_clock::now()}
     , m_ExecutionTimer{executionTimer}
@@ -925,7 +925,7 @@ namespace sequoia::testing
     overwrite_quietly(m_File, started_at(m_Start));
   }
 
-  selected_test::scoped_execution_record::~scoped_execution_record()
+  test_to_run::scoped_execution_record::~scoped_execution_record()
   {
     using std::chrono::microseconds, std::chrono::duration_cast;
     overwrite_quietly(m_File,
@@ -936,7 +936,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  log_summary selected_test::execute(std::optional<std::size_t> index, discarded_materials_remover& remover)
+  log_summary test_to_run::execute(std::optional<std::size_t> index, discarded_materials_remover& remover)
   {
     execution_timer executionTimer{};
     auto summary{execute_and_record(index, executionTimer, remover)};
@@ -946,7 +946,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::optional<removal_failure> selected_test::extract_discarded_materials_removal_failure()
+  std::optional<removal_failure> test_to_run::extract_discarded_materials_removal_failure()
   {
     if(!m_DiscardedMaterialsRemovalFailureFuture.valid())
       return std::nullopt;
@@ -970,9 +970,9 @@ namespace sequoia::testing
       function has made the summary.
    */
   [[nodiscard]]
-  log_summary selected_test::execute_and_record(std::optional<std::size_t> index,
-                                                execution_timer& executionTimer,
-                                                discarded_materials_remover& remover)
+  log_summary test_to_run::execute_and_record(std::optional<std::size_t> index,
+                                              execution_timer& executionTimer,
+                                              discarded_materials_remover& remover)
   {
     // Also installed per test, since under MSVC each thread has its own
     // terminate handler
@@ -985,7 +985,7 @@ namespace sequoia::testing
     return write_output(executionTimer.execution_duration(), index);
   }
 
-  void selected_test::try_run_tests()
+  void test_to_run::try_run_tests()
   {
     try
     {
@@ -1002,8 +1002,8 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  log_summary selected_test::write_output(const log_summary::duration executionDuration,
-                                          std::optional<std::size_t> index)
+  log_summary test_to_run::write_output(const log_summary::duration executionDuration,
+                                        std::optional<std::size_t> index)
   {
     try
     {
@@ -1023,7 +1023,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  bool selected_test::try_prepare_materials(discarded_materials_remover& remover)
+  bool test_to_run::try_prepare_materials(discarded_materials_remover& remover)
   {
     try
     {
@@ -1039,7 +1039,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  log_summary selected_test::write_versioned_output(const log_summary::duration executionDuration) const
+  log_summary test_to_run::write_versioned_output(const log_summary::duration executionDuration) const
   {
     auto summary{m_Vessel.summarize(executionDuration)};
 
@@ -1809,7 +1809,7 @@ namespace sequoia::testing
             if(wt.optTest)
             {
               auto pathsMaker{
-                  [this](const selected_test& test) -> test_paths {
+                  [this](const test_to_run& test) -> test_paths {
                     return {test.source_file(),
                             test.summary_file_path(),
                             test.materials_paths(),
@@ -2287,7 +2287,7 @@ namespace sequoia::testing
     const auto root{m_Suites.add_node(suite_type::npos)};
 
     // By name, so that where a registration sits in a main does not decide what the output says.
-    std::ranges::sort(tests, {}, [](const selected_test& t){ return t.name(); });
+    std::ranges::sort(tests, {}, [](const test_to_run& t){ return t.name(); });
 
     const auto findOrAddSuite{
       [this](const suite_node_index enclosingSuiteNode, const std::string& suiteName) {
