@@ -239,12 +239,6 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    log_summary summarize(log_summary::duration delta) const
-    {
-      return m_pTest->summarize(delta);
-    }
-
-    [[nodiscard]]
     bool has_critical_failures() const noexcept
     {
       return m_pTest->has_critical_failures();
@@ -261,6 +255,27 @@ namespace sequoia::testing
       m_pTest->run_tests();
     }
 
+    void reset_results()
+    {
+      m_pTest->reset_results();
+    }
+
+    /** \brief Replaces the held test with one which knows its materials,
+               diagnostics and recovery paths.
+     */
+    void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode)
+    {
+      m_pTest->initialize(projPaths, cache, mode);
+    }
+  private:
+    friend class selected_test;
+
+    [[nodiscard]]
+    log_summary summarize(log_summary::duration delta) const
+    {
+      return m_pTest->summarize(delta);
+    }
+
     void log_critical_failure(std::string_view tag, std::string_view what)
     {
       m_pTest->log_critical_failure(tag, what);
@@ -271,18 +286,6 @@ namespace sequoia::testing
       m_pTest->write_instability_analysis_output(index);
     }
 
-    void reset_results()
-    {
-      m_pTest->reset_results();
-    }
-
-    /** \brief Replaces the held test with one which knows where its files are. */
-
-    void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode)
-    {
-      m_pTest->initialize(projPaths, cache, mode);
-    }
-  private:
     struct soul
     {
       virtual ~soul() = default;
@@ -405,6 +408,12 @@ namespace sequoia::testing
       , m_ExecutionRecord{std::move(executionRecord)}
     {}
 
+    selected_test(const selected_test&)     = delete;
+    selected_test(selected_test&&) noexcept = default;
+
+    selected_test& operator=(const selected_test&)     = delete;
+    selected_test& operator=(selected_test&&) noexcept = default;
+
     [[nodiscard]]
     std::string_view name() const noexcept
     {
@@ -463,8 +472,9 @@ namespace sequoia::testing
 
     /** \brief Times a test's execution apart from the runner's overhead.
 
-        The execution duration is the time spent in the calls to `time_execution`. The runner's overhead is the rest
-        of the time since construction.
+        The execution duration is the time spent in the calls to
+        `time_execution`. The runner's overhead is the rest of the time since
+        construction.
      */
     class execution_timer
     {
@@ -523,6 +533,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool try_prepare_materials(discarded_materials_remover& remover);
 
+    [[nodiscard]]
     log_summary write_versioned_output(log_summary::duration executionDuration) const;
 
     test_vessel m_Vessel;

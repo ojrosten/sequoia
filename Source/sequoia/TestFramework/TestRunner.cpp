@@ -974,7 +974,8 @@ namespace sequoia::testing
                                                 execution_timer& executionTimer,
                                                 discarded_materials_remover& remover)
   {
-    // Also installed per test, since under MSVC each thread has its own terminate handler
+    // Also installed per test, since under MSVC each thread has its own
+    // terminate handler
     const scoped_terminate_handler terminationReported{report_termination};
     const scoped_execution_record record{m_ExecutionRecord.file_path(), executionTimer};
 
@@ -1037,6 +1038,7 @@ namespace sequoia::testing
     }
   }
 
+  [[nodiscard]]
   log_summary selected_test::write_versioned_output(const log_summary::duration executionDuration) const
   {
     auto summary{m_Vessel.summarize(executionDuration)};
