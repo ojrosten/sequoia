@@ -9,6 +9,7 @@
 
 export module sequoia.text_processing;
 
+export import :Characters;
 export import :Indent;
 export import :Patterns;
 export import :Substitutions;

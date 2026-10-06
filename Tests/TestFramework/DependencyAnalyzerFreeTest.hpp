@@ -15,8 +15,6 @@ import sequoia.test_framework;
 
 /** \file */
 
-#include <array>
-
 namespace sequoia::testing
 {
   class dependency_analyzer_free_test final : public free_test

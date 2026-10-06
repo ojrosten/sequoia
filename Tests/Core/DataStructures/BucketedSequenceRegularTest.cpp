@@ -8,8 +8,6 @@
 #include "BucketedSequenceRegularTest.hpp"
 #include "PartitionedDataGenericTests.hpp"
 
-#include <map>
-
 namespace sequoia::testing
 {
   namespace

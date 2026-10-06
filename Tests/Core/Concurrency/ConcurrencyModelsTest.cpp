@@ -10,12 +10,6 @@
 import std;
 import sequoia.core.concurrency;
 
-#include <future>
-#include <queue>
-#include <semaphore>
-#include <thread>
-#include <utility>
-
 namespace sequoia::testing
 {
   using namespace concurrency;

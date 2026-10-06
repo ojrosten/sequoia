@@ -10,8 +10,6 @@
 import std;
 import sequoia.streaming;
 
-#include <format>
-
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;

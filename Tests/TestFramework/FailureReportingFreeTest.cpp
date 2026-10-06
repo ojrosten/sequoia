@@ -5,16 +5,19 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "FailureReportingFreeTest.hpp"
-#include "sequoia/PlatformSpecific/Helpers.hpp"
-#include "sequoia/TestFramework/FailureReporting.hpp"
-
+// EXIT_FAILURE is a macro, so import std does not supply it, and Windows.h is not a standard-library
+// header; both must precede every import, the test's own header included.
 #include <cstdlib>
-#include <stdexcept>
 
 #ifdef _WIN32
   #include "Windows.h"
 #endif
+
+#include "FailureReportingFreeTest.hpp"
+
+import std;
+import sequoia.platform_specific;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

@@ -5,7 +5,11 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+export module sequoia.text_processing:Characters;
+
+import std;
+
+export import sequoia.core.meta;
 
 /** \file
     \brief Classifications and conversions of a character of any character type, and conversions and comparisons of
@@ -21,17 +25,7 @@
     identifier. None of these helpers depends on the locale.
  */
 
-#include "sequoia/Core/Meta/Concepts.hpp"
-
-#include <algorithm>
-#include <concepts>
-#include <ranges>
-#include <string>
-#include <string_view>
-#include <type_traits>
-#include <utility>
-
-namespace sequoia
+export namespace sequoia
 {
   inline constexpr auto is_ascii{
     [](character auto c){ return static_cast<std::make_unsigned_t<decltype(c)>>(c) < 0x80; }

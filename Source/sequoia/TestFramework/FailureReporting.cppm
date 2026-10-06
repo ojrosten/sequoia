@@ -5,16 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+export module sequoia.test_framework:FailureReporting;
+
+import std;
 
 /** \file
     \brief Describing the current exception when a run ends in `std::terminate`.
  */
 
-#include <exception>
-#include <string>
-
-namespace sequoia::testing
+export namespace sequoia::testing
 {
   /** \brief A description of the exception `e` holds.
 

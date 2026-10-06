@@ -18,8 +18,6 @@ import std;
 import sequoia.maths.graph;
 import sequoia.test_framework;
 
-#include <format>
-
 namespace sequoia::testing
 {
   template<maths::dynamic_tree Tree>

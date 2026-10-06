@@ -146,6 +146,7 @@ set(ModuleList
     TestFramework/DependencyAnalyzer.cppm
     TestFramework/DumpComparison.cppm
     TestFramework/FailureInfo.cppm
+    TestFramework/FailureReporting.cppm
     TestFramework/FileEditors.cppm
     TestFramework/FileSystemUtilities.cppm
     TestFramework/FreeCheckers.cppm
@@ -186,6 +187,7 @@ set(ModuleList
     TestFramework/TestRunner.cppm
     TestFramework/VersionedOutput.cppm
     TestFramework/TestRunnerUtilities.cppm
+    TextProcessing/Characters.cppm
     TextProcessing/Indent.cppm
     TextProcessing/Patterns.cppm
     TextProcessing/Substitutions.cppm

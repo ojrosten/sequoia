@@ -25,6 +25,7 @@ export import :CoreInfrastructure;
 export import :DependencyAnalyzer;
 export import :DumpComparison;
 export import :FailureInfo;
+export import :FailureReporting;
 export import :FileEditors;
 export import :FileSystemUtilities;
 export import :FreeCheckers;

@@ -6,7 +6,9 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "SummaryFreeTest.hpp"
-#include "sequoia/TestFramework/Summary.hpp"
+
+import std;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {
@@ -24,6 +26,9 @@ namespace sequoia::testing
   void summary_free_test::test_stringify_duration()
   {
     using namespace std::chrono;
+    // Named, not reached through std::chrono: the using-directive by which std::chrono supplies its literals
+    // does not reach an importer of std
+    using namespace std::chrono_literals;
     using namespace std::string_literals;
 
     auto stringified{

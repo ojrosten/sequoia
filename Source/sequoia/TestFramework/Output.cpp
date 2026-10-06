@@ -520,10 +520,10 @@ namespace sequoia::testing
     [[nodiscard]]
     bool is_module_name(std::string_view text)
     {
-      if(text.empty() || !(is_alpha(text.front()) || (text.front() == '_')))
+      if(text.empty() || !(ascii::is_alphabetic(text.front()) || (text.front() == '_')))
         return false;
 
-      return std::ranges::all_of(text, [](char c){ return !is_word_delimiter(c) || (c == '.'); });
+      return std::ranges::all_of(text, [](char c){ return !is_identifier_delimiter(c) || (c == '.'); });
     }
 
     /** Removes each `[module.name]` with which MSVC decorates a module-attached entity. */
@@ -547,7 +547,7 @@ namespace sequoia::testing
       for(auto pos{name.find('@')}; pos != npos; pos = name.find('@', pos))
       {
         auto end{pos + 1};
-        while((end < name.size()) && (!is_word_delimiter(name[end]) || (name[end] == '.')))
+        while((end < name.size()) && (!is_identifier_delimiter(name[end]) || (name[end] == '.')))
           ++end;
 
         if(is_module_name(std::string_view{name}.substr(pos + 1, end - pos - 1)))

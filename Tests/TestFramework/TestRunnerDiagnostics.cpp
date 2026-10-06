@@ -8,7 +8,8 @@
 #include "TestRunnerDiagnostics.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 
-#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+import std;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

@@ -10,8 +10,6 @@
 import std;
 import sequoia.core.object;
 
-#include <format>
-
 namespace
 {
   struct aggregate_type

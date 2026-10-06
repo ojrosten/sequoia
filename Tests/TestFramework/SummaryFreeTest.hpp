@@ -7,11 +7,13 @@
 
 #pragma once
 
-/** \file */
-
-#include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
 
 import std;
+import sequoia.test_framework;
+
+/** \file */
 
 namespace sequoia::testing
 {

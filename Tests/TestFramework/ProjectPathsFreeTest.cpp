@@ -6,7 +6,9 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "ProjectPathsFreeTest.hpp"
-#include "sequoia/TestFramework/ProjectPaths.hpp"
+
+import std;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

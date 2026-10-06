@@ -11,8 +11,6 @@
 import std;
 import sequoia.core.concurrency;
 
-#include <format>
-
 namespace sequoia::testing
 {
   namespace

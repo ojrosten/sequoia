@@ -18,8 +18,6 @@ import std;
 import sequoia.core.data_structures;
 import sequoia.maths.graph;
 
-#include <format>
-
 namespace sequoia::testing
 {
   template<maths::graph_flavour Flavour, class EdgeStorage>

@@ -6,15 +6,11 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "ShellCommandsTest.hpp"
-#include "sequoia/PlatformSpecific/Preprocessor.hpp"
-#include "sequoia/Streaming/Streaming.hpp"
-#include "sequoia/TextProcessing/Substitutions.hpp"
 
-#include <array>
-#include <concepts>
-#include <format>
-#include <limits>
-#include <ranges>
+import std;
+import sequoia.platform_specific;
+import sequoia.streaming;
+import sequoia.text_processing;
 
 namespace sequoia::testing
 {

@@ -13,8 +13,6 @@ import std;
 import sequoia.core.logic;
 import sequoia.test_framework;
 
-#include <format>
-
 namespace
 {
   enum class mask { none = 0, a = 1, b = 2, c = 4 };

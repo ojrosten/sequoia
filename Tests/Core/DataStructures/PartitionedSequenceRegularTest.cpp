@@ -13,8 +13,6 @@
 import std;
 import sequoia.core.data_structures;
 
-#include <map>
-
 namespace sequoia::testing
 {
   namespace

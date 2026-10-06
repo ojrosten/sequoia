@@ -8,8 +8,6 @@
 #include "BoundsFreeTest.hpp"
 #include "BoundsTestingUtilities.hpp"
 
-#include <format>
-
 namespace sequoia::testing
 {  
   using namespace maths;

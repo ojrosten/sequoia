@@ -9,8 +9,6 @@ module sequoia.maths.graph;
 
 import std;
 
-#include <format>
-
 namespace sequoia::maths::graph_errors
 {
   namespace

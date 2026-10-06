@@ -7,9 +7,8 @@
 
 #include "CommandLineArgumentsTest.hpp"
 
-#include "sequoia/Streaming/Streaming.hpp"
-
-#include <utility>
+import std;
+import sequoia.streaming;
 
 namespace sequoia::testing
 {

@@ -5,17 +5,18 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for FailureReporting.hpp
- */
+module;
 
-#include "sequoia/TestFramework/FailureReporting.hpp"
-#include "sequoia/TestFramework/Output.hpp"
-
+// stderr is a macro, so import std does not supply it
 #include <cstdio>
-#include <cstdlib>
-#include <format>
-#include <typeinfo>
+
+module sequoia.test_framework;
+
+import std;
+
+/** \file
+    \brief Definitions for FailureReporting.cppm
+ */
 
 namespace sequoia::testing
 {

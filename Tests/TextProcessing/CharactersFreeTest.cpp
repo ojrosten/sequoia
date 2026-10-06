@@ -6,13 +6,9 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "CharactersFreeTest.hpp"
-#include "sequoia/TextProcessing/Characters.hpp"
 
-#include <concepts>
-#include <filesystem>
-#include <format>
-#include <string>
-#include <type_traits>
+import std;
+import sequoia.text_processing;
 
 namespace sequoia::testing
 {

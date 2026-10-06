@@ -9,19 +9,9 @@
 #include "Maths/Graph/GraphTestingUtilities.hpp"
 #include "Maths/Graph/Dynamic/DynamicGraphTestingUtilities.hpp"
 
-#include "sequoia/Core/Meta/TypeName.hpp"
-#include "sequoia/Maths/Graph/DynamicGraph.hpp"
-#include "sequoia/Maths/Graph/DynamicTree.hpp"
-#include "sequoia/Maths/Graph/HeterogeneousStaticGraph.hpp"
-#include "sequoia/Maths/Graph/StaticGraph.hpp"
-
-#include <any>
-#include <format>
-#include <forward_list>
-#include <map>
-#include <memory>
-#include <utility>
-#include <vector>
+import std;
+import sequoia.core.meta;
+import sequoia.maths.graph;
 
 namespace sequoia::testing
 {
