@@ -2841,7 +2841,7 @@ namespace sequoia::testing
 
   /** A removal enqueued after its remover has joined never runs, so once the
       remover is destroyed, the removal's future holds a `std::future_error`.
-      The test's vessel reports that as a failure naming the discarded root.
+      The test to run reports that as a failure naming the discarded root.
       The exception's message is the library's, so it is not checked.
    */
   void test_runner_test::test_discarded_materials_removal_exception()
@@ -2857,12 +2857,12 @@ namespace sequoia::testing
     constexpr auto name{test_name<scratch_writing_free_test>()};
     const auto summaryDiscriminator{get_discriminator<summary_discriminator_probe, scratch_writing_free_test>(cache)};
 
-    test_vessel vessel{scratch_writing_free_test{},
-                       test_summary_path{source, name, projPaths, summaryDiscriminator},
-                       test_execution_record_path{source, name, projPaths}};
-    vessel.initialize(projPaths, cache, recovery_mode::none);
+    test_to_run testToRun{test_vessel{scratch_writing_free_test{}},
+                          test_summary_path{source, name, projPaths, summaryDiscriminator},
+                          test_execution_record_path{source, name, projPaths}};
+    testToRun.initialize(projPaths, cache, recovery_mode::none);
 
-    const auto& materials{vessel.materials_paths()};
+    const auto& materials{testToRun.materials_paths()};
     fs::remove_all(materials.discarded_materials_root());
     fs::create_directories(materials.temporary_materials_root());
 
@@ -2871,13 +2871,13 @@ namespace sequoia::testing
       remover.join();
       check(equality,
             "Materials prepared, so the removal enqueued",
-            vessel.execute(std::nullopt, remover).critical_failures(),
+            testToRun.execute(std::nullopt, remover).critical_failures(),
             0uz);
     }
 
     check(equality,
           "A removal which threw is a failure naming the discarded root",
-          vessel.extract_discarded_materials_removal_failure().value_or(removal_failure{}).dir,
+          testToRun.extract_discarded_materials_removal_failure().value_or(removal_failure{}).dir,
           materials.discarded_materials_root());
   }
 
