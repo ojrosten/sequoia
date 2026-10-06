@@ -9,27 +9,37 @@
                                  --recorded-tool <tool>...
                                  --baseline <file>
 
-`baseline` prints, for each file within `<root>/Source`, the keys of its
-uncalled functions. `compare` reads a baseline and exits with status 1 if the
-tracefile has a key more often than the baseline does. A key the tracefile has
-less often gives a notice, and does not change the status. The notice says
-whether a called function in that file has the key, or none does; since
-functions can share a key, the called one need not be the one listed. Either
-mode exits with status 2 if it refuses its input.
+`baseline` prints, for each file within `<root>/Source`, the keys of the
+file's uncalled functions. `compare` reads a baseline, and counts each key per
+file in the tracefile and in the baseline:
+  -# if any file has a key more often in the tracefile, `compare` names the key
+     and exits with status 1;
+  -# for each key a file has less often, `compare` prints a notice, which does
+     not change the status. The notice says whether a called function in that
+     file has the key. Since functions can share a key, that called function
+     need not be the one the baseline listed.
+Either mode exits with status 2 if it refuses its input.
 
-A function is what lcov reports at one start line of one file. Every template
-instantiation there is an alias of it, and the function is uncalled when no
-alias was called. Its key is its demangled name, with these removed:
+A record is what lcov reports at one start line of one file. Its aliases are
+the mangled names lcov lists there: each template instantiation of a function,
+and also any function written on the same line, such as a lambda within a
+lambda. A record is uncalled when no alias was called. So an uncalled lambda
+written on the line of a called one is never reported.
+
+An uncalled record is listed under each key its aliases give. A key is a
+demangled name with these removed:
   -# every template argument list, at every level;
-  -# the return type, abi tags, `[friend]` and any requires-clause;
+  -# the return type, abi tags, `[friend]`, any requires-clause, and the
+     suffixes `[clone ...]` and `(.cold)` which gcc's optimiser adds;
   -# a parameter list, and its qualifiers, wherever a template argument list
      attached to a name comes before it, since the parameters are spelt with
-     each instantiation's types;
-  -# the discriminator of a lambda, which numbers the lambdas of one signature
-     within a function in source order.
+     each instantiation's types. So is a parameter list which opens with an
+     explicit object parameter, `this`;
+  -# the discriminators of lambdas and of unnamed types, which number them in
+     source order.
 
-Several functions can share a key, so a baseline is a multiset: a key appears
-once for each uncalled function it names.
+Several records can share a key, so a baseline is a multiset: a key appears
+once for each uncalled record it names.
 
 Each demangler is tried in turn, and the first to demangle a name names it. A
 baseline's header records the version of every demangler and of every
@@ -41,6 +51,7 @@ called if the lambda's first line ran.
 """
 import argparse, re, subprocess, sys
 from collections import Counter
+from enum import Enum
 
 
 class Refusal(Exception):
@@ -51,35 +62,44 @@ class Unkeyable(Exception):
     pass
 
 
+class Selection(Enum):
+    uncalled = 'uncalled'
+    called   = 'called'
+
+
 # ---- The tracefile ----------------------------------------------------------
 
 def read_tracefile(path, source_root):
     """{file: {start line: {mangled name: calls}}} for the files within
-    `source_root`.
+    `source_root` which have function records.
 
-    Each file is given relative to the parent of `source_root`.
+    Each file is given relative to the parent of `source_root`. A record's end
+    line is optional, as geninfo documents.
     """
     prefix                = source_root.rstrip('/') + '/'
     relative_from         = prefix[:prefix.rstrip('/').rfind('/') + 1]
     functions, current    = {}, None
     index_to_start        = {}
     with open(path, encoding='utf-8', errors='surrogateescape') as tracefile:
-        for line in tracefile:
+        for number, line in enumerate(tracefile, 1):
             tag, _, value = line.rstrip('\n').partition(':')
-            if tag == 'SF':
-                within_source  = value.startswith(prefix)
-                current        = functions.setdefault(value[len(relative_from):], {}) if within_source else None
-                index_to_start = {}
-            elif current is None:
-                continue
-            elif tag == 'FNL':
-                index, start, _ = value.split(',')
-                index_to_start[index] = int(start)
-                current.setdefault(int(start), {})
-            elif tag == 'FNA':
-                index, calls, name = value.split(',', 2)
-                aliases       = current[index_to_start[index]]
-                aliases[name] = aliases.get(name, 0) + int(calls)
+            try:
+                if tag == 'SF':
+                    within_source  = value.startswith(prefix)
+                    current        = functions.setdefault(value[len(relative_from):], {}) if within_source else None
+                    index_to_start = {}
+                elif current is None:
+                    continue
+                elif tag == 'FNL':
+                    index, start = value.split(',')[:2]
+                    index_to_start[index] = int(start)
+                    current.setdefault(int(start), {})
+                elif tag == 'FNA':
+                    index, calls, name = value.split(',', 2)
+                    aliases       = current[index_to_start[index]]
+                    aliases[name] = aliases.get(name, 0) + int(calls)
+            except (KeyError, ValueError):
+                raise Refusal(f'{path}:{number}: malformed record: {line.rstrip()}')
     return {file: starts for file, starts in functions.items() if starts}
 
 
@@ -98,8 +118,13 @@ def demangle(names, demanglers):
 
 
 def version_of(tool):
-    """The first line of `tool --version` which holds a version number."""
-    output = subprocess.run([tool, '--version'], capture_output=True, text=True, check=True).stdout
+    """The first line of `tool --version` which holds a version number, with
+    its whitespace collapsed, or else the whole output.
+
+    The output is read from standard output and standard error together.
+    """
+    output = subprocess.run([tool, '--version'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+                            check=True).stdout
     lines  = [' '.join(line.split()) for line in output.split('\n')]
     return next((line for line in lines if re.search(r'\d+\.\d+', line)), output.strip())
 
@@ -111,7 +136,8 @@ OPERATORS = ['<=>', '<<=', '>>=', '->*', '()', '[]', '<<', '>>', '<=', '>=', '->
              '^', '~', '!', '=', ',']
 
 # `operator` and the symbol after it form one token, so that the brackets of
-# `operator()` or `operator<` are not read as brackets. So does `->`.
+# `operator()` or `operator<` are not read as brackets. `->` is one token too,
+# so that its `>` is not read as a bracket.
 TOKEN  = re.compile(r'(?<!\w)operator(?:' + '|'.join(map(re.escape, OPERATORS)) + r')?(?!\w)|->|[<>(){}\[\]]')
 CLOSER = {'(': ')', '[': ']', '{': '}', '<': '>'}
 
@@ -141,8 +167,8 @@ def cells(text):
 
 
 def strip_template_arguments(text):
-    """`text` without its template argument lists, and the offsets at which the
-    lists attached to a name were removed.
+    """`text` without its template argument lists, and the offsets, in the text
+    returned, at which the lists attached to a name were removed.
 
     A list attached to a name lies outside every bracket, so a list within a
     parameter list is not one.
@@ -169,9 +195,11 @@ def strip_template_arguments(text):
 
 
 def without_requires_clause(text):
-    """`text` without any requires-clause llvm-cxxfilt printed after it.
+    """`text`, the name of a function, without any requires-clause which
+    llvm-cxxfilt printed after the name.
 
-    The angle brackets of a requires-clause need not balance.
+    The angle brackets of a requires-clause need not balance, and a template
+    argument within the name may hold a requires-clause of its own.
     """
     at = text.find(' requires ')
     while at >= 0:
@@ -227,16 +255,11 @@ def split_name(text):
         if depth == 0 and token == ' ' and not re.match(r'(const|volatile|&&?)(\s|::)', head[offset + 1:]):
             start = offset + 1
 
-    # A conversion operator's type is part of its name, `::` included
-    components, begin, conversion = [], start, False
+    components, begin = [], start
     for offset, depth, token, kind in all_cells:
         if offset < start or offset >= len(head) or depth:
             continue
-        if kind == 'operator' and token == 'operator':
-            conversion = True
-        if kind == 'open' and token == '(':
-            conversion = False
-        if not conversion and head.startswith('::', offset) and offset >= begin:
+        if head.startswith('::', offset) and offset >= begin:
             components.append((head[begin:offset], begin))
             begin = offset + 2
     components.append((head[begin:], begin))
@@ -253,6 +276,10 @@ def key(demangled):
     removed = [at for at in removed if at >= components[0][1]]
 
     def signature(parameters, qualifiers, opening):
+        """The parameter list and its qualifiers, unless a template argument
+        list attached to a name was removed before the list opens, or the list
+        opens with an explicit object parameter, whose type names each
+        instantiation's class."""
         if any(at <= opening for at in removed) or parameters.startswith('this '):
             return ''
         return '(' + parameters + ')' + (' ' + qualifiers if qualifiers else '')
@@ -280,16 +307,15 @@ def key(demangled):
 
 # ---- The baseline -----------------------------------------------------------
 
-def keys_by_file(functions, demanglers, uncalled):
-    """{file: {key: [start line]}} of the uncalled functions if `uncalled` is
-    true, and of the called functions otherwise.
+def keys_by_file(functions, demanglers, selection):
+    """{file: {key: [start line]}} of the records `selection` names.
 
-    A function is keyed by every key its aliases give, since one start line can
-    hold several functions. A called function none of whose aliases can be
-    keyed is left out. An uncalled one raises `Unkeyable`.
+    A record is listed under each key its aliases give. A called record none of
+    whose aliases can be keyed is left out. An uncalled one raises `Unkeyable`.
     """
     def selected(aliases):
-        return not any(aliases.values()) if uncalled else any(aliases.values())
+        called = any(aliases.values())
+        return called if selection == Selection.called else not called
 
     names     = {name for starts in functions.values() for aliases in starts.values() if selected(aliases)
                       for name in aliases}
@@ -305,7 +331,7 @@ def keys_by_file(functions, demanglers, uncalled):
                     keys.add(key(demangled[name]))
                 except Unkeyable:
                     pass
-            if not keys and uncalled:
+            if not keys and selection == Selection.uncalled:
                 raise Unkeyable(f'{file}:{start}: no alias of this uncalled function can be keyed, '
                                 f'e.g. {sorted(aliases)[0]}')
             for function_key in keys:
@@ -320,11 +346,14 @@ def counts(keys):
 
 
 def header(demanglers, recorded_tools):
+    """The lines of a baseline's header: the version of each tool."""
     return ([f'demangler: {version_of(tool)}' for tool in demanglers]
             + [f'tool: {version_of(tool)}' for tool in recorded_tools])
 
 
 def format_baseline(header_lines, uncalled):
+    """A baseline: its header, then each file with its keys, one per line and
+    indented, each as often as `uncalled` counts it."""
     lines = ['# ' + line for line in header_lines]
     for file, keys in sorted(uncalled.items()):
         lines += [file] + ['    ' + key for key in sorted(keys.elements())]
@@ -379,7 +408,7 @@ def main():
         if not functions:
             raise Refusal(f'{arguments.tracefile} has no function records within {arguments.repository}/Source')
         current_header = header(arguments.demangler, arguments.recorded_tool)
-        uncalled       = keys_by_file(functions, arguments.demangler, uncalled=True)
+        uncalled       = keys_by_file(functions, arguments.demangler, Selection.uncalled)
         if arguments.mode == 'baseline':
             sys.stdout.write(format_baseline(current_header, counts(uncalled)))
             return 0
@@ -390,9 +419,9 @@ def main():
                           f'{current_header}: regenerate the baseline')
         risen, fallen = compare(baseline, counts(uncalled))
         called        = keys_by_file({file: functions[file] for file, _ in fallen if file in functions},
-                                     arguments.demangler, uncalled=False)
+                                     arguments.demangler, Selection.called)
         for file, fallen_key in fallen:
-            if fallen_key in called.get(file, Counter()):
+            if fallen_key in called.get(file, {}):
                 print(f'notice: now called, so it can leave the baseline: {file}: {fallen_key}')
             else:
                 print(f'notice: no longer present, so it can leave the baseline: {file}: {fallen_key}')

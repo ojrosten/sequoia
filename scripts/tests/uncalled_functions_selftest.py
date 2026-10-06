@@ -9,21 +9,23 @@ the controls against the script and against each mutant of the script. The
 script must fail no control, and each mutant at least one.
 
 The demanglers are given in the order the script is to try them. The expected
-keys are spelt as llvm-cxxfilt, then GNU c++filt, spell them. The mangled names
-are g++-16's. gcc emits the C2 and D2 variants of a constructor and destructor
-in sequoia's own tracefiles, and they are the C1 and D1 names with the variant
+keys assume llvm-cxxfilt first and GNU c++filt second. The mangled names are
+g++-16's. gcc emits the C2 and D2 variants of a constructor and destructor in
+sequoia's own tracefiles, and they are the C1 and D1 names with the variant
 letter changed.
 """
-import argparse, contextlib, io, os, sys, tempfile, types, unittest
+import argparse, contextlib, io, itertools, os, stat, sys, tempfile, types, unittest
 from collections import Counter
 
-HERE   = os.path.dirname(os.path.abspath(__file__))
-SCRIPT = os.path.join(HERE, '..', 'uncalled_functions.py')
-with open(SCRIPT, encoding='utf-8') as script:
-    SOURCE = script.read()
+HERE        = os.path.dirname(os.path.abspath(__file__))
+SCRIPT_PATH = os.path.join(HERE, '..', 'uncalled_functions.py')
+with open(SCRIPT_PATH, encoding='utf-8') as script_file:
+    SOURCE = script_file.read()
 
 DEMANGLERS = []
-U          = None
+script     = None
+scratch    = None
+file_names = itertools.count()
 
 
 def load(source):
@@ -32,8 +34,10 @@ def load(source):
     return module
 
 
-ROOT = '/home/runner/work/sequoia/sequoia'
-F    = ROOT + '/Source/sequoia/ns.hpp'
+ROOT         = '/home/runner/work/sequoia/sequoia'
+SOURCE_FILE  = ROOT + '/Source/sequoia/ns.hpp'
+OTHER_FILE   = ROOT + '/Source/sequoia/other.hpp'
+FILE_KEY     = 'Source/sequoia/ns.hpp'
 
 # int ns::twice<int>(int) and double ns::twice<double>(double)
 TWICE_INT       = '_ZN2ns5twiceIiEET_S1_'
@@ -66,10 +70,11 @@ COND_DOUBLE     = '_ZN2ns4condIdE1fEvQnt8integralIT_E'
 
 
 def written(text, suffix):
-    handle = tempfile.NamedTemporaryFile('w', suffix=suffix, delete=False, encoding='utf-8')
-    handle.write(text)
-    handle.close()
-    return handle.name
+    """The path of a new file in the scratch directory, holding `text`."""
+    path = os.path.join(scratch, f'{next(file_names)}{suffix}')
+    with open(path, 'w', encoding='utf-8') as file:
+        file.write(text)
+    return path
 
 
 def tracefile(functions, path):
@@ -85,12 +90,21 @@ def tracefile(functions, path):
     return written('\n'.join(lines) + '\n', '.info')
 
 
+def fake_tool(version_line):
+    """The path of an executable which writes `version_line` to standard error
+    when asked for its version."""
+    path = written(f'#!/bin/sh\necho "{version_line}" >&2\n', '.sh')
+    os.chmod(path, os.stat(path).st_mode | stat.S_IXUSR)
+    return path
+
+
 def uncalled_keys(functions):
-    found = U.keys_by_file(U.read_tracefile(tracefile(functions, F), ROOT + '/Source'), DEMANGLERS, uncalled=True)
-    return U.counts(found).get('Source/sequoia/ns.hpp', Counter())
+    found = script.keys_by_file(script.read_tracefile(tracefile(functions, SOURCE_FILE), ROOT + '/Source'),
+                                DEMANGLERS, script.Selection.uncalled)
+    return script.counts(found).get(FILE_KEY, Counter())
 
 
-def run(arguments):
+def run_main(arguments):
     """(exit status, standard output, standard error) of the script's main,
     given `arguments`."""
     out, err = io.StringIO(), io.StringIO()
@@ -98,15 +112,15 @@ def run(arguments):
     sys.argv = ['uncalled_functions.py'] + arguments
     try:
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
-            status = U.main()
+            status = script.main()
     finally:
         sys.argv = saved
     return status, out.getvalue(), err.getvalue()
 
 
-def tools():
-    return ([argument for demangler in DEMANGLERS for argument in ('--demangler', demangler)]
-            + ['--recorded-tool', sys.executable])
+def tool_options(recorded_tool):
+    return ([option for demangler in DEMANGLERS for option in ('--demangler', demangler)]
+            + ['--recorded-tool', recorded_tool])
 
 
 class Keys(unittest.TestCase):
@@ -160,54 +174,106 @@ class Keys(unittest.TestCase):
                          uncalled_keys([(110, [(CONVERT_STRING, 0)]), (220, [(LAMBDA_INT_1, 0)])]))
 
     def test_a_template_in_an_anonymous_namespace(self):
-        self.assertEqual(U.key('std::vector<int, std::allocator<int> > ns::(anonymous namespace)::make<int>(int)'),
+        self.assertEqual(script.key('std::vector<int, std::allocator<int> > ns::(anonymous namespace)::make<int>(int)'),
                          'ns::(anonymous namespace)::make')
 
     def test_a_return_type_does_not_make_the_enclosing_function_a_template(self):
         """A generic lambda's operator() returns the type its instantiation
         gives, and the enclosing g(int) is not a template."""
         generic = 'int ns::g(int)::{lambda(auto:1)#1}::operator()<int>(int) const'
-        self.assertEqual(U.key('std::vector<int, std::allocator<int> > ns::g(int)::{lambda(auto:1)#1}::'
-                               'operator()<std::vector<int> >(std::vector<int>) const'),
-                         U.key(generic))
-        self.assertEqual(U.key(generic), 'ns::g(int)::{lambda(auto:1)}::operator()')
+        self.assertEqual(script.key('std::vector<int, std::allocator<int> > ns::g(int)::{lambda(auto:1)#1}::'
+                                    'operator()<std::vector<int> >(std::vector<int>) const'),
+                         script.key(generic))
+        self.assertEqual(script.key(generic), 'ns::g(int)::{lambda(auto:1)}::operator()')
 
     def test_an_operator_as_an_enclosing_scope(self):
-        self.assertEqual(U.key('ns::x::operator()(int) const::{lambda()#1}::operator()() const'),
+        self.assertEqual(script.key('ns::x::operator()(int) const::{lambda()#1}::operator()() const'),
                          'ns::x::operator()(int) const::{lambda()}::operator()() const')
-        self.assertEqual(U.key('ns::t<int>::operator()(int) const::{lambda()#1}::operator()() const'),
+        self.assertEqual(script.key('ns::t<int>::operator()(int) const::{lambda()#1}::operator()() const'),
                          'ns::t::operator()::{lambda}::operator()')
+
+    def test_a_const_function_as_an_enclosing_scope(self):
+        """The space before the enclosing function's `const` does not begin
+        the name."""
+        self.assertEqual(script.key('ns::a::f() const::{lambda()#1}::operator()() const'),
+                         'ns::a::f() const::{lambda()}::operator()() const')
 
     def test_hidden_friends_of_a_class_template_collapse(self):
         """A friend defined in a class template is a non-template function
         per instantiation. Only its parameter types say which, so the lists
         within a parameter list go too."""
-        self.assertEqual(U.key('sequoia::operator<=>(sequoia::mem_ordered_tuple<int, int> const&, '
-                               'sequoia::mem_ordered_tuple<int, int> const&)'),
-                         U.key('sequoia::operator<=>(sequoia::mem_ordered_tuple<int> const&, '
-                               'sequoia::mem_ordered_tuple<int> const&)'))
+        self.assertEqual(script.key('sequoia::operator<=>(sequoia::mem_ordered_tuple<int, int> const&, '
+                                    'sequoia::mem_ordered_tuple<int, int> const&)'),
+                         script.key('sequoia::operator<=>(sequoia::mem_ordered_tuple<int> const&, '
+                                    'sequoia::mem_ordered_tuple<int> const&)'))
+
+    def test_a_friend_marker_goes(self):
+        self.assertEqual(script.key('ns::f(int) [friend]'), 'ns::f(int)')
+
+    def test_optimiser_suffixes_go(self):
+        for name in ('ns::f(int) [clone .cold]', 'ns::f(int) [clone .isra.0] [clone .cold]', 'ns::f(int) (.cold)'):
+            with self.subTest(name=name):
+                self.assertEqual(script.key(name), 'ns::f(int)')
+
+    def test_an_explicit_object_parameter_list_goes(self):
+        self.assertEqual(script.key('void ns::s::f(this ns::s const&)'), 'ns::s::f')
+
+    def test_unnamed_types_are_named_without_discriminator(self):
+        """GNU c++filt numbers an unnamed type; llvm-cxxfilt spells the first
+        `'unnamed'`."""
+        for name in ('ns::f()::{unnamed type#2}::operator()() const', "ns::f()::'unnamed'::operator()() const"):
+            with self.subTest(name=name):
+                self.assertEqual(script.key(name), 'ns::f()::{unnamed type}::operator()() const')
+
+    def test_a_conversion_to_a_scoped_type(self):
+        self.assertEqual(script.key('ns::num::operator ns::other::type() const'),
+                         'ns::num::operator ns::other::type() const')
+
+    def test_noexcept_is_a_qualifier(self):
+        self.assertEqual(script.key('ns::f(int) noexcept'), 'ns::f(int) noexcept')
+
+    def test_a_requires_clause_within_a_template_argument(self):
+        """The first ` requires ` lies within a template argument; only the
+        second ends the name. The shape is a lambda's, from an initialiser of
+        a constrained constructor, as llvm-cxxfilt prints it."""
+        self.assertEqual(script.key("ns::w<ns::g(int) requires c<T>::'lambda'()>::w(int) requires d<int>"),
+                         'ns::w::w')
 
     def test_files_outside_the_source_tree_are_ignored(self):
-        for path in ('/r/Tests/ns.cpp', ROOT + '/SourceExtra/ns.hpp', '/elsewhere' + F):
+        for path in ('/r/Tests/ns.cpp', ROOT + '/SourceExtra/ns.hpp', '/elsewhere' + SOURCE_FILE):
             with self.subTest(path=path):
-                self.assertEqual(U.read_tracefile(tracefile([(10, [(HIDDEN, 0)])], path), ROOT + '/Source'), {})
+                self.assertEqual(script.read_tracefile(tracefile([(10, [(HIDDEN, 0)])], path), ROOT + '/Source'), {})
 
     def test_a_file_is_named_relative_to_the_repository(self):
-        self.assertEqual(list(U.read_tracefile(tracefile([(10, [(HIDDEN, 0)])], F), ROOT + '/Source')),
-                         ['Source/sequoia/ns.hpp'])
+        self.assertEqual(list(script.read_tracefile(tracefile([(10, [(HIDDEN, 0)])], SOURCE_FILE), ROOT + '/Source')),
+                         [FILE_KEY])
+
+    def test_a_record_without_an_end_line_is_read(self):
+        path = written(f'SF:{SOURCE_FILE}\nFNL:0,12\nFNA:0,0,{HIDDEN}\nend_of_record\n', '.info')
+        self.assertEqual(script.read_tracefile(path, ROOT + '/Source'), {FILE_KEY: {12: {HIDDEN: 0}}})
 
     def test_a_function_no_demangler_can_name_is_refused(self):
-        with self.assertRaises(U.Unkeyable):
+        with self.assertRaises(script.Unkeyable):
             uncalled_keys([(10, [('_ZN2ns5brokenE', 0)])])
 
 
 class Verdict(unittest.TestCase):
-    def verdict(self, baseline_functions, current_functions):
-        status, out, err = run(['baseline', '--tracefile', tracefile(baseline_functions, F), '--repository', ROOT]
-                               + tools())
+    def setUp(self):
+        self.tool = fake_tool('faketool 9.9.1')
+
+    def make_baseline(self, functions, path):
+        status, out, err = run_main(['baseline', '--tracefile', tracefile(functions, path), '--repository', ROOT]
+                                    + tool_options(self.tool))
         self.assertEqual((status, err), (0, ''))
-        return run(['compare', '--tracefile', tracefile(current_functions, F), '--repository', ROOT,
-                    '--baseline', written(out, '.txt')] + tools())
+        return written(out, '.txt')
+
+    def compare(self, baseline, tracefile_path):
+        return run_main(['compare', '--tracefile', tracefile_path, '--repository', ROOT, '--baseline', baseline]
+                        + tool_options(self.tool))
+
+    def verdict(self, baseline_functions, current_functions):
+        return self.compare(self.make_baseline(baseline_functions, SOURCE_FILE),
+                            tracefile(current_functions, SOURCE_FILE))
 
     def test_unchanged_passes_silently(self):
         functions = [(10, [(CONVERT_STRING, 0)]), (20, [(CONVERT_VIEW, 1)])]
@@ -216,6 +282,15 @@ class Verdict(unittest.TestCase):
     def test_newly_uncalled_function_fails(self):
         status, out, _ = self.verdict([(10, [(CONVERT_STRING, 0)]), (20, [(CONVERT_VIEW, 1)])],
                                       [(10, [(CONVERT_STRING, 0)]), (20, [(CONVERT_VIEW, 0)])])
+        self.assertEqual(status, 1)
+        self.assertIn('error: uncalled, and not in the baseline: Source/sequoia/ns.hpp: '
+                      'ns::convert(std::basic_string_view) (lines [20])', out)
+
+    def test_newly_uncalled_function_in_a_file_the_baseline_lacks_fails(self):
+        """Most files have no uncalled function, so the baseline does not list
+        them."""
+        baseline = self.make_baseline([(10, [(HIDDEN, 0)])], OTHER_FILE)
+        status, out, _ = self.compare(baseline, tracefile([(20, [(CONVERT_VIEW, 0)])], SOURCE_FILE))
         self.assertEqual(status, 1)
         self.assertIn('error: uncalled, and not in the baseline: Source/sequoia/ns.hpp: '
                       'ns::convert(std::basic_string_view) (lines [20])', out)
@@ -230,6 +305,23 @@ class Verdict(unittest.TestCase):
                                       [(20, [(CONVERT_VIEW, 1)])]),
                          (0, 'notice: no longer present, so it can leave the baseline: Source/sequoia/ns.hpp: '
                              'ns::convert(std::__cxx11::basic_string const&)\n', ''))
+
+    def test_one_of_two_uncalled_functions_under_a_key_gone(self):
+        """The other function under the key is still uncalled, so the key is
+        not called."""
+        self.assertEqual(self.verdict([(10, [(SET_INT, 0)]), (11, [(SET2_INT, 0)])], [(10, [(SET_INT, 0)])]),
+                         (0, 'notice: no longer present, so it can leave the baseline: Source/sequoia/ns.hpp: '
+                             'ns::box::set\n', ''))
+
+    def test_a_key_listed_twice_is_counted_twice(self):
+        baseline = self.make_baseline([(10, [(SET_INT, 0)]), (11, [(SET2_INT, 0)])], SOURCE_FILE)
+        self.assertEqual(self.compare(baseline, tracefile([(10, [(SET_INT, 0)]), (11, [(SET2_INT, 0)])],
+                                                          SOURCE_FILE)),
+                         (0, '', ''))
+        status, out, _ = self.compare(baseline, tracefile([(10, [(SET_INT, 0)]), (11, [(SET2_INT, 3)])],
+                                                          SOURCE_FILE))
+        self.assertEqual((status, out), (0, 'notice: now called, so it can leave the baseline: '
+                                            'Source/sequoia/ns.hpp: ns::box::set\n'))
 
     def test_a_regression_cannot_hide_behind_an_improvement(self):
         status, _, _ = self.verdict([(10, [(CONVERT_STRING, 0)]), (20, [(CONVERT_VIEW, 1)])],
@@ -249,38 +341,69 @@ class Verdict(unittest.TestCase):
                                       [(21, [(LAMBDA_INT_3, 0)]), (18, [(LAMBDA_INT_1, 4)])]),
                          (0, '', ''))
 
-    def test_a_tracefile_without_source_functions_is_refused(self):
-        baseline   = written(''.join('# ' + line + '\n' for line in U.header(DEMANGLERS, [sys.executable])), '.txt')
-        status, out, err = run(['compare', '--tracefile', tracefile([(10, [(HIDDEN, 0)])], '/r/Tests/ns.cpp'),
-                                '--repository', ROOT, '--baseline', baseline] + tools())
-        self.assertEqual((status, out), (2, ''))
-        self.assertIn('has no function records within ' + ROOT + '/Source', err)
-
-    def test_a_baseline_from_other_tools_is_refused(self):
-        baseline   = written('# demangler: some other version\n', '.txt')
-        status, out, err = run(['compare', '--tracefile', tracefile([(10, [(HIDDEN, 0)])], F),
-                                '--repository', ROOT, '--baseline', baseline] + tools())
-        self.assertEqual((status, out), (2, ''))
-        self.assertIn('regenerate the baseline', err)
-
     def test_the_header_records_every_tool(self):
-        status, out, _ = run(['baseline', '--tracefile', tracefile([(10, [(HIDDEN, 0)])], F), '--repository', ROOT]
-                             + tools())
+        """The fake tool writes its version to standard error."""
+        status, out, _ = run_main(['baseline', '--tracefile', tracefile([(10, [(HIDDEN, 0)])], SOURCE_FILE),
+                                   '--repository', ROOT] + tool_options(self.tool))
         self.assertEqual(status, 0)
         self.assertEqual([line for line in out.split('\n') if line.startswith('# ')],
-                         ['# demangler: ' + U.version_of(tool) for tool in DEMANGLERS]
-                         + ['# tool: ' + U.version_of(sys.executable)])
+                         ['# demangler: ' + script.version_of(demangler) for demangler in DEMANGLERS]
+                         + ['# tool: faketool 9.9.1'])
+
+    def assert_refused(self, result, message):
+        status, out, err = result
+        self.assertEqual((status, out), (2, ''))
+        self.assertIn(message, err)
+
+    def test_a_baseline_from_another_version_of_a_recorded_tool_is_refused(self):
+        baseline  = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
+        self.tool = fake_tool('faketool 9.9.2')
+        self.assert_refused(self.compare(baseline, tracefile([(10, [(HIDDEN, 0)])], SOURCE_FILE)),
+                            'regenerate the baseline')
+
+    def test_a_baseline_without_a_header_is_refused(self):
+        baseline = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
+        with open(baseline, encoding='utf-8') as file:
+            entries = [line for line in file if not line.startswith('# ')]
+        self.assert_refused(self.compare(written(''.join(entries), '.txt'),
+                                         tracefile([(10, [(HIDDEN, 0)])], SOURCE_FILE)),
+                            'regenerate the baseline')
 
     def test_a_key_before_any_file_is_refused(self):
-        baseline   = written(''.join('# ' + line + '\n' for line in U.header(DEMANGLERS, [sys.executable]))
-                             + '    ns::twice\n', '.txt')
-        status, out, err = run(['compare', '--tracefile', tracefile([(10, [(HIDDEN, 0)])], F),
-                                '--repository', ROOT, '--baseline', baseline] + tools())
-        self.assertEqual((status, out), (2, ''))
-        self.assertIn('a key precedes the first file: ns::twice', err)
+        baseline = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
+        with open(baseline, encoding='utf-8') as file:
+            header_lines = [line for line in file if line.startswith('# ')]
+        self.assert_refused(self.compare(written(''.join(header_lines) + '    ns::twice\n', '.txt'),
+                                         tracefile([(10, [(HIDDEN, 0)])], SOURCE_FILE)),
+                            'a key precedes the first file: ns::twice')
+
+    def test_a_tracefile_without_source_functions_is_refused(self):
+        baseline = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
+        for path in (tracefile([(10, [(HIDDEN, 0)])], '/r/Tests/ns.cpp'),
+                     written(f'SF:{SOURCE_FILE}\nDA:1,1\nend_of_record\n', '.info')):
+            with self.subTest(path=path):
+                self.assert_refused(self.compare(baseline, path),
+                                    'has no function records within ' + ROOT + '/Source')
+
+    def test_a_malformed_tracefile_is_refused(self):
+        baseline = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
+        for body in (f'FNA:7,0,{HIDDEN}', 'FNL:0'):
+            with self.subTest(body=body):
+                self.assert_refused(self.compare(baseline, written(f'SF:{SOURCE_FILE}\n{body}\nend_of_record\n',
+                                                                   '.info')),
+                                    'malformed record: ' + body)
+
+    def test_an_absent_tracefile_is_refused(self):
+        baseline = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
+        self.assert_refused(self.compare(baseline, os.path.join(scratch, 'absent.info')), 'absent.info')
+
+    def test_an_unkeyable_uncalled_function_is_refused(self):
+        baseline = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
+        self.assert_refused(self.compare(baseline, tracefile([(10, [('_ZN2ns5brokenE', 0)])], SOURCE_FILE)),
+                            'no alias of this uncalled function can be keyed')
 
 
-# Each mutant breaks the key or the verdict in a way that matters, and is
+# Each mutant breaks the key, the reader, the header or the verdict, and is
 # (description, old text, new text). One mutant is left out as equivalent:
 # dropping the guard that keeps `(anonymous namespace)` from being read as a
 # nameless call. The guard's text comes back unchanged without it, since no
@@ -293,31 +416,64 @@ MUTATIONS = [
     ('keep lambda discriminators',       "begin + len('{lambda')) + '}')",
                                          "begin + len('{lambda')) + '#' + (gnu_discriminator or '1') + '}')"),
     ('keep the return type',             "            start = offset + 1\n",    "            start = 0\n"),
+    ('a const scope begins the name',    "not re.match(r'(const|volatile|&&?)(\\s|::)', head[offset + 1:])", "True"),
     ('keep abi tags',                    r"re.sub(r'\[abi:[^\]]*\]|",          r"re.sub(r'"),
-    ('uncalled if any alias is',         "return not any(aliases.values()) if",  "return not all(aliases.values()) if"),
+    ('keep the friend marker',           r"|\[friend\]|(?<=::)friend '",       r"'"),
+    ('keep optimiser suffixes',          "text          = re.sub(r'( \\[clone",
+                                         "text          = (lambda *arguments: arguments[2])(r'( \\[clone"),
+    ('keep the requires-clause',         "'', without_requires_clause(text))",  "'', text)"),
+    ('search for requires once',         "at = text.find(' requires ', at + 1)", "at = -1"),
+    ('keep an explicit object list',     " or parameters.startswith('this '):", ":"),
+    ('keep unnamed type discriminators', "parts.append('{unnamed type}')",       "parts.append(component)"),
+    ('noexcept not a qualifier',         "|&&|&|noexcept))*)",                  "|&&|&))*)"),
+    ('drop qualifiers',                  "+ (' ' + qualifiers if qualifiers else '')", ""),
+    ('uncalled if any alias is',         "else not called",                       "else not all(aliases.values())"),
+    ('the called pass takes all',        "return called if selection == Selection.called else not called",
+                                         "return True if selection == Selection.called else not called"),
     ('a set, not a multiset',            "Counter({function_key: len(starts)",    "Counter({function_key: 1"),
+    ('the baseline read as a set',       "uncalled[file][line.strip()] += 1",     "uncalled[file][line.strip()] = 1"),
     ('fail on improvements too',         "return 1 if risen else 0",              "return 1 if risen or fallen else 0"),
+    ('files the baseline lacks skipped', "for file in sorted(set(baseline) | set(current)):",
+                                         "for file in sorted(set(baseline)):"),
     ('ignore FNA counts',                "aliases.get(name, 0) + int(calls)",     "aliases.get(name, 0)"),
-    ('skip an unkeyable function',       "if not keys and uncalled:",             "if False:"),
+    ('require an end line',              "index, start = value.split(',')[:2]",  "index, start, _ = value.split(',')"),
+    ('a malformed record crashes',       "            except (KeyError, ValueError):", "            except ():"),
+    ('keep files without functions',     "for file, starts in functions.items() if starts}",
+                                         "for file, starts in functions.items()}"),
+    ('skip an unkeyable function',       "if not keys and selection == Selection.uncalled:", "if False:"),
+    ('an unkeyable function crashes',    "except (Refusal, Unkeyable, OSError,",  "except (Refusal, OSError,"),
+    ('an absent file crashes',           "except (Refusal, Unkeyable, OSError,",  "except (Refusal, Unkeyable,"),
     ('one demangler only',               "        if not pending:\n",             "        if demangled:\n"),
     ('empty tracefile accepted',         "if not functions:\n",                  "if False:\n"),
     ('baseline header not checked',      "if baseline_header != current_header:", "if False:"),
+    ('only the first header line',       "if baseline_header != current_header:",
+                                         "if baseline_header[:1] != current_header[:1]:"),
+    ('a headerless baseline accepted',   "if baseline_header != current_header:",
+                                         "if baseline_header and baseline_header != current_header:"),
+    ('versions from stdout only',        "stderr=subprocess.STDOUT",              "stderr=subprocess.DEVNULL"),
+    ('a constant version',               "return next((line", "return 'v' or next((line"),
+    ('a key before any file accepted',   "raise Refusal(f'{path}: a key precedes the first file: {line.strip()}')",
+                                         "continue"),
     ('return type counts as a template', "removed = [at for at in removed if at >= components[0][1]]", "pass"),
     ('an operator scope as a callable',  "CALLABLE.match(component, operator_length(component))",
                                          "CALLABLE.match(component)"),
     ('files outside Source read',        "if within_source else None",           "if True else None"),
     ('a prefix, not a directory',        "source_root.rstrip('/') + '/'",         "source_root.rstrip('/')"),
-    ('every notice says now called',     "if fallen_key in called.get(file, Counter()):", "if True:"),
-    ('every notice says gone',           "if fallen_key in called.get(file, Counter()):", "if False:"),
+    ('every notice says now called',     "if fallen_key in called.get(file, {}):", "if True:"),
+    ('every notice says gone',           "if fallen_key in called.get(file, {}):", "if False:"),
     ('recorded tools not recorded',      "[f'tool: {version_of(tool)}' for tool in recorded_tools]", "[]"),
 ]
 
 
 def run_controls(module):
-    global U
-    U      = module
-    result = unittest.TextTestRunner(stream=io.StringIO(), verbosity=0).run(
-                 unittest.defaultTestLoader.loadTestsFromModule(sys.modules[__name__]))
+    """(failures, controls run) of the controls against `module`, each run
+    given a scratch directory which is removed afterwards."""
+    global script, scratch
+    script = module
+    with tempfile.TemporaryDirectory() as directory:
+        scratch = directory
+        result  = unittest.TextTestRunner(stream=io.StringIO(), verbosity=0).run(
+                      unittest.defaultTestLoader.loadTestsFromModule(sys.modules[__name__]))
     return len(result.failures) + len(result.errors), result.testsRun
 
 
@@ -337,6 +493,7 @@ def mutations():
 
 
 def main():
+    global script, scratch
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     parser.add_argument('--demangler', required=True, action='append')
     parser.add_argument('--mutations', action='store_true')
@@ -346,7 +503,11 @@ def main():
         return mutations()
     failures, total = run_controls(load(SOURCE))
     if failures:
-        unittest.TextTestRunner(verbosity=1).run(unittest.defaultTestLoader.loadTestsFromModule(sys.modules[__name__]))
+        script = load(SOURCE)
+        with tempfile.TemporaryDirectory() as directory:
+            scratch = directory
+            unittest.TextTestRunner(verbosity=1).run(
+                unittest.defaultTestLoader.loadTestsFromModule(sys.modules[__name__]))
         return 1
     print(f'uncalled_functions.py: all {total} controls pass')
     return 0
