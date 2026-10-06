@@ -18,10 +18,15 @@
 #     is quoted as itself when a count changes, and a changed byte fails; and a dropped file whose
 #     path holds such a byte is listed as itself.
 #
-# One kind of dropped file passes, and is listed: a file with function records but no line
-# records, which lcov deletes on reading any tracefile and llvm-cov writes. Two of them, out
-# of order, so that the listing is shown to be sorted; and the clean pair, which has none,
-# must still print the heading with a count of 0.
+# Two kinds of dropped file pass. Each kind is listed, sorted, under a heading
+# with a count:
+#
+#   - a file with no coverage points. The clean pair has one; two more, out of
+#     order, show that the listing is sorted;
+#   - a file with function records but no line records, which lcov deletes on
+#     reading any tracefile and llvm-cov writes. Two of them, out of order, show
+#     that the listing is sorted. The clean pair has none, and must still print
+#     the heading with a count of 0.
 #
 # The capture also holds a file whose path contains a removal pattern's text past its
 # start. lcov removes it, since lcov searches the whole path; a check that anchored the
@@ -107,6 +112,19 @@ run "a clean pair passes" 0 "1 of 4 captured files kept unchanged; 2 removed by 
 run "a clean pair reports the figures" 0 "4 of 4 lines, 2 of 4 functions"
 run "a clean pair lists no function-only files" 0 \
     "Dropped by lcov for having function records but no line records: 0 files"
+
+reset
+printf '%s\n' SF:/src/y.hpp LF:0 LH:0 end_of_record   >> "$tmp/capture"
+printf '%s\n' SF:/src/d.hpp FNF:0 FNH:0 end_of_record >> "$tmp/capture"
+run "dropped files with no coverage points pass" 0 \
+    "1 of 6 captured files kept unchanged; 2 removed by pattern, 3 with no coverage points"
+printf '%s\n' 'Dropped by lcov for having no coverage points: 3 files' \
+               '  /src/d.hpp' '  /src/empty.hpp' '  /src/y.hpp' \
+               'Dropped by lcov for having function records but no line records: 0 files' > "$tmp/listing"
+if ! tail -n +2 "$tmp/out" | cmp -s - "$tmp/listing"; then
+  echo "FAIL: dropped files with no coverage points are listed, sorted, under a count"
+  sed 's/^/    /' "$tmp/out"; fails=$((fails+1))
+fi
 
 reset; edit filtered 's/^FNA:1,0,/FNA:1,1,/'; edit summary 's/(2 of 4 functions)/(3 of 4 functions)/'
 run "a lambda marked called is named" 1 \
