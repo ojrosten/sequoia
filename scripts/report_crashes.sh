@@ -2,12 +2,12 @@
 # Usage: report_crashes.sh <dump directory> <since file>
 #
 # Reports every crash whose dump is newer than <since file>, with its stacks.
-# A suite that crashes ends with an exit status and nothing else; the stacks
+# A suite that crashes ends with an exit status and nothing else. The stacks
 # say where it stopped.
 #
 # The dumps depend on the platform:
-#   - Windows: the minidumps that Windows Error Reporting wrote to <dump
-#     directory>, read with cdb;
+#   - Windows: the minidumps that Windows Error Reporting wrote to
+#     <dump directory>, read with cdb;
 #   - Linux: the cores that the kernel wrote to <dump directory>, each named
 #     core.<process name>.<pid>, read with gdb;
 #   - macOS: the crash reports that the system wrote to the directories
@@ -20,7 +20,9 @@
 #     whose stacks cannot be read is still reported and counted, and the
 #     report says why;
 #   - "Crashes found: <n>".
-# The status is 0 if the script reports, and 2 if it refuses its arguments.
+# Errors from the tools the script runs go to standard error, and may fall
+# between any of these lines. The status is 0 if the script reports, and 2 if it refuses its
+# arguments.
 
 set -u
 
