@@ -21,7 +21,8 @@ file in the tracefile and in the baseline:
 `compare` also names each `.cpp` file within `<root>/Source` which has no
 record in the tracefile, and then exits with status 1, since none of the file's
 functions is seen. A file with records of lines alone has a record.
-Either mode exits with status 2 if it refuses its input.
+Either mode exits with status 2 if it refuses its input, or if a tool it runs
+fails.
 
 A record is what lcov reports at one start line of one file. Its aliases are
 the mangled names lcov lists there: each template instantiation of a function,
@@ -32,14 +33,19 @@ written on the line of a called one is never reported.
 An uncalled record is listed under each key its aliases give. A key is a
 demangled name with these removed:
   -# every template argument list, at every level;
-  -# the return type, abi tags, `[friend]`, any requires-clause, and the
-     suffixes `[clone ...]` and `(.cold)` which gcc's optimiser adds;
+  -# the return type, abi tags, any requires-clause, and the suffixes
+     `[clone ...]` and `(.cold)` which gcc's optimiser adds;
+  -# the mark of a hidden friend: `[friend]` after the name, or `friend`
+     before it;
   -# a parameter list, and its qualifiers, wherever a template argument list
      attached to a name comes before it, since the parameters are spelt with
      each instantiation's types. So is a parameter list which opens with an
      explicit object parameter, `this`;
   -# the discriminators of lambdas and of unnamed types, which number them in
      source order.
+An alias gives no key if no demangler names it, or if the script cannot parse
+the name a demangler gives. Either mode refuses an uncalled record whose
+aliases give no key.
 
 Several records can share a key, so a baseline is a multiset: a key appears
 once for each uncalled record it names.
@@ -47,6 +53,9 @@ once for each uncalled record it names.
 Each demangler is tried in turn, and the first to demangle a name names it. A
 baseline's header records the name and version number of every demangler and
 of every recorded tool, and `compare` refuses a baseline whose header differs.
+
+A tracefile need not be UTF-8: lcov writes some letters of a function's name
+as single Latin-1 bytes. The script writes such a byte to its output as itself.
 
 The tracefile's counts must be gcov's. With check_data_consistency on, lcov
 repairs counts whenever it reads a tracefile, and marks an uncalled lambda as
@@ -77,7 +86,9 @@ def read_tracefile(path, source_root):
     `source_root`. A file without function records maps to an empty dict.
 
     Each file is given relative to the parent of `source_root`. A record's end
-    line is optional, as geninfo documents.
+    line is optional, as geninfo documents. The records of one file are
+    merged, as are the functions at one start line, and a name's calls are
+    summed. A malformed record raises `Refusal`.
     """
     prefix                = source_root.rstrip('/') + '/'
     relative_from         = prefix[:prefix.rstrip('/').rfind('/') + 1]
@@ -108,7 +119,10 @@ def read_tracefile(path, source_root):
 
 def untraced_translation_units(repository, traced):
     """The `.cpp` files within `<repository>/Source` which `traced` does not
-    name, relative to `repository` and sorted."""
+    name, relative to `repository` and sorted.
+
+    Raises `Refusal` if `<repository>/Source` is not a directory.
+    """
     root  = pathlib.Path(repository)
     if not (root / 'Source').is_dir():
         raise Refusal(f'{root / "Source"} is not a directory')
@@ -146,6 +160,8 @@ def version_of(tool):
     outside the groups, and are kept. The vendor in a group is lost, so
     Homebrew's and Ubuntu's builds of one gcc release record alike. The
     output is read from standard output and standard error together.
+
+    Raises `Refusal` if no line holds a dotted number outside a path.
     """
     output = subprocess.run([tool, '--version'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
                             check=True).stdout
@@ -388,7 +404,10 @@ def format_baseline(header_lines, uncalled):
 
 
 def read_baseline(path):
-    """(header lines, {file: Counter(key)})."""
+    """(header lines, {file: Counter(key)}).
+
+    A blank line is passed over. A key before the first file raises `Refusal`.
+    """
     header_lines, uncalled, file = [], {}, None
     with open(path, encoding='utf-8', errors='surrogateescape') as baseline:
         for line in baseline:

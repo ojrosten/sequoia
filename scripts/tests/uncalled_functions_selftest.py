@@ -6,12 +6,15 @@ check of the controls.
 
 Without --mutations, the selftest runs the controls. With it, the selftest runs
 the controls against the script and against each mutant of the script. The
-script must fail no control, and each mutant at least one.
+script must fail no control, and each mutant at least one; the last line then
+reads "uncalled_functions.py: <N> mutants, every one killed". Otherwise the
+selftest exits with status 1.
 
 The demanglers are given in the order the script is to try them. The expected
 keys are llvm-cxxfilt's and GNU c++filt's spellings, which agree on every name
-here that both can demangle. The mangled names are
-those g++ 15 and g++ 16 both give. gcc emits the C2 and D2 variants of a
+here that both can demangle. The mangled names are those g++ 15 and g++ 16
+both give, except two: UNDEMANGLED, which no compiler gives, and TWICE_CAFE,
+which is spelt as lcov writes it. gcc emits the C2 and D2 variants of a
 constructor and destructor in sequoia's own tracefiles, and they are the C1 and
 D1 names with the variant letter changed.
 """
@@ -608,11 +611,10 @@ class Verdict(unittest.TestCase):
         self.assertEqual(self.compare(baseline, traced), (0, '', ''))
 
 
-# Each mutant breaks the key, the reader, the header or the verdict, and is
-# (description, old text, new text). One mutant is left out as equivalent:
-# dropping the guard that keeps `(anonymous namespace)` from being read as a
-# nameless call. The guard's text comes back unchanged without it, since no
-# template list can precede a namespace.
+# Each mutant is (description, old text, new text). One mutant is left out as
+# equivalent: dropping the guard that keeps `(anonymous namespace)` from being
+# read as a nameless call. The guard's text comes back unchanged without it,
+# since no template list can precede a namespace.
 MUTATIONS = [
     ('keep template argument lists',     "if token == '<' and '<' not in stack:",  "if False:"),
     ('keep lists within parameters',     "if token == '<' and '<' not in stack:",  "if token == '<' and not stack:"),
