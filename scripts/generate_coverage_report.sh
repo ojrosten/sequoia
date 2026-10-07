@@ -19,13 +19,13 @@
 # The script runs lcov, genhtml, ctest and python3 from PATH, the ninja the
 # build's cache names, and check_tracefile.py from its own directory. It runs
 # the gcov tool which matches the build's compiler. On macOS it needs GNU
-# c++filt where Homebrew's binutils puts it.
+# c++filt from Homebrew's binutils, which it finds through `brew --prefix`.
 #
 # Before it runs anything, the script refuses with status 2 a missing, empty
 # or second argument, and a build directory with no directory named build in
 # its path. It fails before it runs anything if the build directory or its
-# CMakeCache.txt is missing, or, on macOS, GNU c++filt. A step that fails
-# stops the script with a non-zero status.
+# CMakeCache.txt is missing, or, on macOS, brew or GNU c++filt. A step that
+# fails stops the script with a non-zero status.
 
 # A command outside run_checked which fails, such as reading the cache, ends
 # the script.
@@ -62,9 +62,13 @@ echo "Output Dir: ${output_dir}"
 # tracefile holds no valid records. The script checks for GNU c++filt before
 # the suite runs, rather than fail once it has.
 platform=$(uname -s)
-gnu_cxxfilt="/opt/homebrew/opt/binutils/bin/c++filt"
 demangle=(--demangle-cpp)
 if [[ "${platform}" == Darwin ]]; then
+  if ! homebrew=$(brew --prefix); then
+    echo "error: on macOS, genhtml needs GNU c++filt from Homebrew, and brew --prefix failed" >&2
+    exit 1
+  fi
+  gnu_cxxfilt="${homebrew}/opt/binutils/bin/c++filt"
   if [[ ! -x "${gnu_cxxfilt}" ]]; then
     echo "error: on macOS, genhtml needs GNU c++filt at ${gnu_cxxfilt}" >&2
     exit 1

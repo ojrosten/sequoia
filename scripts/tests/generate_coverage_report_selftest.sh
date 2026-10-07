@@ -13,9 +13,9 @@
 # Each control runs a copy of the script as CI runs it, from the root of a
 # scratch repository, on a scratch build of TestAll. Stand-ins for lcov,
 # genhtml, ctest, ninja, llvm-cov and check_tracefile.py log each call, and
-# most fail when a control asks them to. A stand-in for uname gives the
-# platform a control chooses. So the selftest checks what the script decides
-# and passes, and needs no build. The claims:
+# most fail when a control asks them to. Stand-ins for uname and brew give the
+# platform and Homebrew's prefix a control chooses. So the selftest checks
+# what the script decides and passes, and needs no build. The claims:
 #
 #   - the report is written to coverage_reports beside the last directory
 #     named build in the build's physical path, under the rest of that path.
@@ -36,9 +36,9 @@
 #     script's comments give reasons for. genhtml runs once, given the three
 #     error categories lcov 2.5 knows. On Darwin, removal takes the
 #     toolchains' paths too, and an unused pattern is no error;
-#   - on Darwin, genhtml is given GNU c++filt from where Homebrew puts it,
-#     and the script refuses to start without it. On Linux, genhtml is given
-#     no c++filt;
+#   - on Darwin, genhtml is given GNU c++filt from Homebrew's binutils, under
+#     the prefix brew gives, and the script refuses to start without brew or
+#     the c++filt. On Linux, brew is not run, and genhtml is given no c++filt;
 #   - a missing, empty or second argument is refused with status 2 and the
 #     usage on standard error alone. A missing build directory, a build
 #     directory not within a directory named build, and a build without a
@@ -62,9 +62,10 @@ esac
 # The stand-ins. Each of lcov, genhtml, ctest, the cache's ninja and
 # check_tracefile.py logs its call as one line of $FAKE/log, and fails with a
 # status of its own when $FAIL names its step.
-mkdir -p "$tmp/bin" "$tmp/cache" "$tmp/llvm/bin" "$tmp/binutils"
-# The script's copies look for GNU c++filt here.
-gnu_cxxfilt=$tmp/binutils/c++filt
+# brew gives $tmp/homebrew as Homebrew's prefix, so the script looks for GNU
+# c++filt here.
+gnu_cxxfilt=$tmp/homebrew/opt/binutils/bin/c++filt
+mkdir -p "$tmp/bin" "$tmp/cache" "$tmp/llvm/bin" "${gnu_cxxfilt%/*}"
 
 # lcov writes the tracefile a capture or a removal asks for, and summarises as
 # lcov does: the figures on standard output, an error on standard error. A
@@ -123,6 +124,15 @@ EOF
 cat > "$tmp/bin/uname" <<'EOF'
 #!/bin/bash
 echo "$FAKE_UNAME"
+EOF
+
+# brew logs its call to $FAKE/brew, and gives $FAKE_HOMEBREW as the prefix.
+# If that is `absent`, it fails as a shell does on a missing command.
+cat > "$tmp/bin/brew" <<'EOF'
+#!/bin/bash
+echo "brew $*" >> "$FAKE/brew"
+if [[ $FAKE_HOMEBREW == absent ]]; then echo "brew: command not found" >&2; exit 127; fi
+echo "$FAKE_HOMEBREW"
 EOF
 
 # A ninja on PATH, which the script must not run, and the ninja which the
@@ -242,12 +252,12 @@ EOF
   : > "$src/Dropped.cpp.o"; : > "$src/Dropped.cpp.gcno"
   echo CMakeFiles/T.dir/src/Dropped.cpp.o > "$b/dead_objects.txt"
   : > "$case_dir/log"
-  platform=Linux failing= cxxfilt=absent from=$repo invoke=./scripts/generate_coverage_report.sh
+  platform=Linux failing= cxxfilt=absent homebrew=$tmp/homebrew from=$repo invoke=./scripts/generate_coverage_report.sh
 }
 
 # run <argument>...
-# Runs the script as $invoke, from $from, with $platform, $failing and
-# $cxxfilt. Their defaults run it as CI does, from the repository's root.
+# Runs the script as $invoke, from $from, with $platform, $failing, $cxxfilt
+# and $homebrew. Their defaults run it as CI does, from the repository's root.
 # Sets $rc. The script's standard output is in $case_dir/out, its standard
 # error in $case_dir/err, and both in $case_dir/all.
 run() {
@@ -257,7 +267,7 @@ run() {
     unexecutable) printf '#!/bin/sh\n' > "$gnu_cxxfilt" ;;
   esac
   (cd "$from" && FAKE=$case_dir PATH="$tmp/bin:$PATH" FAKE_UNAME=$platform \
-                 FAIL=$failing \
+                 FAIL=$failing FAKE_HOMEBREW=$homebrew \
                  "$invoke" "$@" > "$case_dir/out" 2> "$case_dir/err")
   rc=$?
   cat "$case_dir/out" "$case_dir/err" > "$case_dir/all"
@@ -323,6 +333,8 @@ darwin_clang_controls() {
   run build/TestAll/gcc-env-coverage
   calls_in_build
   exits "a run on Darwin succeeds" 0
+  [ "$(cat "$case_dir/brew" 2> /dev/null)" = "brew --prefix" ] \
+    || fail "on Darwin, brew gives Homebrew's prefix: $(cat "$case_dir/brew" 2> /dev/null)"
   common_calls "Darwin"
   called "the capture uses a wrapper of llvm-cov beside clang++" \
          "$capture_call --gcov-tool $b/llvm-gcov.sh $capture_options"
@@ -357,6 +369,7 @@ choice_controls() {
   exits "a run on Linux with GNU c++filt where Homebrew puts it succeeds" 0
   check "on Linux, Homebrew's GNU c++filt is not given to genhtml" yes \
         '^genhtml --demangle-cpp --suppress-aliases ' "$case_dir/log"
+  exists "on Linux, brew is not run" no "$case_dir/brew"
 }
 
 # Where the report goes.
@@ -443,6 +456,14 @@ refusal_controls() {
     [ ! -s "$case_dir/log" ] || fail "on Darwin, a GNU c++filt $state: a tool ran: $(head -1 "$case_dir/log")"
   done
 
+  fixture darwin_brewless "$tmp/llvm/bin/clang++"
+  platform=Darwin cxxfilt=present homebrew=absent
+  run build/TestAll/gcc-env-coverage
+  exits "on Darwin, a failing brew is refused" 1
+  check "on Darwin, a failing brew is named" yes \
+        '^error: on macOS, genhtml needs GNU c\+\+filt from Homebrew, and brew --prefix failed$' "$case_dir/err"
+  [ ! -s "$case_dir/log" ] || fail "on Darwin, a failing brew: a tool ran: $(head -1 "$case_dir/log")"
+
   fixture uncached "$tmp/g++-13/bin/g++-15"
   rm "$b/CMakeCache.txt"
   run build/TestAll/gcc-env-coverage
@@ -501,11 +522,7 @@ controls() {
   chmod -R u+w "$cases" 2> /dev/null
   rm -rf "$cases"
   mkdir "$cases"
-  local cxxfilt_line='gnu_cxxfilt="/opt/homebrew/opt/binutils/bin/c++filt"'
-  grep -qFx "$cxxfilt_line" "$1" \
-    || { fail "GNU c++filt's path is not where this expects it"; return; }
-  subject=$cases/generate_coverage_report.sh
-  sed "s|^$cxxfilt_line\$|gnu_cxxfilt=\"$gnu_cxxfilt\"|" "$1" > "$subject"
+  subject=$1
 
   linux_gcc_controls
   darwin_clang_controls
@@ -612,7 +629,15 @@ mutations=(
                                       ': python3 "${script_dir}/check_tracefile.py"'
   'the check from the working dir'    'script_dir=$(cd "$(dirname "$0")" && pwd -P)'  'script_dir=scripts'
   'GNU c++filt never given'           '  demangle+=("${gnu_cxxfilt}")'       '  :'
-  'GNU c++filt on Linux too'          $'== Darwin ]]; then\n  if [[ ! -x'    $'== Linux || true ]]; then\n  if [[ ! -x'
+  'GNU c++filt on Linux too'          $'== Darwin ]]; then\n  if ! homebrew'
+                                      $'== Linux || true ]]; then\n  if ! homebrew'
+  'brew asked on Linux'               'platform=$(uname -s)'
+                                      'platform=$(uname -s); brew --prefix > /dev/null'
+  'a failing brew accepted'           'if ! homebrew=$(brew --prefix); then'
+                                      'if ! homebrew=$(brew --prefix || :); then'
+  'a failing brew succeeds'           $'--prefix failed" >&2\n    exit 1'    $'--prefix failed" >&2\n    exit 0'
+  "a failing brew on standard output"  'brew --prefix failed" >&2'          'brew --prefix failed"'
+  "Homebrew's prefix assumed"         'gnu_cxxfilt="${homebrew}/opt'         'gnu_cxxfilt="/opt/homebrew/opt'
   'a missing c++filt accepted'        'if [[ ! -x "${gnu_cxxfilt}" ]]; then'  'if false; then'
   'an unexecutable c++filt accepted'  '! -x "${gnu_cxxfilt}"'                '! -e "${gnu_cxxfilt}"'
   'a missing c++filt succeeds'        $'${gnu_cxxfilt}" >&2\n    exit 1'     $'${gnu_cxxfilt}" >&2\n    exit 0'
@@ -624,7 +649,7 @@ mutations=(
   'empty an error in the report'      '--ignore-errors range --ignore-errors empty'  '--ignore-errors range'
   'category an error in the report'   ' --ignore-errors category "'          ' "'
   'genhtml probed first'              $'\nrun_checked genhtml'
-                                      $'\ngenhtml --ignore-errors range -o "${output_dir}" /dev/null 2>&1 | :\nrun_checked genhtml'
+                                      $'\ngenhtml -o "${output_dir}" /dev/null 2>&1 | :\nrun_checked genhtml'
   'genhtml repairs'                   '--ignore-errors category "${read_options[@]}"'  '--ignore-errors category'
   "genhtml's failure unnamed"         'run_checked genhtml "${demangle[@]}"'  'genhtml "${demangle[@]}"'
 )
