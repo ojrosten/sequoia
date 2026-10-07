@@ -97,6 +97,8 @@ jobs:
       # The step fetches the history without blobs, as scope.yml does. The merge
       # needs every commit back to the merge-base, but blobs only for the paths the
       # branch changed since then.
+      #
+      # Repeated in coverage.yml; change both.
       - name: Merge the branch named by merge_into
         if: inputs.merge_into != ''
         env:
@@ -206,7 +208,7 @@ jobs:
           # the configure step's cmake_minimum_required refuses it. The tarball has no apt
           # signature behind it, so its checksum is pinned.
           #
-          # Repeated in rigorous.yml's coverage job; change both.
+          # Repeated in coverage.yml; change both.
           cmake_version=4.4.3
           cmake_sha256=d6c83076c575bc00b823522ac974bda66d0af05d6ddc30e739c12385cf32c6cc
           cmake_tarball=$RUNNER_TEMP/cmake.tar.gz
