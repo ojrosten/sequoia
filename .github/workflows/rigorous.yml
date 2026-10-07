@@ -1,12 +1,13 @@
 name: rigorous
 
-# The gate on main. main advances only by promoting staging, and a promotion
-# merges only when this workflow is green. So main is the last state verified
-# this thoroughly, not the latest work.
+# The gate on main. Only a promotion of staging advances main, and a
+# promotion merges only when this workflow is green. So main is the last state
+# verified this thoroughly, not the latest work.
 #
-# The gate runs once per promotion, not once per change, so a promotion pays
-# for the expensive columns once for every change it carries. The nightly run
-# on main asks two questions that one run of the gate cannot answer:
+# The gate runs on the promotion PR, not on each change: once when the PR
+# opens, and again each time staging moves while it is open. Changes reach
+# main in batches, so the expensive columns are not paid for once per change.
+# The nightly run on main checks two things that one run of the gate cannot:
 #   - Does the suite pass consistently? Races and timings are probabilistic,
 #     and each run is one trial.
 #   - Does it still pass in today's environment? The hosted images roll, and
@@ -27,27 +28,29 @@ name: rigorous
 # notification that staging holds work to promote, whether its gate is green
 # or red.
 #
-# Beyond fine, this tier asks the two questions a sanitized Debug build cannot
-# answer: whether the code races, and what the optimizer does with it.
+# Beyond fine, this tier tests whether the code races and what the optimizer
+# does with it, which a sanitized Debug build cannot.
 #
-# Two columns run the suite a second time, without the end-to-end test:
+# Two columns add a second pass, which repeats the suite without the
+# end-to-end test:
 #   - TSan, twenty times. TSan reports only the interleavings that execute,
 #     and repetition widens them.
 #   - MSVC ASan, five times. It is the configuration in which the sharing
 #     violation described below was most frequent.
 # The end-to-end test dominates a pass, and most of the code where races live
-# runs outside it. Its share of a pass differs by platform, and so the two N
-# differ. Measured on run 34751872361, 2026-09-13:
+# runs outside it. Each N is set by the 30-minute step ceiling against the
+# time a pass takes on that column. Measured on run 34751872361, 2026-09-13:
 #   - TSan: a full pass took 79s, and a pass without the end-to-end test
 #     12-18s, so twenty took 259s.
 #   - MSVC ASan: a full pass took 216s, and a pass without the end-to-end test
-#     91-100s, rising with each repetition. Twenty overran the 30-minute
-#     ceiling at the nineteenth; five take about eight minutes.
+#     91-100s, rising with each repetition. Twenty overran the ceiling at the
+#     nineteenth; five take about eight minutes.
 # The first pass still runs every test once. The repetitions carry the drift
 # flag, since a repetition that rewrote a versioned output would be an
-# instability. statistical.yml repeats the whole suite on main every night,
-# without the drift flag; the second pass here repeats everything but the
-# end-to-end test on the candidate, before it lands.
+# instability. statistical.yml repeats the whole suite but the performance
+# tests on main every night, without the drift flag; the second pass here
+# repeats everything but the end-to-end test on the candidate, before it
+# lands.
 #
 # Every column but Linux · GCC · Release carries `--check-versioned-output`,
 # and that exception is explained below. A column's `exec_args` replaces the
@@ -58,23 +61,6 @@ name: rigorous
 # the versioned output as the others do. On 2026-09-10 a real MSVC run matched
 # 339 of the 340 output files it wrote, and the one that differed has been
 # regenerated since. A macOS run matched all 340.
-#
-# TestRunnerProjectFiles compares a generated TestAll.vcxproj with a
-# prediction stored per preset, in
-# `visual_studio/Prediction/ProjectFiles/<preset>`. `visual_studio` is the
-# name the test's materials discriminator gives the Visual Studio generator.
-# The test checks every preset committed there, so a new Visual Studio preset
-# needs its prediction generated on Windows and committed before a column uses
-# it. Under Ninja the test checks only that the generated build.ninja has an
-# edge for TestAll, and reads no predictions.
-#
-# The MSVC Release column configures with `msvc-release`, a tree of its own,
-# pinned to Release. The end-to-end test configures its nested project from
-# the preset named after that tree. It builds the nested project in the
-# configuration in which the runner itself was built, since `build_cmd`
-# passes CMake's `$<CONFIG>` as `--config`. So the nested executable lands in
-# the configuration directory that the test searches, whatever configurations
-# the tree holds.
 #
 # The TSan column is macOS/Clang, where every other column is Linux/GCC or
 # MSVC, and that is deliberate. `Preprocessor.hpp` gives
@@ -111,13 +97,15 @@ name: rigorous
 #
 # It is also the one column that runs the performance tests.
 # TestRunnerPerformanceTest asserts 60ms +- 35 for eight 25ms sleeps run
-# concurrently. What fails it on a hosted runner is the slowdown, not the
-# platform. The sanitized columns cannot hold it: Linux ASan+UBSan returned
-# 164ms on 2026-09-10, and MSVC 196ms then 603ms for one commit.
-# Uninstrumented gcc can: coarse's Linux Debug column passed it in all 442 runs
-# from 2026-09-08 to 2026-09-28. Every other column here carries
-# `--exclude-performance`, and this column keeps the tier from being blind to
-# performance.
+# concurrently, and the other hosted columns cannot hold that:
+#   - A sanitizer slows the run: Linux ASan+UBSan returned 164ms on
+#     2026-09-10.
+#   - The Windows runner's times vary: 196ms, then 603ms, for one commit.
+#   - The macOS runner's sleeps overshoot even without instrumentation.
+# Uninstrumented gcc on Linux can: since #181 made the test assert on raw
+# times, coarse's Linux Debug column passed it in all 119 runs to 2026-10-05.
+# Every other column here carries `--exclude-performance`, and this column
+# keeps the tier from being blind to performance.
 #
 # Both MSVC columns run TestRunnerTest, as every MSVC column in every tier
 # does. Its teardown's fs::remove_all used to fail on Windows with a sharing
@@ -141,9 +129,9 @@ on:
         type: boolean
         default: false
   # The minute is off the hour, on GitHub's advice that its scheduler is most
-  # loaded at the start of an hour. The run arrives 4h30m to 5h after its tick
-  # all the same, as it did at '0 3 * * *': the delay is a steady backlog that
-  # the minute does not touch.
+  # loaded at the start of an hour. That has not shortened the delay: over the
+  # 20 nights to 2026-10-07, GitHub created the run 4h34m to 6h21m after its
+  # tick, against 4h32m to 4h57m on the four nights at '0 3 * * *'.
   #
   # GitHub documents that it can drop a queued scheduled run under load. This
   # run's audit cannot report a run that never started; watchdog.yml does.
@@ -160,8 +148,8 @@ concurrency:
 jobs:
   # Scheduled runs only: whether staging is ahead of main, which decides the
   # run's mode. The job asks the compare endpoint rather than comparing a
-  # checkout, so that the merge commits promotion leaves on main, and not on
-  # staging, do not count as staging being behind.
+  # checkout, so that merge commits that promotion leaves on main but not on
+  # staging do not count as staging being behind.
   staging:
     name: Is staging ahead of main
     if: github.event_name == 'schedule'
@@ -179,9 +167,7 @@ jobs:
           echo "staging is $ahead commit(s) ahead of main"
           echo "ahead=$ahead" >> "$GITHUB_OUTPUT"
 
-  # One decision for the whole run, which every job below takes as an input. It
-  # runs in promote mode as well, where nothing uses it, so that the audit
-  # expects the same result from it in every mode.
+  # One decision for the whole run, which every job below takes as an input.
   scope:
     uses: ./.github/workflows/scope.yml
 
@@ -230,8 +216,8 @@ jobs:
   # It needs a token other than GITHUB_TOKEN: a PR that token opens triggers no
   # pull_request workflow, so the gate would never report on it.
   # PROMOTION_TOKEN is a fine-grained PAT with Contents and Pull requests
-  # read/write on this repository. When the token expires, this step fails
-  # loudly.
+  # read/write on this repository. When it expires, this step fails: renew
+  # it with the same permissions.
   #
   # One PR at a time. Whatever the previous night left, the step ends with one
   # promotion PR open and set to auto-merge, so an open PR without auto-merge
@@ -241,7 +227,7 @@ jobs:
   # auto-merge stuck for good. Whoever opened the PR, this step completes it,
   # so opening one by hand is fine.
   #
-  # `gh pr merge --auto` merges at once a PR that GitHub already reports
+  # `gh pr merge --auto` merges a PR at once if GitHub already reports it
   # mergeable, since GitHub refuses to arm auto-merge on a clean PR. Either way
   # main advances only when GitHub allows it. The step re-reads the PR
   # afterwards and reports which of the two happened.
@@ -317,13 +303,14 @@ jobs:
   #   - In promote mode, the reverse.
   #   - In the false-negative control the columns must have failed.
   #
-  # main requires this job and none of the others, so a job missing from this
-  # job's `needs` would gate nothing, however red. The second step fails if
-  # any other job is missing. The third fails unless main's rule names this
-  # job, pinned to the app that reports it. A rename here, or an edit to the
-  # rule, then shows as a red check, rather than as a promotion that waits on a
-  # name nothing reports, or merges ungated. The second and third steps run
-  # even when an earlier step fails, so each reports independently.
+  # The branch main requires this job and none of the others, so a job
+  # missing from this job's `needs` would gate nothing, however red. The
+  # second step fails if any other job is missing. The third fails unless
+  # main's rule names this job, pinned to the app that reports it. A rename
+  # here, or an edit to the rule, then shows as a red check, rather than as a
+  # promotion that waits on a name nothing reports, or merges ungated. The
+  # second and third steps run even when an earlier step fails, so each
+  # reports independently.
   #
   # In the false-negative control this job passes on red columns, so it takes
   # another name there, and the third step insists main does not require that
