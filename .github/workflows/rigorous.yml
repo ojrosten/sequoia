@@ -244,9 +244,10 @@ jobs:
     with:
       needs_testing: ${{ needs.scope.outputs.documentation }}
 
-  # Measured and published; no threshold is applied. The uploaded coverage.info is
-  # an lcov tracefile, which is what both a per-file regression rule and diff-cover
-  # would read.
+  # The coverage figures are measured and published, with no threshold. The
+  # job fails on one measurement: roadmap 234's gate on uncalled functions, in
+  # "Check for uncalled functions". The uploaded coverage.info is an lcov
+  # tracefile.
   #
   # The toolchain steps repeat tests.yml rather than calling it: coverage runs the
   # suite through ctest, serially, not through the `run` target.
@@ -264,9 +265,10 @@ jobs:
     #   -# is tested by dispatching rigorous on its branch, since no workflow
     #      a PR into staging triggers runs this job;
     #   -# finds the release's demanglers, with the listing step of 36950811f,
-    #      and updates the llvm-cxxfilt path in the uncalled-functions step;
+    #      and sets LLVM_CXXFILT and GNU_CXXFILT below;
     #   -# checks that the PPA, or the release itself, provides g++-15;
-    #   -# regenerates any baseline that records the tools' versions.
+    #   -# regenerates coverage_reports/uncalled_functions.txt, whose header
+    #      records the tools' releases.
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     env:
@@ -433,7 +435,7 @@ jobs:
             echo '```'
             echo "$summary"
             echo '```'
-            echo "_Reported only. No threshold is applied yet._"
+            echo "_These figures are reported only; the gate on uncalled functions is a step of its own._"
             # The step runs even when Measure fails, so the figures say whether they were checked.
             if [ "$MEASURE_OUTCOME" != success ]; then
               echo "**The Measure step failed ($MEASURE_OUTCOME): these figures are unchecked.**"
@@ -451,30 +453,53 @@ jobs:
         if: ${{ always() && env.NEEDS_TESTING == 'true' }}
         run: scripts/tests/uncalled_functions_selftest.py --demangler "$LLVM_CXXFILT" --demangler "$GNU_CXXFILT"
 
-      # Roadmap 234's gate. A function in Source that no test calls fails the
-      # job, unless coverage_reports/uncalled_functions.txt lists it. A listed
-      # function that is now called, or gone, gives a notice, and the list is
-      # shortened by hand. A failure also prints a baseline made from this run,
-      # for comparison with the committed one. The baseline's header names the
-      # tools, so a change of demangler, compiler or lcov release is refused
-      # until the baseline is made again from a run with the new tools.
+      # Roadmap 234's gate. A function of Source compiled into TestAll that no
+      # test calls fails the job, unless the baseline,
+      # coverage_reports/uncalled_functions.txt, lists it. A function the
+      # tracefile does not hold is not seen: one in an object the static
+      # library never links, a template never instantiated, an inline function
+      # never used. A listed function that is now called, or
+      # gone, gives a notice, and the list is shortened by hand. Errors and
+      # notices are annotations on the run as well as lines in its summary.
+      #
+      # The baseline's header names the tools' releases, so a change of
+      # demangler, compiler or lcov release is refused until the baseline is
+      # made again. A failure, a refusal included, prints a baseline made from
+      # this run and how its entries differ from the committed ones, so that a
+      # newly uncalled function is not absorbed unseen with a change of tools.
       - name: Check for uncalled functions
         if: ${{ always() && steps.measure.outcome == 'success' }}
         run: |
+          baseline=coverage_reports/uncalled_functions.txt
           options=(--tracefile build/TestAll/gcc-env-coverage/coverage.info --repository "$GITHUB_WORKSPACE"
                    --demangler "$LLVM_CXXFILT" --demangler "$GNU_CXXFILT"
                    --recorded-tool g++-15 --recorded-tool lcov)
-          verdict="$RUNNER_TEMP/uncalled_functions.txt"
+          verdict="$RUNNER_TEMP/uncalled_verdict.txt"
+          fresh="$RUNNER_TEMP/uncalled_fresh_baseline.txt"
           status=0
-          scripts/uncalled_functions.py compare "${options[@]}" --baseline coverage_reports/uncalled_functions.txt \
-            > "$verdict" 2>&1 || status=$?
+          scripts/uncalled_functions.py compare "${options[@]}" --baseline "$baseline" > "$verdict" 2>&1 || status=$?
           cat "$verdict"
-          if [ -s "$verdict" ]; then
-            { echo '### Uncalled functions'; echo '```'; cat "$verdict"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
-          fi
+          sed -n -e 's/^notice: /::notice title=Uncalled functions::/p' \
+                 -e 's/^error: /::error title=Uncalled functions::/p' "$verdict"
+          {
+            echo '### Uncalled functions'
+            if [ "$status" -eq 0 ] && [ ! -s "$verdict" ]; then
+              echo "Every uncalled function the tracefile holds is listed in $baseline."
+            else
+              echo '```'; cat "$verdict"; echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
           if [ "$status" -ne 0 ]; then
-            echo "A baseline made from this run, for comparison with coverage_reports/uncalled_functions.txt:"
-            scripts/uncalled_functions.py baseline "${options[@]}" || true
+            scripts/uncalled_functions.py baseline "${options[@]}" > "$fresh" 2>&1 || true
+            entries=$(diff <(grep -v '^# ' "$baseline") <(grep -v '^# ' "$fresh") || true)
+            echo "A baseline made from this run:"
+            cat "$fresh"
+            echo "Its entries against the committed baseline's (< committed only, > this run only):"
+            echo "$entries"
+            {
+              echo "Entries of $baseline (<) against a baseline made from this run (>):"
+              echo '```'; echo "$entries"; echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
           fi
           exit "$status"
 
