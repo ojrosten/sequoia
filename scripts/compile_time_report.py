@@ -100,13 +100,12 @@ def self_times(events):
     work has a duration and no count.
 
     The spans of the compiler's stages enclose the rest, and their self time
-    names no entity, so they are left out. So are any `Source` spans; clang
-    23 writes `Source` as asynchronous events, which are not spans.
+    names no entity, so they are left out.
     """
     spans = [e for e in events
              if e.get("ph") == "X" and not e.get("name", "").startswith("Total ")
              and e.get("name") not in ("ExecuteCompiler", "Frontend", "Backend",
-                                       "PerformPendingInstantiations", "Source")]
+                                       "PerformPendingInstantiations")]
     spans.sort(key=lambda e: (e["ts"], -e.get("dur", 0)))
     by_phase, by_entity = collections.Counter(), collections.Counter()
     stack = []  # each frame is [start, duration, self time, event]
