@@ -15,11 +15,10 @@
 #include "sequoia/Maths/Statistics/StatisticalAlgorithms.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 
+#include <algorithm>
 #include <chrono>
 #include <format>
 #include <random>
-#include <future>
-#include <thread>
 
 namespace sequoia::testing
 {
@@ -209,37 +208,6 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string coarse_sleep_message(std::chrono::duration<double, std::milli> slept,
                                    std::chrono::duration<double, std::milli> target);
-
-  /** \brief Calibrates the duration of a sleep for timings built on sleeps.
-
-      Returns `target` if this machine's sleeps of `target` last about that long. Otherwise returns a duration longer
-      than those sleeps typically last.
-   */
-  template<class T, class Period>
-  [[nodiscard]]
-  std::chrono::duration<T, Period> calibrate(std::chrono::duration<T, Period> target)
-  {
-    using namespace std::chrono;
-
-    std::array<double, 7> timings{};
-    for (auto& t : timings)
-    {
-      t = profile([target]() { std::this_thread::sleep_for(target); }).count();
-    }
-
-    std::ranges::sort(timings);
-    const auto [sig_f, m_f] {maths::sample_standard_deviation(timings.cbegin() + 1, timings.cend() - 1)};
-    if (sig_f && m_f)
-    {
-      if ((m_f.value() - sig_f.value()) > duration_cast<duration<double>>(target).count())
-      {
-        constexpr auto inverse{Period::den / Period::num};
-        return std::chrono::duration<T, Period>{static_cast<T>(std::ceil(inverse* (m_f.value() + 5* sig_f.value())))};
-      }
-    }
-
-    return target;
-  }
 
   /** \brief class template for plugging into the checker class template
       \anchor performance_extender_primary
