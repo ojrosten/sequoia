@@ -1,72 +1,82 @@
 #!/usr/bin/env python3
-"""Report the machine-invariant half of a clang -ftime-trace build.
+"""Report where a clang -ftime-trace build spends its compile time.
 
-Compile time is a per-machine property, so wall-clock figures from one machine
-do not transfer to another, or reliably even to the next session on the same
-one. The counts clang records alongside them do transfer: given the same
-sources, flags and compiler, the number of times a template is instantiated or
-a constraint checked is fixed. This script leads with those and prints the
-durations beside them, marked, so they are read as this machine's answer rather
-than the answer.
-
-Two modes, and the second is where an investigation ends up:
+A compile time measured on one machine does not carry over to another, nor
+reliably to another session on the same machine. The counts clang records
+beside the times do carry over: given the same sources, flags and compiler,
+the number of times a template is instantiated or a constraint is checked is
+fixed. So the summary and --detail lead with the counts, and mark the times
+as this machine's.
 
   compile_time_report.py <build-dir>
-      Sums the `Total *` events over every trace in the build, ranked by count.
-      One row per phase - InstantiateClass, CheckConstraintSatisfaction, and so
-      on - plus a per-translation-unit breakdown.
+      Sums each phase's `Total` event over every translation unit, and ranks
+      the phases by count. Ranks the units by time and by count.
+
+      --write-baseline writes each phase's count to a file. --baseline lists
+      the phases whose counts differ from those in such a file. A count which
+      moved shows that the compiler did more or less of something. A count
+      which did not move does not show that the time stayed the same.
+
+  compile_time_report.py <build-dir> --self [<fragment>]
+      Ranks phases and entities by self time, a span's time less its
+      children's. The unit is the slowest of those whose names contain the
+      fragment. A span with a large self time and no children is the compiler
+      working where it records no events, which no count shows.
 
   compile_time_report.py <build-dir> --detail <event> [--source <fragment>]
-      Recompiles one translation unit at full granularity and attributes that
-      event to the source locations or entities responsible. The recompile is
-      needed because the standing build discards sub-500us events, which is
-      every individual constraint check; it keeps the traces ~400x smaller and
-      leaves the totals byte-identical, so the detail is worth paying for only
-      when something in the summary needs explaining.
-
-Compare two builds with --baseline: counts that moved are attributable to the
-change, counts that did not are not, whatever the clock says.
+      Recompiles the one object whose path contains the fragment, recording
+      every event, and ranks the source lines at which the event occurs. The
+      build's own traces omit events shorter than 500us. Nearly every
+      constraint check is that short, so attributing the checks needs the
+      recompile.
 """
-import argparse, collections, json, os, re, subprocess, sys
+import argparse, collections, contextlib, json, os, re, shlex, subprocess, sys, tempfile
 
+# A source location as clang writes it in a detail: <file:line:column...>.
 LOC = re.compile(r"<(?P<file>[^:<>]+):(?P<line>\d+):\d+")
 
 
 def traces(build_dir):
-    """Every -ftime-trace JSON under build_dir, keyed by translation unit.
+    """The events of every trace anywhere within build_dir, keyed by the
+    trace's file name less `.json`.
 
-    A trace counts only if the object file it was emitted beside is still
-    there. CMake's own compiler checks are compiled with the project's flags
-    and leave traces of their own in the build tree - `-.json` from a check
-    that compiles to stdout, and `a-CMakeCXXCompilerId.json` - which are
-    indistinguishable from real ones by name or content, and which inflated
-    the unit count by two before this check existed. The object is the
-    evidence that something in the project was actually built.
+    A trace counts only if its object lies beside it. A compiler check run by
+    CMake with -ftime-trace in CMAKE_CXX_FLAGS leaves a trace with no object,
+    and the trace is otherwise indistinguishable from a unit's.
+
+    Exits if there are no traces. Also exits if a JSON file beside an object
+    is not a readable trace, or if two traces have the same file name: either
+    would drop a unit from every report.
     """
-    out = {}
+    out, paths = {}, {}
     for root, _, files in os.walk(build_dir):
         for f in files:
-            if not f.endswith(".json") or f == "compile_commands.json":
-                continue
             path = os.path.join(root, f)
-            if not os.path.exists(path[:-len(".json")] + ".o"):
+            if not f.endswith(".json") or not os.path.exists(path[:-len(".json")] + ".o"):
                 continue
+            unit = f[:-len(".json")]
+            if unit in paths:
+                sys.exit(f"two traces are named {f}:\n  {paths[unit]}\n  {path}")
             try:
                 with open(path, encoding="utf-8") as fh:
                     d = json.load(fh)
-            except (json.JSONDecodeError, UnicodeDecodeError):
-                continue
-            if not isinstance(d, dict) or "traceEvents" not in d:
-                continue
-            out[f[:-len(".json")]] = d["traceEvents"]
+            except (OSError, json.JSONDecodeError, UnicodeDecodeError) as e:
+                sys.exit(f"{path} lies beside an object but is not a readable trace: {e}")
+            if not isinstance(d, dict) or not isinstance(d.get("traceEvents"), list):
+                sys.exit(f"{path} lies beside an object but is not a readable trace: it has no list of traceEvents")
+            paths[unit] = path
+            out[unit] = d["traceEvents"]
+    if not out:
+        sys.exit(f"no -ftime-trace output under {build_dir}\n"
+                 "configure with a *-time-trace preset and build")
     return out
 
 
 def totals(events):
-    """The `Total <phase>` summary events, as {phase: (count, microseconds)}.
+    """Each phase's `Total` event, as {phase: (count, microseconds)}.
 
-    clang emits these whatever the granularity, which is what makes the cheap
-    build sufficient for everything except attribution.
+    clang writes these at any granularity, so the build's own traces suffice
+    for every report but --detail's.
     """
     out = {}
     for e in events:
@@ -78,17 +88,20 @@ def totals(events):
 
 
 def self_times(events):
-    """Exclusive time per event, by phase and by entity.
+    """Self time in microseconds, by phase and by (phase, detail).
 
-    A `Total X` row sums every X event, so a phase that mostly contains other
-    phases reads as enormous while explaining nothing. Self time subtracts what
-    a span spends inside its children, which is what separates "this is where
-    the work is" from "this is what the work happened under".
+    A span's self time is its duration less its children's. A phase's `Total`
+    event sums every span of the phase, so a phase whose spans mostly enclose
+    others reads as large while explaining nothing. Self time puts the time
+    in the span which spent it.
 
-    It also exposes the case that no count can: a span with a large self time
-    and no children at all is the compiler working inside machinery it does not
-    instrument - constraint normalisation being the one that bites here. That
-    shows up as time and never as a count.
+    A span with a large self time and no children is the compiler working
+    where it records no events, constraint normalisation among them. That
+    work has a duration and no count.
+
+    The spans of the compiler's stages enclose the rest, and their self time
+    names no entity, so they are left out. So are any `Source` spans; clang
+    23 writes `Source` as asynchronous events, which are not spans.
     """
     spans = [e for e in events
              if e.get("ph") == "X" and not e.get("name", "").startswith("Total ")
@@ -96,7 +109,7 @@ def self_times(events):
                                        "PerformPendingInstantiations", "Source")]
     spans.sort(key=lambda e: (e["ts"], -e.get("dur", 0)))
     by_phase, by_entity = collections.Counter(), collections.Counter()
-    stack = []
+    stack = []  # each frame is [start, duration, self time, event]
     def close(frame):
         _, _, slf, e = frame
         by_phase[e["name"]] += slf
@@ -114,7 +127,8 @@ def self_times(events):
 
 
 def wall(events):
-    """This translation unit's own compile time."""
+    """The unit's compile time: its `Total ExecuteCompiler` event's duration,
+    or 0 if it has none."""
     for e in events:
         if e.get("name") == "Total ExecuteCompiler":
             return e.get("dur", 0)
@@ -122,37 +136,38 @@ def wall(events):
 
 
 def summarize(build_dir, top):
+    """Prints the summary of every unit, and returns each phase's count."""
     tus = traces(build_dir)
-    if not tus:
-        sys.exit(f"no -ftime-trace output under {build_dir}\n"
-                 "configure with a *-time-trace preset and build")
     agg, per_tu = collections.Counter(), collections.Counter()
     dur = collections.Counter()
     for tu, events in tus.items():
-        for phase, (count, d) in totals(events).items():
+        phases = totals(events)
+        for phase, (count, d) in phases.items():
             agg[phase] += count
             dur[phase] += d
-        per_tu[tu] = sum(c for c, _ in totals(events).values())
+        per_tu[tu] = sum(c for c, _ in phases.values())
 
     print(f"{len(tus)} translation units\n")
-    print("phase totals - counts are machine-invariant, times are this machine")
+    print("phase totals - the counts are machine-invariant, and the times are this machine's")
     print(f"  {'count':>12}  {'this machine':>13}  phase")
     for phase, count in agg.most_common(top):
         print(f"  {count:12d}  {dur[phase] / 1e6:11.2f}s  {phase}")
-    print("\nslowest translation units - this machine, but the ranking is stable")
+    print("\nslowest translation units - by this machine's times")
     for tu, d in sorted(((t, wall(e)) for t, e in tus.items()),
                         key=lambda x: -x[1])[:top]:
         print(f"  {d / 1e6:11.2f}s  {tu}")
     print("\nheaviest translation units, by counted events")
     for tu, count in per_tu.most_common(top):
         print(f"  {count:12d}  {tu}")
-    print("\nNote the two rankings can disagree, and when they do the time one is\n"
-          "the finding: work the compiler does not instrument has a duration and\n"
-          "no count. Use --self on such a unit.")
+    print("\nWhere the two rankings disagree, the ranking by time is the finding:\n"
+          "work for which clang records no events has a duration and no count.\n"
+          "Run --self on such a unit.")
     return agg
 
 
 def compare(agg, baseline_path):
+    """Prints each phase whose count differs from the baseline's, the largest
+    difference first."""
     with open(baseline_path, encoding="utf-8") as f:
         base = json.load(f)
     print(f"\nagainst baseline {baseline_path}")
@@ -165,33 +180,79 @@ def compare(agg, baseline_path):
         print(f"  {b:12d}  {n:12d}  {n - b:+12d}{ratio}  {phase}")
 
 
+def ninja(build_dir, *arguments):
+    """The output of `ninja -C build_dir <arguments>`. Exits if ninja fails."""
+    r = subprocess.run(["ninja", "-C", build_dir, *arguments], capture_output=True, text=True)
+    if r.returncode:
+        sys.exit(f"ninja -C {build_dir} {' '.join(arguments)} failed:\n{r.stderr}{r.stdout}".rstrip())
+    return r.stdout
+
+
 def compile_command(build_dir, fragment):
-    """The ninja command line for the one object matching `fragment`."""
-    objs = subprocess.run(["ninja", "-C", build_dir, "-t", "targets", "all"],
-                          capture_output=True, text=True).stdout
-    hits = [l.split(":")[0] for l in objs.splitlines()
-            if l.endswith("o: CXX_COMPILER__" + l.split("CXX_COMPILER__")[-1])
-            and fragment in l and ".o:" in l]
+    """The one object whose path contains `fragment`, among those ninja
+    compiles from C++, and the command which compiles it. Exits unless exactly
+    one object matches."""
+    targets = [line.partition(": ") for line in ninja(build_dir, "-t", "targets", "all").splitlines()]
+    hits = [target for target, _, rule in targets
+            if rule.startswith("CXX_COMPILER__") and target.endswith(".o") and fragment in target]
     if not hits:
         sys.exit(f"no object matching {fragment!r} in {build_dir}")
     if len(hits) > 1:
         sys.exit("ambiguous --source; matches:\n  " + "\n  ".join(hits))
-    cmd = subprocess.run(["ninja", "-C", build_dir, "-t", "commands", hits[0]],
-                         capture_output=True, text=True).stdout.strip().splitlines()[-1]
-    return hits[0], cmd
+    return hits[0], ninja(build_dir, "-t", "commands", hits[0]).strip().splitlines()[-1]
 
 
 def detail(build_dir, event, fragment, top, out_dir):
+    """Recompiles the object matching `fragment`, recording every event, and
+    prints the sites of `event`, ranked by count.
+
+    The recompile writes its object, depfile and trace to `out_dir`, and
+    nothing to the build directory. Exits, before compiling, if the command
+      - has no -ftime-trace;
+      - names a response file which cannot be read;
+      - writes a module's BMI to a path given by -fmodule-output=, which the
+        recompile would overwrite;
+      - does not name its object exactly once, as `-o <path>.o`.
+    Exits with the compiler's status if the recompile fails, and exits if it
+    writes no trace.
+    """
     obj, cmd = compile_command(build_dir, fragment)
+    words = shlex.split(cmd)
+    if "-ftime-trace" not in words:
+        sys.exit(f"the command compiling {obj} has no -ftime-trace\n"
+                 "configure with a *-time-trace preset and build")
+    # CMake passes -fmodule-output= to clang in a response file, which the
+    # command names as @<path>, relative to build_dir.
+    for response_file in [w[1:] for w in words if w.startswith("@")]:
+        try:
+            with open(os.path.join(build_dir, response_file), encoding="utf-8") as f:
+                words += shlex.split(f.read())
+        except (OSError, UnicodeDecodeError) as e:
+            sys.exit(f"the command compiling {obj} names a response file which cannot be read: {e}")
+    if any(w.startswith("-fmodule-output=") for w in words):
+        sys.exit(f"the command compiling {obj} writes a module's BMI, which the recompile would overwrite")
+
+    # The command runs in build_dir, so the compiler would resolve a relative
+    # out_dir against build_dir, not against this process's working directory.
+    probe = os.path.join(os.path.abspath(out_dir), "time_trace_probe.o")
+    trace = probe[:-len(".o")] + ".json"
+    cmd = re.sub(r"(?<!\S)-ftime-trace(?!\S)", "-ftime-trace -ftime-trace-granularity=0", cmd)
+    cmd, objects = re.subn(r"(?<!\S)-o \S+\.o(?!\S)", lambda _: "-o " + shlex.quote(probe), cmd)
+    if objects != 1:
+        sys.exit(f"the command compiling {obj} does not name its object once as -o <path>.o")
+    cmd = re.sub(r"(?<!\S)-MF \S+", lambda _: "-MF " + shlex.quote(probe + ".d"), cmd)
+    # A trace left by an earlier recompile must not stand in for this one's.
+    for output in (probe, probe + ".d", trace):
+        with contextlib.suppress(FileNotFoundError):
+            os.remove(output)
     print(f"recompiling {obj} at full granularity", file=sys.stderr)
-    probe = os.path.join(out_dir, "time_trace_probe.o")
-    cmd = cmd.replace("-ftime-trace", "-ftime-trace -ftime-trace-granularity=0")
-    cmd = re.sub(r"-o \S+\.o", f"-o {probe}", cmd)
     r = subprocess.run(cmd, shell=True, cwd=build_dir)
     if r.returncode:
         sys.exit(r.returncode)
+    if not os.path.exists(trace):
+        sys.exit(f"the recompile of {obj} wrote no trace at {trace}")
 
-    with open(probe[:-2] + ".json", encoding="utf-8") as f:
+    with open(trace, encoding="utf-8") as f:
         events = json.load(f)["traceEvents"]
     hits = [e for e in events if e.get("name") == event]
     if not hits:
@@ -215,8 +276,10 @@ def detail(build_dir, event, fragment, top, out_dir):
 
 
 def show_self(build_dir, fragment, top):
+    """Prints the self times of the slowest unit whose name contains
+    `fragment`."""
     tus = traces(build_dir)
-    hits = [t for t in tus if fragment in t] if fragment else list(tus)
+    hits = [t for t in tus if fragment in t]
     if not hits:
         sys.exit(f"no translation unit matching {fragment!r} in {build_dir}")
     if len(hits) > 1:
@@ -239,23 +302,42 @@ def main():
     ap.add_argument("build_dir")
     ap.add_argument("--top", type=int, default=20, help="rows per table (default 20)")
     ap.add_argument("--write-baseline", metavar="FILE",
-                    help="write this run's phase counts, to compare a later one against")
-    ap.add_argument("--baseline", metavar="FILE", help="compare against counts written earlier")
-    ap.add_argument("--detail", metavar="EVENT",
-                    help="attribute one event kind to source sites; needs a recompile")
-    ap.add_argument("--source", default="", metavar="FRAGMENT",
-                    help="which translation unit --detail should recompile")
-    ap.add_argument("--self", metavar="FRAGMENT", nargs="?", const="",
-                    help="exclusive time per phase and entity for one translation unit")
-    ap.add_argument("--out-dir", default=None,
-                    help="where --detail puts its probe (default: inside the build directory)")
+                    help="write each phase's count to FILE")
+    ap.add_argument("--baseline", metavar="FILE", help="list the phases whose counts differ from FILE's")
+    mode = ap.add_mutually_exclusive_group()
+    mode.add_argument("--detail", metavar="EVENT",
+                      help="rank the source lines at which EVENT occurs, recompiling one unit")
+    ap.add_argument("--source", metavar="FRAGMENT",
+                    help="a fragment of the path of the object --detail recompiles")
+    mode.add_argument("--self", metavar="FRAGMENT", nargs="?", const="",
+                      help="rank phases and entities by self time, in the slowest unit "
+                           "whose name contains FRAGMENT")
+    ap.add_argument("--out-dir", metavar="DIR",
+                    help="the directory, outside the build directory, to which --detail writes "
+                         "the recompiled object, its depfile and its trace "
+                         "(default: a temporary directory, removed afterwards)")
     a = ap.parse_args()
+    if a.detail is None and (a.source is not None or a.out_dir is not None):
+        ap.error("--source and --out-dir apply only to --detail")
+    if (a.detail is not None or a.self is not None) and \
+       (a.baseline is not None or a.write_baseline is not None):
+        ap.error("--baseline and --write-baseline apply only to the summary")
 
     if a.self is not None:
         show_self(a.build_dir, a.self, a.top)
         return
-    if a.detail:
-        detail(a.build_dir, a.detail, a.source, a.top, a.out_dir or a.build_dir)
+    if a.detail is not None:
+        if a.out_dir is None:
+            with tempfile.TemporaryDirectory() as out_dir:
+                detail(a.build_dir, a.detail, a.source or "", a.top, out_dir)
+        else:
+            # A trace beside its object within the build directory would be
+            # read as a unit by every later summary.
+            build = os.path.realpath(a.build_dir)
+            if os.path.commonpath([os.path.realpath(a.out_dir), build]) == build:
+                ap.error("--out-dir must be outside the build directory")
+            os.makedirs(a.out_dir, exist_ok=True)
+            detail(a.build_dir, a.detail, a.source or "", a.top, a.out_dir)
         return
     agg = summarize(a.build_dir, a.top)
     if a.baseline:
