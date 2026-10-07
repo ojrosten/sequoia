@@ -34,9 +34,10 @@
 #   - genhtml is given GNU c++filt if it is installed where Homebrew puts it;
 #   - genhtml is given each of the three ignore categories it accepts, and a
 #     category it refuses is named. The probe leaves nothing behind;
-#   - a missing argument, a missing build directory, a build directory not
-#     within a directory named build, and a build without a cache each stop
-#     the script before any tool runs;
+#   - a missing, empty or second argument is refused with status 2 and the
+#     usage on standard error alone. A missing build directory, a build
+#     directory not within a directory named build, and a build without a
+#     cache stop the script too. In each case no tool runs;
 #   - each step which fails stops the script, with a non-zero status and an
 #     error naming the step, and no later step runs. A refused summary is
 #     shown.
@@ -419,18 +420,28 @@ output_controls() {
          "$repo/coverage_reports/Rebuild/gcc-env-coverage/index.html"
 }
 
+# usage_refused <description>: the last run was refused with status 2, the
+# usage on standard error alone, and no tool run.
+usage_refused() {
+  exits "$1 is refused" 2
+  check "$1 gives the usage" yes '^Usage: .*generate_coverage_report\.sh <build directory>$' "$case_dir/err"
+  [ ! -s "$case_dir/out" ] || fail "$1: the script wrote to standard output: $(head -1 "$case_dir/out")"
+  [ ! -s "$case_dir/log" ] || fail "$1: a tool ran: $(head -1 "$case_dir/log")"
+}
+
 # What stops the script before any tool runs.
 refusal_controls() {
   fixture no_argument "$tmp/g++-13/bin/g++-15"
   run
-  exits "no argument is refused" nonzero
-  check "no argument gives the usage" yes '^Usage: ' "$case_dir/all"
-  [ ! -s "$case_dir/log" ] || fail "no argument: a tool ran: $(head -1 "$case_dir/log")"
+  usage_refused "no argument"
 
   fixture empty_argument "$tmp/g++-13/bin/g++-15"
   run ''
-  exits "an empty argument is refused" nonzero
-  check "an empty argument gives the usage" yes '^Usage: ' "$case_dir/all"
+  usage_refused "an empty argument"
+
+  fixture second_argument "$tmp/g++-13/bin/g++-15"
+  run build/TestAll/gcc-env-coverage build/TestAll/gcc-env-coverage
+  usage_refused "a second argument"
 
   fixture absent "$tmp/g++-13/bin/g++-15"
   run build/TestAll/absent
@@ -518,12 +529,16 @@ controls() {
 }
 
 # Each mutant breaks one behaviour that the controls claim. Its entry holds a
-# description, the text it replaces, and the replacement. One mutant is left
-# out: deleting `mkdir -p "${output_dir}"`, which is equivalent, since genhtml
-# makes its output directory.
+# description, the text it replaces, and the replacement. Two mutants are left
+# out, each equivalent:
+#   - deleting `mkdir -p "${output_dir}"`, since genhtml makes its output
+#     directory;
+#   - `$# -gt 1` for `$# -ne 1`, since `-z "$1"` refuses a missing argument.
 mutations=(
-  'no argument accepted'              'if [[ -z "$1" ]]; then'               'if false; then'
-  'a refusal succeeds'                $'Directory>"\n  exit 1'               $'Directory>"\n  exit 0'
+  'a second argument accepted'        'if [[ $# -ne 1 || -z "$1" ]]; then'   'if [[ $# -lt 1 || -z "$1" ]]; then'
+  'an empty argument accepted'        'if [[ $# -ne 1 || -z "$1" ]]; then'   'if [[ $# -ne 1 ]]; then'
+  'a refused usage succeeds'          $'directory>" >&2\n  exit 2'           $'directory>" >&2\n  exit 0'
+  'the usage on standard output'      '<build directory>" >&2'               '<build directory>"'
   'the logical path'                  '"$test_exe_dir_relative" && pwd -P)'  '"$test_exe_dir_relative" && pwd)'
   'a missing directory read as here'  '"$test_exe_dir_relative" && pwd -P)'  '"$test_exe_dir_relative"; pwd -P)'
   'a path without build accepted'     '!= */build/* ]]'                      '== "" ]]'

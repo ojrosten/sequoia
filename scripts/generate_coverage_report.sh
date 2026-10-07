@@ -18,7 +18,8 @@
 #
 # The script runs lcov, genhtml and ctest from PATH, the ninja the build's
 # cache names, and the gcov tool which matches the build's compiler. A step
-# that fails stops the script with a non-zero status.
+# that fails stops the script with a non-zero status. The script refuses any
+# other arguments with status 2, before it runs anything.
 
 # A failing suite or a failed capture must not leave a report that looks
 # sound. There is no pipefail: the genhtml probe below pipes genhtml, which
@@ -26,9 +27,9 @@
 # as unsupported.
 set -e
 
-if [[ -z "$1" ]]; then
-  echo "Usage: $0 <Test Executable Directory>"
-  exit 1
+if [[ $# -ne 1 || -z "$1" ]]; then
+  echo "Usage: $0 <build directory>" >&2
+  exit 2
 fi
 
 test_exe_dir_relative="$1"
