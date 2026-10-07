@@ -37,9 +37,8 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr static std::string make(const T& val)
     {
-      // std::format is not constexpr; in a constant evaluation an integer is rendered with to_chars
-      // and anything else is named as unrendered. The run-time return follows the if consteval rather
-      // than sitting in its else branch, which MSVC (19.51) rejects as a non-constant immediate call
+      // std::format is not constexpr; in a constant evaluation an integer is
+      // rendered with to_chars and anything else is named as unrendered
       if consteval
       {
         if constexpr(std::integral<T> && !std::is_same_v<T, bool>)
@@ -58,6 +57,9 @@ namespace sequoia::testing
         }
       }
 
+      // TO DO: move this return into the if consteval's else branch, once MSVC
+      // no longer rejects std::format's consteval call there (C7595, 19.51)
+      // https://developercommunity.visualstudio.com/t/-C7595-for-a-consteval-call-in-the-else-/11162658
       return std::format("{}", val);
     }
   };
