@@ -432,6 +432,18 @@ jobs:
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
+      # Roadmap 234's gate on uncalled functions keys each function by its
+      # demangled name, so the script's controls run with the demanglers the
+      # gate is to use. ubuntu-24.04 has llvm-cxxfilt-16 to -18 and no
+      # unversioned llvm-cxxfilt; 18 is the newest. A demangler absent from the
+      # path given fails this step. The step follows Measure, so that a failure
+      # here does not cost the run its coverage figures.
+      - name: Test the uncalled-functions script
+        if: ${{ always() && env.NEEDS_TESTING == 'true' }}
+        run: |
+          scripts/tests/uncalled_functions_selftest.py --demangler /usr/bin/llvm-cxxfilt-18 \
+                                                       --demangler /usr/bin/c++filt
+
       - name: Upload the tracefile and the report
         if: ${{ always() && env.NEEDS_TESTING == 'true' }}
         uses: actions/upload-artifact@v7

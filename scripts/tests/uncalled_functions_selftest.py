@@ -9,10 +9,11 @@ the controls against the script and against each mutant of the script. The
 script must fail no control, and each mutant at least one.
 
 The demanglers are given in the order the script is to try them. The expected
-keys assume llvm-cxxfilt first and GNU c++filt second. The mangled names are
-g++-16's. gcc emits the C2 and D2 variants of a constructor and destructor in
-sequoia's own tracefiles, and they are the C1 and D1 names with the variant
-letter changed.
+keys are llvm-cxxfilt's and GNU c++filt's spellings, which agree on every name
+here that both can demangle. The mangled names are
+those g++ 15 and g++ 16 both give. gcc emits the C2 and D2 variants of a
+constructor and destructor in sequoia's own tracefiles, and they are the C1 and
+D1 names with the variant letter changed.
 """
 import argparse, contextlib, io, itertools, os, stat, sys, tempfile, types, unittest
 from collections import Counter
@@ -502,6 +503,9 @@ def main():
     if arguments.mutations:
         return mutations()
     failures, total = run_controls(load(SOURCE))
+    if total == 0:
+        print('uncalled_functions_selftest.py: no controls were found')
+        return 1
     if failures:
         script = load(SOURCE)
         with tempfile.TemporaryDirectory() as directory:
