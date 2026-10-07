@@ -16,6 +16,13 @@ namespace sequoia::testing
 {
   namespace
   {
+    /** \brief Whether every mismatch lies after the `Task duration:` label on
+               its line, and leaves two spans of that line unchanged.
+
+        Each span must appear identically on both lines, or on neither:
+        -# the number of standard deviations, from `+-` to `*`;
+        -# the range of speed-ups, from `(` to `)`.
+     */
     [[nodiscard]]
     bool acceptable_mismatch(std::string_view testOutput, std::string_view referenceOutput)
     {
@@ -24,15 +31,17 @@ namespace sequoia::testing
       {
         constexpr auto npos{std::string::npos};
         const auto pos{std::ranges::distance(testOutput.begin(), iters.in1)};
-        if(testOutput.rfind("Task duration:", pos) != npos)
+        std::string_view preceding{testOutput.substr(0, pos)};
+        const auto labelPos{preceding.rfind("Task duration:")};
+        if((labelPos != npos) && !preceding.substr(labelPos).contains('\n'))
         {
           const auto endLine{testOutput.find('\n', pos)};
           const auto refEndLine{referenceOutput.find('\n', pos)};
 
           if((endLine != npos) && (refEndLine != npos))
           {
-            std::string_view lineView{testOutput.substr(pos, endLine - pos)};
-            std::string_view refLineView{referenceOutput.substr(pos, refEndLine - pos)};
+            std::string_view lineView{testOutput.substr(labelPos, endLine - labelPos)};
+            std::string_view refLineView{referenceOutput.substr(labelPos, refEndLine - labelPos)};
 
             auto acceptable{
               [=](std::string_view open, std::string_view close){
@@ -40,7 +49,9 @@ namespace sequoia::testing
                 const auto closePos{lineView.find(close)};
                 const auto refOpenPos{refLineView.find(open)};
                 const auto refClosePos{refLineView.find(close)};
-                if((closePos != npos) && (openPos < closePos) && (refClosePos != npos) &&(refOpenPos < refClosePos))
+                const bool present{(closePos != npos) && (openPos < closePos)};
+                const bool refPresent{(refClosePos != npos) && (refOpenPos < refClosePos)};
+                if(present && refPresent)
                 {
                   const auto[lineIter, refLineIter]{
                     std::ranges::mismatch(lineView.begin() + openPos, lineView.begin() + closePos,
@@ -49,11 +60,11 @@ namespace sequoia::testing
                   return (lineIter == (lineView.begin() + closePos)) && (refLineIter == (refLineView.begin() + refClosePos));
                 }
 
-                return true;
+                return present == refPresent;
               }
             };
 
-            if(!acceptable("-", "*") || !acceptable("(", ")"))
+            if(!acceptable("+-", "*") || !acceptable("(", ")"))
               return false;
 
             return acceptable_mismatch(testOutput.substr(endLine), referenceOutput.substr(refEndLine));

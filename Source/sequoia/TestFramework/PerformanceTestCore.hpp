@@ -239,6 +239,14 @@ namespace sequoia::testing
     performance_extender& operator=(performance_extender&&) noexcept = default;
   };
 
+  /** \brief Chooses between a run's diagnostics output and the reference.
+
+      \returns
+      -# `referenceOutput`, if every difference from `testOutput` lies after
+         the `Task duration:` label on its line, and leaves the number of
+         standard deviations and the range of speed-ups unchanged;
+      -# `testOutput`, otherwise.
+   */
   [[nodiscard]]
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);
 
