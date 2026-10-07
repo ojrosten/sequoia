@@ -86,9 +86,10 @@ COND_DOUBLE     = '_ZN2ns4condIdE1fEvQnt8integralIT_E'
 FRIEND_EQUAL    = '_ZN2ns1sIiEFeqERKS1_S3_Q1cIT_E'
 # ns::twice<ns::café>(ns::café) as lcov writes it. lcov writes a function
 # name's letters from U+0080 to U+00FF as single Latin-1 bytes, so a tracefile
-# need not be UTF-8; sequoia's café_free_test is such a name. Neither
-# demangler names a function whose name holds such a byte.
-TWICE_CAFE      = '_ZN2ns5twiceINS_4caf\udce9EEET_S2_'
+# need not be UTF-8; sequoia's café_free_test is such a name. The length
+# before `caf` is still g++'s count of the UTF-8 bytes. Neither demangler
+# names a function whose name holds such a byte.
+TWICE_CAFE      = '_ZN2ns5twiceINS_5caf\udce9EEET_S2_'
 UNDEMANGLED     = '_ZN2ns5brokenE'
 # Local entities of functions with a requires-clause, which GNU c++filt cannot
 # demangle: ns::gen<double>'s constructor, constrained by std::movable, and a
