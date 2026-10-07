@@ -1,30 +1,43 @@
 #!/usr/bin/env python3
-"""Check that filtering a captured lcov tracefile removed files and changed nothing else.
+"""Check that filtering an lcov capture removed files and changed nothing else.
 
   check_tracefile.py --capture <captured.info> --filtered <filtered.info>
                      --summary <lcov --summary output of filtered.info>
                      --removed <pattern>...
 
-Every file of the capture must satisfy one of these:
-  -# It is in the filtered tracefile, with its records identical, line for line.
-  -# It matches one of the removal patterns, as lcov matches them, and is absent.
-  -# It has no coverage points - no record but the per-file totals FNF, FNH, LF, LH, BRF, BRH,
-     MCF and MCH - and is absent.
-  -# It has function records but no line records - no record but FNL, FNA and the totals - and
-     is absent. lcov deletes every file without line records when it reads a tracefile, and
-     the clang leg's capture holds such files. They are accepted as removed, and listed on every
-     run rather than kept, so that the loss stays visible and a newly dropped file shows.
+Each file of the filtered tracefile must be a file of the capture which no
+removal pattern matches. Its records must be identical to its records in the
+capture, byte for byte and in order.
 
-Every run lists the files of the third case too. They are the project's own
-files, and no figure drawn from the filtered tracefile covers them. A file which
-a removal pattern matches counts under the second case, whatever its records.
+Each file of the capture absent from the filtered tracefile must be one of
+these:
+  -# A file which a removal pattern matches, as lcov matches it, whatever its
+     records.
+  -# A file with no coverage points. It has no record but the per-file
+     totals FNF, FNH, LF, LH, BRF, BRH, MCF and MCH.
+  -# A file with function records but no line records. It has no record but
+     FNL, FNA and the totals. lcov deletes every such file when it reads a
+     tracefile.
 
-And the figures `lcov --summary` gives for the filtered tracefile must be the counts of its
-records: lines found and hit are the DA records and those with a non-zero count, functions
-found and hit the FNA records and those with a non-zero count.
+The figures `lcov --summary` gives for the filtered tracefile must also be
+counts of its records. Lines found are its DA records, and lines hit are
+those with a non-zero count. Functions found are its FNA records, and
+functions hit are those with a non-zero count.
 
-Either check failing means lcov changed the measurement while reading it, so the first
-difference found is named and the exit status is 1.
+If both checks pass, the first line of the output counts the files kept,
+those removed by a pattern and those with no coverage points, and gives the
+summary's figures. The files with no coverage points are then listed, and
+then those with function records but no line records. Each list is sorted,
+and has a heading giving its count. No figure drawn from the filtered
+tracefile covers the files listed.
+
+The exit status is 1, and an error names the first problem found, if:
+  -# either check fails;
+  -# a tracefile cannot be read, has no file's record, has two records for
+     one file, has a record with no end_of_record, or has a line outside
+     any file's record other than a test name or a blank line;
+  -# the summary cannot be read, or has no figure for lines or for
+     functions.
 """
 import argparse, re, sys
 
@@ -36,11 +49,13 @@ class Failure(Exception):
 
 
 def removal_pattern(glob):
-    """The expression lcov searches a path for, given one of its removal patterns.
+    """The expression lcov searches a path for, given a removal pattern.
 
-    lcov turns `*` into any run of characters and `?` into any one, takes everything else
-    literally, and searches the whole path rather than matching from its start: `/usr/*`
-    removes `/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stdio.h`.
+    lcov turns `*` into any run of characters and `?` into exactly one. It
+    takes every other character literally, and distinguishes upper from
+    lower case. It searches the whole path, rather than matching from the
+    path's start, so `/usr/*` removes
+    `/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stdio.h`.
     """
     return re.compile(''.join('.*' if c == '*' else '.' if c == '?' else re.escape(c) for c in glob))
 
@@ -52,8 +67,9 @@ def removed_by(source, patterns):
 def read_tracefile(path):
     """Each source file's records, in the order the tracefile gives them."""
     records, source = {}, None
-    # Read so that each byte round-trips, since a tracefile need not be UTF-8: lcov writes a function name's
-    # letters from U+0080 to U+00FF as single Latin-1 bytes, although gcov gives them as UTF-8.
+    # Each byte round-trips, since a tracefile need not be UTF-8. lcov writes a
+    # function name's letters from U+0080 to U+00FF as single Latin-1 bytes,
+    # although gcov gives them as UTF-8.
     with open(path, encoding='utf-8', errors='surrogateescape', newline='') as tracefile:
         for number, line in enumerate(tracefile, 1):
             line = line.rstrip('\n')
@@ -92,9 +108,9 @@ def has_only_function_records(lines):
 
 
 def check_filtering(captured, filtered, patterns):
-    """The number of files removed by a pattern; the sorted list of those
-    removed for having no coverage points; and the sorted list of those removed
-    for having function records but no line records."""
+    """The number of files removed by a pattern, the sorted list of those
+    dropped for having no coverage points, and the sorted list of those
+    dropped for having function records but no line records."""
     for source, lines in filtered.items():
         if source not in captured:
             raise Failure(f'{source} is in the filtered tracefile but not the capture')
@@ -133,8 +149,9 @@ def summary_figure(summary, kind):
 
 
 def record_figure(filtered, tag):
-    """The (hit, found) pair counted from the `tag` records: found is all of them, hit those with a
-    non-zero count, which is a record's second comma-separated field for both DA and FNA."""
+    """The (hit, found) pair counted from the `tag` records. Found is all of
+    them, and hit is those with a non-zero count. The count is a record's
+    second comma-separated field, in both DA and FNA records."""
     hit, found = 0, 0
     for lines in filtered.values():
         for line in lines:
@@ -163,7 +180,8 @@ def main():
     parser.add_argument('--summary',  required=True)
     parser.add_argument('--removed',  required=True, nargs='+')
     arguments = parser.parse_args()
-    # Write escaped bytes back as themselves, since a message quotes the records it compared.
+    # Write escaped bytes back as themselves, since a message quotes the
+    # records it compared.
     for stream in (sys.stdout, sys.stderr):
         stream.reconfigure(encoding='utf-8', errors='surrogateescape')
     try:
