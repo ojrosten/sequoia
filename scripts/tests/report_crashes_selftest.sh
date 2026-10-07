@@ -31,6 +31,8 @@
 #   - a report whose fields are absent is summarised with "?" in their place,
 #     and one that cannot be summarised is printed whole;
 #   - a .crash report is printed whole, without an attempt at a summary;
+#   - a report in a subdirectory is counted, and one that cannot be read is
+#     named;
 #   - the summary shows at most 50 frames;
 #   - a directory that cannot be read, or cannot be searched, is named before
 #     any crash; one that does not exist is not named;
@@ -52,7 +54,7 @@
 #
 # The controls run on macOS alone, where the system writes a crash report a
 # few seconds after each crash. The Linux branch runs here with stubs for file
-# and gdb; the stub file prints what GNU file prints for a core. The Windows
+# and gdb. The stub file prints what GNU file prints for a core. The Windows
 # branch runs here without cdb, since windows_debugger.sh looks for cdb only
 # under /c. So no control runs the real gdb, file or cdb.
 
@@ -96,7 +98,11 @@ if [ "$(uname -s)" != Darwin ]; then
   exit 0
 fi
 
-name=CrashingStandIn
+# macOS stopped writing reports for these stand-ins' names after a day of
+# runs, while still writing them for a new name. So each run names its
+# stand-ins afresh.
+run=$RANDOM
+name=CrashingStandIn$run
 cat > "$tmp/standin.c" <<'STANDIN'
 #include <stdlib.h>
 void crashes_in_the_stand_in(void) { abort(); }
@@ -104,7 +110,7 @@ int main(void) { crashes_in_the_stand_in(); }
 STANDIN
 cc -g -O0 -o "$tmp/$name" "$tmp/standin.c" || { echo "FAIL: cannot compile the stand-in"; exit 1; }
 
-inlining=InliningStandIn
+inlining=InliningStandIn$run
 cat > "$tmp/inlining.c" <<'STANDIN'
 #include <stdlib.h>
 static inline __attribute__((always_inline)) void aborts_when_inlined(int code) { if(code) abort(); }
@@ -123,9 +129,11 @@ sleep 1
 # The system writes each report a few seconds after the crash.
 for stand_in in "$name" "$inlining"; do
   for attempt in $(seq 1 60); do
-    find "${reports[@]}" -type f -newer "$tmp/before" -name "$stand_in*" 2> /dev/null | grep -q . && break
+    find "${reports[@]}" -type f -newer "$tmp/before" -name "$stand_in*" 2> /dev/null | grep -q . && continue 2
     sleep 1
   done
+  echo "FAIL: the system wrote no crash report for $stand_in within 60s"
+  exit 1
 done
 sleep 1
 touch "$tmp/after"
@@ -136,8 +144,8 @@ touch "$tmp/after"
 # searched but not listed. The unsearchable one can be listed but not searched.
 # The locked subdirectory can be neither.
 macos=$tmp/macos
-mkdir -p "$macos/empty" "$macos/reports/Directory.crash" "$macos/reports/locked" "$macos/unreadable" \
-         "$macos/unsearchable"
+mkdir -p "$macos/empty" "$macos/reports/Directory.crash" "$macos/reports/locked" "$macos/reports/nested" \
+         "$macos/unreadable" "$macos/unsearchable"
 cp "$(find "${reports[@]}" -type f -newer "$tmp/before" -name "$name*" 2> /dev/null | head -1)" "$macos/reports/"
 python3 - "$macos/reports" <<'FIXTURES'
 import json, os, sys
@@ -145,13 +153,16 @@ directory = sys.argv[1]
 def write(name, text):
     with open(os.path.join(directory, name), 'w') as f:
         f.write(text)
-# The sparse report lacks its name, its exception, a frame's symbol, a frame's
-# image and a frame's source line. Its second thread faulted.
+# The sparse report lacks its name and its exception. Some of its frames lack
+# a symbol, an offset, an image, a source file or a source line. Its second
+# thread faulted.
 frames = [{'symbol': 'named_frame', 'sourceFile': 'half.c', 'imageIndex': 0},
+          {'symbol': 'line_without_file', 'sourceLine': 7, 'imageIndex': 0},
           {'imageOffset': 4096, 'imageIndex': 0},
+          {'imageIndex': 0},
           {'symbol': 'beyond_the_images', 'imageIndex': 1},
           {'symbol': 'without_an_image'}] \
-       + [{'symbol': f'frame_{index}', 'imageIndex': 0} for index in range(4, 60)]
+       + [{'symbol': f'frame_{index}', 'imageIndex': 0} for index in range(6, 60)]
 body = {'faultingThread': 1,
         'threads': [{'frames': [{'symbol': 'in_a_thread_that_did_not_fault', 'imageIndex': 0}]},
                     {'frames': frames}],
@@ -162,9 +173,11 @@ write('Hang.ips',      '{"bug_type":"298","name":"Hang"}\n"bug_type":"309"\n')
 write('Copy.ips.txt',  '{"bug_type":"309","name":"Copy"}\n{}\n')
 write('Old.ips',       '{"bug_type":"309","name":"Old"}\n{}\n')
 write('Legacy.crash',  'Process: Legacy [1]\nException Type: EXC_CRASH (SIGABRT)\n')
+write('nested/Nested.ips', '{"bug_type":"309","name":"Nested"}\n{}\n')
+write('Unreadable.ips',    '{"bug_type":"309","name":"Unreadable"}\n{}\n')
 FIXTURES
 touch -t 201901010000 "$macos/reports/Old.ips"
-chmod 000 "$macos/reports/locked"
+chmod 000 "$macos/reports/locked" "$macos/reports/Unreadable.ips"
 chmod 300 "$macos/unreadable"
 chmod 600 "$macos/unsearchable"
 
@@ -239,14 +252,19 @@ run_controls() { # run_controls <directory holding the scripts>
     "$script" "$tmp/dumps" "$tmp/before" > "$elsewhere" 2>&1
   check_status "a run with directories it cannot read succeeds" 0 $?
   check "a crash in a second directory is reported"         yes "^Report: $macos/reports/$name" "$elsewhere"
-  check "every crash report there is counted, and no more"  yes "^Crashes found: 4$" "$elsewhere"
+  check "every crash report there is counted, and no more"  yes "^Crashes found: 5$" "$elsewhere"
+  check "a report in a subdirectory is reported"            yes \
+        "^Report: $macos/reports/nested/Nested\.ips$" "$elsewhere"
+  check "a report that cannot be read is named"             yes "$macos/reports/Unreadable\.ips" "$elsewhere"
   check "a report of another kind is not reported"          no  "Hang\.ips" "$elsewhere"
   check "a file not named as a report is not reported"      no  "Copy\.ips\.txt" "$elsewhere"
   check "a directory is not reported"                       no  "Directory\.crash" "$elsewhere"
   check "a report before the since file is not reported"    no  "Old\.ips" "$elsewhere"
   check "absent fields are summarised as ?"                 yes "^\?: \? \(\?\)$" "$elsewhere"
-  check "a frame with half a location shows none"           yes "^  SparseImage: named_frame$" "$elsewhere"
+  check "a frame with only a source file shows no location" yes "^  SparseImage: named_frame$" "$elsewhere"
+  check "a frame with only a source line shows no location" yes "^  SparseImage: line_without_file$" "$elsewhere"
   check "a frame without a symbol shows its offset"         yes "^  SparseImage: 0x1000$" "$elsewhere"
+  check "a frame without a symbol or an offset shows 0x0"   yes "^  SparseImage: 0x0$" "$elsewhere"
   check "a frame beyond the images shows ?"                 yes "^  \?: beyond_the_images$" "$elsewhere"
   check "a frame without an image shows ?"                  yes "^  \?: without_an_image$" "$elsewhere"
   check "the summary shows the fiftieth frame"              yes "^  SparseImage: frame_49$" "$elsewhere"
@@ -270,8 +288,8 @@ run_controls() { # run_controls <directory holding the scripts>
     fail "every directory not read is named before the first crash"
   fi
 
-  # The run starts in a directory holding a report: find, given no directory,
-  # searches the current one.
+  # The run starts in a directory holding a report, which find would search
+  # if it were given no directory.
   ( cd "$macos/reports" && REPORT_CRASHES_MACOS_DIRECTORIES="$macos/absent" \
       "$script" "$tmp/dumps" "$tmp/before" ) > "$nowhere" 2>&1
   check_status "a run with no directory to read succeeds" 0 $?
@@ -383,11 +401,14 @@ report_crashes_mutations=(
   'macOS: listing not checked'        '[ -r "$directory" ] && '                  ''
   'macOS: searching not checked'      ' && [ -x "$directory" ]'                  ''
   'macOS: no directory, find anyway'  $'[ ${#directories[@]} -gt 0 ] || return 0\n' ''
+  'macOS: subdirectories not read'    '-type f -newer "$since" \('
+                                      '-maxdepth 1 -type f -newer "$since" \('
   'macOS: older reports read'         '-type f -newer "$since" \('               '-type f \('
   'macOS: directories read'           '"${directories[@]}" -type f '             '"${directories[@]}" '
   'macOS: .ips not read'              "-name '*.ips' -o "                        ''
   'macOS: .crash not read'            " -o -name '*.crash' "                     ' '
   'macOS: .crash not a crash'         '*.crash) return 0 ;;'                     '*.crash) return 1 ;;'
+  'macOS: unreadable reports unnamed' 'head -1 "$1" |'                           'head -1 "$1" 2> /dev/null |'
   'macOS: the bug type anywhere'      'head -1 "$1" | grep -q '"'"'"bug_type":"309"'"'"' ;;'
                                       'grep -q '"'"'"bug_type":"309"'"'"' "$1" ;;'
   'macOS: every report a crash'       'is_crash_report "$report" || continue'    'true'
@@ -407,10 +428,13 @@ report_crashes_mutations=(
   'macOS: no image is image 0'        'frame.get("imageIndex", -1)'              'frame.get("imageIndex", 0)'
   'macOS: negative images'            'if 0 <= index < len(images)'              'if index < len(images)'
   'macOS: images beyond the list'     'if 0 <= index < len(images)'              'if 0 <= index'
+  'macOS: another default offset'    "hex(frame.get('imageOffset', 0))"         "hex(frame.get('imageOffset', 1))"
   'macOS: a symbol required'          "frame.get('symbol', hex(frame.get('imageOffset', 0)))"
                                       "frame['symbol']"
   'macOS: half a location suffices'   'if {"sourceFile", "sourceLine"} <= frame.keys()'
                                       'if "sourceFile" in frame'
+  'macOS: a source line suffices'    'if {"sourceFile", "sourceLine"} <= frame.keys()'
+                                      'if "sourceLine" in frame'
   'macOS: no location'                "location = f\" ({frame['sourceFile']}:{frame['sourceLine']})\" if"
                                       'location = "" if'
   'macOS: nothing inlined'            'inlined = " [inlined]" if frame.get("inline") else ""'
