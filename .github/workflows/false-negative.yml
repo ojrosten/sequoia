@@ -1,30 +1,32 @@
 name: false-negative
 
-# The control for the gate. A gate that has never been seen to go red has not
-# been shown to see anything: every one of its green runs is consistent with a
-# suite that was never run, a flag that never reached the runner, or a detector
-# that fires on nothing. sequoia's own test framework has a false-negative mode
-# for exactly this reason, and the gate gets the same treatment.
+# The control for the gate. A gate never seen to go red has not been shown to
+# see anything: each of its green runs is consistent with a suite that never
+# ran, a flag that never reached the runner, or a detector that fires on
+# nothing. sequoia's own test framework has a false-negative mode for this
+# reason, and the gate gets the same treatment.
 #
-# This dispatches rigorous with `false_negative: true`, which corrupts one
-# versioned output and one prediction before building, then waits for the run
-# and reads its jobs back. Every column must have failed, and the column audit
-# within the run must have passed - the columns ran, and went red. The run's
-# audit, which checks every job's result against the run's mode, must have passed
-# too, so this job also fails when the subject's docs or coverage break. A column
-# that comes back green here is a column that cannot see, and this job fails on it.
+# This workflow dispatches rigorous with `false_negative: true`, which
+# corrupts one versioned output and one prediction before building. It then
+# waits for the run and reads its jobs back:
+#   - Every column must have failed.
+#   - The column audit within the run must have passed: the columns ran, and
+#     went red.
+#   - The run's audit, which checks every job's result against the run's
+#     mode, must have passed, so this job also fails when the subject run's
+#     docs or coverage break.
+# A column that comes back green cannot see, and this job fails on it.
 #
-# Weekly rather than nightly: it costs a full rigorous run, and what it measures
-# - the gate's ability to fail - changes only when the workflows do. Run it by
-# hand after any change to them.
+# It runs weekly rather than nightly: it costs a full rigorous run, and what
+# it measures, the gate's ability to fail, changes only when the workflows
+# do. Run it by hand after any change to them.
 #
-# Dispatching with GITHUB_TOKEN is allowed: the recursion guard that stops a
-# GITHUB_TOKEN push or PR from triggering workflows exempts workflow_dispatch.
+# GITHUB_TOKEN may dispatch: the guard that stops a GITHUB_TOKEN push or PR
+# from triggering workflows exempts workflow_dispatch.
 on:
   # Saturday evening, so that the result is in by Sunday morning even when the
   # scheduler is hours late, and four hours clear of the nightly's tick. The
-  # minute is off the hour on purpose, where GitHub's scheduler is slowest: see
-  # the schedule in rigorous.yml.
+  # minute is off the hour, as rigorous.yml's is.
   schedule:
     - cron: '1 21 * * 6'
   workflow_dispatch:
@@ -37,8 +39,9 @@ jobs:
   control:
     name: The gate can still go red
     runs-on: ubuntu-latest
-    # The subject run's columns may each take 90 minutes, after however long they
-    # queue. The margin beyond that also holds the wait in scripts/read_settled_jobs.sh.
+    # The subject run's columns may each take 90 minutes, after however long
+    # they queue. The margin beyond that also holds the wait in
+    # scripts/read_settled_jobs.sh.
     timeout-minutes: 160
     env:
       GH_TOKEN: ${{ github.token }}
@@ -54,10 +57,11 @@ jobs:
           before=$(date -u +%Y-%m-%dT%H:%M:%S+00:00)
           gh workflow run rigorous.yml --ref "$GITHUB_REF_NAME" -f false_negative=true
 
-          # The dispatch returns nothing; the run appears a few seconds later. The
-          # OLDEST run after the timestamp, since a second dispatch inside this
-          # window would otherwise be judged in place of ours; and the step below
-          # confirms the run it found is a corrupted one.
+          # The dispatch returns nothing, and the run appears a few seconds
+          # later. The step takes the oldest run created after the timestamp,
+          # so that a second dispatch inside this window is not judged in
+          # place of this one. The step below confirms that the run found is a
+          # corrupted one.
           id=""
           for _ in $(seq 1 12); do
             sleep 10
@@ -70,8 +74,8 @@ jobs:
           echo "subject: https://github.com/$GH_REPO/actions/runs/$id"
           echo "id=$id" >> "$GITHUB_OUTPUT"
 
-      # `gh run watch` exits by the run's own status only with --exit-status,
-      # which is not passed: the run is SUPPOSED to fail.
+      # `gh run watch` exits with the run's status only under --exit-status,
+      # which is not passed, since the run is meant to fail.
       - name: Wait for it
         run: gh run watch "${{ steps.dispatch.outputs.id }}" --interval 60 > /dev/null
 
@@ -79,27 +83,31 @@ jobs:
         run: |
           id=${{ steps.dispatch.outputs.id }}
 
-          # The columns are those that rigorous.yml gives the subject run, read at the
-          # commit the run tested. The run's own jobs cannot supply them: the list a check
-          # is held to must not come from what it judges. A column the API had not yet
-          # listed with its steps would otherwise drop out of the check unjudged.
+          # The columns are those that rigorous.yml gives the subject run,
+          # read at the commit the run tested. The run's own jobs cannot
+          # supply them: the list a check is held to must not come from what
+          # it judges. A column the API had not yet listed with its steps
+          # would otherwise drop out of the check unjudged.
           sha=$(gh api "repos/$GH_REPO/actions/runs/$id" --jq .head_sha)
           rigorous=$(gh api -H 'Accept: application/vnd.github.raw' \
                        "repos/$GH_REPO/contents/.github/workflows/rigorous.yml?ref=$sha")
           yq -o=json '.jobs.rigorous.with.columns' <<<"$rigorous" | jq -r 'fromjson | .[].name' > expected.txt \
             && [ -s expected.txt ] || { echo "::error::no columns were read from rigorous.yml at $sha"; exit 1; }
 
-          # The run's audit is rigorous.yml's last job. It checks each job's result against
-          # the run's mode, which here requires the columns to fail. It also checks that it
-          # needs every other job, and that main does not require its name. Nothing else
-          # reads a red result there, since the run is red anyway.
+          # The run's audit is rigorous.yml's last job. It checks each job's
+          # result against the run's mode, which here requires the columns to
+          # fail. It also checks that it needs every other job, and that main
+          # does not require its name. Nothing else reads a red result there,
+          # since the run is red anyway.
           #
-          # rigorous.yml names the job with an expression on `inputs.false_negative`, and
-          # the name is read from the branch taken when that input is true. The pattern
-          # matches the whole expression, so any other shape is refused. `''` is an
-          # apostrophe in the expression's strings. `[$][{][{]` stands for the expression's
-          # opening, since Actions would substitute that opening, spelt out, in this script.
-          # A name that cannot be read fails this job, but the columns are still judged.
+          # rigorous.yml names the job with an expression on
+          # `inputs.false_negative`, and the name is read from the branch taken
+          # when that input is true. The pattern matches the whole expression,
+          # so any other shape is refused. `''` is an apostrophe in the
+          # expression's strings. `[$][{][{]` stands for the expression's
+          # opening, since Actions would substitute that opening, spelt out, in
+          # this script. A name that cannot be read fails this job, but the
+          # columns are still judged.
           failed=0
           name_expression=$(yq -r '.jobs.audit.name' <<<"$rigorous")
           pattern="^[$][{][{] inputs\.false_negative == true && '(([^']|'')+)' [|][|] '(([^']|'')+)' [}][}]$"
@@ -112,18 +120,19 @@ jobs:
           fi
 
           # Each column must show:
-          #   - The corruption step having succeeded. A column red for another reason,
-          #     such as a genuine break or an outage, proves nothing about whether it can
-          #     see.
+          #   - The corruption step having succeeded. A column red for another
+          #     reason, such as a genuine break or an outage, proves nothing
+          #     about whether it can see.
           #   - The job having failed.
-          #   - The suite step having failed. A column whose suite passed was turned red
-          #     by something other than the suite.
-          #   - The drift step having succeeded. Red alone does not say which detector
-          #     saw the corruption. The drift step is the drift detector's own account:
-          #     a patch which, reversed, restores the corruption.
-          # Both audits within the subject run must also have passed: the column audit,
-          # which checks that every column ran its suite, and the run's audit. Each must
-          # be exactly one job, as each column must.
+          #   - The suite step having failed. A column whose suite passed was
+          #     turned red by something other than the suite.
+          #   - The drift step having succeeded. Red alone does not say which
+          #     detector saw the corruption. The drift step is the drift
+          #     detector's own account: a patch which, reversed, restores the
+          #     corruption.
+          # Both audits within the subject run must also have passed: the
+          # column audit, which checks that every column ran its suite, and
+          # the run's audit. Each must be exactly one job, as each column must.
           readers='
             def column_jobs($c): [.[] | select(.name | endswith(" / " + $c))];
             def conclusion(step): ([.steps[]? | select(.name | step) | .conclusion] | first) // "absent";
@@ -138,11 +147,11 @@ jobs:
             def run_audit($name): job_verdict(. == $name);
             def awaited: . == "absent" or . == "JOBS:0";'
 
-          # The jobs are read until each of these has a conclusion: both audits, each
-          # column's job, and each step of that job that `judged` reads. `gh run watch`
-          # returns once the run has completed, but the jobs API can lag behind it.
-          # read_settled_jobs.sh gives the measurement, and what happens if the
-          # conclusions never arrive.
+          # The jobs are read until each of these has a conclusion: both
+          # audits, each column's job, and each step of that job that `judged`
+          # reads. `gh run watch` returns once the run has completed, but the
+          # jobs API can lag behind it. read_settled_jobs.sh gives the
+          # measurement, and what happens if the conclusions never arrive.
           scripts/read_settled_jobs.sh "$id" jobs.json "$readers"'
             . as $jobs
             | [($columns | split("\n")[]
