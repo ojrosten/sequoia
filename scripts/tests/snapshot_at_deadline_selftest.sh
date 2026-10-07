@@ -103,9 +103,10 @@ check_status() { # check_status <name> <expected> <seconds> <command>...
   local description=$1 expected=$2 seconds=$3
   shift 3
   rm -f "$work/status.txt"
-  bash "$script" "$seconds" "$work/status.txt" NoSuchProcess -- "$@"
+  bash "$script" "$seconds" "$work/status.txt" NoSuchProcess -- "$@" 2> "$work/status.err"
   local got=$?
   [ "$got" -eq "$expected" ] || fail "$description (expected status $expected, got $got)"
+  [ ! -s "$work/status.err" ] || fail "$description: the script wrote to standard error: $(head -1 "$work/status.err")"
 }
 
 check_refusal() { # check_refusal <name> <TMPDIR> <argument>...
@@ -348,6 +349,16 @@ $real_sleep 5"
         > "$work/streams.out" 2> "$work/streams.err"
   check "the command reads standard input and writes standard output" yes "^to the command$" "$work/streams.out"
   check "the command writes standard error"                            yes "^to error$"       "$work/streams.err"
+  [ "$(wc -l < "$work/streams.err")" -eq 1 ] || fail "standard error holds more than the command's line"
+
+  # A command which a signal kills: its status passes through, and standard
+  # error holds only the command's own output, not bash's notice of the kill.
+  bash "$script" 5 "$work/signalled.txt" "$name" -- sh -c 'echo "to error" >&2; kill $$' \
+    2> "$work/signalled.err"
+  got=$?
+  [ "$got" -eq 143 ] || fail "a command killed by SIGTERM gave status $got, not 143"
+  [ "$(cat "$work/signalled.err")" = "to error" ] \
+    || fail "a command killed by a signal left more on standard error: $(tail -1 "$work/signalled.err")"
 
   # The command runs in the caller's process group, as it would without the
   # script.
@@ -534,11 +545,20 @@ mutant any snapshot_at_deadline.sh 'the status lost' \
   'exit "$status"' \
   'exit 0'
 mutant any snapshot_at_deadline.sh 'stdout discarded' \
-  $'"$@"\nstatus' \
-  $'"$@" > /dev/null\nstatus'
+  '{ "$@" 2>&3 3>&-; }' \
+  '{ "$@" > /dev/null 2>&3 3>&-; }'
 mutant any snapshot_at_deadline.sh 'stdin withheld' \
-  $'"$@"\nstatus' \
-  $'"$@" < /dev/null\nstatus'
+  '{ "$@" 2>&3 3>&-; }' \
+  '{ "$@" < /dev/null 2>&3 3>&-; }'
+mutant any snapshot_at_deadline.sh 'stderr discarded' \
+  '{ "$@" 2>&3 3>&-; }' \
+  '{ "$@" 2> /dev/null 3>&-; }'
+mutant any snapshot_at_deadline.sh "bash's notice kept" \
+  '{ "$@" 2>&3 3>&-; } 3>&2 2> /dev/null' \
+  '"$@"'
+mutant any snapshot_at_deadline.sh "the watcher's notice kept" \
+  'wait "$watcher" 2> /dev/null' \
+  'wait "$watcher"'
 mutant any snapshot_at_deadline.sh 'the watcher not ended' \
   '{ kill -TERM -- -"$watcher" || kill -TERM "$watcher"; } 2> /dev/null' \
   ':'

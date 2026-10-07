@@ -3,14 +3,17 @@
 #                                -- <command>...
 #
 # Runs <command> and returns its exit status. <command> has the script's
-# standard input, output and error. If <command> is still running after
-# <seconds>, the script writes to <snapshot file> what the machine is doing:
+# standard input, output and error. Apart from a refusal, the script writes
+# nothing to them itself. The script looks for a deadline <seconds> after
+# <command> begins, once a second, so it sees the deadline up to a second early
+# or late. If <command> is still running when the script sees the deadline,
+# the script writes to <snapshot file> what the machine is doing:
 #   - every process, with its parent and command line;
 #   - the stack of every thread of each process named <executable name>.
-# The script begins the snapshot within a second of the deadline, and finishes
-# it before returning, so a caller never reads half of one. A command which
-# ends more than a second before the deadline leaves no file. When <command>
-# ends with no snapshot under way, the script returns at once.
+# The script finishes the snapshot before returning, so a caller never reads
+# half of one. A command which ends before the script sees the deadline leaves
+# no file. When <command> ends with no snapshot under way, the script returns
+# at once.
 #
 # <seconds> is a positive whole number with no leading zero. <snapshot file>
 # is a path at which the script can create a file, and at which nothing
@@ -154,9 +157,9 @@ take_snapshot() {
 #
 # The watcher also stops if the script has gone. A cancelled step kills the
 # script, and the watcher would otherwise take a snapshot nobody waits for.
-# $SECONDS counts whole seconds, so the snapshot begins within a second of the
-# deadline, and a command which ends in the second before the deadline may
-# still be snapshotted.
+# $SECONDS counts whole seconds, so the watcher may see the deadline up to a
+# second early, and its one-second sleep may make it see the deadline up to a
+# second late.
 watch_for_deadline() {
   local deadline=$((SECONDS + seconds))
   while kill -0 $$ 2> /dev/null; do
@@ -180,7 +183,10 @@ watch_for_deadline < /dev/null > /dev/null 2>&1 &
 watcher=$!
 set +m
 
-"$@"
+# The command's standard error goes through descriptor 3, so that the notice
+# bash writes when a signal kills the command goes to /dev/null. A caller
+# running the command in a pipeline would see no such notice.
+{ "$@" 2>&3 3>&-; } 3>&2 2> /dev/null
 status=$?
 
 if mkdir "$claim" 2> /dev/null; then
