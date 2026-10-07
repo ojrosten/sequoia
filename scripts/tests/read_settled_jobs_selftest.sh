@@ -9,8 +9,8 @@
 # The script must fail no control, and each mutant at least one. One run of the
 # controls takes about 20 s, since four of them wait for the time to run out.
 #
-# The selftest shrinks the wait to 4 s, with a read every 1 s. Each control is
-# a claim the script exists to keep:
+# The selftest shrinks the wait to 4 s, with a pause of 1 s between reads. Each
+# control is a claim the script exists to keep:
 #
 #   - a read on which the filter awaits nothing ends the wait at once, and is
 #     the jobs file;
@@ -20,7 +20,8 @@
 #   - the options after the filter reach jq;
 #   - a read that fails, or gives output that is not JSON, is retried, and does
 #     not replace the jobs file;
-#   - the reads end once the time runs out, with no pause after the last;
+#   - the reads end once the time runs out, within a pause and a read, with no
+#     pause after the last;
 #   - when the time runs out, a warning names what the filter still awaits, or
 #     says that the last read failed. The jobs file holds the last successful
 #     read, and the script succeeds, leaving the judgement to the caller;
@@ -101,6 +102,10 @@ run() {
   calls=$(cat "$dir/calls" 2> /dev/null || echo 0)
 }
 
+# The time in tenths of a second. The script's deadline is in whole seconds,
+# and the time a read takes varies, so the selftest times the wait finer.
+tenths() { perl -MTime::HiRes=time -e 'printf "%d\n", time * 10'; }
+
 same_json() { [ "$(jq -c . "$1" 2> /dev/null)" = "$(jq -c . <<<"$2")" ]; }
 
 # refused <description> <env argument>...
@@ -180,10 +185,17 @@ controls() {
     || fail "a garbled read, then a settled: status $status after $calls reads"
   same_json "$dir/jobs.json" "$settled" || fail "the settled read after a garbled one is not the jobs file"
 
+  # The script's clock counts whole seconds, so its deadline falls 3 s to 4 s
+  # after it starts. The last read can end a pause and a read after that. Each
+  # read here takes far less than 1 s, and the bound tolerates 1 s.
+  local began
+  began=$(tenths)
   run never "$pending"
+  local elapsed=$(( $(tenths) - began ))
   [ "$status" -eq 0 ] || fail "a read that never settles: status $status"
-  [ "$calls" -ge 3 ] && [ "$calls" -le 6 ] \
-    || fail "a read that never settles was read $calls times in 4 s, a second apart"
+  [ "$elapsed" -ge 30 ] && [ "$elapsed" -lt 70 ] \
+    || fail "a read that never settles was read for $elapsed tenths of a second, against a limit of 4 s"
+  [ "$calls" -ge 2 ] || fail "a read that never settles was read $calls times"
   paused $((calls - 1)) || fail "$calls reads were not separated by one pause of the interval each"
   check "a read that never settles ends in a warning naming what is awaited" yes \
         "^::warning::.*awaited for t / B, 4s after the wait began" "$dir/out.txt"
@@ -226,9 +238,10 @@ controls() {
 # Each mutant breaks one behaviour that the controls claim. Its entry holds a
 # description, the text it replaces, and the replacement. Two mutants are left
 # out:
-#   - A deadline one interval later. The script reads the clock in whole
-#     seconds, so the number of reads before the deadline already varies by
-#     one, and no control can see the difference.
+#   - A deadline one second later: `-gt` for `-ge`, or a second added to the
+#     limit. The script reads the clock in whole seconds, so its deadline
+#     already falls anywhere within a second, and no control can see the
+#     difference.
 #   - `set -e` for `set -eu`, which is equivalent: no variable the script reads
 #     can be unset once the arguments and $GH_REPO have been checked.
 mutations=(
