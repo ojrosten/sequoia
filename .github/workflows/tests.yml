@@ -156,6 +156,11 @@ jobs:
       # metacharacters that matches no package it treats the name as a regex, so
       # `g++-15` on noble resolves to clang-15, flang-15 and llvm-15, installs all
       # three, and exits 0.
+      #
+      # grep reads the whole list, not quitting at the first match. Under this
+      # step's pipefail, a grep that quits early leaves apt-cache to die of
+      # SIGPIPE mid-list, and the pipeline fails although the name was found:
+      # every Linux column on ubuntu-26.04 reported g++-15 missing that way.
       - name: Install the toolchain (Linux)
         if: inputs.needs_testing == 'true' && runner.os == 'Linux'
         run: |
@@ -185,7 +190,7 @@ jobs:
           # name the package separately, defaulting to the binary where they agree.
           # gdb is for the stacks in a hung suite's snapshot; the image has none.
           for pkg in "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev gdb; do
-            apt-cache pkgnames | grep -qx "$pkg" \
+            apt-cache pkgnames | grep -Fx -- "$pkg" > /dev/null \
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
           sudo apt-get install -y "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev gdb
