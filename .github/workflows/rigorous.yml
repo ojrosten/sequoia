@@ -1,162 +1,123 @@
 name: rigorous
 
-# The gate on main, and so the definition of what main means: main advances only by
-# promoting staging, and a promotion merges only when this is green. main is
-# therefore the last state verified this thoroughly, not the latest work.
+# The gate on main. Only a promotion of staging advances main, and a
+# promotion merges only when this workflow is green. So main is the last state
+# verified this thoroughly, not the latest work.
 #
-# Promotion-triggered, so the expensive columns are paid for once per promotion
-# rather than once per change - and scheduled, nightly, on main. The gate answers
-# "is this change promotable" once, on one day; that cannot tell whether the suite
-# passes CONSISTENTLY, since races and timings are probabilistic and each run is
-# one trial, nor whether it still passes on TODAY'S environment, since the hosted
-# images roll and the PPA's gcc-15 is a moving snapshot. Both need repetition on a
-# fixed tree, and main is the tree that is supposed to be fixed. A scheduled run
-# fires from the default branch, so nothing here needs to name it.
+# The gate runs on the promotion PR, not on each change: once when the PR
+# opens, and again each time staging moves while it is open. Changes reach
+# main in batches, so the expensive columns are not paid for once per change.
+# The nightly run on main checks two things that one run of the gate cannot:
+#   - Does the suite pass consistently? Races and timings are probabilistic,
+#     and each run is one trial.
+#   - Does it still pass in today's environment? The hosted images roll, and
+#     the PPA's gcc-15 is a moving snapshot.
+# Both need repetition on a fixed tree, and main is the tree meant to be
+# fixed. A scheduled run fires from the default branch, so nothing here names
+# main.
 #
-# The scheduled run is one of two things, decided by whether staging is ahead of
-# main. If it is not, the columns run on main, as above. If it is, the run opens
-# the promotion PR instead - set to merge itself when green - and the columns run
-# on THAT, through the pull_request trigger, where the result is spendable as the
-# gate. The two are never both paid for on one night. (A third case: staging is
-# ahead and the PR is already open, in which case nothing runs anywhere that
-# night beyond making sure the PR is set to merge itself; the PR re-runs the
-# gate whenever staging moves.) Work lands on staging silently, and without
-# this it accumulated until someone remembered; the PR is the notification,
-# green or red.
+# Whether staging is ahead of main decides what the scheduled run does:
+#   - Not ahead: the columns run on main.
+#   - Ahead, with no promotion PR open: the run opens one, set to merge itself
+#     when green. The columns then run on the PR, through the pull_request
+#     trigger, where their result gates the merge.
+#   - Ahead, with the promotion PR already open: the run only makes sure the
+#     PR is set to merge itself. The PR re-runs the gate whenever staging
+#     moves.
+# So no night pays for the columns twice. The promotion PR is also the
+# notification that staging holds work to promote, whether its gate is green
+# or red.
 #
-# Over fine, this adds the two questions a sanitized Debug build cannot answer:
-# races, and what the optimizer does.
+# Beyond fine, this tier tests whether the code races and what the optimizer
+# does with it, which a sanitized Debug build cannot.
 #
-# Two columns run the suite again, minus the end-to-end test: TSan twenty times,
-# because it reports only the interleavings that actually execute and repetition
-# is what widens them; MSVC ASan five times, the configuration in which item
-# 134's sharing violation showed most often. The end-to-end test is excluded
-# because it dominates a pass and the code where races live is mostly elsewhere
-# (its child project runs the framework's concurrency too, in the child) - but
-# by how much depends on the platform, and the two N differ for that reason.
-# Measured on run 34751872361, 2026-09-13: on TSan a full pass is 79s and a
-# pass of everything else 12-18s, so twenty cost 259s; on MSVC ASan a full
-# pass is 216s and everything else 91-100s a time, creeping up with each
-# repetition, so twenty overran the 30-minute ceiling at the nineteenth and five
-# is about eight minutes. Locally, Release, clang, the end-to-end test was 14.8s
-# of 16s - a share the hosted runners do not reproduce in either direction. The
-# first pass still runs everything once, so no column skips the end-to-end
-# test; the drift flag is carried into the repetitions, since a repetition that
-# rewrote a versioned output would be an instability worth seeing. The
-# statistical workflow repeats the whole suite on main every night, without the
-# drift flag; this repeats everything but the end-to-end test on the candidate,
-# before it lands.
-#
-# Which columns run which tests is set out below, at the point it is decided. Both
-# Windows columns exclude the performance tests, for the reason every hosted column
-# has them off bar one.
+# Two columns add a second pass, which repeats the suite without the
+# end-to-end test:
+#   - TSan, twenty times. TSan reports only the interleavings that execute,
+#     and repetition widens them.
+#   - MSVC ASan, five times. It is the configuration in which the sharing
+#     violation described below was most frequent.
+# The end-to-end test dominates a pass, and most of the code where races live
+# runs outside it. Each N is set by the 30-minute step ceiling against the
+# time a pass takes on that column. Measured on run 34751872361, 2026-09-13:
+#   - TSan: a full pass took 79s, and a pass without the end-to-end test
+#     12-18s, so twenty took 259s.
+#   - MSVC ASan: a full pass took 216s, and a pass without the end-to-end test
+#     91-100s, rising with each repetition. Twenty overran the ceiling at the
+#     nineteenth; five take about eight minutes.
+# The first pass still runs every test once. The repetitions carry the drift
+# flag, since a repetition that rewrote a versioned output would be an
+# instability. statistical.yml repeats the whole suite but the performance
+# tests on main every night, without the drift flag; the second pass here
+# repeats everything but the end-to-end test on the candidate, before it
+# lands.
 #
 # Every column but Linux · GCC · Release carries `--check-versioned-output`,
-# including the Windows and macOS ones, which for a time did not. That one
-# exception is untested rather than justified, and is explained where it is set,
-# below. The reason they did not - that the committed
-# `_msvc` forks were stale - was measured and found false on 2026-09-10: of the 340
-# output files a real MSVC run writes, 339 already matched, and the four
-# `_FNOutput_msvc` forks long cited as decayed are byte-identical. The single
-# genuine straggler was `test_runner_project_files_msvc.txt`, still carrying the
-# display name the naming branch retired, because it is the one output a Mac cannot
-# regenerate. It is fixed, so the flag can go on. A macOS run matched all 340.
+# and that exception is explained below. A column's `exec_args` replaces the
+# tier's rather than adding to it, so each column spells the flag out. A
+# column naming only its exclusions silently loses the drift check.
 #
-# TestRunnerProjectFiles compares a generated TestAll.vcxproj against a prediction
-# stored per preset, in `visual_studio/Prediction/ProjectFiles/<preset>`. The
-# directory `visual_studio` is the name the test's materials discriminator gives the
-# Visual Studio generator. The test checks every preset committed there. So a new
-# Visual Studio preset needs its prediction generated on Windows and committed
-# before a column uses it. Under Ninja the test checks only that the generated
-# build.ninja has an edge for TestAll, and reads no predictions.
+# The committed `_msvc` output forks are current, so the MSVC columns check
+# the versioned output as the others do. On 2026-09-10 a real MSVC run matched
+# 339 of the 340 output files it wrote, and the one that differed has been
+# regenerated since. A macOS run matched all 340.
 #
-# Note the MSVC Release column configures with `msvc-release`, a tree of its own
-# pinned to Release. The nested end-to-end project is configured from the preset
-# named after that tree. The nested project is built in the configuration in which
-# the runner itself was built, since `build_cmd` passes CMake's `$<CONFIG>` as
-# `--config`. So the nested executable lands in the configuration directory which
-# the test searches, whatever configurations the tree holds.
-#
-# Note the flag must be spelt out per column here, since `exec_args` REPLACES the
-# tier's rather than adding to it - a column naming only its exclusions silently
-# loses the drift check, which is how Windows came to be unchecked in the first
-# place.
-#
-# The TSan column is macOS/Clang where every other column is Linux/GCC or MSVC,
-# and that is deliberate. `Preprocessor.hpp` gives `sequoia::execution::par` the
-# real `std::execution::par` only where `__cpp_lib_parallel_algorithm` is defined,
-# which is a property of the standard library: libstdc++ has the parallel
-# algorithms, on oneAPI TBB; libc++ does not. So under GCC, `accelerate` runs
-# `std::for_each(par, ...)` and TSan instruments TBB rather than us - it reported
-# 54 races on PR #41, 28 in partitioner.h, 13 in blocked_range.h, 10 in
-# parallel_for.h, 3 in _small_object_pool.h, and none in sequoia, because TSan
-# cannot see TBB's internal synchronisation unless TBB is built with TSan.
+# The TSan column is macOS/Clang, where every other column is Linux/GCC or
+# MSVC, and that is deliberate. `Preprocessor.hpp` gives
+# `sequoia::execution::par` the real `std::execution::par` only where
+# `__cpp_lib_parallel_algorithm` is defined, which is a property of the
+# standard library. libstdc++ has the parallel algorithms, on oneAPI TBB, and
+# libc++ does not. So under GCC, `accelerate` runs `std::for_each(par, ...)`,
+# and TSan instruments TBB rather than sequoia. TSan cannot see TBB's internal
+# synchronisation unless TBB is built with TSan: on PR #41 it reported 54
+# races, all in TBB's headers and none in sequoia.
 #
 # Clang with libc++ takes the other branch, `thread_pool_policy`, so TSan
-# observes the concurrency we actually wrote. Measured 2026-09-10 on 63ec01258
-# with clang 23.1.0 on arm64: zero ThreadSanitizer reports, 19588 checks, 0
-# failures. Suppressing the TBB frames instead would have left the column
-# asserting nothing about our code, since our pool is the branch GCC never takes.
+# observes the concurrency sequoia implements. On 2026-09-10 (63ec01258, clang
+# 23.1.0, arm64) it gave zero reports over 19588 checks. Suppressing the TBB
+# frames instead would leave the column asserting nothing about sequoia,
+# since sequoia's pool is the branch GCC never takes.
 #
-# It must be macOS rather than Linux, and that is the whole point: clang as
-# shipped means libc++ on macOS but **libstdc++ on Linux**, where the feature
-# macro is defined and TBB would come straight back. Do not "regularise" this to
-# ubuntu-latest.
+# It must be macOS rather than Linux. Clang as shipped uses libc++ on macOS
+# but libstdc++ on Linux, where the feature macro is defined and TBB comes
+# straight back. Do not "regularise" this column to ubuntu-latest.
 #
-# macOS was dropped on 2026-09-08 over the timing assertions a hosted runner
-# cannot hold; `--exclude-performance` is what buys it back, exactly as it does
-# for the Windows columns.
+# Linux · GCC · Release exists because -O3 asks questions Debug cannot. Its
+# `exec_args` is explicitly empty, which is not the same as omitting the key:
+# the column runs with no flags, and inherits none of the tier's.
 #
-# The Release column exists because -O3 asks questions Debug cannot, and it was
-# withdrawn for three hours on 2026-09-10 while its warnings were understood.
-# All 107 lines were false positives from three sites: 101 from gcc's loop
-# vectorizer, which -fno-tree-loop-vectorize removes while leaving the diagnostics
-# enabled, and 6 from an address computed in a branch of libstdc++'s
-# __final_insertion_sort that a two-edge graph cannot reach. They are suppressed at
-# the sites, each saying why. Note that the suite had never actually run at -O3
-# before, the column having always died at compile time; it does now, 19588 checks,
-# 0 failures.
+# It is the one column without the drift check. gcc at -O3 on macOS
+# mis-attributes std::source_location, so a run there rewrites a diagnostics
+# file with another translation unit's location
+# (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=126723). The mechanism is ld64
+# discarding a Mach-O atom, which has no ELF counterpart, so this column may
+# be unaffected: no run of it with the flag has yet reached the suite. Restore
+# the flag when gcc is fixed, or sooner, to find out whether this column was
+# ever affected.
 #
-# This column carries NO flags - an explicitly empty `exec_args`, which is not the
-# same as omitting the key. The drift check was dropped here pre-emptively, off a
-# macOS measurement: gcc at -O3 there mis-attributes std::source_location, so a run
-# rewrites a diagnostics file with another translation unit's location. But the
-# mechanism is ld64 discarding a Mach-O atom, which has no ELF counterpart, and this
-# column has never actually tried the flag - every run that carried it died at
-# compile time instead. Reported 2026-09-11 as a further instance of
-# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=126723; restore the flag when gcc is
-# fixed, and put it back sooner than that to find out whether this column was ever
-# affected.
+# It is also the one column that runs the performance tests.
+# TestRunnerPerformanceTest asserts 60ms +- 35 for eight 25ms sleeps run
+# concurrently, and the other hosted columns cannot hold that:
+#   - A sanitizer slows the run: Linux ASan+UBSan returned 164ms on
+#     2026-09-10.
+#   - The Windows runner's times vary: 196ms, then 603ms, for one commit.
+#   - The macOS runner's sleeps overshoot even without instrumentation.
+# Uninstrumented gcc on Linux can: since #181 made the test assert on raw
+# times, coarse's Linux Debug column passed it in all 119 runs to 2026-10-05.
+# Every other column here carries `--exclude-performance`, and this column
+# keeps the tier from being blind to performance.
 #
-# The performance tests run HERE and nowhere else in this tier, which is
-# deliberate. What makes them unreliable on a hosted runner is the slowdown, not
-# the platform: TestRunnerPerformanceTest asserts 60ms +- 35 for eight 25ms sleeps
-# run concurrently, and the sanitized columns cannot hold it - `fine`'s Linux
-# ASan+UBSan returned 164ms on 2026-09-10, and MSVC gave 196ms then 603ms for one
-# commit. Uninstrumented gcc can: `coarse`'s Linux Debug column has run them 20
-# times out of 20 since 2026-09-09. This column is uninstrumented gcc, so it is
-# the one that should carry them, and it is why the tier is not simply blind to
-# performance.
+# Both MSVC columns run TestRunnerTest, as every MSVC column in every tier
+# does. Its teardown's fs::remove_all used to fail on Windows with a sharing
+# violation: under ASan in 2 runs of 4, Release 1 of 3, Debug 3 of 38.
+# std::system spawned children with every open file inherited, so a spawn on
+# one thread captured a file another thread had open. `invoke` now spawns
+# with a handle list naming only the standard streams, and a deterministic
+# test witnesses the mechanism. So a sharing violation on any MSVC column, in
+# any tier, is evidence against that fix, not a flake to re-run.
 #
-# Hence the asymmetry in `exec_args` below: the sanitized Linux column excludes
-# them and spells out BOTH flags, because a column's `exec_args` REPLACES the
-# tier's - naming only the exclusion would silently lose the drift check - while
-# this column carries an explicitly empty `exec_args`, which is not the same as
-# omitting the key: it runs with no flags at all, and inherits nothing.
-#
-# Both MSVC columns run TestRunnerTest again. From 2026-09-09 to 2026-09-11 it was
-# excluded: its teardown's fs::remove_all was refused on Windows, close to a coin
-# toss (ASan 2 of 4, Release 1 of 3, Debug 3 of 38), because std::system spawned
-# children with every open file inherited and a spawn on one thread captured a
-# file another thread had open. invoke now spawns with a handle list naming only
-# the standard streams. A deterministic test witnesses the mechanism; the CI symptom
-# can appear in any MSVC column that runs TestRunnerTest, which today is every MSVC
-# column in every tier - the rates above come from three of them. So a sharing
-# violation on Windows after 2026-09-11, in whichever tier, is evidence against the
-# fix rather than a flake to re-run.
-#
-# No path filter: see scope.yml for why, and for how a
-# column with nothing to test still reports.
+# No path filter: scope.yml says why, and how a column with nothing to test
+# still reports.
 on:
   pull_request:
     branches: [main]
@@ -167,28 +128,28 @@ on:
         required: false
         type: boolean
         default: false
-  # Off the hour, on GitHub's advice that the start of an hour is when its
-  # scheduler is most loaded; it did not help. At '0 3 * * *' the nightly
-  # arrived at 07:34, 07:32, 07:38 and 07:57 UTC on 2026-09-10 to 2026-09-13,
-  # and at '1 1 * * *' it has arrived 4h30m to 5h late on every night since, so
-  # the delay is a steady backlog that the minute does not touch. It stays here
-  # because nothing argues for moving it back. GitHub documents that a queued
-  # run can be dropped outright under load, and nothing here would notice a
-  # dropped run, since the audit lives inside it: that is watchdog.yml's job.
+  # The minute is off the hour, on GitHub's advice that its scheduler is most
+  # loaded at the start of an hour. That has not shortened the delay: over the
+  # 20 nights to 2026-10-07, GitHub created the run 4h34m to 6h21m after its
+  # tick, against 4h32m to 4h57m on the four nights at '0 3 * * *'.
+  #
+  # GitHub documents that it can drop a queued scheduled run under load. This
+  # run's audit cannot report a run that never started; watchdog.yml does.
   schedule:
     - cron: '1 1 * * *'
 
-# A push to the head of an open PR into main cancels that PR's run in flight: a
-# superseded run gates nothing, and Windows runners are scarce. Scheduled and
-# dispatched runs each get a group of their own, so nothing here ever cancels them.
+# A push to the head of an open PR into main cancels that PR's run in flight:
+# a superseded run gates nothing, and Windows runners are scarce. Scheduled
+# and dispatched runs each get a group of their own, so nothing cancels them.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
 
 jobs:
-  # Scheduled runs only: which of the two things this run is. The compare endpoint
-  # rather than a checkout, so the merge commits that promotion leaves on main and
-  # not on staging do not count as staging being behind.
+  # Scheduled runs only: whether staging is ahead of main, which decides the
+  # run's mode. The job asks the compare endpoint rather than comparing a
+  # checkout, so that merge commits that promotion leaves on main but not on
+  # staging do not count as staging being behind.
   staging:
     name: Is staging ahead of main
     if: github.event_name == 'schedule'
@@ -206,16 +167,14 @@ jobs:
           echo "staging is $ahead commit(s) ahead of main"
           echo "ahead=$ahead" >> "$GITHUB_OUTPUT"
 
-  # One decision for the whole run, which every job below takes as an input. It
-  # runs in promote mode too, where it is not needed, because it costs seconds and
-  # one rule for every mode is simpler for the audit to hold.
+  # One decision for the whole run, which every job below takes as an input.
   scope:
     uses: ./.github/workflows/scope.yml
 
-  # `!cancelled()` rather than the implied success(): the staging job is skipped on
-  # every event but the schedule, and a skipped dependency would otherwise skip
-  # these too; and a failed decision should still run them, so that they fail on
-  # the missing answer.
+  # `!cancelled()` replaces the implied success(). The staging job is skipped
+  # on every event but the schedule, and a skipped dependency would otherwise
+  # skip these jobs too. A failed scope job does not skip them either: they
+  # run, and fail on the missing answer.
   rigorous:
     needs: [staging, scope]
     if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
@@ -254,38 +213,34 @@ jobs:
       merge_into: ''
 
   # Opens the promotion PR and sets it to merge itself once the gate is green.
-  # Needs a token other than GITHUB_TOKEN: a PR that token opens triggers no
-  # pull_request workflow, so the gate would never report on it. PROMOTION_TOKEN
-  # is a fine-grained PAT with Contents and Pull requests read/write on this
-  # repository; when it expires this step fails, loudly, which is the point.
+  # It needs a token other than GITHUB_TOKEN: a PR that token opens triggers no
+  # pull_request workflow, so the gate would never report on it.
+  # PROMOTION_TOKEN is a fine-grained PAT with Contents and Pull requests
+  # read/write on this repository. When it expires, this step fails: renew
+  # it with the same permissions.
   #
-  # One PR at a time, and the step's postcondition is the same whatever the
-  # previous night left behind: one promotion PR is open and set to auto-merge.
-  # An open PR is therefore checked for auto-merge and given it if missing, not
-  # left alone. Creating the PR and enabling auto-merge need different
-  # permissions - Pull requests: write for the first, Contents: write as well for
-  # the second - so the two halves fail separately, and a step that only reported
-  # on an open PR would leave one created without auto-merge stuck for good, as
-  # on 2026-09-13. Whoever opened the PR, this step completes it, so opening one
-  # by hand is fine.
+  # One PR at a time. Whatever the previous night left, the step ends with one
+  # promotion PR open and set to auto-merge, so an open PR without auto-merge
+  # is given it. Creating the PR needs Pull requests: write, and enabling
+  # auto-merge needs Contents: write as well, so either half can fail alone. A
+  # step that left an open PR alone would leave a PR created without
+  # auto-merge stuck for good. Whoever opened the PR, this step completes it,
+  # so opening one by hand is fine.
   #
-  # "Set it to auto-merge" is `gh pr merge --auto`, which on a PR GitHub already
-  # reports mergeable sends a merge instead: GitHub refuses to arm auto-merge on
-  # a clean PR. Either way main advances only when GitHub says it may, so the
-  # postcondition holds; the step re-reads the PR afterwards and reports which
-  # of the two happened rather than assuming.
+  # `gh pr merge --auto` merges a PR at once if GitHub already reports it
+  # mergeable, since GitHub refuses to arm auto-merge on a clean PR. Either way
+  # main advances only when GitHub allows it. The step re-reads the PR
+  # afterwards and reports which of the two happened.
   #
-  # The one shape that is an error: the PR is mergeable AND set to auto-merge,
-  # and still open after GitHub has had an hour since its last check completed.
-  # GitHub has everything it needs and has not acted, and that would otherwise
-  # look fine every night. The hour is because auto-merge is not instant: it
-  # took five seconds on 2026-09-12 and did not act at all in the fifteen
-  # minutes before #59 was merged by hand on 2026-09-13, during a GitHub outage
-  # of the Pull Requests service. A nightly landing minutes after a gate went
-  # green would otherwise report a wedge that is not one. A PR whose gate is red is
-  # BLOCKED, not CLEAN, and is left for the PR to report. A conflict (DIRTY)
-  # cannot arise while main moves only by `--merge`-ing staging into it, and is
-  # reported as an error rather than assumed away.
+  # One shape is an error: the PR is mergeable, set to auto-merge, and still
+  # open an hour after its last check completed. GitHub then has everything it
+  # needs and has not acted, and every night would otherwise look fine. The
+  # hour allows for auto-merge's delay, which has ranged from five seconds to
+  # more than fifteen minutes, the latter during an outage of GitHub's Pull
+  # Requests service. A PR whose gate is red is BLOCKED, not CLEAN, and its
+  # own checks report it. A conflict (DIRTY) cannot arise while main moves only
+  # by `--merge`-ing staging into it, and is reported as an error rather than
+  # assumed away.
   promote:
     name: Promote staging
     needs: staging
@@ -339,25 +294,28 @@ jobs:
               echo "::error::cannot read #$pr: '$info'"; exit 1;;
           esac
 
-  # The run's own shape, checked against what its mode requires. A job skipped by
-  # a wrong `if:` renders the same as one that passed, and the `needs:` chain
-  # above gives every job here an `if:`. So: in gate mode the columns, docs and
-  # coverage must have run and promote must not; in promote mode the reverse. Each
-  # job's result is read from `needs`, which reports `skipped` where the tick shows
-  # green. In the false-negative control the columns must have FAILED.
+  # Checks the run's own shape against what its mode requires. A job skipped
+  # by a wrong `if:` shows the same green tick as one that passed, and most
+  # jobs above carry an `if:`. Each job's result is read from `needs`, which
+  # reports `skipped` where the tick shows green:
+  #   - In gate mode the columns, docs and coverage must have run, and promote
+  #     must not.
+  #   - In promote mode, the reverse.
+  #   - In the false-negative control the columns must have failed.
   #
-  # Main requires this job and none of the others, so a job missing from this
-  # job's `needs` would gate nothing, however red. The second step fails if any
-  # other job is missing. The third fails unless main's rule names this job,
-  # pinned to the app that reports this job, so that a rename here, or an edit to
-  # the rule, shows as a red check rather than only as a promotion that waits on a
-  # name nothing reports, or merges ungated. The second and third steps run even
-  # when an earlier step fails, so each reports independently.
+  # The branch main requires this job and none of the others, so a job
+  # missing from this job's `needs` would gate nothing, however red. The
+  # second step fails if any other job is missing. The third fails unless
+  # main's rule names this job, pinned to the app that reports it. A rename
+  # here, or an edit to the rule, then shows as a red check, rather than as a
+  # promotion that waits on a name nothing reports, or merges ungated. The
+  # second and third steps run even when an earlier step fails, so each
+  # reports independently.
   #
   # In the false-negative control this job passes on red columns, so it takes
   # another name there, and the third step insists main does not require that
-  # name: if main did, the control would satisfy main's rule for the commit it ran
-  # on, a promotion PR's head if the control was dispatched on staging.
+  # name. If main did, the control would satisfy main's rule for the commit it
+  # ran on: a promotion PR's head, if the control was dispatched on staging.
   audit:
     name: ${{ inputs.false_negative == true && 'Every column failed, as the false-negative control requires' || 'Every job ran as this run''s mode requires' }}
     needs: [staging, scope, rigorous, docs, coverage, promote]
@@ -413,9 +371,10 @@ jobs:
       - name: Insist this job needs every other job of the workflow
         if: ${{ !cancelled() }}
         run: |
-          # The workflow file is fetched at GITHUB_WORKFLOW_SHA, the commit this run
-          # read it from. Its jobs and this job's `needs` are compared both ways, so
-          # that a file read wrongly - no jobs, or the wrong ones - fails the step.
+          # The step fetches the workflow file at GITHUB_WORKFLOW_SHA, the
+          # commit this run read it from. It compares the file's jobs with this
+          # job's `needs` both ways, so that a file read wrongly, giving no
+          # jobs or the wrong ones, fails the step.
           set -o pipefail
           workflow=${GITHUB_WORKFLOW_REF#"$GITHUB_REPOSITORY/"}
           workflow=${workflow%%@*}
@@ -435,8 +394,8 @@ jobs:
         env:
           CHECK_RUN_ID: ${{ job.check_run_id }}
         run: |
-          # The branches endpoint returns a branch's required checks to any token;
-          # the protection endpoint would need admin rights.
+          # The branches endpoint returns a branch's required checks to any
+          # token; the protection endpoint would need admin rights.
           check=$(gh api "repos/$GH_REPO/check-runs/$CHECK_RUN_ID" --jq '"\(.app.id) \(.name)"')
           gh api "repos/$GH_REPO/branches/main" \
               --jq '.protection.required_status_checks.checks[] | "\(.app_id) \(.context)"' > required.txt

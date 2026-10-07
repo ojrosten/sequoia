@@ -1,49 +1,50 @@
 name: watchdog
 
-# A scheduled run that never happens leaves nothing behind: no run, no email, no
-# red. Every audit in this repository lives inside the run it audits, and the
-# false-negative control shows that a run which happens can fail, not that runs
-# happen. GitHub documents that a queued scheduled run can be dropped under
-# load; a malformed cron expression, or a workflow file that no longer parses,
-# simply never fires. Both look the same.
+# A scheduled run that never happens leaves nothing behind: no run, no email,
+# no red. Each tier's audit lives inside the run it audits, and the
+# false-negative control shows that a run which happens can fail, not that
+# runs happen. GitHub documents that a queued scheduled run can
+# be dropped under load, and a malformed cron expression, or a workflow file
+# that no longer parses, never fires. The two look the same.
 #
-# So this fires on its own schedule and asks the API whether each watched
-# schedule produced a run since its most recent tick - the tick read from the
-# watched file's own `cron:` line, so there is one place a time is written.
-# Every watched schedule is checked every day, and a miss is reported once: by
+# So this workflow fires on its own schedule and asks the API whether each
+# watched schedule produced a run since its most recent tick. The tick is
+# read from the watched file's own `cron:` line, so each time is written in
+# one place. A run that arrived is reported with how late it came, which is
+# the number to watch: the nightly is expected hours after its tick, not
+# minutes.
+#
+# Each watched schedule is checked every day, and a miss is reported once: by
 # the first scheduled run of this workflow after the tick, which goes red, and
-# the failure email is the alarm. Later runs find that earlier one, say so with
-# a link, and stay green on it. The first week of alarms showed why: a weekly
-# tick missed on a Saturday would otherwise be red every day until the next
-# Saturday, the same fact seven times, and an alarm that repeats what it has
-# said is one that stops being read. A run that arrived is reported with how
-# late it came, which is the number to watch: the nightly is expected hours
-# after its tick, not minutes.
+# the failure email is the alarm. Later runs find that earlier one, say so
+# with a link, and stay green on it. Otherwise a weekly tick missed on a
+# Saturday would turn every run red until the next Saturday: the same fact
+# seven times, and an alarm that repeats itself stops being read.
 #
-# It shares the failure mode it watches - a cron - but as an independent
-# instance, and the day both are dropped is still followed by a day on which
-# this one fires and finds a gap. The one cause it shares outright is GitHub
-# switching off every schedule in a public repository after sixty days without
-# activity, this one included; nothing here can see that.
+# The watchdog shares the failure mode it watches, a cron, but as an
+# independent instance: a day on which both are dropped is still followed by
+# a day on which this one fires and finds the gap. The one cause it shares
+# outright is GitHub switching off every schedule in a public repository
+# after sixty days without activity, this one included. Nothing here can see
+# that.
 #
-# The cron lines are read from the checkout, so a dispatch from a branch judges
-# that branch's schedules against runs main's produced. A control dispatch is
-# unaffected, since it looks for nothing.
+# The cron lines are read from the checkout, so a dispatch from a branch
+# judges that branch's schedules against the runs that main's produced. A
+# control dispatch is unaffected, since it looks for nothing.
 #
-# An alarm and nothing more, on purpose. It could dispatch the missing run, but
-# a dispatched run is not a `schedule` event and would not promote; and how
-# often this fires, and by how much the nightly is late, is what decides whether
-# healing is worth that coupling. Data first.
+# It raises an alarm and does nothing more. Dispatching the missing run would
+# not stand in for it: a dispatched run is not a `schedule` event, so
+# rigorous would not promote.
 #
 # The control: dispatching with `control: true` moves every window to now, so
 # nothing can be found and the job must go red. If it comes back green, it
 # cannot see.
 on:
-  # The minute is off the hour on purpose, where GitHub's scheduler is slowest:
-  # see the schedule in rigorous.yml. Twelve hours after the nightly's tick and
-  # eleven after the statistical run's: the nightly's two scheduled runs to date
-  # arrived 6h37m and 6h56m late, and this one will be late by as much, in
-  # either direction.
+  # This tick is twelve hours after those of the nightly and the statistical
+  # run. A watched run that GitHub has not created when this one looks is
+  # reported missing, so the gap must exceed the watched runs' delay. Over the
+  # 20 nights to 2026-10-07, GitHub created the nightly 4h34m to 6h21m after
+  # its tick. The minute is off the hour, as rigorous.yml's is.
   schedule:
     - cron: '1 13 * * *'
   workflow_dispatch:
@@ -76,9 +77,10 @@ jobs:
           midnight=$(( now - now % 86400 ))
           weekday=$(( (now / 86400 + 4) % 7 ))   # 1970-01-01 was a Thursday; 0 is Sunday, as in cron
 
-          # The epoch second of the watched file's most recent cron tick. Only the
-          # two shapes in use are understood, `M H * * *` and `M H * * D`; anything
-          # else is an error here rather than a window silently mis-sized.
+          # The epoch second of the watched file's most recent cron tick. Only
+          # the two shapes in use are understood, `M H * * *` and `M H * * D`.
+          # Any other shape is an error here, rather than a window silently
+          # mis-sized.
           last_tick() {
             cron=$(sed -n "s/^ *- cron: '\(.*\)'$/\1/p" ".github/workflows/$1")
             lines=$(printf '%s' "$cron" | grep -c .)
@@ -109,15 +111,17 @@ jobs:
                 echo "::error::control: no scheduled run of $2 since now, as there cannot be"
                 return 1
               fi
-              # Reported once. The reporter is the earliest scheduled run of this
-              # workflow since the tick, other than this one, whose log carries the
-              # line below for this miss. Red alone is not enough: a run can be red
-              # for a reason of its own - a checkout failure, an API error listing
-              # another workflow - and have said nothing about the gap; a green one
-              # cannot have seen it and a cancelled one did not report it. Any of
-              # those, and a log that cannot be read, leaves the alarm to this run.
-              # Oldest first, because the list is newest first. The script's own
-              # source is echoed into the log with $2 and $since unexpanded, so the
+              # A miss is reported once. The reporter is the earliest
+              # scheduled run of this workflow since the tick, other than this
+              # one, that failed and whose log carries the line below for this
+              # miss. A failed run alone is not enough: it may have failed for
+              # a reason of its own, such as a checkout failure or an API error
+              # listing another workflow, and said nothing about the gap. A
+              # green run cannot have seen the gap, and a cancelled one did not
+              # report it. If no run qualifies, or a log cannot be read, the
+              # alarm is left to this run. The list is reversed, oldest first,
+              # because gh lists newest first. The script's own source is
+              # echoed into the log with $2 and $since unexpanded, so the
               # expanded line matches only a report.
               miss="no scheduled run of $2 since its tick at $since"
               reds=$(gh run list --workflow watchdog.yml --event schedule --created ">=$since" \

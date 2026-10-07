@@ -1,29 +1,27 @@
 name: statistical
 
-# The gate answers "does this tree pass" once, and one trial is the right sample
-# for a deterministic question. This answers a different one: how often does
-# main fail? Races and timings are probabilistic, so a single green says almost
-# nothing about them; N greens on a fixed tree bound the per-run failure
-# probability, and by the rule of three, zero failures in N trials puts it below
-# about 3/N with 95% confidence. Nights on the same tree add up - by hand, since
-# nothing here aggregates them, and with the caveat that the hosted images roll,
-# so successive nights sample the same tree on slightly different environments -
-# and the bound tightens until the next promotion changes the tree. Which is why
-# this runs on main, the tree that is supposed to be fixed, and not on staging
-# or a promotion PR. A promotion night simply ends the sample on the old tree;
-# the new one gets its first trials the night after.
+# Measures how often main fails. The gate answers "does this tree pass" once,
+# and one trial is the right sample for a deterministic question. Races and
+# timings are probabilistic, so a single green says almost nothing about
+# them. N greens on a fixed tree bound the per-run failure probability: by
+# the rule of three, zero failures in N trials puts it below about 3/N with
+# 95% confidence. Nights on the same tree add up, and the bound tightens until
+# the next promotion changes the tree. The sum is made by hand, since nothing
+# here aggregates the nights. The hosted images roll, so successive nights
+# sample one tree in slightly different environments. This runs on main, the
+# tree meant to be fixed, and not on staging or a promotion PR, so that the
+# nights share a tree. A promotion ends the sample on the old tree, and the
+# new tree gets its first trials the night after.
 #
-# So it is independent of rigorous: separate schedule, no sequencing, its own
-# runners. Both may be late by GitHub's random hours; whichever main this sees
-# when it starts is the one it samples, and the run pins that SHA for its whole
-# length, so a promotion landing mid-run changes nothing here. The summary names
-# the SHA, since the sample is per tree.
+# This workflow is independent of rigorous: its own schedule, no sequencing,
+# its own runners. A run samples whichever main it sees when it starts, and
+# pins that SHA for its whole length, so a promotion landing mid-run changes
+# nothing here. The summary names the SHA, since the sample is per tree.
 #
 # The instrument is the runner's own: `locate N` runs the suite N times in one
-# process and reports the tests that failed in some repetitions and not others.
-# A failure common to every repetition is not an instability, and the analysis
-# says "No instabilities detected" over it; the column is still red, and the
-# summary below reads the step's outcome as well as the phrase.
+# process and reports the tests that failed in some repetitions and not
+# others. A failure common to every repetition is not an instability, and the
+# analysis says "No instabilities detected" over it, though the column is red.
 #
 # The repetitions share one process rather than each running as a fresh child
 # under `--sandbox`, and the TSan column is the reason. TSan reports a race and
@@ -39,29 +37,33 @@ name: statistical
 # trials that independence if the test runner counted a refused child as a
 # failed trial and carried on.
 #
-# The column runs without `--check-versioned-output`: the gate has already
-# applied it to this tree. `locate N` composes with the flag, comparing once
-# after every repetition, but that has been verified locally and not here. The
-# performance tests are excluded for the reason coarse.yml gives.
+# The columns run without `--check-versioned-output`: the gate has already
+# applied it to this tree. `locate N` composes with the flag, comparing once,
+# after the last repetition, but that has been verified locally and not here.
+# The performance tests are excluded, as on these configurations in the
+# gates: coarse.yml gives the reason for macOS and Windows, and rigorous.yml
+# for a sanitized Linux build.
 #
-# Which columns: the ones whose failures are rare by mechanism. TSan reports
-# only the interleavings that actually execute, so repetition is what widens its
-# coverage. ASan+UBSan for timing-dependent memory errors. MSVC ASan because it
-# is the configuration in which the sharing violation rigorous.yml describes
-# showed most often - 2 of 4, against Debug's 3 of 38 - and its recurrence is
-# what rigorous.yml says would be evidence against the fix. Not Release, not
-# coverage, not docs: the optimizer's questions are not statistical.
+# The columns are those whose failures are rare by mechanism:
+#   - TSan reports only the interleavings that actually execute, so
+#     repetition is what widens its coverage.
+#   - ASan+UBSan, for timing-dependent memory errors.
+#   - MSVC ASan, the configuration in which the sharing violation that
+#     rigorous.yml describes was most frequent: 2 runs of 4, against Debug's 3
+#     of 38. rigorous.yml says why a recurrence would be evidence against the
+#     fix.
+# Release, coverage and docs are absent: the optimizer's questions are not
+# statistical.
 #
-# N is an input so the nightly value and a by-hand sweep with a larger one are
-# the same file. The cost is wall-clock, not money - standard runners are free
-# on a public repository - and a run is one build plus N suites, which at the
-# measured two to four minutes a suite puts N=20 at about an hour a column.
+# N is an input, so the nightly value and a by-hand sweep with a larger one
+# use the same file. The cost is wall-clock, not money, since standard runners
+# are free on a public repository. A run is one build plus N suites, which at
+# the measured two to four minutes a suite puts N=20 at about an hour a
+# column.
 on:
-  # A minute after the nightly's tick, for no reason beyond not sharing it. The
-  # order in which the two are then created is a coin toss - GitHub's delay is
-  # per run, and its night-to-night spread is about the width of the hour this
-  # once trailed the nightly by - and nothing here depends on the order: the
-  # nightly's columns are not a prerequisite, only a neighbour in the queue.
+  # A minute after the nightly's tick, only so as not to share it. Nothing
+  # here depends on which of the two GitHub creates first: the nightly's
+  # columns are not a prerequisite, only a neighbour in the queue.
   schedule:
     - cron: '2 1 * * *'
   workflow_dispatch:
@@ -71,11 +73,11 @@ on:
         required: false
         type: number
 
-# No concurrency group, as rigorous.yml reasons: a dispatch alongside the
-# scheduled run is a second sample, not a superseded one.
+# No concurrency group: a dispatch alongside the scheduled run is a second
+# sample, not a superseded one.
 jobs:
-  # `inputs.trials` is empty on a schedule and on a dispatch that left it blank,
-  # so the nightly value is spelt here, once.
+  # `inputs.trials` is empty on a schedule and on a dispatch that left it
+  # blank, so the nightly value is spelt here, once.
   trials:
     name: How many trials
     runs-on: ubuntu-latest
@@ -92,8 +94,8 @@ jobs:
           echo "n=$n" >> "$GITHUB_OUTPUT"
 
   # Warnings are counted, not fatal. A red run here should mean an instability
-  # was found, and a build that dies on a warning produces no trials at all;
-  # nothing reaches main without the gates having built it with warnings fatal.
+  # was found, and a build that dies on a warning produces no trials at all.
+  # Nothing reaches main unless the gates have built it with warnings fatal.
   statistical:
     needs: trials
     uses: ./.github/workflows/tests.yml
@@ -112,18 +114,20 @@ jobs:
           {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan"}
         ]
 
-  # The sample, stated as a measurement: the tree, the trials, what each column
-  # found, and the bound that zero failures earns. Runs whether or not the
-  # columns were green, since a red column is the finding. Three things it
-  # insists on, each of which would otherwise pass in silence: every column's
-  # artifact is present; the suite started and finished N times, witnessed by
-  # the runner's "Running tests" line as each repetition starts and its "Total
-  # Run Time" line as each ends - the one check that tells N trials from one,
-  # and a trial that hung from one that ended; and a column is clean only if
-  # its suite step succeeded AND the analysis found nothing, since the analysis
-  # says "No instabilities detected" over a failure common to every repetition
-  # too. A column that is not clean is reported with its counts and the end of
-  # its log, whatever the reason.
+  # Writes the sample up as a measurement: the tree, the trials, what each
+  # column found, and the bound that zero failures earns. The job runs whether
+  # or not the columns were green, since a red column is the finding. It
+  # insists on three things, each of which would otherwise pass in silence:
+  #   - Every column's artifact is present.
+  #   - The suite started and finished N times, counted from the runner's
+  #     "Running tests" line as each repetition starts and its "Total Run
+  #     Time" line as each ends. This is the one check that tells N trials
+  #     from one, and a trial that hung from one that ended.
+  #   - A column is clean only if its suite step succeeded and the analysis
+  #     found nothing, since the analysis says "No instabilities detected"
+  #     over a failure common to every repetition too.
+  # A column that is not clean is reported with its counts and the end of its
+  # log, whatever the reason.
   summary:
     name: The sample
     needs: [trials, statistical]
