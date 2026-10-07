@@ -17,7 +17,10 @@ file in the tracefile and in the baseline:
   -# for each key a file has less often, `compare` prints a notice, which does
      not change the status. The notice says whether a called function in that
      file has the key. Since functions can share a key, that called function
-     need not be the one the baseline listed.
+     need not be the one the baseline listed;
+  -# if a `.cpp` file within `<root>/Source` has no record in the tracefile,
+     `compare` names the file and exits with status 1, since none of its
+     functions is seen. A file with records of lines alone has a record.
 Either mode exits with status 2 if it refuses its input.
 
 A record is what lcov reports at one start line of one file. Its aliases are
@@ -49,7 +52,7 @@ The tracefile's counts must be gcov's. With check_data_consistency on, lcov
 repairs counts whenever it reads a tracefile, and marks an uncalled lambda as
 called if the lambda's first line ran.
 """
-import argparse, re, subprocess, sys
+import argparse, pathlib, re, subprocess, sys
 from collections import Counter
 from enum import Enum
 
@@ -71,7 +74,7 @@ class Selection(Enum):
 
 def read_tracefile(path, source_root):
     """{file: {start line: {mangled name: calls}}} for the files within
-    `source_root` which have function records.
+    `source_root`. A file without function records maps to an empty dict.
 
     Each file is given relative to the parent of `source_root`. A record's end
     line is optional, as geninfo documents.
@@ -100,7 +103,15 @@ def read_tracefile(path, source_root):
                     aliases[name] = aliases.get(name, 0) + int(calls)
             except (KeyError, ValueError):
                 raise Refusal(f'{path}:{number}: malformed record: {line.rstrip()}')
-    return {file: starts for file, starts in functions.items() if starts}
+    return functions
+
+
+def untraced_translation_units(repository, traced):
+    """The `.cpp` files within `<repository>/Source` which `traced` does not
+    name, relative to `repository` and sorted."""
+    root  = pathlib.Path(repository)
+    units = (str(path.relative_to(root)) for path in (root / 'Source').rglob('*.cpp'))
+    return sorted(unit for unit in units if unit not in traced)
 
 
 def demangle(names, demanglers):
@@ -418,7 +429,8 @@ def main():
     arguments = parser.parse_args()
 
     try:
-        functions = read_tracefile(arguments.tracefile, arguments.repository.rstrip('/') + '/Source')
+        traced    = read_tracefile(arguments.tracefile, arguments.repository.rstrip('/') + '/Source')
+        functions = {file: starts for file, starts in traced.items() if starts}
         if not functions:
             raise Refusal(f'{arguments.tracefile} has no function records within {arguments.repository}/Source')
         current_header = header(arguments.demangler, arguments.recorded_tool)
@@ -432,6 +444,7 @@ def main():
             raise Refusal(f'{arguments.baseline} was made with {baseline_header}, and this run has '
                           f'{current_header}: regenerate the baseline')
         risen, fallen = compare(baseline, counts(uncalled))
+        untraced      = untraced_translation_units(arguments.repository, traced)
         called        = keys_by_file({file: functions[file] for file, _ in fallen if file in functions},
                                      arguments.demangler, Selection.called)
         for file, fallen_key in fallen:
@@ -442,7 +455,9 @@ def main():
         for file, risen_key in risen:
             print(f'error: uncalled, and not in the baseline: {file}: {risen_key} '
                   f'(lines {uncalled[file][risen_key]})')
-        return 1 if risen else 0
+        for file in untraced:
+            print(f'error: not in the tracefile, so none of its functions is seen: {file}')
+        return 1 if risen or untraced else 0
     except (Refusal, Unkeyable, OSError, subprocess.CalledProcessError) as error:
         print(f'error: {error}', file=sys.stderr)
         return 2

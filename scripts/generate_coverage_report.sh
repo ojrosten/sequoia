@@ -82,7 +82,10 @@ consistency_options=(--rc check_data_consistency=0)
 
 capture="${test_exe_dir}/coverage_capture.info"
 info="${test_exe_dir}/coverage.info"
-run_checked lcov --directory "${test_exe_dir}" --capture --output-file "${capture}" --gcov-tool "${gcov_tool}" \
+# --all captures each object that never ran, with every count zero. Without it, such an object
+# is absent from the tracefile. The linker leaves out any object of a static library which
+# nothing references, and the object's functions would then be neither called nor uncalled.
+run_checked lcov --directory "${test_exe_dir}" --capture --all --output-file "${capture}" --gcov-tool "${gcov_tool}" \
                  --keep-going --filter range --rc geninfo_unexecuted_blocks=1 "${consistency_options[@]}" \
                  --ignore-errors empty --ignore-errors inconsistent,inconsistent --ignore-errors format,format
 
