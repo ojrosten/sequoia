@@ -432,6 +432,14 @@ class Verdict(unittest.TestCase):
         self.assertEqual(status, 1)
         self.assertIn('ns::box::set (lines [10, 11])', out)
 
+    def test_an_error_lists_its_lines_in_source_order(self):
+        """The tracefile lists the records in the opposite order. The key's
+        count rises by two, so it is named twice."""
+        error = 'error: uncalled, and not in the baseline: Source/sequoia/ns.hpp: ns::box::set (lines [20, 30])\n'
+        self.assertEqual(self.verdict([(10, [(HIDDEN, 0)])],
+                                      [(30, [(SET2_INT, 0)]), (20, [(SET_INT, 0)]), (10, [(HIDDEN, 0)])]),
+                         (1, error * 2, ''))
+
     def test_renumbered_lambda_is_not_a_change(self):
         """A lambda inserted above an uncalled one of the same signature
         changes the uncalled lambda's discriminator and its line."""
@@ -781,6 +789,10 @@ MUTATIONS = [
     ('errors in line order',             "sorted((now - was).elements())]\n        fallen",
                                          "list((now - was).elements())]\n        fallen"),
     ('a blank line names a file',        "            elif line.strip():\n",    "            else:\n"),
+    ('lines in tracefile order',         "for start, aliases in sorted(starts.items()):",
+                                         "for start, aliases in starts.items():"),
+    ('lines in reverse order',           "for start, aliases in sorted(starts.items()):",
+                                         "for start, aliases in sorted(starts.items(), reverse=True):"),
     ('baseline files unsorted',          "for file, keys in sorted(uncalled.items()):",
                                          "for file, keys in uncalled.items():"),
     ('lists within parameters noted',    "                if not stack:\n                    removed.append(length)",

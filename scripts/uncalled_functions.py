@@ -354,7 +354,8 @@ def key(demangled):
 # ---- The baseline -----------------------------------------------------------
 
 def keys_by_file(functions, demanglers, selection):
-    """{file: {key: [start line]}} of the records `selection` names.
+    """{file: {key: [start line]}} of the records `selection` names, each
+    key's start lines in ascending order.
 
     A record is listed under each key its aliases give. A called record none of
     whose aliases can be keyed is left out. An uncalled one raises `Unkeyable`.
