@@ -10,7 +10,8 @@
 # script takes <root>/build to be the last directory named build in the build
 # directory's physical path. Before genhtml writes the report, the script
 # deletes the report's directory, if present, and with it every page of an
-# earlier report.
+# earlier report. It deletes the directory by its physical path, and genhtml
+# writes the report there.
 #
 # The script leaves three files in the build directory:
 #   - coverage_capture.info, the tracefile lcov captured;
@@ -26,10 +27,14 @@
 # Before it runs anything, the script refuses with status 2 a missing, empty
 # or second argument, and a build directory with no directory named build in
 # its path. It fails before it runs anything if the build directory or its
-# CMakeCache.txt is missing, or, on macOS, brew or GNU c++filt. It also fails
-# before it runs anything if the report's directory is present and its
-# physical path is not within <root>/coverage_reports. A step that fails stops
-# the script with a non-zero status.
+# CMakeCache.txt is missing, or, on macOS, brew or GNU c++filt. It fails if
+# the report's path is present and either of these holds:
+#   - the path is not a directory, such as a regular file or a dangling link;
+#   - the directory's physical path is not within the physical
+#     <root>/coverage_reports.
+# The script checks the report's path before it runs anything, and again just
+# before it deletes the directory. A step that fails stops the script with a
+# non-zero status.
 
 # A command outside run_checked which fails, such as reading the cache, ends
 # the script.
@@ -61,18 +66,29 @@ fi
 output_dir="${path_prefix}/coverage_reports/${path_suffix}"
 echo "Output Dir: ${output_dir}"
 
-# The report's directory is deleted before genhtml writes it, so it must lie
-# within coverage_reports. A Setup.txt naming `..`, or a link within
-# coverage_reports, could place it elsewhere, so the check compares physical
-# paths.
-if [[ -e "${output_dir}" ]]; then
-  physical_reports=$(cd "${path_prefix}/coverage_reports" && pwd -P)
-  physical_output=$(cd "${output_dir}" && pwd -P)
-  if [[ "${physical_output}" != "${physical_reports}"/?* ]]; then
-    echo "error: the report's directory, ${physical_output}, is not within ${physical_reports}" >&2
+# Sets report_dir to the report's directory: its physical path if present,
+# and otherwise output_dir. The script deletes report_dir, so report_dir must
+# lie strictly within the physical coverage_reports, or the script fails. A
+# link at any component of output_dir within coverage_reports, or a Setup.txt
+# naming `..`, could place it elsewhere. So each path is resolved by cd -P:
+# a logical cd removes `X/..` from the path's text, where rm resolves `..`
+# through the link X.
+locate_report_dir() {
+  report_dir=${output_dir}
+  [[ -e "${output_dir}" || -L "${output_dir}" ]] || return 0
+  local physical_reports
+  physical_reports=$(cd -P "${path_prefix}/coverage_reports" && pwd -P)
+  report_dir=$(cd -P "${output_dir}" && pwd -P)
+  if [[ "${report_dir}" != "${physical_reports}"/?* ]]; then
+    echo "error: the report's directory, ${report_dir}, is not within ${physical_reports}" >&2
     exit 1
   fi
-fi
+}
+
+# The script checks the report's directory now, so that a refusal comes before
+# the suite runs. It checks again just before deleting the directory, which
+# may have changed while the suite ran.
+locate_report_dir
 
 # lcov forces --no-strip-underscores on Darwin, which only GNU c++filt
 # accepts. Apple's c++filt refuses it, and genhtml then reports that the
@@ -190,6 +206,7 @@ run_checked python3 "${script_dir}/check_tracefile.py" --capture "${capture}" --
 
 # genhtml leaves in place every page it does not write, such as a page for a
 # source the build no longer has.
-run_checked rm -rf "${output_dir}"
-run_checked genhtml "${demangle[@]}" --suppress-aliases -o "${output_dir}" "${info}" \
+locate_report_dir
+run_checked rm -rf "${report_dir}"
+run_checked genhtml "${demangle[@]}" --suppress-aliases -o "${report_dir}" "${info}" \
                     --ignore-errors range --ignore-errors empty --ignore-errors category "${read_options[@]}"
