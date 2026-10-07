@@ -288,7 +288,7 @@ def split_name(text):
             continue
         if closing is not None and depth == 0 and kind == 'open' and token == '(':
             parameters = text[offset + 1:closing]
-            qualifiers = ' '.join(text[closing + 1:].split())
+            qualifiers = text[closing + 1:].strip()
             head       = text[:offset]
             break
     if parameters is None:
@@ -307,7 +307,7 @@ def split_name(text):
     for offset, depth, token, kind in all_cells:
         if offset < start or offset >= len(head) or depth:
             continue
-        if head.startswith('::', offset) and offset >= begin:
+        if head.startswith('::', offset):
             components.append((head[begin:offset], begin))
             begin = offset + 2
     components.append((head[begin:], begin))
@@ -334,8 +334,6 @@ def key(demangled):
 
     parts = []
     for component, begin in components:
-        begin    += len(component) - len(component.lstrip())
-        component = component.strip()
         if lambda_match := LAMBDA.match(component):
             gnu_parameters, gnu_discriminator, _, llvm_parameters = lambda_match.groups()
             lambda_parameters = gnu_parameters if gnu_discriminator else llvm_parameters
