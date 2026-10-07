@@ -12,9 +12,10 @@
 #
 # Each control runs a copy of the script as CI runs it, from the root of a
 # scratch repository, on a scratch build of TestAll. Stand-ins for lcov,
-# genhtml, ctest, ninja, uname, mktemp, llvm-cov and check_tracefile.py log
-# each call, and fail when a control asks them to. So the selftest checks what
-# the script decides and passes, and needs no build. The claims:
+# genhtml, ctest, ninja, llvm-cov and check_tracefile.py log each call, and
+# most fail when a control asks them to. Stand-ins for uname and mktemp give
+# the platform and the probe's directory a control chooses. So the selftest
+# checks what the script decides and passes, and needs no build. The claims:
 #
 #   - the report is written to coverage_reports beside the last directory
 #     named build in the build's physical path, under the rest of that path.
@@ -62,7 +63,8 @@ esac
 # A developer's environment may hold one.
 unset gcov_tool
 
-# The stand-ins. Each logs its call as one line of $FAKE/log, and fails with a
+# The stand-ins. Each of lcov, genhtml, ctest, the cache's ninja and
+# check_tracefile.py logs its call as one line of $FAKE/log, and fails with a
 # status of its own when $FAIL names its step.
 mkdir -p "$tmp/bin" "$tmp/cache" "$tmp/llvm/bin" "$tmp/binutils"
 # The script's copies look for GNU c++filt here.

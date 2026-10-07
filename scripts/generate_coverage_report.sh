@@ -16,19 +16,22 @@
 #     toolchains, from which the report is made;
 #   - coverage_summary.txt, lcov's summary of coverage.info.
 #
-# The script runs lcov, genhtml and ctest from PATH, the ninja the build's
-# cache names, and the gcov tool which matches the build's compiler. On macOS
-# it needs GNU c++filt where Homebrew's binutils puts it.
+# The script runs lcov, genhtml, ctest and python3 from PATH, the ninja the
+# build's cache names, and check_tracefile.py from its own directory. It runs
+# the gcov tool which matches the build's compiler, unless the environment
+# sets gcov_tool, which it then runs instead. On macOS it needs GNU c++filt
+# where Homebrew's binutils puts it.
 #
 # Before it runs anything, the script refuses with status 2 a missing, empty
 # or second argument, and a build directory with no directory named build in
-# its path. On macOS without GNU c++filt, it fails before it runs anything. A
-# step that fails stops the script with a non-zero status.
+# its path. It fails before it runs anything if the build directory or its
+# CMakeCache.txt is missing, or, on macOS, GNU c++filt. A step that fails
+# stops the script with a non-zero status.
 
-# A failing suite or a failed capture must not leave a report that looks
-# sound. There is no pipefail: the genhtml probe below pipes genhtml, which
-# always fails there, into grep, and under pipefail every category would read
-# as unsupported.
+# A command outside run_checked which fails, such as reading the cache, ends
+# the script. There is no pipefail: the genhtml probe below pipes genhtml,
+# which always fails there, into grep. Under pipefail the pipeline would fail
+# whatever grep found, and every category would read as supported.
 set -e
 
 if [[ $# -ne 1 || -z "$1" ]]; then
@@ -50,8 +53,8 @@ path_suffix="${test_exe_dir##*/build/}"
 setup_file="${test_exe_dir}/Setup.txt"
 
 if [[ -f "${setup_file}" ]]; then
-    discriminator=$(head -n 1 "${setup_file}")
-    path_suffix="${path_suffix}/${discriminator}"
+  discriminator=$(head -n 1 "${setup_file}")
+  path_suffix="${path_suffix}/${discriminator}"
 fi
 
 output_dir="${path_prefix}/coverage_reports/${path_suffix}"
