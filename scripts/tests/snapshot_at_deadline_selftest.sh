@@ -44,11 +44,11 @@
 #     names, and says when cdb is absent.
 #
 # The Linux and Windows dumpers' controls run on every platform, against
-# stand-ins for uname, sudo, gdb and PowerShell, which print what they were
-# asked. So they check what the script does with each tool's answer, and not
-# the tools. The real tools run on their own platform: `sample` on macOS, and
-# gdb on Linux, where gdb must be installed. Nothing here runs PowerShell or
-# cdb.
+# stand-ins for uname, pgrep, sudo, gdb and PowerShell, which print what they
+# were asked. So they check what the script does with each tool's answer, and
+# not the tools. The real tools run on their own platform: `sample` on macOS,
+# and gdb on Linux, where gdb must be installed. Nothing here runs PowerShell
+# or cdb.
 #
 # The stand-in for a hung suite is compiled here, blocked in two threads, in
 # functions whose names the stacks must show. A system binary copied under
@@ -135,23 +135,27 @@ wait_for() { # wait_for <pattern> <file> <seconds>
 }
 
 # Runs the script with a command which runs until it is released, and releases
-# it once the snapshot is finished. Sets `began_after` to the seconds from the
-# start of held_snapshot to the start of the snapshot, and `held` to whether
-# the command was still running when the snapshot was finished.
+# it once the snapshot is finished. Fails if the snapshot does not begin within
+# 5 s of the deadline, or does not finish within 20 s of beginning. Sets
+# `began_after` to the seconds from the start of held_snapshot to the start of
+# the snapshot, and `held` to whether the command was still running when the
+# snapshot was finished.
 held_snapshot() { # held_snapshot <snapshot file> <PATH> <seconds> <executable name>
   local snapshot=$1 search_path=$2 seconds=$3 executable=$4 runner start=$SECONDS
   env PATH="$search_path" "$BASH" "$script" "$seconds" "$snapshot" "$executable" \
     -- "$tmp/held" "$snapshot.release" &
   runner=$!
   started="$started $runner"
-  held=no
-  if wait_for '^Snapshot (taken|finished) at' "$snapshot" 60; then
+  held=no began_after=never
+  if ! wait_for '^Snapshot (taken|finished) at' "$snapshot" $((seconds + 5)); then
+    fail "a snapshot due ${seconds}s after the command began never began: $snapshot"
+  else
     began_after=$((SECONDS - start))
-    if wait_for '^Snapshot finished at' "$snapshot" 60 && kill -0 "$runner" 2> /dev/null; then
+    if ! wait_for '^Snapshot finished at' "$snapshot" 20; then
+      fail "a snapshot never finished: $snapshot"
+    elif kill -0 "$runner" 2> /dev/null; then
       held=yes
     fi
-  else
-    began_after=never
   fi
   touch "$snapshot.release"
   wait "$runner"
@@ -210,16 +214,22 @@ esac"
 gdb_stand_in='echo "gdb stand-in${SUDO_STAND_IN:+ through sudo}: $*"
 echo "gdb stand-in: cannot attach" >&2
 exit 1'
+# The pgrep stand-in names one process, 4242, for the stand-in's name, so that
+# these controls need no stand-in running.
+pgrep_stand_in="[ \"\$*\" = \"-x $name\" ] && echo 4242"
 fake_tool "$tmp/linux-sudo"   uname 'echo Linux'
+fake_tool "$tmp/linux-sudo"   pgrep "$pgrep_stand_in"
 fake_tool "$tmp/linux-sudo"   sudo  '[ "$1" = -n ] && shift; SUDO_STAND_IN=yes exec "$@"'
 fake_tool "$tmp/linux-sudo"   gdb   "$gdb_stand_in"
 fake_tool "$tmp/linux-nosudo" uname 'echo Linux'
+fake_tool "$tmp/linux-nosudo" pgrep "$pgrep_stand_in"
 fake_tool "$tmp/linux-nosudo" sudo  'exit 1'
 fake_tool "$tmp/linux-nosudo" gdb   "$gdb_stand_in"
 # Every tool the script runs, and no gdb. The script asks for sudo only once
 # it has found gdb.
 fake_tool "$tmp/linux-nogdb"  uname 'echo Linux'
-for tool in dirname mktemp mkdir rm touch sleep date ps pgrep; do
+fake_tool "$tmp/linux-nogdb"  pgrep "$pgrep_stand_in"
+for tool in dirname mktemp mkdir rm touch sleep date ps; do
   ln -s "$(command -v "$tool")" "$tmp/linux-nogdb/$tool" \
     || { echo "FAIL: cannot find $tool"; exit 1; }
 done
@@ -228,6 +238,13 @@ done
 # exists or its directory has gone, for 600 polls at most, and passes any other
 # sleep to the real one.
 real_sleep=$(command -v sleep)
+
+# A gdb stand-in which takes a second, so that a snapshot is still being taken
+# when the command ends.
+fake_tool "$tmp/linux-slow" uname 'echo Linux'
+fake_tool "$tmp/linux-slow" pgrep "$pgrep_stand_in"
+fake_tool "$tmp/linux-slow" sudo  'exit 1'
+fake_tool "$tmp/linux-slow" gdb   "$real_sleep 1"
 fake_tool "$tmp/sleeping" sleep "[ \"\$1\" = 1 ] || exec $real_sleep \"\$@\"
 polls=0
 while [ ! -e \"\$SLEEP_RELEASE\" ] && [ -d \"\${SLEEP_RELEASE%/*}\" ] && [ \"\$polls\" -lt 600 ]; do
@@ -239,168 +256,37 @@ run_controls() {
   fails=0
   work=$(mktemp -d "$tmp/controls.XXXXXX")
 
+  # The quick controls come first, and those which wait for a deadline or a
+  # snapshot last, since --mutations stops a mutant at its first failure.
+
   # Refusals.
   echo "an earlier snapshot" > "$work/earlier.txt"
   mkdir "$work/read-only"
   chmod 555 "$work/read-only"
   ln -s "$work/missing/r.txt" "$work/into-missing"
   ln -s "$work/target.txt"    "$work/to-new"
-  check_refusal "no command"                "$work"         60 "$work/r.txt"             "$name" --
-  check_refusal "no separator"              "$work"         60 "$work/r.txt"             "$name" touch "$work/ran"
+  check_refusal "no command"                "$work"         1  "$work/r.txt"             "$name" --
+  check_refusal "no separator"              "$work"         1  "$work/r.txt"             "$name" touch "$work/ran"
   for deadline in abc 1.5 0 -600 08 ""; do
     check_refusal "a deadline of '$deadline'" "$work" "$deadline" "$work/r.txt" "$name" -- touch "$work/ran"
   done
-  check_refusal "an existing snapshot file" "$work"         60 "$work/earlier.txt"       "$name" -- touch "$work/ran"
-  check_refusal "a missing directory"       "$work"         60 "$work/missing/r.txt"     "$name" -- touch "$work/ran"
+  check_refusal "an existing snapshot file" "$work"         1  "$work/earlier.txt"       "$name" -- touch "$work/ran"
+  check_refusal "a missing directory"       "$work"         1  "$work/missing/r.txt"     "$name" -- touch "$work/ran"
   if { : > "$work/read-only/probe"; } 2> /dev/null; then
     fail "the read-only directory is writable, as it is to root, so its refusal cannot be checked"
   else
-    check_refusal "a read-only directory"   "$work"         60 "$work/read-only/r.txt"   "$name" -- touch "$work/ran"
+    check_refusal "a read-only directory"   "$work"         1  "$work/read-only/r.txt"   "$name" -- touch "$work/ran"
   fi
-  check_refusal "a file for a directory"    "$work"         60 "$work/earlier.txt/r.txt" "$name" -- touch "$work/ran"
-  check_refusal "an empty path"             "$work"         60 ""                        "$name" -- touch "$work/ran"
-  check_refusal "a path ending in /"        "$work"         60 "$work/absent/"           "$name" -- touch "$work/ran"
+  check_refusal "a file for a directory"    "$work"         1  "$work/earlier.txt/r.txt" "$name" -- touch "$work/ran"
+  check_refusal "an empty path"             "$work"         1  ""                        "$name" -- touch "$work/ran"
+  check_refusal "a path ending in /"        "$work"         1  "$work/absent/"           "$name" -- touch "$work/ran"
   check_refusal "a link into a missing directory" \
-                                            "$work"         60 "$work/into-missing"      "$name" -- touch "$work/ran"
-  check_refusal "a link to a new file"      "$work"         60 "$work/to-new"            "$name" -- touch "$work/ran"
-  check_refusal "a missing TMPDIR"          "$work/missing" 60 "$work/r.txt"             "$name" -- touch "$work/ran"
+                                            "$work"         1  "$work/into-missing"      "$name" -- touch "$work/ran"
+  check_refusal "a link to a new file"      "$work"         1  "$work/to-new"            "$name" -- touch "$work/ran"
+  check_refusal "a missing TMPDIR"          "$work/missing" 1  "$work/r.txt"             "$name" -- touch "$work/ran"
   check "an existing snapshot file is left alone" yes "^an earlier snapshot$" "$work/earlier.txt"
   [ ! -e "$work/target.txt" ] || fail "a refused link to a new file created the file"
   chmod 755 "$work/read-only"
-
-  # The temporary directory, seen by the command and gone afterwards.
-  mkdir "$work/temporary"
-  TMPDIR=$work/temporary bash "$script" 60 "$work/temporary.txt" "$name" -- ls "$work/temporary" \
-    > "$work/temporary.out"
-  check "the temporary directory is under TMPDIR" yes "^snapshot_at_deadline\." "$work/temporary.out"
-  [ -z "$(ls "$work/temporary")" ] || fail "the temporary directory was left behind"
-
-  # The exit status passes through.
-  check_status "success before the deadline"  0 30 true
-  check_status "failure before the deadline"  3 30 sh -c 'exit 3'
-  check_status "success after the deadline"   0 1  sh -c 'sleep 2'
-  check_status "failure after the deadline"   3 1  sh -c 'sleep 2; exit 3'
-
-  # The command's streams.
-  echo "to the command" \
-    | bash "$script" 30 "$work/streams.txt" "$name" -- sh -c 'cat; echo "to error" >&2' \
-        > "$work/streams.out" 2> "$work/streams.err"
-  check "the command reads standard input and writes standard output" yes "^to the command$" "$work/streams.out"
-  check "the command writes standard error"                            yes "^to error$"       "$work/streams.err"
-
-  # The command runs in the caller's process group, as it would without the
-  # script.
-  bash "$script" 30 "$work/group.txt" "$name" -- sh -c 'ps -o pgid= -p $$' > "$work/group.out"
-  check "the command runs in the caller's process group" yes \
-    "^ *$(ps -o pgid= -p $$ | tr -d ' ')\$" "$work/group.out"
-
-  # A command which ends after the deadline has passed, while the watcher
-  # sleeps. A stand-in for sleep holds the watcher's one-second sleep until
-  # the command has ended. The watcher must not snapshot: the script either
-  # ends it, or the watcher wakes to find the snapshot claimed. The deadline is
-  # 2 s, so that the watcher is not already past the deadline when it first
-  # looks.
-  mkdir "$work/sleeping"
-  env PATH="$tmp/sleeping:$PATH" TMPDIR="$work/sleeping" SLEEP_RELEASE="$work/sleeping.wake" \
-    "$BASH" "$script" 2 "$work/sleeping.txt" "$name" -- "$tmp/held" "$work/sleeping.release" &
-  runner=$!
-  started="$started $runner"
-  sleep 2.5
-  touch "$work/sleeping.release"
-  for poll in $(seq 1 50); do
-    [ -z "$(find "$work/sleeping" -name claim)" ] || break
-    sleep 0.1
-  done
-  touch "$work/sleeping.wake"
-  wait "$runner"
-  [ ! -e "$work/sleeping.txt" ] || fail "a command which ended while the watcher slept left a snapshot"
-
-  # At the deadline, with no such process.
-  bash "$script" 1 "$work/absent.txt" "$name" -- sleep 2
-  check "an absent process is reported"           yes "^== No process named '$name' is running ==$" "$work/absent.txt"
-  check "an absent process has no stacks section" no  "^== Stacks of" "$work/absent.txt"
-
-  # Windows, against the stand-ins for uname and PowerShell. PowerShell ends
-  # its lines with a carriage return, which a process id must not keep. cdb is
-  # looked for at the Windows SDK's paths, which no other platform has.
-  held_snapshot "$work/windows.txt" "$tmp/windows:$PATH" 1 "$name"
-  check "Windows: the listing is PowerShell's"   yes "^4242 1 20261007 $name.exe" "$work/windows.txt"
-  check "Windows: each process has its section"  yes "^== Stacks of '$name', process 4242 ==$" "$work/windows.txt"
-  check "Windows: every process has its section" yes "^== Stacks of '$name', process 4343 ==$" "$work/windows.txt"
-  check "Windows: cdb's absence is reported" yes \
-    "^No stacks: cdb.exe is not installed where the Windows SDK puts it\.$" "$work/windows.txt"
-
-  # The stand-ins: two with the name, and a decoy whose name begins with it.
-  "$tmp/$name" &  first=$!
-  "$tmp/$name" &  second=$!
-  "$tmp/$decoy" & decoy_pid=$!
-  started="$started $first $second $decoy_pid"
-  sleep 0.5
-
-  # At the deadline, while the command still runs. The deadline is long enough
-  # that a snapshot taken at twice the deadline is seen to be late.
-  touch "$work/before-late"
-  held_snapshot "$work/late.txt" "$PATH" 4 "$name"
-  [ "$held" = yes ] || fail "the snapshot was not finished while the command ran"
-  [ "$began_after" != never ] && [ "$began_after" -ge 2 ] && [ "$began_after" -le 6 ] \
-    || fail "a snapshot due 4s after the command began began after ${began_after}s"
-  check "the snapshot says when it began" yes \
-    "^Snapshot taken at [0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z, 4s after the command began\.$" \
-    "$work/late.txt"
-  check "the snapshot lists the processes" yes "^== Processes ==$" "$work/late.txt"
-  check "the listing has every user's processes, pid 1 among them" yes "^ *1 +0 " "$work/late.txt"
-  parent=$(ps -o ppid= -p "$first" | tr -d ' ')
-  check "the listing has the stand-in, its parent and command line" yes \
-    "^ *$first +$parent .*$name" "$work/late.txt"
-  check "a process whose name merely begins with the name has no stacks" no \
-    "^== Stacks of '$name', process $decoy_pid ==" "$work/late.txt"
-  if [ "$platform" = linux ]; then
-    if ! command -v gdb > /dev/null; then
-      fail "gdb is not installed, so the Linux stacks cannot be checked"
-    elif [ "$(id -u)" != 0 ] && ! sudo -n true 2> /dev/null \
-           && [ "$(cat /proc/sys/kernel/yama/ptrace_scope 2> /dev/null || echo 0)" != 0 ]; then
-      fail "gdb cannot attach to the stand-ins: that takes root, sudo without a password, or a ptrace_scope of 0"
-    fi
-  fi
-  if [ "$platform" = macos ]; then
-    find /tmp/ -maxdepth 1 -name "${name}_*.sample.txt" -newer "$work/before-late" > "$work/samples.txt"
-    [ ! -s "$work/samples.txt" ] || fail "sample left its report in /tmp as well"
-  fi
-  for pid in "$first" "$second"; do
-    stacks_of "$pid" "$work/late.txt" > "$work/stacks.$pid.txt"
-    check "the stacks of process $pid show its main thread" yes \
-      "blocked_in_the_stand_in" "$work/stacks.$pid.txt"
-    check "the stacks of process $pid show its second thread" yes \
-      "blocked_in_a_second_thread" "$work/stacks.$pid.txt"
-  done
-
-  # The command ends while the snapshot is being taken.
-  env PATH="$PATH" "$BASH" "$script" 1 "$work/overlap.txt" "$name" \
-    -- "$tmp/held" "$work/overlap.release" &
-  runner=$!
-  started="$started $runner"
-  wait_for "^== Stacks of '$name'" "$work/overlap.txt" 60 \
-    || fail "the overlapping snapshot never reached the stacks"
-  touch "$work/overlap.release"
-  wait "$runner"
-  check "a snapshot begun is finished before the script returns" yes "^Snapshot finished at" "$work/overlap.txt"
-
-  # Linux's dumper, against the stand-ins for uname, sudo and gdb.
-  held_snapshot "$work/linux-sudo.txt" "$tmp/linux-sudo:$PATH" 1 "$name"
-  stacks_of "$first" "$work/linux-sudo.txt" > "$work/linux-sudo.stacks"
-  check "Linux: gdb runs through sudo where sudo needs no password" yes \
-    "^gdb stand-in through sudo: -p $first -batch -ex thread apply all bt$" "$work/linux-sudo.stacks"
-  held_snapshot "$work/linux-nosudo.txt" "$tmp/linux-nosudo:$PATH" 1 "$name"
-  stacks_of "$first" "$work/linux-nosudo.txt" > "$work/linux-nosudo.stacks"
-  check "Linux: gdb runs without sudo where sudo needs a password" yes \
-    "^gdb stand-in: -p $first -batch -ex thread apply all bt$" "$work/linux-nosudo.stacks"
-  check "Linux: what gdb writes to standard error is kept" yes \
-    "^gdb stand-in: cannot attach$" "$work/linux-nosudo.stacks"
-  held_snapshot "$work/linux-nogdb.txt" "$tmp/linux-nogdb" 1 "$name"
-  stacks_of "$first" "$work/linux-nogdb.txt" > "$work/linux-nogdb.stacks"
-  check "Linux: gdb's absence is reported" yes "^No stacks: gdb is not on PATH\.$" "$work/linux-nogdb.stacks"
-
-  clean_up
 
   # A command which ends before the deadline, many times over, since a race
   # between the command's end and the watcher would show in only some runs.
@@ -412,7 +298,7 @@ run_controls() {
   fastest=
   for trial in $(seq 1 "$early_return_trials"); do
     start=$(tenths)
-    bash "$script" 20 "$work/early.txt" "$name" -- true
+    bash "$script" 5 "$work/early.txt" "$name" -- true
     elapsed=$(($(tenths) - start))
     [ -n "$fastest" ] && [ "$fastest" -le "$elapsed" ] || fastest=$elapsed
     if [ "$elapsed" -gt 9 ]; then
@@ -435,7 +321,7 @@ run_controls() {
   fake_tool "$work/marked" sleep "touch \"\$SLEEP_MARK\"
 $real_sleep 5"
   env PATH="$work/marked:$PATH" SLEEP_MARK="$work/slept" \
-    "$BASH" "$script" 30 "$work/marked.txt" "$name" -- "$real_sleep" 0.3
+    "$BASH" "$script" 5 "$work/marked.txt" "$name" -- "$real_sleep" 0.3
   if [ ! -e "$work/slept" ]; then
     fail "the watcher never slept, so the end of its sleep could not be checked"
   fi
@@ -444,6 +330,77 @@ $real_sleep 5"
     sleep 0.1
   done
   ! pgrep -f "$work/marked/sleep" > /dev/null || fail "the watcher's sleep outlived the script"
+
+  # The temporary directory, seen by the command and gone afterwards.
+  mkdir "$work/temporary"
+  TMPDIR=$work/temporary bash "$script" 5 "$work/temporary.txt" "$name" -- ls "$work/temporary" \
+    > "$work/temporary.out"
+  check "the temporary directory is under TMPDIR" yes "^snapshot_at_deadline\." "$work/temporary.out"
+  [ -z "$(ls "$work/temporary")" ] || fail "the temporary directory was left behind"
+
+  # The exit status passes through before the deadline.
+  check_status "success before the deadline"  0 5  true
+  check_status "failure before the deadline"  3 5  sh -c 'exit 3'
+
+  # The command's streams.
+  echo "to the command" \
+    | bash "$script" 5 "$work/streams.txt" "$name" -- sh -c 'cat; echo "to error" >&2' \
+        > "$work/streams.out" 2> "$work/streams.err"
+  check "the command reads standard input and writes standard output" yes "^to the command$" "$work/streams.out"
+  check "the command writes standard error"                            yes "^to error$"       "$work/streams.err"
+
+  # The command runs in the caller's process group, as it would without the
+  # script.
+  bash "$script" 5 "$work/group.txt" "$name" -- sh -c 'ps -o pgid= -p $$' > "$work/group.out"
+  check "the command runs in the caller's process group" yes \
+    "^ *$(ps -o pgid= -p $$ | tr -d ' ')\$" "$work/group.out"
+
+  # Windows, against the stand-ins for uname and PowerShell. PowerShell ends
+  # its lines with a carriage return, which a process id must not keep. cdb is
+  # looked for at the Windows SDK's paths, which no other platform has.
+  held_snapshot "$work/windows.txt" "$tmp/windows:$PATH" 1 "$name"
+  check "the snapshot says when it began" yes \
+    "^Snapshot taken at [0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z, 1s after the command began\.$" \
+    "$work/windows.txt"
+  check "the snapshot lists the processes" yes "^== Processes ==$" "$work/windows.txt"
+  check "Windows: the listing is PowerShell's"   yes "^4242 1 20261007 $name.exe" "$work/windows.txt"
+  check "Windows: each process has its section"  yes "^== Stacks of '$name', process 4242 ==$" "$work/windows.txt"
+  check "Windows: every process has its section" yes "^== Stacks of '$name', process 4343 ==$" "$work/windows.txt"
+  check "Windows: cdb's absence is reported" yes \
+    "^No stacks: cdb.exe is not installed where the Windows SDK puts it\.$" "$work/windows.txt"
+
+  # Linux's dumper, against the stand-ins for uname, pgrep, sudo and gdb.
+  held_snapshot "$work/linux-sudo.txt" "$tmp/linux-sudo:$PATH" 1 "$name"
+  stacks_of 4242 "$work/linux-sudo.txt" > "$work/linux-sudo.stacks"
+  check "Linux: gdb runs through sudo where sudo needs no password" yes \
+    "^gdb stand-in through sudo: -p 4242 -batch -ex thread apply all bt$" "$work/linux-sudo.stacks"
+  held_snapshot "$work/linux-nosudo.txt" "$tmp/linux-nosudo:$PATH" 1 "$name"
+  stacks_of 4242 "$work/linux-nosudo.txt" > "$work/linux-nosudo.stacks"
+  check "Linux: gdb runs without sudo where sudo needs a password" yes \
+    "^gdb stand-in: -p 4242 -batch -ex thread apply all bt$" "$work/linux-nosudo.stacks"
+  check "Linux: what gdb writes to standard error is kept" yes \
+    "^gdb stand-in: cannot attach$" "$work/linux-nosudo.stacks"
+  held_snapshot "$work/linux-nogdb.txt" "$tmp/linux-nogdb" 1 "$name"
+  stacks_of 4242 "$work/linux-nogdb.txt" > "$work/linux-nogdb.stacks"
+  check "Linux: gdb's absence is reported" yes "^No stacks: gdb is not on PATH\.$" "$work/linux-nogdb.stacks"
+
+  # The command ends while the snapshot is being taken: a gdb stand-in takes a
+  # second over the stacks.
+  env PATH="$tmp/linux-slow:$PATH" "$BASH" "$script" 1 "$work/overlap.txt" "$name" \
+    -- "$tmp/held" "$work/overlap.release" &
+  runner=$!
+  started="$started $runner"
+  wait_for "^== Stacks of '$name'" "$work/overlap.txt" 10 \
+    || fail "the overlapping snapshot never reached the stacks"
+  touch "$work/overlap.release"
+  wait "$runner"
+  check "a snapshot begun is finished before the script returns" yes "^Snapshot finished at" "$work/overlap.txt"
+
+  # At the deadline, with no such process.
+  bash "$script" 1 "$work/absent.txt" "$name" -- sleep 2
+  check "an absent process is reported"           yes "^== No process named '$name' is running ==$" "$work/absent.txt"
+  check "an absent process has no stacks section" no  "^== Stacks of" "$work/absent.txt"
+  check "the listing has every user's processes, pid 1 among them" yes "^ *1 +0 " "$work/absent.txt"
 
   # The script killed outright, as a cancelled step kills it, before a deadline
   # three seconds off. The control waits until the script has started both its
@@ -475,6 +432,73 @@ $real_sleep 5"
     ! kill -0 "$watcher" 2> /dev/null || fail "a watcher whose script was killed is still running"
     [ ! -e "$work/killed.txt" ] || fail "a watcher whose script was killed took a snapshot"
   fi
+
+  # The exit status passes through after the deadline.
+  check_status "success after the deadline"   0 1  sh -c 'sleep 2'
+  check_status "failure after the deadline"   3 1  sh -c 'sleep 2; exit 3'
+
+  # A command which ends after the deadline has passed, while the watcher
+  # sleeps. A stand-in for sleep holds the watcher's one-second sleep until
+  # the command has ended. The watcher must not snapshot: the script either
+  # ends it, or the watcher wakes to find the snapshot claimed. The deadline is
+  # 2 s, so that the watcher is not already past the deadline when it first
+  # looks.
+  mkdir "$work/sleeping"
+  env PATH="$tmp/sleeping:$PATH" TMPDIR="$work/sleeping" SLEEP_RELEASE="$work/sleeping.wake" \
+    "$BASH" "$script" 2 "$work/sleeping.txt" "$name" -- "$tmp/held" "$work/sleeping.release" &
+  runner=$!
+  started="$started $runner"
+  sleep 2.5
+  touch "$work/sleeping.release"
+  for poll in $(seq 1 50); do
+    [ -z "$(find "$work/sleeping" -name claim)" ] || break
+    sleep 0.1
+  done
+  touch "$work/sleeping.wake"
+  wait "$runner"
+  [ ! -e "$work/sleeping.txt" ] || fail "a command which ended while the watcher slept left a snapshot"
+
+  # The stand-ins: two with the name, and a decoy whose name begins with it.
+  "$tmp/$name" &  first=$!
+  "$tmp/$name" &  second=$!
+  "$tmp/$decoy" & decoy_pid=$!
+  started="$started $first $second $decoy_pid"
+  sleep 0.5
+
+  # At the deadline, while the command still runs. The deadline is long enough
+  # that a snapshot taken at twice the deadline is seen to be late.
+  touch "$work/before-late"
+  held_snapshot "$work/late.txt" "$PATH" 4 "$name"
+  [ "$held" = yes ] || fail "the snapshot was not finished while the command ran"
+  [ "$began_after" != never ] && [ "$began_after" -ge 2 ] && [ "$began_after" -le 6 ] \
+    || fail "a snapshot due 4s after the command began began after ${began_after}s"
+  check "the snapshot says how long after the command it began" yes \
+    "^Snapshot taken at .*, 4s after the command began\.$" "$work/late.txt"
+  parent=$(ps -o ppid= -p "$first" | tr -d ' ')
+  check "the listing has the stand-in, its parent and command line" yes \
+    "^ *$first +$parent .*$name" "$work/late.txt"
+  check "a process whose name merely begins with the name has no stacks" no \
+    "^== Stacks of '$name', process $decoy_pid ==" "$work/late.txt"
+  if [ "$platform" = linux ]; then
+    if ! command -v gdb > /dev/null; then
+      fail "gdb is not installed, so the Linux stacks cannot be checked"
+    elif [ "$(id -u)" != 0 ] && ! sudo -n true 2> /dev/null \
+           && [ "$(cat /proc/sys/kernel/yama/ptrace_scope 2> /dev/null || echo 0)" != 0 ]; then
+      fail "gdb cannot attach to the stand-ins: that takes root, sudo without a password, or a ptrace_scope of 0"
+    fi
+  fi
+  if [ "$platform" = macos ]; then
+    find /tmp/ -maxdepth 1 -name "${name}_*.sample.txt" -newer "$work/before-late" > "$work/samples.txt"
+    [ ! -s "$work/samples.txt" ] || fail "sample left its report in /tmp as well"
+  fi
+  for pid in "$first" "$second"; do
+    stacks_of "$pid" "$work/late.txt" > "$work/stacks.$pid.txt"
+    check "the stacks of process $pid show its main thread" yes \
+      "blocked_in_the_stand_in" "$work/stacks.$pid.txt"
+    check "the stacks of process $pid show its second thread" yes \
+      "blocked_in_a_second_thread" "$work/stacks.$pid.txt"
+  done
+
 
   clean_up
 }
@@ -659,7 +683,7 @@ first_failure() { # first_failure <directory>
 }
 
 mutations() {
-  local i survivors=0 file text content stripped occurrences failure
+  local i survivors=0 file text content stripped occurrences failure start
   mkdir "$tmp/unmutated"
   cp "$original" "$here/../windows_debugger.sh" "$tmp/unmutated/"
   failure=$(first_failure "$tmp/unmutated")
@@ -684,11 +708,12 @@ mutations() {
       continue
     fi
     printf '%s' "${content%%"$text"*}${mutant_replacement[i]}${content#*"$text"}" > "$file"
+    start=$SECONDS
     failure=$(first_failure "$tmp/mutant")
     if [ -n "$failure" ]; then
-      echo "${mutant_description[i]}: killed by ${failure#FAIL: }"
+      echo "${mutant_description[i]}: killed in $((SECONDS - start))s by ${failure#FAIL: }"
     else
-      echo "${mutant_description[i]}: SURVIVED"
+      echo "${mutant_description[i]}: SURVIVED, after $((SECONDS - start))s"
       survivors=1
     fi
   done
