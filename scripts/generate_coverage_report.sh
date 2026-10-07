@@ -45,6 +45,16 @@ run_checked() {
   exit 1
 }
 
+# The capture below reads every notes file (.gcno) in the build, so a stale one would be
+# captured too: for a source since dropped from the build it gives functions nothing can call,
+# and for a deleted source it fails the capture. Ninja's cleandead deletes the objects of
+# sources the build no longer has, and a notes file without its object is then deleted too.
+make_program=$(sed -n 's/^CMAKE_MAKE_PROGRAM:[^=]*=//p' "${test_exe_dir}/CMakeCache.txt")
+run_checked "${make_program}" -C "${test_exe_dir}" -t cleandead
+while IFS= read -r notes; do
+  [[ -f "${notes%.gcno}.o" ]] || run_checked rm "${notes}"
+done < <(find "${test_exe_dir}" -name '*.gcno')
+
 run_checked lcov --zerocounters --directory "${test_exe_dir}"
 
 # Run the tests to generate fresh .gcda files

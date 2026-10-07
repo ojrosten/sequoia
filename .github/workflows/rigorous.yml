@@ -455,14 +455,13 @@ jobs:
 
       # Roadmap 234's gate. A function of Source that no test calls fails the
       # job, unless the baseline, coverage_reports/uncalled_functions.txt,
-      # lists it. A .cpp file of
-      # Source missing from the tracefile also fails the job. The tracefile
-      # holds every object the build compiled, whether or not it was linked. A
-      # template never instantiated, and an inline function never used, are in
-      # no object, so the gate does not see them. A listed function that is
-      # now called, or gone, gives a notice, and the list is shortened by
-      # hand. Errors and notices are annotations on the run as well as lines in
-      # its summary.
+      # lists it. A .cpp file of Source missing from the tracefile also fails
+      # the job. The tracefile holds every object the build compiled, whether or
+      # not it was linked. A template never instantiated, and an inline function
+      # never used, are in no object, so the gate does not see them. A listed
+      # function that is now called, or gone, gives a notice, and the list is
+      # shortened by hand. Errors and notices are annotations on the run as well
+      # as lines in its summary.
       #
       # The baseline's header names the tools' releases, so a change of
       # demangler, compiler or lcov release is refused until the baseline is
@@ -486,7 +485,7 @@ jobs:
           {
             echo '### Uncalled functions'
             if [ "$status" -eq 0 ] && [ ! -s "$verdict" ]; then
-              echo "Every uncalled function the tracefile holds is listed in $baseline."
+              echo "Every .cpp file of Source is in the tracefile, and every uncalled function it holds is listed in $baseline."
             else
               echo '```'; cat "$verdict"; echo '```'
             fi

@@ -35,7 +35,12 @@ def load(source):
     return module
 
 
-ROOT         = '/home/runner/work/sequoia/sequoia'
+# A repository whose Source holds no .cpp file. On a runner, the path of
+# sequoia's own checkout would hold its translation units, so the repository is
+# made afresh.
+REPOSITORY   = tempfile.TemporaryDirectory()
+ROOT         = REPOSITORY.name
+os.makedirs(ROOT + '/Source/sequoia')
 SOURCE_FILE  = ROOT + '/Source/sequoia/ns.hpp'
 OTHER_FILE   = ROOT + '/Source/sequoia/other.hpp'
 FILE_KEY     = 'Source/sequoia/ns.hpp'
@@ -447,6 +452,15 @@ class Verdict(unittest.TestCase):
                          (1, 'error: not in the tracefile, so none of its functions is seen: '
                              'Source/lib/untraced.cpp\n', ''))
 
+    def test_a_repository_without_source_is_refused(self):
+        """The tracefile names a repository which is not on this machine."""
+        baseline = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
+        self.assert_refused(run_main(['compare', '--tracefile',
+                                      tracefile([(10, [(HIDDEN, 0)])], '/elsewhere/Source/sequoia/ns.hpp'),
+                                      '--repository', '/elsewhere', '--baseline', baseline]
+                                     + tool_options(self.tool)),
+                            '/elsewhere/Source is not a directory')
+
     def test_a_translation_unit_with_line_records_alone_is_traced(self):
         self.assertEqual(self.verdict_on_units(['Source/lib/traced.cpp', 'Source/lib/lines.cpp'],
                                                f'SF:{{root}}/Source/lib/traced.cpp\nFNL:0,10,13\nFNA:0,0,{HIDDEN}\n'
@@ -495,6 +509,7 @@ MUTATIONS = [
     ('headers looked for too',           ".rglob('*.cpp')",                       ".rglob('*.*')"),
     ('only the top of Source looked at', ".rglob('*.cpp')",                       ".glob('*.cpp')"),
     ('units outside Source looked for',  "(root / 'Source').rglob",               "root.rglob"),
+    ('a missing Source accepted',        "if not (root / 'Source').is_dir():",   "if False:"),
     ('a unit needs function records',    "untraced_translation_units(arguments.repository, traced)",
                                          "untraced_translation_units(arguments.repository, functions)"),
     ('files the baseline lacks skipped', "for file in sorted(set(baseline) | set(current)):",

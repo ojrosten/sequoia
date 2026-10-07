@@ -17,10 +17,10 @@ file in the tracefile and in the baseline:
   -# for each key a file has less often, `compare` prints a notice, which does
      not change the status. The notice says whether a called function in that
      file has the key. Since functions can share a key, that called function
-     need not be the one the baseline listed;
-  -# if a `.cpp` file within `<root>/Source` has no record in the tracefile,
-     `compare` names the file and exits with status 1, since none of its
-     functions is seen. A file with records of lines alone has a record.
+     need not be the one the baseline listed.
+`compare` also names each `.cpp` file within `<root>/Source` which has no
+record in the tracefile, and then exits with status 1, since none of the file's
+functions is seen. A file with records of lines alone has a record.
 Either mode exits with status 2 if it refuses its input.
 
 A record is what lcov reports at one start line of one file. Its aliases are
@@ -110,6 +110,8 @@ def untraced_translation_units(repository, traced):
     """The `.cpp` files within `<repository>/Source` which `traced` does not
     name, relative to `repository` and sorted."""
     root  = pathlib.Path(repository)
+    if not (root / 'Source').is_dir():
+        raise Refusal(f'{root / "Source"} is not a directory')
     units = (str(path.relative_to(root)) for path in (root / 'Source').rglob('*.cpp'))
     return sorted(unit for unit in units if unit not in traced)
 
