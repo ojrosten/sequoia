@@ -8,6 +8,8 @@
 #include "TestRunnerDiagnostics.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 
+#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+
 namespace sequoia::testing
 {
   [[nodiscard]]
@@ -19,6 +21,7 @@ namespace sequoia::testing
   void test_runner_false_negative_test::run_tests()
   {
     test_template_data_generation();
+    test_prune_fallback_reasons();
   }
 
   void test_runner_false_negative_test::test_template_data_generation()
@@ -28,5 +31,10 @@ namespace sequoia::testing
 
     check(equality, "Wrong symbol",
                    generate_template_data("<class S>"), template_data{{"class", "T"}});
+  }
+
+  void test_runner_false_negative_test::test_prune_fallback_reasons()
+  {
+    check(equality, "Wrong reason", prune_fallback_reason::no_previous_stamp, prune_fallback_reason::toolchain_changed);
   }
 }

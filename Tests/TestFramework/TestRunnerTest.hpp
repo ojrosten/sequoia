@@ -39,11 +39,15 @@ namespace sequoia::testing
 
     void test_suites_not_found();
 
+    void test_selections_not_found();
+
     void test_basic_output();
 
     void test_tests_registered_between_executions();
 
-    void test_execution_after_an_execution_which_threw();
+    void test_execution_after_a_registration_which_threw();
+
+    void test_registration_outside_a_run();
 
     void test_help_output();
 
@@ -55,11 +59,17 @@ namespace sequoia::testing
 
     void test_execution_records();
 
+    void test_summary_collision_with_an_unselected_test();
+
+    void test_discriminated_summary();
+
     void test_prune_basic_output();
 
     void test_prune_with_changed_toolchain();
 
     void test_prune_selects_a_test_this_executable_lacks();
+
+    void test_prune_with_nothing_stale();
 
     struct fake_build
     {
@@ -79,9 +89,13 @@ namespace sequoia::testing
 
     void test_discriminated_materials_update();
 
+    void test_materials_update_of_two_tests();
+
     void test_materials_preparation_failure();
 
     void test_versioned_output_failure();
+
+    void test_versioned_output_check();
 
     void test_discarded_materials_removal();
 
@@ -109,7 +123,11 @@ namespace sequoia::testing
 
     void test_instability_analysis_in_sandboxes_from_a_path_with_a_space();
 
+    void test_sandboxed_repetition();
+
     void test_exit_statuses();
+
+    void test_return_code_names();
 
     template<std::invocable<test_runner&> Manipulator, concrete_test... Ts>
     void test_instability_analysis(std::string_view message,

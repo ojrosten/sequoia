@@ -53,6 +53,9 @@ namespace sequoia::testing
     friend std::istream& operator>>(std::istream& s, prune_record& record);
   };
 
+  [[nodiscard]]
+  std::string to_string(const prune_record& record);
+
   /** \brief The time after which a modification counts as later than the run which wrote `stamp`.
 
       -# Where the filesystem records sub-second times, the threshold is the stamp itself.
@@ -75,7 +78,12 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<prune_record> read_tests(const std::filesystem::path& file);
 
-  /** \brief Writes `tests` to `file`, each source path made relative to the tests repository. */
+  /** \brief Writes `tests` to `file`, each source path made relative to the
+             tests repository.
+
+      \throws std::runtime_error if writing `tests` to `file` fails; `file`
+              then keeps its previous contents
+   */
   void write_tests(const project_paths& projPaths, const std::filesystem::path& file, std::span<const prune_record> tests);
 
   /** \brief Why a requested prune selects every test. */

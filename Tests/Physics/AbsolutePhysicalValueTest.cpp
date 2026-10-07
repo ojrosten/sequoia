@@ -26,6 +26,7 @@ namespace sequoia::testing
     test_absolute_quantity<si::time_interval<float>>();
     test_absolute_quantity<si::temperature<double>>();
     test_absolute_quantity<euclidean_half_line_quantity<float>>();
+    test_formatting();
   }
 
   template<class Quantity>
@@ -62,5 +63,18 @@ namespace sequoia::testing
       using inv_quantity_t = quantity<dual_of_t<units_t>, value_t>;
       coordinates_operations<inv_quantity_t>{*this}.execute();
     }
+  }
+
+  void absolute_physical_value_test::test_formatting()
+  {
+    check(equality,
+          "A unit with a symbol",
+          std::format("{}", si::mass<float>{2.5, si::units::kilogram}),
+          std::string{"2.5 kg"});
+
+    check(equality,
+          "A unit without a symbol",
+          std::format("{}", euclidean_half_line_quantity<float>{0.5, no_unit}),
+          std::string{"0.5"});
   }
 }

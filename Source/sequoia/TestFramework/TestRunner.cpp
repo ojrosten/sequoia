@@ -33,7 +33,6 @@
 #include <span>
 #include <system_error>
 #include <format>
-#include <fstream>
 #include <functional>
 #include <mutex>
 #include <utility>
@@ -68,19 +67,12 @@ namespace sequoia::testing
       return durations[1];
     }
 
-    // Written to <file>.partial and renamed over <file>, so that a process dying mid-write leaves the previous contents
     void overwrite_quietly(const fs::path& file, std::string_view text)
     {
       std::error_code selectsTheNonThrowingOverload{};
       fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
 
-      const auto partial{fs::path{file} += ".partial"};
-      {
-        std::ofstream stream{partial, std::ios_base::out | std::ios_base::trunc | std::ios_base::binary};
-        stream << text;
-      }
-
-      fs::rename(partial, file, selectsTheNonThrowingOverload);
+      replace_contents_quietly(file, text, write_mode::binary);
     }
 
     [[nodiscard]]
@@ -503,9 +495,14 @@ namespace sequoia::testing
       std::visit(
         overloaded{
           [&args,&species = species](nascent_semantics_test& nascent) {
+            if(ascii::is_empty_or_whitespace(args[1]))
+              throw std::runtime_error{
+                std::format("{}_test {} '{}': the equivalent_type names no type", species, args[0], args[1])
+              };
+
             nascent.test_type(species);
             nascent.qualified_name(args[0]);
-            nascent.add_equivalent_type(args[1]);
+            nascent.equivalent_type(args[1]);
           },
           [&args,&species = species](nascent_allocation_test& nascent) {
             nascent.test_type(species);
@@ -721,14 +718,9 @@ namespace sequoia::testing
 
         fs::create_directories(filename.parent_path());
 
-        if(std::ofstream file{filename, std::ios_base::out | std::ios_base::binary})
-        {
-          file << summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent);
-        }
-        else
-        {
-          throw std::runtime_error{report_failed_write(filename)};
-        }
+        write_to_file(filename,
+                      summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent),
+                      std::ios_base::out | std::ios_base::binary);
       }
 
       void record_materials_update_failure(const fs::path& testFile, std::string_view what)
@@ -913,7 +905,7 @@ namespace sequoia::testing
     return ready_future_of(leftoverFailure);
   }
 
-  void test_vessel::versioned_write(const fs::path& file, std::string_view text)
+  void test_to_run::versioned_write(const fs::path& file, std::string_view text)
   {
     if(!text.empty() || fs::exists(file))
     {
@@ -924,7 +916,7 @@ namespace sequoia::testing
     }
   }
 
-  test_vessel::scoped_execution_record::scoped_execution_record(std::filesystem::path file,
+  test_to_run::scoped_execution_record::scoped_execution_record(std::filesystem::path file,
                                                                 const execution_timer& executionTimer)
     : m_File{std::move(file)}
     , m_Start{std::chrono::system_clock::now()}
@@ -933,7 +925,7 @@ namespace sequoia::testing
     overwrite_quietly(m_File, started_at(m_Start));
   }
 
-  test_vessel::scoped_execution_record::~scoped_execution_record()
+  test_to_run::scoped_execution_record::~scoped_execution_record()
   {
     using std::chrono::microseconds, std::chrono::duration_cast;
     overwrite_quietly(m_File,
@@ -941,6 +933,124 @@ namespace sequoia::testing
                                   started_at(m_Start),
                                   duration_cast<microseconds>(m_ExecutionTimer.execution_duration()).count(),
                                   duration_cast<microseconds>(m_ExecutionTimer.runner_overhead()).count()));
+  }
+
+  [[nodiscard]]
+  log_summary test_to_run::execute(std::optional<std::size_t> index, discarded_materials_remover& remover)
+  {
+    execution_timer executionTimer{};
+    auto summary{execute_and_record(index, executionTimer, remover)};
+    summary.runner_overhead(executionTimer.runner_overhead());
+
+    return summary;
+  }
+
+  [[nodiscard]]
+  std::optional<removal_failure> test_to_run::extract_discarded_materials_removal_failure()
+  {
+    if(!m_DiscardedMaterialsRemovalFailureFuture.valid())
+      return std::nullopt;
+
+    try
+    {
+      return m_DiscardedMaterialsRemovalFailureFuture.get();
+    }
+    catch(const std::exception& e)
+    {
+      return removal_failure{m_Vessel.materials_paths().discarded_materials_root(), e.what()};
+    }
+    catch(...)
+    {
+      return removal_failure{m_Vessel.materials_paths().discarded_materials_root(), "Unknown exception"};
+    }
+  }
+
+  /** Returns the test's summary but for the runner's overhead. The overhead
+      includes finishing the record, and the record finishes only after this
+      function has made the summary.
+   */
+  [[nodiscard]]
+  log_summary test_to_run::execute_and_record(std::optional<std::size_t> index,
+                                              execution_timer& executionTimer,
+                                              discarded_materials_remover& remover)
+  {
+    // Also installed per test, since under MSVC each thread has its own
+    // terminate handler
+    const scoped_terminate_handler terminationReported{report_termination};
+    const scoped_execution_record record{m_ExecutionRecord.file_path(), executionTimer};
+
+    if(try_prepare_materials(remover))
+      executionTimer.time_execution([this](){ try_run_tests(); });
+
+    return write_output(executionTimer.execution_duration(), index);
+  }
+
+  void test_to_run::try_run_tests()
+  {
+    try
+    {
+      m_Vessel.run_tests();
+    }
+    catch(const std::exception& e)
+    {
+      m_Vessel.log_critical_failure("Unexpected", e.what());
+    }
+    catch(...)
+    {
+      m_Vessel.log_critical_failure("Unknown", "");
+    }
+  }
+
+  [[nodiscard]]
+  log_summary test_to_run::write_output(const log_summary::duration executionDuration,
+                                        std::optional<std::size_t> index)
+  {
+    try
+    {
+      m_Vessel.write_instability_analysis_output(index);
+      return write_versioned_output(executionDuration);
+    }
+    catch(const std::exception& e)
+    {
+      m_Vessel.log_critical_failure("Output Writing", e.what());
+    }
+    catch(...)
+    {
+      m_Vessel.log_critical_failure("Output Writing", "Unknown exception");
+    }
+
+    return m_Vessel.summarize(executionDuration);
+  }
+
+  [[nodiscard]]
+  bool test_to_run::try_prepare_materials(discarded_materials_remover& remover)
+  {
+    try
+    {
+      m_DiscardedMaterialsRemovalFailureFuture = prepare_materials(m_Vessel.materials_paths(), remover);
+      return true;
+    }
+    catch(const std::exception& e)
+    {
+      m_DiscardedMaterialsRemovalFailureFuture = {};
+      m_Vessel.log_critical_failure("Materials Preparation", e.what());
+      return false;
+    }
+  }
+
+  [[nodiscard]]
+  log_summary test_to_run::write_versioned_output(const log_summary::duration executionDuration) const
+  {
+    auto summary{m_Vessel.summarize(executionDuration)};
+
+    if(!m_Vessel.has_critical_failures())
+    {
+      const auto& diagnostics{m_Vessel.diagnostics_file_paths()};
+      versioned_write(diagnostics.false_positive_or_negative_file_path(), summary.diagnostics_output());
+      versioned_write(diagnostics.caught_exceptions_file_path(),          summary.caught_exceptions_output());
+    }
+
+    return summary;
   }
 
   //=========================================== test_runner ===========================================//
@@ -1699,7 +1809,7 @@ namespace sequoia::testing
             if(wt.optTest)
             {
               auto pathsMaker{
-                  [this](auto& test) -> test_paths {
+                  [this](const test_to_run& test) -> test_paths {
                     return {test.source_file(),
                             test.summary_file_path(),
                             test.materials_paths(),
@@ -1956,7 +2066,7 @@ namespace sequoia::testing
           [&,this](auto& wt){
             if(wt.optTest)
             {
-              wt.optTest->reset();
+              wt.optTest->reset_results();
             }
             else
             {
@@ -2060,18 +2170,18 @@ namespace sequoia::testing
       Beyond ASCII they equate names by rules of their own - case folding, and on macOS Unicode
       normalization - so a name or prefix containing anything non-ASCII is refused.
    */
-  void test_runner::register_name(std::string_view name, const fs::path& source)
+  void test_runner::throw_if_name_refused(std::string_view name, const fs::path& source) const
   {
     if(contains_non_ascii(name))
       throw std::logic_error{non_ascii_name_message(source)};
 
-    if(!m_LowerCaseTestNames.insert(ascii::to_lowercase(name)).second)
+    if(m_LowerCaseTestNames.contains(ascii::to_lowercase(name)))
       throw std::logic_error{duplication_message(name, source)};
   }
 
-  void test_runner::register_source(const fs::path& source)
+  void test_runner::throw_if_materials_unplaceable(const fs::path& source) const
   {
-    const auto prefix{ascii::to_lowercase(materials_prefix(source, proj_paths()).lexically_normal().generic_string())};
+    const auto prefix{lower_case_materials_prefix(source)};
     if(prefix.empty())
       throw std::logic_error{unplaceable_source_message(source)};
 
@@ -2085,8 +2195,8 @@ namespace sequoia::testing
     };
 
     auto nestsWithPrefix{
-      [&prefix, &isDescendantOf](const auto& admitted) {
-        return isDescendantOf(prefix, admitted.first) || isDescendantOf(admitted.first, prefix);
+      [&prefix, &isDescendantOf](const auto& registered) {
+        return isDescendantOf(prefix, registered.first) || isDescendantOf(registered.first, prefix);
       }
     };
 
@@ -2094,19 +2204,31 @@ namespace sequoia::testing
 
     if(nestedWith != m_SourcesByLowerCasePrefix.end())
       throw std::logic_error{nesting_message(source, nestedWith->second)};
-
-    m_SourcesByLowerCasePrefix.try_emplace(prefix, source);
   }
 
-  void test_runner::register_summary(std::string_view name, const test_summary_path& summary)
+  void test_runner::throw_if_summary_collides(std::string_view name, const test_summary_path& summary) const
   {
     const auto& file{summary.file_path()};
-    const auto [admitted, inserted]{
-      m_TestNamesByLowerCaseSummary.try_emplace(ascii::to_lowercase(file.generic_string()), name)
-    };
+    const auto registered{m_TestNamesByLowerCaseSummary.find(ascii::to_lowercase(file.generic_string()))};
 
-    if(!inserted)
-      throw std::runtime_error{summary_collision_message(admitted->second, name, file)};
+    if(registered != m_TestNamesByLowerCaseSummary.end())
+      throw std::runtime_error{summary_collision_message(registered->second, name, file)};
+  }
+
+  void test_runner::register_checked_test(std::string_view name,
+                                          const fs::path& source,
+                                          const test_summary_path& summary)
+  {
+    ++m_Registered;
+    m_LowerCaseTestNames.insert(ascii::to_lowercase(name));
+    m_SourcesByLowerCasePrefix.try_emplace(lower_case_materials_prefix(source), source);
+    m_TestNamesByLowerCaseSummary.try_emplace(ascii::to_lowercase(summary.file_path().generic_string()), name);
+  }
+
+  [[nodiscard]]
+  std::string test_runner::lower_case_materials_prefix(const fs::path& source) const
+  {
+    return ascii::to_lowercase(materials_prefix(source, proj_paths()).lexically_normal().generic_string());
   }
 
   [[nodiscard]]
@@ -2177,7 +2299,7 @@ namespace sequoia::testing
     const auto root{m_Suites.add_node(suite_type::npos)};
 
     // By name, so that where a registration sits in a main does not decide what the output says.
-    std::ranges::sort(tests, {}, [](const test_vessel& v){ return v.name(); });
+    std::ranges::sort(tests, {}, [](const test_to_run& t){ return t.name(); });
 
     const auto findOrAddSuite{
       [this](const suite_node_index enclosingSuiteNode, const std::string& suiteName) {
@@ -2199,16 +2321,14 @@ namespace sequoia::testing
       }
     };
 
-    for(auto& vessel : tests)
+    for(auto& test : tests)
     {
       const auto enclosingSuiteNode{
-        std::ranges::fold_left(enclosing_suites(vessel.source_file()), root, findOrAddSuite)
+        std::ranges::fold_left(enclosing_suites(test.source_file()), root, findOrAddSuite)
       };
 
-      vessel.initialize(proj_paths(), m_CMakeCache, m_RecoveryMode);
-
       m_Suites.add_node(enclosingSuiteNode,
-                        suite_node{.summary{log_summary{vessel.name()}}, .optTest{std::move(vessel)}});
+                        suite_node{.summary{log_summary{test.name()}}, .optTest{std::move(test)}});
     }
   }
 

@@ -1,2 +1,2 @@
 string_false_negative_free_diagnostics
-False Negative Checks:                    70;  Failures:  0
+False Negative Checks:                    72;  Failures:  0

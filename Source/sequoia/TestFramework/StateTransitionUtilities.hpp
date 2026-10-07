@@ -44,11 +44,11 @@ namespace sequoia::testing
   public:
     template<class Fn>
       requires std::invocable<const Fn&> && std::convertible_to<std::invoke_result_t<const Fn&>, T>
-    object_generator(Fn f)
+    constexpr object_generator(Fn f)
       : m_Fn{std::move(f)}
     {}
 
-    object_generator(T t)
+    constexpr object_generator(T t)
       requires std::movable<T>
       : m_Fn{[t{std::move(t)}]() -> const T& { return t; }}
     {}
@@ -56,20 +56,20 @@ namespace sequoia::testing
     template<class... Args>
       requires (initializable_from<T, Args...> &&
                ((sizeof...(Args) != 1) || (!std::is_same_v<T, std::remove_cvref_t<Args>> && ...)))
-    object_generator(Args&&... args)
+    constexpr object_generator(Args&&... args)
       : object_generator{T{std::forward<Args>(args)...}}
     {}
 
     template<class InitCheckFn, class... Args>
       requires (initializable_from<T, Args...> && std::invocable<InitCheckFn, std::string, T, Args...>)
-    object_generator(std::string_view message, InitCheckFn initCheckFn, const Args&... args)
+    constexpr object_generator(std::string_view message, InitCheckFn initCheckFn, const Args&... args)
       : object_generator{T{args...}}
     {
       initCheckFn(message, m_Fn(), args...);
     }
 
     [[nodiscard]]
-    decltype(auto) operator()() const { return m_Fn(); }
+    constexpr decltype(auto) operator()() const { return m_Fn(); }
   private:
     erased_function<T() const> m_Fn;
   };

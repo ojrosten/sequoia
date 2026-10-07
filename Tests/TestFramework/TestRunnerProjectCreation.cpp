@@ -8,7 +8,10 @@
 #include "TestRunnerProjectCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "Runtime/ShellCommandsTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
+
+#include "sequoia/TestFramework/ProjectCreator.hpp"
 
 #include <algorithm>
 #include <cstdlib>
@@ -32,6 +35,7 @@ namespace sequoia::testing
     test_exceptions();
     test_project_creation();
     test_init_failures();
+    test_ide_launch_commands();
   }
 
   void test_runner_project_creation::test_exceptions()
@@ -145,10 +149,7 @@ namespace sequoia::testing
 
       check(equality, "Project creation return code", tr.execute(), return_code::success);
 
-      if(std::ofstream file{fake_project() / "output" / "io.txt"})
-      {
-        file << outputStream.rdbuf();
-      }
+      write_to_file(fake_project() / "output" / "io.txt", outputStream.str(), std::ios_base::out);
 
       check(equivalence, "", hostDir, predictive_materials() /= "GeneratedProject");
       check(equivalence, "", fake_project(), predictive_materials() /= "FakeProject");
@@ -267,5 +268,80 @@ namespace sequoia::testing
       check("The failure reported is the configure and build step's",
             message.starts_with("Configuring and building the new project failed"));
     }
+  }
+
+  /** A parent project built by Visual Studio opens the IDE, if the
+      installation recorded in its cache has a `devenv.exe`. A parent
+      project built by any other generator opens nothing.
+   */
+  void test_runner_project_creation::test_ide_launch_commands()
+  {
+    using runtime::shell_command;
+    using runtime::quote_for_shell;
+
+    const auto newProjectRoot{working_materials() /= "GeneratedProject"};
+    const auto newProjectBuildDir{newProjectRoot / "build/CMade"};
+
+    const transient_directory visualStudioBuild{fake_project() / "build/VisualStudio"},
+                              ninjaBuild{fake_project() / "build/Ninja"};
+
+    // CMake records the installation with forward slashes, on every platform
+    const auto installation{(visualStudioBuild.path() / "Installation").generic_string()};
+
+    auto writeFakeBuild{
+      [&installation](const fs::path& dir, std::string_view generator) {
+        fs::create_directories(dir);
+        write_to_file(dir / "CMakeCache.txt",
+                      std::format("CMAKE_GENERATOR:INTERNAL={}\n"
+                                  "CMAKE_GENERATOR_INSTANCE:INTERNAL={}\n",
+                                  generator,
+                                  installation),
+                      std::ios_base::out);
+        write_to_file(dir / "FakeExe.txt", "", std::ios_base::out);
+      }
+    };
+
+    auto launchFrom{
+      [this, &newProjectBuildDir](const fs::path& parentBuildDir, const fs::path& root) {
+        commandline_arguments args{{(parentBuildDir / "FakeExe.txt").generic_string()}};
+        return launch_cmd(project_paths{args.size(), args.get(), make_project_paths()}, root, newProjectBuildDir);
+      }
+    };
+
+    writeFakeBuild(visualStudioBuild.path(), "Visual Studio 17 2022");
+
+    // A Ninja build records an empty installation. This one names the
+    // Visual Studio installation, so only the generator can refuse it.
+    writeFakeBuild(ninjaBuild.path(), "Ninja");
+
+    check(equality,
+          "Visual Studio, without devenv.exe",
+          launchFrom(visualStudioBuild.path(), newProjectRoot),
+          shell_command{});
+
+    const auto devenv{fs::path{installation} / "Common7/IDE/devenv.exe"};
+    fs::create_directories(devenv.parent_path());
+    write_to_file(devenv, "", std::ios_base::out);
+
+    const auto solution{newProjectBuildDir / "GeneratedProjectTests.sln"};
+
+    check(equality,
+          "Visual Studio, with devenv.exe",
+          launchFrom(visualStudioBuild.path(), newProjectRoot),
+          shell_command{"Attempting to open IDE...",
+                        std::format("{} /Run {}",
+                                    quote_for_shell(devenv.string()),
+                                    quote_for_shell(solution.string())),
+                        ""});
+
+    check(equality,
+          "Ninja, with devenv.exe",
+          launchFrom(ninjaBuild.path(), newProjectRoot),
+          shell_command{});
+
+    check(equality,
+          "Visual Studio, with no project to open",
+          launchFrom(visualStudioBuild.path(), ""),
+          shell_command{});
   }
 }

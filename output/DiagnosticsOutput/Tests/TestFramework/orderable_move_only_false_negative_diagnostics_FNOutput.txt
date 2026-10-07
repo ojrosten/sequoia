@@ -18,7 +18,9 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
 
-  Prerequisite - for ordered semantics, it is assumed that y > x
+  Prerequisite - for ordered semantics, it is assumed that x < y
+  x: 2 
+  y: 1 
   [bool]
   operator== returned false
   Obtained : false
@@ -32,7 +34,9 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
 
-  Prerequisite - for ordered semantics, it is assumed that y > x
+  Prerequisite - for ordered semantics, it is assumed that x > y
+  x: 1 
+  y: 2 
   [bool]
   operator== returned false
   Obtained : false
@@ -430,7 +434,9 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
 
-  Prerequisite - for ordered semantics, it is assumed that y > x
+  Prerequisite - for ordered semantics, it is assumed that x < y
+  x: 2 
+  y: 1 
   [bool]
   operator== returned false
   Obtained : false
@@ -444,7 +450,9 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
 
-  Prerequisite - for ordered semantics, it is assumed that y > x
+  Prerequisite - for ordered semantics, it is assumed that x > y
+  x: 1 
+  y: 2 
   [bool]
   operator== returned false
   Obtained : false

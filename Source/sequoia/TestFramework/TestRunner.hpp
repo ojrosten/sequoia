@@ -198,17 +198,15 @@ namespace sequoia::testing
   [[nodiscard]]
   active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
 
+  /** \brief A type-erased test. */
   class test_vessel
   {
   public:
-    template<class Test>
-      requires (!std::is_same_v<Test, test_vessel> && concrete_test<Test>)
-    test_vessel(Test&& t)
+    template<concrete_test Test>
+    explicit test_vessel(Test&& t)
       : m_pTest{std::make_unique<essence<Test>>(std::forward<Test>(t))}
-    {
-      if constexpr(!is_parallelizable_v<Test>)
-        m_Parallelizable = parallelizable_candidate::no;
-    }
+      , m_Parallelizable{is_parallelizable_v<Test> ? parallelizable_candidate::yes : parallelizable_candidate::no}
+    {}
 
     test_vessel(const test_vessel&)     = delete;
     test_vessel(test_vessel&&) noexcept = default;
@@ -220,12 +218,6 @@ namespace sequoia::testing
     std::string_view name() const noexcept
     {
       return m_pTest->name();
-    }
-
-    [[nodiscard]]
-    const test_summary_path& summary_file_path() const noexcept
-    {
-      return m_pTest->summary_file_path();
     }
 
     [[nodiscard]]
@@ -241,16 +233,193 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    const individual_diagnostics_paths& diagnostics_file_paths() const noexcept
+    {
+      return m_pTest->diagnostics_file_paths();
+    }
+
+    [[nodiscard]]
+    bool has_critical_failures() const noexcept
+    {
+      return m_pTest->has_critical_failures();
+    }
+
+    [[nodiscard]]
     bool parallelizable() const noexcept
     {
       return m_Parallelizable == parallelizable_candidate::yes;
     }
 
-    [[nodiscard]]
-    log_summary execute(std::optional<std::size_t> index, discarded_materials_remover& remover)
+    void run_tests()
     {
-      return m_pTest->execute(index, remover);
+      m_pTest->run_tests();
     }
+
+    void reset_results()
+    {
+      m_pTest->reset_results();
+    }
+  private:
+    friend class test_to_run;
+
+    [[nodiscard]]
+    log_summary summarize(log_summary::duration delta) const
+    {
+      return m_pTest->summarize(delta);
+    }
+
+    void log_critical_failure(std::string_view tag, std::string_view what)
+    {
+      m_pTest->log_critical_failure(tag, what);
+    }
+
+    void write_instability_analysis_output(std::optional<std::size_t> index) const
+    {
+      m_pTest->write_instability_analysis_output(index);
+    }
+
+    struct soul
+    {
+      virtual ~soul() = default;
+
+      virtual std::string_view name() const noexcept                                      = 0;
+      virtual std::filesystem::path source_file() const                                   = 0;
+      virtual const individual_materials_paths& materials_paths() const noexcept          = 0;
+      virtual const individual_diagnostics_paths& diagnostics_file_paths() const noexcept = 0;
+      virtual log_summary summarize(log_summary::duration delta) const                    = 0;
+      virtual bool has_critical_failures() const noexcept                                 = 0;
+
+      virtual void run_tests()                                                               = 0;
+      virtual void log_critical_failure(std::string_view tag, std::string_view what)         = 0;
+      virtual void write_instability_analysis_output(std::optional<std::size_t> index) const = 0;
+      virtual void reset_results()                                                           = 0;
+    };
+
+    template<concrete_test Test>
+    class essence final : public soul
+    {
+    public:
+      explicit essence(Test&& t)
+        : m_Test{std::forward<Test>(t)}
+      {}
+
+      [[nodiscard]]
+      std::string_view name() const noexcept final
+      {
+        return st_Name;
+      }
+
+      [[nodiscard]]
+      std::filesystem::path source_file() const final
+      {
+        return Test::source_file();
+      }
+
+      [[nodiscard]]
+      const individual_materials_paths& materials_paths() const noexcept final
+      {
+        return m_Test.materials_paths();
+      }
+
+      [[nodiscard]]
+      const individual_diagnostics_paths& diagnostics_file_paths() const noexcept final
+      {
+        return m_Test.diagnostics_file_paths();
+      }
+
+      [[nodiscard]]
+      log_summary summarize(log_summary::duration delta) const final
+      {
+        return m_Test.summarize(delta);
+      }
+
+      [[nodiscard]]
+      bool has_critical_failures() const noexcept final
+      {
+        return m_Test.has_critical_failures();
+      }
+
+      void run_tests() final
+      {
+        m_Test.run_tests();
+      }
+
+      void log_critical_failure(std::string_view tag, std::string_view what) final
+      {
+        m_Test.log_critical_failure(Test::source_file(), tag, what);
+      }
+
+      void write_instability_analysis_output(std::optional<std::size_t> index) const final
+      {
+        m_Test.write_instability_analysis_output(Test::source_file(), index);
+      }
+
+      void reset_results() final
+      {
+        m_Test.reset_results();
+      }
+    private:
+      static constexpr std::string_view st_Name{test_name<Test>()};
+
+      Test m_Test;
+    };
+
+    enum class parallelizable_candidate : bool { no, yes };
+
+    std::unique_ptr<soul> m_pTest{};
+    parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
+  };
+
+  /** \brief A test to run, with the paths of the files which the runner
+             writes for it.
+   */
+  class test_to_run
+  {
+  public:
+    test_to_run(test_vessel vessel, test_summary_path summaryFile, test_execution_record_path executionRecord)
+      : m_Vessel{std::move(vessel)}
+      , m_SummaryFile{std::move(summaryFile)}
+      , m_ExecutionRecord{std::move(executionRecord)}
+    {}
+
+    test_to_run(const test_to_run&)     = delete;
+    test_to_run(test_to_run&&) noexcept = default;
+
+    test_to_run& operator=(const test_to_run&)     = delete;
+    test_to_run& operator=(test_to_run&&) noexcept = default;
+
+    [[nodiscard]]
+    std::string_view name() const noexcept
+    {
+      return m_Vessel.name();
+    }
+
+    [[nodiscard]]
+    std::filesystem::path source_file() const
+    {
+      return m_Vessel.source_file();
+    }
+
+    [[nodiscard]]
+    const test_summary_path& summary_file_path() const noexcept
+    {
+      return m_SummaryFile;
+    }
+
+    [[nodiscard]]
+    const individual_materials_paths& materials_paths() const noexcept
+    {
+      return m_Vessel.materials_paths();
+    }
+
+    [[nodiscard]]
+    bool parallelizable() const noexcept
+    {
+      return m_Vessel.parallelizable();
+    }
+
+    [[nodiscard]]
+    log_summary execute(std::optional<std::size_t> index, discarded_materials_remover& remover);
 
     /** \brief Extracts the failure of the removal of the discarded materials
                root which the last `execute` enqueued, waiting for the removal
@@ -261,29 +430,20 @@ namespace sequoia::testing
         removal which threw is a failure, its message the exception's.
      */
     [[nodiscard]]
-    std::optional<removal_failure> extract_discarded_materials_removal_failure()
-    {
-      return m_pTest->extract_discarded_materials_removal_failure();
-    }
+    std::optional<removal_failure> extract_discarded_materials_removal_failure();
 
-    void reset()
+    void reset_results()
     {
-      m_pTest->reset();
-    }
-
-    /** \brief Replaces the held test with one which knows where its files are. */
-
-    void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode)
-    {
-      m_pTest->initialize(projPaths, cache, mode);
+      m_Vessel.reset_results();
     }
   private:
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
 
     /** \brief Times a test's execution apart from the runner's overhead.
 
-        The execution duration is the time spent in the calls to `time_execution`. The runner's overhead is the rest
-        of the time since construction.
+        The execution duration is the time spent in the calls to
+        `time_execution`. The runner's overhead is the rest of the time since
+        construction.
      */
     class execution_timer
     {
@@ -306,10 +466,13 @@ namespace sequoia::testing
       log_summary::duration m_ExecutionDuration{};
     };
 
-    /** \brief An RAII wrapper to write a test's execution record: when the test started and, on destruction, its
-               execution duration and the runner's overhead so far, as `executionTimer` gives them.
+    /** \brief An RAII wrapper to write a test's execution record: when the
+               test started and, on destruction, its execution duration and
+               the runner's overhead so far, as `executionTimer` gives them.
 
-        A record which cannot be written is skipped rather than reported; an allocation failure is not caught.
+        A record which cannot be written is skipped rather than reported. The
+        file then keeps the last record the runner managed to write, which
+        may be an earlier run's. An allocation failure is not caught.
      */
     class [[nodiscard]] scoped_execution_record
     {
@@ -326,201 +489,26 @@ namespace sequoia::testing
       const execution_timer& m_ExecutionTimer;
     };
 
-    struct soul
-    {
-      virtual ~soul() = default;
+    [[nodiscard]]
+    log_summary execute_and_record(std::optional<std::size_t> index,
+                                   execution_timer& executionTimer,
+                                   discarded_materials_remover& remover);
 
-      virtual std::string_view name() const noexcept                      = 0;
-      virtual const test_summary_path& summary_file_path() const noexcept = 0;
-      virtual std::filesystem::path source_file() const                   = 0;
-      virtual const individual_materials_paths& materials_paths() const noexcept = 0;
+    void try_run_tests();
 
-      virtual log_summary execute(std::optional<std::size_t> index, discarded_materials_remover& remover) = 0;
-      virtual std::optional<removal_failure> extract_discarded_materials_removal_failure() = 0;
-      virtual void reset() = 0;
-      virtual void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode) = 0;
-    };
+    [[nodiscard]]
+    log_summary write_output(log_summary::duration executionDuration, std::optional<std::size_t> index);
 
-    template<concrete_test Test>
-    class essence final : public soul
-    {
-    public:
-      essence(Test&& t) : m_Test{std::forward<Test>(t)}
-      {}
+    [[nodiscard]]
+    bool try_prepare_materials(discarded_materials_remover& remover);
 
-      [[nodiscard]]
-      std::filesystem::path source_file() const final
-      {
-        return Test::source_file();
-      }
+    [[nodiscard]]
+    log_summary write_versioned_output(log_summary::duration executionDuration) const;
 
-      [[nodiscard]]
-      std::string_view name() const noexcept final
-      {
-        return m_Name;
-      }
-
-      [[nodiscard]]
-      const test_summary_path& summary_file_path() const noexcept final
-      {
-        return m_Test.summary_file_path();
-      }
-
-      [[nodiscard]]
-      const individual_materials_paths& materials_paths() const noexcept final
-      {
-        return m_Test.materials_paths();
-      }
-
-      [[nodiscard]]
-      log_summary execute(std::optional<std::size_t> index, discarded_materials_remover& remover) final
-      {
-        execution_timer executionTimer{};
-        auto summary{execute_and_record(index, executionTimer, remover)};
-        summary.runner_overhead(executionTimer.runner_overhead());
-
-        return summary;
-      }
-
-      [[nodiscard]]
-      std::optional<removal_failure> extract_discarded_materials_removal_failure() final
-      {
-        if(!m_DiscardedMaterialsRemovalFailureFuture.valid())
-          return std::nullopt;
-
-        try
-        {
-          return m_DiscardedMaterialsRemovalFailureFuture.get();
-        }
-        catch(const std::exception& e)
-        {
-          return removal_failure{m_Test.materials_paths().discarded_materials_root(), e.what()};
-        }
-        catch(...)
-        {
-          return removal_failure{m_Test.materials_paths().discarded_materials_root(), "Unknown exception"};
-        }
-      }
-
-      void reset() final
-      {
-        m_Test.reset_results();
-      }
-
-      void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode) final
-      {
-        const auto source{Test::source_file()};
-
-        m_Test = Test{m_Name,
-                      source,
-                      projPaths,
-                      individual_materials_paths{
-                        source,
-                        m_Name,
-                        projPaths,
-                        get_discriminator<materials_discriminator_probe, Test>(cache)
-                      },
-                      make_active_recovery_paths(mode, projPaths),
-                      get_discriminator<output_discriminator_probe, Test>(cache),
-                      get_discriminator<summary_discriminator_probe, Test>(cache)};
-
-        m_ExecutionRecord = test_execution_record_path{source, m_Name, projPaths};
-      }
-    private:
-      static constexpr std::string_view m_Name{test_name<Test>()};
-
-      /** Returns the test's summary but for the runner's overhead. The overhead includes finishing the record, and the
-          record finishes only after this function has made the summary.
-       */
-      [[nodiscard]]
-      log_summary execute_and_record(std::optional<std::size_t> index,
-                                     execution_timer& executionTimer,
-                                     discarded_materials_remover& remover)
-      {
-        // Also installed per test, since under MSVC each thread has its own terminate handler
-        const scoped_terminate_handler terminationReported{report_termination};
-        const scoped_execution_record record{m_ExecutionRecord.file_path(), executionTimer};
-
-        if(try_prepare_materials(remover))
-          executionTimer.time_execution([this](){ try_run_tests(); });
-
-        return write_output(executionTimer.execution_duration(), index);
-      }
-
-      void try_run_tests()
-      {
-        try
-        {
-          m_Test.run_tests();
-        }
-        catch(const std::exception& e)
-        {
-          m_Test.log_critical_failure(m_Test.source_file(), "Unexpected", e.what());
-        }
-        catch(...)
-        {
-          m_Test.log_critical_failure(m_Test.source_file(), "Unknown", "");
-        }
-      }
-
-      [[nodiscard]]
-      log_summary write_output(const log_summary::duration executionDuration, std::optional<std::size_t> index)
-      {
-        try
-        {
-          m_Test.write_instability_analysis_output(m_Test.source_file(), index);
-          return write_versioned_output(executionDuration);
-        }
-        catch(const std::exception& e)
-        {
-          m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", e.what());
-        }
-        catch(...)
-        {
-          m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", "Unknown exception");
-        }
-
-        return m_Test.summarize(executionDuration);
-      }
-
-      [[nodiscard]]
-      bool try_prepare_materials(discarded_materials_remover& remover)
-      {
-        try
-        {
-          m_DiscardedMaterialsRemovalFailureFuture = prepare_materials(m_Test.materials_paths(), remover);
-          return true;
-        }
-        catch(const std::exception& e)
-        {
-          m_DiscardedMaterialsRemovalFailureFuture = {};
-          m_Test.log_critical_failure(m_Test.source_file(), "Materials Preparation", e.what());
-          return false;
-        }
-      }
-
-      log_summary write_versioned_output(const log_summary::duration executionDuration) const
-      {
-        auto summary{m_Test.summarize(executionDuration)};
-
-        if(!m_Test.has_critical_failures())
-        {
-          versioned_write(m_Test.diagnostics_file_paths().false_positive_or_negative_file_path(), summary.diagnostics_output());
-          versioned_write(m_Test.diagnostics_file_paths().caught_exceptions_file_path(), summary.caught_exceptions_output());
-        }
-
-        return summary;
-      }
-
-      Test m_Test;
-      test_execution_record_path m_ExecutionRecord{};
-      discarded_materials_remover::future_type m_DiscardedMaterialsRemovalFailureFuture{};
-    };
-
-    enum class parallelizable_candidate : bool { no, yes };
-
-    std::unique_ptr<soul> m_pTest{};
-    parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
+    test_vessel m_Vessel;
+    test_summary_path m_SummaryFile{};
+    test_execution_record_path m_ExecutionRecord{};
+    discarded_materials_remover::future_type m_DiscardedMaterialsRemovalFailureFuture{};
   };
 
   /** \brief Calls the hook of `T` that `Probe` probes for.
@@ -541,6 +529,32 @@ namespace sequoia::testing
       return Probe<T>::discriminator(cache);
     else
       return null_discriminator;
+  }
+
+  /** \brief Makes a test of type `T` for the project at `projPaths`.
+
+      The test's discriminators are read from `cache`, and `mode` chooses its
+      recovery files. An exception which a discriminator hook of `T` throws
+      propagates.
+   */
+  template<concrete_test T>
+  [[nodiscard]]
+  T make_test(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode)
+  {
+    constexpr std::string_view name{test_name<T>()};
+    const auto source{T::source_file()};
+
+    return T{name,
+             source,
+             projPaths,
+             individual_materials_paths{
+               source,
+               name,
+               projPaths,
+               get_discriminator<materials_discriminator_probe, T>(cache)
+             },
+             make_active_recovery_paths(mode, projPaths),
+             get_discriminator<output_discriminator_probe, T>(cache)};
   }
 
   /** \brief Consumes command-line arguments and holds all test suites.
@@ -568,21 +582,37 @@ namespace sequoia::testing
     template<concrete_test T>
     void register_test()
     {
-      ++m_Registered;
-
       constexpr std::string_view name{test_name<T>()};
-      register_name(name, T::source_file());
-      register_source(T::source_file());
-      register_summary(name,
-                       test_summary_path{T::source_file(),
-                                         name,
-                                         m_ProjPaths,
-                                         get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)});
-
       constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
+      const auto source{T::source_file()};
 
-      if(m_Filter(T::source_file(), enclosing_suites(T::source_file()), isPerformanceTest))
-        m_Tests.emplace_back(T{});
+      // Every check runs, and every hook returns, before the registration is
+      // recorded. So a registration which throws leaves no record behind,
+      // though the filter may have noted that the test matched a selection.
+      throw_if_name_refused(name, source);
+      throw_if_materials_unplaceable(source);
+
+      const test_summary_path summaryFile{source,
+                                          name,
+                                          m_ProjPaths,
+                                          get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)};
+      throw_if_summary_collides(name, summaryFile);
+
+      // Only a run builds the test, so that neither `create`, `init` nor
+      // `--help` calls its materials or output hooks.
+      const bool toRun{m_Filter(source, enclosing_suites(source), isPerformanceTest) && in_mode(runner_mode::test)};
+      auto testToRun{
+        toRun ? std::optional<test_to_run>{std::in_place,
+                                           test_vessel{make_test<T>(m_ProjPaths, m_CMakeCache, m_RecoveryMode)},
+                                           summaryFile,
+                                           test_execution_record_path{source, name, m_ProjPaths}}
+              : std::nullopt
+      };
+
+      register_checked_test(name, source, summaryFile);
+
+      if(testToRun)
+        m_Tests.push_back(std::move(*testToRun));
     }
 
     /** \brief Runs the tests, as the command line asked.
@@ -744,7 +774,7 @@ namespace sequoia::testing
     struct suite_node
     {
       log_summary summary{};
-      std::optional<test_vessel> optTest{};
+      std::optional<test_to_run> optTest{};
       std::thread::id executing_thread_id{};
     };
 
@@ -758,7 +788,7 @@ namespace sequoia::testing
     std::ostream*    m_Stream;
 
     suite_type m_Suites{};
-    std::vector<test_vessel> m_Tests{};
+    std::vector<test_to_run> m_Tests{};
     std::set<std::string> m_LowerCaseTestNames{};
     std::map<std::string, std::filesystem::path> m_SourcesByLowerCasePrefix{};
     std::map<std::string, std::string_view> m_TestNamesByLowerCaseSummary{};
@@ -894,28 +924,44 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string duplication_message(std::string_view testName, const std::filesystem::path& source);
 
-    /** \brief Admits the name of a test being registered.
+    /** \brief Checks the name of a test being registered.
 
         \throws std::logic_error naming `source`, if `name` contains anything non-ASCII
-        \throws std::logic_error naming both, if a test of the same name, ignoring case, was admitted
+        \throws std::logic_error naming both, if a test of the same name, ignoring case, was registered
      */
-    void register_name(std::string_view name, const std::filesystem::path& source);
+    void throw_if_name_refused(std::string_view name, const std::filesystem::path& source) const;
 
-    /** \brief Admits the source of a test being registered.
+    /** \brief Checks that the materials of a test whose source is `source`
+               can be placed in a directory of their own.
 
-        \throws std::logic_error naming `source`, if its materials prefix is empty
-        \throws std::logic_error naming `source`, if its materials prefix contains anything non-ASCII
-        \throws std::logic_error naming both sources, if the materials prefix of `source` lies beneath
-        that of a source already admitted, or has one beneath it, ignoring ASCII case
+        \throws std::logic_error naming `source`, if its materials prefix is
+        empty
+        \throws std::logic_error naming `source`, if its materials prefix
+        contains anything non-ASCII
+        \throws std::logic_error naming both sources, if the materials prefix
+        of `source` lies within that of a source already registered, or has
+        one within it, ignoring ASCII case
      */
-    void register_source(const std::filesystem::path& source);
+    void throw_if_materials_unplaceable(const std::filesystem::path& source) const;
 
-    /** \brief Admits the summary file of a test being registered.
+    /** \brief Checks that the summary file of a test being registered is no
+               registered test's.
 
-        \throws std::runtime_error naming both tests and the file, if the file of `summary` is that of a test
-        already admitted, ignoring ASCII case
+        \throws std::runtime_error naming both tests and the file, if the file
+        of `summary` is that of a test already registered, ignoring ASCII case
      */
-    void register_summary(std::string_view name, const test_summary_path& summary);
+    void throw_if_summary_collides(std::string_view name, const test_summary_path& summary) const;
+
+    /** \brief Records a test which has passed `throw_if_name_refused`,
+               `throw_if_materials_unplaceable` and
+               `throw_if_summary_collides`.
+     */
+    void register_checked_test(std::string_view name,
+                               const std::filesystem::path& source,
+                               const test_summary_path& summary);
+
+    [[nodiscard]]
+    std::string lower_case_materials_prefix(const std::filesystem::path& source) const;
 
     [[nodiscard]]
     static std::string nesting_message(const std::filesystem::path& source, const std::filesystem::path& nestedWith);

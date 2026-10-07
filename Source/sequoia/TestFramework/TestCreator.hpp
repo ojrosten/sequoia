@@ -24,8 +24,15 @@
 
 namespace sequoia::testing
 {
+  /** \brief Whether to append `&` to `spelling`, which spells a parameter's
+             type.
+
+      The function reads only the text of `spelling`; it looks up no type.
+
+      \throws std::logic_error if `ascii::is_empty_or_whitespace(spelling)`.
+   */
   [[nodiscard]]
-  bool handle_as_ref(std::string_view type);
+  bool needs_reference_suffix(std::string_view spelling);
 
   struct template_spec
   {
@@ -323,7 +330,7 @@ namespace sequoia::testing
 
     void qualified_name(std::string name) { m_QualifiedName = std::move(name); }
 
-    void add_equivalent_type(std::string name) { m_EquivalentTypes.emplace_back(std::move(name)); }
+    void equivalent_type(std::string name) { m_EquivalentType = std::move(name); }
 
     void finalize();
 
@@ -347,7 +354,7 @@ namespace sequoia::testing
 
     template_data m_TemplateData{};
 
-    std::vector<std::string> m_EquivalentTypes{};
+    std::string m_EquivalentType{};
 
     void transform_file(std::string& text) const;
   };

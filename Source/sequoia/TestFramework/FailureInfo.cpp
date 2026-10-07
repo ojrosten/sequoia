@@ -126,11 +126,15 @@ namespace sequoia::testing
     }
   }
 
+  [[nodiscard]]
+  std::string to_string(const failure_info& info)
+  {
+    return std::format("check: {}\nlength: {}\n{}\n", info.check_index, info.message.size(), info.message);
+  }
+
   std::ostream& operator<<(std::ostream& s, const failure_info& info)
   {
-    return s << "check: "  << info.check_index    << '\n'
-             << "length: " << info.message.size() << '\n'
-             << info.message << '\n';
+    return s << to_string(info);
   }
 
   std::istream& operator>>(std::istream& s, failure_info& info)
@@ -149,10 +153,21 @@ namespace sequoia::testing
     return s;
   }
 
+  [[nodiscard]]
+  std::string to_string(const failure_output& output)
+  {
+    auto infoText{[](const failure_info& info) { return to_string(info); }};
+
+    return
+        output
+      | std::views::transform(infoText)
+      | std::views::join
+      | std::ranges::to<std::string>();
+  }
+
   std::ostream& operator<<(std::ostream& s, const failure_output& output)
   {
-    std::ranges::copy(output, std::ostream_iterator<failure_info>{s});
-    return s;
+    return s << to_string(output);
   }
 
   std::istream& operator>>(std::istream& s, failure_output& output)
