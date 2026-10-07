@@ -9,9 +9,13 @@
 # and each mutant at least one.
 #
 # Each control is a claim the script exists to keep:
-#   - arguments without a command after `--`, and a deadline which is not a
-#     positive whole number, are refused on standard error before the command
-#     runs;
+#   - the script refuses, on standard error and before the command runs:
+#       - arguments without a command after `--`;
+#       - a deadline which is not a positive whole number;
+#       - a snapshot file which exists, or whose directory is missing, is not
+#         a directory, or is read-only;
+#       - a TMPDIR in which the script cannot create its temporary directory;
+#   - the script's temporary directory is under TMPDIR, and is removed;
 #   - the command's exit status is the script's, zero or not, before the
 #     deadline and after it;
 #   - the command reads the script's standard input and writes to its standard
@@ -85,15 +89,16 @@ check() { # check <name> <yes|no> <pattern> <file>
 check_status() { # check_status <name> <expected> <seconds> <command>...
   local description=$1 expected=$2 seconds=$3
   shift 3
+  rm -f "$work/status.txt"
   bash "$script" "$seconds" "$work/status.txt" NoSuchProcess -- "$@"
   local got=$?
   [ "$got" -eq "$expected" ] || fail "$description (expected status $expected, got $got)"
 }
 
-check_refusal() { # check_refusal <name> <argument>...
-  local description=$1
-  shift
-  bash "$script" "$@" > "$work/refusal.out" 2> "$work/refusal.err"
+check_refusal() { # check_refusal <name> <TMPDIR> <argument>...
+  local description=$1 temporary=$2
+  shift 2
+  TMPDIR=$temporary bash "$script" "$@" > "$work/refusal.out" 2> "$work/refusal.err"
   local got=$?
   [ "$got" -eq 2 ]             || fail "$description: not refused (status $got)"
   [ ! -e "$work/ran" ]         || fail "$description: refused after running the command"
@@ -205,11 +210,28 @@ run_controls() {
   work=$(mktemp -d "$tmp/controls.XXXXXX")
 
   # Refusals.
-  check_refusal "no command"   60 "$work/r.txt" "$name" --
-  check_refusal "no separator" 60 "$work/r.txt" "$name" touch "$work/ran"
+  echo "an earlier snapshot" > "$work/earlier.txt"
+  mkdir "$work/read-only"
+  chmod 555 "$work/read-only"
+  check_refusal "no command"                "$work"         60 "$work/r.txt"             "$name" --
+  check_refusal "no separator"              "$work"         60 "$work/r.txt"             "$name" touch "$work/ran"
   for deadline in abc 1.5 0 -600 08 ""; do
-    check_refusal "a deadline of '$deadline'" "$deadline" "$work/r.txt" "$name" -- touch "$work/ran"
+    check_refusal "a deadline of '$deadline'" "$work" "$deadline" "$work/r.txt" "$name" -- touch "$work/ran"
   done
+  check_refusal "an existing snapshot file" "$work"         60 "$work/earlier.txt"       "$name" -- touch "$work/ran"
+  check_refusal "a missing directory"       "$work"         60 "$work/missing/r.txt"     "$name" -- touch "$work/ran"
+  check_refusal "a read-only directory"     "$work"         60 "$work/read-only/r.txt"   "$name" -- touch "$work/ran"
+  check_refusal "a file for a directory"    "$work"         60 "$work/earlier.txt/r.txt" "$name" -- touch "$work/ran"
+  check_refusal "a missing TMPDIR"          "$work/missing" 60 "$work/r.txt"             "$name" -- touch "$work/ran"
+  check "an existing snapshot file is left alone" yes "^an earlier snapshot$" "$work/earlier.txt"
+  chmod 755 "$work/read-only"
+
+  # The temporary directory, seen by the command and gone afterwards.
+  mkdir "$work/temporary"
+  TMPDIR=$work/temporary bash "$script" 60 "$work/temporary.txt" "$name" -- ls "$work/temporary" \
+    > "$work/temporary.out"
+  check "the temporary directory is under TMPDIR" yes "^snapshot_at_deadline\." "$work/temporary.out"
+  [ -z "$(ls "$work/temporary")" ] || fail "the temporary directory was left behind"
 
   # The exit status passes through.
   check_status "success before the deadline"  0 30 true
@@ -460,6 +482,24 @@ mutant any snapshot_at_deadline.sh 'Linux: one thread, sudo' \
 mutant any snapshot_at_deadline.sh 'Linux: one thread, no sudo' \
   $'else\n        gdb -p "$1" -batch -ex "thread apply all bt"' \
   $'else\n        gdb -p "$1" -batch -ex "bt"'
+mutant any snapshot_at_deadline.sh 'an existing snapshot accepted' \
+  '[ -e "$snapshot" ] || ' \
+  ''
+mutant any snapshot_at_deadline.sh 'a file accepted as a directory' \
+  '[ ! -d "$snapshot_directory" ] || ' \
+  ''
+mutant any snapshot_at_deadline.sh 'a read-only directory accepted' \
+  ' || [ ! -w "$snapshot_directory" ]' \
+  ''
+mutant macos snapshot_at_deadline.sh 'TMPDIR ignored' \
+  'mktemp -d "${TMPDIR:-/tmp}/snapshot_at_deadline.XXXXXX"' \
+  'mktemp -d'
+mutant any snapshot_at_deadline.sh 'no temporary directory accepted' \
+  '.XXXXXX") || exit 2' \
+  '.XXXXXX")'
+mutant any snapshot_at_deadline.sh 'the temporary directory kept' \
+  'rm -rf "$flag_dir"' \
+  ':'
 mutant macos snapshot_at_deadline.sh 'macOS: sampled to a file' \
   ' -file /dev/stdout' \
   ''

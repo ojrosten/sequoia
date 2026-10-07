@@ -11,10 +11,13 @@
 # it before returning, so a caller never reads half of one. A command which
 # ends more than a second before the deadline leaves no file.
 #
-# <seconds> is a positive whole number with no leading zero. The script refuses
-# arguments of any other form with status 2, before running <command>. On
-# Linux, a process's name is the first fifteen characters of its executable's
-# name, so a longer <executable name> matches no process.
+# <seconds> is a positive whole number with no leading zero. <snapshot file>
+# must not exist, and its directory must be one the script can write to. The
+# script refuses arguments of any other form with status 2, before running
+# <command>. The script refuses the same way if it cannot create a temporary
+# directory under TMPDIR. On Linux, a process's name is the first fifteen
+# characters of its executable's name, so a longer <executable name> matches
+# no process.
 #
 # The script exists for a suite which hangs. A step timeout kills such a suite
 # without a word, and a suite which reports only at the end of a run leaves
@@ -43,6 +46,14 @@ shift 4
 # arithmetic read the deadline as octal.
 if ! [[ $seconds =~ ^[1-9][0-9]*$ ]]; then
   echo "$0: <seconds> must be a positive whole number with no leading zero, not '$seconds'" >&2
+  exit 2
+fi
+
+# The watcher's errors go nowhere, so a snapshot it cannot write would be lost
+# in silence. A file already there would read as this run's snapshot.
+snapshot_directory=$(dirname "$snapshot")
+if [ -e "$snapshot" ] || [ ! -d "$snapshot_directory" ] || [ ! -w "$snapshot_directory" ]; then
+  echo "$0: <snapshot file> must not exist, in a writable directory: '$snapshot'" >&2
   exit 2
 fi
 
@@ -147,7 +158,9 @@ watch_for_deadline() {
   take_snapshot > "$snapshot" 2>&1
 }
 
-flag_dir=$(mktemp -d)
+# The template puts the directory under TMPDIR, which macOS's `mktemp -d`
+# ignores when given no template.
+flag_dir=$(mktemp -d "${TMPDIR:-/tmp}/snapshot_at_deadline.XXXXXX") || exit 2
 finished="$flag_dir/finished"
 
 watch_for_deadline < /dev/null > /dev/null 2>&1 &
