@@ -40,10 +40,10 @@ jobs:
             os: ubuntu-latest
             packages: gdb
             selftests: compile_time_report read_settled_jobs snapshot_at_deadline
-          # report_crashes' controls run on macOS alone, since the system writes
-          # the crash reports they read. No control runs its Linux or Windows
-          # branch: tests.yml's control crash checks that a dump appears, and
-          # never runs the script on it.
+          # report_crashes' selftest runs on macOS alone. The system there writes
+          # the crash reports its macOS controls read, and its Linux and Windows
+          # controls run through stand-ins for uname, file and gdb. One of those
+          # needs gdb absent, which the Linux job installs.
           - name: macOS
             os: macos-latest
             packages: ''
