@@ -156,6 +156,14 @@ jobs:
       # metacharacters that matches no package it treats the name as a regex, so
       # `g++-15` on noble resolves to clang-15, flang-15 and llvm-15, installs all
       # three, and exits 0.
+      #
+      # The list is read once, into a variable, and each name is searched for
+      # there rather than in a pipe from apt-cache. Piped into `grep -q`, which
+      # quits at its first match, apt-cache died of SIGPIPE mid-list, and under
+      # the job's pipefail the check failed although the name was listed: every
+      # Linux column on ubuntu-26.04 reported g++-15 missing that way
+      # (2026-10-07). -F, because a name may hold a `.`, which grep's regex
+      # would match against any character.
       - name: Install the toolchain (Linux)
         if: inputs.needs_testing == 'true' && runner.os == 'Linux'
         run: |
@@ -184,8 +192,9 @@ jobs:
           # g++-15 is both, but clang++ is shipped by `clang`. A column may therefore
           # name the package separately, defaulting to the binary where they agree.
           # gdb is for the stacks in a hung suite's snapshot; the image has none.
+          names=$(apt-cache pkgnames)
           for pkg in "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev gdb; do
-            apt-cache pkgnames | grep -qx "$pkg" \
+            grep -qFx -- "$pkg" <<< "$names" \
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
           sudo apt-get install -y "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev gdb
@@ -491,7 +500,9 @@ jobs:
             {
               echo "### ${{ matrix.name }}: $sites distinct warning site(s)"
               echo '```'
-              grep -E 'warning:|warning C[0-9]+' "$log" | sort -u | head -40
+              # sed, not head: head stops reading at line 40, and under the
+              # job's pipefail sort, cut off mid-write, would fail the step.
+              grep -E 'warning:|warning C[0-9]+' "$log" | sort -u | sed -n '1,40p'
               echo '```'
             } >> "$GITHUB_STEP_SUMMARY"
           else
