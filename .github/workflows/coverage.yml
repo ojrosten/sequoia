@@ -20,7 +20,7 @@ on:
         required: true
         type: string
       merge_into:
-        description: 'A branch into which the job merges the checked-out commit before building, as tests.yml''s input of the same name does; empty to test the checked-out commit itself.'
+        description: 'A branch which the job merges into the checked-out commit before building, as tests.yml''s input of the same name does. Empty tests the checked-out commit itself.'
         required: true
         type: string
 
@@ -88,20 +88,18 @@ jobs:
       - name: Install the toolchain
         if: env.NEEDS_TESTING == 'true'
         run: |
-          # The hosted image ships vendor repositories - Chrome and Microsoft - which
-          # nothing here installs from. A bad index served by one of them fails the
-          # update, and with it the job.
+          # The hosted image ships Chrome's and Microsoft's apt repositories,
+          # which nothing here installs from. A bad index from either fails
+          # `apt-get update`, and with it the job.
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
-          # Launchpad is a live dependency of every Linux column, and it fails in
-          # more than one shape: a malformed chunked response (PR #19, 2026-09-11)
-          # and an HTTP 503 "temporarily unavailable" (2026-09-16), both before any
-          # compiler ran. So the add is retried on any non-zero exit - not only a
-          # timeout - a bounded number of times with a short back-off. Nothing
-          # else is retried. The `apt-get update` below fetches the PPA's index from
-          # Launchpad too, and a failure there is loud - apt exits 100, or the
-          # compiler check after it fires - but is not yet a shape that has been
-          # seen; the two above were both in the add.
+          # Launchpad is a live dependency of every Linux column. Adding its
+          # PPA has failed in more than one way, each before any compiler ran:
+          # a malformed chunked response, and an HTTP 503. So the step retries
+          # the add on any non-zero exit, not only a timeout, a bounded number
+          # of times with a short back-off. `apt-get update` below fetches the
+          # PPA's index from Launchpad too, and is not retried: no failure has
+          # been seen there, and one would be loud.
           for attempt in 1 2 3 4; do
             sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test && break
             [ "$attempt" -lt 4 ] || { echo "::error::add-apt-repository failed on all $attempt attempts"; exit 1; }

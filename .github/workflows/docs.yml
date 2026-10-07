@@ -59,9 +59,9 @@ jobs:
         if: inputs.needs_testing == 'true'
         timeout-minutes: 25
         run: |
-          # The hosted image ships vendor repositories - Chrome and Microsoft - which
-          # nothing here installs from. A bad index served by one of them fails the
-          # update, and with it the job.
+          # The hosted image ships Chrome's and Microsoft's apt repositories,
+          # which nothing here installs from. A bad index from either fails
+          # `apt-get update`, and with it the job.
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
           # Quiet rather than silent, so that a slow index shows which
