@@ -13,8 +13,10 @@
 #       - arguments without a command after `--`;
 #       - a deadline which is not a positive whole number with no leading
 #         zero;
-#       - a snapshot file which exists, or whose directory is missing, is not
-#         a directory, or is read-only;
+#       - a snapshot file at which something exists, a symbolic link
+#         included, or at which the script cannot create a file: an empty
+#         path, a path ending in `/`, or one whose directory is missing, is
+#         not a directory, or is read-only;
 #       - a TMPDIR in which the script cannot create its temporary directory;
 #   - the script's temporary directory is under TMPDIR, and is removed;
 #   - the command's exit status is the script's, zero or not, before the
@@ -23,6 +25,8 @@
 #     output and error;
 #   - a command which ends before the deadline returns within 2.5 seconds,
 #     leaves no snapshot and leaves no watcher behind;
+#   - a command which ends while the watcher sleeps through the deadline
+#     leaves no snapshot;
 #   - a watcher whose script has been killed stops, rather than taking a
 #     snapshot at a deadline nobody is waiting for;
 #   - at the deadline, while the command still runs, the snapshot says when it
@@ -220,6 +224,17 @@ for tool in dirname mktemp rm touch sleep date ps pgrep; do
     || { echo "FAIL: cannot find $tool"; exit 1; }
 done
 
+# A stand-in for sleep which holds a one-second sleep until $SLEEP_RELEASE
+# exists or its directory has gone, for 600 polls at most, and passes any other
+# sleep to the real one.
+real_sleep=$(command -v sleep)
+fake_tool "$tmp/sleeping" sleep "[ \"\$1\" = 1 ] || exec $real_sleep \"\$@\"
+polls=0
+while [ ! -e \"\$SLEEP_RELEASE\" ] && [ -d \"\${SLEEP_RELEASE%/*}\" ] && [ \"\$polls\" -lt 600 ]; do
+  $real_sleep 0.1
+  polls=\$((polls + 1))
+done"
+
 run_controls() {
   fails=0
   work=$(mktemp -d "$tmp/controls.XXXXXX")
@@ -228,6 +243,8 @@ run_controls() {
   echo "an earlier snapshot" > "$work/earlier.txt"
   mkdir "$work/read-only"
   chmod 555 "$work/read-only"
+  ln -s "$work/missing/r.txt" "$work/into-missing"
+  ln -s "$work/target.txt"    "$work/to-new"
   check_refusal "no command"                "$work"         60 "$work/r.txt"             "$name" --
   check_refusal "no separator"              "$work"         60 "$work/r.txt"             "$name" touch "$work/ran"
   for deadline in abc 1.5 0 -600 08 ""; do
@@ -241,8 +258,14 @@ run_controls() {
     check_refusal "a read-only directory"   "$work"         60 "$work/read-only/r.txt"   "$name" -- touch "$work/ran"
   fi
   check_refusal "a file for a directory"    "$work"         60 "$work/earlier.txt/r.txt" "$name" -- touch "$work/ran"
+  check_refusal "an empty path"             "$work"         60 ""                        "$name" -- touch "$work/ran"
+  check_refusal "a path ending in /"        "$work"         60 "$work/absent/"           "$name" -- touch "$work/ran"
+  check_refusal "a link into a missing directory" \
+                                            "$work"         60 "$work/into-missing"      "$name" -- touch "$work/ran"
+  check_refusal "a link to a new file"      "$work"         60 "$work/to-new"            "$name" -- touch "$work/ran"
   check_refusal "a missing TMPDIR"          "$work/missing" 60 "$work/r.txt"             "$name" -- touch "$work/ran"
   check "an existing snapshot file is left alone" yes "^an earlier snapshot$" "$work/earlier.txt"
+  [ ! -e "$work/target.txt" ] || fail "a refused link to a new file created the file"
   chmod 755 "$work/read-only"
 
   # The temporary directory, seen by the command and gone afterwards.
@@ -264,6 +287,26 @@ run_controls() {
         > "$work/streams.out" 2> "$work/streams.err"
   check "the command reads standard input and writes standard output" yes "^to the command$" "$work/streams.out"
   check "the command writes standard error"                            yes "^to error$"       "$work/streams.err"
+
+  # A command which ends while the watcher sleeps through the deadline. A
+  # stand-in for sleep holds the watcher's one-second sleep until the deadline
+  # has passed and the command has ended, so the watcher wakes past the
+  # deadline to find the command ended. The deadline is 2 s, so that the
+  # watcher is not already past the deadline when it first looks.
+  mkdir "$work/sleeping"
+  env PATH="$tmp/sleeping:$PATH" TMPDIR="$work/sleeping" SLEEP_RELEASE="$work/sleeping.wake" \
+    "$BASH" "$script" 2 "$work/sleeping.txt" "$name" -- "$tmp/held" "$work/sleeping.release" &
+  runner=$!
+  started="$started $runner"
+  sleep 2.5
+  touch "$work/sleeping.release"
+  for poll in $(seq 1 50); do
+    [ -z "$(find "$work/sleeping" -name finished)" ] || break
+    sleep 0.1
+  done
+  touch "$work/sleeping.wake"
+  wait "$runner"
+  [ ! -e "$work/sleeping.txt" ] || fail "a command which ended while the watcher slept left a snapshot"
 
   # At the deadline, with no such process.
   bash "$script" 1 "$work/absent.txt" "$name" -- sleep 2
@@ -523,12 +566,18 @@ mutant any snapshot_at_deadline.sh 'Linux: one thread, no sudo' \
 mutant any snapshot_at_deadline.sh 'an existing snapshot accepted' \
   '[ -e "$snapshot" ] || ' \
   ''
-mutant any snapshot_at_deadline.sh 'a file accepted as a directory' \
-  '[ ! -d "$snapshot_directory" ] || ' \
+mutant any snapshot_at_deadline.sh 'a symbolic link accepted' \
+  '[ -L "$snapshot" ] || ' \
   ''
-mutant any snapshot_at_deadline.sh 'a read-only directory accepted' \
-  ' || [ ! -w "$snapshot_directory" ]' \
+mutant any snapshot_at_deadline.sh 'no trial creation' \
+  ' || ! { : > "$snapshot"; } 2> /dev/null' \
   ''
+mutant any snapshot_at_deadline.sh 'the trial file kept' \
+  'rm -f "$snapshot"' \
+  ':'
+mutant any snapshot_at_deadline.sh 'no look before the snapshot' \
+  'while :; do' \
+  'while [ "$SECONDS" -lt "$deadline" ]; do'
 mutant any snapshot_at_deadline.sh 'TMPDIR ignored' \
   'mktemp -d "${TMPDIR:-/tmp}/snapshot_at_deadline.XXXXXX"' \
   'mktemp -d'

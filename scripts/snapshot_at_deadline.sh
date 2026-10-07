@@ -12,12 +12,13 @@
 # ends more than a second before the deadline leaves no file.
 #
 # <seconds> is a positive whole number with no leading zero. <snapshot file>
-# must not exist, and its directory must be one the script can write to. The
-# script refuses arguments of any other form with status 2, before running
-# <command>. The script refuses the same way if it cannot create a temporary
-# directory under TMPDIR. On Linux, a process's name is the first fifteen
-# characters of its executable's name, so a longer <executable name> matches
-# no process.
+# is a path at which the script can create a file, and at which nothing
+# exists, not even a symbolic link. The script refuses arguments of any other
+# form with status 2, before running <command>. If the script cannot create a
+# temporary directory under TMPDIR, it exits with status 2 before running
+# <command>, after mktemp's message. On Linux, a process's name is the first
+# fifteen characters of its executable's name, so a longer <executable name>
+# matches no process.
 #
 # The script exists for a suite which hangs. A step timeout kills such a suite
 # without a word, and a suite which reports only at the end of a run leaves
@@ -50,12 +51,14 @@ if ! [[ $seconds =~ ^[1-9][0-9]*$ ]]; then
 fi
 
 # The watcher's errors go nowhere, so a snapshot it cannot write would be lost
-# in silence. A file already there would read as this run's snapshot.
-snapshot_directory=$(dirname "$snapshot")
-if [ -e "$snapshot" ] || [ ! -d "$snapshot_directory" ] || [ ! -w "$snapshot_directory" ]; then
-  echo "$0: <snapshot file> must not exist, in a writable directory: '$snapshot'" >&2
+# in silence. So the script creates the file here, and removes it. A file
+# already there would read as this run's snapshot, and the creation would
+# empty it.
+if [ -e "$snapshot" ] || [ -L "$snapshot" ] || ! { : > "$snapshot"; } 2> /dev/null; then
+  echo "$0: <snapshot file> must be a new file which the script can create, not '$snapshot'" >&2
   exit 2
 fi
+rm -f "$snapshot"
 
 source "$(dirname "$0")/windows_debugger.sh"
 
@@ -145,14 +148,18 @@ take_snapshot() {
 # rather than being stopped by a signal: a signal arriving before the
 # watcher's trap is set is lost, and one arriving between a sleep's start and
 # the watcher learning the sleep's id leaves the sleep running. So the script
-# returns up to a second after the command ends, and a command which ends in
-# the deadline's last second may still be snapshotted.
+# returns up to a second after the command ends. The watcher looks for the
+# file once more immediately before the snapshot. $SECONDS counts whole
+# seconds, so the snapshot begins within a second of the deadline, and a
+# command which ends in the second before the deadline may still be
+# snapshotted.
 watch_for_deadline() {
   local deadline=$((SECONDS + seconds))
-  while [ "$SECONDS" -lt "$deadline" ]; do
+  while :; do
     if [ -e "$finished" ] || ! kill -0 $$ 2> /dev/null; then
       return
     fi
+    [ "$SECONDS" -lt "$deadline" ] || break
     sleep 1
   done
   take_snapshot > "$snapshot" 2>&1
