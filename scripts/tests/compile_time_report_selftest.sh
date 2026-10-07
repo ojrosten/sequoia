@@ -27,9 +27,16 @@
 #     not instrument shows. Summary events, and the spans enclosing a whole
 #     phase of compilation, are left out;
 #   - --detail recompiles the one object whose path contains --source, at
-#     full granularity, writes nothing to the build directory, and groups the
-#     event's sites by source line. Each way it can fail exits non-zero;
-#   - each option outside the mode selected is refused.
+#     full granularity, and groups the event's sites by source line. It writes
+#     nothing to the build directory or the working directory, and removes the
+#     temporary directory it uses. It reads only the trace this recompile
+#     writes. It refuses a unit whose recompile would overwrite a module's
+#     BMI. Each way it can fail exits non-zero;
+#   - each option outside the mode selected is refused, and so is an
+#     --out-dir within the build directory.
+#
+# A control which checks that something is absent also checks that the run
+# succeeded, and that something beside it is present.
 
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
@@ -79,6 +86,11 @@ exists() { # exists <name> <yes|no> <path>
   if [[ $got != "$2" ]]; then fail "$1 (expected $2, got $got: $3)"; fi
 }
 
+empty() { # empty <name> <directory>: the directory exists, and holds nothing
+  total=$((total+1))
+  if [[ ! -d $2 || -n $(ls -A "$2") ]]; then fail "$1 ($2 is absent, or holds: $(ls -A "$2" 2>&1))"; fi
+}
+
 json_is() { # json_is <name> <file> <json>: the file holds the same JSON value
   total=$((total+1))
   if ! python3 -c 'import json, sys
@@ -124,6 +136,7 @@ summary_controls() {
    {"ph":"X","name":"Total ExecuteCompiler","ts":0,"dur":900000,"args":{"count":1}}]'
   echo '{"not": "a trace"}' > "$b/compile_commands.json"
   echo 'not json at all'    > "$b/stray.json"
+  local good='[{"ph":"X","name":"Total ExecuteCompiler","ts":0,"dur":1000000,"args":{"count":1}}]'
 
   run "$b" --top 5
   exits "a summary succeeds" 0
@@ -144,12 +157,16 @@ summary_controls() {
     '^ +500001  busy\.cpp$' '^ +10  deep\.cpp$' '^ +3  slow\.cpp$'
 
   run "$b" --top 1
+  exits "a summary with --top succeeds" 0
   section 'phase totals' > "$work/phases"
-  check "--top bounds the phases"           no 'InstantiateFunction$' "$work/phases"
+  check "--top keeps the first phase"       yes 'CheckConstraintSatisfaction$' "$work/phases"
+  check "--top bounds the phases"           no  'InstantiateFunction$' "$work/phases"
   section 'slowest translation units' > "$work/bytime"
-  check "--top bounds the ranking by time"  no 'deep\.cpp$' "$work/bytime"
+  check "--top keeps the slowest unit"      yes 'slow\.cpp$' "$work/bytime"
+  check "--top bounds the ranking by time"  no  'deep\.cpp$' "$work/bytime"
   section 'heaviest translation units' > "$work/bycount"
-  check "--top bounds the ranking by count" no 'deep\.cpp$' "$work/bycount"
+  check "--top keeps the heaviest unit"     yes 'busy\.cpp$' "$work/bycount"
+  check "--top bounds the ranking by count" no  'deep\.cpp$' "$work/bycount"
 
   # Earlier counts: one phase unmoved, one risen, one fallen, one gone, and
   # ParseClass absent.
@@ -181,25 +198,30 @@ summary_controls() {
   exits "no traces is an error" nonzero
   check "no traces says so" yes 'no -ftime-trace output under'
 
-  # Files beside objects which are not traces: JSON with no events, JSON which
-  # is no object, text which is no JSON, and bytes which are not UTF-8.
-  local variant
-  for variant in eventless number truncated latin1; do
+  # Files beside objects which are not traces: JSON with no events, events
+  # which are no list, JSON which is no object, text which is no JSON, bytes
+  # which are not UTF-8, and a file which cannot be read. Each lies beside a
+  # good trace, so that only the refusal fails the run.
+  local variant variants="eventless unlisted number truncated latin1 unreadable"
+  for variant in $variants; do
+    trace "$work/$variant/good.cpp.json" "$good"
     trace "$work/$variant/x.cpp.json" '[]'
   done
-  echo '{"not": "a trace"}' > "$work/eventless/x.cpp.json"
-  echo '42'                 > "$work/number/x.cpp.json"
-  echo '{"traceEvents": ['  > "$work/truncated/x.cpp.json"
-  printf '"\xff"\n'         > "$work/latin1/x.cpp.json"
-  for variant in eventless number truncated latin1; do
+  echo '{"not": "a trace"}'   > "$work/eventless/x.cpp.json"
+  echo '{"traceEvents": 5}'   > "$work/unlisted/x.cpp.json"
+  echo '42'                   > "$work/number/x.cpp.json"
+  echo '{"traceEvents": ['    > "$work/truncated/x.cpp.json"
+  printf '"\xff"\n'           > "$work/latin1/x.cpp.json"
+  chmod 000 "$work/unreadable/x.cpp.json"
+  for variant in $variants; do
     run "$work/$variant"
     exits "$variant JSON beside an object is an error" nonzero
     check "$variant JSON beside an object is named" yes \
-      "^$work/$variant/x\.cpp\.json lies beside an object but is not a trace: "
+      "^$work/$variant/x\.cpp\.json lies beside an object but is not a readable trace: "
   done
 
-  trace "$work/twins/a/same.cpp.json" '[]'
-  trace "$work/twins/b/same.cpp.json" '[]'
+  trace "$work/twins/a/same.cpp.json" "$good"
+  trace "$work/twins/b/same.cpp.json" "$good"
   run "$work/twins"
   exits "two traces with one name are an error" nonzero
   check "two traces with one name are named" yes '^two traces are named same\.cpp\.json:$'
@@ -259,10 +281,13 @@ self_controls() {
   done
 
   run "$s" --self nest --top 2
+  exits "--self with --top succeeds" 0
   section 'self time by phase' > "$work/phases"
-  check "--top bounds the phases"   no 'InstantiateClass$' "$work/phases"
+  check "--top keeps the first phase" yes 'InstantiateFunction$' "$work/phases"
+  check "--top bounds the phases"     no  'InstantiateClass$' "$work/phases"
   section 'self time by entity' > "$work/entities"
-  check "--top bounds the entities" no 'grandparent' "$work/entities"
+  check "--top keeps the first entity" yes 'ParseClass: y' "$work/entities"
+  check "--top bounds the entities"    no  'grandparent' "$work/entities"
 
   run "$s" --self nestling
   check "one match is taken without remark" no  'several matched'
@@ -275,25 +300,40 @@ self_controls() {
   run "$s" --self absent
   exits "no matching unit is an error" nonzero
   check "no matching unit says so" yes "no translation unit matching 'absent'"
+
+  mkdir -p "$work/selfless"
+  run "$work/selfless" --self
+  exits "--self with no traces is an error" nonzero
+  check "--self with no traces says so" yes 'no -ftime-trace output under'
 }
 
 detail_controls() {
   local d="$work/ninja" object="CMakeFiles/T.dir/src/Ratio.cpp.o" unit unit_object
   mkdir -p "$d/CMakeFiles/T.dir/src" "$work/probe"
   : > "$d/build.ninja"
-  # Ratio is in the name of a custom command's output and of a linked
-  # executable, neither of which is compiled.
+  # Ratio is in the name of a custom command's output, of a linked executable,
+  # of a BMI and of a precompiled header. None of them is an object compiled
+  # from C++, although the C++ compiler's rule builds the last two.
   cat > "$d/targets.txt" <<'EOF'
 all: phony
 CMakeFiles/gen.dir/Ratio.cpp.o: CUSTOM_COMMAND
 RatioTool: CXX_EXECUTABLE_LINKER__T_Debug
+CMakeFiles/__CMAKE__CXX26@synth_Ratio.dir/e0608402431f.bmi: CXX_COMPILER____CMAKE__CXX26.40synth_Ratio_scanned_Debug
+CMakeFiles/T.dir/cmake_pch_Ratio.hxx.pch: CXX_COMPILER__T_unscanned_Debug
 CMakeFiles/T.dir/src/Ratio.cpp.o: CXX_COMPILER__T_unscanned_Debug
 CMakeFiles/T.dir/src/Broken.cpp.o: CXX_COMPILER__T_unscanned_Debug
 CMakeFiles/T.dir/src/Twin1.cpp.o: CXX_COMPILER__T_unscanned_Debug
 CMakeFiles/T.dir/src/Twin2.cpp.o: CXX_COMPILER__T_unscanned_Debug
 CMakeFiles/T.dir/src/Plain.cpp.o: CXX_COMPILER__T_unscanned_Debug
+CMakeFiles/T.dir/src/Interface.cpp.o: CXX_COMPILER__T_scanned_Debug
+CMakeFiles/T.dir/src/Importer.cpp.o: CXX_COMPILER__T_scanned_Debug
+CMakeFiles/T.dir/src/Inline.cpp.o: CXX_COMPILER__T_scanned_Debug
+CMakeFiles/T.dir/src/Unmapped.cpp.o: CXX_COMPILER__T_scanned_Debug
+CMakeFiles/T.dir/src/Quoted.cpp.o: CXX_COMPILER__T_unscanned_Debug
+CMakeFiles/T.dir/src/Double.cpp.o: CXX_COMPILER__T_unscanned_Debug
+CMakeFiles/T.dir/src/Traceless.cpp.o: CXX_COMPILER__T_unscanned_Debug
 EOF
-  for unit in Ratio Broken Twin1 Twin2; do
+  for unit in Ratio Broken Twin1 Twin2 Traceless; do
     unit_object="CMakeFiles/T.dir/src/$unit.cpp.o"
     printf '%s\t%s\n' "$unit_object" \
       "fakecc -DX -ftime-trace -MD -MT $unit_object -MF $unit_object.d -o $unit_object -c /src/$unit.cpp"
@@ -302,8 +342,27 @@ EOF
   unit_object="CMakeFiles/T.dir/src/Plain.cpp.o"
   printf '%s\t%s\n' "$unit_object" \
     "fakecc -DX -MD -MT $unit_object -MF $unit_object.d -o $unit_object -c /src/Plain.cpp" >> "$d/commands.txt"
-  echo "the build's object"  > "$d/$object"
-  echo "the build's depfile" > "$d/$object.d"
+  # Modules, as CMake gives them to clang: a module's interface writes its BMI
+  # to the path which -fmodule-output= gives in the unit's response file, and
+  # an importer's response file names the BMIs it reads.
+  local unit_flags
+  for unit in Interface Importer Inline Unmapped; do
+    unit_object="CMakeFiles/T.dir/src/$unit.cpp.o"
+    unit_flags="@$unit_object.modmap"
+    if [[ $unit == Inline ]]; then unit_flags="-fmodule-output=CMakeFiles/T.dir/Inline.pcm"; fi
+    printf '%s\t%s\n' "$unit_object" \
+      "fakecc -ftime-trace -MD -MT $unit_object -MF $unit_object.d $unit_flags -o $unit_object -c /src/$unit.cpp"
+  done >> "$d/commands.txt"
+  printf '%s\n' '-x c++-module' '-fmodule-output="CMakeFiles/T.dir/m.pcm"' \
+    > "$d/CMakeFiles/T.dir/src/Interface.cpp.o.modmap"
+  printf '%s\n' '-fmodule-file="m=CMakeFiles/T.dir/m.pcm"' > "$d/CMakeFiles/T.dir/src/Importer.cpp.o.modmap"
+  # An object named in quotes, and two objects named.
+  printf '%s\t%s\n' CMakeFiles/T.dir/src/Quoted.cpp.o \
+    'fakecc -ftime-trace -o "CMakeFiles/T.dir/src/Quoted.cpp.o" -c /src/Quoted.cpp' >> "$d/commands.txt"
+  printf '%s\t%s\n' CMakeFiles/T.dir/src/Double.cpp.o \
+    'fakecc -ftime-trace -o CMakeFiles/T.dir/a.o -o CMakeFiles/T.dir/src/Double.cpp.o -c /src/Double.cpp' \
+    >> "$d/commands.txt"
+  echo "the build's object" > "$d/$object"
 
   HOME=/home/fixture run "$d" --detail CheckConstraintSatisfaction --source Ratio --out-dir "$work/probe" --top 10
   exits "--detail succeeds" 0
@@ -317,14 +376,26 @@ EOF
   check "other events are not sites"          no  'widget'
   exists "the probe's trace is in --out-dir" yes "$work/probe/time_trace_probe.json"
   exists "no trace is left beside the build's object" no "$d/${object%.o}.json"
-  check "the build's object is left alone"  yes "^the build's object$"  "$d/$object"
-  check "the build's depfile is left alone" yes "^the build's depfile$" "$d/$object.d"
+  check "the build's object is left alone" yes "^the build's object$" "$d/$object"
+  exists "no depfile appears beside the build's object" no "$d/$object.d"
   exists "the probe's depfile is in --out-dir" yes "$work/probe/time_trace_probe.o.d"
 
-  run "$d" --detail CheckConstraintSatisfaction --source Ratio
+  # Without --out-dir, from a working directory of its own, and with a
+  # temporary directory of its own.
+  mkdir -p "$work/cwd" "$work/tmpdir"
+  cd "$work/cwd" || exit 1
+  TMPDIR="$work/tmpdir" run "$d" --detail CheckConstraintSatisfaction --source Ratio
+  cd - > /dev/null || exit 1
   exits "--detail succeeds without --out-dir" 0
   check "--detail reports without --out-dir" yes '^8 CheckConstraintSatisfaction events'
+  empty "without --out-dir, the temporary directory is removed" "$work/tmpdir"
+  empty "without --out-dir, nothing is written to the working directory" "$work/cwd"
   exists "without --out-dir, no probe is left in the build" no "$d/time_trace_probe.o"
+
+  run "$d" --detail CheckConstraintSatisfaction --source Ratio --out-dir "$work/with space"
+  exits "an --out-dir with a space succeeds" 0
+  exists "an --out-dir with a space holds the trace"   yes "$work/with space/time_trace_probe.json"
+  exists "an --out-dir with a space holds the depfile" yes "$work/with space/time_trace_probe.o.d"
 
   run "$d" --detail CheckConstraintSatisfaction --source Ratio --out-dir "$work/new/probe"
   exits "an absent --out-dir is made" 0
@@ -337,7 +408,9 @@ EOF
   exists "a relative --out-dir is the working directory's" yes "$work/relative/time_trace_probe.json"
 
   HOME=/home/fixture run "$d" --detail CheckConstraintSatisfaction --source Ratio --out-dir "$work/probe" --top 1
-  check "--top bounds the sites" no 'a\.hpp:20'
+  exits "--detail with --top succeeds" 0
+  check "--top keeps the first site" yes '/src/a\.hpp:10$'
+  check "--top bounds the sites"     no  'a\.hpp:20'
 
   run "$d" --detail Missing --source Ratio --out-dir "$work/probe"
   exits "an event the unit lacks is an error" nonzero
@@ -371,6 +444,39 @@ EOF
   run "$d" --detail CheckConstraintSatisfaction --source Broken --out-dir "$work/probe"
   exits "a failed recompile gives the compiler's status" 3
   check "a failed recompile shows the compiler's error" yes 'Broken\.cpp:1:1: error: fixture'
+
+  run "$d" --detail CheckConstraintSatisfaction --source Interface --out-dir "$work/probe"
+  exits "a module's interface is an error" nonzero
+  check "a module's interface says so" yes \
+    "^the command compiling CMakeFiles/T\.dir/src/Interface\.cpp\.o writes a module's BMI"
+  run "$d" --detail CheckConstraintSatisfaction --source Inline --out-dir "$work/probe"
+  exits "-fmodule-output= on the command line is an error" nonzero
+  check "-fmodule-output= on the command line says so" yes "Inline\.cpp\.o writes a module's BMI"
+  run "$d" --detail CheckConstraintSatisfaction --source Importer --out-dir "$work/probe"
+  exits "a module's importer succeeds" 0
+  run "$d" --detail CheckConstraintSatisfaction --source Unmapped --out-dir "$work/probe"
+  exits "a missing response file is an error" nonzero
+  check "a missing response file says so" yes 'Unmapped\.cpp\.o names a response file which cannot be read'
+
+  run "$d" --detail CheckConstraintSatisfaction --source Quoted --out-dir "$work/probe"
+  exits "an object in quotes is an error" nonzero
+  check "an object in quotes says so" yes 'Quoted\.cpp\.o does not name its object once as -o <path>\.o$'
+  run "$d" --detail CheckConstraintSatisfaction --source Double --out-dir "$work/probe"
+  exits "two objects named is an error" nonzero
+  check "two objects named says so" yes 'Double\.cpp\.o does not name its object once as -o <path>\.o$'
+
+  # A trace from an earlier recompile, and a recompile which writes none.
+  mkdir -p "$work/stale"
+  printf '{"traceEvents": %s}\n' "$(cat "$tmp/bin/fine.json")" > "$work/stale/time_trace_probe.json"
+  run "$d" --detail CheckConstraintSatisfaction --source Traceless --out-dir "$work/stale"
+  exits "a recompile which writes no trace is an error" nonzero
+  check "a recompile which writes no trace says so" yes \
+    "^the recompile of CMakeFiles/T\.dir/src/Traceless\.cpp\.o wrote no trace at $work/stale/time_trace_probe\.json$"
+
+  run "$d" --detail CheckConstraintSatisfaction --source Ratio --out-dir "$d/probe"
+  exits "an --out-dir within the build is an error" 2
+  check "an --out-dir within the build says so" yes '--out-dir must be outside the build directory'
+  exists "an --out-dir within the build is not made" no "$d/probe"
 }
 
 option_controls() {
@@ -391,9 +497,15 @@ option_controls() {
   exits "--baseline with --self is an error" 2
   check "--baseline with --self says so" yes '--baseline and --write-baseline apply only to the summary'
 
-  run "$b" --detail CheckConstraintSatisfaction --write-baseline "$work/never.json"
+  run "$b" --self --baseline ""
+  exits "an empty --baseline with --self is an error" 2
+  check "an empty --baseline with --self says so" yes \
+    '--baseline and --write-baseline apply only to the summary'
+
+  run "$work/ninja" --detail CheckConstraintSatisfaction --source Ratio --out-dir "$work/probe" \
+    --write-baseline "$work/never.json"
   exits "--write-baseline with --detail is an error" 2
-  exists "--write-baseline with --detail writes nothing" no "$work/never.json"
+  check "--write-baseline with --detail says so" yes '--baseline and --write-baseline apply only to the summary'
 }
 
 # Stand-ins for ninja and clang, first in PATH.
@@ -416,7 +528,7 @@ EOF
 # Writes the object named by -o, and the depfile named by -MF. With
 # -ftime-trace, it also writes the trace beside the object, holding fine.json's
 # events at -ftime-trace-granularity=0, and coarse.json's otherwise. A source
-# named Broken fails to compile.
+# named Broken fails to compile, and one named Traceless writes no trace.
 cat > "$tmp/bin/fakecc" <<'EOF'
 #!/bin/bash
 here=$(dirname "$0"); trace=no; granularity=coarse; object=; depfile=
@@ -427,6 +539,7 @@ while [[ $# -gt 0 ]]; do
     -o)                         object=$2; shift ;;
     -MF)                        depfile=$2; shift ;;
     *Broken*)                   echo "Broken.cpp:1:1: error: fixture" >&2; exit 3 ;;
+    *Traceless*)                trace=never ;;
   esac
   shift
 done
@@ -464,9 +577,6 @@ run_controls() { # run_controls <script>: sets fails, and total, the controls ru
 }
 
 # Each mutant breaks one behaviour, and is (description, old text, new text).
-# One is left out as equivalent on any input ninja writes with a Unix
-# toolchain: dropping `target.endswith(".o")` from compile_command, since every
-# target a CXX_COMPILER__ rule builds is an object.
 mutants() { # mutants <dir>: writes <dir>/<n>/compile_time_report.py, and
             # prints a line "<n> <occurrences of the old text> <description>"
   python3 - "$script" "$1" <<'EOF'
@@ -475,18 +585,18 @@ MUTATIONS = [
     ('every JSON file a trace',          'if not f.endswith(".json") or not os.path.exists(path[:-len(".json")] + '
                                          '".o"):',
                                          'if not f.endswith(".json"):'),
-    ('a trace with no events read',      'if not isinstance(d, dict) or "traceEvents" not in d:',
+    ('a trace with no events read',      'if not isinstance(d, dict) or not isinstance(d.get("traceEvents"), list):',
                                          'if not isinstance(d, dict):'),
-    ('JSON which is no object read',     'if not isinstance(d, dict) or "traceEvents" not in d:',
-                                         'if "traceEvents" not in d:'),
-    ('text which is no JSON read',       'except (json.JSONDecodeError, UnicodeDecodeError) as e:',
-                                         'except UnicodeDecodeError as e:'),
-    ('bytes which are not UTF-8 read',   'except (json.JSONDecodeError, UnicodeDecodeError) as e:',
-                                         'except json.JSONDecodeError as e:'),
-    ('a file which is no trace skipped', 'sys.exit(f"{path} lies beside an object but is not a trace: it has no '
-                                         'traceEvents")',
+    ('JSON which is no object read',     'if not isinstance(d, dict) or not isinstance(d.get("traceEvents"), list):',
+                                         'if not isinstance(d.get("traceEvents"), list):'),
+    ('text which is no JSON read',       'except (OSError, json.JSONDecodeError, UnicodeDecodeError) as e:',
+                                         'except (OSError, UnicodeDecodeError) as e:'),
+    ('bytes which are not UTF-8 read',   'except (OSError, json.JSONDecodeError, UnicodeDecodeError) as e:',
+                                         'except (OSError, json.JSONDecodeError) as e:'),
+    ('a file which is no trace skipped', 'sys.exit(f"{path} lies beside an object but is not a readable trace: it has '
+                                         'no list of traceEvents")',
                                          'continue'),
-    ('JSON which fails to read skipped', 'sys.exit(f"{path} lies beside an object but is not a trace: {e}")',
+    ('JSON which fails to read skipped', 'sys.exit(f"{path} lies beside an object but is not a readable trace: {e}")',
                                          'continue'),
     ('a second trace of a name kept',    'if unit in paths:', 'if False:'),
     ('one directory only',               'for root, _, files in os.walk(build_dir):',
@@ -504,7 +614,7 @@ MUTATIONS = [
     ('every unit ranked by count',       'for tu, count in per_tu.most_common(top):',
                                          'for tu, count in per_tu.most_common():'),
     ('a unit counted by its last phase', 'per_tu[tu] = sum(c for c, _ in phases.values())', 'per_tu[tu] = count'),
-    ('an empty build accepted',          'if not tus:\n        sys.exit(f"no -ftime-trace output',
+    ('an empty build accepted',          'if not out:\n        sys.exit(f"no -ftime-trace output',
                                          'if False:\n        sys.exit(f"no -ftime-trace output'),
     ('an unmoved phase listed',          '        if b == n:\n            continue\n', ''),
     ('moves ranked by name',             'key=lambda p: -abs(agg.get(p, 0) - base.get(p, 0))', 'key=lambda p: p'),
@@ -558,17 +668,22 @@ MUTATIONS = [
     ('--source matched in the rule',     'and fragment in target]', 'and fragment in target + rule]'),
     ('a failed ninja read',              'if r.returncode:\n        sys.exit(f"ninja',
                                          'if False:\n        sys.exit(f"ninja'),
-    ('a build without -ftime-trace run', 'if "-ftime-trace" not in cmd.split():', 'if False:'),
+    ('a build without -ftime-trace run', 'if "-ftime-trace" not in words:', 'if False:'),
     ("a relative --out-dir the build's", 'os.path.join(os.path.abspath(out_dir),', 'os.path.join(out_dir,'),
-    ("the depfile the build's",          'cmd = re.sub(r"-MF \\S+", f"-MF {probe}.d", cmd)', 'pass'),
+    ("the depfile the build's",          'cmd = re.sub(r"(?<!\\S)-MF \\S+", lambda _: "-MF " + shlex.quote(probe + '
+                                         '".d"), cmd)',
+                                         'pass'),
     ('the first of several matches',     'if len(hits) > 1:\n        sys.exit("ambiguous',
                                          'if False:\n        sys.exit("ambiguous'),
     ('no object matched accepted',       'if not hits:\n        sys.exit(f"no object matching',
                                          'if False:\n        sys.exit(f"no object matching'),
     ('the first command run',            '.strip().splitlines()[-1]', '.strip().splitlines()[0]'),
-    ('the default granularity',          'cmd = cmd.replace("-ftime-trace", "-ftime-trace -ftime-trace-granularity=0")',
+    ('the default granularity',          'cmd = re.sub(r"(?<!\\S)-ftime-trace(?!\\S)", "-ftime-trace '
+                                         '-ftime-trace-granularity=0", cmd)',
                                          'pass'),
-    ('the build object overwritten',     'cmd = re.sub(r"-o \\S+\\.o", f"-o {probe}", cmd)', 'pass'),
+    ('the build object overwritten',     'cmd, objects = re.subn(r"(?<!\\S)-o \\S+\\.o(?!\\S)", lambda _: "-o " + '
+                                         'shlex.quote(probe), cmd)',
+                                         'objects = 1'),
     ('a failed recompile read',          'if r.returncode:\n        sys.exit(r.returncode)',
                                          'if False:\n        sys.exit(r.returncode)'),
     ('a failed recompile exits 1',       'sys.exit(r.returncode)', 'sys.exit(1)'),
@@ -595,6 +710,28 @@ MUTATIONS = [
     ('a baseline with --detail accepted',
                                          '(a.detail is not None or a.self is not None) and',
                                          '(a.self is not None) and'),
+    ('an unreadable trace crashes',      'except (OSError, json.JSONDecodeError, UnicodeDecodeError) as e:',
+                                         'except (json.JSONDecodeError, UnicodeDecodeError) as e:'),
+    ('events which are no list read',    'not isinstance(d.get("traceEvents"), list)', '"traceEvents" not in d'),
+    ('a BMI or PCH compiled',            ' and target.endswith(".o")', ''),
+    ('response files unread',            'words += shlex.split(f.read())', 'pass'),
+    ('a missing response file crashes',  'except (OSError, UnicodeDecodeError) as e:\n'
+                                         '            sys.exit(f"the command',
+                                         'except UnicodeDecodeError as e:\n            sys.exit(f"the command'),
+    ("a module's BMI overwritten",       'if any(w.startswith("-fmodule-output=") for w in words):', 'if False:'),
+    ('an object not named accepted',     'if objects != 1:', 'if objects > 1:'),
+    ('two objects named accepted',       'if objects != 1:', 'if objects == 0:'),
+    ('the object path unquoted',         '"-o " + shlex.quote(probe)', '"-o " + probe'),
+    ('the depfile path unquoted',        '"-MF " + shlex.quote(probe + ".d")', '"-MF " + probe + ".d"'),
+    ('a stale probe kept',               '            os.remove(output)', '            pass'),
+    ('a missing trace unremarked',       'if not os.path.exists(trace):', 'if False:'),
+    ('the temporary directory leaked',   'with tempfile.TemporaryDirectory() as out_dir:',
+                                         'for out_dir in [tempfile.mkdtemp()]:'),
+    ('the working directory written',    'with tempfile.TemporaryDirectory() as out_dir:', 'for out_dir in ["."]:'),
+    ('an --out-dir within the build',    'if os.path.commonpath([os.path.realpath(a.out_dir), build]) == build:',
+                                         'if False:'),
+    ('an empty --baseline accepted',     '(a.baseline is not None or a.write_baseline is not None)',
+                                         '(a.baseline or a.write_baseline)'),
 ]
 script, directory = sys.argv[1:]
 with open(script, encoding='utf-8') as f:

@@ -5,8 +5,8 @@ A compile time measured on one machine does not carry over to another, nor
 reliably to another session on the same machine. The counts clang records
 beside the times do carry over: given the same sources, flags and compiler,
 the number of times a template is instantiated or a constraint is checked is
-fixed. So each report leads with the counts, and marks the times as this
-machine's.
+fixed. So the summary and --detail lead with the counts, and mark the times
+as this machine's.
 
   compile_time_report.py <build-dir>
       Sums each phase's `Total` event over every translation unit, and ranks
@@ -26,10 +26,11 @@ machine's.
   compile_time_report.py <build-dir> --detail <event> [--source <fragment>]
       Recompiles the one object whose path contains the fragment, recording
       every event, and ranks the source lines at which the event occurs. The
-      build's own traces omit events shorter than 500us, which is every
-      single constraint check, so attributing one needs the recompile.
+      build's own traces omit events shorter than 500us. Nearly every
+      constraint check is that short, so attributing the checks needs the
+      recompile.
 """
-import argparse, collections, json, os, re, subprocess, sys, tempfile
+import argparse, collections, contextlib, json, os, re, shlex, subprocess, sys, tempfile
 
 # A source location as clang writes it in a detail: <file:line:column...>.
 LOC = re.compile(r"<(?P<file>[^:<>]+):(?P<line>\d+):\d+")
@@ -43,8 +44,9 @@ def traces(build_dir):
     CMake with -ftime-trace in CMAKE_CXX_FLAGS leaves a trace with no object,
     and the trace is otherwise indistinguishable from a unit's.
 
-    Exits if a JSON file beside an object is not a readable trace, or if two
-    traces have the same file name. Either would drop a unit from every report.
+    Exits if there are no traces. Also exits if a JSON file beside an object
+    is not a readable trace, or if two traces have the same file name: either
+    would drop a unit from every report.
     """
     out, paths = {}, {}
     for root, _, files in os.walk(build_dir):
@@ -58,12 +60,15 @@ def traces(build_dir):
             try:
                 with open(path, encoding="utf-8") as fh:
                     d = json.load(fh)
-            except (json.JSONDecodeError, UnicodeDecodeError) as e:
-                sys.exit(f"{path} lies beside an object but is not a trace: {e}")
-            if not isinstance(d, dict) or "traceEvents" not in d:
-                sys.exit(f"{path} lies beside an object but is not a trace: it has no traceEvents")
+            except (OSError, json.JSONDecodeError, UnicodeDecodeError) as e:
+                sys.exit(f"{path} lies beside an object but is not a readable trace: {e}")
+            if not isinstance(d, dict) or not isinstance(d.get("traceEvents"), list):
+                sys.exit(f"{path} lies beside an object but is not a readable trace: it has no list of traceEvents")
             paths[unit] = path
             out[unit] = d["traceEvents"]
+    if not out:
+        sys.exit(f"no -ftime-trace output under {build_dir}\n"
+                 "configure with a *-time-trace preset and build")
     return out
 
 
@@ -133,9 +138,6 @@ def wall(events):
 def summarize(build_dir, top):
     """Prints the summary of every unit, and returns each phase's count."""
     tus = traces(build_dir)
-    if not tus:
-        sys.exit(f"no -ftime-trace output under {build_dir}\n"
-                 "configure with a *-time-trace preset and build")
     agg, per_tu = collections.Counter(), collections.Counter()
     dur = collections.Counter()
     for tu, events in tus.items():
@@ -205,24 +207,52 @@ def detail(build_dir, event, fragment, top, out_dir):
     prints the sites of `event`, ranked by count.
 
     The recompile writes its object, depfile and trace to `out_dir`, and
-    nothing to the build directory.
+    nothing to the build directory. Exits, before compiling, if the command
+      - has no -ftime-trace;
+      - names a response file which cannot be read;
+      - writes a module's BMI to a path given by -fmodule-output=, which the
+        recompile would overwrite;
+      - does not name its object exactly once, as `-o <path>.o`.
+    Exits with the compiler's status if the recompile fails, and exits if it
+    writes no trace.
     """
     obj, cmd = compile_command(build_dir, fragment)
-    if "-ftime-trace" not in cmd.split():
+    words = shlex.split(cmd)
+    if "-ftime-trace" not in words:
         sys.exit(f"the command compiling {obj} has no -ftime-trace\n"
                  "configure with a *-time-trace preset and build")
-    print(f"recompiling {obj} at full granularity", file=sys.stderr)
+    # CMake passes -fmodule-output= to clang in a response file, which the
+    # command names as @<path>, relative to build_dir.
+    for response_file in [w[1:] for w in words if w.startswith("@")]:
+        try:
+            with open(os.path.join(build_dir, response_file), encoding="utf-8") as f:
+                words += shlex.split(f.read())
+        except (OSError, UnicodeDecodeError) as e:
+            sys.exit(f"the command compiling {obj} names a response file which cannot be read: {e}")
+    if any(w.startswith("-fmodule-output=") for w in words):
+        sys.exit(f"the command compiling {obj} writes a module's BMI, which the recompile would overwrite")
+
     # The command runs in build_dir, so the compiler would resolve a relative
     # out_dir against build_dir, not against this process's working directory.
     probe = os.path.join(os.path.abspath(out_dir), "time_trace_probe.o")
-    cmd = cmd.replace("-ftime-trace", "-ftime-trace -ftime-trace-granularity=0")
-    cmd = re.sub(r"-o \S+\.o", f"-o {probe}", cmd)
-    cmd = re.sub(r"-MF \S+", f"-MF {probe}.d", cmd)
+    trace = probe[:-len(".o")] + ".json"
+    cmd = re.sub(r"(?<!\S)-ftime-trace(?!\S)", "-ftime-trace -ftime-trace-granularity=0", cmd)
+    cmd, objects = re.subn(r"(?<!\S)-o \S+\.o(?!\S)", lambda _: "-o " + shlex.quote(probe), cmd)
+    if objects != 1:
+        sys.exit(f"the command compiling {obj} does not name its object once as -o <path>.o")
+    cmd = re.sub(r"(?<!\S)-MF \S+", lambda _: "-MF " + shlex.quote(probe + ".d"), cmd)
+    # A trace left by an earlier recompile must not stand in for this one's.
+    for output in (probe, probe + ".d", trace):
+        with contextlib.suppress(FileNotFoundError):
+            os.remove(output)
+    print(f"recompiling {obj} at full granularity", file=sys.stderr)
     r = subprocess.run(cmd, shell=True, cwd=build_dir)
     if r.returncode:
         sys.exit(r.returncode)
+    if not os.path.exists(trace):
+        sys.exit(f"the recompile of {obj} wrote no trace at {trace}")
 
-    with open(probe[:-2] + ".json", encoding="utf-8") as f:
+    with open(trace, encoding="utf-8") as f:
         events = json.load(f)["traceEvents"]
     hits = [e for e in events if e.get("name") == event]
     if not hits:
@@ -283,12 +313,14 @@ def main():
                       help="rank phases and entities by self time, in the slowest unit "
                            "whose name contains FRAGMENT")
     ap.add_argument("--out-dir", metavar="DIR",
-                    help="the directory to which --detail writes the recompiled object "
-                         "and its trace (default: a temporary directory, removed afterwards)")
+                    help="the directory, outside the build directory, to which --detail writes "
+                         "the recompiled object, its depfile and its trace "
+                         "(default: a temporary directory, removed afterwards)")
     a = ap.parse_args()
     if a.detail is None and (a.source is not None or a.out_dir is not None):
         ap.error("--source and --out-dir apply only to --detail")
-    if (a.detail is not None or a.self is not None) and (a.baseline or a.write_baseline):
+    if (a.detail is not None or a.self is not None) and \
+       (a.baseline is not None or a.write_baseline is not None):
         ap.error("--baseline and --write-baseline apply only to the summary")
 
     if a.self is not None:
@@ -299,6 +331,11 @@ def main():
             with tempfile.TemporaryDirectory() as out_dir:
                 detail(a.build_dir, a.detail, a.source or "", a.top, out_dir)
         else:
+            # A trace beside its object within the build directory would be
+            # read as a unit by every later summary.
+            build = os.path.realpath(a.build_dir)
+            if os.path.commonpath([os.path.realpath(a.out_dir), build]) == build:
+                ap.error("--out-dir must be outside the build directory")
             os.makedirs(a.out_dir, exist_ok=True)
             detail(a.build_dir, a.detail, a.source or "", a.top, a.out_dir)
         return
