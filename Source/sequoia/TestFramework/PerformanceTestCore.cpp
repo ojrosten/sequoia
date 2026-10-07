@@ -10,22 +10,25 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/PathCheckers.hpp"
 
+#include <array>
 #include <charconv>
 #include <format>
+#include <optional>
 #include <ranges>
-#include <vector>
 
 namespace sequoia::testing
 {
   namespace
   {
     /** \brief The numbers `std::from_chars` reads in `text`, scanning from left
-               to right.
+               to right, if there are exactly `N` of them.
      */
+    template<std::size_t N>
     [[nodiscard]]
-    std::vector<double> numbers_in(std::string_view text)
+    std::optional<std::array<double, N>> numbers_in(std::string_view text)
     {
-      std::vector<double> numbers{};
+      std::array<double, N> numbers{};
+      std::size_t count{};
       const auto last{text.data() + text.size()};
       auto first{text.data()};
       while(first != last)
@@ -33,7 +36,10 @@ namespace sequoia::testing
         double value{};
         if(const auto [next, error]{std::from_chars(first, last, value)}; error == std::errc{})
         {
-          numbers.push_back(value);
+          if(count == N)
+            return std::nullopt;
+
+          numbers[count++] = value;
           first = next;
         }
         else
@@ -42,7 +48,7 @@ namespace sequoia::testing
         }
       }
 
-      return numbers;
+      return count == N ? std::optional{numbers} : std::nullopt;
     }
 
     /** \brief `line` with its measured values set to zero, if `duration_summary`,
@@ -52,34 +58,26 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string line_without_measurements(std::string_view line)
     {
-      const auto labelPos{line.find(" Task duration: ")};
+      constexpr std::string_view label{" Task duration: "};
+      const auto labelPos{line.find(label)};
       if(labelPos == std::string_view::npos)
         return std::string{line};
 
-      // Indices of the numbers duration_summary prints, then of those speedup_summary appends
-      constexpr std::size_t mean{0},    numSds{1},     sig{2};
-      constexpr std::size_t speedup{3}, minSpeedup{4}, maxSpeedup{5};
-      constexpr std::size_t durationsOnly{3}, withSpeedup{6};
-
       std::string_view prefix{line.substr(0, labelPos)};
-      auto values{numbers_in(line.substr(labelPos))};
+      std::string_view afterLabel{line.substr(labelPos + label.size())};
 
-      auto print{
-        [prefix](const std::vector<double>& numbers) {
-          const auto durations{duration_summary(prefix, numbers[mean], numbers[numSds], numbers[sig])};
-          return numbers.size() == withSpeedup ? durations + speedup_summary(numbers[speedup], numbers[minSpeedup], numbers[maxSpeedup])
-                                               : durations;
-        }
-      };
-
-      if(((values.size() == durationsOnly) || (values.size() == withSpeedup)) && (print(values) == line))
+      if(const auto numbers{numbers_in<3>(afterLabel)})
       {
-        values[mean] = 0;
-        values[sig]  = 0;
-        if(values.size() == withSpeedup)
-          values[speedup] = 0;
+        const auto [mean, numSds, sig]{*numbers};
+        if(duration_summary(prefix, mean, numSds, sig) == line)
+          return duration_summary(prefix, 0, numSds, 0);
+      }
 
-        return print(values);
+      if(const auto numbers{numbers_in<6>(afterLabel)})
+      {
+        const auto [mean, numSds, sig, speedup, minSpeedup, maxSpeedup]{*numbers};
+        if(duration_summary(prefix, mean, numSds, sig) + speedup_summary(speedup, minSpeedup, maxSpeedup) == line)
+          return duration_summary(prefix, 0, numSds, 0) + speedup_summary(0, minSpeedup, maxSpeedup);
       }
 
       return std::string{line};

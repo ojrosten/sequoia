@@ -357,6 +357,13 @@ namespace sequoia::testing
     }
 
     {
+      const std::string latest   {duration_summary("Slow", 0.0063, 3, 8.7e-06) + speedup_summary(1.04, 2, 3)};
+      const std::string reference{duration_summary("Slow", 0.0064, 4, 9.1e-06) + speedup_summary(1.02, 2, 3)};
+
+      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+    }
+
+    {
       const std::string latest   {duration_summary("Slow", 0.0063, 4, 8.7e-06) + speedup_summary(1.04, 2, 3)};
       const std::string reference{duration_summary("Slow", 0.0064, 4, 9.1e-06) + speedup_summary(1.02, 2, 4)};
 
