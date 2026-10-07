@@ -13,9 +13,9 @@
 # Each control runs a copy of the script as CI runs it, from the root of a
 # scratch repository, on a scratch build of TestAll. Stand-ins for lcov,
 # genhtml, ctest, ninja, llvm-cov and check_tracefile.py log each call, and
-# most fail when a control asks them to. Stand-ins for uname and mktemp give
-# the platform and the probe's directory a control chooses. So the selftest
-# checks what the script decides and passes, and needs no build. The claims:
+# most fail when a control asks them to. A stand-in for uname gives the
+# platform a control chooses. So the selftest checks what the script decides
+# and passes, and needs no build. The claims:
 #
 #   - the report is written to coverage_reports beside the last directory
 #     named build in the build's physical path, under the rest of that path.
@@ -33,13 +33,12 @@
 #     llvm-cov gcov beside clang++, or gcov for any other compiler. A gcov_tool
 #     in the environment changes nothing;
 #   - each lcov call, check_tracefile.py and genhtml get the options the
-#     script's comments give reasons for. On Darwin, removal takes the
+#     script's comments give reasons for. genhtml runs once, given the three
+#     error categories lcov 2.5 knows. On Darwin, removal takes the
 #     toolchains' paths too, and an unused pattern is no error;
 #   - on Darwin, genhtml is given GNU c++filt from where Homebrew puts it,
 #     and the script refuses to start without it. On Linux, genhtml is given
 #     no c++filt;
-#   - genhtml is given each of the three ignore categories it accepts, and a
-#     category it refuses is named. The probe leaves nothing behind;
 #   - a missing, empty or second argument is refused with status 2 and the
 #     usage on standard error alone. A missing build directory, a build
 #     directory not within a directory named build, and a build without a
@@ -98,28 +97,18 @@ case $step in
 esac
 EOF
 
-# genhtml called on /dev/null is the script's probe. It refuses, as genhtml
-# does, each category in $UNKNOWN_CATEGORIES, and otherwise fails on its input.
-# The probe's output directory is logged as <probe>, when it is directly
-# within $FAKE/scratch. Called on a tracefile, genhtml makes its output
-# directory, as genhtml does, and writes an index there.
+# genhtml makes its output directory, as genhtml does, and writes an index
+# there.
 cat > "$tmp/bin/genhtml" <<'EOF'
 #!/bin/bash
+echo "genhtml $*" >> "$FAKE/log"
 args=("$@") output= input=
 for ((i = 0; i < ${#args[@]}; i++)); do
   case ${args[i]} in
-    -o)     output=${args[i+1]}
-            [[ ${output%/*} == "$FAKE/scratch" ]] && args[i+1]='<probe>' ;;
+    -o)     output=${args[i+1]} ;;
     *.info) input=${args[i]} ;;
   esac
 done
-echo "genhtml ${args[*]}" >> "$FAKE/log"
-if [[ ${!#} == /dev/null ]]; then
-  if [[ " $UNKNOWN_CATEGORIES " == *" $2 "* ]]; then
-    echo "genhtml: ERROR: unknown argument for --ignore-errors: '$2'" >&2; exit 2
-  fi
-  echo "genhtml: ERROR: (missing) '/dev/null' is not a readable file" >&2; exit 2
-fi
 if [[ ! -f $input ]]; then echo "genhtml: ERROR: no tracefile '$input'" >&2; exit 1; fi
 if [[ $FAIL == genhtml ]]; then echo "genhtml: ERROR: the fixture's genhtml fails" >&2; exit 7; fi
 mkdir -p "$output" && echo report > "$output/index.html"
@@ -134,13 +123,6 @@ EOF
 cat > "$tmp/bin/uname" <<'EOF'
 #!/bin/bash
 echo "$FAKE_UNAME"
-EOF
-
-# macOS's mktemp ignores TMPDIR, so this one makes its directory within
-# $FAKE/scratch, where a control can see what a run leaves behind.
-cat > "$tmp/bin/mktemp" <<EOF
-#!/bin/bash
-mkdir -p "\$FAKE/scratch" && '$(command -v mktemp)' -d "\$FAKE/scratch/tmp.XXXXXX"
 EOF
 
 # A ninja on PATH, which the script must not run, and the ninja which the
@@ -260,12 +242,12 @@ EOF
   : > "$src/Dropped.cpp.o"; : > "$src/Dropped.cpp.gcno"
   echo CMakeFiles/T.dir/src/Dropped.cpp.o > "$b/dead_objects.txt"
   : > "$case_dir/log"
-  platform=Linux failing= unknown= cxxfilt=absent from=$repo invoke=./scripts/generate_coverage_report.sh
+  platform=Linux failing= cxxfilt=absent from=$repo invoke=./scripts/generate_coverage_report.sh
 }
 
 # run <argument>...
-# Runs the script as $invoke, from $from, with $platform, $failing, $unknown
-# and $cxxfilt. Their defaults run it as CI does, from the repository's root.
+# Runs the script as $invoke, from $from, with $platform, $failing and
+# $cxxfilt. Their defaults run it as CI does, from the repository's root.
 # Sets $rc. The script's standard output is in $case_dir/out, its standard
 # error in $case_dir/err, and both in $case_dir/all.
 run() {
@@ -275,7 +257,7 @@ run() {
     unexecutable) printf '#!/bin/sh\n' > "$gnu_cxxfilt" ;;
   esac
   (cd "$from" && FAKE=$case_dir PATH="$tmp/bin:$PATH" FAKE_UNAME=$platform \
-                 FAIL=$failing UNKNOWN_CATEGORIES=$unknown \
+                 FAIL=$failing \
                  "$invoke" "$@" > "$case_dir/out" 2> "$case_dir/err")
   rc=$?
   cat "$case_dir/out" "$case_dir/err" > "$case_dir/all"
@@ -288,6 +270,7 @@ read_options='--rc check_data_consistency=0 --rc derive_function_end_line=0'
 remove_options='--keep-going --ignore-errors empty --ignore-errors format'
 darwin_remove_options="$remove_options --ignore-errors unused"
 darwin_patterns='/usr/* /opt/homebrew/* /Library/Developer/* /Applications/Xcode.app/*'
+categories='--ignore-errors range --ignore-errors empty --ignore-errors category'
 
 # The start of each call which depends on the build $b alone, and the report's
 # directory when the repository is $repo.
@@ -310,7 +293,6 @@ common_calls() {
 
 linux_gcc_controls() {
   fixture linux_gcc "$tmp/g++-13/bin/g++-15"
-  unknown=range
   run build/TestAll/gcc-env-coverage
   calls_in_build
   exits "a run on Linux succeeds" 0
@@ -322,26 +304,17 @@ linux_gcc_controls() {
   called "on Linux, the check is told of /usr alone" "$check_call /usr/*"
   check "the summary is kept for the check" yes '^  lines\.+: 50\.0% \(1 of 2 lines\)$' "$b/coverage_summary.txt"
   check "the summary is printed" yes '^  functions\.+: 100\.0% \(1 of 1 function\)$' "$case_dir/out"
-  called "the range category is probed" "genhtml --ignore-errors range -o <probe> /dev/null"
-  called "the empty category is probed" "genhtml --ignore-errors empty -o <probe> /dev/null"
-  called "the category category is probed" "genhtml --ignore-errors category -o <probe> /dev/null"
-  check "a category genhtml refuses is named" yes \
-        '^genhtml does not support --ignore-errors range; continuing without it$' "$case_dir/out"
-  check "a category genhtml accepts is not named" no \
-        'does not support --ignore-errors (empty|category)' "$case_dir/out"
-  local categories='--ignore-errors empty --ignore-errors category'
-  called "genhtml is given the categories it accepts, and plain --demangle-cpp" \
+  called "genhtml is given its three categories, and plain --demangle-cpp" \
          "genhtml --demangle-cpp --suppress-aliases -o $report $b/coverage.info $categories $read_options"
   exists "the report is in coverage_reports, under the build's path within build" yes \
          "$repo/coverage_reports/TestAll/gcc-env-coverage/index.html"
   check "the build directory is printed" yes "^Test Dir: $b$" "$case_dir/out"
+  [ "$(grep -c '^genhtml ' "$case_dir/log")" -eq 1 ] || fail "genhtml runs once, to write the report"
   in_order "the steps run in order" "ninja " "lcov --zerocounters" "ctest " "lcov --directory .* --capture" \
-           "lcov --remove" "lcov --summary" "check_tracefile.py" "genhtml --ignore-errors range" \
-           "genhtml --demangle-cpp"
+           "lcov --remove" "lcov --summary" "check_tracefile.py" "genhtml --demangle-cpp"
   [ "$(cat "$case_dir/notes_at_capture" 2> /dev/null)" = "$b/CMakeFiles/T.dir/src/Live.cpp.gcno" ] \
     || fail "the capture reads only the live notes file: $(cat "$case_dir/notes_at_capture" 2> /dev/null)"
   exists "a data file is left alone" yes "$b/CMakeFiles/T.dir/src/Live.cpp.gcda"
-  [ -z "$(ls -A "$case_dir/scratch" 2> /dev/null)" ] || fail "the probe left behind: $(ls -A "$case_dir/scratch")"
 }
 
 darwin_clang_controls() {
@@ -359,10 +332,8 @@ darwin_clang_controls() {
   called "on Darwin, removal takes the toolchains' paths, and an unused pattern is no error" \
          "$remove_call $darwin_patterns --output-file $b/coverage.info $darwin_remove_options $read_options"
   called "on Darwin, the check is told of the toolchains' paths" "$check_call $darwin_patterns"
-  local categories='--ignore-errors range --ignore-errors empty --ignore-errors category'
-  called "genhtml is given every category it accepts, and GNU c++filt" \
+  called "genhtml is given its three categories, and GNU c++filt" \
          "genhtml --demangle-cpp $gnu_cxxfilt --suppress-aliases -o $report $b/coverage.info $categories $read_options"
-  check "no category is named as refused" no 'does not support' "$case_dir/out"
 }
 
 # The gcov tool, and the c++filt, the script chooses in other builds.
@@ -589,7 +560,8 @@ mutations=(
   'ctest outside the build'           'pushd "${test_exe_dir}"'              'pushd .'
   'the build left the working dir'    $'\npopd\n'                            $'\n:\n'
   'ctest without a dashboard'         'run_checked ctest -T Test'            'run_checked ctest'
-  "the environment's gcov_tool honoured"  'case "${cxx##*/}" in'          '[[ -n "${gcov_tool}" ]] || case "${cxx##*/}" in'
+  "the environment's gcov_tool honoured"  'case "${cxx##*/}" in'
+                                      '[[ -n "${gcov_tool}" ]] || case "${cxx##*/}" in'
   "the compiler's entry not exact"    $'\'s/^CMAKE_CXX_COMPILER:[^=]*=//p\''  $'\'s/^CMAKE_CXX_COMPILER[^=]*=//p\''
   'g++-N not recognised'              '  g++-*)'                             '  gxx-*)'
   "gcov-N from PATH"                  'gcov_tool="${cxx%/*}/gcov-${cxx##*g++-}"'  'gcov_tool="gcov-${cxx##*g++-}"'
@@ -648,17 +620,12 @@ mutations=(
                                       'needs GNU c++filt at ${gnu_cxxfilt}"'
   'no demangling'                     'run_checked genhtml "${demangle[@]}"'  'run_checked genhtml'
   'aliases kept'                      ' --suppress-aliases'                  ''
-  'range not probed'                  'for category in range empty category'  'for category in empty category'
-  'empty not probed'                  'for category in range empty category'  'for category in range category'
-  'category not probed'               'for category in range empty category'  'for category in range empty'
-  "the probe's refusal unread"        '/dev/null 2>&1 \'                     '/dev/null \'
-  'any error a refusal'               'grep -q "unknown argument for --ignore-errors"'  'grep -q "ERROR"'
-  'refusals passed, acceptances named'  '  if ! genhtml --ignore-errors'     '  if genhtml --ignore-errors'
-  'a dropped category unremarked'     '    echo "genhtml does not support'   '    : "genhtml does not support'
-  "the probe's output in place"       '-o "${probe_dir}" /dev/null'          '/dev/null'
-  'the probe left behind'             'rm -rf "${probe_dir}"'                ':'
-  'no categories passed'              '"${info}" "${ignore[@]}"'             '"${info}"'
-  'genhtml repairs'                   '"${ignore[@]}" "${read_options[@]}"'  '"${ignore[@]}"'
+  'range an error in the report'     ' --ignore-errors range --ignore-errors empty'  ' --ignore-errors empty'
+  'empty an error in the report'      '--ignore-errors range --ignore-errors empty'  '--ignore-errors range'
+  'category an error in the report'   ' --ignore-errors category "'          ' "'
+  'genhtml probed first'              $'\nrun_checked genhtml'
+                                      $'\ngenhtml --ignore-errors range -o "${output_dir}" /dev/null 2>&1 | :\nrun_checked genhtml'
+  'genhtml repairs'                   '--ignore-errors category "${read_options[@]}"'  '--ignore-errors category'
   "genhtml's failure unnamed"         'run_checked genhtml "${demangle[@]}"'  'genhtml "${demangle[@]}"'
 )
 

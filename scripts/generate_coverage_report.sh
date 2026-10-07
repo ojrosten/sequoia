@@ -28,9 +28,7 @@
 # stops the script with a non-zero status.
 
 # A command outside run_checked which fails, such as reading the cache, ends
-# the script. There is no pipefail: the genhtml probe below pipes genhtml,
-# which always fails there, into grep. Under pipefail the pipeline would fail
-# whatever grep found, and every category would read as supported.
+# the script.
 set -e
 
 if [[ $# -ne 1 || -z "$1" ]]; then
@@ -169,22 +167,5 @@ script_dir=$(cd "$(dirname "$0")" && pwd -P)
 run_checked python3 "${script_dir}/check_tracefile.py" --capture "${capture}" --filtered "${info}" \
                                                         --summary "${summary}" --removed "${foreign[@]}"
 
-# genhtml refuses to run when given an error category it does not know, and
-# the categories it knows vary by lcov release: lcov 2.0, which Ubuntu 24.04
-# ships, does not know `range`. So the script passes each category only if
-# this genhtml knows it, and names each category it drops. genhtml refuses an
-# unknown category while it parses its arguments, before it reads its input,
-# so the probe is cheap.
-probe_dir=$(mktemp -d)
-ignore=()
-for category in range empty category; do
-  if ! genhtml --ignore-errors "${category}" -o "${probe_dir}" /dev/null 2>&1 \
-       | grep -q "unknown argument for --ignore-errors"; then
-    ignore+=(--ignore-errors "${category}")
-  else
-    echo "genhtml does not support --ignore-errors ${category}; continuing without it"
-  fi
-done
-rm -rf "${probe_dir}"
-
-run_checked genhtml "${demangle[@]}" --suppress-aliases -o "${output_dir}" "${info}" "${ignore[@]}" "${read_options[@]}"
+run_checked genhtml "${demangle[@]}" --suppress-aliases -o "${output_dir}" "${info}" \
+                    --ignore-errors range --ignore-errors empty --ignore-errors category "${read_options[@]}"
