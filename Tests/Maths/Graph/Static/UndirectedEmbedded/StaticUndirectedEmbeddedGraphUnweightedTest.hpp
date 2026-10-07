@@ -1,15 +1,15 @@
-
-#include "sequoia/PlatformSpecific/Macros.hpp"
-#include "sequoia/TestFramework/Macros.hpp"
-
-import std;
-import sequoia.test_framework;
 ////////////////////////////////////////////////////////////////////
 //                Copyright Oliver J. Rosten 2023.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
+
+import std;
+import sequoia.test_framework;
 
 /** \file */
 
