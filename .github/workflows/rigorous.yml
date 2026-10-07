@@ -254,7 +254,13 @@ jobs:
     name: Coverage · Linux · GCC
     needs: [staging, scope]
     if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
-    runs-on: ubuntu-latest
+    # Pinned, as lcov is below, so that the measurement moves only when a PR
+    # moves it. ubuntu-latest becomes Ubuntu 26.04 from 2026-10-19. The
+    # demanglers named below and the compiler's package belong to this image,
+    # as the baseline of uncalled functions will. Moving to another image is a
+    # PR that changes this line, finds the image's demanglers, checks the
+    # uncalled-functions selftest against them and regenerates that baseline.
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     env:
       CC: gcc-15
@@ -360,20 +366,6 @@ jobs:
           g++-15 --version | head -1
           "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin/cmake" --version | head -1
 
-      # Telemetry for roadmap 234's gate, which is to demangle the tracefile's
-      # names with GNU c++filt and llvm-cxxfilt, and to record their versions
-      # in its baseline. The step reports which demanglers the image offers, and
-      # never fails the job. Remove it once the gate's own step locates its
-      # demanglers.
-      - name: Name the demanglers on the image
-        if: env.NEEDS_TESTING == 'true'
-        run: |
-          for tool in c++filt llvm-cxxfilt /usr/bin/llvm-cxxfilt-* /usr/lib/llvm-*/bin/llvm-cxxfilt; do
-            path=$(command -v "$tool") || { echo "$tool: absent"; continue; }
-            version=$({ "$path" --version 2>&1 || true; } | grep -m1 -E '[0-9]+\.[0-9]+') || version="no version found"
-            echo "$path -> $(readlink -f "$path"): $version"
-          done
-
       - name: Give git an identity
         if: env.NEEDS_TESTING == 'true'
         run: |
@@ -434,7 +426,7 @@ jobs:
 
       # Roadmap 234's gate on uncalled functions keys each function by its
       # demangled name, so the script's controls run with the demanglers the
-      # gate is to use. ubuntu-24.04 has llvm-cxxfilt-16 to -18 and no
+      # gate is to use. The job's image has llvm-cxxfilt-16 to -18 and no
       # unversioned llvm-cxxfilt; 18 is the newest. A demangler absent from the
       # path given fails this step. The step follows Measure, so that a failure
       # here does not cost the run its coverage figures.
