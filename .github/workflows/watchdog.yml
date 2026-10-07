@@ -1,9 +1,9 @@
 name: watchdog
 
 # A scheduled run that never happens leaves nothing behind: no run, no email,
-# no red. Every other audit in this repository lives inside the run it
-# audits, and the false-negative control shows that a run which happens can
-# fail, not that runs happen. GitHub documents that a queued scheduled run can
+# no red. Each tier's audit lives inside the run it audits, and the
+# false-negative control shows that a run which happens can fail, not that
+# runs happen. GitHub documents that a queued scheduled run can
 # be dropped under load, and a malformed cron expression, or a workflow file
 # that no longer parses, never fires. The two look the same.
 #
@@ -40,11 +40,11 @@ name: watchdog
 # nothing can be found and the job must go red. If it comes back green, it
 # cannot see.
 on:
-  # Twelve hours after the ticks of the nightly and the statistical run. Each
-  # of those arrives hours late: the nightly 4h30m to 5h after its tick. A
-  # watched run that has not arrived when this one looks is reported missing,
-  # so the gap must exceed their delay. This run is late too, which only
-  # widens the gap. The minute is off the hour, as rigorous.yml's is.
+  # This tick is twelve hours after those of the nightly and the statistical
+  # run. A watched run that GitHub has not created when this one looks is
+  # reported missing, so the gap must exceed the watched runs' delay. Over the
+  # 20 nights to 2026-10-07, GitHub created the nightly 4h34m to 6h21m after
+  # its tick. The minute is off the hour, as rigorous.yml's is.
   schedule:
     - cron: '1 13 * * *'
   workflow_dispatch:

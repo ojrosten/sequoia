@@ -40,7 +40,9 @@ name: statistical
 # The columns run without `--check-versioned-output`: the gate has already
 # applied it to this tree. `locate N` composes with the flag, comparing once,
 # after the last repetition, but that has been verified locally and not here.
-# The performance tests are excluded for the reason coarse.yml gives.
+# The performance tests are excluded, as on these configurations in the
+# gates: coarse.yml gives the reason for macOS and Windows, and rigorous.yml
+# for a sanitized Linux build.
 #
 # The columns are those whose failures are rare by mechanism:
 #   - TSan reports only the interleavings that actually execute, so
@@ -59,10 +61,9 @@ name: statistical
 # the measured two to four minutes a suite puts N=20 at about an hour a
 # column.
 on:
-  # A minute after the nightly's tick, only so as not to share it. Which of
-  # the two GitHub creates first is a coin toss, since its delay varies from
-  # run to run by about an hour. Nothing here depends on the order: the
-  # nightly's columns are not a prerequisite, only a neighbour in the queue.
+  # A minute after the nightly's tick, only so as not to share it. Nothing
+  # here depends on which of the two GitHub creates first: the nightly's
+  # columns are not a prerequisite, only a neighbour in the queue.
   schedule:
     - cron: '2 1 * * *'
   workflow_dispatch:

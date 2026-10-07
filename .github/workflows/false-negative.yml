@@ -17,8 +17,8 @@ name: false-negative
 #     docs or coverage break.
 # A column that comes back green cannot see, and this job fails on it.
 #
-# It runs weekly rather than nightly: it costs a full rigorous run, and what
-# it measures, the gate's ability to fail, changes only when the workflows
+# It runs weekly rather than nightly, since it costs a full rigorous run. It
+# measures the gate's ability to fail, which changes only when the workflows
 # do. Run it by hand after any change to them.
 #
 # GITHUB_TOKEN may dispatch: the guard that stops a GITHUB_TOKEN push or PR
