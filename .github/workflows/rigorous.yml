@@ -254,12 +254,19 @@ jobs:
     name: Coverage · Linux · GCC
     needs: [staging, scope]
     if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
-    # Pinned, as lcov is below, so that the measurement moves only when a PR
-    # moves it. ubuntu-latest becomes Ubuntu 26.04 from 2026-10-19. The
-    # demanglers named below and the compiler's package belong to this image,
-    # as the baseline of uncalled functions will. Moving to another image is a
-    # PR that changes this line, finds the image's demanglers, checks the
-    # uncalled-functions selftest against them and regenerates that baseline.
+    # Pinned, as lcov is below, so that the Ubuntu release changes only in a
+    # PR. ubuntu-latest moves to Ubuntu 26.04 in a rollout beginning
+    # 2026-10-19. ubuntu-24.04 is the release the demangler paths below were
+    # measured on. Two things still move without a PR: GitHub rebuilds the
+    # ubuntu-24.04 image weekly, and the toolchain PPA uploads new snapshots of
+    # g++-15. A PR that moves the job to another release:
+    #   -# changes the runs-on line;
+    #   -# is tested by dispatching rigorous on its branch, since no workflow
+    #      a PR into staging triggers runs this job;
+    #   -# finds the release's demanglers, with the listing step of 36950811f,
+    #      and updates the llvm-cxxfilt path in the uncalled-functions step;
+    #   -# checks that the PPA, or the release itself, provides g++-15;
+    #   -# regenerates any baseline that records the tools' versions.
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     env:
@@ -336,12 +343,14 @@ jobs:
           if ! echo "$cmake_sha256  $cmake_tarball" | sha256sum --check --quiet; then echo "::error::The CMake tarball does not match its published checksum"; exit 1; fi
           tar -xzf "$cmake_tarball" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin" >> "$GITHUB_PATH"
-          # lcov comes from its release rather than apt, so that its version does not move with
-          # ubuntu-latest: the 24.04 archive has 2.0 and the 26.04 one 2.4, and lcov 2.0 and 2.5
-          # write different function records, and count different function totals, from the same
-          # coverage data. Keep it at the version Homebrew installs, so that CI and a Mac run the
-          # same lcov. Pinned by checksum for the same reason as CMake. Each tool prints the
-          # version and, after a hyphen, the release number from the tarball's .version file.
+          # lcov comes from its release rather than apt, so that its version
+          # does not move with the image: the 24.04 archive has 2.0 and the
+          # 26.04 one 2.4, and lcov 2.0 and 2.5 write different function
+          # records, and count different function totals, from the same
+          # coverage data. Keep it at the version Homebrew installs, so that CI
+          # and a Mac run the same lcov. Pinned by checksum for the same reason
+          # as CMake. Each tool prints the version and, after a hyphen, the
+          # release number from the tarball's .version file.
           lcov_version=2.5
           lcov_release=0
           lcov_sha256=7e5e5a154bd5f3557659c328cab376764e7abd238bb403c424472c296b175126
@@ -426,10 +435,11 @@ jobs:
 
       # Roadmap 234's gate on uncalled functions keys each function by its
       # demangled name, so the script's controls run with the demanglers the
-      # gate is to use. The job's image has llvm-cxxfilt-16 to -18 and no
-      # unversioned llvm-cxxfilt; 18 is the newest. A demangler absent from the
-      # path given fails this step. The step follows Measure, so that a failure
-      # here does not cost the run its coverage figures.
+      # gate is to use. ubuntu-24.04 has llvm-cxxfilt-16 to -18 and no
+      # unversioned llvm-cxxfilt; 18 is the newest (run 37584812301). A
+      # demangler absent from the path given fails this step. The step follows
+      # Measure, so that a failure here does not cost the run its coverage
+      # figures.
       - name: Test the uncalled-functions script
         if: ${{ always() && env.NEEDS_TESTING == 'true' }}
         run: |
