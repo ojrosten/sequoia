@@ -9,15 +9,14 @@
 # The script must fail no control, and each mutant at least one. One run of the
 # controls takes about 20 s, since four of them wait for the time to run out.
 #
-# The wait is shrunk to 4 s, reading every 1 s. Each control is a claim the
-# script exists to keep:
+# The selftest shrinks the wait to 4 s, with a read every 1 s. Each control is
+# a claim the script exists to keep:
 #
 #   - a read on which the filter awaits nothing ends the wait at once, and is
 #     the jobs file;
 #   - the read asks for every page of the jobs of the run named, in $GH_REPO;
-#   - a read on which the filter awaits something is logged, naming what the
-#     filter awaits, and is followed by a pause of the interval and another
-#     read;
+#   - a read on which the filter awaits something is followed by a log line
+#     naming what the filter awaits, a pause of the interval, and another read;
 #   - the options after the filter reach jq;
 #   - a read that fails, or gives output that is not JSON, is retried, and does
 #     not replace the jobs file;
@@ -86,8 +85,8 @@ check() {
 }
 
 # run <case> <read>...
-# Runs the script in the directory $dir, against the reads given, served in
-# order. Sets $status and $calls, the number of reads.
+# Runs the script in a directory of its own, $dir, serving the reads in order.
+# Sets $status, and $calls to the number of reads.
 run() {
   dir=$cases/$1
   shift
@@ -202,11 +201,11 @@ controls() {
   [ -z "$left" ] || fail "runs left temporary files behind: $left"
 }
 
-# Each mutant breaks one behaviour the controls claim, and is a description,
-# the text it replaces, and the replacement. One mutant is left out as beyond
-# the controls' resolution: a deadline one interval later. The script reads the
-# clock in whole seconds, so the reads that fit before the deadline already
-# vary by one.
+# Each mutant breaks one behaviour that the controls claim. Its entry holds a
+# description, the text it replaces, and the replacement. A deadline one
+# interval later is left out: the script reads the clock in whole seconds, so
+# the number of reads before the deadline already varies by one, and no control
+# can see the difference.
 mutations=(
   'two arguments accepted'          'if [ $# -lt 3 ]; then'            'if [ $# -lt 2 ]; then'
   'three arguments refused'         'if [ $# -lt 3 ]; then'            'if [ $# -lt 4 ]; then'
