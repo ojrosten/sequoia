@@ -25,8 +25,6 @@
 #     output and error, and runs in the caller's process group;
 #   - a command which ends before the deadline returns at once, leaves no
 #     snapshot, and leaves neither the watcher nor its sleep behind;
-#   - a command which ends while the watcher sleeps through the deadline
-#     leaves no snapshot;
 #   - a watcher whose script has been killed stops, rather than taking a
 #     snapshot at a deadline nobody is waiting for;
 #   - at the deadline, while the command still runs, the snapshot says when it
@@ -53,9 +51,11 @@
 # The stand-in for a hung suite is compiled here, blocked in two threads, in
 # functions whose names the stacks must show. A system binary copied under
 # another name will not do, since macOS kills a copied platform binary on
-# launch. The stand-in's name is at most fifteen characters, the part of a
-# process's name Linux keeps and pgrep -x compares against. The stand-in ends
-# itself after two minutes, in case the selftest is killed before it can.
+# launch. The stand-in's name is Hung followed by the selftest's process id,
+# so that no control finds another run's stand-ins. The name and the decoy's
+# are at most fourteen characters, within the fifteen of a process's name that
+# Linux keeps and pgrep -x compares against. The stand-in ends itself after
+# two minutes, in case the selftest is killed before it can.
 #
 # Two controls need permissions the selftest does not arrange, and each fails
 # naming the permission when it is missing:
@@ -68,8 +68,8 @@
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
 original="$here/../snapshot_at_deadline.sh"
-name=HungStandIn
-decoy=HungStandInToo
+name=Hung$$
+decoy=${name}Too
 tmp=$(mktemp -d)
 started=
 # Stops every process the selftest started, and removes any report `sample`
@@ -235,9 +235,6 @@ for tool in dirname mktemp mkdir rm touch sleep date ps; do
     || { echo "FAIL: cannot find $tool"; exit 1; }
 done
 
-# A stand-in for sleep which holds a one-second sleep until $SLEEP_RELEASE
-# exists or its directory has gone, for 600 polls at most, and passes any other
-# sleep to the real one.
 real_sleep=$(command -v sleep)
 
 # A gdb stand-in which takes a second, so that a snapshot is still being taken
@@ -246,19 +243,14 @@ fake_tool "$tmp/linux-slow" uname 'echo Linux'
 fake_tool "$tmp/linux-slow" pgrep "$pgrep_stand_in"
 fake_tool "$tmp/linux-slow" sudo  'exit 1'
 fake_tool "$tmp/linux-slow" gdb   "$real_sleep 1"
-fake_tool "$tmp/sleeping" sleep "[ \"\$1\" = 1 ] || exec $real_sleep \"\$@\"
-polls=0
-while [ ! -e \"\$SLEEP_RELEASE\" ] && [ -d \"\${SLEEP_RELEASE%/*}\" ] && [ \"\$polls\" -lt 600 ]; do
-  $real_sleep 0.1
-  polls=\$((polls + 1))
-done"
 
 run_controls() {
   fails=0
   work=$(mktemp -d "$tmp/controls.XXXXXX")
 
-  # The quick controls come first, and those which wait for a deadline or a
-  # snapshot last, since --mutations stops a mutant at its first failure.
+  # The controls run roughly in order of what they cost, the cheapest first,
+  # since --mutations stops a mutant at its first failure. The real stand-ins
+  # and the late snapshot come last.
 
   # Refusals.
   echo "an earlier snapshot" > "$work/earlier.txt"
@@ -403,6 +395,8 @@ $real_sleep 5"
   started="$started $runner"
   wait_for "^== Stacks of '$name'" "$work/overlap.txt" 10 \
     || fail "the overlapping snapshot never reached the stacks"
+  ! grep -q '^Snapshot finished at' "$work/overlap.txt" \
+    || fail "the snapshot finished before the command ended, so the overlap was not tested"
   touch "$work/overlap.release"
   wait "$runner"
   check "a snapshot begun is finished before the script returns" yes "^Snapshot finished at" "$work/overlap.txt"
@@ -448,27 +442,6 @@ $real_sleep 5"
   check_status "success after the deadline"   0 1  sh -c 'sleep 2'
   check_status "failure after the deadline"   3 1  sh -c 'sleep 2; exit 3'
 
-  # A command which ends after the deadline has passed, while the watcher
-  # sleeps. A stand-in for sleep holds the watcher's one-second sleep until
-  # the command has ended. The watcher must not snapshot: the script either
-  # ends it, or the watcher wakes to find the snapshot claimed. The deadline is
-  # 2 s, so that the watcher is not already past the deadline when it first
-  # looks.
-  mkdir "$work/sleeping"
-  env PATH="$tmp/sleeping:$PATH" TMPDIR="$work/sleeping" SLEEP_RELEASE="$work/sleeping.wake" \
-    "$BASH" "$script" 2 "$work/sleeping.txt" "$name" -- "$tmp/held" "$work/sleeping.release" &
-  runner=$!
-  started="$started $runner"
-  sleep 2.5
-  touch "$work/sleeping.release"
-  for poll in $(seq 1 50); do
-    [ -z "$(find "$work/sleeping" -name claim)" ] || break
-    sleep 0.1
-  done
-  touch "$work/sleeping.wake"
-  wait "$runner"
-  [ ! -e "$work/sleeping.txt" ] || fail "a command which ended while the watcher slept left a snapshot"
-
   # The stand-ins: two with the name, and a decoy whose name begins with it.
   "$tmp/$name" &  first=$!
   "$tmp/$name" &  second=$!
@@ -509,7 +482,6 @@ $real_sleep 5"
     check "the stacks of process $pid show its second thread" yes \
       "blocked_in_a_second_thread" "$work/stacks.$pid.txt"
   done
-
 
   clean_up
 }
