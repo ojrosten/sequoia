@@ -15,7 +15,6 @@ import :GraphDetails;
 import :StaticGraphDetails;
 export import sequoia.algorithms;
 export import sequoia.core.container_utilities;
-export import sequoia.core.data_structures;
 export import sequoia.core.meta;
 export import sequoia.core.object;
 export import sequoia.maths.sequences;
