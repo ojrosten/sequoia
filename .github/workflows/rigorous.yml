@@ -245,9 +245,9 @@ jobs:
       needs_testing: ${{ needs.scope.outputs.documentation }}
 
   # The coverage figures are measured and published, with no threshold. The
-  # job fails on one measurement: roadmap 234's gate on uncalled functions, in
-  # "Check for uncalled functions". The uploaded coverage.info is an lcov
-  # tracefile.
+  # job fails on one measurement, in "Check for uncalled functions": a gate on
+  # functions of Source that no test calls. The uploaded coverage.info is an
+  # lcov tracefile.
   #
   # The toolchain steps repeat tests.yml rather than calling it: coverage runs the
   # suite through ctest, serially, not through the `run` target.
@@ -275,8 +275,8 @@ jobs:
       CC: gcc-15
       CXX: g++-15
       NEEDS_TESTING: ${{ needs.scope.outputs.suite }}
-      # The demanglers of roadmap 234's gate on uncalled functions; see
-      # "Test the uncalled-functions script".
+      # The demanglers of the gate on uncalled functions; see "Test the
+      # uncalled-functions script".
       LLVM_CXXFILT: /usr/bin/llvm-cxxfilt-18
       GNU_CXXFILT: /usr/bin/c++filt
     steps:
@@ -442,26 +442,25 @@ jobs:
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
-      # Roadmap 234's gate on uncalled functions keys each function by its
-      # demangled name, so the script's controls run with the demanglers the
-      # gate is to use. ubuntu-24.04 has llvm-cxxfilt-16 to -18 and no
-      # unversioned llvm-cxxfilt; 18 is the newest (run 37584812301). A
-      # demangler absent from the path given fails this step. The step follows
-      # Measure, so that a failure here does not cost the run its coverage
-      # figures.
+      # The gate on uncalled functions keys each function by its demangled name,
+      # so the script's controls run with the demanglers the gate is to use.
+      # ubuntu-24.04 has llvm-cxxfilt-16 to -18 and no unversioned llvm-cxxfilt;
+      # 18 is the newest (run 37584812301). A demangler absent from the path
+      # given fails this step. The step follows Measure, so that a failure here
+      # does not cost the run its coverage figures.
       - name: Test the uncalled-functions script
         if: ${{ always() && env.NEEDS_TESTING == 'true' }}
         run: scripts/tests/uncalled_functions_selftest.py --demangler "$LLVM_CXXFILT" --demangler "$GNU_CXXFILT"
 
-      # Roadmap 234's gate. A function of Source that no test calls fails the
-      # job, unless the baseline, coverage_reports/uncalled_functions.txt,
-      # lists it. A .cpp file of Source missing from the tracefile also fails
-      # the job. The tracefile holds every object the build compiled, whether or
-      # not it was linked. A template never instantiated, and an inline function
-      # never used, are in no object, so the gate does not see them. A listed
-      # function that is now called, or gone, gives a notice, and the list is
-      # shortened by hand. Errors and notices are annotations on the run as well
-      # as lines in its summary.
+      # The gate. A function of Source that no test calls fails the job, unless
+      # the baseline, coverage_reports/uncalled_functions.txt, lists it. A .cpp
+      # file of Source missing from the tracefile also fails the job. The
+      # tracefile holds every object the build compiled, whether or not it was
+      # linked. A template never instantiated, and an inline function never
+      # used, are in no object, so the gate does not see them. A listed function
+      # that is now called, or gone, gives a notice, and the list is shortened
+      # by hand. Errors and notices are annotations on the run as well as lines
+      # in its summary.
       #
       # The baseline's header names the tools' releases, so a change of
       # demangler, compiler or lcov release is refused until the baseline is
