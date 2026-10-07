@@ -42,6 +42,10 @@
 # the script.
 set -e
 
+# An exported CDPATH would send cd with a relative path to a directory within
+# a directory it names, and make cd print the directory it chose.
+unset CDPATH
+
 script_dir=$(cd -P "$(dirname "$0")" && pwd -P)
 
 if [[ $# -ne 1 || -z "$1" ]]; then
@@ -133,9 +137,7 @@ done < <(find "${test_exe_dir}" -name '*.gcno')
 
 run_checked lcov --zerocounters --directory "${test_exe_dir}"
 
-pushd "${test_exe_dir}"
-run_checked ctest -T Test
-popd
+(cd "${test_exe_dir}" && run_checked ctest -T Test)
 
 # gcov must match the compiler which wrote the data files (.gcda), so the
 # script chooses the tool by the build's compiler.
@@ -187,7 +189,7 @@ foreign=('/usr/*')
 # to ignore it.
 remove_options=(--keep-going --ignore-errors empty --ignore-errors format)
 if [[ "${platform}" == Darwin ]]; then
-  foreign+=('/opt/homebrew/*' '/Library/Developer/*' '/Applications/Xcode.app/*')
+  foreign+=("${homebrew}/*" '/Library/Developer/*' '/Applications/Xcode.app/*')
   # The patterns cover every toolchain's system headers, and no one build
   # uses them all. lcov treats a pattern that removes nothing as an error.
   remove_options+=(--ignore-errors unused)

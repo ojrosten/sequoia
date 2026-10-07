@@ -21,7 +21,9 @@
 #     named build in the build's physical path, under the rest of that path.
 #     The script refuses a build whose report would lie outside the
 #     repository's own coverage_reports. Only genhtml makes the report's
-#     directory, so a run which fails before genhtml makes none;
+#     directory, so a run which fails before genhtml makes none. Neither an
+#     exported CDPATH nor a run from a link to the build changes where the
+#     script finds the build, itself, or the report;
 #   - an earlier report is deleted only once every step before genhtml has
 #     succeeded. The script deletes the report's directory by its physical
 #     path, and nothing beside it, and genhtml writes the report there. The
@@ -35,14 +37,17 @@
 #     capture reads only live notes files;
 #   - the counters are zeroed, then ctest runs the suite in the build, then
 #     lcov captures, removes the foreign files, and summarises. Then
-#     check_tracefile.py checks the removal, and genhtml writes the report;
+#     check_tracefile.py checks the removal, and genhtml writes the report.
+#     The script prints to standard output the build's directory, the
+#     report's, the gcov tool and lcov's summary, and nothing else;
 #   - the gcov tool is the one beside g++-N with N's version, or a wrapper of
 #     llvm-cov gcov beside clang++, or gcov for any other compiler. A gcov_tool
 #     in the environment changes nothing;
 #   - each lcov call, check_tracefile.py and genhtml get the options the
 #     script's comments give reasons for. genhtml runs once, given the three
-#     error categories lcov 2.5 knows. On Darwin, removal takes the
-#     toolchains' paths too, and an unused pattern is no error;
+#     error categories lcov 2.5 knows. On Darwin, removal takes Homebrew's
+#     prefix, as brew gives it, and the other toolchains' paths too, and an
+#     unused pattern is no error;
 #   - on Darwin, genhtml is given GNU c++filt from Homebrew's binutils, under
 #     the prefix brew gives, and the script refuses to start without brew or
 #     the c++filt. On Linux, brew is not run, and genhtml is given no c++filt;
@@ -263,13 +268,13 @@ EOF
   echo CMakeFiles/T.dir/src/Dropped.cpp.o > "$b/dead_objects.txt"
   : > "$case_dir/log"
   platform=Linux failing= cxxfilt=absent homebrew=$tmp/homebrew from=$repo invoke=./scripts/generate_coverage_report.sh
-  link_name= link_target=
+  link_name= link_target= cdpath=
 }
 
 # run <argument>...
 # Runs the script as $invoke, from $from, with $platform, $failing, $cxxfilt,
-# $homebrew, $link_name and $link_target. Their defaults run it as CI does,
-# from the repository's root.
+# $homebrew, $link_name, $link_target, and $cdpath as CDPATH. Their defaults
+# run it as CI does, from the repository's root.
 # Sets $rc. The script's standard output is in $case_dir/out, its standard
 # error in $case_dir/err, and both in $case_dir/all.
 run() {
@@ -280,6 +285,7 @@ run() {
   esac
   (cd "$from" && FAKE=$case_dir PATH="$tmp/bin:$PATH" FAKE_UNAME=$platform \
                  FAIL=$failing FAKE_HOMEBREW=$homebrew LINK_NAME=$link_name LINK_TARGET=$link_target \
+                 CDPATH=$cdpath \
                  "$invoke" "$@" > "$case_dir/out" 2> "$case_dir/err")
   rc=$?
   cat "$case_dir/out" "$case_dir/err" > "$case_dir/all"
@@ -291,7 +297,7 @@ capture_options+=' --ignore-errors empty --ignore-errors inconsistent,inconsiste
 read_options='--rc check_data_consistency=0 --rc derive_function_end_line=0'
 remove_options='--keep-going --ignore-errors empty --ignore-errors format'
 darwin_remove_options="$remove_options --ignore-errors unused"
-darwin_patterns='/usr/* /opt/homebrew/* /Library/Developer/* /Applications/Xcode.app/*'
+darwin_patterns="/usr/* $tmp/homebrew/* /Library/Developer/* /Applications/Xcode.app/*"
 categories='--ignore-errors range --ignore-errors empty --ignore-errors category'
 
 # The start of each call which depends on the build $b alone, and the report's
@@ -331,6 +337,10 @@ linux_gcc_controls() {
   exists "the report is in coverage_reports, under the build's path within build" yes \
          "$repo/coverage_reports/TestAll/gcc-env-coverage/index.html"
   check "the build directory is printed" yes "^Test Dir: $b$" "$case_dir/out"
+  local others
+  others=$(grep -vE '^(Test Dir|Output Dir|gcov): |^Reading tracefile |^Summary coverage rate:$|^  (lines|functions)\.' \
+                    "$case_dir/out")
+  [ -z "$others" ] || fail "standard output holds only the script's lines and lcov's summary: $(head -1 <<< "$others")"
   [ "$(grep -c '^genhtml ' "$case_dir/log")" -eq 1 ] || fail "genhtml runs once, to write the report"
   in_order "the steps run in order" "ninja " "lcov --zerocounters" "ctest " "lcov --directory .* --capture" \
            "lcov --remove" "lcov --summary" "check_tracefile.py" "genhtml --demangle-cpp"
@@ -502,6 +512,14 @@ output_controls() {
   exits "a run from a link succeeds" 0
   exists "a run from a link writes the same report" yes \
          "$repo/coverage_reports/TestAll/gcc-env-coverage/index.html"
+
+  # An exported CDPATH names a directory holding a build of the same name.
+  fixture cdpath "$tmp/g++-13/bin/g++-15"
+  mkdir -p "$case_dir/decoy/build/TestAll/gcc-env-coverage"
+  cdpath=$case_dir/decoy
+  run build/TestAll/gcc-env-coverage
+  exits "a run with a CDPATH succeeds" 0
+  check "a run with a CDPATH uses the build named" yes "^Test Dir: $b$" "$case_dir/out"
 
   # The repository lies within a directory named build, which lies within one
   # whose name ends in build. So does the project's directory within build.
@@ -716,6 +734,7 @@ mutations=(
   'an escaping report on standard output'  'is not within ${physical_reports}" >&2'
                                       'is not within ${physical_reports}"'
   'errors ignored'                    'set -e'                               'set +e'
+  "the environment's CDPATH used"     'unset CDPATH'                         ':'
   'a failed step ignored'             '"$@" && return'                       '"$@"; return'
   'a failed step exits 0'             $'>&2\n  exit 1\n}'                    $'>&2\n  exit 0\n}'
   'a failed step on standard output'  'from: $*" >&2'                        'from: $*"'
@@ -732,8 +751,7 @@ mutations=(
   'notes at the top only'             'find "${test_exe_dir}" -name'         'find "${test_exe_dir}" -maxdepth 1 -name'
   'every profile file swept'          "-name '*.gcno'"                       "-name '*.gc*'"
   'counters not zeroed'               'run_checked lcov --zerocounters --directory "${test_exe_dir}"'  ':'
-  'ctest outside the build'           'pushd "${test_exe_dir}"'              'pushd .'
-  'the build left the working dir'    $'\npopd\n'                            $'\n:\n'
+  'ctest outside the build'           '(cd "${test_exe_dir}" && run_checked ctest'  '(run_checked ctest'
   'ctest without a dashboard'         'run_checked ctest -T Test'            'run_checked ctest'
   "the environment's gcov_tool honoured"  'case "${cxx##*/}" in'
                                       '[[ -n "${gcov_tool}" ]] || case "${cxx##*/}" in'
@@ -765,7 +783,8 @@ mutations=(
                                       '"${consistency_options[@]}")'
   '/usr kept'                         "foreign=('/usr/*')"                   'foreign=()'
   'Darwin taken for Linux'            $'== Darwin ]]; then\n  foreign+='    $'== Linux ]]; then\n  foreign+='
-  'Homebrew kept'                     "foreign+=('/opt/homebrew/*' "         "foreign+=("
+  'Homebrew kept'                     'foreign+=("${homebrew}/*" '           'foreign+=('
+  "Homebrew's prefix assumed for removal"  '"${homebrew}/*"'                 "'/opt/homebrew/*'"
   'the CommandLineTools kept'         "'/Library/Developer/*' "              ''
   'Xcode kept'                        " '/Applications/Xcode.app/*')"        ')'
   'an unused pattern an error'        '  remove_options+=(--ignore-errors unused)'  '  :'
