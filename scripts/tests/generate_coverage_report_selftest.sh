@@ -17,7 +17,8 @@
 #   - the report is written to coverage_reports beside the last directory
 #     named build in the build's physical path, under the rest of that path.
 #     A Setup.txt in the build names a subdirectory of the report, by its
-#     first line;
+#     first line. Only genhtml makes the report's directory, so a run which
+#     fails before genhtml makes none;
 #   - ninja, taken from the build's cache rather than from PATH, deletes the
 #     objects of sources the build no longer has. Then every notes file
 #     without its object is deleted, anywhere in the build, so that the
@@ -484,7 +485,8 @@ failure_controls() {
       cleandead)    failed "$step" "^error: exit status 9 from: $tmp/cache/ninja -C $b -t cleandead$" "lcov"
                     exists "a failing cleandead stops the sweep" yes "$b/CMakeFiles/T.dir/src/Orphan.cpp.gcno" ;;
       zerocounters) failed "$step" "^error: exit status 7 from: lcov --zerocounters --directory $b$" "ctest" ;;
-      ctest)        failed "$step" "^error: exit status 8 from: ctest -T Test$" "lcov --directory" ;;
+      ctest)        failed "$step" "^error: exit status 8 from: ctest -T Test$" "lcov --directory"
+                    exists "a failing suite makes no report directory" no "$repo/coverage_reports" ;;
       capture)      failed "$step" "^error: exit status 7 from: lcov --directory $b --capture " "lcov --remove" ;;
       remove)       failed "$step" "^error: exit status 7 from: lcov --remove " "lcov --summary" ;;
       summary)      failed "$step" "^error: exit status 7 from: lcov --summary $b/coverage.info " "check_tracefile.py"
@@ -529,11 +531,9 @@ controls() {
 }
 
 # Each mutant breaks one behaviour that the controls claim. Its entry holds a
-# description, the text it replaces, and the replacement. Two mutants are left
-# out, each equivalent:
-#   - deleting `mkdir -p "${output_dir}"`, since genhtml makes its output
-#     directory;
-#   - `$# -gt 1` for `$# -ne 1`, since `-z "$1"` refuses a missing argument.
+# description, the text it replaces, and the replacement. One mutant is left
+# out, as equivalent: `$# -gt 1` for `$# -ne 1`, since `-z "$1"` refuses a
+# missing argument.
 mutations=(
   'a second argument accepted'        'if [[ $# -ne 1 || -z "$1" ]]; then'   'if [[ $# -lt 1 || -z "$1" ]]; then'
   'an empty argument accepted'        'if [[ $# -ne 1 || -z "$1" ]]; then'   'if [[ $# -ne 1 ]]; then'
@@ -551,6 +551,8 @@ mutations=(
   'the suffix after a name ending build'  '"${test_exe_dir##*/build/}"'      '"${test_exe_dir##*build/}"'
   'the report within the build'       'output_dir="${path_prefix}/coverage_reports/${path_suffix}"'
                                       'output_dir="${test_exe_dir}/coverage_reports"'
+  'the report directory made early'   'echo "Output Dir: ${output_dir}"'
+                                      'echo "Output Dir: ${output_dir}"; mkdir -p "${output_dir}"'
   'Setup.txt ignored'                 'if [[ -f "${setup_file}" ]]; then'    'if false; then'
   'Setup.txt read whole'              'head -n 1 "${setup_file}"'            'cat "${setup_file}"'
   'errors ignored'                    'set -e'                               'set +e'

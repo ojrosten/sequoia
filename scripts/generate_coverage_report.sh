@@ -53,8 +53,6 @@ fi
 output_dir="${path_prefix}/coverage_reports/${path_suffix}"
 echo "Output Dir: ${output_dir}"
 
-mkdir -p "${output_dir}"
-
 # Runs a command and, if it fails, names it before ending the script.
 run_checked() {
   "$@" && return
