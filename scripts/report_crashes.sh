@@ -1,17 +1,26 @@
 #!/bin/bash
 # Usage: report_crashes.sh <dump directory> <since file>
 #
-# Prints the stacks of every crash since <since file> was written, then a last line,
-# "Crashes found: <n>". Where the crashes are found depends on the platform:
-#   - Windows: the minidumps Windows Error Reporting wrote to <dump directory>, read with cdb;
-#   - Linux: the cores the kernel wrote to <dump directory>, each named
-#     core.<process name>.<pid>, read with gdb;
-#   - macOS: the crash reports the system wrote to the directories macos_crash_report_directories
-#     names. A directory that cannot be read is named in a line beginning "Not read:".
+# Reports every crash whose dump is newer than <since file>, with its stacks.
+# A suite that crashes ends with an exit status and nothing else; the stacks
+# say where it stopped.
 #
-# A suite that crashes ends with an exit status and nothing else, and the stacks are what say
-# where it was. A crash whose stacks cannot be read is still counted, and says why, rather than
-# being absent.
+# The dumps depend on the platform:
+#   - Windows: the minidumps that Windows Error Reporting wrote to <dump
+#     directory>, read with cdb;
+#   - Linux: the cores that the kernel wrote to <dump directory>, each named
+#     core.<process name>.<pid>, read with gdb;
+#   - macOS: the crash reports that the system wrote to the directories
+#     macos_crash_report_directories lists. <dump directory> is not read.
+#
+# The output, in order:
+#   - on macOS, a line beginning "Not read:" for each listed directory that
+#     cannot be read;
+#   - for each crash, a line beginning "== Crash:", then its stacks. A crash
+#     whose stacks cannot be read is still reported and counted, and the
+#     report says why;
+#   - "Crashes found: <n>".
+# The status is 0 if the script reports, and 2 if it refuses its arguments.
 
 set -u
 
@@ -23,7 +32,7 @@ fi
 dumps=$1 since=$2
 
 if [ ! -d "$dumps" ] || [ ! -f "$since" ]; then
-  echo "$0: <dump directory> must be a directory and <since file> a file: '$dumps', '$since'" >&2
+  echo "$0: <dump directory> must be a directory, and <since file> must be a file: '$dumps', '$since'" >&2
   exit 2
 fi
 
@@ -39,8 +48,9 @@ case "$(uname -s)" in
   *)                    platform=linux   ;;
 esac
 
-# The images' symbols come from the paths the linker recorded in them; the system's, from
-# Microsoft's symbol server, cached beside the dumps.
+# cdb reads an executable's symbols from the path the linker recorded in it.
+# It downloads the system libraries' symbols from Microsoft's symbol server,
+# and caches them in <dump directory>/symbols.
 report_windows() {
   local cdb dump
   cdb=$(windows_debugger_path)
@@ -58,8 +68,8 @@ report_windows() {
   done < <(find "$dumps" -maxdepth 1 -type f -newer "$since" -name '*.dmp')
 }
 
-# A core's name carries only the process name the kernel keeps; the executable's path is in the
-# core itself, which `file` reads.
+# A core's name carries the kernel's name for the process, not the executable's
+# path. file reads that path from the core itself.
 report_linux() {
   local core executable
   while IFS= read -r core; do
@@ -78,13 +88,10 @@ report_linux() {
   done < <(find "$dumps" -maxdepth 1 -type f -newer "$since" -name 'core.*')
 }
 
-# An .ips report is JSON: a line of metadata, then the body. Only crashes are counted - bug
-# type 309 - since the directory also collects reports of other kinds. What a reader wants of a
-# crash is the exception and the faulting thread's frames, so those come first; the whole report
-# follows, for everything else. A .crash report, the older form, is not JSON, and is printed whole.
-#
-# The system gives a frame its source file and line, and lists the frames inlined into it, when it
-# can read the executable's debug information.
+# Whether a report in the directories is of a crash. The directories also
+# hold reports of other kinds. An .ips report begins with a line of JSON
+# metadata, whose bug type is 309 for a crash. A .crash report is the older
+# form of a crash report.
 is_crash_report() {
   case "$1" in
     *.crash) return 0 ;;
@@ -92,6 +99,13 @@ is_crash_report() {
   esac
 }
 
+# Prints each crash report's path, then a summary, then the whole report. The
+# summary is the exception and the frames of the faulting thread. A report
+# that cannot be summarised, which includes every .crash report, is printed
+# whole.
+#
+# The system gives a frame its source file and line, and lists the frames
+# inlined into it, when it can read the executable's debug information.
 report_macos() {
   local directory report directories=()
   while IFS= read -r directory; do
