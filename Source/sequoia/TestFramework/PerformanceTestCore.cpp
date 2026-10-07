@@ -11,75 +11,46 @@
 #include "sequoia/TestFramework/PathCheckers.hpp"
 
 #include <format>
+#include <regex>
 
 namespace sequoia::testing
 {
   namespace
   {
-    /** \brief Whether every mismatch lies after the `Task duration:` label on
-               its line, and leaves two spans of that line unchanged.
-
-        Each span must appear identically on both lines, or on neither:
-        -# the number of standard deviations, from `+-` to `*`;
-        -# the range of speed-ups, from `(` to `)`.
+    /** \brief `text` with each measured value replaced by `#`, in every line
+               of the shape `duration_summary` writes, and in any suffix of
+               the shape `speed_up_summary` appends to it.
      */
     [[nodiscard]]
-    bool acceptable_mismatch(std::string_view testOutput, std::string_view referenceOutput)
+    std::string without_measurements(std::string_view text)
     {
-      auto iters{std::ranges::mismatch(testOutput, referenceOutput)};
-      if((iters.in1 != testOutput.end()) && (iters.in2 != referenceOutput.end()))
-      {
-        constexpr auto npos{std::string::npos};
-        const auto pos{std::ranges::distance(testOutput.begin(), iters.in1)};
-        std::string_view preceding{testOutput.substr(0, pos)};
-        const auto labelPos{preceding.rfind("Task duration:")};
-        if((labelPos != npos) && !preceding.substr(labelPos).contains('\n'))
-        {
-          const auto endLine{testOutput.find('\n', pos)};
-          const auto refEndLine{referenceOutput.find('\n', pos)};
+      constexpr std::string_view number{R"((?:-?(?:\d+(?:\.\d+)?(?:e[-+]\d+)?|inf|nan)))"};
+      const auto duration{std::format("{}s", number)};
 
-          if((endLine != npos) && (refEndLine != npos))
-          {
-            std::string_view lineView{testOutput.substr(labelPos, endLine - labelPos)};
-            std::string_view refLineView{referenceOutput.substr(labelPos, refEndLine - labelPos)};
+      // A value replaced by `#`, rather than removed, cannot compare equal to a value which is missing
+      const std::regex durations{std::format(R"((Task duration: ){1}( \+- {0} \* ){1})", number, duration)};
+      const std::regex speedUp{std::format(R"((Task duration: # \+- {0} \* #)( \[){0}(; \({0}, {0}\)\]))", number)};
 
-            auto acceptable{
-              [=](std::string_view open, std::string_view close){
-                const auto openPos{lineView.find(open)};
-                const auto closePos{lineView.find(close)};
-                const auto refOpenPos{refLineView.find(open)};
-                const auto refClosePos{refLineView.find(close)};
-                const bool present{(closePos != npos) && (openPos < closePos)};
-                const bool refPresent{(refClosePos != npos) && (refOpenPos < refClosePos)};
-                if(present && refPresent)
-                {
-                  const auto[lineIter, refLineIter]{
-                    std::ranges::mismatch(lineView.begin() + openPos, lineView.begin() + closePos,
-                                          refLineView.begin() + refOpenPos, refLineView.begin() + refClosePos)};
-
-                  return (lineIter == (lineView.begin() + closePos)) && (refLineIter == (refLineView.begin() + refClosePos));
-                }
-
-                return present == refPresent;
-              }
-            };
-
-            if(!acceptable("+-", "*") || !acceptable("(", ")"))
-              return false;
-
-            return acceptable_mismatch(testOutput.substr(endLine), referenceOutput.substr(refEndLine));
-          }
-        }
-      }
-
-      return (iters.in1 == testOutput.end()) && (iters.in2 == referenceOutput.end());
+      return std::regex_replace(std::regex_replace(std::string{text}, durations, "$1#$2#"), speedUp, "$1$2#$3");
     }
+  }
+
+  [[nodiscard]]
+  std::string duration_summary(std::string_view prefix, double mean, double num_sds, double sig)
+  {
+    return std::format("{} Task duration: {:g}s +- {:g} * {:g}s", prefix, mean, num_sds, sig);
+  }
+
+  [[nodiscard]]
+  std::string speed_up_summary(double speedUp, double minSpeedUp, double maxSpeedUp)
+  {
+    return std::format(" [{:g}; ({:g}, {:g})]", speedUp, minSpeedUp, maxSpeedUp);
   }
 
   [[nodiscard]]
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput)
   {
-    return acceptable_mismatch(testOutput, referenceOutput) ? referenceOutput : testOutput;
+    return without_measurements(testOutput) == without_measurements(referenceOutput) ? referenceOutput : testOutput;
   }
 
   [[nodiscard]]

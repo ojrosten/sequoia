@@ -17,7 +17,6 @@
 
 #include <algorithm>
 #include <chrono>
-#include <format>
 #include <random>
 #include <ranges>
 
@@ -32,6 +31,19 @@ namespace sequoia::testing
 
     return t.time_elapsed();
   }
+
+  /** \brief A line reporting a task's mean duration and its standard
+             deviation, both in seconds, with `num_sds`, the number of
+             standard deviations which defines a significant result.
+   */
+  [[nodiscard]]
+  std::string duration_summary(std::string_view prefix, double mean, double num_sds, double sig);
+
+  /** \brief A suffix reporting the measured speed-up and the range predicted
+             for it.
+   */
+  [[nodiscard]]
+  std::string speed_up_summary(double speedUp, double minSpeedUp, double maxSpeedUp);
 
   /** \brief Function for comparing the performance of a fast task to a slow task.
 
@@ -174,19 +186,8 @@ namespace sequoia::testing
         passed = false;
       }
 
-      auto stats{
-        [num_sds](std::string_view prefix, const auto mean, const auto sig){
-          return std::format("{} Task duration: {:g}s +- {:g} * {:g}s", prefix, mean, num_sds, sig);
-        }
-      };
-
-      auto summarizer{
-        [m_f, m_s, minSpeedUp, maxSpeedUp](){
-          return std::format(" [{:g}; ({:g}, {:g})]", m_s / m_f, minSpeedUp, maxSpeedUp);
-        }
-      };
-
-      summary = append_lines(stats("Fast", m_f, sig_f), stats("Slow", m_s, sig_s)).append(summarizer());
+      summary = append_lines(duration_summary("Fast", m_f, num_sds, sig_f),
+                             duration_summary("Slow", m_s, num_sds, sig_s)).append(speed_up_summary(m_s / m_f, minSpeedUp, maxSpeedUp));
 
       if((test_logger<Mode>::mode == test_mode::false_negative) ? !passed : passed)
       {
@@ -242,9 +243,10 @@ namespace sequoia::testing
   /** \brief Chooses between a run's diagnostics output and the reference.
 
       \returns
-      -# `referenceOutput`, if every difference from `testOutput` lies after
-         the `Task duration:` label on its line, and leaves the number of
-         standard deviations and the range of speed-ups unchanged;
+      -# `referenceOutput`, if it differs from `testOutput` only in measured
+         values: the mean and standard deviation in each line of the shape
+         `duration_summary` writes, and the speed-up in each suffix of the
+         shape `speed_up_summary` appends to it;
       -# `testOutput`, otherwise.
    */
   [[nodiscard]]
