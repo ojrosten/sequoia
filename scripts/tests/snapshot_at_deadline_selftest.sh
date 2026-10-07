@@ -11,7 +11,8 @@
 # Each control is a claim the script exists to keep:
 #   - the script refuses, on standard error and before the command runs:
 #       - arguments without a command after `--`;
-#       - a deadline which is not a positive whole number;
+#       - a deadline which is not a positive whole number with no leading
+#         zero;
 #       - a snapshot file which exists, or whose directory is missing, is not
 #         a directory, or is read-only;
 #       - a TMPDIR in which the script cannot create its temporary directory;
@@ -20,8 +21,8 @@
 #     deadline and after it;
 #   - the command reads the script's standard input and writes to its standard
 #     output and error;
-#   - a command which ends before the deadline returns within the watcher's
-#     second, leaves no snapshot and leaves no watcher behind;
+#   - a command which ends before the deadline returns within 2.5 seconds,
+#     leaves no snapshot and leaves no watcher behind;
 #   - a watcher whose script has been killed stops, rather than taking a
 #     snapshot at a deadline nobody is waiting for;
 #   - at the deadline, while the command still runs, the snapshot says when it
@@ -51,6 +52,14 @@
 # launch. The stand-in's name is at most fifteen characters, the part of a
 # process's name Linux keeps and pgrep -x compares against. The stand-in ends
 # itself after two minutes, in case the selftest is killed before it can.
+#
+# Two controls need permissions the selftest does not arrange, and each fails
+# naming the permission when it is missing:
+#   - On Linux, the stacks controls need gdb to attach to the stand-ins, which
+#     are not gdb's descendants. That takes root, sudo without a password, or
+#     a ptrace_scope of 0.
+#   - The read-only directory's refusal needs a user who cannot write to a
+#     read-only directory, which root can.
 
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
@@ -107,6 +116,10 @@ check_refusal() { # check_refusal <name> <TMPDIR> <argument>...
   rm -f "$work/ran"
 }
 
+# The time in tenths of a second. $SECONDS counts whole seconds, which is too
+# coarse to time a return expected within about one.
+tenths() { perl -MTime::HiRes=time -e 'printf "%d\n", time * 10'; }
+
 wait_for() { # wait_for <pattern> <file> <seconds>
   local polls=$(($3 * 10))
   while [ "$polls" -gt 0 ]; do
@@ -119,8 +132,8 @@ wait_for() { # wait_for <pattern> <file> <seconds>
 
 # Runs the script with a command which runs until it is released, and releases
 # it once the snapshot is finished. Sets `began_after` to the seconds from the
-# script's start to the snapshot's, and `held` to whether the command was still
-# running when the snapshot was finished.
+# start of held_snapshot to the start of the snapshot, and `held` to whether
+# the command was still running when the snapshot was finished.
 held_snapshot() { # held_snapshot <snapshot file> <PATH> <seconds> <executable name>
   local snapshot=$1 search_path=$2 seconds=$3 executable=$4 runner start=$SECONDS
   env PATH="$search_path" "$BASH" "$script" "$seconds" "$snapshot" "$executable" \
@@ -168,8 +181,9 @@ for executable in "$name" "$decoy"; do
     || { echo "FAIL: cannot compile the stand-in"; exit 1; }
 done
 
-# The command of a snapshot's control: it runs until its release file exists or
-# that file's directory has gone, for a minute at most.
+# The command of a snapshot's control. It ends once its release file exists,
+# once that file's directory has gone, or after 600 polls a tenth of a second
+# apart.
 cat > "$tmp/held" <<'HELD'
 #!/bin/sh
 polls=0
@@ -198,7 +212,8 @@ fake_tool "$tmp/linux-sudo"   gdb   "$gdb_stand_in"
 fake_tool "$tmp/linux-nosudo" uname 'echo Linux'
 fake_tool "$tmp/linux-nosudo" sudo  'exit 1'
 fake_tool "$tmp/linux-nosudo" gdb   "$gdb_stand_in"
-# Every tool the script runs before it looks for gdb, and no gdb.
+# Every tool the script runs, and no gdb. The script asks for sudo only once
+# it has found gdb.
 fake_tool "$tmp/linux-nogdb"  uname 'echo Linux'
 for tool in dirname mktemp rm touch sleep date ps pgrep; do
   ln -s "$(command -v "$tool")" "$tmp/linux-nogdb/$tool" \
@@ -220,7 +235,11 @@ run_controls() {
   done
   check_refusal "an existing snapshot file" "$work"         60 "$work/earlier.txt"       "$name" -- touch "$work/ran"
   check_refusal "a missing directory"       "$work"         60 "$work/missing/r.txt"     "$name" -- touch "$work/ran"
-  check_refusal "a read-only directory"     "$work"         60 "$work/read-only/r.txt"   "$name" -- touch "$work/ran"
+  if { : > "$work/read-only/probe"; } 2> /dev/null; then
+    fail "the read-only directory is writable, as it is to root, so its refusal cannot be checked"
+  else
+    check_refusal "a read-only directory"   "$work"         60 "$work/read-only/r.txt"   "$name" -- touch "$work/ran"
+  fi
   check_refusal "a file for a directory"    "$work"         60 "$work/earlier.txt/r.txt" "$name" -- touch "$work/ran"
   check_refusal "a missing TMPDIR"          "$work/missing" 60 "$work/r.txt"             "$name" -- touch "$work/ran"
   check "an existing snapshot file is left alone" yes "^an earlier snapshot$" "$work/earlier.txt"
@@ -285,8 +304,13 @@ run_controls() {
     "^ *$first +$parent .*$name" "$work/late.txt"
   check "a process whose name merely begins with the name has no stacks" no \
     "^== Stacks of '$name', process $decoy_pid ==" "$work/late.txt"
-  if [ "$platform" = linux ] && ! command -v gdb > /dev/null; then
-    fail "gdb is not installed, so the Linux stacks cannot be checked"
+  if [ "$platform" = linux ]; then
+    if ! command -v gdb > /dev/null; then
+      fail "gdb is not installed, so the Linux stacks cannot be checked"
+    elif [ "$(id -u)" != 0 ] && ! sudo -n true 2> /dev/null \
+           && [ "$(cat /proc/sys/kernel/yama/ptrace_scope 2> /dev/null || echo 0)" != 0 ]; then
+      fail "gdb cannot attach to the stand-ins: that takes root, sudo without a password, or a ptrace_scope of 0"
+    fi
   fi
   if [ "$platform" = macos ]; then
     find /tmp/ -maxdepth 1 -name "${name}_*.sample.txt" -newer "$work/before-late" > "$work/samples.txt"
@@ -330,40 +354,54 @@ run_controls() {
 
   # A command which ends before the deadline, many times over, since a race
   # between the command's end and the watcher would show in only some runs.
-  # The deadline is one no other control uses, so that a watcher left behind
-  # can be found by its command line. The deadline is short, so that a watcher
-  # which never learns the command has ended costs one slow return rather than
-  # hanging the selftest.
+  # The watcher looks once a second, so the bound on the return leaves a margin
+  # of more than a second. The deadline is short, so that a watcher which never
+  # learns the command has ended costs one slow return rather than hanging the
+  # selftest. A watcher left behind has the snapshot file's path in its command
+  # line.
   for trial in $(seq 1 30); do
-    start=$SECONDS
+    start=$(tenths)
     bash "$script" 20 "$work/early.txt" "$name" -- true
-    if [ $((SECONDS - start)) -gt 2 ]; then
-      fail "a command ending before the deadline took $((SECONDS - start))s to return"
+    elapsed=$(($(tenths) - start))
+    if [ "$elapsed" -gt 25 ]; then
+      fail "a command ending before the deadline took $((elapsed / 10)).$((elapsed % 10))s to return"
       break
     fi
   done
   [ ! -e "$work/early.txt" ] || fail "a command ending before the deadline left a snapshot"
-  ! pgrep -f "snapshot_at_deadline.sh 20 " > /dev/null \
+  ! pgrep -f "$work/early.txt" > /dev/null \
     || fail "a command ending before the deadline left its watcher running"
 
   # The script killed outright, as a cancelled step kills it, before a deadline
-  # three seconds off. The script is killed before its command, so that the
-  # script cannot see the command end and tell the watcher. The command is then
-  # killed, as the step would kill it. TMPDIR puts the script's temporary
-  # directory under this control's, since a kill -9 leaves the directory
-  # behind.
+  # three seconds off. The control waits until the script has started both its
+  # watcher and its command. It kills the script before the command, so that
+  # the script cannot see the command end and tell the watcher, and then kills
+  # the command, as the step would. The watcher must be gone well before the
+  # deadline. TMPDIR puts the script's temporary directory under this
+  # control's, since a kill -9 leaves the directory behind.
   TMPDIR=$work bash "$script" 3 "$work/killed.txt" "$name" -- sleep 30 &
   killed=$!
   started="$started $killed"
-  sleep 1
-  command=$(pgrep -P "$killed" -x sleep)
-  started="$started $command"
-  kill -9 "$killed"
-  wait "$killed" 2> /dev/null
-  kill "$command"
-  sleep 4
-  [ ! -e "$work/killed.txt" ] || fail "a watcher whose script was killed took a snapshot"
-  ! pgrep -f "snapshot_at_deadline.sh 3 " > /dev/null || fail "a watcher whose script was killed is still running"
+  watcher= command=
+  for poll in $(seq 1 50); do
+    watcher=$(pgrep -P "$killed" -x bash) command=$(pgrep -P "$killed" -x sleep)
+    [ -z "$watcher" ] || [ -z "$command" ] || break
+    sleep 0.1
+  done
+  started="$started $watcher $command"
+  if [ -z "$watcher" ] || [ -z "$command" ]; then
+    fail "the killed script's watcher and command did not both start"
+  else
+    kill -9 "$killed"
+    wait "$killed" 2> /dev/null
+    kill "$command"
+    for poll in $(seq 1 20); do
+      kill -0 "$watcher" 2> /dev/null || break
+      sleep 0.1
+    done
+    ! kill -0 "$watcher" 2> /dev/null || fail "a watcher whose script was killed is still running"
+    [ ! -e "$work/killed.txt" ] || fail "a watcher whose script was killed took a snapshot"
+  fi
 
   clean_up
 }
@@ -491,7 +529,7 @@ mutant any snapshot_at_deadline.sh 'a file accepted as a directory' \
 mutant any snapshot_at_deadline.sh 'a read-only directory accepted' \
   ' || [ ! -w "$snapshot_directory" ]' \
   ''
-mutant macos snapshot_at_deadline.sh 'TMPDIR ignored' \
+mutant any snapshot_at_deadline.sh 'TMPDIR ignored' \
   'mktemp -d "${TMPDIR:-/tmp}/snapshot_at_deadline.XXXXXX"' \
   'mktemp -d'
 mutant any snapshot_at_deadline.sh 'no temporary directory accepted' \
