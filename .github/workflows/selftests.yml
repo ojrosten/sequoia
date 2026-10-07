@@ -50,6 +50,17 @@ jobs:
           fi
           echo "Nothing to test; the scope job's summary says why."
 
+      # gdb reads the stacks in snapshot_at_deadline's Linux branch; the image has
+      # none. The package is checked by exact name first, as in tests.yml's
+      # "Install the toolchain (Linux)", since apt-get takes a name as a pattern.
+      - name: Install gdb
+        if: inputs.needs_testing == 'true' && runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          names=$(apt-cache pkgnames)
+          grep -qFx -- gdb <<< "$names" || { echo "::error::gdb is not available on this image"; exit 1; }
+          sudo apt-get install -y gdb
+
       # Every selftest runs, whichever fail, and the step names each that failed.
       - name: Run the selftests
         if: inputs.needs_testing == 'true'
