@@ -6,7 +6,9 @@
 #
 # Without --mutations, the selftest runs the controls. With it, the selftest
 # runs the controls against the script and against each mutant of the script.
-# The script must fail no control, and each mutant at least one.
+# The script must fail no control, and each mutant at least one. The last line
+# gives the verdict. If the script fails a control, no mutant runs. A mutant
+# whose text is not found exactly once counts as a survivor.
 #
 # Each control runs a copy of the script as CI runs it, from the root of a
 # scratch repository, on a scratch build of TestAll. Stand-ins for lcov,
@@ -652,18 +654,22 @@ fi
 
 source_text=$(cat "$script")
 controls "$script" > "$tmp/controls.txt" 2>&1
-echo "unmutated: $fails controls fail$([ "$fails" -eq 0 ] || echo '  <-- must be none')"
-survivors=$fails
-if [ $((${#mutations[@]} % 3)) -ne 0 ]; then
-  echo "the mutations array does not hold whole entries of three"; exit 1
+if [ "$fails" -ne 0 ]; then
+  cat "$tmp/controls.txt"
+  echo "generate_coverage_report: the unmutated script fails $fails of its controls, so no mutant was run"
+  exit 1
 fi
+if [ $((${#mutations[@]} % 3)) -ne 0 ]; then
+  echo "generate_coverage_report: the mutations array does not hold whole entries of three"; exit 1
+fi
+survivors=0
 i=0
 while [ "$i" -lt ${#mutations[@]} ]; do
   description=${mutations[i]} old=${mutations[i+1]} new=${mutations[i+2]}
   i=$((i+3))
   after=${source_text#*"$old"}
   if [ "$after" = "$source_text" ] || [ "${after#*"$old"}" != "$after" ]; then
-    echo "$description: the text to mutate does not occur exactly once"
+    echo "$description: the text to mutate does not occur exactly once  <-- SURVIVED"
     survivors=$((survivors+1))
     continue
   fi
@@ -672,5 +678,9 @@ while [ "$i" -lt ${#mutations[@]} ]; do
   echo "$description: $fails controls fail$([ "$fails" -ne 0 ] || echo '  <-- SURVIVED')"
   [ "$fails" -ne 0 ] || survivors=$((survivors+1))
 done
-[ "$survivors" -eq 0 ] || exit 1
-echo "generate_coverage_report: $((${#mutations[@]} / 3)) mutants, every one killed"
+mutants=$((${#mutations[@]} / 3))
+if [ "$survivors" -ne 0 ]; then
+  echo "generate_coverage_report: $survivors of $mutants mutants survived"
+  exit 1
+fi
+echo "generate_coverage_report: $mutants mutants, every one killed"
