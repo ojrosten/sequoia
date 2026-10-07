@@ -30,6 +30,9 @@ and also any function written on the same line, such as a lambda within a
 lambda. A record is uncalled when no alias was called. So an uncalled lambda
 written on the line of a called one is never reported.
 
+A class or function with a name, local to a function with a requires-clause,
+is keyed as the enclosing function. Its name cannot be told from the clause.
+
 An uncalled record is listed under each key its aliases give. A key is a
 demangled name with these removed:
   -# every template argument list, at every level;
@@ -242,9 +245,19 @@ def strip_template_arguments(text):
     return ''.join(kept), removed
 
 
-def without_requires_clause(text):
-    """`text`, the name of a function, without any requires-clause which
-    llvm-cxxfilt printed after the name.
+def without_requires_clauses(text):
+    """`text`, the name of a function, without its requires-clauses.
+
+    A demangler prints a function's requires-clause after its parameter list.
+    So the clause of a function enclosing a lambda or an unnamed type comes
+    before that local entity, as in
+    `f<int>(int) requires c<T>::'lambda'()::operator()() const`. A clause ends
+    before the first local entity which lies outside the clause's
+    parentheses, brackets and braces, and whose name ends with a parameter
+    list and its qualifiers once the entity's own clauses are removed.
+    Otherwise the clause runs to the end of `text`. The check of the entity's name is
+    needed because a clause may name the type of a lambda within an
+    expression, as in `requires g()::'lambda'()::value_type::v == 0`.
 
     The angle brackets of a requires-clause need not balance, and a template
     argument within the name may hold a requires-clause of its own.
@@ -253,13 +266,26 @@ def without_requires_clause(text):
     while at >= 0:
         try:
             list(cells(text[:at]))
-            return text[:at]
+            break
         except Unkeyable:
             at = text.find(' requires ', at + 1)
-    return text
+    if at < 0:
+        return text
+    depth = 0
+    for offset in range(at, len(text)):
+        if depth == 0 and LOCAL_ENTITY.match(text, offset):
+            entity = without_requires_clauses(text[offset:])
+            if ENDS_IN_PARAMETERS.search(entity):
+                return text[:at] + entity
+        depth += (text[offset] in '([{') - (text[offset] in ')]}')
+    return text[:at]
 
 
 QUALIFIERS = re.compile(r'((?:\s*(?:const|volatile|&&|&|noexcept))*)\s*$')
+# A lambda or an unnamed type which follows its enclosing function, as either
+# demangler spells them
+LOCAL_ENTITY       = re.compile(r"::['{](?:lambda|unnamed)")
+ENDS_IN_PARAMETERS = re.compile(r'\)' + QUALIFIERS.pattern)
 LAMBDA     = re.compile(r"^(?:\{lambda\((.*)\)#(\d+)\}|'lambda(\d*)'\((.*)\))$")
 UNNAMED    = re.compile(r"^(?:\{unnamed type#(\d+)\}|'unnamed(\d*)')$")
 CALLABLE   = re.compile(r'(.*?)\((.*)\)((?: const| volatile| &&| &)*)$')
@@ -317,7 +343,7 @@ def split_name(text):
 def key(demangled):
     """The key of the function named `demangled`."""
     text          = re.sub(r'\[abi:[^\]]*\]|\[friend\]|(?<=::)friend ', '', demangled)
-    text          = re.sub(r'( \[clone [^\]]*\]| \(\.[\w.]+\))+$', '', without_requires_clause(text))
+    text          = re.sub(r'( \[clone [^\]]*\]| \(\.[\w.]+\))+$', '', without_requires_clauses(text))
     text, removed = strip_template_arguments(text)
     components, parameters, qualifiers = split_name(text)
     # The return type's lists say nothing of the name

@@ -90,6 +90,14 @@ FRIEND_EQUAL    = '_ZN2ns1sIiEFeqERKS1_S3_Q1cIT_E'
 # demangler names a function whose name holds such a byte.
 TWICE_CAFE      = '_ZN2ns5twiceINS_4caf\udce9EEET_S2_'
 UNDEMANGLED     = '_ZN2ns5brokenE'
+# Local entities of functions with a requires-clause, which GNU c++filt cannot
+# demangle: ns::gen<double>'s constructor, constrained by std::movable, and a
+# lambda within it; and, within ns::f<int>(int) requires c<int>, a member of an
+# unnamed type, and a lambda with a requires-clause of its own
+GEN_C1          = '_ZN2ns3genIdEC1EdQ7movableIT_E'
+GEN_LAMBDA      = '_ZZN2ns3genIdEC4EdQ7movableIT_EENKUlvE_clEv'
+F_UNNAMED_H     = '_ZZN2ns1fIiEEvT_Q1cIS1_EENUt_1hEv'
+F_LAMBDA        = '_ZZN2ns1fIiEEvT_Q1cIS1_EENKUlTyS1_E_clIiEEDaS1_Q1cITL0__E'
 
 
 def written(text, suffix):
@@ -300,6 +308,32 @@ class Keys(unittest.TestCase):
     def test_noexcept_is_a_qualifier(self):
         self.assertEqual(script.key('ns::f(int) noexcept'), 'ns::f(int) noexcept')
 
+    def test_the_requires_clause_of_an_enclosing_function_goes(self):
+        """The demanglers write the clause before the local entity."""
+        self.assertEqual(uncalled_keys([(10, [(GEN_LAMBDA, 0)]), (20, [(F_UNNAMED_H, 0)]), (30, [(F_LAMBDA, 0)])]),
+                         Counter({'ns::gen::gen::{lambda}::operator()': 1,
+                                  'ns::f::{unnamed type}::h':           1,
+                                  'ns::f::{lambda}::operator()':        1}))
+        self.assertEqual(script.key('void ns::f<int>(int) requires c<int>::{unnamed type#1}::h()'),
+                         'ns::f::{unnamed type}::h')
+        self.assertEqual(script.key('void ns::f<int>(int) requires c<int>::{lambda()#1}::operator()() const'),
+                         'ns::f::{lambda}::operator()')
+
+    def test_an_enclosing_requires_clause_with_parentheses_goes(self):
+        """The shape of a clause from sequoia's connectivity_base."""
+        self.assertEqual(script.key("ns::a<int>::f() requires !ns::is_x(ns::kind)(ns::a<T>::k)::'lambda'()::"
+                                    "operator()() const"),
+                         'ns::a::f::{lambda}::operator()')
+
+    def test_a_requires_clause_naming_a_lambda_s_type(self):
+        """The lambda's type is named within an expression, so the clause does
+        not end before it. The first shape is from sequoia's sort_edges."""
+        for name, expected in (("void ns::sort<ns::g()::'lambda'(auto const&)>(ns::g()::'lambda'(auto const&)) "
+                                "requires ns::g()::'lambda'(auto const&)::value_type::v == 0", 'ns::sort'),
+                               ("void ns::f<int>(int) requires (ns::g()::'lambda'()::v)", 'ns::f')):
+            with self.subTest(name=name):
+                self.assertEqual(script.key(name), expected)
+
     def test_a_requires_clause_within_a_template_argument(self):
         """The first ` requires ` lies within a template argument; only the
         second ends the name. The shape is a lambda's, from an initialiser of
@@ -431,6 +465,15 @@ class Verdict(unittest.TestCase):
                                       [(10, [(SET_INT, 0)]), (11, [(SET2_INT, 0)])])
         self.assertEqual(status, 1)
         self.assertIn('ns::box::set (lines [10, 11])', out)
+
+    def test_a_lambda_uncalled_as_its_constrained_function_is_called_fails(self):
+        """The lambda's key once ended with the function's, so the two
+        changes cancelled."""
+        status, out, _ = self.verdict([(10, [(GEN_C1, 0)]), (11, [(GEN_LAMBDA, 1)])],
+                                      [(10, [(GEN_C1, 1)]), (11, [(GEN_LAMBDA, 0)])])
+        self.assertEqual(status, 1)
+        self.assertIn('error: uncalled, and not in the baseline: Source/sequoia/ns.hpp: '
+                      'ns::gen::gen::{lambda}::operator() (lines [11])', out)
 
     def test_an_error_lists_its_lines_in_source_order(self):
         """The tracefile lists the records in the opposite order. The key's
@@ -693,7 +736,7 @@ MUTATIONS = [
                                          "text          = (lambda *arguments: arguments[2])(r'( \\[clone"),
     ('keep a clone suffix',              r"( \[clone [^\]]*\]| \(\.[\w.]+\))+$",   r"( \(\.[\w.]+\))+$"),
     ('keep a cold suffix',               r"( \[clone [^\]]*\]| \(\.[\w.]+\))+$",   r"( \[clone [^\]]*\])+$"),
-    ('keep the requires-clause',         "'', without_requires_clause(text))",  "'', text)"),
+    ('keep the requires-clause',         "'', without_requires_clauses(text))", "'', text)"),
     ('search for requires once',         "at = text.find(' requires ', at + 1)", "at = -1"),
     ('keep an explicit object list',     " or parameters.startswith('this '):", ":"),
     ('keep unnamed type discriminators', "parts.append('{unnamed type}')",       "parts.append(component)"),
@@ -789,6 +832,16 @@ MUTATIONS = [
     ('errors in line order',             "sorted((now - was).elements())]\n        fallen",
                                          "list((now - was).elements())]\n        fallen"),
     ('a blank line names a file',        "            elif line.strip():\n",    "            else:\n"),
+    ('a clause runs to the end',         "if depth == 0 and LOCAL_ENTITY.match(text, offset):", "if False:"),
+    ('any local entity ends a clause',   "            if ENDS_IN_PARAMETERS.search(entity):", "            if True:"),
+    ("an entity's clauses kept",         "entity = without_requires_clauses(text[offset:])", "entity = text[offset:]"),
+    ('an entity within brackets ends it', "if depth == 0 and LOCAL_ENTITY.match(text, offset):",
+                                         "if LOCAL_ENTITY.match(text, offset):"),
+    ('a closing bracket ignored',        " - (text[offset] in ')]}')",           ""),
+    ('only a lambda ends a clause',      r"""r"::['{](?:lambda|unnamed)")""",      r"""r"::['{](?:lambda)")"""),
+    ('only an unnamed type ends it',     r"""r"::['{](?:lambda|unnamed)")""",      r"""r"::['{](?:unnamed)")"""),
+    ("only llvm's spelling ends it",     r"""r"::['{](?:lambda|unnamed)")""",      r"""r"::['](?:lambda|unnamed)")"""),
+    ("only GNU's spelling ends it",      r"""r"::['{](?:lambda|unnamed)")""",      r"""r"::[{](?:lambda|unnamed)")"""),
     ('lines in tracefile order',         "for start, aliases in sorted(starts.items()):",
                                          "for start, aliases in starts.items():"),
     ('lines in reverse order',           "for start, aliases in sorted(starts.items()):",
