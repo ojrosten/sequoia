@@ -254,7 +254,9 @@ class Keys(unittest.TestCase):
                                     'sequoia::mem_ordered_tuple<int> const&)'))
 
     def test_a_friend_marker_goes(self):
-        self.assertEqual(script.key('ns::f(int) [friend]'), 'ns::f(int)')
+        """GNU c++filt 2.47 writes the marker after the name."""
+        self.assertEqual(script.key('ns::s<int>::operator==[friend](ns::s<int> const&, ns::s<int> const&)'),
+                         'ns::s::operator==')
 
     def test_optimiser_suffixes_go(self):
         for name in ('ns::f(int) [clone .cold]', 'ns::f(int) [clone .isra.0] [clone .cold]', 'ns::f(int) (.cold)'):
