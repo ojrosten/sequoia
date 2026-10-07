@@ -35,7 +35,12 @@ def load(source):
     return module
 
 
-ROOT         = '/home/runner/work/sequoia/sequoia'
+# A repository whose Source holds no .cpp file. On a runner, the path of
+# sequoia's own checkout would hold its translation units, so the repository is
+# made afresh.
+REPOSITORY   = tempfile.TemporaryDirectory()
+ROOT         = REPOSITORY.name
+os.makedirs(ROOT + '/Source/sequoia')
 SOURCE_FILE  = ROOT + '/Source/sequoia/ns.hpp'
 OTHER_FILE   = ROOT + '/Source/sequoia/other.hpp'
 FILE_KEY     = 'Source/sequoia/ns.hpp'
@@ -423,6 +428,46 @@ class Verdict(unittest.TestCase):
         baseline = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
         self.assert_refused(self.compare(baseline, os.path.join(scratch, 'absent.info')), 'absent.info')
 
+    def verdict_on_units(self, sources, tracefile_text):
+        """The verdict, against a baseline made from the same tracefile, in a
+        new repository holding an empty file at each of `sources`.
+        `tracefile_text` gives the repository's path as `{root}`."""
+        root = os.path.join(scratch, f'repository{next(file_names)}')
+        for source in sources:
+            os.makedirs(os.path.dirname(os.path.join(root, source)), exist_ok=True)
+            open(os.path.join(root, source), 'w').close()
+        path     = written(tracefile_text.format(root=root), '.info')
+        options  = ['--tracefile', path, '--repository', root] + tool_options(self.tool)
+        status, out, err = run_main(['baseline'] + options)
+        self.assertEqual((status, err), (0, ''))
+        return run_main(['compare', '--baseline', written(out, '.txt')] + options)
+
+    def test_a_translation_unit_the_tracefile_lacks_fails(self):
+        """A header, and a translation unit outside Source, are not looked
+        for."""
+        self.assertEqual(self.verdict_on_units(['Source/lib/traced.cpp', 'Source/lib/untraced.cpp',
+                                                'Source/lib/untraced.hpp', 'Tests/untraced.cpp'],
+                                               f'SF:{{root}}/Source/lib/traced.cpp\nFNL:0,10,13\nFNA:0,0,{HIDDEN}\n'
+                                               'end_of_record\n'),
+                         (1, 'error: not in the tracefile, so none of its functions is seen: '
+                             'Source/lib/untraced.cpp\n', ''))
+
+    def test_a_repository_without_source_is_refused(self):
+        """The tracefile names a repository which is not on this machine."""
+        baseline = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
+        self.assert_refused(run_main(['compare', '--tracefile',
+                                      tracefile([(10, [(HIDDEN, 0)])], '/elsewhere/Source/sequoia/ns.hpp'),
+                                      '--repository', '/elsewhere', '--baseline', baseline]
+                                     + tool_options(self.tool)),
+                            '/elsewhere/Source is not a directory')
+
+    def test_a_translation_unit_with_line_records_alone_is_traced(self):
+        self.assertEqual(self.verdict_on_units(['Source/lib/traced.cpp', 'Source/lib/lines.cpp'],
+                                               f'SF:{{root}}/Source/lib/traced.cpp\nFNL:0,10,13\nFNA:0,0,{HIDDEN}\n'
+                                               'end_of_record\nSF:{root}/Source/lib/lines.cpp\nDA:1,1\n'
+                                               'end_of_record\n'),
+                         (0, '', ''))
+
     def test_an_unkeyable_uncalled_function_is_refused(self):
         baseline = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
         self.assert_refused(self.compare(baseline, tracefile([(10, [('_ZN2ns5brokenE', 0)])], SOURCE_FILE)),
@@ -458,14 +503,22 @@ MUTATIONS = [
                                          "return True if selection == Selection.called else not called"),
     ('a set, not a multiset',            "Counter({function_key: len(starts)",    "Counter({function_key: 1"),
     ('the baseline read as a set',       "uncalled[file][line.strip()] += 1",     "uncalled[file][line.strip()] = 1"),
-    ('fail on improvements too',         "return 1 if risen else 0",              "return 1 if risen or fallen else 0"),
+    ('fail on improvements too',         "return 1 if risen or untraced else 0",  "return 1 if risen or untraced or fallen else 0"),
+    ('an untraced unit passes',          "return 1 if risen or untraced else 0",  "return 1 if risen else 0"),
+    ('an untraced unit unnamed',         "for file in untraced:",                 "for file in []:"),
+    ('headers looked for too',           ".rglob('*.cpp')",                       ".rglob('*.*')"),
+    ('only the top of Source looked at', ".rglob('*.cpp')",                       ".glob('*.cpp')"),
+    ('units outside Source looked for',  "(root / 'Source').rglob",               "root.rglob"),
+    ('a missing Source accepted',        "if not (root / 'Source').is_dir():",   "if False:"),
+    ('a unit needs function records',    "untraced_translation_units(arguments.repository, traced)",
+                                         "untraced_translation_units(arguments.repository, functions)"),
     ('files the baseline lacks skipped', "for file in sorted(set(baseline) | set(current)):",
                                          "for file in sorted(set(baseline)):"),
     ('ignore FNA counts',                "aliases.get(name, 0) + int(calls)",     "aliases.get(name, 0)"),
     ('require an end line',              "index, start = value.split(',')[:2]",  "index, start, _ = value.split(',')"),
     ('a malformed record crashes',       "            except (KeyError, ValueError):", "            except ():"),
-    ('keep files without functions',     "for file, starts in functions.items() if starts}",
-                                         "for file, starts in functions.items()}"),
+    ('keep files without functions',     "for file, starts in traced.items() if starts}",
+                                         "for file, starts in traced.items()}"),
     ('skip an unkeyable function',       "if not keys and selection == Selection.uncalled:", "if False:"),
     ('an unkeyable function crashes',    "except (Refusal, Unkeyable, OSError,",  "except (Refusal, OSError,"),
     ('an absent file crashes',           "except (Refusal, Unkeyable, OSError,",  "except (Refusal, Unkeyable,"),
