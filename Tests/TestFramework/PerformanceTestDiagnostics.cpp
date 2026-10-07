@@ -9,6 +9,9 @@
 
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <limits>
+#include <thread>
+
 namespace sequoia::testing
 {
   namespace
@@ -32,7 +35,7 @@ namespace sequoia::testing
 
   void performance_false_negative_diagnostics::test_relative_performance()
   {
-    const auto deltaT{calibrate(std::chrono::milliseconds{5})};
+    constexpr std::chrono::milliseconds deltaT{5};
 
     check_relative_performance("Performance Test for which fast task is too slow, [1, (2.0, 2.0)",
                                [deltaT]() { wait(deltaT); },
@@ -60,7 +63,7 @@ namespace sequoia::testing
 
   void performance_false_positive_diagnostics::test_relative_performance()
   {
-    const auto deltaT{calibrate(std::chrono::milliseconds{5})};
+    constexpr std::chrono::milliseconds deltaT{5};
 
     check_relative_performance("Performance Test which should pass",
                                [deltaT]() { wait(deltaT); },
@@ -81,6 +84,8 @@ namespace sequoia::testing
   {
     test_postprocessing();
     test_coarse_sleep();
+    test_invalid_arguments();
+    test_throwing_task();
   }
 
   void performance_utilities_test::test_postprocessing()
@@ -202,5 +207,70 @@ namespace sequoia::testing
           "Message",
           working_materials() /= "CoarseSleepMessage.txt",
           predictive_materials() /= "CoarseSleepMessage.txt");
+  }
+
+  void performance_utilities_test::test_invalid_arguments()
+  {
+    constexpr double nan{std::numeric_limits<double>::quiet_NaN()};
+    constexpr std::string_view description{"Relative performance with invalid arguments"};
+    test_logger<test_mode::standard> logger{};
+
+    auto relativePerformanceCheck{
+      [&logger, description](double minSpeedUp, double maxSpeedUp, std::size_t trials, double numSds,
+                             std::size_t maxAttempts) {
+        return [&logger, description, minSpeedUp, maxSpeedUp, trials, numSds, maxAttempts]() {
+          return check_relative_performance(description, logger, []() {}, []() {},
+                                            minSpeedUp, maxSpeedUp, trials, numSds, maxAttempts);
+        };
+      }
+    };
+
+    check_exception_thrown<std::invalid_argument>("Minimum speed-up of 1",
+                                                  relativePerformanceCheck(1.0, 2.0, 5, 4.0, 3));
+    check_exception_thrown<std::invalid_argument>("Maximum speed-up of 1",
+                                                  relativePerformanceCheck(1.5, 1.0, 5, 4.0, 3));
+    check_exception_thrown<std::invalid_argument>("Minimum speed-up of NaN",
+                                                  relativePerformanceCheck(nan, 2.0, 5, 4.0, 3));
+    check_exception_thrown<std::invalid_argument>("Minimum speed-up exceeding the maximum",
+                                                  relativePerformanceCheck(2.5, 2.0, 5, 4.0, 3));
+    check_exception_thrown<std::invalid_argument>("One standard deviation",
+                                                  relativePerformanceCheck(2.0, 3.0, 5, 1.0, 3));
+    check_exception_thrown<std::invalid_argument>("NaN standard deviations",
+                                                  relativePerformanceCheck(2.0, 3.0, 5, nan, 3));
+    check_exception_thrown<std::invalid_argument>("No attempts",
+                                                  relativePerformanceCheck(2.0, 3.0, 5, 4.0, 0));
+    check_exception_thrown<std::invalid_argument>("Four trials",
+                                                  relativePerformanceCheck(2.0, 3.0, 4, 4.0, 3));
+
+    const auto& exitInfo{logger.last_check_exit_info()};
+    if(check("An invalid argument is attributed to the check refusing it", exitInfo.has_value()))
+    {
+      check("Exit via an exception", exitInfo->via_exception);
+      check(equality, "Message of the check refusing the argument", exitInfo->message, std::string{description});
+    }
+  }
+
+  void performance_utilities_test::test_throwing_task()
+  {
+    constexpr std::string_view description{"Relative performance with a throwing task"};
+    test_logger<test_mode::standard> logger{};
+
+    auto checkWithThrowingFastTask{
+      [&logger, description]() {
+        return check_relative_performance(description, logger,
+                                          []() { throw std::runtime_error{"Fast task failure"}; },
+                                          []() {},
+                                          2.0, 3.0, 5, 4.0, 3);
+      }
+    };
+
+    check_exception_thrown<std::runtime_error>("Fast task throws", checkWithThrowingFastTask);
+
+    const auto& exitInfo{logger.last_check_exit_info()};
+    if(check("A throwing task is attributed to its check", exitInfo.has_value()))
+    {
+      check("Exit via an exception", exitInfo->via_exception);
+      check(equality, "Message of the check whose task threw", exitInfo->message, std::string{description});
+    }
   }
 }

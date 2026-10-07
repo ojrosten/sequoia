@@ -160,6 +160,8 @@ namespace sequoia::testing
 
     void increment_depth(std::string_view message);
 
+    void append_to_level_message(std::size_t level, std::string_view lines);
+
     void decrement_depth();
 
     void end_message(test_mode mode, is_critical isCritical);
@@ -214,6 +216,15 @@ namespace sequoia::testing
 
     void log_caught_exception_message(std::string_view message) { get().log_caught_exception_message(message); }
 
+    /** \brief Appends `lines` to the message given at construction.
+
+        Only reports made after the call can include them, and a failure report
+        quotes the message only if no earlier failure report has. The recovery
+        and dump files never include `lines`: both are written at construction,
+        and record what identifies a check, not its outcome.
+     */
+    void append_to_message(std::string_view lines) { get().append_to_level_message(m_Level, lines); }
+
     [[nodiscard]]
     bool critical_failure_detected() const noexcept { return get().results().critical_failures != m_PriorCriticalFailures; }
 
@@ -239,8 +250,8 @@ namespace sequoia::testing
 
     test_logger_base* m_pLogger;
     test_mode m_Mode;
-    std::string m_Message;
     std::size_t
+      m_Level{},
       m_PriorFailures{},
       m_PriorCriticalFailures{},
       m_PriorDeepChecks{};

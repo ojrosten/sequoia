@@ -8,18 +8,18 @@
 #pragma once
 
 /** \file
-    \brief Extension of the testing framework for perfomance testing.
+    \brief Extension of the testing framework for performance testing.
 */
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/Maths/Statistics/StatisticalAlgorithms.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 
+#include <algorithm>
 #include <chrono>
 #include <format>
 #include <random>
-#include <future>
-#include <thread>
+#include <ranges>
 
 namespace sequoia::testing
 {
@@ -40,8 +40,8 @@ namespace sequoia::testing
        \param fast        the task predicted to be the faster of the two
        \param slow        the task against which fast is compared
        \param minSpeedUp  the minimum predicted speed up of fast over slow; must be > 1
-       \param maxSpeedUp  the maximum predicted speed up of fast over slow; must be > minSpeedUp
-       \param trials      the number of trial used for the statistical analysis
+       \param maxSpeedUp  the maximum predicted speed up of fast over slow; must be >= minSpeedUp
+       \param trials      the number of trials used for the statistical analysis
        \param num_sds     the number of standard deviations used to define a significant result
        \param maxAttempts the number of times the entire test should be re-run before accepting failure
 
@@ -49,15 +49,16 @@ namespace sequoia::testing
        When all trials have been completed, the mean and standard deviations are computed for
        both fast and slow tasks. Denote these by m_f, sig_f and m_s, sig_s.
 
-       if (m_f + sig_f < m_s + sig_s)
+       The test fails unless
 
-       then it is concluded that the purportedly fast task is actually slower than the slow task and
-       so the test fails. If this is not the case then the analysis branches depending on which
-       standard deviation is bigger.
+          m_f + sig_f < m_s - sig_s
+
+       that is, unless the fast task is faster by more than the sum of the standard deviations.
+       If it is, the analysis branches depending on which standard deviation is bigger.
 
        if (sig_f >= sig_s)
 
-       then we mutliply m_f by both the min/max predicted speed-up and compare to the range of
+       then we multiply m_f by both the min/max predicted speed-up and compare to the range of
        values around m_s defined by the number of standard deviations. In particular, the test
        is taken to pass if
 
@@ -69,33 +70,39 @@ namespace sequoia::testing
 
        On the other hand
 
-       if(sig_s > sif_g)
+       if (sig_s > sig_f)
 
-       then we divide m_s by both  the min/max predicted speed-up and compare to the range of
+       then we divide m_s by both the min/max predicted speed-up and compare to the range of
        values around m_f defined by the number of standard deviations. In particular, the test
        is taken to pass if
 
           (m_s / maxSpeedUp <= (m_f + num_sds * sig_f))
        && (m_s / minSpeedUp >= (m_f - num_sds * sig_f))
 
+       \throws std::invalid_argument if a speed-up factor is not greater than 1,
+       if minSpeedUp exceeds maxSpeedUp, if num_sds is not greater than 1, if
+       maxAttempts is 0 or if trials is less than 5.
    */
   template<test_mode Mode, std::invocable F, std::invocable S>
   bool check_relative_performance(std::string_view description, test_logger<Mode>& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts)
   {
-    if((minSpeedUp <= 1) || (maxSpeedUp <= 1))
-      throw std::logic_error{"Relative performance test requires speed-up factors > 1"};
+    sentinel<Mode> sentry{logger, std::string{description}};
+    sentry.log_performance_check();
+
+    if(!(minSpeedUp > 1) || !(maxSpeedUp > 1))
+      throw std::invalid_argument{"Relative performance test requires speed-up factors > 1"};
 
     if(minSpeedUp > maxSpeedUp)
-      throw std::logic_error{"maxSpeedUp must be >= minSpeedUp"};
+      throw std::invalid_argument{"maxSpeedUp must be >= minSpeedUp"};
 
-    if(num_sds <=1)
-      throw std::logic_error{"Number of standard deviations is required to be > 1"};
+    if(!(num_sds > 1))
+      throw std::invalid_argument{"Number of standard deviations is required to be > 1"};
 
     if(!maxAttempts)
-      throw std::logic_error{"Number of attempts is required to be > 0"};
+      throw std::invalid_argument{"Number of attempts is required to be > 0"};
 
     if(trials < 5)
-      throw std::logic_error{"Number of trials is required to be > 4"};
+      throw std::invalid_argument{"Number of trials is required to be > 4"};
 
     using namespace std::chrono;
     using namespace maths;
@@ -114,12 +121,12 @@ namespace sequoia::testing
     {
       const auto adjustedTrials{trials*(maxAttempts - remainingAttempts + 1)};
 
-      std::vector<double> fastData, slowData;
+      std::vector<double> fastData{}, slowData{};
       fastData.reserve(adjustedTrials);
       slowData.reserve(adjustedTrials);
 
-      std::random_device generator;
-      for(std::size_t i{}; i < adjustedTrials; ++i)
+      std::random_device generator{};
+      for([[maybe_unused]] auto _ : std::views::iota(0uz, adjustedTrials))
       {
         std::uniform_real_distribution<double> distribution{0.0, 1.0};
         const bool fastFirst{(distribution(generator) < 0.5)};
@@ -189,8 +196,7 @@ namespace sequoia::testing
       --remainingAttempts;
     }
 
-    sentinel<Mode> sentry{logger, append_lines(description, summary)};
-    sentry.log_performance_check();
+    sentry.append_to_message(summary);
 
     if(!passed)
     {
@@ -209,37 +215,6 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string coarse_sleep_message(std::chrono::duration<double, std::milli> slept,
                                    std::chrono::duration<double, std::milli> target);
-
-  /** \brief Calibrates the duration of a sleep for timings built on sleeps.
-
-      Returns `target` if this machine's sleeps of `target` last about that long. Otherwise returns a duration longer
-      than those sleeps typically last.
-   */
-  template<class T, class Period>
-  [[nodiscard]]
-  std::chrono::duration<T, Period> calibrate(std::chrono::duration<T, Period> target)
-  {
-    using namespace std::chrono;
-
-    std::array<double, 7> timings{};
-    for (auto& t : timings)
-    {
-      t = profile([target]() { std::this_thread::sleep_for(target); }).count();
-    }
-
-    std::ranges::sort(timings);
-    const auto [sig_f, m_f] {maths::sample_standard_deviation(timings.cbegin() + 1, timings.cend() - 1)};
-    if (sig_f && m_f)
-    {
-      if ((m_f.value() - sig_f.value()) > duration_cast<duration<double>>(target).count())
-      {
-        constexpr auto inverse{Period::den / Period::num};
-        return std::chrono::duration<T, Period>{static_cast<T>(std::ceil(inverse* (m_f.value() + 5* sig_f.value())))};
-      }
-    }
-
-    return target;
-  }
 
   /** \brief class template for plugging into the checker class template
       \anchor performance_extender_primary

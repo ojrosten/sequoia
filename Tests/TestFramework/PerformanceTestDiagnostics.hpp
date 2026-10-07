@@ -54,5 +54,9 @@ namespace sequoia::testing
     void test_postprocessing();
 
     void test_coarse_sleep();
+
+    void test_invalid_arguments();
+
+    void test_throwing_task();
   };
 }
