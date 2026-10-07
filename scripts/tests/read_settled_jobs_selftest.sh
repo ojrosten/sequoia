@@ -198,7 +198,7 @@ controls() {
   [ "$calls" -ge 2 ] || fail "a read that never settles was read $calls times"
   paused $((calls - 1)) || fail "$calls reads were not separated by one pause of the interval each"
   check "a read that never settles ends in a warning naming what is awaited" yes \
-        "^::warning::.*awaited for t / B, 4s after the wait began" "$dir/out.txt"
+        "^::warning::.*awaited for t / B, and the wait's 4 s have run out" "$dir/out.txt"
   same_json "$dir/jobs.json" "$pending" || fail "the last read is not the jobs file"
 
   run pending_then_failing "$pending" fail
@@ -273,8 +273,9 @@ mutations=(
   'running out of time fails'       $'read."\n    break'               $'read."\n    exit 1'
   'a successful read forgotten'     '    read_succeeded=true'          '    read_succeeded=false'
   'no successful read needed'       $'read_succeeded=false\nwhile'     $'read_succeeded=true\nwhile'
-  'no successful read succeeds'     'exit 1; }'                        'exit 0; }'
-  'a warning without a read'        '    $read_succeeded ||'           '    echo "::warning::"; $read_succeeded ||'
+  'no successful read succeeds'     '      exit 1'                     '      exit 0'
+  'a warning without a read'        '    if ! $read_succeeded; then'
+                                    '    echo "::warning::"; if ! $read_succeeded; then'
   'the error not an annotation'     'echo "::error::'                  'echo "error: '
   'the reads left behind'           $'trap \'rm -rf "$reads"\' EXIT'   ':'
 )

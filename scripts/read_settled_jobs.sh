@@ -9,13 +9,13 @@
 # it still awaits, or nothing once it awaits nothing. The options after the
 # filter are passed to jq with it.
 #
-# The script reads every 10 s, for up to 420 s. After each read that does not
-# end the wait, it logs what the filter awaits, or that the read failed. If the
-# time runs out, a warning names what the filter still awaits, or says that the
-# last read failed. The script then succeeds, and <jobs file> holds the last
-# successful read, for the caller's checks to judge. If no read succeeds, the
-# script fails with an error instead. A caller's job needs a timeout longer
-# than the wait.
+# Between reads, the script logs what the filter awaits, or that the read
+# failed, and pauses 10 s. Reading also stops after the first read to end at
+# least 420 s after the script began reading. If the time runs out, a warning
+# names what the filter still awaits, or says that the last read failed. The
+# script then succeeds, and <jobs file> holds the last successful read, for the
+# caller's checks to judge. If no read succeeds, the script fails with an error
+# instead. A caller's job needs a timeout longer than the wait.
 #
 # The wait exists because the jobs API can lag behind the run it describes. In
 # run 36726395452, the API was read at 14:20:01:
@@ -60,8 +60,11 @@ while :; do
     lacking="The jobs API could not be read"
   fi
   if [ "$SECONDS" -ge "$deadline" ]; then
-    $read_succeeded || { echo "::error::No read of the jobs API succeeded in ${wait_limit}s"; exit 1; }
-    echo "::warning::$lacking, ${wait_limit}s after the wait began." \
+    if ! $read_succeeded; then
+      echo "::error::No read of the jobs API succeeded, and the wait's ${wait_limit} s have run out"
+      exit 1
+    fi
+    echo "::warning::$lacking, and the wait's ${wait_limit} s have run out." \
          "$jobs_file holds the last successful read."
     break
   fi
