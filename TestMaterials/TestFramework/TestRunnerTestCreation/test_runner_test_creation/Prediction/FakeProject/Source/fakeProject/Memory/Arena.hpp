@@ -1,4 +1,3 @@
-import std;
 ////////////////////////////////////////////////////////////////////
 //               Copyright Oliver Jacob Rosten 2026.              //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
@@ -9,6 +8,8 @@ import std;
 #pragma once
 
 /** \file */
+
+import std;
 
 class arena
 {
