@@ -34,7 +34,9 @@
 #   - each lcov call, check_tracefile.py and genhtml get the options the
 #     script's comments give reasons for. On Darwin, removal takes the
 #     toolchains' paths too, and an unused pattern is no error;
-#   - genhtml is given GNU c++filt if it is installed where Homebrew puts it;
+#   - on Darwin, genhtml is given GNU c++filt from where Homebrew puts it,
+#     and the script refuses to start without it. On Linux, genhtml is given
+#     no c++filt;
 #   - genhtml is given each of the three ignore categories it accepts, and a
 #     category it refuses is named. The probe leaves nothing behind;
 #   - a missing, empty or second argument is refused with status 2 and the
@@ -379,11 +381,11 @@ choice_controls() {
   check "the capture uses the environment's gcov_tool" yes \
         '^lcov --directory .* --gcov-tool /custom/gcov ' "$case_dir/log"
 
-  fixture unexecutable "$tmp/g++-13/bin/g++-15"
-  cxxfilt=unexecutable
+  fixture linux_cxxfilt "$tmp/g++-13/bin/g++-15"
+  cxxfilt=present
   run build/TestAll/gcc-env-coverage
-  exits "a c++filt which cannot run succeeds" 0
-  check "a c++filt which cannot run is not given to genhtml" yes \
+  exits "a run on Linux with GNU c++filt where Homebrew puts it succeeds" 0
+  check "on Linux, Homebrew's GNU c++filt is not given to genhtml" yes \
         '^genhtml --demangle-cpp --suppress-aliases ' "$case_dir/log"
 }
 
@@ -459,6 +461,17 @@ refusal_controls() {
   check "a build directory not within build says so" yes \
         "^error: $b is not within a directory named build$" "$case_dir/err"
   [ ! -s "$case_dir/log" ] || fail "a build directory not within build: a tool ran: $(head -1 "$case_dir/log")"
+
+  local state
+  for state in absent unexecutable; do
+    fixture "darwin_cxxfilt_$state" "$tmp/llvm/bin/clang++"
+    platform=Darwin cxxfilt=$state
+    run build/TestAll/gcc-env-coverage
+    exits "on Darwin, a GNU c++filt $state is refused" 1
+    check "on Darwin, a GNU c++filt $state is named" yes \
+          "^error: on macOS, genhtml needs GNU c\+\+filt at ${gnu_cxxfilt//+/\\+}$" "$case_dir/err"
+    [ ! -s "$case_dir/log" ] || fail "on Darwin, a GNU c++filt $state: a tool ran: $(head -1 "$case_dir/log")"
+  done
 
   fixture uncached "$tmp/g++-13/bin/g++-15"
   rm "$b/CMakeCache.txt"
@@ -605,7 +618,7 @@ mutations=(
   'end lines derived at reads'        '"${consistency_options[@]}" --rc derive_function_end_line=0)'
                                       '"${consistency_options[@]}")'
   '/usr kept'                         "foreign=('/usr/*')"                   'foreign=()'
-  'Darwin taken for Linux'            '== Darwin ]]'                         '== Linux ]]'
+  'Darwin taken for Linux'            $'== Darwin ]]; then\n  foreign+='    $'== Linux ]]; then\n  foreign+='
   'Homebrew kept'                     "foreign+=('/opt/homebrew/*' "         "foreign+=("
   'the CommandLineTools kept'         "'/Library/Developer/*' "              ''
   'Xcode kept'                        " '/Applications/Xcode.app/*')"        ')'
@@ -627,9 +640,13 @@ mutations=(
   'the check not run'                 'run_checked python3 "${script_dir}/check_tracefile.py"'
                                       ': python3 "${script_dir}/check_tracefile.py"'
   'the check from the working dir'    'script_dir=$(cd "$(dirname "$0")" && pwd -P)'  'script_dir=scripts'
-  'GNU c++filt never given'           '[[ -x "${gnu_cxxfilt}" ]] && demangle+=("${gnu_cxxfilt}")'  ':'
-  'GNU c++filt given if present'      '[[ -x "${gnu_cxxfilt}" ]]'            '[[ -e "${gnu_cxxfilt}" ]]'
-  'GNU c++filt always given'          '[[ -x "${gnu_cxxfilt}" ]] && demangle'  'demangle'
+  'GNU c++filt never given'           '  demangle+=("${gnu_cxxfilt}")'       '  :'
+  'GNU c++filt on Linux too'          $'== Darwin ]]; then\n  if [[ ! -x'    $'== Linux || true ]]; then\n  if [[ ! -x'
+  'a missing c++filt accepted'        'if [[ ! -x "${gnu_cxxfilt}" ]]; then'  'if false; then'
+  'an unexecutable c++filt accepted'  '! -x "${gnu_cxxfilt}"'                '! -e "${gnu_cxxfilt}"'
+  'a missing c++filt succeeds'        $'${gnu_cxxfilt}" >&2\n    exit 1'     $'${gnu_cxxfilt}" >&2\n    exit 0'
+  'a missing c++filt on standard output'  'needs GNU c++filt at ${gnu_cxxfilt}" >&2'
+                                      'needs GNU c++filt at ${gnu_cxxfilt}"'
   'no demangling'                     'run_checked genhtml "${demangle[@]}"'  'run_checked genhtml'
   'aliases kept'                      ' --suppress-aliases'                  ''
   'range not probed'                  'for category in range empty category'  'for category in empty category'

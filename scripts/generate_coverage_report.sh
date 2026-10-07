@@ -17,8 +17,10 @@
 #   - coverage_summary.txt, lcov's summary of coverage.info.
 #
 # The script runs lcov, genhtml and ctest from PATH, the ninja the build's
-# cache names, and the gcov tool which matches the build's compiler. A step
-# that fails stops the script with a non-zero status. The script refuses any
+# cache names, and the gcov tool which matches the build's compiler. On macOS
+# it needs GNU c++filt where Homebrew's binutils puts it, and fails before it
+# runs anything if that is absent. A step that fails stops the script with a
+# non-zero status. The script refuses any
 # other arguments with status 2, before it runs anything.
 
 # A failing suite or a failed capture must not leave a report that looks
@@ -52,6 +54,21 @@ fi
 
 output_dir="${path_prefix}/coverage_reports/${path_suffix}"
 echo "Output Dir: ${output_dir}"
+
+# lcov forces --no-strip-underscores on Darwin, which only GNU c++filt
+# accepts. Apple's c++filt refuses it, and genhtml then reports that the
+# tracefile holds no valid records. The script checks for GNU c++filt before
+# the suite runs, rather than fail once it has.
+platform=$(uname -s)
+gnu_cxxfilt="/opt/homebrew/opt/binutils/bin/c++filt"
+demangle=(--demangle-cpp)
+if [[ "${platform}" == Darwin ]]; then
+  if [[ ! -x "${gnu_cxxfilt}" ]]; then
+    echo "error: on macOS, genhtml needs GNU c++filt at ${gnu_cxxfilt}" >&2
+    exit 1
+  fi
+  demangle+=("${gnu_cxxfilt}")
+fi
 
 # Runs a command and, if it fails, names it before ending the script.
 run_checked() {
@@ -129,7 +146,7 @@ foreign=('/usr/*')
 # places at line 0. The capture has already raised that error and been told
 # to ignore it.
 remove_options=(--keep-going --ignore-errors empty --ignore-errors format)
-if [[ "$(uname -s)" == Darwin ]]; then
+if [[ "${platform}" == Darwin ]]; then
   foreign+=('/opt/homebrew/*' '/Library/Developer/*' '/Applications/Xcode.app/*')
   # The patterns cover every toolchain's system headers, and no one build
   # uses them all. lcov treats a pattern that removes nothing as an error.
@@ -149,11 +166,6 @@ cat "${summary}"
 script_dir=$(cd "$(dirname "$0")" && pwd -P)
 run_checked python3 "${script_dir}/check_tracefile.py" --capture "${capture}" --filtered "${info}" \
                                                         --summary "${summary}" --removed "${foreign[@]}"
-
-# lcov forces --no-strip-underscores on Darwin, which only GNU c++filt accepts
-gnu_cxxfilt="/opt/homebrew/opt/binutils/bin/c++filt"
-demangle=(--demangle-cpp)
-[[ -x "${gnu_cxxfilt}" ]] && demangle+=("${gnu_cxxfilt}")
 
 # genhtml refuses to run when given an error category it does not know, and
 # the categories it knows vary by lcov release: lcov 2.0, which Ubuntu 24.04
