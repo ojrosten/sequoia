@@ -574,4 +574,4 @@ esac
 
 script=$original stop_at_first_failure=no
 run_controls
-if [ "$fails" -eq 0 ]; then echo "snapshot_at_deadline: all controls pass on $platform"; else exit 1; fi
+if [ "$fails" -eq 0 ]; then echo "snapshot_at_deadline on $platform: all controls pass"; else exit 1; fi
