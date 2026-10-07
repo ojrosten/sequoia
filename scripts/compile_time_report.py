@@ -24,12 +24,12 @@ machine's.
       working where it records no events, which no count shows.
 
   compile_time_report.py <build-dir> --detail <event> [--source <fragment>]
-      Recompiles the one object matching the fragment, recording every
-      event, and ranks the source lines at which the event occurs. The
+      Recompiles the one object whose path contains the fragment, recording
+      every event, and ranks the source lines at which the event occurs. The
       build's own traces omit events shorter than 500us, which is every
       single constraint check, so attributing one needs the recompile.
 """
-import argparse, collections, json, os, re, subprocess, sys
+import argparse, collections, json, os, re, subprocess, sys, tempfile
 
 # A source location as clang writes it in a detail: <file:line:column...>.
 LOC = re.compile(r"<(?P<file>[^:<>]+):(?P<line>\d+):\d+")
@@ -41,25 +41,29 @@ def traces(build_dir):
 
     A trace counts only if its object lies beside it. A compiler check run by
     CMake with -ftime-trace in CMAKE_CXX_FLAGS leaves a trace with no object,
-    and the trace is otherwise indistinguishable from a unit's. A file which
-    is not a readable trace is skipped.
+    and the trace is otherwise indistinguishable from a unit's.
+
+    Exits if a JSON file beside an object is not a readable trace, or if two
+    traces have the same file name. Either would drop a unit from every report.
     """
-    out = {}
+    out, paths = {}, {}
     for root, _, files in os.walk(build_dir):
         for f in files:
-            if not f.endswith(".json") or f == "compile_commands.json":
-                continue
             path = os.path.join(root, f)
-            if not os.path.exists(path[:-len(".json")] + ".o"):
+            if not f.endswith(".json") or not os.path.exists(path[:-len(".json")] + ".o"):
                 continue
+            unit = f[:-len(".json")]
+            if unit in paths:
+                sys.exit(f"two traces are named {f}:\n  {paths[unit]}\n  {path}")
             try:
                 with open(path, encoding="utf-8") as fh:
                     d = json.load(fh)
-            except (json.JSONDecodeError, UnicodeDecodeError):
-                continue
+            except (json.JSONDecodeError, UnicodeDecodeError) as e:
+                sys.exit(f"{path} lies beside an object but is not a trace: {e}")
             if not isinstance(d, dict) or "traceEvents" not in d:
-                continue
-            out[f[:-len(".json")]] = d["traceEvents"]
+                sys.exit(f"{path} lies beside an object but is not a trace: it has no traceEvents")
+            paths[unit] = path
+            out[unit] = d["traceEvents"]
     return out
 
 
@@ -135,10 +139,11 @@ def summarize(build_dir, top):
     agg, per_tu = collections.Counter(), collections.Counter()
     dur = collections.Counter()
     for tu, events in tus.items():
-        for phase, (count, d) in totals(events).items():
+        phases = totals(events)
+        for phase, (count, d) in phases.items():
             agg[phase] += count
             dur[phase] += d
-        per_tu[tu] = sum(c for c, _ in totals(events).values())
+        per_tu[tu] = sum(c for c, _ in phases.values())
 
     print(f"{len(tus)} translation units\n")
     print("phase totals - the counts are machine-invariant, and the times are this machine's")
@@ -173,31 +178,46 @@ def compare(agg, baseline_path):
         print(f"  {b:12d}  {n:12d}  {n - b:+12d}{ratio}  {phase}")
 
 
+def ninja(build_dir, *arguments):
+    """The output of `ninja -C build_dir <arguments>`. Exits if ninja fails."""
+    r = subprocess.run(["ninja", "-C", build_dir, *arguments], capture_output=True, text=True)
+    if r.returncode:
+        sys.exit(f"ninja -C {build_dir} {' '.join(arguments)} failed:\n{r.stderr}{r.stdout}".rstrip())
+    return r.stdout
+
+
 def compile_command(build_dir, fragment):
-    """The one object whose line in ninja's list of targets contains
-    `fragment`, and the command which compiles it."""
-    objs = subprocess.run(["ninja", "-C", build_dir, "-t", "targets", "all"],
-                          capture_output=True, text=True).stdout
-    hits = [l.split(":")[0] for l in objs.splitlines()
-            if l.endswith("o: CXX_COMPILER__" + l.split("CXX_COMPILER__")[-1])
-            and fragment in l and ".o:" in l]
+    """The one object whose path contains `fragment`, among those ninja
+    compiles from C++, and the command which compiles it. Exits unless exactly
+    one object matches."""
+    targets = [line.partition(": ") for line in ninja(build_dir, "-t", "targets", "all").splitlines()]
+    hits = [target for target, _, rule in targets
+            if rule.startswith("CXX_COMPILER__") and target.endswith(".o") and fragment in target]
     if not hits:
         sys.exit(f"no object matching {fragment!r} in {build_dir}")
     if len(hits) > 1:
         sys.exit("ambiguous --source; matches:\n  " + "\n  ".join(hits))
-    cmd = subprocess.run(["ninja", "-C", build_dir, "-t", "commands", hits[0]],
-                         capture_output=True, text=True).stdout.strip().splitlines()[-1]
-    return hits[0], cmd
+    return hits[0], ninja(build_dir, "-t", "commands", hits[0]).strip().splitlines()[-1]
 
 
 def detail(build_dir, event, fragment, top, out_dir):
     """Recompiles the object matching `fragment`, recording every event, and
-    prints the sites of `event`, ranked by count."""
+    prints the sites of `event`, ranked by count.
+
+    The recompile writes its object, depfile and trace to `out_dir`, and
+    nothing to the build directory.
+    """
     obj, cmd = compile_command(build_dir, fragment)
+    if "-ftime-trace" not in cmd.split():
+        sys.exit(f"the command compiling {obj} has no -ftime-trace\n"
+                 "configure with a *-time-trace preset and build")
     print(f"recompiling {obj} at full granularity", file=sys.stderr)
-    probe = os.path.join(out_dir, "time_trace_probe.o")
+    # The command runs in build_dir, so the compiler would resolve a relative
+    # out_dir against build_dir, not against this process's working directory.
+    probe = os.path.join(os.path.abspath(out_dir), "time_trace_probe.o")
     cmd = cmd.replace("-ftime-trace", "-ftime-trace -ftime-trace-granularity=0")
     cmd = re.sub(r"-o \S+\.o", f"-o {probe}", cmd)
+    cmd = re.sub(r"-MF \S+", f"-MF {probe}.d", cmd)
     r = subprocess.run(cmd, shell=True, cwd=build_dir)
     if r.returncode:
         sys.exit(r.returncode)
@@ -229,7 +249,7 @@ def show_self(build_dir, fragment, top):
     """Prints the self times of the slowest unit whose name contains
     `fragment`."""
     tus = traces(build_dir)
-    hits = [t for t in tus if fragment in t] if fragment else list(tus)
+    hits = [t for t in tus if fragment in t]
     if not hits:
         sys.exit(f"no translation unit matching {fragment!r} in {build_dir}")
     if len(hits) > 1:
@@ -254,23 +274,33 @@ def main():
     ap.add_argument("--write-baseline", metavar="FILE",
                     help="write each phase's count to FILE")
     ap.add_argument("--baseline", metavar="FILE", help="list the phases whose counts differ from FILE's")
-    ap.add_argument("--detail", metavar="EVENT",
-                    help="rank the source lines at which EVENT occurs, recompiling one unit")
-    ap.add_argument("--source", default="", metavar="FRAGMENT",
-                    help="the fragment by which --detail finds the object to recompile")
-    ap.add_argument("--self", metavar="FRAGMENT", nargs="?", const="",
-                    help="rank phases and entities by self time, in the slowest unit "
-                         "whose name contains FRAGMENT")
-    ap.add_argument("--out-dir", default=None, metavar="DIR",
+    mode = ap.add_mutually_exclusive_group()
+    mode.add_argument("--detail", metavar="EVENT",
+                      help="rank the source lines at which EVENT occurs, recompiling one unit")
+    ap.add_argument("--source", metavar="FRAGMENT",
+                    help="a fragment of the path of the object --detail recompiles")
+    mode.add_argument("--self", metavar="FRAGMENT", nargs="?", const="",
+                      help="rank phases and entities by self time, in the slowest unit "
+                           "whose name contains FRAGMENT")
+    ap.add_argument("--out-dir", metavar="DIR",
                     help="the directory to which --detail writes the recompiled object "
-                         "and its trace (default: the build directory)")
+                         "and its trace (default: a temporary directory, removed afterwards)")
     a = ap.parse_args()
+    if a.detail is None and (a.source is not None or a.out_dir is not None):
+        ap.error("--source and --out-dir apply only to --detail")
+    if (a.detail is not None or a.self is not None) and (a.baseline or a.write_baseline):
+        ap.error("--baseline and --write-baseline apply only to the summary")
 
     if a.self is not None:
         show_self(a.build_dir, a.self, a.top)
         return
-    if a.detail:
-        detail(a.build_dir, a.detail, a.source, a.top, a.out_dir or a.build_dir)
+    if a.detail is not None:
+        if a.out_dir is None:
+            with tempfile.TemporaryDirectory() as out_dir:
+                detail(a.build_dir, a.detail, a.source or "", a.top, out_dir)
+        else:
+            os.makedirs(a.out_dir, exist_ok=True)
+            detail(a.build_dir, a.detail, a.source or "", a.top, a.out_dir)
         return
     agg = summarize(a.build_dir, a.top)
     if a.baseline:

@@ -15,9 +15,10 @@
 #     the units both by time and by count. The fixture's rankings disagree,
 #     since a unit can grow slower without doing more of anything clang counts;
 #   - a trace is a unit only if its object lies beside it. CMake's compiler
-#     checks leave well-formed traces with no object. A file beside an object
-#     which is not a trace is not a unit either;
-#   - a build directory with no traces is an error, not an empty report;
+#     checks leave well-formed traces with no object;
+#   - a build directory with no traces is an error, not an empty report. So is
+#     a file beside an object which is not a trace, and so are two traces
+#     with one name, since each would drop a unit from the report;
 #   - a comparison with a baseline lists each phase whose count moved, the
 #     largest move first, including a phase new or gone. A baseline written
 #     holds the counts of the run that writes it, after any comparison;
@@ -25,9 +26,10 @@
 #     with no children keeps its whole duration, which is how work clang does
 #     not instrument shows. Summary events, and the spans enclosing a whole
 #     phase of compilation, are left out;
-#   - --detail recompiles the one object matching --source at full
-#     granularity, leaves the build's object alone, and groups the event's
-#     sites by source line. Each way it can fail exits non-zero.
+#   - --detail recompiles the one object whose path contains --source, at
+#     full granularity, writes nothing to the build directory, and groups the
+#     event's sites by source line. Each way it can fail exits non-zero;
+#   - each option outside the mode selected is refused.
 
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
@@ -122,12 +124,6 @@ summary_controls() {
    {"ph":"X","name":"Total ExecuteCompiler","ts":0,"dur":900000,"args":{"count":1}}]'
   echo '{"not": "a trace"}' > "$b/compile_commands.json"
   echo 'not json at all'    > "$b/stray.json"
-  # Files beside objects which are not traces: JSON with no events, JSON which
-  # is no object, text which is no JSON, and bytes which are not UTF-8.
-  echo '{"not": "a trace"}' > "$b/eventless.cpp.json"; : > "$b/eventless.cpp.o"
-  echo '42'                 > "$b/number.cpp.json";    : > "$b/number.cpp.o"
-  echo '{"traceEvents": ['  > "$b/truncated.cpp.json"; : > "$b/truncated.cpp.o"
-  printf '"\xff"\n'         > "$b/latin1.cpp.json";    : > "$b/latin1.cpp.o"
 
   run "$b" --top 5
   exits "a summary succeeds" 0
@@ -184,6 +180,31 @@ summary_controls() {
   run "$work/empty"
   exits "no traces is an error" nonzero
   check "no traces says so" yes 'no -ftime-trace output under'
+
+  # Files beside objects which are not traces: JSON with no events, JSON which
+  # is no object, text which is no JSON, and bytes which are not UTF-8.
+  local variant
+  for variant in eventless number truncated latin1; do
+    trace "$work/$variant/x.cpp.json" '[]'
+  done
+  echo '{"not": "a trace"}' > "$work/eventless/x.cpp.json"
+  echo '42'                 > "$work/number/x.cpp.json"
+  echo '{"traceEvents": ['  > "$work/truncated/x.cpp.json"
+  printf '"\xff"\n'         > "$work/latin1/x.cpp.json"
+  for variant in eventless number truncated latin1; do
+    run "$work/$variant"
+    exits "$variant JSON beside an object is an error" nonzero
+    check "$variant JSON beside an object is named" yes \
+      "^$work/$variant/x\.cpp\.json lies beside an object but is not a trace: "
+  done
+
+  trace "$work/twins/a/same.cpp.json" '[]'
+  trace "$work/twins/b/same.cpp.json" '[]'
+  run "$work/twins"
+  exits "two traces with one name are an error" nonzero
+  check "two traces with one name are named" yes '^two traces are named same\.cpp\.json:$'
+  check "the first of two traces is listed"  yes "^  $work/twins/a/same\.cpp\.json$"
+  check "the second of two traces is listed" yes "^  $work/twins/b/same\.cpp\.json$"
 }
 
 self_controls() {
@@ -270,12 +291,19 @@ CMakeFiles/T.dir/src/Ratio.cpp.o: CXX_COMPILER__T_unscanned_Debug
 CMakeFiles/T.dir/src/Broken.cpp.o: CXX_COMPILER__T_unscanned_Debug
 CMakeFiles/T.dir/src/Twin1.cpp.o: CXX_COMPILER__T_unscanned_Debug
 CMakeFiles/T.dir/src/Twin2.cpp.o: CXX_COMPILER__T_unscanned_Debug
+CMakeFiles/T.dir/src/Plain.cpp.o: CXX_COMPILER__T_unscanned_Debug
 EOF
   for unit in Ratio Broken Twin1 Twin2; do
     unit_object="CMakeFiles/T.dir/src/$unit.cpp.o"
-    printf '%s\t%s\n' "$unit_object" "fakecc -DX -ftime-trace -MD -MT $unit_object -MF $unit_object.d -o $unit_object -c /src/$unit.cpp"
+    printf '%s\t%s\n' "$unit_object" \
+      "fakecc -DX -ftime-trace -MD -MT $unit_object -MF $unit_object.d -o $unit_object -c /src/$unit.cpp"
   done > "$d/commands.txt"
-  echo "the build's object" > "$d/$object"
+  # A unit compiled without -ftime-trace.
+  unit_object="CMakeFiles/T.dir/src/Plain.cpp.o"
+  printf '%s\t%s\n' "$unit_object" \
+    "fakecc -DX -MD -MT $unit_object -MF $unit_object.d -o $unit_object -c /src/Plain.cpp" >> "$d/commands.txt"
+  echo "the build's object"  > "$d/$object"
+  echo "the build's depfile" > "$d/$object.d"
 
   HOME=/home/fixture run "$d" --detail CheckConstraintSatisfaction --source Ratio --out-dir "$work/probe" --top 10
   exits "--detail succeeds" 0
@@ -289,7 +317,24 @@ EOF
   check "other events are not sites"          no  'widget'
   exists "the probe's trace is in --out-dir" yes "$work/probe/time_trace_probe.json"
   exists "no trace is left beside the build's object" no "$d/${object%.o}.json"
-  check "the build's object is left alone" yes "^the build's object$" "$d/$object"
+  check "the build's object is left alone"  yes "^the build's object$"  "$d/$object"
+  check "the build's depfile is left alone" yes "^the build's depfile$" "$d/$object.d"
+  exists "the probe's depfile is in --out-dir" yes "$work/probe/time_trace_probe.o.d"
+
+  run "$d" --detail CheckConstraintSatisfaction --source Ratio
+  exits "--detail succeeds without --out-dir" 0
+  check "--detail reports without --out-dir" yes '^8 CheckConstraintSatisfaction events'
+  exists "without --out-dir, no probe is left in the build" no "$d/time_trace_probe.o"
+
+  run "$d" --detail CheckConstraintSatisfaction --source Ratio --out-dir "$work/new/probe"
+  exits "an absent --out-dir is made" 0
+  exists "an absent --out-dir holds the probe" yes "$work/new/probe/time_trace_probe.json"
+
+  cd "$work" || exit 1
+  run ninja --detail CheckConstraintSatisfaction --source Ratio --out-dir relative
+  cd - > /dev/null || exit 1
+  exits "--detail succeeds from a relative build directory" 0
+  exists "a relative --out-dir is the working directory's" yes "$work/relative/time_trace_probe.json"
 
   HOME=/home/fixture run "$d" --detail CheckConstraintSatisfaction --source Ratio --out-dir "$work/probe" --top 1
   check "--top bounds the sites" no 'a\.hpp:20'
@@ -309,9 +354,46 @@ EOF
   exits "an unmatched --source is an error" nonzero
   check "an unmatched --source says so" yes "^no object matching 'Nowhere' in $d$"
 
+  run "$d" --detail CheckConstraintSatisfaction --source T_unscanned --out-dir "$work/probe"
+  check "--source matches the object, not its rule" yes "^no object matching 'T_unscanned' in $d$"
+
+  run "$d" --detail CheckConstraintSatisfaction --source Plain --out-dir "$work/probe"
+  exits "a build without -ftime-trace is an error" nonzero
+  check "a build without -ftime-trace says so" yes \
+    '^the command compiling CMakeFiles/T\.dir/src/Plain\.cpp\.o has no -ftime-trace$'
+
+  mkdir -p "$work/unbuilt"
+  run "$work/unbuilt" --detail CheckConstraintSatisfaction --out-dir "$work/probe"
+  exits "a failed ninja is an error" nonzero
+  check "a failed ninja is named" yes "^ninja -C $work/unbuilt -t targets all failed:$"
+  check "a failed ninja's error is shown" yes "^ninja: error: loading 'build\.ninja'"
+
   run "$d" --detail CheckConstraintSatisfaction --source Broken --out-dir "$work/probe"
   exits "a failed recompile gives the compiler's status" 3
   check "a failed recompile shows the compiler's error" yes 'Broken\.cpp:1:1: error: fixture'
+}
+
+option_controls() {
+  local b="$work/build"
+  run "$b" --self --detail CheckConstraintSatisfaction
+  exits "--self with --detail is an error" 2
+  check "--self with --detail says so" yes 'not allowed with argument'
+
+  run "$b" --source Ratio
+  exits "--source without --detail is an error" 2
+  check "--source without --detail says so" yes '--source and --out-dir apply only to --detail'
+
+  run "$b" --out-dir "$work/probe"
+  exits "--out-dir without --detail is an error" 2
+  check "--out-dir without --detail says so" yes '--source and --out-dir apply only to --detail'
+
+  run "$b" --self --baseline "$work/earlier.json"
+  exits "--baseline with --self is an error" 2
+  check "--baseline with --self says so" yes '--baseline and --write-baseline apply only to the summary'
+
+  run "$b" --detail CheckConstraintSatisfaction --write-baseline "$work/never.json"
+  exits "--write-baseline with --detail is an error" 2
+  exists "--write-baseline with --detail writes nothing" no "$work/never.json"
 }
 
 # Stand-ins for ninja and clang, first in PATH.
@@ -378,78 +460,141 @@ run_controls() { # run_controls <script>: sets fails, and total, the controls ru
   summary_controls
   self_controls
   detail_controls
+  option_controls
 }
 
 # Each mutant breaks one behaviour, and is (description, old text, new text).
-# Two are left out as equivalent on any input ninja writes:
-#   - dropping `".o:" in l` from compile_command, since a line which ends in
-#     "o: CXX_COMPILER__<rule>" names an object;
-#   - dropping the test for compile_commands.json in traces, since no object
-#     lies beside it.
+# One is left out as equivalent on any input ninja writes with a Unix
+# toolchain: dropping `target.endswith(".o")` from compile_command, since every
+# target a CXX_COMPILER__ rule builds is an object.
 mutants() { # mutants <dir>: writes <dir>/<n>/compile_time_report.py, and
             # prints a line "<n> <occurrences of the old text> <description>"
   python3 - "$script" "$1" <<'EOF'
 import os, sys
 MUTATIONS = [
-    ('every JSON file a trace',          'if not os.path.exists(path[:-len(".json")] + ".o"):', 'if False:'),
-    ('a trace with no events read',      'if not isinstance(d, dict) or "traceEvents" not in d:', 'if not isinstance(d, dict):'),
-    ('JSON which is no object read',     'if not isinstance(d, dict) or "traceEvents" not in d:', 'if "traceEvents" not in d:'),
-    ('text which is no JSON read',       'except (json.JSONDecodeError, UnicodeDecodeError):', 'except UnicodeDecodeError:'),
-    ('bytes which are not UTF-8 read',   'except (json.JSONDecodeError, UnicodeDecodeError):', 'except json.JSONDecodeError:'),
-    ('one directory only',               'for root, _, files in os.walk(build_dir):', 'for root, files in [(build_dir, os.listdir(build_dir))]:'),
-    ('a phase total ignores its count',  'out[name[len("Total "):]] = (e.get("args", {}).get("count", 0),', 'out[name[len("Total "):]] = (1,'),
+    ('every JSON file a trace',          'if not f.endswith(".json") or not os.path.exists(path[:-len(".json")] + '
+                                         '".o"):',
+                                         'if not f.endswith(".json"):'),
+    ('a trace with no events read',      'if not isinstance(d, dict) or "traceEvents" not in d:',
+                                         'if not isinstance(d, dict):'),
+    ('JSON which is no object read',     'if not isinstance(d, dict) or "traceEvents" not in d:',
+                                         'if "traceEvents" not in d:'),
+    ('text which is no JSON read',       'except (json.JSONDecodeError, UnicodeDecodeError) as e:',
+                                         'except UnicodeDecodeError as e:'),
+    ('bytes which are not UTF-8 read',   'except (json.JSONDecodeError, UnicodeDecodeError) as e:',
+                                         'except json.JSONDecodeError as e:'),
+    ('a file which is no trace skipped', 'sys.exit(f"{path} lies beside an object but is not a trace: it has no '
+                                         'traceEvents")',
+                                         'continue'),
+    ('JSON which fails to read skipped', 'sys.exit(f"{path} lies beside an object but is not a trace: {e}")',
+                                         'continue'),
+    ('a second trace of a name kept',    'if unit in paths:', 'if False:'),
+    ('one directory only',               'for root, _, files in os.walk(build_dir):',
+                                         'for root, files in [(build_dir, os.listdir(build_dir))]:'),
+    ('a phase total ignores its count',  'out[name[len("Total "):]] = (e.get("args", {}).get("count", 0),',
+                                         'out[name[len("Total "):]] = (1,'),
     ('a phase counted from one unit',    'agg[phase] += count', 'agg[phase] = count'),
     ('a phase timed from one unit',      'dur[phase] += d', 'dur[phase] = d'),
-    ('phases ranked by time',            'for phase, count in agg.most_common(top):', 'for phase, count in sorted(agg.items(), key=lambda x: -dur[x[0]])[:top]:'),
-    ('every phase listed',               'for phase, count in agg.most_common(top):', 'for phase, count in agg.most_common():'),
+    ('phases ranked by time',            'for phase, count in agg.most_common(top):',
+                                         'for phase, count in sorted(agg.items(), key=lambda x: -dur[x[0]])[:top]:'),
+    ('every phase listed',               'for phase, count in agg.most_common(top):',
+                                         'for phase, count in agg.most_common():'),
     ('units ranked by time ascending',   'key=lambda x: -x[1])[:top]:', 'key=lambda x: x[1])[:top]:'),
     ('every unit ranked by time',        'key=lambda x: -x[1])[:top]:', 'key=lambda x: -x[1]):'),
-    ('every unit ranked by count',       'for tu, count in per_tu.most_common(top):', 'for tu, count in per_tu.most_common():'),
-    ('a unit counted by its last phase', 'per_tu[tu] = sum(c for c, _ in totals(events).values())', 'per_tu[tu] = count'),
-    ('an empty build accepted',          'if not tus:\n        sys.exit(f"no -ftime-trace output', 'if False:\n        sys.exit(f"no -ftime-trace output'),
+    ('every unit ranked by count',       'for tu, count in per_tu.most_common(top):',
+                                         'for tu, count in per_tu.most_common():'),
+    ('a unit counted by its last phase', 'per_tu[tu] = sum(c for c, _ in phases.values())', 'per_tu[tu] = count'),
+    ('an empty build accepted',          'if not tus:\n        sys.exit(f"no -ftime-trace output',
+                                         'if False:\n        sys.exit(f"no -ftime-trace output'),
     ('an unmoved phase listed',          '        if b == n:\n            continue\n', ''),
     ('moves ranked by name',             'key=lambda p: -abs(agg.get(p, 0) - base.get(p, 0))', 'key=lambda p: p'),
     ('a gone phase left out',            'for phase in sorted(set(base) | set(agg),', 'for phase in sorted(set(agg),'),
     ('a new phase left out',             'for phase in sorted(set(base) | set(agg),', 'for phase in sorted(set(base),'),
-    ('a new phase as a ratio',           'ratio = f"  x{n / b:.2f}" if b else "  (new)"', 'ratio = f"  x{n / max(b, 1):.2f}"'),
-    ('written before compared',          '    if a.baseline:\n        compare(agg, a.baseline)\n    if a.write_baseline:\n        with open(a.write_baseline, "w", encoding="utf-8") as f:\n            json.dump(dict(agg), f, indent=1, sort_keys=True)\n',
-                                         '    if a.write_baseline:\n        with open(a.write_baseline, "w", encoding="utf-8") as f:\n            json.dump(dict(agg), f, indent=1, sort_keys=True)\n    if a.baseline:\n        compare(agg, a.baseline)\n'),
+    ('a new phase as a ratio',           'ratio = f"  x{n / b:.2f}" if b else "  (new)"',
+                                         'ratio = f"  x{n / max(b, 1):.2f}"'),
+    ('written before compared',          '    if a.baseline:\n        compare(agg, a.baseline)\n'
+                                         '    if a.write_baseline:\n'
+                                         '        with open(a.write_baseline, "w", encoding="utf-8") as f:\n'
+                                         '            json.dump(dict(agg), f, indent=1, sort_keys=True)\n',
+                                         '    if a.write_baseline:\n'
+                                         '        with open(a.write_baseline, "w", encoding="utf-8") as f:\n'
+                                         '            json.dump(dict(agg), f, indent=1, sort_keys=True)\n'
+                                         '    if a.baseline:\n        compare(agg, a.baseline)\n'),
     ('a baseline holds times',           'json.dump(dict(agg), f,', 'json.dump(dict(dur), f,'),
     ('every event a span',               'if e.get("ph") == "X" and not', 'if not'),
     ('summary events are spans',         'and not e.get("name", "").startswith("Total ")\n', '\n'),
     ('ExecuteCompiler is a span',        '("ExecuteCompiler", "Frontend"', '("Frontend"'),
     ('Frontend is a span',               '"Frontend", "Backend",', '"Backend",'),
     ('Backend is a span',                '"Backend",\n', '\n'),
-    ('PerformPendingInstantiations is a span', '"PerformPendingInstantiations", "Source")', '"Source")'),
-    ('Source is a span',                 '"PerformPendingInstantiations", "Source")', '"PerformPendingInstantiations",)'),
-    ('a parent may sort after its child', 'spans.sort(key=lambda e: (e["ts"], -e.get("dur", 0)))', 'spans.sort(key=lambda e: e["ts"])'),
-    ('a span ending as another starts is its parent', 'stack[-1][0] + stack[-1][1] <= ts', 'stack[-1][0] + stack[-1][1] < ts'),
-    ('a child taken from every ancestor', '        if stack:\n            stack[-1][2] -= dur\n', '        for frame in stack:\n            frame[2] -= dur\n'),
+    ('PerformPendingInstantiations is a span',
+                                         '"PerformPendingInstantiations", "Source")',
+                                         '"Source")'),
+    ('Source is a span',                 '"PerformPendingInstantiations", "Source")',
+                                         '"PerformPendingInstantiations",)'),
+    ('a parent may sort after its child',
+                                         'spans.sort(key=lambda e: (e["ts"], -e.get("dur", 0)))',
+                                         'spans.sort(key=lambda e: e["ts"])'),
+    ('a span ending as another starts is its parent',
+                                         'stack[-1][0] + stack[-1][1] <= ts',
+                                         'stack[-1][0] + stack[-1][1] < ts'),
+    ('a child taken from every ancestor',
+                                         '        if stack:\n            stack[-1][2] -= dur\n',
+                                         '        for frame in stack:\n            frame[2] -= dur\n'),
     ('no child taken',                   '            stack[-1][2] -= dur\n', '            pass\n'),
-    ('entities merged by name',          'by_entity[(e["name"], e.get("args", {}).get("detail", ""))] += slf', 'by_entity[(e["name"], "")] += slf'),
-    ('a unit timed as zero',             '            return e.get("dur", 0)\n    return 0', '            return 0\n    return 0'),
-    ('several matches take the fastest', 'hits = [max(hits, key=lambda t: wall(tus[t]))]', 'hits = [min(hits, key=lambda t: wall(tus[t]))]'),
-    ('no unit matched accepted',         'if not hits:\n        sys.exit(f"no translation unit matching', 'if False:\n        sys.exit(f"no translation unit matching'),
-    ('self phases unbounded',            'for name, d in by_phase.most_common(top):', 'for name, d in by_phase.most_common():'),
-    ('self entities unbounded',          'for (name, det), d in by_entity.most_common(top):', 'for (name, det), d in by_entity.most_common():'),
+    ('entities merged by name',          'by_entity[(e["name"], e.get("args", {}).get("detail", ""))] += slf',
+                                         'by_entity[(e["name"], "")] += slf'),
+    ('a unit timed as zero',             '            return e.get("dur", 0)\n    return 0',
+                                         '            return 0\n    return 0'),
+    ('several matches take the fastest', 'hits = [max(hits, key=lambda t: wall(tus[t]))]',
+                                         'hits = [min(hits, key=lambda t: wall(tus[t]))]'),
+    ('no unit matched accepted',         'if not hits:\n        sys.exit(f"no translation unit matching',
+                                         'if False:\n        sys.exit(f"no translation unit matching'),
+    ('self phases unbounded',            'for name, d in by_phase.most_common(top):',
+                                         'for name, d in by_phase.most_common():'),
+    ('self entities unbounded',          'for (name, det), d in by_entity.most_common(top):',
+                                         'for (name, det), d in by_entity.most_common():'),
     ('a detail uncut',                   '{det[:100]}', '{det}'),
-    ('a custom command compiled',        'if l.endswith("o: CXX_COMPILER__" + l.split("CXX_COMPILER__")[-1])\n            and ', 'if '),
-    ('the first of several matches',     'if len(hits) > 1:\n        sys.exit("ambiguous', 'if False:\n        sys.exit("ambiguous'),
-    ('no object matched accepted',       'if not hits:\n        sys.exit(f"no object matching', 'if False:\n        sys.exit(f"no object matching'),
-    ('the first command run',            '.stdout.strip().splitlines()[-1]', '.stdout.strip().splitlines()[0]'),
-    ('the default granularity',          'cmd = cmd.replace("-ftime-trace", "-ftime-trace -ftime-trace-granularity=0")', 'pass'),
+    ('any rule compiles',                'if rule.startswith("CXX_COMPILER__") and ', 'if '),
+    ('--source matched in the rule',     'and fragment in target]', 'and fragment in target + rule]'),
+    ('a failed ninja read',              'if r.returncode:\n        sys.exit(f"ninja',
+                                         'if False:\n        sys.exit(f"ninja'),
+    ('a build without -ftime-trace run', 'if "-ftime-trace" not in cmd.split():', 'if False:'),
+    ("a relative --out-dir the build's", 'os.path.join(os.path.abspath(out_dir),', 'os.path.join(out_dir,'),
+    ("the depfile the build's",          'cmd = re.sub(r"-MF \\S+", f"-MF {probe}.d", cmd)', 'pass'),
+    ('the first of several matches',     'if len(hits) > 1:\n        sys.exit("ambiguous',
+                                         'if False:\n        sys.exit("ambiguous'),
+    ('no object matched accepted',       'if not hits:\n        sys.exit(f"no object matching',
+                                         'if False:\n        sys.exit(f"no object matching'),
+    ('the first command run',            '.strip().splitlines()[-1]', '.strip().splitlines()[0]'),
+    ('the default granularity',          'cmd = cmd.replace("-ftime-trace", "-ftime-trace -ftime-trace-granularity=0")',
+                                         'pass'),
     ('the build object overwritten',     'cmd = re.sub(r"-o \\S+\\.o", f"-o {probe}", cmd)', 'pass'),
-    ('a failed recompile read',          'if r.returncode:\n        sys.exit(r.returncode)', 'if False:\n        sys.exit(r.returncode)'),
+    ('a failed recompile read',          'if r.returncode:\n        sys.exit(r.returncode)',
+                                         'if False:\n        sys.exit(r.returncode)'),
     ('a failed recompile exits 1',       'sys.exit(r.returncode)', 'sys.exit(1)'),
     ('an absent event accepted',         'if not hits:\n        names = sorted(', 'if False:\n        names = sorted('),
-    ('summary events listed',            '        names = sorted({e.get("name", "") for e in events\n                        if not e.get("name", "").startswith("Total ")})',
+    ('summary events listed',            '        names = sorted({e.get("name", "") for e in events\n'
+                                         '                        if not e.get("name", "").startswith("Total ")})',
                                          '        names = sorted({e.get("name", "") for e in events})'),
-    ('sites by file',                    'key = f"{m.group(\'file\')}:{m.group(\'line\')}" if m else d', 'key = m.group(\'file\') if m else d'),
-    ('sites by column',                  'LOC = re.compile(r"<(?P<file>[^:<>]+):(?P<line>\\d+):\\d+")', 'LOC = re.compile(r"<(?P<file>[^:<>]+):(?P<line>\\d+:\\d+)")'),
+    ('sites by file',                    'key = f"{m.group(\'file\')}:{m.group(\'line\')}" if m else d',
+                                         "key = m.group('file') if m else d"),
+    ('sites by column',                  'LOC = re.compile(r"<(?P<file>[^:<>]+):(?P<line>\\d+):\\d+")',
+                                         'LOC = re.compile(r"<(?P<file>[^:<>]+):(?P<line>\\d+:\\d+)")'),
     ('a site timed by its last event',   'dur[key] += e.get("dur", 0)', 'dur[key] = e.get("dur", 0)'),
     ('sites unbounded',                  'for key, n in count.most_common(top):', 'for key, n in count.most_common():'),
     ('the home directory spelt out',     'short = key.replace(os.path.expanduser("~"), "~")', 'short = key'),
-    ('--out-dir ignored',                'a.out_dir or a.build_dir', 'a.build_dir'),
+    ('--out-dir ignored',                'a.top, a.out_dir)', 'a.top, a.build_dir)'),
+    ('no --out-dir means the build',     'with tempfile.TemporaryDirectory() as out_dir:',
+                                         'for out_dir in [a.build_dir]:'),
+    ('an absent --out-dir not made',     'os.makedirs(a.out_dir, exist_ok=True)', 'pass'),
+    ('--self and --detail together',     'mode = ap.add_mutually_exclusive_group()', 'mode = ap'),
+    ('--source alone accepted',          '(a.source is not None or a.out_dir is not None)', '(a.out_dir is not None)'),
+    ('--out-dir alone accepted',         '(a.source is not None or a.out_dir is not None)', '(a.source is not None)'),
+    ('a baseline with --self accepted',  '(a.detail is not None or a.self is not None) and',
+                                         '(a.detail is not None) and'),
+    ('a baseline with --detail accepted',
+                                         '(a.detail is not None or a.self is not None) and',
+                                         '(a.self is not None) and'),
 ]
 script, directory = sys.argv[1:]
 with open(script, encoding='utf-8') as f:
