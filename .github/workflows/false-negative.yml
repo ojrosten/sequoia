@@ -20,7 +20,6 @@ name: false-negative
 #
 # Dispatching with GITHUB_TOKEN is allowed: the recursion guard that stops a
 # GITHUB_TOKEN push or PR from triggering workflows exempts workflow_dispatch.
-# Roadmap item 148.
 on:
   # Saturday evening, so that the result is in by Sunday morning even when the
   # scheduler is hours late, and four hours clear of the nightly's tick. The

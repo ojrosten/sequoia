@@ -40,17 +40,17 @@ name: statistical
 # failed trial and carried on.
 #
 # The column runs without `--check-versioned-output`: the gate has already
-# applied it to this tree, and item 160 records the composition as verified
-# locally but not here. The performance tests are excluded for the reason
-# coarse.yml gives.
+# applied it to this tree. `locate N` composes with the flag, comparing once
+# after every repetition, but that has been verified locally and not here. The
+# performance tests are excluded for the reason coarse.yml gives.
 #
-# Which columns: the ones whose failures are rare by mechanism. TSan reports only
-# the interleavings that actually execute, so repetition is what widens its
+# Which columns: the ones whose failures are rare by mechanism. TSan reports
+# only the interleavings that actually execute, so repetition is what widens its
 # coverage. ASan+UBSan for timing-dependent memory errors. MSVC ASan because it
-# is the configuration in which item 134's sharing violation showed most often -
-# 2 of 4, against Debug's 3 of 38 - and its recurrence is what rigorous.yml says
-# would be evidence against the fix. Not Release, not coverage, not docs: the
-# optimizer's questions are not statistical.
+# is the configuration in which the sharing violation rigorous.yml describes
+# showed most often - 2 of 4, against Debug's 3 of 38 - and its recurrence is
+# what rigorous.yml says would be evidence against the fix. Not Release, not
+# coverage, not docs: the optimizer's questions are not statistical.
 #
 # N is an input so the nightly value and a by-hand sweep with a larger one are
 # the same file. The cost is wall-clock, not money - standard runners are free

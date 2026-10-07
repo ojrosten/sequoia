@@ -28,10 +28,10 @@ name: fine
 # and "we develop on the Mac" stopped covering it; see coarse.yml.
 #
 # TestRunnerTest runs here again, having been excluded from this column between
-# 2026-09-09 and 2026-09-11 over a sharing violation on Windows (roadmap item
-# 134). A violation here after 2026-09-11 is evidence against that fix rather
-# than a flake to re-run; rigorous.yml gives the mechanism and the rates per
-# configuration, and every MSVC column in every tier runs the test.
+# 2026-09-09 and 2026-09-11 over a sharing violation on Windows. A violation
+# here after 2026-09-11 is evidence against the fix rigorous.yml describes,
+# rather than a flake to re-run; rigorous.yml gives the mechanism and the rates
+# per configuration, and every MSVC column in every tier runs the test.
 #
 # No path filter: see scope.yml for why, and for how a
 # column with nothing to test still reports.

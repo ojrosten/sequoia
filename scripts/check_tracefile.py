@@ -12,9 +12,8 @@ Every file of the capture must satisfy one of these:
      MCF and MCH - and is absent.
   -# It has function records but no line records - no record but FNL, FNA and the totals - and
      is absent. lcov deletes every file without line records when it reads a tracefile, and
-     the clang leg's capture holds such files. Oliver ruled (2026-09-26) that they are accepted
-     as removed, and listed on every run rather than kept, so that the loss stays visible and a
-     newly dropped file shows.
+     the clang leg's capture holds such files. They are accepted as removed, and listed on every
+     run rather than kept, so that the loss stays visible and a newly dropped file shows.
 
 Every run lists the files of the third case too. They are the project's own
 files, and no figure drawn from the filtered tracefile covers them. A file which
