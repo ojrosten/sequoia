@@ -14,9 +14,10 @@
 # each call, and fail when a control asks them to. So the selftest checks what
 # the script decides and passes, and needs no build. The claims:
 #
-#   - the report is written to coverage_reports beside the first build/ in
-#     the build's physical path, under the rest of that path. A Setup.txt in
-#     the build names a subdirectory of the report, by its first line;
+#   - the report is written to coverage_reports beside the last directory
+#     named build in the build's physical path, under the rest of that path.
+#     A Setup.txt in the build names a subdirectory of the report, by its
+#     first line;
 #   - ninja, taken from the build's cache rather than from PATH, deletes the
 #     objects of sources the build no longer has. Then every notes file
 #     without its object is deleted, anywhere in the build, so that the
@@ -33,8 +34,9 @@
 #   - genhtml is given GNU c++filt if it is installed where Homebrew puts it;
 #   - genhtml is given each of the three ignore categories it accepts, and a
 #     category it refuses is named. The probe leaves nothing behind;
-#   - a missing argument, a missing build directory and a build without a
-#     cache each stop the script before any tool runs;
+#   - a missing argument, a missing build directory, a build directory not
+#     within a directory named build, and a build without a cache each stop
+#     the script before any tool runs;
 #   - each step which fails stops the script, with a non-zero status and an
 #     error naming the step, and no later step runs. A refused summary is
 #     shown.
@@ -217,11 +219,12 @@ exists() {
   [ "$got" = "$2" ] || fail "$1 (expected $2, got $got: $3)"
 }
 
-# fixture <case> <compiler> [<repository>]
+# fixture <case> <compiler> [<repository> [<build>]]
 # A scratch repository, $repo, holding the script and check_tracefile.py's
 # stand-in. It lies at <repository> within the case's directory, by default at
-# repo. It holds a build of TestAll, $b, compiled by <compiler>. The build's
-# notes files are:
+# repo. It holds a build, $b, compiled by <compiler>, at <build> within the
+# repository, by default at build/TestAll/gcc-env-coverage. The build's notes
+# files are:
 #   - Live.cpp.gcno, beside its object, and its data file;
 #   - Orphan.cpp.gcno, and deeper/Nested.cpp.gcno, with no object;
 #   - Dropped.cpp.gcno, whose object ninja's cleandead deletes.
@@ -231,7 +234,7 @@ exists() {
 fixture() {
   case_dir=$cases/$1
   repo=$case_dir/${3:-repo}
-  b=$repo/build/TestAll/gcc-env-coverage
+  b=$repo/${4:-build/TestAll/gcc-env-coverage}
   local src=$b/CMakeFiles/T.dir/src
   mkdir -p "$repo/scripts" "$src/deeper"
   cp "$subject" "$repo/scripts/generate_coverage_report.sh"
@@ -288,7 +291,7 @@ calls_in_build() {
   remove_call="lcov --remove $b/coverage_capture.info"
   check_call="check_tracefile.py --capture $b/coverage_capture.info --filtered $b/coverage.info"
   check_call+=" --summary $b/coverage_summary.txt --removed"
-  report=$repo//coverage_reports/TestAll/gcc-env-coverage
+  report=$repo/coverage_reports/TestAll/gcc-env-coverage
 }
 
 # The calls every run makes in the build $b, when nothing fails.
@@ -408,12 +411,12 @@ output_controls() {
          "$repo/coverage_reports/TestAll/gcc-env-coverage/index.html"
 
   # The repository lies within a directory named build, which lies within one
-  # whose name ends in build.
-  fixture nested "$tmp/g++-13/bin/g++-15" prebuild/build/repo
-  run build/TestAll/gcc-env-coverage
+  # whose name ends in build. So does the project's directory within build.
+  fixture nested "$tmp/g++-13/bin/g++-15" prebuild/build/repo build/Rebuild/gcc-env-coverage
+  run build/Rebuild/gcc-env-coverage
   exits "a repository within a build directory succeeds" 0
-  exists "the report is placed by the first build/ in the path" yes \
-         "$case_dir/pre/coverage_reports/build/repo/build/TestAll/gcc-env-coverage/index.html"
+  exists "the report is placed by the last directory named build" yes \
+         "$repo/coverage_reports/Rebuild/gcc-env-coverage/index.html"
 }
 
 # What stops the script before any tool runs.
@@ -434,6 +437,14 @@ refusal_controls() {
   exits "a missing build directory is refused" nonzero
   check "a missing build directory stops the script at once" no '^Test Dir:' "$case_dir/out"
   [ ! -s "$case_dir/log" ] || fail "a missing build directory: a tool ran: $(head -1 "$case_dir/log")"
+
+  # A path with a directory whose name ends in build, and none named build.
+  fixture unbuilt "$tmp/g++-13/bin/g++-15" repo prebuild/TestAll/gcc-env-coverage
+  run prebuild/TestAll/gcc-env-coverage
+  exits "a build directory not within build is refused" 2
+  check "a build directory not within build says so" yes \
+        "^error: $b is not within a directory named build$" "$case_dir/err"
+  [ ! -s "$case_dir/log" ] || fail "a build directory not within build: a tool ran: $(head -1 "$case_dir/log")"
 
   fixture uncached "$tmp/g++-13/bin/g++-15"
   rm "$b/CMakeCache.txt"
@@ -515,8 +526,14 @@ mutations=(
   'a refusal succeeds'                $'Directory>"\n  exit 1'               $'Directory>"\n  exit 0'
   'the logical path'                  '"$test_exe_dir_relative" && pwd -P)'  '"$test_exe_dir_relative" && pwd)'
   'a missing directory read as here'  '"$test_exe_dir_relative" && pwd -P)'  '"$test_exe_dir_relative"; pwd -P)'
-  'the prefix to the last build/'     '"${test_exe_dir%%build/*}"'           '"${test_exe_dir%build/*}"'
-  'the suffix after the last build/'  '"${test_exe_dir#*build/}"'            '"${test_exe_dir##*build/}"'
+  'a path without build accepted'     '!= */build/* ]]'                      '== "" ]]'
+  'a name ending in build accepted'   '!= */build/* ]]'                      '!= *build/* ]]'
+  'the refusal of a path succeeds'    $'named build" >&2\n  exit 2'          $'named build" >&2\n  exit 0'
+  'the refusal on standard output'    'named build" >&2'                     'named build"'
+  'the prefix to the first build'     '"${test_exe_dir%/build/*}"'           '"${test_exe_dir%%/build/*}"'
+  'the suffix after the first build'  '"${test_exe_dir##*/build/}"'          '"${test_exe_dir#*/build/}"'
+  'the prefix to a name ending build' '"${test_exe_dir%/build/*}"'           '"${test_exe_dir%build/*}"'
+  'the suffix after a name ending build'  '"${test_exe_dir##*/build/}"'      '"${test_exe_dir##*build/}"'
   'the report within the build'       'output_dir="${path_prefix}/coverage_reports/${path_suffix}"'
                                       'output_dir="${test_exe_dir}/coverage_reports"'
   'Setup.txt ignored'                 'if [[ -f "${setup_file}" ]]; then'    'if false; then'

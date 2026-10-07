@@ -6,7 +6,9 @@
 # directory, configured with Ninja by one of the coverage presets, at
 # <root>/build/<project>/<preset>. The report goes to
 # <root>/coverage_reports/<project>/<preset>. If the build directory holds a
-# Setup.txt, the report goes to the subdirectory named by its first line.
+# Setup.txt, the report goes to the subdirectory named by its first line. The
+# script takes <root>/build to be the last directory named build in the build
+# directory's physical path, and refuses a path with none.
 #
 # The script leaves three files in the build directory:
 #   - coverage_capture.info, the tracefile lcov captured;
@@ -33,8 +35,12 @@ test_exe_dir_relative="$1"
 test_exe_dir=$(cd "$test_exe_dir_relative" && pwd -P)
 echo "Test Dir: ${test_exe_dir}"
 
-path_prefix="${test_exe_dir%%build/*}"
-path_suffix="${test_exe_dir#*build/}"
+if [[ "${test_exe_dir}" != */build/* ]]; then
+  echo "error: ${test_exe_dir} is not within a directory named build" >&2
+  exit 2
+fi
+path_prefix="${test_exe_dir%/build/*}"
+path_suffix="${test_exe_dir##*/build/}"
 
 setup_file="${test_exe_dir}/Setup.txt"
 
