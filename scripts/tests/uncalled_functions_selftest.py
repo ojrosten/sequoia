@@ -126,6 +126,16 @@ def fake_tool(name, version_line, status):
     return path
 
 
+def fake_demangler(name, demangling):
+    """The path of an executable named `name` which, asked for its version,
+    writes `<name> 1.2`, and otherwise runs the shell command `demangling`."""
+    path = os.path.join(scratch, name)
+    with open(path, 'w', encoding='utf-8') as file:
+        file.write(f'#!/bin/sh\nif [ "$1" = --version ]; then echo "{name} 1.2"; else {demangling}; fi\n')
+    os.chmod(path, os.stat(path).st_mode | stat.S_IXUSR)
+    return path
+
+
 def uncalled_keys(functions):
     found = script.keys_by_file(script.read_tracefile(tracefile(functions, SOURCE_FILE), ROOT + '/Source'),
                                 DEMANGLERS, script.Selection.uncalled)
@@ -583,14 +593,22 @@ class Verdict(unittest.TestCase):
         self.assertIn(FILE_KEY + '\n    ns::(anonymous namespace)::hidden(int)\n', out)
 
     def test_a_failing_demangler_is_refused(self):
-        """The demangler gives its version, and then fails to demangle."""
-        failing = os.path.join(scratch, 'failing_demangler')
-        with open(failing, 'w', encoding='utf-8') as file:
-            file.write('#!/bin/sh\nif [ "$1" = --version ]; then echo "failing 1.2"; else exit 3; fi\n')
-        os.chmod(failing, os.stat(failing).st_mode | stat.S_IXUSR)
+        failing = fake_demangler('failing', 'exit 3')
         self.assert_refused(run_main(['baseline', '--tracefile', tracefile([(10, [(HIDDEN, 0)])], SOURCE_FILE),
                                       '--repository', ROOT, '--demangler', failing] + tool_options(self.tool)),
                             f"Command '['{failing}']' returned non-zero exit status 3")
+
+    def test_a_demangler_writing_other_than_a_line_per_name_is_refused(self):
+        """The first demangler writes an empty line before the names, so each
+        name would be matched with the line meant for the name before it. The
+        second writes text after the last line."""
+        for demangling in ('echo; cat', 'cat; printf extra'):
+            with self.subTest(demangling=demangling):
+                demangler = fake_demangler('misaligned', demangling)
+                self.assert_refused(run_main(['baseline', '--tracefile',
+                                              tracefile([(10, [(HIDDEN, 0)])], SOURCE_FILE), '--repository', ROOT,
+                                              '--demangler', demangler] + tool_options(self.tool)),
+                                    f'{demangler} did not write one line for each name it was given')
 
     def test_a_tool_whose_version_query_fails_is_refused(self):
         self.tool = fake_tool('faketool', 'faketool 9.9.1', 4)
@@ -730,6 +748,11 @@ MUTATIONS = [
     ('errors in line order',             "sorted((now - was).elements())]\n        fallen",
                                          "list((now - was).elements())]\n        fallen"),
     ('a blank line names a file',        "            elif line.strip():\n",    "            else:\n"),
+    ('baseline files unsorted',          "for file, keys in sorted(uncalled.items()):",
+                                         "for file, keys in uncalled.items():"),
+    ("a demangler's lines unchecked",    "if len(lines) != len(pending) + 1 or lines[-1]:", "if False:"),
+    ('text after the last line read',    "if len(lines) != len(pending) + 1 or lines[-1]:",
+                                         "if len(lines) != len(pending) + 1:"),
 ]
 
 

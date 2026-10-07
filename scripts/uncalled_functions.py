@@ -131,14 +131,19 @@ def untraced_translation_units(repository, traced):
 
 
 def demangle(names, demanglers):
-    """{mangled: demangled}. A name no demangler changes maps to itself."""
+    """{mangled: demangled}. A name no demangler changes maps to itself.
+
+    Raises `Refusal` if a demangler does not write one line for each name.
+    """
     demangled, pending = {}, sorted(names)
     for demangler in demanglers:
         if not pending:
             break
-        output = subprocess.run([demangler], input='\n'.join(pending) + '\n', capture_output=True, text=True,
-                                errors='surrogateescape', check=True).stdout.split('\n')
-        demangled.update((mangled, readable) for mangled, readable in zip(pending, output) if readable != mangled)
+        lines = subprocess.run([demangler], input='\n'.join(pending) + '\n', capture_output=True, text=True,
+                               errors='surrogateescape', check=True).stdout.split('\n')
+        if len(lines) != len(pending) + 1 or lines[-1]:
+            raise Refusal(f'{demangler} did not write one line for each name it was given')
+        demangled.update((mangled, readable) for mangled, readable in zip(pending, lines) if readable != mangled)
         pending = [mangled for mangled in pending if mangled not in demangled]
     demangled.update((mangled, mangled) for mangled in pending)
     return demangled
@@ -364,7 +369,7 @@ def keys_by_file(functions, demanglers, selection):
                       for name in aliases}
     demangled = demangle(names, demanglers)
     result    = {}
-    for file, starts in sorted(functions.items()):
+    for file, starts in functions.items():
         for start, aliases in sorted(starts.items()):
             if not selected(aliases):
                 continue
@@ -399,7 +404,7 @@ def format_baseline(header_lines, uncalled):
     indented, each as often as `uncalled` counts it."""
     lines = ['# ' + line for line in header_lines]
     for file, keys in sorted(uncalled.items()):
-        lines += [file] + ['    ' + key for key in sorted(keys.elements())]
+        lines += [file] + ['    ' + function_key for function_key in sorted(keys.elements())]
     return '\n'.join(lines) + '\n'
 
 
@@ -429,8 +434,8 @@ def compare(baseline, current):
     risen, fallen = [], []
     for file in sorted(set(baseline) | set(current)):
         was, now = baseline.get(file, Counter()), current.get(file, Counter())
-        risen  += [(file, key) for key in sorted((now - was).elements())]
-        fallen += [(file, key) for key in sorted((was - now).elements())]
+        risen  += [(file, function_key) for function_key in sorted((now - was).elements())]
+        fallen += [(file, function_key) for function_key in sorted((was - now).elements())]
     return risen, fallen
 
 
