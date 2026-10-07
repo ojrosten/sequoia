@@ -180,6 +180,8 @@ run_controls() {
   retry "grandchild" 1 1 -- "$tmp/standin"
   expect "a stopped attempt with a grandchild fails the script" "$status" 1
   descendant_gone "the attempt's grandchild is stopped with it"
+  [ "$elapsed" -lt 40 ] \
+    || fail "SIGTERM reaches the grandchild, with no wait for the grace (took $elapsed tenths)"
 
   retry "ignore-term" 1 1 -- "$tmp/standin"
   expect "an attempt ignoring SIGTERM fails the script" "$status" 1
@@ -238,7 +240,7 @@ mutants=(
   'the grace skipped'              '    wait "$watcher" 2> /dev/null
     echo "$* did not finish'  '    kill "$watcher" 2> /dev/null
     echo "$* did not finish'
-  'the whole grace always waited'  '|| exit 0'  '|| :'
+  'the whole grace always waited'  '"-$command" 2> /dev/null || exit 0'  '"-$command" 2> /dev/null || :'
   'a stop not named'               'if [ -e "$flag/stopped" ]; then'  'if false; then'
   'a pause after the last attempt' 'if [ "$attempt" -lt "$attempts" ]; then'  'if true; then'
   'the pause not lengthened'       'sleep $((attempt * pause))'  'sleep $pause'
