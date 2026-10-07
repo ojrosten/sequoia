@@ -683,9 +683,9 @@ class Verdict(unittest.TestCase):
                             f"Command '['{failing}']' returned non-zero exit status 3")
 
     def test_a_demangler_writing_other_than_a_line_per_name_is_refused(self):
-        """The first demangler writes an empty line before the names, so each
-        name would be matched with the line meant for the name before it. The
-        second writes text after the last line."""
+        """The first demangler writes an empty line before the one name it is
+        given, so the name would be matched with the empty line. The second
+        writes text after the last line."""
         for demangling in ('echo; cat', 'cat; printf extra'):
             with self.subTest(demangling=demangling):
                 demangler = fake_demangler('misaligned', demangling)
