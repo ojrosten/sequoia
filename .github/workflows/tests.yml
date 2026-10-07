@@ -39,7 +39,7 @@ on:
         required: true
         type: string
       false_negative:
-        description: 'Corrupt the checkout so that every column MUST go red, one versioned output and one prediction. The control for the gate itself: a run in this mode that comes back green means the gate cannot see. Roadmap item 148.'
+        description: 'Corrupt the checkout so that every column MUST go red, one versioned output and one prediction. The control for the gate itself: a run in this mode that comes back green means the gate cannot see.'
         required: false
         type: boolean
         default: false
@@ -520,7 +520,7 @@ jobs:
       # A column may set `advisory: true` to run without gating on the result, for
       # a platform whose failures are understood and being worked on. No tier sets
       # it since 2026-09-22, when coarse's Windows column became fatal; the
-      # mechanism stays for the columns the roadmap still owes - clang with
+      # mechanism stays for the columns not yet added - clang with
       # libstdc++, clang on Windows, the -Og build - each of which arrives knowing
       # less about itself than this one now does. There is no
       # build-without-running option: a suite that is not run tells you nothing,
@@ -628,7 +628,7 @@ jobs:
             exit 0
           fi
 
-          # Tests whose failures are understood and tracked: roadmap items 38 and 102.
+          # Tests whose failures are understood: timing assertions a hosted runner cannot hold.
           tolerated_tests='TestRunnerPerformanceTest\.cpp'
 
           failing=$({ grep -oE 'Tests/[A-Za-z0-9/_]+\.cpp, Line [0-9]+' "$log" || true; } \
@@ -663,7 +663,7 @@ jobs:
           if [ -n "$actionable" ]; then
             echo "::error title=Advisory run needs action::${{ matrix.name }}: $(echo "$actionable" | tr '\n' ' '). This column does not gate, so the job is green; the failures are real."
           elif [ -n "$failing" ]; then
-            echo "::warning title=Advisory run::${{ matrix.name }}: only the timing assertions this runner cannot hold (roadmap 38, 102). Nothing to act on."
+            echo "::warning title=Advisory run::${{ matrix.name }}: only the timing assertions this runner cannot hold. Nothing to act on."
           elif [ '${{ steps.suite.outcome }}' != 'success' ]; then
             # A suite step that failed without naming a test or writing a patch: a run cut short,
             # a crash, a timeout. Not "passed outright", whatever the log's last lines say.
@@ -910,13 +910,13 @@ jobs:
       # Prints, for each check of the performance test, two durations from the Grand Totals of the output
       # the check wrote: the Execution Time, which the timing checks assert on, and the Runner Overhead.
       # Where the check measured one, it then prints the peak number of the check's tests which ran at
-      # once. A check prints its values only when it fails, and roadmap item 38 needs the distribution,
-      # not only the tail. Each duration is printed with its unit, since the runner writes one of a
-      # second or more in seconds. The checks are found from the io.txt files in the working copy, so a
-      # renamed check is still printed. A column that excludes the performance tests has no working copy,
-      # and says so. A check's name is a directory name and its values are read through a filter of
-      # digits, letters, dots and plus signs, and neither begins a line, so nothing printed here can be a
-      # workflow command. A report cannot fail the job.
+      # once. A check prints its values only when it fails, and setting the checks' bounds needs the
+      # distribution, not only the tail. Each duration is printed with its unit, since the runner writes
+      # one of a second or more in seconds. The checks are found from the io.txt files in the working
+      # copy, so a renamed check is still printed. A column that excludes the performance tests has no
+      # working copy, and says so. A check's name is a directory name and its values are read through a
+      # filter of digits, letters, dots and plus signs, and neither begins a line, so nothing printed here
+      # can be a workflow command. A report cannot fail the job.
       - name: Report the performance test's timings
         if: ${{ always() && inputs.needs_testing == 'true' }}
         continue-on-error: true

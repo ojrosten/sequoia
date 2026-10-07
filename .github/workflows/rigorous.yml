@@ -113,9 +113,9 @@ name: rigorous
 # vectorizer, which -fno-tree-loop-vectorize removes while leaving the diagnostics
 # enabled, and 6 from an address computed in a branch of libstdc++'s
 # __final_insertion_sort that a two-edge graph cannot reach. They are suppressed at
-# the sites, each saying why - see roadmap item 135. Note that the suite had never
-# actually run at -O3 before, the column having always died at compile time; it
-# does now, 19588 checks, 0 failures.
+# the sites, each saying why. Note that the suite had never actually run at -O3
+# before, the column having always died at compile time; it does now, 19588 checks,
+# 0 failures.
 #
 # This column carries NO flags - an explicitly empty `exec_args`, which is not the
 # same as omitting the key. The drift check was dropped here pre-emptively, off a
@@ -124,9 +124,9 @@ name: rigorous
 # mechanism is ld64 discarding a Mach-O atom, which has no ELF counterpart, and this
 # column has never actually tried the flag - every run that carried it died at
 # compile time instead. Reported 2026-09-11 as a further instance of
-# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=126723 (roadmap item 139); restore
-# the flag when gcc is fixed, and put it back sooner than that to find out whether
-# this column was ever affected.
+# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=126723; restore the flag when gcc is
+# fixed, and put it back sooner than that to find out whether this column was ever
+# affected.
 #
 # The performance tests run HERE and nowhere else in this tier, which is
 # deliberate. What makes them unreliable on a hosted runner is the slowdown, not
@@ -149,12 +149,11 @@ name: rigorous
 # toss (ASan 2 of 4, Release 1 of 3, Debug 3 of 38), because std::system spawned
 # children with every open file inherited and a spawn on one thread captured a
 # file another thread had open. invoke now spawns with a handle list naming only
-# the standard streams (roadmap item 134). A deterministic test witnesses the
-# mechanism; the CI symptom can appear in any MSVC column that runs
-# TestRunnerTest, which today is every MSVC column in every tier - the rates
-# above come from three of them. So a sharing violation on Windows after
-# 2026-09-11, in whichever tier, is evidence against the fix rather than a flake
-# to re-run.
+# the standard streams. A deterministic test witnesses the mechanism; the CI symptom
+# can appear in any MSVC column that runs TestRunnerTest, which today is every MSVC
+# column in every tier - the rates above come from three of them. So a sharing
+# violation on Windows after 2026-09-11, in whichever tier, is evidence against the
+# fix rather than a flake to re-run.
 #
 # No path filter: see scope.yml for why, and for how a
 # column with nothing to test still reports.
