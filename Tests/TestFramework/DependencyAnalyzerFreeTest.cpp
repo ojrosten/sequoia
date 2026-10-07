@@ -1336,10 +1336,11 @@ namespace sequoia::testing
                        {},
                        {});
 
-    /* The precondition prune relies on, documented by the two cases which break it: definitions for
-       Foo.hpp's declarations in a source not named for it, and in a header read by one other
-       compilation alone. FooTest.cpp includes Foo.hpp and is not selected by either. Should prune
-       learn the link-time dependencies, both will select it, and these two checks will fail.
+    /* The precondition prune relies on, documented by the two cases which break it: definitions
+       for Foo.hpp's declarations in a source not named for it, and in a header read by one other
+       compilation alone. FooTest.cpp includes Foo.hpp and is not selected by either. Should
+       prune learn the link-time dependencies, both will select it, and these two checks will
+       fail.
     */
     check_tests_to_run("Definitions in a source not named for the header: a limitation, not seen",
                        projPaths,
