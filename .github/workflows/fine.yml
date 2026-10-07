@@ -4,6 +4,9 @@ name: fine
 # plus --check-versioned-output so a change which moves committed diagnostics
 # fails here rather than surfacing later as a git diff.
 #
+# fine also runs coverage.yml, whose gate fails a PR that leaves a function of
+# Source uncalled without listing it in coverage_reports/uncalled_functions.txt.
+#
 # These columns do not repeat coarse's plain ones, since a PR into staging must
 # pass coarse as well. ASan is behaviour-neutral on this suite, leaving check
 # counts and output/ unchanged.
@@ -80,6 +83,16 @@ jobs:
           {"name": "Windows · MSVC · ASan",      "os": "windows-latest", "configure": "msvc-asan",           "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 
+  # The gate on functions of Source that no test calls; coverage.yml says what
+  # the job does. Its merge_into is the columns'.
+  coverage:
+    needs: scope
+    if: ${{ !cancelled() }}
+    uses: ./.github/workflows/coverage.yml
+    with:
+      needs_testing: ${{ needs.scope.outputs.coverage }}
+      merge_into: ${{ github.event_name == 'workflow_dispatch' && 'staging' || '' }}
+
   # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
   # as one that passed; `needs` reports `skipped` where the tick shows green.
   # Staging requires this job and none of the others, so a job missing from this
@@ -92,7 +105,7 @@ jobs:
   # rigorous's audit, without the modes.
   audit:
     name: Every job ran and every job gates
-    needs: [scope, fine]
+    needs: [scope, fine, coverage]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
