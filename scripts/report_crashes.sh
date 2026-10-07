@@ -99,13 +99,32 @@ is_crash_report() {
   esac
 }
 
-# Prints each crash report's path, then a summary, then the whole report. The
-# summary is the exception and the frames of the faulting thread. A report
-# that cannot be summarised, which includes every .crash report, is printed
-# whole.
-#
-# The system gives a frame its source file and line, and lists the frames
-# inlined into it, when it can read the executable's debug information.
+# Prints the exception of an .ips crash report, then the frames of its
+# faulting thread. The system gives a frame its source file and line, and
+# lists the frames inlined into it, when it can read the executable's debug
+# information.
+summarise_ips_report() { # summarise_ips_report <report>
+  python3 - "$1" "$frames_per_thread" <<'SUMMARY'
+import json, sys
+with open(sys.argv[1]) as f:
+    metadata, body = f.readline(), json.loads(f.read())
+exception = body.get("exception", {})
+print(f"{json.loads(metadata).get('name', '?')}: {exception.get('type', '?')} ({exception.get('signal', '?')})")
+images = body.get("usedImages", [])
+faulting = body["threads"][body["faultingThread"]]
+for frame in faulting["frames"][:int(sys.argv[2])]:
+    index = frame.get("imageIndex", -1)
+    image = images[index].get("name", "?") if 0 <= index < len(images) else "?"
+    location = f" ({frame['sourceFile']}:{frame['sourceLine']})" if {"sourceFile", "sourceLine"} <= frame.keys() else ""
+    inlined = " [inlined]" if frame.get("inline") else ""
+    print(f"  {image}: {frame.get('symbol', hex(frame.get('imageOffset', 0)))}{location}{inlined}")
+SUMMARY
+}
+
+# Prints each crash report's path, then a summary of an .ips report, then the
+# whole report. A .crash report is not JSON, and gets no summary. If an .ips
+# report cannot be summarised, the output says so. find names any
+# subdirectory it cannot read, in an error.
 report_macos() {
   local directory report directories=()
   while IFS= read -r directory; do
@@ -123,25 +142,13 @@ report_macos() {
     found=$((found + 1))
     echo "== Crash: $(basename "$report") =="
     echo "Report: $report"
-    python3 - "$report" "$frames_per_thread" <<'SUMMARY' || echo "The report could not be summarised; it follows whole."
-import json, sys
-with open(sys.argv[1]) as f:
-    metadata, body = f.readline(), json.loads(f.read())
-exception = body.get("exception", {})
-print(f"{json.loads(metadata).get('name', '?')}: {exception.get('type', '?')} ({exception.get('signal', '?')})")
-images = body.get("usedImages", [])
-faulting = body["threads"][body["faultingThread"]]
-for frame in faulting["frames"][:int(sys.argv[2])]:
-    index = frame.get("imageIndex", -1)
-    image = images[index].get("name", "?") if 0 <= index < len(images) else "?"
-    location = f" ({frame['sourceFile']}:{frame['sourceLine']})" if {"sourceFile", "sourceLine"} <= frame.keys() else ""
-    inlined = " [inlined]" if frame.get("inline") else ""
-    print(f"  {image}: {frame.get('symbol', hex(frame.get('imageOffset', 0)))}{location}{inlined}")
-SUMMARY
+    case "$report" in
+      *.ips) summarise_ips_report "$report" || echo "The report could not be summarised; it follows whole." ;;
+    esac
     echo "-- The whole report --"
     cat "$report"
     echo
-  done < <(find "${directories[@]}" -type f -newer "$since" \( -name '*.ips' -o -name '*.crash' \) 2> /dev/null)
+  done < <(find "${directories[@]}" -type f -newer "$since" \( -name '*.ips' -o -name '*.crash' \))
 }
 
 report_$platform

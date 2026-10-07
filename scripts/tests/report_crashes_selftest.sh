@@ -30,9 +30,11 @@
 #     are not;
 #   - a report whose fields are absent is summarised with "?" in their place,
 #     and one that cannot be summarised is printed whole;
+#   - a .crash report is printed whole, without an attempt at a summary;
 #   - the summary shows at most 50 frames;
 #   - a directory that cannot be read, or cannot be searched, is named before
 #     any crash; one that does not exist is not named;
+#   - a subdirectory that cannot be read is named;
 #   - with no directory to read, the count is the only output;
 #   - the directories listed are the user's and the system's
 #     DiagnosticReports, unless REPORT_CRASHES_MACOS_DIRECTORIES names others.
@@ -132,8 +134,10 @@ touch "$tmp/after"
 # DiagnosticReports. The reports directory holds a copy of the first
 # stand-in's report, and reports written here. The unreadable directory can be
 # searched but not listed. The unsearchable one can be listed but not searched.
+# The locked subdirectory can be neither.
 macos=$tmp/macos
-mkdir -p "$macos/empty" "$macos/reports/Directory.crash" "$macos/unreadable" "$macos/unsearchable"
+mkdir -p "$macos/empty" "$macos/reports/Directory.crash" "$macos/reports/locked" "$macos/unreadable" \
+         "$macos/unsearchable"
 cp "$(find "${reports[@]}" -type f -newer "$tmp/before" -name "$name*" 2> /dev/null | head -1)" "$macos/reports/"
 python3 - "$macos/reports" <<'FIXTURES'
 import json, os, sys
@@ -160,6 +164,7 @@ write('Old.ips',       '{"bug_type":"309","name":"Old"}\n{}\n')
 write('Legacy.crash',  'Process: Legacy [1]\nException Type: EXC_CRASH (SIGABRT)\n')
 FIXTURES
 touch -t 201901010000 "$macos/reports/Old.ips"
+chmod 000 "$macos/reports/locked"
 chmod 300 "$macos/unreadable"
 chmod 600 "$macos/unsearchable"
 
@@ -207,6 +212,7 @@ run_controls() { # run_controls <directory holding the scripts>
   local script=$scripts/report_crashes.sh
   local crashed=$tmp/out/crashed.txt earlier=$tmp/out/earlier.txt elsewhere=$tmp/out/elsewhere.txt
   local nowhere=$tmp/out/nowhere.txt directories=$tmp/out/directories.txt refused=$tmp/out/refused.txt
+  local legacy=$tmp/out/legacy.txt
   local linux_report=$tmp/out/linux.txt no_gdb=$tmp/out/linux-no-gdb.txt windows_report=$tmp/out/windows.txt
   local gdb_batch='^gdb: \[-batch\] \[-ex\] \[thread apply all bt 50\]'
   fails=0
@@ -253,6 +259,10 @@ run_controls() { # run_controls <directory holding the scripts>
   check "a report that cannot be summarised is printed"     yes "^not JSON$" "$elsewhere"
   check "a .crash report is reported"                       yes "^== Crash: Legacy\.crash ==$" "$elsewhere"
   check "a .crash report is printed whole"                  yes "^Exception Type: EXC_CRASH \(SIGABRT\)$" "$elsewhere"
+  awk '/^== Crash: /{ inside = ($0 == "== Crash: Legacy.crash ==") } /^Crashes found: /{ inside = 0 } inside' \
+    "$elsewhere" > "$legacy"
+  check "a .crash report is not summarised"                 no  "could not be summarised|Traceback" "$legacy"
+  check "a subdirectory that cannot be read is named"       yes "$macos/reports/locked" "$elsewhere"
   check "an unreadable directory is named"                  yes "^Not read: $macos/unreadable " "$elsewhere"
   check "an unsearchable directory is named"                yes "^Not read: $macos/unsearchable " "$elsewhere"
   check "an absent directory is not named"                  no  "$macos/absent" "$elsewhere"
@@ -385,6 +395,8 @@ report_crashes_mutations=(
                                       $'echo "== Crash: $(basename "$report") =="'
   'macOS: no path'                    'echo "Report: $report"'                   ':'
   'macOS: no whole report'            '    cat "$report"'                        '    :'
+  'macOS: .crash summarised'          '*.ips) summarise_ips_report'              '*) summarise_ips_report'
+  "macOS: find's errors discarded"    "-name '*.crash' \\))"                   "-name '*.crash' \\) 2> /dev/null)"
   'macOS: no word of a failed summary' '|| echo "The report could not be summarised; it follows whole."'
                                       '|| true'
   'macOS: no exception'               'print(f"{json.loads(metadata)'            '(f"{json.loads(metadata)'
