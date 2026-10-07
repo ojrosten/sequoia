@@ -108,6 +108,15 @@ jobs:
     with:
       needs_testing: ${{ needs.scope.outputs.documentation }}
 
+  # The scripts' selftests. They take about a minute and build nothing of
+  # sequoia's, so a change to a script is tested on the push that makes it.
+  selftests:
+    needs: scope
+    if: ${{ !cancelled() }}
+    uses: ./.github/workflows/selftests.yml
+    with:
+      needs_testing: ${{ needs.scope.outputs.suite }}
+
   # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
   # as one that passed; `needs` reports `skipped` where the tick shows green.
   # Staging requires this job and none of the others, so a job missing from this
@@ -119,7 +128,7 @@ jobs:
   # an earlier step fails, so each reports independently.
   audit:
     name: Every job ran
-    needs: [scope, coarse, docs]
+    needs: [scope, coarse, docs, selftests]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
