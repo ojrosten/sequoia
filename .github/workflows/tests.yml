@@ -1,18 +1,18 @@
 name: tests
 
-# The one place that knows how to build and run sequoia. coarse, fine and rigorous
-# are callers differing only in which columns they ask for and what they pass the
-# runner, so the tiers cannot drift apart in how they build.
+# coarse, fine, rigorous and statistical all build and run sequoia through
+# this workflow. They differ only in the columns they ask for and the arguments
+# they pass the runner, so the tiers cannot drift apart in how they build.
 #
-# The tiers are ordered by strictness, not by containment: fine and rigorous replace
-# coarse's plain columns with sanitized ones rather than adding to them. A tier must
-# be at least as strict as the one below, or a pass at one says nothing about the
-# next.
+# The tiers are ordered by strictness, not by containment: fine and rigorous
+# run sanitized columns in place of coarse's plain ones, not beside them. A
+# tier must be at least as strict as the one below it, or a pass at one tier
+# says nothing about the next.
 on:
   workflow_call:
     inputs:
       columns:
-        description: 'JSON array of matrix entries: name, os, configure, build, cc/cxx where the preset takes them from the environment, pkg where the apt package providing the compiler is not spelt like the binary (clang++ comes from clang; g++-15 is its own package), and optionally exec_args, repeat_args and advisory, explained where they are read.'
+        description: 'A JSON array of matrix entries. Each has name, os, configure and build. It has cc and cxx where the preset reads the compiler from the environment, and pkg where the apt package holding the compiler is named differently from the binary, as clang++ is held by clang. exec_args, repeat_args and advisory are optional, and each is described where it is read.'
         required: true
         type: string
       exec_args:
@@ -21,30 +21,30 @@ on:
         type: string
         default: ''
       repeat_args:
-        description: 'Arguments for a second run of the test executable on the built tree, after the first; empty for none. In practice `locate N` minus the end-to-end test, which is nine-tenths of a run. A column may carry its own, replacing the tier''s, as with exec_args.'
+        description: 'Arguments for a second run of the test executable, after the first and without a rebuild; empty for none. A column''s own repeat_args replaces the tier''s, as a column''s exec_args does.'
         required: false
         type: string
         default: ''
       warnings_as_errors:
-        description: 'Fail the build on any compiler warning. The gating tiers set this; the reporting tier counts them instead.'
+        description: 'Fail the build on any compiler warning. When false, the warnings are counted and reported instead.'
         required: false
         type: boolean
         default: false
       needs_testing:
-        description: 'Whether the change touches anything the suite reads: `true` or `false`, from scope.yml. Anything else fails every column.'
+        description: 'scope.yml''s answer to whether the change touches anything the suite reads: `true` or `false`. Any other value fails every column.'
         required: true
         type: string
       merge_into:
-        description: 'A branch into which each column merges the checked-out commit before building, so that the column tests what a pull request into that branch would merge; empty to test the checked-out commit itself. A merge that conflicts fails the column.'
+        description: 'A branch which each column merges into the checked-out commit before building, so that the column tests what a pull request into the branch would merge. Empty tests the checked-out commit itself. The column fails if the merge conflicts, or if the branch has changed .github or scripts since the merge-base.'
         required: true
         type: string
       false_negative:
-        description: 'Corrupt the checkout so that every column MUST go red, one versioned output and one prediction. The control for the gate itself: a run in this mode that comes back green means the gate cannot see.'
+        description: 'Corrupt one versioned output and one prediction in the checkout, so that every column must go red. This is the control for the gate itself: a run in this mode that comes back green means the gate cannot see.'
         required: false
         type: boolean
         default: false
       suite_timeout_minutes:
-        description: 'How long one pass of the suite may run before the step is killed; a repeat pass gets the same again. The tiers run it once; statistical runs it N times over in one pass.'
+        description: 'How long one run of the test executable may take before its step is killed, however many repetitions the run makes. The second run, if any, gets the same again.'
         required: false
         type: number
         default: 30
@@ -60,43 +60,46 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: ${{ inputs.job_timeout_minutes }}
     strategy:
-      # Every column reports. Cancelling the rest on the first red would collect
-      # one answer where the point is to collect all of them.
+      # Every column reports. Cancelling the rest on the first red would
+      # collect one answer where the point is to collect all of them.
       fail-fast: false
       matrix:
         include: ${{ fromJSON(inputs.columns) }}
 
-    # bash everywhere, Windows included, so one set of steps serves every column
-    # rather than each acquiring a shell dialect of its own.
+    # Every step runs under bash, Windows included, so that one set of steps
+    # serves every column.
     defaults:
       run:
         shell: bash
 
-    # How long before a suite step's timeout its watcher records what the suite
-    # is doing; "Run the suite" says why. Each snapshot records when it began
-    # and ended, which says whether the margin is generous or tight.
+    # How many minutes before a suite step's timeout the step's watcher records
+    # what the suite is doing; "Run the suite" says why. Each snapshot records
+    # when it began and ended, which shows whether the margin is generous or
+    # tight.
     env:
       SNAPSHOT_MARGIN_MINUTES: 10
 
     steps:
       - uses: actions/checkout@v7
         with:
-          # docs/ is ~96MB of committed doxygen render; nothing here reads it.
+          # The tip alone, not the history: every commit of docs/ holds a
+          # doxygen render, and only the merge step reads the history, which
+          # it fetches itself.
           fetch-depth: 1
 
       # When `merge_into` names a branch, this step merges that branch into the
       # checkout, so that the column tests what a pull request into the branch
-      # would merge. fine's dispatched run is the one caller that names a branch;
-      # fine-on-retarget.yml says why it cannot use GitHub's merge ref.
+      # would merge. fine-on-retarget.yml says why GitHub's merge ref will not
+      # do.
       #
-      # A run that merges here builds with the checkout's workflows and scripts,
-      # not the merged ones. So the step fails if the branch has changed .github
-      # or scripts since the merge-base. Otherwise the gate could pass on a recipe
-      # that the branch has replaced.
+      # A run that merges here builds with the checkout's workflows and
+      # scripts, not the merged ones. So the step fails if the branch has
+      # changed .github or scripts since the merge-base. Otherwise the gate
+      # could pass on a recipe that the branch has replaced.
       #
-      # The step fetches the history without blobs, as scope.yml does. The merge
-      # needs every commit back to the merge-base, but blobs only for the paths the
-      # branch changed since then.
+      # The merge needs every commit back to the merge-base, but blobs only for
+      # the paths the branch has changed since then. So the step fetches the
+      # history without blobs, as scope.yml does.
       #
       # Repeated in coverage.yml; change both.
       - name: Merge the branch named by merge_into
@@ -115,14 +118,16 @@ jobs:
             exit 1
           fi
 
-      # Every column runs whatever changed, so that its check always reports;
-      # scope.yml says why. Every step after this one is conditional on
-      # `needs_testing`, so a column with nothing to test passes in seconds.
+      # Every column runs, whatever the change, so that its check always
+      # reports; scope.yml says why. Every later step runs only if
+      # `needs_testing` is `true`, so a column with nothing to test passes in
+      # seconds.
       #
-      # The conditions test for `true`, so any other answer skips the suite. This
-      # step therefore insists the answer is exactly `false`: an empty one, from a
-      # decision that failed or an output renamed in scope.yml, fails the column
-      # rather than passing it untested. The audit below reads this step back.
+      # Any answer but `true` skips the suite, so this step fails the column
+      # unless the answer is exactly `false`. An empty answer, from a decision
+      # that failed or an output renamed in scope.yml, then fails the column
+      # rather than passing it untested. The audit below reads this step's
+      # conclusion.
       - name: Nothing to test
         if: inputs.needs_testing != 'true'
         env:
@@ -134,13 +139,15 @@ jobs:
           fi
           echo "Nothing to test; the scope job's summary says why."
 
-      # Two corruptions, because the columns do not share a detector. The summary
-      # file is rewritten by every toolchain, so appending to it is drift wherever
-      # `--check-versioned-output` is on; the prediction is what StreamingFreeTest
-      # compares its output against, so rewriting it is a soft failure everywhere,
-      # including the column that carries no drift check. Each target is checked
-      # to exist first: a control that mutates nothing is the false negative it is
-      # meant to catch.
+      # The step makes two corruptions, because the columns do not share a
+      # detector:
+      #   - Every toolchain rewrites the summary file, so a line appended to it
+      #     is drift wherever `--check-versioned-output` is on.
+      #   - StreamingFreeTest compares its output against the prediction, so a
+      #     rewritten prediction is a soft failure in every column, including
+      #     one without the drift check.
+      # The step checks that each target exists first: a control that corrupts
+      # nothing is the false negative it exists to catch.
       - name: Corrupt the tree, so that every column must go red
         if: ${{ inputs.false_negative && inputs.needs_testing == 'true' }}
         run: |
@@ -153,36 +160,33 @@ jobs:
           echo "false-negative control: the test must fail against this" > "$prediction"
           git diff --stat
 
-      # Package presence is tested against `apt-cache pkgnames`, which matches
-      # names exactly. `apt-get install` does not: given a name with regex
-      # metacharacters that matches no package it treats the name as a regex, so
-      # `g++-15` on noble resolves to clang-15, flang-15 and llvm-15, installs all
-      # three, and exits 0.
+      # The step checks each package against `apt-cache pkgnames`, which lists
+      # names exactly. `apt-get install` does not match names exactly: given a
+      # name with regex metacharacters that matches no package, it treats the
+      # name as a regex. So `g++-15` on noble resolves to clang-15, flang-15
+      # and llvm-15, and apt-get installs all three and exits 0.
       #
-      # The list is read once, into a variable, and each name is searched for
-      # there rather than in a pipe from apt-cache. Piped into `grep -q`, which
-      # quits at its first match, apt-cache died of SIGPIPE mid-list, and under
-      # the job's pipefail the check failed although the name was listed: every
-      # Linux column on ubuntu-26.04 reported g++-15 missing that way
-      # (2026-10-07). -F, because a name may hold a `.`, which grep's regex
-      # would match against any character.
+      # The step reads the list once into a variable, and searches for each
+      # name there. A pipe from apt-cache into `grep -q` fails: grep quits at
+      # its first match, apt-cache dies of SIGPIPE mid-list, and the job's
+      # pipefail fails the check although the name is listed. On ubuntu-26.04
+      # the pipe failed this way for g++-15 on every Linux column. -F because a
+      # name may hold a `.`, which a regex matches against any character.
       - name: Install the toolchain (Linux)
         if: inputs.needs_testing == 'true' && runner.os == 'Linux'
         run: |
-          # The hosted image ships vendor repositories - Chrome and Microsoft - which
-          # nothing here installs from. A bad index served by one of them fails the
-          # update, and with it the job.
+          # The hosted image ships Chrome's and Microsoft's apt repositories,
+          # which nothing here installs from. A bad index from either fails
+          # `apt-get update`, and with it the job.
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
-          # Launchpad is a live dependency of every Linux column, and it fails in
-          # more than one shape: a malformed chunked response (PR #19, 2026-09-11)
-          # and an HTTP 503 "temporarily unavailable" (2026-09-16), both before any
-          # compiler ran. So the add is retried on any non-zero exit - not only a
-          # timeout - a bounded number of times with a short back-off. Nothing
-          # else is retried. The `apt-get update` below fetches the PPA's index from
-          # Launchpad too, and a failure there is loud - apt exits 100, or the
-          # compiler check after it fires - but is not yet a shape that has been
-          # seen; the two above were both in the add.
+          # Launchpad is a live dependency of every Linux column. Adding its
+          # PPA has failed in more than one way, each before any compiler ran:
+          # a malformed chunked response, and an HTTP 503. So the step retries
+          # the add on any non-zero exit, not only a timeout, a bounded number
+          # of times with a short back-off. `apt-get update` below fetches the
+          # PPA's index from Launchpad too, and is not retried: no failure has
+          # been seen there, and one would be loud.
           for attempt in 1 2 3 4; do
             sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test && break
             [ "$attempt" -lt 4 ] || { echo "::error::add-apt-repository failed on all $attempt attempts"; exit 1; }
@@ -190,10 +194,8 @@ jobs:
             sleep $((attempt * 15))
           done
           sudo apt-get update -qq
-          # The compiler binary and the package providing it are not the same string:
-          # g++-15 is both, but clang++ is shipped by `clang`. A column may therefore
-          # name the package separately, defaulting to the binary where they agree.
-          # gdb is for the stacks in a hung suite's snapshot; the image has none.
+          # gdb reads the stacks for a hung suite's snapshot and for a crash's
+          # core; the image has none.
           names=$(apt-cache pkgnames)
           for pkg in "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev gdb; do
             grep -qFx -- "$pkg" <<< "$names" \
@@ -221,9 +223,6 @@ jobs:
           echo "CC=${{ matrix.cc }}"   >> "$GITHUB_ENV"
           echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
 
-      # A macOS column carries `--exclude-performance` as the Windows ones do: it is
-      # the suite's timing assertions, not the rest of it, which a hosted runner
-      # cannot hold.
       - name: Install the toolchain (macOS)
         if: inputs.needs_testing == 'true' && runner.os == 'macOS'
         run: |
@@ -233,13 +232,15 @@ jobs:
           echo "CC=$(brew --prefix llvm)/bin/clang"    >> "$GITHUB_ENV"
           echo "CXX=$(brew --prefix llvm)/bin/clang++" >> "$GITHUB_ENV"
 
-      # With the Visual Studio generator CMake finds the toolset itself; with Ninja
-      # it looks for cl.exe on PATH, which nothing puts there. vcvars sets it, but
-      # only within the cmd session that runs it, so its effect is captured and
-      # handed forward: named variables rather than a whole `set` dump, so this
-      # cannot silently clobber the runner's own environment, and PATH through
-      # GITHUB_PATH, the route the runner provides for it, in Windows form, which
-      # is what a later bash step's start-up translates.
+      # With the Visual Studio generator, CMake finds the toolset itself. With
+      # Ninja, CMake looks for cl.exe on PATH, and nothing puts it there.
+      # vcvars does, but only within the cmd session that runs it. So the step
+      # captures what vcvars sets, and hands it to later steps:
+      #   - named variables through GITHUB_ENV, rather than the whole `set`
+      #     dump, so that the step cannot clobber the runner's own
+      #     environment;
+      #   - PATH through GITHUB_PATH, in Windows form, which a later bash
+      #     step's start-up translates.
       - name: Enter the MSVC environment (Windows, Ninja)
         if: inputs.needs_testing == 'true' && runner.os == 'Windows' && matrix.configure == 'msvc-ninja'
         run: |
@@ -251,37 +252,40 @@ jobs:
           vcvars="$(cygpath -u "$root")/VC/Auxiliary/Build/vcvars64.bat"
           [ -f "$vcvars" ] || { echo "::error::$vcvars does not exist"; exit 1; }
 
-          # Via a batch file in RUNNER_TEMP rather than `cmd //c "call ... && set"`:
-          # Git bash's MSYS layer re-quotes an argument containing spaces and
-          # quotes, and cmd then sees the escaping literally. The wrapper's own
-          # path has no spaces, so there is nothing left to mangle.
+          # vcvars runs from a batch file in RUNNER_TEMP, not through
+          # `cmd //c "call ... && set"`: Git bash's MSYS layer re-quotes an
+          # argument holding spaces and quotes, and cmd then reads the escaping
+          # literally. The batch file's own path has no spaces, so MSYS has
+          # nothing to re-quote.
           bat="$RUNNER_TEMP/vcvars_dump.bat"
           printf '@echo off\r\necho PATH_BEFORE=%%PATH%%\r\ncall "%s" >nul || exit /b 1\r\nset\r\n' "$(cygpath -w "$vcvars")" > "$bat"
           dump=$(cmd //c "$(cygpath -w "$bat")" | tr -d '\r')
           printf '%s\n' "$dump" | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINSTALLDIR|VSINSTALLDIR|WindowsSdkDir|WindowsSDKVersion|UCRTVersion|UniversalCRTSdkDir)=' >> "$GITHUB_ENV"
 
-          # Only what vcvars added. Forwarding its whole PATH would prepend the
-          # runner's own entries over themselves in a new order, and the first run
-          # of this step did exactly that: WindowsApps came to precede Git\bin, so
-          # `shell: bash` resolved to the WSL stub for every step after this one.
+          # The step forwards only the PATH entries vcvars added. Forwarding
+          # the whole PATH would put the runner's own entries ahead of
+          # themselves in a new order: WindowsApps then precedes Git\bin, and
+          # `shell: bash` resolves to the WSL stub in every later step.
           #
-          # And not the CMake and Ninja Visual Studio bundles, which the forwarded
-          # entries would otherwise put ahead of the image's: this column builds
-          # with the same cmake as the msbuild columns, so that a red run here asks
-          # about the generator and nothing else. Whether sequoia builds under the
-          # bundled toolset is a question for a matrix row of its own.
+          # Nor does the step forward Visual Studio's bundled CMake and Ninja,
+          # which would otherwise come ahead of the image's. This column then
+          # builds with the same cmake as the msbuild columns, so that a red
+          # run here asks about the generator and nothing else.
           before=$(printf '%s\n' "$dump" | grep '^PATH_BEFORE=' | sed 's/^[^=]*=//' | tr ';' '\n')
           after=$(printf '%s\n' "$dump"  | grep -iE '^PATH='     | sed 's/^[^=]*=//' | tr ';' '\n')
           added=$(printf '%s\n' "$after" | grep -vxF -f <(printf '%s\n' "$before") | grep -v '^$' | grep -vF 'CommonExtensions\Microsoft\CMake\')
           printf '%s\n' "$added"
           printf '%s\n' "$added" >> "$GITHUB_PATH"
 
-          # GITHUB_PATH reaches later steps only, so ninja is looked for where a later
-          # step will: the forwarded entries, then this step's own PATH.
+          # GITHUB_PATH reaches only later steps, so the step looks for ninja
+          # where a later step will: in the forwarded entries, then in this
+          # step's own PATH.
           PATH="$(cygpath -pu "$(printf '%s\n' "$added" | paste -sd ';')"):$PATH" command -v ninja \
             || { echo "no ninja on the forwarded PATH or the image's; installing one"; choco install ninja -y; }
 
-      # An exit status says the tool ran, not that it did what was asked.
+      # An install's exit status says that the installer ran, not that it
+      # installed what was asked for. So this step prints the compiler and the
+      # cmake that later steps will find.
       - name: Report the toolchain actually in use
         if: inputs.needs_testing == 'true'
         run: |
@@ -289,8 +293,8 @@ jobs:
             command -v "$CXX" || { echo "::error::$CXX is not on PATH"; exit 1; }
             "$CXX" --version
           elif [ '${{ matrix.configure }}' = msvc-ninja ]; then
-            # Which cl, ninja and cmake the forwarded PATH resolves to, in that order,
-            # so the ordering GITHUB_PATH produced is visible rather than assumed.
+            # Prints which cl, ninja and cmake the forwarded PATH resolves to,
+            # so that the order GITHUB_PATH produced is seen, not assumed.
             for tool in cl ninja cmake; do
               command -v "$tool" || { echo "::error::$tool is not on PATH"; exit 1; }
             done
@@ -299,16 +303,16 @@ jobs:
           fi
           cmake --version
 
-      # `--version` does not identify the compiler: Ubuntu ships post-release
-      # snapshots of a branch under the release's version number, so a g++ reporting
-      # 15.2.0 may be well beyond it. The changelog says which. The same is true of
-      # a distro clang, so this reads the changelog of whichever package the column
-      # installed rather than naming one compiler.
+      # `--version` does not identify a distribution's compiler: Ubuntu ships
+      # post-release snapshots of a branch under the release's version number,
+      # so a g++ reporting 15.2.0 may be well beyond 15.2.0. The package's
+      # changelog says which snapshot it is. Clang is packaged the same way, so
+      # the step reads the changelog of whichever package the column installed.
       - name: What the distribution's compiler actually is
         if: inputs.needs_testing == 'true' && runner.os == 'Linux'
-        # A report must not be able to fail the job - hence the trailing `|| true`,
-        # and `sed` rather than `head`, since head exits early, gzip takes SIGPIPE,
-        # and `-o pipefail` would turn a report into a failure.
+        # A report must not fail the job. Hence each `|| true`, and `sed`
+        # rather than `head`: head exits early, zcat then takes SIGPIPE, and
+        # pipefail would fail the step.
         run: |
           pkg="${{ matrix.pkg || matrix.cxx }}"
           log=$(dpkg -L "$pkg" 2>/dev/null | grep -m1 'changelog.Debian.gz$' || true)
@@ -318,9 +322,9 @@ jobs:
             echo "No Debian changelog found for $pkg; $CXX --version above is all we have."
           fi
 
-      # The generated project's `git init` is followed by a commit, and git refuses
-      # to commit without an identity. Every developer machine has one configured;
-      # a fresh runner does not.
+      # The suite generates projects, and sequoia commits in each project it
+      # generates. git refuses to commit without an identity, which a fresh
+      # runner lacks.
       - name: Give git an identity
         if: inputs.needs_testing == 'true'
         run: |
@@ -328,21 +332,22 @@ jobs:
           git config --global user.email "ci@example.invalid"
           git config --global init.defaultBranch trunk
 
-      # Once a generated project vendors a copy of sequoia inside itself, the
-      # TestMaterials tree passes 260 characters. sequoia declares itself
-      # long-path aware in resources/win/longpaths.manifest, but Windows also
-      # requires the machine-wide switch, and git its own.
+      # A generated project vendors a copy of sequoia, and paths in the copy's
+      # TestMaterials tree pass 260 characters. sequoia declares itself
+      # long-path aware in resources/win/longpaths.manifest. Windows also needs
+      # its machine-wide switch, and git its own setting.
       #
-      # The switch reaches what asks for it - the checkout, git, and sequoia's own
-      # binaries through that manifest - and no further. cl.exe refuses a path at
-      # 260 whatever the registry says, and MSBuild's file tracker is not
-      # long-path aware either, so the compiler's side of this is held under the
-      # limit rather than allowed past it: build_system/ShortObjectPaths.cmake
-      # hashes the object paths, and UntrackedTryCompiles.cmake keeps the tracker
-      # away from the probes whose logs would be longest.
+      # The switch reaches only what asks for it: the checkout, git, and
+      # sequoia's own binaries through the manifest. cl.exe refuses a path of
+      # 260 characters whatever the registry says, and MSBuild's file tracker
+      # is not long-path aware either. So the build keeps the compiler's paths
+      # under the limit: build_system/ShortObjectPaths.cmake hashes the object
+      # paths, and UntrackedTryCompiles.cmake keeps the tracker away from the
+      # probes whose logs would be longest.
       #
-      # In PowerShell because Git bash's MSYS layer rewrites bare switches like
-      # /v and /f into Windows paths before reg.exe sees them.
+      # The step runs in PowerShell, because Git bash's MSYS layer rewrites
+      # bare switches such as /v and /f into Windows paths before reg.exe sees
+      # them.
       - name: Let Windows and git see long paths
         if: inputs.needs_testing == 'true' && runner.os == 'Windows'
         shell: pwsh
@@ -353,29 +358,33 @@ jobs:
           Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
                            -Name LongPathsEnabled
 
-      # A suite that crashes ends with an exit status and nothing else: rigorous's Windows
-      # Release column, 2026-09-29, died with 0xC0000409 three seconds in and printed
-      # nothing. So a crash leaves a dump, and "Report any crash" prints its stacks:
-      #   - Windows: Windows Error Reporting's LocalDumps, for every process, with its
-      #     dialogs off (DontShowUI), since nobody is there to dismiss one;
-      #   - Linux: the kernel's core pattern, pointed into RUNNER_TEMP; each suite step
-      #     raises its own core size limit, since a limit set in one step does not carry to
-      #     the next, and records it for "Report any crash" to check;
-      #   - macOS: nothing to arrange, since the system writes a crash report itself.
-      # A control crash then checks that the arrangement took. A control which leaves
-      # nothing makes the step warn rather than fail, since a job whose dumps are lost can
-      # still test; without the control, a suite's crash with no dump would be reported as
-      # no crash at all. The since file, written after the control's dump, is what every
-      # dump is compared against.
+      # A suite that crashes ends with an exit status and nothing else. So this
+      # step and the next arrange for a crash to leave a dump, and "Report any
+      # crash" prints its stacks:
+      #   - Windows: Windows Error Reporting's LocalDumps, for every process,
+      #     with its dialogs off (DontShowUI), since nobody is there to dismiss
+      #     one;
+      #   - Linux: the kernel's core pattern, pointed into RUNNER_TEMP. A core
+      #     size limit set in one step does not carry to the next, so each
+      #     suite step raises its own, and records it for "Report any crash" to
+      #     check;
+      #   - macOS: nothing to arrange, since the system writes a crash report
+      #     itself.
+      # A control crash then checks that the arrangement took. Without the
+      # control, a crash in the suite that left no dump would be reported as no
+      # crash at all. A control that leaves nothing makes the step warn rather
+      # than fail, since a job whose dumps are lost can still test. The step
+      # writes the since file after the control's dump, and "Report any crash"
+      # reports only the dumps newer than it.
       #
-      # On Windows the control does not check the process's error mode. GitHub's runner
-      # starts every process of a job with a mode under which a crash never reaches Windows
-      # Error Reporting, and the control's FailFast ignores the mode. sequoia's test runner
-      # clears it for a run (windows_crash_report_enabler), which
-      # failure_reporting_in_parallel_free_test checks.
+      # On Windows the control cannot check the error mode. GitHub's runner
+      # starts every process of a job with an error mode under which a crash
+      # never reaches Windows Error Reporting, and the control's FailFast
+      # ignores the mode. sequoia's test runner clears the mode for a run
+      # (windows_crash_report_enabler), and
+      # failure_reporting_in_parallel_free_test checks that it does.
       #
-      # The registry is written by PowerShell, as in the step above, since Git bash's MSYS
-      # layer rewrites reg.exe's switches.
+      # PowerShell writes the registry, as in the step above.
       - name: Ask Windows Error Reporting for dumps
         if: inputs.needs_testing == 'true' && runner.os == 'Windows'
         timeout-minutes: 2
@@ -402,9 +411,10 @@ jobs:
               powershell -NoProfile -Command "[Environment]::FailFast('A control crash')" || true
               control_pattern='*.dmp' ;;
             Linux)
-              # %e, the name the kernel keeps, rather than %E, the whole path: a core whose name
-              # would pass 255 bytes is not written, and the end-to-end test's executables lie
-              # deep. report_crashes.sh recovers the path from the core.
+              # %e, the name the kernel keeps for the process, not %E, its
+              # whole path: the kernel writes no core whose name would pass
+              # 255 bytes, and the end-to-end test's executables lie deep.
+              # report_crashes.sh reads the path from the core.
               sudo sysctl -q -w "kernel.core_pattern=$dumps/core.%e.%p"
               (ulimit -c unlimited; bash -c 'kill -SEGV $$') || true
               control_pattern='core.*' ;;
@@ -430,23 +440,24 @@ jobs:
           if [ -n "$found" ]; then
             echo "The control crash left $found"
           else
-            echo "::warning title=No crash dumps::${{ matrix.name }}: a control crash left no dump, so a crash in the suite would be reported without its stacks."
+            echo "::warning title=No crash dumps::${{ matrix.name }}: a control crash left no dump, so a crash in the suite would leave no stacks to report."
           fi
           sleep 1
           touch "$dumps/since"
 
-      # A column may carry `exec_args` of its own, for a platform which cannot run the
-      # whole suite. It replaces the tier's rather than adding to them, so a column
-      # taking this route out of a tier which passes `--check-versioned-output` must
-      # repeat it.
+      # A column may carry `exec_args` of its own, for a platform that cannot
+      # run the whole suite. The column's value replaces the tier's rather than
+      # adding to it. So a column in a tier that passes
+      # `--check-versioned-output` must pass it again, or lose the drift check.
+      # A column's `repeat_args` replaces the tier's in the same way.
       - name: Configure
         if: inputs.needs_testing == 'true'
         id: configure
         working-directory: TestAll
         run: |
-          # A column's exec_args replaces the tier's. `||` cannot express this: an
-          # explicitly empty string is falsy, so a column asking for NO flags would
-          # silently inherit the tier's. toJSON distinguishes absent from empty.
+          # Not `||`: an empty string is falsy, so a column asking for no
+          # arguments would silently inherit the tier's. toJSON tells an
+          # absent value from an empty one.
           if [ '${{ toJSON(matrix.exec_args) }}' = 'null' ]; then
             args='${{ inputs.exec_args }}'
           else
@@ -463,24 +474,26 @@ jobs:
                 "-DEXEC_ARGS=$args" \
                 -DWARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors && 'ON' || 'OFF' }}
 
-      # Separate from the run below so a compile failure and a test failure are
-      # distinguishable, and so the suite can carry its own ceiling. The log is kept
-      # so warnings can be counted where they are not fatal.
+      # The build is a step apart from the run, so that a compile failure and a
+      # test failure show as different steps, and so that the suite can carry
+      # its own timeout. The step keeps the log, from which "Report compiler
+      # warnings" counts the warnings where they are not fatal.
       - name: Build
         if: inputs.needs_testing == 'true'
         working-directory: TestAll
         run: cmake --build --preset ${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/build.log"
 
-      # macOS writes a crash report itself, and reads the executable's debug information to
-      # name each frame's source line. "Report any crash" waits about a minute for the report.
-      # Without a dSYM, the system reads the debug information through the object files, and
-      # writes the report too late for that step: 79s after a TestAll crash on a hosted runner.
-      # With a dSYM, the system wrote the report within 8s. Both figures are from Release builds
-      # with line tables, on 2026-10-04. Each executable was new to the system, as every CI
-      # build's is; the system is quicker with an executable it has read before.
+      # macOS writes a crash report itself, and reads the executable's debug
+      # information to name each frame's source line. "Report any crash" waits
+      # about a minute for the report. Without a dSYM, the system reads the
+      # debug information through the object files, and writes the report too
+      # late for that step: 79s after a TestAll crash on a hosted runner,
+      # against 8s with a dSYM. Both figures are from Release builds with line
+      # tables, each executable new to the system, as every CI build's is. The
+      # system is quicker with an executable it has read before.
       #
-      # A failure here warns rather than fails: the suite still runs, and a crash is still
-      # reported, if too late for the summary.
+      # A failure here warns rather than fails, since the suite still runs.
+      # Only a crash's report may then come too late for "Report any crash".
       - name: Link a dSYM (macOS)
         if: inputs.needs_testing == 'true' && runner.os == 'macOS'
         timeout-minutes: 5
@@ -488,9 +501,10 @@ jobs:
           dsymutil "build/TestAll/${{ matrix.configure }}/TestAll" \
             || echo "::warning title=No dSYM::${{ matrix.name }}: dsymutil failed, so a crash's report may arrive after Report any crash stops waiting."
 
-      # Distinct sites rather than raw lines: gcc and clang repeat a warning once per
-      # instantiation, so a raw count says more about templates than about code.
-      # MSVC spells it "warning Cnnnn"; the others "warning:".
+      # The step counts distinct sites as well as lines: gcc and clang repeat a
+      # warning once per instantiation, so a count of lines says more about
+      # templates than about code. MSVC writes "warning Cnnnn", and gcc and
+      # clang write "warning:".
       - name: Report compiler warnings
         if: ${{ inputs.needs_testing == 'true' && !inputs.warnings_as_errors }}
         run: |
@@ -502,8 +516,8 @@ jobs:
             {
               echo "### ${{ matrix.name }}: $sites distinct warning site(s)"
               echo '```'
-              # sed, not head: head stops reading at line 40, and under the
-              # job's pipefail sort, cut off mid-write, would fail the step.
+              # sed, not head: head stops reading at line 40, sort then dies
+              # of SIGPIPE mid-write, and pipefail fails the step.
               grep -E 'warning:|warning C[0-9]+' "$log" | sort -u | sed -n '1,40p'
               echo '```'
             } >> "$GITHUB_STEP_SUMMARY"
@@ -511,42 +525,41 @@ jobs:
             echo "No compiler warnings."
           fi
 
-      # A `run-` preset is named `run-` plus the preset it runs, and builds the
-      # `run` target, whose command is the test executable; the binary is already
-      # built, so this step is the suite and nothing else.
+      # A `run-` preset builds the `run` target, whose command is the test
+      # executable. The Build step has built the executable, so this step runs
+      # the suite and nothing else.
       #
-      # timeout-minutes on the step rather than timeout(1) around the command:
-      # macOS ships no GNU coreutils, and the step form additionally distinguishes
-      # "the suite timed out" from "the job timed out" in the run summary. One
-      # branch has already spun for 36 minutes against an 18s baseline.
-      # A column may set `advisory: true` to run without gating on the result, for
-      # a platform whose failures are understood and being worked on. No tier sets
-      # it since 2026-09-22, when coarse's Windows column became fatal; the
-      # mechanism stays for the columns not yet added - clang with libstdc++,
-      # clang on Windows, the -Og build - each of which arrives knowing less
-      # about itself than this one now does. There is no build-without-running
-      # option: a suite that is not run tells you nothing, and the audit below
-      # refuses a column whose suite step did not run, unless the change held
-      # nothing to test.
+      # The suite's ceiling is the step's timeout-minutes, not timeout(1)
+      # around the command: macOS ships no GNU coreutils, and the step's
+      # timeout tells "the suite timed out" from "the job timed out" in the run
+      # summary. A hang fails nothing until a timeout ends it: a hung suite has
+      # spun for 36 minutes against an 18s baseline.
+      #
+      # The timeout kills a hung suite without a word, and the test runner
+      # reports a pass only when the suite ends, so the log cannot say where
+      # the suite stopped. So the suite runs under a watcher. If the suite is
+      # still running SNAPSHOT_MARGIN_MINUTES before the timeout, the watcher
+      # records the processes and the suite's stacks while they can still be
+      # seen; "Keep the run log" prints the snapshot. Otherwise the watcher
+      # passes the suite's exit status straight through. The test runner's
+      # `recover` mode would not do instead: it records each check before the
+      # check runs, but forces serial execution, and so changes the concurrency
+      # a hang may depend on. `set -u` because a margin missing from the
+      # environment would otherwise read as zero, and the snapshot would be due
+      # only when the step is killed.
       #
       # The tee is safe only because `shell: bash` runs steps under
-      # `--noprofile --norc -eo pipefail`: without pipefail the tee would donate its
-      # own exit status to the step, which is how a red suite comes to look green.
-      # The Build step above already depends on this; it is written down here
-      # because the dependency is invisible at the call site.
+      # `--noprofile --norc -eo pipefail`. Without pipefail the tee's exit
+      # status would become the step's, and a red suite would look green. The
+      # Build step depends on this too.
       #
-      # A suite that hangs is killed by the timeout without a word, and the test
-      # runner reports a pass only when it ends, so the log cannot say where it stopped;
-      # statistical's MSVC ASan column hung this way on 2026-09-26, in its
-      # eighteenth trial. So the suite runs under a watcher which, if it is still
-      # going SNAPSHOT_MARGIN_MINUTES before the timeout, records the processes
-      # and the suite's stacks while they can still be seen, and otherwise
-      # passes the suite's exit status straight through. "Keep the run log"
-      # reports the snapshot. Not the test runner's `recover` mode, which records
-      # each check before it runs but forces serial execution, and so changes the
-      # concurrency a hang may depend on. `set -u` because a margin missing from
-      # the environment would otherwise read as zero, and the snapshot would be due
-      # only when the step is killed.
+      # A column may set `advisory: true` to run without gating on the result,
+      # for a platform whose failures are understood and being worked on. The
+      # mechanism is for a new column, which may need it until its failures are
+      # understood, so it may have no user in between. There is no option to
+      # build without running: a suite that is not run says nothing, and the
+      # audit below refuses a column whose suite step did not run, unless the
+      # change held nothing to test.
       - name: Run the suite
         if: inputs.needs_testing == 'true'
         id: suite
@@ -565,19 +578,20 @@ jobs:
           ../scripts/snapshot_at_deadline.sh "$deadline" "$RUNNER_TEMP/snapshot.txt" TestAll -- \
             cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/run.log"
 
-      # The second pass, where the column asks for one: the same executable on the
-      # same tree with the repeat arguments. Only EXEC_ARGS changes at the
-      # reconfigure, so nothing rebuilds; the `run` target's command line is all
-      # that changes in what is regenerated, and the cache is read back so the
-      # log says what the pass was configured with. The `if:` carries GitHub's
-      # implicit success(), so a red first pass skips both steps - a suite that
-      # is red once tells you what N more would - and the audit below allows for
-      # that; an advisory column's red first pass counts as success, so there the
-      # repeat runs. Such a column must not also check the versioned output: the
-      # second pass's handler removes the first's patch and then finds the tree
-      # already repaired, so the drift would be reported without its patch. No column is
-      # advisory today; the pairing stays forbidden for the next one that is, unless
-      # the patch is moved aside between the passes.
+      # The second pass, where the column asks for one, runs the same
+      # executable on the same tree with the repeat arguments. The reconfigure
+      # changes only EXEC_ARGS, so nothing rebuilds: of what CMake regenerates,
+      # only the `run` target's command line changes. The step reads the cache
+      # back, so that the log says what the pass was configured with.
+      #
+      # The `if:` carries GitHub's implicit success(), so a red first pass
+      # skips both steps: a suite that is red once says what N more would. The
+      # audit below allows for the skip. An advisory column's red first pass
+      # counts as success, so there the repeat runs. Such a column must not
+      # also check the versioned output: the second pass's handler removes the
+      # first's patch and then finds the tree already repaired, so the drift
+      # would be reported without its patch. Moving the patch aside between
+      # the passes would lift this restriction.
       - name: Configure the repetitions
         if: ${{ inputs.needs_testing == 'true' && steps.configure.outputs.repeat_args != '' }}
         working-directory: TestAll
@@ -605,22 +619,26 @@ jobs:
           ../scripts/snapshot_at_deadline.sh "$deadline" "$RUNNER_TEMP/repeat-snapshot.txt" TestAll -- \
             cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/repeat.log"
 
-      # An advisory column still has to be *read*, and its failures are not equally acceptable.
-      # TestRunnerPerformanceTest asserts absolute durations - eight 25ms sleeps against a 60ms +- 35
-      # window - which a shared hosted runner may not hold; as wall-clock times, the same commit
-      # returned 196ms and 603ms. Everything else is a defect.
+      # An advisory column does not gate, so this step reads its run. Not
+      # every failure there is a defect: TestRunnerPerformanceTest asserts
+      # absolute durations, eight 25ms sleeps against a window of 60ms +- 35,
+      # which a shared hosted runner may not hold. There, the same commit took
+      # 196ms and 603ms of wall-clock time. Every other failure is a defect.
       #
-      # Classified by the *test that failed*, not by the summary row: those timing assertions are
-      # `check(within_tolerance{...}, ...)`, which count in the standard row, since the performance
-      # rows count `check_relative_performance` alone. Every failing file is named either way, so a
-      # new one cannot hide behind a tolerated one.
+      # The step classifies a failure by the test that failed, not by the
+      # summary row. The timing assertions are `check(within_tolerance{...},
+      # ...)`, which count in the standard row; the performance rows count
+      # only `check_relative_performance`. The step names every failing file,
+      # so a new failure cannot hide behind a tolerated one.
       #
-      # Drift is a second thing the suite step cannot make red here. Where the column checks the
-      # versioned output, a run whose output moved writes the patch and sets the drift bit of its
-      # exit code, which `continue-on-error` swallows like any other failure; so the patch's
-      # existence is read directly, and raised as an error naming the files it holds. Drift and
-      # failure co-fire, a failing test rewriting its summary, so both are reported when both
-      # occurred. A failed step that names no test and writes no patch is reported as that.
+      # Drift is a second thing the suite step cannot make red here. Where the
+      # column checks the versioned output, a run whose output moved writes the
+      # patch and sets the drift bit of its exit code, and `continue-on-error`
+      # swallows that like any other failure. So the step looks for the patch
+      # itself, and raises an error naming the files it holds. A failing test
+      # rewrites its summary, so drift and failure come together, and the step
+      # reports both. It also reports a failed suite step that names no test
+      # and writes no patch.
       - name: Triage the advisory run
         if: ${{ always() && inputs.needs_testing == 'true' && matrix.advisory == true }}
         run: |
@@ -630,15 +648,18 @@ jobs:
             exit 0
           fi
 
-          # Tests whose failures are understood: timing assertions a hosted runner cannot hold.
+          # Tests whose failures are understood: timing assertions a hosted
+          # runner cannot hold.
           tolerated_tests='TestRunnerPerformanceTest\.cpp'
 
           failing=$({ grep -oE 'Tests/[A-Za-z0-9/_]+\.cpp, Line [0-9]+' "$log" || true; } \
                       | sed 's/, Line.*//' | sort -u)
           actionable=$({ echo "$failing" | grep -vE "$tolerated_tests" || true; } | sed '/^$/d')
 
-          # Every file in the patch has its `diff --git` header; a removed file has no `+++ b/`
-          # line, and a file created or deleted empty has nothing but the header.
+          # The step reads the files' names from the `diff --git` headers,
+          # which every file in the patch has. A removed file has no `+++ b/`
+          # line, and a file created or deleted empty has nothing but its
+          # header.
           patch=output/Drift/VersionedOutput.patch
           drifted=$({ [ -f "$patch" ] && grep '^diff --git a/' "$patch" | sed 's|^diff --git a/.* b/||'; } || true)
 
@@ -667,21 +688,22 @@ jobs:
           elif [ -n "$failing" ]; then
             echo "::warning title=Advisory run::${{ matrix.name }}: only the timing assertions this runner cannot hold. Nothing to act on."
           elif [ '${{ steps.suite.outcome }}' != 'success' ]; then
-            # A suite step that failed without naming a test or writing a patch: a run cut short,
-            # a crash, a timeout. Not "passed outright", whatever the log's last lines say.
+            # The suite step failed, yet named no test and wrote no patch: a
+            # crash, a timeout or something else cut the run short. The suite
+            # did not pass, whatever the log's last lines say.
             echo "::error title=Advisory run needs action::${{ matrix.name }}: the suite step's outcome is '${{ steps.suite.outcome }}' and the log names no failing test and no drift. Read the log."
           elif [ -z "$drifted" ]; then
             echo "::notice title=Advisory run::${{ matrix.name }}: the suite passed outright."
           fi
 
-      # Kept with the artifact so a column can be read after the fact rather than
-      # only through the run page, which is what an advisory column needed and what
-      # statistical reads back. The step's outcome goes with it:
-      # a caller reading the log back cannot otherwise tell a suite that failed
-      # in every repetition, whose analysis says "No instabilities detected", from
-      # one that passed. So does the snapshot of a suite which outlived its
-      # watcher's deadline, printed here as well, so that where a hung suite
-      # stopped can be read from the run page.
+      # The step copies the suite's logs into run-log/, which the artifact
+      # holds, so that a column can be read after the run as well as on the run
+      # page; statistical.yml reads the logs back. The suite step's outcome
+      # goes with its log: otherwise a reader cannot tell a suite that failed
+      # in every repetition, whose analysis says "No instabilities detected",
+      # from one that passed. So does the snapshot of a suite that outlived its
+      # watcher's deadline. The step also prints the snapshot, so that the run
+      # page shows where a hung suite stopped.
       - name: Keep the run log
         if: ${{ always() && inputs.needs_testing == 'true' }}
         run: |
@@ -694,7 +716,8 @@ jobs:
             if [ -f "$RUNNER_TEMP/$snapshot.txt" ]; then
               cp "$RUNNER_TEMP/$snapshot.txt" run-log/
               echo "::warning title=Suite still running near its timeout::${{ matrix.name }}: the suite was still running $SNAPSHOT_MARGIN_MINUTES minutes before its timeout; run-log/$snapshot.txt, printed below, says what it was doing."
-              # Whatever the tools printed is not a workflow command, whatever it begins with.
+              # Whatever the tools printed is not a workflow command, whatever
+              # it begins with.
               token=$(openssl rand -hex 16)
               echo "::stop-commands::$token"
               cat "$RUNNER_TEMP/$snapshot.txt"
@@ -702,19 +725,23 @@ jobs:
             fi
           done
 
-      # Every crash since "Let a crash leave a dump", with its stacks: an error names the
-      # column, the stacks follow on the run page, and the report and any Windows minidumps
-      # go into run-log/, which is uploaded. Linux's cores are not kept: they are large, and
-      # their stacks are already printed.
+      # The step reports every crash since "Let a crash leave a dump". An error
+      # names the column, and the stacks follow on the run page. The report,
+      # and any Windows minidumps, go into run-log/, which the last step
+      # uploads. The step does not keep Linux's cores: they are large, and
+      # their stacks are printed.
       #
-      # macOS writes a crash report, and Windows Error Reporting a dump, some seconds after
-      # the crash, so after a failed suite this waits for one, up to a bound, since the
-      # steps between the suite and this one can take less time than that. Linux writes a
-      # core before the process is gone. On Linux, a core limit the suite step could not
-      # raise is a warning, since its crash would leave no core. So is a macOS report
-      # directory the step cannot read, since a crash reported there would go uncounted. The
-      # timeout bounds cdb's downloads of Windows' symbols, and a report which times out does
-      # not fail the job.
+      # macOS writes a crash report, and Windows Error Reporting a dump, some
+      # seconds after the crash. The steps between the suite and this one can
+      # take less time than that, so after a failed suite this step waits, up
+      # to a bound, for a report or a dump to appear. Linux writes a core
+      # before the process is gone.
+      #
+      # Each of these is a warning, since a crash would go uncounted:
+      #   - on Linux, a core limit the suite step could not raise;
+      #   - on macOS, a report directory the step cannot read.
+      # The timeout bounds cdb's downloads of Windows' symbols, and a report
+      # that times out does not fail the job.
       - name: Report any crash
         if: ${{ always() && inputs.needs_testing == 'true' }}
         timeout-minutes: 10
@@ -742,8 +769,9 @@ jobs:
             esac
             if [ ${#written[@]} -gt 0 ]; then
               for attempt in $(seq 1 60); do
-                # The output is tested, not the exit status: under pipefail, find's failure on an
-                # absent or unreadable directory would hide a report found in another.
+                # The loop tests find's output, not its exit status: under
+                # pipefail, find's failure on an absent or unreadable directory
+                # would hide a report found in another.
                 [ -n "$(find "${written[@]}" 2> /dev/null | head -1)" ] && break
                 sleep 1
               done
@@ -763,26 +791,28 @@ jobs:
             cp "$report" run-log/crashes/
             find "$dumps" -maxdepth 1 -newer "$dumps/since" -name '*.dmp' -exec cp {} run-log/crashes/ \;
           fi
-          # Whatever the debuggers printed is not a workflow command, whatever it begins with.
+          # Whatever the debuggers printed is not a workflow command,
+          # whatever it begins with.
           token=crashes-$RANDOM$RANDOM$RANDOM
           echo "::stop-commands::$token"
           cat "$report"
           echo "::$token::"
 
       # Where drift detection is on, a run whose versioned output moved writes
-      # the change to output/Drift/VersionedOutput.patch, one whole-file hunk per
-      # file, and this puts it on the run page: whether the change is the PR
-      # working or the PR breaking is a judgement made by reading it, and reading
-      # it here needs nothing downloaded. `git status` is kept beside it because
-      # it sees the whole tree, where the runner sees only the two trees it
-      # writes - so a prediction file moving would show here and nowhere else.
+      # the change to output/Drift/VersionedOutput.patch, one whole-file hunk
+      # per file. This step puts the patch on the run page. Only reading the
+      # patch tells the PR working from the PR breaking, and on the run page it
+      # needs nothing downloaded. `git status` runs beside it because it
+      # sees the whole tree, where the runner sees only the two trees it
+      # writes: a prediction file that moved shows here and nowhere else.
       #
-      # A step summary over 1 MiB is dropped whole, with the step still green, so a
-      # patch too big for the page says where to find it instead. `--whitespace=nowarn`
-      # because a whole-file hunk reproduces every trailing space the output has, and
-      # `apply.whitespace=fix` in a user's config would strip them silently, applying
-      # to a tree the run never wrote. The fence is four backticks so that a line of
-      # three in the output cannot close it.
+      # GitHub drops a step summary over 1 MiB whole, and leaves the step
+      # green. So in place of a patch too big for the page, the step says where
+      # to find it. `--whitespace=nowarn` because a whole-file hunk reproduces
+      # every trailing space the output has, and `apply.whitespace=fix` in a
+      # user's config would strip them silently, applying to a tree the run
+      # never wrote. The fence is four backticks, so that a line of three in
+      # the output cannot close it.
       - name: Report any versioned output that moved
         if: ${{ always() && inputs.needs_testing == 'true' }}
         run: |
@@ -802,15 +832,17 @@ jobs:
             } >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      # The control's columns go red on a corrupted tree, but red does not say
-      # which detector saw it: the prediction corruption fails a test in every
-      # column, drift check or none. This holds the drift detector to its own
-      # evidence. Where the check is on, the run must have written a patch, and
-      # that patch applied in reverse to the tree the run repaired must give back
-      # HEAD plus the corruption and nothing else - the one appended line, in the
-      # one summary, as the only change under either versioned tree. Where the
-      # check is off, there must be no patch. Reversing rather than applying
-      # because the tree the patch was taken from is gone: the run rewrote it.
+      # In the false-negative control every column goes red, but red does not
+      # say which detector saw the corruption: the corrupted prediction fails a
+      # test in every column, with or without the drift check. This step holds
+      # the drift detector to its own evidence:
+      #   - Where the check is on, the run must have written a patch. Applied
+      #     in reverse to the tree the run repaired, the patch must give back
+      #     HEAD plus the corruption and nothing else: the one appended line,
+      #     in the one summary, as the only change under either versioned tree.
+      #   - Where the check is off, there must be no patch.
+      # The step reverses the patch rather than applying it, because the run
+      # rewrote the tree the patch was taken from.
       - name: The drift was reported as a patch which, reversed, restores the corruption
         if: ${{ always() && inputs.needs_testing == 'true' && inputs.false_negative }}
         run: |
@@ -837,13 +869,19 @@ jobs:
               echo "ok    no drift check, so no patch";;
           esac
 
-      # Every test writes an execution record: its start when it begins, and its execution duration and the
-      # runner's overhead when it finishes, whether or not its body threw. A record with no execution duration names a
-      # test that was executing when the run ended; such tests are listed oldest start first, since the hung test is
-      # likeliest the one that has run longest. The end-to-end test's generated project keeps records of its own. A
-      # record older than its run's stamp is from an earlier run, and is marked so. The count comes first: none, after
-      # a suite that ran, means the records were not written, or not where this step looks. The names are paths a
-      # fork's PR controls, so they are printed with workflow commands stopped.
+      # Every test writes an execution record: its start when it begins, and
+      # its execution duration and the runner's overhead when it finishes,
+      # whether or not its body threw. A record with no execution duration
+      # names a test that was executing when the run ended. The step lists
+      # such tests oldest start first, since the hung test is likeliest the one
+      # that has run longest. The end-to-end test's generated project keeps
+      # records of its own. A record older than its run's stamp is from an
+      # earlier run, and the step marks it so.
+      #
+      # The count of records comes first: none, after a suite that ran, means
+      # that the records were not written, or not where this step looks. The
+      # names are paths that a fork's PR controls, so the step prints them
+      # with workflow commands stopped.
       - name: Name the tests that started and never finished
         if: ${{ always() && inputs.needs_testing == 'true' }}
         env:
@@ -909,16 +947,23 @@ jobs:
                   -e "s|^\([^ ]*\) $generated/output/ExecutionRecords/|  \1  generated project: |"
           echo "::$token::"
 
-      # Prints, for each check of the performance test, two durations from the Grand Totals of the output
-      # the check wrote: the Execution Time, which the timing checks assert on, and the Runner Overhead.
-      # Where the check measured one, it then prints the peak number of the check's tests which ran at
-      # once. A check prints its values only when it fails, and setting the checks' bounds needs the
-      # distribution, not only the tail. Each duration is printed with its unit, since the runner writes
-      # one of a second or more in seconds. The checks are found from the io.txt files in the working
-      # copy, so a renamed check is still printed. A column that excludes the performance tests has no
-      # working copy, and says so. A check's name is a directory name and its values are read through a
-      # filter of digits, letters, dots and plus signs, and neither begins a line, so nothing printed here
-      # can be a workflow command. A report cannot fail the job.
+      # The step prints two durations for each check of the performance test,
+      # from the Grand Totals of the output the check wrote: the Execution
+      # Time, on which the timing checks assert, and the Runner Overhead. Where
+      # the check measured it, the step also prints the peak number of the
+      # check's tests that ran at once. A check prints its values only when it
+      # fails, and setting the checks' bounds needs the distribution, not only
+      # the tail.
+      #
+      # The step prints each duration with its unit, since the runner writes
+      # one of a second or more in seconds. The step finds the checks from
+      # the io.txt files in the working copy, so a renamed check is still
+      # printed. A column that excludes the performance tests has no working
+      # copy, and the step says so.
+      #
+      # A check's name is a directory name, and its values pass a filter of
+      # digits, letters, dots and plus signs. Neither begins a line, so nothing
+      # printed here can be a workflow command. A report cannot fail the job.
       - name: Report the performance test's timings
         if: ${{ always() && inputs.needs_testing == 'true' }}
         continue-on-error: true
@@ -942,16 +987,17 @@ jobs:
           done
           [ "$found" -gt 0 ] || echo "no performance timings: the working copy holds no io.txt"
 
-      # The patch, if there is one, the logs, the execution records, and the
-      # performance test's working copy, whose io.txt files hold the timings that
-      # "Report the performance test's timings" prints. Not the versioned trees
-      # themselves: what a person would have compared them against is exactly what
-      # the patch holds, without the megabytes that did not move. The artifact keeps
-      # its `-drift` name because statistical.yml collects the artifacts by it.
+      # The artifact takes the performance test's working copy for its io.txt
+      # files, which hold the timings that "Report the performance test's
+      # timings" prints. It does not take the versioned trees: the patch holds
+      # what moved in them, without the megabytes that did not. The artifact
+      # keeps its `-drift` name because statistical.yml collects the artifacts
+      # by it.
       #
-      # A working copy lies under <source path less extension>/<test class>, so the paths below
-      # name both. Get it wrong and nothing says so: `if-no-files-found: warn`
-      # leaves the artifact a file short and the run green.
+      # A working copy lies under <source path less extension>/<test class>,
+      # so the paths below name both. A wrong path goes unnoticed:
+      # `if-no-files-found: warn` leaves the artifact a file short and the run
+      # green.
       - name: Upload the drift, the run log, the execution records and the performance timings
         if: ${{ always() && inputs.needs_testing == 'true' }}
         uses: actions/upload-artifact@v7
@@ -966,22 +1012,22 @@ jobs:
             run-log/
           if-no-files-found: warn
 
-  # A column that reported without running the suite looks exactly like one that
-  # passed: `gh run list` says success either way, and so does the tick. It has
-  # happened - for a day in 2026-09-08/09 every column of every tier skipped the
-  # run and went green. This reads the run's own jobs back through the API and
-  # insists that each column named in `columns` exists, once, and that its
-  # `Run the suite` step concluded - success or failure, but not skipped and not
-  # absent - and, where the column asked for repetitions, that `Run the suite
-  # again` did too. Passing is the column's own business; RUNNING is checked
-  # here. The expectation is the columns input itself, so there is no second list
-  # to drift.
+  # A column that reported without running the suite looks exactly like one
+  # that passed: `gh run list` says success either way, and so does the tick.
+  # So this job reads the run's own jobs back through the API. It insists that
+  # each column named in `columns` exists, once, and that its `Run the suite`
+  # step concluded: success or failure, but neither skipped nor absent. Where
+  # the column asked for repetitions, `Run the suite again` must have
+  # concluded too. Whether the suite passed is the column's own business; this
+  # job checks that the suite ran. The expectation is the `columns` input
+  # itself, so there is no second list to drift.
   #
   # A suite step may be skipped for exactly two reasons:
   #   - The repetitions, when the first pass failed.
   #   - Both passes, when `needs_testing` is `false`. Then every column's
-  #     `Nothing to test` step must have succeeded. A schedule, a dispatch and a
-  #     push to staging are always tested, so a skip on one of those is an error.
+  #     `Nothing to test` step must have succeeded. A schedule, a dispatch and
+  #     a push to staging are always tested, so a skip on one of those is an
+  #     error.
   audit:
     name: Every column ran the suite
     needs: build-and-test
@@ -1004,24 +1050,26 @@ jobs:
 
       - name: Read this run's jobs back and check each column's suite steps
         run: |
-          # A column's repeat_args replaces the tier's, absent meaning the tier's;
-          # the same rule the Configure step applies.
+          # A column's repeat_args replaces the tier's, and an absent one means
+          # the tier's: the rule the Configure step applies.
           jq -r --arg tier "$TIER_REPEAT_ARGS" '
             .[] | "\(.name)\t\((.repeat_args // $tier) != "")"' \
             <<<"$EXPECTED_COLUMNS" > expected.txt
           [ -s expected.txt ] || { echo "::error::no columns to audit"; exit 1; }
 
-          # The jq functions through which both the wait and the checks below read a column.
+          # The jq functions through which both the wait and the checks below
+          # read a column.
           column_readers='
             def column_jobs($c): [.[] | select(.name | endswith(" / " + $c))];
             def conclusion($step): ([.[0].steps[]? | select(.name == $step) | .conclusion] | first) // "ABSENT";
             def audited_conclusions:
               [conclusion("Nothing to test"), conclusion("Run the suite"), conclusion("Run the suite again")];'
 
-          # The jobs are read until every column's job gives a conclusion to each step
-          # that `audited_conclusions` reads. `needs:` starts this job once the columns
-          # have finished, but the jobs API can lag behind them. read_settled_jobs.sh gives
-          # the measurement, and what happens if the conclusions never arrive.
+          # read_settled_jobs.sh reads the jobs until every column's job has a
+          # conclusion for each step that `audited_conclusions` reads. `needs:`
+          # starts this job once the columns have finished, but the jobs API
+          # can lag behind them. The script's header gives the measured lag,
+          # and what happens if the conclusions never arrive.
           scripts/read_settled_jobs.sh "$GITHUB_RUN_ID" jobs.json "$column_readers"'
             . as $jobs
             | [$columns | split("\n")[]
