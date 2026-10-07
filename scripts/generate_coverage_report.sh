@@ -146,11 +146,7 @@ run_checked lcov --remove "${capture}" "${foreign[@]}" --output-file "${info}" \
 # difference. Nothing checks genhtml's function tables, where the second
 # repair above would show.
 summary="${test_exe_dir}/coverage_summary.txt"
-if ! lcov --summary "${info}" "${read_options[@]}" > "${summary}" 2>&1; then
-  cat "${summary}"
-  echo "error: lcov --summary failed on ${info}" >&2
-  exit 1
-fi
+run_checked lcov --summary "${info}" "${read_options[@]}" > "${summary}"
 cat "${summary}"
 script_dir=$(cd "$(dirname "$0")" && pwd -P)
 run_checked python3 "${script_dir}/check_tracefile.py" --capture "${capture}" --filtered "${info}" \

@@ -39,8 +39,8 @@
 #     directory not within a directory named build, and a build without a
 #     cache stop the script too. In each case no tool runs;
 #   - each step which fails stops the script, with a non-zero status and an
-#     error naming the step, and no later step runs. A refused summary is
-#     shown.
+#     error naming the step, and no later step runs. lcov's reason for
+#     refusing a summary is shown.
 
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
@@ -487,7 +487,7 @@ failure_controls() {
       ctest)        failed "$step" "^error: exit status 8 from: ctest -T Test$" "lcov --directory" ;;
       capture)      failed "$step" "^error: exit status 7 from: lcov --directory $b --capture " "lcov --remove" ;;
       remove)       failed "$step" "^error: exit status 7 from: lcov --remove " "lcov --summary" ;;
-      summary)      failed "$step" "^error: lcov --summary failed on $b/coverage.info$" "check_tracefile.py"
+      summary)      failed "$step" "^error: exit status 7 from: lcov --summary $b/coverage.info " "check_tracefile.py"
                     check "a refused summary is shown" yes \
                           "^lcov: ERROR: the fixture's summary fails$" "$case_dir/all" ;;
       check)        failed "$step" "^error: exit status 6 from: python3 $repo/scripts/check_tracefile\.py --capture " \
@@ -613,11 +613,12 @@ mutations=(
   'the patterns expanded'             '"${capture}" "${foreign[@]}" --output-file'
                                       '"${capture}" ${foreign[@]} --output-file'
   'the removal repairs'               '"${remove_options[@]}" "${read_options[@]}"'  '"${remove_options[@]}"'
-  'a refused summary accepted'        $'  exit 1\nfi\ncat "${summary}"'      $'fi\ncat "${summary}"'
-  'a refused summary not shown'       $'  cat "${summary}"\n  echo "error'   $'  echo "error'
-  'the summary not printed'           $'fi\ncat "${summary}"'                'fi'
+  'a refused summary unnamed'         'run_checked lcov --summary'           'lcov --summary'
+  "lcov's reason for a refusal hidden"  '"${read_options[@]}" > "${summary}"'
+                                      '"${read_options[@]}" > "${summary}" 2> /dev/null'
+  'the summary not kept'              '"${read_options[@]}" > "${summary}"'  '"${read_options[@]}"'
+  'the summary not printed'           $'> "${summary}"\ncat "${summary}"'    $'> "${summary}"'
   'the summary repairs'               'lcov --summary "${info}" "${read_options[@]}"'  'lcov --summary "${info}"'
-  "the summary's error on standard output"  'failed on ${info}" >&2'         'failed on ${info}"'
   'the check told of /usr alone'      '--removed "${foreign[@]}"'            "--removed '/usr/*'"
   'the check not run'                 'run_checked python3 "${script_dir}/check_tracefile.py"'
                                       ': python3 "${script_dir}/check_tracefile.py"'
