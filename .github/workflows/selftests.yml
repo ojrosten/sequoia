@@ -39,7 +39,7 @@ jobs:
           - name: Linux
             os: ubuntu-latest
             packages: gdb
-            selftests: compile_time_report read_settled_jobs snapshot_at_deadline
+            selftests: compile_time_report read_settled_jobs retry snapshot_at_deadline
           # report_crashes' selftest runs on macOS alone. The system there writes
           # the crash reports its macOS controls read, and its Linux and Windows
           # controls run through stand-ins for uname, file and gdb. One of those
@@ -73,13 +73,13 @@ jobs:
         env:
           PACKAGES: ${{ matrix.packages }}
         run: |
-          sudo apt-get update -qq
+          scripts/retry.sh 4 300 -- sudo apt-get update -qq
           names=$(apt-cache pkgnames)
           for package in $PACKAGES; do
             grep -qFx -- "$package" <<< "$names" \
               || { echo "::error::$package is not available on this image"; exit 1; }
           done
-          sudo apt-get install -y $PACKAGES
+          scripts/retry.sh 3 900 -- sudo apt-get install -y $PACKAGES
 
       # Every selftest runs, whichever fail, and the step names each that failed.
       # A selftest passes when it exits 0 and its last line says its controls

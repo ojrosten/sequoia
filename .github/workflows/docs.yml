@@ -66,10 +66,10 @@ jobs:
                      /etc/apt/sources.list.d/microsoft-prod.list
           # Quiet rather than silent, so that a slow index shows which
           # repository it is.
-          sudo apt-get update -q
+          scripts/retry.sh 4 300 -- sudo apt-get update -q
           # Formulas need latex, dvips, gs and amssymb; these packages provide
           # them without their recommendations.
-          sudo apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-extra ghostscript
+          scripts/retry.sh 2 600 -- sudo apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-extra ghostscript
           # doxygen itself comes from its release, not apt. noble's 1.9.8
           # cannot write a C++20 module's page under CREATE_SUBDIRS: it
           # prefixes `module_` to a path that already carries the hash
