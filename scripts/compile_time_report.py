@@ -1,47 +1,48 @@
 #!/usr/bin/env python3
-"""Report the machine-invariant half of a clang -ftime-trace build.
+"""Report where a clang -ftime-trace build spends its compile time.
 
-Compile time is a per-machine property, so wall-clock figures from one machine
-do not transfer to another, or reliably even to the next session on the same
-one. The counts clang records alongside them do transfer: given the same
-sources, flags and compiler, the number of times a template is instantiated or
-a constraint checked is fixed. This script leads with those and prints the
-durations beside them, marked, so they are read as this machine's answer rather
-than the answer.
-
-Two modes, and the second is where an investigation ends up:
+A compile time measured on one machine does not carry over to another, nor
+reliably to another session on the same machine. The counts clang records
+beside the times do carry over: given the same sources, flags and compiler,
+the number of times a template is instantiated or a constraint is checked is
+fixed. So each report leads with the counts, and marks the times as this
+machine's.
 
   compile_time_report.py <build-dir>
-      Sums the `Total *` events over every trace in the build, ranked by count.
-      One row per phase - InstantiateClass, CheckConstraintSatisfaction, and so
-      on - plus a per-translation-unit breakdown.
+      Sums each phase's `Total` event over every translation unit, and ranks
+      the phases by count. Ranks the units by time and by count.
+
+      --write-baseline writes each phase's count to a file. --baseline lists
+      the phases whose counts differ from those in such a file. A count which
+      moved shows that the compiler did more or less of something. A count
+      which did not move does not show that the time stayed the same.
+
+  compile_time_report.py <build-dir> --self [<fragment>]
+      Ranks phases and entities by self time, a span's time less its
+      children's. The unit is the slowest of those whose names contain the
+      fragment. A span with a large self time and no children is the compiler
+      working where it records no events, which no count shows.
 
   compile_time_report.py <build-dir> --detail <event> [--source <fragment>]
-      Recompiles one translation unit at full granularity and attributes that
-      event to the source locations or entities responsible. The recompile is
-      needed because the standing build discards sub-500us events, which is
-      every individual constraint check; it keeps the traces ~400x smaller and
-      leaves the totals byte-identical, so the detail is worth paying for only
-      when something in the summary needs explaining.
-
-Compare two builds with --baseline: counts that moved are attributable to the
-change, counts that did not are not, whatever the clock says.
+      Recompiles the one object matching the fragment, recording every
+      event, and ranks the source lines at which the event occurs. The
+      build's own traces omit events shorter than 500us, which is every
+      single constraint check, so attributing one needs the recompile.
 """
 import argparse, collections, json, os, re, subprocess, sys
 
+# A source location as clang writes it in a detail: <file:line:column...>.
 LOC = re.compile(r"<(?P<file>[^:<>]+):(?P<line>\d+):\d+")
 
 
 def traces(build_dir):
-    """Every -ftime-trace JSON under build_dir, keyed by translation unit.
+    """The events of every trace anywhere within build_dir, keyed by the
+    trace's file name less `.json`.
 
-    A trace counts only if the object file it was emitted beside is still
-    there. CMake's own compiler checks are compiled with the project's flags
-    and leave traces of their own in the build tree - `-.json` from a check
-    that compiles to stdout, and `a-CMakeCXXCompilerId.json` - which are
-    indistinguishable from real ones by name or content, and which inflated
-    the unit count by two before this check existed. The object is the
-    evidence that something in the project was actually built.
+    A trace counts only if its object lies beside it. A compiler check run by
+    CMake with -ftime-trace in CMAKE_CXX_FLAGS leaves a trace with no object,
+    and the trace is otherwise indistinguishable from a unit's. A file which
+    is not a readable trace is skipped.
     """
     out = {}
     for root, _, files in os.walk(build_dir):
@@ -63,10 +64,10 @@ def traces(build_dir):
 
 
 def totals(events):
-    """The `Total <phase>` summary events, as {phase: (count, microseconds)}.
+    """Each phase's `Total` event, as {phase: (count, microseconds)}.
 
-    clang emits these whatever the granularity, which is what makes the cheap
-    build sufficient for everything except attribution.
+    clang writes these at any granularity, so the build's own traces suffice
+    for every report but --detail's.
     """
     out = {}
     for e in events:
@@ -78,17 +79,20 @@ def totals(events):
 
 
 def self_times(events):
-    """Exclusive time per event, by phase and by entity.
+    """Self time in microseconds, by phase and by (phase, detail).
 
-    A `Total X` row sums every X event, so a phase that mostly contains other
-    phases reads as enormous while explaining nothing. Self time subtracts what
-    a span spends inside its children, which is what separates "this is where
-    the work is" from "this is what the work happened under".
+    A span's self time is its duration less its children's. A phase's `Total`
+    event sums every span of the phase, so a phase whose spans mostly enclose
+    others reads as large while explaining nothing. Self time puts the time
+    in the span which spent it.
 
-    It also exposes the case that no count can: a span with a large self time
-    and no children at all is the compiler working inside machinery it does not
-    instrument - constraint normalisation being the one that bites here. That
-    shows up as time and never as a count.
+    A span with a large self time and no children is the compiler working
+    where it records no events, constraint normalisation among them. That
+    work has a duration and no count.
+
+    The spans of the compiler's stages enclose the rest, and their self time
+    names no entity, so they are left out. So are any `Source` spans; clang
+    23 writes `Source` as asynchronous events, which are not spans.
     """
     spans = [e for e in events
              if e.get("ph") == "X" and not e.get("name", "").startswith("Total ")
@@ -96,7 +100,7 @@ def self_times(events):
                                        "PerformPendingInstantiations", "Source")]
     spans.sort(key=lambda e: (e["ts"], -e.get("dur", 0)))
     by_phase, by_entity = collections.Counter(), collections.Counter()
-    stack = []
+    stack = []  # each frame is [start, duration, self time, event]
     def close(frame):
         _, _, slf, e = frame
         by_phase[e["name"]] += slf
@@ -114,7 +118,8 @@ def self_times(events):
 
 
 def wall(events):
-    """This translation unit's own compile time."""
+    """The unit's compile time: its `Total ExecuteCompiler` event's duration,
+    or 0 if it has none."""
     for e in events:
         if e.get("name") == "Total ExecuteCompiler":
             return e.get("dur", 0)
@@ -122,6 +127,7 @@ def wall(events):
 
 
 def summarize(build_dir, top):
+    """Prints the summary of every unit, and returns each phase's count."""
     tus = traces(build_dir)
     if not tus:
         sys.exit(f"no -ftime-trace output under {build_dir}\n"
@@ -135,24 +141,26 @@ def summarize(build_dir, top):
         per_tu[tu] = sum(c for c, _ in totals(events).values())
 
     print(f"{len(tus)} translation units\n")
-    print("phase totals - counts are machine-invariant, times are this machine")
+    print("phase totals - the counts are machine-invariant, and the times are this machine's")
     print(f"  {'count':>12}  {'this machine':>13}  phase")
     for phase, count in agg.most_common(top):
         print(f"  {count:12d}  {dur[phase] / 1e6:11.2f}s  {phase}")
-    print("\nslowest translation units - this machine, but the ranking is stable")
+    print("\nslowest translation units - by this machine's times")
     for tu, d in sorted(((t, wall(e)) for t, e in tus.items()),
                         key=lambda x: -x[1])[:top]:
         print(f"  {d / 1e6:11.2f}s  {tu}")
     print("\nheaviest translation units, by counted events")
     for tu, count in per_tu.most_common(top):
         print(f"  {count:12d}  {tu}")
-    print("\nNote the two rankings can disagree, and when they do the time one is\n"
-          "the finding: work the compiler does not instrument has a duration and\n"
-          "no count. Use --self on such a unit.")
+    print("\nWhere the two rankings disagree, the ranking by time is the finding:\n"
+          "work for which clang records no events has a duration and no count.\n"
+          "Run --self on such a unit.")
     return agg
 
 
 def compare(agg, baseline_path):
+    """Prints each phase whose count differs from the baseline's, the largest
+    difference first."""
     with open(baseline_path, encoding="utf-8") as f:
         base = json.load(f)
     print(f"\nagainst baseline {baseline_path}")
@@ -166,7 +174,8 @@ def compare(agg, baseline_path):
 
 
 def compile_command(build_dir, fragment):
-    """The ninja command line for the one object matching `fragment`."""
+    """The one object whose line in ninja's list of targets contains
+    `fragment`, and the command which compiles it."""
     objs = subprocess.run(["ninja", "-C", build_dir, "-t", "targets", "all"],
                           capture_output=True, text=True).stdout
     hits = [l.split(":")[0] for l in objs.splitlines()
@@ -182,6 +191,8 @@ def compile_command(build_dir, fragment):
 
 
 def detail(build_dir, event, fragment, top, out_dir):
+    """Recompiles the object matching `fragment`, recording every event, and
+    prints the sites of `event`, ranked by count."""
     obj, cmd = compile_command(build_dir, fragment)
     print(f"recompiling {obj} at full granularity", file=sys.stderr)
     probe = os.path.join(out_dir, "time_trace_probe.o")
@@ -215,6 +226,8 @@ def detail(build_dir, event, fragment, top, out_dir):
 
 
 def show_self(build_dir, fragment, top):
+    """Prints the self times of the slowest unit whose name contains
+    `fragment`."""
     tus = traces(build_dir)
     hits = [t for t in tus if fragment in t] if fragment else list(tus)
     if not hits:
@@ -239,16 +252,18 @@ def main():
     ap.add_argument("build_dir")
     ap.add_argument("--top", type=int, default=20, help="rows per table (default 20)")
     ap.add_argument("--write-baseline", metavar="FILE",
-                    help="write this run's phase counts, to compare a later one against")
-    ap.add_argument("--baseline", metavar="FILE", help="compare against counts written earlier")
+                    help="write each phase's count to FILE")
+    ap.add_argument("--baseline", metavar="FILE", help="list the phases whose counts differ from FILE's")
     ap.add_argument("--detail", metavar="EVENT",
-                    help="attribute one event kind to source sites; needs a recompile")
+                    help="rank the source lines at which EVENT occurs, recompiling one unit")
     ap.add_argument("--source", default="", metavar="FRAGMENT",
-                    help="which translation unit --detail should recompile")
+                    help="the fragment by which --detail finds the object to recompile")
     ap.add_argument("--self", metavar="FRAGMENT", nargs="?", const="",
-                    help="exclusive time per phase and entity for one translation unit")
-    ap.add_argument("--out-dir", default=None,
-                    help="where --detail puts its probe (default: inside the build directory)")
+                    help="rank phases and entities by self time, in the slowest unit "
+                         "whose name contains FRAGMENT")
+    ap.add_argument("--out-dir", default=None, metavar="DIR",
+                    help="the directory to which --detail writes the recompiled object "
+                         "and its trace (default: the build directory)")
     a = ap.parse_args()
 
     if a.self is not None:
