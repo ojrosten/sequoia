@@ -273,6 +273,10 @@ jobs:
       CC: gcc-15
       CXX: g++-15
       NEEDS_TESTING: ${{ needs.scope.outputs.suite }}
+      # The demanglers of roadmap 234's gate on uncalled functions; see
+      # "Test the uncalled-functions script".
+      LLVM_CXXFILT: /usr/bin/llvm-cxxfilt-18
+      GNU_CXXFILT: /usr/bin/c++filt
     steps:
       - uses: actions/checkout@v7
         with:
@@ -445,9 +449,34 @@ jobs:
       # figures.
       - name: Test the uncalled-functions script
         if: ${{ always() && env.NEEDS_TESTING == 'true' }}
+        run: scripts/tests/uncalled_functions_selftest.py --demangler "$LLVM_CXXFILT" --demangler "$GNU_CXXFILT"
+
+      # Roadmap 234's gate. A function in Source that no test calls fails the
+      # job, unless coverage_reports/uncalled_functions.txt lists it. A listed
+      # function that is now called, or gone, gives a notice, and the list is
+      # shortened by hand. A failure also prints a baseline made from this run,
+      # for comparison with the committed one. The baseline's header names the
+      # tools, so a change of demangler, compiler or lcov release is refused
+      # until the baseline is made again from a run with the new tools.
+      - name: Check for uncalled functions
+        if: ${{ always() && steps.measure.outcome == 'success' }}
         run: |
-          scripts/tests/uncalled_functions_selftest.py --demangler /usr/bin/llvm-cxxfilt-18 \
-                                                       --demangler /usr/bin/c++filt
+          options=(--tracefile build/TestAll/gcc-env-coverage/coverage.info --repository "$GITHUB_WORKSPACE"
+                   --demangler "$LLVM_CXXFILT" --demangler "$GNU_CXXFILT"
+                   --recorded-tool g++-15 --recorded-tool lcov)
+          verdict="$RUNNER_TEMP/uncalled_functions.txt"
+          status=0
+          scripts/uncalled_functions.py compare "${options[@]}" --baseline coverage_reports/uncalled_functions.txt \
+            > "$verdict" 2>&1 || status=$?
+          cat "$verdict"
+          if [ -s "$verdict" ]; then
+            { echo '### Uncalled functions'; echo '```'; cat "$verdict"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ "$status" -ne 0 ]; then
+            echo "A baseline made from this run, for comparison with coverage_reports/uncalled_functions.txt:"
+            scripts/uncalled_functions.py baseline "${options[@]}" || true
+          fi
+          exit "$status"
 
       - name: Upload the tracefile and the report
         if: ${{ always() && env.NEEDS_TESTING == 'true' }}
