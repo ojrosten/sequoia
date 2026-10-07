@@ -183,12 +183,15 @@ jobs:
                      /etc/apt/sources.list.d/microsoft-prod.list
           # Launchpad and the Ubuntu archive are live dependencies of every
           # Linux column. Adding the PPA has failed with a malformed chunked
-          # response and with an HTTP 503, and once hung in its index refresh
+          # response and with an HTTP 503, and has hung in its index refresh
           # until the job's timeout, each before any compiler ran. So
           # scripts/retry.sh runs each apt command: an attempt that fails, or
-          # runs past its limit, is retried a bounded number of times.
-          scripts/retry.sh 4 300 -- sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-          scripts/retry.sh 4 300 -- sudo apt-get update -qq
+          # runs past its limit, is retried a bounded number of times. It runs
+          # as root, so that stopping an attempt reaches the apt-get that
+          # add-apt-repository starts. A whole install step takes 22-126 s, so
+          # the limits leave room for every retry within the job.
+          sudo scripts/retry.sh 3 180 -- add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo scripts/retry.sh 3 180 -- apt-get update -qq
           # gdb reads the stacks for a hung suite's snapshot and for a crash's
           # core; the image has none.
           names=$(apt-cache pkgnames)
@@ -196,7 +199,7 @@ jobs:
             grep -qFx -- "$pkg" <<< "$names" \
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
-          scripts/retry.sh 3 900 -- sudo apt-get install -y "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev gdb
+          sudo scripts/retry.sh 3 300 -- apt-get install -y "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev gdb
           # The hosted image's CMake is below sequoia's floor of 4.2, the release that added
           # CMAKE_INTERMEDIATE_DIR_STRATEGY; the Windows presets set it in
           # build_system/ShortObjectPaths.cmake. The macOS and Windows images ship a release above

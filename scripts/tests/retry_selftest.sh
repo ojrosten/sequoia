@@ -7,35 +7,51 @@
 # it, the selftest runs them against the script and against each mutant of the
 # script: the script must fail no control, and each mutant at least one.
 #
-# The command retried is a stand-in, which follows a plan of one behaviour per
-# attempt: succeed, fail with a status, hang, or hang while ignoring SIGTERM. It
-# records each run and its arguments. Pauses are 1 s, or none, rather than the
-# script's 15 s. Each control is a claim the script exists to keep:
+# The command retried is a stand-in. It follows a plan of one behaviour per
+# attempt, and records each run, its arguments and its standard input. Pauses
+# are 1 s, or none, rather than the script's 15 s. Each control is a claim the
+# script exists to keep:
 #   - arguments of any other form are refused with status 2 and the usage,
 #     and nothing runs;
 #   - the first success ends the retries, with status 0 and nothing printed;
-#   - a failed attempt is named with its status and number, and followed by a
-#     pause of its number times the unit, except after the last;
-#   - when every attempt fails, an ::error:: names the command, and the status
-#     is 1;
-#   - a hung attempt is stopped at the limit, named as such, and retried;
-#   - an attempt which ignores SIGTERM is killed 10 s later, with what it
-#     started;
+#   - a failed attempt is named with the whole command, its status and its
+#     number, and followed by a pause of its number times the unit, except
+#     after the last;
+#   - when every attempt fails, an ::error:: names the whole command, and the
+#     status is 1;
+#   - a hung attempt is stopped at the limit, named as such, and retried,
+#     with nothing printed on standard error;
+#   - what the attempt started is stopped with it: a grandchild, a child
+#     which ignores SIGTERM (killed 10 s later, even when its parent has
+#     died), and, run through sudo, a grandchild running as root;
 #   - the command's arguments arrive intact, and its standard input is empty;
 #   - nothing outlives the script: no stand-in, no watcher, no flag directory;
-#   - the pause unit is 15 s, and the grace before SIGKILL 10 s.
+#   - the pause unit is 15 s.
+#
+# The sudo control needs sudo without a password. On Linux, where CI runs the
+# selftest and has it, its absence fails the selftest; elsewhere the control is
+# reported as not run.
 
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
 original="$here/../retry.sh"
 tmp=$(mktemp -d "${TMPDIR:-/tmp}/retry_selftest.XXXXXX")
-trap 'pkill -f "$tmp/" 2> /dev/null; rm -rf "$tmp"' EXIT
+# The stand-ins hang in sleeps of 61 s, a length nothing else here uses, so
+# that whatever a mutant leaves behind can be found and stopped.
+clean_up() {
+  pkill -f "$tmp/" 2> /dev/null
+  pkill -f '^/bin/sleep 61$' 2> /dev/null
+  pkill -f '^sleep 37$' 2> /dev/null
+  sudo -n pkill -f '^/bin/sleep 61$' 2> /dev/null
+}
+trap 'clean_up; sudo -n rm -rf "$tmp" 2> /dev/null; rm -rf "$tmp"' EXIT
 
 # Reads the clock in tenths of a second.
 tenths() { perl -MTime::HiRes=time -e 'printf "%d\n", time * 10'; }
 
-# The stand-in: reads its plan from $tmp/plan, one behaviour per line, takes
-# the line for this run, and records the run in $tmp/runs.
+# The stand-in reads its plan from $tmp/plan, one behaviour per line, takes the
+# line for this run, and records the run, its child or grandchild, and its
+# standard input.
 cat > "$tmp/standin" <<'STANDIN'
 #!/bin/bash
 dir=$(dirname "$0")
@@ -46,8 +62,11 @@ behaviour=$(sed -n "${run}p" "$dir/plan")
 case "$behaviour" in
   succeed)      exit 0 ;;
   fail-*)       exit "${behaviour#fail-}" ;;
-  hang)         exec /bin/sleep 60 ;;
-  hang-on-term) trap '' TERM; /bin/sleep 60 & echo $! > "$dir/child"; wait $!; /bin/sleep 60 ;;
+  hang)         exec /bin/sleep 61 ;;
+  ignore-term)  trap '' TERM; /bin/sleep 61 & echo $! > "$dir/descendant"; wait $!; /bin/sleep 61 ;;
+  child-ignores-term)
+                bash -c 'trap "" TERM; exec /bin/sleep 61' & echo $! > "$dir/descendant"; wait $! ;;
+  grandchild)   bash -c '/bin/sleep 61 & echo $! > "$1/descendant"; wait $!' _ "$dir" & wait $! ;;
 esac
 exit 99
 STANDIN
@@ -62,13 +81,15 @@ retry() {
   local plan=$1
   shift
   printf '%s\n' $plan > "$tmp/plan"
-  rm -f "$tmp/runs" "$tmp"/stdin.*
+  rm -f "$tmp/runs" "$tmp"/stdin.* "$tmp/descendant"
   local began
   began=$(tenths)
-  TMPDIR="$tmp/temporary" RETRY_PAUSE_SECONDS=${pause-0} bash "$script" "$@" < /dev/null > "$tmp/out" 2> "$tmp/err"
+  TMPDIR="$tmp/temporary" RETRY_PAUSE_SECONDS=${pause-0} ${as_root-} bash "$script" "$@" \
+    < /dev/null > "$tmp/out" 2> "$tmp/err"
   status=$?
   elapsed=$(( $(tenths) - began ))
-  runs=$( [ -f "$tmp/runs" ] && wc -l < "$tmp/runs" | tr -d ' ' || echo 0)
+  runs=0
+  [ -f "$tmp/runs" ] && runs=$(wc -l < "$tmp/runs" | tr -d ' ')
 }
 
 expect() { # expect <claim> <actual> <expected>
@@ -79,6 +100,28 @@ has() { # has <claim> <yes|no> <pattern> <file>
   local got=no
   grep -qE -- "$3" "$4" && got=yes
   [ "$got" = "$2" ] || fail "$1 (expected $2, pattern: $3)"
+}
+
+# Whether process <pid> has ended, allowing 3 s for it to be reaped: a killed
+# process may linger as a zombie.
+gone() {
+  local polls=30
+  while [ "$polls" -gt 0 ]; do
+    case "$(ps -o stat= -p "$1" 2> /dev/null)" in
+      ""|Z*) return 0 ;;
+    esac
+    sleep 0.1
+    polls=$((polls - 1))
+  done
+  return 1
+}
+
+descendant_gone() { # descendant_gone <claim>
+  if [ ! -s "$tmp/descendant" ]; then
+    fail "$1 (the stand-in recorded no descendant)"
+  elif ! gone "$(cat "$tmp/descendant")"; then
+    fail "$1"
+  fi
 }
 
 run_controls() {
@@ -118,35 +161,65 @@ run_controls() {
     "::error::$tmp/standin failed on all 3 attempts"
   expect "no pause follows the last attempt" "$(grep -c '^Retrying' "$tmp/out")" 2
 
+  retry "fail-4" 1 5 -- "$tmp/standin" "two words" "" last
+  expect "the command's arguments arrive intact" "$(cut -d' ' -f2- "$tmp/runs")" "two words  last"
+  has "a failure names the whole command" yes \
+    "^$tmp/standin two words  last failed with status 4 \\(attempt 1 of 1\\)$" "$tmp/out"
+  expect "the error names the whole command" "$(tail -n 1 "$tmp/out")" \
+    "::error::$tmp/standin two words  last failed on all 1 attempts"
+
   retry "hang succeed" 2 1 -- "$tmp/standin"
   expect "a hung attempt is retried, and the retry's success exits 0" "$status" 0
   expect "a hung attempt is retried once" "$runs" 2
   has "a hung attempt is named as such" yes \
     "^$tmp/standin did not finish within 1 s \\(attempt 1 of 2\\)$" "$tmp/out"
   [ "$elapsed" -lt 40 ] || fail "a hung attempt is stopped at its limit (took $elapsed tenths)"
-  local hung
-  hung=$(head -n 1 "$tmp/runs" | cut -d' ' -f1)
-  kill -0 "$hung" 2> /dev/null && fail "a hung attempt is stopped, not left running"
+  has "a stopped attempt prints nothing on standard error" no '.' "$tmp/err"
+  gone "$(head -n 1 "$tmp/runs" | cut -d' ' -f1)" || fail "a hung attempt is stopped, not left running"
 
-  retry "hang-on-term" 1 1 -- "$tmp/standin"
+  retry "grandchild" 1 1 -- "$tmp/standin"
+  expect "a stopped attempt with a grandchild fails the script" "$status" 1
+  descendant_gone "the attempt's grandchild is stopped with it"
+
+  retry "ignore-term" 1 1 -- "$tmp/standin"
   expect "an attempt ignoring SIGTERM fails the script" "$status" 1
   [ "$elapsed" -ge 100 ] && [ "$elapsed" -lt 160 ] \
     || fail "an attempt ignoring SIGTERM is killed 10 s after its limit (took $elapsed tenths)"
-  hung=$(head -n 1 "$tmp/runs" | cut -d' ' -f1)
-  kill -0 "$hung" 2> /dev/null && fail "an attempt ignoring SIGTERM is killed, not left running"
-  kill -0 "$(cat "$tmp/child")" 2> /dev/null && fail "what the attempt started is killed with it"
+  gone "$(head -n 1 "$tmp/runs" | cut -d' ' -f1)" || fail "an attempt ignoring SIGTERM is killed, not left running"
+  descendant_gone "the child of an attempt ignoring SIGTERM is killed with it"
 
-  retry "succeed" 1 5 -- "$tmp/standin" "two words" "" last
-  expect "the command's arguments arrive intact" "$(cut -d' ' -f2- "$tmp/runs")" "two words  last"
+  retry "child-ignores-term" 1 1 -- "$tmp/standin"
+  [ "$elapsed" -ge 100 ] && [ "$elapsed" -lt 160 ] \
+    || fail "a child ignoring SIGTERM is killed 10 s after the limit, its parent dead (took $elapsed tenths)"
+  descendant_gone "a child ignoring SIGTERM is killed once its parent has died"
+
+  rm -f "$tmp"/stdin.*
+  printf '%s\n' succeed > "$tmp/plan"
+  rm -f "$tmp/runs"
   echo something | TMPDIR="$tmp/temporary" RETRY_PAUSE_SECONDS=0 bash "$script" 1 5 -- "$tmp/standin" > /dev/null 2>&1
-  [ -s "$(ls "$tmp"/stdin.* | tail -n 1)" ] && fail "the command's standard input is empty"
+  local inputs
+  inputs=$(ls "$tmp"/stdin.* 2> /dev/null)
+  if [ "$(echo "$inputs" | grep -c .)" -ne 1 ]; then
+    fail "the stand-in recorded its standard input once"
+  elif [ -s "$inputs" ]; then
+    fail "the command's standard input is empty"
+  fi
 
   retry "succeed" 1 37 -- "$tmp/standin"
   pgrep -f '^sleep 37$' > /dev/null && fail "the watcher's sleep outlives the script"
   [ -z "$(ls -A "$tmp/temporary")" ] || fail "the flag directory outlives the script"
 
   grep -qF 'pause=${RETRY_PAUSE_SECONDS:-15}' "$script" || fail "the pause unit is 15 s"
-  grep -qxF 'grace=10' "$script" || fail "the grace before SIGKILL is 10 s"
+
+  if sudo -n true 2> /dev/null; then
+    as_root="sudo -n env" retry "grandchild" 1 1 -- "$tmp/standin"
+    expect "a stopped attempt run as root fails the script" "$status" 1
+    descendant_gone "run as root, the attempt's root grandchild is stopped with it"
+  elif [ "$(uname -s)" = Linux ]; then
+    fail "the sudo control needs sudo without a password, which CI's Linux runners have"
+  else
+    echo "Not run here: the sudo control, which needs sudo without a password"
+  fi
   return "$fails"
 }
 
@@ -157,27 +230,39 @@ mutants=(
   'a leading zero accepted'        '^[1-9][0-9]*$'  '^[0-9]+$'
   'usage on standard output'       'echo "Usage: $0 <attempts> <seconds> -- <command>..." >&2'  'echo "Usage: $0 <attempts> <seconds> -- <command>..."'
   'one attempt too few'            'attempt <= attempts'  'attempt < attempts'
-  'a success not the end'          '    exit 0'  '    :'
+  'a success not the end'          '[ "$status" -ne 0 ] || exit 0'  ':'
   'no watcher'                     '    kill -TERM -- "-$command" 2> /dev/null'  '    :'
   'no SIGKILL'                     '    kill -KILL -- "-$command" 2> /dev/null'  '    :'
   'the command alone killed'       'kill -KILL -- "-$command"'  'kill -KILL "$command"'
+  'the leader alone stopped'       'kill -TERM -- "-$command"'  'kill -TERM "$command"'
+  'the grace skipped'              '    wait "$watcher" 2> /dev/null
+    echo "$* did not finish'  '    kill "$watcher" 2> /dev/null
+    echo "$* did not finish'
+  'the whole grace always waited'  '|| exit 0'  '|| :'
   'a stop not named'               'if [ -e "$flag/stopped" ]; then'  'if false; then'
   'a pause after the last attempt' 'if [ "$attempt" -lt "$attempts" ]; then'  'if true; then'
   'the pause not lengthened'       'sleep $((attempt * pause))'  'sleep $pause'
-  'no error annotation'            'echo "::error::$1 failed on all $attempts attempts"'  'echo "$1 failed on all $attempts attempts"'
+  'no error annotation'            'echo "::error::$* failed on all $attempts attempts"'  'echo "$* failed on all $attempts attempts"'
+  'only the first word named'      '"::error::$* failed'  '"::error::$1 failed'
   'success when all fail'          'exit 1'  'exit 0'
-  'the watcher outlives'           'pkill -P "$watcher" 2> /dev/null'  ':'
+  'the watcher outlives'           "trap 'kill \"\$sleeper\" 2> /dev/null; exit 0' TERM"  "trap 'exit 0' TERM"
   'the flag directory kept'        "trap 'rm -rf \"\$flag\"' EXIT"  ':'
   'arguments joined'               '  "$@" < /dev/null &'  '  $* < /dev/null &'
   'standard input inherited'       '  "$@" < /dev/null &'  '  "$@" &'
+  'job control left on'            '  set +m
+'  '  :
+'
+  'no process group'               '  set -m
+  "$@"'  '  :
+  "$@"'
   'another pause unit'             'pause=${RETRY_PAUSE_SECONDS:-15}'  'pause=${RETRY_PAUSE_SECONDS:-5}'
   'another grace'                  'grace=10'  'grace=3'
 )
 
 mutations() {
-  local i survivors=0 content stripped occurrences
+  local i survivors=0 content stripped occurrences failed
   script=$original
-  run_controls > "$tmp/controls.log"
+  run_controls > "$tmp/controls.log" 2>&1
   echo "unmutated: $(grep -c '^FAIL' "$tmp/controls.log") controls fail"
   grep -q '^FAIL' "$tmp/controls.log" && { cat "$tmp/controls.log"; survivors=1; }
   for ((i = 0; i < ${#mutants[@]}; i += 3)); do
@@ -192,8 +277,7 @@ mutations() {
     fi
     printf '%s' "${content%%"${mutants[i+1]}"*}${mutants[i+2]}${content#*"${mutants[i+1]}"}" > "$tmp/mutant.sh"
     script="$tmp/mutant.sh"
-    run_controls > "$tmp/controls.log"
-    local failed
+    run_controls > "$tmp/controls.log" 2>&1
     failed=$(grep -c '^FAIL' "$tmp/controls.log")
     if [ "$failed" -gt 0 ]; then
       echo "${mutants[i]}: $failed controls fail"
@@ -201,7 +285,7 @@ mutations() {
       echo "${mutants[i]}: SURVIVED"
       survivors=1
     fi
-    pkill -f "$tmp/standin" 2> /dev/null
+    clean_up
   done
   return "$survivors"
 }

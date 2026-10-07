@@ -65,11 +65,13 @@ jobs:
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
           # Quiet rather than silent, so that a slow index shows which
-          # repository it is.
-          scripts/retry.sh 4 300 -- sudo apt-get update -q
+          # repository it is. scripts/retry.sh retries an apt command that
+          # fails or hangs, as in tests.yml's "Install the toolchain (Linux)",
+          # with limits that leave room for every retry within this step.
+          sudo scripts/retry.sh 3 180 -- apt-get update -q
           # Formulas need latex, dvips, gs and amssymb; these packages provide
           # them without their recommendations.
-          scripts/retry.sh 2 600 -- sudo apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-extra ghostscript
+          sudo scripts/retry.sh 2 420 -- apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-extra ghostscript
           # doxygen itself comes from its release, not apt. noble's 1.9.8
           # cannot write a C++20 module's page under CREATE_SUBDIRS: it
           # prefixes `module_` to a path that already carries the hash
