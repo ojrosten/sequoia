@@ -43,9 +43,9 @@
 #   - the gcov tool is the one beside g++-N with N's version, or a wrapper of
 #     llvm-cov gcov beside clang++, or gcov for any other compiler. A gcov_tool
 #     in the environment changes nothing;
-#   - each lcov call, check_tracefile.py and genhtml get the options the
-#     script's comments give reasons for. genhtml runs once, given the three
-#     error categories lcov 2.5 knows. On Darwin, removal takes Homebrew's
+#   - the controls pin every option given to each lcov call,
+#     check_tracefile.py and genhtml. genhtml runs once, given the three error
+#     categories lcov 2.5 knows. On Darwin, removal takes Homebrew's
 #     prefix, as brew gives it, and the other toolchains' paths too, and an
 #     unused pattern is no error;
 #   - on Darwin, genhtml is given GNU c++filt from Homebrew's binutils, under
@@ -74,10 +74,12 @@ esac
 # The stand-ins. Each of lcov, genhtml, ctest, the cache's ninja and
 # check_tracefile.py logs its call as one line of $FAKE/log, and fails with a
 # status of its own when $FAIL names its step.
-# brew gives $tmp/homebrew as Homebrew's prefix, so the script looks for GNU
-# c++filt here.
+mkdir -p "$tmp/bin" "$tmp/cache" "$tmp/llvm/bin"
+
+# The script looks for GNU c++filt here, since brew's stand-in gives
+# $tmp/homebrew as Homebrew's prefix. run places one here when a control asks.
 gnu_cxxfilt=$tmp/homebrew/opt/binutils/bin/c++filt
-mkdir -p "$tmp/bin" "$tmp/cache" "$tmp/llvm/bin" "${gnu_cxxfilt%/*}"
+mkdir -p "${gnu_cxxfilt%/*}"
 
 # lcov writes the tracefile a capture or a removal asks for, and summarises as
 # lcov does: the figures on standard output, an error on standard error. A
@@ -831,7 +833,7 @@ mutations=(
   'a missing c++filt on standard output'  'needs GNU c++filt at ${gnu_cxxfilt}" >&2'
                                       'needs GNU c++filt at ${gnu_cxxfilt}"'
   'no demangling'                     'run_checked genhtml "${demangle[@]}"'  'run_checked genhtml'
-  'aliases kept'                      ' --suppress-aliases'                  ''
+  'aliases kept'                      ' --suppress-aliases -o'               ' -o'
   'range an error in the report'     ' --ignore-errors range --ignore-errors empty'  ' --ignore-errors empty'
   'empty an error in the report'      '--ignore-errors range --ignore-errors empty'  '--ignore-errors range'
   'category an error in the report'   ' --ignore-errors category "'          ' "'

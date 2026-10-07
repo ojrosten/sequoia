@@ -19,9 +19,11 @@
 #   - coverage_summary.txt, lcov's summary of coverage.info.
 #
 # The script runs lcov, genhtml, ctest and python3 from PATH, the ninja the
-# build's cache names, and check_tracefile.py from its own directory. It runs
-# the gcov tool which matches the build's compiler. On macOS it needs GNU
-# c++filt from Homebrew's binutils, which it finds through `brew --prefix`.
+# build's cache names, and check_tracefile.py from its own directory. If the
+# cache names the compiler g++-N, the script runs gcov-N from the compiler's
+# directory, and if clang++, llvm-cov from there. For any other compiler, it
+# runs gcov from PATH. On macOS it needs GNU c++filt from Homebrew's
+# binutils, which it finds through `brew --prefix`.
 #
 # Before it runs anything, the script refuses with status 2:
 #   - a missing, empty or second argument;
@@ -140,7 +142,8 @@ run_checked lcov --zerocounters --directory "${test_exe_dir}"
 (cd "${test_exe_dir}" && run_checked ctest -T Test)
 
 # gcov must match the compiler which wrote the data files (.gcda), so the
-# script chooses the tool by the build's compiler.
+# script chooses the tool by the build's compiler. The gcov on PATH, taken for
+# any other compiler, may not match it.
 cxx=$(sed -n 's/^CMAKE_CXX_COMPILER:[^=]*=//p' "${test_exe_dir}/CMakeCache.txt")
 case "${cxx##*/}" in
   g++-*)    gcov_tool="${cxx%/*}/gcov-${cxx##*g++-}" ;;
@@ -210,6 +213,15 @@ run_checked python3 "${script_dir}/check_tracefile.py" --capture "${capture}" --
 
 # genhtml leaves in place every page it does not write, such as a page for a
 # source the build no longer has.
+#
+# genhtml's own options:
+#   - --suppress-aliases lists the instantiations of a template as one
+#     function. The function tables would otherwise list each instantiation
+#     by its mangled name: a TestChamber report took 851 MB with them listed,
+#     and 12 MB without (2026-09-05).
+#   - --ignore-errors category: llvm-cov gives some lines no category, and
+#     genhtml would otherwise stop at the first, with `unexpected category
+#     UNK`.
 locate_report_dir
 run_checked rm -rf "${report_dir}"
 run_checked genhtml "${demangle[@]}" --suppress-aliases -o "${report_dir}" "${info}" \
