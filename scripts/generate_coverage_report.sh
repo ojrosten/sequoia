@@ -8,7 +8,7 @@
 # <root>/coverage_reports/<project>/<preset>. If the build directory holds a
 # Setup.txt, the report goes to the subdirectory named by its first line. The
 # script takes <root>/build to be the last directory named build in the build
-# directory's physical path, and refuses a path with none.
+# directory's physical path.
 #
 # The script leaves three files in the build directory:
 #   - coverage_capture.info, the tracefile lcov captured;
@@ -18,10 +18,12 @@
 #
 # The script runs lcov, genhtml and ctest from PATH, the ninja the build's
 # cache names, and the gcov tool which matches the build's compiler. On macOS
-# it needs GNU c++filt where Homebrew's binutils puts it, and fails before it
-# runs anything if that is absent. A step that fails stops the script with a
-# non-zero status. The script refuses any
-# other arguments with status 2, before it runs anything.
+# it needs GNU c++filt where Homebrew's binutils puts it.
+#
+# Before it runs anything, the script refuses with status 2 a missing, empty
+# or second argument, and a build directory with no directory named build in
+# its path. On macOS without GNU c++filt, it fails before it runs anything. A
+# step that fails stops the script with a non-zero status.
 
 # A failing suite or a failed capture must not leave a report that looks
 # sound. There is no pipefail: the genhtml probe below pipes genhtml, which
