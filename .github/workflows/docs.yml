@@ -1,16 +1,17 @@
 name: docs
 
-# Called by coarse and by rigorous. docs/html is committed and published, so a
-# defect here ships.
+# Called by coarse and by rigorous. docs/html is committed and published, so
+# a defect here ships.
 #
-# Both callers report this job as `docs / Docs · Doxygen`, and each decides
-# against its own base: coarse against staging, rigorous against the pull
-# request's base. On a PR into main from a branch other than staging the two can
-# disagree, and the check shows whichever reported last.
+# Both callers report this job as `docs / Docs · Doxygen`. Each decides
+# against its own base whether there is anything to document: coarse against
+# staging, rigorous against the pull request's base. On a PR into main from a
+# branch other than staging the two can disagree, and the check shows
+# whichever reported last.
 #
-# Built into a temporary directory and discarded: regenerating the committed render
-# would answer a different question from the one asked here, which is whether the
-# documentation is well-formed.
+# The job asks whether the documentation is well-formed, so it builds into a
+# temporary directory and discards the result. Regenerating the committed
+# render would answer a different question.
 on:
   workflow_call:
     inputs:
@@ -29,11 +30,12 @@ jobs:
         with:
           fetch-depth: 1
 
-      # The job runs whatever the change, since the audits of coarse and rigorous
-      # insist on its success whenever they call it. Only the steps below depend on
-      # the change; scope.yml says why. As in tests.yml, the conditions test for
-      # `true`, so this step insists any other answer is exactly `false`: an empty
-      # one fails the job rather than passing it unchecked.
+      # The job runs whatever the change, since the audits of coarse and
+      # rigorous insist on its success whenever they call it. Only the steps
+      # below depend on the change; scope.yml says why. As in tests.yml, the
+      # conditions test for `true`, so this step insists any other answer is
+      # exactly `false`. An empty answer fails the job rather than passing it
+      # unchecked.
       - name: Nothing to document
         if: inputs.needs_testing != 'true'
         env:
@@ -46,12 +48,13 @@ jobs:
           echo "Nothing to document; the scope job's summary says why."
 
       # USE_MATHJAX is off, so formulas go through LaTeX and then Ghostscript.
-      # Missing either leaves every formula silently wrong, which is the failure
-      # this job exists to catch.
+      # Missing either leaves every formula silently wrong, which is the
+      # failure this job exists to catch.
       #
-      # A slow mirror fails this step by name, instead of running on until the job's
-      # limit cancels the job. So the job's limit exceeds this one by more than
-      # checkout and generation take, about a minute.
+      # This step's limit makes a slow mirror fail the step by name, rather
+      # than run on until the job's limit cancels the job. The job's limit
+      # exceeds the step's by more than checkout and generation take, about a
+      # minute.
       - name: Install doxygen
         if: inputs.needs_testing == 'true'
         timeout-minutes: 25
@@ -61,18 +64,21 @@ jobs:
           # update, and with it the job.
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
-          # Quiet rather than silent, so that a slow index shows which repository it is.
+          # Quiet rather than silent, so that a slow index shows which
+          # repository it is.
           sudo apt-get update -q
-          # Formulas need latex, dvips, gs and amssymb; these packages provide them
-          # without their recommendations.
+          # Formulas need latex, dvips, gs and amssymb; these packages provide
+          # them without their recommendations.
           sudo apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-extra ghostscript
-          # doxygen itself comes from its release, not apt: noble's 1.9.8 cannot write a
-          # C++20 module's page under CREATE_SUBDIRS (it prefixes `module_` to a path that
-          # already carries the hash directory, and exits), so the gate could never pass
-          # on a modules build. Pinned to the version used for local documentation checks,
-          # so the two agree on what is a defect; the checksum is the release tarball's.
-          # The last line insists the doxygen on PATH is the one installed, or a distro
-          # copy could shadow it and the gate would pass on the wrong version until a
+          # doxygen itself comes from its release, not apt. noble's 1.9.8
+          # cannot write a C++20 module's page under CREATE_SUBDIRS: it
+          # prefixes `module_` to a path that already carries the hash
+          # directory, and exits. So the gate could never pass on a modules
+          # build. The version is pinned to the one used for local
+          # documentation checks, so that the two agree on what is a defect;
+          # the checksum is the release tarball's. The last line insists the
+          # doxygen on PATH is the one installed. Otherwise a distro copy could
+          # shadow it, and the gate would pass on the wrong version until a
           # modules build arrived.
           version=1.15.0
           sha256=0ec2e5b2c3cd82b7106d19cb42d8466450730b8cb7a9e85af712be38bf4523a1
@@ -81,12 +87,13 @@ jobs:
           echo "$sha256  doxygen.tgz" | sha256sum -c -
           tar xzf doxygen.tgz "doxygen-$version/bin/doxygen"
           sudo install "doxygen-$version/bin/doxygen" /usr/local/bin/doxygen
-          # The release binary prints its commit after the version; Homebrew's does not.
+          # The release binary prints its commit after the version; Homebrew's
+          # does not.
           [ "$(doxygen --version | cut -d' ' -f1)" = "$version" ] || { echo "::error::doxygen on PATH is $(doxygen --version), not $version"; exit 1; }
 
-      # The Doxyfile's INPUT is relative to its own directory, so doxygen runs from
-      # there; the overrides go in on stdin rather than by editing the file, so what
-      # is tested is the committed configuration.
+      # The Doxyfile's INPUT is relative to its own directory, so doxygen runs
+      # from there. The overrides go in on stdin rather than by editing the
+      # file, so that what is tested is the committed configuration.
       #
       # WARN_IF_UNDOCUMENTED is off: per-file documentation is in progress, and
       # those notices outnumber real defects by three orders of magnitude.
@@ -96,10 +103,10 @@ jobs:
         run: |
           out="$RUNNER_TEMP/doxygen"
           mkdir -p "$out"
-          # Recorded before doxygen runs, not after. If doxygen fails, the log it
-          # wrote is the only account of why, and a variable set on the next line
-          # would never be set at all - which is exactly how a failure on
-          # modules-native reported "doxygen produced no warning log" instead.
+          # Recorded before doxygen runs, not after. If doxygen fails, the log
+          # it wrote is the only account of why, and a variable set after
+          # doxygen would never be set. The step that reads the log would then
+          # report that doxygen did not run, rather than the defects it found.
           echo "DOXY_LOG=$out/warnings.txt" >> "$GITHUB_ENV"
           { cat Doxyfile
             echo "OUTPUT_DIRECTORY=$out"
@@ -108,9 +115,9 @@ jobs:
             echo "QUIET=YES"
           } | doxygen -
 
-      # Zero, which is the only threshold that cannot drift. The gate is on
-      # documentation which is wrong, not documentation which is absent - absence
-      # is excluded above.
+      # The threshold is zero defects, the only threshold that cannot drift.
+      # The gate is on documentation that is wrong, not documentation that is
+      # absent, which WARN_IF_UNDOCUMENTED excludes above.
       - name: Fail on any documentation defect
         if: ${{ always() && inputs.needs_testing == 'true' }}
         run: |
@@ -119,8 +126,8 @@ jobs:
           [ -f "$log" ] || { echo "::error::doxygen produced no warning log"; exit 1; }
           defects=$(grep -cE 'warning|error' "$log" || true)
           lines=$(wc -l < "$log")
-          # The first `n` lines of the log, with paths relative to the checkout, and a
-          # count of the lines left out
+          # Prints the first `n` lines of the log, with paths relative to the
+          # checkout, and a count of the lines left out.
           show() {
             sed -n "1,$1{s#$GITHUB_WORKSPACE/##g;p;}" "$log"
             [ "$lines" -le "$1" ] || echo "... and $((lines - $1)) more line(s) in the uploaded log"
