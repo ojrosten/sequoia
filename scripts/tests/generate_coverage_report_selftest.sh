@@ -19,9 +19,8 @@
 #
 #   - the report is written to coverage_reports beside the last directory
 #     named build in the build's physical path, under the rest of that path.
-#     A Setup.txt in the build names a subdirectory of the report, by its
-#     first line. Only genhtml makes the report's directory, so a run which
-#     fails before genhtml makes none;
+#     Only genhtml makes the report's directory, so a run which fails before
+#     genhtml makes none;
 #   - an earlier report is deleted only once every step before genhtml has
 #     succeeded. The script deletes the report's directory by its physical
 #     path, and nothing beside it, and genhtml writes the report there. The
@@ -396,15 +395,14 @@ escape_refused() {
 
 # Where the report goes.
 output_controls() {
-  fixture discriminated "$tmp/g++-13/bin/g++-15"
-  printf 'Clang\nsecond line\n' > "$b/Setup.txt"
-  local reports=$repo/coverage_reports/TestAll/gcc-env-coverage
-  mkdir -p "$reports/Clang"
-  : > "$reports/Clang/stale.html"; : > "$reports/kept.html"
+  fixture earlier_report "$tmp/g++-13/bin/g++-15"
+  local reports=$repo/coverage_reports/TestAll
+  mkdir -p "$reports/gcc-env-coverage"
+  : > "$reports/gcc-env-coverage/stale.html"; : > "$reports/kept.html"
   run build/TestAll/gcc-env-coverage
-  exits "a build with a Setup.txt succeeds" 0
-  exists "a Setup.txt names a subdirectory of the report by its first line" yes "$reports/Clang/index.html"
-  exists "an earlier report's page is deleted" no "$reports/Clang/stale.html"
+  exits "a run over an earlier report succeeds" 0
+  exists "an earlier report's page is deleted" no "$reports/gcc-env-coverage/stale.html"
+  exists "the report is written over an earlier one" yes "$reports/gcc-env-coverage/index.html"
   exists "a page beside the report's directory is kept" yes "$reports/kept.html"
 
   # In each fixture below, links place the report's directory outside
@@ -434,15 +432,6 @@ output_controls() {
   run build/TestAll/gcc-env-coverage
   escape_refused "a report's directory linked to coverage_reports" "$repo/coverage_reports" \
                  "$repo/coverage_reports/kept.html"
-
-  # A logical cd would take the path to coverage_reports/TestAll/victim.
-  fixture logical_parent "$tmp/g++-13/bin/g++-15"
-  printf '../victim\n' > "$b/Setup.txt"
-  mkdir -p "$case_dir/outside/sub" "$case_dir/outside/victim" "$repo/coverage_reports/TestAll/victim"
-  : > "$case_dir/outside/victim/kept.html"
-  ln -s "$case_dir/outside/sub" "$repo/coverage_reports/TestAll/gcc-env-coverage"
-  run build/TestAll/gcc-env-coverage
-  escape_refused "a path whose .. follows a link" "$case_dir/outside/victim" "$case_dir/outside/victim/kept.html"
 
   fixture regular_file "$tmp/g++-13/bin/g++-15"
   mkdir -p "$repo/coverage_reports/TestAll"
@@ -656,10 +645,11 @@ controls() {
 }
 
 # Each mutant breaks one behaviour that the controls claim. Its entry holds a
-# description, the text it replaces, and the replacement. Two mutants are left
-# out, as equivalent:
+# description, the text it replaces, and the replacement. Three mutants are
+# left out, as equivalent:
 #   - `$# -gt 1` for `$# -ne 1`, since `-z "$1"` refuses a missing argument;
-#   - a logical cd to coverage_reports, whose path holds no `..`.
+#   - a logical cd for either cd -P of locate_report_dir, since neither path
+#     holds `..`: the script builds both from physical paths.
 mutations=(
   'a second argument accepted'        'if [[ $# -ne 1 || -z "$1" ]]; then'   'if [[ $# -lt 1 || -z "$1" ]]; then'
   'an empty argument accepted'        'if [[ $# -ne 1 || -z "$1" ]]; then'   'if [[ $# -ne 1 ]]; then'
@@ -688,7 +678,6 @@ mutations=(
   'coverage_reports itself emptied'   '"${physical_reports}"/?* ]]'          '"${physical_reports}"* ]]'
   'the unresolved path checked'       'report_dir=$(cd -P "${output_dir}" && pwd -P)'
                                       'report_dir=${output_dir}'
-  'the logical cd'                    'report_dir=$(cd -P "${output_dir}"'   'report_dir=$(cd "${output_dir}"'
   'a dangling link unchecked'         ' || -L "${output_dir}" ]]'            ' ]]'
   'the report unchecked before the suite'  $'changed while the suite ran.\nlocate_report_dir\n'
                                       $'changed while the suite ran.\n'
@@ -698,8 +687,6 @@ mutations=(
   'an escaping report succeeds'       $'${physical_reports}" >&2\n    exit 1'  $'${physical_reports}" >&2\n    exit 0'
   'an escaping report on standard output'  'is not within ${physical_reports}" >&2'
                                       'is not within ${physical_reports}"'
-  'Setup.txt ignored'                 'if [[ -f "${setup_file}" ]]; then'    'if false; then'
-  'Setup.txt read whole'              'head -n 1 "${setup_file}"'            'cat "${setup_file}"'
   'errors ignored'                    'set -e'                               'set +e'
   'a failed step ignored'             '"$@" && return'                       '"$@"; return'
   'a failed step exits 0'             $'>&2\n  exit 1\n}'                    $'>&2\n  exit 0\n}'

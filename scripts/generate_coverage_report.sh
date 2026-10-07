@@ -5,13 +5,12 @@
 # coverage the run measured. <build directory> is the build's binary
 # directory, configured with Ninja by one of the coverage presets, at
 # <root>/build/<project>/<preset>. The report goes to
-# <root>/coverage_reports/<project>/<preset>. If the build directory holds a
-# Setup.txt, the report goes to the subdirectory named by its first line. The
-# script takes <root>/build to be the last directory named build in the build
-# directory's physical path. Before genhtml writes the report, the script
-# deletes the report's directory, if present, and with it every page of an
-# earlier report. It deletes the directory by its physical path, and genhtml
-# writes the report there.
+# <root>/coverage_reports/<project>/<preset>. The script takes <root>/build to
+# be the last directory named build in the build directory's physical path.
+# Before genhtml writes the report, the script deletes the report's
+# directory, if present, and with it every page of an earlier report. It
+# deletes the directory by its physical path, and genhtml writes the report
+# there.
 #
 # The script leaves three files in the build directory:
 #   - coverage_capture.info, the tracefile lcov captured;
@@ -56,23 +55,16 @@ fi
 path_prefix="${test_exe_dir%/build/*}"
 path_suffix="${test_exe_dir##*/build/}"
 
-setup_file="${test_exe_dir}/Setup.txt"
-
-if [[ -f "${setup_file}" ]]; then
-  discriminator=$(head -n 1 "${setup_file}")
-  path_suffix="${path_suffix}/${discriminator}"
-fi
-
 output_dir="${path_prefix}/coverage_reports/${path_suffix}"
 echo "Output Dir: ${output_dir}"
 
 # Sets report_dir to the report's directory: its physical path if present,
 # and otherwise output_dir. The script deletes report_dir, so report_dir must
 # lie strictly within the physical coverage_reports, or the script fails. A
-# link at any component of output_dir within coverage_reports, or a Setup.txt
-# naming `..`, could place it elsewhere. So each path is resolved by cd -P:
-# a logical cd removes `X/..` from the path's text, where rm resolves `..`
-# through the link X.
+# link at any component of output_dir within coverage_reports could place it
+# elsewhere. Each path is resolved by cd -P, as rm resolves it: a logical cd
+# would remove `X/..` from the path's text, where rm resolves `..` through
+# the link X.
 locate_report_dir() {
   report_dir=${output_dir}
   [[ -e "${output_dir}" || -L "${output_dir}" ]] || return 0
