@@ -4,13 +4,13 @@
 # Runs the suite of a coverage build, and writes an HTML report of the
 # coverage the run measured. <build directory> is the build's binary
 # directory, configured with Ninja by one of the coverage presets, at
-# <root>/build/<project>/<preset>. The report goes to
-# <root>/coverage_reports/<project>/<preset>. The script takes <root>/build to
-# be the last directory named build in the build directory's physical path.
-# Before genhtml writes the report, the script deletes the report's
-# directory, if present, and with it every page of an earlier report. It
-# deletes the directory by its physical path, and genhtml writes the report
-# there.
+# <root>/build/<project>/<preset>, where <root> is the parent of the script's
+# own directory. The report goes to <root>/coverage_reports/<project>/<preset>.
+# The script takes <root>/build to be the last directory named build in the
+# build directory's physical path. Before genhtml writes the report, the
+# script deletes the report's directory, if present, and with it every page of
+# an earlier report. It deletes the directory by its physical path, and
+# genhtml writes the report there.
 #
 # The script leaves three files in the build directory:
 #   - coverage_capture.info, the tracefile lcov captured;
@@ -23,11 +23,14 @@
 # the gcov tool which matches the build's compiler. On macOS it needs GNU
 # c++filt from Homebrew's binutils, which it finds through `brew --prefix`.
 #
-# Before it runs anything, the script refuses with status 2 a missing, empty
-# or second argument, and a build directory with no directory named build in
-# its path. It fails before it runs anything if the build directory or its
-# CMakeCache.txt is missing, or, on macOS, brew or GNU c++filt. It fails if
-# the report's path is present and either of these holds:
+# Before it runs anything, the script refuses with status 2:
+#   - a missing, empty or second argument;
+#   - a build directory with no directory named build in its path;
+#   - a build directory whose last directory named build is not <root>/build,
+#     such as a build outside the repository.
+# It fails before it runs anything if the build directory or its
+# CMakeCache.txt is missing, or, on macOS, brew or GNU c++filt. It fails if the
+# report's path is present and either of these holds:
 #   - the path is not a directory, such as a regular file or a dangling link;
 #   - the directory's physical path is not within the physical
 #     <root>/coverage_reports.
@@ -38,6 +41,8 @@
 # A command outside run_checked which fails, such as reading the cache, ends
 # the script.
 set -e
+
+script_dir=$(cd -P "$(dirname "$0")" && pwd -P)
 
 if [[ $# -ne 1 || -z "$1" ]]; then
   echo "Usage: $0 <build directory>" >&2
@@ -58,6 +63,12 @@ path_suffix="${test_exe_dir##*/build/}"
 output_dir="${path_prefix}/coverage_reports/${path_suffix}"
 echo "Output Dir: ${output_dir}"
 
+repository_reports="$(cd -P "${script_dir}/.." && pwd -P)/coverage_reports"
+if [[ "${output_dir}" != "${repository_reports}"/?* ]]; then
+  echo "error: the report's directory, ${output_dir}, is not within ${repository_reports}" >&2
+  exit 2
+fi
+
 # Sets report_dir to the report's directory: its physical path if present,
 # and otherwise output_dir. The script deletes report_dir, so report_dir must
 # lie strictly within the physical coverage_reports, or the script fails. A
@@ -69,7 +80,7 @@ locate_report_dir() {
   report_dir=${output_dir}
   [[ -e "${output_dir}" || -L "${output_dir}" ]] || return 0
   local physical_reports
-  physical_reports=$(cd -P "${path_prefix}/coverage_reports" && pwd -P)
+  physical_reports=$(cd -P "${repository_reports}" && pwd -P)
   report_dir=$(cd -P "${output_dir}" && pwd -P)
   if [[ "${report_dir}" != "${physical_reports}"/?* ]]; then
     echo "error: the report's directory, ${report_dir}, is not within ${physical_reports}" >&2
@@ -192,7 +203,6 @@ run_checked lcov --remove "${capture}" "${foreign[@]}" --output-file "${info}" \
 summary="${test_exe_dir}/coverage_summary.txt"
 run_checked lcov --summary "${info}" "${read_options[@]}" > "${summary}"
 cat "${summary}"
-script_dir=$(cd "$(dirname "$0")" && pwd -P)
 run_checked python3 "${script_dir}/check_tracefile.py" --capture "${capture}" --filtered "${info}" \
                                                         --summary "${summary}" --removed "${foreign[@]}"
 

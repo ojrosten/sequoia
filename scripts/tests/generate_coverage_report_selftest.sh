@@ -19,8 +19,9 @@
 #
 #   - the report is written to coverage_reports beside the last directory
 #     named build in the build's physical path, under the rest of that path.
-#     Only genhtml makes the report's directory, so a run which fails before
-#     genhtml makes none;
+#     The script refuses a build whose report would lie outside the
+#     repository's own coverage_reports. Only genhtml makes the report's
+#     directory, so a run which fails before genhtml makes none;
 #   - an earlier report is deleted only once every step before genhtml has
 #     succeeded. The script deletes the report's directory by its physical
 #     path, and nothing beside it, and genhtml writes the report there. The
@@ -491,6 +492,17 @@ output_controls() {
   exists "a run from another directory writes the same report" yes \
          "$repo/coverage_reports/TestAll/gcc-env-coverage/index.html"
 
+  # The script is run from a link to the repository's build directory, beside
+  # a directory named scripts holding no script.
+  fixture through_link "$tmp/g++-13/bin/g++-15"
+  mkdir -p "$case_dir/elsewhere/scripts"
+  ln -s "$repo/build" "$case_dir/elsewhere/build"
+  from=$case_dir/elsewhere/build invoke=../scripts/generate_coverage_report.sh
+  run TestAll/gcc-env-coverage
+  exits "a run from a link succeeds" 0
+  exists "a run from a link writes the same report" yes \
+         "$repo/coverage_reports/TestAll/gcc-env-coverage/index.html"
+
   # The repository lies within a directory named build, which lies within one
   # whose name ends in build. So does the project's directory within build.
   fixture nested "$tmp/g++-13/bin/g++-15" prebuild/build/repo build/Rebuild/gcc-env-coverage
@@ -528,6 +540,21 @@ refusal_controls() {
   exits "a missing build directory is refused" nonzero
   check "a missing build directory stops the script at once" no '^Test Dir:' "$case_dir/out"
   [ ! -s "$case_dir/log" ] || fail "a missing build directory: a tool ran: $(head -1 "$case_dir/log")"
+
+  # A build in another directory named build, outside the repository, with a
+  # report already in that directory's coverage_reports.
+  fixture outside_repository "$tmp/g++-13/bin/g++-15" repo ../other/build/TestAll/gcc-env-coverage
+  local other=$case_dir/other
+  mkdir -p "$other/coverage_reports/TestAll/gcc-env-coverage"
+  : > "$other/coverage_reports/TestAll/gcc-env-coverage/kept.html"
+  run "$other/build/TestAll/gcc-env-coverage"
+  exits "a build outside the repository is refused" 2
+  check "a build outside the repository names both directories" yes \
+        "^error: the report's directory, $other/coverage_reports/TestAll/gcc-env-coverage, is not within $repo/coverage_reports$" \
+        "$case_dir/err"
+  exists "a build outside the repository deletes nothing" yes \
+         "$other/coverage_reports/TestAll/gcc-env-coverage/kept.html"
+  [ ! -s "$case_dir/log" ] || fail "a build outside the repository: a tool ran: $(head -1 "$case_dir/log")"
 
   # A path with a directory whose name ends in build, and none named build.
   fixture unbuilt "$tmp/g++-13/bin/g++-15" repo prebuild/TestAll/gcc-env-coverage
@@ -645,11 +672,12 @@ controls() {
 }
 
 # Each mutant breaks one behaviour that the controls claim. Its entry holds a
-# description, the text it replaces, and the replacement. Three mutants are
+# description, the text it replaces, and the replacement. Four mutants are
 # left out, as equivalent:
 #   - `$# -gt 1` for `$# -ne 1`, since `-z "$1"` refuses a missing argument;
 #   - a logical cd for either cd -P of locate_report_dir, since neither path
-#     holds `..`: the script builds both from physical paths.
+#     holds `..`: the script builds both from physical paths;
+#   - a logical cd to the parent of script_dir, which is a physical path.
 mutations=(
   'a second argument accepted'        'if [[ $# -ne 1 || -z "$1" ]]; then'   'if [[ $# -lt 1 || -z "$1" ]]; then'
   'an empty argument accepted'        'if [[ $# -ne 1 || -z "$1" ]]; then'   'if [[ $# -ne 1 ]]; then'
@@ -757,7 +785,17 @@ mutations=(
   'the check told of /usr alone'      '--removed "${foreign[@]}"'            "--removed '/usr/*'"
   'the check not run'                 'run_checked python3 "${script_dir}/check_tracefile.py"'
                                       ': python3 "${script_dir}/check_tracefile.py"'
-  'the check from the working dir'    'script_dir=$(cd "$(dirname "$0")" && pwd -P)'  'script_dir=scripts'
+  'the check from the working dir'    'script_dir=$(cd -P "$(dirname "$0")" && pwd -P)'  'script_dir=scripts'
+  "the script's directory by a logical cd"  'script_dir=$(cd -P "$(dirname "$0")"'
+                                      'script_dir=$(cd "$(dirname "$0")"'
+  'a report anywhere'                 'if [[ "${output_dir}" != "${repository_reports}"/?* ]]; then'
+                                      'if false; then'
+  'the reports beside the working dir'  '"$(cd -P "${script_dir}/.." && pwd -P)/coverage_reports"'
+                                      '"$(pwd -P)/coverage_reports"'
+  'a misplaced report succeeds'       $'not within ${repository_reports}" >&2\n  exit 2'
+                                      $'not within ${repository_reports}" >&2\n  exit 0'
+  'a misplaced report on standard output'  'is not within ${repository_reports}" >&2'
+                                      'is not within ${repository_reports}"'
   'GNU c++filt never given'           '  demangle+=("${gnu_cxxfilt}")'       '  :'
   'GNU c++filt on Linux too'          $'== Darwin ]]; then\n  if ! homebrew'
                                       $'== Linux || true ]]; then\n  if ! homebrew'
