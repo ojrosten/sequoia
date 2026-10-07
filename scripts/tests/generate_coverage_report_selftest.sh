@@ -30,8 +30,8 @@
 #     lcov captures, removes the foreign files, and summarises. Then
 #     check_tracefile.py checks the removal, and genhtml writes the report;
 #   - the gcov tool is the one beside g++-N with N's version, or a wrapper of
-#     llvm-cov gcov beside clang++, or gcov for any other compiler, or the
-#     environment's gcov_tool;
+#     llvm-cov gcov beside clang++, or gcov for any other compiler. A gcov_tool
+#     in the environment changes nothing;
 #   - each lcov call, check_tracefile.py and genhtml get the options the
 #     script's comments give reasons for. On Darwin, removal takes the
 #     toolchains' paths too, and an unused pattern is no error;
@@ -59,9 +59,6 @@ case "$*" in
   ''|--mutations) ;;
   *) echo "Usage: $0 [--mutations]" >&2; exit 2;;
 esac
-
-# A developer's environment may hold one.
-unset gcov_tool
 
 # The stand-ins. Each of lcov, genhtml, ctest, the cache's ninja and
 # check_tracefile.py logs its call as one line of $FAKE/log, and fails with a
@@ -379,9 +376,9 @@ choice_controls() {
   fixture environment "$tmp/g++-13/bin/g++-15"
   (export gcov_tool=/custom/gcov; run build/TestAll/gcc-env-coverage; echo "$rc" > "$case_dir/rc")
   rc=$(cat "$case_dir/rc")
-  exits "a gcov_tool from the environment succeeds" 0
-  check "the capture uses the environment's gcov_tool" yes \
-        '^lcov --directory .* --gcov-tool /custom/gcov ' "$case_dir/log"
+  exits "a gcov_tool in the environment succeeds" 0
+  check "a gcov_tool in the environment is ignored" yes \
+        "^lcov --directory .* --gcov-tool $tmp/g\+\+-13/bin/gcov-15 " "$case_dir/log"
 
   fixture linux_cxxfilt "$tmp/g++-13/bin/g++-15"
   cxxfilt=present
@@ -592,12 +589,12 @@ mutations=(
   'ctest outside the build'           'pushd "${test_exe_dir}"'              'pushd .'
   'the build left the working dir'    $'\npopd\n'                            $'\n:\n'
   'ctest without a dashboard'         'run_checked ctest -T Test'            'run_checked ctest'
-  "the environment's gcov_tool ignored"  'if [[ -z "${gcov_tool}" ]]; then'  'if true; then'
+  "the environment's gcov_tool honoured"  'case "${cxx##*/}" in'          '[[ -n "${gcov_tool}" ]] || case "${cxx##*/}" in'
   "the compiler's entry not exact"    $'\'s/^CMAKE_CXX_COMPILER:[^=]*=//p\''  $'\'s/^CMAKE_CXX_COMPILER[^=]*=//p\''
-  'g++-N not recognised'              '    g++-*)'                           '    gxx-*)'
+  'g++-N not recognised'              '  g++-*)'                             '  gxx-*)'
   "gcov-N from PATH"                  'gcov_tool="${cxx%/*}/gcov-${cxx##*g++-}"'  'gcov_tool="gcov-${cxx##*g++-}"'
   'the version after the first g++-'  '${cxx##*g++-}'                        '${cxx#*g++-}'
-  'clang++ not recognised'            '    clang++)'                         '    clang)'
+  'clang++ not recognised'            '  clang++)'                           '  clang)'
   'the wrapper runs llvm-cov alone'   'llvm-cov" gcov "$@"'                  'llvm-cov" "$@"'
   "the wrapper's arguments split"     'gcov "$@"'                            'gcov $@'
   'llvm-cov from PATH'                '"${cxx%/*}" > "${gcov_tool}"'         '"" > "${gcov_tool}"'

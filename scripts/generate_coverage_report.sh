@@ -18,9 +18,8 @@
 #
 # The script runs lcov, genhtml, ctest and python3 from PATH, the ninja the
 # build's cache names, and check_tracefile.py from its own directory. It runs
-# the gcov tool which matches the build's compiler, unless the environment
-# sets gcov_tool, which it then runs instead. On macOS it needs GNU c++filt
-# where Homebrew's binutils puts it.
+# the gcov tool which matches the build's compiler. On macOS it needs GNU
+# c++filt where Homebrew's binutils puts it.
 #
 # Before it runs anything, the script refuses with status 2 a missing, empty
 # or second argument, and a build directory with no directory named build in
@@ -102,18 +101,16 @@ popd
 
 # gcov must match the compiler which wrote the data files (.gcda), so the
 # script chooses the tool by the build's compiler.
-if [[ -z "${gcov_tool}" ]]; then
-  cxx=$(sed -n 's/^CMAKE_CXX_COMPILER:[^=]*=//p' "${test_exe_dir}/CMakeCache.txt")
-  case "${cxx##*/}" in
-    g++-*)    gcov_tool="${cxx%/*}/gcov-${cxx##*g++-}" ;;
-    # lcov runs the tool with a data file as its first argument, so the
-    # script writes a wrapper to run the two words `llvm-cov gcov`.
-    clang++)  gcov_tool="${test_exe_dir}/llvm-gcov.sh"
-              printf '#!/bin/sh\nexec "%s/llvm-cov" gcov "$@"\n' "${cxx%/*}" > "${gcov_tool}"
-              chmod +x "${gcov_tool}"                  ;;
-    *)        gcov_tool="gcov"                         ;;
-  esac
-fi
+cxx=$(sed -n 's/^CMAKE_CXX_COMPILER:[^=]*=//p' "${test_exe_dir}/CMakeCache.txt")
+case "${cxx##*/}" in
+  g++-*)    gcov_tool="${cxx%/*}/gcov-${cxx##*g++-}" ;;
+  # lcov runs the tool with a data file as its first argument, so the script
+  # writes a wrapper to run the two words `llvm-cov gcov`.
+  clang++)  gcov_tool="${test_exe_dir}/llvm-gcov.sh"
+            printf '#!/bin/sh\nexec "%s/llvm-cov" gcov "$@"\n' "${cxx%/*}" > "${gcov_tool}"
+            chmod +x "${gcov_tool}"                  ;;
+  *)        gcov_tool="gcov"                         ;;
+esac
 echo "gcov: ${gcov_tool}"
 
 # lcov checks coverage data for consistency, and repairs what it finds by
