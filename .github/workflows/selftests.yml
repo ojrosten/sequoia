@@ -1,8 +1,9 @@
 name: selftests
 
 # The scripts' selftests. Each job names the selftests to run on its platform:
-# those of the scripts CI runs there, and compile_time_report's, whose script
-# runs on developers' machines. A selftest is named rather than found, since
+# those of the scripts CI runs there, and those of compile_time_report and
+# generate_coverage_report. Developers run both scripts on their Macs, though
+# CI runs neither on macOS. A selftest is named rather than found, since
 # report_crashes' selftest passes on Linux having run nothing. The inventory
 # job checks that every selftest runs somewhere.
 #
