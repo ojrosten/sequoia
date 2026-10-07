@@ -736,12 +736,15 @@ jobs:
       # to a bound, for a report or a dump to appear. Linux writes a core
       # before the process is gone.
       #
-      # Each of these is a warning, since a crash would go uncounted:
+      # The step warns of two conditions under which a crash would go
+      # uncounted:
       #   - on Linux, a core limit the suite step could not raise;
       #   - on macOS, a report directory the step cannot read.
-      # The step raises an error if report_crashes.sh exits non-zero or gives
-      # no single count of crashes, since a crash may then have gone
-      # unreported. It then keeps the output and any dumps, as for a crash.
+      # report_crashes.sh ends its output with the count of crashes. If the
+      # script exits non-zero, or its last line is not the count, a crash may
+      # have gone unreported, and the step raises an error saying so. A count
+      # above 0 raises the crash error in either case. Whenever the step
+      # raises an error, it keeps the output and any dumps.
       # The timeout bounds cdb's downloads of Windows' symbols, and a report
       # that times out does not fail the job.
       - name: Report any crash
@@ -787,19 +790,25 @@ jobs:
           sed -n '/^== Crash: /q; s/^Not read: //p' "$report" | while IFS= read -r unread; do
             echo "::warning title=Crash reports unread::${{ matrix.name }}: $unread."
           done
-          count=$(sed -n 's/^Crashes found: //p' "$report")
+          count_line='^Crashes found: ([0-9]+)$'
+          count=
+          if [[ $(tail -n 1 "$report") =~ $count_line ]]; then count=${BASH_REMATCH[1]}; fi
+          # A count holding a digit other than 0 is above 0, however large.
+          crashed=false
+          if [[ $count =~ [1-9] ]]; then crashed=true; fi
           incomplete=
           if [ "$status" -ne 0 ]; then
             incomplete="report_crashes.sh exited with status $status"
-          elif [[ ! $count =~ ^[0-9]+$ ]]; then
-            incomplete="report_crashes.sh gave no single count of crashes"
+          elif [ -z "$count" ]; then
+            incomplete="report_crashes.sh's output does not end with its count of crashes"
+          fi
+          if $crashed; then
+            echo "::error title=Crash::${{ matrix.name }}: $count crash(es); their stacks are below, and in run-log/crashes/."
           fi
           if [ -n "$incomplete" ]; then
             echo "::error title=Crash report incomplete::${{ matrix.name }}: $incomplete, so a crash may have gone unreported. Its output is below, and in run-log/crashes/."
-          elif [ "$count" -gt 0 ]; then
-            echo "::error title=Crash::${{ matrix.name }}: $count crash(es); their stacks are below, and in run-log/crashes/."
           fi
-          if [ -n "$incomplete" ] || [ "$count" -gt 0 ]; then
+          if [ -n "$incomplete" ] || $crashed; then
             mkdir -p run-log/crashes
             cp "$report" run-log/crashes/
             find "$dumps" -maxdepth 1 -newer "$dumps/since" -name '*.dmp' -exec cp {} run-log/crashes/ \;
