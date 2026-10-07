@@ -43,7 +43,7 @@ namespace sequoia::testing
              for it.
    */
   [[nodiscard]]
-  std::string speed_up_summary(double speedUp, double minSpeedUp, double maxSpeedUp);
+  std::string speedup_summary(double speedup, double minSpeedup, double maxSpeedup);
 
   /** \brief Function for comparing the performance of a fast task to a slow task.
 
@@ -187,7 +187,7 @@ namespace sequoia::testing
       }
 
       summary = append_lines(duration_summary("Fast", m_f, num_sds, sig_f),
-                             duration_summary("Slow", m_s, num_sds, sig_s)).append(speed_up_summary(m_s / m_f, minSpeedUp, maxSpeedUp));
+                             duration_summary("Slow", m_s, num_sds, sig_s)).append(speedup_summary(m_s / m_f, minSpeedUp, maxSpeedUp));
 
       if((test_logger<Mode>::mode == test_mode::false_negative) ? !passed : passed)
       {
@@ -244,9 +244,9 @@ namespace sequoia::testing
 
       \returns
       -# `referenceOutput`, if it differs from `testOutput` only in measured
-         values: the mean and standard deviation in each line of the shape
-         `duration_summary` writes, and the speed-up in each suffix of the
-         shape `speed_up_summary` appends to it;
+         values: the mean, the standard deviation and the speed-up, in each
+         line that `duration_summary`, with or without the suffix of
+         `speedup_summary`, prints exactly;
       -# `testOutput`, otherwise.
    */
   [[nodiscard]]

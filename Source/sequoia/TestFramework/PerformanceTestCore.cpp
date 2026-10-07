@@ -10,28 +10,90 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/PathCheckers.hpp"
 
+#include <charconv>
 #include <format>
-#include <regex>
+#include <ranges>
+#include <vector>
 
 namespace sequoia::testing
 {
   namespace
   {
-    /** \brief `text` with each measured value replaced by `#`, in every line
-               of the shape `duration_summary` writes, and in any suffix of
-               the shape `speed_up_summary` appends to it.
+    /** \brief The numbers `std::from_chars` reads in `text`, scanning from left
+               to right.
      */
     [[nodiscard]]
-    std::string without_measurements(std::string_view text)
+    std::vector<double> numbers_in(std::string_view text)
     {
-      constexpr std::string_view number{R"((?:-?(?:\d+(?:\.\d+)?(?:e[-+]\d+)?|inf|nan)))"};
-      const auto duration{std::format("{}s", number)};
+      std::vector<double> numbers{};
+      const auto last{text.data() + text.size()};
+      auto first{text.data()};
+      while(first != last)
+      {
+        double value{};
+        if(const auto [next, error]{std::from_chars(first, last, value)}; error == std::errc{})
+        {
+          numbers.push_back(value);
+          first = next;
+        }
+        else
+        {
+          ++first;
+        }
+      }
 
-      // A value replaced by `#`, rather than removed, cannot compare equal to a value which is missing
-      const std::regex durations{std::format(R"((Task duration: ){1}( \+- {0} \* ){1})", number, duration)};
-      const std::regex speedUp{std::format(R"((Task duration: # \+- {0} \* #)( \[){0}(; \({0}, {0}\)\]))", number)};
+      return numbers;
+    }
 
-      return std::regex_replace(std::regex_replace(std::string{text}, durations, "$1#$2#"), speedUp, "$1$2#$3");
+    /** \brief `line` with its measured values set to zero, if `duration_summary`,
+               with or without the suffix of `speedup_summary`, prints it
+               exactly; otherwise `line` as it stands.
+     */
+    [[nodiscard]]
+    std::string line_without_measurements(std::string_view line)
+    {
+      const auto labelPos{line.find(" Task duration: ")};
+      if(labelPos == std::string_view::npos)
+        return std::string{line};
+
+      // Indices of the numbers duration_summary prints, then of those speedup_summary appends
+      constexpr std::size_t mean{0},    numSds{1},     sig{2};
+      constexpr std::size_t speedup{3}, minSpeedup{4}, maxSpeedup{5};
+      constexpr std::size_t durationsOnly{3}, withSpeedup{6};
+
+      std::string_view prefix{line.substr(0, labelPos)};
+      auto values{numbers_in(line.substr(labelPos))};
+
+      auto print{
+        [prefix](const std::vector<double>& numbers) {
+          const auto durations{duration_summary(prefix, numbers[mean], numbers[numSds], numbers[sig])};
+          return numbers.size() == withSpeedup ? durations + speedup_summary(numbers[speedup], numbers[minSpeedup], numbers[maxSpeedup])
+                                               : durations;
+        }
+      };
+
+      if(((values.size() == durationsOnly) || (values.size() == withSpeedup)) && (print(values) == line))
+      {
+        values[mean] = 0;
+        values[sig]  = 0;
+        if(values.size() == withSpeedup)
+          values[speedup] = 0;
+
+        return print(values);
+      }
+
+      return std::string{line};
+    }
+
+    /** \brief The lines of `text`, each without its measured values. */
+    [[nodiscard]]
+    auto lines_without_measurements(std::string_view text)
+    {
+      auto lineWithoutMeasurements{
+        [](auto line) { return line_without_measurements(std::string_view{line}); }
+      };
+
+      return text | std::views::split('\n') | std::views::transform(lineWithoutMeasurements);
     }
   }
 
@@ -42,15 +104,16 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string speed_up_summary(double speedUp, double minSpeedUp, double maxSpeedUp)
+  std::string speedup_summary(double speedup, double minSpeedup, double maxSpeedup)
   {
-    return std::format(" [{:g}; ({:g}, {:g})]", speedUp, minSpeedUp, maxSpeedUp);
+    return std::format(" [{:g}; ({:g}, {:g})]", speedup, minSpeedup, maxSpeedup);
   }
 
   [[nodiscard]]
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput)
   {
-    return without_measurements(testOutput) == without_measurements(referenceOutput) ? referenceOutput : testOutput;
+    return std::ranges::equal(lines_without_measurements(testOutput), lines_without_measurements(referenceOutput))
+      ? referenceOutput : testOutput;
   }
 
   [[nodiscard]]

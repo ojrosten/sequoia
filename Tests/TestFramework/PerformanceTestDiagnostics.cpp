@@ -91,8 +91,8 @@ namespace sequoia::testing
   void performance_utilities_test::test_postprocessing()
   {
     {
-      std::string_view latest   {"Task duration: 0.00145s +- 3 * 0.0014s\n"};
-      std::string_view reference{"Task duration: 0.00147s +- 3 * 0.0011s\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), reference);
     }
@@ -123,7 +123,7 @@ namespace sequoia::testing
     }
 
     {
-      std::string_view latest   {"Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"};
       std::string_view reference{""};
 
       check(equality, "", postprocess(latest, reference), latest);
@@ -131,115 +131,115 @@ namespace sequoia::testing
 
     {
       std::string_view latest   {""};
-      std::string_view reference{"Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 0.00145s +- 3 * 0.0014s\n"
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"
                                  "bar Task duration: 0.0015s +- 3 * 0.0019s\n"};
-      std::string_view reference{"Task duration: 0.00147s +- 3 * 0.0011s\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 0.00145s +- 3 * 0.0014s\n"};
-      std::string_view reference{"Task duration: 0.00147s +- 3 * 0.0011s\n"
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s\n"
                                  "bar Task duration: 0.0015s +- 3 * 0.0019s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.9, 4.1)]\n"};
-      std::string_view reference{"Task duration: 0.00147s +- 3 * 0.0011s [3.4; (2.9, 4.1)]\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.9, 4.1)]\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s [3.4; (2.9, 4.1)]\n"};
 
       check(equality, "", postprocess(latest, reference), reference);
     }
 
     {
-      std::string_view latest   {"Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.9, 4.1)]\n"};
-      std::string_view reference{"Task duration: 0.00147s +- 3 * 0.001s [3.4; (2.9, 4.1)]\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.9, 4.1)]\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.001s [3.4; (2.9, 4.1)]\n"};
 
       check(equality, "", postprocess(latest, reference), reference);
     }
 
     {
-      std::string_view latest   {"Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.8, 4.1)]\n"};
-      std::string_view reference{"Task duration: 0.00147s +- 3 * 0.0011s [3.4; (2.9, 4.1)]\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.8, 4.1)]\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s [3.4; (2.9, 4.1)]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.8, 4.1)]\n"};
-      std::string_view reference{"Task duration: 0.00147s +- 3 * 0.0011s [3.4; (2.9, 4.0)]\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.8, 4.1)]\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s [3.4; (2.9, 4)]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 0.00145s +- 3 * 0.0014s\n"};
-      std::string_view reference{"Task duration: 0.00147s +- 4 * 0.0011s\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 4 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 8.1e-05s +- 3 * 0.0014s\n"};
-      std::string_view reference{"Task duration: 9.7e-06s +- 3 * 0.0011s\n"};
+      std::string_view latest   {"Fast Task duration: 8.1e-05s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 9.7e-06s +- 3 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), reference);
     }
 
     {
-      std::string_view latest   {"Task duration: 9.9e-05s +- 3 * 0.0014s\n"};
-      std::string_view reference{"Task duration: 0.000101s +- 3 * 0.0011s\n"};
+      std::string_view latest   {"Fast Task duration: 9.9e-05s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 0.000101s +- 3 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), reference);
     }
 
     {
-      std::string_view latest   {"Task duration: 8.1e-05s +- 3 * 0.0014s\n"};
-      std::string_view reference{"Task duration: 9.7e-06s +- 4 * 0.0011s\n"};
+      std::string_view latest   {"Fast Task duration: 8.1e-05s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 9.7e-06s +- 4 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 0.00145s +- 3 * 0.0014s\n"};
-      std::string_view reference{"Task duration: 0.00145s +- 4 * 0.0014s\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 0.00145s +- 4 * 0.0014s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.8, 4.1)]\n"};
-      std::string_view reference{"Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.9, 4.1)]\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.8, 4.1)]\n"};
+      std::string_view reference{"Fast Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.9, 4.1)]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 0.00145s +- 3 * 0.0014s\n"};
-      std::string_view reference{"Task duration: 0.00147s +- 3 * 0.0011s [3.4; (2.9, 4.1)]\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s [3.4; (2.9, 4.1)]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.9, 4.1)]\n"};
-      std::string_view reference{"Task duration: 0.00147s +- 3 * 0.0011s\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.9, 4.1)]\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 0.00145s +- 3 * 0.0014s\n"
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"
                                  "Line 44\n"};
-      std::string_view reference{"Task duration: 0.00145s +- 3 * 0.0014s\n"
+      std::string_view reference{"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"
                                  "Line 45\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
@@ -319,8 +319,22 @@ namespace sequoia::testing
     }
 
     {
-      const std::string latest   {duration_summary("Slow", 9.9e-05,  4, 1e-06)   + speed_up_summary(1.2e+06, 2, 3)};
-      const std::string reference{duration_summary("Slow", 0.000101, 4, 8.7e-06) + speed_up_summary(1.04,    2, 3)};
+      std::string_view latest   {"Task 2 Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Task 2 Task duration: 0.00147s +- 3 * 0.0011s\n"};
+
+      check(equality, "", postprocess(latest, reference), reference);
+    }
+
+    {
+      std::string_view latest   {"Fast Task duration: s +- 3 * s\n"};
+      std::string_view reference{"Fast Task duration: s +- 4 * s\n"};
+
+      check(equality, "", postprocess(latest, reference), latest);
+    }
+
+    {
+      const std::string latest   {duration_summary("Slow", 9.9e-05,  4, 1e-06)   + speedup_summary(1.2e+06, 2, 3)};
+      const std::string reference{duration_summary("Slow", 0.000101, 4, 8.7e-06) + speedup_summary(1.04,    2, 3)};
 
       check(equality, "", postprocess(latest, reference), std::string_view{reference});
     }
@@ -329,8 +343,8 @@ namespace sequoia::testing
       constexpr auto infinity{std::numeric_limits<double>::infinity()};
       constexpr auto nan{std::numeric_limits<double>::quiet_NaN()};
 
-      const std::string latest   {duration_summary("Slow", 0.000999, 4, 1.5e-05) + speed_up_summary(infinity, 2, 3)};
-      const std::string reference{duration_summary("Slow", 0.001,    4, 2e-05)   + speed_up_summary(-nan,     2, 3)};
+      const std::string latest   {duration_summary("Slow", 0.000999, 4, 1.5e-05) + speedup_summary(infinity, 2, 3)};
+      const std::string reference{duration_summary("Slow", 0.001,    4, 2e-05)   + speedup_summary(-nan,     2, 3)};
 
       check(equality, "", postprocess(latest, reference), std::string_view{reference});
     }
@@ -343,8 +357,8 @@ namespace sequoia::testing
     }
 
     {
-      const std::string latest   {duration_summary("Slow", 0.0063, 4, 8.7e-06) + speed_up_summary(1.04, 2, 3)};
-      const std::string reference{duration_summary("Slow", 0.0064, 4, 9.1e-06) + speed_up_summary(1.02, 2, 4)};
+      const std::string latest   {duration_summary("Slow", 0.0063, 4, 8.7e-06) + speedup_summary(1.04, 2, 3)};
+      const std::string reference{duration_summary("Slow", 0.0064, 4, 9.1e-06) + speedup_summary(1.02, 2, 4)};
 
       check(equality, "", postprocess(latest, reference), std::string_view{latest});
     }
