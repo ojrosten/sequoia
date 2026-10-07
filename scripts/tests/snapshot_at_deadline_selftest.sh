@@ -428,11 +428,12 @@ run_controls() {
 
   # The watcher's sleep ends with the script. A stand-in for sleep marks that
   # it ran, and runs the real sleep as its child, so that the stand-in's
-  # command line names it. The command lasts long enough for the watcher to
-  # begin its sleep. The stand-in is the run's own, so that no other run's
-  # sleep is taken for this one's.
+  # command line names it. The stand-in sleeps 5 s whatever it is asked, so
+  # that a sleep left behind outlives the check by seconds. The command lasts
+  # long enough for the watcher to begin its sleep. The stand-in is the run's
+  # own, so that no other run's sleep is taken for this one's.
   fake_tool "$work/marked" sleep "touch \"\$SLEEP_MARK\"
-$real_sleep \"\$@\""
+$real_sleep 5"
   env PATH="$work/marked:$PATH" SLEEP_MARK="$work/slept" \
     "$BASH" "$script" 30 "$work/marked.txt" "$name" -- "$real_sleep" 0.3
   if [ ! -e "$work/slept" ]; then
