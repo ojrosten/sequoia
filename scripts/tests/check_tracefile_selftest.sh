@@ -13,7 +13,9 @@
 # script fails, no mutant is run.
 #
 # Every fixture starts from one clean capture, filtered tracefile and summary,
-# which must pass. Each control then changes one thing. The claims:
+# which must pass. Each control then makes one change to the input. Where
+# the change moves a figure, the summary's figure moves with it, so that the
+# control fails on the records rather than on the figures. The claims:
 #
 #   - a count changed by the read fails, in either direction: a lambda's FNA
 #     raised from 0, which is what lcov 2.5's consistency repair does, and a
@@ -372,7 +374,9 @@ encoding_controls() {
   run "a summary which is not UTF-8 is read" 0 "1 of 4 captured files kept unchanged"
 }
 
-run_controls() { # run_controls <script>: sets fails, and total, the controls run
+# run_controls <script>: runs every control against the script, then sets
+# total to the number of controls run and fails to the number which failed
+run_controls() {
   subject=$1 fails=0 total=0
   out=$(mktemp "$tmp/out.XXXXXX")
   clean_controls

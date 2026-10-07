@@ -24,22 +24,27 @@ counts of its records. Lines found are its DA records, and lines hit are
 those with a non-zero count. Functions found are its FNA records, and
 functions hit are those with a non-zero count.
 
-If both checks pass, the first line of the output names the filtered
-tracefile. It counts the files of the capture, then those kept, those removed
-by a pattern, those with no coverage points and those with function records
-but no line records, and gives the summary's figures. The files with no
-coverage points are then listed, and then those with function records but no
-line records. Each list is sorted, and has a heading giving its count. No
-figure drawn from the filtered tracefile covers the files listed.
+If every file and both figures meet these rules, the first line of the output
+names the filtered tracefile. It counts the files of the capture, then those
+kept, those removed by a pattern, those with no coverage points and those
+with function records but no line records, and gives the summary's figures.
+The files with no coverage points are then listed, and then those with
+function records but no line records. Each list is sorted, and has a heading
+giving its count. No figure drawn from the filtered tracefile covers the
+files listed.
 
-The exit status is 1, and an error names the first problem found, if:
-  -# either check fails;
+The exit status is 1, and an error message names the first problem found,
+if:
+  -# a file or a figure breaks the rules above;
   -# a tracefile cannot be read, has no file's record, has two records for
      one file, has a record with no end_of_record, has a DA or FNA record
      whose count is not an integer, or has a line outside any file's record
      other than a test name or a blank line;
   -# the summary cannot be read, or has no figure for lines or for
      functions.
+
+The exit status is 2, and a usage message is printed, if the command line is
+not of the form above.
 """
 import argparse, re, sys
 from itertools import zip_longest
@@ -141,7 +146,8 @@ def check_filtering(captured, filtered, patterns):
 
 
 def summary_figure(summary, kind):
-    """The (hit, found) pair `lcov --summary` gives for `kind`, which is 'lines' or 'functions'."""
+    """The (hit, found) pair `lcov --summary` gives for `kind`, which is
+    'lines' or 'functions'."""
     match = re.search(rf'^[ \t]*{kind}\.+: .*\((\d+) of (\d+) ', summary, re.MULTILINE)
     if not match:
         raise Failure(f'the summary has no {kind} figure')
