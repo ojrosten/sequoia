@@ -255,6 +255,36 @@ class Keys(unittest.TestCase):
 
     def test_an_explicit_object_parameter_list_goes(self):
         self.assertEqual(script.key('void ns::s::f(this ns::s const&)'), 'ns::s::f')
+        self.assertEqual(script.key('void ns::s::f(this_type)'), 'ns::s::f(this_type)')
+
+    def test_a_return_type_of_several_words(self):
+        """The second name is the shape llvm-cxxfilt gives a lambda's call
+        operator within a function returning `auto`."""
+        self.assertEqual(script.key('unsigned long ns::count(int)'), 'ns::count(int)')
+        self.assertEqual(script.key('auto auto ns::f<int>(int)::{lambda(int)#1}::operator()(int) const'),
+                         'ns::f::{lambda}::operator()')
+
+    def test_a_list_within_a_parameter_list_keeps_a_later_parameter_list(self):
+        self.assertEqual(script.key('ns::f(std::vector<int, std::allocator<int> > const&)::{lambda(int)#1}::'
+                                    'operator()(int) const'),
+                         'ns::f(std::vector const&)::{lambda(int)}::operator()(int) const')
+
+    def test_reference_and_volatile_qualifiers(self):
+        """As qualifiers of the function, and of an enclosing function, whose
+        parameter list goes if a template argument list comes before it."""
+        for name, expected in (('ns::a::f(int) const &', 'ns::a::f(int) const &'),
+                               ('ns::a::g() volatile &&', 'ns::a::g() volatile &&'),
+                               ('ns::a::f() const volatile &&::{lambda()#1}::operator()() const',
+                                'ns::a::f() const volatile &&::{lambda()}::operator()() const'),
+                               ('ns::t<int>::f() const volatile &&::{lambda()#1}::operator()() const',
+                                'ns::t::f::{lambda}::operator()'),
+                               ('ns::t<int>::f() &::{lambda()#1}::operator()() const',
+                                'ns::t::f::{lambda}::operator()')):
+            with self.subTest(name=name):
+                self.assertEqual(script.key(name), expected)
+
+    def test_an_arrow_within_a_template_argument(self):
+        self.assertEqual(script.key('void ns::f<decltype ((parm#1)->x)>(int)'), 'ns::f')
 
     def test_unnamed_types_are_named_without_discriminator(self):
         """GNU c++filt numbers an unnamed type; llvm-cxxfilt spells the first
@@ -632,10 +662,13 @@ class Verdict(unittest.TestCase):
         self.assertEqual(self.compare(baseline, traced), (0, '', ''))
 
 
-# Each mutant is (description, old text, new text). One mutant is left out as
-# equivalent: dropping the guard that keeps `(anonymous namespace)` from being
-# read as a nameless call. The guard's text comes back unchanged without it,
-# since no template list can precede a namespace.
+# Each mutant is (description, old text, new text). Two mutants are left out as
+# equivalent:
+#   -# dropping the guard that keeps `(anonymous namespace)` from being read as
+#      a nameless call. The guard's text comes back unchanged without it, since
+#      no template list can precede a namespace;
+#   -# dropping `&&` from the qualifiers a parameter list may end with. The
+#      pattern repeats `&` with optional space between, so it matches `&&`.
 MUTATIONS = [
     ('keep template argument lists',     "if token == '<' and '<' not in stack:",  "if False:"),
     ('keep lists within parameters',     "if token == '<' and '<' not in stack:",  "if token == '<' and not stack:"),
@@ -750,6 +783,20 @@ MUTATIONS = [
     ('a blank line names a file',        "            elif line.strip():\n",    "            else:\n"),
     ('baseline files unsorted',          "for file, keys in sorted(uncalled.items()):",
                                          "for file, keys in uncalled.items():"),
+    ('lists within parameters noted',    "                if not stack:\n                    removed.append(length)",
+                                         "                if True:\n                    removed.append(length)"),
+    ('the name starts at a first space', "            start = offset + 1\n",
+                                         "            start = offset + 1\n            break\n"),
+    ('volatile not a qualifier',         "(?:const|volatile|&&|&|noexcept)",       "(?:const|&&|&|noexcept)"),
+    ('& not a qualifier',                "(?:const|volatile|&&|&|noexcept)",       "(?:const|volatile|&&|noexcept)"),
+    ("a scope's volatile kept",          "((?: const| volatile| &&| &)*)$",        "((?: const| &&| &)*)$"),
+    ("a scope's && kept",                "((?: const| volatile| &&| &)*)$",        "((?: const| volatile| &)*)$"),
+    ("a scope's & kept",                 "((?: const| volatile| &&| &)*)$",        "((?: const| volatile| &&)*)$"),
+    ('a space before const begins it',   r"(const|volatile|&&?)(\s|::)",           r"(const|volatile|&&?)(::)"),
+    ('a space before volatile begins it', r"(const|volatile|&&?)(\s|::)",          r"(const|&&?)(\s|::)"),
+    ('a space before && begins it',      r"(const|volatile|&&?)(\s|::)",           r"(const|volatile)(\s|::)"),
+    ('an arrow read as a bracket',       r"(?!\w)|->|[<>(){}\[\]]'",              r"(?!\w)|[<>(){}\[\]]'"),
+    ('this_type read as an object',      "parameters.startswith('this ')",        "parameters.startswith('this')"),
     ("a demangler's lines unchecked",    "if len(lines) != len(pending) + 1 or lines[-1]:", "if False:"),
     ('text after the last line read',    "if len(lines) != len(pending) + 1 or lines[-1]:",
                                          "if len(lines) != len(pending) + 1:"),
