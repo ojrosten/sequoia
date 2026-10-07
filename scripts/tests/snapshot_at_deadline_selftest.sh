@@ -410,7 +410,7 @@ run_controls() {
   # would wait out. A watcher left behind has the snapshot file's path in its
   # command line.
   fastest=
-  for trial in $(seq 1 30); do
+  for trial in $(seq 1 "$early_return_trials"); do
     start=$(tenths)
     bash "$script" 20 "$work/early.txt" "$name" -- true
     elapsed=$(($(tenths) - start))
@@ -642,11 +642,14 @@ mutant linux snapshot_at_deadline.sh 'Linux: no parents' \
   'ps -eo pid,'
 
 # Runs the controls against the scripts in <directory> until a control fails,
-# and prints that control's failure, or nothing.
+# and prints that control's failure, or nothing. The early return is tried 3
+# times, not 30. The 30 trials guard against a race which shows in only some
+# runs, which no mutant introduces, and a mutant which breaks the early return
+# fails the first trial.
 first_failure() { # first_failure <directory>
   (
     trap clean_up EXIT
-    script="$1/snapshot_at_deadline.sh" stop_at_first_failure=yes
+    script="$1/snapshot_at_deadline.sh" stop_at_first_failure=yes early_return_trials=3
     run_controls
   ) > "$tmp/mutation.log" 2>&1
   pkill -f "$1/snapshot_at_deadline.sh" 2> /dev/null
@@ -697,6 +700,6 @@ case "${1-}" in
   *)           echo "Usage: $0 [--mutations]" >&2; exit 2 ;;
 esac
 
-script=$original stop_at_first_failure=no
+script=$original stop_at_first_failure=no early_return_trials=30
 run_controls
 if [ "$fails" -eq 0 ]; then echo "snapshot_at_deadline on $platform: all controls pass"; else exit 1; fi
