@@ -29,16 +29,17 @@ name: fine-on-retarget
 # opened, synchronize or reopened event starts one that waits for approval.
 #
 # Why the dispatched run makes its own merge. Even a pull_request run would test
-# the wrong tree: GitHub's merge ref can stay merged into the old base for minutes
-# after a retarget. On scratch PR #201 the ref was still stale three minutes after
-# the retarget. The retarget's own `edited` run checked out the stale merge, and
-# so did a run started by reopening the pull request. So the dispatched fine run
-# merges the head into staging itself, through tests.yml's `merge_into`. Do not
-# close and reopen a pull request to start fine: in that window, the reopen's run
-# tests the stale merge and reports on the head commit, where the gate counts it.
+# the wrong tree: GitHub's merge ref can stay merged into the old base for
+# minutes after a retarget. On scratch PR #201 the ref was still stale three
+# minutes after the retarget. The retarget's own `edited` run checked out the
+# stale merge, and so did a run started by reopening the pull request. So the
+# dispatched fine run merges the head into staging itself, through the
+# `merge_into` input of tests.yml and coverage.yml. Do not close and reopen a
+# pull request to start fine: in that window, the reopen's run tests the stale
+# merge and reports on the head commit, where the gate counts it.
 #
 # A dispatched run builds with the head branch's workflows, not the merged ones.
-# tests.yml's merge step therefore fails the run if staging has changed .github
+# The merge step in each therefore fails the run if staging has changed .github
 # or scripts since its merge-base with the head. Otherwise the gate could pass
 # on a recipe that staging has replaced.
 #

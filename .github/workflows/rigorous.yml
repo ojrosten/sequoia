@@ -251,7 +251,7 @@ jobs:
     if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
     uses: ./.github/workflows/coverage.yml
     with:
-      needs_testing: ${{ needs.scope.outputs.suite }}
+      needs_testing: ${{ needs.scope.outputs.coverage }}
       merge_into: ''
 
   # Opens the promotion PR and sets it to merge itself once the gate is green.

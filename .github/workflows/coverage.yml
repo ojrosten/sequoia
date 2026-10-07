@@ -25,12 +25,14 @@ on:
 jobs:
   coverage:
     name: Coverage · Linux · GCC
-    # Pinned, as lcov is below, so that the Ubuntu release changes only in a
-    # PR. ubuntu-latest moves to Ubuntu 26.04 in a rollout beginning
-    # 2026-10-19. ubuntu-24.04 is the release the demangler paths below were
-    # measured on. Two things still move without a PR: GitHub rebuilds the
-    # ubuntu-24.04 image weekly, and the toolchain PPA uploads new snapshots of
-    # g++-15. A PR that moves the job to another release:
+    # Pinned, as lcov is below, so that the Ubuntu release changes only in a PR.
+    # ubuntu-latest moves to Ubuntu 26.04 in a rollout beginning 2026-10-19.
+    # ubuntu-24.04 is the release the demangler paths below were measured on.
+    # Two things still move without a PR: GitHub rebuilds the ubuntu-24.04 image
+    # weekly, and the toolchain PPA uploads new snapshots of g++-15. A snapshot
+    # with a new version number makes the gate refuse every run, in fine as in
+    # rigorous, until a PR makes the baseline again. A PR that moves the job to
+    # another release:
     #   -# changes the runs-on line;
     #   -# finds the release's demanglers, with the listing step of 36950811f,
     #      and sets LLVM_CXXFILT and GNU_CXXFILT below;
