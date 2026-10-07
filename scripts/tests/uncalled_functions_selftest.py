@@ -91,10 +91,14 @@ def tracefile(functions, path):
     return written('\n'.join(lines) + '\n', '.info')
 
 
-def fake_tool(version_line):
-    """The path of an executable which writes `version_line` to standard error
-    when asked for its version."""
-    path = written(f'#!/bin/sh\necho "{version_line}" >&2\n', '.sh')
+def fake_tool(name, version_line):
+    """The path of an executable named `name` which, asked for its version,
+    writes to standard error a line holding a path with a dotted number in it,
+    a line holding an undotted number, and then `version_line`."""
+    path = os.path.join(scratch, name)
+    with open(path, 'w', encoding='utf-8') as file:
+        file.write(f'#!/bin/sh\n{{ echo /opt/python3.12/bin/{name}; echo "{name}, build 7"; '
+                   f'echo "{version_line}"; }} >&2\n')
     os.chmod(path, os.stat(path).st_mode | stat.S_IXUSR)
     return path
 
@@ -260,7 +264,7 @@ class Keys(unittest.TestCase):
 
 class Verdict(unittest.TestCase):
     def setUp(self):
-        self.tool = fake_tool('faketool 9.9.1')
+        self.tool = fake_tool('faketool', 'faketool (built with 13.4; Fake 9.9.1-1fake1) 9.9.1-0 [r123]')
 
     def make_baseline(self, functions, path):
         status, out, err = run_main(['baseline', '--tracefile', tracefile(functions, path), '--repository', ROOT]
@@ -349,7 +353,28 @@ class Verdict(unittest.TestCase):
         self.assertEqual(status, 0)
         self.assertEqual([line for line in out.split('\n') if line.startswith('# ')],
                          ['# demangler: ' + script.version_of(demangler) for demangler in DEMANGLERS]
-                         + ['# tool: faketool 9.9.1'])
+                         + ['# tool: faketool 9.9.1-0'])
+
+    def test_a_rebuild_of_a_recorded_tool_is_accepted(self):
+        """A package revision is not recorded, so a rebuild of one release
+        compares as that release."""
+        baseline  = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
+        self.tool = fake_tool('faketool', 'faketool (built with 14.3; Fake 9.9.1-2fake1) 9.9.1-0 [r124]')
+        self.assertEqual(self.compare(baseline, tracefile([(10, [(HIDDEN, 0)])], SOURCE_FILE)), (0, '', ''))
+
+    def test_a_prerelease_of_a_recorded_tool_is_refused(self):
+        """A prerelease's date lies outside the groups, so it tells the
+        prerelease from the release."""
+        baseline  = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
+        self.tool = fake_tool('faketool', 'faketool (built with 13.4; Fake 9.9.1-1fake1) 9.9.1-0 20260101 (prerelease)')
+        self.assert_refused(self.compare(baseline, tracefile([(10, [(HIDDEN, 0)])], SOURCE_FILE)),
+                            'regenerate the baseline')
+
+    def test_a_tool_without_a_version_number_is_refused(self):
+        self.tool = fake_tool('faketool', 'faketool, no version')
+        self.assert_refused(run_main(['baseline', '--tracefile', tracefile([(10, [(HIDDEN, 0)])], SOURCE_FILE),
+                                      '--repository', ROOT] + tool_options(self.tool)),
+                            'gives no dotted version number outside a path')
 
     def assert_refused(self, result, message):
         status, out, err = result
@@ -358,7 +383,7 @@ class Verdict(unittest.TestCase):
 
     def test_a_baseline_from_another_version_of_a_recorded_tool_is_refused(self):
         baseline  = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
-        self.tool = fake_tool('faketool 9.9.2')
+        self.tool = fake_tool('faketool', 'faketool (built with 13.4; Fake 9.9.2-1fake1) 9.9.2-0 [r123]')
         self.assert_refused(self.compare(baseline, tracefile([(10, [(HIDDEN, 0)])], SOURCE_FILE)),
                             'regenerate the baseline')
 
@@ -452,7 +477,13 @@ MUTATIONS = [
     ('a headerless baseline accepted',   "if baseline_header != current_header:",
                                          "if baseline_header and baseline_header != current_header:"),
     ('versions from stdout only',        "stderr=subprocess.STDOUT",              "stderr=subprocess.DEVNULL"),
-    ('a constant version',               "return next((line", "return 'v' or next((line"),
+    ('a constant version',               "            return ' '.join(words)",  "            return 'v'"),
+    ('the whole line kept',              "words = GROUP.sub(' ', line).split()",   "words = line.split()"),
+    ('brackets kept',                    r"|\[[^\[\]]*\]')",                     "')"),
+    ('a path may hold the version',      " and '/' not in word for word",          " for word in word"),
+    ('an undotted number is a version',  r"r'\d+(?:\.\d+)+'",                       r"r'\d+(?:\.\d+)*'"),
+    ('no version accepted',              "raise Refusal(f'{tool} --version gives no dotted version number outside a path')",
+                                         "return ''"),
     ('a key before any file accepted',   "raise Refusal(f'{path}: a key precedes the first file: {line.strip()}')",
                                          "continue"),
     ('return type counts as a template', "removed = [at for at in removed if at >= components[0][1]]", "pass"),

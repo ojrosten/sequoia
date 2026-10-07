@@ -42,8 +42,8 @@ Several records can share a key, so a baseline is a multiset: a key appears
 once for each uncalled record it names.
 
 Each demangler is tried in turn, and the first to demangle a name names it. A
-baseline's header records the version of every demangler and of every
-recorded tool, and `compare` refuses a baseline whose header differs.
+baseline's header records the name and version number of every demangler and
+of every recorded tool, and `compare` refuses a baseline whose header differs.
 
 The tracefile's counts must be gcov's. With check_data_consistency on, lcov
 repairs counts whenever it reads a tracefile, and marks an uncalled lambda as
@@ -117,16 +117,30 @@ def demangle(names, demanglers):
     return demangled
 
 
-def version_of(tool):
-    """The first line of `tool --version` which holds a version number, with
-    its whitespace collapsed, or else the whole output.
+DOTTED_NUMBER = re.compile(r'\d+(?:\.\d+)+')
+GROUP         = re.compile(r'\([^()]*\)|\[[^\[\]]*\]')
 
-    The output is read from standard output and standard error together.
+
+def version_of(tool):
+    """The line of `tool --version` which names the release: the first line
+    holding a dotted number outside a path, without its parenthesised and
+    bracketed groups, and with its whitespace collapsed.
+
+    Distributions put a package revision in parentheses, as in
+    `g++-15 (Ubuntu 15.2.0-14ubuntu1~24~ppa1) 15.2.0`, so a new revision of
+    one release, which may carry fixes from the release branch, records as
+    that release: `g++-15 15.2.0`. A prerelease's date and an `-rc` suffix lie
+    outside the groups, and are kept. The vendor in a group is lost, so
+    Homebrew's and Ubuntu's builds of one gcc release record alike. The
+    output is read from standard output and standard error together.
     """
     output = subprocess.run([tool, '--version'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
                             check=True).stdout
-    lines  = [' '.join(line.split()) for line in output.split('\n')]
-    return next((line for line in lines if re.search(r'\d+\.\d+', line)), output.strip())
+    for line in output.split('\n'):
+        words = GROUP.sub(' ', line).split()
+        if any(DOTTED_NUMBER.search(word) and '/' not in word for word in words):
+            return ' '.join(words)
+    raise Refusal(f'{tool} --version gives no dotted version number outside a path')
 
 
 # ---- The key ----------------------------------------------------------------
