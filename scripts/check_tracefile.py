@@ -40,8 +40,10 @@ The exit status is 1, and an error names the first problem found, if:
      functions.
 """
 import argparse, re, sys
+from itertools import zip_longest
 
-TOTAL_RECORDS = {'FNF', 'FNH', 'LF', 'LH', 'BRF', 'BRH', 'MCF', 'MCH'}
+TOTAL_RECORDS    = {'FNF', 'FNH', 'LF', 'LH', 'BRF', 'BRH', 'MCF', 'MCH'}
+FUNCTION_RECORDS = {'FNL', 'FNA'}
 
 
 class Failure(Exception):
@@ -73,17 +75,20 @@ def read_tracefile(path):
     with open(path, encoding='utf-8', errors='surrogateescape', newline='') as tracefile:
         for number, line in enumerate(tracefile, 1):
             line = line.rstrip('\n')
-            if line.startswith('SF:'):
-                source = line[3:]
-                if source in records:
-                    raise Failure(f'{path}:{number}: {source} has a second record')
-                records[source] = []
+            if source is None:
+                if line.startswith('SF:'):
+                    source = line[3:]
+                    if source in records:
+                        raise Failure(f'{path}:{number}: {source} has a second record')
+                    records[source] = []
+                elif line and not line.startswith('TN:'):
+                    raise Failure(f'{path}:{number}: "{line}" is outside any file\'s record')
             elif line == 'end_of_record':
                 source = None
-            elif source is not None:
+            elif line.startswith('SF:'):
+                raise Failure(f'{path}:{number}: the record for {source} has no end_of_record')
+            else:
                 records[source].append(line)
-            elif line and not line.startswith('TN:'):
-                raise Failure(f'{path}:{number}: "{line}" is outside any file\'s record')
     if source is not None:
         raise Failure(f'{path}: the record for {source} has no end_of_record')
     if not records:
@@ -91,20 +96,8 @@ def read_tracefile(path):
     return records
 
 
-FUNCTION_RECORDS = {'FNL', 'FNA'}
-
-
-def record_tags(lines):
+def coverage_point_tags(lines):
     return {line.split(':', 1)[0] for line in lines} - TOTAL_RECORDS
-
-
-def has_coverage_points(lines):
-    return bool(record_tags(lines))
-
-
-def has_only_function_records(lines):
-    tags = record_tags(lines)
-    return bool(tags) and tags <= FUNCTION_RECORDS
 
 
 def check_filtering(captured, filtered, patterns):
@@ -116,10 +109,7 @@ def check_filtering(captured, filtered, patterns):
             raise Failure(f'{source} is in the filtered tracefile but not the capture')
         if removed_by(source, patterns):
             raise Failure(f'{source} matches a removal pattern but was kept')
-        captured_lines = captured[source]
-        for position in range(max(len(captured_lines), len(lines))):
-            in_capture  = captured_lines[position] if position < len(captured_lines) else '(nothing)'
-            in_filtered = lines[position]          if position < len(lines)          else '(nothing)'
+        for in_capture, in_filtered in zip_longest(captured[source], lines, fillvalue='(nothing)'):
             if in_capture != in_filtered:
                 raise Failure(f'{source}: the capture has "{in_capture}" '
                               f'where the filtered tracefile has "{in_filtered}"')
@@ -128,11 +118,12 @@ def check_filtering(captured, filtered, patterns):
     for source, lines in captured.items():
         if source in filtered:
             continue
+        tags = coverage_point_tags(lines)
         if removed_by(source, patterns):
             by_pattern += 1
-        elif not has_coverage_points(lines):
+        elif not tags:
             without_points.append(source)
-        elif has_only_function_records(lines):
+        elif tags <= FUNCTION_RECORDS:
             function_only.append(source)
         else:
             raise Failure(f'{source} has records besides function records, matches no removal pattern, '

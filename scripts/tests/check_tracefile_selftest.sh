@@ -32,7 +32,8 @@
 #     that counted functions by their FNL index instead would disagree with
 #     lcov;
 #   - malformed input fails, and the error gives the file and line: a second
-#     record for one file, a record with no end, no records, and a line outside
+#     record for one file, a record with no end, whether at the end of the
+#     file or before the next file's record, no records, and a line outside
 #     any file's record other than a test name or a blank line;
 #   - a file which cannot be read fails with an error rather than a traceback;
 #   - each option is required, and --removed needs at least one pattern;
@@ -278,6 +279,13 @@ malformed_controls() {
   reset; edit filtered '/^end_of_record$/d'
   run "a record with no end is named" 1 'filtered: the record for /src/a.cpp has no end_of_record'
 
+  reset; edit capture '18d'
+  run "a record which the next file's record interrupts is named" 1 \
+      'capture:18: the record for /src/a.cpp has no end_of_record'
+
+  reset; printf 'end_of_record\n' >> "$tmp/filtered"
+  run "an end of record outside any file is named" 1 'filtered:18: "end_of_record" is outside any file'
+
   reset; printf 'TN:\n' > "$tmp/filtered"
   run "a tracefile with no records is named" 1 'filtered has no file records'
 
@@ -358,7 +366,7 @@ mutants() { # mutants <dir>: writes <dir>/<n>/check_tracefile.py, and
             # prints a line "<n> <occurrences of the old text> <description>"
   python3 - "$script" "$1" <<'EOF'
 import os, sys
-TOTALS    = "TOTAL_RECORDS = {'FNF', 'FNH', 'LF', 'LH', 'BRF', 'BRH', 'MCF', 'MCH'}"
+TOTALS    = "TOTAL_RECORDS    = {'FNF', 'FNH', 'LF', 'LH', 'BRF', 'BRH', 'MCF', 'MCH'}"
 FUNCTIONS = "FUNCTION_RECORDS = {'FNL', 'FNA'}"
 MUTATIONS = [
     *((f'{total} not a total', TOTALS, TOTALS.replace(f"'{total}'", "'XX'"))
@@ -380,10 +388,13 @@ MUTATIONS = [
     ('end_of_record ignored',            "elif line == 'end_of_record':\n                source = None",
                                          "elif line == 'end_of_record':\n                pass"),
     ('a stray line accepted',            "elif line and not line.startswith('TN:'):", "elif False:"),
+    ('a stray end of record accepted',   "elif line and not line.startswith('TN:'):",
+                                         "elif line and not line.startswith('TN:') and line != 'end_of_record':"),
     ('a test name refused',              "elif line and not line.startswith('TN:'):", "elif line:"),
     ('a blank line refused',             "elif line and not line.startswith('TN:'):",
                                          "elif not line.startswith('TN:'):"),
     ('an open record accepted',          "    if source is not None:\n        raise", "    if False:\n        raise"),
+    ('an interrupted record accepted',   "elif line.startswith('SF:'):", "elif False:"),
     ('no records accepted',              "if not records:", "if False:"),
     ('line numbers from 0',              "enumerate(tracefile, 1)", "enumerate(tracefile)"),
     ('a tracefile read as UTF-8',        "encoding='utf-8', errors='surrogateescape', newline=''",
@@ -398,16 +409,16 @@ MUTATIONS = [
     ('a kept file need not be captured', "if source not in captured:", "if False:"),
     ('a kept file may match a pattern',  "        if removed_by(source, patterns):\n            raise",
                                          "        if False:\n            raise"),
-    ('records compared to the shorter',  "max(len(captured_lines), len(lines))",
-                                         "min(len(captured_lines), len(lines))"),
+    ('records compared to the shorter',  "zip_longest(captured[source], lines, fillvalue='(nothing)')",
+                                         "zip(captured[source], lines)"),
     ('a changed record accepted',        "if in_capture != in_filtered:", "if False:"),
     ('removals by pattern uncounted',    "by_pattern += 1", "pass"),
     ('a pattern second to no points',    "        if removed_by(source, patterns):\n            by_pattern += 1",
-                                         "        if removed_by(source, patterns) and has_coverage_points(lines):"
+                                         "        if removed_by(source, patterns) and tags:"
                                          "\n            by_pattern += 1"),
-    ('a file without points refused',    "elif not has_coverage_points(lines):", "elif False:"),
-    ('a function-only file refused',     "elif has_only_function_records(lines):", "elif False:"),
-    ('any dropped file accepted',        "elif has_only_function_records(lines):", "elif True:"),
+    ('a file without points refused',    "elif not tags:", "elif False:"),
+    ('a function-only file refused',     "elif tags <= FUNCTION_RECORDS:", "elif False:"),
+    ('any dropped file accepted',        "elif tags <= FUNCTION_RECORDS:", "elif True:"),
     ('without points unsorted',          "sorted(without_points)", "without_points"),
     ('function-only unsorted',           "sorted(function_only)", "function_only"),
     ('a figure only on the first line',  "re.MULTILINE)", "0)"),
