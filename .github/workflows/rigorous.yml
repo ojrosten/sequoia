@@ -307,10 +307,11 @@ jobs:
           # to read gcov's output.
           packages=(g++-15 ninja-build libtbb-dev
                     libcapture-tiny-perl libdatetime-perl libdevel-stacktrace-perl libjson-xs-perl libtimedate-perl)
-          # Exact names, with the whole list read: tests.yml's "Install the
-          # toolchain (Linux)" says why.
+          # Read once and searched by exact name, as in tests.yml's "Install
+          # the toolchain (Linux)", which says why.
+          names=$(apt-cache pkgnames)
           for pkg in "${packages[@]}"; do
-            apt-cache pkgnames | grep -Fx -- "$pkg" > /dev/null \
+            grep -qFx -- "$pkg" <<< "$names" \
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
           sudo apt-get install -y "${packages[@]}"
