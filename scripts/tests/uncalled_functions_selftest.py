@@ -6,9 +6,12 @@ check of the controls.
 
 Without --mutations, the selftest runs the controls. With it, the selftest runs
 the controls against the script and against each mutant of the script. The
-script must fail no control, and each mutant at least one; the last line then
-reads "uncalled_functions.py: <N> mutants, every one killed". Otherwise the
-selftest exits with status 1.
+script must fail no control, and each mutant at least one. The last line gives
+the verdict:
+  -# "uncalled_functions.py: <N> mutants, every one killed", with status 0;
+  -# otherwise, the number of mutants which survived, or the unmutated
+     script's failures, with status 1. A failure of the unmutated script stops
+     the run. A mutant whose text is not found exactly once survives.
 
 The demanglers are given in the order the script is to try them. The expected
 keys are llvm-cxxfilt's and GNU c++filt's spellings, which agree on every name
@@ -745,17 +748,25 @@ def run_controls(source):
 
 def mutations():
     failures, total = run_controls(SOURCE)
-    print(f'unmutated: {failures} of {total} controls fail' + ('' if failures == 0 else '  <-- must be none'))
-    flawed = failures != 0 or total == 0
+    if total == 0 or not MUTATIONS:
+        print(f'uncalled_functions.py: {total} controls and {len(MUTATIONS)} mutants were found')
+        return 1
+    if failures:
+        print(f'uncalled_functions.py: the unmutated script fails {failures} of {total} controls')
+        return 1
+    print(f'unmutated: 0 of {total} controls fail')
+    survivors = 0
     for description, old, new in MUTATIONS:
         if SOURCE.count(old) != 1:
-            print(f'{description}: the text to mutate occurs {SOURCE.count(old)} times')
-            flawed = True
+            print(f'{description}: the text to mutate occurs {SOURCE.count(old)} times, so the mutant is not run'
+                  '  <-- SURVIVED')
+            survivors += 1
             continue
         failures, total = run_controls(SOURCE.replace(old, new))
         print(f'{description}: {failures} of {total} controls fail' + ('' if failures else '  <-- SURVIVED'))
-        flawed |= failures == 0
-    if flawed or not MUTATIONS:
+        survivors += failures == 0
+    if survivors:
+        print(f'uncalled_functions.py: {survivors} of {len(MUTATIONS)} mutants survived')
         return 1
     print(f'uncalled_functions.py: {len(MUTATIONS)} mutants, every one killed')
     return 0
