@@ -306,11 +306,12 @@ run_controls() {
 
   clean_up
 
-  # A command which ends before the deadline, many times over, since what went
-  # wrong before was a race. The deadline is one no other control uses, so that
-  # a watcher left behind can be looked for by its command line, and short, so
-  # that a watcher which never learns the command has ended costs one slow
-  # return rather than hanging this.
+  # A command which ends before the deadline, many times over, since a race
+  # between the command's end and the watcher would show in only some runs.
+  # The deadline is one no other control uses, so that a watcher left behind
+  # can be found by its command line. The deadline is short, so that a watcher
+  # which never learns the command has ended costs one slow return rather than
+  # hanging the selftest.
   for trial in $(seq 1 30); do
     start=$SECONDS
     bash "$script" 20 "$work/early.txt" "$name" -- true
@@ -324,9 +325,11 @@ run_controls() {
     || fail "a command ending before the deadline left its watcher running"
 
   # The script killed outright, as a cancelled step kills it, before a deadline
-  # three seconds off. It goes first, so that it cannot see its command end and
-  # tell the watcher; the command is then killed as the step's would be. Its
-  # temporary directory is put under this one, which a kill -9 leaves behind.
+  # three seconds off. The script is killed before its command, so that the
+  # script cannot see the command end and tell the watcher. The command is then
+  # killed, as the step would kill it. TMPDIR puts the script's temporary
+  # directory under this control's, since a kill -9 leaves the directory
+  # behind.
   TMPDIR=$work bash "$script" 3 "$work/killed.txt" "$name" -- sleep 30 &
   killed=$!
   started="$started $killed"

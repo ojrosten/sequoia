@@ -1,21 +1,31 @@
 #!/bin/bash
-# Usage: snapshot_at_deadline.sh <seconds> <snapshot file> <executable name> -- <command>...
+# Usage: snapshot_at_deadline.sh <seconds> <snapshot file> <executable name>
+#                                -- <command>...
 #
-# Runs <command> and returns its exit status. If it is still running after
-# <seconds>, writes to <snapshot file> what the machine is doing: every process,
-# with its parent and command line, followed by the stack of every thread of
-# each process running <executable name>. A snapshot begun is finished before
-# this returns, so a caller never reads half of one; a command which ends
-# before the deadline leaves no file.
+# Runs <command> and returns its exit status. <command> has the script's
+# standard input, output and error. If <command> is still running after
+# <seconds>, the script writes to <snapshot file> what the machine is doing:
+#   - every process, with its parent and command line;
+#   - the stack of every thread of each process named <executable name>.
+# The script begins the snapshot within a second of the deadline, and finishes
+# it before returning, so a caller never reads half of one. A command which
+# ends more than a second before the deadline leaves no file.
 #
-# For a suite that hangs. A step timeout kills the suite without a word, and a
-# suite which reports only at the end of a run leaves nothing in its log to say
-# where it stopped. The process list tells a hung child process (a build, a git
-# command) from a test stuck in the suite itself, and the stacks say which test.
+# <seconds> is a positive whole number with no leading zero. The script refuses
+# arguments of any other form with status 2, before running <command>. On
+# Linux, a process's name is the first fifteen characters of its executable's
+# name, so a longer <executable name> matches no process.
 #
-# Every part of the snapshot which could not be taken says so, and why, rather
-# than being absent: an empty stack section would otherwise read as a process
-# with no threads.
+# The script exists for a suite which hangs. A step timeout kills such a suite
+# without a word, and a suite which reports only at the end of a run leaves
+# nothing in its log to say where it stopped. The process list tells a hung
+# child process, such as a build or a git command, from a test stuck in the
+# suite itself, and the stacks say which test.
+#
+# Where the script cannot take a part of the snapshot, the snapshot says why:
+# in a line naming the tool which is absent, or in the complaint of the tool
+# which failed. So an empty stacks section never reads as a process with no
+# threads.
 
 set -u
 
@@ -27,10 +37,12 @@ fi
 seconds=$1 snapshot=$2 name=$3
 shift 4
 
-# A deadline which is not a positive whole number would otherwise pass in silence:
-# no snapshot for one the arithmetic cannot read, one at once for zero or less.
+# A deadline must be a positive whole number with no leading zero. Any other
+# would pass in silence: a deadline the arithmetic cannot read gives no
+# snapshot, zero or less gives one at once, and a leading zero makes the
+# arithmetic read the deadline as octal.
 if ! [[ $seconds =~ ^[1-9][0-9]*$ ]]; then
-  echo "$0: <seconds> must be a positive whole number, not '$seconds'" >&2
+  echo "$0: <seconds> must be a positive whole number with no leading zero, not '$seconds'" >&2
   exit 2
 fi
 
@@ -45,9 +57,9 @@ case "$(uname -s)" in
   *)                    platform=linux   ;;
 esac
 
-# On Windows both the listing and the search go through PowerShell, since the
-# debugger takes Windows process ids, which Git Bash's ps does not show by
-# default.
+# On Windows, PowerShell both lists the processes and finds those with the
+# name, since cdb takes Windows process ids, which Git Bash's ps does not show
+# by default.
 list_processes() {
   case $platform in
     windows) powershell -NoProfile -Command \
@@ -64,9 +76,10 @@ find_processes() {
   esac
 }
 
-# cdb's -pv attaches without stopping the process for good, and `q` then detaches
-# rather than killing it. Linux restricts attaching to a process which is not a
-# child, hence sudo where it can be had without a password.
+# cdb's -pv attaches without stopping the process for good, and `q` then
+# detaches rather than killing the process. Ubuntu's kernel lets gdb attach
+# only to gdb's own descendants unless gdb runs as root, so gdb runs through
+# sudo where sudo needs no password.
 dump_stacks() { # dump_stacks <pid>
   case $platform in
     windows)
@@ -115,13 +128,14 @@ take_snapshot() {
   echo "Snapshot finished at $(date -u +%Y-%m-%dT%H:%M:%SZ)."
 }
 
-# The watcher is told the command has ended by a file, and looks for it once a
-# second. Stopping it by signal is racy: a signal arriving before the watcher's
-# trap is set, or between its sleep starting and that sleep's id being known,
-# is lost or leaves the sleep running. It also stops if this script has gone, so that a
-# cancelled step does not leave it to take a snapshot of nothing. The cost is
-# that the deadline is kept to within a second, and that a command ending in
-# that second may still be snapshotted.
+# The watcher stops when a file says the command has ended, or when the script
+# has gone. A cancelled step kills the script, and the watcher would otherwise
+# take a snapshot nobody waits for. The watcher looks for both once a second,
+# rather than being stopped by a signal: a signal arriving before the
+# watcher's trap is set is lost, and one arriving between a sleep's start and
+# the watcher learning the sleep's id leaves the sleep running. So the script
+# returns up to a second after the command ends, and a command which ends in
+# the deadline's last second may still be snapshotted.
 watch_for_deadline() {
   local deadline=$((SECONDS + seconds))
   while [ "$SECONDS" -lt "$deadline" ]; do
