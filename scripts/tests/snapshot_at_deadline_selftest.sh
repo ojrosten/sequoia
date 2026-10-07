@@ -22,9 +22,9 @@
 #   - the command's exit status is the script's, zero or not, before the
 #     deadline and after it;
 #   - the command reads the script's standard input and writes to its standard
-#     output and error;
-#   - a command which ends before the deadline returns within 2.5 seconds,
-#     leaves no snapshot and leaves no watcher behind;
+#     output and error, and runs in the caller's process group;
+#   - a command which ends before the deadline returns at once, leaves no
+#     snapshot, and leaves neither the watcher nor its sleep behind;
 #   - a command which ends while the watcher sleeps through the deadline
 #     leaves no snapshot;
 #   - a watcher whose script has been killed stops, rather than taking a
@@ -219,7 +219,7 @@ fake_tool "$tmp/linux-nosudo" gdb   "$gdb_stand_in"
 # Every tool the script runs, and no gdb. The script asks for sudo only once
 # it has found gdb.
 fake_tool "$tmp/linux-nogdb"  uname 'echo Linux'
-for tool in dirname mktemp rm touch sleep date ps pgrep; do
+for tool in dirname mktemp mkdir rm touch sleep date ps pgrep; do
   ln -s "$(command -v "$tool")" "$tmp/linux-nogdb/$tool" \
     || { echo "FAIL: cannot find $tool"; exit 1; }
 done
@@ -288,11 +288,18 @@ run_controls() {
   check "the command reads standard input and writes standard output" yes "^to the command$" "$work/streams.out"
   check "the command writes standard error"                            yes "^to error$"       "$work/streams.err"
 
-  # A command which ends while the watcher sleeps through the deadline. A
-  # stand-in for sleep holds the watcher's one-second sleep until the deadline
-  # has passed and the command has ended, so the watcher wakes past the
-  # deadline to find the command ended. The deadline is 2 s, so that the
-  # watcher is not already past the deadline when it first looks.
+  # The command runs in the caller's process group, as it would without the
+  # script.
+  bash "$script" 30 "$work/group.txt" "$name" -- sh -c 'ps -o pgid= -p $$' > "$work/group.out"
+  check "the command runs in the caller's process group" yes \
+    "^ *$(ps -o pgid= -p $$ | tr -d ' ')\$" "$work/group.out"
+
+  # A command which ends after the deadline has passed, while the watcher
+  # sleeps. A stand-in for sleep holds the watcher's one-second sleep until
+  # the command has ended. The watcher must not snapshot: the script either
+  # ends it, or the watcher wakes to find the snapshot claimed. The deadline is
+  # 2 s, so that the watcher is not already past the deadline when it first
+  # looks.
   mkdir "$work/sleeping"
   env PATH="$tmp/sleeping:$PATH" TMPDIR="$work/sleeping" SLEEP_RELEASE="$work/sleeping.wake" \
     "$BASH" "$script" 2 "$work/sleeping.txt" "$name" -- "$tmp/held" "$work/sleeping.release" &
@@ -301,7 +308,7 @@ run_controls() {
   sleep 2.5
   touch "$work/sleeping.release"
   for poll in $(seq 1 50); do
-    [ -z "$(find "$work/sleeping" -name finished)" ] || break
+    [ -z "$(find "$work/sleeping" -name claim)" ] || break
     sleep 0.1
   done
   touch "$work/sleeping.wake"
@@ -397,28 +404,50 @@ run_controls() {
 
   # A command which ends before the deadline, many times over, since a race
   # between the command's end and the watcher would show in only some runs.
-  # The watcher looks once a second, so the bound on the return leaves a margin
-  # of more than a second. The deadline is short, so that a watcher which never
-  # learns the command has ended costs one slow return rather than hanging the
-  # selftest. A watcher left behind has the snapshot file's path in its command
-  # line.
+  # The fastest trial shows whether the script returns at once, whatever the
+  # runner's load. Every trial must return within 0.9 s, short of the
+  # watcher's one-second sleep, which a script that waits for the watcher
+  # would wait out. A watcher left behind has the snapshot file's path in its
+  # command line.
+  fastest=
   for trial in $(seq 1 30); do
     start=$(tenths)
     bash "$script" 20 "$work/early.txt" "$name" -- true
     elapsed=$(($(tenths) - start))
-    if [ "$elapsed" -gt 25 ]; then
+    [ -n "$fastest" ] && [ "$fastest" -le "$elapsed" ] || fastest=$elapsed
+    if [ "$elapsed" -gt 9 ]; then
       fail "a command ending before the deadline took $((elapsed / 10)).$((elapsed % 10))s to return"
       break
     fi
   done
+  [ "$fastest" -le 5 ] \
+    || fail "a command ending at once took $((fastest / 10)).$((fastest % 10))s to return, at the fastest"
   [ ! -e "$work/early.txt" ] || fail "a command ending before the deadline left a snapshot"
   ! pgrep -f "$work/early.txt" > /dev/null \
     || fail "a command ending before the deadline left its watcher running"
 
+  # The watcher's sleep ends with the script. A stand-in for sleep marks that
+  # it ran, and runs the real sleep as its child, so that the stand-in's
+  # command line names it. The command lasts long enough for the watcher to
+  # begin its sleep. The stand-in is the run's own, so that no other run's
+  # sleep is taken for this one's.
+  fake_tool "$work/marked" sleep "touch \"\$SLEEP_MARK\"
+$real_sleep \"\$@\""
+  env PATH="$work/marked:$PATH" SLEEP_MARK="$work/slept" \
+    "$BASH" "$script" 30 "$work/marked.txt" "$name" -- "$real_sleep" 0.3
+  if [ ! -e "$work/slept" ]; then
+    fail "the watcher never slept, so the end of its sleep could not be checked"
+  fi
+  for poll in 1 2 3 4 5; do
+    pgrep -f "$work/marked/sleep" > /dev/null || break
+    sleep 0.1
+  done
+  ! pgrep -f "$work/marked/sleep" > /dev/null || fail "the watcher's sleep outlived the script"
+
   # The script killed outright, as a cancelled step kills it, before a deadline
   # three seconds off. The control waits until the script has started both its
   # watcher and its command. It kills the script before the command, so that
-  # the script cannot see the command end and tell the watcher, and then kills
+  # the script cannot see the command end and end the watcher, and then kills
   # the command, as the step would. The watcher must be gone well before the
   # deadline. TMPDIR puts the script's temporary directory under this
   # control's, since a kill -9 leaves the directory behind.
@@ -485,15 +514,27 @@ mutant any snapshot_at_deadline.sh 'stdout discarded' \
 mutant any snapshot_at_deadline.sh 'stdin withheld' \
   $'"$@"\nstatus' \
   $'"$@" < /dev/null\nstatus'
-mutant any snapshot_at_deadline.sh 'the end not signalled' \
-  'touch "$finished"' \
+mutant any snapshot_at_deadline.sh 'the watcher not ended' \
+  '{ kill -TERM -- -"$watcher" || kill -TERM "$watcher"; } 2> /dev/null' \
   ':'
-mutant any snapshot_at_deadline.sh 'the end not looked for' \
-  '[ -e "$finished" ] || ' \
+mutant any snapshot_at_deadline.sh "the watcher's sleep left" \
+  'kill -TERM -- -"$watcher" || ' \
   ''
+mutant any snapshot_at_deadline.sh 'no process group' \
+  $'set -m\nwatch_for_deadline' \
+  $':\nwatch_for_deadline'
+mutant any snapshot_at_deadline.sh 'job control left on' \
+  'set +m' \
+  ':'
+mutant any snapshot_at_deadline.sh 'the script claims nothing' \
+  'if mkdir "$claim" 2> /dev/null; then' \
+  'if true; then'
+mutant any snapshot_at_deadline.sh 'the watcher claims nothing' \
+  'mkdir "$claim" 2> /dev/null && take_snapshot' \
+  'take_snapshot'
 mutant any snapshot_at_deadline.sh 'an orphan keeps watching' \
-  ' || ! kill -0 $$ 2> /dev/null' \
-  ''
+  'while kill -0 $$ 2> /dev/null; do' \
+  'while :; do'
 mutant any snapshot_at_deadline.sh 'the watcher not waited for' \
   'wait "$watcher"' \
   ':'
@@ -575,9 +616,6 @@ mutant any snapshot_at_deadline.sh 'no trial creation' \
 mutant any snapshot_at_deadline.sh 'the trial file kept' \
   'rm -f "$snapshot"' \
   ':'
-mutant any snapshot_at_deadline.sh 'no look before the snapshot' \
-  'while :; do' \
-  'while [ "$SECONDS" -lt "$deadline" ]; do'
 mutant any snapshot_at_deadline.sh 'TMPDIR ignored' \
   'mktemp -d "${TMPDIR:-/tmp}/snapshot_at_deadline.XXXXXX"' \
   'mktemp -d'

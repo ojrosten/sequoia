@@ -9,7 +9,8 @@
 #   - the stack of every thread of each process named <executable name>.
 # The script begins the snapshot within a second of the deadline, and finishes
 # it before returning, so a caller never reads half of one. A command which
-# ends more than a second before the deadline leaves no file.
+# ends more than a second before the deadline leaves no file. When <command>
+# ends with no snapshot under way, the script returns at once.
 #
 # <seconds> is a positive whole number with no leading zero. <snapshot file>
 # is a path at which the script can create a file, and at which nothing
@@ -142,41 +143,49 @@ take_snapshot() {
   echo "Snapshot finished at $(date -u +%Y-%m-%dT%H:%M:%SZ)."
 }
 
-# The watcher stops when a file says the command has ended, or when the script
-# has gone. A cancelled step kills the script, and the watcher would otherwise
-# take a snapshot nobody waits for. The watcher looks for both once a second,
-# rather than being stopped by a signal: a signal arriving before the
-# watcher's trap is set is lost, and one arriving between a sleep's start and
-# the watcher learning the sleep's id leaves the sleep running. So the script
-# returns up to a second after the command ends. The watcher looks for the
-# file once more immediately before the snapshot. $SECONDS counts whole
-# seconds, so the snapshot begins within a second of the deadline, and a
-# command which ends in the second before the deadline may still be
-# snapshotted.
+# The snapshot goes to whichever claims it first, by creating the claim
+# directory: the watcher at the deadline, or the script when the command ends.
+# mkdir is atomic, so exactly one claim succeeds. If the script's succeeds, no
+# snapshot is under way, and the script ends the watcher at once. The watcher
+# runs in a process group of its own, so killing the group takes the
+# watcher's sleep with it, although the script never learns the sleep's id.
+# Where the group cannot be killed, killing the watcher alone leaves its sleep
+# to end within a second.
+#
+# The watcher also stops if the script has gone. A cancelled step kills the
+# script, and the watcher would otherwise take a snapshot nobody waits for.
+# $SECONDS counts whole seconds, so the snapshot begins within a second of the
+# deadline, and a command which ends in the second before the deadline may
+# still be snapshotted.
 watch_for_deadline() {
   local deadline=$((SECONDS + seconds))
-  while :; do
-    if [ -e "$finished" ] || ! kill -0 $$ 2> /dev/null; then
+  while kill -0 $$ 2> /dev/null; do
+    if [ "$SECONDS" -ge "$deadline" ]; then
+      mkdir "$claim" 2> /dev/null && take_snapshot > "$snapshot" 2>&1
       return
     fi
-    [ "$SECONDS" -lt "$deadline" ] || break
     sleep 1
   done
-  take_snapshot > "$snapshot" 2>&1
 }
 
 # The template puts the directory under TMPDIR, which macOS's `mktemp -d`
 # ignores when given no template.
 flag_dir=$(mktemp -d "${TMPDIR:-/tmp}/snapshot_at_deadline.XXXXXX") || exit 2
-finished="$flag_dir/finished"
+claim="$flag_dir/claim"
 
+# Job control gives the watcher a process group of its own. It is off again
+# before the command runs, so the command runs as it would without the script.
+set -m
 watch_for_deadline < /dev/null > /dev/null 2>&1 &
 watcher=$!
+set +m
 
 "$@"
 status=$?
 
-touch "$finished"
-wait "$watcher"
+if mkdir "$claim" 2> /dev/null; then
+  { kill -TERM -- -"$watcher" || kill -TERM "$watcher"; } 2> /dev/null
+fi
+wait "$watcher" 2> /dev/null
 rm -rf "$flag_dir"
 exit "$status"
