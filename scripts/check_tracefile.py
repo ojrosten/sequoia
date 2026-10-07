@@ -24,18 +24,20 @@ counts of its records. Lines found are its DA records, and lines hit are
 those with a non-zero count. Functions found are its FNA records, and
 functions hit are those with a non-zero count.
 
-If both checks pass, the first line of the output counts the files kept,
-those removed by a pattern and those with no coverage points, and gives the
-summary's figures. The files with no coverage points are then listed, and
-then those with function records but no line records. Each list is sorted,
-and has a heading giving its count. No figure drawn from the filtered
-tracefile covers the files listed.
+If both checks pass, the first line of the output names the filtered
+tracefile. It counts the files of the capture, then those kept, those removed
+by a pattern, those with no coverage points and those with function records
+but no line records, and gives the summary's figures. The files with no
+coverage points are then listed, and then those with function records but no
+line records. Each list is sorted, and has a heading giving its count. No
+figure drawn from the filtered tracefile covers the files listed.
 
 The exit status is 1, and an error names the first problem found, if:
   -# either check fails;
   -# a tracefile cannot be read, has no file's record, has two records for
-     one file, has a record with no end_of_record, or has a line outside
-     any file's record other than a test name or a blank line;
+     one file, has a record with no end_of_record, has a DA or FNA record
+     whose count is not an integer, or has a line outside any file's record
+     other than a test name or a blank line;
   -# the summary cannot be read, or has no figure for lines or for
      functions.
 """
@@ -44,6 +46,7 @@ from itertools import zip_longest
 
 TOTAL_RECORDS    = {'FNF', 'FNH', 'LF', 'LH', 'BRF', 'BRH', 'MCF', 'MCH'}
 FUNCTION_RECORDS = {'FNL', 'FNA'}
+COUNTED_RECORDS  = ('DA:', 'FNA:')
 
 
 class Failure(Exception):
@@ -88,6 +91,8 @@ def read_tracefile(path):
             elif line.startswith('SF:'):
                 raise Failure(f'{path}:{number}: the record for {source} has no end_of_record')
             else:
+                if line.startswith(COUNTED_RECORDS) and not re.fullmatch(r'[^,]*,-?\d+(,.*)?', line):
+                    raise Failure(f'{path}:{number}: "{line}" has no integer count')
                 records[source].append(line)
     if source is not None:
         raise Failure(f'{path}: the record for {source} has no end_of_record')
@@ -100,6 +105,10 @@ def coverage_point_tags(lines):
     return {line.split(':', 1)[0] for line in lines} - TOTAL_RECORDS
 
 
+def quoted(record):
+    return '(nothing)' if record is None else f'"{record}"'
+
+
 def check_filtering(captured, filtered, patterns):
     """The number of files removed by a pattern, the sorted list of those
     dropped for having no coverage points, and the sorted list of those
@@ -109,10 +118,10 @@ def check_filtering(captured, filtered, patterns):
             raise Failure(f'{source} is in the filtered tracefile but not the capture')
         if removed_by(source, patterns):
             raise Failure(f'{source} matches a removal pattern but was kept')
-        for in_capture, in_filtered in zip_longest(captured[source], lines, fillvalue='(nothing)'):
+        for in_capture, in_filtered in zip_longest(captured[source], lines):
             if in_capture != in_filtered:
-                raise Failure(f'{source}: the capture has "{in_capture}" '
-                              f'where the filtered tracefile has "{in_filtered}"')
+                raise Failure(f'{source}: the capture has {quoted(in_capture)} '
+                              f'where the filtered tracefile has {quoted(in_filtered)}')
 
     by_pattern, without_points, function_only = 0, [], []
     for source, lines in captured.items():
@@ -186,7 +195,8 @@ def main():
         print(f'error: {error}', file=sys.stderr)
         return 1
     print(f'{arguments.filtered}: {len(filtered)} of {len(captured)} captured files kept unchanged; '
-          f'{by_pattern} removed by pattern, {len(without_points)} with no coverage points. '
+          f'{by_pattern} removed by pattern, {len(without_points)} with no coverage points, '
+          f'{len(function_only)} with function records but no line records. '
           f'lcov --summary agrees with the records: {figures["lines"][0]} of {figures["lines"][1]} lines, '
           f'{figures["functions"][0]} of {figures["functions"][1]} functions')
     for heading, sources in (('no coverage points',                   without_points),

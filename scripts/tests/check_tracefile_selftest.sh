@@ -14,8 +14,8 @@
 #   - a count changed by the read fails, in either direction: a lambda's FNA
 #     raised from 0, which is what lcov 2.5's consistency repair does, and a
 #     function's FNA lowered to 0. So do a changed line count, a record added,
-#     a record lost, and a carriage return added, since records are compared
-#     byte for byte;
+#     a record lost, even one which reads "(nothing)", and a carriage return
+#     added, since records are compared byte for byte;
 #   - a file dropped although it has records besides function records fails:
 #     one with line records none of which was hit, and one with line records
 #     beside function records;
@@ -32,10 +32,12 @@
 #     function with two aliases, one hit, because lcov counts aliases: a check
 #     that counted functions by their FNL index instead would disagree with
 #     lcov;
-#   - malformed input fails, and the error gives the file and line: a second
-#     record for one file, a record with no end, whether at the end of the
-#     file or before the next file's record, no records, and a line outside
-#     any file's record other than a test name or a blank line;
+#   - malformed input fails, and the error names the file: a second record
+#     for one file, a record with no end, whether at the end of the file or
+#     before the next file's record, no records, a DA or FNA record with no
+#     integer count, and a line outside any file's record other than a test
+#     name or a blank line. Each error but those for a record left open at
+#     the end of the file and for no records gives the line too;
 #   - a file which cannot be read fails with an error rather than a traceback;
 #   - each option is required, and --removed needs at least one pattern;
 #   - bytes which are not UTF-8 pass through as themselves. A clean pair with
@@ -170,7 +172,8 @@ functionOnly='Dropped by lcov for having function records but no line records'
 
 clean_controls() {
   reset
-  run "a clean pair passes" 0 "1 of 4 captured files kept unchanged; 2 removed by pattern, 1 with no coverage points"
+  run "a clean pair passes" 0 \
+      "1 of 4 captured files kept unchanged; 2 removed by pattern, 1 with no coverage points, 0 with function"
   run "a clean pair reports the figures" 0 "4 of 4 lines, 2 of 4 functions"
   run "a clean pair lists no function-only files" 0 \
       "Dropped by lcov for having function records but no line records: 0 files"
@@ -194,7 +197,8 @@ dropped_controls() {
   reset
   printf '%s\n' SF:/src/z.hpp FNL:0,30 FNA:0,15,_ZN1zC2ERKS_ FNF:1 FNH:1 LF:0 LH:0 end_of_record >> "$tmp/capture"
   printf '%s\n' SF:/src/b.hpp FNL:0,12 FNA:0,0,_ZN1b1fEv     FNF:1 FNH:0 LF:0 LH:0 end_of_record >> "$tmp/capture"
-  run "dropped function-only files pass" 0 "1 of 6 captured files kept unchanged"
+  run "dropped function-only files pass" 0 \
+      "1 of 6 captured files kept unchanged; 2 removed by pattern, 1 with no coverage points, 2 with function"
   listed "dropped function-only files are listed, sorted, under a count" \
          "$noPoints: 1 files" '  /src/empty.hpp' "$functionOnly: 2 files" '  /src/b.hpp' '  /src/z.hpp'
 
@@ -222,21 +226,26 @@ record_controls() {
   reset; edit filtered 's/^LH:4$/LH:4\
 DA:9,0/'; edit summary 's/(4 of 4 lines)/(4 of 5 lines)/'
   run "a record the capture lacks is named" 1 \
-      'the capture has "\(nothing\)" where the filtered tracefile has "DA:9,0"'
+      'the capture has \(nothing\) where the filtered tracefile has "DA:9,0"'
 
   reset; edit filtered '/^LH:4$/d'
-  run "a lost record is named" 1 'the capture has "LH:4" where the filtered tracefile has "\(nothing\)"'
+  run "a lost record is named" 1 'the capture has "LH:4" where the filtered tracefile has \(nothing\)'
 
-  reset; edit filtered $'s/^DA:2,2$/DA:2,2\r/'
+  reset; edit capture 's/^LH:4$/LH:4\
+(nothing)/'
+  run "a lost record which reads (nothing) is named" 1 \
+      'the capture has "\(nothing\)" where the filtered tracefile has \(nothing\)'
+
+  reset; edit filtered $'s/^FNL:0,1,3$/FNL:0,1,3\r/'
   run "a carriage return the capture lacks is named" 1 \
-      $'the capture has "DA:2,2" where the filtered tracefile has "DA:2,2\r"'
+      $'the capture has "FNL:0,1,3" where the filtered tracefile has "FNL:0,1,3\r"'
 
   reset
   capture | awk '/^SF:\/usr\/include\/x\.h$/{p=1} p{print} p && /^end_of_record$/{exit}' >> "$tmp/filtered"
   edit summary 's/(4 of 4 lines)/(5 of 5 lines)/'
   run "a kept file a pattern removes is named" 1 '/usr/include/x.h matches a removal pattern but was kept'
 
-  reset; edit filtered 's|^SF:/src/a.cpp$|SF:/src/c.cpp|'
+  reset; printf '%s\n' SF:/src/c.cpp LF:0 LH:0 end_of_record >> "$tmp/filtered"
   run "a file absent from the capture is named" 1 '/src/c.cpp is in the filtered tracefile but not the capture'
 }
 
@@ -296,6 +305,13 @@ malformed_controls() {
   reset; edit filtered '1i\
 DA:1,1'
   run "a record outside any file is named" 1 'filtered:1: "DA:1,1" is outside any file'
+
+  reset; edit filtered 's/^DA:1,2$/DA:1/'
+  run "a line record with no count is named" 1 'filtered:11: "DA:1" has no integer count'
+
+  reset; edit filtered 's/^FNA:0,2,/FNA:0,x,/'
+  run "a function record whose count is not an integer is named" 1 \
+      'filtered:3: "FNA:0,x,_Z1fv" has no integer count'
 
   reset; printf '\n' >> "$tmp/capture"
   run "a blank line outside any file passes" 0 "1 of 4 captured files kept unchanged"
@@ -401,6 +417,8 @@ MUTATIONS = [
     ('an interrupted record accepted',   "elif line.startswith('SF:'):", "elif False:"),
     ('no records accepted',              "if not records:", "if False:"),
     ('line numbers from 0',              "enumerate(tracefile, 1)", "enumerate(tracefile)"),
+    ('bytes not UTF-8 replaced',         "encoding='utf-8', errors='surrogateescape', newline=''",
+                                         "encoding='utf-8', errors='replace', newline=''"),
     ('a tracefile read as UTF-8',        "encoding='utf-8', errors='surrogateescape', newline=''",
                                          "encoding='utf-8', newline=''"),
     ('line endings translated',          "errors='surrogateescape', newline='') as tracefile",
@@ -410,11 +428,17 @@ MUTATIONS = [
                                          "open(arguments.summary, encoding='utf-8')"),
     ('output written strictly',          "stream.reconfigure(encoding='utf-8', errors='surrogateescape')",
                                          "pass"),
-    ('a kept file need not be captured', "if source not in captured:", "if False:"),
+    ('a kept file need not be captured', "if source not in captured:\n            raise",
+                                         "if source not in captured:\n            continue\n            raise"),
     ('a kept file may match a pattern',  "        if removed_by(source, patterns):\n            raise",
                                          "        if False:\n            raise"),
-    ('records compared to the shorter',  "zip_longest(captured[source], lines, fillvalue='(nothing)')",
-                                         "zip(captured[source], lines)"),
+    ('records compared to the shorter',  "zip_longest(captured[source], lines)", "zip(captured[source], lines)"),
+    ('a missing record reads (nothing)', "zip_longest(captured[source], lines)",
+                                         "zip_longest(captured[source], lines, fillvalue='(nothing)')"),
+    ('any count accepted',               "if line.startswith(COUNTED_RECORDS) and", "if False and"),
+    ('only DA counts checked',           "COUNTED_RECORDS  = ('DA:', 'FNA:')", "COUNTED_RECORDS  = ('DA:',)"),
+    ('only FNA counts checked',          "COUNTED_RECORDS  = ('DA:', 'FNA:')", "COUNTED_RECORDS  = ('FNA:',)"),
+    ('function-only uncounted',          "{len(function_only)} with function records", "0 with function records"),
     ('a changed record accepted',        "if in_capture != in_filtered:", "if False:"),
     ('removals by pattern uncounted',    "by_pattern += 1", "pass"),
     ('a pattern second to no points',    "        if removed_by(source, patterns):\n            by_pattern += 1",
@@ -429,9 +453,9 @@ MUTATIONS = [
     ('hit and found swapped',            "int(match.group(1)), int(match.group(2))",
                                          "int(match.group(2)), int(match.group(1))"),
     ('every record hit',                 "int(line.split(',')[1]) != 0", "1"),
-    ('the first field the count',        "int(line.split(',')[1]) != 0", "int(line.split(',')[0]) != 0"),
+    ('the first field the count',        "int(line.split(',')[1]) != 0", "int(line[len(tag) + 1:].split(',')[0]) != 0"),
     ('functions counted by FNL',         "('functions', 'FNA')", "('functions', 'FNL')"),
-    ('lines unchecked',                  "(('lines', 'DA'), ('functions', 'FNA'))", "(('functions', 'FNA'),)"),
+    ('lines unchecked',                  "if reported != counted:", "if reported != counted and tag != 'DA':"),
     ('a figure mismatch accepted',       "if reported != counted:", "if False:"),
     ('the capture summarised',           "check_summary(summary.read(), filtered)",
                                          "check_summary(summary.read(), captured)"),
