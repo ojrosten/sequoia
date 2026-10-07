@@ -21,7 +21,10 @@
 #     named build in the build's physical path, under the rest of that path.
 #     A Setup.txt in the build names a subdirectory of the report, by its
 #     first line. Only genhtml makes the report's directory, so a run which
-#     fails before genhtml makes none;
+#     fails before genhtml makes none. Before genhtml runs, the report's
+#     directory is deleted, and nothing beside it. A report's directory whose
+#     physical path is not within coverage_reports is refused before any tool
+#     runs, and nothing is deleted;
 #   - ninja, taken from the build's cache rather than from PATH, deletes the
 #     objects of sources the build no longer has. Then every notes file
 #     without its object is deleted, anywhere in the build, so that the
@@ -376,10 +379,37 @@ choice_controls() {
 output_controls() {
   fixture discriminated "$tmp/g++-13/bin/g++-15"
   printf 'Clang\nsecond line\n' > "$b/Setup.txt"
+  local reports=$repo/coverage_reports/TestAll/gcc-env-coverage
+  mkdir -p "$reports/Clang"
+  : > "$reports/Clang/stale.html"; : > "$reports/kept.html"
   run build/TestAll/gcc-env-coverage
   exits "a build with a Setup.txt succeeds" 0
-  exists "a Setup.txt names a subdirectory of the report by its first line" yes \
-         "$repo/coverage_reports/TestAll/gcc-env-coverage/Clang/index.html"
+  exists "a Setup.txt names a subdirectory of the report by its first line" yes "$reports/Clang/index.html"
+  exists "an earlier report's page is deleted" no "$reports/Clang/stale.html"
+  exists "a page beside the report's directory is kept" yes "$reports/kept.html"
+
+  fixture escaping "$tmp/g++-13/bin/g++-15"
+  printf '../..\n' > "$b/Setup.txt"
+  reports=$repo/coverage_reports/TestAll/gcc-env-coverage
+  mkdir -p "$reports"
+  : > "$reports/kept.html"
+  run build/TestAll/gcc-env-coverage
+  exits "a Setup.txt naming .. is refused" 1
+  check "a Setup.txt naming .. says so" yes \
+        "^error: the report's directory, $repo/coverage_reports, is not within $repo/coverage_reports$" "$case_dir/err"
+  exists "a Setup.txt naming .. deletes nothing" yes "$reports/kept.html"
+  [ ! -s "$case_dir/log" ] || fail "a Setup.txt naming ..: a tool ran: $(head -1 "$case_dir/log")"
+
+  fixture linked_report "$tmp/g++-13/bin/g++-15"
+  mkdir -p "$case_dir/outside" "$repo/coverage_reports/TestAll"
+  : > "$case_dir/outside/kept.html"
+  ln -s "$case_dir/outside" "$repo/coverage_reports/TestAll/gcc-env-coverage"
+  run build/TestAll/gcc-env-coverage
+  exits "a report's directory linked from outside is refused" 1
+  check "a report's directory linked from outside says so" yes \
+        "^error: the report's directory, $case_dir/outside, is not within $repo/coverage_reports$" "$case_dir/err"
+  exists "a report's directory linked from outside is kept" yes "$case_dir/outside/kept.html"
+  [ ! -s "$case_dir/log" ] || fail "a report's directory linked from outside: a tool ran: $(head -1 "$case_dir/log")"
 
   fixture linked "$tmp/g++-13/bin/g++-15"
   mkdir -p "$case_dir/elsewhere"
@@ -504,6 +534,17 @@ failure_controls() {
     esac
   done
 
+  # An earlier report which cannot be deleted.
+  fixture failing_emptying "$tmp/g++-13/bin/g++-15"
+  local locked=$repo/coverage_reports/TestAll/gcc-env-coverage/locked
+  mkdir -p "$locked"
+  : > "$locked/page.html"
+  chmod a-w "$locked"
+  run build/TestAll/gcc-env-coverage
+  chmod u+w "$locked"
+  failed "emptying" "^error: exit status [0-9]+ from: rm -rf $repo/coverage_reports/TestAll/gcc-env-coverage$" \
+         "genhtml"
+
   # A notes file which cannot be deleted.
   fixture failing_rm "$tmp/g++-13/bin/g++-15"
   mkdir -p "$b/CMakeFiles/T.dir/locked"
@@ -555,6 +596,16 @@ mutations=(
                                       'output_dir="${test_exe_dir}/coverage_reports"'
   'the report directory made early'   'echo "Output Dir: ${output_dir}"'
                                       'echo "Output Dir: ${output_dir}"; mkdir -p "${output_dir}"'
+  'an earlier report kept'            'run_checked rm -rf "${output_dir}"'   ':'
+  'a failed emptying ignored'         'run_checked rm -rf "${output_dir}"'   'rm -rf "${output_dir}" 2> /dev/null || :'
+  'any report directory emptied'      'if [[ "${physical_output}" != "${physical_reports}"/?* ]]; then'
+                                      'if false; then'
+  'coverage_reports itself emptied'   '"${physical_reports}"/?* ]]'          '"${physical_reports}"* ]]'
+  'the logical path checked'          'physical_output=$(cd "${output_dir}" && pwd -P)'
+                                      'physical_output=${output_dir}'
+  'an escaping report succeeds'       $'${physical_reports}" >&2\n    exit 1'  $'${physical_reports}" >&2\n    exit 0'
+  'an escaping report on standard output'  'is not within ${physical_reports}" >&2'
+                                      'is not within ${physical_reports}"'
   'Setup.txt ignored'                 'if [[ -f "${setup_file}" ]]; then'    'if false; then'
   'Setup.txt read whole'              'head -n 1 "${setup_file}"'            'cat "${setup_file}"'
   'errors ignored'                    'set -e'                               'set +e'

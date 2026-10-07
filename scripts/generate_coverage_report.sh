@@ -8,7 +8,9 @@
 # <root>/coverage_reports/<project>/<preset>. If the build directory holds a
 # Setup.txt, the report goes to the subdirectory named by its first line. The
 # script takes <root>/build to be the last directory named build in the build
-# directory's physical path.
+# directory's physical path. Before genhtml writes the report, the script
+# deletes the report's directory, if present, and with it every page of an
+# earlier report.
 #
 # The script leaves three files in the build directory:
 #   - coverage_capture.info, the tracefile lcov captured;
@@ -24,8 +26,10 @@
 # Before it runs anything, the script refuses with status 2 a missing, empty
 # or second argument, and a build directory with no directory named build in
 # its path. It fails before it runs anything if the build directory or its
-# CMakeCache.txt is missing, or, on macOS, brew or GNU c++filt. A step that
-# fails stops the script with a non-zero status.
+# CMakeCache.txt is missing, or, on macOS, brew or GNU c++filt. It also fails
+# before it runs anything if the report's directory is present and its
+# physical path is not within <root>/coverage_reports. A step that fails stops
+# the script with a non-zero status.
 
 # A command outside run_checked which fails, such as reading the cache, ends
 # the script.
@@ -56,6 +60,19 @@ fi
 
 output_dir="${path_prefix}/coverage_reports/${path_suffix}"
 echo "Output Dir: ${output_dir}"
+
+# The report's directory is deleted before genhtml writes it, so it must lie
+# within coverage_reports. A Setup.txt naming `..`, or a link within
+# coverage_reports, could place it elsewhere, so the check compares physical
+# paths.
+if [[ -e "${output_dir}" ]]; then
+  physical_reports=$(cd "${path_prefix}/coverage_reports" && pwd -P)
+  physical_output=$(cd "${output_dir}" && pwd -P)
+  if [[ "${physical_output}" != "${physical_reports}"/?* ]]; then
+    echo "error: the report's directory, ${physical_output}, is not within ${physical_reports}" >&2
+    exit 1
+  fi
+fi
 
 # lcov forces --no-strip-underscores on Darwin, which only GNU c++filt
 # accepts. Apple's c++filt refuses it, and genhtml then reports that the
@@ -171,5 +188,8 @@ script_dir=$(cd "$(dirname "$0")" && pwd -P)
 run_checked python3 "${script_dir}/check_tracefile.py" --capture "${capture}" --filtered "${info}" \
                                                         --summary "${summary}" --removed "${foreign[@]}"
 
+# genhtml leaves in place every page it does not write, such as a page for a
+# source the build no longer has.
+run_checked rm -rf "${output_dir}"
 run_checked genhtml "${demangle[@]}" --suppress-aliases -o "${output_dir}" "${info}" \
                     --ignore-errors range --ignore-errors empty --ignore-errors category "${read_options[@]}"
