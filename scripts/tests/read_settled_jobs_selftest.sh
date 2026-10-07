@@ -27,7 +27,8 @@
 #   - if no read succeeds, the script fails with an error;
 #   - a filter that jq cannot run fails the script, as does a jobs file that
 #     cannot be written;
-#   - fewer than three arguments are refused, with the usage on standard error;
+#   - fewer than three arguments, and an unset or empty $GH_REPO, are refused
+#     before any read, with the usage on standard error;
 #   - no run leaves a temporary directory behind.
 
 set -u
@@ -102,6 +103,25 @@ run() {
 
 same_json() { [ "$(jq -c . "$1" 2> /dev/null)" = "$(jq -c . <<<"$2")" ]; }
 
+# refused <description> <env argument>...
+# Runs `env <env argument>...` in a directory of its own, $dir, with a settled
+# read to serve. Checks that the script refused: exit status 2, the usage on
+# standard error alone, and no read.
+refused() {
+  local description=$1
+  shift
+  dir=$cases/refused
+  rm -rf "$dir"
+  mkdir -p "$dir/reads"
+  echo "$settled" > "$dir/reads/1"
+  (cd "$dir" && export FAKE=$dir PATH="$tmp/bin:$PATH" && env "$@" > out.txt 2> err.txt)
+  status=$?
+  calls=$(cat "$dir/calls" 2> /dev/null || echo 0)
+  [ "$status" -eq 2 ] && [ "$calls" -eq 0 ] || fail "$description: status $status after $calls reads"
+  [ ! -s "$dir/out.txt" ] && grep -q '^Usage: ' "$dir/err.txt" \
+    || fail "$description: the usage was not on standard error alone"
+}
+
 # paused <count>: whether the last run paused <count> times, each for the
 # interval.
 paused() {
@@ -128,8 +148,10 @@ controls() {
   same_json "$dir/jobs.json" "$settled" || fail "a settled read is not the jobs file"
   check "a settled read logs no wait" no "reading again" "$dir/out.txt"
   paused 0 || fail "a settled read was followed by a pause"
-  [ "$(cat "$dir/arguments")" = "api repos/owner/repo/actions/runs/1/jobs?per_page=100 --paginate --jq .jobs[]" ] \
-    || fail "the read asked for: $(cat "$dir/arguments")"
+  local asked
+  asked=$(cat "$dir/arguments" 2> /dev/null)
+  [ "$asked" = "api repos/owner/repo/actions/runs/1/jobs?per_page=100 --paginate --jq .jobs[]" ] \
+    || fail "the read asked for: $asked"
 
   run pending_then_settled "$pending" "$settled"
   [ "$status" -eq 0 ] && [ "$calls" -eq 2 ] \
@@ -180,6 +202,7 @@ controls() {
   run always_failing fail
   [ "$status" -ne 0 ] || fail "no read succeeded, yet the script succeeded"
   check "no successful read is an error" yes "^::error::No read of the jobs API succeeded" "$dir/out.txt"
+  check "no successful read gives no warning" no "^::warning::" "$dir/out.txt"
 
   filter='.[] | no_such_function'
   run bad_filter "$settled"
@@ -191,10 +214,9 @@ controls() {
   [ "$status" -ne 0 ] || fail "a jobs file that cannot be written did not fail the script"
   unset jobs
 
-  (cd "$cases" && bash read_settled_jobs.sh 1 jobs.json > refused.out 2> refused.err)
-  [ $? -eq 2 ] || fail "two arguments were not refused"
-  [ ! -s "$cases/refused.out" ] && grep -q '^Usage: ' "$cases/refused.err" \
-    || fail "the refusal of two arguments did not give the usage on standard error alone"
+  refused "two arguments" GH_REPO=owner/repo bash "$cases/read_settled_jobs.sh" 1 jobs.json
+  refused "an unset GH_REPO" -u GH_REPO bash "$cases/read_settled_jobs.sh" 1 jobs.json "$awaiting"
+  refused "an empty GH_REPO" GH_REPO= bash "$cases/read_settled_jobs.sh" 1 jobs.json "$awaiting"
 
   local left
   left=$(cd "$cases" && find . -path '*/scratch/*')
@@ -202,13 +224,18 @@ controls() {
 }
 
 # Each mutant breaks one behaviour that the controls claim. Its entry holds a
-# description, the text it replaces, and the replacement. A deadline one
-# interval later is left out: the script reads the clock in whole seconds, so
-# the number of reads before the deadline already varies by one, and no control
-# can see the difference.
+# description, the text it replaces, and the replacement. Two mutants are left
+# out:
+#   - A deadline one interval later. The script reads the clock in whole
+#     seconds, so the number of reads before the deadline already varies by
+#     one, and no control can see the difference.
+#   - `set -e` for `set -eu`, which is equivalent: no variable the script reads
+#     can be unset once the arguments and $GH_REPO have been checked.
 mutations=(
-  'two arguments accepted'          'if [ $# -lt 3 ]; then'            'if [ $# -lt 2 ]; then'
-  'three arguments refused'         'if [ $# -lt 3 ]; then'            'if [ $# -lt 4 ]; then'
+  'two arguments accepted'          'if [ $# -lt 3 ] ||'               'if [ $# -lt 2 ] ||'
+  'three arguments refused'         'if [ $# -lt 3 ] ||'               'if [ $# -lt 4 ] ||'
+  'an unset GH_REPO accepted'       '[ -z "${GH_REPO:-}" ]'            '[ -z "${GH_REPO-set}" ]'
+  'an empty GH_REPO accepted'       '[ -z "${GH_REPO:-}" ]'            '[ -z "${GH_REPO+set}" ]'
   'a refusal fails as any error'    '  exit 2'                         '  exit 1'
   'the usage on standard output'    '<jq option>...]" >&2'             '<jq option>...]"'
   'errors ignored'                  'set -eu'                          'set -u'
@@ -226,14 +253,15 @@ mutations=(
                                     'lacking="The jobs API has yet to give a conclusion"'
   'no pause'                        '  sleep "$interval"'              '  :'
   'a longer pause'                  '  sleep "$interval"'              '  sleep "$((interval * 2))"'
-  'a pause after the last read'     '  [ "$SECONDS" -lt "$deadline" ] ||'
-                                    '  sleep "$interval"; [ "$SECONDS" -lt "$deadline" ] ||'
+  'a pause after the last read'     '  if [ "$SECONDS" -ge "$deadline" ]; then'
+                                    '  sleep "$interval"; if [ "$SECONDS" -ge "$deadline" ]; then'
   'twice the time'                  '$((SECONDS + wait_limit))'        '$((SECONDS + 2 * wait_limit))'
   'the warning not an annotation'   'echo "::warning::'                'echo "warning: '
-  'running out of time fails'       'last successful read."; break; }' 'last successful read."; exit 1; }'
+  'running out of time fails'       $'read."\n    break'               $'read."\n    exit 1'
   'a successful read forgotten'     '    read_succeeded=true'          '    read_succeeded=false'
   'no successful read needed'       $'read_succeeded=false\nwhile'     $'read_succeeded=true\nwhile'
   'no successful read succeeds'     'exit 1; }'                        'exit 0; }'
+  'a warning without a read'        '    $read_succeeded ||'           '    echo "::warning::"; $read_succeeded ||'
   'the error not an annotation'     'echo "::error::'                  'echo "error: '
   'the reads left behind'           $'trap \'rm -rf "$reads"\' EXIT'   ':'
 )

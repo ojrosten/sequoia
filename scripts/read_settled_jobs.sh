@@ -1,19 +1,21 @@
 #!/bin/bash
-# Usage: read_settled_jobs.sh <run id> <jobs file> <jq filter> [<jq option>...]
+# Usage:
+#   GH_REPO=<owner>/<repo> \
+#     read_settled_jobs.sh <run id> <jobs file> <jq filter> [<jq option>...]
 #
 # Reads the jobs of run <run id> until the jobs API has given every conclusion
 # that <jq filter> awaits. The script writes each successful read to
 # <jobs file>, as one JSON array. The filter reads that array and prints what
 # it still awaits, or nothing once it awaits nothing. The options after the
-# filter are passed to jq with it. $GH_REPO names the repository.
+# filter are passed to jq with it.
 #
 # The script reads every 10 s, for up to 420 s. After each read that does not
 # end the wait, it logs what the filter awaits, or that the read failed. If the
 # time runs out, a warning names what the filter still awaits, or says that the
 # last read failed. The script then succeeds, and <jobs file> holds the last
 # successful read, for the caller's checks to judge. If no read succeeds, the
-# script fails with an error. A caller's job needs a timeout longer than the
-# wait.
+# script fails with an error instead. A caller's job needs a timeout longer
+# than the wait.
 #
 # The wait exists because the jobs API can lag behind the run it describes. In
 # run 36726395452, the API was read at 14:20:01:
@@ -32,8 +34,8 @@
 
 set -eu
 
-if [ $# -lt 3 ]; then
-  echo "Usage: $0 <run id> <jobs file> <jq filter> [<jq option>...]" >&2
+if [ $# -lt 3 ] || [ -z "${GH_REPO:-}" ]; then
+  echo "Usage: GH_REPO=<owner>/<repo> $0 <run id> <jobs file> <jq filter> [<jq option>...]" >&2
   exit 2
 fi
 
@@ -57,8 +59,12 @@ while :; do
   else
     lacking="The jobs API could not be read"
   fi
-  [ "$SECONDS" -lt "$deadline" ] || { echo "::warning::$lacking, ${wait_limit}s after the wait began. $jobs_file holds the last successful read."; break; }
+  if [ "$SECONDS" -ge "$deadline" ]; then
+    $read_succeeded || { echo "::error::No read of the jobs API succeeded in ${wait_limit}s"; exit 1; }
+    echo "::warning::$lacking, ${wait_limit}s after the wait began." \
+         "$jobs_file holds the last successful read."
+    break
+  fi
   echo "$lacking; reading again in ${interval}s"
   sleep "$interval"
 done
-$read_succeeded || { echo "::error::No read of the jobs API succeeded"; exit 1; }
