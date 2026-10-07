@@ -1,15 +1,17 @@
 name: coverage
 
-# The coverage figures are measured and published, with no threshold. The job
-# fails on one measurement, in "Check for uncalled functions": a gate on
-# functions of Source that no test calls. The uploaded coverage.info is an lcov
-# tracefile.
+# Measures the coverage of Source and publishes the figures, with no
+# threshold. The job fails on one measurement: "Check for uncalled functions"
+# is a gate on functions of Source that no test calls. The uploaded
+# coverage.info is an lcov tracefile.
 #
-# fine calls this workflow, so the gate holds pull requests into staging, and
-# rigorous calls it, for promotions to main, the nightly run and dispatches.
+# fine calls this workflow, so the gate holds pull requests into staging.
+# rigorous calls it too, for promotions to main, the nightly run and
+# dispatches.
 #
-# The toolchain steps repeat tests.yml rather than calling it: coverage runs the
-# suite through ctest, serially, not through the `run` target.
+# The toolchain steps repeat tests.yml's rather than calling it, because
+# coverage runs the suite through ctest, serially, not through the `run`
+# target.
 on:
   workflow_call:
     inputs:
@@ -25,14 +27,13 @@ on:
 jobs:
   coverage:
     name: Coverage · Linux · GCC
-    # Pinned, as lcov is below, so that the Ubuntu release changes only in a PR.
-    # ubuntu-latest moves to Ubuntu 26.04 in a rollout beginning 2026-10-19.
-    # ubuntu-24.04 is the release the demangler paths below were measured on.
-    # Two things still move without a PR: GitHub rebuilds the ubuntu-24.04 image
-    # weekly, and the toolchain PPA uploads new snapshots of g++-15. A snapshot
-    # with a new version number makes the gate refuse every run, in fine as in
-    # rigorous, until a PR makes the baseline again. A PR that moves the job to
-    # another release:
+    # Pinned, as lcov is below, so that the Ubuntu release changes only in a
+    # PR. ubuntu-24.04 is the release the demangler paths below were measured
+    # on. Two things still move without a PR: GitHub rebuilds the ubuntu-24.04
+    # image weekly, and the toolchain PPA uploads new snapshots of g++-15. A
+    # snapshot with a new version number makes the gate refuse every run, in
+    # fine as in rigorous, until a PR makes the baseline again. A PR that moves
+    # the job to another release:
     #   -# changes the runs-on line;
     #   -# finds the release's demanglers, with the listing step of 36950811f,
     #      and sets LLVM_CXXFILT and GNU_CXXFILT below;
@@ -72,9 +73,9 @@ jobs:
             exit 1
           fi
 
-      # As in tests.yml: the job runs whatever the change, since each caller's
-      # audit insists on its success; what it does depends on the change, and any
-      # answer but `true` or `false` fails it.
+      # As in tests.yml, the job runs whatever the change, since each caller's
+      # audit insists on its success. Only the steps below depend on the
+      # change, and any answer but `true` or `false` fails the job.
       - name: Nothing to test
         if: env.NEEDS_TESTING != 'true'
         run: |
@@ -108,14 +109,15 @@ jobs:
             sleep $((attempt * 15))
           done
           sudo apt-get update -qq
-          # The Perl packages are for lcov, installed below from its release: Capture::Tiny,
-          # DateTime, Date::Parse and Devel::StackTrace, without which lcov's tools do not
-          # start, and JSON::XS, which geninfo uses in preference to the core, pure-Perl JSON::PP
-          # to read gcov's output.
+          # The Perl packages are for lcov, installed below from its release.
+          # Without Capture::Tiny, DateTime, Date::Parse and
+          # Devel::StackTrace, lcov's tools do not start. geninfo reads gcov's
+          # output with JSON::XS in preference to the core, pure-Perl
+          # JSON::PP.
           packages=(g++-15 ninja-build libtbb-dev
                     libcapture-tiny-perl libdatetime-perl libdevel-stacktrace-perl libjson-xs-perl libtimedate-perl)
-          # Read once and searched by exact name, as in tests.yml's "Install
-          # the toolchain (Linux)", which says why.
+          # The list is read once and searched by exact name, as in tests.yml's
+          # "Install the toolchain (Linux)", which says why.
           names=$(apt-cache pkgnames)
           for pkg in "${packages[@]}"; do
             grep -qFx -- "$pkg" <<< "$names" \
@@ -142,11 +144,11 @@ jobs:
           echo "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin" >> "$GITHUB_PATH"
           # lcov comes from its release rather than apt, so that its version
           # does not move with the image: the 24.04 archive has 2.0 and the
-          # 26.04 one 2.4, and lcov 2.0 and 2.5 write different function
-          # records, and count different function totals, from the same
-          # coverage data. Keep it at the version Homebrew installs, so that CI
-          # and a Mac run the same lcov. Pinned by checksum for the same reason
-          # as CMake. Each tool prints the version and, after a hyphen, the
+          # 26.04 one 2.4. From the same coverage data, lcov 2.0 and 2.5 write
+          # different function records and count different function totals.
+          # Keep it at the version Homebrew installs, so that CI and a Mac run
+          # the same lcov. The tarball's checksum is pinned for the same reason
+          # as CMake's. Each tool prints the version and, after a hyphen, the
           # release number from the tarball's .version file.
           lcov_version=2.5
           lcov_release=0
@@ -156,12 +158,13 @@ jobs:
           if ! curl -fsSL -o "$lcov_tarball" "$lcov_url"; then echo "::error::lcov $lcov_version could not be fetched from its release page"; exit 1; fi
           if ! echo "$lcov_sha256  $lcov_tarball" | sha256sum --check --quiet; then echo "::error::The lcov tarball does not match its published checksum"; exit 1; fi
           tar -xzf "$lcov_tarball" -C "$RUNNER_TEMP"
-          # --old-file=doc stops install rebuilding the documentation the tarball ships, which
-          # needs Sphinx.
+          # --old-file=doc stops install rebuilding the documentation the
+          # tarball ships, which needs Sphinx.
           sudo make -C "$RUNNER_TEMP/lcov-$lcov_version" --old-file=doc install
-          # Each tool must report the pinned release. That is the only proof the install worked,
-          # since lcov's Makefile can exit 0 after a partial one, and it stops another lcov earlier
-          # on PATH from measuring in its place without a word.
+          # Each tool must report the pinned release. That is the only proof
+          # the install worked, since lcov's Makefile can exit 0 after a
+          # partial install. It also stops another lcov earlier on PATH from
+          # measuring in this one's place without a word.
           pinned=$lcov_version-$lcov_release
           for tool in lcov geninfo genhtml; do
             reported=$("$tool" --version)
@@ -179,7 +182,8 @@ jobs:
           git config --global user.email "ci@example.invalid"
           git config --global init.defaultBranch trunk
 
-      # The checks the Measure step relies on to catch lcov changing the measurement.
+      # Tests the checks by which the Measure step catches lcov changing the
+      # measurement.
       - name: Test the tracefile checks
         if: env.NEEDS_TESTING == 'true'
         run: scripts/tests/check_tracefile_selftest.sh
@@ -191,8 +195,9 @@ jobs:
           cmake --preset gcc-env-coverage
           cmake --build --preset gcc-env-coverage
 
-      # The script runs the suite through ctest itself, so there is no separate run
-      # step. Utilities.cmake registers the test with --serial under CODE_COVERAGE.
+      # The script runs the suite through ctest itself, so there is no separate
+      # run step. Utilities.cmake registers the test with --serial under
+      # CODE_COVERAGE.
       - name: Measure
         id: measure
         if: env.NEEDS_TESTING == 'true'
@@ -205,8 +210,9 @@ jobs:
         run: |
           info=build/TestAll/gcc-env-coverage/coverage.info
           [ -f "$info" ] || { echo "::error::no tracefile at $info"; exit 1; }
-          # Read with generate_coverage_report.sh's read_options, which the script explains. A
-          # tracefile lcov refuses fails the job, since the tracefile is what the job publishes.
+          # The options are generate_coverage_report.sh's read_options, which
+          # the script explains. A tracefile lcov refuses fails the job, since
+          # the tracefile is what the job publishes.
           if ! lcov_output=$(lcov --summary "$info" --rc check_data_consistency=0 --rc derive_function_end_line=0 2>&1); then
             echo "::error::lcov refused $info"
             echo "$lcov_output"
@@ -224,18 +230,19 @@ jobs:
             echo "$summary"
             echo '```'
             echo "_These figures are reported only; the gate on uncalled functions is a step of its own._"
-            # The step runs even when Measure fails, so the figures say whether they were checked.
+            # The step runs even when Measure fails, so the figures say whether
+            # they were checked.
             if [ "$MEASURE_OUTCOME" != success ]; then
               echo "**The Measure step failed ($MEASURE_OUTCOME): these figures are unchecked.**"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
-      # The gate on uncalled functions keys each function by its demangled name,
-      # so the script's controls run with the demanglers the gate is to use.
-      # ubuntu-24.04 has llvm-cxxfilt-16 to -18 and no unversioned llvm-cxxfilt;
-      # 18 is the newest (run 37584812301). A demangler absent from the path
-      # given fails this step. The step follows Measure, so that a failure here
-      # does not cost the run its coverage figures.
+      # The gate on uncalled functions keys each function by its demangled
+      # name, so the script's controls run with the demanglers the gate is to
+      # use. ubuntu-24.04 has llvm-cxxfilt-16 to -18 and no unversioned
+      # llvm-cxxfilt; 18 is the newest (run 37584812301). A demangler absent
+      # from the path given fails this step. The step follows Measure, so that
+      # a failure here does not cost the run its coverage figures.
       - name: Test the uncalled-functions script
         if: ${{ always() && env.NEEDS_TESTING == 'true' }}
         run: scripts/tests/uncalled_functions_selftest.py --demangler "$LLVM_CXXFILT" --demangler "$GNU_CXXFILT"
@@ -245,10 +252,10 @@ jobs:
       # file of Source missing from the tracefile also fails the job. The
       # tracefile holds every object the build compiled, whether or not it was
       # linked. A template never instantiated, and an inline function never
-      # used, are in no object, so the gate does not see them. A listed function
-      # that is now called, or gone, gives a notice, and the list is shortened
-      # by hand. Errors and notices are annotations on the run as well as lines
-      # in its summary.
+      # used, are in no object, so the gate does not see them. A listed
+      # function that is now called, or gone, gives a notice, and the list is
+      # shortened by hand. Errors and notices are annotations on the run as
+      # well as lines in its summary.
       #
       # The baseline's header names the tools' releases, so a change of
       # demangler, compiler or lcov release is refused until the baseline is
