@@ -5,8 +5,12 @@
 #
 # Without --mutations, the selftest runs the controls. With it, the selftest
 # runs the controls against the script and against each mutant of the script.
-# The script must fail no control, and each mutant at least one. Only then
-# does the last line say that every mutant was killed, and the status is 0.
+# The script must fail no control, and each mutant at least one. The last
+# line gives the verdict. If every mutant was killed, it says so, and the
+# status is 0. Otherwise it gives the number of mutants which survived, or
+# says that the unmutated script fails, and the status is 1. A mutant whose
+# text is not found exactly once counts as a survivor. If the unmutated
+# script fails, no mutant is run.
 #
 # Every fixture starts from one clean capture, filtered tracefile and summary,
 # which must pass. Each control then changes one thing. The claims:
@@ -485,17 +489,19 @@ if [[ $# -eq 1 ]]; then
   verbose=no survivors=0 count=0
   run_controls "$script"
   echo "unmutated: $fails of $total controls fail$( ((fails)) && echo '  <-- must be none')"
-  if ((fails)); then survivors=1; fi
+  if ((fails)); then echo "check_tracefile.py: the unmutated run fails $fails of $total controls"; exit 1; fi
   mutants "$tmp/mutants" > "$tmp/mutants.txt" || exit 1
   while read -r n occurrences description; do
+    count=$((count+1))
     if [[ $occurrences -ne 1 ]]; then
-      echo "$description: the text to mutate occurs $occurrences times"; survivors=1; continue
+      echo "$description: the text to mutate occurs $occurrences times"; survivors=$((survivors+1)); continue
     fi
-    run_controls "$tmp/mutants/$n/check_tracefile.py"; count=$((count+1))
+    run_controls "$tmp/mutants/$n/check_tracefile.py"
     echo "$description: $fails of $total controls fail$( ((fails)) || echo '  <-- SURVIVED')"
-    if ((fails == 0)); then survivors=1; fi
+    if ((fails == 0)); then survivors=$((survivors+1)); fi
   done < "$tmp/mutants.txt"
-  if ((survivors || count == 0)); then exit 1; fi
+  if ((count == 0)); then echo "check_tracefile.py: no mutants"; exit 1; fi
+  if ((survivors)); then echo "check_tracefile.py: $survivors of $count mutants survived"; exit 1; fi
   echo "check_tracefile.py: $count mutants, every one killed"
   exit 0
 fi
