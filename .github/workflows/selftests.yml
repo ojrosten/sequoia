@@ -27,8 +27,10 @@ jobs:
           - name: Linux
             os: ubuntu-latest
             selftests: compile_time_report read_settled_jobs snapshot_at_deadline
-          # report_crashes' controls are macOS's alone: Linux and Windows read
-          # dumps the job arranges for, which tests.yml's control crash checks.
+          # report_crashes' controls run on macOS alone, since the system writes
+          # the crash reports they read. No control runs its Linux or Windows
+          # branch: tests.yml's control crash checks that a dump appears, and
+          # never runs the script on it.
           - name: macOS
             os: macos-latest
             selftests: report_crashes snapshot_at_deadline
