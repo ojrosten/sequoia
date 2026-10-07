@@ -5,7 +5,8 @@
 #
 # Without --mutations, the selftest runs the controls. With it, the selftest
 # runs the controls against the script and against each mutant of the script.
-# The script must fail no control, and each mutant at least one.
+# The script must fail no control, and each mutant at least one. Only then
+# does the last line say that every mutant was killed, and the status is 0.
 #
 # Every fixture starts from one clean capture, filtered tracefile and summary,
 # which must pass. Each control then changes one thing. The claims:
@@ -57,6 +58,9 @@
 # under the wrong heading fails.
 
 set -u
+if [[ $# -gt 1 || ( $# -eq 1 && $1 != --mutations ) ]]; then
+  echo "usage: $(basename "$0") [--mutations]" >&2; exit 2
+fi
 here=$(cd "$(dirname "$0")" && pwd -P)
 script="$here/../check_tracefile.py"
 tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
@@ -453,8 +457,8 @@ for n, (description, old, new) in enumerate(MUTATIONS):
 EOF
 }
 
-if [[ ${1:-} == --mutations ]]; then
-  verbose=no survivors=0
+if [[ $# -eq 1 ]]; then
+  verbose=no survivors=0 count=0
   run_controls "$script"
   echo "unmutated: $fails of $total controls fail$( ((fails)) && echo '  <-- must be none')"
   if ((fails)); then survivors=1; fi
@@ -463,11 +467,13 @@ if [[ ${1:-} == --mutations ]]; then
     if [[ $occurrences -ne 1 ]]; then
       echo "$description: the text to mutate occurs $occurrences times"; survivors=1; continue
     fi
-    run_controls "$tmp/mutants/$n/check_tracefile.py"
+    run_controls "$tmp/mutants/$n/check_tracefile.py"; count=$((count+1))
     echo "$description: $fails of $total controls fail$( ((fails)) || echo '  <-- SURVIVED')"
     if ((fails == 0)); then survivors=1; fi
   done < "$tmp/mutants.txt"
-  exit $survivors
+  if ((survivors || count == 0)); then exit 1; fi
+  echo "check_tracefile.py: $count mutants, every one killed"
+  exit 0
 fi
 
 run_controls "$script"
