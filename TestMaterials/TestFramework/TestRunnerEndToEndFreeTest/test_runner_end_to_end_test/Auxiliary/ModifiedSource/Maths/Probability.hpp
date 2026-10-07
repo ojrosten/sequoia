@@ -1,4 +1,3 @@
-import std;
 ////////////////////////////////////////////////////////////////////
 //               Copyright Oliver Jacob Rosten 2021.              //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
@@ -7,6 +6,8 @@ import std;
 ////////////////////////////////////////////////////////////////////
 
 #pragma once
+
+import std;
 
 namespace maths
 {
