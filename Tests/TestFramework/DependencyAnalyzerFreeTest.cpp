@@ -1574,6 +1574,20 @@ namespace sequoia::testing
                      projPaths,
                      {{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
 
+    {
+      const prune_records written{{"Stuff/My Test.cpp", stamp}, {"HouseAllocationTest.cpp", stamp + std::chrono::seconds{1}}};
+
+      std::stringstream stream{};
+      for(const auto& record : written)
+        stream << record;
+
+      prune_records readBack(written.size(), prune_record{"Replaced by what is read", prune_record::stamp_type{}});
+      for(auto& record : readBack)
+        stream >> record;
+
+      check(equality, "operator>> reads back, record by record, what operator<< writes", readBack, written);
+    }
+
     const auto file{projPaths.prune().to_rerun(std::nullopt)};
 
     {
