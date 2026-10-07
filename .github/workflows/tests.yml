@@ -1,18 +1,19 @@
 name: tests
 
 # coarse, fine, rigorous and statistical all build and run sequoia through
-# this workflow. They differ only in the columns they ask for and the arguments
-# they pass the runner, so the tiers cannot drift apart in how they build.
+# this workflow. Each tier passes its own columns and inputs, and all share
+# the steps below, so the tiers cannot drift apart in the steps by which they
+# build.
 #
 # The tiers are ordered by strictness, not by containment: fine and rigorous
 # run sanitized columns in place of coarse's plain ones, not beside them. A
-# tier must be at least as strict as the one below it, or a pass at one tier
-# says nothing about the next.
+# tier must be at least as strict as the one below it, or a pass at a tier
+# would not imply a pass at the tiers below it.
 on:
   workflow_call:
     inputs:
       columns:
-        description: 'A JSON array of matrix entries. Each has name, os, configure and build. It has cc and cxx where the preset reads the compiler from the environment, and pkg where the apt package holding the compiler is named differently from the binary, as clang++ is held by clang. exec_args, repeat_args and advisory are optional, and each is described where it is read.'
+        description: 'A JSON array of matrix entries. Each has name, os, configure and build. It has cc and cxx where the preset reads the compiler from the environment, and pkg where the apt package holding the compiler is named differently from the binary, as clang holds clang++. exec_args, repeat_args and advisory are optional, and a comment at the step that reads each describes it.'
         required: true
         type: string
       exec_args:
@@ -82,9 +83,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          # The tip alone, not the history: every commit of docs/ holds a
-          # doxygen render, and only the merge step reads the history, which
-          # it fetches itself.
+          # The checkout fetches the tip without its history. The history is
+          # large: docs/ holds a doxygen render in every commit. Only the
+          # merge step reads the history, and it fetches what it needs.
           fetch-depth: 1
 
       # When `merge_into` names a branch, this step merges that branch into the
@@ -310,9 +311,7 @@ jobs:
       # the step reads the changelog of whichever package the column installed.
       - name: What the distribution's compiler actually is
         if: inputs.needs_testing == 'true' && runner.os == 'Linux'
-        # A report must not fail the job. Hence each `|| true`, and `sed`
-        # rather than `head`: head exits early, zcat then takes SIGPIPE, and
-        # pipefail would fail the step.
+        # A report must not fail the job, hence each `|| true`.
         run: |
           pkg="${{ matrix.pkg || matrix.cxx }}"
           log=$(dpkg -L "$pkg" 2>/dev/null | grep -m1 'changelog.Debian.gz$' || true)
@@ -322,9 +321,9 @@ jobs:
             echo "No Debian changelog found for $pkg; $CXX --version above is all we have."
           fi
 
-      # The suite generates projects, and sequoia commits in each project it
-      # generates. git refuses to commit without an identity, which a fresh
-      # runner lacks.
+      # The suite generates projects, and sequoia makes a commit in each
+      # project it generates. git refuses to commit without an identity, which
+      # a fresh runner lacks.
       - name: Give git an identity
         if: inputs.needs_testing == 'true'
         run: |
@@ -440,7 +439,7 @@ jobs:
           if [ -n "$found" ]; then
             echo "The control crash left $found"
           else
-            echo "::warning title=No crash dumps::${{ matrix.name }}: a control crash left no dump, so a crash in the suite would leave no stacks to report."
+            echo "::warning title=No crash dumps::${{ matrix.name }}: a control crash left no dump, so a crash in the suite would go unreported."
           fi
           sleep 1
           touch "$dumps/since"
@@ -476,8 +475,8 @@ jobs:
 
       # The build is a step apart from the run, so that a compile failure and a
       # test failure show as different steps, and so that the suite can carry
-      # its own timeout. The step keeps the log, from which "Report compiler
-      # warnings" counts the warnings where they are not fatal.
+      # its own timeout. The step keeps the log for "Report compiler warnings",
+      # which counts the warnings where they are not fatal.
       - name: Build
         if: inputs.needs_testing == 'true'
         working-directory: TestAll
@@ -489,8 +488,9 @@ jobs:
       # debug information through the object files, and writes the report too
       # late for that step: 79s after a TestAll crash on a hosted runner,
       # against 8s with a dSYM. Both figures are from Release builds with line
-      # tables, each executable new to the system, as every CI build's is. The
-      # system is quicker with an executable it has read before.
+      # tables. In both, the executable was new to the system, as every CI
+      # build's is. The system is quicker with an executable it has read
+      # before.
       #
       # A failure here warns rather than fails, since the suite still runs.
       # Only a crash's report may then come too late for "Report any crash".
@@ -554,9 +554,8 @@ jobs:
       # Build step depends on this too.
       #
       # A column may set `advisory: true` to run without gating on the result,
-      # for a platform whose failures are understood and being worked on. The
-      # mechanism is for a new column, which may need it until its failures are
-      # understood, so it may have no user in between. There is no option to
+      # while its failures are worked on. A new column may need it, so the
+      # mechanism stays even while no column sets it. There is no option to
       # build without running: a suite that is not run says nothing, and the
       # audit below refuses a column whose suite step did not run, unless the
       # change held nothing to test.
@@ -1028,13 +1027,16 @@ jobs:
 
   # A column that reported without running the suite looks exactly like one
   # that passed: `gh run list` says success either way, and so does the tick.
-  # So this job reads the run's own jobs back through the API. It insists that
-  # each column named in `columns` exists, once, and that its `Run the suite`
-  # step concluded: success or failure, but neither skipped nor absent. Where
-  # the column asked for repetitions, `Run the suite again` must have
-  # concluded too. Whether the suite passed is the column's own business; this
-  # job checks that the suite ran. The expectation is the `columns` input
-  # itself, so there is no second list to drift.
+  # Every column of every tier once skipped the suite this way for a day, and
+  # went green.
+  #
+  # So this job reads the run's own jobs back through the API. It insists
+  # that each column named in `columns` exists, once, and that its `Run the
+  # suite` step concluded: success or failure, but neither skipped nor
+  # absent. Where the column asked for repetitions, `Run the suite again`
+  # must have concluded too. Whether the suite passed is the column's own
+  # business; this job checks that the suite ran. The expectation is the
+  # `columns` input itself, so there is no second list to drift.
   #
   # A suite step may be skipped for exactly two reasons:
   #   - The repetitions, when the first pass failed.
