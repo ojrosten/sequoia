@@ -740,6 +740,9 @@ jobs:
       # Each of these is a warning, since a crash would go uncounted:
       #   - on Linux, a core limit the suite step could not raise;
       #   - on macOS, a report directory the step cannot read.
+      # The step raises an error if report_crashes.sh exits non-zero or gives
+      # no single count of crashes, since a crash may then have gone
+      # unreported. It then keeps the output and any dumps, as for a crash.
       # The timeout bounds cdb's downloads of Windows' symbols, and a report
       # that times out does not fail the job.
       - name: Report any crash
@@ -780,13 +783,24 @@ jobs:
           fi
 
           report="$RUNNER_TEMP/crashes.txt"
-          scripts/report_crashes.sh "$dumps" "$dumps/since" > "$report" 2>&1
+          status=0
+          scripts/report_crashes.sh "$dumps" "$dumps/since" > "$report" 2>&1 || status=$?
           sed -n '/^== Crash: /q; s/^Not read: //p' "$report" | while IFS= read -r unread; do
             echo "::warning title=Crash reports unread::${{ matrix.name }}: $unread."
           done
           count=$(sed -n 's/^Crashes found: //p' "$report")
-          if [ "${count:-0}" -gt 0 ]; then
+          incomplete=
+          if [ "$status" -ne 0 ]; then
+            incomplete="report_crashes.sh exited with status $status"
+          elif [[ ! $count =~ ^[0-9]+$ ]]; then
+            incomplete="report_crashes.sh gave no single count of crashes"
+          fi
+          if [ -n "$incomplete" ]; then
+            echo "::error title=Crash report incomplete::${{ matrix.name }}: $incomplete, so a crash may have gone unreported. Its output is below, and in run-log/crashes/."
+          elif [ "$count" -gt 0 ]; then
             echo "::error title=Crash::${{ matrix.name }}: $count crash(es); their stacks are below, and in run-log/crashes/."
+          fi
+          if [ -n "$incomplete" ] || [ "$count" -gt 0 ]; then
             mkdir -p run-log/crashes
             cp "$report" run-log/crashes/
             find "$dumps" -maxdepth 1 -newer "$dumps/since" -name '*.dmp' -exec cp {} run-log/crashes/ \;
