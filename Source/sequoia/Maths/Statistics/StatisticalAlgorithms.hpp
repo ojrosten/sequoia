@@ -52,7 +52,7 @@ namespace sequoia::maths
   {
     if(std::ranges::distance(data))
     {
-      const auto m{mean(data)};
+      const auto m{maths::mean(data)};
       const auto var{
         std::ranges::fold_left(data, T{}, [m](const T& sum, const T& datum){
             return sum + (datum - m.value())*(datum - m.value());
@@ -79,7 +79,7 @@ namespace sequoia::maths
   {
     if(const auto dist{std::ranges::distance(data)})
     {
-      auto [sq, mean]{cumulative_square_diffs(data)};
+      auto [sq, mean]{maths::cumulative_square_diffs(data)};
 
       return {sq.value()/dist, mean.value()};
     }
@@ -105,11 +105,11 @@ namespace sequoia::maths
     }
     else if(dist == 1)
     {
-      return {{}, mean(data)};
+      return {{}, maths::mean(data)};
     }
     else
     {
-      auto [sq, mean]{cumulative_square_diffs(data)};
+      auto [sq, mean]{maths::cumulative_square_diffs(data)};
 
       return {sq.value()/(dist - 1), mean.value()};
     }
@@ -185,7 +185,7 @@ namespace sequoia::maths
   {
     if(const auto dist{std::ranges::distance(data)})
     {
-      auto [var, mean]{variance(data)};
+      auto [var, mean]{maths::variance(data)};
 
       return {std::sqrt(var.value()), mean.value()};
     }
@@ -223,11 +223,11 @@ namespace sequoia::maths
         }
         else if(dist == 1)
         {
-          return {{}, mean(data)};
+          return {{}, maths::mean(data)};
         }
         else
         {
-          auto [sq, mean]{cumulative_square_diffs(data)};
+          auto [sq, mean]{maths::cumulative_square_diffs(data)};
 
           return {std::sqrt(sq.value()/(dist - 1.5)), mean.value()};
         }
@@ -235,8 +235,10 @@ namespace sequoia::maths
     };
   }
 
-  /** \brief Returns `estimator`'s estimate of the population standard
-             deviation from the sample `data`, and the mean of `data`.
+  /** \brief Returns the result of invoking `estimator` on `data`.
+
+      The default estimator returns its estimate of the population standard
+      deviation, and the mean of `data`.
    */
   template<
     std::ranges::forward_range Data,

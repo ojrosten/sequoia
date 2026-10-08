@@ -60,12 +60,12 @@ namespace sequoia::testing
 
       const auto n{data.size()};
       const auto numTrimmed{num_trimmed_from_each_end(n)};
-      const std::ranges::subrange kept{data.cbegin() + numTrimmed, data.cend() - numTrimmed};
 
       const auto winsorizedVariance{
         maths::winsorized_sample_variance(data, static_cast<std::ptrdiff_t>(numTrimmed)).first
       };
 
+      const std::ranges::subrange kept{data.cbegin() + numTrimmed, data.cend() - numTrimmed};
       const double fractionKept{1.0 - 2.0 * numTrimmed / n};
 
       return {
