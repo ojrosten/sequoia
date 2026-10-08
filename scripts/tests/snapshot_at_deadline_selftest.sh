@@ -23,6 +23,9 @@
 #     deadline and after it;
 #   - the command reads the script's standard input and writes to its standard
 #     output and error, and runs in the caller's process group;
+#   - the script adds nothing to standard error: neither bash's notice of a
+#     command which a signal kills, nor its notice of the watcher's end, even
+#     when the watcher ends before the script waits for it;
 #   - a command which ends before the deadline returns at once, leaves no
 #     snapshot, and leaves neither the watcher nor its sleep behind;
 #   - a watcher whose script has been killed stops, rather than taking a
@@ -244,6 +247,18 @@ fake_tool "$tmp/linux-slow" pgrep "$pgrep_stand_in"
 fake_tool "$tmp/linux-slow" sudo  'exit 1'
 fake_tool "$tmp/linux-slow" gdb   "$real_sleep 1"
 
+# A DEBUG trap, sourced through BASH_ENV, which holds back the script's wait
+# for the watcher until the watcher has gone, for at most 5 s. The trap marks
+# that it held the wait, so that a control whose wait was never held fails
+# rather than passing unexercised.
+cat > "$tmp/late_wait.bash" <<'LATE_WAIT'
+trap 'case $BASH_COMMAND in
+  "wait \"\$watcher\""*)
+    touch "$LATE_WAIT_MARK"
+    for poll in $(seq 1 50); do kill -0 "$watcher" 2> /dev/null || break; sleep 0.1; done ;;
+esac' DEBUG
+LATE_WAIT
+
 run_controls() {
   fails=0
   work=$(mktemp -d "$tmp/controls.XXXXXX")
@@ -351,6 +366,17 @@ $real_sleep 5"
   [ "$got" -eq 143 ] || fail "a command killed by SIGTERM gave status $got, not 143"
   [ "$(cat "$work/signalled.err")" = "to error" ] \
     || fail "a command killed by a signal left more on standard error: $(tail -1 "$work/signalled.err")"
+
+  # The watcher's end goes unreported when the watcher ends before the script
+  # waits for it. Only macOS's bash, 3.2, reports a background job which
+  # SIGTERM ends, so on Linux this control cannot fail.
+  env BASH_ENV="$tmp/late_wait.bash" LATE_WAIT_MARK="$work/late-wait.mark" \
+    "$BASH" "$script" 5 "$work/late-wait.txt" "$name" -- true 2> "$work/late-wait.err"
+  if [ ! -e "$work/late-wait.mark" ]; then
+    fail "the script's wait for the watcher was never held back, so the watcher's end could not be checked"
+  fi
+  [ ! -s "$work/late-wait.err" ] \
+    || fail "a watcher ending before the wait left a notice on standard error: $(head -1 "$work/late-wait.err")"
 
   # The command runs in the caller's process group, as it would without the
   # script.
@@ -529,11 +555,11 @@ mutant any snapshot_at_deadline.sh "bash's notice kept" \
   '{ "$@" 2>&3 3>&-; } 3>&2 2> /dev/null' \
   '"$@"'
 mutant any snapshot_at_deadline.sh "the watcher's notice kept" \
-  'wait "$watcher" 2> /dev/null' \
-  'wait "$watcher"'
+  $'  wait "$watcher"\n} 2> /dev/null' \
+  $'  wait "$watcher"\n}'
 mutant any snapshot_at_deadline.sh 'the watcher not ended' \
-  '{ kill -TERM -- -"$watcher" || kill -TERM "$watcher"; } 2> /dev/null' \
-  ':'
+  '    kill -TERM -- -"$watcher" || kill -TERM "$watcher"' \
+  '    :'
 mutant any snapshot_at_deadline.sh "the watcher's sleep left" \
   'kill -TERM -- -"$watcher" || ' \
   ''
@@ -544,7 +570,7 @@ mutant any snapshot_at_deadline.sh 'job control left on' \
   'set +m' \
   ':'
 mutant any snapshot_at_deadline.sh 'the script claims nothing' \
-  'if mkdir "$claim" 2> /dev/null; then' \
+  'if mkdir "$claim"; then' \
   'if true; then'
 mutant any snapshot_at_deadline.sh 'the watcher claims nothing' \
   'mkdir "$claim" 2> /dev/null && take_snapshot' \
@@ -642,6 +668,9 @@ mutant any snapshot_at_deadline.sh 'no temporary directory accepted' \
 mutant any snapshot_at_deadline.sh 'the temporary directory kept' \
   'rm -rf "$flag_dir"' \
   ':'
+mutant macos snapshot_at_deadline.sh "macOS: the watcher's end reported" \
+  $'  fi\n  wait "$watcher"\n} 2> /dev/null' \
+  $'  fi\n} 2> /dev/null\nwait "$watcher" 2> /dev/null'
 mutant macos snapshot_at_deadline.sh 'macOS: sampled to a file' \
   ' -file /dev/stdout' \
   ''

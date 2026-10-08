@@ -189,9 +189,16 @@ set +m
 { "$@" 2>&3 3>&-; } 3>&2 2> /dev/null
 status=$?
 
-if mkdir "$claim" 2> /dev/null; then
-  { kill -TERM -- -"$watcher" || kill -TERM "$watcher"; } 2> /dev/null
-fi
-wait "$watcher" 2> /dev/null
+# One redirection covers the kill and the wait together. macOS's bash, 3.2,
+# writes a notice to standard error when a signal ends a background job. bash
+# writes the notice just before the next command to begin after the job ended.
+# So a redirection on the wait alone misses the notice of a watcher which ends
+# before the wait begins.
+{
+  if mkdir "$claim"; then
+    kill -TERM -- -"$watcher" || kill -TERM "$watcher"
+  fi
+  wait "$watcher"
+} 2> /dev/null
 rm -rf "$flag_dir"
 exit "$status"
