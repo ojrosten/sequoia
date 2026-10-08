@@ -43,9 +43,9 @@ namespace sequoia::testing
     };
   }
 
-  /** \brief A task which spins, and counts its calls.
+  /** \brief A task which spins, and counts its invocations.
 
-      Every copy of the task shares one count of the calls made, so the
+      Every copy of the task shares one count of the invocations, so the
       count covers every trial of every attempt.
    */
   class counted_spinner
