@@ -7,7 +7,8 @@ name: coverage
 #
 # fine calls this workflow, so the gate holds pull requests into staging.
 # rigorous calls it too, for promotions to main, the nightly run and
-# dispatches.
+# dispatches. baseline-tightener.yml calls it to measure staging, and proposes
+# the tightened baseline this workflow uploads.
 #
 # The toolchain steps repeat tests.yml's rather than calling it, because
 # coverage runs the suite through ctest, serially, not through the `run`
@@ -248,16 +249,25 @@ jobs:
       # tracefile holds every object the build compiled, whether or not it was
       # linked. A template never instantiated, and an inline function never
       # used, are in no object, so the gate does not see them. A listed
-      # function that is now called, or gone, gives a notice, and the list is
-      # shortened by hand. Errors and notices are annotations on the run as
-      # well as lines in its summary.
+      # function that is now called, or gone, gives a notice, and
+      # baseline-tightener.yml removes its entry. Errors and notices are
+      # annotations on the run as well as lines in its summary.
       #
       # The baseline's header names the tools' releases, so a change of
       # demangler, compiler or lcov release is refused until the baseline is
       # made again. A failure, a refusal included, prints a baseline made from
       # this run and how its entries differ from the committed ones, so that a
       # newly uncalled function is not absorbed unseen with a change of tools.
+      #
+      # A run which passes also writes the baseline tightened by this run: the
+      # committed one without the entries the notices name. Both follow from
+      # the same counts, so the step fails if a notice leaves the baseline
+      # unchanged. It also fails if tightening changes a baseline without a
+      # notice, which happens when the committed baseline is not in the form
+      # the script writes, such as a hand-added entry out of order.
+      # baseline-tightener.yml proposes the tightened baseline.
       - name: Check for uncalled functions
+        id: gate
         if: ${{ always() && steps.measure.outcome == 'success' }}
         run: |
           baseline=coverage_reports/uncalled_functions.txt
@@ -290,8 +300,33 @@ jobs:
               echo "Entries of $baseline (<) against a baseline made from this run (>):"
               echo '```'; echo "$entries"; echo '```'
             } >> "$GITHUB_STEP_SUMMARY"
+            exit "$status"
           fi
-          exit "$status"
+          tightened="$RUNNER_TEMP/tightened/uncalled_functions.txt"
+          mkdir -p "${tightened%/*}"
+          if ! scripts/uncalled_functions.py tighten "${options[@]}" --baseline "$baseline" > "$tightened"; then
+            echo "::error title=Uncalled functions::the baseline could not be tightened"
+            exit 1
+          fi
+          if cmp -s "$baseline" "$tightened"; then changed=no; else changed=yes; fi
+          if grep -q '^notice: ' "$verdict"; then noticed=yes; else noticed=no; fi
+          if [ "$changed" = yes ] && [ "$noticed" = no ]; then
+            echo "::error title=Uncalled functions::$baseline is not as the script writes it: tightening it with no notice changed it. Make it again as the diff below shows"
+            diff "$baseline" "$tightened" || true
+            exit 1
+          fi
+          if [ "$changed" = no ] && [ "$noticed" = yes ]; then
+            echo "::error title=Uncalled functions::tightening $baseline removed nothing, although the comparison gave a notice"
+            exit 1
+          fi
+
+      - name: Upload the tightened baseline
+        if: ${{ always() && steps.gate.outcome == 'success' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: uncalled-functions-tightened
+          path: ${{ runner.temp }}/tightened/uncalled_functions.txt
+          if-no-files-found: error
 
       - name: Upload the tracefile and the report
         if: ${{ always() && env.NEEDS_TESTING == 'true' }}

@@ -41,10 +41,11 @@ name: watchdog
 # cannot see.
 on:
   # This tick is twelve hours after those of the nightly and the statistical
-  # run. A watched run that GitHub has not created when this one looks is
-  # reported missing, so the gap must exceed the watched runs' delay. Over the
-  # 20 nights to 2026-10-07, GitHub created the nightly 4h34m to 6h21m after
-  # its tick. The minute is off the hour, as rigorous.yml's is.
+  # run, and fifteen after the baseline tightener's. A watched run that GitHub
+  # has not created when this one looks is reported missing, so the gap must
+  # exceed the watched runs' delay. Over the 20 nights to 2026-10-07, GitHub
+  # created the nightly 4h34m to 6h21m after its tick. The minute is off the
+  # hour, as rigorous.yml's is.
   schedule:
     - cron: '1 13 * * *'
   workflow_dispatch:
@@ -147,4 +148,5 @@ jobs:
           check rigorous.yml "the nightly" || failed=1
           check statistical.yml "the statistical run" || failed=1
           check false-negative.yml "the false-negative control" || failed=1
+          check baseline-tightener.yml "the baseline tightener" || failed=1
           exit $failed

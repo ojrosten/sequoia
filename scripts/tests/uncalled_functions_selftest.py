@@ -716,6 +716,73 @@ class Verdict(unittest.TestCase):
         self.assertEqual(self.compare(baseline, traced), (0, '', ''))
 
 
+class Tightening(unittest.TestCase):
+    setUp         = Verdict.setUp
+    make_baseline = Verdict.make_baseline
+
+    def tighten(self, baseline, tracefile_path):
+        return run_main(['tighten', '--tracefile', tracefile_path, '--repository', ROOT, '--baseline', baseline]
+                        + tool_options(self.tool))
+
+    def tightened(self, baseline_functions, current_functions):
+        """(exit status, standard output, standard error) of `tighten`, given
+        a baseline made from `baseline_functions`."""
+        return self.tighten(self.make_baseline(baseline_functions, SOURCE_FILE),
+                            tracefile(current_functions, SOURCE_FILE))
+
+    def baseline_text(self, functions, path):
+        with open(self.make_baseline(functions, path), encoding='utf-8') as file:
+            return file.read()
+
+    def test_an_unchanged_baseline_is_printed_as_it_was(self):
+        functions = [(10, [(CONVERT_STRING, 0)]), (20, [(CONVERT_VIEW, 0)]), (30, [(HIDDEN, 1)])]
+        self.assertEqual(self.tightened(functions, functions), (0, self.baseline_text(functions, SOURCE_FILE), ''))
+
+    def test_a_listed_function_now_called_is_removed(self):
+        self.assertEqual(self.tightened([(10, [(CONVERT_STRING, 0)]), (20, [(CONVERT_VIEW, 0)])],
+                                        [(10, [(CONVERT_STRING, 2)]), (20, [(CONVERT_VIEW, 0)])]),
+                         (0, self.baseline_text([(20, [(CONVERT_VIEW, 0)])], SOURCE_FILE), ''))
+
+    def test_a_listed_function_gone_is_removed(self):
+        self.assertEqual(self.tightened([(10, [(CONVERT_STRING, 0)]), (20, [(CONVERT_VIEW, 0)])],
+                                        [(20, [(CONVERT_VIEW, 0)])]),
+                         (0, self.baseline_text([(20, [(CONVERT_VIEW, 0)])], SOURCE_FILE), ''))
+
+    def test_a_newly_uncalled_function_is_not_added(self):
+        self.assertEqual(self.tightened([(10, [(CONVERT_STRING, 0)]), (20, [(CONVERT_VIEW, 1)])],
+                                        [(10, [(CONVERT_STRING, 0)]), (20, [(CONVERT_VIEW, 0)])]),
+                         (0, self.baseline_text([(10, [(CONVERT_STRING, 0)])], SOURCE_FILE), ''))
+
+    def test_a_key_listed_twice_loses_one_listing_when_one_function_is_called(self):
+        self.assertEqual(self.tightened([(10, [(SET_INT, 0)]), (11, [(SET2_INT, 0)])],
+                                        [(10, [(SET_INT, 0)]), (11, [(SET2_INT, 3)])]),
+                         (0, self.baseline_text([(10, [(SET_INT, 0)])], SOURCE_FILE), ''))
+
+    def test_a_file_left_with_no_key_is_dropped(self):
+        def both_files(source_functions, other_functions):
+            texts = []
+            for functions, path in ((source_functions, SOURCE_FILE), (other_functions, OTHER_FILE)):
+                with open(tracefile(functions, path), encoding='utf-8') as file:
+                    texts.append(file.read())
+            return written(''.join(texts), '.info')
+
+        status, out, err = run_main(['baseline', '--tracefile', both_files([(10, [(HIDDEN, 0)])],
+                                                                             [(20, [(CONVERT_VIEW, 0)])]),
+                                     '--repository', ROOT] + tool_options(self.tool))
+        self.assertEqual((status, err), (0, ''))
+        self.assertIn('Source/sequoia/other.hpp', out)
+        self.assertEqual(self.tighten(written(out, '.txt'),
+                                      both_files([(10, [(HIDDEN, 0)])], [(20, [(CONVERT_VIEW, 4)])])),
+                         (0, self.baseline_text([(10, [(HIDDEN, 0)])], SOURCE_FILE), ''))
+
+    def test_a_baseline_from_another_version_of_a_recorded_tool_is_refused(self):
+        baseline  = self.make_baseline([(10, [(HIDDEN, 0)])], SOURCE_FILE)
+        self.tool = fake_tool('faketool', 'faketool (built with 13.4; Fake 9.9.2-1fake1) 9.9.2-0 [r123]', 0)
+        status, out, err = self.tighten(baseline, tracefile([(10, [(HIDDEN, 0)])], SOURCE_FILE))
+        self.assertEqual((status, out), (2, ''))
+        self.assertIn('regenerate the baseline', err)
+
+
 # Each mutant is (description, old text, new text). Two mutants are left out as
 # equivalent:
 #   -# dropping the guard that keeps `(anonymous namespace)` from being read as
@@ -865,6 +932,15 @@ MUTATIONS = [
     ('a space before && begins it',      r"(const|volatile|&&?)(\s|::)",           r"(const|volatile)(\s|::)"),
     ('an arrow read as a bracket',       r"(?!\w)|->|[<>(){}\[\]]'",              r"(?!\w)|[<>(){}\[\]]'"),
     ('this_type read as an object',      "parameters.startswith('this ')",        "parameters.startswith('this')"),
+    ('tighten removes nothing',          "kept := keys & current.get(file, Counter())", "kept := keys"),
+    ('tighten adds keys too',            "kept := keys & current.get(file, Counter())",
+                                         "kept := keys | current.get(file, Counter())"),
+    ('tighten keeps an emptied file',    "if (kept := keys & current.get(file, Counter()))}",
+                                         "if (kept := keys & current.get(file, Counter())) or True}"),
+    ('tighten keeps a key while any is uncalled', "kept := keys & current.get(file, Counter())",
+                                         "kept := Counter({k: n for k, n in keys.items() if current.get(file, {}).get(k)})"),
+    ('tighten exits as compare does',    "            sys.stdout.write(format_baseline(current_header, tightened(",
+                                         "            return 1\n            sys.stdout.write(format_baseline(current_header, tightened("),
     ("a demangler's lines unchecked",    "if len(lines) != len(pending) + 1 or lines[-1]:", "if False:"),
     ('text after the last line read',    "if len(lines) != len(pending) + 1 or lines[-1]:",
                                          "if len(lines) != len(pending) + 1:"),
