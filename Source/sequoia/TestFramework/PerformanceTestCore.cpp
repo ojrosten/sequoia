@@ -22,10 +22,11 @@ namespace sequoia::testing
   {
     /** \brief The numbers in `text`, if there are exactly `N`.
 
-        Reading goes left to right, trying `std::from_chars` at each character.
-        A number it reads is taken, and reading resumes after it; otherwise
-        reading moves on one character. So `inf` and `nan` count, even inside a
-        word, and a `-` directly before a number is its sign.
+        Anything identifiable as a number is extracted as a `double`: whatever
+        `std::from_chars` reads, trying each character from left to right and
+        resuming after each number it reads. So an integer counts, as do `inf`
+        and `nan`, even inside a word, and a `-` directly before a number is
+        its sign.
      */
     template<std::size_t N>
     [[nodiscard]]
@@ -72,15 +73,15 @@ namespace sequoia::testing
 
       if(const auto numbers{extract_numbers_from<3>(afterLabel)})
       {
-        const auto [mean, numSds, sig]{*numbers};
-        if(duration_summary(prefix, mean, numSds, sig) == line)
+        const auto [mean, numSds, sd]{*numbers};
+        if(duration_summary(prefix, mean, numSds, sd) == line)
           return duration_summary(prefix, 0, numSds, 0);
       }
 
       if(const auto numbers{extract_numbers_from<6>(afterLabel)})
       {
-        const auto [mean, numSds, sig, speedup, minSpeedup, maxSpeedup]{*numbers};
-        if(duration_summary(prefix, mean, numSds, sig) + speedup_summary(speedup, minSpeedup, maxSpeedup) == line)
+        const auto [mean, numSds, sd, speedup, minSpeedup, maxSpeedup]{*numbers};
+        if(duration_summary(prefix, mean, numSds, sd) + speedup_summary(speedup, minSpeedup, maxSpeedup) == line)
           return duration_summary(prefix, 0, numSds, 0) + speedup_summary(0, minSpeedup, maxSpeedup);
       }
 
@@ -100,9 +101,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string duration_summary(std::string_view prefix, double mean, double numSds, double sig)
+  std::string duration_summary(std::string_view prefix, double mean, double numSds, double sd)
   {
-    return std::format("{} Task duration: {:g}s +- {:g} * {:g}s", prefix, mean, numSds, sig);
+    return std::format("{} Task duration: {:g}s +- {:g} * {:g}s", prefix, mean, numSds, sd);
   }
 
   [[nodiscard]]

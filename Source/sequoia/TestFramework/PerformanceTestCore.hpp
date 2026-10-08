@@ -37,7 +37,7 @@ namespace sequoia::testing
              standard deviations which defines a significant result.
    */
   [[nodiscard]]
-  std::string duration_summary(std::string_view prefix, double mean, double numSds, double sig);
+  std::string duration_summary(std::string_view prefix, double mean, double numSds, double sd);
 
   /** \brief A suffix reporting the measured speed-up and the range predicted
              for it.
