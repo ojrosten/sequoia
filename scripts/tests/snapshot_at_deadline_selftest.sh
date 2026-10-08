@@ -18,6 +18,8 @@
 #         path, a path ending in `/`, or one whose directory is missing, is
 #         not a directory, or is read-only;
 #       - a TMPDIR in which the script cannot create its temporary directory;
+#   - the script says so, and exits with status 2 before the command runs,
+#     when it cannot start its watcher;
 #   - the script's temporary directory is under TMPDIR, and is removed;
 #   - the command's exit status is the script's, zero or not, before the
 #     deadline and after it;
@@ -25,7 +27,8 @@
 #     output and error, and runs in the caller's process group;
 #   - the script adds nothing to standard error: neither bash's notice of a
 #     command which a signal kills, nor its notice of the watcher's end, even
-#     when the watcher ends before the script waits for it;
+#     when the watcher ends before the script waits for it, nor anything the
+#     watcher's process writes before its own redirections apply;
 #   - a command which ends before the deadline returns at once, leaves no
 #     snapshot, and leaves neither the watcher nor its sleep behind;
 #   - a watcher whose script has been killed stops, rather than taking a
@@ -249,8 +252,9 @@ fake_tool "$tmp/linux-slow" gdb   "$real_sleep 1"
 
 # A DEBUG trap, sourced through BASH_ENV, which holds back the script's wait
 # for the watcher until the watcher has gone, for at most 5 s. The trap leaves
-# a mark if the watcher had gone when the wait began, so that a control whose
-# wait was never held back fails rather than passing unexercised.
+# a mark if the watcher had gone by the time it let the wait begin, so that a
+# control whose wait was never held back fails rather than passing
+# unexercised.
 cat > "$tmp/late_wait.bash" <<'LATE_WAIT'
 trap 'case $BASH_COMMAND in
   "wait \"\$watcher\""*)
@@ -258,6 +262,23 @@ trap 'case $BASH_COMMAND in
     kill -0 "$watcher" 2> /dev/null || touch "$LATE_WAIT_MARK" ;;
 esac' DEBUG
 LATE_WAIT
+
+# A DEBUG trap which writes a line to standard error as the watcher is
+# launched, as bash does when the watcher's process cannot move into its
+# process group. It leaves a mark, as the trap above does.
+cat > "$tmp/launch_complaint.bash" <<'LAUNCH_COMPLAINT'
+trap 'case $BASH_COMMAND in
+  watch_for_deadline*)
+    touch "$LAUNCH_MARK"
+    echo "child setpgid (1 to 1): Operation not permitted" >&2 ;;
+esac' DEBUG
+LAUNCH_COMPLAINT
+
+# A DEBUG trap which allows the script one process just before it launches the
+# watcher, so that the launch's fork fails.
+cat > "$tmp/no_fork.bash" <<'NO_FORK'
+trap 'case $BASH_COMMAND in "set -m") ulimit -u 1 ;; esac' DEBUG
+NO_FORK
 
 run_controls() {
   fails=0
@@ -309,11 +330,11 @@ run_controls() {
     start=$(tenths)
     bash "$script" 5 "$work/early.txt" "$name" -- true 2> "$work/early.err"
     elapsed=$(($(tenths) - start))
+    [ -n "$fastest" ] && [ "$fastest" -le "$elapsed" ] || fastest=$elapsed
     if [ -s "$work/early.err" ]; then
       fail "a command ending before the deadline left a line on standard error: $(head -1 "$work/early.err")"
       break
     fi
-    [ -n "$fastest" ] && [ "$fastest" -le "$elapsed" ] || fastest=$elapsed
     if [ "$elapsed" -gt 9 ]; then
       fail "a command ending before the deadline took $((elapsed / 10)).$((elapsed % 10))s to return"
       break
@@ -362,7 +383,7 @@ $real_sleep 5"
   check "the command reads standard input and writes standard output" yes "^to the command$" "$work/streams.out"
   check "the command writes standard error"                            yes "^to error$"       "$work/streams.err"
   [ "$(wc -l < "$work/streams.err")" -eq 1 ] \
-    || fail "standard error holds more than the command's line: $(grep -vx 'to error' "$work/streams.err" | head -1)"
+    || fail "standard error holds more than the command's line: $(paste -sd '|' "$work/streams.err")"
 
   # A command which a signal kills: its status passes through, and standard
   # error holds only the command's own output, not bash's notice of the kill.
@@ -383,6 +404,29 @@ $real_sleep 5"
   fi
   [ ! -s "$work/late-wait.err" ] \
     || fail "a watcher ending before the wait left a notice on standard error: $(head -1 "$work/late-wait.err")"
+
+  # Whatever the watcher's process writes before its own redirections apply
+  # is discarded.
+  env BASH_ENV="$tmp/launch_complaint.bash" LAUNCH_MARK="$work/launch.mark" \
+    "$BASH" "$script" 5 "$work/launch.txt" "$name" -- true 2> "$work/launch.err"
+  if [ ! -e "$work/launch.mark" ]; then
+    fail "the trap never saw the watcher's launch, so a complaint from the launch could not be checked"
+  fi
+  [ ! -s "$work/launch.err" ] \
+    || fail "a complaint from the watcher's launch reached standard error: $(head -1 "$work/launch.err")"
+
+  # A watcher which cannot be started is reported, before the command runs.
+  rm -f "$work/ran"
+  BASH_ENV="$tmp/no_fork.bash" "$BASH" "$script" 5 "$work/no-fork.txt" "$name" -- touch "$work/ran" \
+    2> "$work/no-fork.err"
+  got=$?
+  if [ -e "$work/ran" ]; then
+    fail "the watcher started under a limit of one process, as it may for root, so a failed start could not be checked"
+  else
+    [ "$got" -eq 2 ] || fail "a watcher which could not be started gave status $got, not 2"
+    check "a watcher which could not be started is reported" yes \
+      "the watcher could not be started$" "$work/no-fork.err"
+  fi
 
   # The command runs in the caller's process group, as it would without the
   # script.
@@ -569,6 +613,15 @@ mutant any snapshot_at_deadline.sh 'the watcher not ended' \
 mutant any snapshot_at_deadline.sh "the watcher's sleep left" \
   'kill -TERM -- -"$watcher" || ' \
   ''
+mutant any snapshot_at_deadline.sh "the launch's complaint kept" \
+  '{ watch_for_deadline < /dev/null > /dev/null 2>&1 & } 2> /dev/null' \
+  'watch_for_deadline < /dev/null > /dev/null 2>&1 &'
+mutant any snapshot_at_deadline.sh 'a failed start unreported' \
+  $'trap \'echo "$0: the watcher could not be started" >&2; exit 2\' EXIT\n' \
+  ''
+mutant any snapshot_at_deadline.sh 'the exit trap left set' \
+  $'set +m\ntrap - EXIT' \
+  'set +m'
 mutant any snapshot_at_deadline.sh 'no process group' \
   $'set -m\n{ watch_for_deadline' \
   $':\n{ watch_for_deadline'
