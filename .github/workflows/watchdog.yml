@@ -147,4 +147,5 @@ jobs:
           check rigorous.yml "the nightly" || failed=1
           check statistical.yml "the statistical run" || failed=1
           check false-negative.yml "the false-negative control" || failed=1
+          check baseline-tightener.yml "the baseline tightener" || failed=1
           exit $failed

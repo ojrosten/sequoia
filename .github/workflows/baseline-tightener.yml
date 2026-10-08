@@ -1,0 +1,205 @@
+name: baseline-tightener
+# The ratchet of the gate on uncalled functions. coverage.yml fails a run in
+# which a function of Source is uncalled and is not listed in
+# coverage_reports/uncalled_functions.txt. A listed function that has since
+# been called, or has gone, gives only a notice. Left alone, its entry would
+# stay, and the function could stop being called again with no gate to see it.
+# So each night this workflow measures staging and proposes the baseline
+# without every entry the measurement no longer needs: it opens, or updates,
+# one PR into staging, set to merge itself once its gate is green, as the
+# promotion PR is.
+#
+# The PR only removes entries, so it cannot loosen the gate. A function newly
+# uncalled is not listed, so its own PR still fails. The job checks the
+# proposal against the committed baseline before pushing it: the header and
+# every remaining entry unchanged, and nothing added.
+#
+# The workflow measures staging's tip itself, rather than taking a tracefile
+# from another workflow's run. So the proposal rests on the commit it is
+# built on, and on nothing a fork's PR could supply. The measurement costs a
+# coverage build, about twenty minutes of a Linux runner.
+#
+# The PR is gated like any other PR into staging. Since only the baseline
+# changes, scope.yml runs the coverage job and skips the test columns. The
+# gate measures the PR merged with staging as it is when the gate runs. A PR
+# merged after that, which stops a listed function being called, would pass
+# its own gate, since the function is still listed. If this PR then removes
+# the entry, the next PR into staging fails, naming the function.
+#
+# Each removal rests on one measurement. Over five fine runs of one tree,
+# 2026-10-07, every run left the same functions uncalled. A function whose
+# calls varied between runs would be removed by a lucky run and named by the
+# next PR's gate, so the PR lists what it removes.
+#
+# A dispatch names the branch to measure and propose into, so the workflow
+# can be tried on a scratch branch. The schedule always uses staging.
+#
+# The push and the PR need a token other than GITHUB_TOKEN, for the reason
+# rigorous.yml's promote job gives: a PR or push that token makes starts no
+# workflow, so the PR's gate would never report. PROMOTION_TOKEN is that job's
+# token.
+on:
+  # watchdog.yml checks that this schedule fires. Its tick must stay more than
+  # GitHub's delay, up to six and a half hours, before the watchdog's.
+  schedule:
+    - cron: '1 2 * * *'
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'The branch to measure, and to propose the tightened baseline into.'
+        required: true
+        type: string
+# One run at a time, so that an older measurement cannot overwrite a newer
+# proposal. A run waiting for the one before it is not cancelled.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  # The commit the run measures and builds the proposal on, fixed once, so
+  # that both jobs below see one commit however the branch moves.
+  commit:
+    name: The commit to measure
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      sha: ${{ steps.resolve.outputs.sha }}
+      branch: ${{ steps.resolve.outputs.branch }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      BRANCH: ${{ github.event_name == 'schedule' && 'staging' || inputs.branch }}
+    steps:
+      - id: resolve
+        run: |
+          sha=$(gh api "repos/$GH_REPO/commits/heads/$BRANCH" --jq .sha)
+          echo "Measuring $BRANCH at $sha"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+
+  coverage:
+    needs: commit
+    uses: ./.github/workflows/coverage.yml
+    with:
+      needs_testing: 'true'
+      merge_into: ''
+      ref: ${{ needs.commit.outputs.sha }}
+
+  propose:
+    name: Propose the tightened baseline
+    needs: [commit, coverage]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ secrets.PROMOTION_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      SHA: ${{ needs.commit.outputs.sha }}
+      BRANCH: ${{ needs.commit.outputs.branch }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.commit.outputs.sha }}
+          token: ${{ secrets.PROMOTION_TOKEN }}
+          fetch-depth: 1
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: uncalled-functions-tightened
+          path: ${{ runner.temp }}/tightened
+
+      - name: Open, update or close the PR
+        run: |
+          baseline=coverage_reports/uncalled_functions.txt
+          tightened=$RUNNER_TEMP/tightened/uncalled_functions.txt
+          head=tighten-uncalled-functions-into-$BRANCH
+          pr=$(gh pr list --base "$BRANCH" --head "$head" --state open --json number --jq '.[0].number // empty')
+
+          if cmp -s "$baseline" "$tightened"; then
+            echo "$BRANCH at $SHA needs every entry of $baseline"
+            if [ -n "$pr" ]; then
+              gh pr close "$pr" --delete-branch \
+                --comment "$BRANCH at $SHA needs every entry of \`$baseline\`, so nothing is left to remove: $RUN_URL"
+              echo "closed #$pr"
+            fi
+            exit 0
+          fi
+
+          # The proposal may only remove entries. The check reads both files
+          # as the gate does, so that a key moved to another file counts as an
+          # addition there.
+          python3 - "$baseline" "$tightened" <<'CHECK'
+          import sys
+          from collections import Counter
+          sys.path.insert(0, 'scripts')
+          from uncalled_functions import read_baseline
+          committed_header, committed = read_baseline(sys.argv[1])
+          proposed_header,  proposed  = read_baseline(sys.argv[2])
+          added = [(file, key) for file, keys in proposed.items()
+                               for key in (keys - committed.get(file, Counter())).elements()]
+          if proposed_header != committed_header:
+              print(f'::error::the tightened baseline changes the header: {proposed_header}')
+              sys.exit(1)
+          if added:
+              print(f'::error::the tightened baseline adds entries: {added}')
+              sys.exit(1)
+          CHECK
+          removed=$(diff --unchanged-line-format= --old-line-format='%L' --new-line-format= "$baseline" "$tightened" || true)
+          echo "Lines the tightened baseline removes:"
+          echo "$removed"
+
+          if [ -n "$pr" ] && git fetch --quiet --depth=1 origin "$head" \
+               && git diff --quiet FETCH_HEAD "$SHA" -- . ":(exclude)$baseline" \
+               && git show "FETCH_HEAD:$baseline" | cmp -s - "$tightened"; then
+            echo "#$pr already proposes this baseline on $BRANCH's tree at $SHA"
+            exit 0
+          fi
+
+          cp "$tightened" "$baseline"
+          message=$(printf '%s\n\n%s\n\n%s\n' \
+            "Tighten the uncalled-functions baseline" \
+            "Measured on $BRANCH at $SHA, by $RUN_URL. The lines removed:" \
+            "$removed")
+          git switch --quiet -c "$head"
+          git -c user.name="sequoia CI" -c user.email=ci@example.invalid \
+            commit --quiet -m "$message" -- "$baseline"
+          git push --quiet --force origin "$head"
+
+          body=$(printf '%s\n\n%s\n\n```\n%s\n```\n\n%s\n' \
+            "Measured on \`$BRANCH\` at $SHA by $RUN_URL. These entries of \`$baseline\` name functions that are now called, or gone:" \
+            "Removed:" \
+            "$removed" \
+            "Opened by baseline-tightener.yml, which says why. It removes entries only, and merges itself once its gate is green.")
+          if [ -n "$pr" ]; then
+            gh pr edit "$pr" --body "$body"
+            echo "updated #$pr"
+          else
+            url=$(gh pr create --base "$BRANCH" --head "$head" \
+                    --title "Tighten the uncalled-functions baseline" --body "$body")
+            pr=${url##*/}
+            echo "opened $url"
+          fi
+
+          # Auto-merge, as the promotion PR has it. A conflict with a baseline
+          # edited on the branch since the measurement leaves the PR unable to
+          # merge, and auto-merge would then wait without a word, so the step
+          # waits for GitHub's answer and fails on a conflict.
+          armed=$(gh pr view "$pr" --json autoMergeRequest --jq '.autoMergeRequest != null')
+          [ "$armed" = true ] || gh pr merge --auto --merge "$pr"
+          if [ "$(gh pr view "$pr" --json state --jq .state)" = MERGED ]; then
+            echo "#$pr had nothing to wait for and has merged"
+            exit 0
+          fi
+          for attempt in $(seq 1 12); do
+            mergeable=$(gh pr view "$pr" --json mergeable --jq .mergeable)
+            [ "$mergeable" = UNKNOWN ] || break
+            sleep 5
+          done
+          case "$mergeable" in
+            MERGEABLE)   echo "#$pr is mergeable and set to auto-merge";;
+            CONFLICTING) echo "::error::#$pr conflicts with $BRANCH, whose baseline has changed since $SHA"; exit 1;;
+            *)           echo "::warning::GitHub has not said whether #$pr can merge: '$mergeable'";;
+          esac
