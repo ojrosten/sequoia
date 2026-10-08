@@ -10,76 +10,127 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/PathCheckers.hpp"
 
+#include <array>
+#include <charconv>
 #include <format>
+#include <optional>
+#include <ranges>
 
 namespace sequoia::testing
 {
   namespace
   {
-    /** \brief Whether every mismatch lies after the `Task duration:` label on
-               its line, and leaves two spans of that line unchanged.
+    /** \brief Extracts the numbers in `text`, if there are exactly `N`.
 
-        Each span must appear identically on both lines, or on neither:
-        -# the number of standard deviations, from `+-` to `*`;
-        -# the range of speed-ups, from `(` to `)`.
+        Anything identifiable as a number is extracted as a `double`. That is
+        whatever `std::from_chars` reads. Reading tries each character from
+        left to right, and resumes after each number it reads. So integers
+        count, and so do `inf` and `nan`, even inside a word. A `-` directly
+        before a number is its sign.
      */
+    template<std::size_t N>
     [[nodiscard]]
-    bool acceptable_mismatch(std::string_view testOutput, std::string_view referenceOutput)
+    std::optional<std::array<double, N>> extract_numbers_from(std::string_view text)
     {
-      auto iters{std::ranges::mismatch(testOutput, referenceOutput)};
-      if((iters.in1 != testOutput.end()) && (iters.in2 != referenceOutput.end()))
+      std::array<double, N> numbers{};
+      std::size_t count{};
+      const auto last{text.data() + text.size()};
+      auto first{text.data()};
+      while(first != last)
       {
-        constexpr auto npos{std::string::npos};
-        const auto pos{std::ranges::distance(testOutput.begin(), iters.in1)};
-        std::string_view preceding{testOutput.substr(0, pos)};
-        const auto labelPos{preceding.rfind("Task duration:")};
-        if((labelPos != npos) && !preceding.substr(labelPos).contains('\n'))
+        double value{};
+        if(const auto [next, error]{std::from_chars(first, last, value)}; error == std::errc{})
         {
-          const auto endLine{testOutput.find('\n', pos)};
-          const auto refEndLine{referenceOutput.find('\n', pos)};
+          if(count == N)
+            return std::nullopt;
 
-          if((endLine != npos) && (refEndLine != npos))
-          {
-            std::string_view lineView{testOutput.substr(labelPos, endLine - labelPos)};
-            std::string_view refLineView{referenceOutput.substr(labelPos, refEndLine - labelPos)};
-
-            auto acceptable{
-              [=](std::string_view open, std::string_view close){
-                const auto openPos{lineView.find(open)};
-                const auto closePos{lineView.find(close)};
-                const auto refOpenPos{refLineView.find(open)};
-                const auto refClosePos{refLineView.find(close)};
-                const bool present{(closePos != npos) && (openPos < closePos)};
-                const bool refPresent{(refClosePos != npos) && (refOpenPos < refClosePos)};
-                if(present && refPresent)
-                {
-                  const auto[lineIter, refLineIter]{
-                    std::ranges::mismatch(lineView.begin() + openPos, lineView.begin() + closePos,
-                                          refLineView.begin() + refOpenPos, refLineView.begin() + refClosePos)};
-
-                  return (lineIter == (lineView.begin() + closePos)) && (refLineIter == (refLineView.begin() + refClosePos));
-                }
-
-                return present == refPresent;
-              }
-            };
-
-            if(!acceptable("+-", "*") || !acceptable("(", ")"))
-              return false;
-
-            return acceptable_mismatch(testOutput.substr(endLine), referenceOutput.substr(refEndLine));
-          }
+          numbers[count++] = value;
+          first = next;
+        }
+        else
+        {
+          ++first;
         }
       }
 
-      return (iters.in1 == testOutput.end()) && (iters.in2 == referenceOutput.end());
+      return count == N ? std::optional{numbers} : std::nullopt;
     }
+
+    /** \brief Returns `line` with its measured values set to zero.
+
+        The measured values are the mean, the standard deviation and the
+        speed-up. The number of standard deviations and the predicted range
+        stay as they are.
+
+        A line has measured values only if the formatter could have printed it.
+        That is so if `duration_summary` reprints the line exactly from the
+        numbers after its label, with or without `speedup_summary` after it.
+        Any other line is returned as it stands.
+     */
+    [[nodiscard]]
+    std::string line_with_zeroed_measurements(std::string_view line)
+    {
+      constexpr std::string_view label{" Task duration: "};
+      const auto labelPos{line.find(label)};
+      if(labelPos == std::string_view::npos)
+        return std::string{line};
+
+      std::string_view prefix{line.substr(0, labelPos)};
+      std::string_view afterLabel{line.substr(labelPos + label.size())};
+
+      if(const auto numbers{extract_numbers_from<3>(afterLabel)})
+      {
+        const auto [mean, numSds, sd]{*numbers};
+        if(duration_summary(prefix, mean, numSds, sd) == line)
+          return duration_summary(prefix, 0, numSds, 0);
+      }
+
+      if(const auto numbers{extract_numbers_from<6>(afterLabel)})
+      {
+        const auto [mean, numSds, sd, speedup, minSpeedup, maxSpeedup]{*numbers};
+        if(duration_summary(prefix, mean, numSds, sd) + speedup_summary(speedup, minSpeedup, maxSpeedup) == line)
+          return duration_summary(prefix, 0, numSds, 0) + speedup_summary(0, minSpeedup, maxSpeedup);
+      }
+
+      return std::string{line};
+    }
+
+    /** \brief Splits `text` at each newline, and zeroes the measured values
+               in each line.
+
+        Each line passes through `line_with_zeroed_measurements`. The result is
+        a lazy view of `text`, so it must not outlive `text`.
+     */
+    [[nodiscard]]
+    auto lines_with_zeroed_measurements(std::string_view text)
+    {
+      auto lineWithZeroedMeasurements{
+        [](auto line) { return line_with_zeroed_measurements(std::string_view{line}); }
+      };
+
+      return text | std::views::split('\n') | std::views::transform(lineWithZeroedMeasurements);
+    }
+  }
+
+  [[nodiscard]]
+  std::string duration_summary(std::string_view prefix, double mean, double numSds, double sd)
+  {
+    return std::format("{} Task duration: {:g}s +- {:g} * {:g}s", prefix, mean, numSds, sd);
+  }
+
+  [[nodiscard]]
+  std::string speedup_summary(double speedup, double minSpeedup, double maxSpeedup)
+  {
+    return std::format(" [{:g}; ({:g}, {:g})]", speedup, minSpeedup, maxSpeedup);
   }
 
   [[nodiscard]]
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput)
   {
-    return acceptable_mismatch(testOutput, referenceOutput) ? referenceOutput : testOutput;
+    const bool sameButForMeasurements{std::ranges::equal(lines_with_zeroed_measurements(testOutput),
+                                                         lines_with_zeroed_measurements(referenceOutput))};
+
+    return sameButForMeasurements ? referenceOutput : testOutput;
   }
 
   [[nodiscard]]
