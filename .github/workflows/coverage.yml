@@ -254,9 +254,9 @@ jobs:
       # tracefile holds every object the build compiled, whether or not it was
       # linked. A template never instantiated, and an inline function never
       # used, are in no object, so the gate does not see them. A listed
-      # function that is now called, or gone, gives a notice, and the list is
-      # shortened by hand. Errors and notices are annotations on the run as
-      # well as lines in its summary.
+      # function that is now called, or gone, gives a notice, and
+      # baseline-tightener.yml removes its entry. Errors and notices are
+      # annotations on the run as well as lines in its summary.
       #
       # The baseline's header names the tools' releases, so a change of
       # demangler, compiler or lcov release is refused until the baseline is
@@ -266,9 +266,11 @@ jobs:
       #
       # A run which passes also writes the baseline tightened by this run: the
       # committed one without the entries the notices name. The two come from
-      # one comparison, so the step fails if the tightened baseline differs
-      # from the committed one without a notice, or a notice leaves it
-      # unchanged. baseline-tightener.yml proposes the tightened baseline.
+      # one comparison, so the step fails if a notice leaves the baseline
+      # unchanged. It also fails if tightening changes a baseline without a
+      # notice, which happens when the committed baseline is not in the form
+      # the script writes, such as a hand-added entry out of order.
+      # baseline-tightener.yml proposes the tightened baseline.
       - name: Check for uncalled functions
         id: gate
         if: ${{ always() && steps.measure.outcome == 'success' }}
@@ -313,9 +315,13 @@ jobs:
           fi
           if cmp -s "$baseline" "$tightened"; then changed=no; else changed=yes; fi
           if grep -q '^notice: ' "$verdict"; then noticed=yes; else noticed=no; fi
-          if [ "$changed" != "$noticed" ]; then
-            echo "::error title=Uncalled functions::tightening changed the baseline: $changed; the comparison gave a notice: $noticed"
+          if [ "$changed" = yes ] && [ "$noticed" = no ]; then
+            echo "::error title=Uncalled functions::$baseline is not as the script writes it: tightening it with no notice changed it. Sort its entries as a baseline made from this run sorts them"
             diff "$baseline" "$tightened" || true
+            exit 1
+          fi
+          if [ "$changed" = no ] && [ "$noticed" = yes ]; then
+            echo "::error title=Uncalled functions::tightening $baseline removed nothing, although the comparison gave a notice"
             exit 1
           fi
 
