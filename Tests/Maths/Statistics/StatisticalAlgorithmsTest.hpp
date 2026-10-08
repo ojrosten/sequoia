@@ -25,5 +25,7 @@ namespace sequoia::testing
   private:
 
     void test_winsorized_sample_variance();
+
+    void test_forward_only_view();
   };
 }

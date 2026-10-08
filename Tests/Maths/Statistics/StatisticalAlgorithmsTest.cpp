@@ -9,22 +9,51 @@
 
 #include "sequoia/Maths/Statistics/StatisticalAlgorithms.hpp"
 
-#include <iterator>
+#include <forward_list>
 #include <limits>
+#include <ranges>
 #include <vector>
 
 namespace sequoia::testing
 {
   namespace
   {
-    // Parameterized so that an unsatisfiable requirement is a substitution failure rather than an ill-formed program
-    template<class Iter> inline constexpr bool mean_accepts                      {requires(Iter i) { maths::mean(i, i); }};
-    template<class Iter> inline constexpr bool cumulative_square_diffs_accepts   {requires(Iter i) { maths::cumulative_square_diffs(i, i); }};
-    template<class Iter> inline constexpr bool variance_accepts                  {requires(Iter i) { maths::variance(i, i); }};
-    template<class Iter> inline constexpr bool sample_variance_accepts           {requires(Iter i) { maths::sample_variance(i, i); }};
-    template<class Iter> inline constexpr bool standard_deviation_accepts        {requires(Iter i) { maths::standard_deviation(i, i); }};
-    template<class Iter> inline constexpr bool sample_standard_deviation_accepts {requires(Iter i) { maths::sample_standard_deviation(i, i); }};
-    template<class Iter> inline constexpr bool winsorized_sample_variance_accepts{requires(Iter i) { maths::winsorized_sample_variance(i, i, 0); }};
+    // Each probe is parameterized so that an unsatisfiable requirement is a
+    // substitution failure rather than an ill-formed program
+    template<class Data>
+    inline constexpr bool mean_accepts{
+      requires(Data d) { maths::mean(d); }
+    };
+
+    template<class Data>
+    inline constexpr bool cumulative_square_diffs_accepts{
+      requires(Data d) { maths::cumulative_square_diffs(d); }
+    };
+
+    template<class Data>
+    inline constexpr bool variance_accepts{
+      requires(Data d) { maths::variance(d); }
+    };
+
+    template<class Data>
+    inline constexpr bool sample_variance_accepts{
+      requires(Data d) { maths::sample_variance(d); }
+    };
+
+    template<class Data>
+    inline constexpr bool standard_deviation_accepts{
+      requires(Data d) { maths::standard_deviation(d); }
+    };
+
+    template<class Data>
+    inline constexpr bool sample_standard_deviation_accepts{
+      requires(Data d) { maths::sample_standard_deviation(d); }
+    };
+
+    template<class Data>
+    inline constexpr bool winsorized_sample_variance_accepts{
+      requires(Data d) { maths::winsorized_sample_variance(d, 0); }
+    };
   }
 
   [[nodiscard]]
@@ -37,12 +66,16 @@ namespace sequoia::testing
   {
     using namespace sequoia::maths;
 
-    // Both directions, since a constraint rejecting everything would pass the refusals on its own
-    using single_pass = std::istream_iterator<double>;
-    using multi_pass  = std::vector<double>::const_iterator;
+    auto keepAll{[](double) { return true; }};
 
-    STATIC_CHECK(( std::input_iterator<single_pass> && !std::forward_iterator<single_pass>));
-    STATIC_CHECK(( std::forward_iterator<multi_pass>));
+    // Both directions, since a constraint rejecting everything would pass the refusals on its own
+    using single_pass = std::ranges::istream_view<double>;
+    using multi_pass  = std::ranges::filter_view<std::ranges::ref_view<std::forward_list<double>>, decltype(keepAll)>;
+
+    STATIC_CHECK(( std::ranges::input_range<single_pass> && !std::ranges::forward_range<single_pass>));
+    STATIC_CHECK(( std::ranges::forward_range<multi_pass>
+                && !std::ranges::bidirectional_range<multi_pass>
+                && !std::ranges::range<const multi_pass>));
 
     STATIC_CHECK(!mean_accepts<single_pass>);
     STATIC_CHECK(!cumulative_square_diffs_accepts<single_pass>);
@@ -64,38 +97,38 @@ namespace sequoia::testing
 
     //
 
-    auto m{mean(data.begin(), data.end())};
+    auto m{mean(data)};
     check("", !m.has_value());
 
-    auto sq{cumulative_square_diffs(data.begin(), data.end())};
+    auto sq{cumulative_square_diffs(data)};
     check("", !sq.first.has_value());
     check("", !sq.second.has_value());
 
-    auto var{variance(data.begin(), data.end())};
+    auto var{variance(data)};
     check("", !var.first.has_value());
     check("", !var.second.has_value());
 
-    auto uvar{sample_variance(data.begin(), data.end())};
+    auto uvar{sample_variance(data)};
     check("", !uvar.first.has_value());
     check("", !uvar.second.has_value());
 
-    auto sd{standard_deviation(data.begin(), data.end())};
+    auto sd{standard_deviation(data)};
     check("", !sd.first.has_value());
     check("", !sd.second.has_value());
 
-    auto ssd{sample_standard_deviation(data.begin(), data.end())};
+    auto ssd{sample_standard_deviation(data)};
     check("", !ssd.first.has_value());
     check("", !ssd.second.has_value());
 
     // [2]
     data.push_back(2);
 
-    m = mean(data.begin(), data.end());
-    sq = cumulative_square_diffs(data.begin(), data.end());
-    var = variance(data.begin(), data.end());
-    uvar = sample_variance(data.begin(), data.end());
-    sd = standard_deviation(data.begin(), data.end());
-    ssd = sample_standard_deviation(data.begin(), data.end());
+    m = mean(data);
+    sq = cumulative_square_diffs(data);
+    var = variance(data);
+    uvar = sample_variance(data);
+    sd = standard_deviation(data);
+    ssd = sample_standard_deviation(data);
 
     check(equality, "", m.value(), 2.0);
 
@@ -117,12 +150,12 @@ namespace sequoia::testing
     // [2][4]
     data.push_back(4);
 
-    m = mean(data.begin(), data.end());
-    sq = cumulative_square_diffs(data.begin(), data.end());
-    var = variance(data.begin(), data.end());
-    uvar = sample_variance(data.begin(), data.end());
-    sd = standard_deviation(data.begin(), data.end());
-    ssd = sample_standard_deviation(data.begin(), data.end());
+    m = mean(data);
+    sq = cumulative_square_diffs(data);
+    var = variance(data);
+    uvar = sample_variance(data);
+    sd = standard_deviation(data);
+    ssd = sample_standard_deviation(data);
 
     check(equality, "", m.value(), 3.0);
 
@@ -144,12 +177,12 @@ namespace sequoia::testing
     // [2][4][9]
     data.push_back(9);
 
-    m = mean(data.begin(), data.end());
-    sq = cumulative_square_diffs(data.begin(), data.end());
-    var = variance(data.begin(), data.end());
-    uvar = sample_variance(data.begin(), data.end());
-    sd = standard_deviation(data.begin(), data.end());
-    ssd = sample_standard_deviation(data.begin(), data.end());
+    m = mean(data);
+    sq = cumulative_square_diffs(data);
+    var = variance(data);
+    uvar = sample_variance(data);
+    sd = standard_deviation(data);
+    ssd = sample_standard_deviation(data);
 
     check(equality, "", m.value(), 5.0);
 
@@ -169,6 +202,7 @@ namespace sequoia::testing
     check(equality, "", ssd.second.value(), 5.0);
 
     test_winsorized_sample_variance();
+    test_forward_only_view();
   }
 
   void statistical_algorithms_test::test_winsorized_sample_variance()
@@ -177,7 +211,7 @@ namespace sequoia::testing
 
     auto winsorized{
       [](const std::vector<double>& data, std::ptrdiff_t numReplacedAtEachEnd) {
-        return winsorized_sample_variance(data.cbegin(), data.cend(), numReplacedAtEachEnd);
+        return winsorized_sample_variance(data, numReplacedAtEachEnd);
       }
     };
 
@@ -230,5 +264,26 @@ namespace sequoia::testing
       check(equality, "One replaced at each end: the variance", var.value(), 13.5);
       check(equality, "One replaced at each end: the mean", mean.value(), 3.0);
     }
+  }
+
+  void statistical_algorithms_test::test_forward_only_view()
+  {
+    using namespace sequoia::maths;
+
+    const std::forward_list<double> data{2, 4, 9};
+    auto view{data | std::views::filter([](double) { return true; })};
+    using view_type = decltype(view);
+
+    STATIC_CHECK(( std::ranges::forward_range<view_type>
+                && !std::ranges::bidirectional_range<view_type>
+                && !std::ranges::range<const view_type>));
+
+    check(equality, "Mean",                       mean(view).value(),                                5.0);
+    check(equality, "Cumulative square diffs",    cumulative_square_diffs(view).first.value(),       26.0);
+    check(equality, "Variance",                   variance(view).first.value(),                      26.0/3);
+    check(equality, "Sample variance",            sample_variance(view).first.value(),               13.0);
+    check(equality, "Standard deviation",         standard_deviation(view).first.value(),            std::sqrt(26.0/3));
+    check(equality, "Sample standard deviation",  sample_standard_deviation(view).first.value(),     std::sqrt(52.0/3));
+    check(equality, "Winsorized sample variance", winsorized_sample_variance(view, 0).first.value(), 13.0);
   }
 }
