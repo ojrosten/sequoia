@@ -96,7 +96,9 @@ namespace sequoia::testing
        maxAttempts is 0 or if trials is less than 5.
    */
   template<test_mode Mode, std::invocable F, std::invocable S>
-  bool check_relative_performance(std::string_view description, test_logger<Mode>& logger, F fast, S slow, const double minSpeedup, const double maxSpeedup, const std::size_t trials, const double numSds, const std::size_t maxAttempts)
+  bool check_relative_performance(std::string_view description, test_logger<Mode>& logger, F fast, S slow,
+                                  const double minSpeedup, const double maxSpeedup,
+                                  const std::size_t trials, const double numSds, const std::size_t maxAttempts)
   {
     sentinel<Mode> sentry{logger, std::string{description}};
     sentry.log_performance_check();
@@ -187,7 +189,8 @@ namespace sequoia::testing
       }
 
       summary = append_lines(duration_summary("Fast", fastMean, numSds, fastSd),
-                             duration_summary("Slow", slowMean, numSds, slowSd) + speedup_summary(slowMean / fastMean, minSpeedup, maxSpeedup));
+                             duration_summary("Slow", slowMean, numSds, slowSd)
+                           + speedup_summary(slowMean / fastMean, minSpeedup, maxSpeedup));
 
       if((test_logger<Mode>::mode == test_mode::false_negative) ? !passed : passed)
       {
@@ -229,9 +232,12 @@ namespace sequoia::testing
     performance_extender() = default;
 
     template<class Self, std::invocable F, std::invocable S>
-    bool check_relative_performance(this Self& self, const reporter& description, F fast, S slow, const double minSpeedup, const double maxSpeedup, const std::size_t trials=5, const double numSds=4)
+    bool check_relative_performance(this Self& self, const reporter& description, F fast, S slow,
+                                    const double minSpeedup, const double maxSpeedup,
+                                    const std::size_t trials=5, const double numSds=4)
     {
-      return testing::check_relative_performance(self.report(description), self.m_Logger, fast, slow, minSpeedup, maxSpeedup, trials, numSds, 3);
+      return testing::check_relative_performance(self.report(description), self.m_Logger, fast, slow,
+                                                 minSpeedup, maxSpeedup, trials, numSds, 3);
     }
   protected:
     ~performance_extender() = default;
