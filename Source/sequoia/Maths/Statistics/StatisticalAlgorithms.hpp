@@ -11,8 +11,9 @@
     \brief Tools for statistical analysis.
 */
 
+#include <algorithm>
 #include <cmath>
-#include <numeric>
+#include <functional>
 #include <optional>
 #include <iterator>
 
@@ -26,7 +27,7 @@ namespace sequoia::maths
 
     if(const auto dist{std::ranges::distance(first, last)})
     {
-      m = std::accumulate(first, last, T{}) / dist;
+      m = std::ranges::fold_left(first, last, T{}, std::plus<>{}) / dist;
     }
 
     return m;
@@ -41,7 +42,7 @@ namespace sequoia::maths
     {
       const auto m{mean(first, last)};
       const auto var{
-        std::accumulate(first, last, T{}, [m](const T& sum, const T& datum){
+        std::ranges::fold_left(first, last, T{}, [m](const T& sum, const T& datum){
             return sum + (datum - m.value())*(datum - m.value());
           }
         )
@@ -121,7 +122,8 @@ namespace sequoia::maths
             highest{*std::ranges::prev(keptLast)};
 
     const T winsorizedMean{
-      (std::accumulate(keptFirst, keptLast, T{}) + numReplacedAtEachEnd * (lowest + highest)) / dist
+        (std::ranges::fold_left(keptFirst, keptLast, T{}, std::plus<>{}) + numReplacedAtEachEnd * (lowest + highest))
+      / dist
     };
 
     if(dist == 1)
@@ -133,7 +135,7 @@ namespace sequoia::maths
     auto addSquareDiff{[&squareDiff](const T& sum, const T& datum) { return sum + squareDiff(datum); }};
 
     const T cumulativeSquareDiffs{
-        std::accumulate(keptFirst, keptLast, T{}, addSquareDiff)
+        std::ranges::fold_left(keptFirst, keptLast, T{}, addSquareDiff)
       + numReplacedAtEachEnd * (squareDiff(lowest) + squareDiff(highest))
     };
 
