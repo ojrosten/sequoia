@@ -20,7 +20,9 @@
 # exists, not even a symbolic link. The script refuses arguments of any other
 # form with status 2, before running <command>. If the script cannot create a
 # temporary directory under TMPDIR, it exits with status 2 before running
-# <command>, after mktemp's message. On Linux, a process's name is the first
+# <command>, after mktemp's message. If the script cannot start the process
+# which watches for the deadline, it says so, and exits with status 2 before
+# running <command>. On Linux, a process's name is the first
 # fifteen characters of its executable's name, so a longer <executable name>
 # matches no process.
 #
@@ -178,10 +180,21 @@ claim="$flag_dir/claim"
 
 # Job control gives the watcher a process group of its own. It is off again
 # before the command runs, so the command runs as it would without the script.
+# Both the script and the watcher's process move the watcher into its group.
+# On macOS the watcher's own move has failed now and then, and bash then
+# writes "child setpgid ...: Operation not permitted". bash writes it before
+# the watcher's redirections apply, so the launch has a redirection of its
+# own. That redirection also discards bash's complaint when the watcher cannot
+# be started, and bash then ends the script. So the exit trap gives the
+# script's own message instead. The trap starts no process, since a fork that
+# failed once may fail again and end the trap early, so it leaves the
+# temporary directory behind.
+trap 'echo "$0: the watcher could not be started" >&2; exit 2' EXIT
 set -m
-watch_for_deadline < /dev/null > /dev/null 2>&1 &
+{ watch_for_deadline < /dev/null > /dev/null 2>&1 & } 2> /dev/null
 watcher=$!
 set +m
+trap - EXIT
 
 # The command's standard error goes through descriptor 3, so that the notice
 # bash writes when a signal kills the command goes to /dev/null. A caller
@@ -189,9 +202,17 @@ set +m
 { "$@" 2>&3 3>&-; } 3>&2 2> /dev/null
 status=$?
 
-if mkdir "$claim" 2> /dev/null; then
-  { kill -TERM -- -"$watcher" || kill -TERM "$watcher"; } 2> /dev/null
-fi
-wait "$watcher" 2> /dev/null
+# One redirection to /dev/null covers the claim, the kill and the wait. mkdir
+# complains when the watcher has claimed first. macOS's bash, 3.2, writes a
+# notice to standard error when a signal ends a background job. It writes the
+# notice just before the next command to begin after the job ended. So a
+# redirection on the wait alone misses the notice of a watcher which ends
+# before the wait begins.
+{
+  if mkdir "$claim"; then
+    kill -TERM -- -"$watcher" || kill -TERM "$watcher"
+  fi
+  wait "$watcher"
+} 2> /dev/null
 rm -rf "$flag_dir"
 exit "$status"
