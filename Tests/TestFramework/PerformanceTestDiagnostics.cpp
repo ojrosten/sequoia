@@ -399,11 +399,11 @@ namespace sequoia::testing
     test_logger<test_mode::standard> logger{};
 
     auto relativePerformanceCheck{
-      [&logger, description](double minSpeedUp, double maxSpeedUp, std::size_t trials, double numSds,
+      [&logger, description](double minSpeedup, double maxSpeedup, std::size_t trials, double numSds,
                              std::size_t maxAttempts) {
-        return [&logger, description, minSpeedUp, maxSpeedUp, trials, numSds, maxAttempts]() {
+        return [&logger, description, minSpeedup, maxSpeedup, trials, numSds, maxAttempts]() {
           return check_relative_performance(description, logger, []() {}, []() {},
-                                            minSpeedUp, maxSpeedUp, trials, numSds, maxAttempts);
+                                            minSpeedup, maxSpeedup, trials, numSds, maxAttempts);
         };
       }
     };

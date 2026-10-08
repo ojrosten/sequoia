@@ -30,7 +30,7 @@ Minimum speed-up exceeding the maximum
 
 Expected Exception Type:
 [std::invalid_argument]
-maxSpeedUp must be >= minSpeedUp
+maxSpeedup must be >= minSpeedup
 
 =======================================
 

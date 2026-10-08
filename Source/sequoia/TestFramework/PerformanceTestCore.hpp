@@ -51,10 +51,10 @@ namespace sequoia::testing
        \param logger      the logger to which the result is reported
        \param fast        the task predicted to be the faster of the two
        \param slow        the task against which fast is compared
-       \param minSpeedUp  the minimum predicted speed up of fast over slow; must be > 1
-       \param maxSpeedUp  the maximum predicted speed up of fast over slow; must be >= minSpeedUp
+       \param minSpeedup  the minimum predicted speed-up of fast over slow; must be > 1
+       \param maxSpeedup  the maximum predicted speed-up of fast over slow; must be >= minSpeedup
        \param trials      the number of trials used for the statistical analysis
-       \param num_sds     the number of standard deviations used to define a significant result
+       \param numSds      the number of standard deviations used to define a significant result
        \param maxAttempts the number of times the entire test should be re-run before accepting failure
 
        For each trial, both the supposedly fast and slow tasks are run. Their order is random.
@@ -74,8 +74,8 @@ namespace sequoia::testing
        values around m_s defined by the number of standard deviations. In particular, the test
        is taken to pass if
 
-          (minSpeedUp * m_f <= (m_s + num_sds * sig_s))
-       && (maxSpeedUp * m_f >= (m_s - num_sds * sig_s))
+          (minSpeedup * m_f <= (m_s + numSds * sig_s))
+       && (maxSpeedup * m_f >= (m_s - numSds * sig_s))
 
        which is essentially saying that the range of predicted speed-ups must fall within
        the specified number of standard deviations of m_s.
@@ -88,26 +88,26 @@ namespace sequoia::testing
        values around m_f defined by the number of standard deviations. In particular, the test
        is taken to pass if
 
-          (m_s / maxSpeedUp <= (m_f + num_sds * sig_f))
-       && (m_s / minSpeedUp >= (m_f - num_sds * sig_f))
+          (m_s / maxSpeedup <= (m_f + numSds * sig_f))
+       && (m_s / minSpeedup >= (m_f - numSds * sig_f))
 
        \throws std::invalid_argument if a speed-up factor is not greater than 1,
-       if minSpeedUp exceeds maxSpeedUp, if num_sds is not greater than 1, if
+       if minSpeedup exceeds maxSpeedup, if numSds is not greater than 1, if
        maxAttempts is 0 or if trials is less than 5.
    */
   template<test_mode Mode, std::invocable F, std::invocable S>
-  bool check_relative_performance(std::string_view description, test_logger<Mode>& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts)
+  bool check_relative_performance(std::string_view description, test_logger<Mode>& logger, F fast, S slow, const double minSpeedup, const double maxSpeedup, const std::size_t trials, const double numSds, const std::size_t maxAttempts)
   {
     sentinel<Mode> sentry{logger, std::string{description}};
     sentry.log_performance_check();
 
-    if(!(minSpeedUp > 1) || !(maxSpeedUp > 1))
+    if(!(minSpeedup > 1) || !(maxSpeedup > 1))
       throw std::invalid_argument{"Relative performance test requires speed-up factors > 1"};
 
-    if(minSpeedUp > maxSpeedUp)
-      throw std::invalid_argument{"maxSpeedUp must be >= minSpeedUp"};
+    if(minSpeedup > maxSpeedup)
+      throw std::invalid_argument{"maxSpeedup must be >= minSpeedup"};
 
-    if(!(num_sds > 1))
+    if(!(numSds > 1))
       throw std::invalid_argument{"Number of standard deviations is required to be > 1"};
 
     if(!maxAttempts)
@@ -155,7 +155,7 @@ namespace sequoia::testing
         }
       }
 
-      auto compute_stats{
+      auto computeStats{
         [](auto first, auto last) {
           const auto data{sample_standard_deviation(first, last)};
           return std::make_pair(data.first.value(), data.second.value());
@@ -165,20 +165,20 @@ namespace sequoia::testing
       std::ranges::sort(fastData);
       std::ranges::sort(slowData);
 
-      const auto [sig_f, m_f]{compute_stats(fastData.cbegin()+1, fastData.cend()-1)};
-      const auto [sig_s, m_s]{compute_stats(slowData.cbegin()+1, slowData.cend()-1)};
+      const auto [sig_f, m_f]{computeStats(fastData.cbegin()+1, fastData.cend()-1)};
+      const auto [sig_s, m_s]{computeStats(slowData.cbegin()+1, slowData.cend()-1)};
 
       if(m_f + sig_f < m_s - sig_s)
       {
         if(sig_f >= sig_s)
         {
-          passed =    (minSpeedUp * m_f <= (m_s + num_sds * sig_s))
-                   && (maxSpeedUp * m_f >= (m_s - num_sds * sig_s));
+          passed =    (minSpeedup * m_f <= (m_s + numSds * sig_s))
+                   && (maxSpeedup * m_f >= (m_s - numSds * sig_s));
         }
         else
         {
-          passed =    (m_s / maxSpeedUp <= (m_f + num_sds * sig_f))
-                   && (m_s / minSpeedUp >= (m_f - num_sds * sig_f));
+          passed =    (m_s / maxSpeedup <= (m_f + numSds * sig_f))
+                   && (m_s / minSpeedup >= (m_f - numSds * sig_f));
         }
       }
       else
@@ -186,9 +186,9 @@ namespace sequoia::testing
         passed = false;
       }
 
-      summary = append_lines(duration_summary("Fast", m_f, num_sds, sig_f),
-                             duration_summary("Slow", m_s, num_sds, sig_s))
-                .append(speedup_summary(m_s / m_f, minSpeedUp, maxSpeedUp));
+      summary = append_lines(duration_summary("Fast", m_f, numSds, sig_f),
+                             duration_summary("Slow", m_s, numSds, sig_s))
+                .append(speedup_summary(m_s / m_f, minSpeedup, maxSpeedup));
 
       if((test_logger<Mode>::mode == test_mode::false_negative) ? !passed : passed)
       {
@@ -230,9 +230,9 @@ namespace sequoia::testing
     performance_extender() = default;
 
     template<class Self, std::invocable F, std::invocable S>
-    bool check_relative_performance(this Self& self, const reporter& description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)
+    bool check_relative_performance(this Self& self, const reporter& description, F fast, S slow, const double minSpeedup, const double maxSpeedup, const std::size_t trials=5, const double numSds=4)
     {
-      return testing::check_relative_performance(self.report(description), self.m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, 3);
+      return testing::check_relative_performance(self.report(description), self.m_Logger, fast, slow, minSpeedup, maxSpeedup, trials, numSds, 3);
     }
   protected:
     ~performance_extender() = default;
