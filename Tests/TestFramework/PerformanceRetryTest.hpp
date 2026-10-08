@@ -32,6 +32,8 @@ namespace sequoia::testing
 
     void test_constant_gate_multiplier();
 
+    void test_trimmed_estimate();
+
     void test_task_orders();
   };
 }

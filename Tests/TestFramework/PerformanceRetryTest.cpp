@@ -37,6 +37,7 @@ namespace sequoia::testing
     test_pass_at_final_attempt();
     test_rising_overlap_multiplier();
     test_constant_gate_multiplier();
+    test_trimmed_estimate();
     test_task_orders();
   }
 
@@ -91,6 +92,20 @@ namespace sequoia::testing
       parameters
     );
     check(equality, "Calls of the fast task", fast.calls(), parameters.trials * (1 + 2));
+  }
+
+  void performance_retry_test::test_trimmed_estimate()
+  {
+    using namespace std::chrono_literals;
+
+    constexpr relative_performance_parameters parameters{.min_speedup{3.2}, .max_speedup{5}, .trials{5}};
+
+    check_relative_performance(
+      "One fast call in five takes 12 ms. The trimmed mean gives a speed-up of 4, and the untrimmed mean gives 2.43",
+      make_cycling_spinner({1ms, 1ms, 1ms, 1ms, 12ms}),
+      counted_spinner{4ms},
+      parameters
+    );
   }
 
   void performance_retry_test::test_task_orders()
