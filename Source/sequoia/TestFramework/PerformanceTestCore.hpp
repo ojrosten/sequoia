@@ -32,15 +32,17 @@ namespace sequoia::testing
     return t.time_elapsed();
   }
 
-  /** \brief A line reporting a task's mean duration and its standard
-             deviation, both in seconds, with `numSds`, the number of
-             standard deviations which defines a significant result.
+  /** \brief Returns a line reporting a task's mean duration and its standard
+             deviation, in seconds.
+
+      The line also gives `numSds`, the number of standard deviations used to
+      define a significant result.
    */
   [[nodiscard]]
   std::string duration_summary(std::string_view prefix, double mean, double numSds, double sd);
 
-  /** \brief A suffix reporting the measured speed-up and the range predicted
-             for it.
+  /** \brief Returns a suffix reporting the measured speed-up and the range
+             predicted for it.
    */
   [[nodiscard]]
   std::string speedup_summary(double speedup, double minSpeedup, double maxSpeedup);
@@ -250,10 +252,13 @@ namespace sequoia::testing
 
       \returns
       -# `referenceOutput`, if it differs from `testOutput` only in measured
-         values: the mean, the standard deviation and the speed-up, in each
-         line that `duration_summary`, with or without the suffix of
-         `speedup_summary`, prints exactly;
+         values;
       -# `testOutput`, otherwise.
+
+      The measured values are the mean, the standard deviation and the
+      speed-up, in each line the formatter could have printed. A line counts
+      if `duration_summary` reprints it exactly, with or without
+      `speedup_summary` after it.
    */
   [[nodiscard]]
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);

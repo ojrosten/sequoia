@@ -20,13 +20,13 @@ namespace sequoia::testing
 {
   namespace
   {
-    /** \brief The numbers in `text`, if there are exactly `N`.
+    /** \brief Extracts the numbers in `text`, if there are exactly `N`.
 
-        Anything identifiable as a number is extracted as a `double`: whatever
-        `std::from_chars` reads, trying each character from left to right and
-        resuming after each number it reads. So an integer counts, as do `inf`
-        and `nan`, even inside a word, and a `-` directly before a number is
-        its sign.
+        Anything identifiable as a number is extracted as a `double`. That is
+        whatever `std::from_chars` reads. Reading tries each character from
+        left to right, and resumes after each number it reads. So integers
+        count, and so do `inf` and `nan`, even inside a word. A `-` directly
+        before a number is its sign.
      */
     template<std::size_t N>
     [[nodiscard]]
@@ -56,14 +56,16 @@ namespace sequoia::testing
       return count == N ? std::optional{numbers} : std::nullopt;
     }
 
-    /** \brief `line` with its measured values set to zero, if the formatter
-               could have printed it; otherwise `line` as it stands.
+    /** \brief Returns `line` with its measured values set to zero.
 
         The measured values are the mean, the standard deviation and the
         speed-up. The number of standard deviations and the predicted range
-        stay as they are. The formatter could have printed `line` if
-        `duration_summary`, with or without `speedup_summary` after it,
-        reprints `line` exactly from the numbers after its label.
+        stay as they are.
+
+        A line has measured values only if the formatter could have printed it.
+        That is so if `duration_summary` reprints the line exactly from the
+        numbers after its label, with or without `speedup_summary` after it.
+        Any other line is returned as it stands.
      */
     [[nodiscard]]
     std::string line_with_zeroed_measurements(std::string_view line)
@@ -93,10 +95,11 @@ namespace sequoia::testing
       return std::string{line};
     }
 
-    /** \brief The lines of `text`, split at each newline, each as
-               `line_with_zeroed_measurements` returns it.
+    /** \brief Splits `text` at each newline, and zeroes the measured values
+               in each line.
 
-        The view is lazy and refers to `text`, so it must not outlive `text`.
+        Each line passes through `line_with_zeroed_measurements`. The result is
+        a lazy view of `text`, so it must not outlive `text`.
      */
     [[nodiscard]]
     auto lines_with_zeroed_measurements(std::string_view text)
