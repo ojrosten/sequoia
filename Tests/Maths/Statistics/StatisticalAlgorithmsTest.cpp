@@ -217,7 +217,8 @@ namespace sequoia::testing
     }
 
     {
-      // Winsorized to [0, 0, 1, 7, 7]; the middle three alone have a different variance and mean
+      // Winsorized to [0, 0, 1, 7, 7]. The middle three alone have a different
+      // variance and mean.
       const auto [var, mean]{winsorized({-5, 0, 1, 7, 20}, 1)};
       check(equality, "One replaced at each end: the variance", var.value(), 13.5);
       check(equality, "One replaced at each end: the mean", mean.value(), 3.0);

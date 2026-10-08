@@ -94,7 +94,9 @@ namespace sequoia::testing
     check_relative_performance("A speed-up of 1 until the final attempt, then of 2, each task recording its calls",
                                recordedTask(task::fast, counted_spinner{spin_unit}),
                                recordedTask(task::slow,
-                                            counted_spinner{spin_unit, parameters.trials * attempts * (attempts - 1) / 2, 2 * spin_unit}),
+                                            counted_spinner{spin_unit,
+                                                            parameters.trials * attempts * (attempts - 1) / 2,
+                                                            2 * spin_unit}),
                                parameters);
 
     auto firstTasksOfAttempt{

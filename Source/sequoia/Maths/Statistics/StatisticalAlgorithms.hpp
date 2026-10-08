@@ -127,9 +127,10 @@ namespace sequoia::maths
     }
 
     auto squareDiff{[winsorizedMean](const T& datum) { return (datum - winsorizedMean)*(datum - winsorizedMean); }};
+    auto addSquareDiff{[&squareDiff](const T& sum, const T& datum) { return sum + squareDiff(datum); }};
 
     const T cumulativeSquareDiffs{
-        std::accumulate(keptFirst, keptLast, T{}, [&squareDiff](const T& sum, const T& datum){ return sum + squareDiff(datum); })
+        std::accumulate(keptFirst, keptLast, T{}, addSquareDiff)
       + numReplacedAtEachEnd * (squareDiff(lowest) + squareDiff(highest))
     };
 

@@ -369,8 +369,10 @@ namespace sequoia::testing
       constexpr auto infinity{std::numeric_limits<double>::infinity()};
       constexpr auto nan{std::numeric_limits<double>::quiet_NaN()};
 
-      const std::string latest   {append_lines(speedup_summary(infinity, 1e+06, -nan, 2, 3), task_durations_summary(9.9e-05, 0))};
-      const std::string reference{append_lines(speedup_summary(1.04,     1e-07,  2.5, 2, 3), task_durations_summary(0.001,   nan))};
+      const std::string latest   {append_lines(speedup_summary(infinity, 1e+06, -nan, 2, 3),
+                                               task_durations_summary(9.9e-05, 0))};
+      const std::string reference{append_lines(speedup_summary(1.04,     1e-07,  2.5, 2, 3),
+                                               task_durations_summary(0.001,   nan))};
 
       check(equality, "", postprocess(latest, reference), std::string_view{reference});
     }
