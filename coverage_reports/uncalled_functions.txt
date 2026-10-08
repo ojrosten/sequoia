@@ -7,6 +7,7 @@ Source/sequoia/Maths/Graph/GraphErrors.cpp
     sequoia::maths::graph_errors::erase_edge_error(unsigned long, sequoia::maths::graph_errors::edge_indices)
 Source/sequoia/TestFramework/FailureReporting.cpp
     sequoia::testing::report_termination()
+    sequoia::testing::report_termination()
 Source/sequoia/TestFramework/TestRunner.cpp
     sequoia::testing::test_runner::process_args(int, char**)::{lambda(auto&, std::vector const&)}::operator()
     sequoia::testing::test_runner::process_args(int, char**)::{lambda(auto&, std::vector const&)}::operator()
