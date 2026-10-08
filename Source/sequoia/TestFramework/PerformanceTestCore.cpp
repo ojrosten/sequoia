@@ -13,8 +13,6 @@
 #include "sequoia/Maths/Statistics/StatisticalAlgorithms.hpp"
 
 #include <algorithm>
-#include <array>
-#include <charconv>
 #include <cmath>
 #include <compare>
 #include <format>
@@ -24,83 +22,16 @@ namespace sequoia::testing
 {
   namespace
   {
-    /** \brief Extracts the numbers in `text`, if there are exactly `N`.
+    /** \brief Orders doubles totally, so that sorting is defined even with
+               NaNs among them.
 
-        Anything identifiable as a number of type `T` is extracted. That is
-        whatever `std::from_chars` reads. Reading tries each character from
-        left to right, and resumes after each number it reads. So for a
-        floating-point `T`, integers count, and so do `inf` and `nan`, even
-        inside a word. A `-` directly before a number is its sign, if `T` has one.
-     */
-    template<class T, std::size_t N>
-    [[nodiscard]]
-    std::optional<std::array<T, N>> extract_numbers_from(std::string_view text)
-    {
-      std::array<T, N> numbers{};
-      std::size_t count{};
-      const auto last{text.data() + text.size()};
-      auto first{text.data()};
-      while(first != last)
-      {
-        T value{};
-        if(const auto [next, error]{std::from_chars(first, last, value)}; error == std::errc{})
-        {
-          if(count == N)
-            return std::nullopt;
-
-          numbers[count++] = value;
-          first = next;
-        }
-        else
-        {
-          ++first;
-        }
-      }
-
-      return count == N ? std::optional{numbers} : std::nullopt;
-    }
-
-    /** \brief Returns `line` with its measured values set to zero.
-
-        `text_with_zeroed_measurements` states which lines hold measured
-        values, and which values they are.
-     */
-    [[nodiscard]]
-    std::string line_with_zeroed_measurements(std::string_view line)
-    {
-      if(const auto numbers{extract_numbers_from<double, 5>(line)})
-      {
-        const auto [speedup, intervalMin, intervalMax, minSpeedup, maxSpeedup]{*numbers};
-        if(speedup_summary(speedup, intervalMin, intervalMax, minSpeedup, maxSpeedup) == line)
-          return speedup_summary(0, 0, 0, minSpeedup, maxSpeedup);
-      }
-
-      if(const auto numbers{extract_numbers_from<std::size_t, 3>(line)})
-      {
-        const auto [trials, attempt, maxAttempts]{*numbers};
-        if(trials_summary(trials, attempt, maxAttempts) == line)
-          return trials_summary(0, 0, maxAttempts);
-      }
-
-      if(const auto numbers{extract_numbers_from<double, 2>(line)})
-      {
-        const auto [fastDuration, slowDuration]{*numbers};
-        if(task_durations_summary(fastDuration, slowDuration) == line)
-          return task_durations_summary(0, 0);
-      }
-
-      return std::string{line};
-    }
-
-    /** \brief Orders doubles totally, so that sorting is defined even with NaNs among them.
-
-        A task too quick for the clock times as zero, and the log-ratio of two such
-        timings is NaN.
+        A task too quick for the clock times as zero, and the log-ratio of two
+        such timings is NaN.
      */
     constexpr auto total_order{[](double lhs, double rhs) { return std::strong_order(lhs, rhs) < 0; }};
 
-    /** \brief Returns the number trimmed from each end of `n` sorted data: a tenth of `n`,
-               rounded up.
+    /** \brief Returns the number trimmed from each end of `n` sorted data: a
+               tenth of `n`, rounded up.
      */
     [[nodiscard]]
     std::size_t num_trimmed_from_each_end(std::size_t n) noexcept
@@ -108,19 +39,22 @@ namespace sequoia::testing
       return (n + 9) / 10;
     }
 
-    /** \brief The mean of sorted data once the extremes are trimmed, and its standard error. */
+    /** \brief The mean of sorted data once the extremes are trimmed, and its
+               standard error.
+     */
     struct trimmed_mean_estimate
     {
       double mean{}, standard_error{};
     };
 
-    /** \brief Returns the trimmed mean of `data` and its standard error, after sorting `data`.
+    /** \brief Estimates the trimmed mean of `data`, and its standard error.
 
-        The standard error is Tukey and McLaughlin's: the winsorized sample standard deviation
-        divided by the fraction of data kept and by the square root of their number.
+        The standard error is Tukey and McLaughlin's: the winsorized sample
+        standard deviation, divided by the fraction of data kept and by the
+        square root of the number of data.
      */
     [[nodiscard]]
-    trimmed_mean_estimate trimmed_mean_with_error(std::vector<double> data)
+    trimmed_mean_estimate estimate_trimmed_mean(std::vector<double> data)
     {
       std::ranges::sort(data, total_order);
 
@@ -141,61 +75,18 @@ namespace sequoia::testing
       };
     }
 
-    /** \brief Returns the exponential of the trimmed mean of the logarithms of `durations`. */
+    /** \brief Returns the exponential of the trimmed mean of the logarithms of
+               `durations`.
+     */
     [[nodiscard]]
     double trimmed_geometric_mean(std::span<const double> durations)
     {
       auto logOf{[](double duration) { return std::log(duration); }};
 
       return std::exp(
-        trimmed_mean_with_error(durations | std::views::transform(logOf) | std::ranges::to<std::vector>()).mean
+        estimate_trimmed_mean(durations | std::views::transform(logOf) | std::ranges::to<std::vector>()).mean
       );
     }
-  }
-
-  [[nodiscard]]
-  std::string_view verdict_summary(relative_performance_failure failure)
-  {
-    switch(failure)
-    {
-    case relative_performance_failure::not_distinguishably_faster:
-      return "The fast task is not distinguishably faster than the slow one";
-    case relative_performance_failure::slower:
-      return "The fast task is slower than the slow one";
-    case relative_performance_failure::faster_but_less_than_predicted:
-      return "The fast task is faster than the slow one, but by less than predicted";
-    case relative_performance_failure::suspiciously_fast:
-      return "The fast task is suspiciously fast: faster than predicted";
-    }
-
-    throw std::logic_error{"Unknown relative_performance_failure"};
-  }
-
-  [[nodiscard]]
-  std::string speedup_summary(double speedup,
-                              double intervalMin,
-                              double intervalMax,
-                              double minSpeedup,
-                              double maxSpeedup)
-  {
-    return std::format("Speed-up: {:.3g} in [{:.3g}, {:.3g}]; predicted ({:g}, {:g})",
-                       speedup,
-                       intervalMin,
-                       intervalMax,
-                       minSpeedup,
-                       maxSpeedup);
-  }
-
-  [[nodiscard]]
-  std::string trials_summary(std::size_t trials, std::size_t attempt, std::size_t maxAttempts)
-  {
-    return std::format("Trials: {}, attempt {} of {}", trials, attempt, maxAttempts);
-  }
-
-  [[nodiscard]]
-  std::string task_durations_summary(double fastDuration, double slowDuration)
-  {
-    return std::format("Task durations: fast {:.3g}s, slow {:.3g}s", fastDuration, slowDuration);
   }
 
   namespace impl
@@ -209,7 +100,9 @@ namespace sequoia::testing
       auto logRatio{[](double fast, double slow) { return std::log(slow / fast); }};
 
       const auto [mean, standardError]{
-        trimmed_mean_with_error(std::views::zip_transform(logRatio, fastDurations, slowDurations) | std::ranges::to<std::vector>())
+        estimate_trimmed_mean(
+          std::views::zip_transform(logRatio, fastDurations, slowDurations) | std::ranges::to<std::vector>()
+        )
       };
 
       const double intervalMin{mean - confidenceMultiplier * standardError},
@@ -269,29 +162,20 @@ namespace sequoia::testing
     std::vector<first_task> shuffled_task_orders(std::size_t trials, std::mt19937& generator)
     {
       auto firstTaskOfTrial{
-        [numFastFirst{trials / 2}](std::size_t trial) { return trial < numFastFirst ? first_task::fast : first_task::slow; }
+        [numFastFirst{trials / 2}](std::size_t trial) {
+          return trial < numFastFirst ? first_task::fast : first_task::slow;
+        }
       };
 
-      auto orders{std::views::iota(0uz, trials) | std::views::transform(firstTaskOfTrial) | std::ranges::to<std::vector>()};
+      auto orders{
+          std::views::iota(0uz, trials)
+        | std::views::transform(firstTaskOfTrial)
+        | std::ranges::to<std::vector>()
+      };
 
       std::ranges::shuffle(orders, generator);
       return orders;
     }
-  }
-
-  [[nodiscard]]
-  std::string text_with_zeroed_measurements(std::string_view text)
-  {
-    auto lineWithZeroedMeasurements{
-      [](auto line) { return line_with_zeroed_measurements(std::string_view{line}); }
-    };
-
-    return
-        text
-      | std::views::split('\n')
-      | std::views::transform(lineWithZeroedMeasurements)
-      | std::views::join_with('\n')
-      | std::ranges::to<std::string>();
   }
 
   [[nodiscard]]

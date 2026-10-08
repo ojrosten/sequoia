@@ -28,6 +28,7 @@ set(SourceList
     TestFramework/MaterialsUpdater.cpp
     TestFramework/MoveOnlyTestCore.cpp
     TestFramework/Output.cpp
+    TestFramework/PerformanceSummary.cpp
     TestFramework/PerformanceTestCore.cpp
     TestFramework/ProjectCreator.cpp
     TestFramework/ProjectPaths.cpp
