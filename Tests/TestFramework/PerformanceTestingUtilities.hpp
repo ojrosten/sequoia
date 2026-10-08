@@ -57,7 +57,7 @@ namespace sequoia::testing
     {}
 
     /** \brief Spins for `initial` on each of the first `initialCalls`
-               calls, and for `later` on every call after them.
+               calls, and for `later` on every call thereafter.
      */
     counted_spinner(std::chrono::milliseconds initial,
                     std::size_t initialCalls,
