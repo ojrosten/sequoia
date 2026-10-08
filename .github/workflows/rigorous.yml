@@ -221,7 +221,9 @@ jobs:
   #
   # One PR at a time. Whatever the previous night left, the step ends with one
   # promotion PR open and set to auto-merge, so an open PR without auto-merge
-  # is given it. Creating the PR needs Pull requests: write, and enabling
+  # is given it. Only a PR from this repository's staging counts: `--head
+  # staging` matches a fork's branch named staging too, and the step would
+  # otherwise arm the fork's PR to merge into main. Creating the PR needs Pull requests: write, and enabling
   # auto-merge needs Contents: write as well, so either half can fail alone. A
   # step that left an open PR alone would leave a PR created without
   # auto-merge stuck for good. Whoever opened the PR, this step completes it,
@@ -254,7 +256,8 @@ jobs:
     steps:
       - name: Open the promotion PR and set it to auto-merge, whichever is missing
         run: |
-          pr=$(gh pr list --base main --head staging --state open --json number --jq '.[0].number // empty')
+          pr=$(gh pr list --base main --head staging --state open --json number,isCrossRepository \
+                 --jq 'map(select(.isCrossRepository | not)) | .[0].number // empty')
           if [ -n "$pr" ]; then
             echo "promotion PR #$pr is already open"
           else
