@@ -94,11 +94,14 @@ namespace sequoia::maths
 
       Winsorizing replaces each of the first `numReplacedAtEachEnd` data with
       the first datum after them, and each of the last `numReplacedAtEachEnd`
-      with the last datum before them. For sorted data, this is the winsorized
-      sample variance.
+      with the last datum before them. For sorted data, the variance returned
+      is the winsorized sample variance.
 
-      Neither is returned if there are no data beyond those replaced, and only
-      the mean if a single datum remains.
+      \returns
+      -# Neither, if `numReplacedAtEachEnd` is negative, or if no data remain
+         beyond those replaced;
+      -# Only the mean, if there is a single datum;
+      -# Both, otherwise.
    */
   template<std::forward_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
   [[nodiscard]]

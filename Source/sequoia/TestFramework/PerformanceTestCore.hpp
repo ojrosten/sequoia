@@ -19,6 +19,7 @@
 #include <concepts>
 #include <optional>
 #include <random>
+#include <ranges>
 #include <span>
 
 namespace sequoia::testing
@@ -192,7 +193,6 @@ namespace sequoia::testing
       throw std::invalid_argument{"Number of trials is required to be > 4"};
 
     std::string summary{};
-    std::size_t remainingAttempts{relative_performance_max_attempts};
     bool passed{};
 
     auto timer{
@@ -203,16 +203,15 @@ namespace sequoia::testing
 
     std::mt19937 generator{std::random_device{}()};
 
-    while(remainingAttempts > 0)
+    for(const auto attempt : std::views::iota(1uz, relative_performance_max_attempts + 1))
     {
-      const auto attempt{relative_performance_max_attempts - remainingAttempts + 1};
-      const auto adjustedTrials{parameters.trials * attempt};
+      const auto trialsOfAttempt{parameters.trials * attempt};
 
       std::vector<double> fastData{}, slowData{};
-      fastData.reserve(adjustedTrials);
-      slowData.reserve(adjustedTrials);
+      fastData.reserve(trialsOfAttempt);
+      slowData.reserve(trialsOfAttempt);
 
-      for(const auto first : impl::shuffled_task_orders(adjustedTrials, generator))
+      for(const auto first : impl::shuffled_task_orders(trialsOfAttempt, generator))
       {
         if(first == impl::first_task::fast)
         {
@@ -231,14 +230,12 @@ namespace sequoia::testing
       };
 
       passed  = !judgement.failure;
-      summary = impl::attempt_summary(judgement, adjustedTrials, attempt, parameters);
+      summary = impl::attempt_summary(judgement, trialsOfAttempt, attempt, parameters);
 
-      if((test_logger<Mode>::mode == test_mode::false_negative) ? !passed : passed)
+      if((Mode == test_mode::false_negative) ? !passed : passed)
       {
         break;
       }
-
-      --remainingAttempts;
     }
 
     sentry.append_to_message(summary);
