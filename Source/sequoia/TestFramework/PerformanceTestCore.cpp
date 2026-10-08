@@ -96,9 +96,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string duration_summary(std::string_view prefix, double mean, double num_sds, double sig)
+  std::string duration_summary(std::string_view prefix, double mean, double numSds, double sig)
   {
-    return std::format("{} Task duration: {:g}s +- {:g} * {:g}s", prefix, mean, num_sds, sig);
+    return std::format("{} Task duration: {:g}s +- {:g} * {:g}s", prefix, mean, numSds, sig);
   }
 
   [[nodiscard]]

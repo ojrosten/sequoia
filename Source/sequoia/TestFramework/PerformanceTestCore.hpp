@@ -33,11 +33,11 @@ namespace sequoia::testing
   }
 
   /** \brief A line reporting a task's mean duration and its standard
-             deviation, both in seconds, with `num_sds`, the number of
+             deviation, both in seconds, with `numSds`, the number of
              standard deviations which defines a significant result.
    */
   [[nodiscard]]
-  std::string duration_summary(std::string_view prefix, double mean, double num_sds, double sig);
+  std::string duration_summary(std::string_view prefix, double mean, double numSds, double sig);
 
   /** \brief A suffix reporting the measured speed-up and the range predicted
              for it.
@@ -187,7 +187,8 @@ namespace sequoia::testing
       }
 
       summary = append_lines(duration_summary("Fast", m_f, num_sds, sig_f),
-                             duration_summary("Slow", m_s, num_sds, sig_s)).append(speedup_summary(m_s / m_f, minSpeedUp, maxSpeedUp));
+                             duration_summary("Slow", m_s, num_sds, sig_s))
+                .append(speedup_summary(m_s / m_f, minSpeedUp, maxSpeedUp));
 
       if((test_logger<Mode>::mode == test_mode::false_negative) ? !passed : passed)
       {
