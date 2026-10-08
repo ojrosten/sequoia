@@ -127,9 +127,10 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput)
   {
-    return std::ranges::equal(lines_with_zeroed_measurements(testOutput),
-                              lines_with_zeroed_measurements(referenceOutput))
-      ? referenceOutput : testOutput;
+    const bool sameButForMeasurements{std::ranges::equal(lines_with_zeroed_measurements(testOutput),
+                                                         lines_with_zeroed_measurements(referenceOutput))};
+
+    return sameButForMeasurements ? referenceOutput : testOutput;
   }
 
   [[nodiscard]]
