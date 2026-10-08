@@ -31,6 +31,8 @@ namespace sequoia::testing
     void test_significance_gate();
 
     void test_fail_at_second_attempt();
+
+    void test_confidence_multiplier_from_first_attempt();
   };
 
   class performance_false_positive_diagnostics final : public performance_false_positive_test

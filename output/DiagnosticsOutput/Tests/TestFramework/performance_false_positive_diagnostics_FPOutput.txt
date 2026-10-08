@@ -1,5 +1,5 @@
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 148
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 163
 Speed-up of 2, predicted (1.8, 2.1)
 
 Speed-up: 2 in [2, 2]; predicted (1.8, 2.1)
@@ -9,7 +9,7 @@ Task durations: fast 0.001s, slow 0.002s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 153
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 168
 Speed-up of 4, predicted (3.4, 4.1)
 
 Speed-up: 4 in [4, 4]; predicted (3.4, 4.1)
@@ -19,7 +19,7 @@ Task durations: fast 0.001s, slow 0.004s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 158
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 173
 Durations varying together, a speed-up of 2 in every trial, predicted (1.8, 2.2)
 
 Speed-up: 2 in [2, 2]; predicted (1.8, 2.2)
@@ -29,7 +29,7 @@ Task durations: fast 0.00171s, slow 0.00342s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 168
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 183
 Final attempt: an interval of 3 standard errors ends inside (6.57, 8.54)
 
 Speed-up: 3.38 in [1.58, 7.22]; predicted (6.57, 8.54)
@@ -39,12 +39,12 @@ Task durations: fast 0.001s, slow 0.00338s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 173
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 188
 Final attempt: an interval of 3 standard errors starts inside (1.05, 1.37)
 
 Speed-up: 2.87 in [1.24, 6.67]; predicted (1.05, 1.37)
 Trials: 15, attempt 3 of 3
-Task durations: fast 0.001s, slow 0.00287s
+Task durations: fast 0.001s, slow 0.00288s
 
 =======================================
 

@@ -39,8 +39,9 @@ namespace sequoia::testing
   template<class T>
   concept copy_constructible_task = std::invocable<T&> && std::copy_constructible<T>;
 
-  /** \brief The half-width, in standard errors, of the interval which
-             decides the final attempt of `check_relative_performance`.
+  /** \brief The half-width, in standard errors, of the interval with which
+             every attempt of `check_relative_performance` judges whether
+             the fast task is faster.
    */
   inline constexpr double relative_performance_confidence_multiplier{3.0};
 
@@ -79,7 +80,7 @@ namespace sequoia::testing
     [[nodiscard]]
     relative_performance_judgement judge_attempt(std::span<const double> fastDurations,
                                                  std::span<const double> slowDurations,
-                                                 double confidenceMultiplier,
+                                                 double overlapMultiplier,
                                                  const relative_performance_parameters& parameters);
 
     /** \brief Returns the lines reporting an attempt.
@@ -94,10 +95,10 @@ namespace sequoia::testing
                                 const relative_performance_parameters& parameters);
 
     /** \brief Returns the half-width, in standard errors, of the interval
-               which decides attempt `attempt`.
+               which attempt `attempt` compares with the predicted range.
      */
     [[nodiscard]]
-    double confidence_multiplier(test_mode mode, std::size_t attempt);
+    double overlap_multiplier(test_mode mode, std::size_t attempt);
 
     enum class first_task { fast, slow };
 
@@ -141,15 +142,18 @@ namespace sequoia::testing
        where s_w is the winsorized sample standard deviation of the
        log-ratios. Attempt k passes if and only if both
 
-          m - c_k * SE > 0
+          m - c * SE > 0
 
        and the interval [m - c_k * SE, m + c_k * SE] overlaps
-       [ln(min_speedup), ln(max_speedup)]. The multiplier rises with the
-       attempts:
+       [ln(min_speedup), ln(max_speedup)]. Here c is
+       `relative_performance_confidence_multiplier`, and
 
           c_k = c * k / A
 
-       where c is `relative_performance_confidence_multiplier`.
+       The first condition is a gate on whether the fast task is
+       distinguishably faster. It takes c on every attempt, so an early
+       attempt, with few trials, does not relax the gate. Only the interval's
+       multiplier rises with the attempts.
 
        The check passes if any attempt passes, and stops at the first that
        does. In false-negative mode the polarity is reversed: the check passes
@@ -163,13 +167,13 @@ namespace sequoia::testing
        task's typical duration: the exponential of the trimmed mean of the
        logarithms of its durations. If the last attempt failed, the summary
        also gives the reason, a `relative_performance_failure`:
-       -# `slower`, if the interval lies wholly below 0;
-       -# `not_distinguishably_faster`, if the interval lies neither wholly
-          above 0 nor wholly below it;
-       -# `faster_but_less_than_predicted`, if the interval lies wholly above
-          0, and below ln(min_speedup);
-       -# `suspiciously_fast`, if the interval lies wholly above
-          ln(max_speedup).
+       -# `slower`, if m + c * SE < 0;
+       -# `not_distinguishably_faster`, if the gate fails, and m + c * SE is
+          not below 0;
+       -# `faster_but_less_than_predicted`, if the gate passes, and the
+          interval lies wholly below ln(min_speedup);
+       -# `suspiciously_fast`, if the gate passes, and the interval lies
+          wholly above ln(max_speedup).
 
        \throws std::invalid_argument if a speed-up factor is not greater
        than 1, if min_speedup exceeds max_speedup or if trials is less than 5.
@@ -227,7 +231,7 @@ namespace sequoia::testing
       }
 
       const auto judgement{
-        impl::judge_attempt(fastData, slowData, impl::confidence_multiplier(Mode, attempt), parameters)
+        impl::judge_attempt(fastData, slowData, impl::overlap_multiplier(Mode, attempt), parameters)
       };
 
       passed  = !judgement.failure;

@@ -63,6 +63,7 @@ namespace sequoia::testing
     test_confidence_multiplier();
     test_significance_gate();
     test_fail_at_second_attempt();
+    test_confidence_multiplier_from_first_attempt();
   }
 
   void performance_false_negative_diagnostics::test_relative_performance()
@@ -126,6 +127,20 @@ namespace sequoia::testing
     check_relative_performance("A speed-up of 2, then of 0.5, then of 2",
                                counted_spinner{1ms, parameters.trials,           4ms},
                                counted_spinner{2ms, parameters.trials * (1 + 2), 8ms},
+                               parameters);
+  }
+
+  void performance_false_negative_diagnostics::test_confidence_multiplier_from_first_attempt()
+  {
+    using namespace std::chrono_literals;
+
+    constexpr relative_performance_parameters parameters{
+      .min_speedup{2.92}, .max_speedup{4.38}, .trials{10}
+    };
+
+    check_relative_performance("Attempt 1 overlaps (2.92, 4.38) at 3 standard errors, not at 1; attempt 2 is slower",
+                               counted_spinner{1ms, parameters.trials, 4ms},
+                               make_cycling_spinner({2ms, 2ms, 3ms, 3ms, 3ms}),
                                parameters);
   }
 

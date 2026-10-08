@@ -94,7 +94,7 @@ namespace sequoia::testing
     [[nodiscard]]
     relative_performance_judgement judge_attempt(std::span<const double> fastDurations,
                                                  std::span<const double> slowDurations,
-                                                 double confidenceMultiplier,
+                                                 double overlapMultiplier,
                                                  const relative_performance_parameters& parameters)
     {
       auto logRatio{[](double fast, double slow) { return std::log(slow / fast); }};
@@ -105,14 +105,16 @@ namespace sequoia::testing
         )
       };
 
-      const double intervalMin{mean - confidenceMultiplier * standardError},
-                   intervalMax{mean + confidenceMultiplier * standardError};
+      const double gateMin    {mean - relative_performance_confidence_multiplier * standardError},
+                   gateMax    {mean + relative_performance_confidence_multiplier * standardError},
+                   intervalMin{mean - overlapMultiplier * standardError},
+                   intervalMax{mean + overlapMultiplier * standardError};
 
       const auto failure{
-        [intervalMin, intervalMax, &parameters]() -> std::optional<relative_performance_failure> {
-          if(!(intervalMin > 0))
-            return intervalMax < 0 ? relative_performance_failure::slower
-                                   : relative_performance_failure::not_distinguishably_faster;
+        [gateMin, gateMax, intervalMin, intervalMax, &parameters]() -> std::optional<relative_performance_failure> {
+          if(!(gateMin > 0))
+            return gateMax < 0 ? relative_performance_failure::slower
+                               : relative_performance_failure::not_distinguishably_faster;
 
           if(intervalMax < std::log(parameters.min_speedup))
             return relative_performance_failure::faster_but_less_than_predicted;
@@ -151,7 +153,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    double confidence_multiplier(test_mode mode, std::size_t attempt)
+    double overlap_multiplier(test_mode mode, std::size_t attempt)
     {
       return (mode == test_mode::false_negative)
         ? relative_performance_confidence_multiplier

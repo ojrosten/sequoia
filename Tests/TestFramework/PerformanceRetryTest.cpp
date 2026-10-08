@@ -35,7 +35,8 @@ namespace sequoia::testing
   {
     test_pass_at_second_attempt();
     test_pass_at_final_attempt();
-    test_rising_confidence_multiplier();
+    test_rising_overlap_multiplier();
+    test_constant_gate_multiplier();
     test_task_orders();
   }
 
@@ -60,7 +61,7 @@ namespace sequoia::testing
     check(equality, "Calls of the slow task", slow.calls(), retry_parameters.trials * attempts * (attempts + 1) / 2);
   }
 
-  void performance_retry_test::test_rising_confidence_multiplier()
+  void performance_retry_test::test_rising_overlap_multiplier()
   {
     using namespace std::chrono_literals;
 
@@ -71,6 +72,22 @@ namespace sequoia::testing
       "Overlapping (3.82, 5.7) needs 1.25 standard errors: the first attempt's 1 falls short, the second's 2 suffices",
       fast,
       make_cycling_spinner({1ms, 3ms, 3ms, 4ms, 4ms}),
+      parameters
+    );
+    check(equality, "Calls of the fast task", fast.calls(), parameters.trials * (1 + 2));
+  }
+
+  void performance_retry_test::test_constant_gate_multiplier()
+  {
+    using namespace std::chrono_literals;
+
+    constexpr relative_performance_parameters parameters{.min_speedup{1.05}, .max_speedup{4}, .trials{5}};
+    const counted_spinner fast{1ms};
+
+    check_relative_performance(
+      "The log speed-up is 1.95 standard errors at the first attempt, short of the gate's 3, and 4.09 at the second",
+      fast,
+      make_cycling_spinner({2ms, 2ms, 2ms, 9ms, 9ms}),
       parameters
     );
     check(equality, "Calls of the fast task", fast.calls(), parameters.trials * (1 + 2));
