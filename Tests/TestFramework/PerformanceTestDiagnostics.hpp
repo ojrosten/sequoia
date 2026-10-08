@@ -81,7 +81,7 @@ namespace sequoia::testing
 
     void test_stop_at_first_passing_attempt();
 
-    void test_failure_once_attempts_run_out();
+    void test_failure_when_attempts_run_out();
 
     void test_false_negative_stop_at_first_failing_attempt();
   };
