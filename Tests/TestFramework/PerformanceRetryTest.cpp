@@ -15,7 +15,7 @@ namespace sequoia::testing
     constexpr std::chrono::milliseconds spin_unit{2};
 
     constexpr relative_performance_parameters retry_parameters{
-      .min_speedup{1.8}, .max_speedup{2.2}, .trials{10}, .num_sds{4}, .max_attempts{3}
+      .min_speedup{1.8}, .max_speedup{2.2}, .trials{10}
     };
   }
 

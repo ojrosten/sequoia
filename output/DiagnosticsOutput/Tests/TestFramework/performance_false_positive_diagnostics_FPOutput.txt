@@ -1,54 +1,50 @@
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 148
-Performance Test which should pass
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 143
+Speed-up of 2, predicted (1.8, 2.1)
 
-Fast Task duration: 0.00500011s +- 4 * 1.39001e-07s
-Slow Task duration: 0.0100003s +- 4 * 3.20253e-07s [2.00001; (1.8, 2.1)]
+Speed-up: 2 in [2, 2]; predicted (1.8, 2.1)
+Trials: 5, attempt 1 of 3
+Task durations: fast 0.001s, slow 0.002s
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 148
+Speed-up of 4, predicted (3.4, 4.1)
+
+Speed-up: 4 in [4, 4]; predicted (3.4, 4.1)
+Trials: 5, attempt 1 of 3
+Task durations: fast 0.001s, slow 0.004s
 
 =======================================
 
 False Negative Failure:
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 153
-Performance Test which should pass
+Durations drifting together, a speed-up of 2 in every trial, predicted (1.8, 2.2)
 
-Fast Task duration: 0.00500008s +- 4 * 4.79212e-08s
-Slow Task duration: 0.0200001s +- 4 * 7.34514e-08s [3.99996; (3.4, 4.1)]
+Speed-up: 2 in [2, 2]; predicted (1.8, 2.2)
+Trials: 5, attempt 1 of 3
+Task durations: fast 0.00288s, slow 0.00577s
 
 =======================================
 
 False Negative Failure:
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 163
-Speed-up of 2, below (2.6, 3.0) by less than 4 of the slow task's sds
+Final attempt: an interval of 3 standard errors ends inside (6.57, 8.54)
 
-Fast Task duration: 0.00500006s +- 4 * 0.00230943s
-Slow Task duration: 0.0100001s +- 4 * 0.00115473s [1.99999; (2.6, 3)]
+Speed-up: 3.38 in [1.58, 7.22]; predicted (6.57, 8.54)
+Trials: 15, attempt 3 of 3
+Task durations: fast 0.001s, slow 0.00338s
 
 =======================================
 
 False Negative Failure:
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 168
-Speed-up of 2, above (1.2, 1.5) by less than 4 of the slow task's sds
+Final attempt: an interval of 3 standard errors starts inside (1.05, 1.37)
 
-Fast Task duration: 0.00500006s +- 4 * 0.0023094s
-Slow Task duration: 0.0100001s +- 4 * 0.0011547s [1.99999; (1.2, 1.5)]
-
-=======================================
-
-False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 173
-Speed-up of 2, below (4.5, 5.0) by less than 4 of the fast task's sds
-
-Fast Task duration: 0.00500007s +- 4 * 0.00115472s
-Slow Task duration: 0.0100002s +- 4 * 0.0023094s [2.00001; (4.5, 5)]
-
-=======================================
-
-False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 178
-Speed-up of 2, above (1.1, 1.3) by less than 4 of the fast task's sds
-
-Fast Task duration: 0.00500007s +- 4 * 0.00115468s
-Slow Task duration: 0.0100001s +- 4 * 0.0023094s [1.99999; (1.1, 1.3)]
+Speed-up: 2.87 in [1.24, 6.67]; predicted (1.05, 1.37)
+Trials: 15, attempt 3 of 3
+Task durations: fast 0.001s, slow 0.00287s
 
 =======================================
 
