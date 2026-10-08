@@ -89,7 +89,6 @@ jobs:
     with:
       needs_testing: 'true'
       merge_into: ''
-      ref: ''
 
   propose:
     name: Propose the tightened baseline

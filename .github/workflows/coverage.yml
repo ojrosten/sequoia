@@ -24,10 +24,6 @@ on:
         description: 'A branch which the job merges into the checked-out commit before building, as tests.yml''s input of the same name does. Empty tests the checked-out commit itself.'
         required: true
         type: string
-      ref:
-        description: 'The commit to check out. Empty checks out actions/checkout''s default: the commit the run was triggered for, which for a pull request is GitHub''s merge commit.'
-        required: true
-        type: string
 
 jobs:
   coverage:
@@ -58,7 +54,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.ref }}
           fetch-depth: 1
 
       # Repeated from tests.yml, whose comment on the step says why it exists

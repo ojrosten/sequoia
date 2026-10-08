@@ -131,7 +131,7 @@ chmod +x "$tmp/bin/gh" "$tmp/bin/sleep"
 
 # Makes a fresh origin, a checkout of its one commit, and the stand-in's state,
 # and sets `checkout`, `origin`, `state` and `measured`.
-fresh() {
+fresh_case() {
   local root
   root=$(mktemp -d "$tmp/case.XXXXXX")
   origin=$root/origin.git checkout=$root/checkout state=$root/state
@@ -158,7 +158,7 @@ add_pr() {
       headRefName: "tighten-uncalled-functions-into-staging", isCrossRepository: $c}' > "$state/pr-$1.json"
 }
 
-proposal() { # proposal <text>: the path of a tightened baseline holding <text>
+proposal_file() { # proposal <text>: the path of a tightened baseline holding <text>
   local path
   path=$(mktemp "$tmp/proposal.XXXXXX")
   printf '%s' "$1" > "$path"
@@ -175,7 +175,7 @@ propose() { # propose <tightened baseline> [<branch>]
   status=$?
 }
 
-remote_head() { git --git-dir="$origin" rev-parse --verify -q refs/heads/tighten-uncalled-functions-into-staging; }
+pushed_proposal() { git --git-dir="$origin" rev-parse --verify -q refs/heads/tighten-uncalled-functions-into-staging; }
 
 logged() { grep -qF -- "$1" "$state/gh.log" 2> /dev/null; }
 
@@ -186,8 +186,8 @@ run_controls() {
   local removal_file pushed first
 
   # Refusals of the arguments.
-  fresh
-  removal_file=$(proposal "$removal"$'\n')
+  fresh_case
+  removal_file=$(proposal_file "$removal"$'\n')
   for arguments in "" "staging" "staging $removal_file" "staging $tmp/absent https://example.invalid/run" \
                    "staging $removal_file https://example.invalid/run extra"; do
     (cd "$checkout" && PATH="$tmp/bin:$PATH" GH_STATE="$state" GH_ORIGIN="$origin" bash "$script" $arguments \
@@ -200,33 +200,33 @@ run_controls() {
   [ ! -e "$state/gh.log" ] || fail "a refusal of the arguments called gh"
 
   # An unchanged baseline proposes nothing.
-  fresh
-  propose "$(proposal "$baseline_text")"
+  fresh_case
+  propose "$(proposal_file "$baseline_text")"
   [ "$status" -eq 0 ] || fail "an unchanged baseline gave status $status: $output"
-  [ -z "$(remote_head)" ] || fail "an unchanged baseline pushed a branch"
+  [ -z "$(pushed_proposal)" ] || fail "an unchanged baseline pushed a branch"
   ! logged "pr create" || fail "an unchanged baseline opened a PR"
 
   # ... and closes this repository's open PR, but not a fork's.
-  fresh
+  fresh_case
   add_pr 7 true
   add_pr 8 false
-  propose "$(proposal "$baseline_text")"
+  propose "$(proposal_file "$baseline_text")"
   [ "$status" -eq 0 ] || fail "an unchanged baseline with open PRs gave status $status: $output"
   logged "pr close 8 --delete-branch" || fail "an unchanged baseline left this repository's PR open"
   ! logged "pr close 7" || fail "an unchanged baseline closed a fork's PR"
 
   # A PR whose repository gh does not report is not taken for this one's.
-  fresh
+  fresh_case
   add_pr 10 false
   jq 'map(del(.isCrossRepository))' "$state/prs.json" > "$state/prs.tmp" && mv "$state/prs.tmp" "$state/prs.json"
-  propose "$(proposal "$baseline_text")"
+  propose "$(proposal_file "$baseline_text")"
   ! logged "pr close 10" || fail "a PR whose repository is not reported was taken for this repository's"
 
   # A removal, with no PR open.
-  fresh
-  propose "$(proposal "$removal"$'\n')"
+  fresh_case
+  propose "$(proposal_file "$removal"$'\n')"
   [ "$status" -eq 0 ] || fail "a removal gave status $status: $output"
-  pushed=$(remote_head)
+  pushed=$(pushed_proposal)
   if [ -z "$pushed" ]; then
     fail "a removal pushed no branch"
   else
@@ -249,9 +249,9 @@ run_controls() {
   # The same proposal again keeps the PR, and does not arm it again.
   first=$pushed
   : > "$state/gh.log"
-  propose "$(proposal "$removal"$'\n')"
+  propose "$(proposal_file "$removal"$'\n')"
   [ "$status" -eq 0 ] || fail "the same proposal again gave status $status: $output"
-  [ "$(remote_head)" = "$first" ] || fail "the same proposal again pushed a new commit"
+  [ "$(pushed_proposal)" = "$first" ] || fail "the same proposal again pushed a new commit"
   ! logged "pr close" || fail "the same proposal again closed its PR"
   ! logged "pr create" || fail "the same proposal again opened a PR"
   ! logged "pr merge" || fail "the same proposal again armed a PR already armed"
@@ -259,33 +259,33 @@ run_controls() {
   # ... and arms the PR if it is not armed.
   jq '.autoMergeRequest = null' "$state/pr-300.json" > "$state/pr.tmp" && mv "$state/pr.tmp" "$state/pr-300.json"
   : > "$state/gh.log"
-  propose "$(proposal "$removal"$'\n')"
+  propose "$(proposal_file "$removal"$'\n')"
   logged "pr merge 300 --auto --merge --match-head-commit $first" \
     || fail "an open PR proposing the same baseline was not armed"
 
   # A different proposal closes the open PR and opens another.
   : > "$state/gh.log"
-  propose "$(proposal "$(printf '%s' "$removal" | grep -v 'ns::alpha()')"$'\n')"
+  propose "$(proposal_file "$(printf '%s' "$removal" | grep -v 'ns::alpha()')"$'\n')"
   [ "$status" -eq 0 ] || fail "a different proposal gave status $status: $output"
   logged "pr close 300 --delete-branch" || fail "a different proposal left the old PR open"
   logged "pr create" || fail "a different proposal opened no PR"
-  [ "$(remote_head)" != "$first" ] || fail "a different proposal pushed nothing"
+  [ "$(pushed_proposal)" != "$first" ] || fail "a different proposal pushed nothing"
 
   # A branch left behind, with no PR open, is overwritten.
-  fresh
+  fresh_case
   git -C "$checkout" push -q origin "$measured:refs/heads/tighten-uncalled-functions-into-staging"
   git -C "$checkout" -c user.name=t -c user.email=t@t commit -q --allow-empty -m "left behind"
   git -C "$checkout" push -q --force origin HEAD:refs/heads/tighten-uncalled-functions-into-staging
   git -C "$checkout" checkout -q --detach "$measured"
-  propose "$(proposal "$removal"$'\n')"
+  propose "$(proposal_file "$removal"$'\n')"
   [ "$status" -eq 0 ] || fail "a removal over a branch left behind gave status $status: $output"
-  [ "$(git --git-dir="$origin" rev-parse "$(remote_head)^")" = "$measured" ] \
+  [ "$(git --git-dir="$origin" rev-parse "$(pushed_proposal)^")" = "$measured" ] \
     || fail "a branch left behind was not overwritten"
 
   # A fork's PR from a branch of the same name is never adopted.
-  fresh
+  fresh_case
   add_pr 9 true
-  propose "$(proposal "$removal"$'\n')"
+  propose "$(proposal_file "$removal"$'\n')"
   [ "$status" -eq 0 ] || fail "a removal beside a fork's PR gave status $status: $output"
   ! logged "pr merge 9" || fail "a fork's PR was armed"
   ! logged "pr close 9" || fail "a fork's PR was closed"
@@ -293,8 +293,8 @@ run_controls() {
 
   # The same baseline proposed on a later commit closes the open PR, and
   # proposes it again on that commit.
-  fresh
-  removal_file=$(proposal "$removal"$'\n')
+  fresh_case
+  removal_file=$(proposal_file "$removal"$'\n')
   propose "$removal_file"
   : > "$state/gh.log"
   git -C "$checkout" checkout -q --force --detach "$measured"
@@ -304,7 +304,7 @@ run_controls() {
   propose "$removal_file"
   [ "$status" -eq 0 ] || fail "the same proposal on a later commit gave status $status: $output"
   logged "pr close 300 --delete-branch" || fail "the same proposal on a later commit kept the PR on the earlier one"
-  [ "$(git --git-dir="$origin" rev-parse "$(remote_head)^")" = "$measured" ] \
+  [ "$(git --git-dir="$origin" rev-parse "$(pushed_proposal)^")" = "$measured" ] \
     || fail "the same proposal on a later commit was not made on that commit"
 
   # Proposals which do more than remove lines, each refused for its reason.
@@ -313,37 +313,37 @@ run_controls() {
                  "changed last line|not the committed one with lines deleted|$(printf '%s' "$baseline_text" | sed '$ s/ns::gamma()/ns::delta()/')"$'\n' \
                  "header|changes the header|$(printf '%s' "$baseline_text" | grep -v '^# tool')"$'\n' \
                  "file line|adds entries|$(printf '%s' "$baseline_text" | grep -vx 'Source/b.cpp')"$'\n'; do
-    fresh
+    fresh_case
     reason=${refused#*|} reason=${reason%%|*}
-    propose "$(proposal "${refused#*|*|}")"
+    propose "$(proposal_file "${refused#*|*|}")"
     [ "$status" -eq 1 ] || fail "a proposal with a ${refused%%|*} change gave status $status, not 1: $output"
     [[ $output == *"$reason"* ]] || fail "a proposal with a ${refused%%|*} change was not refused as one that $reason: $output"
-    [ -z "$(remote_head)" ] || fail "a proposal with a ${refused%%|*} change was pushed"
+    [ -z "$(pushed_proposal)" ] || fail "a proposal with a ${refused%%|*} change was pushed"
     ! logged "pr create" || fail "a proposal with a ${refused%%|*} change opened a PR"
   done
 
   # GitHub's answer on whether the PR can merge.
-  fresh
+  fresh_case
   echo CONFLICTING > "$state/mergeable"
-  propose "$(proposal "$removal"$'\n')"
+  propose "$(proposal_file "$removal"$'\n')"
   [ "$status" -eq 1 ] || fail "a conflicting PR gave status $status, not 1: $output"
   [[ $output == *"conflicts with staging"* ]] || fail "a conflict was not reported: $output"
 
-  fresh
+  fresh_case
   echo 2 > "$state/unknown_views"
-  propose "$(proposal "$removal"$'\n')"
+  propose "$(proposal_file "$removal"$'\n')"
   [ "$status" -eq 0 ] || fail "a PR whose answer came on the third ask gave status $status: $output"
   [ "$(grep -c '^sleep' "$state/gh.log")" -eq 2 ] || fail "the script did not wait for GitHub's answer"
 
-  fresh
+  fresh_case
   echo 100 > "$state/unknown_views"
-  propose "$(proposal "$removal"$'\n')"
+  propose "$(proposal_file "$removal"$'\n')"
   [ "$status" -eq 1 ] || fail "a PR with no answer gave status $status, not 1: $output"
   [ "$(grep -c '^sleep' "$state/gh.log")" -ge 10 ] || fail "the script gave up on GitHub's answer too soon"
 
-  fresh
+  fresh_case
   touch "$state/merge_at_once"
-  propose "$(proposal "$removal"$'\n')"
+  propose "$(proposal_file "$removal"$'\n')"
   [ "$status" -eq 0 ] || fail "a PR which merged at once gave status $status: $output"
   [[ $output == *"#300 has merged"* ]] || fail "a PR which merged at once was not reported: $output"
 }
@@ -366,8 +366,8 @@ mutant 'the removed lines unlisted' 'zip(committed_lines, kept) if not was_kept'
 mutant 'a header change accepted'   'if proposed_header != committed_header:' 'if False:'
 mutant 'an added entry accepted'    'if added:' 'if False:'
 mutant 'the check ignored'          'python3 - "$here" "$baseline" "$tightened" <<' 'cat > /dev/null <<'
-mutant 'any open PR kept'           '[ "$(git rev-parse "refs/remotes/origin/$head^")" = "$measured" ]' 'true'
-mutant 'a different baseline kept'  'git show "refs/remotes/origin/$head:$baseline" | cmp -s - "$tightened"' 'true'
+mutant 'any open PR kept'           '[ "$(git rev-parse "refs/remotes/origin/$proposal_branch^")" = "$measured" ]' 'true'
+mutant 'a different baseline kept'  'git show "refs/remotes/origin/$proposal_branch:$baseline" | cmp -s - "$tightened"' 'true'
 mutant 'no open PR kept'            'if git fetch --quiet --depth=2' 'if false && git fetch --quiet --depth=2'
 mutant 'never armed'                $'!= true ]; then\n  gh pr merge' $'= never ]; then\n  gh pr merge'
 mutant 'armed again'                $'!= true ]; then\n  gh pr merge' $'!= never ]; then\n  gh pr merge'

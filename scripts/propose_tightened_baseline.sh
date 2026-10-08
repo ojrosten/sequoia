@@ -18,7 +18,7 @@
 #      Any other open PR is closed, and its branch deleted, and a new PR is
 #      opened from one commit on top of the measured one, changing the
 #      baseline alone.
-#   -# The PR is set to merge itself, as soon as its head is the commit
+#   -# The PR is set to merge itself, provided its head is still the commit
 #      proposed. The script fails if GitHub reports that the PR conflicts with
 #      <branch>.
 #
@@ -36,11 +36,11 @@ fi
 
 branch=$1 tightened=$2 run_url=$3
 baseline=coverage_reports/uncalled_functions.txt
-head=tighten-uncalled-functions-into-$branch
+proposal_branch=tighten-uncalled-functions-into-$branch
 measured=$(git rev-parse HEAD)
 here=$(cd "$(dirname "$0")" && pwd -P)
 
-pr=$(gh pr list --base "$branch" --head "$head" --state open --json number,isCrossRepository \
+pr=$(gh pr list --base "$branch" --head "$proposal_branch" --state open --json number,isCrossRepository \
        --jq 'map(select(.isCrossRepository == false)) | .[0].number // empty')
 
 close_pr() { # close_pr <comment>
@@ -94,10 +94,10 @@ echo "$removed"
 
 proposed=
 if [ -n "$pr" ]; then
-  if git fetch --quiet --depth=2 origin "+refs/heads/$head:refs/remotes/origin/$head" \
-       && [ "$(git rev-parse "refs/remotes/origin/$head^")" = "$measured" ] \
-       && git show "refs/remotes/origin/$head:$baseline" | cmp -s - "$tightened"; then
-    proposed=$(git rev-parse "refs/remotes/origin/$head")
+  if git fetch --quiet --depth=2 origin "+refs/heads/$proposal_branch:refs/remotes/origin/$proposal_branch" \
+       && [ "$(git rev-parse "refs/remotes/origin/$proposal_branch^")" = "$measured" ] \
+       && git show "refs/remotes/origin/$proposal_branch:$baseline" | cmp -s - "$tightened"; then
+    proposed=$(git rev-parse "refs/remotes/origin/$proposal_branch")
     echo "#$pr already proposes this baseline on $measured"
   else
     close_pr "Superseded by a measurement of $branch at $measured: $run_url"
@@ -106,7 +106,7 @@ fi
 
 if [ -z "$proposed" ]; then
   cp "$tightened" "$baseline"
-  git switch --quiet -c "$head"
+  git switch --quiet -c "$proposal_branch"
   git -c user.name="sequoia CI" -c user.email=ci@example.invalid commit --quiet -F - -- "$baseline" <<MESSAGE
 Tighten the uncalled-functions baseline
 
@@ -114,9 +114,9 @@ Measured on $branch at $measured, by $run_url. The lines removed:
 
 $removed
 MESSAGE
-  git push --quiet --force origin "$head"
+  git push --quiet --force origin "$proposal_branch"
   proposed=$(git rev-parse HEAD)
-  url=$(gh pr create --base "$branch" --head "$head" --title "Tighten the uncalled-functions baseline" \
+  url=$(gh pr create --base "$branch" --head "$proposal_branch" --title "Tighten the uncalled-functions baseline" \
           --body "Measured on \`$branch\` at $measured by $run_url. These entries of \`$baseline\` name functions that are now called, or gone:
 
 \`\`\`

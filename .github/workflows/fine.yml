@@ -92,7 +92,6 @@ jobs:
     with:
       needs_testing: ${{ needs.scope.outputs.coverage }}
       merge_into: ${{ github.event_name == 'workflow_dispatch' && 'staging' || '' }}
-      ref: ''
 
   # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
   # as one that passed; `needs` reports `skipped` where the tick shows green.
