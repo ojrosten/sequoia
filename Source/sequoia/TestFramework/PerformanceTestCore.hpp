@@ -59,37 +59,37 @@ namespace sequoia::testing
 
        For each trial, both the supposedly fast and slow tasks are run. Their order is random.
        When all trials have been completed, the mean and standard deviations are computed for
-       both fast and slow tasks. Denote these by m_f, sig_f and m_s, sig_s.
+       both fast and slow tasks. Denote these by fastMean, fastSd and slowMean, slowSd.
 
        The test fails unless
 
-          m_f + sig_f < m_s - sig_s
+          fastMean + fastSd < slowMean - slowSd
 
        that is, unless the fast task is faster by more than the sum of the standard deviations.
        If it is, the analysis branches depending on which standard deviation is bigger.
 
-       if (sig_f >= sig_s)
+       if (fastSd >= slowSd)
 
-       then we multiply m_f by both the min/max predicted speed-up and compare to the range of
-       values around m_s defined by the number of standard deviations. In particular, the test
+       then we multiply fastMean by both the min/max predicted speed-up and compare to the range of
+       values around slowMean defined by the number of standard deviations. In particular, the test
        is taken to pass if
 
-          (minSpeedup * m_f <= (m_s + numSds * sig_s))
-       && (maxSpeedup * m_f >= (m_s - numSds * sig_s))
+          (minSpeedup * fastMean <= (slowMean + numSds * slowSd))
+       && (maxSpeedup * fastMean >= (slowMean - numSds * slowSd))
 
        which is essentially saying that the range of predicted speed-ups must fall within
-       the specified number of standard deviations of m_s.
+       the specified number of standard deviations of slowMean.
 
        On the other hand
 
-       if (sig_s > sig_f)
+       if (slowSd > fastSd)
 
-       then we divide m_s by both the min/max predicted speed-up and compare to the range of
-       values around m_f defined by the number of standard deviations. In particular, the test
+       then we divide slowMean by both the min/max predicted speed-up and compare to the range of
+       values around fastMean defined by the number of standard deviations. In particular, the test
        is taken to pass if
 
-          (m_s / maxSpeedup <= (m_f + numSds * sig_f))
-       && (m_s / minSpeedup >= (m_f - numSds * sig_f))
+          (slowMean / maxSpeedup <= (fastMean + numSds * fastSd))
+       && (slowMean / minSpeedup >= (fastMean - numSds * fastSd))
 
        \throws std::invalid_argument if a speed-up factor is not greater than 1,
        if minSpeedup exceeds maxSpeedup, if numSds is not greater than 1, if
@@ -165,20 +165,20 @@ namespace sequoia::testing
       std::ranges::sort(fastData);
       std::ranges::sort(slowData);
 
-      const auto [sig_f, m_f]{computeStats(fastData.cbegin()+1, fastData.cend()-1)};
-      const auto [sig_s, m_s]{computeStats(slowData.cbegin()+1, slowData.cend()-1)};
+      const auto [fastSd, fastMean]{computeStats(fastData.cbegin()+1, fastData.cend()-1)};
+      const auto [slowSd, slowMean]{computeStats(slowData.cbegin()+1, slowData.cend()-1)};
 
-      if(m_f + sig_f < m_s - sig_s)
+      if(fastMean + fastSd < slowMean - slowSd)
       {
-        if(sig_f >= sig_s)
+        if(fastSd >= slowSd)
         {
-          passed =    (minSpeedup * m_f <= (m_s + numSds * sig_s))
-                   && (maxSpeedup * m_f >= (m_s - numSds * sig_s));
+          passed =    (minSpeedup * fastMean <= (slowMean + numSds * slowSd))
+                   && (maxSpeedup * fastMean >= (slowMean - numSds * slowSd));
         }
         else
         {
-          passed =    (m_s / maxSpeedup <= (m_f + numSds * sig_f))
-                   && (m_s / minSpeedup >= (m_f - numSds * sig_f));
+          passed =    (slowMean / maxSpeedup <= (fastMean + numSds * fastSd))
+                   && (slowMean / minSpeedup >= (fastMean - numSds * fastSd));
         }
       }
       else
@@ -186,9 +186,8 @@ namespace sequoia::testing
         passed = false;
       }
 
-      summary = append_lines(duration_summary("Fast", m_f, numSds, sig_f),
-                             duration_summary("Slow", m_s, numSds, sig_s))
-                .append(speedup_summary(m_s / m_f, minSpeedup, maxSpeedup));
+      summary = append_lines(duration_summary("Fast", fastMean, numSds, fastSd),
+                             duration_summary("Slow", slowMean, numSds, slowSd) + speedup_summary(slowMean / fastMean, minSpeedup, maxSpeedup));
 
       if((test_logger<Mode>::mode == test_mode::false_negative) ? !passed : passed)
       {
