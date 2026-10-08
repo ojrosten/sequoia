@@ -25,7 +25,7 @@ on:
         required: true
         type: string
       ref:
-        description: 'The commit to check out. Empty checks out the commit the run was triggered for.'
+        description: 'The commit to check out. Empty checks out actions/checkout''s default: the commit the run was triggered for, which for a pull request is GitHub''s merge commit.'
         required: true
         type: string
 
@@ -265,8 +265,8 @@ jobs:
       # newly uncalled function is not absorbed unseen with a change of tools.
       #
       # A run which passes also writes the baseline tightened by this run: the
-      # committed one without the entries the notices name. The two come from
-      # one comparison, so the step fails if a notice leaves the baseline
+      # committed one without the entries the notices name. Both follow from
+      # the same counts, so the step fails if a notice leaves the baseline
       # unchanged. It also fails if tightening changes a baseline without a
       # notice, which happens when the committed baseline is not in the form
       # the script writes, such as a hand-added entry out of order.
@@ -316,7 +316,7 @@ jobs:
           if cmp -s "$baseline" "$tightened"; then changed=no; else changed=yes; fi
           if grep -q '^notice: ' "$verdict"; then noticed=yes; else noticed=no; fi
           if [ "$changed" = yes ] && [ "$noticed" = no ]; then
-            echo "::error title=Uncalled functions::$baseline is not as the script writes it: tightening it with no notice changed it. Sort its entries as a baseline made from this run sorts them"
+            echo "::error title=Uncalled functions::$baseline is not as the script writes it: tightening it with no notice changed it. Make it again as the diff below shows"
             diff "$baseline" "$tightened" || true
             exit 1
           fi

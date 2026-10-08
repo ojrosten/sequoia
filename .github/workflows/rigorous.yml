@@ -217,8 +217,8 @@ jobs:
   # It needs a token other than GITHUB_TOKEN: a PR that token opens triggers no
   # pull_request workflow, so the gate would never report on it.
   # PROMOTION_TOKEN is a fine-grained PAT with Contents and Pull requests
-  # read/write on this repository. When it expires, this step fails: renew
-  # it with the same permissions.
+  # read/write on this repository. When it expires, this step fails, as does
+  # baseline-tightener.yml's propose job: renew it with the same permissions.
   #
   # One PR at a time. Whatever the previous night left, the step ends with one
   # promotion PR open and set to auto-merge, so an open PR without auto-merge
