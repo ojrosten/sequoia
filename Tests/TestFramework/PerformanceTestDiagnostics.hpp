@@ -24,6 +24,10 @@ namespace sequoia::testing
   private:
 
     void test_relative_performance();
+
+    void test_sd_tolerance();
+
+    void test_significance_gate();
   };
 
   class performance_false_positive_diagnostics final : public performance_false_positive_test
@@ -38,6 +42,8 @@ namespace sequoia::testing
   private:
 
     void test_relative_performance();
+
+    void test_sd_tolerance();
   };
 
   class performance_utilities_test final : public free_test
@@ -58,5 +64,7 @@ namespace sequoia::testing
     void test_invalid_arguments();
 
     void test_throwing_task();
+
+    void test_task_constraints();
   };
 }

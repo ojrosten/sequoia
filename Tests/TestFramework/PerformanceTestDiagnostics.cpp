@@ -9,17 +9,83 @@
 
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <array>
+#include <chrono>
 #include <limits>
-#include <thread>
+#include <memory>
+#include <utility>
 
 namespace sequoia::testing
 {
   namespace
   {
-    void wait(std::chrono::milliseconds t)
+    /** \brief Keeps the calling thread busy until `t` has passed by the
+               steady clock.
+
+        A sleep ends on the operating system's timer, and so overruns by an
+        amount that varies with the platform and the load, distorting the
+        ratios the checks below predict. A spin ends at the first reading of
+        the clock past its deadline.
+     */
+    void spin_for(std::chrono::milliseconds t)
     {
-      std::this_thread::sleep_for(t);
+      const auto deadline{std::chrono::steady_clock::now() + t};
+      while(std::chrono::steady_clock::now() < deadline) {}
     }
+
+    /** \brief Returns a task which spins for each of `durations` in turn,
+               starting again after the last.
+
+        Every copy of the task shares one count of the calls made, so any
+        five consecutive calls spin for each duration once.
+     */
+    [[nodiscard]]
+    auto make_cycling_spinner(const std::array<std::chrono::milliseconds, 5>& durations)
+    {
+      return [durations, calls{std::make_shared<std::size_t>()}]() {
+        spin_for(durations[(*calls)++ % durations.size()]);
+      };
+    }
+
+    struct copyable_task
+    {
+      void operator()() const {}
+    };
+
+    struct move_only_task
+    {
+      std::unique_ptr<int> resource{};
+
+      void operator()() const {}
+    };
+
+    struct rvalue_only_task
+    {
+      void operator()() && {}
+    };
+
+    template<class Task>
+    concept profilable = requires(Task task) { profile(std::move(task)); };
+
+    template<class Fast, class Slow>
+    inline constexpr bool checkable_tasks_v{
+      requires(test_logger<test_mode::standard>& logger,
+               Fast fast,
+               Slow slow,
+               const relative_performance_parameters& parameters) {
+        check_relative_performance("", logger, std::move(fast), std::move(slow), parameters);
+      }
+    };
+
+    template<class Fast, class Slow>
+    inline constexpr bool checkable_tasks_by_extender_v{
+      requires(performance_extender<test_mode::standard>& extender,
+               Fast fast,
+               Slow slow,
+               const relative_performance_parameters& parameters) {
+        extender.check_relative_performance("", std::move(fast), std::move(slow), parameters);
+      }
+    };
   }
 
   [[nodiscard]]
@@ -31,6 +97,8 @@ namespace sequoia::testing
   void performance_false_negative_diagnostics::run_tests()
   {
     test_relative_performance();
+    test_sd_tolerance();
+    test_significance_gate();
   }
 
   void performance_false_negative_diagnostics::test_relative_performance()
@@ -38,19 +106,54 @@ namespace sequoia::testing
     constexpr std::chrono::milliseconds deltaT{5};
 
     check_relative_performance("Performance Test for which fast task is too slow, [1, (2.0, 2.0)",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
                                {.min_speedup{2.0}, .max_speedup{2.0}, .trials{5}, .num_sds{4}, .max_attempts{3}});
 
     check_relative_performance("Performance Test for which fast task is too slow [1, (2.0, 3.0)",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
                                {.min_speedup{2.0}, .max_speedup{3.0}, .trials{5}, .num_sds{4}, .max_attempts{3}});
 
     check_relative_performance("Performance Test for which fast task is too fast [4, (2.0, 2.5)]",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(4 * deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(4 * deltaT); },
                                {.min_speedup{2.0}, .max_speedup{2.5}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+  }
+
+  void performance_false_negative_diagnostics::test_sd_tolerance()
+  {
+    using namespace std::chrono_literals;
+
+    check_relative_performance("Speed-up of 2, below (2.6, 3.0) by more than 1.5 of the slow task's sds",
+                               make_cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}),
+                               make_cycling_spinner({8ms, 9ms, 10ms, 11ms, 12ms}),
+                               {.min_speedup{2.6}, .max_speedup{3.0}, .trials{5}, .num_sds{1.5}, .max_attempts{3}});
+
+    check_relative_performance("Speed-up of 2, above (1.2, 1.5) by more than 1.5 of the slow task's sds",
+                               make_cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}),
+                               make_cycling_spinner({8ms, 9ms, 10ms, 11ms, 12ms}),
+                               {.min_speedup{1.2}, .max_speedup{1.5}, .trials{5}, .num_sds{1.5}, .max_attempts{3}});
+
+    check_relative_performance("Speed-up of 2, below (4.5, 5.0) by more than 1.5 of the fast task's sds",
+                               make_cycling_spinner({3ms, 4ms, 5ms, 6ms, 7ms}),
+                               make_cycling_spinner({6ms, 8ms, 10ms, 12ms, 14ms}),
+                               {.min_speedup{4.5}, .max_speedup{5.0}, .trials{5}, .num_sds{1.5}, .max_attempts{3}});
+
+    check_relative_performance("Speed-up of 2, above (1.1, 1.3) by more than 1.5 of the fast task's sds",
+                               make_cycling_spinner({3ms, 4ms, 5ms, 6ms, 7ms}),
+                               make_cycling_spinner({6ms, 8ms, 10ms, 12ms, 14ms}),
+                               {.min_speedup{1.1}, .max_speedup{1.3}, .trials{5}, .num_sds{1.5}, .max_attempts{3}});
+  }
+
+  void performance_false_negative_diagnostics::test_significance_gate()
+  {
+    using namespace std::chrono_literals;
+
+    check_relative_performance("Speed-up of 2, within (1.8, 2.1), but the tasks' spreads overlap",
+                               make_cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}),
+                               make_cycling_spinner({2ms, 6ms, 10ms, 14ms, 18ms}),
+                               {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
   }
 
   [[nodiscard]]
@@ -62,6 +165,7 @@ namespace sequoia::testing
   void performance_false_positive_diagnostics::run_tests()
   {
     test_relative_performance();
+    test_sd_tolerance();
   }
 
   void performance_false_positive_diagnostics::test_relative_performance()
@@ -69,14 +173,39 @@ namespace sequoia::testing
     constexpr std::chrono::milliseconds deltaT{5};
 
     check_relative_performance("Performance Test which should pass",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(2 * deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(2 * deltaT); },
                                {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
 
     check_relative_performance("Performance Test which should pass",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(4 * deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(4 * deltaT); },
                                {.min_speedup{3.4}, .max_speedup{4.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+  }
+
+  void performance_false_positive_diagnostics::test_sd_tolerance()
+  {
+    using namespace std::chrono_literals;
+
+    check_relative_performance("Speed-up of 2, below (2.6, 3.0) by less than 4 of the slow task's sds",
+                               make_cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}),
+                               make_cycling_spinner({8ms, 9ms, 10ms, 11ms, 12ms}),
+                               {.min_speedup{2.6}, .max_speedup{3.0}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+
+    check_relative_performance("Speed-up of 2, above (1.2, 1.5) by less than 4 of the slow task's sds",
+                               make_cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}),
+                               make_cycling_spinner({8ms, 9ms, 10ms, 11ms, 12ms}),
+                               {.min_speedup{1.2}, .max_speedup{1.5}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+
+    check_relative_performance("Speed-up of 2, below (4.5, 5.0) by less than 4 of the fast task's sds",
+                               make_cycling_spinner({3ms, 4ms, 5ms, 6ms, 7ms}),
+                               make_cycling_spinner({6ms, 8ms, 10ms, 12ms, 14ms}),
+                               {.min_speedup{4.5}, .max_speedup{5.0}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+
+    check_relative_performance("Speed-up of 2, above (1.1, 1.3) by less than 4 of the fast task's sds",
+                               make_cycling_spinner({3ms, 4ms, 5ms, 6ms, 7ms}),
+                               make_cycling_spinner({6ms, 8ms, 10ms, 12ms, 14ms}),
+                               {.min_speedup{1.1}, .max_speedup{1.3}, .trials{5}, .num_sds{4}, .max_attempts{3}});
   }
 
   [[nodiscard]]
@@ -91,6 +220,7 @@ namespace sequoia::testing
     test_coarse_sleep();
     test_invalid_arguments();
     test_throwing_task();
+    test_task_constraints();
   }
 
   void performance_utilities_test::test_postprocessing()
@@ -494,5 +624,23 @@ namespace sequoia::testing
       check("Exit via an exception", exitInfo->via_exception);
       check(equality, "Message of the check whose task threw", exitInfo->message, std::string{description});
     }
+  }
+
+  void performance_utilities_test::test_task_constraints()
+  {
+    STATIC_CHECK( profilable<   copyable_task>);
+    STATIC_CHECK(!profilable<rvalue_only_task>);
+
+    STATIC_CHECK( checkable_tasks_v<   copyable_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_v<  move_only_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_v<   copyable_task,   move_only_task>);
+    STATIC_CHECK(!checkable_tasks_v<rvalue_only_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_v<   copyable_task, rvalue_only_task>);
+
+    STATIC_CHECK( checkable_tasks_by_extender_v<   copyable_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_by_extender_v<  move_only_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_by_extender_v<   copyable_task,   move_only_task>);
+    STATIC_CHECK(!checkable_tasks_by_extender_v<rvalue_only_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_by_extender_v<   copyable_task, rvalue_only_task>);
   }
 }

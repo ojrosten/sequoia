@@ -1,4 +1,4 @@
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 414
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 544
 Minimum speed-up of 1
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 420
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 550
 Maximum speed-up of 1
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 426
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 556
 Minimum speed-up of NaN
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 432
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 562
 Minimum speed-up exceeding the maximum
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ max_speedup must be >= min_speedup
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 438
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 568
 One standard deviation
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Number of standard deviations is required to be > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 444
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 574
 NaN standard deviations
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Number of standard deviations is required to be > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 450
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 580
 No attempts
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ Number of attempts is required to be > 0
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 456
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 586
 Four trials
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Number of trials is required to be > 4
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 489
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 619
 Fast task throws
 
 Expected Exception Type:
