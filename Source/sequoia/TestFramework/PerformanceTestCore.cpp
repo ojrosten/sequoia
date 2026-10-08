@@ -88,7 +88,11 @@ namespace sequoia::testing
       return std::string{line};
     }
 
-    /** \brief The lines of `text`, each without its measured values. */
+    /** \brief The lines of `text`, split at each newline, each as
+               `line_without_measurements` returns it.
+
+        The view is lazy and refers to `text`, so it must not outlive `text`.
+     */
     [[nodiscard]]
     auto lines_without_measurements(std::string_view text)
     {
