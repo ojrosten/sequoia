@@ -64,13 +64,15 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    constexpr relative_performance_parameters parameters{.min_speedup{3.2}, .max_speedup{4.8}, .trials{5}};
+    constexpr relative_performance_parameters parameters{.min_speedup{3.82}, .max_speedup{5.7}, .trials{5}};
     const counted_spinner fast{1ms};
 
-    check_relative_performance("An interval of 1 standard error below (3.2, 4.8), then of 2 overlapping it",
-                               fast,
-                               make_cycling_spinner({1ms, 2ms, 2ms, 3ms, 8ms}),
-                               parameters);
+    check_relative_performance(
+      "Overlapping (3.82, 5.7) needs 1.25 standard errors: the first attempt's 1 falls short, the second's 2 suffices",
+      fast,
+      make_cycling_spinner({1ms, 3ms, 3ms, 4ms, 4ms}),
+      parameters
+    );
     check(equality, "Calls of the fast task", fast.calls(), parameters.trials * (1 + 2));
   }
 
@@ -81,29 +83,39 @@ namespace sequoia::testing
     constexpr relative_performance_parameters parameters{.min_speedup{1.8}, .max_speedup{2.2}, .trials{5}};
     constexpr auto attempts{relative_performance_max_attempts};
 
-    const auto taskCalls{std::make_shared<std::vector<task>>()};
-    auto recordedTask{
-      [taskCalls](task t, counted_spinner spinner) {
-        return [taskCalls, t, spinner]() {
-          taskCalls->push_back(t);
-          spinner();
+    auto recordTaskCalls{
+      [this, &parameters](const reporter& description) {
+        const auto taskCalls{std::make_shared<std::vector<task>>()};
+        auto recordedTask{
+          [taskCalls](task t, counted_spinner spinner) {
+            return [taskCalls, t, spinner]() {
+              taskCalls->push_back(t);
+              spinner();
+            };
+          }
         };
+
+        check_relative_performance(description,
+                                   recordedTask(task::fast, counted_spinner{spin_unit}),
+                                   recordedTask(task::slow,
+                                                counted_spinner{spin_unit,
+                                                                parameters.trials * attempts * (attempts - 1) / 2,
+                                                                2 * spin_unit}),
+                                   parameters);
+
+        return *taskCalls;
       }
     };
 
-    check_relative_performance("A speed-up of 1 until the final attempt, then of 2, each task recording its calls",
-                               recordedTask(task::fast, counted_spinner{spin_unit}),
-                               recordedTask(task::slow,
-                                            counted_spinner{spin_unit,
-                                                            parameters.trials * attempts * (attempts - 1) / 2,
-                                                            2 * spin_unit}),
-                               parameters);
+    const auto taskCalls{
+      recordTaskCalls("A speed-up of 1 until the final attempt, then of 2, each task recording its calls")
+    };
 
     auto firstTasksOfAttempt{
       [&taskCalls, &parameters](std::size_t attempt) {
         const auto priorTrials{parameters.trials * attempt * (attempt - 1) / 2};
         return
-            *taskCalls
+            taskCalls
           | std::views::drop(2 * priorTrials)
           | std::views::take(2 * parameters.trials * attempt)
           | std::views::stride(2)
@@ -121,13 +133,7 @@ namespace sequoia::testing
             parameters.trials * attempt / 2);
     }
 
-    auto ranFastFirstThenSlowFirst{
-      [&firstTasksOfAttempt, &isFast](std::size_t attempt) {
-        return std::ranges::is_partitioned(firstTasksOfAttempt(attempt), isFast);
-      }
-    };
-
-    check("Some attempt runs a slow-first trial before a fast-first one",
-          !std::ranges::all_of(std::views::iota(1uz, attempts + 1), ranFastFirstThenSlowFirst));
+    check("A second check runs the tasks in another order",
+          recordTaskCalls("The same tasks, checked again") != taskCalls);
   }
 }

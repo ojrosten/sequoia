@@ -32,12 +32,14 @@ namespace sequoia::testing
       return {info.check_index, text_with_zeroed_measurements(info.message)};
     }
 
+    constexpr auto info_with_zeroed_measurements{
+      [](const failure_info& info) { return with_zeroed_measurements(info); }
+    };
+
     [[nodiscard]]
     failure_output with_zeroed_measurements(const failure_output& output)
     {
-      auto infoWithZeroedMeasurements{[](const failure_info& info) { return with_zeroed_measurements(info); }};
-
-      return output | std::views::transform(infoWithZeroedMeasurements) | std::ranges::to<failure_output>();
+      return output | std::views::transform(info_with_zeroed_measurements) | std::ranges::to<failure_output>();
     }
 
     /** \brief Reports the outcomes of repeated runs of a test, if they differ
@@ -67,7 +69,6 @@ namespace sequoia::testing
 
       std::string freqs{"["};
       std::string messages{};
-      auto infoWithZeroedMeasurements{[](const failure_info& info) { return with_zeroed_measurements(info); }};
 
       while(++first != last)
       {
@@ -75,7 +76,7 @@ namespace sequoia::testing
         {
           freqs += to_percent(std::ranges::distance(current, first)) += "%,";
           auto[i,j]{
-            std::ranges::mismatch(*current, *first, {}, infoWithZeroedMeasurements, infoWithZeroedMeasurements)
+            std::ranges::mismatch(*current, *first, {}, info_with_zeroed_measurements, info_with_zeroed_measurements)
           };
           if(j == first->end())
           {

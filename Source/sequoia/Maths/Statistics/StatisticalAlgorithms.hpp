@@ -109,7 +109,7 @@ namespace sequoia::maths
     winsorized_sample_variance(Iter first, Iter last, std::iter_difference_t<Iter> numReplacedAtEachEnd)
   {
     const auto dist{std::ranges::distance(first, last)};
-    if((numReplacedAtEachEnd < 0) || (dist <= 2 * numReplacedAtEachEnd))
+    if((numReplacedAtEachEnd < 0) || (dist - numReplacedAtEachEnd <= numReplacedAtEachEnd))
     {
       return {{}, {}};
     }

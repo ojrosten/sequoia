@@ -154,17 +154,18 @@ namespace sequoia::testing
        The check passes if any attempt passes, and stops at the first that
        does. In false-negative mode the polarity is reversed: the check passes
        only if every attempt passes, and stops at the first that fails. In
-       that mode every attempt uses c, in place of c_k. In either mode each
-       task runs at most `parameters.trials * A * (A + 1) / 2` times.
+       that mode c_k = c for every k. In either mode each task runs at most
+       `parameters.trials * A * (A + 1) / 2` times.
 
        The summary reports the last attempt. It gives the speed-up, exp(m),
-       and the interval around it, [exp(m - c_k * SE), exp(m + c_k * SE)].
-       It gives the number of trials, and the attempt. And it gives each
+       and the exponentials of the interval's ends. It gives the number of
+       trials, and the attempt. And it gives each
        task's typical duration: the exponential of the trimmed mean of the
        logarithms of its durations. If the last attempt failed, the summary
        also gives the reason, a `relative_performance_failure`:
        -# `slower`, if the interval lies wholly below 0;
-       -# `not_distinguishably_faster`, if the interval otherwise includes 0;
+       -# `not_distinguishably_faster`, if the interval lies neither wholly
+          above 0 nor wholly below it;
        -# `faster_but_less_than_predicted`, if the interval lies wholly above
           0, and below ln(min_speedup);
        -# `suspiciously_fast`, if the interval lies wholly above

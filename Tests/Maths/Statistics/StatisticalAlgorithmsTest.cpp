@@ -10,6 +10,7 @@
 #include "sequoia/Maths/Statistics/StatisticalAlgorithms.hpp"
 
 #include <iterator>
+#include <limits>
 #include <vector>
 
 namespace sequoia::testing
@@ -196,6 +197,12 @@ namespace sequoia::testing
       const auto [var, mean]{winsorized({2, 4}, 1)};
       check("Every datum replaced: no variance", !var.has_value());
       check("Every datum replaced: no mean", !mean.has_value());
+    }
+
+    {
+      const auto [var, mean]{winsorized({2, 4, 9}, std::numeric_limits<std::ptrdiff_t>::max())};
+      check("The most that can be replaced: no variance", !var.has_value());
+      check("The most that can be replaced: no mean", !mean.has_value());
     }
 
     {

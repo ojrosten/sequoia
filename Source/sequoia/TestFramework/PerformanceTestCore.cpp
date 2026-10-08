@@ -39,8 +39,8 @@ namespace sequoia::testing
       return (n + 9) / 10;
     }
 
-    /** \brief The mean of sorted data once the extremes are trimmed, and its
-               standard error.
+    /** \brief The mean of data once the extremes are trimmed, and its standard
+               error.
      */
     struct trimmed_mean_estimate
     {
