@@ -227,6 +227,11 @@ jobs:
   # auto-merge stuck for good. Whoever opened the PR, this step completes it,
   # so opening one by hand is fine.
   #
+  # Only a PR from this repository's staging counts. `--head staging` also
+  # matches a fork's branch named staging, and the step would otherwise arm
+  # the fork's PR to merge into main. A PR whose field is missing does not
+  # count either.
+  #
   # `gh pr merge --auto` merges a PR at once if GitHub already reports it
   # mergeable, since GitHub refuses to arm auto-merge on a clean PR. Either way
   # main advances only when GitHub allows it. The step re-reads the PR
@@ -254,7 +259,8 @@ jobs:
     steps:
       - name: Open the promotion PR and set it to auto-merge, whichever is missing
         run: |
-          pr=$(gh pr list --base main --head staging --state open --json number --jq '.[0].number // empty')
+          pr=$(gh pr list --base main --head staging --state open --json number,isCrossRepository \
+                 --jq 'map(select(.isCrossRepository == false)) | .[0].number // empty')
           if [ -n "$pr" ]; then
             echo "promotion PR #$pr is already open"
           else
