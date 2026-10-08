@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "PerformanceTestDiagnostics.hpp"
+#include "PerformanceTestingUtilities.hpp"
 
 #include "sequoia/Streaming/Streaming.hpp"
 
@@ -19,34 +20,6 @@ namespace sequoia::testing
 {
   namespace
   {
-    /** \brief Keeps the calling thread busy until `t` has passed by the
-               steady clock.
-
-        A sleep ends on the operating system's timer, and so overruns by an
-        amount that varies with the platform and the load, distorting the
-        ratios the checks below predict. A spin ends at the first reading of
-        the clock past its deadline.
-     */
-    void spin_for(std::chrono::milliseconds t)
-    {
-      const auto deadline{std::chrono::steady_clock::now() + t};
-      while(std::chrono::steady_clock::now() < deadline) {}
-    }
-
-    /** \brief Returns a task which spins for each of `durations` in turn,
-               starting again after the last.
-
-        Every copy of the task shares one count of the calls made, so any
-        five consecutive calls spin for each duration once.
-     */
-    [[nodiscard]]
-    auto make_cycling_spinner(const std::array<std::chrono::milliseconds, 5>& durations)
-    {
-      return [durations, calls{std::make_shared<std::size_t>()}]() {
-        spin_for(durations[(*calls)++ % durations.size()]);
-      };
-    }
-
     struct copyable_task
     {
       void operator()() const {}
@@ -642,100 +615,5 @@ namespace sequoia::testing
     STATIC_CHECK(!checkable_tasks_by_extender_v<   copyable_task,   move_only_task>);
     STATIC_CHECK(!checkable_tasks_by_extender_v<rvalue_only_task,    copyable_task>);
     STATIC_CHECK(!checkable_tasks_by_extender_v<   copyable_task, rvalue_only_task>);
-  }
-
-  namespace
-  {
-    /** \brief A task which spins, and counts its calls.
-
-        Every copy of the task shares one count of the calls made, so the
-        count covers every trial of every attempt.
-     */
-    class counted_spinner
-    {
-    public:
-      /** \brief Spins for `duration` on every call. */
-      explicit counted_spinner(std::chrono::milliseconds duration)
-        : counted_spinner{duration, 0, duration}
-      {}
-
-      /** \brief Spins for `initial` on each of the first `initialCalls`
-                 calls, and for `later` on every call after them.
-       */
-      counted_spinner(std::chrono::milliseconds initial,
-                      std::size_t initialCalls,
-                      std::chrono::milliseconds later)
-        : m_Initial{initial}
-        , m_Later{later}
-        , m_InitialCalls{initialCalls}
-      {}
-
-      void operator()() const
-      {
-        spin_for((*m_Calls)++ < m_InitialCalls ? m_Initial : m_Later);
-      }
-
-      [[nodiscard]]
-      std::size_t calls() const noexcept { return *m_Calls; }
-    private:
-      std::chrono::milliseconds m_Initial{}, m_Later{};
-      std::size_t m_InitialCalls{};
-      std::shared_ptr<std::size_t> m_Calls{std::make_shared<std::size_t>()};
-    };
-
-    constexpr std::chrono::milliseconds spin_unit{2};
-
-    constexpr relative_performance_parameters retry_parameters{
-      .min_speedup{1.8}, .max_speedup{2.2}, .trials{10}, .num_sds{4}, .max_attempts{3}
-    };
-  }
-
-  [[nodiscard]]
-  std::filesystem::path performance_retry_test::source_file()
-  {
-    return std::source_location::current().file_name();
-  }
-
-  void performance_retry_test::run_tests()
-  {
-    test_stop_at_first_passing_attempt();
-    test_failure_when_attempts_run_out();
-    test_false_negative_stop_at_first_failing_attempt();
-  }
-
-  void performance_retry_test::test_stop_at_first_passing_attempt()
-  {
-    test_logger<test_mode::standard> logger{};
-    const counted_spinner fast{spin_unit},
-                          slow{spin_unit, retry_parameters.trials, 2 * spin_unit};
-
-    check("The check passes", testing::check_relative_performance("", logger, fast, slow, retry_parameters));
-    check(equality, "No performance failure logged", logger.results().performance_failures, 0uz);
-    check(equality, "Calls of the fast task", fast.calls(), retry_parameters.trials * (1 + 2));
-    check(equality, "Calls of the slow task", slow.calls(), retry_parameters.trials * (1 + 2));
-  }
-
-  void performance_retry_test::test_failure_when_attempts_run_out()
-  {
-    test_logger<test_mode::standard> logger{};
-    const counted_spinner fast{spin_unit},
-                          slow{spin_unit};
-
-    check("The check fails", !testing::check_relative_performance("", logger, fast, slow, retry_parameters));
-    check(equality, "One performance failure logged", logger.results().performance_failures, 1uz);
-    check(equality, "Calls of the fast task", fast.calls(), retry_parameters.trials * (1 + 2 + 3));
-    check(equality, "Calls of the slow task", slow.calls(), retry_parameters.trials * (1 + 2 + 3));
-  }
-
-  void performance_retry_test::test_false_negative_stop_at_first_failing_attempt()
-  {
-    test_logger<test_mode::false_negative> logger{};
-    const counted_spinner fast{spin_unit},
-                          slow{2 * spin_unit, retry_parameters.trials, spin_unit};
-
-    check("The check fails", !testing::check_relative_performance("", logger, fast, slow, retry_parameters));
-    check(equality, "One performance failure logged", logger.results().performance_failures, 1uz);
-    check(equality, "Calls of the fast task", fast.calls(), retry_parameters.trials * (1 + 2));
-    check(equality, "Calls of the slow task", slow.calls(), retry_parameters.trials * (1 + 2));
   }
 }

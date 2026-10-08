@@ -90,7 +90,6 @@ int main(int argc, char** argv)
     runner.register_test<performance_false_negative_diagnostics>();
     runner.register_test<performance_false_positive_diagnostics>();
     runner.register_test<performance_utilities_test>();
-    runner.register_test<performance_retry_test>();
     runner.register_test<relational_false_negative_diagnostics>();
     runner.register_test<relational_false_positive_diagnostics>();
     runner.register_test<regular_state_transition_false_negative_diagnostics>();
@@ -110,6 +109,7 @@ int main(int argc, char** argv)
     runner.register_test<build_artefacts_free_test>();
     runner.register_test<project_paths_free_test>();
     runner.register_test<summary_free_test>();
+    runner.register_test<performance_retry_test>();
 
     code = runner.execute();
   }
