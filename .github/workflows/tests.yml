@@ -181,20 +181,17 @@ jobs:
           # `apt-get update`, and with it the job.
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
-          # Launchpad is a live dependency of every Linux column. Adding its
-          # PPA has failed in more than one way, each before any compiler ran:
-          # a malformed chunked response, and an HTTP 503. So the step retries
-          # the add on any non-zero exit, not only a timeout, a bounded number
-          # of times with a short back-off. `apt-get update` below fetches the
-          # PPA's index from Launchpad too, and is not retried: no failure has
-          # been seen there, and one would be loud.
-          for attempt in 1 2 3 4; do
-            sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test && break
-            [ "$attempt" -lt 4 ] || { echo "::error::add-apt-repository failed on all $attempt attempts"; exit 1; }
-            echo "add-apt-repository failed (attempt $attempt); retrying in $((attempt * 15))s"
-            sleep $((attempt * 15))
-          done
-          sudo apt-get update -qq
+          # Launchpad and the Ubuntu archive are live dependencies of every
+          # Linux column. Adding the PPA has failed with a malformed chunked
+          # response and with an HTTP 503, and has hung in its index refresh
+          # until the job's timeout, each before any compiler ran. So
+          # scripts/retry.sh runs each apt command: an attempt that fails, or
+          # runs past its limit, is retried a bounded number of times. It runs
+          # as root, so that stopping an attempt reaches the apt-get that
+          # add-apt-repository starts. A whole install step takes 22-126 s, so
+          # the limits leave room for every retry within the job.
+          sudo scripts/retry.sh 3 180 -- add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo scripts/retry.sh 3 180 -- apt-get update -qq
           # gdb reads the stacks for a hung suite's snapshot and for a crash's
           # core; the image has none.
           names=$(apt-cache pkgnames)
@@ -202,7 +199,7 @@ jobs:
             grep -qFx -- "$pkg" <<< "$names" \
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
-          sudo apt-get install -y "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev gdb
+          sudo scripts/retry.sh 3 300 -- apt-get install -y "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev gdb
           # The hosted image's CMake is below sequoia's floor of 4.2, the release that added
           # CMAKE_INTERMEDIATE_DIR_STRATEGY; the Windows presets set it in
           # build_system/ShortObjectPaths.cmake. The macOS and Windows images ship a release above

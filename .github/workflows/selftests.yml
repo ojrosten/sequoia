@@ -39,7 +39,7 @@ jobs:
           - name: Linux
             os: ubuntu-latest
             packages: gdb
-            selftests: compile_time_report read_settled_jobs snapshot_at_deadline
+            selftests: compile_time_report read_settled_jobs retry snapshot_at_deadline
           # report_crashes' selftest runs on macOS alone. The system there writes
           # the crash reports its macOS controls read, and its Linux and Windows
           # controls run through stand-ins for uname, file and gdb. One of those
@@ -67,19 +67,21 @@ jobs:
           echo "Nothing to test; the scope job's summary says why."
 
       # Each package is checked by exact name first, as in tests.yml's "Install
-      # the toolchain (Linux)", since apt-get takes a name as a pattern.
+      # the toolchain (Linux)", since apt-get takes a name as a pattern. Each
+      # apt command runs through scripts/retry.sh, as there, with limits that
+      # leave room for every retry within the job.
       - name: Install the packages the selftests need
         if: inputs.needs_testing == 'true' && matrix.packages != ''
         env:
           PACKAGES: ${{ matrix.packages }}
         run: |
-          sudo apt-get update -qq
+          sudo scripts/retry.sh 3 120 -- apt-get update -qq
           names=$(apt-cache pkgnames)
           for package in $PACKAGES; do
             grep -qFx -- "$package" <<< "$names" \
               || { echo "::error::$package is not available on this image"; exit 1; }
           done
-          sudo apt-get install -y $PACKAGES
+          sudo scripts/retry.sh 2 180 -- apt-get install -y $PACKAGES
 
       # Every selftest runs, whichever fail, and the step names each that failed.
       # A selftest passes when it exits 0 and its last line says its controls
