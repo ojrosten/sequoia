@@ -49,6 +49,8 @@ on:
   # opens the promotion PR, whose gate a change to staging would restart.
   schedule:
     - cron: '1 22 * * *'
+  push:
+    branches: [scratch-tightener-2]
   workflow_dispatch:
 # One run at a time on each branch, so that an older measurement cannot
 # overwrite a newer proposal. A run queued behind a running one is replaced by
