@@ -21,7 +21,8 @@ file in the tracefile and in the baseline:
 `compare` also names each `.cpp` file within `<root>/Source` which has no
 record in the tracefile, and then exits with status 1, since none of the file's
 functions is seen. A file with records of lines alone has a record.
-Either mode exits with status 2 if it refuses its input.
+Either mode exits with status 2 if it refuses its input, or if a tool it runs
+fails.
 
 A record is what lcov reports at one start line of one file. Its aliases are
 the mangled names lcov lists there: each template instantiation of a function,
@@ -29,17 +30,25 @@ and also any function written on the same line, such as a lambda within a
 lambda. A record is uncalled when no alias was called. So an uncalled lambda
 written on the line of a called one is never reported.
 
+A class or function with a name, local to a function with a requires-clause,
+is keyed as the enclosing function. Its name cannot be told from the clause.
+
 An uncalled record is listed under each key its aliases give. A key is a
 demangled name with these removed:
   -# every template argument list, at every level;
-  -# the return type, abi tags, `[friend]`, any requires-clause, and the
-     suffixes `[clone ...]` and `(.cold)` which gcc's optimiser adds;
+  -# the return type, abi tags, any requires-clause, and the suffixes
+     `[clone ...]` and `(.cold)` which gcc's optimiser adds;
+  -# the mark of a hidden friend: `[friend]` after the name, or `friend`
+     before it;
   -# a parameter list, and its qualifiers, wherever a template argument list
      attached to a name comes before it, since the parameters are spelt with
      each instantiation's types. So is a parameter list which opens with an
      explicit object parameter, `this`;
   -# the discriminators of lambdas and of unnamed types, which number them in
      source order.
+An alias gives no key if no demangler names it, or if the script cannot parse
+the name a demangler gives. Either mode refuses an uncalled record whose
+aliases give no key.
 
 Several records can share a key, so a baseline is a multiset: a key appears
 once for each uncalled record it names.
@@ -47,6 +56,9 @@ once for each uncalled record it names.
 Each demangler is tried in turn, and the first to demangle a name names it. A
 baseline's header records the name and version number of every demangler and
 of every recorded tool, and `compare` refuses a baseline whose header differs.
+
+A tracefile need not be UTF-8: lcov writes some letters of a function's name
+as single Latin-1 bytes. The script writes such a byte to its output as itself.
 
 The tracefile's counts must be gcov's. With check_data_consistency on, lcov
 repairs counts whenever it reads a tracefile, and marks an uncalled lambda as
@@ -77,7 +89,9 @@ def read_tracefile(path, source_root):
     `source_root`. A file without function records maps to an empty dict.
 
     Each file is given relative to the parent of `source_root`. A record's end
-    line is optional, as geninfo documents.
+    line is optional, as geninfo documents. The records of one file are
+    merged, as are the functions at one start line, and a name's calls are
+    summed. A malformed record raises `Refusal`.
     """
     prefix                = source_root.rstrip('/') + '/'
     relative_from         = prefix[:prefix.rstrip('/').rfind('/') + 1]
@@ -108,7 +122,10 @@ def read_tracefile(path, source_root):
 
 def untraced_translation_units(repository, traced):
     """The `.cpp` files within `<repository>/Source` which `traced` does not
-    name, relative to `repository` and sorted."""
+    name, relative to `repository` and sorted.
+
+    Raises `Refusal` if `<repository>/Source` is not a directory.
+    """
     root  = pathlib.Path(repository)
     if not (root / 'Source').is_dir():
         raise Refusal(f'{root / "Source"} is not a directory')
@@ -117,14 +134,19 @@ def untraced_translation_units(repository, traced):
 
 
 def demangle(names, demanglers):
-    """{mangled: demangled}. A name no demangler changes maps to itself."""
+    """{mangled: demangled}. A name no demangler changes maps to itself.
+
+    Raises `Refusal` if a demangler does not write one line for each name.
+    """
     demangled, pending = {}, sorted(names)
     for demangler in demanglers:
         if not pending:
             break
-        output = subprocess.run([demangler], input='\n'.join(pending) + '\n', capture_output=True, text=True,
-                                errors='surrogateescape', check=True).stdout.split('\n')
-        demangled.update((mangled, readable) for mangled, readable in zip(pending, output) if readable != mangled)
+        lines = subprocess.run([demangler], input='\n'.join(pending) + '\n', capture_output=True, text=True,
+                               errors='surrogateescape', check=True).stdout.split('\n')
+        if len(lines) != len(pending) + 1 or lines[-1]:
+            raise Refusal(f'{demangler} did not write one line for each name it was given')
+        demangled.update((mangled, readable) for mangled, readable in zip(pending, lines) if readable != mangled)
         pending = [mangled for mangled in pending if mangled not in demangled]
     demangled.update((mangled, mangled) for mangled in pending)
     return demangled
@@ -146,6 +168,8 @@ def version_of(tool):
     outside the groups, and are kept. The vendor in a group is lost, so
     Homebrew's and Ubuntu's builds of one gcc release record alike. The
     output is read from standard output and standard error together.
+
+    Raises `Refusal` if no line holds a dotted number outside a path.
     """
     output = subprocess.run([tool, '--version'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
                             check=True).stdout
@@ -221,9 +245,19 @@ def strip_template_arguments(text):
     return ''.join(kept), removed
 
 
-def without_requires_clause(text):
-    """`text`, the name of a function, without any requires-clause which
-    llvm-cxxfilt printed after the name.
+def without_requires_clauses(text):
+    """`text`, the name of a function, without its requires-clauses.
+
+    A demangler prints a function's requires-clause after its parameter list.
+    So the clause of a function enclosing a lambda or an unnamed type comes
+    before that local entity, as in
+    `f<int>(int) requires c<T>::'lambda'()::operator()() const`. A clause ends
+    before the first local entity which lies outside the clause's
+    parentheses, brackets and braces, and whose name ends with a parameter
+    list and its qualifiers once the entity's own clauses are removed.
+    Otherwise the clause runs to the end of `text`. The check of the entity's name is
+    needed because a clause may name the type of a lambda within an
+    expression, as in `requires g()::'lambda'()::value_type::v == 0`.
 
     The angle brackets of a requires-clause need not balance, and a template
     argument within the name may hold a requires-clause of its own.
@@ -232,13 +266,26 @@ def without_requires_clause(text):
     while at >= 0:
         try:
             list(cells(text[:at]))
-            return text[:at]
+            break
         except Unkeyable:
             at = text.find(' requires ', at + 1)
-    return text
+    if at < 0:
+        return text
+    depth = 0
+    for offset in range(at, len(text)):
+        if depth == 0 and LOCAL_ENTITY.match(text, offset):
+            entity = without_requires_clauses(text[offset:])
+            if ENDS_IN_PARAMETERS.search(entity):
+                return text[:at] + entity
+        depth += (text[offset] in '([{') - (text[offset] in ')]}')
+    return text[:at]
 
 
 QUALIFIERS = re.compile(r'((?:\s*(?:const|volatile|&&|&|noexcept))*)\s*$')
+# A lambda or an unnamed type which follows its enclosing function, as either
+# demangler spells them
+LOCAL_ENTITY       = re.compile(r"::['{](?:lambda|unnamed)")
+ENDS_IN_PARAMETERS = re.compile(r'\)' + QUALIFIERS.pattern)
 LAMBDA     = re.compile(r"^(?:\{lambda\((.*)\)#(\d+)\}|'lambda(\d*)'\((.*)\))$")
 UNNAMED    = re.compile(r"^(?:\{unnamed type#(\d+)\}|'unnamed(\d*)')$")
 CALLABLE   = re.compile(r'(.*?)\((.*)\)((?: const| volatile| &&| &)*)$')
@@ -267,7 +314,7 @@ def split_name(text):
             continue
         if closing is not None and depth == 0 and kind == 'open' and token == '(':
             parameters = text[offset + 1:closing]
-            qualifiers = ' '.join(text[closing + 1:].split())
+            qualifiers = text[closing + 1:].strip()
             head       = text[:offset]
             break
     if parameters is None:
@@ -286,7 +333,7 @@ def split_name(text):
     for offset, depth, token, kind in all_cells:
         if offset < start or offset >= len(head) or depth:
             continue
-        if head.startswith('::', offset) and offset >= begin:
+        if head.startswith('::', offset):
             components.append((head[begin:offset], begin))
             begin = offset + 2
     components.append((head[begin:], begin))
@@ -296,7 +343,7 @@ def split_name(text):
 def key(demangled):
     """The key of the function named `demangled`."""
     text          = re.sub(r'\[abi:[^\]]*\]|\[friend\]|(?<=::)friend ', '', demangled)
-    text          = re.sub(r'( \[clone [^\]]*\]| \(\.[\w.]+\))+$', '', without_requires_clause(text))
+    text          = re.sub(r'( \[clone [^\]]*\]| \(\.[\w.]+\))+$', '', without_requires_clauses(text))
     text, removed = strip_template_arguments(text)
     components, parameters, qualifiers = split_name(text)
     # The return type's lists say nothing of the name
@@ -313,8 +360,6 @@ def key(demangled):
 
     parts = []
     for component, begin in components:
-        begin    += len(component) - len(component.lstrip())
-        component = component.strip()
         if lambda_match := LAMBDA.match(component):
             gnu_parameters, gnu_discriminator, _, llvm_parameters = lambda_match.groups()
             lambda_parameters = gnu_parameters if gnu_discriminator else llvm_parameters
@@ -335,7 +380,8 @@ def key(demangled):
 # ---- The baseline -----------------------------------------------------------
 
 def keys_by_file(functions, demanglers, selection):
-    """{file: {key: [start line]}} of the records `selection` names.
+    """{file: {key: [start line]}} of the records `selection` names, each
+    key's start lines in ascending order.
 
     A record is listed under each key its aliases give. A called record none of
     whose aliases can be keyed is left out. An uncalled one raises `Unkeyable`.
@@ -348,7 +394,7 @@ def keys_by_file(functions, demanglers, selection):
                       for name in aliases}
     demangled = demangle(names, demanglers)
     result    = {}
-    for file, starts in sorted(functions.items()):
+    for file, starts in functions.items():
         for start, aliases in sorted(starts.items()):
             if not selected(aliases):
                 continue
@@ -383,12 +429,15 @@ def format_baseline(header_lines, uncalled):
     indented, each as often as `uncalled` counts it."""
     lines = ['# ' + line for line in header_lines]
     for file, keys in sorted(uncalled.items()):
-        lines += [file] + ['    ' + key for key in sorted(keys.elements())]
+        lines += [file] + ['    ' + function_key for function_key in sorted(keys.elements())]
     return '\n'.join(lines) + '\n'
 
 
 def read_baseline(path):
-    """(header lines, {file: Counter(key)})."""
+    """(header lines, {file: Counter(key)}).
+
+    A blank line is passed over. A key before the first file raises `Refusal`.
+    """
     header_lines, uncalled, file = [], {}, None
     with open(path, encoding='utf-8', errors='surrogateescape') as baseline:
         for line in baseline:
@@ -410,8 +459,8 @@ def compare(baseline, current):
     risen, fallen = [], []
     for file in sorted(set(baseline) | set(current)):
         was, now = baseline.get(file, Counter()), current.get(file, Counter())
-        risen  += [(file, key) for key in sorted((now - was).elements())]
-        fallen += [(file, key) for key in sorted((was - now).elements())]
+        risen  += [(file, function_key) for function_key in sorted((now - was).elements())]
+        fallen += [(file, function_key) for function_key in sorted((was - now).elements())]
     return risen, fallen
 
 
