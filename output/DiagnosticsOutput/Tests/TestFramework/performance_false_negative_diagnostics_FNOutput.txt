@@ -1,64 +1,64 @@
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 97
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 108
 Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-Fast Task duration: 0.00500011s +- 4 * 1.00494e-07s
-Slow Task duration: 0.00500008s +- 4 * 0s [0.999995; (2, 2)]
+Fast Task duration: 0.00500007s +- 4 * 2.76727e-08s
+Slow Task duration: 0.0050001s +- 4 * 2.8e-08s [1.00001; (2, 2)]
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 102
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 113
 Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-Fast Task duration: 0.0050001s +- 4 * 7.35784e-08s
-Slow Task duration: 0.00500007s +- 4 * 2.73333e-08s [0.999994; (2, 3)]
+Fast Task duration: 0.00500007s +- 4 * 2.73333e-08s
+Slow Task duration: 0.00500008s +- 4 * 4.79212e-08s [1; (2, 3)]
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 107
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 118
 Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-Fast Task duration: 0.00500013s +- 4 * 1.27222e-07s
-Slow Task duration: 0.0200005s +- 4 * 8.33333e-08s [4; (2, 2.5)]
+Fast Task duration: 0.0050001s +- 4 * 2.73333e-08s
+Slow Task duration: 0.0200002s +- 4 * 1.00494e-07s [3.99996; (2, 2.5)]
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 119
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 128
 Speed-up of 2, below (2.6, 3.0) by more than 1.5 of the slow task's sds
 
-Fast Task duration: 0.00500008s +- 1.5 * 0.00230947s
-Slow Task duration: 0.01s +- 1.5 * 0.0011547s [1.99998; (2.6, 3)]
+Fast Task duration: 0.00500008s +- 1.5 * 0.0023094s
+Slow Task duration: 0.0100001s +- 1.5 * 0.00115475s [1.99999; (2.6, 3)]
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 127
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 133
 Speed-up of 2, above (1.2, 1.5) by more than 1.5 of the slow task's sds
 
-Fast Task duration: 0.00500014s +- 1.5 * 0.00230952s
-Slow Task duration: 0.0100001s +- 1.5 * 0.00115468s [1.99997; (1.2, 1.5)]
+Fast Task duration: 0.00500007s +- 1.5 * 0.00230938s
+Slow Task duration: 0.0100001s +- 1.5 * 0.0011547s [1.99999; (1.2, 1.5)]
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 135
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 138
 Speed-up of 2, below (4.5, 5.0) by more than 1.5 of the fast task's sds
 
-Fast Task duration: 0.0050001s +- 1.5 * 0.00115468s
-Slow Task duration: 0.0100001s +- 1.5 * 0.00230938s [1.99998; (4.5, 5)]
+Fast Task duration: 0.0050001s +- 1.5 * 0.0011547s
+Slow Task duration: 0.0100001s +- 1.5 * 0.00230942s [1.99998; (4.5, 5)]
 
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 143
 Speed-up of 2, above (1.1, 1.3) by more than 1.5 of the fast task's sds
 
-Fast Task duration: 0.00500007s +- 1.5 * 0.00115473s
-Slow Task duration: 0.0100002s +- 1.5 * 0.00230964s [2.00001; (1.1, 1.3)]
+Fast Task duration: 0.00500005s +- 1.5 * 0.00115472s
+Slow Task duration: 0.0100001s +- 1.5 * 0.00230938s [1.99999; (1.1, 1.3)]
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 155
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 153
 Speed-up of 2, within (1.8, 2.1), but the tasks' spreads overlap
 
-Fast Task duration: 0.00500007s +- 4 * 0.00230943s
-Slow Task duration: 0.0100002s +- 4 * 0.00461909s [2.00002; (1.8, 2.1)]
+Fast Task duration: 0.00500006s +- 4 * 0.00230942s
+Slow Task duration: 0.0100001s +- 4 * 0.00461892s [2.00001; (1.8, 2.1)]
 
 =======================================
 

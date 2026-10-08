@@ -17,12 +17,14 @@
 
 #include <algorithm>
 #include <chrono>
+#include <concepts>
 #include <random>
 #include <ranges>
 
 namespace sequoia::testing
 {
-  template<std::invocable Task>
+  template<class Task>
+    requires std::invocable<Task&>
   [[nodiscard]]
   std::chrono::duration<double> profile(Task task)
   {
@@ -31,6 +33,10 @@ namespace sequoia::testing
 
     return t.time_elapsed();
   }
+
+  /** \brief A task which can be copied, and called through the copy. */
+  template<class T>
+  concept copy_constructible_task = std::invocable<T&> && std::copy_constructible<T>;
 
   /** \brief Returns a line reporting a task's mean duration and its standard
              deviation, in seconds.
@@ -75,8 +81,9 @@ namespace sequoia::testing
        \param parameters  the predicted range of speed-ups, and the statistics which test it
 
        For each trial, both the supposedly fast and slow tasks are run. Their order is random.
-       Each trial runs its own copy of each task, so state that a task changes in itself does
-       not carry over to the next trial.
+       Each trial runs its own copy of each task, made before the timing starts. So state a task
+       holds by value starts afresh in every trial, while state it reaches through a reference or
+       a pointer is shared by every trial.
        When all trials have been completed, the mean and standard deviations are computed for
        both fast and slow tasks. Denote these by fastMean, fastSd and slowMean, slowSd.
 
@@ -114,8 +121,7 @@ namespace sequoia::testing
        if min_speedup exceeds max_speedup, if num_sds is not greater than 1, if
        max_attempts is 0 or if trials is less than 5.
    */
-  template<test_mode Mode, std::invocable F, std::invocable S>
-    requires std::copy_constructible<F> && std::copy_constructible<S>
+  template<test_mode Mode, copy_constructible_task F, copy_constructible_task S>
   bool check_relative_performance(std::string_view description,
                                   test_logger<Mode>& logger,
                                   F fast,
@@ -253,15 +259,18 @@ namespace sequoia::testing
 
     performance_extender() = default;
 
-    template<class Self, std::invocable F, std::invocable S>
-      requires std::copy_constructible<F> && std::copy_constructible<S>
+    template<class Self, copy_constructible_task F, copy_constructible_task S>
     bool check_relative_performance(this Self& self,
                                     const reporter& description,
                                     F fast,
                                     S slow,
                                     const relative_performance_parameters& parameters)
     {
-      return testing::check_relative_performance(self.report(description), self.m_Logger, fast, slow, parameters);
+      return testing::check_relative_performance(self.report(description),
+                                                 self.m_Logger,
+                                                 std::move(fast),
+                                                 std::move(slow),
+                                                 parameters);
     }
   protected:
     ~performance_extender() = default;

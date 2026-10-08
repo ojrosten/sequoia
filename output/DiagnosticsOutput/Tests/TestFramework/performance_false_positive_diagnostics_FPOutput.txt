@@ -1,54 +1,54 @@
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 177
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 175
 Performance Test which should pass
 
-Fast Task duration: 0.00500008s +- 4 * 0s
-Slow Task duration: 0.0100015s +- 4 * 2.70811e-06s [2.00026; (1.8, 2.1)]
+Fast Task duration: 0.00500011s +- 4 * 1.39001e-07s
+Slow Task duration: 0.0100003s +- 4 * 3.20253e-07s [2.00001; (1.8, 2.1)]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 182
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 180
 Performance Test which should pass
 
-Fast Task duration: 0.00500007s +- 4 * 2.8e-08s
-Slow Task duration: 0.0200001s +- 4 * 2.73333e-08s [3.99997; (3.4, 4.1)]
+Fast Task duration: 0.00500008s +- 4 * 4.79212e-08s
+Slow Task duration: 0.0200001s +- 4 * 7.34514e-08s [3.99996; (3.4, 4.1)]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 194
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 190
 Speed-up of 2, below (2.6, 3.0) by less than 4 of the slow task's sds
 
-Fast Task duration: 0.00500008s +- 4 * 0.0023094s
-Slow Task duration: 0.0100002s +- 4 * 0.00115487s [2; (2.6, 3)]
+Fast Task duration: 0.00500006s +- 4 * 0.00230943s
+Slow Task duration: 0.0100001s +- 4 * 0.00115473s [1.99999; (2.6, 3)]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 202
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 195
 Speed-up of 2, above (1.2, 1.5) by less than 4 of the slow task's sds
 
-Fast Task duration: 0.00500007s +- 4 * 0.00230938s
+Fast Task duration: 0.00500006s +- 4 * 0.0023094s
 Slow Task duration: 0.0100001s +- 4 * 0.0011547s [1.99999; (1.2, 1.5)]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 210
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 200
 Speed-up of 2, below (4.5, 5.0) by less than 4 of the fast task's sds
 
-Fast Task duration: 0.00500024s +- 4 * 0.00115501s
-Slow Task duration: 0.0100001s +- 4 * 0.0023094s [1.99992; (4.5, 5)]
+Fast Task duration: 0.00500007s +- 4 * 0.00115472s
+Slow Task duration: 0.0100002s +- 4 * 0.0023094s [2.00001; (4.5, 5)]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 218
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 205
 Speed-up of 2, above (1.1, 1.3) by less than 4 of the fast task's sds
 
-Fast Task duration: 0.00500007s +- 4 * 0.0011547s
-Slow Task duration: 0.0100001s +- 4 * 0.00230943s [1.99999; (1.1, 1.3)]
+Fast Task duration: 0.00500007s +- 4 * 0.00115468s
+Slow Task duration: 0.0100001s +- 4 * 0.0023094s [1.99999; (1.1, 1.3)]
 
 =======================================
 
