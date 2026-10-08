@@ -11,16 +11,17 @@
 #   -# If the tightened baseline equals the committed one, the script closes
 #      the open PR, if any, and exits with status 0.
 #   -# Otherwise it refuses, with status 1 and nothing pushed, a proposal which
-#      does more than remove lines: the tightened baseline must be the
-#      committed one with lines deleted, and read as the gate reads it, must
-#      keep the header and add no entry to any file.
+#      does other than remove lines: the tightened baseline must be the
+#      committed one with lines deleted and every other byte kept, and read
+#      as the gate reads it, must keep the header and add no entry to any
+#      file.
 #   -# An open PR which already proposes this baseline on this commit is kept.
 #      Any other open PR is closed, and its branch deleted, and a new PR is
 #      opened from one commit on top of the measured one, changing the
 #      baseline alone.
-#   -# The PR is set to merge itself, provided its head is still the commit
-#      proposed. The script fails if GitHub reports that the PR conflicts with
-#      <branch>.
+#   -# The PR is set to merge itself, armed only if its head is then the
+#      commit proposed. The script fails if GitHub reports that the PR
+#      conflicts with <branch>.
 #
 # Only a PR from this repository is looked for. A fork's PR may come from a
 # branch of the same name, and the script must never arm one.
@@ -55,8 +56,9 @@ if cmp -s "$baseline" "$tightened"; then
   exit 0
 fi
 
-# The check reads the two baselines as lines, and then as the gate reads them.
-# A line moved counts as a line added, so a reordered baseline is refused. A
+# The check reads the two baselines as lines, each with its ending, and then as
+# the gate reads them. A line moved counts as a line added, so a reordered
+# baseline is refused, as is one whose line endings differ. A
 # file's line deleted would move its keys to the file before it, which the
 # second reading sees. The check prints the lines removed.
 removed=$(python3 - "$here" "$baseline" "$tightened" <<'CHECK'
@@ -64,16 +66,16 @@ import sys
 from collections import Counter
 sys.path.insert(0, sys.argv[1])
 from uncalled_functions import read_baseline
-with open(sys.argv[2], encoding='utf-8', errors='surrogateescape') as file:
-    committed_lines = file.read().splitlines()
-with open(sys.argv[3], encoding='utf-8', errors='surrogateescape') as file:
-    proposed_lines = file.read().splitlines()
+with open(sys.argv[2], encoding='utf-8', errors='surrogateescape', newline='') as file:
+    committed_lines = file.read().splitlines(keepends=True)
+with open(sys.argv[3], encoding='utf-8', errors='surrogateescape', newline='') as file:
+    proposed_lines = file.read().splitlines(keepends=True)
 kept, at = [False] * len(committed_lines), 0
 for line in proposed_lines:
     while at < len(committed_lines) and committed_lines[at] != line:
         at += 1
     if at == len(committed_lines):
-        print(f'error: the tightened baseline is not the committed one with lines deleted: {line}', file=sys.stderr)
+        print(f'error: the tightened baseline is not the committed one with lines deleted: {line!r}', file=sys.stderr)
         sys.exit(1)
     kept[at], at = True, at + 1
 committed_header, committed = read_baseline(sys.argv[2])
@@ -85,7 +87,7 @@ if proposed_header != committed_header:
 if added:
     print(f'error: the tightened baseline adds entries: {added}', file=sys.stderr)
     sys.exit(1)
-print('\n'.join(line for line, was_kept in zip(committed_lines, kept) if not was_kept))
+print(''.join(line for line, was_kept in zip(committed_lines, kept) if not was_kept), end='')
 CHECK
 )
 

@@ -22,6 +22,11 @@ name: baseline-tightener
 # commit staging is at, since the measurement costs a coverage build, about
 # twenty minutes of a Linux runner.
 #
+# A dispatched run's actor is GitHub's bot, so its failure reaches nobody,
+# and watchdog.yml checks only that the scheduled run happened. So the
+# scheduled run fails when the last dispatched run that finished failed: an
+# expired token or a refused proposal then shows as a red nightly run.
+#
 # The PR is gated like any other PR into staging. Since only the baseline
 # changes, scope.yml runs the coverage job and skips the test columns. The
 # gate measures the PR merged with staging as it is when the gate runs. A PR
@@ -82,6 +87,17 @@ jobs:
           fi
           gh workflow run baseline-tightener.yml --ref staging
           echo "dispatched a measurement of staging at $staging; the last successful one measured ${measured:-nothing}"
+      - name: Fail if the last measurement failed
+        run: |
+          read -r conclusion url <<< "$(gh run list --workflow baseline-tightener.yml --branch staging \
+            --event workflow_dispatch --status completed --limit 1 --json conclusion,url \
+            --jq '.[0] | "\(.conclusion) \(.url)"' 2> /dev/null || true)"
+          # A run replaced while queued, by the concurrency group, is
+          # cancelled; that is not a failure.
+          case "$conclusion" in
+            ""|null|success|cancelled|skipped) echo "the last measurement that finished: ${conclusion:-none} ${url:-}";;
+            *) echo "::error::the last measurement of staging ended '$conclusion': $url"; exit 1;;
+          esac
 
   coverage:
     if: github.event_name != 'schedule'

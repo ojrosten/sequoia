@@ -75,7 +75,22 @@ jq_of() { # jq_of <file>: applies the --jq expression of the call to <file>
 ARGS=("$@")
 case "$1 $2" in
   "pr list")
-    jq_of "$GH_STATE/prs.json" ;;
+    # The filters the script passes are applied, as gh applies them. Only
+    # open PRs are kept, so any other --state is refused.
+    base= head= state= previous=
+    for argument in "$@"; do
+      case "$previous" in
+        --base)  base=$argument ;;
+        --head)  head=$argument ;;
+        --state) state=$argument ;;
+      esac
+      previous=$argument
+    done
+    [ "$state" = open ] || { echo "gh stand-in: only open PRs are kept, not '$state'" >&2; exit 1; }
+    jq --arg b "$base" --arg h "$head" \
+      '[.[] | select(($b == "" or .base == $b) and ($h == "" or .head == $h))]' \
+      "$GH_STATE/prs.json" > "$GH_STATE/listed.json"
+    jq_of "$GH_STATE/listed.json" ;;
   "pr view")
     number=$3
     # A PR may read UNKNOWN for its first few asks whether it can merge, as
@@ -112,7 +127,14 @@ case "$1 $2" in
     jq --arg h "$head" --arg m "$(cat "$GH_STATE/mergeable" 2>/dev/null || echo MERGEABLE)" -n \
       '{state: "OPEN", mergeable: $m, autoMergeRequest: null, headRefName: $h, isCrossRepository: false}' \
       > "$GH_STATE/pr-$number.json"
-    jq --argjson n "$number" '. + [{number: $n, isCrossRepository: false}]' "$GH_STATE/prs.json" > "$GH_STATE/prs.tmp"
+    base=
+    previous=
+    for argument in "$@"; do
+      [ "$previous" = --base ] && base=$argument
+      previous=$argument
+    done
+    jq --argjson n "$number" --arg b "$base" --arg h "$head" \
+      '. + [{number: $n, isCrossRepository: false, base: $b, head: $h}]' "$GH_STATE/prs.json" > "$GH_STATE/prs.tmp"
     mv "$GH_STATE/prs.tmp" "$GH_STATE/prs.json"
     echo "https://github.com/owner/repository/pull/$number" ;;
   "pr merge")
@@ -149,16 +171,19 @@ fresh_case() {
   measured=$(git -C "$checkout" rev-parse HEAD)
 }
 
-# Adds an open PR to the stand-in's state: add_pr <number> <cross repository>
+# Adds an open PR to the stand-in's state, by default from the tightening
+# branch into staging: add_pr <number> <cross repository> [<base> <head>]
 add_pr() {
-  jq --argjson n "$1" --argjson c "$2" '. + [{number: $n, isCrossRepository: $c}]' "$state/prs.json" > "$state/prs.tmp"
+  local base=${3-staging} head=${4-tighten-uncalled-functions-into-staging}
+  jq --argjson n "$1" --argjson c "$2" --arg b "$base" --arg h "$head" \
+    '. + [{number: $n, isCrossRepository: $c, base: $b, head: $h}]' "$state/prs.json" > "$state/prs.tmp"
   mv "$state/prs.tmp" "$state/prs.json"
-  jq -n --argjson c "$2" \
-    '{state: "OPEN", mergeable: "MERGEABLE", autoMergeRequest: null,
-      headRefName: "tighten-uncalled-functions-into-staging", isCrossRepository: $c}' > "$state/pr-$1.json"
+  jq -n --argjson c "$2" --arg h "$head" \
+    '{state: "OPEN", mergeable: "MERGEABLE", autoMergeRequest: null, headRefName: $h, isCrossRepository: $c}' \
+    > "$state/pr-$1.json"
 }
 
-proposal_file() { # proposal <text>: the path of a tightened baseline holding <text>
+proposal_file() { # proposal_file <text>: the path of a tightened baseline holding <text>
   local path
   path=$(mktemp "$tmp/proposal.XXXXXX")
   printf '%s' "$1" > "$path"
@@ -214,6 +239,26 @@ run_controls() {
   [ "$status" -eq 0 ] || fail "an unchanged baseline with open PRs gave status $status: $output"
   logged "pr close 8 --delete-branch" || fail "an unchanged baseline left this repository's PR open"
   ! logged "pr close 7" || fail "an unchanged baseline closed a fork's PR"
+
+  # PRs of this repository from another branch, or into another branch, are
+  # left alone, and not taken for the tightening PR.
+  fresh_case
+  add_pr 12 false staging feature
+  add_pr 13 false main tighten-uncalled-functions-into-staging
+  propose "$(proposal_file "$baseline_text")"
+  ! logged "pr close 12" || fail "an unchanged baseline closed a PR from another branch"
+  ! logged "pr close 13" || fail "an unchanged baseline closed a PR into another branch"
+  propose "$(proposal_file "$removal"$'\n')"
+  ! logged "pr merge 12" && ! logged "pr merge 13" || fail "a removal armed a PR other than its own"
+  logged "pr create" || fail "a removal beside other PRs opened no PR of its own"
+
+  # An open PR whose branch cannot be fetched is closed and replaced.
+  fresh_case
+  add_pr 14 false
+  propose "$(proposal_file "$removal"$'\n')"
+  [ "$status" -eq 0 ] || fail "a removal beside a PR without a branch gave status $status: $output"
+  logged "pr close 14 --delete-branch" || fail "a PR whose branch cannot be fetched was kept"
+  logged "pr create" || fail "a PR whose branch cannot be fetched was not replaced"
 
   # A PR whose repository gh does not report is not taken for this one's.
   fresh_case
@@ -311,6 +356,8 @@ run_controls() {
   for refused in "added|not the committed one with lines deleted|$baseline_text    ns::delta()"$'\n' \
                  "moved|not the committed one with lines deleted|$(printf '%s' "$baseline_text" | awk '/ns::alpha\(\)/ { held = $0; next } { print } /ns::beta\(\)/ { print held }')"$'\n' \
                  "changed last line|not the committed one with lines deleted|$(printf '%s' "$baseline_text" | sed '$ s/ns::gamma()/ns::delta()/')"$'\n' \
+                 "line endings|not the committed one with lines deleted|$(printf '%s' "$baseline_text" | sed 's/$/\r/')"$'\n' \
+                 "no final newline|not the committed one with lines deleted|${baseline_text%$'\n'}" \
                  "header|changes the header|$(printf '%s' "$baseline_text" | grep -v '^# tool')"$'\n' \
                  "file line|adds entries|$(printf '%s' "$baseline_text" | grep -vx 'Source/b.cpp')"$'\n'; do
     fresh_case
@@ -358,6 +405,13 @@ mutant() {
 mutant 'arguments unchecked'       '[ $# -ne 3 ] || ' ''
 mutant "a fork's PR adopted"        'map(select(.isCrossRepository == false)) | ' ''
 mutant 'an unreported PR adopted'   '.isCrossRepository == false' '.isCrossRepository | not'
+mutant 'any head branch'            'gh pr list --base "$branch" --head "$proposal_branch" --state open' 'gh pr list --base "$branch" --state open'
+mutant 'any base branch'            'gh pr list --base "$branch" --head "$proposal_branch" --state open' 'gh pr list --head "$proposal_branch" --state open'
+mutant 'closed PRs listed too'      'gh pr list --base "$branch" --head "$proposal_branch" --state open' 'gh pr list --base "$branch" --head "$proposal_branch" --state all'
+mutant 'line endings translated'    $', newline=\'\') as file:\n    proposed_lines' $') as file:\n    proposed_lines'
+mutant 'line endings ignored'       'file.read().splitlines(keepends=True)
+with' 'file.read().splitlines()
+with'
 mutant 'nothing closed'             '[ -z "$pr" ] || close_pr' 'true || close_pr'
 mutant 'a move accepted'            "    if at == len(committed_lines):" "    if False:"
 mutant 'a line added past the end'  "    while at < len(committed_lines) and committed_lines[at] != line:" \
