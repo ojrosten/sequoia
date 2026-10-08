@@ -1,0 +1,81 @@
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 310
+Minimum speed-up of 1
+
+Expected Exception Type:
+[std::invalid_argument]
+Relative performance test requires speed-up factors > 1
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 312
+Maximum speed-up of 1
+
+Expected Exception Type:
+[std::invalid_argument]
+Relative performance test requires speed-up factors > 1
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 314
+Minimum speed-up of NaN
+
+Expected Exception Type:
+[std::invalid_argument]
+Relative performance test requires speed-up factors > 1
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 316
+Minimum speed-up exceeding the maximum
+
+Expected Exception Type:
+[std::invalid_argument]
+maxSpeedUp must be >= minSpeedUp
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 318
+One standard deviation
+
+Expected Exception Type:
+[std::invalid_argument]
+Number of standard deviations is required to be > 1
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 320
+NaN standard deviations
+
+Expected Exception Type:
+[std::invalid_argument]
+Number of standard deviations is required to be > 1
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 322
+No attempts
+
+Expected Exception Type:
+[std::invalid_argument]
+Number of attempts is required to be > 0
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 324
+Four trials
+
+Expected Exception Type:
+[std::invalid_argument]
+Number of trials is required to be > 4
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 349
+Fast task throws
+
+Expected Exception Type:
+[std::runtime_error]
+Fast task failure
+
+=======================================
+

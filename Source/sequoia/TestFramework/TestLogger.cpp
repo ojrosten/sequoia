@@ -79,7 +79,7 @@ namespace sequoia::testing
   sentinel_base::sentinel_base(test_logger_base& logger, test_mode mode, std::string message)
     : m_pLogger{&logger}
     , m_Mode{mode}
-    , m_Message{std::move(message)}
+    , m_Level{logger.depth()}
     , m_PriorFailures{logger.results().failures}
     , m_PriorCriticalFailures{logger.results().critical_failures}
     , m_PriorDeepChecks{logger.results().deep_checks}
@@ -87,11 +87,11 @@ namespace sequoia::testing
     if(!logger.depth())
     {
       logger.log_top_level_check();
-      record_check_started(get().recovery().recovery_file, m_Message);
+      record_check_started(get().recovery().recovery_file, message);
     }
 
-    recored_dump_started(get().recovery().dump_file, m_Message);
-    logger.increment_depth(m_Message);
+    recored_dump_started(get().recovery().dump_file, message);
+    logger.increment_depth(message);
   }
 
   sentinel_base::~sentinel_base()
@@ -220,6 +220,14 @@ namespace sequoia::testing
   void test_logger_base::increment_depth(std::string_view message)
   {
     m_SentinelDepth.emplace_back(message);
+  }
+
+  void test_logger_base::append_to_level_message(std::size_t level, std::string_view lines)
+  {
+    if(level >= m_SentinelDepth.size())
+      throw std::logic_error{"Cannot append to a message absent from TestLogger's stack"};
+
+    append_lines(m_SentinelDepth[level].message, lines);
   }
 
   void test_logger_base::decrement_depth()

@@ -1,0 +1,12 @@
+# demangler: Ubuntu LLVM version 18.1.3
+# demangler: GNU c++filt 2.42
+# tool: g++-15 15.2.0
+# tool: lcov: LCOV version 2.5-0
+Source/sequoia/Maths/Graph/GraphErrors.cpp
+    sequoia::maths::graph_errors::absent_partner_weight_message(std::basic_string_view, sequoia::maths::graph_errors::edge_indices)
+    sequoia::maths::graph_errors::erase_edge_error(unsigned long, sequoia::maths::graph_errors::edge_indices)
+Source/sequoia/TestFramework/FailureReporting.cpp
+    sequoia::testing::report_termination()
+Source/sequoia/TestFramework/TestRunner.cpp
+    sequoia::testing::test_runner::process_args(int, char**)::{lambda(auto&, std::vector const&)}::operator()
+    sequoia::testing::test_runner::process_args(int, char**)::{lambda(auto&, std::vector const&)}::operator()

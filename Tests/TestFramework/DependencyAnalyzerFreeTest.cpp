@@ -1339,8 +1339,7 @@ namespace sequoia::testing
     /* The precondition prune relies on, documented by the two cases which break it: definitions for
        Foo.hpp's declarations in a source not named for it, and in a header read by one other
        compilation alone. FooTest.cpp includes Foo.hpp and is not selected by either. Should prune
-       learn the link-time dependencies (roadmap item 180), both will select it, and these two
-       checks will fail.
+       learn the link-time dependencies, both will select it, and these two checks will fail.
     */
     check_tests_to_run("Definitions in a source not named for the header: a limitation, not seen",
                        projPaths,
@@ -1573,6 +1572,20 @@ namespace sequoia::testing
     check_round_trip("The file clock's epoch itself",
                      projPaths,
                      {{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
+
+    {
+      const prune_records written{{"Stuff/My Test.cpp", stamp}, {"HouseAllocationTest.cpp", stamp + std::chrono::seconds{1}}};
+
+      std::stringstream stream{};
+      for(const auto& record : written)
+        stream << record;
+
+      prune_records readBack(written.size(), prune_record{"Replaced by what is read", prune_record::stamp_type{}});
+      for(auto& record : readBack)
+        stream >> record;
+
+      check(equality, "operator>> reads back, record by record, what operator<< writes", readBack, written);
+    }
 
     const auto file{projPaths.prune().to_rerun(std::nullopt)};
 

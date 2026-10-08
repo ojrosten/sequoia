@@ -2,64 +2,68 @@ name: fine-on-retarget
 
 # Starts fine on a pull request that has just been retargeted to staging.
 #
-# Why this exists. fine runs on a pull request's opened, synchronize and reopened
-# events. A stacked pull request is one whose base is another pull request's
-# branch. It gets no fine run, and needs none while stacked. When the base pull
-# request merges, GitHub retargets the stacked one to staging. The retarget is an
-# `edited` event, so fine does not run, and staging's required "Every job ran and
-# every job gates" never reports. #178 sat BLOCKED with every visible check green
-# until a push to its head (2026-10-04).
+# Why this exists. fine runs on a pull request's opened, synchronize and
+# reopened events. A stacked pull request is one whose base is another pull
+# request's branch. It gets no fine run, and needs none while stacked. When
+# the base pull request merges, GitHub retargets the stacked one to staging.
+# The retarget is an `edited` event, so fine does not run, and staging's
+# required "Every job ran and every job gates" never reports. The pull request
+# then sits BLOCKED, with every visible check green, until a push to its head.
 #
 # Why fine.yml does not take `edited` itself. A title or body edit is also an
 # `edited` event. A run guarded by `if: github.event.changes.base` would skip
-# every job on such an edit, and a skipped job reports success. GitHub judges a
-# pull request by the latest check run of each name, so the skipped audit
+# every job on such an edit, and a skipped job reports success. GitHub judges
+# a pull request by the latest check run of each name, so the skipped audit
 # replaces a red one. The edit's run would also join the pull request's
 # concurrency group, and so cancel a gate in flight. Both were measured on
-# scratch PR #199 on 2026-10-04. With the audit red, a title edit took the pull
-# request's mergeStateStatus from UNSTABLE to CLEAN. A title edit during a run
-# cancelled the run, and GitHub then reported CLEAN, although the gate had never
-# finished. An edit's skipped run of this workflow masks nothing and cancels
-# nothing only while both of these hold: this workflow's job is not a required
-# check, and the workflow has no concurrency group.
+# scratch PR #199 on 2026-10-04. With the audit red, a title edit took the
+# pull request's mergeStateStatus from UNSTABLE to CLEAN. A title edit during
+# a run cancelled the run, and GitHub then reported CLEAN, although the gate
+# had never finished. An edit's skipped run of this workflow masks nothing and
+# cancels nothing only while both of these hold: this workflow's job is not a
+# required check, and the workflow has no concurrency group.
 #
-# Why a dispatch. A workflow_dispatch is the one event by which the GITHUB_TOKEN
-# can start a run at once on a branch of its choosing. GitHub documents that any
-# other event the GITHUB_TOKEN causes starts no run, except that a pull request's
-# opened, synchronize or reopened event starts one that waits for approval.
+# Why a dispatch. A workflow_dispatch is the one event by which the
+# GITHUB_TOKEN can start a run at once on a branch of its choosing. GitHub
+# documents that any other event the GITHUB_TOKEN causes starts no run,
+# except that a pull request's opened, synchronize or reopened event starts
+# one that waits for approval.
 #
-# Why the dispatched run makes its own merge. Even a pull_request run would test
-# the wrong tree: GitHub's merge ref can stay merged into the old base for minutes
-# after a retarget. On scratch PR #201 the ref was still stale three minutes after
-# the retarget. The retarget's own `edited` run checked out the stale merge, and
-# so did a run started by reopening the pull request. So the dispatched fine run
-# merges the head into staging itself, through tests.yml's `merge_into`. Do not
-# close and reopen a pull request to start fine: in that window, the reopen's run
-# tests the stale merge and reports on the head commit, where the gate counts it.
+# Why the dispatched run makes its own merge. Even a pull_request run would
+# test the wrong tree: GitHub's merge ref can stay merged into the old base
+# for minutes after a retarget. On scratch PR #201 the ref was still stale
+# three minutes after the retarget. The retarget's own `edited` run checked
+# out the stale merge, and so did a run started by reopening the pull
+# request. So the dispatched fine run merges the head into staging itself,
+# through the `merge_into` input of tests.yml and coverage.yml. Do not close
+# and reopen a pull request to start fine: in that window, the reopen's run
+# tests the stale merge and reports on the head commit, where the gate counts
+# it.
 #
-# A dispatched run builds with the head branch's workflows, not the merged ones.
-# tests.yml's merge step therefore fails the run if staging has changed .github
-# or scripts since its merge-base with the head. Otherwise the gate could pass
-# on a recipe that staging has replaced.
+# A dispatched run builds with the head branch's workflows, not the merged
+# ones. The merge step in each therefore fails the run if staging has changed
+# .github or scripts since its merge-base with the head. Otherwise the gate
+# could pass on a recipe that staging has replaced.
 #
-# What would invalidate this. fine.yml could take the retarget in place of this
-# workflow only if both of these became true: a pull_request trigger could filter
-# on what an edit changed, so that a title edit started no run; and GitHub
-# recomputed the merge ref at a retarget.
+# What would invalidate this. fine.yml could take the retarget in place of
+# this workflow only if both of these became true: a pull_request trigger
+# could filter on what an edit changed, so that a title edit started no run;
+# and GitHub recomputed the merge ref at a retarget.
 #
 # Not covered, each failing loudly or waiting as before:
 #   - A pull request from a fork. This repository can dispatch only its own
 #     branches, so the job fails and says so. Such a pull request waits on
 #     coarse's audit in any case, as coarse.yml says.
-#   - A head branch without this change. A pull_request run takes its workflows
-#     from the merge commit, and after a retarget that is the stale merge. If
-#     neither the head nor the old base holds this file, nothing runs, and the
-#     pull request waits as before. If this file runs but the head's fine.yml has no
-#     workflow_dispatch, GitHub is documented to refuse the dispatch, and the job
-#     fails. Neither case has been seen here. A push starts fine in both.
+#   - A head branch without this change. A pull_request run takes its
+#     workflows from the merge commit, and after a retarget that is the stale
+#     merge. If neither the head nor the old base holds this file, nothing
+#     runs, and the pull request waits as before. If this file runs but the
+#     head's fine.yml has no workflow_dispatch, GitHub is documented to refuse
+#     the dispatch, and the job fails. Neither case has been seen here. A push
+#     starts fine in both.
 #   - A pull request that conflicts with its new base. GitHub starts no
-#     pull_request run for such a pull request, so neither this workflow nor fine
-#     runs. Resolving the conflict needs a push, and the push starts fine.
+#     pull_request run for such a pull request, so neither this workflow nor
+#     fine runs. Resolving the conflict needs a push, and the push starts fine.
 on:
   pull_request:
     types: [edited]
@@ -100,7 +104,8 @@ jobs:
             exit 1
           fi
           echo "fine run $run: https://github.com/$GH_REPO/actions/runs/$run"
-          # The dispatch has succeeded, so a failure to read the run back only warns.
+          # The dispatch has succeeded, so a failure to read the run back only
+          # warns.
           if ! tested=$(gh api "repos/$GH_REPO/actions/runs/$run" --jq .head_sha); then
             echo "::warning::could not read back which commit fine run $run tests"
           elif [ "$tested" != "$HEAD_SHA" ]; then

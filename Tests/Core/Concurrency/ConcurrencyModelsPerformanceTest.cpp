@@ -135,7 +135,7 @@ namespace sequoia::testing
      The upper bounds are not slack: exceeding the ideal would mean the serial baseline was wrong.
 
      This is a holding position. Bounds which have to be widened whenever the hardware changes are
-     measuring the machine as much as the code; see roadmap items 38 and 102.
+     measuring the machine as much as the code.
   */
   void threading_models_performance_test::test_waiting_task(const std::chrono::milliseconds millisecs)
   {

@@ -1,0 +1,146 @@
+name: selftests
+
+# The scripts' selftests. Each job names the selftests to run on its platform:
+# those of the scripts CI runs there, and compile_time_report's, whose script
+# runs on developers' machines. The macOS job also runs
+# generate_coverage_report's: developers run that script on their Macs, though
+# CI runs it only on Linux. A selftest is named rather than found, since
+# report_crashes' selftest passes on Linux having run nothing. The inventory
+# job checks that every selftest runs somewhere.
+#
+# No job runs on Windows. snapshot_at_deadline runs on every Windows column,
+# but its selftest compiles a POSIX stand-in, so nothing controls its Windows
+# branch.
+#
+# The coverage job runs the tracefile and uncalled-functions selftests itself,
+# with the lcov release and the demanglers it installs.
+on:
+  workflow_call:
+    inputs:
+      needs_testing:
+        description: 'Whether the change touches anything the suite reads, scripts included: `true` or `false`, from scope.yml. Anything else fails every job.'
+        required: true
+        type: string
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  selftests:
+    name: Script selftests · ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      # Every platform reports, as in tests.yml.
+      fail-fast: false
+      matrix:
+        include:
+          # gdb reads the stacks in snapshot_at_deadline's Linux branch; the
+          # image has none.
+          - name: Linux
+            os: ubuntu-latest
+            packages: gdb
+            selftests: compile_time_report generate_coverage_report read_settled_jobs retry snapshot_at_deadline
+          # report_crashes' selftest runs on macOS alone. The system there writes
+          # the crash reports its macOS controls read, and its Linux and Windows
+          # controls run through stand-ins for uname, file and gdb. One of those
+          # needs gdb absent, which the Linux job installs.
+          - name: macOS
+            os: macos-latest
+            packages: ''
+            selftests: compile_time_report generate_coverage_report report_crashes snapshot_at_deadline
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      # As in tests.yml: the job runs whatever the change, so that its check
+      # always reports, and any answer but `true` or `false` fails it.
+      - name: Nothing to test
+        if: inputs.needs_testing != 'true'
+        env:
+          NEEDS_TESTING: ${{ inputs.needs_testing }}
+        run: |
+          if [ "$NEEDS_TESTING" != false ]; then
+            echo "::error::the scope job's answer is '$NEEDS_TESTING', neither true nor false"
+            exit 1
+          fi
+          echo "Nothing to test; the scope job's summary says why."
+
+      # Each package is checked by exact name first, as in tests.yml's "Install
+      # the toolchain (Linux)", since apt-get takes a name as a pattern. Each
+      # apt command runs through scripts/retry.sh, as there, with limits that
+      # leave room for every retry within the job.
+      - name: Install the packages the selftests need
+        if: inputs.needs_testing == 'true' && matrix.packages != ''
+        env:
+          PACKAGES: ${{ matrix.packages }}
+        run: |
+          sudo scripts/retry.sh 3 120 -- apt-get update -qq
+          names=$(apt-cache pkgnames)
+          for package in $PACKAGES; do
+            grep -qFx -- "$package" <<< "$names" \
+              || { echo "::error::$package is not available on this image"; exit 1; }
+          done
+          sudo scripts/retry.sh 2 180 -- apt-get install -y $PACKAGES
+
+      # Every selftest runs, whichever fail, and the step names each that failed.
+      # A selftest passes when it exits 0 and its last line says its controls
+      # pass: one that ran nothing exits 0 too.
+      - name: Run the selftests
+        if: inputs.needs_testing == 'true'
+        env:
+          SELFTESTS: ${{ matrix.selftests }}
+        run: |
+          failed=()
+          log="$RUNNER_TEMP/selftest.log"
+          for selftest in $SELFTESTS; do
+            echo "::group::$selftest"
+            status=0
+            scripts/tests/"$selftest"_selftest.sh > "$log" 2>&1 || status=$?
+            cat "$log"
+            echo "::endgroup::"
+            if [ "$status" -ne 0 ]; then
+              failed+=("$selftest (exit status $status)")
+            elif ! tail -n 1 "$log" | grep -q 'controls pass$'; then
+              failed+=("$selftest (exit status 0, but its last line does not say its controls pass)")
+            fi
+          done
+          if [ ${#failed[@]} -ne 0 ]; then
+            for failure in "${failed[@]}"; do echo "::error title=Selftest failed::$failure"; done
+            exit 1
+          fi
+          echo "Every selftest passed: $SELFTESTS"
+
+  # A selftest no job names would run nowhere, and every job would stay green.
+  # So every selftest in scripts/tests must be named in a list above, or by its
+  # path in a workflow, as the coverage job's are.
+  inventory:
+    name: Every script selftest runs somewhere
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            .github
+            scripts
+
+      - name: Compare the selftests with those the workflows run
+        run: |
+          found=$(cd scripts/tests && ls | sed -n 's/^\(.*\)_selftest\.[a-z]*$/\1/p' | sort -u)
+          [ -n "$found" ] || { echo "::error::no selftest found in scripts/tests"; exit 1; }
+          listed=$(yq -r '.jobs.selftests.strategy.matrix.include[].selftests' .github/workflows/selftests.yml | tr ' ' '\n')
+          named=$(grep -ohE 'scripts/tests/[A-Za-z0-9_]+_selftest\.[a-z]+' .github/workflows/*.yml \
+                    | sed 's|^scripts/tests/\(.*\)_selftest\.[a-z]*$|\1|')
+          run=$(printf '%s\n%s\n' "$listed" "$named" | sed '/^$/d' | sort -u)
+          echo "selftests in scripts/tests:"; sed 's/^/  /' <<< "$found"
+          echo "selftests the workflows run:"; sed 's/^/  /' <<< "$run"
+          nowhere=$(comm -23 <(echo "$found") <(echo "$run"))
+          absent=$(comm -13 <(echo "$found") <(echo "$run"))
+          failed=0
+          for selftest in $nowhere; do echo "::error title=Selftest runs nowhere::$selftest"; failed=1; done
+          for selftest in $absent; do echo "::error title=Selftest absent::$selftest is run, and scripts/tests has no such selftest"; failed=1; done
+          exit $failed

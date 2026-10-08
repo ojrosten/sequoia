@@ -1,0 +1,304 @@
+name: coverage
+
+# Measures the coverage of Source and publishes the figures, with no
+# threshold. The job fails on one measurement: "Check for uncalled functions"
+# is a gate on functions of Source that no test calls. The uploaded
+# coverage.info is an lcov tracefile.
+#
+# fine calls this workflow, so the gate holds pull requests into staging.
+# rigorous calls it too, for promotions to main, the nightly run and
+# dispatches.
+#
+# The toolchain steps repeat tests.yml's rather than calling it, because
+# coverage runs the suite through ctest, serially, not through the `run`
+# target.
+on:
+  workflow_call:
+    inputs:
+      needs_testing:
+        description: 'Whether the change touches anything the job reads: `true` or `false`, from scope.yml. Anything else fails the job.'
+        required: true
+        type: string
+      merge_into:
+        description: 'A branch which the job merges into the checked-out commit before building, as tests.yml''s input of the same name does. Empty tests the checked-out commit itself.'
+        required: true
+        type: string
+
+jobs:
+  coverage:
+    name: Coverage · Linux · GCC
+    # Pinned, as lcov is below, so that the Ubuntu release changes only in a
+    # PR. ubuntu-24.04 is the release the demangler paths below were measured
+    # on. Two things still move without a PR: GitHub rebuilds the ubuntu-24.04
+    # image weekly, and the toolchain PPA uploads new snapshots of g++-15. A
+    # snapshot with a new version number makes the gate refuse every run, in
+    # fine as in rigorous, until a PR makes the baseline again. A PR that moves
+    # the job to another release:
+    #   -# changes the runs-on line;
+    #   -# finds the release's demanglers, with the listing step of 36950811f,
+    #      and sets LLVM_CXXFILT and GNU_CXXFILT below;
+    #   -# checks that the PPA, or the release itself, provides g++-15;
+    #   -# regenerates coverage_reports/uncalled_functions.txt, whose header
+    #      records the tools' releases.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      CC: gcc-15
+      CXX: g++-15
+      NEEDS_TESTING: ${{ inputs.needs_testing }}
+      # The demanglers of the gate on uncalled functions; see "Test the
+      # uncalled-functions script".
+      LLVM_CXXFILT: /usr/bin/llvm-cxxfilt-18
+      GNU_CXXFILT: /usr/bin/c++filt
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      # Repeated from tests.yml, whose comment on the step says why it exists
+      # and what it refuses; change both.
+      - name: Merge the branch named by merge_into
+        if: inputs.merge_into != ''
+        env:
+          BASE: ${{ inputs.merge_into }}
+        run: |
+          git fetch --quiet --no-tags --filter=blob:none --unshallow origin "+refs/heads/$BASE:refs/remotes/origin/$BASE"
+          tested=$(git rev-parse HEAD)
+          git -c user.name="sequoia CI" -c user.email=ci@example.invalid \
+            merge --no-edit "refs/remotes/origin/$BASE"
+          echo "Testing $(git rev-parse HEAD): $tested merged with $BASE at $(git rev-parse "refs/remotes/origin/$BASE")"
+          if ! git diff --quiet "$tested" HEAD -- .github scripts; then
+            git diff --stat "$tested" HEAD -- .github scripts
+            echo "::error::$BASE has changed .github or scripts since its merge-base with $tested, and this run builds with the old ones: rebase onto $BASE and push"
+            exit 1
+          fi
+
+      # As in tests.yml, the job runs whatever the change, since each caller's
+      # audit insists on its success. Only the steps below depend on the
+      # change, and any answer but `true` or `false` fails the job.
+      - name: Nothing to test
+        if: env.NEEDS_TESTING != 'true'
+        run: |
+          if [ "$NEEDS_TESTING" != false ]; then
+            echo "::error::the scope job's answer is '$NEEDS_TESTING', neither true nor false"
+            exit 1
+          fi
+          echo "Nothing to test; the scope job's summary says why."
+
+      - name: Install the toolchain
+        if: env.NEEDS_TESTING == 'true'
+        run: |
+          # The hosted image ships Chrome's and Microsoft's apt repositories,
+          # which nothing here installs from. A bad index from either fails
+          # `apt-get update`, and with it the job.
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
+                     /etc/apt/sources.list.d/microsoft-prod.list
+          # Launchpad and the Ubuntu archive are live dependencies of every
+          # Linux column. Adding the PPA has failed with a malformed chunked
+          # response and with an HTTP 503, and has hung in its index refresh
+          # until the job's timeout, each before any compiler ran. So
+          # scripts/retry.sh runs each apt command: an attempt that fails, or
+          # runs past its limit, is retried a bounded number of times. It runs
+          # as root, so that stopping an attempt reaches the apt-get that
+          # add-apt-repository starts. A whole install step takes 22-126 s, so
+          # the limits leave room for every retry within the job.
+          sudo scripts/retry.sh 3 180 -- add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo scripts/retry.sh 3 180 -- apt-get update -qq
+          # The Perl packages are for lcov, installed below from its release.
+          # Without Capture::Tiny, DateTime, Date::Parse and
+          # Devel::StackTrace, lcov's tools do not start. geninfo reads gcov's
+          # output with JSON::XS in preference to the core, pure-Perl
+          # JSON::PP.
+          packages=(g++-15 ninja-build libtbb-dev
+                    libcapture-tiny-perl libdatetime-perl libdevel-stacktrace-perl libjson-xs-perl libtimedate-perl)
+          # The list is read once and searched by exact name, as in tests.yml's
+          # "Install the toolchain (Linux)", which says why.
+          names=$(apt-cache pkgnames)
+          for pkg in "${packages[@]}"; do
+            grep -qFx -- "$pkg" <<< "$names" \
+              || { echo "::error::$pkg is not available on this image"; exit 1; }
+          done
+          sudo scripts/retry.sh 3 300 -- apt-get install -y "${packages[@]}"
+          # The hosted image's CMake is below sequoia's floor of 4.2, the release that added
+          # CMAKE_INTERMEDIATE_DIR_STRATEGY; the Windows presets set it in
+          # build_system/ShortObjectPaths.cmake. The macOS and Windows images ship a release above
+          # the floor, so this job fetches one from Kitware - the host the checkout already
+          # comes from - and puts it first on PATH. An older cmake surviving this step is loud:
+          # the configure step's cmake_minimum_required refuses it. The tarball has no apt
+          # signature behind it, so its checksum is pinned.
+          #
+          # Repeated in tests.yml's "Install the toolchain (Linux)"; change both.
+          cmake_version=4.4.3
+          cmake_sha256=d6c83076c575bc00b823522ac974bda66d0af05d6ddc30e739c12385cf32c6cc
+          cmake_tarball=$RUNNER_TEMP/cmake.tar.gz
+          cmake_url=https://github.com/Kitware/CMake/releases/download/v$cmake_version/cmake-$cmake_version-linux-x86_64.tar.gz
+          if [ "$(uname -m)" != x86_64 ]; then echo "::error::No CMake build is fetched for $(uname -m)"; exit 1; fi
+          if ! curl -fsSL -o "$cmake_tarball" "$cmake_url"; then echo "::error::CMake $cmake_version could not be fetched from Kitware's release page"; exit 1; fi
+          if ! echo "$cmake_sha256  $cmake_tarball" | sha256sum --check --quiet; then echo "::error::The CMake tarball does not match its published checksum"; exit 1; fi
+          tar -xzf "$cmake_tarball" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin" >> "$GITHUB_PATH"
+          # lcov comes from its release rather than apt, so that its version
+          # does not move with the image: the 24.04 archive has 2.0 and the
+          # 26.04 one 2.4. From the same coverage data, lcov 2.0 and 2.5 write
+          # different function records and count different function totals.
+          # Keep it at the version Homebrew installs, so that CI and a Mac run
+          # the same lcov. The tarball's checksum is pinned for the same reason
+          # as CMake's. Each tool prints the version and, after a hyphen, the
+          # release number from the tarball's .version file.
+          lcov_version=2.5
+          lcov_release=0
+          lcov_sha256=7e5e5a154bd5f3557659c328cab376764e7abd238bb403c424472c296b175126
+          lcov_tarball=$RUNNER_TEMP/lcov.tar.gz
+          lcov_url=https://github.com/linux-test-project/lcov/releases/download/v$lcov_version/lcov-$lcov_version.tar.gz
+          if ! curl -fsSL -o "$lcov_tarball" "$lcov_url"; then echo "::error::lcov $lcov_version could not be fetched from its release page"; exit 1; fi
+          if ! echo "$lcov_sha256  $lcov_tarball" | sha256sum --check --quiet; then echo "::error::The lcov tarball does not match its published checksum"; exit 1; fi
+          tar -xzf "$lcov_tarball" -C "$RUNNER_TEMP"
+          # --old-file=doc stops install rebuilding the documentation the
+          # tarball ships, which needs Sphinx.
+          sudo make -C "$RUNNER_TEMP/lcov-$lcov_version" --old-file=doc install
+          # Each tool must report the pinned release. That is the only proof
+          # the install worked, since lcov's Makefile can exit 0 after a
+          # partial install. It also stops another lcov earlier on PATH from
+          # measuring in this one's place without a word.
+          pinned=$lcov_version-$lcov_release
+          for tool in lcov geninfo genhtml; do
+            reported=$("$tool" --version)
+            echo "$reported"
+            [ "${reported##* }" = "$pinned" ] \
+              || { echo "::error::$tool on PATH reports ${reported##* }, not the pinned $pinned"; exit 1; }
+          done
+          g++-15 --version | head -1
+          "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin/cmake" --version | head -1
+
+      - name: Give git an identity
+        if: env.NEEDS_TESTING == 'true'
+        run: |
+          git config --global user.name "sequoia CI"
+          git config --global user.email "ci@example.invalid"
+          git config --global init.defaultBranch trunk
+
+      # Tests the checks by which the Measure step catches lcov changing the
+      # measurement.
+      - name: Test the tracefile checks
+        if: env.NEEDS_TESTING == 'true'
+        run: scripts/tests/check_tracefile_selftest.sh
+
+      - name: Configure and build
+        if: env.NEEDS_TESTING == 'true'
+        working-directory: TestAll
+        run: |
+          cmake --preset gcc-env-coverage
+          cmake --build --preset gcc-env-coverage
+
+      # The script runs the suite through ctest itself, so there is no separate
+      # run step. Utilities.cmake registers the test with --serial under
+      # CODE_COVERAGE.
+      - name: Measure
+        id: measure
+        if: env.NEEDS_TESTING == 'true'
+        run: ./scripts/generate_coverage_report.sh build/TestAll/gcc-env-coverage
+
+      - name: Report
+        if: ${{ always() && env.NEEDS_TESTING == 'true' }}
+        env:
+          MEASURE_OUTCOME: ${{ steps.measure.outcome }}
+        run: |
+          info=build/TestAll/gcc-env-coverage/coverage.info
+          [ -f "$info" ] || { echo "::error::no tracefile at $info"; exit 1; }
+          # The options are generate_coverage_report.sh's read_options, which
+          # the script explains. A tracefile lcov refuses fails the job, since
+          # the tracefile is what the job publishes.
+          if ! lcov_output=$(lcov --summary "$info" --rc check_data_consistency=0 --rc derive_function_end_line=0 2>&1); then
+            echo "::error::lcov refused $info"
+            echo "$lcov_output"
+            exit 1
+          fi
+          if ! summary=$(grep -E '^ *(lines|functions)\.' <<< "$lcov_output"); then
+            echo "::error::lcov's summary of $info has no lines or functions figure"
+            echo "$lcov_output"
+            exit 1
+          fi
+          echo "$summary"
+          {
+            echo "### Coverage"
+            echo '```'
+            echo "$summary"
+            echo '```'
+            echo "_These figures are reported only; the gate on uncalled functions is a step of its own._"
+            # The step runs even when Measure fails, so the figures say whether
+            # they were checked.
+            if [ "$MEASURE_OUTCOME" != success ]; then
+              echo "**The Measure step failed ($MEASURE_OUTCOME): these figures are unchecked.**"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # The gate on uncalled functions keys each function by its demangled
+      # name, so the script's controls run with the demanglers the gate is to
+      # use. ubuntu-24.04 has llvm-cxxfilt-16 to -18 and no unversioned
+      # llvm-cxxfilt; 18 is the newest (run 37584812301). A demangler absent
+      # from the path given fails this step. The step follows Measure, so that
+      # a failure here does not cost the run its coverage figures.
+      - name: Test the uncalled-functions script
+        if: ${{ always() && env.NEEDS_TESTING == 'true' }}
+        run: scripts/tests/uncalled_functions_selftest.py --demangler "$LLVM_CXXFILT" --demangler "$GNU_CXXFILT"
+
+      # The gate. A function of Source that no test calls fails the job, unless
+      # the baseline, coverage_reports/uncalled_functions.txt, lists it. A .cpp
+      # file of Source missing from the tracefile also fails the job. The
+      # tracefile holds every object the build compiled, whether or not it was
+      # linked. A template never instantiated, and an inline function never
+      # used, are in no object, so the gate does not see them. A listed
+      # function that is now called, or gone, gives a notice, and the list is
+      # shortened by hand. Errors and notices are annotations on the run as
+      # well as lines in its summary.
+      #
+      # The baseline's header names the tools' releases, so a change of
+      # demangler, compiler or lcov release is refused until the baseline is
+      # made again. A failure, a refusal included, prints a baseline made from
+      # this run and how its entries differ from the committed ones, so that a
+      # newly uncalled function is not absorbed unseen with a change of tools.
+      - name: Check for uncalled functions
+        if: ${{ always() && steps.measure.outcome == 'success' }}
+        run: |
+          baseline=coverage_reports/uncalled_functions.txt
+          options=(--tracefile build/TestAll/gcc-env-coverage/coverage.info --repository "$GITHUB_WORKSPACE"
+                   --demangler "$LLVM_CXXFILT" --demangler "$GNU_CXXFILT"
+                   --recorded-tool g++-15 --recorded-tool lcov)
+          verdict="$RUNNER_TEMP/uncalled_verdict.txt"
+          fresh="$RUNNER_TEMP/uncalled_fresh_baseline.txt"
+          status=0
+          scripts/uncalled_functions.py compare "${options[@]}" --baseline "$baseline" > "$verdict" 2>&1 || status=$?
+          cat "$verdict"
+          sed -n -e 's/^notice: /::notice title=Uncalled functions::/p' \
+                 -e 's/^error: /::error title=Uncalled functions::/p' "$verdict"
+          {
+            echo '### Uncalled functions'
+            if [ "$status" -eq 0 ] && [ ! -s "$verdict" ]; then
+              echo "Every .cpp file of Source is in the tracefile, and every uncalled function it holds is listed in $baseline."
+            else
+              echo '```'; cat "$verdict"; echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$status" -ne 0 ]; then
+            scripts/uncalled_functions.py baseline "${options[@]}" > "$fresh" 2>&1 || true
+            entries=$(diff <(grep -v '^# ' "$baseline") <(grep -v '^# ' "$fresh") || true)
+            echo "A baseline made from this run:"
+            cat "$fresh"
+            echo "Its entries against the committed baseline's (< committed only, > this run only):"
+            echo "$entries"
+            {
+              echo "Entries of $baseline (<) against a baseline made from this run (>):"
+              echo '```'; echo "$entries"; echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit "$status"
+
+      - name: Upload the tracefile and the report
+        if: ${{ always() && env.NEEDS_TESTING == 'true' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage
+          path: |
+            build/TestAll/gcc-env-coverage/coverage.info
+            coverage_reports/
+          if-no-files-found: warn

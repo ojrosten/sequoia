@@ -27,9 +27,9 @@ name: coarse
 # Every column is fatal, the Windows one since 2026-09-22. It had been advisory
 # from 2026-09-09 - the suite run and triaged, a failure reported on a green job -
 # because it was red on every push from PR #80 onwards for one cause: the nested
-# test projects' compiler probes overran MAX_PATH, roadmap item 197, fixed by
-# hashing the object paths (build_system/ShortObjectPaths.cmake). A column that
-# nothing can make red is a report rather than a gate; this one gates.
+# test projects' compiler probes overran MAX_PATH, fixed by hashing the object
+# paths (build_system/ShortObjectPaths.cmake). A column that nothing can make
+# red is a report rather than a gate; this one gates.
 #
 # The Windows column builds with Ninja, not msbuild: the same cl.exe, the faster
 # of the two builds, and the generator a client outside the IDE would use, so a
@@ -108,6 +108,15 @@ jobs:
     with:
       needs_testing: ${{ needs.scope.outputs.documentation }}
 
+  # The scripts' selftests. They take about a minute and build nothing of
+  # sequoia's, so a change to a script is tested on the push that makes it.
+  selftests:
+    needs: scope
+    if: ${{ !cancelled() }}
+    uses: ./.github/workflows/selftests.yml
+    with:
+      needs_testing: ${{ needs.scope.outputs.suite }}
+
   # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
   # as one that passed; `needs` reports `skipped` where the tick shows green.
   # Staging requires this job and none of the others, so a job missing from this
@@ -119,7 +128,7 @@ jobs:
   # an earlier step fails, so each reports independently.
   audit:
     name: Every job ran
-    needs: [scope, coarse, docs]
+    needs: [scope, coarse, docs, selftests]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
