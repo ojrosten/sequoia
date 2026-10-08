@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class performance_retry_test final : public performance_test
+  class performance_exceptions_test final : public performance_test
   {
   public:
     using performance_test::performance_test;
@@ -24,8 +24,8 @@ namespace sequoia::testing
     void run_tests();
   private:
 
-    void test_pass_at_second_attempt();
+    void test_invalid_arguments();
 
-    void test_pass_at_third_attempt();
+    void test_throwing_task();
   };
 }

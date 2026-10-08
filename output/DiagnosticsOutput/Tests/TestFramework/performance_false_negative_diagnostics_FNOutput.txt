@@ -1,14 +1,14 @@
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 81
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 72
 Fast task 4 ms, slow task cycling through (2, 3, 4, 5, 6) ms, predicted (1.2, 1.5)
 
 The fast task is not distinguishably faster than the slow one
 Speed-up: 0.979 in [0.552, 1.73]; predicted (1.2, 1.5)
 Trials: 5, attempt 1 of 3
-Task durations: fast 0.004s, slow 0.00391s
+Task durations: fast 0.004s, slow 0.00392s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 86
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 77
 Fast task 2 ms, slow task 1 ms, predicted (1.5, 2.0)
 
 The fast task is slower than the slow one
@@ -18,7 +18,7 @@ Task durations: fast 0.002s, slow 0.001s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 91
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 82
 Speed-up of 2, predicted (3.0, 3.0)
 
 The fast task is faster than the slow one, but by less than predicted
@@ -28,7 +28,7 @@ Task durations: fast 0.001s, slow 0.002s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 96
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 87
 Speed-up of 4, predicted (2.0, 2.5)
 
 The fast task is suspiciously fast: faster than predicted
@@ -38,7 +38,7 @@ Task durations: fast 0.001s, slow 0.004s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 106
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 97
 An interval of 3 standard errors ends below the predicted (11.2, 14.5)
 
 The fast task is faster than the slow one, but by less than predicted
@@ -48,23 +48,33 @@ Task durations: fast 0.001s, slow 0.00342s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 111
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 102
 An interval of 3 standard errors starts above the predicted (1.15, 1.5)
 
 The fast task is suspiciously fast: faster than predicted
-Speed-up: 2.62 in [1.59, 4.31]; predicted (1.15, 1.5)
+Speed-up: 2.62 in [1.6, 4.31]; predicted (1.15, 1.5)
 Trials: 5, attempt 1 of 3
 Task durations: fast 0.001s, slow 0.00262s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 121
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 112
 An interval of 3 standard errors includes a speed-up of 1, and overlaps (2.6, 3.17)
 
 The fast task is not distinguishably faster than the slow one
-Speed-up: 2.89 in [0.869, 9.58]; predicted (2.6, 3.17)
+Speed-up: 2.88 in [0.868, 9.59]; predicted (2.6, 3.17)
 Trials: 5, attempt 1 of 3
-Task durations: fast 0.00126s, slow 0.00364s
+Task durations: fast 0.00126s, slow 0.00363s
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 126
+A speed-up of 2, then of 1, then of 2
+
+The fast task is not distinguishably faster than the slow one
+Speed-up: 1 in [1, 1]; predicted (1.8, 2.2)
+Trials: 20, attempt 2 of 3
+Task durations: fast 0.002s, slow 0.002s
 
 =======================================
 
