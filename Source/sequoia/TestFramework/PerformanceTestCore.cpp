@@ -61,7 +61,7 @@ namespace sequoia::testing
                exactly; otherwise `line` as it stands.
      */
     [[nodiscard]]
-    std::string line_without_measurements(std::string_view line)
+    std::string line_with_zeroed_measurements(std::string_view line)
     {
       constexpr std::string_view label{" Task duration: "};
       const auto labelPos{line.find(label)};
@@ -89,18 +89,18 @@ namespace sequoia::testing
     }
 
     /** \brief The lines of `text`, split at each newline, each as
-               `line_without_measurements` returns it.
+               `line_with_zeroed_measurements` returns it.
 
         The view is lazy and refers to `text`, so it must not outlive `text`.
      */
     [[nodiscard]]
-    auto lines_without_measurements(std::string_view text)
+    auto lines_with_zeroed_measurements(std::string_view text)
     {
-      auto lineWithoutMeasurements{
-        [](auto line) { return line_without_measurements(std::string_view{line}); }
+      auto lineWithZeroedMeasurements{
+        [](auto line) { return line_with_zeroed_measurements(std::string_view{line}); }
       };
 
-      return text | std::views::split('\n') | std::views::transform(lineWithoutMeasurements);
+      return text | std::views::split('\n') | std::views::transform(lineWithZeroedMeasurements);
     }
   }
 
@@ -119,7 +119,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput)
   {
-    return std::ranges::equal(lines_without_measurements(testOutput), lines_without_measurements(referenceOutput))
+    return std::ranges::equal(lines_with_zeroed_measurements(testOutput),
+                              lines_with_zeroed_measurements(referenceOutput))
       ? referenceOutput : testOutput;
   }
 
