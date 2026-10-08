@@ -123,9 +123,9 @@ namespace sequoia::testing
       .min_speedup{1.8}, .max_speedup{2.2}, .trials{10}
     };
 
-    check_relative_performance("A speed-up of 2, then of 1, then of 2",
-                               counted_spinner{2ms, parameters.trials * (1 + 2), 1ms},
-                               counted_spinner{4ms, parameters.trials,           2ms},
+    check_relative_performance("A speed-up of 2, then of 0.5, then of 2",
+                               counted_spinner{1ms, parameters.trials,           4ms},
+                               counted_spinner{2ms, parameters.trials * (1 + 2), 8ms},
                                parameters);
   }
 
@@ -155,9 +155,9 @@ namespace sequoia::testing
                                []() { spin_for(4ms); },
                                {.min_speedup{3.4}, .max_speedup{4.1}, .trials{5}});
 
-    check_relative_performance("Durations drifting together, a speed-up of 2 in every trial, predicted (1.8, 2.2)",
-                               make_cycling_spinner({1ms, 2ms, 3ms,  4ms,  5ms}),
-                               make_cycling_spinner({2ms, 4ms, 6ms,  8ms, 10ms}),
+    check_relative_performance("Durations varying together, a speed-up of 2 in every trial, predicted (1.8, 2.2)",
+                               make_cycling_spinner({1ms,  5ms, 1ms,  5ms, 1ms}),
+                               make_cycling_spinner({2ms, 10ms, 2ms, 10ms, 2ms}),
                                {.min_speedup{1.8}, .max_speedup{2.2}, .trials{5}});
   }
 

@@ -20,11 +20,11 @@ Task durations: fast 0.001s, slow 0.004s
 
 False Negative Failure:
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 158
-Durations drifting together, a speed-up of 2 in every trial, predicted (1.8, 2.2)
+Durations varying together, a speed-up of 2 in every trial, predicted (1.8, 2.2)
 
 Speed-up: 2 in [2, 2]; predicted (1.8, 2.2)
 Trials: 5, attempt 1 of 3
-Task durations: fast 0.00288s, slow 0.00577s
+Task durations: fast 0.00171s, slow 0.00342s
 
 =======================================
 
