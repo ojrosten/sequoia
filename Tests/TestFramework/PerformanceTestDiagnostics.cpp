@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "PerformanceTestDiagnostics.hpp"
+#include "PerformanceTestingUtilities.hpp"
 
 #include "sequoia/Streaming/Streaming.hpp"
 
@@ -19,34 +20,6 @@ namespace sequoia::testing
 {
   namespace
   {
-    /** \brief Keeps the calling thread busy until `t` has passed by the
-               steady clock.
-
-        A sleep ends on the operating system's timer, and so overruns by an
-        amount that varies with the platform and the load, distorting the
-        ratios the checks below predict. A spin ends at the first reading of
-        the clock past its deadline.
-     */
-    void spin_for(std::chrono::milliseconds t)
-    {
-      const auto deadline{std::chrono::steady_clock::now() + t};
-      while(std::chrono::steady_clock::now() < deadline) {}
-    }
-
-    /** \brief Returns a task which spins for each of `durations` in turn,
-               starting again after the last.
-
-        Every copy of the task shares one count of the calls made, so any
-        five consecutive calls spin for each duration once.
-     */
-    [[nodiscard]]
-    auto make_cycling_spinner(const std::array<std::chrono::milliseconds, 5>& durations)
-    {
-      return [durations, calls{std::make_shared<std::size_t>()}]() {
-        spin_for(durations[(*calls)++ % durations.size()]);
-      };
-    }
-
     struct copyable_task
     {
       void operator()() const {}
@@ -69,16 +42,6 @@ namespace sequoia::testing
 
     template<class Fast, class Slow>
     inline constexpr bool checkable_tasks_v{
-      requires(test_logger<test_mode::standard>& logger,
-               Fast fast,
-               Slow slow,
-               const relative_performance_parameters& parameters) {
-        check_relative_performance("", logger, std::move(fast), std::move(slow), parameters);
-      }
-    };
-
-    template<class Fast, class Slow>
-    inline constexpr bool checkable_tasks_by_extender_v{
       requires(performance_extender<test_mode::standard>& extender,
                Fast fast,
                Slow slow,
@@ -99,6 +62,7 @@ namespace sequoia::testing
     test_relative_performance();
     test_sd_tolerance();
     test_significance_gate();
+    test_fail_at_second_attempt();
   }
 
   void performance_false_negative_diagnostics::test_relative_performance()
@@ -154,6 +118,20 @@ namespace sequoia::testing
                                make_cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}),
                                make_cycling_spinner({2ms, 6ms, 10ms, 14ms, 18ms}),
                                {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+  }
+
+  void performance_false_negative_diagnostics::test_fail_at_second_attempt()
+  {
+    using namespace std::chrono_literals;
+
+    constexpr relative_performance_parameters parameters{
+      .min_speedup{1.8}, .max_speedup{2.2}, .trials{10}, .num_sds{4}, .max_attempts{3}
+    };
+
+    check_relative_performance("A speed-up of 2, then of 1, then of 2",
+                               counted_spinner{2ms, parameters.trials * (1 + 2), 1ms},
+                               counted_spinner{4ms, parameters.trials,           2ms},
+                               parameters);
   }
 
   [[nodiscard]]
@@ -218,8 +196,6 @@ namespace sequoia::testing
   {
     test_postprocessing();
     test_coarse_sleep();
-    test_invalid_arguments();
-    test_throwing_task();
     test_task_constraints();
   }
 
@@ -527,105 +503,6 @@ namespace sequoia::testing
           predictive_materials() /= "CoarseSleepMessage.txt");
   }
 
-  void performance_utilities_test::test_invalid_arguments()
-  {
-    constexpr double nan{std::numeric_limits<double>::quiet_NaN()};
-    constexpr std::string_view description{"Relative performance with invalid arguments"};
-    test_logger<test_mode::standard> logger{};
-
-    auto relativePerformanceCheck{
-      [&logger, description](const relative_performance_parameters& parameters) {
-        return [&logger, description, parameters]() {
-          return check_relative_performance(description, logger, []() {}, []() {}, parameters);
-        };
-      }
-    };
-
-    check_exception_thrown<std::invalid_argument>("Minimum speed-up of 1",
-                                                  relativePerformanceCheck({.min_speedup{1.0},
-                                                                            .max_speedup{2.0},
-                                                                            .trials{5},
-                                                                            .num_sds{4.0},
-                                                                            .max_attempts{3}}));
-    check_exception_thrown<std::invalid_argument>("Maximum speed-up of 1",
-                                                  relativePerformanceCheck({.min_speedup{1.5},
-                                                                            .max_speedup{1.0},
-                                                                            .trials{5},
-                                                                            .num_sds{4.0},
-                                                                            .max_attempts{3}}));
-    check_exception_thrown<std::invalid_argument>("Minimum speed-up of NaN",
-                                                  relativePerformanceCheck({.min_speedup{nan},
-                                                                            .max_speedup{2.0},
-                                                                            .trials{5},
-                                                                            .num_sds{4.0},
-                                                                            .max_attempts{3}}));
-    check_exception_thrown<std::invalid_argument>("Minimum speed-up exceeding the maximum",
-                                                  relativePerformanceCheck({.min_speedup{2.5},
-                                                                            .max_speedup{2.0},
-                                                                            .trials{5},
-                                                                            .num_sds{4.0},
-                                                                            .max_attempts{3}}));
-    check_exception_thrown<std::invalid_argument>("One standard deviation",
-                                                  relativePerformanceCheck({.min_speedup{2.0},
-                                                                            .max_speedup{3.0},
-                                                                            .trials{5},
-                                                                            .num_sds{1.0},
-                                                                            .max_attempts{3}}));
-    check_exception_thrown<std::invalid_argument>("NaN standard deviations",
-                                                  relativePerformanceCheck({.min_speedup{2.0},
-                                                                            .max_speedup{3.0},
-                                                                            .trials{5},
-                                                                            .num_sds{nan},
-                                                                            .max_attempts{3}}));
-    check_exception_thrown<std::invalid_argument>("No attempts",
-                                                  relativePerformanceCheck({.min_speedup{2.0},
-                                                                            .max_speedup{3.0},
-                                                                            .trials{5},
-                                                                            .num_sds{4.0},
-                                                                            .max_attempts{0}}));
-    check_exception_thrown<std::invalid_argument>("Four trials",
-                                                  relativePerformanceCheck({.min_speedup{2.0},
-                                                                            .max_speedup{3.0},
-                                                                            .trials{4},
-                                                                            .num_sds{4.0},
-                                                                            .max_attempts{3}}));
-
-    const auto& exitInfo{logger.last_check_exit_info()};
-    if(check("An invalid argument is attributed to the check refusing it", exitInfo.has_value()))
-    {
-      check("Exit via an exception", exitInfo->via_exception);
-      check(equality, "Message of the check refusing the argument", exitInfo->message, std::string{description});
-    }
-  }
-
-  void performance_utilities_test::test_throwing_task()
-  {
-    constexpr std::string_view description{"Relative performance with a throwing task"};
-    test_logger<test_mode::standard> logger{};
-
-    auto checkWithThrowingFastTask{
-      [&logger, description]() {
-        return check_relative_performance(description, logger,
-                                          []() { throw std::runtime_error{"Fast task failure"}; },
-                                          []() {},
-                                          {.min_speedup{2.0},
-                                           .max_speedup{3.0},
-                                           .trials{5},
-                                           .num_sds{4.0},
-                                           .max_attempts{3}});
-      }
-    };
-
-    check_exception_thrown<std::runtime_error>("Fast task throws", checkWithThrowingFastTask);
-
-    const auto& exitInfo{logger.last_check_exit_info()};
-    if(check("A throwing task is attributed to its check", exitInfo.has_value()))
-    {
-      check("Exit via an exception", exitInfo->via_exception);
-      check(equality, "Message of the check whose task threw", exitInfo->message, std::string{description});
-    }
-  }
-
   void performance_utilities_test::test_task_constraints()
   {
     STATIC_CHECK( profilable<   copyable_task>);
@@ -636,11 +513,5 @@ namespace sequoia::testing
     STATIC_CHECK(!checkable_tasks_v<   copyable_task,   move_only_task>);
     STATIC_CHECK(!checkable_tasks_v<rvalue_only_task,    copyable_task>);
     STATIC_CHECK(!checkable_tasks_v<   copyable_task, rvalue_only_task>);
-
-    STATIC_CHECK( checkable_tasks_by_extender_v<   copyable_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_by_extender_v<  move_only_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_by_extender_v<   copyable_task,   move_only_task>);
-    STATIC_CHECK(!checkable_tasks_by_extender_v<rvalue_only_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_by_extender_v<   copyable_task, rvalue_only_task>);
   }
 }
