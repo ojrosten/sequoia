@@ -26,7 +26,7 @@
 #   - an open PR proposing this baseline on this commit is kept, and armed if
 #     it is not; any other is closed and replaced;
 #   - a fork's PR from a branch of the same name is never adopted, edited,
-#     closed or armed;
+#     closed or armed, nor is a PR whose repository gh does not report;
 #   - the PR is armed to merge only with the head the script proposed;
 #   - the script waits for GitHub's answer on whether the PR can merge, and
 #     fails on a conflict or on no answer.
@@ -215,6 +215,13 @@ run_controls() {
   logged "pr close 8 --delete-branch" || fail "an unchanged baseline left this repository's PR open"
   ! logged "pr close 7" || fail "an unchanged baseline closed a fork's PR"
 
+  # A PR whose repository gh does not report is not taken for this one's.
+  fresh
+  add_pr 10 false
+  jq 'map(del(.isCrossRepository))' "$state/prs.json" > "$state/prs.tmp" && mv "$state/prs.tmp" "$state/prs.json"
+  propose "$(proposal "$baseline_text")"
+  ! logged "pr close 10" || fail "a PR whose repository is not reported was taken for this repository's"
+
   # A removal, with no PR open.
   fresh
   propose "$(proposal "$removal"$'\n')"
@@ -349,7 +356,8 @@ mutant() {
   mutants=$((mutants+1))
 }
 mutant 'arguments unchecked'       '[ $# -ne 3 ] || ' ''
-mutant "a fork's PR adopted"        'map(select(.isCrossRepository | not)) | ' ''
+mutant "a fork's PR adopted"        'map(select(.isCrossRepository == false)) | ' ''
+mutant 'an unreported PR adopted'   '.isCrossRepository == false' '.isCrossRepository | not'
 mutant 'nothing closed'             '[ -z "$pr" ] || close_pr' 'true || close_pr'
 mutant 'a move accepted'            "    if at == len(committed_lines):" "    if False:"
 mutant 'a line added past the end'  "    while at < len(committed_lines) and committed_lines[at] != line:" \

@@ -41,7 +41,7 @@ measured=$(git rev-parse HEAD)
 here=$(cd "$(dirname "$0")" && pwd -P)
 
 pr=$(gh pr list --base "$branch" --head "$head" --state open --json number,isCrossRepository \
-       --jq 'map(select(.isCrossRepository | not)) | .[0].number // empty')
+       --jq 'map(select(.isCrossRepository == false)) | .[0].number // empty')
 
 close_pr() { # close_pr <comment>
   gh pr close "$pr" --delete-branch --comment "$1"
