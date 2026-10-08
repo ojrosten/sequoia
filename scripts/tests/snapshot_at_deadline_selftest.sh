@@ -248,14 +248,14 @@ fake_tool "$tmp/linux-slow" sudo  'exit 1'
 fake_tool "$tmp/linux-slow" gdb   "$real_sleep 1"
 
 # A DEBUG trap, sourced through BASH_ENV, which holds back the script's wait
-# for the watcher until the watcher has gone, for at most 5 s. The trap marks
-# that it held the wait, so that a control whose wait was never held fails
-# rather than passing unexercised.
+# for the watcher until the watcher has gone, for at most 5 s. The trap leaves
+# a mark if the watcher had gone when the wait began, so that a control whose
+# wait was never held back fails rather than passing unexercised.
 cat > "$tmp/late_wait.bash" <<'LATE_WAIT'
 trap 'case $BASH_COMMAND in
   "wait \"\$watcher\""*)
-    touch "$LATE_WAIT_MARK"
-    for poll in $(seq 1 50); do kill -0 "$watcher" 2> /dev/null || break; sleep 0.1; done ;;
+    for poll in $(seq 1 50); do kill -0 "$watcher" 2> /dev/null || break; sleep 0.1; done
+    kill -0 "$watcher" 2> /dev/null || touch "$LATE_WAIT_MARK" ;;
 esac' DEBUG
 LATE_WAIT
 
@@ -298,6 +298,7 @@ run_controls() {
 
   # A command which ends before the deadline, many times over, since a race
   # between the command's end and the watcher would show in only some runs.
+  # Each trial must write nothing to standard error.
   # The fastest trial shows whether the script returns at once, whatever the
   # runner's load. Every trial must return within 0.9 s, short of the
   # watcher's one-second sleep, which a script that waits for the watcher
@@ -306,8 +307,12 @@ run_controls() {
   fastest=
   for trial in $(seq 1 "$early_return_trials"); do
     start=$(tenths)
-    bash "$script" 5 "$work/early.txt" "$name" -- true
+    bash "$script" 5 "$work/early.txt" "$name" -- true 2> "$work/early.err"
     elapsed=$(($(tenths) - start))
+    if [ -s "$work/early.err" ]; then
+      fail "a command ending before the deadline left a line on standard error: $(head -1 "$work/early.err")"
+      break
+    fi
     [ -n "$fastest" ] && [ "$fastest" -le "$elapsed" ] || fastest=$elapsed
     if [ "$elapsed" -gt 9 ]; then
       fail "a command ending before the deadline took $((elapsed / 10)).$((elapsed % 10))s to return"
@@ -356,7 +361,8 @@ $real_sleep 5"
         > "$work/streams.out" 2> "$work/streams.err"
   check "the command reads standard input and writes standard output" yes "^to the command$" "$work/streams.out"
   check "the command writes standard error"                            yes "^to error$"       "$work/streams.err"
-  [ "$(wc -l < "$work/streams.err")" -eq 1 ] || fail "standard error holds more than the command's line"
+  [ "$(wc -l < "$work/streams.err")" -eq 1 ] \
+    || fail "standard error holds more than the command's line: $(grep -vx 'to error' "$work/streams.err" | head -1)"
 
   # A command which a signal kills: its status passes through, and standard
   # error holds only the command's own output, not bash's notice of the kill.
@@ -369,11 +375,11 @@ $real_sleep 5"
 
   # The watcher's end goes unreported when the watcher ends before the script
   # waits for it. Only macOS's bash, 3.2, reports a background job which
-  # SIGTERM ends, so on Linux this control cannot fail.
+  # SIGTERM ends, so on Linux this control cannot catch a notice.
   env BASH_ENV="$tmp/late_wait.bash" LATE_WAIT_MARK="$work/late-wait.mark" \
     "$BASH" "$script" 5 "$work/late-wait.txt" "$name" -- true 2> "$work/late-wait.err"
   if [ ! -e "$work/late-wait.mark" ]; then
-    fail "the script's wait for the watcher was never held back, so the watcher's end could not be checked"
+    fail "the watcher had not gone when the script's wait began, so the watcher's end could not be checked"
   fi
   [ ! -s "$work/late-wait.err" ] \
     || fail "a watcher ending before the wait left a notice on standard error: $(head -1 "$work/late-wait.err")"
@@ -554,7 +560,7 @@ mutant any snapshot_at_deadline.sh 'stderr discarded' \
 mutant any snapshot_at_deadline.sh "bash's notice kept" \
   '{ "$@" 2>&3 3>&-; } 3>&2 2> /dev/null' \
   '"$@"'
-mutant any snapshot_at_deadline.sh "the watcher's notice kept" \
+mutant any snapshot_at_deadline.sh "the claim's, kill's and wait's errors kept" \
   $'  wait "$watcher"\n} 2> /dev/null' \
   $'  wait "$watcher"\n}'
 mutant any snapshot_at_deadline.sh 'the watcher not ended' \
@@ -564,8 +570,8 @@ mutant any snapshot_at_deadline.sh "the watcher's sleep left" \
   'kill -TERM -- -"$watcher" || ' \
   ''
 mutant any snapshot_at_deadline.sh 'no process group' \
-  $'set -m\nwatch_for_deadline' \
-  $':\nwatch_for_deadline'
+  $'set -m\n{ watch_for_deadline' \
+  $':\n{ watch_for_deadline'
 mutant any snapshot_at_deadline.sh 'job control left on' \
   'set +m' \
   ':'

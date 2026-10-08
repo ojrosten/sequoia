@@ -178,8 +178,13 @@ claim="$flag_dir/claim"
 
 # Job control gives the watcher a process group of its own. It is off again
 # before the command runs, so the command runs as it would without the script.
+# Both the script and the watcher's process move the watcher into its group.
+# On macOS the watcher's own move has failed now and then, and bash then
+# writes "child setpgid ...: Operation not permitted". bash writes it before
+# the watcher's redirections apply, so the launch has a redirection of its
+# own.
 set -m
-watch_for_deadline < /dev/null > /dev/null 2>&1 &
+{ watch_for_deadline < /dev/null > /dev/null 2>&1 & } 2> /dev/null
 watcher=$!
 set +m
 
@@ -189,10 +194,11 @@ set +m
 { "$@" 2>&3 3>&-; } 3>&2 2> /dev/null
 status=$?
 
-# One redirection covers the kill and the wait together. macOS's bash, 3.2,
-# writes a notice to standard error when a signal ends a background job. bash
-# writes the notice just before the next command to begin after the job ended.
-# So a redirection on the wait alone misses the notice of a watcher which ends
+# One redirection to /dev/null covers the claim, the kill and the wait. mkdir
+# complains when the watcher has claimed first. macOS's bash, 3.2, writes a
+# notice to standard error when a signal ends a background job. It writes the
+# notice just before the next command to begin after the job ended. So a
+# redirection on the wait alone misses the notice of a watcher which ends
 # before the wait begins.
 {
   if mkdir "$claim"; then
