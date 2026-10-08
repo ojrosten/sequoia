@@ -39,15 +39,18 @@ namespace sequoia::testing
 
     check_relative_performance("Performance Test for which fast task is too slow, [1, (2.0, 2.0)",
                                [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(deltaT); }, 2.0, 2.0);
+                               [deltaT]() { wait(deltaT); },
+                               {.min_speedup{2.0}, .max_speedup{2.0}, .trials{5}, .num_sds{4}, .max_attempts{3}});
 
     check_relative_performance("Performance Test for which fast task is too slow [1, (2.0, 3.0)",
                                [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(deltaT); }, 2.0, 3.0);
+                               [deltaT]() { wait(deltaT); },
+                               {.min_speedup{2.0}, .max_speedup{3.0}, .trials{5}, .num_sds{4}, .max_attempts{3}});
 
     check_relative_performance("Performance Test for which fast task is too fast [4, (2.0, 2.5)]",
                                [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(4 * deltaT); }, 2.0, 2.5);
+                               [deltaT]() { wait(4 * deltaT); },
+                               {.min_speedup{2.0}, .max_speedup{2.5}, .trials{5}, .num_sds{4}, .max_attempts{3}});
   }
 
   [[nodiscard]]
@@ -67,11 +70,13 @@ namespace sequoia::testing
 
     check_relative_performance("Performance Test which should pass",
                                [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(2 * deltaT); }, 1.8, 2.1, 5);
+                               [deltaT]() { wait(2 * deltaT); },
+                               {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
 
     check_relative_performance("Performance Test which should pass",
                                [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(4 * deltaT); }, 3.4, 4.1, 5);
+                               [deltaT]() { wait(4 * deltaT); },
+                               {.min_speedup{3.4}, .max_speedup{4.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
   }
 
   [[nodiscard]]
@@ -399,31 +404,61 @@ namespace sequoia::testing
     test_logger<test_mode::standard> logger{};
 
     auto relativePerformanceCheck{
-      [&logger, description](double minSpeedup, double maxSpeedup, std::size_t trials, double numSds,
-                             std::size_t maxAttempts) {
-        return [&logger, description, minSpeedup, maxSpeedup, trials, numSds, maxAttempts]() {
-          return check_relative_performance(description, logger, []() {}, []() {},
-                                            minSpeedup, maxSpeedup, trials, numSds, maxAttempts);
+      [&logger, description](const relative_performance_parameters& parameters) {
+        return [&logger, description, parameters]() {
+          return check_relative_performance(description, logger, []() {}, []() {}, parameters);
         };
       }
     };
 
     check_exception_thrown<std::invalid_argument>("Minimum speed-up of 1",
-                                                  relativePerformanceCheck(1.0, 2.0, 5, 4.0, 3));
+                                                  relativePerformanceCheck({.min_speedup{1.0},
+                                                                            .max_speedup{2.0},
+                                                                            .trials{5},
+                                                                            .num_sds{4.0},
+                                                                            .max_attempts{3}}));
     check_exception_thrown<std::invalid_argument>("Maximum speed-up of 1",
-                                                  relativePerformanceCheck(1.5, 1.0, 5, 4.0, 3));
+                                                  relativePerformanceCheck({.min_speedup{1.5},
+                                                                            .max_speedup{1.0},
+                                                                            .trials{5},
+                                                                            .num_sds{4.0},
+                                                                            .max_attempts{3}}));
     check_exception_thrown<std::invalid_argument>("Minimum speed-up of NaN",
-                                                  relativePerformanceCheck(nan, 2.0, 5, 4.0, 3));
+                                                  relativePerformanceCheck({.min_speedup{nan},
+                                                                            .max_speedup{2.0},
+                                                                            .trials{5},
+                                                                            .num_sds{4.0},
+                                                                            .max_attempts{3}}));
     check_exception_thrown<std::invalid_argument>("Minimum speed-up exceeding the maximum",
-                                                  relativePerformanceCheck(2.5, 2.0, 5, 4.0, 3));
+                                                  relativePerformanceCheck({.min_speedup{2.5},
+                                                                            .max_speedup{2.0},
+                                                                            .trials{5},
+                                                                            .num_sds{4.0},
+                                                                            .max_attempts{3}}));
     check_exception_thrown<std::invalid_argument>("One standard deviation",
-                                                  relativePerformanceCheck(2.0, 3.0, 5, 1.0, 3));
+                                                  relativePerformanceCheck({.min_speedup{2.0},
+                                                                            .max_speedup{3.0},
+                                                                            .trials{5},
+                                                                            .num_sds{1.0},
+                                                                            .max_attempts{3}}));
     check_exception_thrown<std::invalid_argument>("NaN standard deviations",
-                                                  relativePerformanceCheck(2.0, 3.0, 5, nan, 3));
+                                                  relativePerformanceCheck({.min_speedup{2.0},
+                                                                            .max_speedup{3.0},
+                                                                            .trials{5},
+                                                                            .num_sds{nan},
+                                                                            .max_attempts{3}}));
     check_exception_thrown<std::invalid_argument>("No attempts",
-                                                  relativePerformanceCheck(2.0, 3.0, 5, 4.0, 0));
+                                                  relativePerformanceCheck({.min_speedup{2.0},
+                                                                            .max_speedup{3.0},
+                                                                            .trials{5},
+                                                                            .num_sds{4.0},
+                                                                            .max_attempts{0}}));
     check_exception_thrown<std::invalid_argument>("Four trials",
-                                                  relativePerformanceCheck(2.0, 3.0, 4, 4.0, 3));
+                                                  relativePerformanceCheck({.min_speedup{2.0},
+                                                                            .max_speedup{3.0},
+                                                                            .trials{4},
+                                                                            .num_sds{4.0},
+                                                                            .max_attempts{3}}));
 
     const auto& exitInfo{logger.last_check_exit_info()};
     if(check("An invalid argument is attributed to the check refusing it", exitInfo.has_value()))
@@ -443,7 +478,11 @@ namespace sequoia::testing
         return check_relative_performance(description, logger,
                                           []() { throw std::runtime_error{"Fast task failure"}; },
                                           []() {},
-                                          2.0, 3.0, 5, 4.0, 3);
+                                          {.min_speedup{2.0},
+                                           .max_speedup{3.0},
+                                           .trials{5},
+                                           .num_sds{4.0},
+                                           .max_attempts{3}});
       }
     };
 
