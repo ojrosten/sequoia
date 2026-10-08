@@ -59,11 +59,11 @@ namespace sequoia::testing
    */
   struct relative_performance_parameters
   {
-    double      min_speedup{};
-    double      max_speedup{};
-    std::size_t trials{};
-    double      num_sds{};
-    std::size_t max_attempts{};
+    double      min_speedup;
+    double      max_speedup;
+    std::size_t trials;
+    double      num_sds;
+    std::size_t max_attempts;
   };
 
   /** \brief Function for comparing the performance of a fast task to a slow task.
