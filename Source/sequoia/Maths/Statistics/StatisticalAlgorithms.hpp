@@ -89,6 +89,53 @@ namespace sequoia::maths
     }
   }
 
+  /** \brief Returns the sample variance and the mean of the data once the
+             first and last `numReplacedAtEachEnd` are winsorized.
+
+      Winsorizing replaces each of the first `numReplacedAtEachEnd` data with
+      the first datum after them, and each of the last `numReplacedAtEachEnd`
+      with the last datum before them. For sorted data, this is the winsorized
+      sample variance.
+
+      Neither is returned if there are no data beyond those replaced, and only
+      the mean if a single datum remains.
+   */
+  template<std::forward_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
+  [[nodiscard]]
+  std::pair<std::optional<T>, std::optional<T>>
+    winsorized_sample_variance(Iter first, Iter last, std::iter_difference_t<Iter> numReplacedAtEachEnd)
+  {
+    const auto dist{std::ranges::distance(first, last)};
+    if((numReplacedAtEachEnd < 0) || (dist <= 2 * numReplacedAtEachEnd))
+    {
+      return {{}, {}};
+    }
+
+    const auto keptFirst{std::ranges::next(first, numReplacedAtEachEnd)},
+               keptLast {std::ranges::next(first, dist - numReplacedAtEachEnd)};
+
+    const T lowest{*keptFirst},
+            highest{*std::ranges::prev(keptLast)};
+
+    const T winsorizedMean{
+      (std::accumulate(keptFirst, keptLast, T{}) + numReplacedAtEachEnd * (lowest + highest)) / dist
+    };
+
+    if(dist == 1)
+    {
+      return {{}, winsorizedMean};
+    }
+
+    auto squareDiff{[winsorizedMean](const T& datum) { return (datum - winsorizedMean)*(datum - winsorizedMean); }};
+
+    const T cumulativeSquareDiffs{
+        std::accumulate(keptFirst, keptLast, T{}, [&squareDiff](const T& sum, const T& datum){ return sum + squareDiff(datum); })
+      + numReplacedAtEachEnd * (squareDiff(lowest) + squareDiff(highest))
+    };
+
+    return {cumulativeSquareDiffs / (dist - 1), winsorizedMean};
+  }
+
   template<std::forward_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
   [[nodiscard]]
   std::pair<std::optional<T>, std::optional<T>>

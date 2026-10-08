@@ -23,6 +23,7 @@ namespace sequoia::testing
     template<class Iter> inline constexpr bool sample_variance_accepts           {requires(Iter i) { maths::sample_variance(i, i); }};
     template<class Iter> inline constexpr bool standard_deviation_accepts        {requires(Iter i) { maths::standard_deviation(i, i); }};
     template<class Iter> inline constexpr bool sample_standard_deviation_accepts {requires(Iter i) { maths::sample_standard_deviation(i, i); }};
+    template<class Iter> inline constexpr bool winsorized_sample_variance_accepts{requires(Iter i) { maths::winsorized_sample_variance(i, i, 0); }};
   }
 
   [[nodiscard]]
@@ -48,6 +49,7 @@ namespace sequoia::testing
     STATIC_CHECK(!sample_variance_accepts<single_pass>);
     STATIC_CHECK(!standard_deviation_accepts<single_pass>);
     STATIC_CHECK(!sample_standard_deviation_accepts<single_pass>);
+    STATIC_CHECK(!winsorized_sample_variance_accepts<single_pass>);
 
     STATIC_CHECK(mean_accepts<multi_pass>);
     STATIC_CHECK(cumulative_square_diffs_accepts<multi_pass>);
@@ -55,6 +57,7 @@ namespace sequoia::testing
     STATIC_CHECK(sample_variance_accepts<multi_pass>);
     STATIC_CHECK(standard_deviation_accepts<multi_pass>);
     STATIC_CHECK(sample_standard_deviation_accepts<multi_pass>);
+    STATIC_CHECK(winsorized_sample_variance_accepts<multi_pass>);
 
     std::vector<double> data{};
 
@@ -163,5 +166,61 @@ namespace sequoia::testing
 
     check(equality, "", ssd.first.value(), std::sqrt(26.0/1.5));
     check(equality, "", ssd.second.value(), 5.0);
+
+    test_winsorized_sample_variance();
+  }
+
+  void statistical_algorithms_test::test_winsorized_sample_variance()
+  {
+    using namespace sequoia::maths;
+
+    auto winsorized{
+      [](const std::vector<double>& data, std::ptrdiff_t numReplacedAtEachEnd) {
+        return winsorized_sample_variance(data.cbegin(), data.cend(), numReplacedAtEachEnd);
+      }
+    };
+
+    {
+      const auto [var, mean]{winsorized({}, 0)};
+      check("No data: no variance", !var.has_value());
+      check("No data: no mean", !mean.has_value());
+    }
+
+    {
+      const auto [var, mean]{winsorized({2}, 0)};
+      check("A single datum: no variance", !var.has_value());
+      check(equality, "A single datum: its mean", mean.value(), 2.0);
+    }
+
+    {
+      const auto [var, mean]{winsorized({2, 4}, 1)};
+      check("Every datum replaced: no variance", !var.has_value());
+      check("Every datum replaced: no mean", !mean.has_value());
+    }
+
+    {
+      const auto [var, mean]{winsorized({2, 4, 9}, -1)};
+      check("A negative number replaced: no variance", !var.has_value());
+      check("A negative number replaced: no mean", !mean.has_value());
+    }
+
+    {
+      const auto [var, mean]{winsorized({2, 4, 9}, 0)};
+      check(equality, "Nothing replaced: the sample variance", var.value(), 13.0);
+      check(equality, "Nothing replaced: the mean", mean.value(), 5.0);
+    }
+
+    {
+      const auto [var, mean]{winsorized({2, 4, 9}, 1)};
+      check(equality, "A single datum remains: zero variance", var.value(), 0.0);
+      check(equality, "A single datum remains: that datum", mean.value(), 4.0);
+    }
+
+    {
+      // Winsorized to [0, 0, 1, 7, 7]; the middle three alone have a different variance and mean
+      const auto [var, mean]{winsorized({-5, 0, 1, 7, 20}, 1)};
+      check(equality, "One replaced at each end: the variance", var.value(), 13.5);
+      check(equality, "One replaced at each end: the mean", mean.value(), 3.0);
+    }
   }
 }
