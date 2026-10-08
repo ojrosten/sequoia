@@ -56,9 +56,14 @@ namespace sequoia::testing
       return count == N ? std::optional{numbers} : std::nullopt;
     }
 
-    /** \brief `line` with its measured values set to zero, if `duration_summary`,
-               with or without the suffix of `speedup_summary`, prints it
-               exactly; otherwise `line` as it stands.
+    /** \brief `line` with its measured values set to zero, if the formatter
+               could have printed it; otherwise `line` as it stands.
+
+        The measured values are the mean, the standard deviation and the
+        speed-up. The number of standard deviations and the predicted range
+        stay as they are. The formatter could have printed `line` if
+        `duration_summary`, with or without `speedup_summary` after it,
+        reprints `line` exactly from the numbers after its label.
      */
     [[nodiscard]]
     std::string line_with_zeroed_measurements(std::string_view line)
