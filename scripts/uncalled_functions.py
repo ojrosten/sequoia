@@ -8,6 +8,10 @@
                                  --demangler <tool>...
                                  --recorded-tool <tool>...
                                  --baseline <file>
+  uncalled_functions.py tighten  --tracefile <info> --repository <root>
+                                 --demangler <tool>...
+                                 --recorded-tool <tool>...
+                                 --baseline <file>
 
 `baseline` prints, for each file within `<root>/Source`, the keys of the
 file's uncalled functions. `compare` reads a baseline, and counts each key per
@@ -21,7 +25,10 @@ file in the tracefile and in the baseline:
 `compare` also names each `.cpp` file within `<root>/Source` which has no
 record in the tracefile, and then exits with status 1, since none of the file's
 functions is seen. A file with records of lines alone has a record.
-Either mode exits with status 2 if it refuses its input, or if a tool it runs
+`tighten` prints the baseline with each key of each file counted no more often
+than the file's uncalled functions in the tracefile count it. So `tighten`
+only removes keys, and it drops a file left with none.
+Each mode exits with status 2 if it refuses its input, or if a tool it runs
 fails.
 
 A record is what lcov reports at one start line of one file. Its aliases are
@@ -55,7 +62,8 @@ once for each uncalled record it names.
 
 Each demangler is tried in turn, and the first to demangle a name names it. A
 baseline's header records the name and version number of every demangler and
-of every recorded tool, and `compare` refuses a baseline whose header differs.
+of every recorded tool. `compare` and `tighten` refuse a baseline whose header
+differs.
 
 A tracefile need not be UTF-8: lcov writes some letters of a function's name
 as single Latin-1 bytes. The script writes such a byte to its output as itself.
@@ -453,6 +461,12 @@ def read_baseline(path):
     return header_lines, uncalled
 
 
+def tightened(baseline, current):
+    """{file: Counter(key)}: each key of `baseline` counted no more often than
+    `current` counts it, without the files left with no key."""
+    return {file: kept for file, keys in baseline.items() if (kept := keys & current.get(file, Counter()))}
+
+
 def compare(baseline, current):
     """(risen, fallen): a (file, key) pair for each unit by which a key's count
     rose or fell."""
@@ -469,13 +483,13 @@ def compare(baseline, current):
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     modes  = parser.add_subparsers(dest='mode', required=True)
-    for mode in ('baseline', 'compare'):
+    for mode in ('baseline', 'compare', 'tighten'):
         options = modes.add_parser(mode)
         options.add_argument('--tracefile',     required=True)
         options.add_argument('--repository',    required=True)
         options.add_argument('--demangler',     required=True, action='append')
         options.add_argument('--recorded-tool', required=True, action='append')
-        if mode == 'compare':
+        if mode != 'baseline':
             options.add_argument('--baseline',  required=True)
     arguments = parser.parse_args()
 
@@ -494,6 +508,9 @@ def main():
         if baseline_header != current_header:
             raise Refusal(f'{arguments.baseline} was made with {baseline_header}, and this run has '
                           f'{current_header}: regenerate the baseline')
+        if arguments.mode == 'tighten':
+            sys.stdout.write(format_baseline(current_header, tightened(baseline, counts(uncalled))))
+            return 0
         risen, fallen = compare(baseline, counts(uncalled))
         untraced      = untraced_translation_units(arguments.repository, traced)
         called        = keys_by_file({file: functions[file] for file, _ in fallen if file in functions},
