@@ -54,6 +54,8 @@ namespace sequoia::testing
         attempt runs `trials` more than the one before.
       - `num_sds`: the number of standard deviations used to define a
         significant result.
+      - `max_attempts`: the number of attempts allowed, counting the first.
+        An attempt without the expected outcome is retried until none remain.
    */
   struct relative_performance_parameters
   {
