@@ -43,6 +43,8 @@ on:
   # GitHub's delay, up to six and a half hours, before the watchdog's.
   schedule:
     - cron: '1 2 * * *'
+  push:
+    branches: [scratch-tightener, scratch-tightener-mutant]
   workflow_dispatch:
     inputs:
       branch:
@@ -52,7 +54,7 @@ on:
 # One run at a time, so that an older measurement cannot overwrite a newer
 # proposal. A run waiting for the one before it is not cancelled.
 concurrency:
-  group: ${{ github.workflow }}
+  group: ${{ github.workflow }}-${{ github.ref_name }}
   cancel-in-progress: false
 permissions:
   contents: read
@@ -71,7 +73,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
-      BRANCH: ${{ github.event_name == 'schedule' && 'staging' || inputs.branch }}
+      BRANCH: ${{ github.event_name == 'schedule' && 'staging' || github.event_name == 'push' && github.ref_name || inputs.branch }}
     steps:
       - id: resolve
         run: |
