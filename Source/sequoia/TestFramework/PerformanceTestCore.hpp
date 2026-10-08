@@ -47,11 +47,13 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string speedup_summary(double speedup, double minSpeedup, double maxSpeedup);
 
-  /** \brief The range of speed-ups predicted for a fast task over a slow one, and the
-             statistics which test the prediction.
+  /** \brief The range of speed-ups predicted for a fast task over a slow one,
+             and the statistics which test the prediction.
 
-      - `trials`: the number of trials used for the statistical analysis;
-      - `num_sds`: the number of standard deviations used to define a significant result.
+      - `trials`: the number of trials in the first attempt. Each further
+        attempt runs `trials` more than the one before.
+      - `num_sds`: the number of standard deviations used to define a
+        significant result.
    */
   struct relative_performance_parameters
   {
