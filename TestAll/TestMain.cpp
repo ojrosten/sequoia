@@ -246,6 +246,7 @@ int main(int argc, char** argv)
     runner.register_test<project_paths_free_test>();
     runner.register_test<summary_free_test>();
     runner.register_test<performance_retry_test>();
+    runner.register_test<performance_exceptions_test>();
     code = runner.execute();
   }
   catch(const std::exception& e)

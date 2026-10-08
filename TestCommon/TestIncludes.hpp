@@ -180,6 +180,7 @@
 #include "TestFramework/OrderableRegularTestDiagnostics.hpp"
 #include "TestFramework/OutputFreeTest.hpp"
 #include "TestFramework/PathFreeDiagnostics.hpp"
+#include "TestFramework/PerformanceExceptionsTest.hpp"
 #include "TestFramework/PerformanceRetryTest.hpp"
 #include "TestFramework/PerformanceTestDiagnostics.hpp"
 #include "TestFramework/ProjectPathsFreeTest.hpp"

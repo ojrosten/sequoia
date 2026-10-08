@@ -28,6 +28,8 @@ namespace sequoia::testing
     void test_sd_tolerance();
 
     void test_significance_gate();
+
+    void test_fail_at_second_attempt();
   };
 
   class performance_false_positive_diagnostics final : public performance_false_positive_test
@@ -60,10 +62,6 @@ namespace sequoia::testing
     void test_postprocessing();
 
     void test_coarse_sleep();
-
-    void test_invalid_arguments();
-
-    void test_throwing_task();
 
     void test_task_constraints();
   };
