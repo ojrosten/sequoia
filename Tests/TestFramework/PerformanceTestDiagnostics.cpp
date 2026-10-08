@@ -9,6 +9,7 @@
 
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <array>
 #include <chrono>
 #include <limits>
 
@@ -29,6 +30,19 @@ namespace sequoia::testing
       const auto deadline{std::chrono::steady_clock::now() + t};
       while(std::chrono::steady_clock::now() < deadline) {}
     }
+
+    /** \brief Returns a task which spins for each of `durations` in turn,
+               starting again after the last.
+
+        `check_relative_performance` copies a task for each trial, so the
+        number of calls made is held in `calls`, which must outlive the task.
+        An attempt of five trials therefore spins for each duration once.
+     */
+    [[nodiscard]]
+    auto cycling_spinner(const std::array<std::chrono::milliseconds, 5>& durations, std::size_t& calls)
+    {
+      return [durations, &calls]() { spin_for(durations[calls++ % durations.size()]); };
+    }
   }
 
   [[nodiscard]]
@@ -40,6 +54,8 @@ namespace sequoia::testing
   void performance_false_negative_diagnostics::run_tests()
   {
     test_relative_performance();
+    test_sd_tolerance();
+    test_significance_gate();
   }
 
   void performance_false_negative_diagnostics::test_relative_performance()
@@ -62,6 +78,54 @@ namespace sequoia::testing
                                {.min_speedup{2.0}, .max_speedup{2.5}, .trials{5}, .num_sds{4}, .max_attempts{3}});
   }
 
+  void performance_false_negative_diagnostics::test_sd_tolerance()
+  {
+    using namespace std::chrono_literals;
+
+    {
+      std::size_t fastCalls{}, slowCalls{};
+      check_relative_performance("Speed-up of 2, below (2.6, 3.0) by more than 1.5 of the slow task's sds",
+                                 cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}, fastCalls),
+                                 cycling_spinner({8ms, 9ms, 10ms, 11ms, 12ms}, slowCalls),
+                                 {.min_speedup{2.6}, .max_speedup{3.0}, .trials{5}, .num_sds{1.5}, .max_attempts{3}});
+    }
+
+    {
+      std::size_t fastCalls{}, slowCalls{};
+      check_relative_performance("Speed-up of 2, above (1.2, 1.5) by more than 1.5 of the slow task's sds",
+                                 cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}, fastCalls),
+                                 cycling_spinner({8ms, 9ms, 10ms, 11ms, 12ms}, slowCalls),
+                                 {.min_speedup{1.2}, .max_speedup{1.5}, .trials{5}, .num_sds{1.5}, .max_attempts{3}});
+    }
+
+    {
+      std::size_t fastCalls{}, slowCalls{};
+      check_relative_performance("Speed-up of 2, below (4.5, 5.0) by more than 1.5 of the fast task's sds",
+                                 cycling_spinner({3ms, 4ms, 5ms, 6ms, 7ms}, fastCalls),
+                                 cycling_spinner({6ms, 8ms, 10ms, 12ms, 14ms}, slowCalls),
+                                 {.min_speedup{4.5}, .max_speedup{5.0}, .trials{5}, .num_sds{1.5}, .max_attempts{3}});
+    }
+
+    {
+      std::size_t fastCalls{}, slowCalls{};
+      check_relative_performance("Speed-up of 2, above (1.1, 1.3) by more than 1.5 of the fast task's sds",
+                                 cycling_spinner({3ms, 4ms, 5ms, 6ms, 7ms}, fastCalls),
+                                 cycling_spinner({6ms, 8ms, 10ms, 12ms, 14ms}, slowCalls),
+                                 {.min_speedup{1.1}, .max_speedup{1.3}, .trials{5}, .num_sds{1.5}, .max_attempts{3}});
+    }
+  }
+
+  void performance_false_negative_diagnostics::test_significance_gate()
+  {
+    using namespace std::chrono_literals;
+
+    std::size_t fastCalls{}, slowCalls{};
+    check_relative_performance("Speed-up of 2, within (1.8, 2.1), but the tasks' spreads overlap",
+                               cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}, fastCalls),
+                               cycling_spinner({2ms, 6ms, 10ms, 14ms, 18ms}, slowCalls),
+                               {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+  }
+
   [[nodiscard]]
   std::filesystem::path performance_false_positive_diagnostics::source_file()
   {
@@ -71,6 +135,7 @@ namespace sequoia::testing
   void performance_false_positive_diagnostics::run_tests()
   {
     test_relative_performance();
+    test_sd_tolerance();
   }
 
   void performance_false_positive_diagnostics::test_relative_performance()
@@ -86,6 +151,43 @@ namespace sequoia::testing
                                [deltaT]() { spin_for(deltaT); },
                                [deltaT]() { spin_for(4 * deltaT); },
                                {.min_speedup{3.4}, .max_speedup{4.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+  }
+
+  void performance_false_positive_diagnostics::test_sd_tolerance()
+  {
+    using namespace std::chrono_literals;
+
+    {
+      std::size_t fastCalls{}, slowCalls{};
+      check_relative_performance("Speed-up of 2, below (2.6, 3.0) by less than 4 of the slow task's sds",
+                                 cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}, fastCalls),
+                                 cycling_spinner({8ms, 9ms, 10ms, 11ms, 12ms}, slowCalls),
+                                 {.min_speedup{2.6}, .max_speedup{3.0}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+    }
+
+    {
+      std::size_t fastCalls{}, slowCalls{};
+      check_relative_performance("Speed-up of 2, above (1.2, 1.5) by less than 4 of the slow task's sds",
+                                 cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}, fastCalls),
+                                 cycling_spinner({8ms, 9ms, 10ms, 11ms, 12ms}, slowCalls),
+                                 {.min_speedup{1.2}, .max_speedup{1.5}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+    }
+
+    {
+      std::size_t fastCalls{}, slowCalls{};
+      check_relative_performance("Speed-up of 2, below (4.5, 5.0) by less than 4 of the fast task's sds",
+                                 cycling_spinner({3ms, 4ms, 5ms, 6ms, 7ms}, fastCalls),
+                                 cycling_spinner({6ms, 8ms, 10ms, 12ms, 14ms}, slowCalls),
+                                 {.min_speedup{4.5}, .max_speedup{5.0}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+    }
+
+    {
+      std::size_t fastCalls{}, slowCalls{};
+      check_relative_performance("Speed-up of 2, above (1.1, 1.3) by less than 4 of the fast task's sds",
+                                 cycling_spinner({3ms, 4ms, 5ms, 6ms, 7ms}, fastCalls),
+                                 cycling_spinner({6ms, 8ms, 10ms, 12ms, 14ms}, slowCalls),
+                                 {.min_speedup{1.1}, .max_speedup{1.3}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+    }
   }
 
   [[nodiscard]]
