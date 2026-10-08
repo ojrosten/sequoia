@@ -9,16 +9,25 @@
 
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <chrono>
 #include <limits>
-#include <thread>
 
 namespace sequoia::testing
 {
   namespace
   {
-    void wait(std::chrono::milliseconds t)
+    /** \brief Keeps the calling thread busy until `t` has passed by the
+               steady clock.
+
+        A sleep ends on the operating system's timer, and so overruns by an
+        amount that varies with the platform and the load, distorting the
+        ratios the checks below predict. A spin ends at the first reading of
+        the clock past its deadline.
+     */
+    void spin_for(std::chrono::milliseconds t)
     {
-      std::this_thread::sleep_for(t);
+      const auto deadline{std::chrono::steady_clock::now() + t};
+      while(std::chrono::steady_clock::now() < deadline) {}
     }
   }
 
@@ -38,18 +47,18 @@ namespace sequoia::testing
     constexpr std::chrono::milliseconds deltaT{5};
 
     check_relative_performance("Performance Test for which fast task is too slow, [1, (2.0, 2.0)",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
                                {.min_speedup{2.0}, .max_speedup{2.0}, .trials{5}, .num_sds{4}, .max_attempts{3}});
 
     check_relative_performance("Performance Test for which fast task is too slow [1, (2.0, 3.0)",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
                                {.min_speedup{2.0}, .max_speedup{3.0}, .trials{5}, .num_sds{4}, .max_attempts{3}});
 
     check_relative_performance("Performance Test for which fast task is too fast [4, (2.0, 2.5)]",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(4 * deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(4 * deltaT); },
                                {.min_speedup{2.0}, .max_speedup{2.5}, .trials{5}, .num_sds{4}, .max_attempts{3}});
   }
 
@@ -69,13 +78,13 @@ namespace sequoia::testing
     constexpr std::chrono::milliseconds deltaT{5};
 
     check_relative_performance("Performance Test which should pass",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(2 * deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(2 * deltaT); },
                                {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
 
     check_relative_performance("Performance Test which should pass",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(4 * deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(4 * deltaT); },
                                {.min_speedup{3.4}, .max_speedup{4.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
   }
 
