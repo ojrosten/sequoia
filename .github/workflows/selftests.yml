@@ -2,7 +2,9 @@ name: selftests
 
 # The scripts' selftests. Each job names the selftests to run on its platform:
 # those of the scripts CI runs there, and compile_time_report's, whose script
-# runs on developers' machines. A selftest is named rather than found, since
+# runs on developers' machines. The macOS job also runs
+# generate_coverage_report's: developers run that script on their Macs, though
+# CI runs it only on Linux. A selftest is named rather than found, since
 # report_crashes' selftest passes on Linux having run nothing. The inventory
 # job checks that every selftest runs somewhere.
 #
@@ -39,7 +41,7 @@ jobs:
           - name: Linux
             os: ubuntu-latest
             packages: gdb
-            selftests: compile_time_report read_settled_jobs retry snapshot_at_deadline
+            selftests: compile_time_report generate_coverage_report read_settled_jobs retry snapshot_at_deadline
           # report_crashes' selftest runs on macOS alone. The system there writes
           # the crash reports its macOS controls read, and its Linux and Windows
           # controls run through stand-ins for uname, file and gdb. One of those
@@ -47,7 +49,7 @@ jobs:
           - name: macOS
             os: macos-latest
             packages: ''
-            selftests: compile_time_report report_crashes snapshot_at_deadline
+            selftests: compile_time_report generate_coverage_report report_crashes snapshot_at_deadline
     steps:
       - uses: actions/checkout@v7
         with:

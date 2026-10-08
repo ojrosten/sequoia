@@ -1,41 +1,122 @@
 #!/bin/bash
+# Usage: generate_coverage_report.sh <build directory>
+#
+# Runs the suite of a coverage build, and writes an HTML report of the
+# coverage the run measured. <build directory> is the build's binary
+# directory, configured with Ninja by one of the coverage presets, at
+# <root>/build/<project>/<preset>, where <root> is the parent of the script's
+# own directory. The report goes to <root>/coverage_reports/<project>/<preset>.
+# The script takes <root>/build to be the last directory named build in the
+# build directory's physical path. Before genhtml writes the report, the
+# script deletes the report's directory, if present, and with it every page of
+# an earlier report. It deletes the directory by its physical path, and
+# genhtml writes the report there.
+#
+# The script leaves three files in the build directory:
+#   - coverage_capture.info, the tracefile lcov captured;
+#   - coverage.info, that tracefile without the files of the system and the
+#     toolchains, from which the report is made;
+#   - coverage_summary.txt, lcov's summary of coverage.info.
+#
+# The script runs lcov, genhtml, ctest and python3 from PATH, the ninja the
+# build's cache names, and check_tracefile.py from its own directory. If the
+# cache names the compiler g++-N, the script runs gcov-N from the compiler's
+# directory, and if clang++, llvm-cov from there. For any other compiler, it
+# runs gcov from PATH. On macOS it needs GNU c++filt from Homebrew's
+# binutils, which it finds through `brew --prefix`.
+#
+# Before it runs anything, the script refuses with status 2:
+#   - a missing, empty or second argument;
+#   - a build directory with no directory named build in its path;
+#   - a build directory whose last directory named build is not <root>/build,
+#     such as a build outside the repository.
+# It fails before it runs anything if the build directory or its
+# CMakeCache.txt is missing, or, on macOS, brew or GNU c++filt. It fails if the
+# report's path is present and either of these holds:
+#   - the path is not a directory, such as a regular file or a dangling link;
+#   - the directory's physical path is not within the physical
+#     <root>/coverage_reports.
+# The script checks the report's path before it runs anything, and again just
+# before it deletes the directory. A step that fails stops the script with a
+# non-zero status.
 
-# Any command that fails ends the script with a non-zero status, so the step that runs the
-# script fails with it: a failing suite or a failed capture must not leave a report that looks
-# sound. There is no pipefail: the genhtml probe below pipes genhtml, which always fails there,
-# into grep, and under pipefail every category would read as unsupported.
+# A command outside run_checked which fails, such as reading the cache, ends
+# the script.
 set -e
 
-# Check if a test directory was provided as an argument
-if [[ -z "$1" ]]; then
-  echo "Usage: $0 <Test Executable Directory>"
-  exit 1
+# An exported CDPATH would send cd with a relative path to a directory within
+# a directory it names, and make cd print the directory it chose.
+unset CDPATH
+
+script_dir=$(cd -P "$(dirname "$0")" && pwd -P)
+
+if [[ $# -ne 1 || -z "$1" ]]; then
+  echo "Usage: $0 <build directory>" >&2
+  exit 2
 fi
 
-# Get the test executable directory from the first argument
 test_exe_dir_relative="$1"
 test_exe_dir=$(cd "$test_exe_dir_relative" && pwd -P)
 echo "Test Dir: ${test_exe_dir}"
 
-# Get the path components before 'build/'
-path_prefix="${test_exe_dir%%build/*}"
-
-# Get the path components after 'build/'
-path_suffix="${test_exe_dir#*build/}"
-
-setup_file="${test_exe_dir}/Setup.txt"
-
-if [[ -f "${setup_file}" ]]; then
-    discriminator=$(head -n 1 "${setup_file}")
-    path_suffix="${path_suffix}/${discriminator}"
+if [[ "${test_exe_dir}" != */build/* ]]; then
+  echo "error: ${test_exe_dir} is not within a directory named build" >&2
+  exit 2
 fi
+path_prefix="${test_exe_dir%/build/*}"
+path_suffix="${test_exe_dir##*/build/}"
 
-# Relative location of the html output directory
 output_dir="${path_prefix}/coverage_reports/${path_suffix}"
 echo "Output Dir: ${output_dir}"
 
-# Create output directory if it doesn't exist
-mkdir -p "${output_dir}"
+repository_reports="$(cd -P "${script_dir}/.." && pwd -P)/coverage_reports"
+if [[ "${output_dir}" != "${repository_reports}"/?* ]]; then
+  echo "error: the report's directory, ${output_dir}, is not within ${repository_reports}" >&2
+  exit 2
+fi
+
+# Sets report_dir to the report's directory: its physical path if present,
+# and otherwise output_dir. The script deletes report_dir, so report_dir must
+# lie strictly within the physical coverage_reports, or the script fails. A
+# link at any component of output_dir within coverage_reports could place it
+# elsewhere. Each path is resolved by cd -P, as rm resolves it: a logical cd
+# would remove `X/..` from the path's text, where rm resolves `..` through
+# the link X.
+locate_report_dir() {
+  report_dir=${output_dir}
+  [[ -e "${output_dir}" || -L "${output_dir}" ]] || return 0
+  local physical_reports
+  physical_reports=$(cd -P "${repository_reports}" && pwd -P)
+  report_dir=$(cd -P "${output_dir}" && pwd -P)
+  if [[ "${report_dir}" != "${physical_reports}"/?* ]]; then
+    echo "error: the report's directory, ${report_dir}, is not within ${physical_reports}" >&2
+    exit 1
+  fi
+}
+
+# The script checks the report's directory now, so that a refusal comes before
+# the suite runs. It checks again just before deleting the directory, which
+# may have changed while the suite ran.
+locate_report_dir
+
+# lcov forces --no-strip-underscores on Darwin, which only GNU c++filt
+# accepts. Apple's c++filt refuses it, and genhtml then reports that the
+# tracefile holds no valid records. The script checks for GNU c++filt before
+# the suite runs, rather than fail once it has.
+platform=$(uname -s)
+demangle=(--demangle-cpp)
+if [[ "${platform}" == Darwin ]]; then
+  if ! homebrew=$(brew --prefix); then
+    echo "error: on macOS, genhtml needs GNU c++filt from Homebrew, and brew --prefix failed" >&2
+    exit 1
+  fi
+  gnu_cxxfilt="${homebrew}/opt/binutils/bin/c++filt"
+  if [[ ! -x "${gnu_cxxfilt}" ]]; then
+    echo "error: on macOS, genhtml needs GNU c++filt at ${gnu_cxxfilt}" >&2
+    exit 1
+  fi
+  demangle+=("${gnu_cxxfilt}")
+fi
 
 # Runs a command and, if it fails, names it before ending the script.
 run_checked() {
@@ -45,10 +126,11 @@ run_checked() {
   exit 1
 }
 
-# The capture below reads every notes file (.gcno) in the build, so a stale one would be
-# captured too: for a source since dropped from the build it gives functions nothing can call,
-# and for a deleted source it fails the capture. Ninja's cleandead deletes the objects of
-# sources the build no longer has, and a notes file without its object is then deleted too.
+# The capture below reads every notes file (.gcno) in the build, stale ones
+# included. A stale notes file of a source since dropped from the build gives
+# functions nothing can call. One of a deleted source fails the capture.
+# Ninja's cleandead deletes the objects of sources the build no longer has.
+# Then the script deletes each notes file without its object.
 make_program=$(sed -n 's/^CMAKE_MAKE_PROGRAM:[^=]*=//p' "${test_exe_dir}/CMakeCache.txt")
 run_checked "${make_program}" -C "${test_exe_dir}" -t cleandead
 while IFS= read -r notes; do
@@ -57,102 +139,90 @@ done < <(find "${test_exe_dir}" -name '*.gcno')
 
 run_checked lcov --zerocounters --directory "${test_exe_dir}"
 
-# Run the tests to generate fresh .gcda files
-pushd "${test_exe_dir}"
-run_checked ctest -T Test
-popd
+(cd "${test_exe_dir}" && run_checked ctest -T Test)
 
-# gcov must match the compiler which produced the .gcda files, so take it from the build itself
-if [[ -z "${gcov_tool}" ]]; then
-  cxx=$(sed -n 's/^CMAKE_CXX_COMPILER:[^=]*=//p' "${test_exe_dir}/CMakeCache.txt")
-  case "${cxx##*/}" in
-    g++-*)    gcov_tool="${cxx%/*}/gcov-${cxx##*g++-}" ;;
-    # lcov invokes the tool with the .gcda as its first argument, so the two-word
-    # 'llvm-cov gcov' has to be wrapped rather than passed
-    clang++)  gcov_tool="${test_exe_dir}/llvm-gcov.sh"
-              printf '#!/bin/sh\nexec "%s/llvm-cov" gcov "$@"\n' "${cxx%/*}" > "${gcov_tool}"
-              chmod +x "${gcov_tool}"                  ;;
-    *)        gcov_tool="gcov"                         ;;
-  esac
-fi
+# gcov must match the compiler which wrote the data files (.gcda), so the
+# script chooses the tool by the build's compiler. The gcov on PATH, taken for
+# any other compiler, may not match it.
+cxx=$(sed -n 's/^CMAKE_CXX_COMPILER:[^=]*=//p' "${test_exe_dir}/CMakeCache.txt")
+case "${cxx##*/}" in
+  g++-*)    gcov_tool="${cxx%/*}/gcov-${cxx##*g++-}" ;;
+  # lcov runs the tool with a data file as its first argument, so the script
+  # writes a wrapper to run the two words `llvm-cov gcov`.
+  clang++)  gcov_tool="${test_exe_dir}/llvm-gcov.sh"
+            printf '#!/bin/sh\nexec "%s/llvm-cov" gcov "$@"\n' "${cxx%/*}" > "${gcov_tool}"
+            chmod +x "${gcov_tool}"                  ;;
+  *)        gcov_tool="gcov"                         ;;
+esac
 echo "gcov: ${gcov_tool}"
 
-# lcov checks coverage data for consistency, and repairs what it finds by overriding gcov's
-# counts, in both directions. It checks on every read of a tracefile, and at capture wherever
-# it has to derive the end lines of functions, which llvm-cov never supplies:
-#  - A function gcov says was never called, but with a line that ran, is marked called.
-#    The check exempts the first line of a lambda, which runs when the closure is built,
-#    but it recognises a lambda only by its demangled name, and the tracefile holds mangled
-#    names. So every uncalled lambda whose first line ran is reported as called.
-#  - A function gcov says was called, but with no line that ran, is shown as uncalled in
-#    genhtml's function tables.
-# Turning the check off keeps gcov's counts. The lambda defect is drafted as an upstream
-# lcov report, not yet filed.
+# lcov checks coverage data for consistency, and repairs what it finds by
+# overriding gcov's counts, in both directions. It checks on every read of a
+# tracefile, and at capture wherever it has to derive the end lines of
+# functions, which llvm-cov never supplies:
+#   - A function gcov says was never called, but with a line that ran, is
+#     marked called. The check exempts the first line of a lambda, which runs
+#     when the closure is built. But it recognises a lambda only by its
+#     demangled name, and the tracefile holds mangled names. So every uncalled
+#     lambda whose first line ran is reported as called: lcov issue 557,
+#     https://github.com/linux-test-project/lcov/issues/557.
+#   - A function gcov says was called, but with no line that ran, is shown as
+#     uncalled in genhtml's function tables.
+# Turning the check off keeps gcov's counts.
 consistency_options=(--rc check_data_consistency=0)
 
 capture="${test_exe_dir}/coverage_capture.info"
 info="${test_exe_dir}/coverage.info"
-# --all captures each object that never ran, with every count zero. Without it, such an object
-# is absent from the tracefile. The linker leaves out any object of a static library which
-# nothing references, and the object's functions would then be neither called nor uncalled.
+# --all captures each object that never ran, with every count zero. Without
+# it, such an object is absent from the tracefile. The linker leaves out any
+# object of a static library which nothing references, and that object's
+# functions would then be neither called nor uncalled.
 run_checked lcov --directory "${test_exe_dir}" --capture --all --output-file "${capture}" --gcov-tool "${gcov_tool}" \
                  --keep-going --filter range --rc geninfo_unexecuted_blocks=1 "${consistency_options[@]}" \
                  --ignore-errors empty --ignore-errors inconsistent,inconsistent --ignore-errors format,format
 
-# A read derives end lines again for functions that have none. The capture has already done
-# so, and a second derivation raises `inconsistent` wherever it fails.
+# A read derives end lines again for functions that have none. The capture
+# has already done so, and a second derivation raises `inconsistent` wherever
+# it fails.
 read_options=("${consistency_options[@]}" --rc derive_function_end_line=0)
 
 foreign=('/usr/*')
-# Writing the tracefile again raises `format` for each function llvm-cov places at line 0.
-# The capture has already raised that error and been told to ignore it.
+# Writing the tracefile again raises `format` for each function llvm-cov
+# places at line 0. The capture has already raised that error and been told
+# to ignore it.
 remove_options=(--keep-going --ignore-errors empty --ignore-errors format)
-if [[ "$(uname -s)" == Darwin ]]; then
-  foreign+=('/opt/homebrew/*' '/Library/Developer/*' '/Applications/Xcode.app/*')
-  # The patterns cover every toolchain's system headers, and no one build uses them all.
-  # lcov treats a pattern that removes nothing as an error.
+if [[ "${platform}" == Darwin ]]; then
+  foreign+=("${homebrew}/*" '/Library/Developer/*' '/Applications/Xcode.app/*')
+  # The patterns cover every toolchain's system headers, and no one build
+  # uses them all. lcov treats a pattern that removes nothing as an error.
   remove_options+=(--ignore-errors unused)
 fi
 
 run_checked lcov --remove "${capture}" "${foreign[@]}" --output-file "${info}" \
                  "${remove_options[@]}" "${read_options[@]}"
 
-# Removal must drop files and change nothing else, and lcov's figures must be counts of the
-# tracefile's records. check_tracefile.py names the first difference. Nothing checks genhtml's
-# function tables, where the second repair above would show.
+# Removal must drop files and change nothing else, and lcov's figures must be
+# counts of the tracefile's records. check_tracefile.py names the first
+# difference. Nothing checks genhtml's function tables, where the second
+# repair above would show.
 summary="${test_exe_dir}/coverage_summary.txt"
-if ! lcov --summary "${info}" "${read_options[@]}" > "${summary}" 2>&1; then
-  cat "${summary}"
-  echo "error: lcov --summary failed on ${info}" >&2
-  exit 1
-fi
+run_checked lcov --summary "${info}" "${read_options[@]}" > "${summary}"
 cat "${summary}"
-script_dir=$(cd "$(dirname "$0")" && pwd -P)
 run_checked python3 "${script_dir}/check_tracefile.py" --capture "${capture}" --filtered "${info}" \
                                                         --summary "${summary}" --removed "${foreign[@]}"
 
-# lcov forces --no-strip-underscores on Darwin, which only GNU c++filt accepts
-gnu_cxxfilt="/opt/homebrew/opt/binutils/bin/c++filt"
-demangle=(--demangle-cpp)
-[[ -x "${gnu_cxxfilt}" ]] && demangle+=("${gnu_cxxfilt}")
-
-# genhtml's set of ignorable error categories varies by lcov version: 'range' is
-# accepted by 2.5 and rejected outright by the lcov in Ubuntu's archives, which
-# stopped a coverage run dead. Each category below was added for a reason, so the
-# list is filtered to what this genhtml accepts rather than trimmed to whatever
-# every version has in common. Unknown categories are refused during argument
-# parsing, before genhtml looks at its input, which is what makes the probe cheap.
-probe_dir=$(mktemp -d)
-ignore=()
-for category in range empty category; do
-  if ! genhtml --ignore-errors "${category}" -o "${probe_dir}" /dev/null 2>&1 \
-       | grep -q "unknown argument for --ignore-errors"; then
-    ignore+=(--ignore-errors "${category}")
-  else
-    echo "genhtml does not support --ignore-errors ${category}; continuing without it"
-  fi
-done
-rm -rf "${probe_dir}"
-
-# Generate HTML report
-run_checked genhtml "${demangle[@]}" --suppress-aliases -o "${output_dir}" "${info}" "${ignore[@]}" "${read_options[@]}"
+# genhtml leaves in place every page it does not write, such as a page for a
+# source the build no longer has.
+#
+# genhtml's own options:
+#   - --suppress-aliases lists the instantiations of a template as one
+#     function. The function tables would otherwise list each instantiation
+#     by its mangled name: a TestChamber report took 851 MB with them listed,
+#     and 12 MB without (2026-09-05).
+#   - --ignore-errors category: llvm-cov gives some lines no category, and
+#     genhtml would otherwise stop at the first, with `unexpected category
+#     UNK`.
+locate_report_dir
+run_checked rm -rf "${report_dir}"
+run_checked genhtml "${demangle[@]}" --suppress-aliases -o "${report_dir}" "${info}" \
+                    --ignore-errors range --ignore-errors empty --ignore-errors category "${read_options[@]}"
