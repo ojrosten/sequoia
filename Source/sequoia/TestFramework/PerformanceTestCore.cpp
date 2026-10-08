@@ -20,12 +20,16 @@ namespace sequoia::testing
 {
   namespace
   {
-    /** \brief The numbers `std::from_chars` reads in `text`, scanning from left
-               to right, if there are exactly `N` of them.
+    /** \brief The numbers in `text`, if there are exactly `N`.
+
+        Reading goes left to right, trying `std::from_chars` at each character.
+        A number it reads is taken, and reading resumes after it; otherwise
+        reading moves on one character. So `inf` and `nan` count, even inside a
+        word, and a `-` directly before a number is its sign.
      */
     template<std::size_t N>
     [[nodiscard]]
-    std::optional<std::array<double, N>> numbers_in(std::string_view text)
+    std::optional<std::array<double, N>> extract_numbers_from(std::string_view text)
     {
       std::array<double, N> numbers{};
       std::size_t count{};
@@ -66,14 +70,14 @@ namespace sequoia::testing
       std::string_view prefix{line.substr(0, labelPos)};
       std::string_view afterLabel{line.substr(labelPos + label.size())};
 
-      if(const auto numbers{numbers_in<3>(afterLabel)})
+      if(const auto numbers{extract_numbers_from<3>(afterLabel)})
       {
         const auto [mean, numSds, sig]{*numbers};
         if(duration_summary(prefix, mean, numSds, sig) == line)
           return duration_summary(prefix, 0, numSds, 0);
       }
 
-      if(const auto numbers{numbers_in<6>(afterLabel)})
+      if(const auto numbers{extract_numbers_from<6>(afterLabel)})
       {
         const auto [mean, numSds, sig, speedup, minSpeedup, maxSpeedup]{*numbers};
         if(duration_summary(prefix, mean, numSds, sig) + speedup_summary(speedup, minSpeedup, maxSpeedup) == line)
