@@ -8,6 +8,7 @@
 #include "sequoia/TestFramework/FailureInfo.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/Output.hpp"
+#include "sequoia/TestFramework/PerformanceTestCore.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
@@ -25,6 +26,30 @@ namespace sequoia::testing
   
   namespace
   {
+    [[nodiscard]]
+    failure_info with_zeroed_measurements(const failure_info& info)
+    {
+      return {info.check_index, text_with_zeroed_measurements(info.message)};
+    }
+
+    [[nodiscard]]
+    failure_output with_zeroed_measurements(const failure_output& output)
+    {
+      auto infoWithZeroedMeasurements{[](const failure_info& info) { return with_zeroed_measurements(info); }};
+
+      return output | std::views::transform(infoWithZeroedMeasurements) | std::ranges::to<failure_output>();
+    }
+
+    [[nodiscard]]
+    std::string indented(std::string_view message)
+    {
+      return indent(message, tab);
+    }
+
+    /** \brief Reports the outcomes of repeated runs of a test, if they differ other than in measured values.
+
+        `failuresFromFiles` must be sorted by its elements with their measured values zeroed.
+     */
     [[nodiscard]]
     std::string analyse_output(const fs::path& filename, const std::vector<failure_output>& failuresFromFiles)
     {
@@ -46,12 +71,14 @@ namespace sequoia::testing
 
       std::string freqs{"["};
       std::string messages{};
+      auto infoWithZeroedMeasurements{[](const failure_info& info) { return with_zeroed_measurements(info); }};
+
       while(++first != last)
       {
-        if(*first != *current)
+        if(with_zeroed_measurements(*first) != with_zeroed_measurements(*current))
         {
           freqs += to_percent(std::ranges::distance(current, first)) += "%,";
-          auto[i,j]{std::ranges::mismatch(*current, *first)};
+          auto[i,j]{std::ranges::mismatch(*current, *first, {}, infoWithZeroedMeasurements, infoWithZeroedMeasurements)};
           if(j == first->end())
           {
             throw std::logic_error{"Unable to identify instability"};
@@ -60,7 +87,7 @@ namespace sequoia::testing
           {
             if(current->begin() == current->end())
             {
-              messages.append("--No failures--\n\nvs.\n\n").append(j->message);
+              messages.append("--No failures--\n\nvs.\n\n").append(indented(j->message));
             }
             else
             {
@@ -69,7 +96,7 @@ namespace sequoia::testing
                   std::string mess{};
                   for(auto c{current->begin()}; c != current->end(); ++c)
                   {
-                    mess.append(c->message).append("\n");
+                    mess.append(indented(c->message)).append("\n");
                   }
 
                   return mess;
@@ -78,15 +105,15 @@ namespace sequoia::testing
 
               messages.append(messages.empty() ? commonMessage : "\n");
 
-              messages.append(std::format("vs.\n\n{}{}", commonMessage, j->message));
+              messages.append(std::format("vs.\n\n{}{}", commonMessage, indented(j->message)));
             }
           }
           else
           {
             if(current == initial)
-              messages.append(i->message);
+              messages.append(indented(i->message));
 
-            messages.append("\nvs.\n\n").append(j->message);
+            messages.append("\nvs.\n\n").append(indented(j->message));
           }
 
           current = first;
@@ -207,21 +234,15 @@ namespace sequoia::testing
     if(files.size() % trials)
       throw std::runtime_error{"Instability analysis: incorrect number of output files"};
 
-    auto readAndIndentFailureOutput{
+    auto readFailureOutput{
       [](const fs::path& file) {
-        auto indented{
-          [](const failure_info& info) {
-            return failure_info{info.check_index, indent(info.message, tab)};
-          }
-        };
-
         if(std::ifstream ifile{file, std::ios_base::binary})
         {
           try
           {
             failure_output output{};
             ifile >> output;
-            return output | std::views::transform(indented) | std::ranges::to<failure_output>();
+            return output;
           }
           catch(const std::exception& e)
           {
@@ -238,13 +259,14 @@ namespace sequoia::testing
     };
 
     auto analyseTestFrom{
-      [&files, trials, &readAndIndentFailureOutput](std::size_t first) {
+      [&files, trials, &readFailureOutput](std::size_t first) {
         auto testFiles{std::span{files}.subspan(first, trials)};
         auto failuresFromFiles{
-          testFiles | std::views::transform(readAndIndentFailureOutput) | std::ranges::to<std::vector>()
+          testFiles | std::views::transform(readFailureOutput) | std::ranges::to<std::vector>()
         };
 
-        std::ranges::sort(failuresFromFiles);
+        auto outputWithZeroedMeasurements{[](const failure_output& output) { return with_zeroed_measurements(output); }};
+        std::ranges::sort(failuresFromFiles, {}, outputWithZeroedMeasurements);
         return analyse_output(source_from_instability_analysis(testFiles.front().parent_path()), failuresFromFiles);
       }
     };

@@ -112,6 +112,28 @@ namespace sequoia::testing
       working_materials() / "StableAnalysis.txt",
       predictive_materials() / "StableAnalysis.txt"
     );
+
+    write_to_file(working_materials() / "MeasuredValuesAnalysis.txt",
+                  instability_analysis(working_materials() / "MeasuredValues", 2),
+                  std::ios_base::binary);
+
+    check(
+      equivalence,
+      "Outputs which differ only in measured values",
+      working_materials() / "MeasuredValuesAnalysis.txt",
+      predictive_materials() / "MeasuredValuesAnalysis.txt"
+    );
+
+    write_to_file(working_materials() / "VerdictsAnalysis.txt",
+                  instability_analysis(working_materials() / "Verdicts", 2),
+                  std::ios_base::binary);
+
+    check(
+      equivalence,
+      "Outputs which differ in a verdict, as well as in measured values",
+      working_materials() / "VerdictsAnalysis.txt",
+      predictive_materials() / "VerdictsAnalysis.txt"
+    );
   }
 
   void failure_info_test::check_written_format()
