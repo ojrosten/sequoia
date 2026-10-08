@@ -248,8 +248,7 @@ self_controls() {
    {"ph":"X","name":"ExecuteCompiler","ts":13000000,"dur":1000000},
    {"ph":"X","name":"Frontend","ts":14000000,"dur":1000000},
    {"ph":"X","name":"Backend","ts":15000000,"dur":1000000},
-   {"ph":"X","name":"PerformPendingInstantiations","ts":16000000,"dur":1000000},
-   {"ph":"X","name":"Source","ts":17000000,"dur":1000000,"args":{"detail":"header.hpp"}}]'
+   {"ph":"X","name":"PerformPendingInstantiations","ts":16000000,"dur":1000000}]'
   trace "$s/nestling.cpp.json" '[
    {"ph":"X","name":"Total ExecuteCompiler","ts":0,"dur":1000000,"args":{"count":1}},
    {"ph":"X","name":"InstantiateClass","ts":0,"dur":500000,"args":{"detail":"fledgling"}}]'
@@ -276,7 +275,7 @@ self_controls() {
   check "an entity's detail is cut at 100, not more" no 'y{101}'
   check "an event which is no span is ignored" no 'InstantMarker'
   check "summary events are not spans"     no 'Total'
-  for enclosing in ExecuteCompiler Frontend Backend PerformPendingInstantiations Source; do
+  for enclosing in ExecuteCompiler Frontend Backend PerformPendingInstantiations; do
     check "an enclosing $enclosing span is left out" no "s  $enclosing(:|$)"
   done
 
@@ -637,10 +636,7 @@ MUTATIONS = [
     ('Frontend is a span',               '"Frontend", "Backend",', '"Backend",'),
     ('Backend is a span',                '"Backend",\n', '\n'),
     ('PerformPendingInstantiations is a span',
-                                         '"PerformPendingInstantiations", "Source")',
-                                         '"Source")'),
-    ('Source is a span',                 '"PerformPendingInstantiations", "Source")',
-                                         '"PerformPendingInstantiations",)'),
+                                         '"PerformPendingInstantiations")', ')'),
     ('a parent may sort after its child',
                                          'spans.sort(key=lambda e: (e["ts"], -e.get("dur", 0)))',
                                          'spans.sort(key=lambda e: e["ts"])'),
