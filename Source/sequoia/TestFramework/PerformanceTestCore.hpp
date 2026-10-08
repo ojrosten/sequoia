@@ -34,7 +34,7 @@ namespace sequoia::testing
     return t.time_elapsed();
   }
 
-  /** \brief A task which can be copied, and called through the copy. */
+  /** \brief A task which can be copied, and called with no arguments through an lvalue. */
   template<class T>
   concept copy_constructible_task = std::invocable<T&> && std::copy_constructible<T>;
 
@@ -82,8 +82,8 @@ namespace sequoia::testing
 
        For each trial, both the supposedly fast and slow tasks are run. Their order is random.
        Each trial runs its own copy of each task, made before the timing starts. So state a task
-       holds by value starts afresh in every trial, while state it reaches through a reference or
-       a pointer is shared by every trial.
+       holds by value starts afresh in every trial, while any other state it uses, such as state
+       reached through a reference or a pointer, is shared by every trial.
        When all trials have been completed, the mean and standard deviations are computed for
        both fast and slow tasks. Denote these by fastMean, fastSd and slowMean, slowSd.
 
@@ -155,7 +155,7 @@ namespace sequoia::testing
 
     auto timer{
        [](auto task, std::vector<double>& timings){
-         timings.push_back(profile(task).count());
+         timings.push_back(profile(std::move(task)).count());
        }
     };
 

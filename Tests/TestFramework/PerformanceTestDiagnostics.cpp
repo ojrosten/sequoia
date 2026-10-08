@@ -36,8 +36,8 @@ namespace sequoia::testing
     /** \brief Returns a task which spins for each of `durations` in turn,
                starting again after the last.
 
-        Every copy of the task shares one count of the calls made, so an
-        attempt of five trials spins for each duration once.
+        Every copy of the task shares one count of the calls made, so any
+        five consecutive calls spin for each duration once.
      */
     [[nodiscard]]
     auto make_cycling_spinner(const std::array<std::chrono::milliseconds, 5>& durations)
@@ -628,19 +628,19 @@ namespace sequoia::testing
 
   void performance_utilities_test::test_task_constraints()
   {
-    STATIC_CHECK( profilable<copyable_task>);
+    STATIC_CHECK( profilable<   copyable_task>);
     STATIC_CHECK(!profilable<rvalue_only_task>);
 
-    STATIC_CHECK( checkable_tasks_v<copyable_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_v<move_only_task,   copyable_task>);
-    STATIC_CHECK(!checkable_tasks_v<copyable_task,    move_only_task>);
-    STATIC_CHECK(!checkable_tasks_v<rvalue_only_task, copyable_task>);
-    STATIC_CHECK(!checkable_tasks_v<copyable_task,    rvalue_only_task>);
+    STATIC_CHECK( checkable_tasks_v<   copyable_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_v<  move_only_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_v<   copyable_task,   move_only_task>);
+    STATIC_CHECK(!checkable_tasks_v<rvalue_only_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_v<   copyable_task, rvalue_only_task>);
 
-    STATIC_CHECK( checkable_tasks_by_extender_v<copyable_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_by_extender_v<move_only_task,   copyable_task>);
-    STATIC_CHECK(!checkable_tasks_by_extender_v<copyable_task,    move_only_task>);
-    STATIC_CHECK(!checkable_tasks_by_extender_v<rvalue_only_task, copyable_task>);
-    STATIC_CHECK(!checkable_tasks_by_extender_v<copyable_task,    rvalue_only_task>);
+    STATIC_CHECK( checkable_tasks_by_extender_v<   copyable_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_by_extender_v<  move_only_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_by_extender_v<   copyable_task,   move_only_task>);
+    STATIC_CHECK(!checkable_tasks_by_extender_v<rvalue_only_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_by_extender_v<   copyable_task, rvalue_only_task>);
   }
 }
