@@ -75,6 +75,8 @@ namespace sequoia::testing
        \param parameters  the predicted range of speed-ups, and the statistics which test it
 
        For each trial, both the supposedly fast and slow tasks are run. Their order is random.
+       Each trial runs its own copy of each task, so state that a task changes in itself does
+       not carry over to the next trial.
        When all trials have been completed, the mean and standard deviations are computed for
        both fast and slow tasks. Denote these by fastMean, fastSd and slowMean, slowSd.
 
@@ -113,7 +115,11 @@ namespace sequoia::testing
        max_attempts is 0 or if trials is less than 5.
    */
   template<test_mode Mode, std::invocable F, std::invocable S>
-  bool check_relative_performance(std::string_view description, test_logger<Mode>& logger, F fast, S slow,
+    requires std::copy_constructible<F> && std::copy_constructible<S>
+  bool check_relative_performance(std::string_view description,
+                                  test_logger<Mode>& logger,
+                                  F fast,
+                                  S slow,
                                   const relative_performance_parameters& parameters)
   {
     sentinel<Mode> sentry{logger, std::string{description}};
@@ -248,7 +254,11 @@ namespace sequoia::testing
     performance_extender() = default;
 
     template<class Self, std::invocable F, std::invocable S>
-    bool check_relative_performance(this Self& self, const reporter& description, F fast, S slow,
+      requires std::copy_constructible<F> && std::copy_constructible<S>
+    bool check_relative_performance(this Self& self,
+                                    const reporter& description,
+                                    F fast,
+                                    S slow,
                                     const relative_performance_parameters& parameters)
     {
       return testing::check_relative_performance(self.report(description), self.m_Logger, fast, slow, parameters);
