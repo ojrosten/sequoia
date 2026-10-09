@@ -39,22 +39,22 @@ Task durations: fast 0.001s, slow 0.004s
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 98
-An interval of 3 standard errors ends below the predicted [6.19, 8.0]; one of 4 would overlap it
+Attempt 1: an interval of 3 standard errors ends below the predicted [3.15, 8.0], and one of 4 would not. Later attempts overlap it.
 
 The fast task is faster than the slow one, but by less than predicted
-Speed-up: 3.35 in [1.98, 5.67]; predicted [6.19, 8]
+Speed-up: 2.21 in [1.63, 3]; predicted [3.15, 8]
 Trials: 10, attempt 1 of 3
-Task durations: fast 0.001s, slow 0.00335s
+Task durations: fast 0.003s, slow 0.00664s
 
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 104
-An interval of 3 standard errors starts above the predicted [1.1, 1.39]; one of 4 would overlap it
+Attempt 1: an interval of 3 standard errors starts above the predicted [1.05, 2.91], and one of 4 would not. Later attempts overlap it.
 
 The fast task is suspiciously fast: faster than predicted
-Speed-up: 2.91 in [1.55, 5.49]; predicted [1.1, 1.39]
+Speed-up: 4.36 in [3.08, 6.17]; predicted [1.05, 2.91]
 Trials: 10, attempt 1 of 3
-Task durations: fast 0.001s, slow 0.00291s
+Task durations: fast 0.001s, slow 0.00436s
 
 =======================================
 

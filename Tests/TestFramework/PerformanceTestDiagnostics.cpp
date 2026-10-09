@@ -95,17 +95,17 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("An interval of 3 standard errors ends below the predicted [6.19, 8.0]; "
-                               "one of 4 would overlap it",
-                               []() { spin_for(1ms); },
-                               make_cycling_spinner({2ms, 2ms, 4ms, 5ms, 5ms}),
-                               {.prediction{.lower{6.19}, .upper{8.0}}, .minimum_trials{10}});
+    check_relative_performance("Attempt 1: an interval of 3 standard errors ends below the predicted [3.15, 8.0], "
+                               "and one of 4 would not. Later attempts overlap it.",
+                               counted_spinner{3ms, trials_at_minimum_10[0], 1ms},
+                               make_cycling_spinner({4ms, 7ms, 7ms, 7ms, 8ms}),
+                               {.prediction{.lower{3.15}, .upper{8.0}}, .minimum_trials{10}});
 
-    check_relative_performance("An interval of 3 standard errors starts above the predicted [1.1, 1.39]; "
-                               "one of 4 would overlap it",
-                               []() { spin_for(1ms); },
-                               make_cycling_spinner({2ms, 2ms, 3ms, 3ms, 8ms}),
-                               {.prediction{.lower{1.1}, .upper{1.39}}, .minimum_trials{10}});
+    check_relative_performance("Attempt 1: an interval of 3 standard errors starts above the predicted [1.05, 2.91], "
+                               "and one of 4 would not. Later attempts overlap it.",
+                               counted_spinner{1ms, trials_at_minimum_10[0], 2ms},
+                               make_cycling_spinner({4ms, 4ms, 4ms, 4ms, 8ms}),
+                               {.prediction{.lower{1.05}, .upper{2.91}}, .minimum_trials{10}});
   }
 
   void performance_false_negative_diagnostics::test_significance_gate()
