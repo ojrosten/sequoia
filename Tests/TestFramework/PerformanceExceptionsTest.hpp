@@ -27,5 +27,7 @@ namespace sequoia::testing
     void test_invalid_arguments();
 
     void test_throwing_task();
+
+    void test_non_positive_durations();
   };
 }

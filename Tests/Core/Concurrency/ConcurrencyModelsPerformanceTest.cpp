@@ -149,11 +149,11 @@ namespace sequoia::testing
       auto asyncFn{[millisecs]() { waiting_task<wait, asynchronous<void>>{2u, wait{millisecs}}(); }};
 
       check_relative_performance("Two Waiting tasks; pool_2/null", threadPoolFn, nullThreadFn,
-                                 {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+                                 {.prediction{.lower{1.8}, .upper{2.1}}, .trials{5}});
       check_relative_performance("Two Waiting tasks; pool_2M/null", threadPoolMonoFn, nullThreadFn,
-                                 {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+                                 {.prediction{.lower{1.8}, .upper{2.1}}, .trials{5}});
       check_relative_performance("Two Waiting tasks; async/null", asyncFn, nullThreadFn,
-                                 {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+                                 {.prediction{.lower{1.8}, .upper{2.1}}, .trials{5}});
     }
 
     {
@@ -164,9 +164,9 @@ namespace sequoia::testing
       auto nullThreadFn{[millisecs]() { waiting_task<wait, serial<void>>{4u, wait{millisecs}}(); }};
 
       check_relative_performance("Four Waiting tasks; pool_2/null", threadPoolFn, nullThreadFn,
-                                 {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+                                 {.prediction{.lower{1.8}, .upper{2.1}}, .trials{5}});
       check_relative_performance("Four Waiting tasks; pool_2M/null", threadPoolMonoFn, nullThreadFn,
-                                 {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+                                 {.prediction{.lower{1.8}, .upper{2.1}}, .trials{5}});
     }
 
     {
@@ -177,9 +177,9 @@ namespace sequoia::testing
       auto nullThreadFn{[millisecs]() { waiting_task<wait, serial<void>>{4u, wait{millisecs}}(); }};
 
       check_relative_performance("Four Waiting tasks; pool_4/null", threadPoolFn, nullThreadFn,
-                                 {.min_speedup{3.5}, .max_speedup{4.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+                                 {.prediction{.lower{3.5}, .upper{4.1}}, .trials{5}});
       check_relative_performance("Four Waiting tasks; pool_4M/null", threadPoolMonoFn, nullThreadFn,
-                                 {.min_speedup{3.5}, .max_speedup{4.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+                                 {.prediction{.lower{3.5}, .upper{4.1}}, .trials{5}});
     }
   }
 
@@ -198,11 +198,11 @@ namespace sequoia::testing
       auto asyncFn{[waitReturnVal]() { return waiting_task<wait_return, asynchronous<int>>{2u, waitReturnVal}(); }};
 
       check_relative_performance("Two Waiting tasks; pool_2/null", threadPoolFn, nullThreadFn,
-                                 {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+                                 {.prediction{.lower{1.8}, .upper{2.1}}, .trials{5}});
       check_relative_performance("Two Waiting tasks; pool_2M/null", threadPoolMonoFn, nullThreadFn,
-                                 {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+                                 {.prediction{.lower{1.8}, .upper{2.1}}, .trials{5}});
       check_relative_performance("Two Waiting tasks; async/null", asyncFn, nullThreadFn,
-                                 {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+                                 {.prediction{.lower{1.8}, .upper{2.1}}, .trials{5}});
     }
   }
 }

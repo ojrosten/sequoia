@@ -109,6 +109,12 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code child_return_code(int exitStatus, std::string_view childDescription);
 
+  /** \brief Returns `message` as the runner compares it across runs when
+             looking for instabilities: with its measurements set to zero.
+   */
+  [[nodiscard]]
+  std::string instability_projection(std::string_view message);
+
   /** \brief Encodes `code` as a runner's exit status.
 
       \returns

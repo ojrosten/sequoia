@@ -26,6 +26,14 @@ namespace sequoia::testing
 
     void test_pass_at_second_attempt();
 
-    void test_pass_at_third_attempt();
+    void test_pass_at_final_attempt();
+
+    void test_rising_overlap_multiplier();
+
+    void test_constant_gate_multiplier();
+
+    void test_trimmed_estimate();
+
+    void test_task_orders();
   };
 }

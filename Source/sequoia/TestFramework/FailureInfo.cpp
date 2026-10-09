@@ -25,8 +25,35 @@ namespace sequoia::testing
   
   namespace
   {
+    /** \brief The failures of one run of a test, as recorded and with each
+               message projected.
+     */
+    struct run_failures
+    {
+      failure_output recorded{}, projected{};
+    };
+
+    /** \brief Returns `output` with `projection` applied to the message of
+               each failure; the check indices are kept.
+     */
     [[nodiscard]]
-    std::string analyse_output(const fs::path& filename, const std::vector<failure_output>& failuresFromFiles)
+    failure_output apply_projection(const failure_output& output, const message_projection& projection)
+    {
+      auto projectedInfo{
+        [&projection](const failure_info& info) { return failure_info{info.check_index, projection(info.message)}; }
+      };
+
+      return output | std::views::transform(projectedInfo) | std::ranges::to<failure_output>();
+    }
+
+    /** \brief Reports the outcomes of repeated runs of a test, if they differ
+               once each message is projected.
+
+        `failuresFromFiles` must be sorted stably by their projected failures,
+        so that each outcome is shown as the earliest of its runs recorded it.
+     */
+    [[nodiscard]]
+    std::string analyse_output(const fs::path& filename, const std::vector<run_failures>& failuresFromFiles)
     {
       if(failuresFromFiles.size() <= 1) return "";
 
@@ -46,30 +73,40 @@ namespace sequoia::testing
 
       std::string freqs{"["};
       std::string messages{};
+
       while(++first != last)
       {
-        if(*first != *current)
+        if(first->projected != current->projected)
         {
           freqs += to_percent(std::ranges::distance(current, first)) += "%,";
-          auto[i,j]{std::ranges::mismatch(*current, *first)};
-          if(j == first->end())
+
+          const auto mismatchIndex{
+            static_cast<std::size_t>(
+              std::ranges::distance(current->projected.begin(),
+                                    std::ranges::mismatch(current->projected, first->projected).in1)
+            )
+          };
+
+          if(mismatchIndex == first->recorded.size())
           {
             throw std::logic_error{"Unable to identify instability"};
           }
-          else if(i == current->end())
+
+          const auto& newOutcomeMessage{first->recorded[mismatchIndex].message};
+          if(mismatchIndex == current->recorded.size())
           {
-            if(current->begin() == current->end())
+            if(current->recorded.empty())
             {
-              messages.append("--No failures--\n\nvs.\n\n").append(j->message);
+              messages.append("--No failures--\n\nvs.\n\n").append(indent(newOutcomeMessage, tab));
             }
             else
             {
               const auto commonMessage{
                 [current](){
                   std::string mess{};
-                  for(auto c{current->begin()}; c != current->end(); ++c)
+                  for(const auto& info : current->recorded)
                   {
-                    mess.append(c->message).append("\n");
+                    mess.append(indent(info.message, tab)).append("\n");
                   }
 
                   return mess;
@@ -78,15 +115,15 @@ namespace sequoia::testing
 
               messages.append(messages.empty() ? commonMessage : "\n");
 
-              messages.append(std::format("vs.\n\n{}{}", commonMessage, j->message));
+              messages.append(std::format("vs.\n\n{}{}", commonMessage, indent(newOutcomeMessage, tab)));
             }
           }
           else
           {
             if(current == initial)
-              messages.append(i->message);
+              messages.append(indent(current->recorded[mismatchIndex].message, tab));
 
-            messages.append("\nvs.\n\n").append(j->message);
+            messages.append("\nvs.\n\n").append(indent(newOutcomeMessage, tab));
           }
 
           current = first;
@@ -178,7 +215,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string instability_analysis(const fs::path& root, const std::size_t trials)
+  std::string instability_analysis(const fs::path& root, const std::size_t trials, const message_projection& projection)
   {
     if(trials <= 1) return "";
 
@@ -207,21 +244,16 @@ namespace sequoia::testing
     if(files.size() % trials)
       throw std::runtime_error{"Instability analysis: incorrect number of output files"};
 
-    auto readAndIndentFailureOutput{
-      [](const fs::path& file) {
-        auto indented{
-          [](const failure_info& info) {
-            return failure_info{info.check_index, indent(info.message, tab)};
-          }
-        };
-
+    auto readFailureOutput{
+      [&projection](const fs::path& file) -> run_failures {
         if(std::ifstream ifile{file, std::ios_base::binary})
         {
           try
           {
             failure_output output{};
             ifile >> output;
-            return output | std::views::transform(indented) | std::ranges::to<failure_output>();
+            auto projected{apply_projection(output, projection)};
+            return {.recorded{std::move(output)}, .projected{std::move(projected)}};
           }
           catch(const std::exception& e)
           {
@@ -238,13 +270,13 @@ namespace sequoia::testing
     };
 
     auto analyseTestFrom{
-      [&files, trials, &readAndIndentFailureOutput](std::size_t first) {
+      [&files, trials, &readFailureOutput](std::size_t first) {
         auto testFiles{std::span{files}.subspan(first, trials)};
         auto failuresFromFiles{
-          testFiles | std::views::transform(readAndIndentFailureOutput) | std::ranges::to<std::vector>()
+          testFiles | std::views::transform(readFailureOutput) | std::ranges::to<std::vector>()
         };
 
-        std::ranges::sort(failuresFromFiles);
+        std::ranges::stable_sort(failuresFromFiles, {}, &run_failures::projected);
         return analyse_output(source_from_instability_analysis(testFiles.front().parent_path()), failuresFromFiles);
       }
     };
