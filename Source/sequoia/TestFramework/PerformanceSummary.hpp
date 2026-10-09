@@ -9,7 +9,7 @@
 
 /** \file
     \brief The text of a relative performance check's summary, and the
-           zeroing of the values in it which vary from run to run.
+           zeroing of the measurements in it.
  */
 
 #include <chrono>
@@ -77,20 +77,21 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string task_durations_summary(relative_performance_durations durations);
 
-  /** \brief Returns `text` with the values in its summary lines which vary
-             from run to run set to zero.
+  /** \brief Returns `text` with the measurements in its summary lines set to
+             zero.
 
       A summary line is one which `speedup_summary`, `trials_summary` or
       `task_durations_summary` reprints exactly from the numbers it contains,
-      once any leading spaces and tabs are set aside. The leading spaces and
-      tabs stay as they are. The values set to zero are:
-      -# The measurements: the speed-up, the interval around it and the task
-         durations;
-      -# The attempt to which the measurements led, and its number of trials.
+      once any leading spaces and tabs are set aside. The values set to zero
+      are the measurements, each with its uncertainty and its sample:
+      -# The speed-up, and the interval around it;
+      -# The number of trials, and the attempt which made them;
+      -# The task durations.
 
-      The predicted interval and the number of attempts allowed stay as they
-      are, and so does every other line. So the results for two texts are
-      equal if and only if the texts differ only in the values set to zero.
+      The leading spaces and tabs, the predicted interval and the number of
+      attempts allowed stay as they are, and so does every other line. So the
+      results for two texts are equal if and only if the texts differ only in
+      their measurements.
    */
   [[nodiscard]]
   std::string text_with_zeroed_measurements(std::string_view text);

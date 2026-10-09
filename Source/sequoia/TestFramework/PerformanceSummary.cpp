@@ -17,10 +17,9 @@ namespace sequoia::testing
 {
   namespace
   {
-    /** \brief Returns `line` with the values in it which vary from run to run
-               set to zero.
+    /** \brief Returns `line` with its measurements set to zero.
 
-        `text_with_zeroed_measurements` states which lines hold such values,
+        `text_with_zeroed_measurements` states which lines hold measurements,
         and which values they are.
      */
     [[nodiscard]]
