@@ -30,7 +30,7 @@ Task durations: fast 0.00183s, slow 0.00366s
 
 False Negative Failure:
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 185
-Attempt 3 takes 3 standard errors and needs 2.5 to overlap [4.57, 5.94]; attempt 2 takes 2 and needs 3.2
+Attempts 1 and 2 fail at the gate; attempt 3 takes 3 standard errors and needs 2.5 to overlap [4.57, 5.94]
 
 Speed-up: 2.64 in [1.37, 5.1]; predicted [4.57, 5.94]
 Trials: 20, attempt 3 of 3

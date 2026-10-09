@@ -127,8 +127,8 @@ namespace sequoia::testing
     };
 
     check_relative_performance("A speed-up of 2, then of 0.5, then of 2",
-                               counted_spinner{1ms, trials_for_minimum_10[0],                            4ms},
-                               counted_spinner{2ms, trials_for_minimum_10[0] + trials_for_minimum_10[1], 8ms},
+                               counted_spinner{1ms, trials_for_minimum_10[0],                        4ms},
+                               counted_spinner{2ms, trials_before_attempt(trials_for_minimum_10, 3), 8ms},
                                parameters);
   }
 
@@ -182,15 +182,15 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("Attempt 3 takes 3 standard errors and needs 2.5 to overlap [4.57, 5.94]; "
-                               "attempt 2 takes 2 and needs 3.2",
-                               counted_spinner{3ms, trials_for_minimum_10[0] + trials_for_minimum_10[1], 2ms},
+    check_relative_performance("Attempts 1 and 2 fail at the gate; "
+                               "attempt 3 takes 3 standard errors and needs 2.5 to overlap [4.57, 5.94]",
+                               counted_spinner{3ms, trials_before_attempt(trials_for_minimum_10, 3), 2ms},
                                make_cycling_spinner({1ms, 6ms, 7ms, 7ms, 7ms}),
                                {.prediction{.lower{4.57}, .upper{5.94}}, .minimum_trials{10}});
 
     check_relative_performance("Attempt 3 takes 3 standard errors and needs 2.49 to overlap [1.86, 2.42]; "
                                "attempt 2 takes 2 and needs 7.62",
-                               counted_spinner{1ms, trials_for_minimum_10[0] + trials_for_minimum_10[1], 2ms},
+                               counted_spinner{1ms, trials_before_attempt(trials_for_minimum_10, 3), 2ms},
                                make_cycling_spinner({4ms, 4ms, 8ms, 8ms, 8ms}),
                                {.prediction{.lower{1.86}, .upper{2.42}}, .minimum_trials{10}});
   }

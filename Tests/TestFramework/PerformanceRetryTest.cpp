@@ -21,8 +21,8 @@ namespace sequoia::testing
   {
     constexpr std::chrono::milliseconds spin_unit{2};
 
-    /** \brief Parameters with an odd minimum, so that every rounding down of
-               a number of trials shows.
+    /** \brief Parameters with an odd minimum, so that a number of trials
+               rounded down differs from one rounded up.
      */
     constexpr relative_performance_parameters retry_parameters{
       .prediction{.lower{1.8}, .upper{2.2}}, .minimum_trials{11}
@@ -51,8 +51,8 @@ namespace sequoia::testing
                           slow{spin_unit, trials_for_minimum_11[0], 2 * spin_unit};
 
     check_relative_performance("A speed-up of 1, then of 2", fast, slow, retry_parameters);
-    check(equality, "Calls of the fast task", fast.calls(), trials_for_minimum_11[0] + trials_for_minimum_11[1]);
-    check(equality, "Calls of the slow task", slow.calls(), trials_for_minimum_11[0] + trials_for_minimum_11[1]);
+    check(equality, "Calls of the fast task", fast.calls(), trials_before_attempt(trials_for_minimum_11, 3));
+    check(equality, "Calls of the slow task", slow.calls(), trials_before_attempt(trials_for_minimum_11, 3));
   }
 
   void performance_retry_test::test_pass_at_final_attempt()
@@ -61,7 +61,7 @@ namespace sequoia::testing
     constexpr auto maximumCalls{retry_parameters.minimum_trials * attempts * (attempts + 3) / 4};
 
     const counted_spinner fast{spin_unit},
-                          slow{spin_unit, trials_for_minimum_11[0] + trials_for_minimum_11[1], 2 * spin_unit};
+                          slow{spin_unit, trials_before_attempt(trials_for_minimum_11, 3), 2 * spin_unit};
 
     check_relative_performance("A speed-up of 1 until the final attempt, then of 2", fast, slow, retry_parameters);
     check(equality, "Calls of the fast task, the contract's maximum", fast.calls(), maximumCalls);
@@ -81,7 +81,7 @@ namespace sequoia::testing
       make_cycling_spinner({1ms, 2ms, 8ms, 8ms, 8ms}),
       parameters
     );
-    check(equality, "Calls of the fast task", fast.calls(), trials_for_minimum_10[0] + trials_for_minimum_10[1]);
+    check(equality, "Calls of the fast task", fast.calls(), trials_before_attempt(trials_for_minimum_10, 3));
   }
 
   void performance_retry_test::test_constant_gate_multiplier()
@@ -97,7 +97,7 @@ namespace sequoia::testing
       make_cycling_spinner({2ms, 2ms, 3ms, 4ms, 9ms}),
       parameters
     );
-    check(equality, "Calls of the fast task", fast.calls(), trials_for_minimum_10[0] + trials_for_minimum_10[1]);
+    check(equality, "Calls of the fast task", fast.calls(), trials_before_attempt(trials_for_minimum_10, 3));
   }
 
   void performance_retry_test::test_trimmed_estimate()
@@ -138,7 +138,7 @@ namespace sequoia::testing
                                    recordedTask(task::fast, counted_spinner{spin_unit}),
                                    recordedTask(task::slow,
                                                 counted_spinner{spin_unit,
-                                                                trials_for_minimum_11[0] + trials_for_minimum_11[1],
+                                                                trials_before_attempt(trials_for_minimum_11, 3),
                                                                 2 * spin_unit}),
                                    retry_parameters);
 
@@ -152,9 +152,7 @@ namespace sequoia::testing
 
     auto tasksRunFirstInAttempt{
       [&taskCalls](std::size_t attempt) {
-        const auto priorTrials{
-          std::ranges::fold_left(trials_for_minimum_11 | std::views::take(attempt - 1), 0uz, std::plus<>{})
-        };
+        const auto priorTrials{trials_before_attempt(trials_for_minimum_11, attempt)};
 
         return
             taskCalls
