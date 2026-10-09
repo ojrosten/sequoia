@@ -52,7 +52,7 @@ Expected a line break after 3 characters
 
 =======================================
 
-Tests/TestFramework/FailureInfoTest.cpp, Line 48
+Tests/TestFramework/FailureInfoTest.cpp, Line 52
 A malformed file of failures, named by the instability analysis
 
 Expected Exception Type:

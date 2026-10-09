@@ -1609,7 +1609,9 @@ namespace sequoia::testing
        || (m_InstabilityMode == instability_mode::coordinator))
     {
       aggregate_instability_analysis_prune_files(proj_paths(), m_PruneMode, entry_time_stamp, m_NumReps);
-      stream() << instability_analysis(proj_paths().output().instability_analysis(), m_NumReps, instability_projection);
+      auto instabilityProjection{[](std::string_view message) { return instability_projection(message); }};
+
+      stream() << instability_analysis(proj_paths().output().instability_analysis(), m_NumReps, instabilityProjection);
     }
 
     return code | report_versioned_output_changes(baseline);
