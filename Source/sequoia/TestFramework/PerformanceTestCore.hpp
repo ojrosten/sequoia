@@ -70,10 +70,10 @@ namespace sequoia::testing
       std::span<const std::chrono::duration<double>> fast{}, slow{};
     };
 
-    /** \brief The judgement of one attempt of `check_relative_performance`,
-               and the measurements which support it.
+    /** \brief The outcome of one attempt of `check_relative_performance`:
+               why it failed, if it did, and its measurements.
      */
-    struct relative_performance_judgement
+    struct relative_performance_outcome
     {
       std::optional<relative_performance_failure> failure{};
       relative_performance_estimate               estimate{};
@@ -89,9 +89,9 @@ namespace sequoia::testing
         \throws std::runtime_error if any duration is not greater than zero.
      */
     [[nodiscard]]
-    relative_performance_judgement judge_attempt(const relative_performance_trial_durations& trialDurations,
-                                                 double overlapMultiplier,
-                                                 relative_performance_interval prediction);
+    relative_performance_outcome judge_attempt(const relative_performance_trial_durations& trialDurations,
+                                               double overlapMultiplier,
+                                               relative_performance_interval prediction);
 
     /** \brief Returns the lines reporting an attempt.
 
@@ -99,7 +99,7 @@ namespace sequoia::testing
         the speed-up, the trials and the task durations.
      */
     [[nodiscard]]
-    std::string attempt_summary(const relative_performance_judgement& judgement,
+    std::string attempt_summary(const relative_performance_outcome& outcome,
                                 std::size_t trials,
                                 std::size_t attempt,
                                 relative_performance_interval prediction);
@@ -219,14 +219,14 @@ namespace sequoia::testing
         }
       }
 
-      const auto judgement{
+      const auto outcome{
         impl::judge_attempt({.fast{fastDurations}, .slow{slowDurations}},
                             impl::overlap_multiplier(Mode, attempt),
                             parameters.prediction)
       };
 
-      passed  = !judgement.failure;
-      summary = impl::attempt_summary(judgement, trialsOfAttempt, attempt, parameters.prediction);
+      passed  = !outcome.failure;
+      summary = impl::attempt_summary(outcome, trialsOfAttempt, attempt, parameters.prediction);
 
       if((Mode == test_mode::false_negative) ? !passed : passed)
       {
