@@ -77,13 +77,15 @@ namespace sequoia::testing
     /** \brief Returns the exponential of the trimmed mean of the logarithms of
                `durations`.
      */
+    template<std::ranges::input_range Durations>
+      requires std::same_as<std::ranges::range_value_t<Durations>, std::chrono::duration<double>>
     [[nodiscard]]
-    std::chrono::duration<double> trimmed_geometric_mean(std::span<const std::chrono::duration<double>> durations)
+    std::chrono::duration<double> trimmed_geometric_mean(Durations&& durations)
     {
       auto logOf{[](std::chrono::duration<double> duration) { return std::log(duration.count()); }};
 
       auto logDurations{
-          durations
+          std::forward<Durations>(durations)
         | std::views::transform(logOf)
         | std::ranges::to<std::vector>()
       };
@@ -95,25 +97,28 @@ namespace sequoia::testing
   namespace impl
   {
     [[nodiscard]]
-    relative_performance_outcome judge_attempt(const relative_performance_trial_durations& trialDurations,
+    relative_performance_outcome judge_attempt(std::span<const relative_performance_durations> trialDurations,
                                                double overlapMultiplier,
                                                relative_performance_interval prediction)
     {
-      auto isNotPositive{
-        [](std::chrono::duration<double> duration) { return !(duration > std::chrono::duration<double>::zero()); }
+      auto eitherNotPositive{
+        [](relative_performance_durations durations) {
+          constexpr auto zero{std::chrono::duration<double>::zero()};
+          return !(durations.fast > zero) || !(durations.slow > zero);
+        }
       };
 
-      if(   std::ranges::any_of(trialDurations.fast, isNotPositive)
-         || std::ranges::any_of(trialDurations.slow, isNotPositive))
+      if(std::ranges::any_of(trialDurations, eitherNotPositive))
         throw std::runtime_error{"Relative performance test requires task durations > 0; "
                                  "a task too quick for the clock times as zero"};
 
       auto logRatio{
-        [](std::chrono::duration<double> fast, std::chrono::duration<double> slow) { return std::log(slow / fast); }
+        [](relative_performance_durations durations) { return std::log(durations.slow / durations.fast); }
       };
 
       auto logRatios{
-          std::views::zip_transform(logRatio, trialDurations.fast, trialDurations.slow)
+          trialDurations
+        | std::views::transform(logRatio)
         | std::ranges::to<std::vector>()
       };
 
@@ -144,6 +149,9 @@ namespace sequoia::testing
         }()
       };
 
+      auto fastOf{[](relative_performance_durations durations) { return durations.fast; }};
+      auto slowOf{[](relative_performance_durations durations) { return durations.slow; }};
+
       return {
         .failure{failure},
         .estimate{
@@ -151,8 +159,8 @@ namespace sequoia::testing
           .interval{.lower{std::exp(intervalLower)}, .upper{std::exp(intervalUpper)}}
         },
         .durations{
-          .fast{trimmed_geometric_mean(trialDurations.fast)},
-          .slow{trimmed_geometric_mean(trialDurations.slow)}
+          .fast{trimmed_geometric_mean(trialDurations | std::views::transform(fastOf))},
+          .slow{trimmed_geometric_mean(trialDurations | std::views::transform(slowOf))}
         }
       };
     }

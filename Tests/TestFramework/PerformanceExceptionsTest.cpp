@@ -77,22 +77,24 @@ namespace sequoia::testing
   void performance_exceptions_test::test_non_positive_durations()
   {
     using namespace std::chrono_literals;
-    using durations = std::array<std::chrono::duration<double>, 5>;
 
-    constexpr durations positive    {1s, 1s,  1s, 1s, 1s},
-                        withZero    {1s, 1s,  0s, 1s, 1s},
-                        withNegative{1s, 1s, -1s, 1s, 1s};
+    auto judgeAttemptContaining{
+      [](relative_performance_durations trial) {
+        return [trial]() {
+          const std::array<relative_performance_durations, 5> trialDurations{{
+            {.fast{1s}, .slow{1s}}, {.fast{1s}, .slow{1s}}, trial, {.fast{1s}, .slow{1s}}, {.fast{1s}, .slow{1s}}
+          }};
 
-    auto judge{
-      [](const durations& fast, const durations& slow) {
-        return [&fast, &slow]() {
-          return impl::judge_attempt({.fast{fast}, .slow{slow}}, 1.0, {.lower{2.0}, .upper{3.0}});
+          return impl::judge_attempt(trialDurations, 1.0, {.lower{2.0}, .upper{3.0}});
         };
       }
     };
 
-    check_exception_thrown<std::runtime_error>("A fast task timed as zero", judge(withZero, positive));
-    check_exception_thrown<std::runtime_error>("A slow task timed as zero", judge(positive, withZero));
-    check_exception_thrown<std::runtime_error>("A negative duration",       judge(positive, withNegative));
+    check_exception_thrown<std::runtime_error>("A fast task timed as zero",
+                                               judgeAttemptContaining({.fast{0s}, .slow{1s}}));
+    check_exception_thrown<std::runtime_error>("A slow task timed as zero",
+                                               judgeAttemptContaining({.fast{1s}, .slow{0s}}));
+    check_exception_thrown<std::runtime_error>("A negative duration",
+                                               judgeAttemptContaining({.fast{1s}, .slow{-1s}}));
   }
 }

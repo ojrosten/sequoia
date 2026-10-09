@@ -62,14 +62,6 @@ namespace sequoia::testing
 
   namespace impl
   {
-    /** \brief The durations of each task in the trials of one attempt, in
-               trial order.
-     */
-    struct relative_performance_trial_durations
-    {
-      std::span<const std::chrono::duration<double>> fast{}, slow{};
-    };
-
     /** \brief The outcome of one attempt of `check_relative_performance`:
                why it failed, if it did, and its measurements.
      */
@@ -81,15 +73,14 @@ namespace sequoia::testing
     };
 
     /** \brief Judges the speed-up of a fast task over a slow one from their
-               durations in one attempt, paired by trial.
+               durations in each trial of one attempt.
 
-        \pre `trialDurations.fast` and `trialDurations.slow` have the same
-        size, which is at least 5.
+        \pre `trialDurations` has at least 5 elements.
 
         \throws std::runtime_error if any duration is not greater than zero.
      */
     [[nodiscard]]
-    relative_performance_outcome judge_attempt(const relative_performance_trial_durations& trialDurations,
+    relative_performance_outcome judge_attempt(std::span<const relative_performance_durations> trialDurations,
                                                double overlapMultiplier,
                                                relative_performance_interval prediction);
 
@@ -120,6 +111,20 @@ namespace sequoia::testing
      */
     [[nodiscard]]
     std::vector<task_order> shuffled_task_orders(std::size_t trials, std::mt19937& generator);
+
+    /** \brief Returns the duration of a call of each task, with the tasks
+               called in `order`.
+     */
+    template<performance_task F, performance_task S>
+    [[nodiscard]]
+    relative_performance_durations time_trial(const F& fast, const S& slow, task_order order)
+    {
+      if(order == task_order::fast_then_slow)
+        return {.fast{profile(fast)}, .slow{profile(slow)}};
+
+      const auto slowDuration{profile(slow)};
+      return {.fast{profile(fast)}, .slow{slowDuration}};
+    }
   }
 
   /** \brief Checks that the speed-up of `fast` over `slow` is consistent with
@@ -189,40 +194,22 @@ namespace sequoia::testing
     std::string summary{};
     bool passed{};
 
-    auto recordDuration{
-       [](auto task, std::vector<std::chrono::duration<double>>& durations){
-         durations.push_back(profile(std::move(task)));
-       }
-    };
-
     std::mt19937 generator{std::random_device{}()};
+
+    auto timeTrial{[&fast, &slow](impl::task_order order) { return impl::time_trial(fast, slow, order); }};
 
     for(const auto attempt : std::views::iota(1uz, relative_performance_max_attempts + 1))
     {
       const auto trialsOfAttempt{parameters.trials * attempt};
 
-      std::vector<std::chrono::duration<double>> fastDurations{}, slowDurations{};
-      fastDurations.reserve(trialsOfAttempt);
-      slowDurations.reserve(trialsOfAttempt);
-
-      for(const auto order : impl::shuffled_task_orders(trialsOfAttempt, generator))
-      {
-        if(order == impl::task_order::fast_then_slow)
-        {
-          recordDuration(fast, fastDurations);
-          recordDuration(slow, slowDurations);
-        }
-        else
-        {
-          recordDuration(slow, slowDurations);
-          recordDuration(fast, fastDurations);
-        }
-      }
+      const auto trialDurations{
+          impl::shuffled_task_orders(trialsOfAttempt, generator)
+        | std::views::transform(timeTrial)
+        | std::ranges::to<std::vector>()
+      };
 
       const auto outcome{
-        impl::judge_attempt({.fast{fastDurations}, .slow{slowDurations}},
-                            impl::overlap_multiplier(Mode, attempt),
-                            parameters.prediction)
+        impl::judge_attempt(trialDurations, impl::overlap_multiplier(Mode, attempt), parameters.prediction)
       };
 
       passed  = !outcome.failure;

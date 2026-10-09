@@ -52,7 +52,7 @@ Fast task failure
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 94
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 93
 A fast task timed as zero
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 96
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 97
 A negative duration
 
 Expected Exception Type:
