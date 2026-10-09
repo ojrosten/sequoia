@@ -54,8 +54,8 @@ namespace sequoia::testing
              differently.
 
       Each failure's message passes through `projection` before the runs are
-      compared, so that what the projection discards, such as measured values,
-      is not a difference.
+      compared, so that what the projection discards, such as measurements, is
+      not a difference.
    */
   [[nodiscard]]
   std::string instability_analysis(const std::filesystem::path& root,

@@ -91,7 +91,8 @@ namespace sequoia::testing
       The leading spaces and tabs, the predicted interval and the number of
       attempts allowed stay as they are, and so does every other line. So the
       results for two texts are equal if and only if the texts differ only in
-      their measurements.
+      their measurements, provided no measurement prints as a value beyond the
+      largest `double`.
    */
   [[nodiscard]]
   std::string text_with_zeroed_measurements(std::string_view text);

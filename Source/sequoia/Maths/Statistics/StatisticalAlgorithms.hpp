@@ -13,9 +13,9 @@
     Each statistic of `data` is returned as `statistic_value_type_t<T, Data>`.
     It is computed in the common type of the type returned and the value type
     of the data, and converted once, on return. A statistic too large for the
-    type returned is converted as the platform converts floating-point values:
-    on an IEEE 754 platform it becomes an infinity, but C++ does not guarantee
-    this.
+    type returned is converted as the platform converts floating-point values.
+    That typically gives an infinity; for a type with no infinity, the
+    behaviour is undefined.
 */
 
 #include <algorithm>
@@ -334,9 +334,9 @@ namespace sequoia::maths
 
   /** \brief Returns the result of invoking `estimator` on `data`.
 
-      `estimator` is invoked as `estimator.template operator()<T>(data)`, and
-      must return a `standard_deviation_and_mean` of
-      `statistic_value_type_t<T, Data>`. The default estimator returns its
+      The call operator of `estimator` is invoked on `data`, with `T` as its
+      first template argument, and must return a `standard_deviation_and_mean`
+      of `statistic_value_type_t<T, Data>`. The default estimator returns its
       estimate of the population standard deviation, and the mean of `data`.
    */
   template<

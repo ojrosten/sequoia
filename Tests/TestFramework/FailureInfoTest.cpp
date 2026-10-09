@@ -7,7 +7,7 @@
 
 #include "FailureInfoTest.hpp"
 
-#include "sequoia/TestFramework/PerformanceSummary.hpp"
+#include "sequoia/TestFramework/TestRunner.hpp"
 
 namespace sequoia::testing
 {
@@ -43,7 +43,7 @@ namespace sequoia::testing
                                                readFailureInfo("check: 1\nlength: 3\nabcd\n"));
 
     auto analyseMalformed{
-      [this]() { return instability_analysis(working_materials() / "Malformed", 2, text_with_zeroed_measurements); }
+      [this]() { return instability_analysis(working_materials() / "Malformed", 2, instability_projection); }
     };
     check_exception_thrown<std::runtime_error>("A malformed file of failures, named by the instability analysis",
                                                analyseMalformed);
@@ -107,7 +107,7 @@ namespace sequoia::testing
   void failure_info_test::check_instability_analysis()
   {
     write_to_file(working_materials() / "StableAnalysis.txt",
-                  instability_analysis(working_materials() / "Stable", 2, text_with_zeroed_measurements),
+                  instability_analysis(working_materials() / "Stable", 2, instability_projection),
                   std::ios_base::binary);
 
     check(
@@ -118,12 +118,12 @@ namespace sequoia::testing
     );
 
     write_to_file(working_materials() / "MeasuredValuesAnalysis.txt",
-                  instability_analysis(working_materials() / "MeasuredValues", 2, text_with_zeroed_measurements),
+                  instability_analysis(working_materials() / "MeasuredValues", 2, instability_projection),
                   std::ios_base::binary);
 
     check(
       equivalence,
-      "Outputs which differ only in measured values",
+      "Outputs which differ only in measurements",
       working_materials() / "MeasuredValuesAnalysis.txt",
       predictive_materials() / "MeasuredValuesAnalysis.txt"
     );
@@ -136,18 +136,18 @@ namespace sequoia::testing
 
     check(
       equivalence,
-      "Outputs which differ only in measured values, compared with no projection",
+      "Outputs which differ only in measurements, compared with no projection",
       working_materials() / "MeasuredValuesUnprojectedAnalysis.txt",
       predictive_materials() / "MeasuredValuesUnprojectedAnalysis.txt"
     );
 
     write_to_file(working_materials() / "VerdictsAnalysis.txt",
-                  instability_analysis(working_materials() / "Verdicts", 2, text_with_zeroed_measurements),
+                  instability_analysis(working_materials() / "Verdicts", 2, instability_projection),
                   std::ios_base::binary);
 
     check(
       equivalence,
-      "Outputs which differ in a verdict, as well as in measured values",
+      "Outputs which differ in a verdict, as well as in measurements",
       working_materials() / "VerdictsAnalysis.txt",
       predictive_materials() / "VerdictsAnalysis.txt"
     );
@@ -155,12 +155,12 @@ namespace sequoia::testing
     write_to_file(working_materials() / "VerdictsAfterMeasuredValuesAnalysis.txt",
                   instability_analysis(working_materials() / "VerdictsAfterMeasuredValues",
                                        3,
-                                       text_with_zeroed_measurements),
+                                       instability_projection),
                   std::ios_base::binary);
 
     check(
       equivalence,
-      "Outputs which differ in a verdict, after a failure which differs only in measured values",
+      "Outputs which differ in a verdict, after a failure which differs only in measurements",
       working_materials() / "VerdictsAfterMeasuredValuesAnalysis.txt",
       predictive_materials() / "VerdictsAfterMeasuredValuesAnalysis.txt"
     );

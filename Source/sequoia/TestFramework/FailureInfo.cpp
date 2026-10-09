@@ -46,7 +46,8 @@ namespace sequoia::testing
     /** \brief Reports the outcomes of repeated runs of a test, if they differ
                once each message is projected.
 
-        `failuresFromFiles` must be sorted by their projected failures.
+        `failuresFromFiles` must be sorted stably by their projected failures,
+        so that each outcome is shown as the earliest of its runs recorded it.
      */
     [[nodiscard]]
     std::string analyse_output(const fs::path& filename, const std::vector<run_failures>& failuresFromFiles)
@@ -272,7 +273,7 @@ namespace sequoia::testing
           testFiles | std::views::transform(readFailureOutput) | std::ranges::to<std::vector>()
         };
 
-        std::ranges::sort(failuresFromFiles, {}, &run_failures::projected);
+        std::ranges::stable_sort(failuresFromFiles, {}, &run_failures::projected);
         return analyse_output(source_from_instability_analysis(testFiles.front().parent_path()), failuresFromFiles);
       }
     };

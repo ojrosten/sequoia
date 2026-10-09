@@ -26,7 +26,7 @@ namespace sequoia::testing
     std::string line_with_zeroed_measurements(std::string_view line)
     {
       const auto indentationSize{std::min(line.find_first_not_of(" \t"), line.size())};
-      std::string_view indentation{line.substr(0, indentationSize)}, unindented{line.substr(indentationSize)};
+      const std::string_view indentation{line.substr(0, indentationSize)}, unindented{line.substr(indentationSize)};
 
       auto indented{[indentation](std::string_view zeroed) { return std::format("{}{}", indentation, zeroed); }};
 

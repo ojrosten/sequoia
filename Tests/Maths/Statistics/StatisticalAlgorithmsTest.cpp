@@ -90,7 +90,7 @@ namespace sequoia::testing
       [[nodiscard]]
       maths::standard_deviation_and_mean<maths::statistic_value_type_t<T, Data>> operator()(Data&&) const
       {
-        return {.standard_deviation{42}};
+        return {.standard_deviation{static_cast<maths::statistic_value_type_t<T, Data>>(42)}};
       }
     };
 
@@ -451,10 +451,11 @@ namespace sequoia::testing
   {
     using doubles = const std::vector<double>&;
 
+    STATIC_CHECK(sample_standard_deviation_accepts_estimator<void, doubles, fixed_estimator>);
     STATIC_CHECK(sample_standard_deviation_accepts_estimator<float, doubles, fixed_estimator>);
     STATIC_CHECK(!sample_standard_deviation_accepts_estimator<void, doubles, estimator_without_requested_type>);
 
     const auto ssd{maths::sample_standard_deviation<float>(std::vector<double>{2, 4, 9}, fixed_estimator{})};
-    check(equality, "The custom estimator's estimate", ssd.standard_deviation, std::optional<float>{42});
+    check(equality, "The custom estimator's estimate", ssd.standard_deviation, std::optional<float>{42.0f});
   }
 }
