@@ -7,6 +7,8 @@
 
 #include "PerformanceExceptionsTest.hpp"
 
+#include <array>
+#include <chrono>
 #include <limits>
 #include <stdexcept>
 
@@ -22,6 +24,7 @@ namespace sequoia::testing
   {
     test_invalid_arguments();
     test_throwing_task();
+    test_non_positive_durations();
   }
 
   void performance_exceptions_test::test_invalid_arguments()
@@ -69,5 +72,27 @@ namespace sequoia::testing
     };
 
     check_exception_thrown<std::runtime_error>("Fast task throws", checkWithThrowingFastTask);
+  }
+
+  void performance_exceptions_test::test_non_positive_durations()
+  {
+    using namespace std::chrono_literals;
+    using durations = std::array<std::chrono::duration<double>, 5>;
+
+    constexpr durations positive    {1s, 1s,  1s, 1s, 1s},
+                        withZero    {1s, 1s,  0s, 1s, 1s},
+                        withNegative{1s, 1s, -1s, 1s, 1s};
+
+    auto judge{
+      [](const durations& fast, const durations& slow) {
+        return [&fast, &slow]() {
+          return impl::judge_attempt(fast, slow, 1.0, {.lower{2.0}, .upper{3.0}});
+        };
+      }
+    };
+
+    check_exception_thrown<std::runtime_error>("A fast task timed as zero", judge(withZero, positive));
+    check_exception_thrown<std::runtime_error>("A slow task timed as zero", judge(positive, withZero));
+    check_exception_thrown<std::runtime_error>("A negative duration",       judge(positive, withNegative));
   }
 }

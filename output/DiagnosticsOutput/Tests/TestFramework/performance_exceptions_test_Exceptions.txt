@@ -1,4 +1,4 @@
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 42
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 45
 Minimum speed-up of 1
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 45
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 48
 Maximum speed-up of 1
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 48
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 51
 Minimum speed-up of NaN
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 51
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 54
 Minimum speed-up exceeding the maximum
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ prediction.upper must be >= prediction.lower
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 54
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 57
 Four trials
 
 Expected Exception Type:
@@ -43,12 +43,39 @@ Number of trials is required to be > 4
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 71
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 74
 Fast task throws
 
 Expected Exception Type:
 [std::runtime_error]
 Fast task failure
+
+=======================================
+
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 94
+A fast task timed as zero
+
+Expected Exception Type:
+[std::runtime_error]
+Relative performance test requires task durations > 0; a task too quick for the clock times as zero
+
+=======================================
+
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 95
+A slow task timed as zero
+
+Expected Exception Type:
+[std::runtime_error]
+Relative performance test requires task durations > 0; a task too quick for the clock times as zero
+
+=======================================
+
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 96
+A negative duration
+
+Expected Exception Type:
+[std::runtime_error]
+Relative performance test requires task durations > 0; a task too quick for the clock times as zero
 
 =======================================
 

@@ -24,6 +24,7 @@
 
 namespace sequoia::testing
 {
+  /** \brief Returns the duration of a call of `task`. */
   template<class Task>
     requires std::invocable<Task&>
   [[nodiscard]]
@@ -39,22 +40,15 @@ namespace sequoia::testing
   template<class T>
   concept copy_constructible_task = std::invocable<T&> && std::copy_constructible<T>;
 
-  /** \brief The half-width, in standard errors, of the interval with which
-             every attempt of `check_relative_performance` judges whether
-             the fast task is faster.
-   */
-  inline constexpr double relative_performance_confidence_multiplier{3.0};
-
   /** \brief The maximum number of attempts `check_relative_performance`
              makes, counting the first.
    */
   inline constexpr std::size_t relative_performance_max_attempts{3};
 
   /** \brief The interval of speed-ups predicted for a fast task over a slow
-             one, and the number of trials with which to test it.
+             one, and the number of trials in the first attempt.
 
-      - `trials`: the number of trials in the first attempt. Attempt `k` runs
-        `k * trials`.
+      Attempt `k` runs `k * trials` trials.
    */
   struct relative_performance_parameters
   {
@@ -76,12 +70,17 @@ namespace sequoia::testing
 
     /** \brief Judges the speed-up of a fast task over a slow one from the
                durations of each in one attempt, paired by trial.
+
+        \pre `fastDurations` and `slowDurations` have the same size, which is
+        at least 5.
+
+        \throws std::runtime_error if any duration is not greater than zero.
      */
     [[nodiscard]]
     relative_performance_judgement judge_attempt(std::span<const std::chrono::duration<double>> fastDurations,
                                                  std::span<const std::chrono::duration<double>> slowDurations,
                                                  double overlapMultiplier,
-                                                 const relative_performance_parameters& parameters);
+                                                 relative_performance_interval prediction);
 
     /** \brief Returns the lines reporting an attempt.
 
@@ -92,7 +91,7 @@ namespace sequoia::testing
     std::string attempt_summary(const relative_performance_judgement& judgement,
                                 std::size_t trials,
                                 std::size_t attempt,
-                                const relative_performance_parameters& parameters);
+                                relative_performance_interval prediction);
 
     /** \brief Returns the half-width, in standard errors, of the interval
                which attempt `attempt` compares with the predicted interval.
@@ -132,51 +131,29 @@ namespace sequoia::testing
        while any other state it uses, such as state reached through a
        reference or a pointer, is shared by every trial.
 
-       An attempt of N trials takes the log-ratio of each trial's durations,
-       `d = ln(slow / fast)`. The check trims the smallest g and the largest g
-       of the N log-ratios, where g is a tenth of N, rounded up. The estimate,
-       m, is the mean of the rest. Its standard error is
-
-          SE = s_w / ((1 - 2g/N) * sqrt(N))
-
-       where s_w is the winsorized sample standard deviation of the
-       log-ratios. Attempt k passes if and only if both
-
-          m - c * SE > 0
-
-       and the interval [m - c_k * SE, m + c_k * SE] overlaps
-       [ln(p.lower), ln(p.upper)], where p is `parameters.prediction`. Here c
-       is `relative_performance_confidence_multiplier`, and
-
-          c_k = c * k / A
-
-       The first condition is a gate on whether the fast task is
-       distinguishably faster. It takes c on every attempt, so an early
-       attempt, with few trials, does not relax the gate. Only the interval's
-       multiplier rises with the attempts.
+       Each attempt estimates the speed-up from the ratio of the tasks'
+       durations in each trial, and puts an interval around the estimate. The
+       attempt passes if both the fast task is distinguishably faster and the
+       interval overlaps the predicted one.
 
        The check passes if any attempt passes, and stops at the first that
        does. In false-negative mode the polarity is reversed: the check passes
        only if every attempt passes, and stops at the first that fails. In
-       that mode c_k = c for every k. In either mode each task runs at most
+       every mode each task runs at most
        `parameters.trials * A * (A + 1) / 2` times.
 
-       The summary reports the last attempt. It gives the speed-up, exp(m),
-       and the exponentials of the interval's ends. It gives the number of
-       trials, and the attempt. And it gives each
-       task's typical duration: the exponential of the trimmed mean of the
-       logarithms of its durations. If the last attempt failed, the summary
-       also gives the reason, a `relative_performance_failure`:
-       -# `slower`, if m + c * SE < 0;
-       -# `not_distinguishably_faster`, if the gate fails, and m + c * SE is
-          not below 0;
-       -# `faster_but_less_than_predicted`, if the gate passes, and the
-          interval lies wholly below ln(p.lower);
-       -# `suspiciously_fast`, if the gate passes, and the interval lies
-          wholly above ln(p.upper).
+       The summary reports the last attempt. It gives the speed-up, the
+       interval around it, the number of trials, the attempt, and each task's
+       typical duration. If the last attempt failed, the summary also gives
+       the reason, a `relative_performance_failure`.
 
-       \throws std::invalid_argument if either end of p is not greater than
-       1, if p.lower exceeds p.upper, or if `parameters.trials` is less than 5.
+       Any exception thrown by `fast` or `slow` propagates.
+
+       \throws std::invalid_argument if either end of `parameters.prediction`
+       is not greater than 1, if its lower end exceeds its upper end, or if
+       `parameters.trials` is less than 5.
+
+       \throws std::runtime_error if a trial times either task as zero.
    */
   template<test_mode Mode, copy_constructible_task F, copy_constructible_task S>
   bool check_relative_performance(std::string_view description,
@@ -200,9 +177,9 @@ namespace sequoia::testing
     std::string summary{};
     bool passed{};
 
-    auto timer{
-       [](auto task, std::vector<std::chrono::duration<double>>& timings){
-         timings.push_back(profile(std::move(task)));
+    auto recordDuration{
+       [](auto task, std::vector<std::chrono::duration<double>>& durations){
+         durations.push_back(profile(std::move(task)));
        }
     };
 
@@ -212,30 +189,33 @@ namespace sequoia::testing
     {
       const auto trialsOfAttempt{parameters.trials * attempt};
 
-      std::vector<std::chrono::duration<double>> fastData{}, slowData{};
-      fastData.reserve(trialsOfAttempt);
-      slowData.reserve(trialsOfAttempt);
+      std::vector<std::chrono::duration<double>> fastDurations{}, slowDurations{};
+      fastDurations.reserve(trialsOfAttempt);
+      slowDurations.reserve(trialsOfAttempt);
 
       for(const auto first : impl::shuffled_task_orders(trialsOfAttempt, generator))
       {
         if(first == impl::first_task::fast)
         {
-          timer(fast, fastData);
-          timer(slow, slowData);
+          recordDuration(fast, fastDurations);
+          recordDuration(slow, slowDurations);
         }
         else
         {
-          timer(slow, slowData);
-          timer(fast, fastData);
+          recordDuration(slow, slowDurations);
+          recordDuration(fast, fastDurations);
         }
       }
 
       const auto judgement{
-        impl::judge_attempt(fastData, slowData, impl::overlap_multiplier(Mode, attempt), parameters)
+        impl::judge_attempt(fastDurations,
+                            slowDurations,
+                            impl::overlap_multiplier(Mode, attempt),
+                            parameters.prediction)
       };
 
       passed  = !judgement.failure;
-      summary = impl::attempt_summary(judgement, trialsOfAttempt, attempt, parameters);
+      summary = impl::attempt_summary(judgement, trialsOfAttempt, attempt, parameters.prediction);
 
       if((Mode == test_mode::false_negative) ? !passed : passed)
       {

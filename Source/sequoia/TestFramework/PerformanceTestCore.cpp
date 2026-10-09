@@ -14,7 +14,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <compare>
 #include <format>
 #include <ranges>
 
@@ -22,19 +21,17 @@ namespace sequoia::testing
 {
   namespace
   {
-    /** \brief Orders doubles totally, so that sorting is defined even with
-               NaNs among them.
-
-        A task too quick for the clock times as zero, and the log-ratio of two
-        such timings is NaN.
+    /** \brief The half-width, in standard errors, of the interval with which
+               every attempt judges whether the fast task is distinguishably
+               faster.
      */
-    constexpr auto total_order{[](double lhs, double rhs) { return std::strong_order(lhs, rhs) < 0; }};
+    constexpr double confidence_multiplier{3.0};
 
     /** \brief Returns the number trimmed from each end of `n` sorted data: a
                tenth of `n`, rounded up.
      */
     [[nodiscard]]
-    std::size_t num_trimmed_from_each_end(std::size_t n) noexcept
+    constexpr std::size_t num_trimmed_from_each_end(std::size_t n) noexcept
     {
       return (n + 9) / 10;
     }
@@ -49,14 +46,17 @@ namespace sequoia::testing
 
     /** \brief Estimates the trimmed mean of `data`, and its standard error.
 
-        The standard error is Tukey and McLaughlin's: the winsorized sample
-        standard deviation, divided by the fraction of data kept and by the
-        square root of the number of data.
+        The standard error is Tukey and McLaughlin's:
+
+          SE = s_w / ((1 - 2g/N) * sqrt(N))
+
+        Here N is the number of data, g the number trimmed from each end, and
+        s_w the winsorized sample standard deviation.
      */
     [[nodiscard]]
     trimmed_mean_estimate estimate_trimmed_mean(std::vector<double> data)
     {
-      std::ranges::sort(data, total_order);
+      std::ranges::sort(data);
 
       const auto n{data.size()};
       const auto numTrimmed{num_trimmed_from_each_end(n)};
@@ -82,9 +82,13 @@ namespace sequoia::testing
     {
       auto logOf{[](std::chrono::duration<double> duration) { return std::log(duration.count()); }};
 
-      return std::chrono::duration<double>{
-        std::exp(estimate_trimmed_mean(durations | std::views::transform(logOf) | std::ranges::to<std::vector>()).mean)
+      auto logDurations{
+          durations
+        | std::views::transform(logOf)
+        | std::ranges::to<std::vector>()
       };
+
+      return std::chrono::duration<double>{std::exp(estimate_trimmed_mean(std::move(logDurations)).mean)};
     }
   }
 
@@ -94,33 +98,46 @@ namespace sequoia::testing
     relative_performance_judgement judge_attempt(std::span<const std::chrono::duration<double>> fastDurations,
                                                  std::span<const std::chrono::duration<double>> slowDurations,
                                                  double overlapMultiplier,
-                                                 const relative_performance_parameters& parameters)
+                                                 relative_performance_interval prediction)
     {
+      auto isNotPositive{
+        [](std::chrono::duration<double> duration) { return !(duration > std::chrono::duration<double>::zero()); }
+      };
+
+      if(std::ranges::any_of(fastDurations, isNotPositive) || std::ranges::any_of(slowDurations, isNotPositive))
+        throw std::runtime_error{"Relative performance test requires task durations > 0; "
+                                 "a task too quick for the clock times as zero"};
+
       auto logRatio{
         [](std::chrono::duration<double> fast, std::chrono::duration<double> slow) { return std::log(slow / fast); }
       };
 
-      const auto [mean, standardError]{
-        estimate_trimmed_mean(
-          std::views::zip_transform(logRatio, fastDurations, slowDurations) | std::ranges::to<std::vector>()
-        )
+      auto logRatios{
+          std::views::zip_transform(logRatio, fastDurations, slowDurations)
+        | std::ranges::to<std::vector>()
       };
 
-      const double gateMin    {mean - relative_performance_confidence_multiplier * standardError},
-                   gateMax    {mean + relative_performance_confidence_multiplier * standardError},
-                   intervalMin{mean - overlapMultiplier * standardError},
-                   intervalMax{mean + overlapMultiplier * standardError};
+      const auto [mean, standardError]{estimate_trimmed_mean(std::move(logRatios))};
+
+      // The gate takes confidence_multiplier on every attempt, not
+      // overlapMultiplier. An early attempt's overlapMultiplier is smaller,
+      // and with it tasks of equal speed would too often pass the gate.
+      const double gateLower    {mean - confidence_multiplier * standardError},
+                   gateUpper    {mean + confidence_multiplier * standardError},
+                   intervalLower{mean - overlapMultiplier * standardError},
+                   intervalUpper{mean + overlapMultiplier * standardError};
 
       const auto failure{
-        [gateMin, gateMax, intervalMin, intervalMax, &parameters]() -> std::optional<relative_performance_failure> {
-          if(!(gateMin > 0))
-            return gateMax < 0 ? relative_performance_failure::slower
-                               : relative_performance_failure::not_distinguishably_faster;
+        [gateLower, gateUpper, intervalLower, intervalUpper, prediction]()
+          -> std::optional<relative_performance_failure> {
+          if(!(gateLower > 0))
+            return gateUpper < 0 ? relative_performance_failure::slower
+                                 : relative_performance_failure::not_distinguishably_faster;
 
-          if(intervalMax < std::log(parameters.prediction.lower))
+          if(intervalUpper < std::log(prediction.lower))
             return relative_performance_failure::faster_but_less_than_predicted;
 
-          if(intervalMin > std::log(parameters.prediction.upper))
+          if(intervalLower > std::log(prediction.upper))
             return relative_performance_failure::suspiciously_fast;
 
           return std::nullopt;
@@ -131,7 +148,7 @@ namespace sequoia::testing
         .failure{failure},
         .estimate{
           .speedup{std::exp(mean)},
-          .interval{.lower{std::exp(intervalMin)}, .upper{std::exp(intervalMax)}}
+          .interval{.lower{std::exp(intervalLower)}, .upper{std::exp(intervalUpper)}}
         },
         .durations{.fast{trimmed_geometric_mean(fastDurations)}, .slow{trimmed_geometric_mean(slowDurations)}}
       };
@@ -141,10 +158,10 @@ namespace sequoia::testing
     std::string attempt_summary(const relative_performance_judgement& judgement,
                                 std::size_t trials,
                                 std::size_t attempt,
-                                const relative_performance_parameters& parameters)
+                                relative_performance_interval prediction)
     {
       return append_lines(judgement.failure ? verdict_summary(*judgement.failure) : "",
-                          speedup_summary(judgement.estimate, parameters.prediction),
+                          speedup_summary(judgement.estimate, prediction),
                           trials_summary(trials, {.current{attempt}, .maximum{relative_performance_max_attempts}}),
                           task_durations_summary(judgement.durations));
     }
@@ -152,9 +169,13 @@ namespace sequoia::testing
     [[nodiscard]]
     double overlap_multiplier(test_mode mode, std::size_t attempt)
     {
+      // A check in standard mode fails only if its last attempt fails, and
+      // the last attempt takes the full multiplier. False-negative mode stops
+      // at the first failing attempt. So in that mode every attempt takes the
+      // full multiplier, and each applies the rule which decides a failure.
       return (mode == test_mode::false_negative)
-        ? relative_performance_confidence_multiplier
-        : relative_performance_confidence_multiplier * static_cast<double>(attempt) / relative_performance_max_attempts;
+        ? confidence_multiplier
+        : confidence_multiplier * static_cast<double>(attempt) / relative_performance_max_attempts;
     }
 
     [[nodiscard]]
@@ -217,7 +238,7 @@ namespace sequoia::testing
           if(std::filesystem::exists(filename))
           {
             if(auto contents{read_to_string(filename, std::ios_base::in | std::ios_base::binary)})
-              return contents.value();
+              return *std::move(contents);
 
             throw std::runtime_error{report_failed_read(filename)};
           }
