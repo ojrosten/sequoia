@@ -28,9 +28,17 @@ name: watchdog
 # after sixty days without activity, this one included. Nothing here can see
 # that.
 #
-# The cron lines are read from the checkout, so a dispatch from a branch
-# judges that branch's schedules against the runs that main's produced. A
-# control dispatch is unaffected, since it looks for nothing.
+# A schedule fires only once its file is on main, so a tick before the
+# schedule arrived there is not a miss. Each schedule is compared with the one
+# the branch carried at its tick, read from the branch's history by
+# scripts/cron_line_at.sh, and a schedule that differed, or was absent, is
+# reported as new, with nothing due. A tick that a reschedule moved is not
+# watched either, under its old time or its new: the alarm waits for the
+# next.
+#
+# The cron lines are read from the checked-out branch, so a dispatch from a
+# branch judges that branch's schedules against the runs that main's produced.
+# A control dispatch is unaffected, since it looks for nothing.
 #
 # It raises an alarm and does nothing more. Dispatching the missing run would
 # not stand in for it: a dispatched run is not a `schedule` event, so
@@ -70,7 +78,12 @@ jobs:
       GH_REPO: ${{ github.repository }}
       CONTROL: ${{ inputs.control == true }}
     steps:
+      # The whole history, for cron_line_at.sh, without the files of every
+      # commit: it fetches the few it reads.
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          filter: blob:none
 
       - name: A run exists since each schedule's most recent tick
         run: |
@@ -78,17 +91,14 @@ jobs:
           midnight=$(( now - now % 86400 ))
           weekday=$(( (now / 86400 + 4) % 7 ))   # 1970-01-01 was a Thursday; 0 is Sunday, as in cron
 
-          # The epoch second of the watched file's most recent cron tick. Only
-          # the two shapes in use are understood, `M H * * *` and `M H * * D`.
-          # Any other shape is an error here, rather than a window silently
+          # The epoch second of a cron expression's most recent tick. Only the
+          # two shapes in use are understood, `M H * * *` and `M H * * D`. Any
+          # other shape is an error here, rather than a window silently
           # mis-sized.
-          last_tick() {
-            cron=$(sed -n "s/^ *- cron: '\(.*\)'$/\1/p" ".github/workflows/$1")
-            lines=$(printf '%s' "$cron" | grep -c .)
-            [ "$lines" -eq 1 ] || { echo "::error::$1 carries $lines cron lines, not one" >&2; return 1; }
-            read -r minute hour dom month dow <<<"$cron"
+          last_tick() {   # workflow file, cron expression
+            read -r minute hour dom month dow <<<"$2"
             [[ $minute =~ ^([0-9]|[1-5][0-9])$ && $hour =~ ^([0-9]|1[0-9]|2[0-3])$ && $dom = '*' && $month = '*' && $dow =~ ^([0-6]|\*)$ ]] \
-              || { echo "::error::$1: cannot compute a tick from '$cron'" >&2; return 1; }
+              || { echo "::error::$1: cannot compute a tick from '$2'" >&2; return 1; }
             tick=$(( midnight + hour * 3600 + minute * 60 ))
             if [ "$dow" = '*' ]; then
               period=86400
@@ -101,9 +111,16 @@ jobs:
           }
 
           check() {   # workflow file, what to call it
-            tick=$(last_tick "$1") || return 1
+            cron=$(scripts/cron_line_at.sh ".github/workflows/$1" "$now") || return 1
+            [ -n "$cron" ] || { echo "::error::$1 carries no cron line"; return 1; }
+            tick=$(last_tick "$1" "$cron") || return 1
             if [ "$CONTROL" = true ]; then tick=$now; fi
             since=$(date -u -d "@$tick" +%Y-%m-%dT%H:%M:%S+00:00)
+            cron_at_tick=$(scripts/cron_line_at.sh ".github/workflows/$1" "$tick") || return 1
+            if [ "$cron_at_tick" != "$cron" ]; then
+              echo "new   $2 was not scheduled '$cron' on $GITHUB_REF_NAME at its tick at $since, so nothing was due"
+              return 0
+            fi
             run=$(gh run list --workflow "$1" --event schedule --created ">=$since" \
                     --json databaseId,createdAt,conclusion,status --jq 'last // empty') \
               || { echo "::error::could not list the runs of $1"; return 1; }
