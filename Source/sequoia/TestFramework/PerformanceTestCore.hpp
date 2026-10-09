@@ -84,16 +84,16 @@ namespace sequoia::testing
                                                double overlapMultiplier,
                                                relative_performance_interval prediction);
 
-    /** \brief Returns the lines reporting an attempt.
+    /** \brief Summarizes an attempt in lines of text.
 
         The lines give the reason the attempt failed, if it did. Then they give
         the speed-up, the trials and the task durations.
      */
     [[nodiscard]]
-    std::string attempt_summary(const relative_performance_outcome& outcome,
-                                std::size_t trials,
-                                std::size_t attempt,
-                                relative_performance_interval prediction);
+    std::string summarize_attempt(const relative_performance_outcome& outcome,
+                                  std::size_t trials,
+                                  std::size_t attempt,
+                                  relative_performance_interval prediction);
 
     /** \brief Returns the half-width, in standard errors, of the interval
                which attempt `attempt` compares with the predicted interval.
@@ -213,7 +213,7 @@ namespace sequoia::testing
       };
 
       passed  = !outcome.failure;
-      summary = impl::attempt_summary(outcome, trialsOfAttempt, attempt, parameters.prediction);
+      summary = impl::summarize_attempt(outcome, trialsOfAttempt, attempt, parameters.prediction);
 
       if((Mode == test_mode::false_negative) ? !passed : passed)
       {

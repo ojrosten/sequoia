@@ -166,10 +166,10 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string attempt_summary(const relative_performance_outcome& outcome,
-                                std::size_t trials,
-                                std::size_t attempt,
-                                relative_performance_interval prediction)
+    std::string summarize_attempt(const relative_performance_outcome& outcome,
+                                  std::size_t trials,
+                                  std::size_t attempt,
+                                  relative_performance_interval prediction)
     {
       return append_lines(outcome.failure ? verdict_summary(*outcome.failure) : "",
                           speedup_summary(outcome.estimate, prediction),
