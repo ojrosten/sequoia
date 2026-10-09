@@ -44,19 +44,19 @@ namespace sequoia::testing
 
     check_exception_thrown<std::invalid_argument>("Minimum speed-up of 1",
                                                   relativePerformanceCheck({.prediction{.lower{1.0}, .upper{2.0}},
-                                                                            .trials{5}}));
+                                                                            .minimum_trials{10}}));
     check_exception_thrown<std::invalid_argument>("Maximum speed-up of 1",
                                                   relativePerformanceCheck({.prediction{.lower{1.5}, .upper{1.0}},
-                                                                            .trials{5}}));
+                                                                            .minimum_trials{10}}));
     check_exception_thrown<std::invalid_argument>("Minimum speed-up of NaN",
                                                   relativePerformanceCheck({.prediction{.lower{nan}, .upper{2.0}},
-                                                                            .trials{5}}));
+                                                                            .minimum_trials{10}}));
     check_exception_thrown<std::invalid_argument>("Minimum speed-up exceeding the maximum",
                                                   relativePerformanceCheck({.prediction{.lower{2.5}, .upper{2.0}},
-                                                                            .trials{5}}));
-    check_exception_thrown<std::invalid_argument>("Four trials",
+                                                                            .minimum_trials{10}}));
+    check_exception_thrown<std::invalid_argument>("Nine trials",
                                                   relativePerformanceCheck({.prediction{.lower{2.0}, .upper{3.0}},
-                                                                            .trials{4}}));
+                                                                            .minimum_trials{9}}));
   }
 
   void performance_exceptions_test::test_throwing_task()
@@ -67,7 +67,7 @@ namespace sequoia::testing
                                           []() { throw std::runtime_error{"Fast task failure"}; },
                                           []() {},
                                           {.prediction{.lower{2.0}, .upper{3.0}},
-                                           .trials{5}});
+                                           .minimum_trials{10}});
       }
     };
 
