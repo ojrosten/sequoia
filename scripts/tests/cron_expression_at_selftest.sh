@@ -1,14 +1,14 @@
 #!/bin/bash
-# Controls for cron_line_at.sh, against repositories built here with the times
-# of their commits set, and a mutation check of the controls.
+# Controls for cron_expression_at.sh, against repositories built here with the
+# times of their commits set, and a mutation check of the controls.
 #
-#   cron_line_at_selftest.sh [--mutations]
+#   cron_expression_at_selftest.sh [--mutations]
 #
 # Without --mutations, the selftest runs the controls. With it, the selftest
 # runs the controls against the script and against each mutant of the script.
 # The script must fail no control, and each mutant at least one.
 #
-# The history, in seconds after a base time B, on the first-parent chain of
+# The history, in seconds after a base time, on the first-parent chain of
 # main:
 #   0    the root, with no workflow;
 #   100  wf.yml added, scheduled A;
@@ -35,7 +35,7 @@
 
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
-script=$here/../cron_line_at.sh
+script=$here/../cron_expression_at.sh
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 
@@ -48,7 +48,7 @@ esac
 # repositories built here.
 unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_COMMON_DIR
 
-B=1790000000
+base=1790000000
 A_cron='1 2 * * *' B_cron='5 6 * * *' C_cron='9 10 * * 0'
 
 # workflow <cron expression>: a workflow file's text, with a commented-out
@@ -57,9 +57,9 @@ workflow() {
   printf '%s\n' 'on:' '  schedule:' "  # - cron: '0 0 * * *'" "    - cron: '$1'"
 }
 
-# commit_at <seconds after B> <message>, in the current directory.
+# commit_at <seconds after the base> <message>, in the current directory.
 commit_at() {
-  GIT_AUTHOR_DATE="@$((B + $1)) +0000" GIT_COMMITTER_DATE="@$((B + $1)) +0000" \
+  GIT_AUTHOR_DATE="@$((base + $1)) +0000" GIT_COMMITTER_DATE="@$((base + $1)) +0000" \
     git commit -q --allow-empty -m "$2"
 }
 
@@ -84,7 +84,7 @@ mkdir -p "$repo/.github/workflows" "$repo/sub"
   workflow "$C_cron" > .github/workflows/wf.yml && git add .github && commit_at 300 'wf to C'
   git checkout -q main
   echo more >> README && git add README && commit_at 400 'unrelated'
-  GIT_AUTHOR_DATE="@$((B + 500)) +0000" GIT_COMMITTER_DATE="@$((B + 500)) +0000" \
+  GIT_AUTHOR_DATE="@$((base + 500)) +0000" GIT_COMMITTER_DATE="@$((base + 500)) +0000" \
     git merge -q --no-ff -m 'merge side' side
   { workflow "$A_cron"; echo "    - cron: '$B_cron'"; } > .github/workflows/two.yml
   printf '%s\n' 'on:' '  push:' > .github/workflows/none.yml
@@ -114,10 +114,10 @@ run() {
   out=$(cat "$tmp/out")
 }
 
-# reads <description> <directory> <file> <seconds after B> <expected>
+# reads <description> <directory> <file> <seconds after the base> <expected>
 # The script succeeds, printing <expected> and a newline, or nothing at all.
 reads() {
-  run "$2" "$3" "$((B + $4))"
+  run "$2" "$3" "$((base + $4))"
   local expected=
   [ -z "$5" ] || expected=$5$'\n'
   if [ "$status" -ne 0 ] || [ "$(cat "$tmp/out"; echo .)" != "$expected." ] || [ -s "$tmp/err" ]; then
@@ -167,23 +167,23 @@ controls() {
   reads "a shallow clone, at its tip"            "$tmp/shallow" "$wf" 9999 "$C_cron"
   reads "a blobless clone fetches the file"      "$tmp/blobless" "$wf" 250 "$B_cron"
 
-  refused_as_error "two cron lines"        "carries 2 cron lines" "$repo" .github/workflows/two.yml "$((B + 9999))"
-  refused_as_error "before the root"       "does not reach back"  "$repo" "$wf" "$((B - 1))"
-  refused_as_error "a clone too shallow"   "does not reach back"  "$tmp/shallow" "$wf" "$((B + 250))"
-  refused_as_error "no commits"            "cannot be read"       "$tmp/empty" "$wf" "$((B + 250))"
-  refused_as_error "outside a repository"  "not in a git repository" "$tmp/outside" "$wf" "$((B + 250))"
+  refused_as_error "two cron lines"        "carries 2 cron lines" "$repo" .github/workflows/two.yml "$((base + 9999))"
+  refused_as_error "before the root"       "does not reach back"  "$repo" "$wf" "$((base - 1))"
+  refused_as_error "a clone too shallow"   "does not reach back"  "$tmp/shallow" "$wf" "$((base + 250))"
+  refused_as_error "no commits"            "cannot be read"       "$tmp/empty" "$wf" "$((base + 250))"
+  refused_as_error "outside a repository"  "not in a git repository" "$tmp/outside" "$wf" "$((base + 250))"
   refused_as_error "a file that cannot be fetched" "the file cannot be read" \
-                   "$tmp/blobless-cut-off" "$wf" "$((B + 250))"
+                   "$tmp/blobless-cut-off" "$wf" "$((base + 250))"
   refused_as_error "a tree that cannot be fetched" "the tree of" \
-                   "$tmp/treeless-cut-off" "$wf" "$((B + 250))"
+                   "$tmp/treeless-cut-off" "$wf" "$((base + 250))"
 
   refused "no arguments"
   refused "one argument"         "$wf"
-  refused "three arguments"      "$wf" "$B" extra
-  refused "an empty path"        '' "$B"
+  refused "three arguments"      "$wf" "$base" extra
+  refused "an empty path"        '' "$base"
   refused "a time that is not a number" "$wf" yesterday
   refused "a negative time"      "$wf" -1
-  refused "a leading zero"       "$wf" "0$B"
+  refused "a leading zero"       "$wf" "0$base"
 }
 
 # Each mutant breaks one behaviour that the controls claim. Its entry holds a
@@ -217,7 +217,7 @@ mutations=(
 
 if [ "$*" != --mutations ]; then
   controls "$script"
-  if [ "$fails" -eq 0 ]; then echo "cron_line_at: all controls pass"; else exit 1; fi
+  if [ "$fails" -eq 0 ]; then echo "cron_expression_at: all controls pass"; else exit 1; fi
   exit 0
 fi
 

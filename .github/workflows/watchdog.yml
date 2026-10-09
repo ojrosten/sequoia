@@ -31,7 +31,7 @@ name: watchdog
 # A schedule fires only once its file is on main, so a tick before the
 # schedule arrived there is not a miss. Each schedule is compared with the one
 # the branch carried at its tick, read from the branch's history by
-# scripts/cron_line_at.sh, and a schedule that differed, or was absent, is
+# scripts/cron_expression_at.sh, and a schedule that differed, or was absent, is
 # reported as new, with nothing due. A tick that a reschedule moved is not
 # watched either, under its old time or its new: the alarm waits for the
 # next.
@@ -78,7 +78,7 @@ jobs:
       GH_REPO: ${{ github.repository }}
       CONTROL: ${{ inputs.control == true }}
     steps:
-      # The whole history, for cron_line_at.sh, without the files of every
+      # The whole history, for cron_expression_at.sh, without the files of every
       # commit: it fetches the few it reads.
       - uses: actions/checkout@v7
         with:
@@ -111,12 +111,12 @@ jobs:
           }
 
           check() {   # workflow file, what to call it
-            cron=$(scripts/cron_line_at.sh ".github/workflows/$1" "$now") || return 1
+            cron=$(scripts/cron_expression_at.sh ".github/workflows/$1" "$now") || return 1
             [ -n "$cron" ] || { echo "::error::$1 carries no cron line"; return 1; }
             tick=$(last_tick "$1" "$cron") || return 1
             if [ "$CONTROL" = true ]; then tick=$now; fi
             since=$(date -u -d "@$tick" +%Y-%m-%dT%H:%M:%S+00:00)
-            cron_at_tick=$(scripts/cron_line_at.sh ".github/workflows/$1" "$tick") || return 1
+            cron_at_tick=$(scripts/cron_expression_at.sh ".github/workflows/$1" "$tick") || return 1
             if [ "$cron_at_tick" != "$cron" ]; then
               echo "new   $2 was not scheduled '$cron' on $GITHUB_REF_NAME at its tick at $since, so nothing was due"
               return 0

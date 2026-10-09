@@ -1,5 +1,5 @@
 #!/bin/bash
-# Usage: cron_line_at.sh <workflow file> <epoch second>
+# Usage: cron_expression_at.sh <workflow file> <epoch second>
 #
 # Prints the schedule that <workflow file>, a path from the top of the
 # repository, carried on the checked-out branch at <epoch second>: the
