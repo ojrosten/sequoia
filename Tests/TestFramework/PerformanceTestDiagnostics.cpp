@@ -95,15 +95,15 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("Attempt 1: an interval of 3 standard errors ends below the predicted [3.15, 8.0], "
-                               "and one of 4 would not. Later attempts overlap it.",
-                               counted_spinner{3ms, trials_at_minimum_10[0], 1ms},
+    check_relative_performance("Attempt 1 takes 3 standard errors and needs 3.49 to overlap [3.15, 8.0]; "
+                               "later speed-ups lie inside the prediction",
+                               counted_spinner{3ms, trials_for_minimum_10[0], 1ms},
                                make_cycling_spinner({4ms, 7ms, 7ms, 7ms, 8ms}),
                                {.prediction{.lower{3.15}, .upper{8.0}}, .minimum_trials{10}});
 
-    check_relative_performance("Attempt 1: an interval of 3 standard errors starts above the predicted [1.05, 2.91], "
-                               "and one of 4 would not. Later attempts overlap it.",
-                               counted_spinner{1ms, trials_at_minimum_10[0], 2ms},
+    check_relative_performance("Attempt 1 takes 3 standard errors and needs 3.5 to overlap [1.05, 2.91]; "
+                               "later speed-ups lie inside the prediction",
+                               counted_spinner{1ms, trials_for_minimum_10[0], 2ms},
                                make_cycling_spinner({4ms, 4ms, 4ms, 4ms, 8ms}),
                                {.prediction{.lower{1.05}, .upper{2.91}}, .minimum_trials{10}});
   }
@@ -127,8 +127,8 @@ namespace sequoia::testing
     };
 
     check_relative_performance("A speed-up of 2, then of 0.5, then of 2",
-                               counted_spinner{1ms, trials_at_minimum_10[0],                           4ms},
-                               counted_spinner{2ms, trials_at_minimum_10[0] + trials_at_minimum_10[1], 8ms},
+                               counted_spinner{1ms, trials_for_minimum_10[0],                            4ms},
+                               counted_spinner{2ms, trials_for_minimum_10[0] + trials_for_minimum_10[1], 8ms},
                                parameters);
   }
 
@@ -141,7 +141,7 @@ namespace sequoia::testing
     };
 
     check_relative_performance("Attempt 1 overlaps [2.92, 4.38] at 3 standard errors, not at 1; attempt 2 is slower",
-                               counted_spinner{1ms, trials_at_minimum_10[0], 4ms},
+                               counted_spinner{1ms, trials_for_minimum_10[0], 4ms},
                                make_cycling_spinner({2ms, 2ms, 3ms, 3ms, 3ms}),
                                parameters);
   }
@@ -182,15 +182,15 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("Final attempt, with the fast task quicker: an interval of 3 standard errors ends "
-                               "inside [4.57, 5.94], and one of 2 would not",
-                               counted_spinner{3ms, trials_at_minimum_10[0] + trials_at_minimum_10[1], 2ms},
+    check_relative_performance("Attempt 3 takes 3 standard errors and needs 2.5 to overlap [4.57, 5.94]; "
+                               "attempt 2 takes 2 and needs 3.2",
+                               counted_spinner{3ms, trials_for_minimum_10[0] + trials_for_minimum_10[1], 2ms},
                                make_cycling_spinner({1ms, 6ms, 7ms, 7ms, 7ms}),
                                {.prediction{.lower{4.57}, .upper{5.94}}, .minimum_trials{10}});
 
-    check_relative_performance("Final attempt, with the fast task slower: an interval of 3 standard errors starts "
-                               "inside [1.86, 2.42], and one of 2 would not",
-                               counted_spinner{1ms, trials_at_minimum_10[0] + trials_at_minimum_10[1], 2ms},
+    check_relative_performance("Attempt 3 takes 3 standard errors and needs 2.49 to overlap [1.86, 2.42]; "
+                               "attempt 2 takes 2 and needs 7.62",
+                               counted_spinner{1ms, trials_for_minimum_10[0] + trials_for_minimum_10[1], 2ms},
                                make_cycling_spinner({4ms, 4ms, 8ms, 8ms, 8ms}),
                                {.prediction{.lower{1.86}, .upper{2.42}}, .minimum_trials{10}});
   }
