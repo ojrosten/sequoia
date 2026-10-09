@@ -52,7 +52,7 @@ namespace sequoia::testing
   inline constexpr std::size_t relative_performance_max_attempts{3};
 
   /** \brief The interval of speed-ups predicted for a fast task over a slow
-             one, and the minimum number of trials.
+             one, and the fewest trials in any attempt.
    */
   struct relative_performance_parameters
   {
@@ -200,15 +200,14 @@ namespace sequoia::testing
        \param logger      The logger to which the result is reported
        \param fast        The task predicted to be the faster of the two
        \param slow        The task against which fast is compared
-       \param parameters  The predicted interval of speed-ups, and the number
-                          of trials
+       \param parameters  The predicted interval of speed-ups, and the fewest
+                          trials in any attempt
 
        The check makes up to A attempts, where A is
-       `relative_performance_max_attempts`. The first attempt runs
-       `parameters.minimum_trials` trials, and each later attempt runs more.
-       Each trial runs both tasks, and times each.
-       The fast task runs first in half of an attempt's trials, rounded down.
-       Those trials are chosen at random.
+       `relative_performance_max_attempts`. Each attempt runs at least
+       `parameters.minimum_trials` trials. Each trial runs both tasks, and
+       times each. The fast task runs first in half of an attempt's trials,
+       rounded down. Those trials are chosen at random.
 
        Each trial runs its own copy of each task, made before the timing
        starts. So state a task holds by value starts afresh in every trial,
@@ -256,7 +255,7 @@ namespace sequoia::testing
       throw std::invalid_argument{"prediction.upper must be >= prediction.lower"};
 
     if(parameters.minimum_trials < 10)
-      throw std::invalid_argument{"Minimum number of trials is required to be > 9"};
+      throw std::invalid_argument{"Relative performance test requires minimum_trials >= 10"};
 
     const auto [attempt, outcome]{impl::execute_attempts<Mode>(fast, slow, parameters)};
 

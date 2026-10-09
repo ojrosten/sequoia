@@ -95,25 +95,27 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("An interval of 3 standard errors ends below the predicted [11.2, 14.5]",
+    check_relative_performance("An interval of 3 standard errors ends below the predicted [6.19, 8.0]; "
+                               "one of 4 would overlap it",
                                []() { spin_for(1ms); },
                                make_cycling_spinner({2ms, 2ms, 4ms, 5ms, 5ms}),
-                               {.prediction{.lower{11.2}, .upper{14.5}}, .minimum_trials{10}});
+                               {.prediction{.lower{6.19}, .upper{8.0}}, .minimum_trials{10}});
 
-    check_relative_performance("An interval of 3 standard errors starts above the predicted [1.15, 1.5]",
+    check_relative_performance("An interval of 3 standard errors starts above the predicted [1.1, 1.39]; "
+                               "one of 4 would overlap it",
                                []() { spin_for(1ms); },
                                make_cycling_spinner({2ms, 2ms, 3ms, 3ms, 8ms}),
-                               {.prediction{.lower{1.15}, .upper{1.5}}, .minimum_trials{10}});
+                               {.prediction{.lower{1.1}, .upper{1.39}}, .minimum_trials{10}});
   }
 
   void performance_false_negative_diagnostics::test_significance_gate()
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("An interval of 3 standard errors includes a speed-up of 1, and overlaps [2.6, 3.17]",
-                               make_cycling_spinner({1ms, 1ms, 1ms, 2ms, 2ms}),
-                               make_cycling_spinner({4ms, 4ms, 4ms, 3ms, 1ms}),
-                               {.prediction{.lower{2.6}, .upper{3.17}}, .minimum_trials{10}});
+    check_relative_performance("An interval of 3 standard errors includes a speed-up of 1, and overlaps [1.4, 1.8]",
+                               []() { spin_for(2ms); },
+                               make_cycling_spinner({2ms, 2ms, 3ms, 4ms, 9ms}),
+                               {.prediction{.lower{1.4}, .upper{1.8}}, .minimum_trials{10}});
   }
 
   void performance_false_negative_diagnostics::test_fail_at_second_attempt()
@@ -125,8 +127,8 @@ namespace sequoia::testing
     };
 
     check_relative_performance("A speed-up of 2, then of 0.5, then of 2",
-                               counted_spinner{1ms, parameters.minimum_trials,           4ms},
-                               counted_spinner{2ms, parameters.minimum_trials * (1 + 2), 8ms},
+                               counted_spinner{1ms, trials_at_minimum_10[0],                           4ms},
+                               counted_spinner{2ms, trials_at_minimum_10[0] + trials_at_minimum_10[1], 8ms},
                                parameters);
   }
 
@@ -139,7 +141,7 @@ namespace sequoia::testing
     };
 
     check_relative_performance("Attempt 1 overlaps [2.92, 4.38] at 3 standard errors, not at 1; attempt 2 is slower",
-                               counted_spinner{1ms, parameters.minimum_trials, 4ms},
+                               counted_spinner{1ms, trials_at_minimum_10[0], 4ms},
                                make_cycling_spinner({2ms, 2ms, 3ms, 3ms, 3ms}),
                                parameters);
   }
@@ -180,15 +182,17 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("Final attempt: an interval of 3 standard errors ends inside [6.57, 8.54]",
-                               []() { spin_for(1ms); },
-                               make_cycling_spinner({1ms, 2ms, 4ms, 6ms, 6ms}),
-                               {.prediction{.lower{6.57}, .upper{8.54}}, .minimum_trials{10}});
+    check_relative_performance("Final attempt, with the fast task quicker: an interval of 3 standard errors ends "
+                               "inside [4.57, 5.94], and one of 2 would not",
+                               counted_spinner{3ms, trials_at_minimum_10[0] + trials_at_minimum_10[1], 2ms},
+                               make_cycling_spinner({1ms, 6ms, 7ms, 7ms, 7ms}),
+                               {.prediction{.lower{4.57}, .upper{5.94}}, .minimum_trials{10}});
 
-    check_relative_performance("Final attempt: an interval of 3 standard errors starts inside [1.05, 1.37]",
-                               []() { spin_for(1ms); },
-                               make_cycling_spinner({1ms, 2ms, 2ms, 6ms, 8ms}),
-                               {.prediction{.lower{1.05}, .upper{1.37}}, .minimum_trials{10}});
+    check_relative_performance("Final attempt, with the fast task slower: an interval of 3 standard errors starts "
+                               "inside [1.86, 2.42], and one of 2 would not",
+                               counted_spinner{1ms, trials_at_minimum_10[0] + trials_at_minimum_10[1], 2ms},
+                               make_cycling_spinner({4ms, 4ms, 8ms, 8ms, 8ms}),
+                               {.prediction{.lower{1.86}, .upper{2.42}}, .minimum_trials{10}});
   }
 
   [[nodiscard]]

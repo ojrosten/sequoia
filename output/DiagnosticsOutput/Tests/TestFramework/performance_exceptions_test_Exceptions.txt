@@ -35,11 +35,11 @@ prediction.upper must be >= prediction.lower
 =======================================
 
 Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 57
-Four trials
+Nine trials
 
 Expected Exception Type:
 [std::invalid_argument]
-Number of trials is required to be > 4
+Relative performance test requires minimum_trials >= 10
 
 =======================================
 

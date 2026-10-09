@@ -9,12 +9,23 @@
 
 /** \file */
 
+#include "sequoia/TestFramework/PerformanceTestCore.hpp"
+
 #include <array>
 #include <chrono>
 #include <memory>
 
 namespace sequoia::testing
 {
+  /** \brief The number of trials in each attempt of
+             `check_relative_performance`, at minima of 10 and 11.
+
+      The numbers are not in the contract. Tests which use them pin the
+      implementation's choice, and change with it.
+   */
+  inline constexpr std::array<std::size_t, relative_performance_max_attempts> trials_at_minimum_10{10, 15, 20},
+                                                                              trials_at_minimum_11{11, 16, 22};
+
   /** \brief Keeps the calling thread busy until `t` has passed by the
              steady clock.
 
