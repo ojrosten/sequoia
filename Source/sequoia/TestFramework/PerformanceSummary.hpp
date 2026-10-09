@@ -33,8 +33,6 @@ namespace sequoia::testing
   /** \brief A closed interval of speed-ups. */
   struct relative_performance_interval
   {
-    // No default member initialisers: without them, clang and gcc refuse,
-    // under -Wextra, a designated initialiser which omits a field.
     double lower, upper;
   };
 
