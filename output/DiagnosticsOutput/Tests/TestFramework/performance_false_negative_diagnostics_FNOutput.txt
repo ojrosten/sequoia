@@ -2,9 +2,9 @@ Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 73
 Fast task 4 ms, slow task cycling through (2, 3, 4, 5, 6) ms, predicted [1.2, 1.5]
 
 The fast task is not distinguishably faster than the slow one
-Speed-up: 0.979 in [0.552, 1.73]; predicted [1.2, 1.5]
-Trials: 5, attempt 1 of 3
-Task durations: fast 0.004s, slow 0.00391s
+Speed-up: 0.949 in [0.585, 1.54]; predicted [1.2, 1.5]
+Trials: 10, attempt 1 of 3
+Task durations: fast 0.004s, slow 0.0038s
 
 =======================================
 
@@ -13,7 +13,7 @@ Fast task 2 ms, slow task 1 ms, predicted [1.5, 2.0]
 
 The fast task is slower than the slow one
 Speed-up: 0.5 in [0.5, 0.5]; predicted [1.5, 2]
-Trials: 5, attempt 1 of 3
+Trials: 10, attempt 1 of 3
 Task durations: fast 0.002s, slow 0.001s
 
 =======================================
@@ -23,7 +23,7 @@ Speed-up of 2, predicted [3.0, 3.0]
 
 The fast task is faster than the slow one, but by less than predicted
 Speed-up: 2 in [2, 2]; predicted [3, 3]
-Trials: 5, attempt 1 of 3
+Trials: 10, attempt 1 of 3
 Task durations: fast 0.001s, slow 0.002s
 
 =======================================
@@ -33,58 +33,58 @@ Speed-up of 4, predicted [2.0, 2.5]
 
 The fast task is suspiciously fast: faster than predicted
 Speed-up: 4 in [4, 4]; predicted [2, 2.5]
-Trials: 5, attempt 1 of 3
+Trials: 10, attempt 1 of 3
 Task durations: fast 0.001s, slow 0.004s
 
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 98
-An interval of 3 standard errors ends below the predicted [11.2, 14.5]
+Attempt 1 takes 3 standard errors and needs 3.49 to overlap [3.15, 8.0]; later speed-ups lie inside the prediction
 
 The fast task is faster than the slow one, but by less than predicted
-Speed-up: 3.44 in [1.2, 9.87]; predicted [11.2, 14.5]
-Trials: 5, attempt 1 of 3
-Task durations: fast 0.001s, slow 0.00344s
+Speed-up: 2.21 in [1.63, 3]; predicted [3.15, 8]
+Trials: 10, attempt 1 of 3
+Task durations: fast 0.003s, slow 0.00664s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 103
-An interval of 3 standard errors starts above the predicted [1.15, 1.5]
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 104
+Attempt 1 takes 3 standard errors and needs 3.5 to overlap [1.05, 2.91]; later speed-ups lie inside the prediction
 
 The fast task is suspiciously fast: faster than predicted
-Speed-up: 2.62 in [1.6, 4.31]; predicted [1.15, 1.5]
-Trials: 5, attempt 1 of 3
-Task durations: fast 0.001s, slow 0.00262s
+Speed-up: 4.36 in [3.08, 6.17]; predicted [1.05, 2.91]
+Trials: 10, attempt 1 of 3
+Task durations: fast 0.001s, slow 0.00436s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 113
-An interval of 3 standard errors includes a speed-up of 1, and overlaps [2.6, 3.17]
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 115
+An interval of 3 standard errors includes a speed-up of 1, and overlaps [1.4, 1.8]
 
 The fast task is not distinguishably faster than the slow one
-Speed-up: 2.88 in [0.868, 9.59]; predicted [2.6, 3.17]
-Trials: 5, attempt 1 of 3
-Task durations: fast 0.00126s, slow 0.00363s
+Speed-up: 1.59 in [0.792, 3.19]; predicted [1.4, 1.8]
+Trials: 10, attempt 1 of 3
+Task durations: fast 0.002s, slow 0.00318s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 127
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 129
 A speed-up of 2, then of 0.5, then of 2
 
 The fast task is slower than the slow one
 Speed-up: 0.5 in [0.5, 0.5]; predicted [1.8, 2.2]
-Trials: 20, attempt 2 of 3
+Trials: 15, attempt 2 of 3
 Task durations: fast 0.004s, slow 0.002s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 141
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 143
 Attempt 1 overlaps [2.92, 4.38] at 3 standard errors, not at 1; attempt 2 is slower
 
 The fast task is slower than the slow one
-Speed-up: 0.644 in [0.543, 0.764]; predicted [2.92, 4.38]
-Trials: 20, attempt 2 of 3
-Task durations: fast 0.004s, slow 0.00258s
+Speed-up: 0.647 in [0.521, 0.804]; predicted [2.92, 4.38]
+Trials: 15, attempt 2 of 3
+Task durations: fast 0.004s, slow 0.00259s
 
 =======================================
 

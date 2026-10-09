@@ -52,14 +52,12 @@ namespace sequoia::testing
   inline constexpr std::size_t relative_performance_max_attempts{3};
 
   /** \brief The interval of speed-ups predicted for a fast task over a slow
-             one, and the number of trials in the first attempt.
-
-      Attempt `k` runs `k * trials` trials.
+             one, and the fewest trials in any attempt.
    */
   struct relative_performance_parameters
   {
     relative_performance_interval prediction;
-    std::size_t                   trials;
+    std::size_t                   minimum_trials;
   };
 
   namespace impl
@@ -102,6 +100,13 @@ namespace sequoia::testing
      */
     [[nodiscard]]
     double overlap_multiplier(test_mode mode, std::size_t attempt);
+
+    /** \brief Returns the number of trials which attempt `attempt` runs. */
+    [[nodiscard]]
+    constexpr std::size_t trials_of_attempt(std::size_t minimumTrials, std::size_t attempt) noexcept
+    {
+      return minimumTrials * (attempt + 1) / 2;
+    }
 
     enum class task_order { fast_then_slow, slow_then_fast };
 
@@ -158,7 +163,7 @@ namespace sequoia::testing
 
       auto executeAttempt{
         [&generator, &timeTrial, &parameters](std::size_t attempt) {
-          const auto trials{parameters.trials * attempt};
+          const auto trials{trials_of_attempt(parameters.minimum_trials, attempt)};
 
           // Not std::views::transform: timeTrial is not equality-preserving,
           // so it does not model the regular_invocable the view requires.
@@ -195,14 +200,14 @@ namespace sequoia::testing
        \param logger      The logger to which the result is reported
        \param fast        The task predicted to be the faster of the two
        \param slow        The task against which fast is compared
-       \param parameters  The predicted interval of speed-ups, and the number
-                          of trials
+       \param parameters  The predicted interval of speed-ups, and the fewest
+                          trials in any attempt
 
        The check makes up to A attempts, where A is
-       `relative_performance_max_attempts`. Attempt k runs k times
-       `parameters.trials` trials. Each trial runs both tasks, and times each.
-       The fast task runs first in half of an attempt's trials, rounded down.
-       Those trials are chosen at random.
+       `relative_performance_max_attempts`. Each attempt runs at least
+       `parameters.minimum_trials` trials. Each trial runs both tasks, and
+       times each. The fast task runs first in half of an attempt's trials,
+       rounded down. Those trials are chosen at random.
 
        Each trial runs its own copy of each task, made before the timing
        starts. So state a task holds by value starts afresh in every trial,
@@ -218,7 +223,7 @@ namespace sequoia::testing
        does. In false-negative mode the polarity is reversed: the check passes
        only if every attempt passes, and stops at the first that fails. In
        every mode each task runs at most
-       `parameters.trials * A * (A + 1) / 2` times.
+       `parameters.minimum_trials * A * (A + 3) / 4` times.
 
        The summary reports the last attempt. It gives the speed-up, the
        interval around it, the number of trials, the attempt, and each task's
@@ -229,7 +234,7 @@ namespace sequoia::testing
 
        \throws std::invalid_argument if either end of `parameters.prediction`
        is not greater than 1, if its lower end exceeds its upper end, or if
-       `parameters.trials` is less than 5.
+       `parameters.minimum_trials` is less than 10.
 
        \throws std::runtime_error if a trial times either task as zero.
    */
@@ -249,13 +254,16 @@ namespace sequoia::testing
     if(parameters.prediction.lower > parameters.prediction.upper)
       throw std::invalid_argument{"prediction.upper must be >= prediction.lower"};
 
-    if(parameters.trials < 5)
-      throw std::invalid_argument{"Number of trials is required to be > 4"};
+    if(parameters.minimum_trials < 10)
+      throw std::invalid_argument{"Relative performance test requires minimum_trials >= 10"};
 
     const auto [attempt, outcome]{impl::execute_attempts<Mode>(fast, slow, parameters)};
 
     sentry.append_to_message(
-      impl::summarize_attempt(outcome, parameters.trials * attempt, attempt, parameters.prediction)
+      impl::summarize_attempt(outcome,
+                              impl::trials_of_attempt(parameters.minimum_trials, attempt),
+                              attempt,
+                              parameters.prediction)
     );
 
     if(outcome.failure)
