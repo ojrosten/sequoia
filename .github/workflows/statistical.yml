@@ -40,9 +40,9 @@ name: statistical
 # The columns run without `--check-versioned-output`: the gate has already
 # applied it to this tree. `locate N` composes with the flag, comparing once,
 # after the last repetition, but that has been verified locally and not here.
-# The performance tests are excluded. A performance check is a statistical
-# judgement, which fails now and then by design, so it has no place in a
-# sample that bounds the rate of failures which should never happen.
+# The performance tests are excluded. They judge timings, which vary, so
+# each has a small rate of failure that is tolerated by design; this sample
+# bounds the rate of failures which should never happen.
 #
 # The columns are those whose failures are rare by mechanism:
 #   - TSan reports only the interleavings that actually execute, so

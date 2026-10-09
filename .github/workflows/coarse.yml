@@ -47,7 +47,7 @@ name: coarse
 # all 30 trials on every macOS configuration, and
 # ConcurrencyModelsPerformanceTest in 26 to 30. The same 30 trials passed in
 # full on every Linux and Windows configuration, so those columns run the
-# performance tests, in every tier. Run them here too once macOS's sleeps are
+# performance tests, in every gate. Run them here too once macOS's sleeps are
 # understood, or once no test's outcome depends on them.
 #
 # Every column checks the versioned output, since 2026-09-22. The check is a
