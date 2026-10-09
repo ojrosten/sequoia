@@ -16,9 +16,11 @@
 # was not in force at the tick.
 #
 # The history must reach back to the time. A checkout too shallow to say is an
-# error, never an absent file, as is a file with more than one `cron:` line,
-# or one that cannot be read. An error exits 1, with an ::error::. Arguments of
-# any other form are refused with status 2, before anything is read.
+# error, never an absent file, as is a file with more than one `cron:` line, a
+# `cron:` line not in the form `- cron: '<expression>'`, or a file that cannot
+# be read. An error exits 1, with an ::error:: on standard error, so that a
+# caller capturing the expression still shows it. Arguments of any other form
+# are refused with status 2, before anything is read.
 
 set -u
 
@@ -31,7 +33,7 @@ usage() {
 workflow=$1 time=$2
 
 error() {
-  echo "::error::$workflow at $(date -u -d "@$time" +%Y-%m-%dT%H:%M:%S+00:00 2> /dev/null || echo "$time"): $1"
+  echo "::error::$workflow at $(date -u -d "@$time" +%Y-%m-%dT%H:%M:%S+00:00 2> /dev/null || echo "$time"): $1" >&2
   exit 1
 }
 
@@ -47,5 +49,7 @@ listed=$(git ls-tree --name-only "$commit" -- "$workflow") || error "the tree of
 text=$(git show "$commit:$workflow") || error "the file cannot be read from $commit"
 cron=$(sed -n "s/^ *- cron: '\(.*\)'$/\1/p" <<< "$text")
 lines=$(printf '%s' "$cron" | grep -c .)
+written=$(grep -c "^ *- cron:" <<< "$text")
+[ "$lines" -eq "$written" ] || error "$commit carries a cron line not in the form - cron: '<expression>'"
 [ "$lines" -le 1 ] || error "$commit carries $lines cron lines, not one"
 [ -z "$cron" ] || echo "$cron"

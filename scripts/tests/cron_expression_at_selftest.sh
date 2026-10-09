@@ -14,7 +14,8 @@
 #   100  wf.yml added, scheduled A;
 #   200  wf.yml rescheduled B;
 #   500  the merge of a branch whose one commit, at 300, rescheduled it C;
-#   600  two.yml added with two cron lines, and none.yml with none.
+#   600  two.yml added with two cron lines, none.yml with none, and
+#        quoted.yml with one in double quotes.
 # Each control is a claim the script exists to keep:
 #   - the schedule at a time is that of the newest commit on the first-parent
 #     chain not after it: the commit at 300 was not in force until the merge
@@ -29,7 +30,9 @@
 #     ::error:: saying which, and nothing on standard output: a time before
 #     the root, a clone too shallow to reach the time, a repository with no
 #     commits, a directory outside any repository, a tree or a file the clone
-#     cannot fetch, a file with two cron lines;
+#     cannot fetch, a file with two cron lines, a cron line in another form.
+#     The ::error:: is on standard error, so that a caller capturing the
+#     expression still shows it;
 #   - arguments of any other form are refused with status 2 and the usage on
 #     standard error alone.
 
@@ -73,24 +76,40 @@ configure() {
 repo=$tmp/repo
 mkdir -p "$repo/.github/workflows" "$repo/sub"
 (
-  cd "$repo" || exit 1
+  set -e
+  cd "$repo"
   git init -q -b main
   configure
   git config uploadpack.allowFilter true
-  echo readme > README && git add README && commit_at 0 root
-  workflow "$A_cron" > .github/workflows/wf.yml && git add .github && commit_at 100 'add wf, A'
-  workflow "$B_cron" > .github/workflows/wf.yml && git add .github && commit_at 200 'wf to B'
+  echo readme > README
+  git add README
+  commit_at 0 root
+  workflow "$A_cron" > .github/workflows/wf.yml
+  git add .github
+  commit_at 100 'add wf, A'
+  workflow "$B_cron" > .github/workflows/wf.yml
+  git add .github
+  commit_at 200 'wf to B'
   git checkout -q -b side
-  workflow "$C_cron" > .github/workflows/wf.yml && git add .github && commit_at 300 'wf to C'
+  workflow "$C_cron" > .github/workflows/wf.yml
+  git add .github
+  commit_at 300 'wf to C'
   git checkout -q main
-  echo more >> README && git add README && commit_at 400 'unrelated'
+  echo more >> README
+  git add README
+  commit_at 400 'unrelated'
   GIT_AUTHOR_DATE="@$((base + 500)) +0000" GIT_COMMITTER_DATE="@$((base + 500)) +0000" \
     git merge -q --no-ff -m 'merge side' side
   { workflow "$A_cron"; echo "    - cron: '$B_cron'"; } > .github/workflows/two.yml
   printf '%s\n' 'on:' '  push:' > .github/workflows/none.yml
-  git add .github && commit_at 600 'add two and none'
+  printf '%s\n' 'on:' '  schedule:' '    - cron: "1 2 * * *"' > .github/workflows/quoted.yml
+  git add .github
+  commit_at 600 'add two, none and quoted'
   touch sub/.keep
-) > "$tmp/setup.txt" 2>&1 || { cat "$tmp/setup.txt"; echo "FAIL: the fixture could not be built"; exit 1; }
+) > "$tmp/setup.txt" 2>&1
+# The status is read apart from the subshell: under `||`, bash would ignore
+# its `set -e`, and only the last command's status would count.
+[ $? -eq 0 ] || { cat "$tmp/setup.txt"; echo "FAIL: the fixture could not be built"; exit 1; }
 
 git clone -q --depth 1 "file://$repo" "$tmp/shallow" 2> /dev/null
 git clone -q --filter=blob:none --no-checkout "file://$repo" "$tmp/blobless" 2> /dev/null
@@ -126,14 +145,18 @@ reads() {
 }
 
 # refused_as_error <description> <expected message> <directory> <argument>...
-# The script fails with status 1 and an ::error:: carrying the message, and
-# prints nothing else.
+# The script fails with status 1, prints nothing on standard output, and ends
+# standard error with its one ::error::, which carries the message. Git's own
+# lines may come before it.
 refused_as_error() {
   local description=$1 message=$2
   shift 2
   run "$@"
-  if [ "$status" -ne 1 ] || [[ $out != ::error::*"$message"* ]] || [ "$(grep -c . "$tmp/out")" -ne 1 ]; then
-    fail "$description: status $status, printed '$out'"
+  local error
+  error=$(tail -n 1 "$tmp/err")
+  if [ "$status" -ne 1 ] || [ -s "$tmp/out" ] || [[ $error != ::error::*"$message"* ]] \
+     || [ "$(grep -c '^::error::' "$tmp/err")" -ne 1 ]; then
+    fail "$description: status $status, printed '$out', and ended standard error with '$error'"
   fi
 }
 
@@ -168,6 +191,7 @@ controls() {
   reads "a blobless clone fetches the file"      "$tmp/blobless" "$wf" 250 "$B_cron"
 
   refused_as_error "two cron lines"        "carries 2 cron lines" "$repo" .github/workflows/two.yml "$((base + 9999))"
+  refused_as_error "a cron line in double quotes" "not in the form" "$repo" .github/workflows/quoted.yml "$((base + 9999))"
   refused_as_error "before the root"       "does not reach back"  "$repo" "$wf" "$((base - 1))"
   refused_as_error "a clone too shallow"   "does not reach back"  "$tmp/shallow" "$wf" "$((base + 250))"
   refused_as_error "no commits"            "cannot be read"       "$tmp/empty" "$wf" "$((base + 250))"
@@ -201,6 +225,9 @@ mutations=(
   'the path read from where it is run'     'cd "$top" || error'              ': || error'
   'outside a repository read as absent'    'error "not in a git repository"' 'exit 0'
   'two cron lines accepted'                '[ "$lines" -le 1 ]'              '[ "$lines" -le 2 ]'
+  'a cron line in another form read as absent' '[ "$lines" -eq "$written" ] ||' ': ||'
+  'the error on standard output'           '+%Y-%m-%dT%H:%M:%S+00:00 2> /dev/null || echo "$time"): $1" >&2'
+                                           '+%Y-%m-%dT%H:%M:%S+00:00 2> /dev/null || echo "$time"): $1"'
   'no cron line refused'                   '[ "$lines" -le 1 ]'              '[ "$lines" -eq 1 ]'
   'a commented-out line read'              's/^ *- cron:'                    's/^.*- cron:'
   'an empty line for no cron line'         '[ -z "$cron" ] || echo "$cron"'  'echo "$cron"'
