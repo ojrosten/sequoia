@@ -78,7 +78,8 @@ namespace sequoia::testing
                `durations`.
      */
     template<std::ranges::input_range Durations>
-      requires std::same_as<std::ranges::range_value_t<Durations>, std::chrono::duration<double>>
+      requires std::ranges::viewable_range<Durations>
+            && std::same_as<std::ranges::range_value_t<Durations>, std::chrono::duration<double>>
     [[nodiscard]]
     std::chrono::duration<double> trimmed_geometric_mean(Durations&& durations)
     {

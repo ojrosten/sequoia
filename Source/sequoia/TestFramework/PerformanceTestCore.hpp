@@ -15,8 +15,10 @@
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 
+#include <algorithm>
 #include <chrono>
 #include <concepts>
+#include <iterator>
 #include <optional>
 #include <random>
 #include <ranges>
@@ -125,6 +127,65 @@ namespace sequoia::testing
       const auto slowDuration{profile(slow)};
       return {.fast{profile(fast)}, .slow{slowDuration}};
     }
+
+    /** \brief The attempt which decided `check_relative_performance`, and its
+               outcome.
+     */
+    struct relative_performance_decision
+    {
+      std::size_t                  attempt{};
+      relative_performance_outcome outcome{};
+    };
+
+    /** \brief Executes attempts until one decides the check, and returns the
+               last attempt executed.
+
+        An attempt which passes decides the check. In false-negative mode, an
+        attempt which fails decides the check instead. The last attempt
+        allowed decides the check whatever its outcome.
+     */
+    template<test_mode Mode, performance_task F, performance_task S>
+    [[nodiscard]]
+    relative_performance_decision execute_attempts(const F& fast,
+                                                   const S& slow,
+                                                   const relative_performance_parameters& parameters)
+    {
+      static_assert(relative_performance_max_attempts > 0);
+
+      std::mt19937 generator{std::random_device{}()};
+
+      auto timeTrial{[&fast, &slow](task_order order) { return time_trial(fast, slow, order); }};
+
+      auto executeAttempt{
+        [&generator, &timeTrial, &parameters](std::size_t attempt) {
+          const auto trials{parameters.trials * attempt};
+
+          // Not std::views::transform: timeTrial is not equality-preserving,
+          // so it does not model the regular_invocable the view requires.
+          std::vector<relative_performance_durations> trialDurations{};
+          trialDurations.reserve(trials);
+          std::ranges::transform(shuffled_task_orders(trials, generator),
+                                 std::back_inserter(trialDurations),
+                                 timeTrial);
+
+          return judge_attempt(trialDurations, overlap_multiplier(Mode, attempt), parameters.prediction);
+        }
+      };
+
+      auto isDecisive{
+        [](const relative_performance_outcome& outcome) {
+          return (Mode == test_mode::false_negative) ? outcome.failure.has_value() : !outcome.failure.has_value();
+        }
+      };
+
+      for(const auto attempt : std::views::iota(1uz, relative_performance_max_attempts))
+      {
+        if(const auto outcome{executeAttempt(attempt)}; isDecisive(outcome))
+          return {.attempt{attempt}, .outcome{outcome}};
+      }
+
+      return {.attempt{relative_performance_max_attempts}, .outcome{executeAttempt(relative_performance_max_attempts)}};
+    }
   }
 
   /** \brief Checks that the speed-up of `fast` over `slow` is consistent with
@@ -191,44 +252,18 @@ namespace sequoia::testing
     if(parameters.trials < 5)
       throw std::invalid_argument{"Number of trials is required to be > 4"};
 
-    std::string summary{};
-    bool passed{};
+    const auto [attempt, outcome]{impl::execute_attempts<Mode>(fast, slow, parameters)};
 
-    std::mt19937 generator{std::random_device{}()};
+    sentry.append_to_message(
+      impl::summarize_attempt(outcome, parameters.trials * attempt, attempt, parameters.prediction)
+    );
 
-    auto timeTrial{[&fast, &slow](impl::task_order order) { return impl::time_trial(fast, slow, order); }};
-
-    for(const auto attempt : std::views::iota(1uz, relative_performance_max_attempts + 1))
-    {
-      const auto trialsOfAttempt{parameters.trials * attempt};
-
-      const auto trialDurations{
-          impl::shuffled_task_orders(trialsOfAttempt, generator)
-        | std::views::transform(timeTrial)
-        | std::ranges::to<std::vector>()
-      };
-
-      const auto outcome{
-        impl::judge_attempt(trialDurations, impl::overlap_multiplier(Mode, attempt), parameters.prediction)
-      };
-
-      passed  = !outcome.failure;
-      summary = impl::summarize_attempt(outcome, trialsOfAttempt, attempt, parameters.prediction);
-
-      if((Mode == test_mode::false_negative) ? !passed : passed)
-      {
-        break;
-      }
-    }
-
-    sentry.append_to_message(summary);
-
-    if(!passed)
+    if(outcome.failure)
     {
       sentry.log_performance_failure("");
     }
 
-    return passed;
+    return !outcome.failure;
   }
 
   /** \brief Whether `slept`, compared to `target`, indicates sleeps rounded up to a coarse timer tick. */
