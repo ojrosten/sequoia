@@ -33,8 +33,11 @@ namespace sequoia::testing
       failure_output recorded{}, projected{};
     };
 
+    /** \brief Returns `output` with `projection` applied to the message of
+               each failure; the check indices are kept.
+     */
     [[nodiscard]]
-    failure_output with_projected_messages(const failure_output& output, const message_projection& projection)
+    failure_output apply_projection(const failure_output& output, const message_projection& projection)
     {
       auto projectedInfo{
         [&projection](const failure_info& info) { return failure_info{info.check_index, projection(info.message)}; }
@@ -249,7 +252,7 @@ namespace sequoia::testing
           {
             failure_output output{};
             ifile >> output;
-            auto projected{with_projected_messages(output, projection)};
+            auto projected{apply_projection(output, projection)};
             return {.recorded{std::move(output)}, .projected{std::move(projected)}};
           }
           catch(const std::exception& e)
