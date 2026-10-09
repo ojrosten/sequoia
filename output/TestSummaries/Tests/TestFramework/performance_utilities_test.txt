@@ -1,2 +1,2 @@
 performance_utilities_test
-Standard Top Level Checks:                43;  Failures:  0  [Deep checks: 48]
+Standard Top Level Checks:                49;  Failures:  0  [Deep checks: 54]

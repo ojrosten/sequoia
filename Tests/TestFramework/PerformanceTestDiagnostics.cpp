@@ -6,20 +6,49 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "PerformanceTestDiagnostics.hpp"
+#include "PerformanceTestingUtilities.hpp"
 
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <array>
+#include <chrono>
 #include <limits>
-#include <thread>
+#include <memory>
+#include <utility>
 
 namespace sequoia::testing
 {
   namespace
   {
-    void wait(std::chrono::milliseconds t)
+    struct copyable_task
     {
-      std::this_thread::sleep_for(t);
-    }
+      void operator()() const {}
+    };
+
+    struct move_only_task
+    {
+      std::unique_ptr<int> resource{};
+
+      void operator()() const {}
+    };
+
+    struct rvalue_only_task
+    {
+      void operator()() && {}
+    };
+
+    template<class Task>
+    concept profilable = requires(Task task) { profile(std::move(task)); };
+
+    template<class Fast, class Slow>
+    inline constexpr bool checkable_tasks_v{
+      requires(performance_extender<test_mode::standard>& extender,
+               Fast fast,
+               Slow slow,
+               const relative_performance_parameters& parameters) {
+        extender.check_relative_performance("", std::move(fast), std::move(slow), parameters);
+      }
+    };
   }
 
   [[nodiscard]]
@@ -31,6 +60,9 @@ namespace sequoia::testing
   void performance_false_negative_diagnostics::run_tests()
   {
     test_relative_performance();
+    test_sd_tolerance();
+    test_significance_gate();
+    test_fail_at_second_attempt();
   }
 
   void performance_false_negative_diagnostics::test_relative_performance()
@@ -38,16 +70,68 @@ namespace sequoia::testing
     constexpr std::chrono::milliseconds deltaT{5};
 
     check_relative_performance("Performance Test for which fast task is too slow, [1, (2.0, 2.0)",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(deltaT); }, 2.0, 2.0);
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
+                               {.min_speedup{2.0}, .max_speedup{2.0}, .trials{5}, .num_sds{4}, .max_attempts{3}});
 
     check_relative_performance("Performance Test for which fast task is too slow [1, (2.0, 3.0)",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(deltaT); }, 2.0, 3.0);
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(deltaT); },
+                               {.min_speedup{2.0}, .max_speedup{3.0}, .trials{5}, .num_sds{4}, .max_attempts{3}});
 
     check_relative_performance("Performance Test for which fast task is too fast [4, (2.0, 2.5)]",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(4 * deltaT); }, 2.0, 2.5);
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(4 * deltaT); },
+                               {.min_speedup{2.0}, .max_speedup{2.5}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+  }
+
+  void performance_false_negative_diagnostics::test_sd_tolerance()
+  {
+    using namespace std::chrono_literals;
+
+    check_relative_performance("Speed-up of 2, below (2.6, 3.0) by more than 1.5 of the slow task's sds",
+                               make_cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}),
+                               make_cycling_spinner({8ms, 9ms, 10ms, 11ms, 12ms}),
+                               {.min_speedup{2.6}, .max_speedup{3.0}, .trials{5}, .num_sds{1.5}, .max_attempts{3}});
+
+    check_relative_performance("Speed-up of 2, above (1.2, 1.5) by more than 1.5 of the slow task's sds",
+                               make_cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}),
+                               make_cycling_spinner({8ms, 9ms, 10ms, 11ms, 12ms}),
+                               {.min_speedup{1.2}, .max_speedup{1.5}, .trials{5}, .num_sds{1.5}, .max_attempts{3}});
+
+    check_relative_performance("Speed-up of 2, below (4.5, 5.0) by more than 1.5 of the fast task's sds",
+                               make_cycling_spinner({3ms, 4ms, 5ms, 6ms, 7ms}),
+                               make_cycling_spinner({6ms, 8ms, 10ms, 12ms, 14ms}),
+                               {.min_speedup{4.5}, .max_speedup{5.0}, .trials{5}, .num_sds{1.5}, .max_attempts{3}});
+
+    check_relative_performance("Speed-up of 2, above (1.1, 1.3) by more than 1.5 of the fast task's sds",
+                               make_cycling_spinner({3ms, 4ms, 5ms, 6ms, 7ms}),
+                               make_cycling_spinner({6ms, 8ms, 10ms, 12ms, 14ms}),
+                               {.min_speedup{1.1}, .max_speedup{1.3}, .trials{5}, .num_sds{1.5}, .max_attempts{3}});
+  }
+
+  void performance_false_negative_diagnostics::test_significance_gate()
+  {
+    using namespace std::chrono_literals;
+
+    check_relative_performance("Speed-up of 2, within (1.8, 2.1), but the tasks' spreads overlap",
+                               make_cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}),
+                               make_cycling_spinner({2ms, 6ms, 10ms, 14ms, 18ms}),
+                               {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+  }
+
+  void performance_false_negative_diagnostics::test_fail_at_second_attempt()
+  {
+    using namespace std::chrono_literals;
+
+    constexpr relative_performance_parameters parameters{
+      .min_speedup{1.8}, .max_speedup{2.2}, .trials{10}, .num_sds{4}, .max_attempts{3}
+    };
+
+    check_relative_performance("A speed-up of 2, then of 1, then of 2",
+                               counted_spinner{2ms, parameters.trials * (1 + 2), 1ms},
+                               counted_spinner{4ms, parameters.trials,           2ms},
+                               parameters);
   }
 
   [[nodiscard]]
@@ -59,6 +143,7 @@ namespace sequoia::testing
   void performance_false_positive_diagnostics::run_tests()
   {
     test_relative_performance();
+    test_sd_tolerance();
   }
 
   void performance_false_positive_diagnostics::test_relative_performance()
@@ -66,12 +151,39 @@ namespace sequoia::testing
     constexpr std::chrono::milliseconds deltaT{5};
 
     check_relative_performance("Performance Test which should pass",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(2 * deltaT); }, 1.8, 2.1, 5);
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(2 * deltaT); },
+                               {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
 
     check_relative_performance("Performance Test which should pass",
-                               [deltaT]() { wait(deltaT); },
-                               [deltaT]() { wait(4 * deltaT); }, 3.4, 4.1, 5);
+                               [deltaT]() { spin_for(deltaT); },
+                               [deltaT]() { spin_for(4 * deltaT); },
+                               {.min_speedup{3.4}, .max_speedup{4.1}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+  }
+
+  void performance_false_positive_diagnostics::test_sd_tolerance()
+  {
+    using namespace std::chrono_literals;
+
+    check_relative_performance("Speed-up of 2, below (2.6, 3.0) by less than 4 of the slow task's sds",
+                               make_cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}),
+                               make_cycling_spinner({8ms, 9ms, 10ms, 11ms, 12ms}),
+                               {.min_speedup{2.6}, .max_speedup{3.0}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+
+    check_relative_performance("Speed-up of 2, above (1.2, 1.5) by less than 4 of the slow task's sds",
+                               make_cycling_spinner({1ms, 3ms, 5ms, 7ms, 9ms}),
+                               make_cycling_spinner({8ms, 9ms, 10ms, 11ms, 12ms}),
+                               {.min_speedup{1.2}, .max_speedup{1.5}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+
+    check_relative_performance("Speed-up of 2, below (4.5, 5.0) by less than 4 of the fast task's sds",
+                               make_cycling_spinner({3ms, 4ms, 5ms, 6ms, 7ms}),
+                               make_cycling_spinner({6ms, 8ms, 10ms, 12ms, 14ms}),
+                               {.min_speedup{4.5}, .max_speedup{5.0}, .trials{5}, .num_sds{4}, .max_attempts{3}});
+
+    check_relative_performance("Speed-up of 2, above (1.1, 1.3) by less than 4 of the fast task's sds",
+                               make_cycling_spinner({3ms, 4ms, 5ms, 6ms, 7ms}),
+                               make_cycling_spinner({6ms, 8ms, 10ms, 12ms, 14ms}),
+                               {.min_speedup{1.1}, .max_speedup{1.3}, .trials{5}, .num_sds{4}, .max_attempts{3}});
   }
 
   [[nodiscard]]
@@ -84,46 +196,45 @@ namespace sequoia::testing
   {
     test_postprocessing();
     test_coarse_sleep();
-    test_invalid_arguments();
-    test_throwing_task();
+    test_task_constraints();
   }
 
   void performance_utilities_test::test_postprocessing()
   {
     {
-      std::string_view latest   {"Task duration: 1.45e-3s +- 3 * 0.0014\n"};
-      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), reference);
     }
 
     {
-      std::string_view latest   {"foo Task duration: 1.45e-3s +- 3 * 0.0014\n"};
-      std::string_view reference{"bar Task duration: 1.47e-3s +- 3 * 0.0011\n"};
+      std::string_view latest   {"foo Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"bar Task duration: 0.00147s +- 3 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"foo Task duration: 1.45e-3s +- 3 * 0.0014\n"
-                                 "bar Task duration: 1.50e-3s +- 3 * 0.0019\n"};
-      std::string_view reference{"foo Task duration: 1.47e-3s +- 3 * 0.0011\n"
-                                 "bar Task duration: 1.51e-3s +- 3 * 0.0016\n"};
+      std::string_view latest   {"foo Task duration: 0.00145s +- 3 * 0.0014s\n"
+                                 "bar Task duration: 0.0015s +- 3 * 0.0019s\n"};
+      std::string_view reference{"foo Task duration: 0.00147s +- 3 * 0.0011s\n"
+                                 "bar Task duration: 0.00151s +- 3 * 0.0016s\n"};
 
       check(equality, "", postprocess(latest, reference), reference);
     }
 
     {
-      std::string_view latest   {"foo Task duration: 1.45e-3s +- 3 * 0.0014\n"
-                                 "bar Task duration: 1.50e-3s +- 3 * 0.0019\n"};
-      std::string_view reference{"foo Task duration: 1.47e-3s +- 3 * 0.0011\n"
-                                 "baz Task duration: 1.51e-3s +- 3 * 0.0016\n"};
+      std::string_view latest   {"foo Task duration: 0.00145s +- 3 * 0.0014s\n"
+                                 "bar Task duration: 0.0015s +- 3 * 0.0019s\n"};
+      std::string_view reference{"foo Task duration: 0.00147s +- 3 * 0.0011s\n"
+                                 "baz Task duration: 0.00151s +- 3 * 0.0016s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 1.45e-3s +- 3 * 0.0014\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"};
       std::string_view reference{""};
 
       check(equality, "", postprocess(latest, reference), latest);
@@ -131,125 +242,125 @@ namespace sequoia::testing
 
     {
       std::string_view latest   {""};
-      std::string_view reference{"Task duration: 1.45e-3s +- 3 * 0.0014\n"};
+      std::string_view reference{"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 1.45e-3s +- 3 * 0.0014\n"
-                                 "bar Task duration: 1.50e-3s +- 3 * 0.0019\n"};
-      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"
+                                 "bar Task duration: 0.0015s +- 3 * 0.0019s\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 1.45e-3s +- 3 * 0.0014\n"};
-      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011\n"
-                                 "bar Task duration: 1.50e-3s +- 3 * 0.0019\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s\n"
+                                 "bar Task duration: 0.0015s +- 3 * 0.0019s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.9, 4.1))]\n"};
-      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011 [3.4; (2.9, 4.1))]\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.9, 4.1)]\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s [3.4; (2.9, 4.1)]\n"};
 
       check(equality, "", postprocess(latest, reference), reference);
     }
 
     {
-      std::string_view latest   {"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.9, 4.1))]\n"};
-      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.001 [3.4; (2.9, 4.1))]\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.9, 4.1)]\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.001s [3.4; (2.9, 4.1)]\n"};
 
       check(equality, "", postprocess(latest, reference), reference);
     }
 
     {
-      std::string_view latest   {"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.8, 4.1))]\n"};
-      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011 [3.4; (2.9, 4.1))]\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.8, 4.1)]\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s [3.4; (2.9, 4.1)]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.8, 4.1))]\n"};
-      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011 [3.4; (2.9, 4.0))]\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.8, 4.1)]\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s [3.4; (2.9, 4)]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 1.45e-3s +- 3 * 0.0014\n"};
-      std::string_view reference{"Task duration: 1.47e-3s +- 4 * 0.0011\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 4 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 8.1e-05s +- 3 * 0.0014\n"};
-      std::string_view reference{"Task duration: 9.7e-06s +- 3 * 0.0011\n"};
+      std::string_view latest   {"Fast Task duration: 8.1e-05s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 9.7e-06s +- 3 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), reference);
     }
 
     {
-      std::string_view latest   {"Task duration: 9.9e-05s +- 3 * 0.0014\n"};
-      std::string_view reference{"Task duration: 0.000101s +- 3 * 0.0011\n"};
+      std::string_view latest   {"Fast Task duration: 9.9e-05s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 0.000101s +- 3 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), reference);
     }
 
     {
-      std::string_view latest   {"Task duration: 8.1e-05s +- 3 * 0.0014\n"};
-      std::string_view reference{"Task duration: 9.7e-06s +- 4 * 0.0011\n"};
+      std::string_view latest   {"Fast Task duration: 8.1e-05s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 9.7e-06s +- 4 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 1.45e-3s +- 3 * 0.0014\n"};
-      std::string_view reference{"Task duration: 1.45e-3s +- 4 * 0.0014\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 0.00145s +- 4 * 0.0014s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.8, 4.1))]\n"};
-      std::string_view reference{"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.9, 4.1))]\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.8, 4.1)]\n"};
+      std::string_view reference{"Fast Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.9, 4.1)]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 1.45e-3s +- 3 * 0.0014\n"};
-      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011 [3.4; (2.9, 4.1))]\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s [3.4; (2.9, 4.1)]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.9, 4.1))]\n"};
-      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011\n"};
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s [3.4; (2.9, 4.1)]\n"};
+      std::string_view reference{"Fast Task duration: 0.00147s +- 3 * 0.0011s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Task duration: 1.45e-3s +- 3 * 0.0014\n"
+      std::string_view latest   {"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"
                                  "Line 44\n"};
-      std::string_view reference{"Task duration: 1.45e-3s +- 3 * 0.0014\n"
+      std::string_view reference{"Fast Task duration: 0.00145s +- 3 * 0.0014s\n"
                                  "Line 45\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"foo Task duration: 1.45e-3s +- 3 * 0.0014\n"
-                                 "bar Task duration: 1.50e-3s +- 3 * 0.0019\n"};
-      std::string_view reference{"foo Task duration: 1.45e-3s +- 3 * 0.0014\n"
-                                 "baz Task duration: 1.51e-3s +- 3 * 0.0016\n"};
+      std::string_view latest   {"foo Task duration: 0.00145s +- 3 * 0.0014s\n"
+                                 "bar Task duration: 0.0015s +- 3 * 0.0019s\n"};
+      std::string_view reference{"foo Task duration: 0.00145s +- 3 * 0.0014s\n"
+                                 "baz Task duration: 0.00151s +- 3 * 0.0016s\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
@@ -267,6 +378,107 @@ namespace sequoia::testing
                                  "Slow Task duration: 9.7e-06s +- 4 * 8.69355e-06s [1.04386; (2, 2)]\n"};
 
       check(equality, "", postprocess(latest, reference), reference);
+    }
+
+    {
+      std::string_view latest   {"Fast Task duration: 0.006s +- 4 * 0.0001s\n"};
+      std::string_view reference{"Fast Task duration: 0.006ms +- 4 * 0.0001s\n"};
+
+      check(equality, "", postprocess(latest, reference), latest);
+    }
+
+    {
+      std::string_view latest   {"Fast Task duration: 0.006s +- 4 * 0.0001s\n"};
+      std::string_view reference{"Fast Task duration: 0.006s +- 4 * 0.0001ms\n"};
+
+      check(equality, "", postprocess(latest, reference), latest);
+    }
+
+    {
+      std::string_view latest   {"Slow Task duration: 0.0063s +- 4 * 8.7e-06s [1.04; (2, 3)]\n"};
+      std::string_view reference{"Slow Task duration: 0.0063s +- 4 * 8.7e-06s {1.04; (2, 3)}\n"};
+
+      check(equality, "", postprocess(latest, reference), latest);
+    }
+
+    {
+      std::string_view latest   {"Slow Task duration: 0.0063s +- 4 * 8.7e-06s [1.04; (2, 3)]\n"};
+      std::string_view reference{"Slow Task duration: 0.0063s +- 4 * 8.7e-06s (2, 3)\n"};
+
+      check(equality, "", postprocess(latest, reference), latest);
+    }
+
+    {
+      std::string_view latest   {"Slow Task duration: 0.0063s +- 4 * 8.7e-06s [1.04; (2, 3)]\n"};
+      std::string_view reference{"Slow Task duration: 0.0063s +- 4 * 8.7e-06s [; (2, 3)]\n"};
+
+      check(equality, "", postprocess(latest, reference), latest);
+    }
+
+    {
+      std::string_view latest   {"Fast Task duration: 1s +- 4 * 0.1s\n"};
+      std::string_view reference{"Fast Task duration: 1s +- 4 * 0.1s FAILED\n"};
+
+      check(equality, "", postprocess(latest, reference), latest);
+    }
+
+    {
+      std::string_view latest   {"Fast 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Fast 0.00147s +- 3 * 0.0011s\n"};
+
+      check(equality, "", postprocess(latest, reference), latest);
+    }
+
+    {
+      std::string_view latest   {"Task 2 Task duration: 0.00145s +- 3 * 0.0014s\n"};
+      std::string_view reference{"Task 2 Task duration: 0.00147s +- 3 * 0.0011s\n"};
+
+      check(equality, "", postprocess(latest, reference), reference);
+    }
+
+    {
+      std::string_view latest   {"Fast Task duration: s +- 3 * s\n"};
+      std::string_view reference{"Fast Task duration: s +- 4 * s\n"};
+
+      check(equality, "", postprocess(latest, reference), latest);
+    }
+
+    {
+      const std::string latest   {duration_summary("Slow", 9.9e-05,  4, 1e-06)   + speedup_summary(1.2e+06, 2, 3)};
+      const std::string reference{duration_summary("Slow", 0.000101, 4, 8.7e-06) + speedup_summary(1.04,    2, 3)};
+
+      check(equality, "", postprocess(latest, reference), std::string_view{reference});
+    }
+
+    {
+      constexpr auto infinity{std::numeric_limits<double>::infinity()};
+      constexpr auto nan{std::numeric_limits<double>::quiet_NaN()};
+
+      const std::string latest   {duration_summary("Slow", 0.000999, 4, 1.5e-05) + speedup_summary(infinity, 2, 3)};
+      const std::string reference{duration_summary("Slow", 0.001,    4, 2e-05)   + speedup_summary(-nan,     2, 3)};
+
+      check(equality, "", postprocess(latest, reference), std::string_view{reference});
+    }
+
+    {
+      const std::string latest   {duration_summary("Fast", 0.00145, 3, 0.0014)};
+      const std::string reference{duration_summary("Fast", 0.00147, 4, 0.0011)};
+
+      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+    }
+
+    {
+      const std::string latest   {duration_summary("Slow", 0.0063, 3, 8.7e-06) + speedup_summary(1.04, 2, 3)};
+      const std::string reference{duration_summary("Slow", 0.0064, 4, 9.1e-06) + speedup_summary(1.02, 2, 3)};
+
+      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+    }
+
+    {
+      const std::string latest   {duration_summary("Slow", 0.0063, 4, 8.7e-06) + speedup_summary(1.04, 2, 3)};
+      const std::string reference{duration_summary("Slow", 0.0064, 4, 9.1e-06) + speedup_summary(1.02, 2, 4)};
+
+      check(equality, "", postprocess(latest, reference), std::string_view{latest});
     }
   }
 
@@ -291,68 +503,15 @@ namespace sequoia::testing
           predictive_materials() /= "CoarseSleepMessage.txt");
   }
 
-  void performance_utilities_test::test_invalid_arguments()
+  void performance_utilities_test::test_task_constraints()
   {
-    constexpr double nan{std::numeric_limits<double>::quiet_NaN()};
-    constexpr std::string_view description{"Relative performance with invalid arguments"};
-    test_logger<test_mode::standard> logger{};
+    STATIC_CHECK( profilable<   copyable_task>);
+    STATIC_CHECK(!profilable<rvalue_only_task>);
 
-    auto relativePerformanceCheck{
-      [&logger, description](double minSpeedUp, double maxSpeedUp, std::size_t trials, double numSds,
-                             std::size_t maxAttempts) {
-        return [&logger, description, minSpeedUp, maxSpeedUp, trials, numSds, maxAttempts]() {
-          return check_relative_performance(description, logger, []() {}, []() {},
-                                            minSpeedUp, maxSpeedUp, trials, numSds, maxAttempts);
-        };
-      }
-    };
-
-    check_exception_thrown<std::invalid_argument>("Minimum speed-up of 1",
-                                                  relativePerformanceCheck(1.0, 2.0, 5, 4.0, 3));
-    check_exception_thrown<std::invalid_argument>("Maximum speed-up of 1",
-                                                  relativePerformanceCheck(1.5, 1.0, 5, 4.0, 3));
-    check_exception_thrown<std::invalid_argument>("Minimum speed-up of NaN",
-                                                  relativePerformanceCheck(nan, 2.0, 5, 4.0, 3));
-    check_exception_thrown<std::invalid_argument>("Minimum speed-up exceeding the maximum",
-                                                  relativePerformanceCheck(2.5, 2.0, 5, 4.0, 3));
-    check_exception_thrown<std::invalid_argument>("One standard deviation",
-                                                  relativePerformanceCheck(2.0, 3.0, 5, 1.0, 3));
-    check_exception_thrown<std::invalid_argument>("NaN standard deviations",
-                                                  relativePerformanceCheck(2.0, 3.0, 5, nan, 3));
-    check_exception_thrown<std::invalid_argument>("No attempts",
-                                                  relativePerformanceCheck(2.0, 3.0, 5, 4.0, 0));
-    check_exception_thrown<std::invalid_argument>("Four trials",
-                                                  relativePerformanceCheck(2.0, 3.0, 4, 4.0, 3));
-
-    const auto& exitInfo{logger.last_check_exit_info()};
-    if(check("An invalid argument is attributed to the check refusing it", exitInfo.has_value()))
-    {
-      check("Exit via an exception", exitInfo->via_exception);
-      check(equality, "Message of the check refusing the argument", exitInfo->message, std::string{description});
-    }
-  }
-
-  void performance_utilities_test::test_throwing_task()
-  {
-    constexpr std::string_view description{"Relative performance with a throwing task"};
-    test_logger<test_mode::standard> logger{};
-
-    auto checkWithThrowingFastTask{
-      [&logger, description]() {
-        return check_relative_performance(description, logger,
-                                          []() { throw std::runtime_error{"Fast task failure"}; },
-                                          []() {},
-                                          2.0, 3.0, 5, 4.0, 3);
-      }
-    };
-
-    check_exception_thrown<std::runtime_error>("Fast task throws", checkWithThrowingFastTask);
-
-    const auto& exitInfo{logger.last_check_exit_info()};
-    if(check("A throwing task is attributed to its check", exitInfo.has_value()))
-    {
-      check("Exit via an exception", exitInfo->via_exception);
-      check(equality, "Message of the check whose task threw", exitInfo->message, std::string{description});
-    }
+    STATIC_CHECK( checkable_tasks_v<   copyable_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_v<  move_only_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_v<   copyable_task,   move_only_task>);
+    STATIC_CHECK(!checkable_tasks_v<rvalue_only_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_v<   copyable_task, rvalue_only_task>);
   }
 }
