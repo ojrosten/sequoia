@@ -39,12 +39,16 @@ name: coarse
 # committed vcxproj prediction is checked by any Visual Studio column, this
 # column's absence from that generator leaves none of them unverified.
 #
-# The Windows and macOS columns run with `--exclude-performance`, because
-# TestRunnerPerformanceTest asserts absolute durations - 60ms +- 35 for eight
-# 25ms sleeps run concurrently - which a hosted runner may not hold: as wall-clock
-# times, Windows returned 196ms and then 603ms for the same commit, and macOS
-# 172ms, which is what cost it its column on 2026-09-08. No tolerance spans that and still means
-# anything.
+# The macOS column runs with `--exclude-performance`. On the hosted macOS
+# runner, sleeps are coarse: the runner warns that 5 ms sleeps last 21 ms or
+# more, and the tests which time sleeps fail on that alone. Run 37950206807
+# (2026-10-09) ran the performance tests alone, 30 times in one process, on
+# every configuration then excluding them. TestRunnerPerformanceTest failed in
+# all 30 trials on every macOS configuration, and
+# ConcurrencyModelsPerformanceTest in 26 to 30. The same 30 trials passed in
+# full on every Linux and Windows configuration, so those columns run the
+# performance tests, in every tier. Run them here too once macOS's sleeps are
+# understood, or once no test's outcome depends on them.
 #
 # Every column checks the versioned output, since 2026-09-22. The check is a
 # comparison of files the run has just written, and costs nothing this tier's
@@ -96,7 +100,7 @@ jobs:
         [
           {"name": "Linux · GCC · Debug",   "os": "ubuntu-latest",  "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15"},
           {"name": "macOS · Clang · Debug", "os": "macos-latest",   "configure": "llvm-env", "build": "llvm-env", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc-ninja", "build": "msvc-ninja", "exec_args": "--check-versioned-output;--exclude-performance"}
+          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc-ninja", "build": "msvc-ninja", "exec_args": "--check-versioned-output"}
         ]
 
   # Also in rigorous. It costs seconds and no compilation, so there is no reason to
