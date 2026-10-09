@@ -769,9 +769,9 @@ namespace sequoia::testing
       };
 
       check_relative_performance("Null versus async check", asyncFn, serialFn,
-                                 {.min_speedup{2.0}, .max_speedup{5.0}, .trials{5}});
+                                 {.prediction{.lower{2.0}, .upper{5.0}}, .trials{5}});
       check_relative_performance("Null versus pool check", poolFn, serialFn,
-                                 {.min_speedup{2.0}, .max_speedup{5.0}, .trials{5}});
+                                 {.prediction{.lower{2.0}, .upper{5.0}}, .trials{5}});
     }
   }
 }

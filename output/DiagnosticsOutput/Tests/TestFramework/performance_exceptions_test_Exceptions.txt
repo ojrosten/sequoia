@@ -7,7 +7,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 46
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 45
 Maximum speed-up of 1
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 50
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 48
 Minimum speed-up of NaN
 
 Expected Exception Type:
@@ -25,16 +25,16 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 54
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 51
 Minimum speed-up exceeding the maximum
 
 Expected Exception Type:
 [std::invalid_argument]
-max_speedup must be >= min_speedup
+prediction.upper must be >= prediction.lower
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 58
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 54
 Four trials
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Number of trials is required to be > 4
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 77
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 71
 Fast task throws
 
 Expected Exception Type:

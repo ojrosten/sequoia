@@ -62,7 +62,7 @@ namespace sequoia::testing
       const auto numTrimmed{num_trimmed_from_each_end(n)};
 
       const auto winsorizedVariance{
-        maths::winsorized_sample_variance(data, static_cast<std::ptrdiff_t>(numTrimmed)).first
+        maths::winsorized_sample_variance(data, numTrimmed).variance
       };
 
       const std::ranges::subrange kept{data.cbegin() + numTrimmed, data.cend() - numTrimmed};
@@ -78,25 +78,27 @@ namespace sequoia::testing
                `durations`.
      */
     [[nodiscard]]
-    double trimmed_geometric_mean(std::span<const double> durations)
+    std::chrono::duration<double> trimmed_geometric_mean(std::span<const std::chrono::duration<double>> durations)
     {
-      auto logOf{[](double duration) { return std::log(duration); }};
+      auto logOf{[](std::chrono::duration<double> duration) { return std::log(duration.count()); }};
 
-      return std::exp(
-        estimate_trimmed_mean(durations | std::views::transform(logOf) | std::ranges::to<std::vector>()).mean
-      );
+      return std::chrono::duration<double>{
+        std::exp(estimate_trimmed_mean(durations | std::views::transform(logOf) | std::ranges::to<std::vector>()).mean)
+      };
     }
   }
 
   namespace impl
   {
     [[nodiscard]]
-    relative_performance_judgement judge_attempt(std::span<const double> fastDurations,
-                                                 std::span<const double> slowDurations,
+    relative_performance_judgement judge_attempt(std::span<const std::chrono::duration<double>> fastDurations,
+                                                 std::span<const std::chrono::duration<double>> slowDurations,
                                                  double overlapMultiplier,
                                                  const relative_performance_parameters& parameters)
     {
-      auto logRatio{[](double fast, double slow) { return std::log(slow / fast); }};
+      auto logRatio{
+        [](std::chrono::duration<double> fast, std::chrono::duration<double> slow) { return std::log(slow / fast); }
+      };
 
       const auto [mean, standardError]{
         estimate_trimmed_mean(
@@ -115,10 +117,10 @@ namespace sequoia::testing
             return gateMax < 0 ? relative_performance_failure::slower
                                : relative_performance_failure::not_distinguishably_faster;
 
-          if(intervalMax < std::log(parameters.min_speedup))
+          if(intervalMax < std::log(parameters.prediction.lower))
             return relative_performance_failure::faster_but_less_than_predicted;
 
-          if(intervalMin > std::log(parameters.max_speedup))
+          if(intervalMin > std::log(parameters.prediction.upper))
             return relative_performance_failure::suspiciously_fast;
 
           return std::nullopt;
@@ -127,11 +129,11 @@ namespace sequoia::testing
 
       return {
         .failure{failure},
-        .speedup{std::exp(mean)},
-        .interval_min{std::exp(intervalMin)},
-        .interval_max{std::exp(intervalMax)},
-        .fast_duration{trimmed_geometric_mean(fastDurations)},
-        .slow_duration{trimmed_geometric_mean(slowDurations)}
+        .estimate{
+          .speedup{std::exp(mean)},
+          .interval{.lower{std::exp(intervalMin)}, .upper{std::exp(intervalMax)}}
+        },
+        .durations{.fast{trimmed_geometric_mean(fastDurations)}, .slow{trimmed_geometric_mean(slowDurations)}}
       };
     }
 
@@ -142,13 +144,9 @@ namespace sequoia::testing
                                 const relative_performance_parameters& parameters)
     {
       return append_lines(judgement.failure ? verdict_summary(*judgement.failure) : "",
-                          speedup_summary(judgement.speedup,
-                                          judgement.interval_min,
-                                          judgement.interval_max,
-                                          parameters.min_speedup,
-                                          parameters.max_speedup),
-                          trials_summary(trials, attempt, relative_performance_max_attempts),
-                          task_durations_summary(judgement.fast_duration, judgement.slow_duration));
+                          speedup_summary(judgement.estimate, parameters.prediction),
+                          trials_summary(trials, {.current{attempt}, .maximum{relative_performance_max_attempts}}),
+                          task_durations_summary(judgement.durations));
     }
 
     [[nodiscard]]

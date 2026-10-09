@@ -1,4 +1,4 @@
-Tests/TestFramework/FailureInfoTest.cpp, Line 30
+Tests/TestFramework/FailureInfoTest.cpp, Line 32
 A record not beginning with its check index
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Expected a line beginning 'check: ' but found 'foo'
 
 =======================================
 
-Tests/TestFramework/FailureInfoTest.cpp, Line 32
+Tests/TestFramework/FailureInfoTest.cpp, Line 34
 A check index which is not a number
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/FailureInfoTest.cpp, Line 34
+Tests/TestFramework/FailureInfoTest.cpp, Line 36
 A record with no length
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Expected a line beginning 'length: ' but there are no more lines
 
 =======================================
 
-Tests/TestFramework/FailureInfoTest.cpp, Line 36
+Tests/TestFramework/FailureInfoTest.cpp, Line 38
 A length which is not a number
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/FailureInfoTest.cpp, Line 38
+Tests/TestFramework/FailureInfoTest.cpp, Line 40
 A message shorter than its length
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Expected 5 characters but the stream ended after 4
 
 =======================================
 
-Tests/TestFramework/FailureInfoTest.cpp, Line 40
+Tests/TestFramework/FailureInfoTest.cpp, Line 42
 A message longer than its length
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Expected a line break after 3 characters
 
 =======================================
 
-Tests/TestFramework/FailureInfoTest.cpp, Line 44
+Tests/TestFramework/FailureInfoTest.cpp, Line 48
 A malformed file of failures, named by the instability analysis
 
 Expected Exception Type:

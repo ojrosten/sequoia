@@ -21,7 +21,7 @@ namespace sequoia::testing
     constexpr std::chrono::milliseconds spin_unit{2};
 
     constexpr relative_performance_parameters retry_parameters{
-      .min_speedup{1.8}, .max_speedup{2.2}, .trials{10}
+      .prediction{.lower{1.8}, .upper{2.2}}, .trials{10}
     };
   }
 
@@ -66,11 +66,11 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    constexpr relative_performance_parameters parameters{.min_speedup{3.82}, .max_speedup{5.7}, .trials{5}};
+    constexpr relative_performance_parameters parameters{.prediction{.lower{3.82}, .upper{5.7}}, .trials{5}};
     const counted_spinner fast{1ms};
 
     check_relative_performance(
-      "Overlapping (3.82, 5.7) needs 1.25 standard errors: the first attempt's 1 falls short, the second's 2 suffices",
+      "Overlapping [3.82, 5.7] needs 1.25 standard errors: the first attempt's 1 falls short, the second's 2 suffices",
       fast,
       make_cycling_spinner({1ms, 3ms, 3ms, 4ms, 4ms}),
       parameters
@@ -82,7 +82,7 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    constexpr relative_performance_parameters parameters{.min_speedup{1.05}, .max_speedup{4}, .trials{5}};
+    constexpr relative_performance_parameters parameters{.prediction{.lower{1.05}, .upper{4}}, .trials{5}};
     const counted_spinner fast{1ms};
 
     check_relative_performance(
@@ -98,7 +98,7 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    constexpr relative_performance_parameters parameters{.min_speedup{3.2}, .max_speedup{5}, .trials{5}};
+    constexpr relative_performance_parameters parameters{.prediction{.lower{3.2}, .upper{5}}, .trials{5}};
 
     check_relative_performance(
       "One fast call in five takes 12 ms. The trimmed mean gives a speed-up of 4, and the untrimmed mean gives 2.43",
@@ -112,7 +112,7 @@ namespace sequoia::testing
   {
     enum class task { fast, slow };
 
-    constexpr relative_performance_parameters parameters{.min_speedup{1.8}, .max_speedup{2.2}, .trials{5}};
+    constexpr relative_performance_parameters parameters{.prediction{.lower{1.8}, .upper{2.2}}, .trials{5}};
     constexpr auto attempts{relative_performance_max_attempts};
 
     auto recordTaskCalls{

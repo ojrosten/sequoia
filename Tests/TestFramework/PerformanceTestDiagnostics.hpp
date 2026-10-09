@@ -64,6 +64,8 @@ namespace sequoia::testing
 
     void test_postprocessing();
 
+    void test_zeroed_measurements();
+
     void test_coarse_sleep();
 
     void test_task_constraints();

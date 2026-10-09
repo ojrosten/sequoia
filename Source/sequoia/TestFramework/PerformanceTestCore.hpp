@@ -50,17 +50,16 @@ namespace sequoia::testing
    */
   inline constexpr std::size_t relative_performance_max_attempts{3};
 
-  /** \brief The range of speed-ups predicted for a fast task over a slow one,
-             and the number of trials with which to test it.
+  /** \brief The interval of speed-ups predicted for a fast task over a slow
+             one, and the number of trials with which to test it.
 
       - `trials`: the number of trials in the first attempt. Attempt `k` runs
         `k * trials`.
    */
   struct relative_performance_parameters
   {
-    double      min_speedup;
-    double      max_speedup;
-    std::size_t trials;
+    relative_performance_interval prediction{};
+    std::size_t                   trials{};
   };
 
   namespace impl
@@ -71,15 +70,16 @@ namespace sequoia::testing
     struct relative_performance_judgement
     {
       std::optional<relative_performance_failure> failure{};
-      double speedup{}, interval_min{}, interval_max{}, fast_duration{}, slow_duration{};
+      relative_performance_estimate               estimate{};
+      relative_performance_durations              durations{};
     };
 
     /** \brief Judges the speed-up of a fast task over a slow one from the
                durations of each in one attempt, paired by trial.
      */
     [[nodiscard]]
-    relative_performance_judgement judge_attempt(std::span<const double> fastDurations,
-                                                 std::span<const double> slowDurations,
+    relative_performance_judgement judge_attempt(std::span<const std::chrono::duration<double>> fastDurations,
+                                                 std::span<const std::chrono::duration<double>> slowDurations,
                                                  double overlapMultiplier,
                                                  const relative_performance_parameters& parameters);
 
@@ -95,7 +95,7 @@ namespace sequoia::testing
                                 const relative_performance_parameters& parameters);
 
     /** \brief Returns the half-width, in standard errors, of the interval
-               which attempt `attempt` compares with the predicted range.
+               which attempt `attempt` compares with the predicted interval.
      */
     [[nodiscard]]
     double overlap_multiplier(test_mode mode, std::size_t attempt);
@@ -112,14 +112,14 @@ namespace sequoia::testing
   }
 
   /** \brief Checks that the speed-up of `fast` over `slow` is consistent with
-             the predicted range.
+             the predicted interval.
 
        \param description The description reported with the check
        \param logger      The logger to which the result is reported
        \param fast        The task predicted to be the faster of the two
        \param slow        The task against which fast is compared
-       \param parameters  The predicted range of speed-ups, and the number of
-                          trials
+       \param parameters  The predicted interval of speed-ups, and the number
+                          of trials
 
        The check makes up to A attempts, where A is
        `relative_performance_max_attempts`. Attempt k runs k times
@@ -145,8 +145,8 @@ namespace sequoia::testing
           m - c * SE > 0
 
        and the interval [m - c_k * SE, m + c_k * SE] overlaps
-       [ln(min_speedup), ln(max_speedup)]. Here c is
-       `relative_performance_confidence_multiplier`, and
+       [ln(p.lower), ln(p.upper)], where p is `parameters.prediction`. Here c
+       is `relative_performance_confidence_multiplier`, and
 
           c_k = c * k / A
 
@@ -171,12 +171,12 @@ namespace sequoia::testing
        -# `not_distinguishably_faster`, if the gate fails, and m + c * SE is
           not below 0;
        -# `faster_but_less_than_predicted`, if the gate passes, and the
-          interval lies wholly below ln(min_speedup);
+          interval lies wholly below ln(p.lower);
        -# `suspiciously_fast`, if the gate passes, and the interval lies
-          wholly above ln(max_speedup).
+          wholly above ln(p.upper).
 
-       \throws std::invalid_argument if a speed-up factor is not greater
-       than 1, if min_speedup exceeds max_speedup or if trials is less than 5.
+       \throws std::invalid_argument if either end of p is not greater than
+       1, if p.lower exceeds p.upper, or if `parameters.trials` is less than 5.
    */
   template<test_mode Mode, copy_constructible_task F, copy_constructible_task S>
   bool check_relative_performance(std::string_view description,
@@ -188,11 +188,11 @@ namespace sequoia::testing
     sentinel<Mode> sentry{logger, std::string{description}};
     sentry.log_performance_check();
 
-    if(!(parameters.min_speedup > 1) || !(parameters.max_speedup > 1))
+    if(!(parameters.prediction.lower > 1) || !(parameters.prediction.upper > 1))
       throw std::invalid_argument{"Relative performance test requires speed-up factors > 1"};
 
-    if(parameters.min_speedup > parameters.max_speedup)
-      throw std::invalid_argument{"max_speedup must be >= min_speedup"};
+    if(parameters.prediction.lower > parameters.prediction.upper)
+      throw std::invalid_argument{"prediction.upper must be >= prediction.lower"};
 
     if(parameters.trials < 5)
       throw std::invalid_argument{"Number of trials is required to be > 4"};
@@ -201,8 +201,8 @@ namespace sequoia::testing
     bool passed{};
 
     auto timer{
-       [](auto task, std::vector<double>& timings){
-         timings.push_back(profile(std::move(task)).count());
+       [](auto task, std::vector<std::chrono::duration<double>>& timings){
+         timings.push_back(profile(std::move(task)));
        }
     };
 
@@ -212,7 +212,7 @@ namespace sequoia::testing
     {
       const auto trialsOfAttempt{parameters.trials * attempt};
 
-      std::vector<double> fastData{}, slowData{};
+      std::vector<std::chrono::duration<double>> fastData{}, slowData{};
       fastData.reserve(trialsOfAttempt);
       slowData.reserve(trialsOfAttempt);
 
@@ -297,8 +297,8 @@ namespace sequoia::testing
   /** \brief Chooses between a run's diagnostics output and the reference.
 
       \returns
-      -# `referenceOutput`, if it differs from `testOutput` only in measured values, as
-         `text_with_zeroed_measurements` defines them;
+      -# `referenceOutput`, if `text_with_zeroed_measurements` gives the same
+         result for it as for `testOutput`;
       -# `testOutput`, otherwise.
    */
   [[nodiscard]]

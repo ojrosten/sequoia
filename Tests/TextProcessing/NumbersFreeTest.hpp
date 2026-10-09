@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//                Copyright Oliver J. Rosten 2019.                //
+//                Copyright Oliver J. Rosten 2026.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -9,11 +9,11 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
+#include "sequoia/TestFramework/FreeTestCore.hpp"
 
 namespace sequoia::testing
 {
-  class statistical_algorithms_test final : public free_test
+  class numbers_free_test final : public free_test
   {
   public:
     using free_test::free_test;
@@ -23,17 +23,16 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+    void test_constraints();
 
-    void test_winsorized_sample_variance();
+    void test_count();
 
-    void test_forward_only_view();
+    void test_floating_point();
 
-    void test_types_admitted();
+    void test_integers();
 
-    void test_narrower_type_requested();
+    void test_signs();
 
-    void test_wider_type_requested();
-
-    void test_custom_estimator();
+    void test_out_of_range();
   };
 }

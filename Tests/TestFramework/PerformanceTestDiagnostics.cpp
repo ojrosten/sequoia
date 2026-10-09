@@ -70,50 +70,50 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("Fast task 4 ms, slow task cycling through (2, 3, 4, 5, 6) ms, predicted (1.2, 1.5)",
+    check_relative_performance("Fast task 4 ms, slow task cycling through (2, 3, 4, 5, 6) ms, predicted [1.2, 1.5]",
                                []() { spin_for(4ms); },
                                make_cycling_spinner({2ms, 3ms, 4ms, 5ms, 6ms}),
-                               {.min_speedup{1.2}, .max_speedup{1.5}, .trials{5}});
+                               {.prediction{.lower{1.2}, .upper{1.5}}, .trials{5}});
 
-    check_relative_performance("Fast task 2 ms, slow task 1 ms, predicted (1.5, 2.0)",
+    check_relative_performance("Fast task 2 ms, slow task 1 ms, predicted [1.5, 2.0]",
                                []() { spin_for(2ms); },
                                []() { spin_for(1ms); },
-                               {.min_speedup{1.5}, .max_speedup{2.0}, .trials{5}});
+                               {.prediction{.lower{1.5}, .upper{2.0}}, .trials{5}});
 
-    check_relative_performance("Speed-up of 2, predicted (3.0, 3.0)",
+    check_relative_performance("Speed-up of 2, predicted [3.0, 3.0]",
                                []() { spin_for(1ms); },
                                []() { spin_for(2ms); },
-                               {.min_speedup{3.0}, .max_speedup{3.0}, .trials{5}});
+                               {.prediction{.lower{3.0}, .upper{3.0}}, .trials{5}});
 
-    check_relative_performance("Speed-up of 4, predicted (2.0, 2.5)",
+    check_relative_performance("Speed-up of 4, predicted [2.0, 2.5]",
                                []() { spin_for(1ms); },
                                []() { spin_for(4ms); },
-                               {.min_speedup{2.0}, .max_speedup{2.5}, .trials{5}});
+                               {.prediction{.lower{2.0}, .upper{2.5}}, .trials{5}});
   }
 
   void performance_false_negative_diagnostics::test_confidence_multiplier()
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("An interval of 3 standard errors ends below the predicted (11.2, 14.5)",
+    check_relative_performance("An interval of 3 standard errors ends below the predicted [11.2, 14.5]",
                                []() { spin_for(1ms); },
                                make_cycling_spinner({2ms, 2ms, 4ms, 5ms, 5ms}),
-                               {.min_speedup{11.2}, .max_speedup{14.5}, .trials{5}});
+                               {.prediction{.lower{11.2}, .upper{14.5}}, .trials{5}});
 
-    check_relative_performance("An interval of 3 standard errors starts above the predicted (1.15, 1.5)",
+    check_relative_performance("An interval of 3 standard errors starts above the predicted [1.15, 1.5]",
                                []() { spin_for(1ms); },
                                make_cycling_spinner({2ms, 2ms, 3ms, 3ms, 8ms}),
-                               {.min_speedup{1.15}, .max_speedup{1.5}, .trials{5}});
+                               {.prediction{.lower{1.15}, .upper{1.5}}, .trials{5}});
   }
 
   void performance_false_negative_diagnostics::test_significance_gate()
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("An interval of 3 standard errors includes a speed-up of 1, and overlaps (2.6, 3.17)",
+    check_relative_performance("An interval of 3 standard errors includes a speed-up of 1, and overlaps [2.6, 3.17]",
                                make_cycling_spinner({1ms, 1ms, 1ms, 2ms, 2ms}),
                                make_cycling_spinner({4ms, 4ms, 4ms, 3ms, 1ms}),
-                               {.min_speedup{2.6}, .max_speedup{3.17}, .trials{5}});
+                               {.prediction{.lower{2.6}, .upper{3.17}}, .trials{5}});
   }
 
   void performance_false_negative_diagnostics::test_fail_at_second_attempt()
@@ -121,7 +121,7 @@ namespace sequoia::testing
     using namespace std::chrono_literals;
 
     constexpr relative_performance_parameters parameters{
-      .min_speedup{1.8}, .max_speedup{2.2}, .trials{10}
+      .prediction{.lower{1.8}, .upper{2.2}}, .trials{10}
     };
 
     check_relative_performance("A speed-up of 2, then of 0.5, then of 2",
@@ -135,10 +135,10 @@ namespace sequoia::testing
     using namespace std::chrono_literals;
 
     constexpr relative_performance_parameters parameters{
-      .min_speedup{2.92}, .max_speedup{4.38}, .trials{10}
+      .prediction{.lower{2.92}, .upper{4.38}}, .trials{10}
     };
 
-    check_relative_performance("Attempt 1 overlaps (2.92, 4.38) at 3 standard errors, not at 1; attempt 2 is slower",
+    check_relative_performance("Attempt 1 overlaps [2.92, 4.38] at 3 standard errors, not at 1; attempt 2 is slower",
                                counted_spinner{1ms, parameters.trials, 4ms},
                                make_cycling_spinner({2ms, 2ms, 3ms, 3ms, 3ms}),
                                parameters);
@@ -160,35 +160,35 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("Speed-up of 2, predicted (1.8, 2.1)",
+    check_relative_performance("Speed-up of 2, predicted [1.8, 2.1]",
                                []() { spin_for(1ms); },
                                []() { spin_for(2ms); },
-                               {.min_speedup{1.8}, .max_speedup{2.1}, .trials{5}});
+                               {.prediction{.lower{1.8}, .upper{2.1}}, .trials{5}});
 
-    check_relative_performance("Speed-up of 4, predicted (3.4, 4.1)",
+    check_relative_performance("Speed-up of 4, predicted [3.4, 4.1]",
                                []() { spin_for(1ms); },
                                []() { spin_for(4ms); },
-                               {.min_speedup{3.4}, .max_speedup{4.1}, .trials{5}});
+                               {.prediction{.lower{3.4}, .upper{4.1}}, .trials{5}});
 
-    check_relative_performance("Durations varying together, a speed-up of 2 in every trial, predicted (1.8, 2.2)",
+    check_relative_performance("Durations varying together, a speed-up of 2 in every trial, predicted [1.8, 2.2]",
                                make_cycling_spinner({1ms,  5ms, 1ms,  5ms, 1ms}),
                                make_cycling_spinner({2ms, 10ms, 2ms, 10ms, 2ms}),
-                               {.min_speedup{1.8}, .max_speedup{2.2}, .trials{5}});
+                               {.prediction{.lower{1.8}, .upper{2.2}}, .trials{5}});
   }
 
   void performance_false_positive_diagnostics::test_confidence_multiplier()
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("Final attempt: an interval of 3 standard errors ends inside (6.57, 8.54)",
+    check_relative_performance("Final attempt: an interval of 3 standard errors ends inside [6.57, 8.54]",
                                []() { spin_for(1ms); },
                                make_cycling_spinner({1ms, 2ms, 4ms, 6ms, 6ms}),
-                               {.min_speedup{6.57}, .max_speedup{8.54}, .trials{5}});
+                               {.prediction{.lower{6.57}, .upper{8.54}}, .trials{5}});
 
-    check_relative_performance("Final attempt: an interval of 3 standard errors starts inside (1.05, 1.37)",
+    check_relative_performance("Final attempt: an interval of 3 standard errors starts inside [1.05, 1.37]",
                                []() { spin_for(1ms); },
                                make_cycling_spinner({1ms, 2ms, 2ms, 6ms, 8ms}),
-                               {.min_speedup{1.05}, .max_speedup{1.37}, .trials{5}});
+                               {.prediction{.lower{1.05}, .upper{1.37}}, .trials{5}});
   }
 
   [[nodiscard]]
@@ -200,6 +200,7 @@ namespace sequoia::testing
   void performance_utilities_test::run_tests()
   {
     test_postprocessing();
+    test_zeroed_measurements();
     test_coarse_sleep();
     test_task_constraints();
   }
@@ -207,50 +208,50 @@ namespace sequoia::testing
   void performance_utilities_test::test_postprocessing()
   {
     {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3)\n"};
-      std::string_view reference{"Speed-up: 2.01 in [1.98, 2.04]; predicted (2, 3)\n"};
+      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
+      std::string_view reference{"Speed-up: 2.01 in [1.98, 2.04]; predicted [2, 3]\n"};
 
       check(equality, "", postprocess(latest, reference), reference);
     }
 
     {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3)\n"};
-      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted (2.1, 3)\n"};
+      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
+      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2.1, 3]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3)\n"};
-      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3.1)\n"};
+      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
+      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3.1]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3)\n"};
-      std::string_view reference{"Speed-up: 1.34 in (1.22, 1.47); predicted (2, 3)\n"};
+      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
+      std::string_view reference{"Speed-up: 1.34 in (1.22, 1.47); predicted [2, 3]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3)\n"};
-      std::string_view reference{"Speed-up: 1.340 in [1.22, 1.47]; predicted (2, 3)\n"};
+      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
+      std::string_view reference{"Speed-up: 1.340 in [1.22, 1.47]; predicted [2, 3]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3)\n"};
-      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3) 4 5 6 7\n"};
+      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
+      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3] 4 5 6 7\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3)\n"};
-      std::string_view reference{"Speed-up: 1.34 in [1.22]; predicted (2, 3)\n"};
+      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
+      std::string_view reference{"Speed-up: 1.34 in [1.22]; predicted [2, 3]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
@@ -328,12 +329,12 @@ namespace sequoia::testing
     {
       std::string_view latest   {"Line 40\n"
                                  "The fast task is slower than the slow one\n"
-                                 "Speed-up: 0.5 in [0.499, 0.501]; predicted (2, 3)\n"
+                                 "Speed-up: 0.5 in [0.499, 0.501]; predicted [2, 3]\n"
                                  "Trials: 5, attempt 1 of 3\n"
                                  "Task durations: fast 0.002s, slow 0.001s\n"};
       std::string_view reference{"Line 40\n"
                                  "The fast task is slower than the slow one\n"
-                                 "Speed-up: 0.497 in [0.495, 0.499]; predicted (2, 3)\n"
+                                 "Speed-up: 0.497 in [0.495, 0.499]; predicted [2, 3]\n"
                                  "Trials: 10, attempt 2 of 3\n"
                                  "Task durations: fast 0.00201s, slow 0.001s\n"};
 
@@ -342,32 +343,32 @@ namespace sequoia::testing
 
     {
       std::string_view latest   {"Line 40\n"
-                                 "Speed-up: 0.5 in [0.499, 0.501]; predicted (2, 3)\n"};
+                                 "Speed-up: 0.5 in [0.499, 0.501]; predicted [2, 3]\n"};
       std::string_view reference{"Line 41\n"
-                                 "Speed-up: 0.497 in [0.495, 0.499]; predicted (2, 3)\n"};
+                                 "Speed-up: 0.497 in [0.495, 0.499]; predicted [2, 3]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3)\n"
+      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"
                                  "Trials: 15, attempt 3 of 3\n"};
       std::string_view reference{"Trials: 15, attempt 3 of 3\n"
-                                 "Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3)\n"};
+                                 "Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3)\n"};
-      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3)\n"
+      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
+      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"
                                  "Trials: 15, attempt 3 of 3\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
 
     {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3)\n"};
+      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{""};
 
       check(equality, "", postprocess(latest, reference), latest);
@@ -375,7 +376,7 @@ namespace sequoia::testing
 
     {
       std::string_view latest   {""};
-      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted (2, 3)\n"};
+      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
 
       check(equality, "", postprocess(latest, reference), latest);
     }
@@ -383,35 +384,108 @@ namespace sequoia::testing
     {
       constexpr auto infinity{std::numeric_limits<double>::infinity()};
       constexpr auto nan{std::numeric_limits<double>::quiet_NaN()};
+      using fractional_seconds = std::chrono::duration<double>;
 
-      const std::string latest   {append_lines(speedup_summary(infinity, 1e+06, -nan, 2, 3),
-                                               task_durations_summary(9.9e-05, 0))};
-      const std::string reference{append_lines(speedup_summary(1.04,     1e-07,  2.5, 2, 3),
-                                               task_durations_summary(0.001,   nan))};
+      const std::string latest{
+        append_lines(speedup_summary({infinity, {1e+06, -nan}}, {2, 3}),
+                     task_durations_summary({fractional_seconds{9.9e-05}, fractional_seconds{0}}))
+      };
+
+      const std::string reference{
+        append_lines(speedup_summary({1.04,     {1e-07,  2.5}}, {2, 3}),
+                     task_durations_summary({fractional_seconds{0.001},   fractional_seconds{nan}}))
+      };
 
       check(equality, "", postprocess(latest, reference), std::string_view{reference});
     }
 
     {
-      const std::string latest   {append_lines(trials_summary(15, 3, 3), speedup_summary(1.04, 1.01, 1.07, 2, 3))};
-      const std::string reference{append_lines(trials_summary(5,  1, 3), speedup_summary(1.02, 1.00, 1.04, 2, 3))};
+      const std::string latest{
+        append_lines(trials_summary(15, {3, 3}), speedup_summary({1.04, {1.01, 1.07}}, {2, 3}))
+      };
+
+      const std::string reference{
+        append_lines(trials_summary(5,  {1, 3}), speedup_summary({1.02, {1.00, 1.04}}, {2, 3}))
+      };
 
       check(equality, "", postprocess(latest, reference), std::string_view{reference});
     }
 
     {
-      const std::string latest   {trials_summary(15, 3, 3)};
-      const std::string reference{trials_summary(15, 3, 4)};
+      const std::string latest   {trials_summary(15, {3, 3})};
+      const std::string reference{trials_summary(15, {3, 4})};
 
       check(equality, "", postprocess(latest, reference), std::string_view{latest});
     }
 
     {
-      const std::string latest   {speedup_summary(1.04, 1.01, 1.07, 2, 3)};
-      const std::string reference{speedup_summary(1.04, 1.01, 1.07, 2, 4)};
+      const std::string latest   {speedup_summary({1.04, {1.01, 1.07}}, {2, 3})};
+      const std::string reference{speedup_summary({1.04, {1.01, 1.07}}, {2, 4})};
 
       check(equality, "", postprocess(latest, reference), std::string_view{latest});
     }
+
+    {
+      const std::string latest   {std::format("Line 40\n\n{}", speedup_summary({1.04, {1.01, 1.07}}, {2, 3}))};
+      const std::string reference{std::format("Line 40\n{}",   speedup_summary({1.02, {1.00, 1.04}}, {2, 3}))};
+
+      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+    }
+
+    {
+      const std::string latest   {std::format("{}\n", speedup_summary({1.04, {1.01, 1.07}}, {2, 3}))};
+      const std::string reference{std::format("{}",   speedup_summary({1.02, {1.00, 1.04}}, {2, 3}))};
+
+      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+    }
+
+    {
+      using fractional_seconds = std::chrono::duration<double>;
+      const indentation nested{"  "};
+
+      const std::string latest{
+        indent(append_lines(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}),
+                            trials_summary(15, {3, 3}),
+                            task_durations_summary({fractional_seconds{0.001},  fractional_seconds{0.00104}})),
+               nested)
+      };
+
+      const std::string reference{
+        indent(append_lines(speedup_summary({1.02, {1.00, 1.04}}, {2, 3}),
+                            trials_summary(5,  {1, 3}),
+                            task_durations_summary({fractional_seconds{0.0011}, fractional_seconds{0.00112}})),
+               nested)
+      };
+
+      check(equality, "", postprocess(latest, reference), std::string_view{reference});
+    }
+
+    {
+      const std::string latest   {indent(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}), indentation{"  "})};
+      const std::string reference{indent(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}), indentation{"    "})};
+
+      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+    }
+  }
+
+  void performance_utilities_test::test_zeroed_measurements()
+  {
+    using fractional_seconds = std::chrono::duration<double>;
+
+    check(equality,
+          "The speed-up and the interval around it are zeroed, and the predicted interval kept",
+          text_with_zeroed_measurements(speedup_summary({1.04, {1.01, 1.07}}, {2, 3})),
+          speedup_summary({}, {2, 3}));
+
+    check(equality,
+          "The number of trials and the attempt are zeroed, and the number of attempts allowed kept",
+          text_with_zeroed_measurements(trials_summary(15, {3, 3})),
+          trials_summary(0, {0, 3}));
+
+    check(equality,
+          "The task durations are zeroed",
+          text_with_zeroed_measurements(task_durations_summary({fractional_seconds{0.001}, fractional_seconds{0.002}})),
+          task_durations_summary({}));
   }
 
   void performance_utilities_test::test_coarse_sleep()

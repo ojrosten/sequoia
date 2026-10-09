@@ -9,33 +9,90 @@
 
 /** \file StatisticalAlgorithms.hpp
     \brief Tools for statistical analysis.
+
+    Each statistic of `data` is returned as `statistic_value_type_t<T, Data>`.
+    It is computed in the common type of the type returned and the value type
+    of the data, and converted once, on return. A statistic too large for the
+    type returned is converted as the platform converts floating-point values:
+    on an IEEE 754 platform it becomes an infinity, but C++ does not guarantee
+    this.
 */
 
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
 #include <functional>
 #include <optional>
 #include <ranges>
+#include <type_traits>
 #include <utility>
 
 namespace sequoia::maths
 {
+  /** \brief `T`, or the value type of `Data` if `T` is `void`. */
+  template<class T, std::ranges::forward_range Data>
+    requires std::same_as<T, std::remove_cvref_t<T>>
+  using statistic_value_type_t = std::conditional_t<std::is_void_v<T>, std::ranges::range_value_t<Data>, T>;
+
+  namespace impl
+  {
+    template<class T, std::ranges::forward_range Data>
+    using statistic_working_type_t
+      = std::common_type_t<statistic_value_type_t<T, Data>, std::ranges::range_value_t<Data>>;
+  }
+
+  /** \brief The statistics of the forward range `Data` can be returned in the
+             floating-point type that `T` requests, and computed in a
+             floating-point type.
+   */
+  template<class Data, class T>
+  concept statistics_expressible_in
+    =    std::ranges::forward_range<Data>
+      && std::floating_point<statistic_value_type_t<T, Data>>
+      && std::floating_point<impl::statistic_working_type_t<T, Data>>;
+
+  /** \brief The sum of the squared deviations of data from their mean, and the
+             mean.
+   */
+  template<class T>
+  struct sum_of_square_diffs_and_mean
+  {
+    std::optional<T> sum_of_square_diffs{}, mean{};
+  };
+
+  /** \brief A variance of data, and their mean. */
+  template<class T>
+  struct variance_and_mean
+  {
+    std::optional<T> variance{}, mean{};
+  };
+
+  /** \brief A standard deviation of data, and their mean. */
+  template<class T>
+  struct standard_deviation_and_mean
+  {
+    std::optional<T> standard_deviation{}, mean{};
+  };
+
   /** \brief Returns the mean of `data`.
 
       There is no mean if `data` is empty.
    */
-  template<std::ranges::forward_range Data, class T = std::ranges::range_value_t<Data>>
+  template<class T = void, statistics_expressible_in<T> Data>
   [[nodiscard]]
-  std::optional<T> mean(Data&& data)
+  std::optional<statistic_value_type_t<T, Data>> mean(Data&& data)
   {
-    std::optional<T> m{};
+    using statistic_type = statistic_value_type_t<T, Data>;
+    using working_type   = impl::statistic_working_type_t<T, Data>;
 
     if(const auto dist{std::ranges::distance(data)})
     {
-      m = std::ranges::fold_left(data, T{}, std::plus<>{}) / dist;
+      return static_cast<statistic_type>(
+        std::ranges::fold_left(data, working_type{}, std::plus<>{}) / static_cast<working_type>(dist)
+      );
     }
 
-    return m;
+    return {};
   }
 
   /** \brief Returns the sum of the squared deviations of `data` from its mean,
@@ -45,25 +102,30 @@ namespace sequoia::maths
       -# Neither, if `data` is empty;
       -# Both, otherwise.
    */
-  template<std::ranges::forward_range Data, class T = std::ranges::range_value_t<Data>>
+  template<class T = void, statistics_expressible_in<T> Data>
   [[nodiscard]]
-  std::pair<std::optional<T>, std::optional<T>>
-    cumulative_square_diffs(Data&& data)
+  sum_of_square_diffs_and_mean<statistic_value_type_t<T, Data>> cumulative_square_diffs(Data&& data)
   {
+    using statistic_type = statistic_value_type_t<T, Data>;
+    using working_type   = impl::statistic_working_type_t<T, Data>;
+
     if(std::ranges::distance(data))
     {
-      const auto m{maths::mean(data)};
-      const auto var{
-        std::ranges::fold_left(data, T{}, [m](const T& sum, const T& datum){
-            return sum + (datum - m.value())*(datum - m.value());
-          }
-        )
+      const working_type m{maths::mean<working_type>(data).value()};
+
+      auto addSquareDiff{
+        [m](working_type sum, working_type datum) { return sum + (datum - m)*(datum - m); }
       };
 
-      return {var, m};
+      const working_type sumOfSquareDiffs{std::ranges::fold_left(data, working_type{}, addSquareDiff)};
+
+      return {
+        .sum_of_square_diffs{static_cast<statistic_type>(sumOfSquareDiffs)},
+        .mean{static_cast<statistic_type>(m)}
+      };
     }
 
-    return {{}, {}};
+    return {};
   }
 
   /** \brief Returns the population variance and the mean of `data`.
@@ -72,19 +134,24 @@ namespace sequoia::maths
       -# Neither, if `data` is empty;
       -# Both, otherwise.
    */
-  template<std::ranges::forward_range Data, class T = std::ranges::range_value_t<Data>>
+  template<class T = void, statistics_expressible_in<T> Data>
   [[nodiscard]]
-  std::pair<std::optional<T>, std::optional<T>>
-    variance(Data&& data)
+  variance_and_mean<statistic_value_type_t<T, Data>> variance(Data&& data)
   {
+    using statistic_type = statistic_value_type_t<T, Data>;
+    using working_type   = impl::statistic_working_type_t<T, Data>;
+
     if(const auto dist{std::ranges::distance(data)})
     {
-      auto [sq, mean]{maths::cumulative_square_diffs(data)};
+      const auto [sq, mean]{maths::cumulative_square_diffs<working_type>(data)};
 
-      return {sq.value()/dist, mean.value()};
+      return {
+        .variance{static_cast<statistic_type>(sq.value() / static_cast<working_type>(dist))},
+        .mean{static_cast<statistic_type>(mean.value())}
+      };
     }
 
-    return {{}, {}};
+    return {};
   }
 
   /** \brief Returns the sample variance and the mean of `data`.
@@ -94,24 +161,29 @@ namespace sequoia::maths
       -# Only the mean, if there is a single datum;
       -# Both, otherwise.
    */
-  template<std::ranges::forward_range Data, class T = std::ranges::range_value_t<Data>>
+  template<class T = void, statistics_expressible_in<T> Data>
   [[nodiscard]]
-  std::pair<std::optional<T>, std::optional<T>>
-    sample_variance(Data&& data)
+  variance_and_mean<statistic_value_type_t<T, Data>> sample_variance(Data&& data)
   {
+    using statistic_type = statistic_value_type_t<T, Data>;
+    using working_type   = impl::statistic_working_type_t<T, Data>;
+
     if(const auto dist{std::ranges::distance(data)}; !dist)
     {
-      return {{}, {}};
+      return {};
     }
     else if(dist == 1)
     {
-      return {{}, maths::mean(data)};
+      return {.mean{maths::mean<T>(data)}};
     }
     else
     {
-      auto [sq, mean]{maths::cumulative_square_diffs(data)};
+      const auto [sq, mean]{maths::cumulative_square_diffs<working_type>(data)};
 
-      return {sq.value()/(dist - 1), mean.value()};
+      return {
+        .variance{static_cast<statistic_type>(sq.value() / static_cast<working_type>(dist - 1))},
+        .mean{static_cast<statistic_type>(mean.value())}
+      };
     }
   }
 
@@ -124,51 +196,63 @@ namespace sequoia::maths
       is the winsorized sample variance.
 
       \returns
-      -# Neither, if `numReplacedAtEachEnd` is negative, or if no data remain
-         beyond those replaced;
+      -# Neither, if no data remain beyond those replaced;
       -# Only the mean, if there is a single datum;
       -# Both, otherwise.
    */
-  template<std::ranges::forward_range Data, class T = std::ranges::range_value_t<Data>>
+  template<class T = void, statistics_expressible_in<T> Data>
   [[nodiscard]]
-  std::pair<std::optional<T>, std::optional<T>>
-    winsorized_sample_variance(Data&& data, std::ranges::range_difference_t<Data> numReplacedAtEachEnd)
+  variance_and_mean<statistic_value_type_t<T, Data>>
+    winsorized_sample_variance(Data&& data, std::size_t numReplacedAtEachEnd)
   {
+    using statistic_type = statistic_value_type_t<T, Data>;
+    using working_type   = impl::statistic_working_type_t<T, Data>;
+
     const auto dist{std::ranges::distance(data)};
-    if((numReplacedAtEachEnd < 0) || (dist - numReplacedAtEachEnd <= numReplacedAtEachEnd))
+    if(std::cmp_greater_equal(numReplacedAtEachEnd, dist - dist / 2))
     {
-      return {{}, {}};
+      return {};
     }
 
-    const auto numKept{dist - numReplacedAtEachEnd - numReplacedAtEachEnd};
+    const auto firstKeptIndex{static_cast<std::ranges::range_difference_t<Data>>(numReplacedAtEachEnd)},
+               finalKeptIndex{dist - firstKeptIndex - 1};
 
-    const auto firstKept{std::ranges::next(std::ranges::begin(data), numReplacedAtEachEnd)},
-               finalKept{std::ranges::next(firstKept, numKept - 1)};
+    const auto firstKept{std::ranges::next(std::ranges::begin(data), firstKeptIndex)},
+               finalKept{std::ranges::next(firstKept, finalKeptIndex - firstKeptIndex)};
 
     const std::ranges::subrange kept{firstKept, std::ranges::next(finalKept)};
 
-    const T lowest {*firstKept},
-            highest{*finalKept};
+    const auto lowest {static_cast<working_type>(*firstKept)},
+               highest{static_cast<working_type>(*finalKept)};
 
-    const T winsorizedMean{
-        (std::ranges::fold_left(kept, T{}, std::plus<>{}) + numReplacedAtEachEnd * (lowest + highest))
-      / dist
+    const working_type winsorizedMean{
+        (  std::ranges::fold_left(kept, working_type{}, std::plus<>{})
+         + static_cast<working_type>(numReplacedAtEachEnd) * (lowest + highest))
+      / static_cast<working_type>(dist)
     };
 
     if(dist == 1)
     {
-      return {{}, winsorizedMean};
+      return {.mean{static_cast<statistic_type>(winsorizedMean)}};
     }
 
-    auto squareDiff{[winsorizedMean](const T& datum) { return (datum - winsorizedMean)*(datum - winsorizedMean); }};
-    auto addSquareDiff{[&squareDiff](const T& sum, const T& datum) { return sum + squareDiff(datum); }};
-
-    const T cumulativeSquareDiffs{
-        std::ranges::fold_left(kept, T{}, addSquareDiff)
-      + numReplacedAtEachEnd * (squareDiff(lowest) + squareDiff(highest))
+    auto squareDiff{
+      [winsorizedMean](working_type datum) { return (datum - winsorizedMean)*(datum - winsorizedMean); }
     };
 
-    return {cumulativeSquareDiffs / (dist - 1), winsorizedMean};
+    auto addSquareDiff{
+      [squareDiff](working_type sum, working_type datum) { return sum + squareDiff(datum); }
+    };
+
+    const working_type sumOfSquareDiffs{
+        std::ranges::fold_left(kept, working_type{}, addSquareDiff)
+      + static_cast<working_type>(numReplacedAtEachEnd) * (squareDiff(lowest) + squareDiff(highest))
+    };
+
+    return {
+      .variance{static_cast<statistic_type>(sumOfSquareDiffs / static_cast<working_type>(dist - 1))},
+      .mean{static_cast<statistic_type>(winsorizedMean)}
+    };
   }
 
   /** \brief Returns the population standard deviation and the mean of
@@ -178,19 +262,24 @@ namespace sequoia::maths
       -# Neither, if `data` is empty;
       -# Both, otherwise.
    */
-  template<std::ranges::forward_range Data, class T = std::ranges::range_value_t<Data>>
+  template<class T = void, statistics_expressible_in<T> Data>
   [[nodiscard]]
-  std::pair<std::optional<T>, std::optional<T>>
-    standard_deviation(Data&& data)
+  standard_deviation_and_mean<statistic_value_type_t<T, Data>> standard_deviation(Data&& data)
   {
-    if(const auto dist{std::ranges::distance(data)})
-    {
-      auto [var, mean]{maths::variance(data)};
+    using statistic_type = statistic_value_type_t<T, Data>;
+    using working_type   = impl::statistic_working_type_t<T, Data>;
 
-      return {std::sqrt(var.value()), mean.value()};
+    if(std::ranges::distance(data))
+    {
+      const auto [var, mean]{maths::variance<working_type>(data)};
+
+      return {
+        .standard_deviation{static_cast<statistic_type>(std::sqrt(var.value()))},
+        .mean{static_cast<statistic_type>(mean.value())}
+      };
     }
 
-    return {{}, {}};
+    return {};
   }
 
   namespace bias
@@ -212,24 +301,32 @@ namespace sequoia::maths
           -# Only the mean, if there is a single datum;
           -# Both, otherwise.
        */
-      template<std::ranges::forward_range Data, class T = std::ranges::range_value_t<Data>>
+      template<class T = void, statistics_expressible_in<T> Data>
       [[nodiscard]]
-      std::pair<std::optional<T>, std::optional<T>>
-        operator()(Data&& data) const
+      standard_deviation_and_mean<statistic_value_type_t<T, Data>> operator()(Data&& data) const
       {
+        using statistic_type = statistic_value_type_t<T, Data>;
+        using working_type   = impl::statistic_working_type_t<T, Data>;
+
         if(const auto dist{std::ranges::distance(data)}; !dist)
         {
-          return {{}, {}};
+          return {};
         }
         else if(dist == 1)
         {
-          return {{}, maths::mean(data)};
+          return {.mean{maths::mean<T>(data)}};
         }
         else
         {
-          auto [sq, mean]{maths::cumulative_square_diffs(data)};
+          const auto [sq, mean]{maths::cumulative_square_diffs<working_type>(data)};
+          const auto biasCorrection{static_cast<working_type>(1.5)};
 
-          return {std::sqrt(sq.value()/(dist - 1.5)), mean.value()};
+          return {
+            .standard_deviation{
+              static_cast<statistic_type>(std::sqrt(sq.value() / (static_cast<working_type>(dist) - biasCorrection)))
+            },
+            .mean{static_cast<statistic_type>(mean.value())}
+          };
         }
       }
     };
@@ -237,18 +334,24 @@ namespace sequoia::maths
 
   /** \brief Returns the result of invoking `estimator` on `data`.
 
-      The default estimator returns its estimate of the population standard
-      deviation, and the mean of `data`.
+      `estimator` is invoked as `estimator.template operator()<T>(data)`, and
+      must return a `standard_deviation_and_mean` of
+      `statistic_value_type_t<T, Data>`. The default estimator returns its
+      estimate of the population standard deviation, and the mean of `data`.
    */
   template<
-    std::ranges::forward_range Data,
-    class Estimator = bias::gaussian_approx_estimator,
-    class T         = std::ranges::range_value_t<Data>
+    class T         = void,
+    statistics_expressible_in<T> Data,
+    class Estimator = bias::gaussian_approx_estimator
   >
+    requires requires(Estimator& estimator, Data&& data) {
+      { estimator.template operator()<T>(std::forward<Data>(data)) }
+        -> std::same_as<standard_deviation_and_mean<statistic_value_type_t<T, Data>>>;
+    }
   [[nodiscard]]
-  std::pair<std::optional<T>, std::optional<T>>
-  sample_standard_deviation(Data&& data, Estimator estimator = Estimator{})
+  standard_deviation_and_mean<statistic_value_type_t<T, Data>>
+    sample_standard_deviation(Data&& data, Estimator estimator = Estimator{})
   {
-    return estimator(std::forward<Data>(data));
+    return estimator.template operator()<T>(std::forward<Data>(data));
   }
 }

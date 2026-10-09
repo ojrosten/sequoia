@@ -1,10 +1,10 @@
 check: 3
 length: 319
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 91
-Speed-up of 2, predicted (3.0, 3.0)
+Speed-up of 2, predicted [3.0, 3.0]
 
 The fast task is not distinguishably faster than the slow one
-Speed-up: 1.31 in [0.902, 1.9]; predicted (3, 3)
+Speed-up: 1.31 in [0.902, 1.9]; predicted [3, 3]
 Trials: 5, attempt 1 of 3
 Task durations: fast 0.00153s, slow 0.002s
 

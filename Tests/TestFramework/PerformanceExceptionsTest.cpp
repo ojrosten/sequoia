@@ -40,24 +40,19 @@ namespace sequoia::testing
     };
 
     check_exception_thrown<std::invalid_argument>("Minimum speed-up of 1",
-                                                  relativePerformanceCheck({.min_speedup{1.0},
-                                                                            .max_speedup{2.0},
+                                                  relativePerformanceCheck({.prediction{.lower{1.0}, .upper{2.0}},
                                                                             .trials{5}}));
     check_exception_thrown<std::invalid_argument>("Maximum speed-up of 1",
-                                                  relativePerformanceCheck({.min_speedup{1.5},
-                                                                            .max_speedup{1.0},
+                                                  relativePerformanceCheck({.prediction{.lower{1.5}, .upper{1.0}},
                                                                             .trials{5}}));
     check_exception_thrown<std::invalid_argument>("Minimum speed-up of NaN",
-                                                  relativePerformanceCheck({.min_speedup{nan},
-                                                                            .max_speedup{2.0},
+                                                  relativePerformanceCheck({.prediction{.lower{nan}, .upper{2.0}},
                                                                             .trials{5}}));
     check_exception_thrown<std::invalid_argument>("Minimum speed-up exceeding the maximum",
-                                                  relativePerformanceCheck({.min_speedup{2.5},
-                                                                            .max_speedup{2.0},
+                                                  relativePerformanceCheck({.prediction{.lower{2.5}, .upper{2.0}},
                                                                             .trials{5}}));
     check_exception_thrown<std::invalid_argument>("Four trials",
-                                                  relativePerformanceCheck({.min_speedup{2.0},
-                                                                            .max_speedup{3.0},
+                                                  relativePerformanceCheck({.prediction{.lower{2.0}, .upper{3.0}},
                                                                             .trials{4}}));
   }
 
@@ -68,8 +63,7 @@ namespace sequoia::testing
         return check_relative_performance("Relative performance with a throwing task",
                                           []() { throw std::runtime_error{"Fast task failure"}; },
                                           []() {},
-                                          {.min_speedup{2.0},
-                                           .max_speedup{3.0},
+                                          {.prediction{.lower{2.0}, .upper{3.0}},
                                            .trials{5}});
       }
     };

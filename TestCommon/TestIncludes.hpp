@@ -201,6 +201,7 @@
 #include "TestFramework/VersionedOutputFreeTest.hpp"
 #include "TextProcessing/CharactersFreeTest.hpp"
 #include "TextProcessing/IndentFreeTest.hpp"
+#include "TextProcessing/NumbersFreeTest.hpp"
 #include "TextProcessing/PatternsFreeTest.hpp"
 #include "TextProcessing/SubstitutionsFreeTest.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"

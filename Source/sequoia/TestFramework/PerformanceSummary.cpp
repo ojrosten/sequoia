@@ -6,11 +6,10 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/TestFramework/PerformanceSummary.hpp"
+#include "sequoia/TextProcessing/Numbers.hpp"
 
-#include <array>
-#include <charconv>
+#include <algorithm>
 #include <format>
-#include <optional>
 #include <ranges>
 #include <stdexcept>
 
@@ -18,69 +17,53 @@ namespace sequoia::testing
 {
   namespace
   {
-    /** \brief Extracts the numbers in `text`, if there are exactly `N`.
+    /** \brief Returns `line` with the values in it which vary from run to run
+               set to zero.
 
-        Anything identifiable as a number of type `T` is extracted. That is
-        whatever `std::from_chars` reads. Reading tries each character from
-        left to right, and resumes after each number it reads. So for a
-        floating-point `T`, integers count, and so do `inf` and `nan`, even
-        inside a word. A `-` directly before a number is its sign, if `T` has one.
-     */
-    template<class T, std::size_t N>
-    [[nodiscard]]
-    std::optional<std::array<T, N>> extract_numbers_from(std::string_view text)
-    {
-      std::array<T, N> numbers{};
-      std::size_t count{};
-      const auto last{text.data() + text.size()};
-      auto first{text.data()};
-      while(first != last)
-      {
-        T value{};
-        if(const auto [next, error]{std::from_chars(first, last, value)}; error == std::errc{})
-        {
-          if(count == N)
-            return std::nullopt;
-
-          numbers[count++] = value;
-          first = next;
-        }
-        else
-        {
-          ++first;
-        }
-      }
-
-      return count == N ? std::optional{numbers} : std::nullopt;
-    }
-
-    /** \brief Returns `line` with its measured values set to zero.
-
-        `text_with_zeroed_measurements` states which lines hold measured
-        values, and which values they are.
+        `text_with_zeroed_measurements` states which lines hold such values,
+        and which values they are.
      */
     [[nodiscard]]
     std::string line_with_zeroed_measurements(std::string_view line)
     {
-      if(const auto numbers{extract_numbers_from<double, 5>(line)})
+      const auto indentationSize{std::min(line.find_first_not_of(" \t"), line.size())};
+      std::string_view indentation{line.substr(0, indentationSize)}, unindented{line.substr(indentationSize)};
+
+      auto indented{[indentation](std::string_view zeroed) { return std::format("{}{}", indentation, zeroed); }};
+
+      if(const auto numbers{extract_numbers_from<double, 5>(unindented)})
       {
-        const auto [speedup, intervalMin, intervalMax, minSpeedup, maxSpeedup]{*numbers};
-        if(speedup_summary(speedup, intervalMin, intervalMax, minSpeedup, maxSpeedup) == line)
-          return speedup_summary(0, 0, 0, minSpeedup, maxSpeedup);
+        const auto [speedup, obtainedLower, obtainedUpper, predictionLower, predictionUpper]{*numbers};
+        const relative_performance_estimate obtained{
+          .speedup{speedup},
+          .interval{.lower{obtainedLower}, .upper{obtainedUpper}}
+        };
+
+        const relative_performance_interval prediction{.lower{predictionLower}, .upper{predictionUpper}};
+
+        if(speedup_summary(obtained, prediction) == unindented)
+          return indented(speedup_summary({}, prediction));
       }
 
-      if(const auto numbers{extract_numbers_from<std::size_t, 3>(line)})
+      if(const auto numbers{extract_numbers_from<std::size_t, 3>(unindented)})
       {
-        const auto [trials, attempt, maxAttempts]{*numbers};
-        if(trials_summary(trials, attempt, maxAttempts) == line)
-          return trials_summary(0, 0, maxAttempts);
+        const auto [trials, currentAttempt, maximumAttempts]{*numbers};
+        const relative_performance_attempts attempts{.current{currentAttempt}, .maximum{maximumAttempts}};
+
+        if(trials_summary(trials, attempts) == unindented)
+          return indented(trials_summary(0, {.maximum{attempts.maximum}}));
       }
 
-      if(const auto numbers{extract_numbers_from<double, 2>(line)})
+      if(const auto numbers{extract_numbers_from<double, 2>(unindented)})
       {
-        const auto [fastDuration, slowDuration]{*numbers};
-        if(task_durations_summary(fastDuration, slowDuration) == line)
-          return task_durations_summary(0, 0);
+        const auto [fastSeconds, slowSeconds]{*numbers};
+        const relative_performance_durations durations{
+          .fast{std::chrono::duration<double>{fastSeconds}},
+          .slow{std::chrono::duration<double>{slowSeconds}}
+        };
+
+        if(task_durations_summary(durations) == unindented)
+          return indented(task_durations_summary({}));
       }
 
       return std::string{line};
@@ -102,34 +85,30 @@ namespace sequoia::testing
       return "The fast task is suspiciously fast: faster than predicted";
     }
 
-    throw std::logic_error{"Unknown relative_performance_failure"};
+    throw std::logic_error{"Unrecognized case for relative_performance_failure"};
   }
 
   [[nodiscard]]
-  std::string speedup_summary(double speedup,
-                              double intervalMin,
-                              double intervalMax,
-                              double minSpeedup,
-                              double maxSpeedup)
+  std::string speedup_summary(const relative_performance_estimate& obtained, relative_performance_interval prediction)
   {
-    return std::format("Speed-up: {:.3g} in [{:.3g}, {:.3g}]; predicted ({:g}, {:g})",
-                       speedup,
-                       intervalMin,
-                       intervalMax,
-                       minSpeedup,
-                       maxSpeedup);
+    return std::format("Speed-up: {:.3g} in [{:.3g}, {:.3g}]; predicted [{:g}, {:g}]",
+                       obtained.speedup,
+                       obtained.interval.lower,
+                       obtained.interval.upper,
+                       prediction.lower,
+                       prediction.upper);
   }
 
   [[nodiscard]]
-  std::string trials_summary(std::size_t trials, std::size_t attempt, std::size_t maxAttempts)
+  std::string trials_summary(std::size_t trials, relative_performance_attempts attempts)
   {
-    return std::format("Trials: {}, attempt {} of {}", trials, attempt, maxAttempts);
+    return std::format("Trials: {}, attempt {} of {}", trials, attempts.current, attempts.maximum);
   }
 
   [[nodiscard]]
-  std::string task_durations_summary(double fastDuration, double slowDuration)
+  std::string task_durations_summary(relative_performance_durations durations)
   {
-    return std::format("Task durations: fast {:.3g}s, slow {:.3g}s", fastDuration, slowDuration);
+    return std::format("Task durations: fast {:.3g}s, slow {:.3g}s", durations.fast.count(), durations.slow.count());
   }
 
   [[nodiscard]]

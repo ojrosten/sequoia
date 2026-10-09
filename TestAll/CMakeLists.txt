@@ -212,6 +212,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/VersionedOutputFreeTest.cpp
                ${TestDir}/TextProcessing/CharactersFreeTest.cpp
                ${TestDir}/TextProcessing/IndentFreeTest.cpp
+               ${TestDir}/TextProcessing/NumbersFreeTest.cpp
                ${TestDir}/TextProcessing/PatternsFreeTest.cpp
                ${TestDir}/TextProcessing/SubstitutionsFreeTest.cpp)
 
