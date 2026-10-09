@@ -86,7 +86,7 @@ namespace sequoia::testing
     auto judge{
       [](const durations& fast, const durations& slow) {
         return [&fast, &slow]() {
-          return impl::judge_attempt(fast, slow, 1.0, {.lower{2.0}, .upper{3.0}});
+          return impl::judge_attempt({.fast{fast}, .slow{slow}}, 1.0, {.lower{2.0}, .upper{3.0}});
         };
       }
     };

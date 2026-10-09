@@ -36,9 +36,13 @@ namespace sequoia::testing
     return t.time_elapsed();
   }
 
-  /** \brief A task which can be copied, and called with no arguments through an lvalue. */
+  /** \brief A type that `check_relative_performance` accepts as a task.
+
+      Each trial copies the task, and calls the copy as an lvalue, with no
+      arguments.
+   */
   template<class T>
-  concept copy_constructible_task = std::invocable<T&> && std::copy_constructible<T>;
+  concept performance_task = std::copy_constructible<T> && std::invocable<T&>;
 
   /** \brief The maximum number of attempts `check_relative_performance`
              makes, counting the first.
@@ -58,6 +62,14 @@ namespace sequoia::testing
 
   namespace impl
   {
+    /** \brief The durations of each task in the trials of one attempt, in
+               trial order.
+     */
+    struct relative_performance_trial_durations
+    {
+      std::span<const std::chrono::duration<double>> fast{}, slow{};
+    };
+
     /** \brief The judgement of one attempt of `check_relative_performance`,
                and the measurements which support it.
      */
@@ -68,17 +80,16 @@ namespace sequoia::testing
       relative_performance_durations              durations{};
     };
 
-    /** \brief Judges the speed-up of a fast task over a slow one from the
-               durations of each in one attempt, paired by trial.
+    /** \brief Judges the speed-up of a fast task over a slow one from their
+               durations in one attempt, paired by trial.
 
-        \pre `fastDurations` and `slowDurations` have the same size, which is
-        at least 5.
+        \pre `trialDurations.fast` and `trialDurations.slow` have the same
+        size, which is at least 5.
 
         \throws std::runtime_error if any duration is not greater than zero.
      */
     [[nodiscard]]
-    relative_performance_judgement judge_attempt(std::span<const std::chrono::duration<double>> fastDurations,
-                                                 std::span<const std::chrono::duration<double>> slowDurations,
+    relative_performance_judgement judge_attempt(const relative_performance_trial_durations& trialDurations,
                                                  double overlapMultiplier,
                                                  relative_performance_interval prediction);
 
@@ -156,7 +167,7 @@ namespace sequoia::testing
 
        \throws std::runtime_error if a trial times either task as zero.
    */
-  template<test_mode Mode, copy_constructible_task F, copy_constructible_task S>
+  template<test_mode Mode, performance_task F, performance_task S>
   bool check_relative_performance(std::string_view description,
                                   test_logger<Mode>& logger,
                                   F fast,
@@ -209,8 +220,7 @@ namespace sequoia::testing
       }
 
       const auto judgement{
-        impl::judge_attempt(fastDurations,
-                            slowDurations,
+        impl::judge_attempt({.fast{fastDurations}, .slow{slowDurations}},
                             impl::overlap_multiplier(Mode, attempt),
                             parameters.prediction)
       };
@@ -255,7 +265,7 @@ namespace sequoia::testing
 
     performance_extender() = default;
 
-    template<class Self, copy_constructible_task F, copy_constructible_task S>
+    template<class Self, performance_task F, performance_task S>
     bool check_relative_performance(this Self& self,
                                     const reporter& description,
                                     F fast,

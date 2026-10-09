@@ -95,8 +95,7 @@ namespace sequoia::testing
   namespace impl
   {
     [[nodiscard]]
-    relative_performance_judgement judge_attempt(std::span<const std::chrono::duration<double>> fastDurations,
-                                                 std::span<const std::chrono::duration<double>> slowDurations,
+    relative_performance_judgement judge_attempt(const relative_performance_trial_durations& trialDurations,
                                                  double overlapMultiplier,
                                                  relative_performance_interval prediction)
     {
@@ -104,7 +103,8 @@ namespace sequoia::testing
         [](std::chrono::duration<double> duration) { return !(duration > std::chrono::duration<double>::zero()); }
       };
 
-      if(std::ranges::any_of(fastDurations, isNotPositive) || std::ranges::any_of(slowDurations, isNotPositive))
+      if(   std::ranges::any_of(trialDurations.fast, isNotPositive)
+         || std::ranges::any_of(trialDurations.slow, isNotPositive))
         throw std::runtime_error{"Relative performance test requires task durations > 0; "
                                  "a task too quick for the clock times as zero"};
 
@@ -113,7 +113,7 @@ namespace sequoia::testing
       };
 
       auto logRatios{
-          std::views::zip_transform(logRatio, fastDurations, slowDurations)
+          std::views::zip_transform(logRatio, trialDurations.fast, trialDurations.slow)
         | std::ranges::to<std::vector>()
       };
 
@@ -150,7 +150,10 @@ namespace sequoia::testing
           .speedup{std::exp(mean)},
           .interval{.lower{std::exp(intervalLower)}, .upper{std::exp(intervalUpper)}}
         },
-        .durations{.fast{trimmed_geometric_mean(fastDurations)}, .slow{trimmed_geometric_mean(slowDurations)}}
+        .durations{
+          .fast{trimmed_geometric_mean(trialDurations.fast)},
+          .slow{trimmed_geometric_mean(trialDurations.slow)}
+        }
       };
     }
 
