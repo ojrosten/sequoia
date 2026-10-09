@@ -58,8 +58,8 @@ namespace sequoia::testing
    */
   struct relative_performance_parameters
   {
-    relative_performance_interval prediction{};
-    std::size_t                   trials{};
+    relative_performance_interval prediction;
+    std::size_t                   trials;
   };
 
   namespace impl

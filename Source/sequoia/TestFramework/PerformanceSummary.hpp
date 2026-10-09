@@ -33,7 +33,7 @@ namespace sequoia::testing
   /** \brief A closed interval of speed-ups. */
   struct relative_performance_interval
   {
-    double lower{}, upper{};
+    double lower, upper;
   };
 
   /** \brief A measured speed-up, and the interval around it. */
