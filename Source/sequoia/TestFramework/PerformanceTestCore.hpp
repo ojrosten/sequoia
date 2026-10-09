@@ -58,8 +58,10 @@ namespace sequoia::testing
    */
   struct relative_performance_parameters
   {
-    relative_performance_interval prediction{};
-    std::size_t                   trials{};
+    // No default member initialisers: without them, clang and gcc refuse,
+    // under -Wextra, a designated initialiser which omits a field.
+    relative_performance_interval prediction;
+    std::size_t                   trials;
   };
 
   namespace impl
