@@ -99,15 +99,16 @@ namespace sequoia::testing
     [[nodiscard]]
     double overlap_multiplier(test_mode mode, std::size_t attempt);
 
-    enum class first_task { fast, slow };
+    enum class task_order { fast_then_slow, slow_then_fast };
 
-    /** \brief Returns which task runs first in each of `trials` trials.
+    /** \brief Returns the order in which the two tasks run in each of
+               `trials` trials.
 
-        The fast task runs first in half of the trials, rounded down. The
-        order is shuffled by `generator`.
+        The fast task runs first in half of the trials, rounded down.
+        `generator` chooses which trials those are.
      */
     [[nodiscard]]
-    std::vector<first_task> shuffled_task_orders(std::size_t trials, std::mt19937& generator);
+    std::vector<task_order> shuffled_task_orders(std::size_t trials, std::mt19937& generator);
   }
 
   /** \brief Checks that the speed-up of `fast` over `slow` is consistent with
@@ -193,9 +194,9 @@ namespace sequoia::testing
       fastDurations.reserve(trialsOfAttempt);
       slowDurations.reserve(trialsOfAttempt);
 
-      for(const auto first : impl::shuffled_task_orders(trialsOfAttempt, generator))
+      for(const auto order : impl::shuffled_task_orders(trialsOfAttempt, generator))
       {
-        if(first == impl::first_task::fast)
+        if(order == impl::task_order::fast_then_slow)
         {
           recordDuration(fast, fastDurations);
           recordDuration(slow, slowDurations);

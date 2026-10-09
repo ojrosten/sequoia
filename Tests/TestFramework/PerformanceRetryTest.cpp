@@ -143,7 +143,7 @@ namespace sequoia::testing
       recordTaskCalls("A speed-up of 1 until the final attempt, then of 2, each task recording its calls")
     };
 
-    auto firstTasksOfAttempt{
+    auto tasksRunFirstInAttempt{
       [&taskCalls, &parameters](std::size_t attempt) {
         const auto priorTrials{parameters.trials * attempt * (attempt - 1) / 2};
         return
@@ -161,7 +161,7 @@ namespace sequoia::testing
     {
       check(equality,
             std::format("Trials of attempt {} in which the fast task runs first", attempt),
-            static_cast<std::size_t>(std::ranges::count_if(firstTasksOfAttempt(attempt), isFast)),
+            static_cast<std::size_t>(std::ranges::count_if(tasksRunFirstInAttempt(attempt), isFast)),
             parameters.trials * attempt / 2);
     }
 

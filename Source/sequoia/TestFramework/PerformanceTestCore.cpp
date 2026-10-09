@@ -179,17 +179,17 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::vector<first_task> shuffled_task_orders(std::size_t trials, std::mt19937& generator)
+    std::vector<task_order> shuffled_task_orders(std::size_t trials, std::mt19937& generator)
     {
-      auto firstTaskOfTrial{
-        [numFastFirst{trials / 2}](std::size_t trial) {
-          return trial < numFastFirst ? first_task::fast : first_task::slow;
+      auto orderOfTrial{
+        [numFastThenSlow{trials / 2}](std::size_t trial) {
+          return trial < numFastThenSlow ? task_order::fast_then_slow : task_order::slow_then_fast;
         }
       };
 
       auto orders{
           std::views::iota(0uz, trials)
-        | std::views::transform(firstTaskOfTrial)
+        | std::views::transform(orderOfTrial)
         | std::ranges::to<std::vector>()
       };
 
