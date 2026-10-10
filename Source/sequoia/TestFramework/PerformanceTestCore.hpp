@@ -40,30 +40,33 @@ namespace sequoia::testing
   /** \brief Prevents the optimizer from removing the computation of `value`.
 
       The compiler must treat `value` as read at the call. So an optimized
-      build computes `value` before the call, even if nothing else uses it.
+      build computes `value` before the call, even if nothing else reads
+      `value`.
 
-      If every input to the computation is known at compile time, the compiler
-      may still compute `value` there.
+      A compiler may still compute `value` during compilation, if every input
+      to the computation is known then.
    */
   template<class T>
   void do_not_optimize_away(const T& value) noexcept
   {
 #if defined(_MSC_VER) && !defined(__clang__)
-    // The store lets code outside this function reach `value`, and the fence
-    // obliges the compiler to complete, before it, every write to memory
-    // which such code can reach. Without either, the computation may be lost.
+    // The store lets code outside this function reach `value`. The fence then
+    // obliges the compiler to complete every write to such reachable memory
+    // before the fence. Without either, the computation of `value` may be
+    // lost.
     impl::observed_address<T> = std::addressof(value);
     std::atomic_signal_fence(std::memory_order_seq_cst);
 #else
-    // Without the memory clobber, only the bytes of `value` itself would be
-    // read, and not memory they point to, such as a vector's elements.
+    // Without the memory clobber, the compiler would treat only the bytes of
+    // `value` as read, and not memory they point to, such as a vector's
+    // elements.
     asm volatile("" : : "m"(value) : "memory");
 #endif
   }
 
   /** \brief Returns the duration of a call of `task`.
 
-      If the call returns a value, the value is passed to
+      If the call returns a value, `profile` passes the value to
       `do_not_optimize_away` before the timing stops.
    */
   template<class Task>

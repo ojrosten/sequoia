@@ -64,17 +64,17 @@ namespace sequoia::testing
       proportion to `steps`.
    */
   [[nodiscard]]
-  constexpr std::uint64_t xorshift(std::uint64_t seed, std::size_t steps) noexcept
+  constexpr std::uint64_t xorshift_state(std::uint64_t seed, std::size_t steps) noexcept
   {
-    return std::ranges::fold_left(
-             std::views::iota(0uz, steps),
-             seed,
-             [](std::uint64_t state, std::size_t) {
-               state ^= state << 13;
-               state ^= state >> 7;
-               return state ^ (state << 17);
-             }
-           );
+    auto nextState{
+      [](std::uint64_t state, std::size_t) {
+        state ^= state << 13;
+        state ^= state >> 7;
+        return state ^ (state << 17);
+      }
+    };
+
+    return std::ranges::fold_left(std::views::iota(0uz, steps), seed, nextState);
   }
 
   /** \brief Returns a task which spins for each of `durations` in turn,

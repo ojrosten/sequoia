@@ -50,7 +50,7 @@ namespace sequoia::testing
 
     void test_confidence_multiplier();
 
-    void test_unused_results();
+    void test_computations_not_optimized_away();
   };
 
   class performance_utilities_test final : public free_test
