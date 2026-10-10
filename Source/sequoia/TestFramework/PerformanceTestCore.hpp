@@ -348,8 +348,8 @@ namespace sequoia::testing
 
     using base_type::base_type;
 
-    /** \brief Summarizes the checks, taking the attempt which decides each to
-               vary from run to run.
+    /** \brief Summarizes the checks, as
+               `summarize(delta, deciding_attempt::varies)` does.
      */
     [[nodiscard]]
     log_summary summarize(duration delta) const;
