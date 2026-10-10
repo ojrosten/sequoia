@@ -22,6 +22,9 @@ namespace sequoia::testing
     static std::filesystem::path source_file();
 
     void run_tests();
+
+    [[nodiscard]]
+    log_summary summarize(duration delta) const;
   private:
 
     void test_relative_performance();
@@ -44,6 +47,9 @@ namespace sequoia::testing
     static std::filesystem::path source_file();
 
     void run_tests();
+
+    [[nodiscard]]
+    log_summary summarize(duration delta) const;
   private:
 
     void test_relative_performance();

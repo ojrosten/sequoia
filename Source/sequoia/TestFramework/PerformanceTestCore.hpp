@@ -329,11 +329,13 @@ namespace sequoia::testing
 
       \returns
       -# `referenceOutput`, if `text_with_zeroed_measurements` gives the same
-         result for it as for `testOutput`;
+         result for it as for `testOutput`, each given `decidingAttempt`;
       -# `testOutput`, otherwise.
    */
   [[nodiscard]]
-  std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);
+  std::string_view postprocess(std::string_view testOutput,
+                               std::string_view referenceOutput,
+                               deciding_attempt decidingAttempt);
 
   /**\brief class template from which all concrete tests should derive */
 
@@ -346,6 +348,9 @@ namespace sequoia::testing
 
     using base_type::base_type;
 
+    /** \brief Summarizes the checks, as
+               `summarize(delta, deciding_attempt::varies)` does.
+     */
     [[nodiscard]]
     log_summary summarize(duration delta) const;
   protected:
@@ -353,6 +358,21 @@ namespace sequoia::testing
 
     basic_performance_test(basic_performance_test&&)            noexcept = default;
     basic_performance_test& operator=(basic_performance_test&&) noexcept = default;
+
+    /** \brief Summarizes the checks.
+
+        In false-positive and false-negative modes, `postprocess` chooses
+        between the run's diagnostics output and the contents of the existing
+        diagnostics file, given `decidingAttempt`. The summary carries the
+        chosen text.
+
+        A test in which the same attempt decides each check on every run may
+        hide `summarize(duration)` with its own, which passes
+        `deciding_attempt::invariant` here. Its diagnostics output then
+        records the number of trials and the attempt exactly.
+     */
+    [[nodiscard]]
+    log_summary summarize(duration delta, deciding_attempt decidingAttempt) const;
   };
 
   /** \anchor performance_test_alias */

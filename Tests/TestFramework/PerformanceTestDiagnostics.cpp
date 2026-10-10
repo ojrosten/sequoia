@@ -57,6 +57,12 @@ namespace sequoia::testing
     return std::source_location::current().file_name();
   }
 
+  [[nodiscard]]
+  log_summary performance_false_negative_diagnostics::summarize(duration delta) const
+  {
+    return performance_false_negative_test::summarize(delta, deciding_attempt::invariant);
+  }
+
   void performance_false_negative_diagnostics::run_tests()
   {
     test_relative_performance();
@@ -152,6 +158,12 @@ namespace sequoia::testing
     return std::source_location::current().file_name();
   }
 
+  [[nodiscard]]
+  log_summary performance_false_positive_diagnostics::summarize(duration delta) const
+  {
+    return performance_false_positive_test::summarize(delta, deciding_attempt::invariant);
+  }
+
   void performance_false_positive_diagnostics::run_tests()
   {
     test_relative_performance();
@@ -215,119 +227,119 @@ namespace sequoia::testing
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{"Speed-up: 2.01 in [1.98, 2.04]; predicted [2, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), reference);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), reference);
     }
 
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2.1, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3.1]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{"Speed-up: 1.34 in (1.22, 1.47); predicted [2, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{"Speed-up: 1.340 in [1.22, 1.47]; predicted [2, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3] 4 5 6 7\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{"Speed-up: 1.34 in [1.22]; predicted [2, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {"Trials: 15, attempt 3 of 3\n"};
       std::string_view reference{"Trials: 5, attempt 1 of 3\n"};
 
-      check(equality, "", postprocess(latest, reference), reference);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), reference);
     }
 
     {
       std::string_view latest   {"Trials: 5, attempt 1 of 3\n"};
       std::string_view reference{"Trials: 5, attempt 1 of 4\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {"Trials: 5, attempt 1 of 3\n"};
       std::string_view reference{"Trials: 05, attempt 1 of 3\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {"Trials: 5, attempt 1 of 3\n"};
       std::string_view reference{"Trials: 5.5, attempt 1 of 3\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {"Trials: 5, attempt 1 of 3\n"};
       std::string_view reference{"Trials: -5, attempt 1 of 3\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {"Task durations: fast 0.005s, slow 0.0067s\n"};
       std::string_view reference{"Task durations: fast 0.00101s, slow 0.00402s\n"};
 
-      check(equality, "", postprocess(latest, reference), reference);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), reference);
     }
 
     {
       std::string_view latest   {"Task durations: fast 0.005s, slow 0.0067s\n"};
       std::string_view reference{"Task durations: fast 0.005ms, slow 0.0067s\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {"Task durations: fast 0.005s, slow 0.0067s\n"};
       std::string_view reference{"Task durations: slow 0.005s, fast 0.0067s\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {"Task durations: fast 0.005s, slow 0.0067s\n"};
       std::string_view reference{"Task durations: fast 0.005s, slow 0.0067s FAILED\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {"The fast task is slower than the slow one\n"};
       std::string_view reference{"The fast task is not distinguishably faster than the slow one\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
@@ -342,7 +354,7 @@ namespace sequoia::testing
                                  "Trials: 10, attempt 2 of 3\n"
                                  "Task durations: fast 0.00201s, slow 0.001s\n"};
 
-      check(equality, "", postprocess(latest, reference), reference);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), reference);
     }
 
     {
@@ -351,7 +363,7 @@ namespace sequoia::testing
       std::string_view reference{"Line 41\n"
                                  "Speed-up: 0.497 in [0.495, 0.499]; predicted [2, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
@@ -360,7 +372,7 @@ namespace sequoia::testing
       std::string_view reference{"Trials: 15, attempt 3 of 3\n"
                                  "Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
@@ -368,21 +380,21 @@ namespace sequoia::testing
       std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"
                                  "Trials: 15, attempt 3 of 3\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{""};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
       std::string_view latest   {""};
       std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), latest);
     }
 
     {
@@ -400,7 +412,7 @@ namespace sequoia::testing
                      task_durations_summary({fractional_seconds{0.001},   fractional_seconds{nan}}))
       };
 
-      check(equality, "", postprocess(latest, reference), std::string_view{reference});
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), std::string_view{reference});
     }
 
     {
@@ -412,35 +424,67 @@ namespace sequoia::testing
         append_lines(trials_summary(5,  {1, 3}), speedup_summary({1.02, {1.00, 1.04}}, {2, 3}))
       };
 
-      check(equality, "", postprocess(latest, reference), std::string_view{reference});
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), std::string_view{reference});
     }
 
     {
       const std::string latest   {trials_summary(15, {3, 3})};
       const std::string reference{trials_summary(15, {3, 4})};
 
-      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), std::string_view{latest});
+    }
+
+    {
+      using fractional_seconds = std::chrono::duration<double>;
+
+      const std::string latest{
+        append_lines(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}),
+                     trials_summary(15, {3, 3}),
+                     task_durations_summary({fractional_seconds{0.001},  fractional_seconds{0.00104}}))
+      };
+
+      const std::string reference{
+        append_lines(speedup_summary({1.02, {1.00, 1.04}}, {2, 3}),
+                     trials_summary(15, {3, 3}),
+                     task_durations_summary({fractional_seconds{0.0011}, fractional_seconds{0.00112}}))
+      };
+
+      check(equality, "", postprocess(latest, reference, deciding_attempt::invariant), std::string_view{reference});
+    }
+
+    {
+      const std::string latest   {trials_summary(15, {3, 3})};
+      const std::string reference{trials_summary(20, {3, 3})};
+
+      check(equality, "", postprocess(latest, reference, deciding_attempt::invariant), std::string_view{latest});
+    }
+
+    {
+      const std::string latest   {trials_summary(15, {3, 3})};
+      const std::string reference{trials_summary(15, {2, 3})};
+
+      check(equality, "", postprocess(latest, reference, deciding_attempt::invariant), std::string_view{latest});
     }
 
     {
       const std::string latest   {speedup_summary({1.04, {1.01, 1.07}}, {2, 3})};
       const std::string reference{speedup_summary({1.04, {1.01, 1.07}}, {2, 4})};
 
-      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), std::string_view{latest});
     }
 
     {
       const std::string latest   {std::format("Line 40\n\n{}", speedup_summary({1.04, {1.01, 1.07}}, {2, 3}))};
       const std::string reference{std::format("Line 40\n{}",   speedup_summary({1.02, {1.00, 1.04}}, {2, 3}))};
 
-      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), std::string_view{latest});
     }
 
     {
       const std::string latest   {std::format("{}\n", speedup_summary({1.04, {1.01, 1.07}}, {2, 3}))};
       const std::string reference{std::format("{}",   speedup_summary({1.02, {1.00, 1.04}}, {2, 3}))};
 
-      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), std::string_view{latest});
     }
 
     {
@@ -461,14 +505,14 @@ namespace sequoia::testing
                nested)
       };
 
-      check(equality, "", postprocess(latest, reference), std::string_view{reference});
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), std::string_view{reference});
     }
 
     {
       const std::string latest   {indent(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}), indentation{"  "})};
       const std::string reference{indent(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}), indentation{"    "})};
 
-      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+      check(equality, "", postprocess(latest, reference, deciding_attempt::varies), std::string_view{latest});
     }
   }
 
@@ -478,18 +522,32 @@ namespace sequoia::testing
 
     check(equality,
           "The speed-up and the interval around it are zeroed, and the predicted interval kept",
-          text_with_zeroed_measurements(speedup_summary({1.04, {1.01, 1.07}}, {2, 3})),
+          text_with_zeroed_measurements(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}), deciding_attempt::varies),
           speedup_summary({}, {2, 3}));
 
     check(equality,
           "The number of trials and the attempt are zeroed, and the number of attempts allowed kept",
-          text_with_zeroed_measurements(trials_summary(15, {3, 3})),
+          text_with_zeroed_measurements(trials_summary(15, {3, 3}), deciding_attempt::varies),
           trials_summary(0, {0, 3}));
 
     check(equality,
           "The task durations are zeroed",
-          text_with_zeroed_measurements(task_durations_summary({fractional_seconds{0.001}, fractional_seconds{0.002}})),
+          text_with_zeroed_measurements(task_durations_summary({fractional_seconds{0.001}, fractional_seconds{0.002}}),
+                                        deciding_attempt::varies),
           task_durations_summary({}));
+
+    check(equality,
+          "With the deciding attempt invariant, the number of trials and the attempt are kept",
+          text_with_zeroed_measurements(trials_summary(15, {3, 3}), deciding_attempt::invariant),
+          trials_summary(15, {3, 3}));
+
+    check(equality,
+          "With the deciding attempt invariant, the speed-up, its interval and the task durations are zeroed",
+          text_with_zeroed_measurements(
+            append_lines(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}),
+                         task_durations_summary({fractional_seconds{0.001}, fractional_seconds{0.002}})),
+            deciding_attempt::invariant),
+          append_lines(speedup_summary({}, {2, 3}), task_durations_summary({})));
   }
 
   void performance_utilities_test::test_coarse_sleep()

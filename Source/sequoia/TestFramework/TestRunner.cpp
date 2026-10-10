@@ -816,7 +816,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string instability_projection(std::string_view message)
   {
-    return text_with_zeroed_measurements(message);
+    return text_with_zeroed_measurements(message, deciding_attempt::varies);
   }
 
   [[nodiscard]]

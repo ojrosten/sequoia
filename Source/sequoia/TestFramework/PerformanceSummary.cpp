@@ -23,7 +23,7 @@ namespace sequoia::testing
         and which values they are.
      */
     [[nodiscard]]
-    std::string line_with_zeroed_measurements(std::string_view line)
+    std::string line_with_zeroed_measurements(std::string_view line, deciding_attempt decidingAttempt)
     {
       const auto indentationSize{std::min(line.find_first_not_of(" \t"), line.size())};
       const std::string_view indentation{line.substr(0, indentationSize)}, unindented{line.substr(indentationSize)};
@@ -44,7 +44,8 @@ namespace sequoia::testing
           return indented(speedup_summary({}, prediction));
       }
 
-      if(const auto numbers{extract_numbers_from<std::size_t, 3>(unindented)})
+      if(const auto numbers{extract_numbers_from<std::size_t, 3>(unindented)};
+         numbers && (decidingAttempt == deciding_attempt::varies))
       {
         const auto [trials, currentAttempt, maximumAttempts]{*numbers};
         const relative_performance_attempts attempts{.current{currentAttempt}, .maximum{maximumAttempts}};
@@ -111,10 +112,10 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string text_with_zeroed_measurements(std::string_view text)
+  std::string text_with_zeroed_measurements(std::string_view text, deciding_attempt decidingAttempt)
   {
     auto lineWithZeroedMeasurements{
-      [](auto line) { return line_with_zeroed_measurements(std::string_view{line}); }
+      [decidingAttempt](auto line) { return line_with_zeroed_measurements(std::string_view{line}, decidingAttempt); }
     };
 
     return
