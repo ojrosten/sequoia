@@ -199,23 +199,23 @@ namespace sequoia::testing
   void performance_false_positive_diagnostics::test_unused_results()
   {
     // Nothing but do_not_optimize_away uses the result of either task's
-    // computation. Without it, an optimized build removes the computation,
-    // and the check fails, since a trial times the tasks at or near zero. An
-    // unoptimized build removes nothing, so there these checks pass either
-    // way. The seed is drawn at run time, so that no build can compute the
-    // result at compile time.
+    // computation. Without it, an optimized build removes the computation. A
+    // trial then times the tasks at or near zero, and the check fails or
+    // throws. An unoptimized build removes nothing, so there these checks
+    // pass either way. The seed is drawn at run time, so that no build can
+    // compute the result at compile time.
     const std::uint64_t seed{std::random_device{}()};
     constexpr std::size_t steps{500'000};
-
-    check_relative_performance("A speed-up of 2 in computing the value a task returns, predicted [1.8, 2.2]",
-                               [seed]() { return xorshift(seed, steps); },
-                               [seed]() { return xorshift(seed, 2 * steps); },
-                               {.prediction{.lower{1.8}, .upper{2.2}}, .minimum_trials{10}});
 
     check_relative_performance("A speed-up of 2 in computing a value a task passes to do_not_optimize_away, "
                                "predicted [1.8, 2.2]",
                                [seed]() { do_not_optimize_away(xorshift(seed, steps)); },
                                [seed]() { do_not_optimize_away(xorshift(seed, 2 * steps)); },
+                               {.prediction{.lower{1.8}, .upper{2.2}}, .minimum_trials{10}});
+
+    check_relative_performance("A speed-up of 2 in computing the value a task returns, predicted [1.8, 2.2]",
+                               [seed]() { return xorshift(seed, steps); },
+                               [seed]() { return xorshift(seed, 2 * steps); },
                                {.prediction{.lower{1.8}, .upper{2.2}}, .minimum_trials{10}});
   }
 
