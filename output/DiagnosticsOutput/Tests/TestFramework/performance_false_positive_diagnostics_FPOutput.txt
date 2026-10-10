@@ -50,21 +50,21 @@ Task durations: fast 0.002s, slow 0.00617s
 
 False Negative Failure:
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 210
-A speed-up of 2 in computing the value a task returns, predicted [1.8, 2.2]
+A speed-up of 2 in computing a value a task passes to do_not_optimize_away, predicted [1.5, 2.5]
 
-Speed-up: 2 in [2, 2.01]; predicted [1.8, 2.2]
+Speed-up: 1.98 in [1.96, 2.01]; predicted [1.5, 2.5]
 Trials: 10, attempt 1 of 3
-Task durations: fast 0.000761s, slow 0.00152s
+Task durations: fast 0.00824s, slow 0.0164s
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 215
-A speed-up of 2 in computing a value a task passes to do_not_optimize_away, predicted [1.8, 2.2]
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 216
+A speed-up of 2 in computing the value a task returns, predicted [1.5, 2.5]
 
-Speed-up: 2.01 in [1.99, 2.03]; predicted [1.8, 2.2]
+Speed-up: 2.01 in [2, 2.02]; predicted [1.5, 2.5]
 Trials: 10, attempt 1 of 3
-Task durations: fast 0.000743s, slow 0.00149s
+Task durations: fast 0.00813s, slow 0.0163s
 
 =======================================
 

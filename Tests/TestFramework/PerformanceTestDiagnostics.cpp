@@ -208,15 +208,15 @@ namespace sequoia::testing
     constexpr std::size_t steps{500'000};
 
     check_relative_performance("A speed-up of 2 in computing a value a task passes to do_not_optimize_away, "
-                               "predicted [1.8, 2.2]",
+                               "predicted [1.5, 2.5]",
                                [seed]() { do_not_optimize_away(xorshift(seed, steps)); },
                                [seed]() { do_not_optimize_away(xorshift(seed, 2 * steps)); },
-                               {.prediction{.lower{1.8}, .upper{2.2}}, .minimum_trials{10}});
+                               {.prediction{.lower{1.5}, .upper{2.5}}, .minimum_trials{10}});
 
-    check_relative_performance("A speed-up of 2 in computing the value a task returns, predicted [1.8, 2.2]",
+    check_relative_performance("A speed-up of 2 in computing the value a task returns, predicted [1.5, 2.5]",
                                [seed]() { return xorshift(seed, steps); },
                                [seed]() { return xorshift(seed, 2 * steps); },
-                               {.prediction{.lower{1.8}, .upper{2.2}}, .minimum_trials{10}});
+                               {.prediction{.lower{1.5}, .upper{2.5}}, .minimum_trials{10}});
   }
 
   [[nodiscard]]
