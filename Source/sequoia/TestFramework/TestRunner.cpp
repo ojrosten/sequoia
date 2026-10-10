@@ -10,6 +10,7 @@
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/DumpComparison.hpp"
 #include "sequoia/TestFramework/MaterialsUpdater.hpp"
+#include "sequoia/TestFramework/PerformanceSummary.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/TestCreator.hpp"
@@ -813,6 +814,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::string instability_projection(std::string_view message)
+  {
+    return text_with_zeroed_measurements(message);
+  }
+
+  [[nodiscard]]
   return_code child_return_code(const int exitStatus, std::string_view childDescription)
   {
     if(exitStatus == 0)
@@ -1602,7 +1609,9 @@ namespace sequoia::testing
        || (m_InstabilityMode == instability_mode::coordinator))
     {
       aggregate_instability_analysis_prune_files(proj_paths(), m_PruneMode, entry_time_stamp, m_NumReps);
-      stream() << instability_analysis(proj_paths().output().instability_analysis(), m_NumReps);
+      auto instabilityProjection{[](std::string_view message) { return instability_projection(message); }};
+
+      stream() << instability_analysis(proj_paths().output().instability_analysis(), m_NumReps, instabilityProjection);
     }
 
     return code | report_versioned_output_changes(baseline);

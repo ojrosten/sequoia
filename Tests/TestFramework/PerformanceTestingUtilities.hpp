@@ -9,12 +9,39 @@
 
 /** \file */
 
+#include "sequoia/TestFramework/PerformanceTestCore.hpp"
+
+#include <algorithm>
 #include <array>
 #include <chrono>
+#include <functional>
 #include <memory>
+#include <ranges>
+#include <span>
 
 namespace sequoia::testing
 {
+  /** \brief The number of trials in each attempt of
+             `check_relative_performance`, for minima of 10 and 11.
+
+      The numbers are not in the contract. Tests which use them pin the
+      implementation's choice, and change with it.
+   */
+  inline constexpr auto trials_for_minimum_10{std::to_array<std::size_t>({10, 15, 20})},
+                        trials_for_minimum_11{std::to_array<std::size_t>({11, 16, 22})};
+
+  static_assert(trials_for_minimum_10.size() == relative_performance_max_attempts);
+  static_assert(trials_for_minimum_11.size() == relative_performance_max_attempts);
+
+  /** \brief Returns the number of trials made before attempt `attempt`,
+             given the number in each attempt.
+   */
+  [[nodiscard]]
+  constexpr std::size_t trials_before_attempt(std::span<const std::size_t> trialsOfAttempts, std::size_t attempt)
+  {
+    return std::ranges::fold_left(trialsOfAttempts | std::views::take(attempt - 1), 0uz, std::plus<>{});
+  }
+
   /** \brief Keeps the calling thread busy until `t` has passed by the
              steady clock.
 

@@ -1,3 +1,4 @@
+////////////////////////////////////////////////////////////////////
 //                Copyright Oliver J. Rosten 2020.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
@@ -25,11 +26,13 @@ namespace sequoia::testing
 
     void test_relative_performance();
 
-    void test_sd_tolerance();
+    void test_confidence_multiplier();
 
     void test_significance_gate();
 
     void test_fail_at_second_attempt();
+
+    void test_confidence_multiplier_from_first_attempt();
   };
 
   class performance_false_positive_diagnostics final : public performance_false_positive_test
@@ -45,7 +48,7 @@ namespace sequoia::testing
 
     void test_relative_performance();
 
-    void test_sd_tolerance();
+    void test_confidence_multiplier();
   };
 
   class performance_utilities_test final : public free_test
@@ -60,6 +63,8 @@ namespace sequoia::testing
   private:
 
     void test_postprocessing();
+
+    void test_zeroed_measurements();
 
     void test_coarse_sleep();
 

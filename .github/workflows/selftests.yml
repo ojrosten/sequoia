@@ -41,7 +41,8 @@ jobs:
           - name: Linux
             os: ubuntu-latest
             packages: gdb
-            selftests: compile_time_report generate_coverage_report propose_tightened_baseline read_settled_jobs retry snapshot_at_deadline
+            selftests: compile_time_report cron_expression_at generate_coverage_report
+              propose_tightened_baseline read_settled_jobs retry snapshot_at_deadline
           # report_crashes' selftest runs on macOS alone. The system there writes
           # the crash reports its macOS controls read, and its Linux and Windows
           # controls run through stand-ins for uname, file and gdb. One of those
@@ -49,7 +50,8 @@ jobs:
           - name: macOS
             os: macos-latest
             packages: ''
-            selftests: compile_time_report generate_coverage_report propose_tightened_baseline report_crashes snapshot_at_deadline
+            selftests: compile_time_report generate_coverage_report
+              propose_tightened_baseline report_crashes snapshot_at_deadline
     steps:
       - uses: actions/checkout@v7
         with:

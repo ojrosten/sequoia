@@ -95,17 +95,11 @@ name: rigorous
 # the flag when gcc is fixed, or sooner, to find out whether this column was
 # ever affected.
 #
-# It is also the one column that runs the performance tests.
-# TestRunnerPerformanceTest asserts 60ms +- 35 for eight 25ms sleeps run
-# concurrently, and the other hosted columns cannot hold that:
-#   - A sanitizer slows the run: Linux ASan+UBSan returned 164ms on
-#     2026-09-10.
-#   - The Windows runner's times vary: 196ms, then 603ms, for one commit.
-#   - The macOS runner's sleeps overshoot even without instrumentation.
-# Uninstrumented gcc on Linux can: since #181 made the test assert on raw
-# times, coarse's Linux Debug column passed it in all 119 runs to 2026-10-05.
-# Every other column here carries `--exclude-performance`, and this column
-# keeps the tier from being blind to performance.
+# Every Linux and Windows column runs the performance tests. The macOS
+# columns carry `--exclude-performance`, for the reason, and on the
+# measurement, that coarse.yml gives. The Windows ASan column's repeated runs
+# keep excluding them: those repeat the suite to find the sharing violation
+# below, which the performance tests have no part in.
 #
 # Both MSVC columns run TestRunnerTest, as every MSVC column in every tier
 # does. Its teardown's fs::remove_all used to fail on Windows with a sharing
@@ -187,11 +181,11 @@ jobs:
       exec_args: '--check-versioned-output'
       columns: >-
         [
-          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance", "repeat_args": "locate;5;--check-versioned-output;--exclude-performance;exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
+          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output"},
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output", "repeat_args": "locate;5;--check-versioned-output;--exclude-performance;exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
           {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15", "exec_args": ""},
           {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance", "repeat_args": "locate;20;--check-versioned-output;--exclude-performance;exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
-          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output"},
           {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 

@@ -7,6 +7,8 @@
 
 #include "PerformanceExceptionsTest.hpp"
 
+#include <array>
+#include <chrono>
 #include <limits>
 #include <stdexcept>
 
@@ -22,6 +24,7 @@ namespace sequoia::testing
   {
     test_invalid_arguments();
     test_throwing_task();
+    test_non_positive_durations();
   }
 
   void performance_exceptions_test::test_invalid_arguments()
@@ -40,53 +43,20 @@ namespace sequoia::testing
     };
 
     check_exception_thrown<std::invalid_argument>("Minimum speed-up of 1",
-                                                  relativePerformanceCheck({.min_speedup{1.0},
-                                                                            .max_speedup{2.0},
-                                                                            .trials{5},
-                                                                            .num_sds{4.0},
-                                                                            .max_attempts{3}}));
+                                                  relativePerformanceCheck({.prediction{.lower{1.0}, .upper{2.0}},
+                                                                            .minimum_trials{10}}));
     check_exception_thrown<std::invalid_argument>("Maximum speed-up of 1",
-                                                  relativePerformanceCheck({.min_speedup{1.5},
-                                                                            .max_speedup{1.0},
-                                                                            .trials{5},
-                                                                            .num_sds{4.0},
-                                                                            .max_attempts{3}}));
+                                                  relativePerformanceCheck({.prediction{.lower{1.5}, .upper{1.0}},
+                                                                            .minimum_trials{10}}));
     check_exception_thrown<std::invalid_argument>("Minimum speed-up of NaN",
-                                                  relativePerformanceCheck({.min_speedup{nan},
-                                                                            .max_speedup{2.0},
-                                                                            .trials{5},
-                                                                            .num_sds{4.0},
-                                                                            .max_attempts{3}}));
+                                                  relativePerformanceCheck({.prediction{.lower{nan}, .upper{2.0}},
+                                                                            .minimum_trials{10}}));
     check_exception_thrown<std::invalid_argument>("Minimum speed-up exceeding the maximum",
-                                                  relativePerformanceCheck({.min_speedup{2.5},
-                                                                            .max_speedup{2.0},
-                                                                            .trials{5},
-                                                                            .num_sds{4.0},
-                                                                            .max_attempts{3}}));
-    check_exception_thrown<std::invalid_argument>("One standard deviation",
-                                                  relativePerformanceCheck({.min_speedup{2.0},
-                                                                            .max_speedup{3.0},
-                                                                            .trials{5},
-                                                                            .num_sds{1.0},
-                                                                            .max_attempts{3}}));
-    check_exception_thrown<std::invalid_argument>("NaN standard deviations",
-                                                  relativePerformanceCheck({.min_speedup{2.0},
-                                                                            .max_speedup{3.0},
-                                                                            .trials{5},
-                                                                            .num_sds{nan},
-                                                                            .max_attempts{3}}));
-    check_exception_thrown<std::invalid_argument>("No attempts",
-                                                  relativePerformanceCheck({.min_speedup{2.0},
-                                                                            .max_speedup{3.0},
-                                                                            .trials{5},
-                                                                            .num_sds{4.0},
-                                                                            .max_attempts{0}}));
-    check_exception_thrown<std::invalid_argument>("Four trials",
-                                                  relativePerformanceCheck({.min_speedup{2.0},
-                                                                            .max_speedup{3.0},
-                                                                            .trials{4},
-                                                                            .num_sds{4.0},
-                                                                            .max_attempts{3}}));
+                                                  relativePerformanceCheck({.prediction{.lower{2.5}, .upper{2.0}},
+                                                                            .minimum_trials{10}}));
+    check_exception_thrown<std::invalid_argument>("Nine trials",
+                                                  relativePerformanceCheck({.prediction{.lower{2.0}, .upper{3.0}},
+                                                                            .minimum_trials{9}}));
   }
 
   void performance_exceptions_test::test_throwing_task()
@@ -96,14 +66,35 @@ namespace sequoia::testing
         return check_relative_performance("Relative performance with a throwing task",
                                           []() { throw std::runtime_error{"Fast task failure"}; },
                                           []() {},
-                                          {.min_speedup{2.0},
-                                           .max_speedup{3.0},
-                                           .trials{5},
-                                           .num_sds{4.0},
-                                           .max_attempts{3}});
+                                          {.prediction{.lower{2.0}, .upper{3.0}},
+                                           .minimum_trials{10}});
       }
     };
 
     check_exception_thrown<std::runtime_error>("Fast task throws", checkWithThrowingFastTask);
+  }
+
+  void performance_exceptions_test::test_non_positive_durations()
+  {
+    using namespace std::chrono_literals;
+
+    auto judgeAttemptContaining{
+      [](relative_performance_durations trial) {
+        return [trial]() {
+          const std::array<relative_performance_durations, 5> trialDurations{{
+            {.fast{1s}, .slow{1s}}, {.fast{1s}, .slow{1s}}, trial, {.fast{1s}, .slow{1s}}, {.fast{1s}, .slow{1s}}
+          }};
+
+          return impl::judge_attempt(trialDurations, 1.0, {.lower{2.0}, .upper{3.0}});
+        };
+      }
+    };
+
+    check_exception_thrown<std::runtime_error>("A fast task timed as zero",
+                                               judgeAttemptContaining({.fast{0s}, .slow{1s}}));
+    check_exception_thrown<std::runtime_error>("A slow task timed as zero",
+                                               judgeAttemptContaining({.fast{1s}, .slow{0s}}));
+    check_exception_thrown<std::runtime_error>("A negative duration",
+                                               judgeAttemptContaining({.fast{1s}, .slow{-1s}}));
   }
 }

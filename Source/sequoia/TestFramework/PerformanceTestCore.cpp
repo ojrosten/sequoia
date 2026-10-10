@@ -10,127 +10,212 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/PathCheckers.hpp"
 
-#include <array>
-#include <charconv>
+#include "sequoia/Maths/Statistics/StatisticalAlgorithms.hpp"
+
+#include <algorithm>
+#include <cmath>
 #include <format>
-#include <optional>
 #include <ranges>
 
 namespace sequoia::testing
 {
   namespace
   {
-    /** \brief Extracts the numbers in `text`, if there are exactly `N`.
-
-        Anything identifiable as a number is extracted as a `double`. That is
-        whatever `std::from_chars` reads. Reading tries each character from
-        left to right, and resumes after each number it reads. So integers
-        count, and so do `inf` and `nan`, even inside a word. A `-` directly
-        before a number is its sign.
+    /** \brief The half-width, in standard errors, of the interval with which
+               every attempt judges whether the fast task is distinguishably
+               faster.
      */
-    template<std::size_t N>
+    constexpr double confidence_multiplier{3.0};
+
+    /** \brief Returns the number trimmed from each end of `n` sorted data: a
+               tenth of `n`, rounded up.
+     */
     [[nodiscard]]
-    std::optional<std::array<double, N>> extract_numbers_from(std::string_view text)
+    constexpr std::size_t num_trimmed_from_each_end(std::size_t n) noexcept
     {
-      std::array<double, N> numbers{};
-      std::size_t count{};
-      const auto last{text.data() + text.size()};
-      auto first{text.data()};
-      while(first != last)
-      {
-        double value{};
-        if(const auto [next, error]{std::from_chars(first, last, value)}; error == std::errc{})
-        {
-          if(count == N)
-            return std::nullopt;
-
-          numbers[count++] = value;
-          first = next;
-        }
-        else
-        {
-          ++first;
-        }
-      }
-
-      return count == N ? std::optional{numbers} : std::nullopt;
+      return (n + 9) / 10;
     }
 
-    /** \brief Returns `line` with its measured values set to zero.
+    /** \brief The mean of data once the extremes are trimmed, and its standard
+               error.
+     */
+    struct trimmed_mean_estimate
+    {
+      double mean{}, standard_error{};
+    };
 
-        The measured values are the mean, the standard deviation and the
-        speed-up. The number of standard deviations and the predicted range
-        stay as they are.
+    /** \brief Estimates the trimmed mean of `data`, and its standard error.
 
-        A line has measured values only if the formatter could have printed it.
-        That is so if `duration_summary` reprints the line exactly from the
-        numbers after its label, with or without `speedup_summary` after it.
-        Any other line is returned as it stands.
+        The standard error is Tukey and McLaughlin's:
+
+          SE = s_w / ((1 - 2g/N) * sqrt(N))
+
+        Here N is the number of data, g the number trimmed from each end, and
+        s_w the winsorized sample standard deviation.
      */
     [[nodiscard]]
-    std::string line_with_zeroed_measurements(std::string_view line)
+    trimmed_mean_estimate estimate_trimmed_mean(std::vector<double> data)
     {
-      constexpr std::string_view label{" Task duration: "};
-      const auto labelPos{line.find(label)};
-      if(labelPos == std::string_view::npos)
-        return std::string{line};
+      std::ranges::sort(data);
 
-      std::string_view prefix{line.substr(0, labelPos)};
-      std::string_view afterLabel{line.substr(labelPos + label.size())};
+      const auto n{data.size()};
+      const auto numTrimmed{num_trimmed_from_each_end(n)};
 
-      if(const auto numbers{extract_numbers_from<3>(afterLabel)})
-      {
-        const auto [mean, numSds, sd]{*numbers};
-        if(duration_summary(prefix, mean, numSds, sd) == line)
-          return duration_summary(prefix, 0, numSds, 0);
-      }
-
-      if(const auto numbers{extract_numbers_from<6>(afterLabel)})
-      {
-        const auto [mean, numSds, sd, speedup, minSpeedup, maxSpeedup]{*numbers};
-        if(duration_summary(prefix, mean, numSds, sd) + speedup_summary(speedup, minSpeedup, maxSpeedup) == line)
-          return duration_summary(prefix, 0, numSds, 0) + speedup_summary(0, minSpeedup, maxSpeedup);
-      }
-
-      return std::string{line};
-    }
-
-    /** \brief Splits `text` at each newline, and zeroes the measured values
-               in each line.
-
-        Each line passes through `line_with_zeroed_measurements`. The result is
-        a lazy view of `text`, so it must not outlive `text`.
-     */
-    [[nodiscard]]
-    auto lines_with_zeroed_measurements(std::string_view text)
-    {
-      auto lineWithZeroedMeasurements{
-        [](auto line) { return line_with_zeroed_measurements(std::string_view{line}); }
+      const auto winsorizedVariance{
+        maths::winsorized_sample_variance(data, numTrimmed).variance
       };
 
-      return text | std::views::split('\n') | std::views::transform(lineWithZeroedMeasurements);
+      const std::ranges::subrange kept{data.cbegin() + numTrimmed, data.cend() - numTrimmed};
+      const double fractionKept{1.0 - 2.0 * numTrimmed / n};
+
+      return {
+        .mean{maths::mean(kept).value()},
+        .standard_error{std::sqrt(winsorizedVariance.value()) / (fractionKept * std::sqrt(n))}
+      };
+    }
+
+    /** \brief Returns the exponential of the trimmed mean of the logarithms of
+               `durations`.
+     */
+    template<std::ranges::input_range Durations>
+      requires std::ranges::viewable_range<Durations>
+            && std::same_as<std::ranges::range_value_t<Durations>, std::chrono::duration<double>>
+    [[nodiscard]]
+    std::chrono::duration<double> trimmed_geometric_mean(Durations&& durations)
+    {
+      auto logOf{[](std::chrono::duration<double> duration) { return std::log(duration.count()); }};
+
+      auto logDurations{
+          std::forward<Durations>(durations)
+        | std::views::transform(logOf)
+        | std::ranges::to<std::vector>()
+      };
+
+      return std::chrono::duration<double>{std::exp(estimate_trimmed_mean(std::move(logDurations)).mean)};
     }
   }
 
-  [[nodiscard]]
-  std::string duration_summary(std::string_view prefix, double mean, double numSds, double sd)
+  namespace impl
   {
-    return std::format("{} Task duration: {:g}s +- {:g} * {:g}s", prefix, mean, numSds, sd);
-  }
+    [[nodiscard]]
+    relative_performance_outcome judge_attempt(std::span<const relative_performance_durations> trialDurations,
+                                               double overlapMultiplier,
+                                               relative_performance_interval prediction)
+    {
+      auto eitherNotPositive{
+        [](relative_performance_durations durations) {
+          constexpr auto zero{std::chrono::duration<double>::zero()};
+          return !(durations.fast > zero) || !(durations.slow > zero);
+        }
+      };
 
-  [[nodiscard]]
-  std::string speedup_summary(double speedup, double minSpeedup, double maxSpeedup)
-  {
-    return std::format(" [{:g}; ({:g}, {:g})]", speedup, minSpeedup, maxSpeedup);
+      if(std::ranges::any_of(trialDurations, eitherNotPositive))
+        throw std::runtime_error{"Relative performance test requires task durations > 0; "
+                                 "a task too quick for the clock times as zero"};
+
+      auto logRatio{
+        [](relative_performance_durations durations) { return std::log(durations.slow / durations.fast); }
+      };
+
+      auto logRatios{
+          trialDurations
+        | std::views::transform(logRatio)
+        | std::ranges::to<std::vector>()
+      };
+
+      const auto [mean, standardError]{estimate_trimmed_mean(std::move(logRatios))};
+
+      // The gate takes confidence_multiplier on every attempt, not
+      // overlapMultiplier. An early attempt's overlapMultiplier is smaller,
+      // and with it tasks of equal speed would too often pass the gate.
+      const double gateLower    {mean - confidence_multiplier * standardError},
+                   gateUpper    {mean + confidence_multiplier * standardError},
+                   intervalLower{mean - overlapMultiplier * standardError},
+                   intervalUpper{mean + overlapMultiplier * standardError};
+
+      const auto failure{
+        [gateLower, gateUpper, intervalLower, intervalUpper, prediction]()
+          -> std::optional<relative_performance_failure> {
+          if(!(gateLower > 0))
+            return gateUpper < 0 ? relative_performance_failure::slower
+                                 : relative_performance_failure::not_distinguishably_faster;
+
+          if(intervalUpper < std::log(prediction.lower))
+            return relative_performance_failure::faster_but_less_than_predicted;
+
+          if(intervalLower > std::log(prediction.upper))
+            return relative_performance_failure::suspiciously_fast;
+
+          return std::nullopt;
+        }()
+      };
+
+      auto fastOf{[](relative_performance_durations durations) { return durations.fast; }};
+      auto slowOf{[](relative_performance_durations durations) { return durations.slow; }};
+
+      return {
+        .failure{failure},
+        .estimate{
+          .speedup{std::exp(mean)},
+          .interval{.lower{std::exp(intervalLower)}, .upper{std::exp(intervalUpper)}}
+        },
+        .durations{
+          .fast{trimmed_geometric_mean(trialDurations | std::views::transform(fastOf))},
+          .slow{trimmed_geometric_mean(trialDurations | std::views::transform(slowOf))}
+        }
+      };
+    }
+
+    [[nodiscard]]
+    std::string summarize_attempt(const relative_performance_outcome& outcome,
+                                  std::size_t trials,
+                                  std::size_t attempt,
+                                  relative_performance_interval prediction)
+    {
+      return append_lines(outcome.failure ? verdict_summary(*outcome.failure) : "",
+                          speedup_summary(outcome.estimate, prediction),
+                          trials_summary(trials, {.current{attempt}, .maximum{relative_performance_max_attempts}}),
+                          task_durations_summary(outcome.durations));
+    }
+
+    [[nodiscard]]
+    double overlap_multiplier(test_mode mode, std::size_t attempt)
+    {
+      // A check in standard mode fails only if its last attempt fails, and
+      // the last attempt takes the full multiplier. False-negative mode stops
+      // at the first failing attempt. So in that mode every attempt takes the
+      // full multiplier, and each applies the rule which decides a failure.
+      return (mode == test_mode::false_negative)
+        ? confidence_multiplier
+        : confidence_multiplier * static_cast<double>(attempt) / relative_performance_max_attempts;
+    }
+
+    [[nodiscard]]
+    std::vector<task_order> shuffled_task_orders(std::size_t trials, std::mt19937& generator)
+    {
+      auto orderOfTrial{
+        [numFastThenSlow{trials / 2}](std::size_t trial) {
+          return trial < numFastThenSlow ? task_order::fast_then_slow : task_order::slow_then_fast;
+        }
+      };
+
+      auto orders{
+          std::views::iota(0uz, trials)
+        | std::views::transform(orderOfTrial)
+        | std::ranges::to<std::vector>()
+      };
+
+      std::ranges::shuffle(orders, generator);
+      return orders;
+    }
   }
 
   [[nodiscard]]
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput)
   {
-    const bool sameButForMeasurements{std::ranges::equal(lines_with_zeroed_measurements(testOutput),
-                                                         lines_with_zeroed_measurements(referenceOutput))};
-
-    return sameButForMeasurements ? referenceOutput : testOutput;
+    return text_with_zeroed_measurements(testOutput) == text_with_zeroed_measurements(referenceOutput)
+      ? referenceOutput
+      : testOutput;
   }
 
   [[nodiscard]]
@@ -165,7 +250,7 @@ namespace sequoia::testing
           if(std::filesystem::exists(filename))
           {
             if(auto contents{read_to_string(filename, std::ios_base::in | std::ios_base::binary)})
-              return contents.value();
+              return *std::move(contents);
 
             throw std::runtime_error{report_failed_read(filename)};
           }
