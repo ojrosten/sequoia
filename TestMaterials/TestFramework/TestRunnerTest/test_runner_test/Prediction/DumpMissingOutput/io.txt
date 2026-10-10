@@ -2,14 +2,14 @@
 Running tests, synchronously...
 
 passing_test:
-[Execution Time: 128us]
-[Runner Overhead: 525us]
+[Execution Time: 105us]
+[Runner Overhead: 366us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 8.4ms]
-[Execution Time: 128us]
-[Runner Overhead: 525us]
+[Total Run Time: 407us]
+[Execution Time: 105us]
+[Runner Overhead: 366us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -20,4 +20,4 @@ passing_test:
 Dump compared with 'before': 1 check missing, 0 checks added
 
 Missing:
-  Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 102: Standard Failure
+  Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 101: Standard Failure

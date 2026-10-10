@@ -2,14 +2,14 @@
 Running tests, synchronously...
 
 periodic_free_test:
-[Execution Time: 55.5us]
-[Runner Overhead: 778us]
+[Execution Time: 111us]
+[Runner Overhead: 720us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 2.05ms]
-[Execution Time: 55.5us]
-[Runner Overhead: 778us]
+[Total Run Time: 298us]
+[Execution Time: 111us]
+[Runner Overhead: 720us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -20,11 +20,11 @@ periodic_free_test:
 Running tests, synchronously...
 
 periodic_free_test:
-[Execution Time: 127us]
-[Runner Overhead: 1.56ms]
+[Execution Time: 50.3us]
+[Runner Overhead: 524us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 225
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 224
 	Period 4
 
 	[int]
@@ -36,9 +36,9 @@ periodic_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 3.13ms]
-[Execution Time: 127us]
-[Runner Overhead: 1.56ms]
+[Total Run Time: 210us]
+[Execution Time: 50.3us]
+[Runner Overhead: 524us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -49,11 +49,11 @@ periodic_free_test:
 Running tests, synchronously...
 
 periodic_free_test:
-[Execution Time: 88.7us]
-[Runner Overhead: 1.27ms]
+[Execution Time: 53.9us]
+[Runner Overhead: 551us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 225
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 224
 	Period 4
 
 	[int]
@@ -65,9 +65,9 @@ periodic_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 2.99ms]
-[Execution Time: 88.7us]
-[Runner Overhead: 1.27ms]
+[Total Run Time: 217us]
+[Execution Time: 53.9us]
+[Runner Overhead: 551us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -78,11 +78,11 @@ periodic_free_test:
 Running tests, synchronously...
 
 periodic_free_test:
-[Execution Time: 132us]
-[Runner Overhead: 1.54ms]
+[Execution Time: 53us]
+[Runner Overhead: 577us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 225
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 224
 	Period 4
 
 	[int]
@@ -94,9 +94,9 @@ periodic_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 2.95ms]
-[Execution Time: 132us]
-[Runner Overhead: 1.54ms]
+[Total Run Time: 202us]
+[Execution Time: 53us]
+[Runner Overhead: 577us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -112,7 +112,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 225
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 224
 	Period 4
 
 	[int]
@@ -124,7 +124,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 225
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 224
 	Period 4
 
 	[int]
@@ -136,7 +136,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 225
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 224
 	Period 4
 
 	[int]

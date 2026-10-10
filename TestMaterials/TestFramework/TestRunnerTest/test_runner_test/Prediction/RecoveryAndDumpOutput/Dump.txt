@@ -8,7 +8,7 @@ Phoney equality check
 
 =======================================
 
-Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 68
+Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 67
 Throw during check
 
 [sequoia::testing::(anonymous namespace)::foo]

@@ -1015,9 +1015,10 @@ jobs:
       # false-positive and false-negative diagnostics are built to be decided
       # at a later attempt.
       #
-      # Each record is of the column's last run of the test, so a column
-      # which repeats the suite shows only its last repetition. The records
-      # are in the artifact, for a count over several columns or runs.
+      # Each record is of the last run of its test, so a column which runs
+      # the suite more than once shows one run of each test, not every run.
+      # The records are in the artifact, for a count over several columns or
+      # runs.
       #
       # The names are paths that a fork's PR controls, so the step prints
       # them with workflow commands stopped. A report cannot fail the job.
@@ -1025,6 +1026,10 @@ jobs:
         if: ${{ always() && inputs.needs_testing == 'true' }}
         continue-on-error: true
         run: |
+          if [ ! -d output/ExecutionRecords ]; then
+            echo "no deciding attempts: there are no execution records"
+            exit 0
+          fi
           token=$(openssl rand -hex 16)
           echo "::stop-commands::$token"
           found=0
@@ -1033,7 +1038,7 @@ jobs:
             [ -n "$attempts" ] || continue
             found=$((found + 1))
             echo "deciding attempts: ${record#output/ExecutionRecords/}: $attempts"
-          done < <(find output/ExecutionRecords -type f -name '*.txt' 2>/dev/null | sort)
+          done < <(find output/ExecutionRecords -type f -name '*.txt' | sort)
           [ "$found" -gt 0 ] || echo "no deciding attempts: no execution record names a performance check"
           echo "::$token::"
 

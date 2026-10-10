@@ -2,11 +2,11 @@
 Running tests, synchronously...
 
 failing_test:
-[Execution Time: 171us]
-[Runner Overhead: 568us]
+[Execution Time: 99.1us]
+[Runner Overhead: 399us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 102
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 101
 	Standard Failure
 
 	[int]
@@ -17,14 +17,14 @@ failing_test:
 	=======================================
 
 passing_test:
-[Execution Time: 113us]
-[Runner Overhead: 494us]
+[Execution Time: 68.8us]
+[Runner Overhead: 472us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 3.36ms]
-[Execution Time: 284us]
-[Runner Overhead: 1.06ms]
+[Total Run Time: 575us]
+[Execution Time: 168us]
+[Runner Overhead: 871us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

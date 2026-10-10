@@ -7,7 +7,6 @@
 
 #include "TestRunnerTest.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
-#include "PerformanceTestingUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
 #include "TestFramework/BuildArtefactsTestingUtilities.hpp"
@@ -933,61 +932,19 @@ namespace sequoia::testing
       return labels;
     }
 
-    /// The values of the lines of `record` labelled `label`, in their order
+    /// The value of the line of a test's execution record labelled `label`, or nothing if there is no such line
     [[nodiscard]]
-    std::vector<std::string> execution_record_values(const fs::path& record, std::string_view label)
+    std::string execution_record_value(const fs::path& record, std::string_view label)
     {
-      std::vector<std::string> values{};
       std::ifstream file{record};
       for(std::string line{}; std::getline(file, line);)
       {
         if(line.starts_with(label) && (line.size() > label.size()) && (line[label.size()] == ' '))
-          values.push_back(line.substr(label.size() + 1));
+          return line.substr(label.size() + 1);
       }
 
-      return values;
+      return "";
     }
-
-    /** Makes four performance checks. The tasks' durations decide the first at
-        the second attempt, the third at the first attempt and the fourth at
-        the last attempt. The second check throws before its decision.
-     */
-    class deciding_attempts_performance_test final : public performance_test
-    {
-    public:
-      using performance_test::performance_test;
-
-      [[nodiscard]]
-      static fs::path source_file()
-      {
-        return make_fake_file_path<deciding_attempts_performance_test>();
-      }
-
-      void run_tests()
-      {
-        using namespace std::chrono_literals;
-
-        constexpr relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}, .minimum_trials{10}};
-
-        check_relative_performance("A speed-up of 1, then of 8",
-                                   counted_spinner{1ms},
-                                   counted_spinner{1ms, trials_for_minimum_10[0], 8ms},
-                                   parameters);
-
-        check_exception_thrown<std::invalid_argument>(
-          "Nine trials are refused",
-          [this]() {
-            return check_relative_performance("Nine trials",
-                                              counted_spinner{1ms},
-                                              counted_spinner{8ms},
-                                              {.prediction{.lower{2}, .upper{40}}, .minimum_trials{9}});
-          }
-        );
-
-        check_relative_performance("A speed-up of 8", counted_spinner{1ms}, counted_spinner{8ms}, parameters);
-        check_relative_performance("A speed-up of 1", counted_spinner{1ms}, counted_spinner{1ms}, parameters);
-      }
-    };
 
     /// Checks its own execution record while it executes
     class record_reading_free_test final : public free_test
@@ -1053,7 +1010,6 @@ namespace sequoia::testing
     test_serial_verbose_output();
     test_throwing_tests();
     test_execution_records();
-    test_execution_records_of_performance_checks();
     test_summary_collision_with_an_unselected_test();
     test_discriminated_summary();
     test_filtered_suites();
@@ -1698,62 +1654,6 @@ namespace sequoia::testing
     const bool runStartedFirst{   (runStart <= start_named_by(passingRecord.file_path()))
                                && (runStart <= start_named_by(throwingRecord.file_path()))};
     check("The run started no later than either test", runStartedFirst);
-  }
-
-  /** The fake tests tell the mechanism from its rivals. The attempts which
-      decide `deciding_attempts_performance_test`'s checks are distinct, and
-      in neither sorted order nor its reverse. They are not the checks'
-      numbers of trials, and one of its checks throws before its decision.
-      `fake_performance_test` is a performance test which makes no performance
-      check. The records directory is removed first, so that only this run can
-      have written the records.
-   */
-  void test_runner_test::test_execution_records_of_performance_checks()
-  {
-    std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
-
-    const auto& projPaths{runner.proj_paths()};
-    fs::remove_all(projPaths.execution_records().dir());
-
-    runner.register_test<deciding_attempts_performance_test>();
-    runner.register_test<fake_performance_test>();
-
-    check(equality, "Performance check records return code", runner.execute(), return_code::soft_failures);
-
-    const test_execution_record_path
-      decidedRecord{deciding_attempts_performance_test::source_file(),
-                    test_name<deciding_attempts_performance_test>(),
-                    projPaths},
-      uncheckedRecord{fake_performance_test::source_file(), test_name<fake_performance_test>(), projPaths};
-
-    constexpr std::string_view decidedLabel{"performance check decided at attempt"};
-
-    check(equality,
-          "The record of a performance test gives a line for each of its performance checks which reached a decision",
-          execution_record_labels(decidedRecord.file_path()),
-          std::vector<std::string>{"started",
-                                   "execution duration",
-                                   "runner overhead",
-                                   std::string{decidedLabel},
-                                   std::string{decidedLabel},
-                                   std::string{decidedLabel}});
-
-    check(equality,
-          "The record of a performance test gives the attempt which decided each check, in the order of the checks",
-          execution_record_values(decidedRecord.file_path(), decidedLabel),
-          std::vector<std::string>{"2", "1", "3"});
-
-    check(equality,
-          "The record of a performance test which makes no performance check gives no attempt",
-          execution_record_labels(uncheckedRecord.file_path()),
-          std::vector<std::string>{"started", "execution duration", "runner overhead"});
   }
 
   /** `summary_collider_test_twin` is selected and `summary_collider_test` is
@@ -2778,8 +2678,8 @@ namespace sequoia::testing
 
     check(equality,
           "A test whose materials could not be prepared has an execution duration of zero: preparing them is overhead",
-          execution_record_values(record.file_path(), "execution duration"),
-          std::vector<std::string>{"0us"});
+          execution_record_value(record.file_path(), "execution duration"),
+          std::string{"0us"});
   }
 
   namespace

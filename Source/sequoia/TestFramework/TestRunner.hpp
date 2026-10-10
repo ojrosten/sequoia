@@ -488,10 +488,10 @@ namespace sequoia::testing
     /** \brief An RAII wrapper to write a test's execution record.
 
         On construction, the record gives the test's start. On destruction,
-        the record adds what `executionTimer` gives: the test's execution
-        duration and the runner's overhead so far. Then the record adds what
-        `vessel` gives: the attempt which decided each of the test's
-        performance checks.
+        the record adds the test's execution duration and the runner's
+        overhead so far, from `executionTimer`. Then the record adds the
+        attempt which decided each of the test's performance checks, from
+        `vessel`.
 
         A record which cannot be written is skipped rather than reported. The
         file then keeps the last record the runner managed to write, which

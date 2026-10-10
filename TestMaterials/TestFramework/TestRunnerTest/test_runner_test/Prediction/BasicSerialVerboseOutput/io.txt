@@ -2,17 +2,17 @@
 Running tests, synchronously...
 
 Tests:
-[Execution Time: 154us]
-[Runner Overhead: 1.47ms]
+[Execution Time: 187us]
+[Runner Overhead: 2.01ms]
     Failing:
-    [Execution Time: 154us]
-    [Runner Overhead: 1.47ms]
+    [Execution Time: 187us]
+    [Runner Overhead: 2.01ms]
         failing_fn_test:
-        [Execution Time: 71.5us]
-        [Runner Overhead: 517us]
+        [Execution Time: 60.4us]
+        [Runner Overhead: 725us]
             False Positive Checks:                     1;  Failures:  1
 
-            Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 176
+            Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 175
             False negative failure
 
             [int]
@@ -23,12 +23,12 @@ Tests:
             =======================================
 
         failing_fp_test:
-        [Execution Time: 37.9us]
-        [Runner Overhead: 472us]
+        [Execution Time: 58.2us]
+        [Runner Overhead: 696us]
             False Negative Checks:                     1;  Failures:  1
 
             False Negative Failure:
-            Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 159
+            Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 158
             False positive failure
 
             [int]
@@ -36,11 +36,11 @@ Tests:
             =======================================
 
         failing_test:
-        [Execution Time: 44.5us]
-        [Runner Overhead: 481us]
+        [Execution Time: 68.8us]
+        [Runner Overhead: 586us]
             Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-            Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 102
+            Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 101
             Standard Failure
 
             [int]
@@ -52,9 +52,9 @@ Tests:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 4.17ms]
-[Execution Time: 154us]
-[Runner Overhead: 1.47ms]
+[Total Run Time: 1.41ms]
+[Execution Time: 187us]
+[Runner Overhead: 2.01ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     1;  Failures:  1

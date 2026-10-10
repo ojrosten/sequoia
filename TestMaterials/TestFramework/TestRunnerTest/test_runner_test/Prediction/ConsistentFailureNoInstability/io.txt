@@ -2,11 +2,11 @@
 Running tests, synchronously...
 
 consistently_failing_free_test:
-[Execution Time: 164us]
-[Runner Overhead: 2.03ms]
+[Execution Time: 183us]
+[Runner Overhead: 809us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 280
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 279
 	Always fails
 
 	[bool]
@@ -18,9 +18,9 @@ consistently_failing_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 3.67ms]
-[Execution Time: 164us]
-[Runner Overhead: 2.03ms]
+[Total Run Time: 384us]
+[Execution Time: 183us]
+[Runner Overhead: 809us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -31,11 +31,11 @@ consistently_failing_free_test:
 Running tests, synchronously...
 
 consistently_failing_free_test:
-[Execution Time: 131us]
-[Runner Overhead: 2.66ms]
+[Execution Time: 67.1us]
+[Runner Overhead: 754us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 280
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 279
 	Always fails
 
 	[bool]
@@ -47,9 +47,9 @@ consistently_failing_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 3.68ms]
-[Execution Time: 131us]
-[Runner Overhead: 2.66ms]
+[Total Run Time: 249us]
+[Execution Time: 67.1us]
+[Runner Overhead: 754us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

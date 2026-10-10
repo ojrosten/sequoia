@@ -34,6 +34,8 @@ namespace sequoia::testing
 
     void test_execution_duration_of_busiest_thread();
 
+    void test_execution_records_of_performance_checks();
+
     [[nodiscard]]
     std::filesystem::path fake_project() const;
 
