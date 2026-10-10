@@ -72,13 +72,13 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    constexpr relative_performance_parameters parameters{.prediction{.lower{7.35}, .upper{11.8}}, .minimum_trials{10}};
-    const counted_spinner fast{1ms};
+    constexpr relative_performance_parameters parameters{.prediction{.lower{5.97}, .upper{9.55}}, .minimum_trials{10}};
+    const counted_spinner fast{6ms, trials_for_minimum_10[0], 5ms};
 
     check_relative_performance(
-      "Attempt 1 takes 1 standard error and needs 1.43 to overlap [7.35, 11.8]; attempt 2 takes 2 and needs 1.51",
+      "Attempt 1 takes 1 standard error and needs 1.75 to overlap [5.97, 9.55]; attempt 2 takes 2 and needs 1.26",
       fast,
-      make_cycling_spinner({1ms, 2ms, 8ms, 8ms, 8ms}),
+      make_cycling_spinner({5ms, 12ms, 24ms, 40ms, 40ms}),
       parameters
     );
     check(equality, "Calls of the fast task", fast.calls(), trials_before_attempt(trials_for_minimum_10, 3));

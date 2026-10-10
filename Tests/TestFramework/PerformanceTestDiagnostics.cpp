@@ -95,17 +95,17 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("Attempt 1 takes 3 standard errors and needs 3.49 to overlap [3.15, 8.0]; "
+    check_relative_performance("Attempt 1 takes 3 standard errors and needs 3.75 to overlap [20.4, 41.1]; "
                                "later speed-ups lie inside the prediction",
-                               counted_spinner{3ms, trials_for_minimum_10[0], 1ms},
-                               make_cycling_spinner({4ms, 7ms, 7ms, 7ms, 8ms}),
-                               {.prediction{.lower{3.15}, .upper{8.0}}, .minimum_trials{10}});
+                               counted_spinner{5ms, trials_for_minimum_10[0], 1ms},
+                               make_cycling_spinner({5ms, 30ms, 40ms, 40ms, 40ms}),
+                               {.prediction{.lower{20.4}, .upper{41.1}}, .minimum_trials{10}});
 
-    check_relative_performance("Attempt 1 takes 3 standard errors and needs 3.5 to overlap [1.05, 2.91]; "
+    check_relative_performance("Attempt 1 takes 3 standard errors and needs 3.74 to overlap [1.7, 2.62]; "
                                "later speed-ups lie inside the prediction",
-                               counted_spinner{1ms, trials_for_minimum_10[0], 2ms},
-                               make_cycling_spinner({4ms, 4ms, 4ms, 4ms, 8ms}),
-                               {.prediction{.lower{1.05}, .upper{2.91}}, .minimum_trials{10}});
+                               counted_spinner{8ms, trials_for_minimum_10[0], 20ms},
+                               make_cycling_spinner({30ms, 30ms, 30ms, 60ms, 80ms}),
+                               {.prediction{.lower{1.7}, .upper{2.62}}, .minimum_trials{10}});
   }
 
   void performance_false_negative_diagnostics::test_significance_gate()
@@ -183,16 +183,16 @@ namespace sequoia::testing
     using namespace std::chrono_literals;
 
     check_relative_performance("Attempts 1 and 2 fail at the gate; "
-                               "attempt 3 takes 3 standard errors and needs 2.5 to overlap [4.57, 5.94]",
-                               counted_spinner{3ms, trials_before_attempt(trials_for_minimum_10, 3), 2ms},
-                               make_cycling_spinner({1ms, 6ms, 7ms, 7ms, 7ms}),
-                               {.prediction{.lower{4.57}, .upper{5.94}}, .minimum_trials{10}});
+                               "attempt 3 takes 3 standard errors and needs 2.25 to overlap [4.86, 5.83]",
+                               counted_spinner{8ms, trials_before_attempt(trials_for_minimum_10, 3), 5ms},
+                               make_cycling_spinner({4ms, 6ms, 20ms, 30ms, 30ms}),
+                               {.prediction{.lower{4.86}, .upper{5.83}}, .minimum_trials{10}});
 
-    check_relative_performance("Attempt 3 takes 3 standard errors and needs 2.49 to overlap [1.86, 2.42]; "
-                               "attempt 2 takes 2 and needs 7.62",
+    check_relative_performance("Attempt 3 takes 3 standard errors and needs 2.25 to overlap [2.89, 3.54]; "
+                               "attempt 2 takes 2 and needs 3.77",
                                counted_spinner{1ms, trials_before_attempt(trials_for_minimum_10, 3), 2ms},
-                               make_cycling_spinner({4ms, 4ms, 8ms, 8ms, 8ms}),
-                               {.prediction{.lower{1.86}, .upper{2.42}}, .minimum_trials{10}});
+                               make_cycling_spinner({5ms, 5ms, 10ms, 40ms, 40ms}),
+                               {.prediction{.lower{2.89}, .upper{3.54}}, .minimum_trials{10}});
   }
 
   [[nodiscard]]
