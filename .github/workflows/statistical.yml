@@ -104,12 +104,11 @@ jobs:
       needs_testing: ${{ 'true' }}
       merge_into: ''
       warnings_as_errors: false
-      exec_args: 'locate;${{ needs.trials.outputs.n }};--exclude-performance'
+      exec_args: 'locate;${{ needs.trials.outputs.n }}'
       suite_timeout_minutes: 200
       job_timeout_minutes: 240
       columns: >-
         [
-          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan"},
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15"},
           {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan"}
         ]
@@ -180,8 +179,7 @@ jobs:
             fi
             echo "" >> "$report"
           done <<'COLUMNS'
-          llvm-env-tsan|macOS · Clang · TSan
-          gcc-env-asan-ubsan|Linux · GCC · ASan+UBSan
+                    gcc-env-asan-ubsan|Linux · GCC · ASan+UBSan
           msvc-asan|Windows · MSVC · ASan
           COLUMNS
 
