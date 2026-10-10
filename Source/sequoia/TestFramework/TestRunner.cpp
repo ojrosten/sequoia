@@ -53,11 +53,8 @@ namespace sequoia::testing
       return std::format("started {:%FT%TZ}\n", std::chrono::floor<std::chrono::milliseconds>(start));
     }
 
-    /** \brief Returns a line for each of `decidingAttempts`, which names the
-               attempt that decided a performance check.
-     */
     [[nodiscard]]
-    std::string deciding_attempts_record(std::span<const std::size_t> decidingAttempts)
+    std::string performance_checks_decided_at(std::span<const std::size_t> decidingAttempts)
     {
       auto line{
         [](std::size_t attempt) { return std::format("performance check decided at attempt {}\n", attempt); }
@@ -959,7 +956,7 @@ namespace sequoia::testing
                                   started_at(m_Start),
                                   duration_cast<microseconds>(m_ExecutionTimer.execution_duration()).count(),
                                   duration_cast<microseconds>(m_ExecutionTimer.runner_overhead()).count(),
-                                  deciding_attempts_record(m_Vessel.performance_deciding_attempts())));
+                                  performance_checks_decided_at(m_Vessel.performance_deciding_attempts())));
   }
 
   [[nodiscard]]

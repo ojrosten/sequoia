@@ -933,20 +933,6 @@ namespace sequoia::testing
       return labels;
     }
 
-    /// The value of the line of a test's execution record labelled `label`, or nothing if there is no such line
-    [[nodiscard]]
-    std::string execution_record_value(const fs::path& record, std::string_view label)
-    {
-      std::ifstream file{record};
-      for(std::string line{}; std::getline(file, line);)
-      {
-        if(line.starts_with(label) && (line.size() > label.size()) && (line[label.size()] == ' '))
-          return line.substr(label.size() + 1);
-      }
-
-      return "";
-    }
-
     /// The values of the lines of a test's execution record labelled `label`, in the order of the lines
     [[nodiscard]]
     std::vector<std::string> execution_record_values(const fs::path& record, std::string_view label)
@@ -2792,8 +2778,8 @@ namespace sequoia::testing
 
     check(equality,
           "A test whose materials could not be prepared has an execution duration of zero: preparing them is overhead",
-          execution_record_value(record.file_path(), "execution duration"),
-          std::string{"0us"});
+          execution_record_values(record.file_path(), "execution duration"),
+          std::vector<std::string>{"0us"});
   }
 
   namespace
