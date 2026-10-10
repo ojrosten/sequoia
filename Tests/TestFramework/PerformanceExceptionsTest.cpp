@@ -29,7 +29,8 @@ namespace sequoia::testing
 
   void performance_exceptions_test::test_invalid_arguments()
   {
-    constexpr double nan{std::numeric_limits<double>::quiet_NaN()};
+    constexpr double      nan{std::numeric_limits<double>::quiet_NaN()};
+    constexpr std::size_t tooFewTrials{relative_performance_minimum_trials_floor - 1};
 
     auto relativePerformanceCheck{
       [this](const relative_performance_parameters& parameters) {
@@ -54,9 +55,9 @@ namespace sequoia::testing
     check_exception_thrown<std::invalid_argument>("Minimum speed-up exceeding the maximum",
                                                   relativePerformanceCheck({.prediction{.lower{2.5}, .upper{2.0}},
                                                                             .minimum_trials{10}}));
-    check_exception_thrown<std::invalid_argument>("Nine trials",
+    check_exception_thrown<std::invalid_argument>("Too few trials",
                                                   relativePerformanceCheck({.prediction{.lower{2.0}, .upper{3.0}},
-                                                                            .minimum_trials{9}}));
+                                                                            .minimum_trials{tooFewTrials}}));
   }
 
   void performance_exceptions_test::test_throwing_task()
