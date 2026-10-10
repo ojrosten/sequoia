@@ -1,5 +1,5 @@
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 165
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 177
 Speed-up of 2, predicted [1.8, 2.1]
 
 Speed-up: 2 in [2, 2]; predicted [1.8, 2.1]
@@ -9,7 +9,7 @@ Task durations: fast 0.001s, slow 0.002s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 170
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 182
 Speed-up of 4, predicted [3.4, 4.1]
 
 Speed-up: 4 in [4, 4]; predicted [3.4, 4.1]
@@ -19,7 +19,7 @@ Task durations: fast 0.001s, slow 0.004s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 175
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 187
 Durations varying together, a speed-up of 2 in every trial, predicted [1.8, 2.2]
 
 Speed-up: 2 in [2, 2]; predicted [1.8, 2.2]
@@ -29,7 +29,7 @@ Task durations: fast 0.00183s, slow 0.00366s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 185
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 197
 Attempts 1 and 2 fail at the gate; attempt 3 takes 3 standard errors and needs 2.25 to overlap [4.86, 7.43]
 
 Speed-up: 2.82 in [1.36, 5.83]; predicted [4.86, 7.43]
@@ -39,7 +39,7 @@ Task durations: fast 0.005s, slow 0.0141s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 191
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 203
 Attempt 3 takes 3 standard errors and needs 2.24 to overlap [2.21, 3.54]; attempt 2 takes 2 and needs 3.77
 
 Speed-up: 6.48 in [2.89, 14.6]; predicted [2.21, 3.54]

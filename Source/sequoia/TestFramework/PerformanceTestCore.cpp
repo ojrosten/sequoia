@@ -211,11 +211,16 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput)
+  std::string_view postprocess(std::string_view testOutput,
+                               std::string_view referenceOutput,
+                               deciding_attempt decidingAttempt)
   {
-    return text_with_zeroed_measurements(testOutput) == text_with_zeroed_measurements(referenceOutput)
-      ? referenceOutput
-      : testOutput;
+    const bool differOnlyInMeasurements{
+         text_with_zeroed_measurements(testOutput,      decidingAttempt)
+      == text_with_zeroed_measurements(referenceOutput, decidingAttempt)
+    };
+
+    return differOnlyInMeasurements ? referenceOutput : testOutput;
   }
 
   [[nodiscard]]
@@ -241,6 +246,13 @@ namespace sequoia::testing
   [[nodiscard]]
   log_summary basic_performance_test<Mode>::summarize(duration delta) const
   {
+    return summarize(delta, deciding_attempt::varies);
+  }
+
+  template<test_mode Mode>
+  [[nodiscard]]
+  log_summary basic_performance_test<Mode>::summarize(duration delta, deciding_attempt decidingAttempt) const
+  {
     auto summary{base_type::summarize(delta)};
 
     if constexpr(Mode != test_mode::standard)
@@ -259,7 +271,7 @@ namespace sequoia::testing
         }()
       };
 
-      std::string outputToUse{postprocess(summary.diagnostics_output(), referenceOutput)};
+      std::string outputToUse{postprocess(summary.diagnostics_output(), referenceOutput, decidingAttempt)};
       summary.diagnostics_output(std::move(outputToUse));
     }
 

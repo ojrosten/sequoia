@@ -328,12 +328,14 @@ namespace sequoia::testing
   /** \brief Chooses between a run's diagnostics output and the reference.
 
       \returns
-      -# `referenceOutput`, if `text_with_zeroed_measurements` gives the same
-         result for it as for `testOutput`;
+      -# `referenceOutput`, if `text_with_zeroed_measurements`, given
+         `decidingAttempt`, gives the same result for it as for `testOutput`;
       -# `testOutput`, otherwise.
    */
   [[nodiscard]]
-  std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);
+  std::string_view postprocess(std::string_view testOutput,
+                               std::string_view referenceOutput,
+                               deciding_attempt decidingAttempt);
 
   /**\brief class template from which all concrete tests should derive */
 
@@ -346,6 +348,9 @@ namespace sequoia::testing
 
     using base_type::base_type;
 
+    /** \brief Summarizes the checks, with the attempt which decides each
+               taken to vary from run to run.
+     */
     [[nodiscard]]
     log_summary summarize(duration delta) const;
   protected:
@@ -353,6 +358,14 @@ namespace sequoia::testing
 
     basic_performance_test(basic_performance_test&&)            noexcept = default;
     basic_performance_test& operator=(basic_performance_test&&) noexcept = default;
+
+    /** \brief Summarizes the checks.
+
+        In false-positive and false-negative modes, the diagnostics output is
+        `postprocess`ed against the reference, given `decidingAttempt`.
+     */
+    [[nodiscard]]
+    log_summary summarize(duration delta, deciding_attempt decidingAttempt) const;
   };
 
   /** \anchor performance_test_alias */
