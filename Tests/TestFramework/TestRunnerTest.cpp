@@ -963,8 +963,8 @@ namespace sequoia::testing
     }
 
     /** Makes four performance checks. The tasks' durations decide the first at
-        the first attempt, the third at the last attempt and the fourth at the
-        first attempt. The second throws before its decision.
+        the second attempt, the third at the first attempt and the fourth at
+        the last attempt. The second check throws before its decision.
      */
     class deciding_attempts_performance_test final : public performance_test
     {
@@ -983,7 +983,10 @@ namespace sequoia::testing
 
         constexpr relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}, .minimum_trials{10}};
 
-        check_relative_performance("A speed-up of 8 passes", counted_spinner{1ms}, counted_spinner{8ms}, parameters);
+        check_relative_performance("A speed-up of 1, then of 8",
+                                   counted_spinner{1ms},
+                                   counted_spinner{1ms, trials_for_minimum_10[0], 8ms},
+                                   parameters);
 
         check_exception_thrown<std::invalid_argument>(
           "Nine trials are refused",
@@ -995,8 +998,8 @@ namespace sequoia::testing
           }
         );
 
-        check_relative_performance("A speed-up of 1 fails", counted_spinner{1ms}, counted_spinner{1ms}, parameters);
-        check_relative_performance("A speed-up of 8 passes", counted_spinner{1ms}, counted_spinner{8ms}, parameters);
+        check_relative_performance("A speed-up of 8", counted_spinner{1ms}, counted_spinner{8ms}, parameters);
+        check_relative_performance("A speed-up of 1", counted_spinner{1ms}, counted_spinner{1ms}, parameters);
       }
     };
 
@@ -1712,9 +1715,9 @@ namespace sequoia::testing
   }
 
   /** The fake tests tell the mechanism from its rivals. The attempts which
-      decide `deciding_attempts_performance_test`'s checks are not in sorted
-      order, are not all one attempt, and are not the checks' numbers of
-      trials; and one of its checks throws before its decision.
+      decide `deciding_attempts_performance_test`'s checks are distinct, and
+      in neither sorted order nor its reverse. They are not the checks'
+      numbers of trials, and one of its checks throws before its decision.
       `fake_performance_test` is a performance test which makes no performance
       check. The records directory is removed first, so that only this run can
       have written the records.
@@ -1759,7 +1762,7 @@ namespace sequoia::testing
     check(equality,
           "The record of a performance test gives the attempt which decided each check, in the order of the checks",
           execution_record_values(decidedRecord.file_path(), decidedLabel),
-          std::vector<std::string>{"1", "3", "1"});
+          std::vector<std::string>{"2", "1", "3"});
 
     check(equality,
           "The record of a performance test which makes no performance check gives no attempt",
