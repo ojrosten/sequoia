@@ -1,5 +1,8 @@
 name: statistical
 
+# SCRATCH (scratch-perf-pinned-numbers, on performance-wider-fixtures, 2026-10-10): roadmap 342's measurement - the
+# performance diagnostics alone, under locate, every run's unmasked text printed. Not for merging.
+
 # Measures how often main fails. The gate answers "does this tree pass" once,
 # and one trial is the right sample for a deterministic question. Races and
 # timings are probabilistic, so a single green says almost nothing about
@@ -104,14 +107,21 @@ jobs:
       needs_testing: ${{ 'true' }}
       merge_into: ''
       warnings_as_errors: false
-      exec_args: 'locate;${{ needs.trials.outputs.n }};--exclude-performance'
+      exec_args: 'locate;${{ needs.trials.outputs.n }};select;Tests/TestFramework/PerformanceTestDiagnostics.cpp'
       suite_timeout_minutes: 200
       job_timeout_minutes: 240
       columns: >-
         [
-          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan"},
-          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan"}
+          {"name": "Linux · GCC · Debug",        "os": "ubuntu-latest",  "configure": "gcc-env",             "build": "gcc-env",             "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Linux · GCC · ASan+UBSan",   "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan",  "build": "gcc-env-asan-ubsan",  "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Linux · GCC · Release",      "os": "ubuntu-latest",  "configure": "gcc-env-release",     "build": "gcc-env-release",     "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "macOS · Clang · Debug",      "os": "macos-latest",   "configure": "llvm-env",            "build": "llvm-env"},
+          {"name": "macOS · Clang · ASan+UBSan", "os": "macos-latest",   "configure": "llvm-env-asan-ubsan", "build": "llvm-env-asan-ubsan"},
+          {"name": "macOS · Clang · TSan",       "os": "macos-latest",   "configure": "llvm-env-tsan",       "build": "llvm-env-tsan"},
+          {"name": "macOS · Clang · Release",    "os": "macos-latest",   "configure": "llvm-env-release",    "build": "llvm-env-release"},
+          {"name": "Windows · MSVC · Debug",     "os": "windows-latest", "configure": "msvc-ninja",          "build": "msvc-ninja"},
+          {"name": "Windows · MSVC · ASan",      "os": "windows-latest", "configure": "msvc-asan",           "build": "msvc-asan"},
+          {"name": "Windows · MSVC · Release",   "os": "windows-latest", "configure": "msvc-release",        "build": "msvc-release"}
         ]
 
   # Writes the sample up as a measurement: the tree, the trials, what each
@@ -180,9 +190,16 @@ jobs:
             fi
             echo "" >> "$report"
           done <<'COLUMNS'
-          llvm-env-tsan|macOS · Clang · TSan
+          gcc-env|Linux · GCC · Debug
           gcc-env-asan-ubsan|Linux · GCC · ASan+UBSan
+          gcc-env-release|Linux · GCC · Release
+          llvm-env|macOS · Clang · Debug
+          llvm-env-asan-ubsan|macOS · Clang · ASan+UBSan
+          llvm-env-tsan|macOS · Clang · TSan
+          llvm-env-release|macOS · Clang · Release
+          msvc-ninja|Windows · MSVC · Debug
           msvc-asan|Windows · MSVC · ASan
+          msvc-release|Windows · MSVC · Release
           COLUMNS
 
           {
