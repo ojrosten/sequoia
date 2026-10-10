@@ -933,7 +933,7 @@ namespace sequoia::testing
       return labels;
     }
 
-    /// The values of the lines of a test's execution record labelled `label`, in the order of the lines
+    /// The values of the lines of `record` labelled `label`, in their order
     [[nodiscard]]
     std::vector<std::string> execution_record_values(const fs::path& record, std::string_view label)
     {

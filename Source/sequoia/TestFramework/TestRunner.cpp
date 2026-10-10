@@ -56,13 +56,13 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string performance_checks_decided_at(std::span<const std::size_t> decidingAttempts)
     {
-      auto line{
+      auto lineOf{
         [](std::size_t attempt) { return std::format("performance check decided at attempt {}\n", attempt); }
       };
 
       return
           decidingAttempts
-        | std::views::transform(line)
+        | std::views::transform(lineOf)
         | std::views::join
         | std::ranges::to<std::string>();
     }
