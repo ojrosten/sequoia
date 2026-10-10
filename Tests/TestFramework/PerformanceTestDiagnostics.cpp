@@ -156,6 +156,7 @@ namespace sequoia::testing
   {
     test_relative_performance();
     test_confidence_multiplier();
+    test_computations_not_optimized_away();
   }
 
   void performance_false_positive_diagnostics::test_relative_performance()
@@ -195,6 +196,30 @@ namespace sequoia::testing
                                {.prediction{.lower{1.86}, .upper{2.42}}, .minimum_trials{10}});
   }
 
+  void performance_false_positive_diagnostics::test_computations_not_optimized_away()
+  {
+    // Nothing but do_not_optimize_away uses the result of either task's
+    // computation. Without do_not_optimize_away, an optimized build removes
+    // the computation. A trial then times the tasks at or near zero, and the
+    // check fails or throws. An unoptimized build removes nothing, so in such
+    // a build these checks pass with or without do_not_optimize_away. The
+    // seed is drawn at run time, so that no build can compute the result at
+    // compile time.
+    const std::uint64_t seed{std::random_device{}()};
+    constexpr std::size_t steps{500'000};
+
+    check_relative_performance("A speed-up of 2 in computing a value a task passes to do_not_optimize_away, "
+                               "predicted [1.5, 2.5]",
+                               [seed]() { do_not_optimize_away(xorshift_state(seed,     steps)); },
+                               [seed]() { do_not_optimize_away(xorshift_state(seed, 2 * steps)); },
+                               {.prediction{.lower{1.5}, .upper{2.5}}, .minimum_trials{10}});
+
+    check_relative_performance("A speed-up of 2 in computing the value a task returns, predicted [1.5, 2.5]",
+                               [seed]() { return xorshift_state(seed,     steps); },
+                               [seed]() { return xorshift_state(seed, 2 * steps); },
+                               {.prediction{.lower{1.5}, .upper{2.5}}, .minimum_trials{10}});
+  }
+
   [[nodiscard]]
   std::filesystem::path performance_utilities_test::source_file()
   {
@@ -207,6 +232,7 @@ namespace sequoia::testing
     test_zeroed_measurements();
     test_coarse_sleep();
     test_task_constraints();
+    test_exception_specifications();
   }
 
   void performance_utilities_test::test_postprocessing()
@@ -523,5 +549,10 @@ namespace sequoia::testing
     STATIC_CHECK(!checkable_tasks_v<   copyable_task,   move_only_task>);
     STATIC_CHECK(!checkable_tasks_v<rvalue_only_task,    copyable_task>);
     STATIC_CHECK(!checkable_tasks_v<   copyable_task, rvalue_only_task>);
+  }
+
+  void performance_utilities_test::test_exception_specifications()
+  {
+    STATIC_CHECK(noexcept(do_not_optimize_away(0)));
   }
 }

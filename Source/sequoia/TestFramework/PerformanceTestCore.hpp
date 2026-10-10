@@ -23,17 +23,65 @@
 #include <random>
 #include <ranges>
 #include <span>
+#include <type_traits>
+
+#if defined(_MSC_VER) && !defined(__clang__)
+  #include <atomic>
+  #include <memory>
+#endif
 
 namespace sequoia::testing
 {
-  /** \brief Returns the duration of a call of `task`. */
+  /** \brief Prevents the optimizer from removing the computation of `value`.
+
+      The compiler must treat `value` as read at the call, and as possibly
+      changed by it. So an optimized build computes `value` before the call,
+      even if nothing else reads `value`. And a computation after the call
+      which depends on the state of `value` is made after the call.
+
+      The compiler may still compute `value` earlier, at any point after the
+      inputs to the computation are known. That may be during compilation.
+   */
+  template<class T>
+  void do_not_optimize_away(const T& value) noexcept
+  {
+#if defined(_MSC_VER) && !defined(__clang__)
+    // The store lets code outside this function reach `value`. MSVC compiles
+    // the fence as a compiler barrier: every write to memory such code can
+    // reach completes before the fence, and every read of it after the fence
+    // is made afresh. Without either, the computation of `value` may be lost.
+    static thread_local const T* volatile observedAddress{};
+    observedAddress = std::addressof(value);
+    std::atomic_signal_fence(std::memory_order_seq_cst);
+#else
+    // The memory clobber makes the compiler treat all memory as possibly read
+    // and changed: both `value` and memory it points to, such as a vector's
+    // elements. Without it, only the bytes of `value` would be read.
+    asm volatile("" : : "m"(value) : "memory");
+#endif
+  }
+
+  /** \brief Returns the duration of a call of `task`.
+
+      The duration includes the computation of any value the call returns,
+      even if nothing else reads the value.
+   */
   template<class Task>
     requires std::invocable<Task&>
   [[nodiscard]]
   std::chrono::duration<double> profile(Task task)
   {
     const timer t{};
-    task();
+
+    // Without this call, the compiler may make the task's computation once,
+    // before any timing starts, if it can see that every call of the task
+    // gives the same result.
+    do_not_optimize_away(task);
+
+    if constexpr(std::is_void_v<std::invoke_result_t<Task&>>)
+      task();
+    else
+      do_not_optimize_away(task());
 
     return t.time_elapsed();
   }
@@ -213,6 +261,12 @@ namespace sequoia::testing
        starts. So state a task holds by value starts afresh in every trial,
        while any other state it uses, such as state reached through a
        reference or a pointer, is shared by every trial.
+
+       If a task returns a value, each trial passes the value to
+       `do_not_optimize_away` before the timing stops. So the timing includes
+       the computation of the value. An optimized build may remove any other
+       computation whose result nothing uses. To time such a computation,
+       pass its result to `do_not_optimize_away` within the task.
 
        Each attempt estimates the speed-up from the ratio of the tasks'
        durations in each trial, and puts an interval around the estimate. The

@@ -1,5 +1,5 @@
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 165
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 166
 Speed-up of 2, predicted [1.8, 2.1]
 
 Speed-up: 2 in [2, 2]; predicted [1.8, 2.1]
@@ -9,7 +9,7 @@ Task durations: fast 0.001s, slow 0.002s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 170
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 171
 Speed-up of 4, predicted [3.4, 4.1]
 
 Speed-up: 4 in [4, 4]; predicted [3.4, 4.1]
@@ -19,7 +19,7 @@ Task durations: fast 0.001s, slow 0.004s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 175
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 176
 Durations varying together, a speed-up of 2 in every trial, predicted [1.8, 2.2]
 
 Speed-up: 2 in [2, 2]; predicted [1.8, 2.2]
@@ -29,7 +29,7 @@ Task durations: fast 0.00183s, slow 0.00366s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 185
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 186
 Attempts 1 and 2 fail at the gate; attempt 3 takes 3 standard errors and needs 2.5 to overlap [4.57, 5.94]
 
 Speed-up: 2.64 in [1.37, 5.1]; predicted [4.57, 5.94]
@@ -39,12 +39,32 @@ Task durations: fast 0.002s, slow 0.00528s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 191
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 192
 Attempt 3 takes 3 standard errors and needs 2.49 to overlap [1.86, 2.42]; attempt 2 takes 2 and needs 7.62
 
 Speed-up: 3.08 in [2.3, 4.13]; predicted [1.86, 2.42]
 Trials: 20, attempt 3 of 3
 Task durations: fast 0.002s, slow 0.00617s
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 211
+A speed-up of 2 in computing a value a task passes to do_not_optimize_away, predicted [1.5, 2.5]
+
+Speed-up: 2 in [2, 2]; predicted [1.5, 2.5]
+Trials: 10, attempt 1 of 3
+Task durations: fast 0.0079s, slow 0.0158s
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 217
+A speed-up of 2 in computing the value a task returns, predicted [1.5, 2.5]
+
+Speed-up: 2 in [2, 2]; predicted [1.5, 2.5]
+Trials: 10, attempt 1 of 3
+Task durations: fast 0.00793s, slow 0.0159s
 
 =======================================
 
