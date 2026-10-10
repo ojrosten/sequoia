@@ -328,8 +328,8 @@ namespace sequoia::testing
   /** \brief Chooses between a run's diagnostics output and the reference.
 
       \returns
-      -# `referenceOutput`, if `text_with_zeroed_measurements`, given
-         `decidingAttempt`, gives the same result for it as for `testOutput`;
+      -# `referenceOutput`, if `text_with_zeroed_measurements` gives the same
+         result for it as for `testOutput`, each given `decidingAttempt`;
       -# `testOutput`, otherwise.
    */
   [[nodiscard]]
@@ -348,8 +348,8 @@ namespace sequoia::testing
 
     using base_type::base_type;
 
-    /** \brief Summarizes the checks, with the attempt which decides each
-               taken to vary from run to run.
+    /** \brief Summarizes the checks, taking the attempt which decides each to
+               vary from run to run.
      */
     [[nodiscard]]
     log_summary summarize(duration delta) const;
@@ -361,8 +361,15 @@ namespace sequoia::testing
 
     /** \brief Summarizes the checks.
 
-        In false-positive and false-negative modes, the diagnostics output is
-        `postprocess`ed against the reference, given `decidingAttempt`.
+        In false-positive and false-negative modes, `postprocess` chooses
+        between the run's diagnostics output and the contents of the existing
+        diagnostics file, given `decidingAttempt`. The summary carries the
+        chosen text.
+
+        A test in which the same attempt decides each check on every run may
+        hide `summarize(duration)` with its own, which passes
+        `deciding_attempt::invariant` here. Its diagnostics output then
+        records the number of trials and the attempt exactly.
      */
     [[nodiscard]]
     log_summary summarize(duration delta, deciding_attempt decidingAttempt) const;
