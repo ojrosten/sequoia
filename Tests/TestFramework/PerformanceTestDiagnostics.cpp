@@ -183,16 +183,16 @@ namespace sequoia::testing
     using namespace std::chrono_literals;
 
     check_relative_performance("Attempts 1 and 2 fail at the gate; "
-                               "attempt 3 takes 3 standard errors and needs 2.25 to overlap [4.86, 5.83]",
+                               "attempt 3 takes 3 standard errors and needs 2.25 to overlap [4.86, 7.43]",
                                counted_spinner{8ms, trials_before_attempt(trials_for_minimum_10, 3), 5ms},
                                make_cycling_spinner({4ms, 6ms, 20ms, 30ms, 30ms}),
-                               {.prediction{.lower{4.86}, .upper{5.83}}, .minimum_trials{10}});
+                               {.prediction{.lower{4.86}, .upper{7.43}}, .minimum_trials{10}});
 
-    check_relative_performance("Attempt 3 takes 3 standard errors and needs 2.25 to overlap [2.89, 3.54]; "
+    check_relative_performance("Attempt 3 takes 3 standard errors and needs 2.24 to overlap [2.21, 3.54]; "
                                "attempt 2 takes 2 and needs 3.77",
                                counted_spinner{1ms, trials_before_attempt(trials_for_minimum_10, 3), 2ms},
                                make_cycling_spinner({5ms, 5ms, 10ms, 40ms, 40ms}),
-                               {.prediction{.lower{2.89}, .upper{3.54}}, .minimum_trials{10}});
+                               {.prediction{.lower{2.21}, .upper{3.54}}, .minimum_trials{10}});
   }
 
   [[nodiscard]]
