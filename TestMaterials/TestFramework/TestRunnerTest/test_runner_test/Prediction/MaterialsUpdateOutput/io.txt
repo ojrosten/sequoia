@@ -4,7 +4,7 @@ Running tests...
 stale_predictions_free_test:
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 425
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 426
 	Predictions are stale
 
 	[bool]
@@ -16,9 +16,9 @@ stale_predictions_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.05ms]
-[Execution Time: 254us]
-[Runner Overhead: 659us]
+[Total Run Time: 3.55ms]
+[Execution Time: 149us]
+[Runner Overhead: 612us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

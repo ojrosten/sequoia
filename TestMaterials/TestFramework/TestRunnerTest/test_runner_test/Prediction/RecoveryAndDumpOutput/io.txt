@@ -2,14 +2,14 @@
 Running tests, synchronously...
 
 Tests:
-[Execution Time: 1.05ms]
-[Runner Overhead: 1.28ms]
+[Execution Time: 2.03ms]
+[Runner Overhead: 4.17ms]
     TestFramework:
-    [Execution Time: 523us]
-    [Runner Overhead: 819us]
+    [Execution Time: 998us]
+    [Runner Overhead: 842us]
         bar_free_test:
-        [Execution Time: 523us]
-        [Runner Overhead: 819us]
+        [Execution Time: 998us]
+        [Runner Overhead: 842us]
             Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
 
 ******  Critical Failures:  1  ******
@@ -29,8 +29,8 @@ Tests:
             =======================================
 
     foo_test:
-    [Execution Time: 523us]
-    [Runner Overhead: 458us]
+    [Execution Time: 1.03ms]
+    [Runner Overhead: 3.33ms]
         Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
@@ -42,7 +42,7 @@ Tests:
         Exception thrown during last check
         Last Recorded Message:
 
-        Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 67
+        Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 68
         Throw during check
 
         [sequoia::testing::(anonymous namespace)::foo]
@@ -51,9 +51,9 @@ Tests:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 2.2ms]
-[Execution Time: 1.05ms]
-[Runner Overhead: 1.28ms]
+[Total Run Time: 8.67ms]
+[Execution Time: 2.03ms]
+[Runner Overhead: 4.17ms]
 	Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

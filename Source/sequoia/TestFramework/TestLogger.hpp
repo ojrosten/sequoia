@@ -26,6 +26,7 @@
 
 #include <chrono>
 #include <filesystem>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -55,6 +56,12 @@ namespace sequoia::testing
       top_level_checks{},
       deep_checks{},
       performance_checks{};
+
+    /** \brief The attempt which decided each performance check, in the order
+               of the checks. A check which threw before its decision has
+               none.
+     */
+    std::vector<std::size_t> performance_deciding_attempts{};
   };
 
   /** \brief Helper class for safe interaction with test_logger.
@@ -136,6 +143,11 @@ namespace sequoia::testing
       ++m_Results.performance_checks;
     }
 
+    void log_performance_deciding_attempt(std::size_t attempt)
+    {
+      m_Results.performance_deciding_attempts.push_back(attempt);
+    }
+
     void failure_message(test_mode mode, std::string_view message, is_critical isCritical);
     
     void log_failure(test_mode mode, std::string_view message)
@@ -205,6 +217,8 @@ namespace sequoia::testing
     sentinel_base& operator=(const sentinel_base&) = delete;
 
     void log_performance_check() { get().log_performance_check(); }
+
+    void log_performance_deciding_attempt(std::size_t attempt) { get().log_performance_deciding_attempt(attempt); }
 
     void log_check() { get().log_check(); }
 

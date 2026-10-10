@@ -2,14 +2,14 @@
 Running tests, synchronously...
 
 flipper_free_test:
-[Execution Time: 135us]
-[Runner Overhead: 548us]
+[Execution Time: 56.9us]
+[Runner Overhead: 786us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 301us]
-[Execution Time: 135us]
-[Runner Overhead: 548us]
+[Total Run Time: 2.19ms]
+[Execution Time: 56.9us]
+[Runner Overhead: 786us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -20,11 +20,11 @@ flipper_free_test:
 Running tests, synchronously...
 
 flipper_free_test:
-[Execution Time: 54.3us]
-[Runner Overhead: 519us]
+[Execution Time: 139us]
+[Runner Overhead: 1.57ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 199
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 200
 	Flipper
 
 	[bool]
@@ -36,9 +36,9 @@ flipper_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 210us]
-[Execution Time: 54.3us]
-[Runner Overhead: 519us]
+[Total Run Time: 3.18ms]
+[Execution Time: 139us]
+[Runner Overhead: 1.57ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -54,7 +54,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 199
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 200
 	Flipper
 
 	[bool]

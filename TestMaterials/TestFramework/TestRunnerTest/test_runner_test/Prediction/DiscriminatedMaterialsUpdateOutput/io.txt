@@ -4,7 +4,7 @@ Running tests...
 variant_free_test:
 	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 3]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 425
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 426
 	Predictions are stale
 
 	[bool]
@@ -16,9 +16,9 @@ variant_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.34ms]
-[Execution Time: 604us]
-[Runner Overhead: 784us]
+[Total Run Time: 4.47ms]
+[Execution Time: 268us]
+[Runner Overhead: 981us]
 	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 3]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

@@ -4,7 +4,7 @@ Running tests...
 failing_test:
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 101
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 102
 	Standard Failure
 
 	[int]
@@ -18,9 +18,9 @@ passing_test:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 3.03ms]
-[Execution Time: 62us]
-[Runner Overhead: 1.51ms]
+[Total Run Time: 3.78ms]
+[Execution Time: 124us]
+[Runner Overhead: 1.73ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

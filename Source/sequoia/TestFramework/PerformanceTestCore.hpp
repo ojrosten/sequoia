@@ -258,6 +258,7 @@ namespace sequoia::testing
       throw std::invalid_argument{"Relative performance test requires minimum_trials >= 10"};
 
     const auto [attempt, outcome]{impl::execute_attempts<Mode>(fast, slow, parameters)};
+    sentry.log_performance_deciding_attempt(attempt);
 
     sentry.append_to_message(
       impl::summarize_attempt(outcome,

@@ -4,7 +4,7 @@ Running tests...
 type_swapped_predictions_free_test:
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 482
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 483
 	Predictions are stale
 
 	[bool]
@@ -16,9 +16,9 @@ type_swapped_predictions_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 9.58ms]
-[Execution Time: 859us]
-[Runner Overhead: 431us]
+[Total Run Time: 6.75ms]
+[Execution Time: 143us]
+[Runner Overhead: 549us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -33,5 +33,5 @@ type_swapped_predictions_free_test:
 
 -----------Post-Run Failures-----------
 	Update of materials for Updating/TypeSwappedPredictionsFreeTest.cpp did not complete:
-	[the standard library's message, masked by io.seqpat]
+	filesystem error: in copy_file: Operation not supported ["/Users/oliver/sequoia-performance-attempt-counter/output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/TestMaterials/Updating/TypeSwappedPredictionsFreeTest/type_swapped_predictions_free_test/Prediction/B"] ["/Users/oliver/sequoia-performance-attempt-counter/output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/output/TestsTemporaryData/Updating/TypeSwappedPredictionsFreeTest/type_swapped_predictions_free_test/WorkingCopy/B"]
 

@@ -284,6 +284,12 @@ namespace sequoia::testing
       m_pTest->write_instability_analysis_output(index);
     }
 
+    [[nodiscard]]
+    std::span<const std::size_t> performance_deciding_attempts() const noexcept
+    {
+      return m_pTest->performance_deciding_attempts();
+    }
+
     struct soul
     {
       virtual ~soul() = default;
@@ -294,6 +300,7 @@ namespace sequoia::testing
       virtual const individual_diagnostics_paths& diagnostics_file_paths() const noexcept = 0;
       virtual log_summary summarize(log_summary::duration delta) const                    = 0;
       virtual bool has_critical_failures() const noexcept                                 = 0;
+      virtual std::span<const std::size_t> performance_deciding_attempts() const noexcept = 0;
 
       virtual void run_tests()                                                               = 0;
       virtual void log_critical_failure(std::string_view tag, std::string_view what)         = 0;
@@ -343,6 +350,12 @@ namespace sequoia::testing
       bool has_critical_failures() const noexcept final
       {
         return m_Test.has_critical_failures();
+      }
+
+      [[nodiscard]]
+      std::span<const std::size_t> performance_deciding_attempts() const noexcept final
+      {
+        return m_Test.performance_deciding_attempts();
       }
 
       void run_tests() final
@@ -472,9 +485,13 @@ namespace sequoia::testing
       log_summary::duration m_ExecutionDuration{};
     };
 
-    /** \brief An RAII wrapper to write a test's execution record: when the
-               test started and, on destruction, its execution duration and
-               the runner's overhead so far, as `executionTimer` gives them.
+    /** \brief An RAII wrapper to write a test's execution record.
+
+        On construction, the record gives when the test started. On
+        destruction, it adds the test's execution duration and the runner's
+        overhead so far, as `executionTimer` gives them. It then adds the
+        attempt which decided each of the test's performance checks, as
+        `vessel` gives them.
 
         A record which cannot be written is skipped rather than reported. The
         file then keeps the last record the runner managed to write, which
@@ -483,7 +500,9 @@ namespace sequoia::testing
     class [[nodiscard]] scoped_execution_record
     {
     public:
-      scoped_execution_record(std::filesystem::path file, const execution_timer& executionTimer);
+      scoped_execution_record(std::filesystem::path file,
+                              const execution_timer& executionTimer,
+                              const test_vessel& vessel);
 
       scoped_execution_record(const scoped_execution_record&)            = delete;
       scoped_execution_record& operator=(const scoped_execution_record&) = delete;
@@ -493,6 +512,7 @@ namespace sequoia::testing
       std::filesystem::path m_File{};
       std::chrono::system_clock::time_point m_Start{};
       const execution_timer& m_ExecutionTimer;
+      const test_vessel& m_Vessel;
     };
 
     [[nodiscard]]

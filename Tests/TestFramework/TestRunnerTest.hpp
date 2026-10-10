@@ -59,6 +59,8 @@ namespace sequoia::testing
 
     void test_execution_records();
 
+    void test_execution_records_of_performance_checks();
+
     void test_summary_collision_with_an_unselected_test();
 
     void test_discriminated_summary();

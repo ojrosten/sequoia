@@ -53,6 +53,23 @@ namespace sequoia::testing
       return std::format("started {:%FT%TZ}\n", std::chrono::floor<std::chrono::milliseconds>(start));
     }
 
+    /** \brief Returns a line for each of `decidingAttempts`, which names the
+               attempt that decided a performance check.
+     */
+    [[nodiscard]]
+    std::string deciding_attempts_record(std::span<const std::size_t> decidingAttempts)
+    {
+      auto line{
+        [](std::size_t attempt) { return std::format("performance check decided at attempt {}\n", attempt); }
+      };
+
+      return
+          decidingAttempts
+        | std::views::transform(line)
+        | std::views::join
+        | std::ranges::to<std::string>();
+    }
+
     /** \brief How long a sleep of `target` typically lasts on this machine. */
     [[nodiscard]]
     std::chrono::duration<double> typical_sleep_duration(std::chrono::milliseconds target)
@@ -924,10 +941,12 @@ namespace sequoia::testing
   }
 
   test_to_run::scoped_execution_record::scoped_execution_record(std::filesystem::path file,
-                                                                const execution_timer& executionTimer)
+                                                                const execution_timer& executionTimer,
+                                                                const test_vessel& vessel)
     : m_File{std::move(file)}
     , m_Start{std::chrono::system_clock::now()}
     , m_ExecutionTimer{executionTimer}
+    , m_Vessel{vessel}
   {
     overwrite_quietly(m_File, started_at(m_Start));
   }
@@ -936,10 +955,11 @@ namespace sequoia::testing
   {
     using std::chrono::microseconds, std::chrono::duration_cast;
     overwrite_quietly(m_File,
-                      std::format("{}execution duration {}us\nrunner overhead {}us\n",
+                      std::format("{}execution duration {}us\nrunner overhead {}us\n{}",
                                   started_at(m_Start),
                                   duration_cast<microseconds>(m_ExecutionTimer.execution_duration()).count(),
-                                  duration_cast<microseconds>(m_ExecutionTimer.runner_overhead()).count()));
+                                  duration_cast<microseconds>(m_ExecutionTimer.runner_overhead()).count(),
+                                  deciding_attempts_record(m_Vessel.performance_deciding_attempts())));
   }
 
   [[nodiscard]]
@@ -984,7 +1004,7 @@ namespace sequoia::testing
     // Also installed per test, since under MSVC each thread has its own
     // terminate handler
     const scoped_terminate_handler terminationReported{report_termination};
-    const scoped_execution_record record{m_ExecutionRecord.file_path(), executionTimer};
+    const scoped_execution_record record{m_ExecutionRecord.file_path(), executionTimer, m_Vessel};
 
     if(try_prepare_materials(remover))
       executionTimer.time_execution([this](){ try_run_tests(); });
