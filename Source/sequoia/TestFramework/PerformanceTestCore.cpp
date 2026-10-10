@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <cmath>
 #include <format>
+#include <iostream>
 #include <ranges>
 
 namespace sequoia::testing
@@ -258,6 +259,11 @@ namespace sequoia::testing
           return "";
         }()
       };
+
+      // EXPERIMENT (roadmap 342): the unmasked text of every run. Not for merging.
+      std::cout << "@@@ FRESH-DIAGNOSTICS BEGIN " << this->name() << '\n'
+                << summary.diagnostics_output()
+                << "@@@ FRESH-DIAGNOSTICS END\n" << std::flush;
 
       std::string outputToUse{postprocess(summary.diagnostics_output(), referenceOutput)};
       summary.diagnostics_output(std::move(outputToUse));
