@@ -1006,6 +1006,37 @@ jobs:
           done
           [ "$found" -gt 0 ] || echo "no performance timings: the working copy holds no io.txt"
 
+      # A performance check makes up to three attempts, so a green check does
+      # not say how often its first attempt failed. A test's execution record
+      # gives the attempt which decided each of its performance checks, one
+      # line per check, in the order of the checks. This step prints those
+      # attempts, one line per test. An attempt after the first means that the
+      # first attempt did not decide the check. Some fixtures of the
+      # false-positive and false-negative diagnostics are built to be decided
+      # at a later attempt.
+      #
+      # Each record is of the column's last run of the test, so a column
+      # which repeats the suite shows only its last repetition. The records
+      # are in the artifact, for a count over several columns or runs.
+      #
+      # The names are paths that a fork's PR controls, so the step prints
+      # them with workflow commands stopped. A report cannot fail the job.
+      - name: Report the attempts which decided the performance checks
+        if: ${{ always() && inputs.needs_testing == 'true' }}
+        continue-on-error: true
+        run: |
+          token=$(openssl rand -hex 16)
+          echo "::stop-commands::$token"
+          found=0
+          while IFS= read -r record; do
+            attempts=$(sed -n 's/^performance check decided at attempt //p' "$record" | paste -sd ' ' -)
+            [ -n "$attempts" ] || continue
+            found=$((found + 1))
+            echo "deciding attempts: ${record#output/ExecutionRecords/}: $attempts"
+          done < <(find output/ExecutionRecords -type f -name '*.txt' 2>/dev/null | sort)
+          [ "$found" -gt 0 ] || echo "no deciding attempts: no execution record names a performance check"
+          echo "::$token::"
+
       # The artifact takes the performance test's working copy for its io.txt
       # files, which hold the timings that "Report the performance test's
       # timings" prints. It does not take the versioned trees: the patch holds
