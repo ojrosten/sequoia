@@ -1,2 +1,2 @@
 performance_false_positive_diagnostics
-False Positive Performance Checks:         5;  Failures:  0
+False Positive Performance Checks:         7;  Failures:  0

@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <array>
 #include <chrono>
+#include <cstdint>
 #include <functional>
 #include <memory>
 #include <ranges>
@@ -54,6 +55,26 @@ namespace sequoia::testing
   {
     const auto deadline{std::chrono::steady_clock::now() + t};
     while(std::chrono::steady_clock::now() < deadline) {}
+  }
+
+  /** \brief Returns the state of Marsaglia's 64-bit xorshift generator
+             after `steps` steps from `seed`.
+
+      Each step depends on the one before, so the computation takes time in
+      proportion to `steps`.
+   */
+  [[nodiscard]]
+  constexpr std::uint64_t xorshift(std::uint64_t seed, std::size_t steps) noexcept
+  {
+    return std::ranges::fold_left(
+             std::views::iota(0uz, steps),
+             seed,
+             [](std::uint64_t state, std::size_t) {
+               state ^= state << 13;
+               state ^= state >> 7;
+               return state ^ (state << 17);
+             }
+           );
   }
 
   /** \brief Returns a task which spins for each of `durations` in turn,
