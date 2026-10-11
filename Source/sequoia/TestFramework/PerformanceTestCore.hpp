@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <chrono>
 #include <concepts>
+#include <format>
 #include <iterator>
 #include <optional>
 #include <random>
@@ -50,6 +51,11 @@ namespace sequoia::testing
              makes, counting the first.
    */
   inline constexpr std::size_t relative_performance_max_attempts{3};
+
+  /** \brief The least `minimum_trials` which `check_relative_performance`
+             accepts.
+   */
+  inline constexpr std::size_t relative_performance_minimum_trials_floor{10};
 
   /** \brief The interval of speed-ups predicted for a fast task over a slow
              one, and the fewest trials in any attempt.
@@ -234,7 +240,8 @@ namespace sequoia::testing
 
        \throws std::invalid_argument if either end of `parameters.prediction`
        is not greater than 1, if its lower end exceeds its upper end, or if
-       `parameters.minimum_trials` is less than 10.
+       `parameters.minimum_trials` is less than
+       `relative_performance_minimum_trials_floor`.
 
        \throws std::runtime_error if a trial times either task as zero.
    */
@@ -254,8 +261,11 @@ namespace sequoia::testing
     if(parameters.prediction.lower > parameters.prediction.upper)
       throw std::invalid_argument{"prediction.upper must be >= prediction.lower"};
 
-    if(parameters.minimum_trials < 10)
-      throw std::invalid_argument{"Relative performance test requires minimum_trials >= 10"};
+    if(parameters.minimum_trials < relative_performance_minimum_trials_floor)
+      throw std::invalid_argument{
+        std::format("Relative performance test requires minimum_trials >= {}",
+                    relative_performance_minimum_trials_floor)
+      };
 
     const auto [attempt, outcome]{impl::execute_attempts<Mode>(fast, slow, parameters)};
 
