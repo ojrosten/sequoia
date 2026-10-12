@@ -52,9 +52,10 @@ namespace sequoia::testing
     std::size_t
       failures{},
       top_level_failures{},
-      performance_failures{},
+      top_level_performance_failures{},
       critical_failures{},
       top_level_checks{},
+      top_level_performance_checks{},
       deep_checks{};
 
     std::vector<std::optional<std::size_t>> attempts_per_performance_check{};
@@ -117,7 +118,7 @@ namespace sequoia::testing
       {}
 
       std::string message;
-      bool written{};
+      bool written{}, is_performance_check{};
     };
 
     enum class is_critical{yes, no};
@@ -134,12 +135,13 @@ namespace sequoia::testing
     void log_top_level_check() noexcept { ++m_Results.top_level_checks; }
 
     [[nodiscard]]
-    std::size_t log_performance_check()
+    bool within_performance_check() const noexcept
     {
-      m_Results.attempts_per_performance_check.emplace_back();
-      log_check();
-      return m_Results.attempts_per_performance_check.size() - 1;
+      return !m_SentinelDepth.empty() && m_SentinelDepth.back().is_performance_check;
     }
+
+    [[nodiscard]]
+    std::size_t log_performance_check(std::size_t level);
 
     void log_performance_check_attempts(std::size_t checkIndex, std::size_t attempts)
     {
@@ -154,9 +156,11 @@ namespace sequoia::testing
       failure_message(mode, message, is_critical::no);
     }
 
-    void log_performance_failure(test_mode mode, std::string_view message)
+    void log_performance_failure(test_mode mode, std::size_t level, std::string_view message)
     {
-      ++m_Results.performance_failures;
+      if(!level)
+        ++m_Results.top_level_performance_failures;
+
       log_failure(mode, message);
     }
 
@@ -215,7 +219,7 @@ namespace sequoia::testing
     sentinel_base& operator=(const sentinel_base&) = delete;
 
     [[nodiscard]]
-    std::size_t log_performance_check() { return get().log_performance_check(); }
+    std::size_t log_performance_check() { return get().log_performance_check(m_Level); }
 
     void log_performance_check_attempts(std::size_t checkIndex, std::size_t attempts)
     {
@@ -226,7 +230,7 @@ namespace sequoia::testing
 
     void log_failure(std::string_view message) { get().log_failure(m_Mode, message); }
 
-    void log_performance_failure(std::string_view message) { get().log_performance_failure(m_Mode, message); }
+    void log_performance_failure(std::string_view message) { get().log_performance_failure(m_Mode, m_Level, message); }
 
     void log_critical_failure(std::string_view message) { get().log_critical_failure(m_Mode, message); }
 

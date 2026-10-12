@@ -23,6 +23,7 @@ namespace sequoia::testing
   void performance_exceptions_test::run_tests()
   {
     test_invalid_arguments();
+    test_checks_made_by_a_task();
     test_throwing_task();
     test_attempt_with_too_few_trials();
     test_non_positive_durations();
@@ -59,6 +60,36 @@ namespace sequoia::testing
     check_exception_thrown<std::invalid_argument>("Too few trials",
                                                   relativePerformanceCheck({.prediction{.lower{2.0}, .upper{3.0}},
                                                                             .minimum_trials{tooFewTrials}}));
+  }
+
+  void performance_exceptions_test::test_checks_made_by_a_task()
+  {
+    const relative_performance_parameters parameters{.prediction{.lower{2.0}, .upper{3.0}}, .minimum_trials{10}};
+
+    auto checkWithFastTask{
+      [this, parameters](auto fast) {
+        return [this, parameters, fast]() {
+          return check_relative_performance("Relative performance with a task which makes a check",
+                                            fast,
+                                            []() {},
+                                            parameters);
+        };
+      }
+    };
+
+    check_exception_thrown<std::logic_error>(
+      "Fast task makes a check",
+      checkWithFastTask([this]() { check("A check within a performance check", true); })
+    );
+
+    check_exception_thrown<std::logic_error>(
+      "Fast task makes a performance check",
+      checkWithFastTask(
+        [this, parameters]() {
+          check_relative_performance("A performance check within a performance check", []() {}, []() {}, parameters);
+        }
+      )
+    );
   }
 
   void performance_exceptions_test::test_throwing_task()

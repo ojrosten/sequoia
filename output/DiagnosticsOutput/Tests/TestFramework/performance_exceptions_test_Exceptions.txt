@@ -43,7 +43,25 @@ Relative performance test requires minimum_trials >= 10
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 76
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 80
+Fast task makes a check
+
+Expected Exception Type:
+[std::logic_error]
+A check cannot be made within a performance check
+
+=======================================
+
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 85
+Fast task makes a performance check
+
+Expected Exception Type:
+[std::logic_error]
+A check cannot be made within a performance check
+
+=======================================
+
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 106
 Fast task throws
 
 Expected Exception Type:
@@ -52,16 +70,7 @@ Fast task failure
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 101
-An attempt with one trial fewer than the floor
-
-Expected Exception Type:
-[std::invalid_argument]
-Relative performance attempt requires at least 10 trials; it has 9
-
-=======================================
-
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 127
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 125
 A fast task timed as zero
 
 Expected Exception Type:
@@ -70,7 +79,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 129
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 127
 A slow task timed as zero
 
 Expected Exception Type:
@@ -79,7 +88,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 131
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 129
 A negative duration
 
 Expected Exception Type:

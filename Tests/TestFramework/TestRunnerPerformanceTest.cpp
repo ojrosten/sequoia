@@ -432,6 +432,50 @@ namespace sequoia::testing
       }
     };
 
+    /** Makes a performance check, and two more within checks of exceptions:
+        -# A speed-up of 8 passes at once.
+        -# A check of nine trials is refused, which is the exception expected.
+        -# A speed-up of 0.5 never passes, and the exception expected follows.
+     */
+    class performance_checks_within_other_checks_test final : public performance_test
+    {
+    public:
+      using performance_test::performance_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return std::source_location::current().file_name();
+      }
+
+      void run_tests()
+      {
+        using namespace std::chrono_literals;
+
+        const relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}, .minimum_trials{10}};
+
+        check_relative_performance("A speed-up of 8", counted_spinner{1ms}, counted_spinner{8ms}, parameters);
+
+        check_exception_thrown<std::invalid_argument>(
+          "Nine trials are refused",
+          [this, &parameters]() {
+            return check_relative_performance("Nine trials",
+                                              counted_spinner{1ms},
+                                              counted_spinner{8ms},
+                                              {.prediction{parameters.prediction}, .minimum_trials{9}});
+          }
+        );
+
+        check_exception_thrown<std::runtime_error>(
+          "A failing performance check, then an exception",
+          [this, &parameters]() {
+            check_relative_performance("A speed-up of 0.5", counted_spinner{2ms}, counted_spinner{1ms}, parameters);
+            throw std::runtime_error{"After the performance check"};
+          }
+        );
+      }
+    };
+
     /** A performance test which makes no performance check. */
     class performance_test_without_performance_checks final : public performance_test
     {
@@ -525,6 +569,7 @@ namespace sequoia::testing
     test_runner_overhead_reported_apart();
     test_execution_duration_of_busiest_thread();
     test_execution_records_of_performance_checks();
+    test_summary_of_performance_checks_within_other_checks();
   }
 
   void test_runner_performance_test::test_parallel_acceleration()
@@ -712,5 +757,32 @@ namespace sequoia::testing
           "The record of a performance test which makes no performance check gives no attempts",
           get_recorded_lines_after_timings<performance_test_without_performance_checks>(runner),
           std::vector<std::string>{});
+  }
+
+  void test_runner_performance_test::test_summary_of_performance_checks_within_other_checks()
+  {
+    using test_type = performance_checks_within_other_checks_test;
+
+    std::stringstream outputStream{};
+    commandline_arguments args{{minimal_fake_path().generic_string()}};
+    auto runner{make_runner(args, outputStream)};
+    runner.register_test<test_type>();
+    check(equality,
+          "Performance checks within other checks return code",
+          runner.execute(),
+          return_code::soft_failures);
+
+    const test_summary_path summary{test_type::source_file(),
+                                    test_name<test_type>(),
+                                    runner.proj_paths(),
+                                    null_discriminator};
+    const auto outputDir{working_materials() /= "PerformanceChecksWithinOtherChecks"};
+    fs::create_directory(outputDir);
+    fs::copy(summary.file_path(), outputDir);
+
+    check(equivalence,
+          "A performance check within another check counts towards the other",
+          outputDir,
+          predictive_materials() /= "PerformanceChecksWithinOtherChecks");
   }
 }

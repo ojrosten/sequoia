@@ -84,6 +84,9 @@ namespace sequoia::testing
     , m_PriorCriticalFailures{logger.results().critical_failures}
     , m_PriorDeepChecks{logger.results().deep_checks}
   {
+    if(logger.within_performance_check())
+      throw std::logic_error{"A check cannot be made within a performance check"};
+
     if(!logger.depth())
     {
       logger.log_top_level_check();
@@ -190,6 +193,20 @@ namespace sequoia::testing
     recored_critical_failure(m_Recovery.recovery_file, message);
   }
 
+  std::size_t test_logger_base::log_performance_check(std::size_t level)
+  {
+    if(level >= m_SentinelDepth.size())
+      throw std::logic_error{"Cannot log a performance check absent from TestLogger's stack"};
+
+    m_SentinelDepth[level].is_performance_check = true;
+    if(!level)
+      ++m_Results.top_level_performance_checks;
+
+    m_Results.attempts_per_performance_check.emplace_back();
+    log_check();
+    return m_Results.attempts_per_performance_check.size() - 1;
+  }
+
   void test_logger_base::log_top_level_failure(test_mode mode, std::string message)
   {
     if(m_SentinelDepth.empty())
@@ -281,26 +298,27 @@ namespace sequoia::testing
     , m_CriticalFailures{logger.results().critical_failures}
     , m_ExecutionDuration{delta}
   {
-    const auto performanceChecks{logger.results().attempts_per_performance_check.size()};
+    const auto performanceChecks{logger.results().top_level_performance_checks},
+               performanceFailures{logger.results().top_level_performance_failures};
 
     switch(mode)
     {
     case test_mode::standard:
-      m_StandardTopLevelFailures    = logger.results().top_level_failures - logger.results().performance_failures;
-      m_StandardDeepFailures        = logger.results().failures - logger.results().performance_failures;
-      m_StandardPerformanceFailures = logger.results().performance_failures;
+      m_StandardTopLevelFailures    = logger.results().top_level_failures - performanceFailures;
+      m_StandardDeepFailures        = logger.results().failures - performanceFailures;
+      m_StandardPerformanceFailures = performanceFailures;
       m_StandardTopLevelChecks      = logger.results().top_level_checks - performanceChecks;
       m_StandardDeepChecks          = logger.results().deep_checks - performanceChecks;
       m_StandardPerformanceChecks   = performanceChecks;
       break;
     case test_mode::false_positive:
-      m_FalsePositiveFailures            = logger.results().top_level_failures - logger.results().performance_failures;
-      m_FalsePositivePerformanceFailures = logger.results().performance_failures;
+      m_FalsePositiveFailures            = logger.results().top_level_failures - performanceFailures;
+      m_FalsePositivePerformanceFailures = performanceFailures;
       m_FalsePositiveChecks              = logger.results().top_level_checks - performanceChecks;
       m_FalsePositivePerformanceChecks   = performanceChecks;
       break;
     case test_mode::false_negative:
-      m_FalseNegativePerformanceFailures = performanceChecks - logger.results().performance_failures;
+      m_FalseNegativePerformanceFailures = performanceChecks - performanceFailures;
       m_FalseNegativeFailures            = logger.results().top_level_failures - m_FalseNegativePerformanceFailures;
       m_FalseNegativeChecks              = logger.results().top_level_checks - performanceChecks;
       m_FalseNegativePerformanceChecks   = performanceChecks;
