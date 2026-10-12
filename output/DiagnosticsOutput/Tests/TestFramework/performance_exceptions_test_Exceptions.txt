@@ -1,4 +1,4 @@
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 47
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 48
 Minimum speed-up of 1
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 50
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 51
 Maximum speed-up of 1
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 53
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 54
 Minimum speed-up of NaN
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 56
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 57
 Minimum speed-up exceeding the maximum
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ prediction.upper must be >= prediction.lower
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 59
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 60
 Too few trials
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Relative performance test requires minimum_trials >= 10
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 76
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 77
 Fast task throws
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Fast task failure
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 101
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 102
 An attempt with one trial fewer than the floor
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ Relative performance attempt requires at least 10 trials; it has 9
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 127
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 128
 A fast task timed as zero
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 129
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 130
 A slow task timed as zero
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 131
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 132
 A negative duration
 
 Expected Exception Type:
