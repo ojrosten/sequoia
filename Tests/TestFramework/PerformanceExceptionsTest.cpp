@@ -77,12 +77,12 @@ namespace sequoia::testing
       }
     };
 
-    check_exception_thrown<std::logic_error>(
+    check_exception_thrown<std::invalid_argument>(
       "Fast task makes a check",
       checkWithTasks([this]() { check("A check within a performance check", true); }, []() {})
     );
 
-    check_exception_thrown<std::logic_error>(
+    check_exception_thrown<std::invalid_argument>(
       "Slow task makes a performance check",
       checkWithTasks(
         []() {},

@@ -304,7 +304,7 @@ namespace sequoia::testing
 
        \throws std::runtime_error if a trial times either task as zero.
 
-       \throws std::logic_error if `fast` or `slow` makes a check on `logger`.
+       \throws std::invalid_argument if `fast` or `slow` makes a check on `logger`.
    */
   template<test_mode Mode, performance_task F, performance_task S>
   bool check_relative_performance(std::string_view description,

@@ -85,7 +85,7 @@ namespace sequoia::testing
     , m_PriorDeepChecks{logger.results().deep_checks}
   {
     if(logger.within_performance_check())
-      throw std::logic_error{"A check cannot be made within a performance check"};
+      throw std::invalid_argument{"A check cannot be made within a performance check"};
 
     if(!logger.depth())
     {

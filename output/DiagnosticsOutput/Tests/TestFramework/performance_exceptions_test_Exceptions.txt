@@ -47,7 +47,7 @@ Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 80
 Fast task makes a check
 
 Expected Exception Type:
-[std::logic_error]
+[std::invalid_argument]
 A check cannot be made within a performance check
 
 =======================================
@@ -56,7 +56,7 @@ Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 85
 Slow task makes a performance check
 
 Expected Exception Type:
-[std::logic_error]
+[std::invalid_argument]
 A check cannot be made within a performance check
 
 =======================================
