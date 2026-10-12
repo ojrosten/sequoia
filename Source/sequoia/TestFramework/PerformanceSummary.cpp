@@ -47,11 +47,11 @@ namespace sequoia::testing
       if(const auto numbers{extract_numbers_from<std::size_t, 3>(unindented)};
          numbers && (attemptCountStability == attempt_count_stability::fluctuating))
       {
-        const auto [trials, currentAttempt, maximumAttempts]{*numbers};
-        const relative_performance_attempts attempts{.current{currentAttempt}, .maximum{maximumAttempts}};
+        const auto [trials, attemptsMade, attemptsAllowed]{*numbers};
+        const relative_performance_attempt_progress progress{.made{attemptsMade}, .allowed{attemptsAllowed}};
 
-        if(trials_summary(trials, attempts) == unindented)
-          return indented(trials_summary(0, {.maximum{attempts.maximum}}));
+        if(trials_summary(trials, progress) == unindented)
+          return indented(trials_summary(0, {.allowed{progress.allowed}}));
       }
 
       if(const auto numbers{extract_numbers_from<double, 2>(unindented)})
@@ -100,9 +100,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string trials_summary(std::size_t trials, relative_performance_attempts attempts)
+  std::string trials_summary(std::size_t trials, relative_performance_attempt_progress progress)
   {
-    return std::format("Trials: {}, attempt {} of {}", trials, attempts.current, attempts.maximum);
+    return std::format("Trials: {}, attempt {} of {}", trials, progress.made, progress.allowed);
   }
 
   [[nodiscard]]

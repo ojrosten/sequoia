@@ -116,7 +116,7 @@ namespace sequoia::testing
     /** \brief The outcome of one attempt of `check_relative_performance`:
                why it failed, if it did, and its measurements.
      */
-    struct relative_performance_outcome
+    struct relative_performance_attempt_outcome
     {
       std::optional<relative_performance_failure> failure{};
       relative_performance_estimate               estimate{};
@@ -131,9 +131,9 @@ namespace sequoia::testing
         \throws std::runtime_error if any duration is not greater than zero.
      */
     [[nodiscard]]
-    relative_performance_outcome judge_attempt(std::span<const relative_performance_durations> trialDurations,
-                                               double overlapMultiplier,
-                                               relative_performance_interval prediction);
+    relative_performance_attempt_outcome judge_attempt(std::span<const relative_performance_durations> trialDurations,
+                                                       double overlapMultiplier,
+                                                       relative_performance_interval prediction);
 
     /** \brief Summarizes an attempt in lines of text.
 
@@ -141,9 +141,9 @@ namespace sequoia::testing
         the speed-up, the trials and the task durations.
      */
     [[nodiscard]]
-    std::string summarize_attempt(const relative_performance_outcome& outcome,
+    std::string summarize_attempt(const relative_performance_attempt_outcome& outcome,
                                   std::size_t trials,
-                                  std::size_t attempt,
+                                  std::size_t attemptsMade,
                                   relative_performance_interval prediction);
 
     /** \brief Returns the half-width, in standard errors, of the interval
@@ -187,10 +187,10 @@ namespace sequoia::testing
     /** \brief How many attempts `check_relative_performance` made, and the
                outcome of the last.
      */
-    struct relative_performance_attempts
+    struct relative_performance_conclusion
     {
-      std::size_t                  attempts{};
-      relative_performance_outcome outcome{};
+      std::size_t                          attempts{};
+      relative_performance_attempt_outcome outcome{};
     };
 
     /** \brief Executes attempts in turn, and returns how many it made and the
@@ -203,9 +203,9 @@ namespace sequoia::testing
      */
     template<test_mode Mode, performance_task F, performance_task S>
     [[nodiscard]]
-    relative_performance_attempts execute_attempts(const F& fast,
-                                                   const S& slow,
-                                                   const relative_performance_parameters& parameters)
+    relative_performance_conclusion execute_attempts(const F& fast,
+                                                     const S& slow,
+                                                     const relative_performance_parameters& parameters)
     {
       static_assert(relative_performance_max_attempts > 0);
 
@@ -230,7 +230,7 @@ namespace sequoia::testing
       };
 
       auto stopsFurtherAttempts{
-        [](const relative_performance_outcome& outcome) {
+        [](const relative_performance_attempt_outcome& outcome) {
           return (Mode == test_mode::false_negative) ? outcome.failure.has_value() : !outcome.failure.has_value();
         }
       };
