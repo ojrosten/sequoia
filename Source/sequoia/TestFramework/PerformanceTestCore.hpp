@@ -139,25 +139,26 @@ namespace sequoia::testing
       return {.fast{profile(fast)}, .slow{slowDuration}};
     }
 
-    /** \brief The attempt which decided `check_relative_performance`, and its
-               outcome.
+    /** \brief How many attempts `check_relative_performance` made, and the
+               outcome of the last.
      */
-    struct relative_performance_decision
+    struct relative_performance_attempts
     {
-      std::size_t                  attempt{};
+      std::size_t                  attempts{};
       relative_performance_outcome outcome{};
     };
 
-    /** \brief Executes attempts until one decides the check, and returns the
-               last attempt executed.
+    /** \brief Executes attempts in turn, and returns how many it made and the
+               outcome of the last.
 
-        An attempt which passes decides the check. In false-negative mode, an
-        attempt which fails decides the check instead. The last attempt
-        allowed decides the check whatever its outcome.
+        In standard and false-positive modes, the attempts stop after the
+        first which passes. In false-negative mode, they stop after the first
+        which fails. In every mode, they stop after the last attempt allowed,
+        whatever its outcome.
      */
     template<test_mode Mode, performance_task F, performance_task S>
     [[nodiscard]]
-    relative_performance_decision execute_attempts(const F& fast,
+    relative_performance_attempts execute_attempts(const F& fast,
                                                    const S& slow,
                                                    const relative_performance_parameters& parameters)
     {
@@ -183,7 +184,7 @@ namespace sequoia::testing
         }
       };
 
-      auto isDecisive{
+      auto stopsFurtherAttempts{
         [](const relative_performance_outcome& outcome) {
           return (Mode == test_mode::false_negative) ? outcome.failure.has_value() : !outcome.failure.has_value();
         }
@@ -191,11 +192,12 @@ namespace sequoia::testing
 
       for(const auto attempt : std::views::iota(1uz, relative_performance_max_attempts))
       {
-        if(const auto outcome{executeAttempt(attempt)}; isDecisive(outcome))
-          return {.attempt{attempt}, .outcome{outcome}};
+        if(const auto outcome{executeAttempt(attempt)}; stopsFurtherAttempts(outcome))
+          return {.attempts{attempt}, .outcome{outcome}};
       }
 
-      return {.attempt{relative_performance_max_attempts}, .outcome{executeAttempt(relative_performance_max_attempts)}};
+      return {.attempts{relative_performance_max_attempts},
+              .outcome{executeAttempt(relative_performance_max_attempts)}};
     }
   }
 
@@ -253,7 +255,7 @@ namespace sequoia::testing
                                   const relative_performance_parameters& parameters)
   {
     sentinel<Mode> sentry{logger, std::string{description}};
-    sentry.log_performance_check();
+    const auto checkIndex{sentry.log_performance_check()};
 
     if(!(parameters.prediction.lower > 1) || !(parameters.prediction.upper > 1))
       throw std::invalid_argument{"Relative performance test requires speed-up factors > 1"};
@@ -267,12 +269,13 @@ namespace sequoia::testing
                     relative_performance_minimum_trials_floor)
       };
 
-    const auto [attempt, outcome]{impl::execute_attempts<Mode>(fast, slow, parameters)};
+    const auto [attempts, outcome]{impl::execute_attempts<Mode>(fast, slow, parameters)};
+    sentry.log_performance_check_attempts(checkIndex, attempts);
 
     sentry.append_to_message(
       impl::summarize_attempt(outcome,
-                              impl::trials_of_attempt(parameters.minimum_trials, attempt),
-                              attempt,
+                              impl::trials_of_attempt(parameters.minimum_trials, attempts),
+                              attempts,
                               parameters.prediction)
     );
 
