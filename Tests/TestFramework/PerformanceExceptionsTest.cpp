@@ -82,9 +82,16 @@ namespace sequoia::testing
     auto judgeAttemptContaining{
       [](relative_performance_durations trial) {
         return [trial]() {
-          const std::array<relative_performance_durations, 5> trialDurations{{
-            {.fast{1s}, .slow{1s}}, {.fast{1s}, .slow{1s}}, trial, {.fast{1s}, .slow{1s}}, {.fast{1s}, .slow{1s}}
-          }};
+          // The fewest trials an attempt runs, so that only a duration can be
+          // refused.
+          const auto trialDurations{
+            [trial]() {
+              std::array<relative_performance_durations, relative_performance_minimum_trials_floor> durations{};
+              durations.fill({.fast{1s}, .slow{1s}});
+              durations[durations.size() / 2] = trial;
+              return durations;
+            }()
+          };
 
           return impl::judge_attempt(trialDurations, 1.0, {.lower{2.0}, .upper{3.0}});
         };
