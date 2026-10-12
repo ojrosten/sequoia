@@ -133,6 +133,7 @@ namespace sequoia::testing
     using type = std::any;
 
     template<test_mode Mode, class T, class Advisor>
+      requires std::copy_constructible<T> && std::same_as<T, std::decay_t<T>>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const T& prediction, const tutor<Advisor>& advisor)
     {
       if(check("Has value", logger, obtained.has_value()))
