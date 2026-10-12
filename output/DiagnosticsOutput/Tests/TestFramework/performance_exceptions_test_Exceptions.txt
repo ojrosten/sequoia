@@ -52,16 +52,16 @@ Fast task failure
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 99
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 101
 An attempt with one trial fewer than the floor
 
 Expected Exception Type:
-[std::runtime_error]
+[std::invalid_argument]
 Relative performance attempt requires at least 10 trials; it has 9
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 125
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 127
 A fast task timed as zero
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 127
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 129
 A slow task timed as zero
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 129
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 131
 A negative duration
 
 Expected Exception Type:

@@ -103,7 +103,7 @@ namespace sequoia::testing
                                                        relative_performance_interval prediction)
     {
       if(trialDurations.size() < relative_performance_minimum_trials_floor)
-        throw std::runtime_error{
+        throw std::invalid_argument{
           std::format("Relative performance attempt requires at least {} trials; it has {}",
                       relative_performance_minimum_trials_floor,
                       trialDurations.size())

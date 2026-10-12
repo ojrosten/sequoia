@@ -80,13 +80,15 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
+    constexpr std::size_t tooFewTrials{relative_performance_minimum_trials_floor - 1};
+
     auto judgeAttemptWithTooFewTrials{
       []() {
         // Every duration is positive, so only the number of trials can be
         // refused.
         const auto trialDurations{
           []() {
-            std::array<relative_performance_durations, relative_performance_minimum_trials_floor - 1> durations{};
+            std::array<relative_performance_durations, tooFewTrials> durations{};
             durations.fill({.fast{1s}, .slow{1s}});
             return durations;
           }()
@@ -96,8 +98,8 @@ namespace sequoia::testing
       }
     };
 
-    check_exception_thrown<std::runtime_error>("An attempt with one trial fewer than the floor",
-                                               judgeAttemptWithTooFewTrials);
+    check_exception_thrown<std::invalid_argument>("An attempt with one trial fewer than the floor",
+                                                  judgeAttemptWithTooFewTrials);
   }
 
   void performance_exceptions_test::test_non_positive_durations()
