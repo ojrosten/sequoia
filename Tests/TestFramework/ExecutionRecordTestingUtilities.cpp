@@ -39,6 +39,12 @@ namespace sequoia::testing
         return std::getline(stream, toRead.text);
       }
     };
+
+    [[nodiscard]]
+    std::string label_of(std::string_view recordLine)
+    {
+      return std::string{recordLine.substr(0, recordLine.rfind(' '))};
+    }
   }
 
   [[nodiscard]]
@@ -57,7 +63,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> execution_record_labels(const fs::path& record)
   {
-    auto labelOf{[](std::string_view recordLine) { return std::string{recordLine.substr(0, recordLine.rfind(' '))}; }};
+    auto labelOf{[](std::string_view recordLine) { return label_of(recordLine); }};
 
     return   execution_record_lines(record)
            | std::views::transform(labelOf)
@@ -67,14 +73,10 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string execution_record_value(const fs::path& record, std::string_view label)
   {
-    auto isLabelled{
-      [label](std::string_view recordLine) {
-        return recordLine.starts_with(label) && (recordLine.rfind(' ') == label.size());
-      }
-    };
+    auto labelOf{[](std::string_view recordLine) { return label_of(recordLine); }};
 
     const auto lines{execution_record_lines(record)};
-    if(const auto labelled{std::ranges::find_if(lines, isLabelled)}; labelled != lines.end())
+    if(const auto labelled{std::ranges::find(lines, label, labelOf)}; labelled != lines.end())
       return labelled->substr(label.size() + 1);
 
     throw std::runtime_error{std::format("Unable to extract the {} from: {}", label, record.generic_string())};
