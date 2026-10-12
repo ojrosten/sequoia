@@ -28,6 +28,8 @@ namespace sequoia::testing
 
     void test_throwing_task();
 
+    void test_attempt_with_too_few_trials();
+
     void test_non_positive_durations();
   };
 }
