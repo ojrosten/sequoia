@@ -16,6 +16,14 @@
     declarations that would then belong to two modules at once.
  */
 
+/** Defined when the compiler is MSVC, and not a clang which defines
+    `_MSC_VER` too.
+ */
+
+#if defined(_MSC_VER) && !defined(__clang__)
+  #define SEQUOIA_MSVC_COMPILER
+#endif
+
 #if defined(_MSC_VER)
   #define SEQUOIA_MSVC_EMPTY_BASE_HACK __declspec(empty_bases)
   #define SEQUOIA_NO_UNIQUE_ADDRESS [[msvc::no_unique_address]]
@@ -24,7 +32,7 @@
   #define SEQUOIA_NO_UNIQUE_ADDRESS [[no_unique_address]]
 #endif
 
-#if defined(_MSC_VER) && !defined(__clang__)
+#if defined(SEQUOIA_MSVC_COMPILER)
   #define NAMESPACE_SEQUOIA_AS_BITMASK inline namespace sequoia_bitmask
 #else
   #define NAMESPACE_SEQUOIA_AS_BITMASK namespace sequoia
@@ -43,7 +51,7 @@
     MSVC does not inline at all under `/Od`, so there it takes effect only in an optimised build.
  */
 
-#if defined(_MSC_VER) && !defined(__clang__)
+#if defined(SEQUOIA_MSVC_COMPILER)
   #define SEQUOIA_FORCE_INLINE __forceinline
 #else
   #define SEQUOIA_FORCE_INLINE [[gnu::always_inline]]

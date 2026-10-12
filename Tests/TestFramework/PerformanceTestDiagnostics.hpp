@@ -49,6 +49,8 @@ namespace sequoia::testing
     void test_relative_performance();
 
     void test_confidence_multiplier();
+
+    void test_computations_not_optimized_away();
   };
 
   class performance_utilities_test final : public free_test
@@ -62,12 +64,14 @@ namespace sequoia::testing
     void run_tests();
   private:
 
+    void test_task_constraints();
+
+    void test_exception_specifications();
+
     void test_postprocessing();
 
     void test_zeroed_measurements();
 
     void test_coarse_sleep();
-
-    void test_task_constraints();
   };
 }
