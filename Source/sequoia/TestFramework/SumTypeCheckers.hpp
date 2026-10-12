@@ -137,12 +137,11 @@ namespace sequoia::testing
     {
       if(check("Has value", logger, obtained.has_value()))
       {
-        try
+        if(auto pObtained{std::any_cast<T>(&obtained)})
         {
-          const auto& val{std::any_cast<T>(obtained)};
-          check(with_best_available, "Value held by std::any", logger, val, prediction, advisor);
+          check(with_best_available, "Value held by std::any", logger, *pObtained, prediction, advisor);
         }
-        catch(const std::bad_any_cast&)
+        else
         {
           check("std::any does not hold the expected type", logger, false);
         }
