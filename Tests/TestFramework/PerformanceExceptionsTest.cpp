@@ -31,8 +31,7 @@ namespace sequoia::testing
   void performance_exceptions_test::test_invalid_arguments()
   {
     constexpr double      nan{std::numeric_limits<double>::quiet_NaN()};
-    constexpr std::size_t fewestTrials{relative_performance_minimum_trials_floor},
-                          tooFewTrials{fewestTrials - 1};
+    constexpr std::size_t tooFewTrials{relative_performance_minimum_trials_floor - 1};
 
     auto relativePerformanceCheck{
       [this](const relative_performance_parameters& parameters) {
@@ -47,16 +46,16 @@ namespace sequoia::testing
 
     check_exception_thrown<std::invalid_argument>("Minimum speed-up of 1",
                                                   relativePerformanceCheck({.prediction{.lower{1.0}, .upper{2.0}},
-                                                                            .minimum_trials{fewestTrials}}));
+                                                                            .minimum_trials{10}}));
     check_exception_thrown<std::invalid_argument>("Maximum speed-up of 1",
                                                   relativePerformanceCheck({.prediction{.lower{1.5}, .upper{1.0}},
-                                                                            .minimum_trials{fewestTrials}}));
+                                                                            .minimum_trials{10}}));
     check_exception_thrown<std::invalid_argument>("Minimum speed-up of NaN",
                                                   relativePerformanceCheck({.prediction{.lower{nan}, .upper{2.0}},
-                                                                            .minimum_trials{fewestTrials}}));
+                                                                            .minimum_trials{10}}));
     check_exception_thrown<std::invalid_argument>("Minimum speed-up exceeding the maximum",
                                                   relativePerformanceCheck({.prediction{.lower{2.5}, .upper{2.0}},
-                                                                            .minimum_trials{fewestTrials}}));
+                                                                            .minimum_trials{10}}));
     check_exception_thrown<std::invalid_argument>("Too few trials",
                                                   relativePerformanceCheck({.prediction{.lower{2.0}, .upper{3.0}},
                                                                             .minimum_trials{tooFewTrials}}));
@@ -70,7 +69,7 @@ namespace sequoia::testing
                                           []() { throw std::runtime_error{"Fast task failure"}; },
                                           []() {},
                                           {.prediction{.lower{2.0}, .upper{3.0}},
-                                           .minimum_trials{relative_performance_minimum_trials_floor}});
+                                           .minimum_trials{10}});
       }
     };
 
