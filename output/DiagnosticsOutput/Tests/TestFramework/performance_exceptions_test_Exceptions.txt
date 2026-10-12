@@ -53,7 +53,7 @@ A check cannot be made within a performance check
 =======================================
 
 Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 85
-Fast task makes a performance check
+Slow task makes a performance check
 
 Expected Exception Type:
 [std::logic_error]
@@ -61,7 +61,7 @@ A check cannot be made within a performance check
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 106
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 107
 Fast task throws
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Fast task failure
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 125
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 126
 A fast task timed as zero
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 127
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 128
 A slow task timed as zero
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 129
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 130
 A negative duration
 
 Expected Exception Type:

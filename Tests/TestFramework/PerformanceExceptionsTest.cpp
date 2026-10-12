@@ -66,12 +66,12 @@ namespace sequoia::testing
   {
     const relative_performance_parameters parameters{.prediction{.lower{2.0}, .upper{3.0}}, .minimum_trials{10}};
 
-    auto checkWithFastTask{
-      [this, &parameters](auto fast) {
-        return [this, &parameters, fast]() {
+    auto checkWithTasks{
+      [this, &parameters](auto fast, auto slow) {
+        return [this, &parameters, fast, slow]() {
           return check_relative_performance("Relative performance with a task which makes a check",
                                             fast,
-                                            []() {},
+                                            slow,
                                             parameters);
         };
       }
@@ -79,12 +79,13 @@ namespace sequoia::testing
 
     check_exception_thrown<std::logic_error>(
       "Fast task makes a check",
-      checkWithFastTask([this]() { check("A check within a performance check", true); })
+      checkWithTasks([this]() { check("A check within a performance check", true); }, []() {})
     );
 
     check_exception_thrown<std::logic_error>(
-      "Fast task makes a performance check",
-      checkWithFastTask(
+      "Slow task makes a performance check",
+      checkWithTasks(
+        []() {},
         [this, &parameters]() {
           check_relative_performance("A performance check within a performance check", []() {}, []() {}, parameters);
         }
