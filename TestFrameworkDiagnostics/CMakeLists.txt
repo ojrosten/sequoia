@@ -44,6 +44,7 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/DumpComparisonFreeTest.cpp
                ${TestDir}/TestFramework/ElementaryFreeDiagnostics.cpp
                ${TestDir}/TestFramework/ExceptionsFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/ExecutionRecordTestingUtilities.cpp
                ${TestDir}/TestFramework/FailureInfoTest.cpp
                ${TestDir}/TestFramework/FailureInfoTestingDiagnostics.cpp
                ${TestDir}/TestFramework/FileEditorsFreeTest.cpp

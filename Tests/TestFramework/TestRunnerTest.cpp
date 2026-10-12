@@ -7,6 +7,7 @@
 
 #include "TestRunnerTest.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
+#include "ExecutionRecordTestingUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
 #include "TestFramework/BuildArtefactsTestingUtilities.hpp"
@@ -916,34 +917,6 @@ namespace sequoia::testing
       stream >> word >> start;
 
       return start;
-    }
-
-    /// The label of each line of a test's execution record: the text before the line's last space
-    [[nodiscard]]
-    std::vector<std::string> execution_record_labels(const fs::path& record)
-    {
-      std::vector<std::string> labels{};
-      std::ifstream file{record};
-      for(std::string line{}; std::getline(file, line);)
-      {
-        labels.push_back(line.substr(0, line.rfind(' ')));
-      }
-
-      return labels;
-    }
-
-    /// The value of the line of a test's execution record labelled `label`, or nothing if there is no such line
-    [[nodiscard]]
-    std::string execution_record_value(const fs::path& record, std::string_view label)
-    {
-      std::ifstream file{record};
-      for(std::string line{}; std::getline(file, line);)
-      {
-        if(line.starts_with(label) && (line.size() > label.size()) && (line[label.size()] == ' '))
-          return line.substr(label.size() + 1);
-      }
-
-      return "";
     }
 
     /// Checks its own execution record while it executes

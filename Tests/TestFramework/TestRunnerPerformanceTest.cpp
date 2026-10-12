@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "TestRunnerPerformanceTest.hpp"
-#include "TestRunnerDiagnosticsUtilities.hpp"
+#include "ExecutionRecordTestingUtilities.hpp"
 #include "PerformanceTestingUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
@@ -19,9 +19,9 @@
 #include <chrono>
 #include <cmath>
 #include <format>
-#include <fstream>
 #include <ranges>
 #include <span>
+#include <sstream>
 #include <stdexcept>
 #include <vector>
 
@@ -99,16 +99,7 @@ namespace sequoia::testing
     double get_recorded_duration(const test_runner& runner, std::string_view label)
     {
       const test_execution_record_path record{Test::source_file(), test_name<Test>(), runner.proj_paths()};
-      std::ifstream file{record.file_path()};
-      for(std::string line{}; std::getline(file, line);)
-      {
-        if(line.starts_with(label))
-          return to_milliseconds(std::string_view{line}.substr(label.size() + 1));
-      }
-
-      throw std::runtime_error{
-        std::format("Unable to extract the {} from: {}", label, record.file_path().generic_string())
-      };
+      return to_milliseconds(execution_record_value(record.file_path(), label));
     }
 
     /** The lines of the execution record `runner` keeps for `Test`, after the
