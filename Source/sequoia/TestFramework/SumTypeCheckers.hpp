@@ -133,16 +133,16 @@ namespace sequoia::testing
     using type = std::any;
 
     template<test_mode Mode, class T, class Advisor>
+      requires std::copy_constructible<T> && std::same_as<T, std::decay_t<T>>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const T& prediction, const tutor<Advisor>& advisor)
     {
       if(check("Has value", logger, obtained.has_value()))
       {
-        try
+        if(auto pObtained{std::any_cast<T>(&obtained)})
         {
-          const auto& val{std::any_cast<T>(obtained)};
-          check(with_best_available, "Value held by std::any", logger, val, prediction, advisor);
+          check(with_best_available, "Value held by std::any", logger, *pObtained, prediction, advisor);
         }
-        catch(const std::bad_any_cast&)
+        else
         {
           check("std::any does not hold the expected type", logger, false);
         }
