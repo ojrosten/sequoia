@@ -112,9 +112,9 @@ namespace sequoia::testing
     test_logger_base(test_logger_base&&)            noexcept = default;
     test_logger_base& operator=(test_logger_base&&) noexcept = default;
   private:
-    struct level_message
+    struct sentinel_level
     {
-      explicit level_message(std::string_view m)
+      explicit sentinel_level(std::string_view m)
         : message{m}
       {}
 
@@ -126,7 +126,7 @@ namespace sequoia::testing
     enum class is_critical{yes, no};
 
     test_results m_Results;
-    std::vector<level_message> m_SentinelDepth;
+    std::vector<sentinel_level> m_SentinelDepth;
     active_recovery_files m_Recovery{};
 
     [[nodiscard]]
@@ -139,7 +139,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool within_performance_check() const noexcept
     {
-      return std::ranges::any_of(m_SentinelDepth, &level_message::is_performance_check);
+      return std::ranges::any_of(m_SentinelDepth, &sentinel_level::is_performance_check);
     }
 
     [[nodiscard]]
