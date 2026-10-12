@@ -383,11 +383,13 @@ namespace sequoia::testing
 
       \returns
       -# `referenceOutput`, if `text_with_zeroed_measurements` gives the same
-         result for it as for `testOutput`;
+         result for it as for `testOutput`, each given `attemptCountStability`;
       -# `testOutput`, otherwise.
    */
   [[nodiscard]]
-  std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);
+  std::string_view postprocess(std::string_view testOutput,
+                               std::string_view referenceOutput,
+                               attempt_count_stability attemptCountStability);
 
   /**\brief class template from which all concrete tests should derive */
 
@@ -407,6 +409,24 @@ namespace sequoia::testing
 
     basic_performance_test(basic_performance_test&&)            noexcept = default;
     basic_performance_test& operator=(basic_performance_test&&) noexcept = default;
+
+    /** \brief Summarizes the checks.
+
+        `postprocess` chooses between the run's diagnostics output and the
+        contents of the existing diagnostics file, given
+        `attemptCountStability`. The summary carries the chosen text.
+
+        A test whose checks typically make the same number of attempts from
+        run to run may hide `summarize(duration)` with its own. Its
+        replacement calls this one with
+        `attempt_count_stability::typically_stable`. The diagnostics output
+        then records the number of trials and the attempt. So a run in which
+        a check makes a different number of attempts changes the diagnostics
+        file.
+     */
+    [[nodiscard]]
+    log_summary summarize(duration delta, attempt_count_stability attemptCountStability) const
+      requires (Mode != test_mode::standard);
   };
 
   /** \anchor performance_test_alias */
