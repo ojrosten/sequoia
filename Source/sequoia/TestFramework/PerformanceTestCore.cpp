@@ -98,9 +98,9 @@ namespace sequoia::testing
   namespace impl
   {
     [[nodiscard]]
-    relative_performance_outcome judge_attempt(std::span<const relative_performance_durations> trialDurations,
-                                               double overlapMultiplier,
-                                               relative_performance_interval prediction)
+    relative_performance_attempt_outcome judge_attempt(std::span<const relative_performance_durations> trialDurations,
+                                                       double overlapMultiplier,
+                                                       relative_performance_interval prediction)
     {
       auto eitherNotPositive{
         [](relative_performance_durations durations) {
@@ -167,14 +167,14 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string summarize_attempt(const relative_performance_outcome& outcome,
+    std::string summarize_attempt(const relative_performance_attempt_outcome& outcome,
                                   std::size_t trials,
-                                  std::size_t attempt,
+                                  std::size_t attemptsMade,
                                   relative_performance_interval prediction)
     {
       return append_lines(outcome.failure ? verdict_summary(*outcome.failure) : "",
                           speedup_summary(outcome.estimate, prediction),
-                          trials_summary(trials, {.current{attempt}, .maximum{relative_performance_max_attempts}}),
+                          trials_summary(trials, {.made{attemptsMade}, .allowed{relative_performance_max_attempts}}),
                           task_durations_summary(outcome.durations));
     }
 

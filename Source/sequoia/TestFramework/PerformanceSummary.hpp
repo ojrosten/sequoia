@@ -43,10 +43,10 @@ namespace sequoia::testing
     relative_performance_interval interval{};
   };
 
-  /** \brief Which attempt this is, and how many are allowed. */
-  struct relative_performance_attempts
+  /** \brief The number of attempts made, and the number allowed. */
+  struct relative_performance_attempt_progress
   {
-    std::size_t current{}, maximum{};
+    std::size_t made{}, allowed{};
   };
 
   /** \brief A duration for each of the fast and slow tasks. */
@@ -71,7 +71,7 @@ namespace sequoia::testing
              made them, and how many attempts are allowed.
    */
   [[nodiscard]]
-  std::string trials_summary(std::size_t trials, relative_performance_attempts attempts);
+  std::string trials_summary(std::size_t trials, relative_performance_attempt_progress progress);
 
   /** \brief Returns a line reporting the duration of each task. */
   [[nodiscard]]
