@@ -11,7 +11,7 @@
     \brief Readers for the execution records which the test runner writes.
 
     A line of a record holds a label and a value. The value is the text
-    after the line's last space, and the label is the text before it.
+    after the line's last space, and the label is the text before that space.
  */
 
 #include <filesystem>
