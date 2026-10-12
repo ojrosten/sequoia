@@ -55,6 +55,12 @@ namespace sequoia::testing
     std::chrono::duration<double> fast{}, slow{};
   };
 
+  /** \brief Whether the number of attempts each relative performance check
+             makes is expected to vary from run to run, or typically to stay
+             the same.
+   */
+  enum class attempt_count_stability { fluctuating, typically_stable };
+
   /** \brief Returns a line stating why the speed-up departs from the
              prediction.
    */
@@ -82,18 +88,20 @@ namespace sequoia::testing
 
       A summary line is one which `speedup_summary`, `trials_summary` or
       `task_durations_summary` reprints exactly from the numbers it contains,
-      once any leading spaces and tabs are set aside. The values set to zero
-      are the measurements, each with its uncertainty and its sample:
+      once any leading spaces and tabs are set aside. Its measurements are
+      these values, each with its uncertainty and its sample:
       -# The speed-up, and the interval around it;
       -# The number of trials, and the attempt which made them;
       -# The task durations.
 
-      The leading spaces and tabs, the predicted interval and the number of
-      attempts allowed stay as they are, and so does every other line. So the
-      results for two texts are equal if and only if the texts differ only in
-      their measurements, provided no measurement prints as a value beyond the
-      largest `double`.
+      Every measurement is set to zero, except that the number of trials and
+      the attempt stay as they are if `attemptCountStability` is
+      `attempt_count_stability::typically_stable`. The leading spaces and tabs,
+      the predicted interval and the number of attempts allowed stay as they
+      are too, and so does every other line. So the results for two texts are
+      equal if and only if the texts differ only in the values set to zero,
+      provided no measurement prints as a value beyond the largest `double`.
    */
   [[nodiscard]]
-  std::string text_with_zeroed_measurements(std::string_view text);
+  std::string text_with_zeroed_measurements(std::string_view text, attempt_count_stability attemptCountStability);
 }
