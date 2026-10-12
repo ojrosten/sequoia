@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "TestRunnerPerformanceTest.hpp"
+#include "TestRunnerDiagnosticsUtilities.hpp"
 #include "PerformanceTestingUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
@@ -119,14 +120,14 @@ namespace sequoia::testing
     std::vector<std::string> get_recorded_lines_after_timings(const test_runner& runner)
     {
       const test_execution_record_path record{Test::source_file(), test_name<Test>(), runner.proj_paths()};
-      std::ifstream file{record.file_path()};
-      std::vector<std::string> lines{};
-      for(std::string line{}; std::getline(file, line);)
-      {
-        lines.push_back(line);
-      }
+      const auto lines{execution_record_lines(record.file_path())};
 
       constexpr std::size_t timingLines{3};
+      if(lines.size() < timingLines)
+        throw std::runtime_error{
+          std::format("Unable to extract the timings from: {}", record.file_path().generic_string())
+        };
+
       return lines | std::views::drop(timingLines) | std::ranges::to<std::vector>();
     }
 

@@ -40,4 +40,12 @@ namespace sequoia::testing
       throw std::runtime_error{"Throw after check"};
     }
   };
+
+  /** \brief The lines of the execution record `record`, without their line
+             breaks.
+
+      \throws std::runtime_error if `record` cannot be opened
+   */
+  [[nodiscard]]
+  std::vector<std::string> execution_record_lines(const std::filesystem::path& record);
 }
