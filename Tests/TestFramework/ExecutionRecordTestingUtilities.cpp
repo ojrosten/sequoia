@@ -73,12 +73,16 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string execution_record_value(const fs::path& record, std::string_view label)
   {
-    auto labelOf{[](std::string_view recordLine) { return label_of(recordLine); }};
+    auto givesValue{
+      [label](std::string_view recordLine) {
+        return (label_of(recordLine) == label) && (recordLine.size() > label.size());
+      }
+    };
 
     const auto lines{execution_record_lines(record)};
-    if(const auto labelled{std::ranges::find(lines, label, labelOf)}; labelled != lines.end())
-      return labelled->substr(label.size() + 1);
+    if(std::ranges::count_if(lines, givesValue) != 1)
+      throw std::runtime_error{std::format("Expected exactly one {} in: {}", label, record.generic_string())};
 
-    throw std::runtime_error{std::format("Unable to extract the {} from: {}", label, record.generic_string())};
+    return std::ranges::find_if(lines, givesValue)->substr(label.size() + 1);
   }
 }

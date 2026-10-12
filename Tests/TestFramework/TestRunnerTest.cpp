@@ -15,8 +15,6 @@
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
 
-#include <fstream>
-
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
@@ -912,11 +910,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string start_named_by(const fs::path& file)
     {
-      std::ifstream stream{file};
-      std::string word{}, start{};
-      stream >> word >> start;
-
-      return start;
+      return execution_record_value(file, "started");
     }
 
     /// Checks its own execution record while it executes
@@ -934,10 +928,13 @@ namespace sequoia::testing
       void run_tests()
       {
         const test_execution_record_path record{source_file(), name(), get_project_paths()};
-        check(equality,
-              "While a test executes, its record names its start and no execution duration",
-              execution_record_labels(record.file_path()),
-              std::vector<std::string>{"started"});
+        if(check("While a test executes, its record exists", fs::exists(record.file_path())))
+        {
+          check(equality,
+                "While a test executes, its record names its start and no execution duration",
+                execution_record_labels(record.file_path()),
+                std::vector<std::string>{"started"});
+        }
 
         check("While a test executes, the run's stamp already exists",
               fs::exists(get_project_paths().execution_records().stamp()));

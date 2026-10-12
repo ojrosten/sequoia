@@ -12,6 +12,7 @@
 
     A line of a record holds a label and a value. The value is the text
     after the line's last space, and the label is the text before that space.
+    A line with no space is a label with no value.
  */
 
 #include <filesystem>
@@ -40,8 +41,8 @@ namespace sequoia::testing
   /** \brief The value of the line of the execution record `record` labelled
              `label`.
 
-      \throws std::runtime_error if `record` cannot be opened, or has no line
-              labelled `label`
+      \throws std::runtime_error if `record` cannot be opened, or if it does
+              not have exactly one line labelled `label` with a value
    */
   [[nodiscard]]
   std::string execution_record_value(const std::filesystem::path& record, std::string_view label);
