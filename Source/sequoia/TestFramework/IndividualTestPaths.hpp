@@ -169,6 +169,10 @@ namespace sequoia::testing
              once it has finished, its execution duration and the runner's
              overhead.
 
+      A finished record also gives the number of attempts each of the test's
+      performance checks made. A check which threw before its last attempt
+      finished has no entry.
+
       A test's record is the last one the runner managed to write. That is
       normally the current run's: the start while the test executes, then the
       whole record once the test has finished. If a write fails, an earlier

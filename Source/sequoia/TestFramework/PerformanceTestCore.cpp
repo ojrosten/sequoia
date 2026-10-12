@@ -183,8 +183,9 @@ namespace sequoia::testing
     {
       // A check in standard mode fails only if its last attempt fails, and
       // the last attempt takes the full multiplier. False-negative mode stops
-      // at the first failing attempt. So in that mode every attempt takes the
-      // full multiplier, and each applies the rule which decides a failure.
+      // at the first failing attempt. So in that mode the failure of any
+      // attempt is the check's outcome, and every attempt takes the full
+      // multiplier.
       return (mode == test_mode::false_negative)
         ? confidence_multiplier
         : confidence_multiplier * static_cast<double>(attempt) / relative_performance_max_attempts;

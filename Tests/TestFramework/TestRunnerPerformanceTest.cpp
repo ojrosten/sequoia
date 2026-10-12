@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "TestRunnerPerformanceTest.hpp"
+#include "PerformanceTestingUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/TestRunner.hpp"
@@ -20,6 +21,7 @@
 #include <fstream>
 #include <ranges>
 #include <span>
+#include <stdexcept>
 #include <vector>
 
 namespace sequoia::testing
@@ -106,6 +108,26 @@ namespace sequoia::testing
       throw std::runtime_error{
         std::format("Unable to extract the {} from: {}", label, record.file_path().generic_string())
       };
+    }
+
+    /** The lines of the execution record `runner` keeps for `Test`, after the
+        three which give its start, its execution duration and the runner's
+        overhead.
+     */
+    template<concrete_test Test>
+    [[nodiscard]]
+    std::vector<std::string> get_recorded_lines_after_timings(const test_runner& runner)
+    {
+      const test_execution_record_path record{Test::source_file(), test_name<Test>(), runner.proj_paths()};
+      std::ifstream file{record.file_path()};
+      std::vector<std::string> lines{};
+      for(std::string line{}; std::getline(file, line);)
+      {
+        lines.push_back(line);
+      }
+
+      constexpr std::size_t timingLines{3};
+      return lines | std::views::drop(timingLines) | std::ranges::to<std::vector>();
     }
 
     /** When a slow test's sleep began and ended. */
@@ -353,6 +375,80 @@ namespace sequoia::testing
       using slow_to_summarize_test_base::slow_to_summarize_test_base;
     };
 
+    /** Makes five performance checks. A check stops at its first passing
+        attempt, so the tasks' durations set how many attempts each makes:
+        -# Two: the slow task is as fast as the fast one for the first
+           attempt's trials, and eight times slower after them.
+        -# None: the check is refused before its first attempt.
+        -# None recorded: the fast task throws during the first attempt.
+        -# One: a speed-up of 8 passes at once.
+        -# Three, the most allowed: a speed-up of 1 never passes.
+     */
+    class attempt_counting_performance_test final : public performance_test
+    {
+    public:
+      using performance_test::performance_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return std::source_location::current().file_name();
+      }
+
+      void run_tests()
+      {
+        using namespace std::chrono_literals;
+
+        const relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}, .minimum_trials{10}};
+
+        check_relative_performance("A speed-up of 1, then of 8",
+                                   counted_spinner{1ms},
+                                   counted_spinner{1ms, trials_for_minimum_10[0], 8ms},
+                                   parameters);
+
+        check_exception_thrown<std::invalid_argument>(
+          "Nine trials are refused",
+          [this, &parameters]() {
+            return check_relative_performance("Nine trials",
+                                              counted_spinner{1ms},
+                                              counted_spinner{8ms},
+                                              {.prediction{parameters.prediction}, .minimum_trials{9}});
+          }
+        );
+
+        check_exception_thrown<std::runtime_error>(
+          "A task which throws ends the check",
+          [this, &parameters]() {
+            return check_relative_performance("A throwing task",
+                                              []() { throw std::runtime_error{"Fast task failure"}; },
+                                              counted_spinner{8ms},
+                                              parameters);
+          }
+        );
+
+        check_relative_performance("A speed-up of 8", counted_spinner{1ms}, counted_spinner{8ms}, parameters);
+        check_relative_performance("A speed-up of 1", counted_spinner{1ms}, counted_spinner{1ms}, parameters);
+      }
+    };
+
+    /** A performance test which makes no performance check. */
+    class performance_test_without_performance_checks final : public performance_test
+    {
+    public:
+      using performance_test::performance_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return std::source_location::current().file_name();
+      }
+
+      void run_tests()
+      {
+        check(equality, "Not a performance check", 42, 42);
+      }
+    };
+
     test_runner make_runner(commandline_arguments& args, std::stringstream& outputStream)
     {
       return test_runner{args.size(),
@@ -427,6 +523,7 @@ namespace sequoia::testing
     test_serial_execution();
     test_runner_overhead_reported_apart();
     test_execution_duration_of_busiest_thread();
+    test_execution_records_of_performance_checks();
   }
 
   void test_runner_performance_test::test_parallel_acceleration()
@@ -585,5 +682,34 @@ namespace sequoia::testing
           "The runner overhead includes the summarizing sleeps of the unparallelizable test and the busiest thread",
           get_grand_total(outputFile, "Runner Overhead"),
           3 * summarizing_sleep_ms);
+  }
+
+  /** `attempt_counting_performance_test`'s checks make 2, 1 and 3 attempts:
+      distinct numbers, in neither sorted order nor its reverse, and not the
+      checks' numbers of trials. Its other two checks end by throwing, one
+      before its first attempt and one during it, so the record has no line
+      for either. `performance_test_without_performance_checks` is the
+      control: a performance test whose record gives no attempts.
+   */
+  void test_runner_performance_test::test_execution_records_of_performance_checks()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{minimal_fake_path().generic_string()}};
+    auto runner{make_runner(args, outputStream)};
+    runner.register_test<attempt_counting_performance_test>();
+    runner.register_test<performance_test_without_performance_checks>();
+    check(equality, "Performance check records return code", runner.execute(), return_code::soft_failures);
+
+    check(equality,
+          "The record of a performance test gives the number of attempts each check made, in the order of the checks",
+          get_recorded_lines_after_timings<attempt_counting_performance_test>(runner),
+          std::vector<std::string>{"performance check attempts 2",
+                                   "performance check attempts 1",
+                                   "performance check attempts 3"});
+
+    check(equality,
+          "The record of a performance test which makes no performance check gives no attempts",
+          get_recorded_lines_after_timings<performance_test_without_performance_checks>(runner),
+          std::vector<std::string>{});
   }
 }

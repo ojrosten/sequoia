@@ -68,6 +68,8 @@
 #include "sequoia/Core/Meta/Utilities.hpp"
 
 #include <format>
+#include <optional>
+#include <span>
 
 namespace sequoia::testing
 {
@@ -837,6 +839,12 @@ namespace sequoia::testing
     bool has_critical_failures() const noexcept
     {
       return m_Logger.results().critical_failures > 0;
+    }
+
+    [[nodiscard]]
+    std::span<const std::optional<std::size_t>> attempts_per_performance_check() const noexcept
+    {
+      return m_Logger.results().attempts_per_performance_check;
     }
   protected:
     explicit checker(active_recovery_files recovery)
