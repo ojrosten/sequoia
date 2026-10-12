@@ -292,9 +292,9 @@ namespace sequoia::testing
 
        Any exception thrown by `fast` or `slow` propagates.
 
-       A check made within another, such as by the function given to
-       `check_exception_thrown`, is counted as a deep check of the other, not
-       as a performance check. Its failure is counted as a failure of the
+       Made within another check, such as by the function given to
+       `check_exception_thrown`, the check counts as a deep check of the
+       other, not as a performance check, and its failure as a failure of the
        other.
 
        \throws std::invalid_argument if either end of `parameters.prediction`
