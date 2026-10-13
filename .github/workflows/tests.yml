@@ -301,6 +301,30 @@ jobs:
           fi
           cmake --version
 
+      # A timing check can fail on one runner and pass on the next with the
+      # same binary. The job's log names the image and the region, but not
+      # the machine. So this step prints the CPU and its number of logical
+      # processors. Where the runner answers Azure's metadata service, the
+      # step prints the VM size too.
+      - name: Report the runner's hardware
+        if: inputs.needs_testing == 'true'
+        # A report must not fail the job, hence each `|| true`.
+        run: |
+          case "$RUNNER_OS" in
+            Linux)
+              grep -m1 'model name' /proc/cpuinfo || true
+              echo "logical processors: $(nproc)" ;;
+            macOS)
+              sysctl -n machdep.cpu.brand_string || true
+              echo "logical processors: $(sysctl -n hw.logicalcpu)" ;;
+            Windows)
+              powershell -NoProfile -Command \
+                "Get-CimInstance Win32_Processor | ForEach-Object { \$_.Name; 'logical processors: ' + \$_.NumberOfLogicalProcessors }" || true ;;
+          esac
+          metadata='http://169.254.169.254/metadata/instance/compute/vmSize?api-version=2021-02-01&format=text'
+          size=$(curl -fs --max-time 3 -H 'Metadata: true' "$metadata" || true)
+          echo "VM size: ${size:-not reported}"
+
       # `--version` does not identify a distribution's compiler: Ubuntu ships
       # post-release snapshots of a branch under the release's version number,
       # so a g++ reporting 15.2.0 may be well beyond 15.2.0. The package's
