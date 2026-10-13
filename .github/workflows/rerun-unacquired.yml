@@ -1,0 +1,42 @@
+name: rerun-unacquired
+# A hosted job can wait for a runner that never comes. GitHub then gives up on
+# it, and the run fails on the job's absence, though the change is not at
+# fault. Eight runs lost jobs this way from 2026-09-30 to 2026-10-13, five of
+# them in one evening, and each of the seven re-run passed. So when a run of a
+# tier fails, this workflow re-runs a job that never got a runner, together
+# with the jobs that need it. scripts/rerun_unacquired_job.sh says how such a
+# job is recognised, which it re-runs, and how many attempts it allows. A job
+# that ran and failed is never re-run, so a real failure stays red.
+#
+# Only a run that failed is read. A run superseded by a newer push concludes
+# `cancelled`, and is left alone.
+#
+# GitHub starts a workflow_run workflow from the default branch's copy of the
+# file, and the checkout is of the default branch. So a change here takes
+# effect once promoted to main, and nothing from the failed run's commit, which
+# a fork's PR could supply, runs with this workflow's token.
+on:
+  workflow_run:
+    workflows: [coarse, fine, fine-on-retarget, rigorous, statistical]
+    types: [completed]
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  rerun:
+    name: Re-run a job that never got a runner
+    if: github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RUN_ID: ${{ github.event.workflow_run.id }}
+      ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - run: scripts/rerun_unacquired_job.sh "$RUN_ID" "$ATTEMPT"
