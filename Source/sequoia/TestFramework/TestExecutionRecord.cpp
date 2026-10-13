@@ -61,10 +61,10 @@ namespace sequoia::testing
       return std::format("{} {}", label, count);
     }
 
-    // Each recognizer builds a value from the numbers in an entry. It returns
+    // Each extractor builds a value from the numbers in an entry. It returns
     // the value only if the entry's writer reprints the entry exactly from
     // that value.
-    constexpr auto start_in{
+    constexpr auto start_extractor{
       [](std::string_view entry) -> std::optional<test_execution_record::start_type> {
         // TO DO: std::chrono::parse reads the start time, once libc++ provides it
         using namespace std::chrono;
@@ -84,7 +84,7 @@ namespace sequoia::testing
     };
 
     [[nodiscard]]
-    constexpr auto duration_recognizer(std::string_view label)
+    constexpr auto duration_extractor(std::string_view label)
     {
       return [label](std::string_view entry) -> std::optional<std::chrono::microseconds> {
         using rep = std::chrono::microseconds::rep;
@@ -103,11 +103,11 @@ namespace sequoia::testing
       };
     }
 
-    constexpr auto execution_duration_in{duration_recognizer(execution_duration_label)},
-                   runner_overhead_in   {duration_recognizer(runner_overhead_label)};
+    constexpr auto execution_duration_extractor{duration_extractor(execution_duration_label)},
+                   runner_overhead_extractor   {duration_extractor(runner_overhead_label)};
 
     [[nodiscard]]
-    constexpr auto count_recognizer(std::string_view label)
+    constexpr auto count_extractor(std::string_view label)
     {
       return [label](std::string_view entry) -> std::optional<std::size_t> {
         if(const auto numbers{extract_numbers_from<std::size_t, 1>(entry)})
@@ -121,10 +121,10 @@ namespace sequoia::testing
       };
     }
 
-    constexpr auto attempts_in           {count_recognizer(attempts_label)},
-                   entries_of_attempts_in{count_recognizer(entries_of_attempts_label)};
+    constexpr auto attempts_extractor           {count_extractor(attempts_label)},
+                   entries_of_attempts_extractor{count_extractor(entries_of_attempts_label)};
 
-    constexpr auto finished_in{
+    constexpr auto finished_extractor{
       [](std::string_view entry) -> std::optional<finished_state> {
         for(const auto finished : {finished_state::no, finished_state::yes})
         {
@@ -136,21 +136,21 @@ namespace sequoia::testing
       }
     };
 
-    /** Reads the next line of `s`, and returns the value which `recognize`
+    /** Reads the next line of `s`, and returns the value which `extract`
         finds in that line.
 
-        \throws std::runtime_error if `s` has no next line, or `recognize`
+        \throws std::runtime_error if `s` has no next line, or `extract`
                 finds no value in that line
      */
-    template<std::invocable<std::string_view> Recognizer>
+    template<std::invocable<std::string_view> Extractor>
     [[nodiscard]]
-    auto read_entry(std::istream& s, std::string_view description, Recognizer recognize)
+    auto read_entry(std::istream& s, std::string_view description, Extractor extract)
     {
       std::string line{};
       if(!std::getline(s, line))
         throw std::runtime_error{std::format("Expected {} but there are no more lines", description)};
 
-      if(const auto value{recognize(line)})
+      if(const auto value{extract(line)})
         return value.value();
 
       throw std::runtime_error{std::format("Expected {} but found '{}'", description, line)};
@@ -160,14 +160,14 @@ namespace sequoia::testing
     [[nodiscard]]
     std::vector<std::size_t> read_attempts(std::istream& s)
     {
-      const auto entries{read_entry(s, "a number of entries of attempts", entries_of_attempts_in)};
+      const auto entries{read_entry(s, "a number of entries of attempts", entries_of_attempts_extractor)};
 
       // The count sizes nothing in advance, so a corrupt count is refused at
       // the first missing entry rather than by an allocation
       std::vector<std::size_t> attempts{};
       for(std::size_t i{}; i < entries; ++i)
       {
-        attempts.push_back(read_entry(s, "a number of attempts", attempts_in));
+        attempts.push_back(read_entry(s, "a number of attempts", attempts_extractor));
       }
 
       return attempts;
@@ -177,8 +177,8 @@ namespace sequoia::testing
     test_execution_completion read_completion_entries(std::istream& s)
     {
       return {
-        .execution_duration{read_entry(s, "an execution duration", execution_duration_in)},
-        .runner_overhead{read_entry(s, "a runner overhead", runner_overhead_in)},
+        .execution_duration{read_entry(s, "an execution duration", execution_duration_extractor)},
+        .runner_overhead{read_entry(s, "a runner overhead", runner_overhead_extractor)},
         .performance_check_attempts{read_attempts(s)}
       };
     }
@@ -280,8 +280,8 @@ namespace sequoia::testing
     if(!peek_for_more(s))
       return s;
 
-    const auto start{read_entry(s, "a start time", start_in)};
-    const auto finished{read_entry(s, "whether the test finished", finished_in)};
+    const auto start{read_entry(s, "a start time", start_extractor)};
+    const auto finished{read_entry(s, "whether the test finished", finished_extractor)};
     record = test_execution_record{.start{start}, .completion{read_completion(s, finished)}};
     return s;
   }
@@ -308,7 +308,7 @@ namespace sequoia::testing
     if(!peek_for_more(s))
       return s;
 
-    stamp = run_stamp{.start{read_entry(s, "a start time", start_in)}};
+    stamp = run_stamp{.start{read_entry(s, "a start time", start_extractor)}};
     return s;
   }
 
