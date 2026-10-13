@@ -94,7 +94,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string_view top_level_message() const noexcept
     {
-      return !m_SentinelDepth.empty() ? std::string_view{m_SentinelDepth.front().message} : "";
+      return !m_SentinelLevels.empty() ? std::string_view{m_SentinelLevels.front().message} : "";
     }
 
     [[nodiscard]]
@@ -119,18 +119,17 @@ namespace sequoia::testing
       {}
 
       std::string message;
-      bool written{};
-      bool is_performance_check{};
+      bool written{}, is_performance_check{};
     };
 
     enum class is_critical{yes, no};
 
     test_results m_Results;
-    std::vector<sentinel_level> m_SentinelDepth;
+    std::vector<sentinel_level> m_SentinelLevels;
     active_recovery_files m_Recovery{};
 
     [[nodiscard]]
-    std::size_t depth() const noexcept { return m_SentinelDepth.size(); }
+    std::size_t depth() const noexcept { return m_SentinelLevels.size(); }
 
     void log_check() noexcept { ++m_Results.deep_checks; }
 
@@ -139,7 +138,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool within_performance_check() const noexcept
     {
-      return std::ranges::any_of(m_SentinelDepth, &sentinel_level::is_performance_check);
+      return std::ranges::any_of(m_SentinelLevels, &sentinel_level::is_performance_check);
     }
 
     [[nodiscard]]

@@ -168,7 +168,7 @@ namespace sequoia::testing
 
     indentation ind{no_indent};
     std::size_t activeLevels{};
-    for(auto& info : m_SentinelDepth)
+    for(auto& info : m_SentinelLevels)
     {
       if(info.message.empty()) continue;
 
@@ -195,10 +195,10 @@ namespace sequoia::testing
 
   std::size_t test_logger_base::log_performance_check(std::size_t level)
   {
-    if(level >= m_SentinelDepth.size())
+    if(level >= m_SentinelLevels.size())
       throw std::logic_error{"Cannot log a performance check absent from TestLogger's stack"};
 
-    m_SentinelDepth[level].is_performance_check = true;
+    m_SentinelLevels[level].is_performance_check = true;
     if(!level)
       ++m_Results.top_level_performance_checks;
 
@@ -209,11 +209,11 @@ namespace sequoia::testing
 
   void test_logger_base::log_top_level_failure(test_mode mode, std::string message)
   {
-    if(m_SentinelDepth.empty())
+    if(m_SentinelLevels.empty())
       throw std::logic_error{"Cannot log a top-level failure outside a sentinel"};
 
     ++m_Results.top_level_failures;
-    m_SentinelDepth.back().message.append(message);
+    m_SentinelLevels.back().message.append(message);
 
     if(mode == test_mode::false_negative)
     {
@@ -236,31 +236,31 @@ namespace sequoia::testing
 
   void test_logger_base::increment_depth(std::string_view message)
   {
-    m_SentinelDepth.emplace_back(message);
+    m_SentinelLevels.emplace_back(message);
   }
 
   void test_logger_base::append_to_level_message(std::size_t level, std::string_view lines)
   {
-    if(level >= m_SentinelDepth.size())
+    if(level >= m_SentinelLevels.size())
       throw std::logic_error{"Cannot append to a message absent from TestLogger's stack"};
 
-    append_lines(m_SentinelDepth[level].message, lines);
+    append_lines(m_SentinelLevels[level].message, lines);
   }
 
   void test_logger_base::decrement_depth()
   {
-    if(m_SentinelDepth.empty())
+    if(m_SentinelLevels.empty())
       throw std::logic_error{"Cannot pop from TestLogger's empty stack"};
 
     if(depth() == 1)
     {
       m_Results.last_check_exit_info = top_level_check_exit_info{
                                          .via_exception{std::uncaught_exceptions() > 0},
-                                         .message{std::move(m_SentinelDepth.front().message)}
+                                         .message{std::move(m_SentinelLevels.front().message)}
                                        };
     }
 
-    m_SentinelDepth.pop_back();
+    m_SentinelLevels.pop_back();
   }
 
   void test_logger_base::end_message(test_mode mode, const is_critical isCritical)
