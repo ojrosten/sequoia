@@ -125,6 +125,15 @@ Expected a number of attempts but there are no more lines
 =======================================
 
 Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 241
+A number of entries of attempts beyond the largest std::ptrdiff_t
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a number of entries of attempts but found 'entries of performance check attempts 9223372036854775808'
+
+=======================================
+
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 245
 Fewer entries of attempts than the completion says it has
 
 Expected Exception Type:

@@ -235,7 +235,11 @@ namespace sequoia::testing
 
     check_exception_thrown<std::runtime_error>(
       "A number of entries of attempts far beyond the entries which follow",
-      readCompletion(withEntries("18446744073709551615") + "performance check attempts 2\n"));
+      readCompletion(withEntries("9223372036854775807") + "performance check attempts 2\n"));
+
+    check_exception_thrown<std::runtime_error>(
+      "A number of entries of attempts beyond the largest std::ptrdiff_t",
+      readCompletion(withEntries("9223372036854775808") + "performance check attempts 2\n"));
 
     check_exception_thrown<std::runtime_error>(
       "Fewer entries of attempts than the completion says it has",

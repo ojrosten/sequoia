@@ -14,10 +14,13 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Numbers.hpp"
 
+#include <algorithm>
 #include <concepts>
+#include <cstddef>
 #include <format>
 #include <fstream>
 #include <istream>
+#include <iterator>
 #include <ostream>
 #include <ranges>
 #include <stdexcept>
@@ -105,23 +108,29 @@ namespace sequoia::testing
     constexpr auto extractor_for_execution_duration{extractor_for_duration(label_for_execution_duration)},
                    extractor_for_runner_overhead   {extractor_for_duration(label_for_runner_overhead)};
 
+    template<std::integral Count>
     [[nodiscard]]
     constexpr auto extractor_for_count(std::string_view label)
     {
-      return [label](std::string_view entry) -> std::optional<std::size_t> {
+      return [label](std::string_view entry) -> std::optional<Count> {
         if(const auto numbers{extract_numbers_from<std::size_t, 1>(entry)})
         {
           const auto [count]{*numbers};
-          if(entry_for_count(label, count) == entry)
-            return count;
+          if(std::in_range<Count>(count) && (entry_for_count(label, count) == entry))
+            return static_cast<Count>(count);
         }
 
         return std::nullopt;
       };
     }
 
-    constexpr auto extractor_for_attempts           {extractor_for_count(label_for_attempts)},
-                   extractor_for_entries_of_attempts{extractor_for_count(label_for_entries_of_attempts)};
+    constexpr auto extractor_for_attempts{extractor_for_count<std::size_t>(label_for_attempts)};
+
+    // The number of entries is a std::ptrdiff_t since std::ranges::generate_n
+    // takes its count as an iterator's difference type
+    constexpr auto extractor_for_entries_of_attempts{
+      extractor_for_count<std::ptrdiff_t>(label_for_entries_of_attempts)
+    };
 
     constexpr auto extractor_for_status{
       [](std::string_view entry) -> std::optional<test_execution_status> {
@@ -160,15 +169,11 @@ namespace sequoia::testing
     std::vector<std::size_t> read_attempts(std::istream& s)
     {
       const auto entries{read_entry(s, "a number of entries of attempts", extractor_for_entries_of_attempts)};
+      auto nextNumberOfAttempts{[&s]() { return read_entry(s, "a number of attempts", extractor_for_attempts); }};
 
-      // The count sizes nothing in advance, so a corrupt count is refused at
-      // the first missing entry rather than by an allocation
+      // generate_n rather than a view, since each read consumes a line of `s`
       std::vector<std::size_t> attempts{};
-      for(std::size_t i{}; i < entries; ++i)
-      {
-        attempts.push_back(read_entry(s, "a number of attempts", extractor_for_attempts));
-      }
-
+      std::ranges::generate_n(std::back_inserter(attempts), entries, nextNumberOfAttempts);
       return attempts;
     }
 
