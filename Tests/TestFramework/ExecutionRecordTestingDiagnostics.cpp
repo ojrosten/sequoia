@@ -25,7 +25,8 @@ namespace sequoia::testing
       otherOverhead{.execution_duration{2us}, .runner_overhead{3us}, .performance_check_attempts{3}},
       otherAttempts{.execution_duration{2us}, .runner_overhead{1us}, .performance_check_attempts{3, 1}};
 
-    const execution_record unfinished{}, finished{.completion{completion}};
+    const execution_record unfinished{},
+                           finished{.completion{completion}};
 
     check(equality, "Starts differ", unfinished, execution_record{.start{execution_record::start_type{1ms}}});
     check(equality, "Only one record has a completion", unfinished, finished);

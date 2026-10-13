@@ -937,7 +937,8 @@ namespace sequoia::testing
     {
       return_code code{};
       execution_record::start_type time_before_run{};
-      execution_record test_record{}, run_record{};
+      execution_record test_record{},
+                       run_record{};
 
       [[nodiscard]]
       bool stamp_in_order() const noexcept

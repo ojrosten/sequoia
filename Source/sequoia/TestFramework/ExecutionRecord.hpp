@@ -29,8 +29,8 @@ namespace sequoia::testing
    */
   struct execution_completion
   {
-    std::chrono::microseconds execution_duration{};
-    std::chrono::microseconds runner_overhead{};
+    std::chrono::microseconds execution_duration{},
+                              runner_overhead{};
     std::vector<std::size_t>  performance_check_attempts{};
 
     [[nodiscard]]

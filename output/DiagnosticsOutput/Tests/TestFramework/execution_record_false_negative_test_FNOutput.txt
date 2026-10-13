@@ -1,4 +1,4 @@
-Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 30
+Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 31
 Starts differ
 
 [sequoia::testing::execution_record]
@@ -12,7 +12,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 31
+Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 32
 Only one record has a completion
 
 [sequoia::testing::execution_record]
@@ -31,7 +31,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 32
+Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 33
 Execution durations differ
 
 [sequoia::testing::execution_record]
@@ -53,7 +53,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 33
+Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 34
 Runner overheads differ
 
 [sequoia::testing::execution_record]
@@ -75,7 +75,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 34
+Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 35
 Performance check attempts differ
 
 [sequoia::testing::execution_record]
