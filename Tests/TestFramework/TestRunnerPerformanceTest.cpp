@@ -483,7 +483,7 @@ namespace sequoia::testing
         );
 
         check_exception_thrown<std::runtime_error>(
-          "A failing performance check, then an exception",
+          "A failing performance check, then a check, then an exception",
           [this, &parameters]() {
             check_relative_performance("A speed-up of 0.25", counted_spinner{4ms}, counted_spinner{1ms}, parameters);
             check("A check after the performance check", true);
