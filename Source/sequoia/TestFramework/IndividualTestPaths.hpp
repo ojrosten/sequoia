@@ -165,7 +165,7 @@ namespace sequoia::testing
     std::filesystem::path m_Summary;
   };
 
-  /** \brief Where a test keeps the `execution_record` of its last execution.
+  /** \brief Where a test keeps its latest `test_execution_record`.
 
       When a test begins, the runner writes the test's start to the file.
       Once the test has finished, the runner rewrites the file with the whole

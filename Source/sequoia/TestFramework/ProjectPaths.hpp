@@ -438,8 +438,7 @@ namespace sequoia::testing
       return m_Dir;
     }
 
-    /** \brief The file in which each run of tests writes the
-               `execution_record` of its start.
+    /** \brief The file in which each run of tests writes its `run_stamp`.
 
         A test's record is from an earlier run if the record's start precedes
         the stamp's start.

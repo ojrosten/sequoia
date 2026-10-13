@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "ExecutionRecordRegularTest.hpp"
+#include "TestExecutionRecordRegularTest.hpp"
 
 #include "sequoia/Streaming/Streaming.hpp"
 
@@ -18,20 +18,20 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    execution_record unfinished_record()
+    test_execution_record unfinished_record()
     {
       using namespace std::chrono;
       return {.start{sys_days{year{2026} / 10 / 13} + 9h + 15min + 4s + 123ms}};
     }
 
     [[nodiscard]]
-    execution_record finished_record()
+    test_execution_record finished_record()
     {
       using namespace std::chrono_literals;
       return {
         .start{unfinished_record().start},
         .completion{
-          execution_completion{
+          test_execution_completion{
             .execution_duration{1500us},
             .runner_overhead{250us},
             .performance_check_attempts{2, 1, 3}
@@ -42,12 +42,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path execution_record_regular_test::source_file()
+  std::filesystem::path test_execution_record_regular_test::source_file()
   {
     return std::source_location::current().file_name();
   }
 
-  void execution_record_regular_test::run_tests()
+  void test_execution_record_regular_test::run_tests()
   {
     test_semantics();
     test_round_trip();
@@ -57,20 +57,20 @@ namespace sequoia::testing
     test_refusals_of_files();
   }
 
-  void execution_record_regular_test::test_semantics()
+  void test_execution_record_regular_test::test_semantics()
   {
-    check_semantics("A default record and a finished record", execution_record{}, finished_record());
+    check_semantics("A default record and a finished record", test_execution_record{}, finished_record());
     check_semantics("Records which differ only in their completion", unfinished_record(), finished_record());
   }
 
-  void execution_record_regular_test::test_round_trip()
+  void test_execution_record_regular_test::test_round_trip()
   {
     auto readBackFromWritten{
-      [](const execution_record& written) -> std::optional<execution_record> {
+      [](const test_execution_record& written) -> std::optional<test_execution_record> {
         std::stringstream s{};
         s << written;
 
-        execution_record readBack{.completion{execution_completion{.performance_check_attempts{7}}}};
+        test_execution_record readBack{.completion{test_execution_completion{.performance_check_attempts{7}}}};
         if(s >> readBack)
           return readBack;
 
@@ -80,8 +80,8 @@ namespace sequoia::testing
 
     check(equality,
           "operator>> overwrites a finished record with a default record which operator<< wrote",
-          readBackFromWritten(execution_record{}),
-          std::optional{execution_record{}});
+          readBackFromWritten(test_execution_record{}),
+          std::optional{test_execution_record{}});
 
     check(equality,
           "A record with no completion round-trips through operator<< and operator>>",
@@ -107,7 +107,7 @@ namespace sequoia::testing
           std::optional{finishedWithoutAttempts});
 
     using namespace std::chrono;
-    const execution_record
+    const test_execution_record
       firstStart{.start{sys_days{year{0} / 1 / 1}}},
       lastStart {.start{sys_days{year{32767} / 12 / 31} + days{1} - milliseconds{1}}};
 
@@ -122,21 +122,21 @@ namespace sequoia::testing
           std::optional{lastStart});
   }
 
-  void execution_record_regular_test::test_end_of_stream()
+  void test_execution_record_regular_test::test_end_of_stream()
   {
     std::stringstream s{};
-    execution_record record{finished_record()};
+    test_execution_record record{finished_record()};
     s >> record;
 
     check("A read at the end of a stream fails", s.fail());
     check(equality, "A read at the end of a stream leaves the record as it was", record, finished_record());
 
     auto readWithoutFinalLineBreak{
-      [](const execution_record& written) -> std::optional<execution_record> {
+      [](const test_execution_record& written) -> std::optional<test_execution_record> {
         const auto text{to_string(written)};
         std::stringstream unterminated{text.substr(0, text.size() - 1)};
 
-        execution_record readBack{};
+        test_execution_record readBack{};
         if(unterminated >> readBack)
           return readBack;
 
@@ -155,7 +155,7 @@ namespace sequoia::testing
           std::optional{finished_record()});
   }
 
-  void execution_record_regular_test::test_written_format()
+  void test_execution_record_regular_test::test_written_format()
   {
     write_to_file(working_materials() / "Unfinished.txt", to_string(unfinished_record()), std::ios_base::binary);
     write_to_file(working_materials() / "Finished.txt",   to_string(finished_record()),   std::ios_base::binary);
@@ -171,13 +171,13 @@ namespace sequoia::testing
           predictive_materials() / "Finished.txt");
   }
 
-  void execution_record_regular_test::test_refusals()
+  void test_execution_record_regular_test::test_refusals()
   {
     auto readRecord{
       [](std::string text) {
         return [text{std::move(text)}]() {
           std::stringstream s{text};
-          execution_record record{};
+          test_execution_record record{};
           s >> record;
         };
       }
@@ -251,18 +251,18 @@ namespace sequoia::testing
       readRecord(startLine + timingLines + "check attempts 2\n"));
   }
 
-  void execution_record_regular_test::test_refusals_of_files()
+  void test_execution_record_regular_test::test_refusals_of_files()
   {
     check_exception_thrown<std::runtime_error>(
       "A file which does not exist",
-      [this]() { return read_execution_record(working_materials() / "Missing.txt"); });
+      [this]() { return read_test_execution_record(working_materials() / "Missing.txt"); });
 
     check_exception_thrown<std::runtime_error>(
       "An empty file",
-      [this]() { return read_execution_record(working_materials() / "Empty.txt"); });
+      [this]() { return read_test_execution_record(working_materials() / "Empty.txt"); });
 
     check_exception_thrown<std::runtime_error>(
       "A file whose text is not a record",
-      [this]() { return read_execution_record(working_materials() / "Malformed.txt"); });
+      [this]() { return read_test_execution_record(working_materials() / "Malformed.txt"); });
   }
 }

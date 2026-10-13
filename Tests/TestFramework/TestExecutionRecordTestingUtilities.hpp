@@ -11,13 +11,13 @@
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
-#include "sequoia/TestFramework/ExecutionRecord.hpp"
+#include "sequoia/TestFramework/TestExecutionRecord.hpp"
 
 namespace sequoia::testing
 {
-  template<> struct value_tester<sequoia::testing::execution_completion>
+  template<> struct value_tester<sequoia::testing::test_execution_completion>
   {
-    using type = sequoia::testing::execution_completion;
+    using type = sequoia::testing::test_execution_completion;
 
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
@@ -42,9 +42,9 @@ namespace sequoia::testing
     }
   };
 
-  template<> struct value_tester<sequoia::testing::execution_record>
+  template<> struct value_tester<sequoia::testing::test_execution_record>
   {
-    using type = sequoia::testing::execution_record;
+    using type = sequoia::testing::test_execution_record;
 
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)

@@ -13,7 +13,7 @@
 
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
-#include "sequoia/TestFramework/ExecutionRecord.hpp"
+#include "sequoia/TestFramework/TestExecutionRecord.hpp"
 
 namespace sequoia::testing
 {
@@ -924,7 +924,7 @@ namespace sequoia::testing
         if(check("While a test executes, its record exists", fs::exists(record.file_path())))
         {
           check("While a test executes, its record has no completion",
-                !read_execution_record(record.file_path()).completion.has_value());
+                !read_test_execution_record(record.file_path()).completion.has_value());
         }
 
         check("While a test executes, the run's stamp already exists",
@@ -932,18 +932,18 @@ namespace sequoia::testing
       }
     };
 
-    /** The return code and records of a run of one test */
+    /** The return code, test record and stamp of a run of one test */
     struct recorded_run
     {
-      return_code code{};
-      execution_record::start_type time_before_run{};
-      execution_record test_record{},
-                       run_record{};
+      return_code                       code{};
+      test_execution_record::start_type time_before_run{};
+      test_execution_record             test_record{};
+      run_stamp                         stamp{};
 
       [[nodiscard]]
       bool stamp_in_order() const noexcept
       {
-        return (time_before_run <= run_record.start) && (run_record.start <= test_record.start);
+        return (time_before_run <= stamp.start) && (stamp.start <= test_record.start);
       }
     };
 
@@ -1617,8 +1617,8 @@ namespace sequoia::testing
         return recorded_run{
           .code{code},
           .time_before_run{timeBeforeRun},
-          .test_record{read_execution_record(testRecordPath.file_path())},
-          .run_record{read_execution_record(projPaths.execution_records().stamp())}
+          .test_record{read_test_execution_record(testRecordPath.file_path())},
+          .stamp{read_run_stamp(projPaths.execution_records().stamp())}
         };
       }
     };
@@ -2666,7 +2666,7 @@ namespace sequoia::testing
     const test_execution_record_path
       record{stray_materials_free_test::source_file(), test_name<stray_materials_free_test>(), runner.proj_paths()};
 
-    const auto completion{read_execution_record(record.file_path()).completion};
+    const auto completion{read_test_execution_record(record.file_path()).completion};
     if(check("The record of a test whose materials could not be prepared has a completion", completion.has_value()))
     {
       check(equality,

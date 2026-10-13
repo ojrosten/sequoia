@@ -9,11 +9,11 @@
 
 /** \file */
 
-#include "ExecutionRecordTestingUtilities.hpp"
+#include "TestExecutionRecordTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class execution_record_false_negative_test final : public regular_false_negative_test
+  class test_execution_record_false_negative_test final : public regular_false_negative_test
   {
   public:
     using regular_false_negative_test::regular_false_negative_test;

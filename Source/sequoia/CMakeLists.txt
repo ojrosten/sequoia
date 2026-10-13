@@ -19,7 +19,6 @@ set(SourceList
     TestFramework/ConcreteTypeCheckers.cpp
     TestFramework/DependencyAnalyzer.cpp
     TestFramework/DumpComparison.cpp
-    TestFramework/ExecutionRecord.cpp
     TestFramework/FailureInfo.cpp
     TestFramework/FailureReporting.cpp
     TestFramework/FileEditors.cpp
@@ -37,6 +36,7 @@ set(SourceList
     TestFramework/SemanticsCheckersDetails.cpp
     TestFramework/Summary.cpp
     TestFramework/TestCreator.cpp
+    TestFramework/TestExecutionRecord.cpp
     TestFramework/TestLogger.cpp
     TestFramework/TestRunner.cpp
     TestFramework/TestRunnerUtilities.cpp

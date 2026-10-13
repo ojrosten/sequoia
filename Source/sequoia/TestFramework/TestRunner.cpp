@@ -48,7 +48,7 @@ namespace sequoia::testing
     const auto entry_time_stamp{std::chrono::file_clock::now()};
 
     [[nodiscard]]
-    execution_record::start_type current_time_to_the_millisecond()
+    test_execution_record::start_type current_time_to_the_millisecond()
     {
       return std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now());
     }
@@ -950,7 +950,7 @@ namespace sequoia::testing
   test_to_run::scoped_execution_record::~scoped_execution_record()
   {
     using std::chrono::microseconds, std::chrono::duration_cast;
-    m_Record.completion = execution_completion{
+    m_Record.completion = test_execution_completion{
       .execution_duration{duration_cast<microseconds>(m_ExecutionTimer.execution_duration())},
       .runner_overhead{duration_cast<microseconds>(m_ExecutionTimer.runner_overhead())},
       .performance_check_attempts{finished_attempts(m_Vessel.attempts_per_performance_check())}
@@ -1613,8 +1613,8 @@ namespace sequoia::testing
     if(m_InstabilityMode != instability_mode::sandbox)
     {
       fs::remove_all(proj_paths().output().instability_analysis());
-      const execution_record runRecord{.start{current_time_to_the_millisecond()}};
-      overwrite_quietly(proj_paths().execution_records().stamp(), to_string(runRecord));
+      const run_stamp stamp{.start{current_time_to_the_millisecond()}};
+      overwrite_quietly(proj_paths().execution_records().stamp(), to_string(stamp));
       check_for_coarse_sleeps();
     }
 

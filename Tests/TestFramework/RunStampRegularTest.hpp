@@ -9,11 +9,11 @@
 
 /** \file */
 
-#include "ExecutionRecordTestingUtilities.hpp"
+#include "RunStampTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class execution_record_regular_test final : public regular_test
+  class run_stamp_regular_test final : public regular_test
   {
   public:
     using regular_test::regular_test;

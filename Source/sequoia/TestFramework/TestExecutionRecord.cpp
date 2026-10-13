@@ -6,10 +6,10 @@
 ////////////////////////////////////////////////////////////////////
 
 /** \file
-    \brief Definitions for ExecutionRecord.hpp
+    \brief Definitions for TestExecutionRecord.hpp
  */
 
-#include "sequoia/TestFramework/ExecutionRecord.hpp"
+#include "sequoia/TestFramework/TestExecutionRecord.hpp"
 
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Numbers.hpp"
@@ -34,7 +34,7 @@ namespace sequoia::testing
                                runner_overhead_label   {"runner overhead"};
 
     [[nodiscard]]
-    std::string start_entry(execution_record::start_type start)
+    std::string start_entry(test_execution_record::start_type start)
     {
       return std::format("started {:%FT%TZ}", start);
     }
@@ -52,7 +52,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string lines_of(const execution_completion& completion)
+    std::string lines_of(const test_execution_completion& completion)
     {
       auto attemptsLine{[](std::size_t attempts) { return std::format("{}\n", attempts_entry(attempts)); }};
 
@@ -73,14 +73,14 @@ namespace sequoia::testing
     // the value only if the entry's writer reprints the entry exactly from
     // that value.
     constexpr auto start_in{
-      [](std::string_view entry) -> std::optional<execution_record::start_type> {
+      [](std::string_view entry) -> std::optional<test_execution_record::start_type> {
         // TO DO: std::chrono::parse reads the start, once libc++ provides it
         using namespace std::chrono;
         constexpr std::size_t fieldsOfStart{7};
         if(const auto numbers{extract_numbers_from<unsigned, fieldsOfStart>(entry)})
         {
           const auto [y, mo, d, h, mi, s, ms]{*numbers};
-          const execution_record::start_type midnight{sys_days{year{static_cast<int>(y)} / month{mo} / day{d}}};
+          const test_execution_record::start_type midnight{sys_days{year{static_cast<int>(y)} / month{mo} / day{d}}};
           const auto start{midnight + hours{h} + minutes{mi} + seconds{s} + milliseconds{ms}};
 
           if(start_entry(start) == entry)
@@ -167,60 +167,102 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::optional<execution_completion> read_completion(std::istream& s)
+    std::optional<test_execution_completion> read_completion(std::istream& s)
     {
       if(!more_to_read(s))
         return std::nullopt;
 
-      return execution_completion{
+      return test_execution_completion{
         .execution_duration{read_entry(s, "an execution duration", execution_duration_in)},
         .runner_overhead{read_entry(s, "a runner overhead", runner_overhead_in)},
         .performance_check_attempts{read_attempts(s)}
       };
     }
+
+    /** Reads a `T` from `file`, naming it by `description` in what throws.
+
+        \throws std::runtime_error if `file` cannot be opened, or does not hold
+                a `T`
+     */
+    template<class T>
+    [[nodiscard]]
+    T read_from(const fs::path& file, std::string_view description)
+    {
+      if(std::ifstream ifile{file})
+      {
+        try
+        {
+          if(T value{}; ifile >> value)
+            return value;
+        }
+        catch(const std::runtime_error& e)
+        {
+          throw std::runtime_error{
+            std::format("Unable to read the {} in {}: {}", description, file.generic_string(), e.what())
+          };
+        }
+
+        throw std::runtime_error{std::format("No {} in {}", description, file.generic_string())};
+      }
+
+      throw std::runtime_error{report_failed_read(file)};
+    }
   }
 
   [[nodiscard]]
-  std::string to_string(const execution_record& record)
+  std::string to_string(const test_execution_record& record)
   {
     const auto completionLines{record.completion ? lines_of(record.completion.value()) : std::string{}};
     return std::format("{}\n{}", start_entry(record.start), completionLines);
   }
 
-  std::ostream& operator<<(std::ostream& s, const execution_record& record)
+  std::ostream& operator<<(std::ostream& s, const test_execution_record& record)
   {
     return s << to_string(record);
   }
 
-  std::istream& operator>>(std::istream& s, execution_record& record)
+  std::istream& operator>>(std::istream& s, test_execution_record& record)
   {
     if(!peek_for_more(s))
       return s;
 
-    record = execution_record{.start{read_entry(s, "a start", start_in)}, .completion{read_completion(s)}};
+    record = test_execution_record{.start{read_entry(s, "a start", start_in)}, .completion{read_completion(s)}};
     return s;
   }
 
   [[nodiscard]]
-  execution_record read_execution_record(const fs::path& file)
+  test_execution_record read_test_execution_record(const fs::path& file)
   {
-    if(std::ifstream ifile{file})
-    {
-      try
-      {
-        if(execution_record record{}; ifile >> record)
-          return record;
-      }
-      catch(const std::runtime_error& e)
-      {
-        throw std::runtime_error{
-          std::format("Unable to read the execution record in {}: {}", file.generic_string(), e.what())
-        };
-      }
+    return read_from<test_execution_record>(file, "test execution record");
+  }
 
-      throw std::runtime_error{std::format("No execution record in {}", file.generic_string())};
-    }
+  [[nodiscard]]
+  std::string to_string(const run_stamp& stamp)
+  {
+    return std::format("{}\n", start_entry(stamp.start));
+  }
 
-    throw std::runtime_error{report_failed_read(file)};
+  std::ostream& operator<<(std::ostream& s, const run_stamp& stamp)
+  {
+    return s << to_string(stamp);
+  }
+
+  std::istream& operator>>(std::istream& s, run_stamp& stamp)
+  {
+    if(!peek_for_more(s))
+      return s;
+
+    const run_stamp read{.start{read_entry(s, "a start", start_in)}};
+    if(std::string line{}; more_to_read(s) && std::getline(s, line))
+      throw std::runtime_error{std::format("Expected the end of the stamp but found '{}'", line)};
+
+    stamp = read;
+    return s;
+  }
+
+  [[nodiscard]]
+  run_stamp read_run_stamp(const fs::path& file)
+  {
+    return read_from<run_stamp>(file, "run stamp");
   }
 }

@@ -9,7 +9,7 @@
 #include "PerformanceTestingUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
-#include "sequoia/TestFramework/ExecutionRecord.hpp"
+#include "sequoia/TestFramework/TestExecutionRecord.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
@@ -93,10 +93,10 @@ namespace sequoia::testing
     /** Reads the completion of the record `runner` keeps for `Test`. */
     template<concrete_test Test>
     [[nodiscard]]
-    execution_completion get_recorded_completion(const test_runner& runner)
+    test_execution_completion get_recorded_completion(const test_runner& runner)
     {
       const test_execution_record_path record{Test::source_file(), test_name<Test>(), runner.proj_paths()};
-      if(auto completion{read_execution_record(record.file_path()).completion})
+      if(auto completion{read_test_execution_record(record.file_path()).completion})
         return std::move(completion).value();
 
       throw std::runtime_error{std::format("No completion in: {}", record.file_path().generic_string())};
