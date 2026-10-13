@@ -40,11 +40,9 @@ namespace sequoia::testing
       }
     };
 
-    [[nodiscard]]
-    std::string label_of(std::string_view recordLine)
-    {
-      return std::string{recordLine.substr(0, recordLine.rfind(' '))};
-    }
+    constexpr auto label_of{
+      [](std::string_view recordLine) { return std::string{recordLine.substr(0, recordLine.rfind(' '))}; }
+    };
   }
 
   [[nodiscard]]
@@ -63,10 +61,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> execution_record_labels(const fs::path& record)
   {
-    auto labelOf{[](std::string_view recordLine) { return label_of(recordLine); }};
-
     return   execution_record_lines(record)
-           | std::views::transform(labelOf)
+           | std::views::transform(label_of)
            | std::ranges::to<std::vector>();
   }
 
