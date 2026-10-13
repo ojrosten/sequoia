@@ -2,7 +2,7 @@ Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 79
 Fast task 4 ms, slow task cycling through (2, 3, 4, 5, 6) ms, predicted [1.2, 1.5]
 
 The fast task is not distinguishably faster than the slow one
-Speed-up: 0.949 in [0.585, 1.54]; predicted [1.2, 1.5]
+Speed-up: 0.949 in [0.584, 1.54]; predicted [1.2, 1.5]
 Trials: 10, attempt 1 of 3
 Task durations: fast 0.004s, slow 0.0038s
 
@@ -59,7 +59,7 @@ Task durations: fast 0.008s, slow 0.0403s
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 118
-Attempt 1's interval overlaps the prediction, but would not if substantially narrower; attempt 2 is slower
+Attempt 1's interval overlaps the prediction, but would lie above the prediction if substantially narrower; attempt 2 is slower
 
 The fast task is slower than the slow one
 Speed-up: 0.128 in [0.0651, 0.25]; predicted [2.34, 3.66]
@@ -69,7 +69,7 @@ Task durations: fast 0.00784s, slow 0.001s
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 130
-An interval of 3 standard errors includes a speed-up of 1, and overlaps [1.4, 1.8]
+Attempt 1's interval includes a speed-up of 1, and overlaps the prediction
 
 The fast task is not distinguishably faster than the slow one
 Speed-up: 1.59 in [0.791, 3.19]; predicted [1.4, 1.8]
@@ -89,7 +89,7 @@ Task durations: fast 0.004s, slow 0.002s
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 154
-Attempt 1 overlaps [2.92, 4.38] at 3 standard errors, not at 1; attempt 2 is slower
+Attempt 1's interval overlaps the prediction, but would lie below the prediction if substantially narrower; attempt 2 is slower
 
 The fast task is slower than the slow one
 Speed-up: 0.647 in [0.521, 0.804]; predicted [2.92, 4.38]
