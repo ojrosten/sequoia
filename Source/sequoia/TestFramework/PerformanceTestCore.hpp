@@ -314,7 +314,7 @@ namespace sequoia::testing
                                   const relative_performance_parameters& parameters)
   {
     sentinel<Mode> sentry{logger, std::string{description}};
-    const auto checkIndex{sentry.log_performance_check()};
+    sentry.log_performance_check();
 
     if(!(parameters.prediction.lower > 1) || !(parameters.prediction.upper > 1))
       throw std::invalid_argument{"Relative performance test requires speed-up factors > 1"};
@@ -329,7 +329,7 @@ namespace sequoia::testing
       };
 
     const auto [attempts, outcome]{impl::execute_attempts<Mode>(fast, slow, parameters)};
-    sentry.log_performance_check_attempts(checkIndex, attempts);
+    sentry.log_performance_check_attempts(attempts);
 
     sentry.append_to_message(
       impl::summarize_attempt(outcome,

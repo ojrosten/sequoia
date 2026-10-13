@@ -147,13 +147,9 @@ namespace sequoia::testing
       return !m_SentinelLevels.empty() && m_SentinelLevels.front().is_performance_check;
     }
 
-    [[nodiscard]]
-    std::size_t log_performance_check();
+    void log_performance_check();
 
-    void log_performance_check_attempts(std::size_t checkIndex, std::size_t attempts)
-    {
-      m_Results.attempts_per_performance_check.at(checkIndex) = attempts;
-    }
+    void log_performance_check_attempts(std::size_t attempts);
 
     void failure_message(test_mode mode, std::string_view message, is_critical isCritical);
     
@@ -225,13 +221,9 @@ namespace sequoia::testing
     sentinel_base(const sentinel_base&)            = delete;
     sentinel_base& operator=(const sentinel_base&) = delete;
 
-    [[nodiscard]]
-    std::size_t log_performance_check() { return get().log_performance_check(); }
+    void log_performance_check() { get().log_performance_check(); }
 
-    void log_performance_check_attempts(std::size_t checkIndex, std::size_t attempts)
-    {
-      get().log_performance_check_attempts(checkIndex, attempts);
-    }
+    void log_performance_check_attempts(std::size_t attempts) { get().log_performance_check_attempts(attempts); }
 
     void log_check() { get().log_check(); }
 

@@ -193,7 +193,7 @@ namespace sequoia::testing
     recored_critical_failure(m_Recovery.recovery_file, message);
   }
 
-  std::size_t test_logger_base::log_performance_check()
+  void test_logger_base::log_performance_check()
   {
     if(m_SentinelLevels.empty())
       throw std::logic_error{"Cannot log a performance check outside a sentinel"};
@@ -204,7 +204,14 @@ namespace sequoia::testing
 
     m_Results.attempts_per_performance_check.emplace_back();
     log_check();
-    return m_Results.attempts_per_performance_check.size() - 1;
+  }
+
+  void test_logger_base::log_performance_check_attempts(std::size_t attempts)
+  {
+    if(m_Results.attempts_per_performance_check.empty())
+      throw std::logic_error{"Cannot log the attempts of a performance check before the check"};
+
+    m_Results.attempts_per_performance_check.back() = attempts;
   }
 
   void test_logger_base::log_top_level_failure(test_mode mode, std::string message)
