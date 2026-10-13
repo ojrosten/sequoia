@@ -12,6 +12,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -22,6 +23,14 @@ namespace sequoia::testing
     {
       using namespace std::chrono_literals;
       return {.execution_duration{1500us}, .runner_overhead{250us}, .performance_check_attempts{2, 1, 3}};
+    }
+
+    [[nodiscard]]
+    test_execution_completion completion_without_attempts()
+    {
+      auto withoutAttempts{completion()};
+      withoutAttempts.performance_check_attempts.clear();
+      return withoutAttempts;
     }
   }
 
@@ -70,18 +79,10 @@ namespace sequoia::testing
           readBackFromWritten(completion()),
           std::optional{completion()});
 
-    const auto withoutAttempts{
-      []() {
-        auto noAttempts{completion()};
-        noAttempts.performance_check_attempts.clear();
-        return noAttempts;
-      }()
-    };
-
     check(equality,
           "A completion with no performance check attempts round-trips through operator<< and operator>>",
-          readBackFromWritten(withoutAttempts),
-          std::optional{withoutAttempts});
+          readBackFromWritten(completion_without_attempts()),
+          std::optional{completion_without_attempts()});
   }
 
   void test_execution_completion_regular_test::test_end_of_stream()
@@ -123,6 +124,41 @@ namespace sequoia::testing
     check("A read of a completion followed by another line succeeds", readSucceeded);
     check(equality, "A completion followed by another line reads as the completion", readBack, completion());
     check(equality, "operator>> leaves the line after a completion unread", rest, std::string{"next line"});
+
+    std::stringstream followedNoAttempts{to_string(completion_without_attempts()) + "next line\n"};
+    test_execution_completion readNoAttempts{completion()};
+    followedNoAttempts >> readNoAttempts;
+    std::string restNoAttempts{};
+    std::getline(followedNoAttempts, restNoAttempts);
+
+    check(equality,
+          "A completion with no attempts, followed by another line, reads as the completion",
+          readNoAttempts,
+          completion_without_attempts());
+
+    check(equality,
+          "operator>> leaves the line after a completion with no attempts unread",
+          restNoAttempts,
+          std::string{"next line"});
+
+    std::stringstream moreThanCounted{
+      "execution duration 1500us\nrunner overhead 250us\nentries of performance check attempts 1\n"
+      "performance check attempts 2\nperformance check attempts 3\n"
+    };
+    test_execution_completion counted{};
+    moreThanCounted >> counted;
+    std::string uncounted{};
+    std::getline(moreThanCounted, uncounted);
+
+    check(equality,
+          "A completion reads only as many entries of attempts as it gives",
+          counted.performance_check_attempts,
+          std::vector<std::size_t>{2});
+
+    check(equality,
+          "operator>> leaves an entry of attempts beyond the completion's number unread",
+          uncounted,
+          std::string{"performance check attempts 3"});
   }
 
   void test_execution_completion_regular_test::test_refusals()
@@ -196,6 +232,10 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       "A number of attempts with a label other than the one operator<< writes",
       readCompletion(withEntries("1") + "check attempts 2\n"));
+
+    check_exception_thrown<std::runtime_error>(
+      "A number of entries of attempts far beyond the entries which follow",
+      readCompletion(withEntries("18446744073709551615") + "performance check attempts 2\n"));
 
     check_exception_thrown<std::runtime_error>(
       "Fewer entries of attempts than the completion says it has",

@@ -1,4 +1,4 @@
-Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 149
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 185
 A completion which does not begin with the execution duration
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Expected an execution duration but found 'runner overhead 250us'
 
 =======================================
 
-Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 153
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 189
 An execution duration in a unit other than microseconds
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Expected an execution duration but found 'execution duration 2ms'
 
 =======================================
 
-Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 157
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 193
 An execution duration with a leading zero
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Expected an execution duration but found 'execution duration 01500us'
 
 =======================================
 
-Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 161
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 197
 A negative runner overhead
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Expected a runner overhead but found 'runner overhead -250us'
 
 =======================================
 
-Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 165
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 201
 A negative runner overhead whose magnitude exceeds the largest signed count
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Expected a runner overhead but found 'runner overhead -9223372036854775808us'
 
 =======================================
 
-Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 169
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 205
 A completion with no runner overhead
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Expected a runner overhead but there are no more lines
 
 =======================================
 
-Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 173
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 209
 A completion which does not give its number of entries of attempts
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ Expected a number of entries of attempts but found 'performance check attempts 2
 
 =======================================
 
-Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 177
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 213
 A number of entries of attempts which is not a number
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Expected a number of entries of attempts but found 'entries of performance check
 
 =======================================
 
-Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 181
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 217
 A number of attempts which is not a number
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Expected a number of attempts but found 'performance check attempts two'
 
 =======================================
 
-Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 185
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 221
 A number of attempts with a leading zero
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ Expected a number of attempts but found 'performance check attempts 02'
 
 =======================================
 
-Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 189
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 225
 A line which gives no number of attempts, after one which does
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ Expected a number of attempts but found 'foo'
 
 =======================================
 
-Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 193
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 229
 A runner overhead where a number of attempts should be
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ Expected a number of attempts but found 'runner overhead 250us'
 
 =======================================
 
-Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 197
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 233
 A number of attempts with a label other than the one operator<< writes
 
 Expected Exception Type:
@@ -115,7 +115,16 @@ Expected a number of attempts but found 'check attempts 2'
 
 =======================================
 
-Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 201
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 237
+A number of entries of attempts far beyond the entries which follow
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a number of attempts but there are no more lines
+
+=======================================
+
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 241
 Fewer entries of attempts than the completion says it has
 
 Expected Exception Type:

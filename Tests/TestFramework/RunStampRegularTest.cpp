@@ -78,12 +78,12 @@ namespace sequoia::testing
       lastStart {.start{sys_days{year{32767} / 12 / 31} + days{1} - milliseconds{1}}};
 
     check(equality,
-          "A stamp with the earliest start the format holds round-trips through operator<< and operator>>",
+          "A stamp with the earliest start time the format holds round-trips through operator<< and operator>>",
           readBackFromWritten(firstStart),
           std::optional{firstStart});
 
     check(equality,
-          "A stamp with the latest start the format holds round-trips through operator<< and operator>>",
+          "A stamp with the latest start time the format holds round-trips through operator<< and operator>>",
           readBackFromWritten(lastStart),
           std::optional{lastStart});
   }

@@ -66,7 +66,7 @@ namespace sequoia::testing
     // that value.
     constexpr auto start_in{
       [](std::string_view entry) -> std::optional<test_execution_record::start_type> {
-        // TO DO: std::chrono::parse reads the start, once libc++ provides it
+        // TO DO: std::chrono::parse reads the start time, once libc++ provides it
         using namespace std::chrono;
         constexpr std::size_t fieldsOfStart{7};
         if(const auto numbers{extract_numbers_from<unsigned, fieldsOfStart>(entry)})
@@ -156,20 +156,16 @@ namespace sequoia::testing
       throw std::runtime_error{std::format("Expected {} but found '{}'", description, line)};
     }
 
-    [[nodiscard]]
-    bool more_to_read(std::istream& s)
-    {
-      return s.good() && (s.peek() != std::char_traits<char>::eof());
-    }
-
     /** Reads the number of entries of attempts, then that many entries. */
     [[nodiscard]]
     std::vector<std::size_t> read_attempts(std::istream& s)
     {
       const auto entries{read_entry(s, "a number of entries of attempts", entries_of_attempts_in)};
 
+      // The count sizes nothing in advance, so a corrupt count is refused at
+      // the first missing entry rather than by an allocation
       std::vector<std::size_t> attempts{};
-      for([[maybe_unused]] const auto entry : std::views::iota(std::size_t{}, entries))
+      for(std::size_t i{}; i < entries; ++i)
       {
         attempts.push_back(read_entry(s, "a number of attempts", attempts_in));
       }
@@ -178,15 +174,22 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    test_execution_completion read_completion_entries(std::istream& s)
+    {
+      return {
+        .execution_duration{read_entry(s, "an execution duration", execution_duration_in)},
+        .runner_overhead{read_entry(s, "a runner overhead", runner_overhead_in)},
+        .performance_check_attempts{read_attempts(s)}
+      };
+    }
+
+    [[nodiscard]]
     std::optional<test_execution_completion> read_completion(std::istream& s, finished_state finished)
     {
       if(finished == finished_state::no)
         return std::nullopt;
 
-      if(test_execution_completion completion{}; s >> completion)
-        return completion;
-
-      throw std::runtime_error{"Expected an execution duration but there are no more lines"};
+      return read_completion_entries(s);
     }
 
     /** Reads the `T` which `file` holds. `description` names a `T` in the
@@ -205,7 +208,7 @@ namespace sequoia::testing
         {
           if(T value{}; ifile >> value)
           {
-            if(std::string line{}; more_to_read(ifile) && std::getline(ifile, line))
+            if(std::string line{}; peek_for_more(ifile) && std::getline(ifile, line))
               throw std::runtime_error{std::format("Expected the end of the file but found '{}'", line)};
 
             return value;
@@ -254,11 +257,7 @@ namespace sequoia::testing
     if(!peek_for_more(s))
       return s;
 
-    completion = test_execution_completion{
-      .execution_duration{read_entry(s, "an execution duration", execution_duration_in)},
-      .runner_overhead{read_entry(s, "a runner overhead", runner_overhead_in)},
-      .performance_check_attempts{read_attempts(s)}
-    };
+    completion = read_completion_entries(s);
 
     return s;
   }

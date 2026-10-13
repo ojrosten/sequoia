@@ -912,12 +912,12 @@ jobs:
               echo "ok    no drift check, so no patch";;
           esac
 
-      # Every test writes an execution record: its start when it begins, and
-      # its execution duration and the runner's overhead when it finishes,
-      # whether or not its body threw. A record with no execution duration
-      # names a test that was executing when the run ended. The step lists
-      # such tests oldest start first, since the hung test is likeliest the one
-      # that has run longest. The end-to-end test's generated project keeps
+      # Every test writes an execution record: its start time when it begins,
+      # and its execution duration and the runner's overhead when it
+      # finishes, whether or not its body threw. A record which says
+      # "finished no" names a test that was executing when the run ended. The
+      # step lists such tests oldest start time first, since the hung test is
+      # likeliest the one that has run longest. The end-to-end test's generated project keeps
       # records of its own. A record older than its run's stamp is from an
       # earlier run, and the step marks it so.
       #
@@ -952,7 +952,7 @@ jobs:
             [ ! -f "$dir/run.stamp" ] || started "$dir/run.stamp"
           }
           unfinished=$(printf '%s\n' "$tests" | while IFS= read -r record; do
-                         if [ -z "$record" ] || grep -q '^execution duration' "$record"; then continue; fi
+                         if [ -z "$record" ] || ! grep -q '^finished no$' "$record"; then continue; fi
                          start=$(started "$record")
                          run_start=$(start_of_run "$record")
                          if [[ -n "$run_start" && "$start" < "$run_start" ]]; then
