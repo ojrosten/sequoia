@@ -33,6 +33,7 @@ namespace sequoia::testing
 
   static_assert(trials_for_minimum_10.size() == relative_performance_max_attempts);
   static_assert(trials_for_minimum_11.size() == relative_performance_max_attempts);
+  static_assert(trials_for_minimum_10.front() == relative_performance_minimum_trials_floor);
 
   /** \brief Returns the number of trials made before attempt `attempt`,
              given the number in each attempt.

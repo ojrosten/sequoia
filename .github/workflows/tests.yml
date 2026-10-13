@@ -318,6 +318,30 @@ jobs:
             echo "No Debian changelog found for $pkg; $CXX --version above is all we have."
           fi
 
+      # A timing check can fail on one runner and pass on the next at the
+      # same commit. The job's log names the image, but not the hardware. So
+      # this step prints the CPU model and the number of logical processors.
+      # Where the runner answers Azure's metadata service, the step also
+      # prints the VM size. The timeout bounds the queries, and a report that
+      # times out does not fail the job.
+      - name: Report the runner's hardware
+        if: inputs.needs_testing == 'true'
+        timeout-minutes: 1
+        continue-on-error: true
+        # A report must not fail the job, hence each `|| true`.
+        run: |
+          case "$RUNNER_OS" in
+            Linux)   cpu=$(grep -m1 '^model name' /proc/cpuinfo | sed 's/^[^:]*: //' || true) ;;
+            macOS)   cpu=$(sysctl -n machdep.cpu.brand_string || true) ;;
+            Windows) cpu=$(powershell -NoProfile -Command '(Get-CimInstance Win32_Processor).Name' || true) ;;
+          esac
+          cpu=${cpu%$'\r'}
+          echo "CPU: ${cpu:-not reported}"
+          echo "Logical processors: $(getconf _NPROCESSORS_ONLN || true)"
+          vm_size_url='http://169.254.169.254/metadata/instance/compute/vmSize?api-version=2021-02-01&format=text'
+          vm_size=$(curl -fs --max-time 3 -H 'Metadata: true' "$vm_size_url" || true)
+          echo "VM size: ${vm_size:-not reported}"
+
       # The suite generates projects, and sequoia makes a commit in each
       # project it generates. git refuses to commit without an identity, which
       # a fresh runner lacks.

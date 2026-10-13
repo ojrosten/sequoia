@@ -36,6 +36,8 @@ namespace sequoia::testing
 
     void test_execution_records_of_performance_checks();
 
+    void test_summary_of_performance_checks_within_other_checks();
+
     [[nodiscard]]
     std::filesystem::path fake_project() const;
 

@@ -26,7 +26,11 @@ namespace sequoia::testing
 
     void test_invalid_arguments();
 
+    void test_checks_made_by_a_task();
+
     void test_throwing_task();
+
+    void test_attempt_with_too_few_trials();
 
     void test_non_positive_durations();
   };

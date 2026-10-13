@@ -79,39 +79,48 @@ namespace sequoia::testing
     check_relative_performance("Fast task 4 ms, slow task cycling through (2, 3, 4, 5, 6) ms, predicted [1.2, 1.5]",
                                []() { spin_for(4ms); },
                                make_cycling_spinner({2ms, 3ms, 4ms, 5ms, 6ms}),
-                               {.prediction{.lower{1.2}, .upper{1.5}}, .minimum_trials{10}});
+                               {.prediction{.lower{1.2}, .upper{1.5}}});
 
     check_relative_performance("Fast task 2 ms, slow task 1 ms, predicted [1.5, 2.0]",
                                []() { spin_for(2ms); },
                                []() { spin_for(1ms); },
-                               {.prediction{.lower{1.5}, .upper{2.0}}, .minimum_trials{10}});
+                               {.prediction{.lower{1.5}, .upper{2.0}}});
 
     check_relative_performance("Speed-up of 2, predicted [3.0, 3.0]",
                                []() { spin_for(1ms); },
                                []() { spin_for(2ms); },
-                               {.prediction{.lower{3.0}, .upper{3.0}}, .minimum_trials{10}});
+                               {.prediction{.lower{3.0}, .upper{3.0}}});
 
     check_relative_performance("Speed-up of 4, predicted [2.0, 2.5]",
                                []() { spin_for(1ms); },
                                []() { spin_for(4ms); },
-                               {.prediction{.lower{2.0}, .upper{2.5}}, .minimum_trials{10}});
+                               {.prediction{.lower{2.0}, .upper{2.5}}});
   }
 
   void performance_false_negative_diagnostics::test_confidence_multiplier()
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("Attempt 1 takes 3 standard errors and needs 3.75 to overlap [20.4, 41.1]; "
+    check_relative_performance("Attempt 1's interval lies below the prediction, "
+                               "and would overlap the prediction only if substantially wider; "
                                "later speed-ups lie inside the prediction",
                                counted_spinner{5ms, trials_for_minimum_10[0], 1ms},
                                make_cycling_spinner({5ms, 30ms, 40ms, 40ms, 40ms}),
-                               {.prediction{.lower{20.4}, .upper{41.1}}, .minimum_trials{10}});
+                               {.prediction{.lower{20.4}, .upper{41.1}}});
 
-    check_relative_performance("Attempt 1 takes 3 standard errors and needs 3.74 to overlap [1.7, 2.62]; "
+    check_relative_performance("Attempt 1's interval lies above the prediction, "
+                               "and would overlap the prediction only if substantially wider; "
                                "later speed-ups lie inside the prediction",
                                counted_spinner{8ms, trials_for_minimum_10[0], 20ms},
                                make_cycling_spinner({30ms, 30ms, 30ms, 60ms, 80ms}),
-                               {.prediction{.lower{1.7}, .upper{2.62}}, .minimum_trials{10}});
+                               {.prediction{.lower{1.7}, .upper{2.62}}});
+
+    check_relative_performance("Attempt 1's interval overlaps the prediction, "
+                               "but would not if substantially narrower; "
+                               "attempt 2 is slower",
+                               make_cycling_spinner({3ms, 4ms, 12ms, 12ms, 12ms}),
+                               counted_spinner{50ms, trials_for_minimum_10[0], 1ms},
+                               {.prediction{.lower{2.34}, .upper{3.66}}});
   }
 
   void performance_false_negative_diagnostics::test_significance_gate()
@@ -121,16 +130,14 @@ namespace sequoia::testing
     check_relative_performance("An interval of 3 standard errors includes a speed-up of 1, and overlaps [1.4, 1.8]",
                                []() { spin_for(2ms); },
                                make_cycling_spinner({2ms, 2ms, 3ms, 4ms, 9ms}),
-                               {.prediction{.lower{1.4}, .upper{1.8}}, .minimum_trials{10}});
+                               {.prediction{.lower{1.4}, .upper{1.8}}});
   }
 
   void performance_false_negative_diagnostics::test_fail_at_second_attempt()
   {
     using namespace std::chrono_literals;
 
-    constexpr relative_performance_parameters parameters{
-      .prediction{.lower{1.8}, .upper{2.2}}, .minimum_trials{10}
-    };
+    constexpr relative_performance_parameters parameters{.prediction{.lower{1.8}, .upper{2.2}}};
 
     check_relative_performance("A speed-up of 2, then of 0.5, then of 2",
                                counted_spinner{1ms, trials_for_minimum_10[0],                        4ms},
@@ -142,9 +149,7 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    constexpr relative_performance_parameters parameters{
-      .prediction{.lower{2.92}, .upper{4.38}}, .minimum_trials{10}
-    };
+    constexpr relative_performance_parameters parameters{.prediction{.lower{2.92}, .upper{4.38}}};
 
     check_relative_performance("Attempt 1 overlaps [2.92, 4.38] at 3 standard errors, not at 1; attempt 2 is slower",
                                counted_spinner{1ms, trials_for_minimum_10[0], 4ms},
@@ -178,17 +183,17 @@ namespace sequoia::testing
     check_relative_performance("Speed-up of 2, predicted [1.8, 2.1]",
                                []() { spin_for(1ms); },
                                []() { spin_for(2ms); },
-                               {.prediction{.lower{1.8}, .upper{2.1}}, .minimum_trials{10}});
+                               {.prediction{.lower{1.8}, .upper{2.1}}});
 
     check_relative_performance("Speed-up of 4, predicted [3.4, 4.1]",
                                []() { spin_for(1ms); },
                                []() { spin_for(4ms); },
-                               {.prediction{.lower{3.4}, .upper{4.1}}, .minimum_trials{10}});
+                               {.prediction{.lower{3.4}, .upper{4.1}}});
 
     check_relative_performance("Durations varying together, a speed-up of 2 in every trial, predicted [1.8, 2.2]",
                                make_cycling_spinner({1ms,  5ms, 1ms,  5ms, 1ms}),
                                make_cycling_spinner({2ms, 10ms, 2ms, 10ms, 2ms}),
-                               {.prediction{.lower{1.8}, .upper{2.2}}, .minimum_trials{10}});
+                               {.prediction{.lower{1.8}, .upper{2.2}}});
   }
 
   void performance_false_positive_diagnostics::test_confidence_multiplier()
@@ -196,16 +201,19 @@ namespace sequoia::testing
     using namespace std::chrono_literals;
 
     check_relative_performance("Attempts 1 and 2 fail at the gate; "
-                               "attempt 3 takes 3 standard errors and needs 2.25 to overlap [4.86, 7.43]",
+                               "attempt 3's interval overlaps the prediction, "
+                               "but would not if substantially narrower",
                                counted_spinner{8ms, trials_before_attempt(trials_for_minimum_10, 3), 5ms},
                                make_cycling_spinner({4ms, 6ms, 20ms, 30ms, 30ms}),
-                               {.prediction{.lower{4.86}, .upper{7.43}}, .minimum_trials{10}});
+                               {.prediction{.lower{4.86}, .upper{7.43}}});
 
-    check_relative_performance("Attempt 3 takes 3 standard errors and needs 2.24 to overlap [2.21, 3.54]; "
-                               "attempt 2 takes 2 and needs 3.77",
+    check_relative_performance("Attempt 2's interval lies above the prediction, "
+                               "and would overlap the prediction only if substantially wider; "
+                               "attempt 3's interval overlaps the prediction, "
+                               "but would not if substantially narrower",
                                counted_spinner{1ms, trials_before_attempt(trials_for_minimum_10, 3), 2ms},
                                make_cycling_spinner({5ms, 5ms, 10ms, 40ms, 40ms}),
-                               {.prediction{.lower{2.21}, .upper{3.54}}, .minimum_trials{10}});
+                               {.prediction{.lower{2.21}, .upper{3.54}}});
   }
 
   void performance_false_positive_diagnostics::test_computations_not_optimized_away()
@@ -224,12 +232,12 @@ namespace sequoia::testing
                                "predicted [1.5, 2.5]",
                                [seed]() { do_not_optimize_away(xorshift_state(seed,     steps)); },
                                [seed]() { do_not_optimize_away(xorshift_state(seed, 2 * steps)); },
-                               {.prediction{.lower{1.5}, .upper{2.5}}, .minimum_trials{10}});
+                               {.prediction{.lower{1.5}, .upper{2.5}}});
 
     check_relative_performance("A speed-up of 2 in computing the value a task returns, predicted [1.5, 2.5]",
                                [seed]() { return xorshift_state(seed,     steps); },
                                [seed]() { return xorshift_state(seed, 2 * steps); },
-                               {.prediction{.lower{1.5}, .upper{2.5}}, .minimum_trials{10}});
+                               {.prediction{.lower{1.5}, .upper{2.5}}});
   }
 
   [[nodiscard]]
@@ -242,6 +250,7 @@ namespace sequoia::testing
   {
     test_task_constraints();
     test_exception_specifications();
+    test_default_minimum_trials();
     test_postprocessing();
     test_zeroed_measurements();
     test_coarse_sleep();
@@ -262,6 +271,13 @@ namespace sequoia::testing
   void performance_utilities_test::test_exception_specifications()
   {
     STATIC_CHECK(noexcept(do_not_optimize_away(0)));
+  }
+
+  void performance_utilities_test::test_default_minimum_trials()
+  {
+    constexpr relative_performance_parameters parameters{.prediction{.lower{2.0}, .upper{3.0}}};
+
+    STATIC_CHECK(parameters.minimum_trials == relative_performance_minimum_trials_floor);
   }
 
   void performance_utilities_test::test_postprocessing()

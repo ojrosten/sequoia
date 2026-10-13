@@ -102,6 +102,13 @@ namespace sequoia::testing
                                                        double overlapMultiplier,
                                                        relative_performance_interval prediction)
     {
+      if(trialDurations.size() < relative_performance_minimum_trials_floor)
+        throw std::invalid_argument{
+          std::format("Relative performance attempt requires at least {} trials; it has {}",
+                      relative_performance_minimum_trials_floor,
+                      trialDurations.size())
+        };
+
       auto eitherNotPositive{
         [](relative_performance_durations durations) {
           constexpr auto zero{std::chrono::duration<double>::zero()};
