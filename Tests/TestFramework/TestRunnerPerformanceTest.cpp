@@ -390,6 +390,8 @@ namespace sequoia::testing
       using slow_to_summarize_test_base::slow_to_summarize_test_base;
     };
 
+    constexpr std::size_t too_few_trials{relative_performance_minimum_trials_floor - 1};
+
     /** Makes five performance checks. A check stops at its first passing
         attempt, so the tasks' durations set how many attempts each makes:
         -# Two: the slow task is as fast as the fast one for the first
@@ -422,12 +424,12 @@ namespace sequoia::testing
                                    parameters);
 
         check_exception_thrown<std::invalid_argument>(
-          "Nine trials are refused",
+          "Too few trials are refused",
           [this, &parameters]() {
-            return check_relative_performance("Nine trials",
+            return check_relative_performance("Too few trials",
                                               counted_spinner{1ms},
                                               counted_spinner{8ms},
-                                              {.prediction{parameters.prediction}, .minimum_trials{9}});
+                                              {.prediction{parameters.prediction}, .minimum_trials{too_few_trials}});
           }
         );
 
@@ -449,7 +451,8 @@ namespace sequoia::testing
     /** Makes a performance check, and two more, each within a check of an
         exception:
         -# A speed-up of 8 passes at once.
-        -# A check of nine trials is refused, which is the exception expected.
+        -# A check of too few trials is refused, which is the exception
+           expected.
         -# A speed-up of 0.25 never passes; a check, then the exception
            expected, follow.
      */
@@ -473,12 +476,12 @@ namespace sequoia::testing
         check_relative_performance("A speed-up of 8", counted_spinner{1ms}, counted_spinner{8ms}, parameters);
 
         check_exception_thrown<std::invalid_argument>(
-          "Nine trials are refused",
+          "Too few trials are refused",
           [this, &parameters]() {
-            return check_relative_performance("Nine trials",
+            return check_relative_performance("Too few trials",
                                               counted_spinner{1ms},
                                               counted_spinner{8ms},
-                                              {.prediction{parameters.prediction}, .minimum_trials{9}});
+                                              {.prediction{parameters.prediction}, .minimum_trials{too_few_trials}});
           }
         );
 
@@ -496,7 +499,8 @@ namespace sequoia::testing
     /** In false-positive mode, makes a performance check, and another within
         a check of an exception:
         -# A speed-up of 8 passes at once.
-        -# A check of nine trials is refused, which is the exception expected.
+        -# A check of too few trials is refused, which is the exception
+           expected.
      */
     class performance_checks_within_other_checks_false_positive_test final : public performance_false_positive_test
     {
@@ -518,12 +522,12 @@ namespace sequoia::testing
         check_relative_performance("A speed-up of 8", counted_spinner{1ms}, counted_spinner{8ms}, parameters);
 
         check_exception_thrown<std::invalid_argument>(
-          "Nine trials are refused",
+          "Too few trials are refused",
           [this, &parameters]() {
-            return check_relative_performance("Nine trials",
+            return check_relative_performance("Too few trials",
                                               counted_spinner{1ms},
                                               counted_spinner{8ms},
-                                              {.prediction{parameters.prediction}, .minimum_trials{9}});
+                                              {.prediction{parameters.prediction}, .minimum_trials{too_few_trials}});
           }
         );
       }
@@ -532,7 +536,7 @@ namespace sequoia::testing
     /** In false-negative mode, makes a performance check, and another within
         a check of an exception, each meant to fail:
         -# A speed-up of 1 fails its first attempt.
-        -# A check of nine trials is refused, which is not the exception
+        -# A check of too few trials is refused, which is not the exception
            expected.
      */
     class performance_checks_within_other_checks_false_negative_test final : public performance_false_negative_test
@@ -555,12 +559,12 @@ namespace sequoia::testing
         check_relative_performance("A speed-up of 1", counted_spinner{1ms}, counted_spinner{1ms}, parameters);
 
         check_exception_thrown<std::runtime_error>(
-          "Nine trials are refused, but not with the exception expected",
+          "Too few trials are refused, but not with the exception expected",
           [this, &parameters]() {
-            return check_relative_performance("Nine trials",
+            return check_relative_performance("Too few trials",
                                               counted_spinner{1ms},
                                               counted_spinner{8ms},
-                                              {.prediction{parameters.prediction}, .minimum_trials{9}});
+                                              {.prediction{parameters.prediction}, .minimum_trials{too_few_trials}});
           }
         );
       }
