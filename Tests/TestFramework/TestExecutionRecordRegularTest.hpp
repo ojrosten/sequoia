@@ -35,6 +35,8 @@ namespace sequoia::testing
 
     void test_refusals();
 
+    void test_reading_files();
+
     void test_refusals_of_files();
   };
 }

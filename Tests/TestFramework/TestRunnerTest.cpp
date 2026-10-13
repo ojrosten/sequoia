@@ -923,8 +923,9 @@ namespace sequoia::testing
         const test_execution_record_path record{source_file(), name(), get_project_paths()};
         if(check("While a test executes, its record exists", fs::exists(record.file_path())))
         {
-          check("While a test executes, its record has no completion",
-                !read_test_execution_record(record.file_path()).completion.has_value());
+          const auto records{read_test_execution_records(record.file_path())};
+          check("While a test executes, its last record has no completion",
+                !records.empty() && !records.back().completion.has_value());
         }
 
         check("While a test executes, the run's stamp already exists",
@@ -932,18 +933,29 @@ namespace sequoia::testing
       }
     };
 
-    /** The return code, test record and stamp of a run of one test */
+    /** Whether each of `records` has a completion, in the order of the records */
+    [[nodiscard]]
+    std::vector<bool> completions_of(const std::vector<test_execution_record>& records)
+    {
+      auto hasCompletion{[](const test_execution_record& record) { return record.completion.has_value(); }};
+
+      return records | std::views::transform(hasCompletion) | std::ranges::to<std::vector>();
+    }
+
+    /** The return code, test records and stamp of a run of one test */
     struct recorded_run
     {
       return_code                            code{};
       test_execution_record::start_time_type moment_before_run{};
-      test_execution_record                  test_record{};
+      std::vector<test_execution_record>     test_records{};
       run_stamp                              stamp{};
 
       [[nodiscard]]
       bool is_stamp_between_call_and_test() const noexcept
       {
-        return (moment_before_run <= stamp.start_time) && (stamp.start_time <= test_record.start_time);
+        return !test_records.empty()
+            && (moment_before_run <= stamp.start_time)
+            && (stamp.start_time <= test_records.front().start_time);
       }
     };
 
@@ -986,6 +998,8 @@ namespace sequoia::testing
     test_serial_verbose_output();
     test_throwing_tests();
     test_execution_records();
+    test_execution_records_of_repetitions();
+    test_execution_records_of_successive_runs();
     test_summary_collision_with_an_unselected_test();
     test_discriminated_summary();
     test_filtered_suites();
@@ -1617,7 +1631,7 @@ namespace sequoia::testing
         return recorded_run{
           .code{code},
           .moment_before_run{momentBeforeRun},
-          .test_record{read_test_execution_record(testRecordPath.file_path())},
+          .test_records{read_test_execution_records(testRecordPath.file_path())},
           .stamp{read_run_stamp(projPaths.execution_records().stamp())}
         };
       }
@@ -1636,14 +1650,83 @@ namespace sequoia::testing
           throwing.code,
           return_code::critical_failures);
 
-    check("The record of a test which passed has a completion",     passing.test_record.completion.has_value());
-    check("The record of a test whose body threw has a completion", throwing.test_record.completion.has_value());
+    check(equality,
+          "A test which passed is recorded as it starts, and again, with a completion, as it finishes",
+          completions_of(passing.test_records),
+          std::vector{false, true});
+
+    check(equality,
+          "A test whose body threw is recorded as it starts, and again, with a completion, as it finishes",
+          completions_of(throwing.test_records),
+          std::vector{false, true});
 
     check("The stamp's start time lies between the call to execute and the start time of a test which passed",
           passing.is_stamp_between_call_and_test());
 
     check("The stamp's start time lies between the call to execute and the start time of a test whose body threw",
           throwing.is_stamp_between_call_and_test());
+  }
+
+  /** Under `locate-instabilities`, each repetition appends its test's records to those of the repetitions before it.
+      The records directory is removed first, so that only this run can have written records.
+   */
+  void test_runner_test::test_execution_records_of_repetitions()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{minimal_fake_path().generic_string(), "locate", "2"}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+    const auto& projPaths{runner.proj_paths()};
+    fs::remove_all(projPaths.execution_records().dir());
+    runner.register_test<passing_test>();
+
+    check(equality, "Two repetitions of a passing test return code", runner.execute(), return_code::success);
+
+    const test_execution_record_path record{passing_test::source_file(), test_name<passing_test>(), projPaths};
+    check(equality,
+          "Each repetition of a test is recorded as it starts, and again, with a completion, as it finishes",
+          completions_of(read_test_execution_records(record.file_path())),
+          std::vector{false, true, false, true});
+  }
+
+  /** A run empties the execution records of each test it runs before appending its own, and leaves those of a test it
+      does not run as they were. Both tests are given an unfinished record from an earlier run. The run selects
+      `passing_test` alone, so `failing_test` is registered but not run.
+   */
+  void test_runner_test::test_execution_records_of_successive_runs()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{minimal_fake_path().generic_string(),
+                                "select",
+                                passing_test::source_file().generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+    const auto& projPaths{runner.proj_paths()};
+    const test_execution_record_path
+      runRecord{passing_test::source_file(), test_name<passing_test>(), projPaths},
+      unrunRecord{failing_test::source_file(), test_name<failing_test>(), projPaths};
+
+    const auto earlierRecord{to_string(test_execution_record{})};
+    for(const auto& record : {runRecord, unrunRecord})
+    {
+      fs::create_directories(record.file_path().parent_path());
+      write_to_file(record.file_path(), earlierRecord, std::ios_base::binary);
+    }
+
+    runner.register_test<passing_test>();
+    runner.register_test<failing_test>();
+
+    check(equality, "A run of the selected test return code", runner.execute(), return_code::success);
+
+    check(equality,
+          "A run replaces an earlier run's execution records of a test it runs with its own",
+          completions_of(read_test_execution_records(runRecord.file_path())),
+          std::vector{false, true});
+
+    check(equality,
+          "A run leaves the execution records of a test it does not run as they were",
+          read_to_string(unrunRecord.file_path(), std::ios_base::binary).value_or(""),
+          earlierRecord);
   }
 
   /** `summary_collider_test_twin` is selected and `summary_collider_test` is
@@ -2573,6 +2656,11 @@ namespace sequoia::testing
       place, and leaves the analysis of every sandbox's records to the run
       which launched them all. The launching side is the subject of
       `test_instability_analysis_in_sandboxes_from_a_path_with_a_space`.
+
+      The run which launched the sandboxes empties each test's execution
+      records as it begins, so a sandbox appends its test's execution records
+      to those of the sandboxes before it. The fake records of an earlier
+      sandbox stand for those.
    */
   void test_runner_test::test_sandboxed_repetition()
   {
@@ -2600,9 +2688,26 @@ namespace sequoia::testing
     // The run which launches the sandboxes prepares this folder first
     setup_instability_analysis_prune_folder(runner.proj_paths());
 
+    const test_execution_record_path
+      executionRecord{passing_test::source_file(), test_name<passing_test>(), runner.proj_paths()};
+
+    const std::vector<test_execution_record>
+      earlierSandboxRecords{{}, {.completion{test_execution_completion{}}}};
+
+    fs::create_directories(executionRecord.file_path().parent_path());
+    write_to_file(executionRecord.file_path(),
+                  to_string(earlierSandboxRecords.front()) + to_string(earlierSandboxRecords.back()),
+                  std::ios_base::binary);
+
     check(equality, "Sandboxed repetition return code", runner.execute(), return_code::success);
     check_output("Sandboxed Repetition Output", "SandboxedRepetitionOutput", outputStream);
     check("The sandbox writes its records under its id", fs::exists(recordOf(1)));
+
+    const auto executionRecords{read_test_execution_records(executionRecord.file_path())};
+    check(equality,
+          "The sandbox appends its test's execution records to those of an earlier sandbox",
+          completions_of(executionRecords),
+          std::vector{false, true, false, true});
     check(equality,
           "The sandbox leaves another sandbox's records in place",
           read_to_string(recordOf(0), std::ios_base::in).value_or(""),
@@ -2666,13 +2771,14 @@ namespace sequoia::testing
     const test_execution_record_path
       record{stray_materials_free_test::source_file(), test_name<stray_materials_free_test>(), runner.proj_paths()};
 
-    const auto completion{read_test_execution_record(record.file_path()).completion};
-    if(check("The record of a test whose materials could not be prepared has a completion", completion.has_value()))
+    const auto records{read_test_execution_records(record.file_path())};
+    if(check("The last record of a test whose materials could not be prepared has a completion",
+             !records.empty() && records.back().completion.has_value()))
     {
       check(equality,
             "A test whose materials could not be prepared has an execution duration of zero: "
             "preparing them is overhead",
-            completion->execution_duration,
+            records.back().completion->execution_duration,
             std::chrono::microseconds{});
     }
   }

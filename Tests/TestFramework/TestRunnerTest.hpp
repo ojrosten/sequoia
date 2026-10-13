@@ -59,6 +59,10 @@ namespace sequoia::testing
 
     void test_execution_records();
 
+    void test_execution_records_of_repetitions();
+
+    void test_execution_records_of_successive_runs();
+
     void test_summary_collision_with_an_unselected_test();
 
     void test_discriminated_summary();

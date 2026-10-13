@@ -11,8 +11,11 @@
 
 #include <format>
 #include <optional>
+#include <ranges>
 #include <sstream>
+#include <string>
 #include <utility>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -56,6 +59,7 @@ namespace sequoia::testing
     test_what_follows();
     test_written_format();
     test_refusals();
+    test_reading_files();
     test_refusals_of_files();
   }
 
@@ -259,22 +263,55 @@ namespace sequoia::testing
     check(equality, "A refused read leaves the record as it was", readInto, finished_record());
   }
 
+  /** `Repetitions.txt` holds the records of two executions of a test, as the runner appends them: each execution's
+      record with no completion, then the same record with one.
+   */
+  void test_execution_record_regular_test::test_reading_files()
+  {
+    check(equality,
+          "An empty file holds no records",
+          read_test_execution_records(working_materials() / "Empty.txt"),
+          std::vector<test_execution_record>{});
+
+    using namespace std::chrono_literals;
+    const auto laterStart{unfinished_record().start_time + 2s};
+    const std::vector<test_execution_record> records{
+      unfinished_record(),
+      finished_record(),
+      {.start_time{laterStart}},
+      {.start_time{laterStart}, .completion{finished_record().completion}}
+    };
+
+    const auto recordsFile{working_materials() / "Repetitions.txt"};
+    write_to_file(recordsFile,
+                  records | std::views::transform([](const auto& record) { return to_string(record); })
+                          | std::views::join
+                          | std::ranges::to<std::string>(),
+                  std::ios_base::binary);
+
+    check(equivalence,
+          "The text of a file of the records of two executions",
+          recordsFile,
+          predictive_materials() / "Repetitions.txt");
+
+    check(equality,
+          "A file of records reads back as every record, in the order written",
+          read_test_execution_records(recordsFile),
+          records);
+  }
+
   void test_execution_record_regular_test::test_refusals_of_files()
   {
     check_exception_thrown<std::runtime_error>(
       "A file which does not exist",
-      [this]() { return read_test_execution_record(working_materials() / "Missing.txt"); });
-
-    check_exception_thrown<std::runtime_error>(
-      "An empty file",
-      [this]() { return read_test_execution_record(working_materials() / "Empty.txt"); });
+      [this]() { return read_test_execution_records(working_materials() / "Missing.txt"); });
 
     check_exception_thrown<std::runtime_error>(
       "A file whose text is not a record",
-      [this]() { return read_test_execution_record(working_materials() / "Malformed.txt"); });
+      [this]() { return read_test_execution_records(working_materials() / "Malformed.txt"); });
 
     check_exception_thrown<std::runtime_error>(
-      "A file with a line after the record",
-      [this]() { return read_test_execution_record(working_materials() / "Followed.txt"); });
+      "A file with a line after a record which begins no record",
+      [this]() { return read_test_execution_records(working_materials() / "Followed.txt"); });
   }
 }
