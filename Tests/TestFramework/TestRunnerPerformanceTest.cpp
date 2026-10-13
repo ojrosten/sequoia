@@ -555,7 +555,7 @@ namespace sequoia::testing
         check_relative_performance("A speed-up of 1", counted_spinner{1ms}, counted_spinner{1ms}, parameters);
 
         check_exception_thrown<std::runtime_error>(
-          "Nine trials are refused, with another exception",
+          "Nine trials are refused, but not with the exception expected",
           [this, &parameters]() {
             return check_relative_performance("Nine trials",
                                               counted_spinner{1ms},
@@ -880,7 +880,7 @@ namespace sequoia::testing
     writeSummary(test_name<false_negative_test>(), get_summary_with_zeroed_measurements<false_negative_test>(runner));
 
     check(equivalence,
-          "A performance check within another check counts towards the other",
+          "A performance check within another check is counted as part of the other",
           outputDir,
           predictive_materials() /= "PerformanceChecksWithinOtherChecks");
   }
