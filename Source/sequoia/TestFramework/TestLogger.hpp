@@ -24,7 +24,6 @@
 #include "sequoia/TestFramework/Output.hpp"
 #include "sequoia/TestFramework/TestMode.hpp"
 
-#include <algorithm>
 #include <chrono>
 #include <filesystem>
 #include <optional>
@@ -139,7 +138,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool within_performance_check() const noexcept
     {
-      return std::ranges::any_of(m_SentinelLevels, &sentinel_level::is_performance_check);
+      return !m_SentinelLevels.empty() && m_SentinelLevels.back().is_performance_check;
     }
 
     [[nodiscard]]
