@@ -639,7 +639,7 @@ namespace sequoia::testing
     test_serial_execution();
     test_runner_overhead_reported_apart();
     test_execution_duration_of_busiest_thread();
-    test_execution_records_of_performance_checks();
+    test_recording_of_performance_check_attempts();
     test_summary_of_performance_checks_within_other_checks();
   }
 
@@ -808,7 +808,7 @@ namespace sequoia::testing
       for either. `performance_test_without_performance_checks` is the
       control: a performance test whose record gives no attempts.
    */
-  void test_runner_performance_test::test_execution_records_of_performance_checks()
+  void test_runner_performance_test::test_recording_of_performance_check_attempts()
   {
     std::stringstream outputStream{};
     commandline_arguments args{{minimal_fake_path().generic_string()}};
