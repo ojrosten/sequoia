@@ -193,13 +193,13 @@ namespace sequoia::testing
     recored_critical_failure(m_Recovery.recovery_file, message);
   }
 
-  std::size_t test_logger_base::log_performance_check(std::size_t level)
+  std::size_t test_logger_base::log_performance_check()
   {
-    if(level >= m_SentinelLevels.size())
-      throw std::logic_error{"Cannot log a performance check absent from TestLogger's stack"};
+    if(m_SentinelLevels.empty())
+      throw std::logic_error{"Cannot log a performance check outside a sentinel"};
 
-    m_SentinelLevels[level].is_performance_check = true;
-    if(!level)
+    m_SentinelLevels.back().is_performance_check = true;
+    if(top_level_is_performance_check())
       ++m_Results.top_level_performance_checks;
 
     m_Results.attempts_per_performance_check.emplace_back();

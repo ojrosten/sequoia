@@ -142,7 +142,13 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::size_t log_performance_check(std::size_t level);
+    bool top_level_is_performance_check() const noexcept
+    {
+      return !m_SentinelLevels.empty() && m_SentinelLevels.front().is_performance_check;
+    }
+
+    [[nodiscard]]
+    std::size_t log_performance_check();
 
     void log_performance_check_attempts(std::size_t checkIndex, std::size_t attempts)
     {
@@ -157,9 +163,9 @@ namespace sequoia::testing
       failure_message(mode, message, is_critical::no);
     }
 
-    void log_performance_failure(test_mode mode, std::size_t level, std::string_view message)
+    void log_performance_failure(test_mode mode, std::string_view message)
     {
-      if(!level)
+      if(top_level_is_performance_check())
         ++m_Results.top_level_performance_failures;
 
       log_failure(mode, message);
@@ -220,7 +226,7 @@ namespace sequoia::testing
     sentinel_base& operator=(const sentinel_base&) = delete;
 
     [[nodiscard]]
-    std::size_t log_performance_check() { return get().log_performance_check(m_Level); }
+    std::size_t log_performance_check() { return get().log_performance_check(); }
 
     void log_performance_check_attempts(std::size_t checkIndex, std::size_t attempts)
     {
@@ -231,7 +237,7 @@ namespace sequoia::testing
 
     void log_failure(std::string_view message) { get().log_failure(m_Mode, message); }
 
-    void log_performance_failure(std::string_view message) { get().log_performance_failure(m_Mode, m_Level, message); }
+    void log_performance_failure(std::string_view message) { get().log_performance_failure(m_Mode, message); }
 
     void log_critical_failure(std::string_view message) { get().log_critical_failure(m_Mode, message); }
 
