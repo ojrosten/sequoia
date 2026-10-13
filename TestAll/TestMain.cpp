@@ -248,6 +248,8 @@ int main(int argc, char** argv)
     runner.register_test<performance_retry_test>();
     runner.register_test<performance_exceptions_test>();
     runner.register_test<numbers_free_test>();
+    runner.register_test<execution_record_false_negative_test>();
+    runner.register_test<execution_record_regular_test>();
     code = runner.execute();
   }
   catch(const std::exception& e)

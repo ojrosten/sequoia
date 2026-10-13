@@ -12,6 +12,7 @@
 */
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+#include "sequoia/TestFramework/ExecutionRecord.hpp"
 #include "sequoia/TestFramework/FailureReporting.hpp"
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
@@ -510,7 +511,7 @@ namespace sequoia::testing
       ~scoped_execution_record();
     private:
       std::filesystem::path m_File{};
-      std::chrono::system_clock::time_point m_Start{};
+      execution_record m_Record{};
       const execution_timer& m_ExecutionTimer;
       const test_vessel& m_Vessel;
     };

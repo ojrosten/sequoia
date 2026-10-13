@@ -165,6 +165,8 @@
 #include "TestFramework/DumpComparisonFreeTest.hpp"
 #include "TestFramework/ElementaryFreeDiagnostics.hpp"
 #include "TestFramework/ExceptionsFreeDiagnostics.hpp"
+#include "TestFramework/ExecutionRecordRegularTest.hpp"
+#include "TestFramework/ExecutionRecordTestingDiagnostics.hpp"
 #include "TestFramework/FailureInfoTest.hpp"
 #include "TestFramework/FailureInfoTestingDiagnostics.hpp"
 #include "TestFramework/FailureReportingFreeTest.hpp"

@@ -13,8 +13,7 @@
 
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
-
-#include <fstream>
+#include "sequoia/TestFramework/ExecutionRecord.hpp"
 
 namespace sequoia::testing
 {
@@ -907,45 +906,6 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
-    /// The time a record or the run's stamp names after `started`; the times sort as their text does
-    [[nodiscard]]
-    std::string start_named_by(const fs::path& file)
-    {
-      std::ifstream stream{file};
-      std::string word{}, start{};
-      stream >> word >> start;
-
-      return start;
-    }
-
-    /// The label of each line of a test's execution record: the text before the line's last space
-    [[nodiscard]]
-    std::vector<std::string> execution_record_labels(const fs::path& record)
-    {
-      std::vector<std::string> labels{};
-      std::ifstream file{record};
-      for(std::string line{}; std::getline(file, line);)
-      {
-        labels.push_back(line.substr(0, line.rfind(' ')));
-      }
-
-      return labels;
-    }
-
-    /// The value of the line of a test's execution record labelled `label`, or nothing if there is no such line
-    [[nodiscard]]
-    std::string execution_record_value(const fs::path& record, std::string_view label)
-    {
-      std::ifstream file{record};
-      for(std::string line{}; std::getline(file, line);)
-      {
-        if(line.starts_with(label) && (line.size() > label.size()) && (line[label.size()] == ' '))
-          return line.substr(label.size() + 1);
-      }
-
-      return "";
-    }
-
     /// Checks its own execution record while it executes
     class record_reading_free_test final : public free_test
     {
@@ -961,13 +921,28 @@ namespace sequoia::testing
       void run_tests()
       {
         const test_execution_record_path record{source_file(), name(), get_project_paths()};
-        check(equality,
-              "While a test executes, its record names its start and no execution duration",
-              execution_record_labels(record.file_path()),
-              std::vector<std::string>{"started"});
+        if(check("While a test executes, its record exists", fs::exists(record.file_path())))
+        {
+          check("While a test executes, its record has no completion",
+                !read_execution_record(record.file_path()).completion.has_value());
+        }
 
         check("While a test executes, the run's stamp already exists",
               fs::exists(get_project_paths().execution_records().stamp()));
+      }
+    };
+
+    /// The records a run of one test leaves, and the time just before the run was called
+    struct recorded_run
+    {
+      return_code code{};
+      execution_record::start_type time_before_run{};
+      execution_record test_record{}, run_record{};
+
+      [[nodiscard]]
+      bool stamp_in_order() const noexcept
+      {
+        return (time_before_run <= run_record.start) && (run_record.start <= test_record.start);
       }
     };
 
@@ -1612,48 +1587,62 @@ namespace sequoia::testing
 
   /** The fake tests tell the mechanism from its rivals: `record_reading_free_test` sees its record while it executes,
       which a start written only at the end would not produce; `escaping_exception_free_test` throws, which an
-      execution duration written only on normal completion would miss. The records directory is removed first, so that
-      only this run can have written the stamp.
+      execution duration written only on normal completion would miss. Each fake test runs alone, so that a run's
+      return code is its test's alone. Each run removes the records directory first, so that only that run can have
+      written the stamp.
    */
   void test_runner_test::test_execution_records()
   {
-    std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runAlone{
+      [this]<concrete_test Test>(std::type_identity<Test>) {
+        std::stringstream outputStream{};
+        commandline_arguments args{{minimal_fake_path().generic_string()}};
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
 
-    const auto& projPaths{runner.proj_paths()};
-    fs::remove_all(projPaths.execution_records().dir());
+        const auto& projPaths{runner.proj_paths()};
+        fs::remove_all(projPaths.execution_records().dir());
+        runner.register_test<Test>();
 
-    runner.register_test<record_reading_free_test>();
-    runner.register_test<escaping_exception_free_test>();
+        const auto timeBeforeRun{std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now())};
+        const auto code{runner.execute()};
+        const test_execution_record_path testRecordPath{Test::source_file(), test_name<Test>(), projPaths};
 
-    check(equality, "Execution records return code", runner.execute(), return_code::critical_failures);
+        return recorded_run{
+          .code{code},
+          .time_before_run{timeBeforeRun},
+          .test_record{read_execution_record(testRecordPath.file_path())},
+          .run_record{read_execution_record(projPaths.execution_records().stamp())}
+        };
+      }
+    };
 
-    const test_execution_record_path
-      passingRecord{record_reading_free_test::source_file(),     test_name<record_reading_free_test>(),     projPaths},
-      throwingRecord{escaping_exception_free_test::source_file(), test_name<escaping_exception_free_test>(), projPaths};
+    const auto passing {runAlone(std::type_identity<record_reading_free_test>{})},
+               throwing{runAlone(std::type_identity<escaping_exception_free_test>{})};
 
-    const std::vector<std::string> finishedRecordLabels{"started", "execution duration", "runner overhead"};
     check(equality,
-          "The record of a test which passed names its start, its execution duration and the runner's overhead",
-          execution_record_labels(passingRecord.file_path()),
-          finishedRecordLabels);
+          "A run of a test which reads its own record succeeds",
+          passing.code,
+          return_code::success);
 
     check(equality,
-          "The record of a test whose body threw names its start, its execution duration and the runner's overhead",
-          execution_record_labels(throwingRecord.file_path()),
-          finishedRecordLabels);
+          "A run of a test whose body throws fails critically",
+          throwing.code,
+          return_code::critical_failures);
 
-    const auto runStart{start_named_by(projPaths.execution_records().stamp())};
-    check("The run's stamp names a start", !runStart.empty());
-    const bool runStartedFirst{   (runStart <= start_named_by(passingRecord.file_path()))
-                               && (runStart <= start_named_by(throwingRecord.file_path()))};
-    check("The run started no later than either test", runStartedFirst);
+    check("The record of a test which passed has a completion",     passing.test_record.completion.has_value());
+    check("The record of a test whose body threw has a completion", throwing.test_record.completion.has_value());
+
+    check("The stamp of the run of a test which passed is written between the run's call and the test's start",
+          passing.stamp_in_order());
+
+    check("The stamp of the run of a test whose body threw is written between the run's call and the test's start",
+          throwing.stamp_in_order());
   }
 
   /** `summary_collider_test_twin` is selected and `summary_collider_test` is
@@ -2676,10 +2665,15 @@ namespace sequoia::testing
     const test_execution_record_path
       record{stray_materials_free_test::source_file(), test_name<stray_materials_free_test>(), runner.proj_paths()};
 
-    check(equality,
-          "A test whose materials could not be prepared has an execution duration of zero: preparing them is overhead",
-          execution_record_value(record.file_path(), "execution duration"),
-          std::string{"0us"});
+    const auto completion{read_execution_record(record.file_path()).completion};
+    if(check("The record of a test whose materials could not be prepared has a completion", completion.has_value()))
+    {
+      check(equality,
+            "A test whose materials could not be prepared has an execution duration of zero: "
+            "preparing them is overhead",
+            completion->execution_duration,
+            std::chrono::microseconds{});
+    }
   }
 
   namespace

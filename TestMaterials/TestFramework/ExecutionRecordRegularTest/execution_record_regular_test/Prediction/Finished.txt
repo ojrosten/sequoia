@@ -1,0 +1,6 @@
+started 2026-10-13T09:15:04.123Z
+execution duration 1500us
+runner overhead 250us
+performance check attempts 2
+performance check attempts 1
+performance check attempts 3

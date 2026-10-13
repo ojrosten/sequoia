@@ -1,0 +1,135 @@
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 175
+A first line which does not give the start
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a line beginning 'started ' but found 'begun 2026-10-13T09:15:04.123Z'
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 179
+A start in a layout other than the one written
+
+Expected Exception Type:
+[std::runtime_error]
+'2026-10-13 09:15:04.123Z' is not a start
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 183
+A start with a month out of range
+
+Expected Exception Type:
+[std::runtime_error]
+'2026-13-13T09:15:04.123Z' is not a start
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 187
+A start without its milliseconds
+
+Expected Exception Type:
+[std::runtime_error]
+'2026-10-13T09:15:04Z' is not a start
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 191
+A start with an hour out of range
+
+Expected Exception Type:
+[std::runtime_error]
+'2026-10-13T2147483000:00:00.000Z' is not a start
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 195
+A completion which does not begin with the execution duration
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a line beginning 'execution duration ' but found 'runner overhead 250us'
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 199
+An execution duration in a unit other than microseconds
+
+Expected Exception Type:
+[std::runtime_error]
+'2ms' is not a duration in microseconds
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 203
+An execution duration with a leading zero
+
+Expected Exception Type:
+[std::runtime_error]
+'01500us' is not a duration in microseconds
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 207
+A completion with no runner overhead
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a line beginning 'runner overhead ' but there are no more lines
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 211
+A number of attempts which is not a number
+
+Expected Exception Type:
+[std::runtime_error]
+'two' is not a number of attempts
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 215
+A number of attempts with a leading zero
+
+Expected Exception Type:
+[std::runtime_error]
+'02' is not a number of attempts
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 219
+A line after the timings which does not give attempts
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a line beginning 'performance check attempts ' but found 'foo'
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 226
+A file which does not exist
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to open file output/TestsTemporaryData/TestFramework/ExecutionRecordRegularTest/execution_record_regular_test/WorkingCopy/Missing.txt for reading
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 230
+An empty file
+
+Expected Exception Type:
+[std::runtime_error]
+No execution record in output/TestsTemporaryData/TestFramework/ExecutionRecordRegularTest/execution_record_regular_test/WorkingCopy/Empty.txt
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 234
+A file whose text is not a record
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read the execution record in output/TestsTemporaryData/TestFramework/ExecutionRecordRegularTest/execution_record_regular_test/WorkingCopy/Malformed.txt: 'yesterday' is not a start
+
+=======================================
+

@@ -19,6 +19,7 @@ set(SourceList
     TestFramework/ConcreteTypeCheckers.cpp
     TestFramework/DependencyAnalyzer.cpp
     TestFramework/DumpComparison.cpp
+    TestFramework/ExecutionRecord.cpp
     TestFramework/FailureInfo.cpp
     TestFramework/FailureReporting.cpp
     TestFramework/FileEditors.cpp

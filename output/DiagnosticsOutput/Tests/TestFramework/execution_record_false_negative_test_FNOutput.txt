@@ -1,0 +1,103 @@
+Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 30
+Starts differ
+
+[sequoia::testing::execution_record]
+operator== returned false
+
+  Start
+  [std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<long long, std::ratio<1, 1000> > >]
+  operator== returned false
+  Obtained : 1970-01-01 00:00:00.000
+  Predicted: 1970-01-01 00:00:00.001
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 31
+Only one record has a completion
+
+[sequoia::testing::execution_record]
+operator== returned false
+
+  Completion
+  [std::optional<sequoia::testing::execution_completion>]
+  operator== returned false
+
+    Obtained : null
+    Predicted: not null
+    [bool]
+    operator== returned false
+    Obtained : false
+    Predicted: true
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 32
+Execution durations differ
+
+[sequoia::testing::execution_record]
+operator== returned false
+
+  Completion
+  [std::optional<sequoia::testing::execution_completion>]
+  operator== returned false
+
+    Contents of optional
+    [sequoia::testing::execution_completion]
+    operator== returned false
+
+      Execution duration, in microseconds
+      [long long]
+      operator== returned false
+      Obtained : 2
+      Predicted: 3
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 33
+Runner overheads differ
+
+[sequoia::testing::execution_record]
+operator== returned false
+
+  Completion
+  [std::optional<sequoia::testing::execution_completion>]
+  operator== returned false
+
+    Contents of optional
+    [sequoia::testing::execution_completion]
+    operator== returned false
+
+      Runner overhead, in microseconds
+      [long long]
+      operator== returned false
+      Obtained : 1
+      Predicted: 3
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordTestingDiagnostics.cpp, Line 34
+Performance check attempts differ
+
+[sequoia::testing::execution_record]
+operator== returned false
+
+  Completion
+  [std::optional<sequoia::testing::execution_completion>]
+  operator== returned false
+
+    Contents of optional
+    [sequoia::testing::execution_completion]
+    operator== returned false
+
+      Performance check attempts
+      [std::vector<unsigned long long, std::allocator<unsigned long long> >]
+      operator== returned false
+
+        Container size wrong
+        [unsigned long long]
+        operator== returned false
+        Obtained : 1
+        Predicted: 2
+
+=======================================
+

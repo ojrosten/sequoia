@@ -48,28 +48,22 @@ namespace sequoia::testing
     const auto entry_time_stamp{std::chrono::file_clock::now()};
 
     [[nodiscard]]
-    std::string started_at(std::chrono::system_clock::time_point start)
+    execution_record::start_type current_time_to_the_millisecond()
     {
-      return std::format("started {:%FT%TZ}\n", std::chrono::floor<std::chrono::milliseconds>(start));
+      return std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now());
     }
 
     [[nodiscard]]
-    std::string record_entries_for(std::span<const std::optional<std::size_t>> attemptsPerCheck)
+    std::vector<std::size_t> finished_attempts(std::span<const std::optional<std::size_t>> attemptsPerCheck)
     {
       auto attemptsFinished{[](const std::optional<std::size_t>& attempts) { return attempts.has_value(); }};
-
-      auto asRecorded{
-        [](const std::optional<std::size_t>& attempts) {
-          return std::format("performance check attempts {}\n", attempts.value());
-        }
-      };
+      auto attemptsMade{[](const std::optional<std::size_t>& attempts) { return attempts.value(); }};
 
       return
           attemptsPerCheck
         | std::views::filter(attemptsFinished)
-        | std::views::transform(asRecorded)
-        | std::views::join
-        | std::ranges::to<std::string>();
+        | std::views::transform(attemptsMade)
+        | std::ranges::to<std::vector>();
     }
 
     /** \brief How long a sleep of `target` typically lasts on this machine. */
@@ -946,22 +940,23 @@ namespace sequoia::testing
                                                                 const execution_timer& executionTimer,
                                                                 const test_vessel& vessel)
     : m_File{std::move(file)}
-    , m_Start{std::chrono::system_clock::now()}
+    , m_Record{.start{current_time_to_the_millisecond()}}
     , m_ExecutionTimer{executionTimer}
     , m_Vessel{vessel}
   {
-    overwrite_quietly(m_File, started_at(m_Start));
+    overwrite_quietly(m_File, to_string(m_Record));
   }
 
   test_to_run::scoped_execution_record::~scoped_execution_record()
   {
     using std::chrono::microseconds, std::chrono::duration_cast;
-    overwrite_quietly(m_File,
-                      std::format("{}execution duration {}us\nrunner overhead {}us\n{}",
-                                  started_at(m_Start),
-                                  duration_cast<microseconds>(m_ExecutionTimer.execution_duration()).count(),
-                                  duration_cast<microseconds>(m_ExecutionTimer.runner_overhead()).count(),
-                                  record_entries_for(m_Vessel.attempts_per_performance_check())));
+    m_Record.completion = execution_completion{
+      .execution_duration{duration_cast<microseconds>(m_ExecutionTimer.execution_duration())},
+      .runner_overhead{duration_cast<microseconds>(m_ExecutionTimer.runner_overhead())},
+      .performance_check_attempts{finished_attempts(m_Vessel.attempts_per_performance_check())}
+    };
+
+    overwrite_quietly(m_File, to_string(m_Record));
   }
 
   [[nodiscard]]
@@ -1618,7 +1613,8 @@ namespace sequoia::testing
     if(m_InstabilityMode != instability_mode::sandbox)
     {
       fs::remove_all(proj_paths().output().instability_analysis());
-      overwrite_quietly(proj_paths().execution_records().stamp(), started_at(std::chrono::system_clock::now()));
+      const execution_record runRecord{.start{current_time_to_the_millisecond()}};
+      overwrite_quietly(proj_paths().execution_records().stamp(), to_string(runRecord));
       check_for_coarse_sleeps();
     }
 

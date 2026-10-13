@@ -438,8 +438,10 @@ namespace sequoia::testing
       return m_Dir;
     }
 
-    /** \brief The file in which each run writes its start; a record whose start precedes the run's is from an
-               earlier run.
+    /** \brief The file in which each run writes the `execution_record` of
+               its start.
+
+        A test's record whose start precedes the run's is from an earlier run.
      */
     [[nodiscard]]
     std::filesystem::path stamp() const;
