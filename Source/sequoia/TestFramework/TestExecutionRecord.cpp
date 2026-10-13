@@ -166,7 +166,7 @@ namespace sequoia::testing
 
     /** Reads the number of entries of attempts, then that many entries. */
     [[nodiscard]]
-    std::vector<std::size_t> read_attempts(std::istream& s)
+    std::vector<std::size_t> read_attempt_counts(std::istream& s)
     {
       const auto entries{read_entry(s, "a number of entries of attempts", extractor_for_entries_of_attempts)};
       auto nextNumberOfAttempts{[&s]() { return read_entry(s, "a number of attempts", extractor_for_attempts); }};
@@ -183,12 +183,12 @@ namespace sequoia::testing
       return {
         .execution_duration{read_entry(s, "an execution duration", extractor_for_execution_duration)},
         .runner_overhead{read_entry(s, "a runner overhead", extractor_for_runner_overhead)},
-        .performance_check_attempts{read_attempts(s)}
+        .performance_check_attempts{read_attempt_counts(s)}
       };
     }
 
     [[nodiscard]]
-    std::optional<test_execution_completion> read_completion(std::istream& s, test_execution_status status)
+    std::optional<test_execution_completion> read_optional_completion(std::istream& s, test_execution_status status)
     {
       if(status == test_execution_status::started)
         return std::nullopt;
@@ -288,7 +288,7 @@ namespace sequoia::testing
 
     const auto start{read_entry(s, "a start time", extractor_for_start_time)};
     const auto status{read_entry(s, "whether the test finished", extractor_for_status)};
-    record = test_execution_record{.start{start}, .completion{read_completion(s, status)}};
+    record = test_execution_record{.start{start}, .completion{read_optional_completion(s, status)}};
     return s;
   }
 
