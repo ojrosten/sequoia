@@ -105,6 +105,21 @@ namespace sequoia::testing
           "operator>> reads back what operator<< writes of a finished record with no performance check attempts",
           readBackFromWritten(finishedWithoutAttempts),
           std::optional{finishedWithoutAttempts});
+
+    using namespace std::chrono;
+    const execution_record
+      firstStart{.start{sys_days{year{0} / 1 / 1}}},
+      lastStart {.start{sys_days{year{32767} / 12 / 31} + days{1} - milliseconds{1}}};
+
+    check(equality,
+          "operator>> reads back what operator<< writes of the first start the format holds",
+          readBackFromWritten(firstStart),
+          std::optional{firstStart});
+
+    check(equality,
+          "operator>> reads back what operator<< writes of the last start the format holds",
+          readBackFromWritten(lastStart),
+          std::optional{lastStart});
   }
 
   void execution_record_regular_test::test_end_of_stream()
@@ -208,6 +223,10 @@ namespace sequoia::testing
       readRecord(startLine + "execution duration 1500us\nrunner overhead -250us\n"));
 
     check_exception_thrown<std::runtime_error>(
+      "A negative runner overhead whose magnitude only an unsigned count can hold",
+      readRecord(startLine + "execution duration 1500us\nrunner overhead -9223372036854775808us\n"));
+
+    check_exception_thrown<std::runtime_error>(
       "A completion with no runner overhead",
       readRecord(startLine + "execution duration 1500us\n"));
 
@@ -222,6 +241,14 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       "A line after the timings which does not give attempts",
       readRecord(startLine + timingLines + "performance check attempts 2\nfoo\n"));
+
+    check_exception_thrown<std::runtime_error>(
+      "A line after the timings which gives a number, but not of attempts",
+      readRecord(startLine + timingLines + "runner overhead 250us\n"));
+
+    check_exception_thrown<std::runtime_error>(
+      "A number of attempts under a label other than the one written",
+      readRecord(startLine + timingLines + "check attempts 2\n"));
   }
 
   void execution_record_regular_test::test_refusals_of_files()

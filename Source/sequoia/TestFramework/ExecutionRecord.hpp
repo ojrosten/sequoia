@@ -41,7 +41,7 @@ namespace sequoia::testing
              once the execution has finished.
 
       `operator>>` reads back what `operator<<` writes, for a start in the
-      years 0 to 9999 and durations which are not negative.
+      years 0 to 32767 and durations which are not negative.
    */
   struct execution_record
   {

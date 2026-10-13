@@ -14,12 +14,15 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Numbers.hpp"
 
+#include <concepts>
 #include <format>
 #include <fstream>
 #include <istream>
 #include <ostream>
 #include <ranges>
 #include <stdexcept>
+#include <type_traits>
+#include <utility>
 
 namespace sequoia::testing
 {
@@ -27,102 +30,120 @@ namespace sequoia::testing
 
   namespace
   {
-    constexpr std::string_view start_key             {"started "},
-                               execution_duration_key{"execution duration "},
-                               runner_overhead_key   {"runner overhead "},
-                               attempts_key          {"performance check attempts "};
-
-    constexpr std::string_view microseconds_unit{"us"};
+    constexpr std::string_view execution_duration_label{"execution duration"},
+                               runner_overhead_label   {"runner overhead"};
 
     [[nodiscard]]
-    std::string entry(std::string_view key, std::string_view value)
+    std::string start_entry(execution_record::start_type start)
     {
-      return std::format("{}{}\n", key, value);
+      return std::format("started {:%FT%TZ}", start);
     }
 
     [[nodiscard]]
-    std::string text_of(execution_record::start_type start)
+    std::string duration_entry(std::string_view label, std::chrono::microseconds duration)
     {
-      return std::format("{:%FT%TZ}", start);
+      return std::format("{} {}us", label, duration.count());
     }
 
     [[nodiscard]]
-    std::string text_of(std::chrono::microseconds duration)
+    std::string attempts_entry(std::size_t attempts)
     {
-      return std::format("{}{}", duration.count(), microseconds_unit);
+      return std::format("performance check attempts {}", attempts);
     }
 
     [[nodiscard]]
-    execution_record::start_type to_start(const std::string& text)
+    std::string lines_of(const execution_completion& completion)
     {
-      // TO DO: std::chrono::parse reads the start, once libc++ provides it
-      using namespace std::chrono;
-      constexpr std::size_t fieldsOfStart{7};
-      if(const auto fields{extract_numbers_from<unsigned, fieldsOfStart>(text)})
-      {
-        const auto [y, mo, d, h, mi, s, ms]{*fields};
-        const year_month_day date{year{static_cast<int>(y)}, month{mo}, day{d}};
+      auto attemptsLine{[](std::size_t attempts) { return std::format("{}\n", attempts_entry(attempts)); }};
 
-        // The ranges are checked before the arithmetic: a large field would
-        // overflow it where a duration's representation is an int
-        if(date.ok() && (h < 24) && (mi < 60) && (s < 60) && (ms < 1000))
-        {
-          const auto start{sys_days{date} + hours{h} + minutes{mi} + seconds{s} + milliseconds{ms}};
-          if(text_of(start) == text)
-            return start;
-        }
-      }
-
-      throw std::runtime_error{std::format("'{}' is not a start", text)};
-    }
-
-    [[nodiscard]]
-    std::chrono::microseconds to_duration(const std::string& text)
-    {
-      if(text.ends_with(microseconds_unit))
-      {
-        const std::string_view count{std::string_view{text}.substr(0, text.size() - microseconds_unit.size())};
-        const std::chrono::microseconds duration{
-          parse_integer<std::chrono::microseconds::rep>(count, "a number of microseconds")
-        };
-
-        if(text_of(duration) == text)
-        {
-          if(duration < std::chrono::microseconds::zero())
-            throw std::runtime_error{std::format("'{}' is a negative duration", text)};
-
-          return duration;
-        }
-      }
-
-      throw std::runtime_error{std::format("'{}' is not a duration in microseconds", text)};
-    }
-
-    [[nodiscard]]
-    std::size_t to_attempts(const std::string& text)
-    {
-      if(const auto attempts{parse_integer<std::size_t>(text, "a number of attempts")}; std::to_string(attempts) == text)
-        return attempts;
-
-      throw std::runtime_error{std::format("'{}' is not a number of attempts", text)};
-    }
-
-    [[nodiscard]]
-    std::string text_of(const execution_completion& completion)
-    {
-      auto attemptsEntry{[](std::size_t attempts) { return entry(attempts_key, std::to_string(attempts)); }};
-
-      const auto attemptsEntries{
+      const auto attemptsLines{
           completion.performance_check_attempts
-        | std::views::transform(attemptsEntry)
+        | std::views::transform(attemptsLine)
         | std::views::join
         | std::ranges::to<std::string>()
       };
 
-      return std::format("{}{}{}",
-                         entry(execution_duration_key, text_of(completion.execution_duration)),
-                         entry(runner_overhead_key,    text_of(completion.runner_overhead)),
-                         attemptsEntries);
+      return std::format("{}\n{}\n{}",
+                         duration_entry(execution_duration_label, completion.execution_duration),
+                         duration_entry(runner_overhead_label,    completion.runner_overhead),
+                         attemptsLines);
+    }
+
+    // Each recognizer returns the value in an entry only if the entry's
+    // writer reprints the entry exactly from the numbers it contains
+    constexpr auto start_in{
+      [](std::string_view entry) -> std::optional<execution_record::start_type> {
+        // TO DO: std::chrono::parse reads the start, once libc++ provides it
+        using namespace std::chrono;
+        constexpr std::size_t fieldsOfStart{7};
+        if(const auto numbers{extract_numbers_from<unsigned, fieldsOfStart>(entry)})
+        {
+          const auto [y, mo, d, h, mi, s, ms]{*numbers};
+          const execution_record::start_type midnight{sys_days{year{static_cast<int>(y)} / month{mo} / day{d}}};
+          const auto start{midnight + hours{h} + minutes{mi} + seconds{s} + milliseconds{ms}};
+
+          if(start_entry(start) == entry)
+            return start;
+        }
+
+        return std::nullopt;
+      }
+    };
+
+    [[nodiscard]]
+    constexpr auto duration_recognizer(std::string_view label)
+    {
+      return [label](std::string_view entry) -> std::optional<std::chrono::microseconds> {
+        using rep = std::chrono::microseconds::rep;
+        if(const auto numbers{extract_numbers_from<std::make_unsigned_t<rep>, 1>(entry)})
+        {
+          const auto [count]{*numbers};
+          if(std::in_range<rep>(count))
+          {
+            const std::chrono::microseconds duration{static_cast<rep>(count)};
+            if(duration_entry(label, duration) == entry)
+              return duration;
+          }
+        }
+
+        return std::nullopt;
+      };
+    }
+
+    constexpr auto execution_duration_in{duration_recognizer(execution_duration_label)},
+                   runner_overhead_in   {duration_recognizer(runner_overhead_label)};
+
+    constexpr auto attempts_in{
+      [](std::string_view entry) -> std::optional<std::size_t> {
+        if(const auto numbers{extract_numbers_from<std::size_t, 1>(entry)})
+        {
+          const auto [attempts]{*numbers};
+          if(attempts_entry(attempts) == entry)
+            return attempts;
+        }
+
+        return std::nullopt;
+      }
+    };
+
+    /** Reads the next line of `s`, and returns the value which `recognize`
+        finds in it.
+
+        \throws std::runtime_error if `s` has no next line, or `recognize`
+                finds no value in it
+     */
+    template<std::invocable<std::string_view> Recognizer>
+    [[nodiscard]]
+    auto read_entry(std::istream& s, std::string_view description, Recognizer recognize)
+    {
+      std::string line{};
+      if(!std::getline(s, line))
+        throw std::runtime_error{std::format("Expected {} but there are no more lines", description)};
+
+      if(const auto value{recognize(line)})
+        return value.value();
+
+      throw std::runtime_error{std::format("Expected {} but found '{}'", description, line)};
     }
 
     [[nodiscard]]
@@ -138,7 +159,7 @@ namespace sequoia::testing
       std::vector<std::size_t> attempts{};
       while(more_to_read(s))
       {
-        attempts.push_back(extract_field(s, attempts_key, to_attempts));
+        attempts.push_back(read_entry(s, "a number of attempts", attempts_in));
       }
 
       return attempts;
@@ -151,8 +172,8 @@ namespace sequoia::testing
         return std::nullopt;
 
       return execution_completion{
-        .execution_duration{extract_field(s, execution_duration_key, to_duration)},
-        .runner_overhead{extract_field(s, runner_overhead_key, to_duration)},
+        .execution_duration{read_entry(s, "an execution duration", execution_duration_in)},
+        .runner_overhead{read_entry(s, "a runner overhead", runner_overhead_in)},
         .performance_check_attempts{read_attempts(s)}
       };
     }
@@ -161,8 +182,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string to_string(const execution_record& record)
   {
-    const auto completionText{record.completion ? text_of(record.completion.value()) : std::string{}};
-    return entry(start_key, text_of(record.start)) + completionText;
+    const auto completionLines{record.completion ? lines_of(record.completion.value()) : std::string{}};
+    return std::format("{}\n{}", start_entry(record.start), completionLines);
   }
 
   std::ostream& operator<<(std::ostream& s, const execution_record& record)
@@ -175,7 +196,7 @@ namespace sequoia::testing
     if(!peek_for_more(s))
       return s;
 
-    record = execution_record{.start{extract_field(s, start_key, to_start)}, .completion{read_completion(s)}};
+    record = execution_record{.start{read_entry(s, "a start", start_in)}, .completion{read_completion(s)}};
     return s;
   }
 
