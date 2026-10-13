@@ -96,7 +96,7 @@ namespace sequoia::testing
 
     check_relative_performance(
       "Attempt 1's interval excludes a speed-up of 1, "
-      "but attempt 1 fails at the gate; "
+      "but the gate's wider interval does not; "
       "attempt 2 passes",
       fast,
       make_cycling_spinner({2ms, 2ms, 3ms, 4ms, 9ms}),
@@ -115,7 +115,7 @@ namespace sequoia::testing
     check_relative_performance(
       "The first fast call takes 100 ms. "
       "The trimmed mean gives a speed-up of 4, "
-      "and the untrimmed mean gives a speed-up below the prediction",
+      "and the untrimmed mean gives a speed-up below the prediction at attempt 1",
       fast,
       counted_spinner{4ms},
       parameters
