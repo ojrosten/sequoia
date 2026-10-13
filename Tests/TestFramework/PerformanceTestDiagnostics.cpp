@@ -101,19 +101,22 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("Attempt 1 overlaps [20.4, 41.1] only from 3.75 standard errors, not at 3; "
+    check_relative_performance("Attempt 1's interval lies below the prediction, "
+                               "and would overlap the prediction only if significantly wider; "
                                "later speed-ups lie inside the prediction",
                                counted_spinner{5ms, trials_for_minimum_10[0], 1ms},
                                make_cycling_spinner({5ms, 30ms, 40ms, 40ms, 40ms}),
                                {.prediction{.lower{20.4}, .upper{41.1}}});
 
-    check_relative_performance("Attempt 1 overlaps [1.7, 2.62] only from 3.74 standard errors, not at 3; "
+    check_relative_performance("Attempt 1's interval lies above the prediction, "
+                               "and would overlap the prediction only if significantly wider; "
                                "later speed-ups lie inside the prediction",
                                counted_spinner{8ms, trials_for_minimum_10[0], 20ms},
                                make_cycling_spinner({30ms, 30ms, 30ms, 60ms, 80ms}),
                                {.prediction{.lower{1.7}, .upper{2.62}}});
 
-    check_relative_performance("Attempt 1 overlaps [2.34, 3.66] at 3 standard errors, not below 2.25; "
+    check_relative_performance("Attempt 1's interval overlaps the prediction, "
+                               "but would not if significantly narrower; "
                                "attempt 2 is slower",
                                make_cycling_spinner({3ms, 4ms, 12ms, 12ms, 12ms}),
                                counted_spinner{50ms, trials_for_minimum_10[0], 1ms},
@@ -198,13 +201,16 @@ namespace sequoia::testing
     using namespace std::chrono_literals;
 
     check_relative_performance("Attempts 1 and 2 fail at the gate; "
-                               "attempt 3 overlaps [4.86, 7.43] at 3 standard errors, not below 2.25",
+                               "attempt 3's interval overlaps the prediction, "
+                               "but would not if significantly narrower",
                                counted_spinner{8ms, trials_before_attempt(trials_for_minimum_10, 3), 5ms},
                                make_cycling_spinner({4ms, 6ms, 20ms, 30ms, 30ms}),
                                {.prediction{.lower{4.86}, .upper{7.43}}});
 
-    check_relative_performance("Attempt 3 overlaps [2.21, 3.54] at 3 standard errors, not below 2.24; "
-                               "attempt 2 overlaps only from 3.77, not at 2",
+    check_relative_performance("Attempt 2's interval lies above the prediction, "
+                               "and would overlap the prediction only if significantly wider; "
+                               "attempt 3's interval overlaps the prediction, "
+                               "but would not if significantly narrower",
                                counted_spinner{1ms, trials_before_attempt(trials_for_minimum_10, 3), 2ms},
                                make_cycling_spinner({5ms, 5ms, 10ms, 40ms, 40ms}),
                                {.prediction{.lower{2.21}, .upper{3.54}}});

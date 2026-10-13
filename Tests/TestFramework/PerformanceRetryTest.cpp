@@ -76,8 +76,10 @@ namespace sequoia::testing
     const counted_spinner fast{8ms};
 
     check_relative_performance(
-      "Attempt 1 overlaps [4.62, 7.4] only from 1.45 standard errors, not at 1; "
-      "attempt 2 overlaps at 2, not below 1.55",
+      "Attempt 1's interval lies below the prediction, "
+      "and would overlap the prediction only if significantly wider; "
+      "attempt 2's wider interval overlaps the prediction, "
+      "but would not if significantly narrower",
       fast,
       make_cycling_spinner({8ms, 12ms, 40ms, 40ms, 40ms}),
       parameters
