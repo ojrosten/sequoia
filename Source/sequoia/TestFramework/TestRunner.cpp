@@ -976,6 +976,8 @@ namespace sequoia::testing
 
   void test_to_run::clear_execution_records() const
   {
+    // The file is made here, before the run, so that the test's execution
+    // appends to a file which exists, and neither creates nor replaces one
     empty_quietly(m_ExecutionRecord.file_path());
   }
 
@@ -2088,7 +2090,9 @@ namespace sequoia::testing
     auto holdsTest{[](const suite_node& node) { return node.optTest.has_value(); }};
 
     for(const auto& node : m_Suites.node_weights() | std::views::filter(holdsTest))
+    {
       node.optTest->clear_execution_records();
+    }
   }
 
   [[nodiscard]]

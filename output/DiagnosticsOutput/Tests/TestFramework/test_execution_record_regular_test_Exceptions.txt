@@ -79,7 +79,7 @@ Expected an execution duration but found 'execution duration 2ms'
 
 =======================================
 
-Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 306
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 312
 A file which does not exist
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ Unable to open file output/TestsTemporaryData/TestFramework/TestExecutionRecordR
 
 =======================================
 
-Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 310
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 316
 A file whose text is not a record
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ Unable to read the test execution records in output/TestsTemporaryData/TestFrame
 
 =======================================
 
-Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 314
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 320
 A file with a line after a record which begins no record
 
 Expected Exception Type:

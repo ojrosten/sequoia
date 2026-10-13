@@ -460,11 +460,7 @@ namespace sequoia::testing
     /** \brief Empties the file of the test's execution records, creating
                it if need be.
 
-        Each record of the test which the run then writes is appended, so
-        follows none of an earlier run's. The file is emptied before the run
-        rather than created by its first record, so that a test's execution
-        neither creates nor replaces a file. A failure is skipped rather than
-        reported.
+        A failure is skipped rather than reported.
      */
     void clear_execution_records() const;
   private:
@@ -864,8 +860,7 @@ namespace sequoia::testing
 
     void reset_tests();
 
-    /** \brief Empties the file of each test's execution records, as a run
-               of the tests begins.
+    /** \brief Empties the file of execution records of each test to be run.
      */
     void clear_execution_records() const;
 

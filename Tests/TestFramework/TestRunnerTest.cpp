@@ -1666,8 +1666,10 @@ namespace sequoia::testing
           throwing.is_stamp_between_call_and_test());
   }
 
-  /** Under `locate-instabilities`, each repetition appends its test's records to those of the repetitions before it.
-      The records directory is removed first, so that only this run can have written records.
+  /** Under `locate-instabilities`, each repetition appends its test's
+      execution records to those of the repetitions before it. The records
+      directory is removed first, so that only this run can have written
+      records.
    */
   void test_runner_test::test_recording_of_repetitions()
   {
@@ -1688,9 +1690,11 @@ namespace sequoia::testing
           std::vector{false, true, false, true});
   }
 
-  /** A run empties the execution records of each test it runs before appending its own, and leaves those of a test it
-      does not run as they were. Both tests are given an unfinished record from an earlier run. The run selects
-      `passing_test` alone, so `failing_test` is registered but not run.
+  /** A run empties the file of execution records of each test it runs,
+      before appending its own records. The run leaves the file of a test it
+      does not run as it was. Both tests are given an unfinished record from
+      an earlier run. The run selects `passing_test` alone, so `failing_test`
+      is registered but not run.
    */
   void test_runner_test::test_recording_of_successive_runs()
   {
@@ -2656,10 +2660,10 @@ namespace sequoia::testing
       which launched them all. The launching side is the subject of
       `test_instability_analysis_in_sandboxes_from_a_path_with_a_space`.
 
-      The run which launched the sandboxes empties each test's execution
-      records as it begins, so a sandbox appends its test's execution records
-      to those of the sandboxes before it. The fake records of an earlier
-      sandbox stand for those.
+      The run which launched the sandboxes empties each test's file of
+      execution records when that run begins. So a sandbox appends its test's
+      execution records to those of the sandboxes before it. Here, fake
+      records stand for an earlier sandbox's.
    */
   void test_runner_test::test_sandboxed_repetition()
   {

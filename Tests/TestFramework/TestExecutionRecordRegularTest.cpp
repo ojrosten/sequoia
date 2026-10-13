@@ -263,8 +263,9 @@ namespace sequoia::testing
     check(equality, "A refused read leaves the record as it was", readInto, finished_record());
   }
 
-  /** `Repetitions.txt` holds the records of two executions of a test, as the runner appends them: each execution's
-      record with no completion, then the same record with one.
+  /** `Repetitions.txt` holds the records of two executions of a test, as
+      the runner appends them: each execution's record with no completion,
+      then the same record with one.
    */
   void test_execution_record_regular_test::test_reading_files()
   {
@@ -282,12 +283,17 @@ namespace sequoia::testing
       {.start_time{laterStart}, .completion{finished_record().completion}}
     };
 
+    auto asText{[](const test_execution_record& record) { return to_string(record); }};
+
+    const auto recordsText{
+        records
+      | std::views::transform(asText)
+      | std::views::join
+      | std::ranges::to<std::string>()
+    };
+
     const auto recordsFile{working_materials() / "Repetitions.txt"};
-    write_to_file(recordsFile,
-                  records | std::views::transform([](const auto& record) { return to_string(record); })
-                          | std::views::join
-                          | std::ranges::to<std::string>(),
-                  std::ios_base::binary);
+    write_to_file(recordsFile, recordsText, std::ios_base::binary);
 
     check(equivalence,
           "The text of a file of the records of two executions",

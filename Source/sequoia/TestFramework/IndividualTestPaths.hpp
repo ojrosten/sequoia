@@ -168,12 +168,12 @@ namespace sequoia::testing
   /** \brief Where a test keeps the `test_execution_record`s of the latest
              run which executed it.
 
-      As the run begins, the runner empties the file. Each time the test
-      begins, which under `locate-instabilities` is once per repetition, the
-      runner appends the test's record with its start time and no
-      completion. Once the test has finished, the runner appends the record
-      again, with its completion. A record which the runner cannot write is
-      skipped.
+      The runner empties the file as the run begins. Each time the test
+      begins, the runner appends a record of the test's start time, with no
+      completion, to the file. Under `locate-instabilities`, the test begins
+      once per repetition. Once the test has finished, the runner appends
+      the record again, with its completion. A record which the runner
+      cannot write is skipped.
 
       A last record with no completion marks a test which either did not
       finish in the run that wrote the record, or whose finished record the
