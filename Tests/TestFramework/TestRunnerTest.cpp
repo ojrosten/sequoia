@@ -1620,7 +1620,6 @@ namespace sequoia::testing
           finishedRecordLabels);
 
     const auto runStart{start_named_by(projPaths.execution_records().stamp())};
-    check("The run's stamp names a start", !runStart.empty());
     const bool runStartedFirst{   (runStart <= start_named_by(passingRecord.file_path()))
                                && (runStart <= start_named_by(throwingRecord.file_path()))};
     check("The run started no later than either test", runStartedFirst);

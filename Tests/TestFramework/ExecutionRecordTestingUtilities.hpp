@@ -8,11 +8,12 @@
 #pragma once
 
 /** \file
-    \brief Readers for the execution records which the test runner writes.
+    \brief Readers for the execution records which the test runner writes,
+           and for the run's stamp, which has their format.
 
-    A line of a record holds a label and a value. The value is the text
-    after the line's last space, and the label is the text before that space.
-    A line with no space is a label with no value.
+    A line of a record holds a label, and may hold a value. The value is the
+    text after the line's last space, and the label is the text before that
+    space. A line with no space holds only a label.
  */
 
 #include <filesystem>

@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <format>
 #include <fstream>
+#include <optional>
 #include <ranges>
 #include <stdexcept>
 
@@ -42,6 +43,15 @@ namespace sequoia::testing
 
     constexpr auto label_of{
       [](std::string_view recordLine) { return std::string{recordLine.substr(0, recordLine.rfind(' '))}; }
+    };
+
+    constexpr auto value_of{
+      [](std::string_view recordLine) -> std::optional<std::string> {
+        if(const auto space{recordLine.rfind(' ')}; space != std::string_view::npos)
+          return std::string{recordLine.substr(space + 1)};
+
+        return std::nullopt;
+      }
     };
   }
 
@@ -71,14 +81,19 @@ namespace sequoia::testing
   {
     auto givesValue{
       [label](std::string_view recordLine) {
-        return (label_of(recordLine) == label) && (recordLine.size() > label.size());
+        return (label_of(recordLine) == label) && value_of(recordLine).has_value();
       }
     };
 
     const auto lines{execution_record_lines(record)};
-    if(std::ranges::count_if(lines, givesValue) != 1)
-      throw std::runtime_error{std::format("Expected exactly one {} in: {}", label, record.generic_string())};
+    if(const auto matches{std::ranges::count_if(lines, givesValue)}; matches != 1)
+      throw std::runtime_error{
+        std::format("Expected exactly one line labelled '{}' with a value, but found {}: {}",
+                    label,
+                    matches,
+                    record.generic_string())
+      };
 
-    return std::ranges::find_if(lines, givesValue)->substr(label.size() + 1);
+    return value_of(*std::ranges::find_if(lines, givesValue)).value();
   }
 }
