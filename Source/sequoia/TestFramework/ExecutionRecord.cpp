@@ -69,8 +69,9 @@ namespace sequoia::testing
                          attemptsLines);
     }
 
-    // Each recognizer returns the value in an entry only if the entry's
-    // writer reprints the entry exactly from the numbers it contains
+    // Each recognizer builds a value from the numbers in an entry. It returns
+    // the value only if the entry's writer reprints the entry exactly from
+    // that value.
     constexpr auto start_in{
       [](std::string_view entry) -> std::optional<execution_record::start_type> {
         // TO DO: std::chrono::parse reads the start, once libc++ provides it
@@ -127,10 +128,10 @@ namespace sequoia::testing
     };
 
     /** Reads the next line of `s`, and returns the value which `recognize`
-        finds in it.
+        finds in that line.
 
         \throws std::runtime_error if `s` has no next line, or `recognize`
-                finds no value in it
+                finds no value in the line
      */
     template<std::invocable<std::string_view> Recognizer>
     [[nodiscard]]
@@ -152,7 +153,7 @@ namespace sequoia::testing
       return s.good() && (s.peek() != std::char_traits<char>::eof());
     }
 
-    /** Reads entries of attempts until the end of `s`. */
+    /** Reads the numbers of attempts in the rest of `s`. */
     [[nodiscard]]
     std::vector<std::size_t> read_attempts(std::istream& s)
     {

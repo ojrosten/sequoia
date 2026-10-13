@@ -8,7 +8,7 @@ Expected a start but found 'begun 2026-10-13T09:15:04.123Z'
 =======================================
 
 Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 194
-A start in a layout other than the one written
+A start in a layout other than the one operator<< writes
 
 Expected Exception Type:
 [std::runtime_error]
@@ -80,7 +80,7 @@ Expected a runner overhead but found 'runner overhead -250us'
 =======================================
 
 Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 226
-A negative runner overhead whose magnitude only an unsigned count can hold
+A negative runner overhead whose magnitude is too large for a signed count
 
 Expected Exception Type:
 [std::runtime_error]
@@ -116,7 +116,7 @@ Expected a number of attempts but found 'performance check attempts 02'
 =======================================
 
 Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 242
-A line after the timings which does not give attempts
+A line after the timings which gives no number of attempts
 
 Expected Exception Type:
 [std::runtime_error]
@@ -125,7 +125,7 @@ Expected a number of attempts but found 'foo'
 =======================================
 
 Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 246
-A line after the timings which gives a number, but not of attempts
+A runner overhead where a number of attempts should be
 
 Expected Exception Type:
 [std::runtime_error]
@@ -134,7 +134,7 @@ Expected a number of attempts but found 'runner overhead 250us'
 =======================================
 
 Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 250
-A number of attempts under a label other than the one written
+A number of attempts with a label other than the one operator<< writes
 
 Expected Exception Type:
 [std::runtime_error]

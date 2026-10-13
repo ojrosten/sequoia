@@ -932,7 +932,7 @@ namespace sequoia::testing
       }
     };
 
-    /// The records a run of one test leaves, and the time just before the run was called
+    /** The return code and records of a run of one test */
     struct recorded_run
     {
       return_code code{};
@@ -1639,10 +1639,10 @@ namespace sequoia::testing
     check("The record of a test which passed has a completion",     passing.test_record.completion.has_value());
     check("The record of a test whose body threw has a completion", throwing.test_record.completion.has_value());
 
-    check("The stamp of the run of a test which passed is written between the run's call and the test's start",
+    check("A run writes its stamp after its call and before the start of a test which passes",
           passing.stamp_in_order());
 
-    check("The stamp of the run of a test whose body threw is written between the run's call and the test's start",
+    check("A run writes its stamp after its call and before the start of a test whose body throws",
           throwing.stamp_in_order());
   }
 

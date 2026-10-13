@@ -167,12 +167,14 @@ namespace sequoia::testing
 
   /** \brief Where a test keeps the `execution_record` of its last execution.
 
-      A test's record is the last one the runner managed to write. That is
-      normally the current run's: the start while the test executes, then the
-      whole record once the test has finished. If a write fails, an earlier
-      run's record remains. A record with no completion marks a test which
-      did not finish in the run that wrote the record, or whose finished
-      record could not be written.
+      Each time a test executes, the runner writes the test's record twice:
+      with only the start when the test begins, and with the completion once
+      the test has finished. If a write fails, the file keeps the record the
+      runner wrote before. That record may be from an earlier run.
+
+      A record with no completion marks a test which either did not finish
+      in the run that wrote the record, or whose finished record the runner
+      could not write.
 
       The path is empty for default project paths.
    */

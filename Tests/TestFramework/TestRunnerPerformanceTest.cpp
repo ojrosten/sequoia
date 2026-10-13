@@ -90,7 +90,7 @@ namespace sequoia::testing
       throw std::runtime_error{std::format("Unable to extract the {} from: {}", label, file.generic_string())};
     }
 
-    /** The completion of the execution record `runner` keeps for `Test`. */
+    /** Reads the completion of the record `runner` keeps for `Test`. */
     template<concrete_test Test>
     [[nodiscard]]
     execution_completion get_recorded_completion(const test_runner& runner)

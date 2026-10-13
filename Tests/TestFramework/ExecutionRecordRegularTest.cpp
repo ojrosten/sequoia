@@ -79,17 +79,17 @@ namespace sequoia::testing
     };
 
     check(equality,
-          "operator>> reads back what operator<< writes of a default record, in place of what it held",
+          "operator>> overwrites a finished record with a default record which operator<< wrote",
           readBackFromWritten(execution_record{}),
           std::optional{execution_record{}});
 
     check(equality,
-          "operator>> reads back what operator<< writes of a record with no completion",
+          "A record with no completion round-trips through operator<< and operator>>",
           readBackFromWritten(unfinished_record()),
           std::optional{unfinished_record()});
 
     check(equality,
-          "operator>> reads back what operator<< writes of a finished record",
+          "A finished record round-trips through operator<< and operator>>",
           readBackFromWritten(finished_record()),
           std::optional{finished_record()});
 
@@ -102,7 +102,7 @@ namespace sequoia::testing
     };
 
     check(equality,
-          "operator>> reads back what operator<< writes of a finished record with no performance check attempts",
+          "A finished record with no performance check attempts round-trips through operator<< and operator>>",
           readBackFromWritten(finishedWithoutAttempts),
           std::optional{finishedWithoutAttempts});
 
@@ -112,12 +112,12 @@ namespace sequoia::testing
       lastStart {.start{sys_days{year{32767} / 12 / 31} + days{1} - milliseconds{1}}};
 
     check(equality,
-          "operator>> reads back what operator<< writes of the first start the format holds",
+          "A record with the earliest start the format holds round-trips through operator<< and operator>>",
           readBackFromWritten(firstStart),
           std::optional{firstStart});
 
     check(equality,
-          "operator>> reads back what operator<< writes of the last start the format holds",
+          "A record with the latest start the format holds round-trips through operator<< and operator>>",
           readBackFromWritten(lastStart),
           std::optional{lastStart});
   }
@@ -191,7 +191,7 @@ namespace sequoia::testing
       readRecord("begun 2026-10-13T09:15:04.123Z\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A start in a layout other than the one written",
+      "A start in a layout other than the one operator<< writes",
       readRecord("started 2026-10-13 09:15:04.123Z\n"));
 
     check_exception_thrown<std::runtime_error>(
@@ -223,7 +223,7 @@ namespace sequoia::testing
       readRecord(startLine + "execution duration 1500us\nrunner overhead -250us\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A negative runner overhead whose magnitude only an unsigned count can hold",
+      "A negative runner overhead whose magnitude is too large for a signed count",
       readRecord(startLine + "execution duration 1500us\nrunner overhead -9223372036854775808us\n"));
 
     check_exception_thrown<std::runtime_error>(
@@ -239,15 +239,15 @@ namespace sequoia::testing
       readRecord(startLine + timingLines + "performance check attempts 02\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A line after the timings which does not give attempts",
+      "A line after the timings which gives no number of attempts",
       readRecord(startLine + timingLines + "performance check attempts 2\nfoo\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A line after the timings which gives a number, but not of attempts",
+      "A runner overhead where a number of attempts should be",
       readRecord(startLine + timingLines + "runner overhead 250us\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A number of attempts under a label other than the one written",
+      "A number of attempts with a label other than the one operator<< writes",
       readRecord(startLine + timingLines + "check attempts 2\n"));
   }
 

@@ -8,8 +8,8 @@
 #pragma once
 
 /** \file
-    \brief The record of an execution, which the test runner keeps for each
-           test, and for each run as the run's stamp.
+    \brief The record of an execution, and the functions which write and
+           read records.
  */
 
 #include <chrono>
@@ -21,11 +21,11 @@
 
 namespace sequoia::testing
 {
-  /** \brief What a record adds once its execution has finished.
+  /** \brief What a finished execution adds to its record.
 
-      A completion gives the execution duration, the runner's overhead, and
-      the number of attempts each performance check made. A performance check
-      which threw before its last attempt finished has no entry.
+      `performance_check_attempts` gives the number of attempts each
+      performance check made. A check which threw before its last attempt
+      finished has no entry.
    */
   struct execution_completion
   {
@@ -37,11 +37,11 @@ namespace sequoia::testing
     friend bool operator==(const execution_completion&, const execution_completion&) noexcept = default;
   };
 
-  /** \brief The start of an execution, to the millisecond, and its completion
-             once the execution has finished.
+  /** \brief The start of an execution, and its completion if the execution
+             has finished.
 
-      `operator>>` reads back what `operator<<` writes, for a start in the
-      years 0 to 32767 and durations which are not negative.
+      `operator>>` reads back what `operator<<` writes, provided that the
+      start lies in the years 0 to 32767 and that no duration is negative.
    */
   struct execution_record
   {
@@ -55,12 +55,13 @@ namespace sequoia::testing
 
     friend std::ostream& operator<<(std::ostream& s, const execution_record& record);
 
-    /** \brief Reads a record which runs to the end of `s`.
+    /** \brief Reads a record from the rest of `s`.
 
-        At the end of `s`, sets `failbit` and leaves `record` unchanged.
+        Sets `failbit` if `s` is at its end. Modifies `record` only after
+        reading a whole record.
 
-        \throws std::runtime_error if the text is not a record, or gives a
-                negative duration; `record` is then unchanged
+        \throws std::runtime_error if the rest of `s` is not a record, or
+                holds a negative duration
      */
     friend std::istream& operator>>(std::istream& s, execution_record& record);
   };
