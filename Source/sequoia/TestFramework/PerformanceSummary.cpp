@@ -23,7 +23,7 @@ namespace sequoia::testing
         and which values they are.
      */
     [[nodiscard]]
-    std::string line_with_zeroed_measurements(std::string_view line)
+    std::string line_with_zeroed_measurements(std::string_view line, attempt_count_stability attemptCountStability)
     {
       const auto indentationSize{std::min(line.find_first_not_of(" \t"), line.size())};
       const std::string_view indentation{line.substr(0, indentationSize)}, unindented{line.substr(indentationSize)};
@@ -44,13 +44,14 @@ namespace sequoia::testing
           return indented(speedup_summary({}, prediction));
       }
 
-      if(const auto numbers{extract_numbers_from<std::size_t, 3>(unindented)})
+      if(const auto numbers{extract_numbers_from<std::size_t, 3>(unindented)};
+         numbers && (attemptCountStability == attempt_count_stability::fluctuating))
       {
-        const auto [trials, currentAttempt, maximumAttempts]{*numbers};
-        const relative_performance_attempts attempts{.current{currentAttempt}, .maximum{maximumAttempts}};
+        const auto [trials, attemptsMade, attemptsAllowed]{*numbers};
+        const relative_performance_attempt_progress progress{.made{attemptsMade}, .allowed{attemptsAllowed}};
 
-        if(trials_summary(trials, attempts) == unindented)
-          return indented(trials_summary(0, {.maximum{attempts.maximum}}));
+        if(trials_summary(trials, progress) == unindented)
+          return indented(trials_summary(0, {.allowed{progress.allowed}}));
       }
 
       if(const auto numbers{extract_numbers_from<double, 2>(unindented)})
@@ -99,9 +100,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string trials_summary(std::size_t trials, relative_performance_attempts attempts)
+  std::string trials_summary(std::size_t trials, relative_performance_attempt_progress progress)
   {
-    return std::format("Trials: {}, attempt {} of {}", trials, attempts.current, attempts.maximum);
+    return std::format("Trials: {}, attempt {} of {}", trials, progress.made, progress.allowed);
   }
 
   [[nodiscard]]
@@ -111,10 +112,13 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string text_with_zeroed_measurements(std::string_view text)
+  std::string text_with_zeroed_measurements(std::string_view text, attempt_count_stability attemptCountStability)
   {
     auto lineWithZeroedMeasurements{
-      [](auto line) { return line_with_zeroed_measurements(std::string_view{line}); }
+      [attemptCountStability](auto line)
+      {
+        return line_with_zeroed_measurements(std::string_view{line}, attemptCountStability);
+      }
     };
 
     return

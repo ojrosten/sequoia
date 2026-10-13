@@ -26,6 +26,8 @@
 
 #include <chrono>
 #include <filesystem>
+#include <optional>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -53,8 +55,9 @@ namespace sequoia::testing
       performance_failures{},
       critical_failures{},
       top_level_checks{},
-      deep_checks{},
-      performance_checks{};
+      deep_checks{};
+
+    std::vector<std::optional<std::size_t>> attempts_per_performance_check{};
   };
 
   /** \brief Helper class for safe interaction with test_logger.
@@ -130,10 +133,17 @@ namespace sequoia::testing
 
     void log_top_level_check() noexcept { ++m_Results.top_level_checks; }
 
-    void log_performance_check() noexcept
+    [[nodiscard]]
+    std::size_t log_performance_check()
     {
+      m_Results.attempts_per_performance_check.emplace_back();
       log_check();
-      ++m_Results.performance_checks;
+      return m_Results.attempts_per_performance_check.size() - 1;
+    }
+
+    void log_performance_check_attempts(std::size_t checkIndex, std::size_t attempts)
+    {
+      m_Results.attempts_per_performance_check.at(checkIndex) = attempts;
     }
 
     void failure_message(test_mode mode, std::string_view message, is_critical isCritical);
@@ -204,7 +214,13 @@ namespace sequoia::testing
     sentinel_base(const sentinel_base&)            = delete;
     sentinel_base& operator=(const sentinel_base&) = delete;
 
-    void log_performance_check() { get().log_performance_check(); }
+    [[nodiscard]]
+    std::size_t log_performance_check() { return get().log_performance_check(); }
+
+    void log_performance_check_attempts(std::size_t checkIndex, std::size_t attempts)
+    {
+      get().log_performance_check_attempts(checkIndex, attempts);
+    }
 
     void log_check() { get().log_check(); }
 

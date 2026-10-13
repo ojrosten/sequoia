@@ -57,6 +57,12 @@ namespace sequoia::testing
     return std::source_location::current().file_name();
   }
 
+  [[nodiscard]]
+  log_summary performance_false_negative_diagnostics::summarize(duration delta) const
+  {
+    return performance_false_negative_test::summarize(delta, attempt_count_stability::typically_stable);
+  }
+
   void performance_false_negative_diagnostics::run_tests()
   {
     test_relative_performance();
@@ -152,10 +158,17 @@ namespace sequoia::testing
     return std::source_location::current().file_name();
   }
 
+  [[nodiscard]]
+  log_summary performance_false_positive_diagnostics::summarize(duration delta) const
+  {
+    return performance_false_positive_test::summarize(delta, attempt_count_stability::typically_stable);
+  }
+
   void performance_false_positive_diagnostics::run_tests()
   {
     test_relative_performance();
     test_confidence_multiplier();
+    test_computations_not_optimized_away();
   }
 
   void performance_false_positive_diagnostics::test_relative_performance()
@@ -195,6 +208,30 @@ namespace sequoia::testing
                                {.prediction{.lower{2.21}, .upper{3.54}}, .minimum_trials{10}});
   }
 
+  void performance_false_positive_diagnostics::test_computations_not_optimized_away()
+  {
+    // Nothing but do_not_optimize_away uses the result of either task's
+    // computation. Without do_not_optimize_away, an optimized build removes
+    // the computation. A trial then times the tasks at or near zero, and the
+    // check fails or throws. An unoptimized build removes nothing, so in such
+    // a build these checks pass with or without do_not_optimize_away. The
+    // seed is drawn at run time, so that no build can compute the result at
+    // compile time.
+    const std::uint64_t seed{std::random_device{}()};
+    constexpr std::size_t steps{500'000};
+
+    check_relative_performance("A speed-up of 2 in computing a value a task passes to do_not_optimize_away, "
+                               "predicted [1.5, 2.5]",
+                               [seed]() { do_not_optimize_away(xorshift_state(seed,     steps)); },
+                               [seed]() { do_not_optimize_away(xorshift_state(seed, 2 * steps)); },
+                               {.prediction{.lower{1.5}, .upper{2.5}}, .minimum_trials{10}});
+
+    check_relative_performance("A speed-up of 2 in computing the value a task returns, predicted [1.5, 2.5]",
+                               [seed]() { return xorshift_state(seed,     steps); },
+                               [seed]() { return xorshift_state(seed, 2 * steps); },
+                               {.prediction{.lower{1.5}, .upper{2.5}}, .minimum_trials{10}});
+  }
+
   [[nodiscard]]
   std::filesystem::path performance_utilities_test::source_file()
   {
@@ -203,131 +240,151 @@ namespace sequoia::testing
 
   void performance_utilities_test::run_tests()
   {
+    test_task_constraints();
+    test_exception_specifications();
     test_postprocessing();
     test_zeroed_measurements();
     test_coarse_sleep();
-    test_task_constraints();
+  }
+
+  void performance_utilities_test::test_task_constraints()
+  {
+    STATIC_CHECK( profilable<   copyable_task>);
+    STATIC_CHECK(!profilable<rvalue_only_task>);
+
+    STATIC_CHECK( checkable_tasks_v<   copyable_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_v<  move_only_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_v<   copyable_task,   move_only_task>);
+    STATIC_CHECK(!checkable_tasks_v<rvalue_only_task,    copyable_task>);
+    STATIC_CHECK(!checkable_tasks_v<   copyable_task, rvalue_only_task>);
+  }
+
+  void performance_utilities_test::test_exception_specifications()
+  {
+    STATIC_CHECK(noexcept(do_not_optimize_away(0)));
   }
 
   void performance_utilities_test::test_postprocessing()
   {
+    using enum attempt_count_stability;
+
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{"Speed-up: 2.01 in [1.98, 2.04]; predicted [2, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), reference);
+      check(equality, "", postprocess(latest, reference, fluctuating), reference);
     }
 
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2.1, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3.1]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{"Speed-up: 1.34 in (1.22, 1.47); predicted [2, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{"Speed-up: 1.340 in [1.22, 1.47]; predicted [2, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3] 4 5 6 7\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{"Speed-up: 1.34 in [1.22]; predicted [2, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {"Trials: 15, attempt 3 of 3\n"};
       std::string_view reference{"Trials: 5, attempt 1 of 3\n"};
 
-      check(equality, "", postprocess(latest, reference), reference);
+      check(equality, "", postprocess(latest, reference, fluctuating), reference);
     }
 
     {
       std::string_view latest   {"Trials: 5, attempt 1 of 3\n"};
       std::string_view reference{"Trials: 5, attempt 1 of 4\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {"Trials: 5, attempt 1 of 3\n"};
       std::string_view reference{"Trials: 05, attempt 1 of 3\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {"Trials: 5, attempt 1 of 3\n"};
       std::string_view reference{"Trials: 5.5, attempt 1 of 3\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {"Trials: 5, attempt 1 of 3\n"};
       std::string_view reference{"Trials: -5, attempt 1 of 3\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {"Task durations: fast 0.005s, slow 0.0067s\n"};
       std::string_view reference{"Task durations: fast 0.00101s, slow 0.00402s\n"};
 
-      check(equality, "", postprocess(latest, reference), reference);
+      check(equality, "", postprocess(latest, reference, fluctuating), reference);
     }
 
     {
       std::string_view latest   {"Task durations: fast 0.005s, slow 0.0067s\n"};
       std::string_view reference{"Task durations: fast 0.005ms, slow 0.0067s\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {"Task durations: fast 0.005s, slow 0.0067s\n"};
       std::string_view reference{"Task durations: slow 0.005s, fast 0.0067s\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {"Task durations: fast 0.005s, slow 0.0067s\n"};
       std::string_view reference{"Task durations: fast 0.005s, slow 0.0067s FAILED\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {"The fast task is slower than the slow one\n"};
       std::string_view reference{"The fast task is not distinguishably faster than the slow one\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
@@ -342,7 +399,7 @@ namespace sequoia::testing
                                  "Trials: 10, attempt 2 of 3\n"
                                  "Task durations: fast 0.00201s, slow 0.001s\n"};
 
-      check(equality, "", postprocess(latest, reference), reference);
+      check(equality, "", postprocess(latest, reference, fluctuating), reference);
     }
 
     {
@@ -351,7 +408,7 @@ namespace sequoia::testing
       std::string_view reference{"Line 41\n"
                                  "Speed-up: 0.497 in [0.495, 0.499]; predicted [2, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
@@ -360,7 +417,7 @@ namespace sequoia::testing
       std::string_view reference{"Trials: 15, attempt 3 of 3\n"
                                  "Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
@@ -368,21 +425,21 @@ namespace sequoia::testing
       std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"
                                  "Trials: 15, attempt 3 of 3\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
       std::string_view reference{""};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
       std::string_view latest   {""};
       std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
 
-      check(equality, "", postprocess(latest, reference), latest);
+      check(equality, "", postprocess(latest, reference, fluctuating), latest);
     }
 
     {
@@ -400,7 +457,7 @@ namespace sequoia::testing
                      task_durations_summary({fractional_seconds{0.001},   fractional_seconds{nan}}))
       };
 
-      check(equality, "", postprocess(latest, reference), std::string_view{reference});
+      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{reference});
     }
 
     {
@@ -412,35 +469,67 @@ namespace sequoia::testing
         append_lines(trials_summary(5,  {1, 3}), speedup_summary({1.02, {1.00, 1.04}}, {2, 3}))
       };
 
-      check(equality, "", postprocess(latest, reference), std::string_view{reference});
+      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{reference});
     }
 
     {
       const std::string latest   {trials_summary(15, {3, 3})};
       const std::string reference{trials_summary(15, {3, 4})};
 
-      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{latest});
+    }
+
+    {
+      using fractional_seconds = std::chrono::duration<double>;
+
+      const std::string latest{
+        append_lines(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}),
+                     trials_summary(15, {3, 3}),
+                     task_durations_summary({fractional_seconds{0.001},  fractional_seconds{0.00104}}))
+      };
+
+      const std::string reference{
+        append_lines(speedup_summary({1.02, {1.00, 1.04}}, {2, 3}),
+                     trials_summary(15, {3, 3}),
+                     task_durations_summary({fractional_seconds{0.0011}, fractional_seconds{0.00112}}))
+      };
+
+      check(equality, "", postprocess(latest, reference, typically_stable), std::string_view{reference});
+    }
+
+    {
+      const std::string latest   {trials_summary(15, {3, 3})};
+      const std::string reference{trials_summary(20, {3, 3})};
+
+      check(equality, "", postprocess(latest, reference, typically_stable), std::string_view{latest});
+    }
+
+    {
+      const std::string latest   {trials_summary(15, {3, 3})};
+      const std::string reference{trials_summary(15, {2, 3})};
+
+      check(equality, "", postprocess(latest, reference, typically_stable), std::string_view{latest});
     }
 
     {
       const std::string latest   {speedup_summary({1.04, {1.01, 1.07}}, {2, 3})};
       const std::string reference{speedup_summary({1.04, {1.01, 1.07}}, {2, 4})};
 
-      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{latest});
     }
 
     {
       const std::string latest   {std::format("Line 40\n\n{}", speedup_summary({1.04, {1.01, 1.07}}, {2, 3}))};
       const std::string reference{std::format("Line 40\n{}",   speedup_summary({1.02, {1.00, 1.04}}, {2, 3}))};
 
-      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{latest});
     }
 
     {
       const std::string latest   {std::format("{}\n", speedup_summary({1.04, {1.01, 1.07}}, {2, 3}))};
       const std::string reference{std::format("{}",   speedup_summary({1.02, {1.00, 1.04}}, {2, 3}))};
 
-      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{latest});
     }
 
     {
@@ -461,35 +550,50 @@ namespace sequoia::testing
                nested)
       };
 
-      check(equality, "", postprocess(latest, reference), std::string_view{reference});
+      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{reference});
     }
 
     {
       const std::string latest   {indent(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}), indentation{"  "})};
       const std::string reference{indent(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}), indentation{"    "})};
 
-      check(equality, "", postprocess(latest, reference), std::string_view{latest});
+      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{latest});
     }
   }
 
   void performance_utilities_test::test_zeroed_measurements()
   {
     using fractional_seconds = std::chrono::duration<double>;
+    using enum attempt_count_stability;
 
     check(equality,
           "The speed-up and the interval around it are zeroed, and the predicted interval kept",
-          text_with_zeroed_measurements(speedup_summary({1.04, {1.01, 1.07}}, {2, 3})),
+          text_with_zeroed_measurements(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}), fluctuating),
           speedup_summary({}, {2, 3}));
 
     check(equality,
           "The number of trials and the attempt are zeroed, and the number of attempts allowed kept",
-          text_with_zeroed_measurements(trials_summary(15, {3, 3})),
+          text_with_zeroed_measurements(trials_summary(15, {3, 3}), fluctuating),
           trials_summary(0, {0, 3}));
 
     check(equality,
           "The task durations are zeroed",
-          text_with_zeroed_measurements(task_durations_summary({fractional_seconds{0.001}, fractional_seconds{0.002}})),
+          text_with_zeroed_measurements(task_durations_summary({fractional_seconds{0.001}, fractional_seconds{0.002}}),
+                                        fluctuating),
           task_durations_summary({}));
+
+    check(equality,
+          "With the attempt count typically stable, the number of trials and the attempt are kept",
+          text_with_zeroed_measurements(trials_summary(15, {3, 3}), typically_stable),
+          trials_summary(15, {3, 3}));
+
+    check(equality,
+          "With the attempt count typically stable, the speed-up, its interval and the task durations are zeroed",
+          text_with_zeroed_measurements(
+            append_lines(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}),
+                         task_durations_summary({fractional_seconds{0.001}, fractional_seconds{0.002}})),
+            typically_stable),
+          append_lines(speedup_summary({}, {2, 3}), task_durations_summary({})));
   }
 
   void performance_utilities_test::test_coarse_sleep()
@@ -511,17 +615,5 @@ namespace sequoia::testing
           "Message",
           working_materials() /= "CoarseSleepMessage.txt",
           predictive_materials() /= "CoarseSleepMessage.txt");
-  }
-
-  void performance_utilities_test::test_task_constraints()
-  {
-    STATIC_CHECK( profilable<   copyable_task>);
-    STATIC_CHECK(!profilable<rvalue_only_task>);
-
-    STATIC_CHECK( checkable_tasks_v<   copyable_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_v<  move_only_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_v<   copyable_task,   move_only_task>);
-    STATIC_CHECK(!checkable_tasks_v<rvalue_only_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_v<   copyable_task, rvalue_only_task>);
   }
 }

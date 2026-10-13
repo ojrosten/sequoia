@@ -98,9 +98,9 @@ namespace sequoia::testing
   namespace impl
   {
     [[nodiscard]]
-    relative_performance_outcome judge_attempt(std::span<const relative_performance_durations> trialDurations,
-                                               double overlapMultiplier,
-                                               relative_performance_interval prediction)
+    relative_performance_attempt_outcome judge_attempt(std::span<const relative_performance_durations> trialDurations,
+                                                       double overlapMultiplier,
+                                                       relative_performance_interval prediction)
     {
       auto eitherNotPositive{
         [](relative_performance_durations durations) {
@@ -167,14 +167,14 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string summarize_attempt(const relative_performance_outcome& outcome,
+    std::string summarize_attempt(const relative_performance_attempt_outcome& outcome,
                                   std::size_t trials,
-                                  std::size_t attempt,
+                                  std::size_t attemptsMade,
                                   relative_performance_interval prediction)
     {
       return append_lines(outcome.failure ? verdict_summary(*outcome.failure) : "",
                           speedup_summary(outcome.estimate, prediction),
-                          trials_summary(trials, {.current{attempt}, .maximum{relative_performance_max_attempts}}),
+                          trials_summary(trials, {.made{attemptsMade}, .allowed{relative_performance_max_attempts}}),
                           task_durations_summary(outcome.durations));
     }
 
@@ -183,8 +183,9 @@ namespace sequoia::testing
     {
       // A check in standard mode fails only if its last attempt fails, and
       // the last attempt takes the full multiplier. False-negative mode stops
-      // at the first failing attempt. So in that mode every attempt takes the
-      // full multiplier, and each applies the rule which decides a failure.
+      // at the first failing attempt. So in that mode the failure of any
+      // attempt is the check's outcome, and every attempt takes the full
+      // multiplier.
       return (mode == test_mode::false_negative)
         ? confidence_multiplier
         : confidence_multiplier * static_cast<double>(attempt) / relative_performance_max_attempts;
@@ -211,11 +212,16 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput)
+  std::string_view postprocess(std::string_view testOutput,
+                               std::string_view referenceOutput,
+                               attempt_count_stability attemptCountStability)
   {
-    return text_with_zeroed_measurements(testOutput) == text_with_zeroed_measurements(referenceOutput)
-      ? referenceOutput
-      : testOutput;
+    const bool differOnlyInMeasurements{
+         text_with_zeroed_measurements(testOutput,      attemptCountStability)
+      == text_with_zeroed_measurements(referenceOutput, attemptCountStability)
+    };
+
+    return differOnlyInMeasurements ? referenceOutput : testOutput;
   }
 
   [[nodiscard]]
@@ -241,27 +247,36 @@ namespace sequoia::testing
   [[nodiscard]]
   log_summary basic_performance_test<Mode>::summarize(duration delta) const
   {
+    if constexpr(Mode == test_mode::standard)
+      return base_type::summarize(delta);
+    else
+      return summarize(delta, attempt_count_stability::fluctuating);
+  }
+
+  template<test_mode Mode>
+  [[nodiscard]]
+  log_summary basic_performance_test<Mode>::summarize(duration delta,
+                                                      attempt_count_stability attemptCountStability) const
+    requires (Mode != test_mode::standard)
+  {
     auto summary{base_type::summarize(delta)};
 
-    if constexpr(Mode != test_mode::standard)
-    {
-      const auto referenceOutput{
-        [filename{this->diagnostics_file_paths().false_positive_or_negative_file_path()}]() -> std::string {
-          if(std::filesystem::exists(filename))
-          {
-            if(auto contents{read_to_string(filename, std::ios_base::in | std::ios_base::binary)})
-              return *std::move(contents);
+    const auto referenceOutput{
+      [filename{this->diagnostics_file_paths().false_positive_or_negative_file_path()}]() -> std::string {
+        if(std::filesystem::exists(filename))
+        {
+          if(auto contents{read_to_string(filename, std::ios_base::in | std::ios_base::binary)})
+            return std::move(*contents);
 
-            throw std::runtime_error{report_failed_read(filename)};
-          }
+          throw std::runtime_error{report_failed_read(filename)};
+        }
 
-          return "";
-        }()
-      };
+        return "";
+      }()
+    };
 
-      std::string outputToUse{postprocess(summary.diagnostics_output(), referenceOutput)};
-      summary.diagnostics_output(std::move(outputToUse));
-    }
+    std::string outputToUse{postprocess(summary.diagnostics_output(), referenceOutput, attemptCountStability)};
+    summary.diagnostics_output(std::move(outputToUse));
 
     return summary;
   }

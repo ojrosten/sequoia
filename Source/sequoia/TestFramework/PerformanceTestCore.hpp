@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/PerformanceSummary.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
 
 #include <algorithm>
 #include <chrono>
@@ -24,17 +25,61 @@
 #include <random>
 #include <ranges>
 #include <span>
+#include <type_traits>
+
+#if defined(SEQUOIA_MSVC_COMPILER)
+  #include <atomic>
+  #include <memory>
+#endif
 
 namespace sequoia::testing
 {
-  /** \brief Returns the duration of a call of `task`. */
+  /** \brief Prevents the optimizer from removing the computation of `value`.
+
+      The compiler must treat `value` as read at the call, and as possibly
+      changed by it. So an optimized build computes `value` before the call,
+      even if nothing else reads `value`. And a computation after the call
+      which depends on the state of `value` is made after the call.
+
+      The compiler may still compute `value` earlier, at any point after the
+      inputs to the computation are known. That may be during compilation.
+   */
+  template<class T>
+  void do_not_optimize_away(const T& value) noexcept
+  {
+#if defined(SEQUOIA_MSVC_COMPILER)
+    // The store lets code outside this function reach `value`. MSVC compiles
+    // the fence as a compiler barrier: every write to memory such code can
+    // reach completes before the fence, and every read of it after the fence
+    // is made afresh. Without either, the computation of `value` may be lost.
+    static thread_local const T* volatile observedAddress{};
+    observedAddress = std::addressof(value);
+    std::atomic_signal_fence(std::memory_order_seq_cst);
+#else
+    // The memory clobber makes the compiler treat all memory as possibly read
+    // and changed: both `value` and memory it points to, such as a vector's
+    // elements. Without it, only the bytes of `value` would be read.
+    asm volatile("" : : "m"(value) : "memory");
+#endif
+  }
+
+  /** \brief Returns the duration of a call of `task`.
+
+      The duration includes the computation of any value the call returns,
+      even if nothing else reads the value.
+   */
   template<class Task>
     requires std::invocable<Task&>
   [[nodiscard]]
   std::chrono::duration<double> profile(Task task)
   {
     const timer t{};
-    task();
+    do_not_optimize_away(task);
+
+    if constexpr(std::is_void_v<std::invoke_result_t<Task&>>)
+      task();
+    else
+      do_not_optimize_away(task());
 
     return t.time_elapsed();
   }
@@ -71,7 +116,7 @@ namespace sequoia::testing
     /** \brief The outcome of one attempt of `check_relative_performance`:
                why it failed, if it did, and its measurements.
      */
-    struct relative_performance_outcome
+    struct relative_performance_attempt_outcome
     {
       std::optional<relative_performance_failure> failure{};
       relative_performance_estimate               estimate{};
@@ -86,9 +131,9 @@ namespace sequoia::testing
         \throws std::runtime_error if any duration is not greater than zero.
      */
     [[nodiscard]]
-    relative_performance_outcome judge_attempt(std::span<const relative_performance_durations> trialDurations,
-                                               double overlapMultiplier,
-                                               relative_performance_interval prediction);
+    relative_performance_attempt_outcome judge_attempt(std::span<const relative_performance_durations> trialDurations,
+                                                       double overlapMultiplier,
+                                                       relative_performance_interval prediction);
 
     /** \brief Summarizes an attempt in lines of text.
 
@@ -96,9 +141,9 @@ namespace sequoia::testing
         the speed-up, the trials and the task durations.
      */
     [[nodiscard]]
-    std::string summarize_attempt(const relative_performance_outcome& outcome,
+    std::string summarize_attempt(const relative_performance_attempt_outcome& outcome,
                                   std::size_t trials,
-                                  std::size_t attempt,
+                                  std::size_t attemptsMade,
                                   relative_performance_interval prediction);
 
     /** \brief Returns the half-width, in standard errors, of the interval
@@ -139,27 +184,28 @@ namespace sequoia::testing
       return {.fast{profile(fast)}, .slow{slowDuration}};
     }
 
-    /** \brief The attempt which decided `check_relative_performance`, and its
-               outcome.
+    /** \brief How many attempts `check_relative_performance` made, and the
+               outcome of the last.
      */
-    struct relative_performance_decision
+    struct relative_performance_conclusion
     {
-      std::size_t                  attempt{};
-      relative_performance_outcome outcome{};
+      std::size_t                          attempts{};
+      relative_performance_attempt_outcome outcome{};
     };
 
-    /** \brief Executes attempts until one decides the check, and returns the
-               last attempt executed.
+    /** \brief Executes attempts in turn, and returns how many it made and the
+               outcome of the last.
 
-        An attempt which passes decides the check. In false-negative mode, an
-        attempt which fails decides the check instead. The last attempt
-        allowed decides the check whatever its outcome.
+        In standard and false-positive modes, the attempts stop after the
+        first which passes. In false-negative mode, they stop after the first
+        which fails. In every mode, they stop after the last attempt allowed,
+        whatever its outcome.
      */
     template<test_mode Mode, performance_task F, performance_task S>
     [[nodiscard]]
-    relative_performance_decision execute_attempts(const F& fast,
-                                                   const S& slow,
-                                                   const relative_performance_parameters& parameters)
+    relative_performance_conclusion execute_attempts(const F& fast,
+                                                     const S& slow,
+                                                     const relative_performance_parameters& parameters)
     {
       static_assert(relative_performance_max_attempts > 0);
 
@@ -183,19 +229,20 @@ namespace sequoia::testing
         }
       };
 
-      auto isDecisive{
-        [](const relative_performance_outcome& outcome) {
+      auto stopsFurtherAttempts{
+        [](const relative_performance_attempt_outcome& outcome) {
           return (Mode == test_mode::false_negative) ? outcome.failure.has_value() : !outcome.failure.has_value();
         }
       };
 
       for(const auto attempt : std::views::iota(1uz, relative_performance_max_attempts))
       {
-        if(const auto outcome{executeAttempt(attempt)}; isDecisive(outcome))
-          return {.attempt{attempt}, .outcome{outcome}};
+        if(const auto outcome{executeAttempt(attempt)}; stopsFurtherAttempts(outcome))
+          return {.attempts{attempt}, .outcome{outcome}};
       }
 
-      return {.attempt{relative_performance_max_attempts}, .outcome{executeAttempt(relative_performance_max_attempts)}};
+      return {.attempts{relative_performance_max_attempts},
+              .outcome{executeAttempt(relative_performance_max_attempts)}};
     }
   }
 
@@ -219,6 +266,12 @@ namespace sequoia::testing
        starts. So state a task holds by value starts afresh in every trial,
        while any other state it uses, such as state reached through a
        reference or a pointer, is shared by every trial.
+
+       If a task returns a value, each trial passes the value to
+       `do_not_optimize_away` before the timing stops. So the timing includes
+       the computation of the value. An optimized build may remove any other
+       computation whose result nothing uses. To time such a computation,
+       pass its result to `do_not_optimize_away` within the task.
 
        Each attempt estimates the speed-up from the ratio of the tasks'
        durations in each trial, and puts an interval around the estimate. The
@@ -253,7 +306,7 @@ namespace sequoia::testing
                                   const relative_performance_parameters& parameters)
   {
     sentinel<Mode> sentry{logger, std::string{description}};
-    sentry.log_performance_check();
+    const auto checkIndex{sentry.log_performance_check()};
 
     if(!(parameters.prediction.lower > 1) || !(parameters.prediction.upper > 1))
       throw std::invalid_argument{"Relative performance test requires speed-up factors > 1"};
@@ -267,12 +320,13 @@ namespace sequoia::testing
                     relative_performance_minimum_trials_floor)
       };
 
-    const auto [attempt, outcome]{impl::execute_attempts<Mode>(fast, slow, parameters)};
+    const auto [attempts, outcome]{impl::execute_attempts<Mode>(fast, slow, parameters)};
+    sentry.log_performance_check_attempts(checkIndex, attempts);
 
     sentry.append_to_message(
       impl::summarize_attempt(outcome,
-                              impl::trials_of_attempt(parameters.minimum_trials, attempt),
-                              attempt,
+                              impl::trials_of_attempt(parameters.minimum_trials, attempts),
+                              attempts,
                               parameters.prediction)
     );
 
@@ -329,11 +383,13 @@ namespace sequoia::testing
 
       \returns
       -# `referenceOutput`, if `text_with_zeroed_measurements` gives the same
-         result for it as for `testOutput`;
+         result for it as for `testOutput`, each given `attemptCountStability`;
       -# `testOutput`, otherwise.
    */
   [[nodiscard]]
-  std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);
+  std::string_view postprocess(std::string_view testOutput,
+                               std::string_view referenceOutput,
+                               attempt_count_stability attemptCountStability);
 
   /**\brief class template from which all concrete tests should derive */
 
@@ -353,6 +409,24 @@ namespace sequoia::testing
 
     basic_performance_test(basic_performance_test&&)            noexcept = default;
     basic_performance_test& operator=(basic_performance_test&&) noexcept = default;
+
+    /** \brief Summarizes the checks.
+
+        `postprocess` chooses between the run's diagnostics output and the
+        contents of the existing diagnostics file, given
+        `attemptCountStability`. The summary carries the chosen text.
+
+        A test whose checks typically make the same number of attempts from
+        run to run may hide `summarize(duration)` with its own. Its
+        replacement calls this one with
+        `attempt_count_stability::typically_stable`. The diagnostics output
+        then records the number of trials and the attempt. So a run in which
+        a check makes a different number of attempts changes the diagnostics
+        file.
+     */
+    [[nodiscard]]
+    log_summary summarize(duration delta, attempt_count_stability attemptCountStability) const
+      requires (Mode != test_mode::standard);
   };
 
   /** \anchor performance_test_alias */

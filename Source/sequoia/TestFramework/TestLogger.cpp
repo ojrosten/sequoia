@@ -281,27 +281,29 @@ namespace sequoia::testing
     , m_CriticalFailures{logger.results().critical_failures}
     , m_ExecutionDuration{delta}
   {
+    const auto performanceChecks{logger.results().attempts_per_performance_check.size()};
+
     switch(mode)
     {
     case test_mode::standard:
       m_StandardTopLevelFailures    = logger.results().top_level_failures - logger.results().performance_failures;
       m_StandardDeepFailures        = logger.results().failures - logger.results().performance_failures;
       m_StandardPerformanceFailures = logger.results().performance_failures;
-      m_StandardTopLevelChecks      = logger.results().top_level_checks - logger.results().performance_checks;
-      m_StandardDeepChecks          = logger.results().deep_checks - logger.results().performance_checks;
-      m_StandardPerformanceChecks   = logger.results().performance_checks;
+      m_StandardTopLevelChecks      = logger.results().top_level_checks - performanceChecks;
+      m_StandardDeepChecks          = logger.results().deep_checks - performanceChecks;
+      m_StandardPerformanceChecks   = performanceChecks;
       break;
     case test_mode::false_positive:
       m_FalsePositiveFailures            = logger.results().top_level_failures - logger.results().performance_failures;
       m_FalsePositivePerformanceFailures = logger.results().performance_failures;
-      m_FalsePositiveChecks              = logger.results().top_level_checks - logger.results().performance_checks;
-      m_FalsePositivePerformanceChecks   = logger.results().performance_checks;
+      m_FalsePositiveChecks              = logger.results().top_level_checks - performanceChecks;
+      m_FalsePositivePerformanceChecks   = performanceChecks;
       break;
     case test_mode::false_negative:
-      m_FalseNegativePerformanceFailures = logger.results().performance_checks - logger.results().performance_failures;
+      m_FalseNegativePerformanceFailures = performanceChecks - logger.results().performance_failures;
       m_FalseNegativeFailures            = logger.results().top_level_failures - m_FalseNegativePerformanceFailures;
-      m_FalseNegativeChecks              = logger.results().top_level_checks - logger.results().performance_checks;
-      m_FalseNegativePerformanceChecks   = logger.results().performance_checks;
+      m_FalseNegativeChecks              = logger.results().top_level_checks - performanceChecks;
+      m_FalseNegativePerformanceChecks   = performanceChecks;
       break;
     }
   }
