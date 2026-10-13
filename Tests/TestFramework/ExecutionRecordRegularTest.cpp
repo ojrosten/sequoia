@@ -223,7 +223,7 @@ namespace sequoia::testing
       readRecord(startLine + "execution duration 1500us\nrunner overhead -250us\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A negative runner overhead whose magnitude is too large for a signed count",
+      "A negative runner overhead whose magnitude exceeds the largest signed count",
       readRecord(startLine + "execution duration 1500us\nrunner overhead -9223372036854775808us\n"));
 
     check_exception_thrown<std::runtime_error>(
@@ -239,7 +239,7 @@ namespace sequoia::testing
       readRecord(startLine + timingLines + "performance check attempts 02\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A line after the timings which gives no number of attempts",
+      "A line which gives no number of attempts, after one which does",
       readRecord(startLine + timingLines + "performance check attempts 2\nfoo\n"));
 
     check_exception_thrown<std::runtime_error>(

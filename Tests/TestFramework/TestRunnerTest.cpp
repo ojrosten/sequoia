@@ -1639,10 +1639,10 @@ namespace sequoia::testing
     check("The record of a test which passed has a completion",     passing.test_record.completion.has_value());
     check("The record of a test whose body threw has a completion", throwing.test_record.completion.has_value());
 
-    check("A run writes its stamp after its call and before the start of a test which passes",
+    check("The stamp's start lies between the call to execute and the start of a test which passed",
           passing.stamp_in_order());
 
-    check("A run writes its stamp after its call and before the start of a test whose body throws",
+    check("The stamp's start lies between the call to execute and the start of a test whose body threw",
           throwing.stamp_in_order());
   }
 

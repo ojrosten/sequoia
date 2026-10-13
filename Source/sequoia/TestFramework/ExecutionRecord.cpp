@@ -131,7 +131,7 @@ namespace sequoia::testing
         finds in that line.
 
         \throws std::runtime_error if `s` has no next line, or `recognize`
-                finds no value in the line
+                finds no value in that line
      */
     template<std::invocable<std::string_view> Recognizer>
     [[nodiscard]]

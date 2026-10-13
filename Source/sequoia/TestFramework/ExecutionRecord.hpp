@@ -55,7 +55,7 @@ namespace sequoia::testing
 
     friend std::ostream& operator<<(std::ostream& s, const execution_record& record);
 
-    /** \brief Reads a record from the rest of `s`.
+    /** \brief Reads a record which fills the rest of `s`.
 
         Sets `failbit` if `s` is at its end. Modifies `record` only after
         reading a whole record.

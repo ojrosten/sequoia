@@ -80,7 +80,7 @@ Expected a runner overhead but found 'runner overhead -250us'
 =======================================
 
 Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 226
-A negative runner overhead whose magnitude is too large for a signed count
+A negative runner overhead whose magnitude exceeds the largest signed count
 
 Expected Exception Type:
 [std::runtime_error]
@@ -116,7 +116,7 @@ Expected a number of attempts but found 'performance check attempts 02'
 =======================================
 
 Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 242
-A line after the timings which gives no number of attempts
+A line which gives no number of attempts, after one which does
 
 Expected Exception Type:
 [std::runtime_error]
