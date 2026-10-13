@@ -311,16 +311,11 @@ jobs:
         # A report must not fail the job, hence each `|| true`.
         run: |
           case "$RUNNER_OS" in
-            Linux)
-              grep -m1 'model name' /proc/cpuinfo || true
-              echo "logical processors: $(nproc)" ;;
-            macOS)
-              sysctl -n machdep.cpu.brand_string || true
-              echo "logical processors: $(sysctl -n hw.logicalcpu)" ;;
-            Windows)
-              powershell -NoProfile -Command \
-                "Get-CimInstance Win32_Processor | ForEach-Object { \$_.Name; 'logical processors: ' + \$_.NumberOfLogicalProcessors }" || true ;;
+            Linux)   grep -m1 'model name' /proc/cpuinfo || true ;;
+            macOS)   sysctl -n machdep.cpu.brand_string || true ;;
+            Windows) powershell -NoProfile -Command '(Get-CimInstance Win32_Processor).Name' || true ;;
           esac
+          echo "logical processors: $(getconf _NPROCESSORS_ONLN)"
           vm_size_url='http://169.254.169.254/metadata/instance/compute/vmSize?api-version=2021-02-01&format=text'
           vm_size=$(curl -fs --max-time 3 -H 'Metadata: true' "$vm_size_url" || true)
           echo "VM size: ${vm_size:-not reported}"
