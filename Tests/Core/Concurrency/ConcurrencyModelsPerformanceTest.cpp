@@ -8,6 +8,8 @@
 #include "ConcurrencyModelsPerformanceTest.hpp"
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
+#include <functional>
+
 namespace sequoia::testing
 {
   using namespace concurrency;
@@ -125,7 +127,7 @@ namespace sequoia::testing
     test_waiting_task_return(std::chrono::milliseconds{15});
   }
 
-  /* Each model is constructed once, before its checks, and the tasks reach it
+  /* Each model is constructed once, before its checks, and the checks reach it
      by reference. A task which constructed its model would add the start and
      join of a pool's threads to every trial's timing.
 
@@ -149,19 +151,14 @@ namespace sequoia::testing
       waiting_task<wait, serial<void>>             nullThreadTask{2u, wait{millisecs}};
       waiting_task<wait, asynchronous<void>>       asyncTask{2u, wait{millisecs}};
 
-      auto threadPoolFn{[&threadPoolTask](){ threadPoolTask(); }};
-
-      auto threadPoolMonoFn{[&threadPoolMonoTask]() { threadPoolMonoTask(); }};
-
-      auto nullThreadFn{[&nullThreadTask]() { nullThreadTask(); }};
-
-      auto asyncFn{[&asyncTask]() { asyncTask(); }};
-
-      check_relative_performance("Two Waiting tasks; pool_2/null", threadPoolFn, nullThreadFn,
+      check_relative_performance("Two Waiting tasks; pool_2/null",
+                                 std::ref(threadPoolTask), std::ref(nullThreadTask),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
-      check_relative_performance("Two Waiting tasks; pool_2M/null", threadPoolMonoFn, nullThreadFn,
+      check_relative_performance("Two Waiting tasks; pool_2M/null",
+                                 std::ref(threadPoolMonoTask), std::ref(nullThreadTask),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
-      check_relative_performance("Two Waiting tasks; async/null", asyncFn, nullThreadFn,
+      check_relative_performance("Two Waiting tasks; async/null",
+                                 std::ref(asyncTask), std::ref(nullThreadTask),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
     }
 
@@ -170,15 +167,11 @@ namespace sequoia::testing
       waiting_task<wait, thread_pool<void, false>> threadPoolMonoTask{4u, wait{millisecs}, 2u};
       waiting_task<wait, serial<void>>             nullThreadTask{4u, wait{millisecs}};
 
-      auto threadPoolFn{[&threadPoolTask](){ threadPoolTask(); }};
-
-      auto threadPoolMonoFn{[&threadPoolMonoTask]() { threadPoolMonoTask(); }};
-
-      auto nullThreadFn{[&nullThreadTask]() { nullThreadTask(); }};
-
-      check_relative_performance("Four Waiting tasks; pool_2/null", threadPoolFn, nullThreadFn,
+      check_relative_performance("Four Waiting tasks; pool_2/null",
+                                 std::ref(threadPoolTask), std::ref(nullThreadTask),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
-      check_relative_performance("Four Waiting tasks; pool_2M/null", threadPoolMonoFn, nullThreadFn,
+      check_relative_performance("Four Waiting tasks; pool_2M/null",
+                                 std::ref(threadPoolMonoTask), std::ref(nullThreadTask),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
     }
 
@@ -187,15 +180,11 @@ namespace sequoia::testing
       waiting_task<wait, thread_pool<void, false>> threadPoolMonoTask{4u, wait{millisecs}, 4u};
       waiting_task<wait, serial<void>>             nullThreadTask{4u, wait{millisecs}};
 
-      auto threadPoolFn{[&threadPoolTask](){ threadPoolTask(); }};
-
-      auto threadPoolMonoFn{[&threadPoolMonoTask]() { threadPoolMonoTask(); }};
-
-      auto nullThreadFn{[&nullThreadTask]() { nullThreadTask(); }};
-
-      check_relative_performance("Four Waiting tasks; pool_4/null", threadPoolFn, nullThreadFn,
+      check_relative_performance("Four Waiting tasks; pool_4/null",
+                                 std::ref(threadPoolTask), std::ref(nullThreadTask),
                                  {.prediction{.lower{3.5}, .upper{4.1}}});
-      check_relative_performance("Four Waiting tasks; pool_4M/null", threadPoolMonoFn, nullThreadFn,
+      check_relative_performance("Four Waiting tasks; pool_4M/null",
+                                 std::ref(threadPoolMonoTask), std::ref(nullThreadTask),
                                  {.prediction{.lower{3.5}, .upper{4.1}}});
     }
   }
@@ -211,19 +200,14 @@ namespace sequoia::testing
       waiting_task<wait_return, serial<int>>             nullThreadTask{2u, waitReturnVal};
       waiting_task<wait_return, asynchronous<int>>       asyncTask{2u, waitReturnVal};
 
-      auto threadPoolFn{[&threadPoolTask](){ return threadPoolTask(); }};
-
-      auto threadPoolMonoFn{[&threadPoolMonoTask](){ return threadPoolMonoTask(); }};
-
-      auto nullThreadFn{[&nullThreadTask]() { return nullThreadTask(); }};
-
-      auto asyncFn{[&asyncTask]() { return asyncTask(); }};
-
-      check_relative_performance("Two Waiting tasks; pool_2/null", threadPoolFn, nullThreadFn,
+      check_relative_performance("Two Waiting tasks; pool_2/null",
+                                 std::ref(threadPoolTask), std::ref(nullThreadTask),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
-      check_relative_performance("Two Waiting tasks; pool_2M/null", threadPoolMonoFn, nullThreadFn,
+      check_relative_performance("Two Waiting tasks; pool_2M/null",
+                                 std::ref(threadPoolMonoTask), std::ref(nullThreadTask),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
-      check_relative_performance("Two Waiting tasks; async/null", asyncFn, nullThreadFn,
+      check_relative_performance("Two Waiting tasks; async/null",
+                                 std::ref(asyncTask), std::ref(nullThreadTask),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
     }
   }
