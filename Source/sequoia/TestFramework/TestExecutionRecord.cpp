@@ -51,24 +51,6 @@ namespace sequoia::testing
       return std::format("performance check attempts {}", attempts);
     }
 
-    [[nodiscard]]
-    std::string lines_of(const test_execution_completion& completion)
-    {
-      auto attemptsLine{[](std::size_t attempts) { return std::format("{}\n", attempts_entry(attempts)); }};
-
-      const auto attemptsLines{
-          completion.performance_check_attempts
-        | std::views::transform(attemptsLine)
-        | std::views::join
-        | std::ranges::to<std::string>()
-      };
-
-      return std::format("{}\n{}\n{}",
-                         duration_entry(execution_duration_label, completion.execution_duration),
-                         duration_entry(runner_overhead_label,    completion.runner_overhead),
-                         attemptsLines);
-    }
-
     // Each recognizer builds a value from the numbers in an entry. It returns
     // the value only if the entry's writer reprints the entry exactly from
     // that value.
@@ -169,14 +151,10 @@ namespace sequoia::testing
     [[nodiscard]]
     std::optional<test_execution_completion> read_completion(std::istream& s)
     {
-      if(!more_to_read(s))
-        return std::nullopt;
+      if(test_execution_completion completion{}; more_to_read(s) && (s >> completion))
+        return completion;
 
-      return test_execution_completion{
-        .execution_duration{read_entry(s, "an execution duration", execution_duration_in)},
-        .runner_overhead{read_entry(s, "a runner overhead", runner_overhead_in)},
-        .performance_check_attempts{read_attempts(s)}
-      };
+      return std::nullopt;
     }
 
     /** Reads a `T` from `file`. `description` names a `T` in the messages
@@ -211,9 +189,46 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::string to_string(const test_execution_completion& completion)
+  {
+    auto attemptsLine{[](std::size_t attempts) { return std::format("{}\n", attempts_entry(attempts)); }};
+
+    const auto attemptsLines{
+        completion.performance_check_attempts
+      | std::views::transform(attemptsLine)
+      | std::views::join
+      | std::ranges::to<std::string>()
+    };
+
+    return std::format("{}\n{}\n{}",
+                       duration_entry(execution_duration_label, completion.execution_duration),
+                       duration_entry(runner_overhead_label,    completion.runner_overhead),
+                       attemptsLines);
+  }
+
+  std::ostream& operator<<(std::ostream& s, const test_execution_completion& completion)
+  {
+    return s << to_string(completion);
+  }
+
+  std::istream& operator>>(std::istream& s, test_execution_completion& completion)
+  {
+    if(!peek_for_more(s))
+      return s;
+
+    completion = test_execution_completion{
+      .execution_duration{read_entry(s, "an execution duration", execution_duration_in)},
+      .runner_overhead{read_entry(s, "a runner overhead", runner_overhead_in)},
+      .performance_check_attempts{read_attempts(s)}
+    };
+
+    return s;
+  }
+
+  [[nodiscard]]
   std::string to_string(const test_execution_record& record)
   {
-    const auto completionLines{record.completion ? lines_of(record.completion.value()) : std::string{}};
+    const auto completionLines{record.completion ? to_string(record.completion.value()) : std::string{}};
     return std::format("{}\n{}", start_entry(record.start), completionLines);
   }
 
@@ -253,11 +268,7 @@ namespace sequoia::testing
     if(!peek_for_more(s))
       return s;
 
-    const run_stamp read{.start{read_entry(s, "a start", start_in)}};
-    if(std::string line{}; more_to_read(s) && std::getline(s, line))
-      throw std::runtime_error{std::format("Expected the end of the stamp but found '{}'", line)};
-
-    stamp = read;
+    stamp = run_stamp{.start{read_entry(s, "a start", start_in)}};
     return s;
   }
 

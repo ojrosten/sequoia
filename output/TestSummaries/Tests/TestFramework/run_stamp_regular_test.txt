@@ -1,2 +1,2 @@
 run_stamp_regular_test
-Standard Top Level Checks:                15;  Failures:  0  [Deep checks: 54]
+Standard Top Level Checks:                14;  Failures:  0  [Deep checks: 53]

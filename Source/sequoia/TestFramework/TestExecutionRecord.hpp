@@ -26,6 +26,9 @@ namespace sequoia::testing
       `performance_check_attempts` gives the number of attempts each
       performance check made. A check which threw before its last attempt
       finished has no entry.
+
+      `operator>>` reads back what `operator<<` writes, provided that no
+      duration is negative.
    */
   struct test_execution_completion
   {
@@ -35,7 +38,26 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const test_execution_completion&, const test_execution_completion&) noexcept = default;
+
+    friend std::ostream& operator<<(std::ostream& s, const test_execution_completion& completion);
+
+    /** \brief Reads a completion which runs from the read position of `s`
+               to the end of `s`.
+
+        A completion has no end marker: its entries of attempts run until
+        the stream ends. So nothing can follow a completion in `s`.
+
+        Sets `failbit` if the read position is at the end of `s`. Modifies
+        `completion` only after reading a whole completion.
+
+        \throws std::runtime_error if the text from the read position is not
+                a completion, or gives a negative duration
+     */
+    friend std::istream& operator>>(std::istream& s, test_execution_completion& completion);
   };
+
+  [[nodiscard]]
+  std::string to_string(const test_execution_completion& completion);
 
   /** \brief The start of a test's execution, and its completion if the test
              has finished.
@@ -57,6 +79,9 @@ namespace sequoia::testing
 
     /** \brief Reads a record which runs from the read position of `s` to
                the end of `s`.
+
+        Once the start is read, any text that follows is read as the
+        record's completion, which runs to the end of `s`.
 
         Sets `failbit` if the read position is at the end of `s`. Modifies
         `record` only after reading a whole record.
@@ -98,14 +123,13 @@ namespace sequoia::testing
 
     friend std::ostream& operator<<(std::ostream& s, const run_stamp& stamp);
 
-    /** \brief Reads a stamp which runs from the read position of `s` to the
-               end of `s`.
+    /** \brief Reads a stamp from the line at the read position of `s`.
 
         Sets `failbit` if the read position is at the end of `s`. Modifies
-        `stamp` only after reading a whole stamp.
+        `stamp` only after reading a whole stamp. Any line after the stamp's
+        is left unread.
 
-        \throws std::runtime_error if the text from the read position is not
-                a stamp
+        \throws std::runtime_error if the line is not a stamp
      */
     friend std::istream& operator>>(std::istream& s, run_stamp& stamp);
   };

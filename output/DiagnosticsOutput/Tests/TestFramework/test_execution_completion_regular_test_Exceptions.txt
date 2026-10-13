@@ -1,0 +1,99 @@
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 113
+A completion which does not begin with the execution duration
+
+Expected Exception Type:
+[std::runtime_error]
+Expected an execution duration but found 'runner overhead 250us'
+
+=======================================
+
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 117
+An execution duration in a unit other than microseconds
+
+Expected Exception Type:
+[std::runtime_error]
+Expected an execution duration but found 'execution duration 2ms'
+
+=======================================
+
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 121
+An execution duration with a leading zero
+
+Expected Exception Type:
+[std::runtime_error]
+Expected an execution duration but found 'execution duration 01500us'
+
+=======================================
+
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 125
+A negative runner overhead
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a runner overhead but found 'runner overhead -250us'
+
+=======================================
+
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 129
+A negative runner overhead whose magnitude exceeds the largest signed count
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a runner overhead but found 'runner overhead -9223372036854775808us'
+
+=======================================
+
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 133
+A completion with no runner overhead
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a runner overhead but there are no more lines
+
+=======================================
+
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 137
+A number of attempts which is not a number
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a number of attempts but found 'performance check attempts two'
+
+=======================================
+
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 141
+A number of attempts with a leading zero
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a number of attempts but found 'performance check attempts 02'
+
+=======================================
+
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 145
+A line which gives no number of attempts, after one which does
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a number of attempts but found 'foo'
+
+=======================================
+
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 149
+A runner overhead where a number of attempts should be
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a number of attempts but found 'runner overhead 250us'
+
+=======================================
+
+Tests/TestFramework/TestExecutionCompletionRegularTest.cpp, Line 153
+A number of attempts with a label other than the one operator<< writes
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a number of attempts but found 'check attempts 2'
+
+=======================================
+

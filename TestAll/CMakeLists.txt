@@ -203,6 +203,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/StringFreeDiagnostics.cpp
                ${TestDir}/TestFramework/SumTypesFreeDiagnostics.cpp
                ${TestDir}/TestFramework/SummaryFreeTest.cpp
+               ${TestDir}/TestFramework/TestExecutionCompletionRegularTest.cpp
                ${TestDir}/TestFramework/TestExecutionRecordRegularTest.cpp
                ${TestDir}/TestFramework/TestExecutionRecordTestingDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp

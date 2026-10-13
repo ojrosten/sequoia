@@ -112,6 +112,14 @@ namespace sequoia::testing
           "A stamp with no final line break reads as one with the line break",
           readWithoutFinalLineBreak(stamp()),
           std::optional{stamp()});
+
+    std::stringstream followed{to_string(stamp()) + "next line\n"};
+    run_stamp readBack{};
+    followed >> readBack;
+    std::string rest{};
+    std::getline(followed, rest);
+
+    check(equality, "operator>> leaves the line after a stamp unread", rest, std::string{"next line"});
   }
 
   void run_stamp_regular_test::test_written_format()
@@ -137,18 +145,10 @@ namespace sequoia::testing
       "A first line which does not give the start",
       readStamp("begun 2026-10-13T09:15:04.123Z\n"));
 
-    check_exception_thrown<std::runtime_error>(
-      "A line after the start",
-      readStamp("started 2026-10-13T09:15:04.123Z\nexecution duration 1500us\n"));
-
-    check_exception_thrown<std::runtime_error>(
-      "A blank line after the start",
-      readStamp("started 2026-10-13T09:15:04.123Z\n\n"));
-
     run_stamp readInto{stamp()};
     try
     {
-      std::stringstream s{"started 2026-10-14T09:15:04.123Z\nexecution duration 1500us\n"};
+      std::stringstream s{"started 2026-13-14T09:15:04.123Z\n"};
       s >> readInto;
     }
     catch(const std::runtime_error&)

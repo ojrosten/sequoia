@@ -183,9 +183,6 @@ namespace sequoia::testing
       }
     };
 
-    const std::string startLine{"started 2026-10-13T09:15:04.123Z\n"},
-                      timingLines{"execution duration 1500us\nrunner overhead 250us\n"};
-
     check_exception_thrown<std::runtime_error>(
       "A first line which does not give the start",
       readRecord("begun 2026-10-13T09:15:04.123Z\n"));
@@ -207,48 +204,8 @@ namespace sequoia::testing
       readRecord("started 2026-10-13T2147483000:00:00.000Z\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A completion which does not begin with the execution duration",
-      readRecord(startLine + "runner overhead 250us\n"));
-
-    check_exception_thrown<std::runtime_error>(
-      "An execution duration in a unit other than microseconds",
-      readRecord(startLine + "execution duration 2ms\nrunner overhead 250us\n"));
-
-    check_exception_thrown<std::runtime_error>(
-      "An execution duration with a leading zero",
-      readRecord(startLine + "execution duration 01500us\nrunner overhead 250us\n"));
-
-    check_exception_thrown<std::runtime_error>(
-      "A negative runner overhead",
-      readRecord(startLine + "execution duration 1500us\nrunner overhead -250us\n"));
-
-    check_exception_thrown<std::runtime_error>(
-      "A negative runner overhead whose magnitude exceeds the largest signed count",
-      readRecord(startLine + "execution duration 1500us\nrunner overhead -9223372036854775808us\n"));
-
-    check_exception_thrown<std::runtime_error>(
-      "A completion with no runner overhead",
-      readRecord(startLine + "execution duration 1500us\n"));
-
-    check_exception_thrown<std::runtime_error>(
-      "A number of attempts which is not a number",
-      readRecord(startLine + timingLines + "performance check attempts two\n"));
-
-    check_exception_thrown<std::runtime_error>(
-      "A number of attempts with a leading zero",
-      readRecord(startLine + timingLines + "performance check attempts 02\n"));
-
-    check_exception_thrown<std::runtime_error>(
-      "A line which gives no number of attempts, after one which does",
-      readRecord(startLine + timingLines + "performance check attempts 2\nfoo\n"));
-
-    check_exception_thrown<std::runtime_error>(
-      "A runner overhead where a number of attempts should be",
-      readRecord(startLine + timingLines + "runner overhead 250us\n"));
-
-    check_exception_thrown<std::runtime_error>(
-      "A number of attempts with a label other than the one operator<< writes",
-      readRecord(startLine + timingLines + "check attempts 2\n"));
+      "A record followed by another record",
+      readRecord("started 2026-10-13T09:15:04.123Z\nstarted 2026-10-14T09:15:04.123Z\n"));
 
     test_execution_record readInto{finished_record()};
     try

@@ -193,6 +193,7 @@
 #include "TestFramework/StringFreeDiagnostics.hpp"
 #include "TestFramework/SumTypesFreeDiagnostics.hpp"
 #include "TestFramework/SummaryFreeTest.hpp"
+#include "TestFramework/TestExecutionCompletionRegularTest.hpp"
 #include "TestFramework/TestExecutionRecordRegularTest.hpp"
 #include "TestFramework/TestExecutionRecordTestingDiagnostics.hpp"
 #include "TestFramework/TestRunnerDiagnostics.hpp"
