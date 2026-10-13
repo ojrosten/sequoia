@@ -34,6 +34,7 @@
 #include <span>
 #include <system_error>
 #include <format>
+#include <fstream>
 #include <functional>
 #include <mutex>
 #include <utility>
@@ -87,6 +88,20 @@ namespace sequoia::testing
       fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
 
       replace_contents_quietly(file, text, write_mode::binary);
+    }
+
+    void empty_quietly(const fs::path& file)
+    {
+      std::error_code selectsTheNonThrowingOverload{};
+      fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
+
+      std::ofstream ofile{file, std::ios_base::out | std::ios_base::binary};
+    }
+
+    void append_quietly(const fs::path& file, std::string_view text)
+    {
+      std::ofstream ofile{file, std::ios_base::app | std::ios_base::binary};
+      ofile.write(text.data(), static_cast<std::streamsize>(text.size()));
     }
 
     [[nodiscard]]
@@ -944,7 +959,7 @@ namespace sequoia::testing
     , m_ExecutionTimer{executionTimer}
     , m_Vessel{vessel}
   {
-    overwrite_quietly(m_File, to_string(m_Record));
+    append_quietly(m_File, to_string(m_Record));
   }
 
   test_to_run::scoped_execution_record::~scoped_execution_record()
@@ -956,7 +971,12 @@ namespace sequoia::testing
       .performance_check_attempts{attempt_counts_of_finished_checks(m_Vessel.attempts_per_performance_check())}
     };
 
-    overwrite_quietly(m_File, to_string(m_Record));
+    append_quietly(m_File, to_string(m_Record));
+  }
+
+  void test_to_run::clear_execution_records() const
+  {
+    empty_quietly(m_ExecutionRecord.file_path());
   }
 
   [[nodiscard]]
@@ -1615,6 +1635,7 @@ namespace sequoia::testing
       fs::remove_all(proj_paths().output().instability_analysis());
       const run_stamp stamp{.start_time{current_time_to_the_millisecond()}};
       overwrite_quietly(proj_paths().execution_records().stamp(), to_string(stamp));
+      clear_execution_records();
       check_for_coarse_sleeps();
     }
 
@@ -2060,6 +2081,14 @@ namespace sequoia::testing
     };
 
     return failures;
+  }
+
+  void test_runner::clear_execution_records() const
+  {
+    auto holdsTest{[](const suite_node& node) { return node.optTest.has_value(); }};
+
+    for(const auto& node : m_Suites.node_weights() | std::views::filter(holdsTest))
+      node.optTest->clear_execution_records();
   }
 
   [[nodiscard]]

@@ -92,13 +92,16 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string to_string(const test_execution_record& record);
 
-  /** \brief Reads the record of a test's execution held by `file`.
+  /** \brief Reads every record of a test's execution which `file` holds,
+             in the order in which they were written.
+
+      \returns The records, none if `file` is empty.
 
       \throws std::runtime_error if `file` cannot be opened, or holds
-              anything other than one record
+              anything other than records, one after another
    */
   [[nodiscard]]
-  test_execution_record read_test_execution_record(const std::filesystem::path& file);
+  std::vector<test_execution_record> read_test_execution_records(const std::filesystem::path& file);
 
   /** \brief The start time of a run of tests.
 

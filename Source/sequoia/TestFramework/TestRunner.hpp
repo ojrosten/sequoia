@@ -456,6 +456,17 @@ namespace sequoia::testing
     {
       m_Vessel.reset_results();
     }
+
+    /** \brief Empties the file of the test's execution records, creating
+               it if need be.
+
+        Each record of the test which the run then writes is appended, so
+        follows none of an earlier run's. The file is emptied before the run
+        rather than created by its first record, so that a test's execution
+        neither creates nor replaces a file. A failure is skipped rather than
+        reported.
+     */
+    void clear_execution_records() const;
   private:
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
 
@@ -486,17 +497,19 @@ namespace sequoia::testing
       log_summary::duration m_ExecutionDuration{};
     };
 
-    /** \brief An RAII wrapper to write a test's execution record.
+    /** \brief An RAII wrapper to append a test's execution records to
+               `file`.
 
-        On construction, the record gives the test's start time. On
-        destruction, the record adds the test's execution duration and the
-        runner's overhead so far, from `executionTimer`. Then the record adds
-        the number of attempts each of the test's performance checks made, from
-        `vessel`.
+        On construction, appends a record giving the test's start time. On
+        destruction, appends that record again, with a completion: the test's
+        execution duration and the runner's overhead so far, from
+        `executionTimer`, and the number of attempts each of the test's
+        performance checks made, from `vessel`. So the last record in `file`
+        is of the test's latest execution, and has no completion while the
+        test executes.
 
-        A record which cannot be written is skipped rather than reported. The
-        file then keeps the last record the runner managed to write, which
-        may be an earlier run's. An allocation failure is not caught.
+        A record which cannot be written is skipped rather than reported. An
+        allocation failure is not caught.
      */
     class [[nodiscard]] scoped_execution_record
     {
@@ -850,6 +863,11 @@ namespace sequoia::testing
     void sort_tests();
 
     void reset_tests();
+
+    /** \brief Empties the file of each test's execution records, as a run
+               of the tests begins.
+     */
+    void clear_execution_records() const;
 
     return_code run_tests(std::optional<std::size_t> id);
 

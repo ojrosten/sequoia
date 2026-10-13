@@ -298,9 +298,23 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  test_execution_record read_test_execution_record(const fs::path& file)
+  std::vector<test_execution_record> read_test_execution_records(const fs::path& file)
   {
-    return read_from<test_execution_record>(file, "test execution record");
+    if(std::ifstream ifile{file})
+    {
+      try
+      {
+        return std::views::istream<test_execution_record>(ifile) | std::ranges::to<std::vector>();
+      }
+      catch(const std::runtime_error& e)
+      {
+        throw std::runtime_error{
+          std::format("Unable to read the test execution records in {}: {}", file.generic_string(), e.what())
+        };
+      }
+    }
+
+    throw std::runtime_error{report_failed_read(file)};
   }
 
   [[nodiscard]]
