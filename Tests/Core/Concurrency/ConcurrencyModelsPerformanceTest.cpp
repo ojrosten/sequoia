@@ -127,10 +127,9 @@ namespace sequoia::testing
     test_waiting_task_return(std::chrono::milliseconds{15});
   }
 
-  /* The checks take each waiting_task by reference, so its model is
-     constructed once, before the checks. Constructing the model inside a timed
-     call would add the start and join of a pool's threads to every trial's
-     timing.
+  /* Each pool is constructed before its checks. The checks take the pool's
+     waiting_task by reference, so no trial times the start or join of the
+     pool's threads.
 
      The lower bounds sit further below the ideal speed-up than a symmetric tolerance would put
      them, because a pool of N on a machine with N hardware threads has no headroom: the pool's
