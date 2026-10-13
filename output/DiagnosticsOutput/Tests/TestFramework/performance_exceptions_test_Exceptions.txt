@@ -48,7 +48,7 @@ Fast task performs a check
 
 Expected Exception Type:
 [std::logic_error]
-The tasks of a performance check cannot perform checks
+Checks cannot be nested within a performance check
 
 =======================================
 
@@ -57,7 +57,7 @@ Slow task performs a performance check
 
 Expected Exception Type:
 [std::logic_error]
-The tasks of a performance check cannot perform checks
+Checks cannot be nested within a performance check
 
 =======================================
 
