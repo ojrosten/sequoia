@@ -292,11 +292,6 @@ namespace sequoia::testing
 
        Any exception thrown by `fast` or `slow` propagates.
 
-       A performance check made by the function given to another check, such
-       as `check_exception_thrown`, counts as a deep check of the other check,
-       not as a performance check. Its failure counts as a failure of the
-       other check.
-
        \pre Neither `fast` nor `slow` performs a check using a different
        instance of the logger.
 

@@ -295,7 +295,9 @@ namespace sequoia::testing
       a localized and simple manner. In particular, a given check may actually be
       composed of many sub-checks. For standard checks, we want to count this as a
       single 'top-level' check. For false-positive checks success is counted as a failure
-      of one or more of the sub-checks. The sentinels deal with all of this smoothly
+      of one or more of the sub-checks. Likewise, a performance check counts as a
+      performance check only at the top level; within another check, it is one of
+      that check's sub-checks. The sentinels deal with all of this smoothly
       in a way which clients of the framework can generally ignore.
 
       4. sentinel may be used to help coordinate output.
