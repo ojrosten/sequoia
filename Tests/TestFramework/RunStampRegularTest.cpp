@@ -146,7 +146,7 @@ namespace sequoia::testing
     };
 
     check_exception_thrown<std::runtime_error>(
-      "A first line which does not give the start",
+      "A first line which does not give the start time",
       readStamp("begun 2026-10-13T09:15:04.123Z\n"));
 
     run_stamp readInto{stamp()};
@@ -171,8 +171,6 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       "An empty file",
       [this]() { return read_run_stamp(working_materials() / "Empty.txt"); });
-
-    write_to_file(working_materials() / "Followed.txt", to_string(stamp()) + "next line\n", std::ios_base::binary);
 
     check_exception_thrown<std::runtime_error>(
       "A file with a line after the stamp",

@@ -10,6 +10,8 @@
 /** \file
     \brief The record of a test's execution and the stamp of a run of tests,
            and the functions which write and read them.
+
+    `run_stamp` defines a run of tests.
  */
 
 #include <chrono>
@@ -41,17 +43,14 @@ namespace sequoia::testing
 
     friend std::ostream& operator<<(std::ostream& s, const test_execution_completion& completion);
 
-    /** \brief Reads a completion from the read position of `s`.
-
-        A completion must be the last thing in `s`. Nothing marks its last
-        entry of attempts, so each line after the runner overhead is read as
-        an entry of attempts, and any other line is refused.
+    /** \brief Reads a completion from the read position of `s`, and leaves
+               any text after it unread.
 
         Sets `failbit` if the read position is at the end of `s`. Modifies
         `completion` only after reading a whole completion.
 
-        \throws std::runtime_error if the text from the read position is not
-                a completion, or gives a negative duration
+        \throws std::runtime_error if the text from the read position does
+                not begin with a completion, or gives a negative duration
      */
     friend std::istream& operator>>(std::istream& s, test_execution_completion& completion);
   };
@@ -59,11 +58,12 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string to_string(const test_execution_completion& completion);
 
-  /** \brief The start of a test's execution, and its completion if the test
-             has finished.
+  /** \brief The start time of a test's execution, and its completion if the
+             test has finished.
 
       `operator>>` reads back what `operator<<` writes, provided that the
-      start lies in the years 0 to 32767 and that no duration is negative.
+      start time lies in the years 0 to 32767 and that no duration is
+      negative.
    */
   struct test_execution_record
   {
@@ -77,17 +77,14 @@ namespace sequoia::testing
 
     friend std::ostream& operator<<(std::ostream& s, const test_execution_record& record);
 
-    /** \brief Reads a record from the read position of `s`.
-
-        A record must be the last thing in `s`: its completion has no end
-        marker, so any line after the start is read as part of the
-        completion.
+    /** \brief Reads a record from the read position of `s`, and leaves any
+               text after it unread.
 
         Sets `failbit` if the read position is at the end of `s`. Modifies
         `record` only after reading a whole record.
 
-        \throws std::runtime_error if the text from the read position is not
-                a record, or gives a negative duration
+        \throws std::runtime_error if the text from the read position does
+                not begin with a record, or gives a negative duration
      */
     friend std::istream& operator>>(std::istream& s, test_execution_record& record);
   };
@@ -103,14 +100,14 @@ namespace sequoia::testing
   [[nodiscard]]
   test_execution_record read_test_execution_record(const std::filesystem::path& file);
 
-  /** \brief The start of a run of tests.
+  /** \brief The start time of a run of tests.
 
       A run of tests is a call to `test_runner::execute` which has tests to
       run. Under `locate-instabilities`, one run covers every repetition,
       including the repetitions made in separate processes.
 
       `operator>>` reads back what `operator<<` writes, provided that the
-      start lies in the years 0 to 32767.
+      start time lies in the years 0 to 32767.
    */
   struct run_stamp
   {
@@ -123,13 +120,14 @@ namespace sequoia::testing
 
     friend std::ostream& operator<<(std::ostream& s, const run_stamp& stamp);
 
-    /** \brief Reads a stamp from the line at the read position of `s`.
+    /** \brief Reads a stamp from the read position of `s`, and leaves any
+               text after it unread.
 
         Sets `failbit` if the read position is at the end of `s`. Modifies
-        `stamp` only after reading a whole stamp. Any line after the stamp's
-        is left unread.
+        `stamp` only after reading a whole stamp.
 
-        \throws std::runtime_error if the line is not a stamp
+        \throws std::runtime_error if the text from the read position does
+                not begin with a stamp
      */
     friend std::istream& operator>>(std::istream& s, run_stamp& stamp);
   };

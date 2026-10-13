@@ -30,8 +30,12 @@ namespace sequoia::testing
 
   namespace
   {
-    constexpr std::string_view execution_duration_label{"execution duration"},
-                               runner_overhead_label   {"runner overhead"};
+    constexpr std::string_view execution_duration_label {"execution duration"},
+                               runner_overhead_label    {"runner overhead"},
+                               attempts_label           {"performance check attempts"},
+                               entries_of_attempts_label{"entries of performance check attempts"};
+
+    enum class finished_state : bool { no, yes };
 
     [[nodiscard]]
     std::string start_entry(test_execution_record::start_type start)
@@ -46,9 +50,15 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string attempts_entry(std::size_t attempts)
+    std::string finished_entry(finished_state finished)
     {
-      return std::format("performance check attempts {}", attempts);
+      return std::format("finished {}", finished == finished_state::yes ? "yes" : "no");
+    }
+
+    [[nodiscard]]
+    std::string count_entry(std::string_view label, std::size_t count)
+    {
+      return std::format("{} {}", label, count);
     }
 
     // Each recognizer builds a value from the numbers in an entry. It returns
@@ -96,13 +106,30 @@ namespace sequoia::testing
     constexpr auto execution_duration_in{duration_recognizer(execution_duration_label)},
                    runner_overhead_in   {duration_recognizer(runner_overhead_label)};
 
-    constexpr auto attempts_in{
-      [](std::string_view entry) -> std::optional<std::size_t> {
+    [[nodiscard]]
+    constexpr auto count_recognizer(std::string_view label)
+    {
+      return [label](std::string_view entry) -> std::optional<std::size_t> {
         if(const auto numbers{extract_numbers_from<std::size_t, 1>(entry)})
         {
-          const auto [attempts]{*numbers};
-          if(attempts_entry(attempts) == entry)
-            return attempts;
+          const auto [count]{*numbers};
+          if(count_entry(label, count) == entry)
+            return count;
+        }
+
+        return std::nullopt;
+      };
+    }
+
+    constexpr auto attempts_in           {count_recognizer(attempts_label)},
+                   entries_of_attempts_in{count_recognizer(entries_of_attempts_label)};
+
+    constexpr auto finished_in{
+      [](std::string_view entry) -> std::optional<finished_state> {
+        for(const auto finished : {finished_state::no, finished_state::yes})
+        {
+          if(finished_entry(finished) == entry)
+            return finished;
         }
 
         return std::nullopt;
@@ -135,12 +162,14 @@ namespace sequoia::testing
       return s.good() && (s.peek() != std::char_traits<char>::eof());
     }
 
-    /** Reads the numbers of attempts in the rest of `s`. */
+    /** Reads the number of entries of attempts, then that many entries. */
     [[nodiscard]]
     std::vector<std::size_t> read_attempts(std::istream& s)
     {
+      const auto entries{read_entry(s, "a number of entries of attempts", entries_of_attempts_in)};
+
       std::vector<std::size_t> attempts{};
-      while(more_to_read(s))
+      for([[maybe_unused]] const auto entry : std::views::iota(std::size_t{}, entries))
       {
         attempts.push_back(read_entry(s, "a number of attempts", attempts_in));
       }
@@ -149,14 +178,15 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::optional<test_execution_completion> read_completion(std::istream& s)
+    std::optional<test_execution_completion> read_completion(std::istream& s, finished_state finished)
     {
-      if(!more_to_read(s))
+      if(finished == finished_state::no)
         return std::nullopt;
 
-      test_execution_completion completion{};
-      s >> completion;
-      return completion;
+      if(test_execution_completion completion{}; s >> completion)
+        return completion;
+
+      throw std::runtime_error{"Expected an execution duration but there are no more lines"};
     }
 
     /** Reads the `T` which `file` holds. `description` names a `T` in the
@@ -198,7 +228,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string to_string(const test_execution_completion& completion)
   {
-    auto attemptsLine{[](std::size_t attempts) { return std::format("{}\n", attempts_entry(attempts)); }};
+    auto attemptsLine{[](std::size_t attempts) { return std::format("{}\n", count_entry(attempts_label, attempts)); }};
 
     const auto attemptsLines{
         completion.performance_check_attempts
@@ -207,9 +237,10 @@ namespace sequoia::testing
       | std::ranges::to<std::string>()
     };
 
-    return std::format("{}\n{}\n{}",
+    return std::format("{}\n{}\n{}\n{}",
                        duration_entry(execution_duration_label, completion.execution_duration),
                        duration_entry(runner_overhead_label,    completion.runner_overhead),
+                       count_entry(entries_of_attempts_label,   completion.performance_check_attempts.size()),
                        attemptsLines);
   }
 
@@ -235,8 +266,9 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string to_string(const test_execution_record& record)
   {
+    const auto finished{record.completion ? finished_state::yes : finished_state::no};
     const auto completionLines{record.completion ? to_string(record.completion.value()) : std::string{}};
-    return std::format("{}\n{}", start_entry(record.start), completionLines);
+    return std::format("{}\n{}\n{}", start_entry(record.start), finished_entry(finished), completionLines);
   }
 
   std::ostream& operator<<(std::ostream& s, const test_execution_record& record)
@@ -249,7 +281,9 @@ namespace sequoia::testing
     if(!peek_for_more(s))
       return s;
 
-    record = test_execution_record{.start{read_entry(s, "a start", start_in)}, .completion{read_completion(s)}};
+    const auto start{read_entry(s, "a start time", start_in)};
+    const auto finished{read_entry(s, "whether the test finished", finished_in)};
+    record = test_execution_record{.start{start}, .completion{read_completion(s, finished)}};
     return s;
   }
 
@@ -275,7 +309,7 @@ namespace sequoia::testing
     if(!peek_for_more(s))
       return s;
 
-    stamp = run_stamp{.start{read_entry(s, "a start", start_in)}};
+    stamp = run_stamp{.start{read_entry(s, "a start time", start_in)}};
     return s;
   }
 

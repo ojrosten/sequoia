@@ -7,6 +7,7 @@
 
 #include "TestExecutionCompletionRegularTest.hpp"
 
+#include <format>
 #include <optional>
 #include <sstream>
 #include <stdexcept>
@@ -35,6 +36,7 @@ namespace sequoia::testing
     test_semantics();
     test_round_trip();
     test_end_of_stream();
+    test_what_follows();
     test_refusals();
   }
 
@@ -110,6 +112,19 @@ namespace sequoia::testing
           std::optional{completion()});
   }
 
+  void test_execution_completion_regular_test::test_what_follows()
+  {
+    std::stringstream followed{to_string(completion()) + "next line\n"};
+    test_execution_completion readBack{};
+    const bool readSucceeded{static_cast<bool>(followed >> readBack)};
+    std::string rest{};
+    std::getline(followed, rest);
+
+    check("A read of a completion followed by another line succeeds", readSucceeded);
+    check(equality, "A completion followed by another line reads as the completion", readBack, completion());
+    check(equality, "operator>> leaves the line after a completion unread", rest, std::string{"next line"});
+  }
+
   void test_execution_completion_regular_test::test_refusals()
   {
     auto readCompletion{
@@ -123,6 +138,12 @@ namespace sequoia::testing
     };
 
     const std::string timingLines{"execution duration 1500us\nrunner overhead 250us\n"};
+
+    auto withEntries{
+      [&timingLines](std::string_view entries) {
+        return std::format("{}entries of performance check attempts {}\n", timingLines, entries);
+      }
+    };
 
     check_exception_thrown<std::runtime_error>(
       "A completion which does not begin with the execution duration",
@@ -149,37 +170,44 @@ namespace sequoia::testing
       readCompletion("execution duration 1500us\n"));
 
     check_exception_thrown<std::runtime_error>(
+      "A completion which does not give its number of entries of attempts",
+      readCompletion(timingLines + "performance check attempts 2\n"));
+
+    check_exception_thrown<std::runtime_error>(
+      "A number of entries of attempts which is not a number",
+      readCompletion(withEntries("two")));
+
+    check_exception_thrown<std::runtime_error>(
       "A number of attempts which is not a number",
-      readCompletion(timingLines + "performance check attempts two\n"));
+      readCompletion(withEntries("1") + "performance check attempts two\n"));
 
     check_exception_thrown<std::runtime_error>(
       "A number of attempts with a leading zero",
-      readCompletion(timingLines + "performance check attempts 02\n"));
+      readCompletion(withEntries("1") + "performance check attempts 02\n"));
 
     check_exception_thrown<std::runtime_error>(
       "A line which gives no number of attempts, after one which does",
-      readCompletion(timingLines + "performance check attempts 2\nfoo\n"));
+      readCompletion(withEntries("2") + "performance check attempts 2\nfoo\n"));
 
     check_exception_thrown<std::runtime_error>(
       "A runner overhead where a number of attempts should be",
-      readCompletion(timingLines + "runner overhead 250us\n"));
+      readCompletion(withEntries("1") + "runner overhead 250us\n"));
 
     check_exception_thrown<std::runtime_error>(
       "A number of attempts with a label other than the one operator<< writes",
-      readCompletion(timingLines + "check attempts 2\n"));
+      readCompletion(withEntries("1") + "check attempts 2\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A completion followed by another completion",
-      readCompletion(timingLines + timingLines));
-
-    check_exception_thrown<std::runtime_error>(
-      "A blank line after a completion",
-      readCompletion(timingLines + "\n"));
+      "Fewer entries of attempts than the completion says it has",
+      readCompletion(withEntries("2") + "performance check attempts 2\n"));
 
     test_execution_completion readInto{completion()};
     try
     {
-      std::stringstream s{"execution duration 9us\nrunner overhead 1us\nperformance check attempts two\n"};
+      std::stringstream s{
+        "execution duration 9us\nrunner overhead 1us\nentries of performance check attempts 1\n"
+        "performance check attempts two\n"
+      };
       s >> readInto;
     }
     catch(const std::runtime_error&)

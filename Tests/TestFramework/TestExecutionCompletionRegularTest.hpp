@@ -29,6 +29,8 @@ namespace sequoia::testing
 
     void test_end_of_stream();
 
+    void test_what_follows();
+
     void test_refusals();
   };
 }

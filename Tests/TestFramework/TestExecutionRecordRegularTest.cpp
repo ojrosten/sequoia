@@ -12,6 +12,7 @@
 #include <format>
 #include <optional>
 #include <sstream>
+#include <utility>
 
 namespace sequoia::testing
 {
@@ -52,6 +53,7 @@ namespace sequoia::testing
     test_semantics();
     test_round_trip();
     test_end_of_stream();
+    test_what_follows();
     test_written_format();
     test_refusals();
     test_refusals_of_files();
@@ -155,6 +157,31 @@ namespace sequoia::testing
           std::optional{finished_record()});
   }
 
+  void test_execution_record_regular_test::test_what_follows()
+  {
+    auto readFirstOfTwo{
+      [](const test_execution_record& first) -> std::optional<std::pair<test_execution_record, test_execution_record>> {
+        std::stringstream s{to_string(first) + to_string(finished_record())};
+
+        test_execution_record firstRead{}, secondRead{};
+        if(s >> firstRead >> secondRead)
+          return std::pair{firstRead, secondRead};
+
+        return std::nullopt;
+      }
+    };
+
+    check(equality,
+          "A record with no completion, then a finished record, read back one after the other",
+          readFirstOfTwo(unfinished_record()),
+          std::optional{std::pair{unfinished_record(), finished_record()}});
+
+    check(equality,
+          "Two finished records read back one after the other",
+          readFirstOfTwo(finished_record()),
+          std::optional{std::pair{finished_record(), finished_record()}});
+  }
+
   void test_execution_record_regular_test::test_written_format()
   {
     write_to_file(working_materials() / "Unfinished.txt", to_string(unfinished_record()), std::ios_base::binary);
@@ -184,41 +211,45 @@ namespace sequoia::testing
     };
 
     check_exception_thrown<std::runtime_error>(
-      "A first line which does not give the start",
+      "A first line which does not give the start time",
       readRecord("begun 2026-10-13T09:15:04.123Z\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A start in a layout other than the one operator<< writes",
+      "A start time in a layout other than the one operator<< writes",
       readRecord("started 2026-10-13 09:15:04.123Z\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A start with a month out of range",
+      "A start time with a month out of range",
       readRecord("started 2026-13-13T09:15:04.123Z\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A start without its milliseconds",
+      "A start time without its milliseconds",
       readRecord("started 2026-10-13T09:15:04Z\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A start with an hour out of range",
+      "A start time with an hour out of range",
       readRecord("started 2026-10-13T2147483000:00:00.000Z\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A record followed by another record",
-      readRecord("started 2026-10-13T09:15:04.123Z\nstarted 2026-10-14T09:15:04.123Z\n"));
+      "A record which does not say whether the test finished",
+      readRecord("started 2026-10-13T09:15:04.123Z\nexecution duration 1500us\n"));
 
     check_exception_thrown<std::runtime_error>(
-      "A finished record followed by another record",
-      readRecord(to_string(finished_record()) + "started 2026-10-14T09:15:04.123Z\n"));
-
-    check_exception_thrown<std::runtime_error>(
-      "A blank line after a record's start",
+      "A blank line where a record says whether the test finished",
       readRecord("started 2026-10-13T09:15:04.123Z\n\n"));
+
+    check_exception_thrown<std::runtime_error>(
+      "A record which says the test finished, but has no completion",
+      readRecord("started 2026-10-13T09:15:04.123Z\nfinished yes\n"));
+
+    check_exception_thrown<std::runtime_error>(
+      "A record whose completion is refused",
+      readRecord("started 2026-10-13T09:15:04.123Z\nfinished yes\nexecution duration 2ms\n"));
 
     test_execution_record readInto{finished_record()};
     try
     {
-      std::stringstream s{"started 2026-10-14T09:15:04.123Z\nexecution duration 2ms\n"};
+      std::stringstream s{"started 2026-10-14T09:15:04.123Z\nfinished yes\nexecution duration 2ms\n"};
       s >> readInto;
     }
     catch(const std::runtime_error&)
@@ -241,5 +272,9 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       "A file whose text is not a record",
       [this]() { return read_test_execution_record(working_materials() / "Malformed.txt"); });
+
+    check_exception_thrown<std::runtime_error>(
+      "A file with a line after the record",
+      [this]() { return read_test_execution_record(working_materials() / "Followed.txt"); });
   }
 }

@@ -440,8 +440,8 @@ namespace sequoia::testing
 
     /** \brief The file in which each run of tests writes its `run_stamp`.
 
-        A test's record is from an earlier run if the record's start precedes
-        the stamp's start.
+        A test's record is from an earlier run if the record's start time
+        precedes the stamp's.
      */
     [[nodiscard]]
     std::filesystem::path stamp() const;
