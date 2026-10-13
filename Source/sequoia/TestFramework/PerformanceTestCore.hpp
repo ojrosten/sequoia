@@ -126,7 +126,8 @@ namespace sequoia::testing
     /** \brief Judges the speed-up of a fast task over a slow one from their
                durations in each trial of one attempt.
 
-        \pre `trialDurations` has at least 5 elements.
+        \throws std::invalid_argument if `trialDurations` has fewer elements
+        than `relative_performance_minimum_trials_floor`.
 
         \throws std::runtime_error if any duration is not greater than zero.
      */

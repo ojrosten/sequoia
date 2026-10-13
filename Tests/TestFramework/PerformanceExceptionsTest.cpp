@@ -24,6 +24,7 @@ namespace sequoia::testing
   {
     test_invalid_arguments();
     test_throwing_task();
+    test_attempt_with_too_few_trials();
     test_non_positive_durations();
   }
 
@@ -75,6 +76,32 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>("Fast task throws", checkWithThrowingFastTask);
   }
 
+  void performance_exceptions_test::test_attempt_with_too_few_trials()
+  {
+    using namespace std::chrono_literals;
+
+    constexpr std::size_t tooFewTrials{relative_performance_minimum_trials_floor - 1};
+
+    auto judgeAttemptWithTooFewTrials{
+      []() {
+        // Every duration is positive, so only the number of trials can be
+        // refused.
+        const auto trialDurations{
+          []() {
+            std::array<relative_performance_durations, tooFewTrials> durations{};
+            durations.fill({.fast{1s}, .slow{1s}});
+            return durations;
+          }()
+        };
+
+        return impl::judge_attempt(trialDurations, 1.0, {.lower{2.0}, .upper{3.0}});
+      }
+    };
+
+    check_exception_thrown<std::invalid_argument>("An attempt with one trial fewer than the floor",
+                                                  judgeAttemptWithTooFewTrials);
+  }
+
   void performance_exceptions_test::test_non_positive_durations()
   {
     using namespace std::chrono_literals;
@@ -82,9 +109,15 @@ namespace sequoia::testing
     auto judgeAttemptContaining{
       [](relative_performance_durations trial) {
         return [trial]() {
-          const std::array<relative_performance_durations, 5> trialDurations{{
-            {.fast{1s}, .slow{1s}}, {.fast{1s}, .slow{1s}}, trial, {.fast{1s}, .slow{1s}}, {.fast{1s}, .slow{1s}}
-          }};
+          // As many trials as the floor, so only a duration can be refused.
+          const auto trialDurations{
+            [trial]() {
+              std::array<relative_performance_durations, relative_performance_minimum_trials_floor> durations{};
+              durations.fill({.fast{1s}, .slow{1s}});
+              durations[durations.size() / 2] = trial;
+              return durations;
+            }()
+          };
 
           return impl::judge_attempt(trialDurations, 1.0, {.lower{2.0}, .upper{3.0}});
         };
