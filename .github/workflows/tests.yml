@@ -303,9 +303,9 @@ jobs:
 
       # A timing check can fail on one runner and pass on the next with the
       # same binary. The job's log names the image and the region, but not
-      # the machine. So this step prints the CPU and its number of logical
-      # processors. Where the runner answers Azure's metadata service, the
-      # step prints the VM size too.
+      # the machine. So this step prints the CPU model and the number of
+      # logical processors. Where the runner answers Azure's metadata service,
+      # the step prints the VM size too.
       - name: Report the runner's hardware
         if: inputs.needs_testing == 'true'
         # A report must not fail the job, hence each `|| true`.
@@ -321,9 +321,9 @@ jobs:
               powershell -NoProfile -Command \
                 "Get-CimInstance Win32_Processor | ForEach-Object { \$_.Name; 'logical processors: ' + \$_.NumberOfLogicalProcessors }" || true ;;
           esac
-          metadata='http://169.254.169.254/metadata/instance/compute/vmSize?api-version=2021-02-01&format=text'
-          size=$(curl -fs --max-time 3 -H 'Metadata: true' "$metadata" || true)
-          echo "VM size: ${size:-not reported}"
+          vm_size_url='http://169.254.169.254/metadata/instance/compute/vmSize?api-version=2021-02-01&format=text'
+          vm_size=$(curl -fs --max-time 3 -H 'Metadata: true' "$vm_size_url" || true)
+          echo "VM size: ${vm_size:-not reported}"
 
       # `--version` does not identify a distribution's compiler: Ubuntu ships
       # post-release snapshots of a branch under the release's version number,
