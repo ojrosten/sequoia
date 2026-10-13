@@ -36,6 +36,7 @@ set(SourceList
     TestFramework/SemanticsCheckersDetails.cpp
     TestFramework/Summary.cpp
     TestFramework/TestCreator.cpp
+    TestFramework/TestExecutionRecord.cpp
     TestFramework/TestLogger.cpp
     TestFramework/TestRunner.cpp
     TestFramework/TestRunnerUtilities.cpp

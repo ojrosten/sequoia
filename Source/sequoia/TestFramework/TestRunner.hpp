@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/FailureReporting.hpp"
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "sequoia/TestFramework/TestExecutionRecord.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/TestFramework/VersionedOutput.hpp"
 
@@ -487,10 +488,10 @@ namespace sequoia::testing
 
     /** \brief An RAII wrapper to write a test's execution record.
 
-        On construction, the record gives the test's start. On destruction,
-        the record adds the test's execution duration and the runner's
-        overhead so far, from `executionTimer`. Then the record adds the
-        number of attempts each of the test's performance checks made, from
+        On construction, the record gives the test's start time. On
+        destruction, the record adds the test's execution duration and the
+        runner's overhead so far, from `executionTimer`. Then the record adds
+        the number of attempts each of the test's performance checks made, from
         `vessel`.
 
         A record which cannot be written is skipped rather than reported. The
@@ -510,7 +511,7 @@ namespace sequoia::testing
       ~scoped_execution_record();
     private:
       std::filesystem::path m_File{};
-      std::chrono::system_clock::time_point m_Start{};
+      test_execution_record m_Record{};
       const execution_timer& m_ExecutionTimer;
       const test_vessel& m_Vessel;
     };
