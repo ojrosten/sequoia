@@ -11,7 +11,7 @@
     \brief The record of a test's execution and the stamp of a run of tests,
            and the functions which write and read them.
 
-    `run_stamp`'s brief says what a run of tests is.
+    `run_stamp`'s brief defines what a run of tests is.
  */
 
 #include <chrono>
