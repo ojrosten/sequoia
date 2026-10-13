@@ -1,10 +1,10 @@
-Tests/TestFramework/TestExecutionRecordTestingDiagnostics.cpp, Line 31
-Starts differ
+Tests/TestFramework/TestExecutionRecordTestingDiagnostics.cpp, Line 32
+Start times differ
 
 [sequoia::testing::test_execution_record]
 operator== returned false
 
-  Start
+  Start time
   [std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<long long, std::ratio<1, 1000> > >]
   operator== returned false
   Obtained : 1970-01-01 00:00:00.000
@@ -12,7 +12,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/TestExecutionRecordTestingDiagnostics.cpp, Line 32
+Tests/TestFramework/TestExecutionRecordTestingDiagnostics.cpp, Line 33
 Only one record has a completion
 
 [sequoia::testing::test_execution_record]
@@ -31,7 +31,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/TestExecutionRecordTestingDiagnostics.cpp, Line 33
+Tests/TestFramework/TestExecutionRecordTestingDiagnostics.cpp, Line 34
 Execution durations differ
 
 [sequoia::testing::test_execution_record]
@@ -53,7 +53,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/TestExecutionRecordTestingDiagnostics.cpp, Line 34
+Tests/TestFramework/TestExecutionRecordTestingDiagnostics.cpp, Line 35
 Runner overheads differ
 
 [sequoia::testing::test_execution_record]
@@ -75,7 +75,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/TestExecutionRecordTestingDiagnostics.cpp, Line 35
+Tests/TestFramework/TestExecutionRecordTestingDiagnostics.cpp, Line 36
 Performance check attempts differ
 
 [sequoia::testing::test_execution_record]

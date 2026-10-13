@@ -19,6 +19,6 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check(equality, "Starts differ", run_stamp{}, run_stamp{.start{run_stamp::start_type{1ms}}});
+    check(equality, "Start times differ", run_stamp{}, run_stamp{.start_time{run_stamp::start_time_type{1ms}}});
   }
 }

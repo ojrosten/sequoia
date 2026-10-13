@@ -49,7 +49,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
     {
-      check(equality, "Start",      logger, actual.start,      prediction.start);
+      check(equality, "Start time", logger, actual.start_time, prediction.start_time);
       check(equality, "Completion", logger, actual.completion, prediction.completion);
     }
   };

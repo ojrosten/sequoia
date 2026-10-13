@@ -26,9 +26,10 @@ namespace sequoia::testing
       otherAttempts{.execution_duration{2us}, .runner_overhead{1us}, .performance_check_attempts{3, 1}};
 
     const test_execution_record unfinished{},
-                                finished{.completion{completion}};
+                                finished{.completion{completion}},
+                                laterStart{.start_time{test_execution_record::start_time_type{1ms}}};
 
-    check(equality, "Starts differ", unfinished, test_execution_record{.start{test_execution_record::start_type{1ms}}});
+    check(equality, "Start times differ", unfinished, laterStart);
     check(equality, "Only one record has a completion", unfinished, finished);
     check(equality, "Execution durations differ",        finished, test_execution_record{.completion{otherDuration}});
     check(equality, "Runner overheads differ",           finished, test_execution_record{.completion{otherOverhead}});

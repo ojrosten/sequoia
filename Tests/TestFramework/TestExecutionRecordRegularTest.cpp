@@ -22,7 +22,7 @@ namespace sequoia::testing
     test_execution_record unfinished_record()
     {
       using namespace std::chrono;
-      return {.start{sys_days{year{2026} / 10 / 13} + 9h + 15min + 4s + 123ms}};
+      return {.start_time{sys_days{year{2026} / 10 / 13} + 9h + 15min + 4s + 123ms}};
     }
 
     [[nodiscard]]
@@ -30,7 +30,7 @@ namespace sequoia::testing
     {
       using namespace std::chrono_literals;
       return {
-        .start{unfinished_record().start},
+        .start_time{unfinished_record().start_time},
         .completion{
           test_execution_completion{
             .execution_duration{1500us},
@@ -110,8 +110,8 @@ namespace sequoia::testing
 
     using namespace std::chrono;
     const test_execution_record
-      firstStart{.start{sys_days{year{0} / 1 / 1}}},
-      lastStart {.start{sys_days{year{32767} / 12 / 31} + days{1} - milliseconds{1}}};
+      firstStart{.start_time{sys_days{year{0} / 1 / 1}}},
+      lastStart {.start_time{sys_days{year{32767} / 12 / 31} + days{1} - milliseconds{1}}};
 
     check(equality,
           "A record with the earliest start time the format holds round-trips through operator<< and operator>>",

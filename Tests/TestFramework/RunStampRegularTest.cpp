@@ -22,7 +22,7 @@ namespace sequoia::testing
     run_stamp stamp()
     {
       using namespace std::chrono;
-      return {.start{sys_days{year{2026} / 10 / 13} + 9h + 15min + 4s + 123ms}};
+      return {.start_time{sys_days{year{2026} / 10 / 13} + 9h + 15min + 4s + 123ms}};
     }
   }
 
@@ -74,8 +74,8 @@ namespace sequoia::testing
 
     using namespace std::chrono;
     const run_stamp
-      firstStart{.start{sys_days{year{0} / 1 / 1}}},
-      lastStart {.start{sys_days{year{32767} / 12 / 31} + days{1} - milliseconds{1}}};
+      firstStart{.start_time{sys_days{year{0} / 1 / 1}}},
+      lastStart {.start_time{sys_days{year{32767} / 12 / 31} + days{1} - milliseconds{1}}};
 
     check(equality,
           "A stamp with the earliest start time the format holds round-trips through operator<< and operator>>",

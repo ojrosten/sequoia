@@ -935,15 +935,15 @@ namespace sequoia::testing
     /** The return code, test record and stamp of a run of one test */
     struct recorded_run
     {
-      return_code                       code{};
-      test_execution_record::start_type moment_before_run{};
-      test_execution_record             test_record{};
-      run_stamp                         stamp{};
+      return_code                            code{};
+      test_execution_record::start_time_type moment_before_run{};
+      test_execution_record                  test_record{};
+      run_stamp                              stamp{};
 
       [[nodiscard]]
       bool is_stamp_between_call_and_test() const noexcept
       {
-        return (moment_before_run <= stamp.start) && (stamp.start <= test_record.start);
+        return (moment_before_run <= stamp.start_time) && (stamp.start_time <= test_record.start_time);
       }
     };
 
@@ -1587,7 +1587,7 @@ namespace sequoia::testing
   }
 
   /** The fake tests tell the mechanism from its rivals: `record_reading_free_test` sees its record while it executes,
-      which a start written only at the end would not produce; `escaping_exception_free_test` throws, which an
+      which a start time written only at the end would not produce; `escaping_exception_free_test` throws, which an
       execution duration written only on normal completion would miss. Each fake test runs alone, so that a run's
       return code is its test's alone. Each run removes the records directory first, so that only that run can have
       written the stamp.
@@ -1639,10 +1639,10 @@ namespace sequoia::testing
     check("The record of a test which passed has a completion",     passing.test_record.completion.has_value());
     check("The record of a test whose body threw has a completion", throwing.test_record.completion.has_value());
 
-    check("The stamp's start lies between the call to execute and the start of a test which passed",
+    check("The stamp's start time lies between the call to execute and the start time of a test which passed",
           passing.is_stamp_between_call_and_test());
 
-    check("The stamp's start lies between the call to execute and the start of a test whose body threw",
+    check("The stamp's start time lies between the call to execute and the start time of a test whose body threw",
           throwing.is_stamp_between_call_and_test());
   }
 

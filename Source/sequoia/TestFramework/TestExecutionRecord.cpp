@@ -41,9 +41,9 @@ namespace sequoia::testing
     enum class test_execution_status : bool { started, finished };
 
     [[nodiscard]]
-    std::string entry_for_start_time(test_execution_record::start_type start)
+    std::string entry_for_start_time(test_execution_record::start_time_type startTime)
     {
-      return std::format("started {:%FT%TZ}", start);
+      return std::format("started {:%FT%TZ}", startTime);
     }
 
     [[nodiscard]]
@@ -67,18 +67,20 @@ namespace sequoia::testing
     // Each extractor finds the value an entry holds, and returns it only if
     // the entry's writer reprints the entry exactly from that value.
     constexpr auto extractor_for_start_time{
-      [](std::string_view entry) -> std::optional<test_execution_record::start_type> {
+      [](std::string_view entry) -> std::optional<test_execution_record::start_time_type> {
         // TO DO: std::chrono::parse reads the start time, once libc++ provides it
         using namespace std::chrono;
         constexpr std::size_t fieldsOfStart{7};
         if(const auto numbers{extract_numbers_from<unsigned, fieldsOfStart>(entry)})
         {
           const auto [y, mo, d, h, mi, s, ms]{*numbers};
-          const test_execution_record::start_type midnight{sys_days{year{static_cast<int>(y)} / month{mo} / day{d}}};
-          const auto start{midnight + hours{h} + minutes{mi} + seconds{s} + milliseconds{ms}};
+          const test_execution_record::start_time_type midnight{
+            sys_days{year{static_cast<int>(y)} / month{mo} / day{d}}
+          };
+          const auto startTime{midnight + hours{h} + minutes{mi} + seconds{s} + milliseconds{ms}};
 
-          if(entry_for_start_time(start) == entry)
-            return start;
+          if(entry_for_start_time(startTime) == entry)
+            return startTime;
         }
 
         return std::nullopt;
@@ -273,7 +275,10 @@ namespace sequoia::testing
   {
     const auto status{record.completion ? test_execution_status::finished : test_execution_status::started};
     const auto completionLines{record.completion ? to_string(record.completion.value()) : std::string{}};
-    return std::format("{}\n{}\n{}", entry_for_start_time(record.start), entry_for_status(status), completionLines);
+    return std::format("{}\n{}\n{}",
+                       entry_for_start_time(record.start_time),
+                       entry_for_status(status),
+                       completionLines);
   }
 
   std::ostream& operator<<(std::ostream& s, const test_execution_record& record)
@@ -286,9 +291,9 @@ namespace sequoia::testing
     if(!peek_for_more(s))
       return s;
 
-    const auto start{read_entry(s, "a start time", extractor_for_start_time)};
+    const auto startTime{read_entry(s, "a start time", extractor_for_start_time)};
     const auto status{read_entry(s, "whether the test finished", extractor_for_status)};
-    record = test_execution_record{.start{start}, .completion{read_optional_completion(s, status)}};
+    record = test_execution_record{.start_time{startTime}, .completion{read_optional_completion(s, status)}};
     return s;
   }
 
@@ -301,7 +306,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string to_string(const run_stamp& stamp)
   {
-    return std::format("{}\n", entry_for_start_time(stamp.start));
+    return std::format("{}\n", entry_for_start_time(stamp.start_time));
   }
 
   std::ostream& operator<<(std::ostream& s, const run_stamp& stamp)
@@ -314,7 +319,7 @@ namespace sequoia::testing
     if(!peek_for_more(s))
       return s;
 
-    stamp = run_stamp{.start{read_entry(s, "a start time", extractor_for_start_time)}};
+    stamp = run_stamp{.start_time{read_entry(s, "a start time", extractor_for_start_time)}};
     return s;
   }
 

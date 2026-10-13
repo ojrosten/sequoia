@@ -48,7 +48,7 @@ namespace sequoia::testing
     const auto entry_time_stamp{std::chrono::file_clock::now()};
 
     [[nodiscard]]
-    test_execution_record::start_type current_time_to_the_millisecond()
+    test_execution_record::start_time_type current_time_to_the_millisecond()
     {
       return std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now());
     }
@@ -940,7 +940,7 @@ namespace sequoia::testing
                                                                 const execution_timer& executionTimer,
                                                                 const test_vessel& vessel)
     : m_File{std::move(file)}
-    , m_Record{.start{current_time_to_the_millisecond()}}
+    , m_Record{.start_time{current_time_to_the_millisecond()}}
     , m_ExecutionTimer{executionTimer}
     , m_Vessel{vessel}
   {
@@ -1613,7 +1613,7 @@ namespace sequoia::testing
     if(m_InstabilityMode != instability_mode::sandbox)
     {
       fs::remove_all(proj_paths().output().instability_analysis());
-      const run_stamp stamp{.start{current_time_to_the_millisecond()}};
+      const run_stamp stamp{.start_time{current_time_to_the_millisecond()}};
       overwrite_quietly(proj_paths().execution_records().stamp(), to_string(stamp));
       check_for_coarse_sleeps();
     }

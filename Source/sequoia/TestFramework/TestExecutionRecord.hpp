@@ -67,9 +67,9 @@ namespace sequoia::testing
    */
   struct test_execution_record
   {
-    using start_type = std::chrono::sys_time<std::chrono::milliseconds>;
+    using start_time_type = std::chrono::sys_time<std::chrono::milliseconds>;
 
-    start_type start{};
+    start_time_type start_time{};
     std::optional<test_execution_completion> completion{};
 
     [[nodiscard]]
@@ -111,9 +111,9 @@ namespace sequoia::testing
    */
   struct run_stamp
   {
-    using start_type = test_execution_record::start_type;
+    using start_time_type = test_execution_record::start_time_type;
 
-    start_type start{};
+    start_time_type start_time{};
 
     [[nodiscard]]
     friend bool operator==(const run_stamp&, const run_stamp&) noexcept = default;
