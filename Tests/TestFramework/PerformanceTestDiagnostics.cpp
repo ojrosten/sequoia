@@ -152,7 +152,7 @@ namespace sequoia::testing
     constexpr relative_performance_parameters parameters{.prediction{.lower{2.92}, .upper{4.38}}};
 
     check_relative_performance("Attempt 1's interval overlaps the prediction, "
-                               "but would not at the narrower width of a first attempt in standard mode; "
+                               "but would not if as narrow as in standard mode; "
                                "attempt 2 is slower",
                                counted_spinner{1ms, trials_for_minimum_10[0], 4ms},
                                make_cycling_spinner({2ms, 2ms, 3ms, 3ms, 3ms}),

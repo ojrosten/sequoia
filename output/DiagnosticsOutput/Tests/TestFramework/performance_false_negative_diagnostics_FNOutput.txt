@@ -2,7 +2,7 @@ Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 79
 Fast task 4 ms, slow task cycling through (2, 3, 4, 5, 6) ms, predicted [1.2, 1.5]
 
 The fast task is not distinguishably faster than the slow one
-Speed-up: 0.949 in [0.585, 1.54]; predicted [1.2, 1.5]
+Speed-up: 0.949 in [0.584, 1.54]; predicted [1.2, 1.5]
 Trials: 10, attempt 1 of 3
 Task durations: fast 0.004s, slow 0.0038s
 
@@ -89,7 +89,7 @@ Task durations: fast 0.004s, slow 0.002s
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 154
-Attempt 1's interval overlaps the prediction, but would not at the narrower width of a first attempt in standard mode; attempt 2 is slower
+Attempt 1's interval overlaps the prediction, but would not if as narrow as in standard mode; attempt 2 is slower
 
 The fast task is slower than the slow one
 Speed-up: 0.647 in [0.521, 0.804]; predicted [2.92, 4.38]
