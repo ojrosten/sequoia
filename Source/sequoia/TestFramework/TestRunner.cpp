@@ -54,13 +54,13 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::vector<std::size_t> attempts_of_finished_checks(std::span<const std::optional<std::size_t>> attemptsPerCheck)
+    std::vector<std::size_t> attempt_counts_of_finished_checks(std::span<const std::optional<std::size_t>> counts)
     {
-      auto isFinished{[](const std::optional<std::size_t>& attempts) { return attempts.has_value(); }};
-      auto attemptsMade{[](const std::optional<std::size_t>& attempts) { return attempts.value(); }};
+      auto isFinished{[](const std::optional<std::size_t>& count) { return count.has_value(); }};
+      auto attemptsMade{[](const std::optional<std::size_t>& count) { return count.value(); }};
 
       return
-          attemptsPerCheck
+          counts
         | std::views::filter(isFinished)
         | std::views::transform(attemptsMade)
         | std::ranges::to<std::vector>();
@@ -953,7 +953,7 @@ namespace sequoia::testing
     m_Record.completion = test_execution_completion{
       .execution_duration{duration_cast<microseconds>(m_ExecutionTimer.execution_duration())},
       .runner_overhead{duration_cast<microseconds>(m_ExecutionTimer.runner_overhead())},
-      .performance_check_attempts{attempts_of_finished_checks(m_Vessel.attempts_per_performance_check())}
+      .performance_check_attempts{attempt_counts_of_finished_checks(m_Vessel.attempts_per_performance_check())}
     };
 
     overwrite_quietly(m_File, to_string(m_Record));
