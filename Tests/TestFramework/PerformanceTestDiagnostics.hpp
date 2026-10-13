@@ -74,6 +74,8 @@ namespace sequoia::testing
 
     void test_exception_specifications();
 
+    void test_default_minimum_trials();
+
     void test_postprocessing();
 
     void test_zeroed_measurements();
