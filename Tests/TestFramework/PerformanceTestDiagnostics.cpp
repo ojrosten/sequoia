@@ -127,7 +127,7 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("An interval of 3 standard errors includes a speed-up of 1, and overlaps [1.4, 1.8]",
+    check_relative_performance("Attempt 1's interval includes a speed-up of 1, and overlaps the prediction",
                                []() { spin_for(2ms); },
                                make_cycling_spinner({2ms, 2ms, 3ms, 4ms, 9ms}),
                                {.prediction{.lower{1.4}, .upper{1.8}}});
@@ -151,7 +151,9 @@ namespace sequoia::testing
 
     constexpr relative_performance_parameters parameters{.prediction{.lower{2.92}, .upper{4.38}}};
 
-    check_relative_performance("Attempt 1 overlaps [2.92, 4.38] at 3 standard errors, not at 1; attempt 2 is slower",
+    check_relative_performance("Attempt 1's interval overlaps the prediction, "
+                               "but would not at the narrower width of a first attempt in standard mode; "
+                               "attempt 2 is slower",
                                counted_spinner{1ms, trials_for_minimum_10[0], 4ms},
                                make_cycling_spinner({2ms, 2ms, 3ms, 3ms, 3ms}),
                                parameters);

@@ -69,7 +69,7 @@ Task durations: fast 0.00784s, slow 0.001s
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 130
-An interval of 3 standard errors includes a speed-up of 1, and overlaps [1.4, 1.8]
+Attempt 1's interval includes a speed-up of 1, and overlaps the prediction
 
 The fast task is not distinguishably faster than the slow one
 Speed-up: 1.59 in [0.791, 3.19]; predicted [1.4, 1.8]
@@ -89,7 +89,7 @@ Task durations: fast 0.004s, slow 0.002s
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 154
-Attempt 1 overlaps [2.92, 4.38] at 3 standard errors, not at 1; attempt 2 is slower
+Attempt 1's interval overlaps the prediction, but would not at the narrower width of a first attempt in standard mode; attempt 2 is slower
 
 The fast task is slower than the slow one
 Speed-up: 0.647 in [0.521, 0.804]; predicted [2.92, 4.38]

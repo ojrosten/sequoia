@@ -95,7 +95,9 @@ namespace sequoia::testing
     const counted_spinner fast{2ms, trials_for_minimum_10[0], 1ms};
 
     check_relative_performance(
-      "The log speed-up is 1.99 standard errors at the first attempt, short of the gate's 3, and 5.56 at the second",
+      "Attempt 1's interval excludes a speed-up of 1, "
+      "but attempt 1 fails at the gate; "
+      "attempt 2 passes",
       fast,
       make_cycling_spinner({2ms, 2ms, 3ms, 4ms, 9ms}),
       parameters
@@ -111,7 +113,9 @@ namespace sequoia::testing
     const counted_spinner fast{100ms, 1, 1ms};
 
     check_relative_performance(
-      "The first fast call takes 100 ms. The trimmed mean gives a speed-up of 4, and the untrimmed mean gives 2.52",
+      "The first fast call takes 100 ms. "
+      "The trimmed mean gives a speed-up of 4, "
+      "and the untrimmed mean gives a speed-up below the prediction",
       fast,
       counted_spinner{4ms},
       parameters
