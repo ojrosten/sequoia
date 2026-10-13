@@ -119,7 +119,8 @@ namespace sequoia::testing
       {}
 
       std::string message;
-      bool written{}, is_performance_check{};
+      bool written{},
+           is_performance_check{};
     };
 
     enum class is_critical{yes, no};
