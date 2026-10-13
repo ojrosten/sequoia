@@ -921,11 +921,11 @@ namespace sequoia::testing
       void run_tests()
       {
         const test_execution_record_path record{source_file(), name(), get_project_paths()};
-        if(check("While a test executes, its record exists", fs::exists(record.file_path())))
+        const auto records{read_test_execution_records(record.file_path())};
+        if(check("While a test executes, it has a record", !records.empty()))
         {
-          const auto records{read_test_execution_records(record.file_path())};
           check("While a test executes, its last record has no completion",
-                !records.empty() && !records.back().completion.has_value());
+                !records.back().completion.has_value());
         }
 
         check("While a test executes, the run's stamp already exists",
@@ -934,7 +934,7 @@ namespace sequoia::testing
     };
 
     [[nodiscard]]
-    std::vector<bool> has_completion_per_record(const std::vector<test_execution_record>& records)
+    std::vector<bool> completion_flags_of(const std::vector<test_execution_record>& records)
     {
       auto hasCompletion{[](const test_execution_record& record) { return record.completion.has_value(); }};
 
@@ -946,15 +946,15 @@ namespace sequoia::testing
     {
       return_code                            code{};
       test_execution_record::start_time_type moment_before_run{};
-      std::vector<test_execution_record>     test_records{};
+      std::vector<test_execution_record>     execution_records{};
       run_stamp                              stamp{};
 
       [[nodiscard]]
       bool is_stamp_between_call_and_test() const noexcept
       {
-        return !test_records.empty()
+        return !execution_records.empty()
             && (moment_before_run <= stamp.start_time)
-            && (stamp.start_time <= test_records.front().start_time);
+            && (stamp.start_time <= execution_records.front().start_time);
       }
     };
 
@@ -1630,7 +1630,7 @@ namespace sequoia::testing
         return recorded_run{
           .code{code},
           .moment_before_run{momentBeforeRun},
-          .test_records{read_test_execution_records(testRecordPath.file_path())},
+          .execution_records{read_test_execution_records(testRecordPath.file_path())},
           .stamp{read_run_stamp(projPaths.execution_records().stamp())}
         };
       }
@@ -1651,12 +1651,12 @@ namespace sequoia::testing
 
     check(equality,
           "A test which passed is recorded as it starts, and again, with a completion, as it finishes",
-          has_completion_per_record(passing.test_records),
+          completion_flags_of(passing.execution_records),
           std::vector{false, true});
 
     check(equality,
           "A test whose body threw is recorded as it starts, and again, with a completion, as it finishes",
-          has_completion_per_record(throwing.test_records),
+          completion_flags_of(throwing.execution_records),
           std::vector{false, true});
 
     check("The stamp's start time lies between the call to execute and the start time of a test which passed",
@@ -1686,7 +1686,7 @@ namespace sequoia::testing
     const test_execution_record_path record{passing_test::source_file(), test_name<passing_test>(), projPaths};
     check(equality,
           "Each repetition of a test is recorded as it starts, and again, with a completion, as it finishes",
-          has_completion_per_record(read_test_execution_records(record.file_path())),
+          completion_flags_of(read_test_execution_records(record.file_path())),
           std::vector{false, true, false, true});
   }
 
@@ -1723,7 +1723,7 @@ namespace sequoia::testing
 
     check(equality,
           "A run replaces an earlier run's execution records of a test it runs with its own",
-          has_completion_per_record(read_test_execution_records(selectedTestRecordPath.file_path())),
+          completion_flags_of(read_test_execution_records(selectedTestRecordPath.file_path())),
           std::vector{false, true});
 
     check(equality,
@@ -2647,17 +2647,29 @@ namespace sequoia::testing
     runner.register_test<selected_in_spaced_suite_free_test>();
     runner.register_test<excluded_from_spaced_suite_free_test>();
 
+    const test_execution_record_path executionRecordPath{selected_in_spaced_suite_free_test::source_file(),
+                                                         test_name<selected_in_spaced_suite_free_test>(),
+                                                         runner.proj_paths()};
+
+    fs::create_directories(executionRecordPath.file_path().parent_path());
+    write_to_file(executionRecordPath.file_path(), to_string(test_execution_record{}), std::ios_base::binary);
+
     check(equality, "Both sandboxes run, and the run succeeds", runner.execute(), return_code::success);
     check(equivalence,
           "Each sandbox is given the repetitions, its runner id and the selections, each as one argument",
           outputDir,
           predictive_materials() /= "SandboxesFromAPathWithASpace");
+
+    check(equality,
+          "The run which launches the sandboxes empties the file of execution records of each test to be run",
+          read_test_execution_records(executionRecordPath.file_path()),
+          std::vector<test_execution_record>{});
   }
 
   /** A runner given a runner id is one sandbox. The sandbox writes its
-      records under its id. It leaves the other sandboxes' records in
-      place, and leaves the analysis of every sandbox's records to the run
-      which launched them all. The launching side is the subject of
+      instability analysis records under its id. It leaves the other
+      sandboxes' instability analysis records in place, and leaves the
+      analysis of every sandbox's records to the run which launched them all. The launching side is the subject of
       `test_instability_analysis_in_sandboxes_from_a_path_with_a_space`.
 
       The run which launched the sandboxes empties each test's file of
@@ -2704,17 +2716,16 @@ namespace sequoia::testing
 
     check(equality, "Sandboxed repetition return code", runner.execute(), return_code::success);
     check_output("Sandboxed Repetition Output", "SandboxedRepetitionOutput", outputStream);
-    check("The sandbox writes its records under its id", fs::exists(recordOf(1)));
-
-    const auto executionRecords{read_test_execution_records(executionRecordPath.file_path())};
+    check("The sandbox writes its instability analysis records under its id", fs::exists(recordOf(1)));
     check(equality,
-          "The sandbox appends its test's execution records to those of an earlier sandbox",
-          has_completion_per_record(executionRecords),
-          std::vector{false, true, false, true});
-    check(equality,
-          "The sandbox leaves another sandbox's records in place",
+          "The sandbox leaves another sandbox's instability analysis records in place",
           read_to_string(recordOf(0), std::ios_base::in).value_or(""),
           anotherRecord);
+
+    check(equality,
+          "The sandbox appends its test's execution records to those of an earlier sandbox",
+          completion_flags_of(read_test_execution_records(executionRecordPath.file_path())),
+          std::vector{false, true, false, true});
   }
 
   namespace

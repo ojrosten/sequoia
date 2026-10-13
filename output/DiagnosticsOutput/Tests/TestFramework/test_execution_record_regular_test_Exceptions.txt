@@ -98,7 +98,7 @@ Unable to read the test execution records in output/TestsTemporaryData/TestFrame
 =======================================
 
 Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 320
-A file with a line after a record which begins no record
+A file with a record followed by a line which begins no record
 
 Expected Exception Type:
 [std::runtime_error]

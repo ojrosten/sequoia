@@ -90,7 +90,7 @@ namespace sequoia::testing
       replace_contents_quietly(file, text, write_mode::binary);
     }
 
-    void empty_quietly(const fs::path& file)
+    void truncate_quietly(const fs::path& file)
     {
       std::error_code selectsTheNonThrowingOverload{};
       fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
@@ -103,6 +103,8 @@ namespace sequoia::testing
       std::ofstream ofile{file, std::ios_base::app | std::ios_base::binary};
       ofile.write(text.data(), static_cast<std::streamsize>(text.size()));
     }
+
+    constexpr auto holds_test{[](const auto& node) { return node.optTest.has_value(); }};
 
     [[nodiscard]]
     std::string running_tests_message(concurrency_mode mode)
@@ -976,9 +978,10 @@ namespace sequoia::testing
 
   void test_to_run::clear_execution_records() const
   {
-    // The file is made here, before the run, so that the test's execution
-    // appends to a file which exists, and neither creates nor replaces one
-    empty_quietly(m_ExecutionRecord.file_path());
+    // The file is made here, before the tests execute, so that the test's
+    // execution appends to a file which exists, and neither creates nor
+    // replaces one
+    truncate_quietly(m_ExecutionRecord.file_path());
   }
 
   [[nodiscard]]
@@ -2063,8 +2066,6 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<removal_failure> test_runner::extract_discarded_materials_removal_failures()
   {
-    auto holdsTest{[](const suite_node& node) { return node.optTest.has_value(); }};
-
     auto failureOf{
       [](suite_node& node) -> std::vector<removal_failure> {
         if(auto failure{node.optTest->extract_discarded_materials_removal_failure()})
@@ -2076,7 +2077,7 @@ namespace sequoia::testing
 
     const auto failures{
         m_Suites.node_weights()
-      | std::views::filter(holdsTest)
+      | std::views::filter(holds_test)
       | std::views::transform(failureOf)
       | std::views::join
       | std::ranges::to<std::vector>()
@@ -2087,9 +2088,7 @@ namespace sequoia::testing
 
   void test_runner::clear_execution_records() const
   {
-    auto holdsTest{[](const suite_node& node) { return node.optTest.has_value(); }};
-
-    for(const auto& node : m_Suites.node_weights() | std::views::filter(holdsTest))
+    for(const auto& node : m_Suites.node_weights() | std::views::filter(holds_test))
     {
       node.optTest->clear_execution_records();
     }

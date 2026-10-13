@@ -59,7 +59,7 @@ namespace sequoia::testing
     test_what_follows();
     test_written_format();
     test_refusals();
-    test_reading_files();
+    test_reads_of_files();
     test_refusals_of_files();
   }
 
@@ -267,7 +267,7 @@ namespace sequoia::testing
       the runner appends them: each execution's record with no completion,
       then the same record with one.
    */
-  void test_execution_record_regular_test::test_reading_files()
+  void test_execution_record_regular_test::test_reads_of_files()
   {
     check(equality,
           "An empty file holds no records",
@@ -317,7 +317,7 @@ namespace sequoia::testing
       [this]() { return read_test_execution_records(working_materials() / "Malformed.txt"); });
 
     check_exception_thrown<std::runtime_error>(
-      "A file with a line after a record which begins no record",
+      "A file with a record followed by a line which begins no record",
       [this]() { return read_test_execution_records(working_materials() / "Followed.txt"); });
   }
 }

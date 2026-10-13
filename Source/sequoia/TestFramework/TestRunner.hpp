@@ -500,12 +500,12 @@ namespace sequoia::testing
         destruction, appends that record again, with a completion: the test's
         execution duration and the runner's overhead so far, from
         `executionTimer`, and the number of attempts each of the test's
-        performance checks made, from `vessel`. So the last record in `file`
-        is of the test's latest execution, and has no completion while the
-        test executes.
+        performance checks made, from `vessel`. So, unless a write fails, the
+        last record in `file` is of the test's latest execution, and has no
+        completion while the test executes.
 
-        A record which cannot be written is skipped rather than reported. An
-        allocation failure is not caught.
+        A write which fails is not reported, and may leave part of a record.
+        An allocation failure is not caught.
      */
     class [[nodiscard]] scoped_execution_record
     {
