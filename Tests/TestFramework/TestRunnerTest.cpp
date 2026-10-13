@@ -936,14 +936,14 @@ namespace sequoia::testing
     struct recorded_run
     {
       return_code                       code{};
-      test_execution_record::start_type time_before_run{};
+      test_execution_record::start_type moment_before_run{};
       test_execution_record             test_record{};
       run_stamp                         stamp{};
 
       [[nodiscard]]
-      bool stamp_in_order() const noexcept
+      bool is_stamp_between_call_and_test() const noexcept
       {
-        return (time_before_run <= stamp.start) && (stamp.start <= test_record.start);
+        return (moment_before_run <= stamp.start) && (stamp.start <= test_record.start);
       }
     };
 
@@ -1610,13 +1610,13 @@ namespace sequoia::testing
         fs::remove_all(projPaths.execution_records().dir());
         runner.register_test<Test>();
 
-        const auto timeBeforeRun{std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now())};
+        const auto momentBeforeRun{std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now())};
         const auto code{runner.execute()};
         const test_execution_record_path testRecordPath{Test::source_file(), test_name<Test>(), projPaths};
 
         return recorded_run{
           .code{code},
-          .time_before_run{timeBeforeRun},
+          .moment_before_run{momentBeforeRun},
           .test_record{read_test_execution_record(testRecordPath.file_path())},
           .stamp{read_run_stamp(projPaths.execution_records().stamp())}
         };
@@ -1640,10 +1640,10 @@ namespace sequoia::testing
     check("The record of a test whose body threw has a completion", throwing.test_record.completion.has_value());
 
     check("The stamp's start lies between the call to execute and the start of a test which passed",
-          passing.stamp_in_order());
+          passing.is_stamp_between_call_and_test());
 
     check("The stamp's start lies between the call to execute and the start of a test whose body threw",
-          throwing.stamp_in_order());
+          throwing.is_stamp_between_call_and_test());
   }
 
   /** `summary_collider_test_twin` is selected and `summary_collider_test` is
