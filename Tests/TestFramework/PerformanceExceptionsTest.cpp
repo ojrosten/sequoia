@@ -46,17 +46,13 @@ namespace sequoia::testing
     };
 
     check_exception_thrown<std::invalid_argument>("Minimum speed-up of 1",
-                                                  relativePerformanceCheck({.prediction{.lower{1.0}, .upper{2.0}},
-                                                                            .minimum_trials{10}}));
+                                                  relativePerformanceCheck({.prediction{.lower{1.0}, .upper{2.0}}}));
     check_exception_thrown<std::invalid_argument>("Maximum speed-up of 1",
-                                                  relativePerformanceCheck({.prediction{.lower{1.5}, .upper{1.0}},
-                                                                            .minimum_trials{10}}));
+                                                  relativePerformanceCheck({.prediction{.lower{1.5}, .upper{1.0}}}));
     check_exception_thrown<std::invalid_argument>("Minimum speed-up of NaN",
-                                                  relativePerformanceCheck({.prediction{.lower{nan}, .upper{2.0}},
-                                                                            .minimum_trials{10}}));
+                                                  relativePerformanceCheck({.prediction{.lower{nan}, .upper{2.0}}}));
     check_exception_thrown<std::invalid_argument>("Minimum speed-up exceeding the maximum",
-                                                  relativePerformanceCheck({.prediction{.lower{2.5}, .upper{2.0}},
-                                                                            .minimum_trials{10}}));
+                                                  relativePerformanceCheck({.prediction{.lower{2.5}, .upper{2.0}}}));
     check_exception_thrown<std::invalid_argument>("Too few trials",
                                                   relativePerformanceCheck({.prediction{.lower{2.0}, .upper{3.0}},
                                                                             .minimum_trials{tooFewTrials}}));
@@ -64,7 +60,7 @@ namespace sequoia::testing
 
   void performance_exceptions_test::test_checks_made_by_a_task()
   {
-    const relative_performance_parameters parameters{.prediction{.lower{2.0}, .upper{3.0}}, .minimum_trials{10}};
+    const relative_performance_parameters parameters{.prediction{.lower{2.0}, .upper{3.0}}};
 
     auto checkWithTasks{
       [this, &parameters](auto fast, auto slow) {
@@ -100,8 +96,7 @@ namespace sequoia::testing
         return check_relative_performance("Relative performance with a throwing task",
                                           []() { throw std::runtime_error{"Fast task failure"}; },
                                           []() {},
-                                          {.prediction{.lower{2.0}, .upper{3.0}},
-                                           .minimum_trials{10}});
+                                          {.prediction{.lower{2.0}, .upper{3.0}}});
       }
     };
 

@@ -108,7 +108,7 @@ namespace sequoia::testing
   struct relative_performance_parameters
   {
     relative_performance_interval prediction;
-    std::size_t                   minimum_trials;
+    std::size_t                   minimum_trials{relative_performance_minimum_trials_floor};
   };
 
   namespace impl

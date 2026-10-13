@@ -39,7 +39,7 @@ Task durations: fast 0.001s, slow 0.004s
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 104
-Attempt 1 takes 3 standard errors and needs 3.75 to overlap [20.4, 41.1]; later speed-ups lie inside the prediction
+Attempt 1 overlaps [20.4, 41.1] only from 3.75 standard errors, not at 3; later speed-ups lie inside the prediction
 
 The fast task is faster than the slow one, but by less than predicted
 Speed-up: 5.74 in [2.08, 15.8]; predicted [20.4, 41.1]
@@ -49,7 +49,7 @@ Task durations: fast 0.005s, slow 0.0287s
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 110
-Attempt 1 takes 3 standard errors and needs 3.74 to overlap [1.7, 2.62]; later speed-ups lie inside the prediction
+Attempt 1 overlaps [1.7, 2.62] only from 3.74 standard errors, not at 3; later speed-ups lie inside the prediction
 
 The fast task is suspiciously fast: faster than predicted
 Speed-up: 5.04 in [2.98, 8.52]; predicted [1.7, 2.62]
@@ -72,13 +72,13 @@ Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 127
 An interval of 3 standard errors includes a speed-up of 1, and overlaps [1.4, 1.8]
 
 The fast task is not distinguishably faster than the slow one
-Speed-up: 1.59 in [0.792, 3.19]; predicted [1.4, 1.8]
+Speed-up: 1.59 in [0.791, 3.19]; predicted [1.4, 1.8]
 Trials: 10, attempt 1 of 3
 Task durations: fast 0.002s, slow 0.00318s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 141
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 139
 A speed-up of 2, then of 0.5, then of 2
 
 The fast task is slower than the slow one
@@ -88,7 +88,7 @@ Task durations: fast 0.004s, slow 0.002s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 155
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 151
 Attempt 1 overlaps [2.92, 4.38] at 3 standard errors, not at 1; attempt 2 is slower
 
 The fast task is slower than the slow one

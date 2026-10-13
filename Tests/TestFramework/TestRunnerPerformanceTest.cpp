@@ -416,7 +416,7 @@ namespace sequoia::testing
       {
         using namespace std::chrono_literals;
 
-        const relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}, .minimum_trials{10}};
+        const relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}};
 
         check_relative_performance("A speed-up of 1, then of 8",
                                    counted_spinner{1ms},
@@ -471,7 +471,7 @@ namespace sequoia::testing
       {
         using namespace std::chrono_literals;
 
-        const relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}, .minimum_trials{10}};
+        const relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}};
 
         check_relative_performance("A speed-up of 8", counted_spinner{1ms}, counted_spinner{8ms}, parameters);
 
@@ -517,7 +517,7 @@ namespace sequoia::testing
       {
         using namespace std::chrono_literals;
 
-        const relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}, .minimum_trials{10}};
+        const relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}};
 
         check_relative_performance("A speed-up of 8", counted_spinner{1ms}, counted_spinner{8ms}, parameters);
 
@@ -554,7 +554,7 @@ namespace sequoia::testing
       {
         using namespace std::chrono_literals;
 
-        const relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}, .minimum_trials{10}};
+        const relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}};
 
         check_relative_performance("A speed-up of 1", counted_spinner{1ms}, counted_spinner{1ms}, parameters);
 
