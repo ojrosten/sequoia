@@ -297,6 +297,9 @@ namespace sequoia::testing
        not as a performance check. Its failure counts as a failure of the
        other check.
 
+       \pre Neither `fast` nor `slow` performs a check using a different
+       instance of the logger.
+
        \throws std::invalid_argument if either end of `parameters.prediction`
        is not greater than 1, if its lower end exceeds its upper end, or if
        `parameters.minimum_trials` is less than
