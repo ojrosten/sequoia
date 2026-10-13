@@ -131,6 +131,20 @@ namespace sequoia::testing
       return lines | std::views::drop(timingLines) | std::ranges::to<std::vector>();
     }
 
+    /** The summary `runner` writes for `Test`, with every measurement set to
+        zero by `text_with_zeroed_measurements`.
+     */
+    template<concrete_test Test>
+    [[nodiscard]]
+    std::string get_summary_with_zeroed_measurements(const test_runner& runner)
+    {
+      const test_summary_path summary{Test::source_file(), test_name<Test>(), runner.proj_paths(), null_discriminator};
+      if(const auto optContents{read_to_string(summary.file_path(), std::ios_base::in)})
+        return text_with_zeroed_measurements(optContents.value(), attempt_count_stability::typically_stable);
+
+      throw std::runtime_error{std::format("Unable to read the summary: {}", summary.file_path().generic_string())};
+    }
+
     /** When a slow test's sleep began and ended. */
     struct execution_interval
     {
@@ -376,6 +390,8 @@ namespace sequoia::testing
       using slow_to_summarize_test_base::slow_to_summarize_test_base;
     };
 
+    constexpr std::size_t too_few_trials{relative_performance_minimum_trials_floor - 1};
+
     /** Makes five performance checks. A check stops at its first passing
         attempt, so the tasks' durations set how many attempts each makes:
         -# Two: the slow task is as fast as the fast one for the first
@@ -408,12 +424,12 @@ namespace sequoia::testing
                                    parameters);
 
         check_exception_thrown<std::invalid_argument>(
-          "Nine trials are refused",
+          "Too few trials are refused",
           [this, &parameters]() {
-            return check_relative_performance("Nine trials",
+            return check_relative_performance("Too few trials",
                                               counted_spinner{1ms},
                                               counted_spinner{8ms},
-                                              {.prediction{parameters.prediction}, .minimum_trials{9}});
+                                              {.prediction{parameters.prediction}, .minimum_trials{too_few_trials}});
           }
         );
 
@@ -429,6 +445,128 @@ namespace sequoia::testing
 
         check_relative_performance("A speed-up of 8", counted_spinner{1ms}, counted_spinner{8ms}, parameters);
         check_relative_performance("A speed-up of 1", counted_spinner{1ms}, counted_spinner{1ms}, parameters);
+      }
+    };
+
+    /** Makes a performance check, and two more, each within a check of an
+        exception:
+        -# A speed-up of 8 passes at once.
+        -# A check of too few trials is refused, which is the exception
+           expected.
+        -# A speed-up of 0.25 never passes; a check, then the exception
+           expected, follow.
+     */
+    class performance_checks_within_other_checks_test final : public performance_test
+    {
+    public:
+      using performance_test::performance_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return std::source_location::current().file_name();
+      }
+
+      void run_tests()
+      {
+        using namespace std::chrono_literals;
+
+        const relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}, .minimum_trials{10}};
+
+        check_relative_performance("A speed-up of 8", counted_spinner{1ms}, counted_spinner{8ms}, parameters);
+
+        check_exception_thrown<std::invalid_argument>(
+          "Too few trials are refused",
+          [this, &parameters]() {
+            return check_relative_performance("Too few trials",
+                                              counted_spinner{1ms},
+                                              counted_spinner{8ms},
+                                              {.prediction{parameters.prediction}, .minimum_trials{too_few_trials}});
+          }
+        );
+
+        check_exception_thrown<std::runtime_error>(
+          "A nested performance check's failure is the enclosing check's failure, and a check may follow it",
+          [this, &parameters]() {
+            check_relative_performance("A speed-up of 0.25", counted_spinner{4ms}, counted_spinner{1ms}, parameters);
+            check("A check after the performance check", true);
+            throw std::runtime_error{"After the performance check"};
+          }
+        );
+      }
+    };
+
+    /** In false-positive mode, makes a performance check, and another within
+        a check of an exception:
+        -# A speed-up of 8 passes at once.
+        -# A check of too few trials is refused, which is the exception
+           expected.
+     */
+    class performance_checks_within_other_checks_false_positive_test final : public performance_false_positive_test
+    {
+    public:
+      using performance_false_positive_test::performance_false_positive_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return std::source_location::current().file_name();
+      }
+
+      void run_tests()
+      {
+        using namespace std::chrono_literals;
+
+        const relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}, .minimum_trials{10}};
+
+        check_relative_performance("A speed-up of 8", counted_spinner{1ms}, counted_spinner{8ms}, parameters);
+
+        check_exception_thrown<std::invalid_argument>(
+          "Too few trials are refused",
+          [this, &parameters]() {
+            return check_relative_performance("Too few trials",
+                                              counted_spinner{1ms},
+                                              counted_spinner{8ms},
+                                              {.prediction{parameters.prediction}, .minimum_trials{too_few_trials}});
+          }
+        );
+      }
+    };
+
+    /** In false-negative mode, makes a performance check, and another within
+        a check of an exception, each meant to fail:
+        -# A speed-up of 1 fails its first attempt.
+        -# A check of too few trials is refused, which is not the exception
+           expected.
+     */
+    class performance_checks_within_other_checks_false_negative_test final : public performance_false_negative_test
+    {
+    public:
+      using performance_false_negative_test::performance_false_negative_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return std::source_location::current().file_name();
+      }
+
+      void run_tests()
+      {
+        using namespace std::chrono_literals;
+
+        const relative_performance_parameters parameters{.prediction{.lower{2}, .upper{40}}, .minimum_trials{10}};
+
+        check_relative_performance("A speed-up of 1", counted_spinner{1ms}, counted_spinner{1ms}, parameters);
+
+        check_exception_thrown<std::runtime_error>(
+          "Too few trials are refused, but not with the exception expected",
+          [this, &parameters]() {
+            return check_relative_performance("Too few trials",
+                                              counted_spinner{1ms},
+                                              counted_spinner{8ms},
+                                              {.prediction{parameters.prediction}, .minimum_trials{too_few_trials}});
+          }
+        );
       }
     };
 
@@ -525,6 +663,7 @@ namespace sequoia::testing
     test_runner_overhead_reported_apart();
     test_execution_duration_of_busiest_thread();
     test_execution_records_of_performance_checks();
+    test_summary_of_performance_checks_within_other_checks();
   }
 
   void test_runner_performance_test::test_parallel_acceleration()
@@ -712,5 +851,41 @@ namespace sequoia::testing
           "The record of a performance test which makes no performance check gives no attempts",
           get_recorded_lines_after_timings<performance_test_without_performance_checks>(runner),
           std::vector<std::string>{});
+  }
+
+  void test_runner_performance_test::test_summary_of_performance_checks_within_other_checks()
+  {
+    using standard_test       = performance_checks_within_other_checks_test;
+    using false_positive_test = performance_checks_within_other_checks_false_positive_test;
+    using false_negative_test = performance_checks_within_other_checks_false_negative_test;
+
+    std::stringstream outputStream{};
+    commandline_arguments args{{minimal_fake_path().generic_string()}};
+    auto runner{make_runner(args, outputStream)};
+    runner.register_test<standard_test>();
+    runner.register_test<false_positive_test>();
+    runner.register_test<false_negative_test>();
+    check(equality,
+          "Performance checks within other checks return code",
+          runner.execute(),
+          return_code::soft_failures);
+
+    const auto outputDir{working_materials() /= "PerformanceChecksWithinOtherChecks"};
+    fs::create_directory(outputDir);
+
+    auto writeSummary{
+      [&outputDir](std::string_view testName, const std::string& summary) {
+        write_to_file(outputDir / std::format("{}.txt", testName), summary, std::ios_base::out);
+      }
+    };
+
+    writeSummary(test_name<standard_test>(),       get_summary_with_zeroed_measurements<standard_test>(runner));
+    writeSummary(test_name<false_positive_test>(), get_summary_with_zeroed_measurements<false_positive_test>(runner));
+    writeSummary(test_name<false_negative_test>(), get_summary_with_zeroed_measurements<false_negative_test>(runner));
+
+    check(equivalence,
+          "A performance check within another check is counted as part of the other",
+          outputDir,
+          predictive_materials() /= "PerformanceChecksWithinOtherChecks");
   }
 }

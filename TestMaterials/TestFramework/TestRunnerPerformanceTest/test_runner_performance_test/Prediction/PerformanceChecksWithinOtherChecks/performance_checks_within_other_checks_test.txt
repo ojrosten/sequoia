@@ -1,0 +1,19 @@
+performance_checks_within_other_checks_test
+Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 5]
+Standard Performance Checks:               1;  Failures:  0
+
+Tests/Tests/TestFramework/TestRunnerPerformanceTest.cpp, Line 489
+A nested performance check's failure is the enclosing check's failure, and a check may follow it
+
+Expected Exception Type:
+[std::runtime_error]
+  Tests/Tests/TestFramework/TestRunnerPerformanceTest.cpp, Line 491
+  A speed-up of 0.25
+
+  The fast task is slower than the slow one
+  Speed-up: 0 in [0, 0]; predicted [2, 40]
+  Trials: 20, attempt 3 of 3
+  Task durations: fast 0s, slow 0s
+
+=======================================
+

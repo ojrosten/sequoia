@@ -52,9 +52,10 @@ namespace sequoia::testing
     std::size_t
       failures{},
       top_level_failures{},
-      performance_failures{},
+      top_level_performance_failures{},
       critical_failures{},
       top_level_checks{},
+      top_level_performance_checks{},
       deep_checks{};
 
     std::vector<std::optional<std::size_t>> attempts_per_performance_check{};
@@ -92,7 +93,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string_view top_level_message() const noexcept
     {
-      return !m_SentinelDepth.empty() ? std::string_view{m_SentinelDepth.front().message} : "";
+      return !m_SentinelLevels.empty() ? std::string_view{m_SentinelLevels.front().message} : "";
     }
 
     [[nodiscard]]
@@ -110,41 +111,45 @@ namespace sequoia::testing
     test_logger_base(test_logger_base&&)            noexcept = default;
     test_logger_base& operator=(test_logger_base&&) noexcept = default;
   private:
-    struct level_message
+    struct sentinel_level
     {
-      explicit level_message(std::string_view m)
+      explicit sentinel_level(std::string_view m)
         : message{m}
       {}
 
       std::string message;
-      bool written{};
+      bool written{},
+           is_performance_check{};
     };
 
     enum class is_critical{yes, no};
 
     test_results m_Results;
-    std::vector<level_message> m_SentinelDepth;
+    std::vector<sentinel_level> m_SentinelLevels;
     active_recovery_files m_Recovery{};
 
     [[nodiscard]]
-    std::size_t depth() const noexcept { return m_SentinelDepth.size(); }
+    std::size_t depth() const noexcept { return m_SentinelLevels.size(); }
 
     void log_check() noexcept { ++m_Results.deep_checks; }
 
     void log_top_level_check() noexcept { ++m_Results.top_level_checks; }
 
     [[nodiscard]]
-    std::size_t log_performance_check()
+    bool within_performance_check() const noexcept
     {
-      m_Results.attempts_per_performance_check.emplace_back();
-      log_check();
-      return m_Results.attempts_per_performance_check.size() - 1;
+      return !m_SentinelLevels.empty() && m_SentinelLevels.back().is_performance_check;
     }
 
-    void log_performance_check_attempts(std::size_t checkIndex, std::size_t attempts)
+    [[nodiscard]]
+    bool top_level_is_performance_check() const noexcept
     {
-      m_Results.attempts_per_performance_check.at(checkIndex) = attempts;
+      return !m_SentinelLevels.empty() && m_SentinelLevels.front().is_performance_check;
     }
+
+    void log_performance_check();
+
+    void log_performance_check_attempts(std::size_t attempts);
 
     void failure_message(test_mode mode, std::string_view message, is_critical isCritical);
     
@@ -156,7 +161,9 @@ namespace sequoia::testing
 
     void log_performance_failure(test_mode mode, std::string_view message)
     {
-      ++m_Results.performance_failures;
+      if(top_level_is_performance_check())
+        ++m_Results.top_level_performance_failures;
+
       log_failure(mode, message);
     }
 
@@ -214,13 +221,9 @@ namespace sequoia::testing
     sentinel_base(const sentinel_base&)            = delete;
     sentinel_base& operator=(const sentinel_base&) = delete;
 
-    [[nodiscard]]
-    std::size_t log_performance_check() { return get().log_performance_check(); }
+    void log_performance_check() { get().log_performance_check(); }
 
-    void log_performance_check_attempts(std::size_t checkIndex, std::size_t attempts)
-    {
-      get().log_performance_check_attempts(checkIndex, attempts);
-    }
+    void log_performance_check_attempts(std::size_t attempts) { get().log_performance_check_attempts(attempts); }
 
     void log_check() { get().log_check(); }
 
@@ -289,7 +292,9 @@ namespace sequoia::testing
       a localized and simple manner. In particular, a given check may actually be
       composed of many sub-checks. For standard checks, we want to count this as a
       single 'top-level' check. For false-positive checks success is counted as a failure
-      of one or more of the sub-checks. The sentinels deal with all of this smoothly
+      of one or more of the sub-checks. Likewise, a performance check counts as a
+      performance check only at the top level; within another check, it is one of
+      that check's sub-checks. The sentinels deal with all of this smoothly
       in a way which clients of the framework can generally ignore.
 
       4. sentinel may be used to help coordinate output.
