@@ -204,6 +204,10 @@ namespace sequoia::testing
       readRecord(startLine + "execution duration 01500us\nrunner overhead 250us\n"));
 
     check_exception_thrown<std::runtime_error>(
+      "A negative runner overhead",
+      readRecord(startLine + "execution duration 1500us\nrunner overhead -250us\n"));
+
+    check_exception_thrown<std::runtime_error>(
       "A completion with no runner overhead",
       readRecord(startLine + "execution duration 1500us\n"));
 

@@ -71,6 +71,15 @@ Expected Exception Type:
 =======================================
 
 Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 207
+A negative runner overhead
+
+Expected Exception Type:
+[std::runtime_error]
+'-250us' is a negative duration
+
+=======================================
+
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 211
 A completion with no runner overhead
 
 Expected Exception Type:
@@ -79,7 +88,7 @@ Expected a line beginning 'runner overhead ' but there are no more lines
 
 =======================================
 
-Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 211
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 215
 A number of attempts which is not a number
 
 Expected Exception Type:
@@ -88,7 +97,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 215
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 219
 A number of attempts with a leading zero
 
 Expected Exception Type:
@@ -97,7 +106,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 219
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 223
 A line after the timings which does not give attempts
 
 Expected Exception Type:
@@ -106,7 +115,7 @@ Expected a line beginning 'performance check attempts ' but found 'foo'
 
 =======================================
 
-Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 226
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 230
 A file which does not exist
 
 Expected Exception Type:
@@ -115,7 +124,7 @@ Unable to open file output/TestsTemporaryData/TestFramework/ExecutionRecordRegul
 
 =======================================
 
-Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 230
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 234
 An empty file
 
 Expected Exception Type:
@@ -124,7 +133,7 @@ No execution record in output/TestsTemporaryData/TestFramework/ExecutionRecordRe
 
 =======================================
 
-Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 234
+Tests/TestFramework/ExecutionRecordRegularTest.cpp, Line 238
 A file whose text is not a record
 
 Expected Exception Type:

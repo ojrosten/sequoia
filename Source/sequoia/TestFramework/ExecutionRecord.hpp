@@ -41,7 +41,7 @@ namespace sequoia::testing
              once the execution has finished.
 
       `operator>>` reads back what `operator<<` writes, for a start in the
-      years 0 to 9999.
+      years 0 to 9999 and durations which are not negative.
    */
   struct execution_record
   {
@@ -59,8 +59,8 @@ namespace sequoia::testing
 
         At the end of `s`, sets `failbit` and leaves `record` unchanged.
 
-        \throws std::runtime_error if the text is not a record; `record` is
-                then unchanged
+        \throws std::runtime_error if the text is not a record, or gives a
+                negative duration; `record` is then unchanged
      */
     friend std::istream& operator>>(std::istream& s, execution_record& record);
   };

@@ -87,7 +87,12 @@ namespace sequoia::testing
         };
 
         if(text_of(duration) == text)
+        {
+          if(duration < std::chrono::microseconds::zero())
+            throw std::runtime_error{std::format("'{}' is a negative duration", text)};
+
           return duration;
+        }
       }
 
       throw std::runtime_error{std::format("'{}' is not a duration in microseconds", text)};
