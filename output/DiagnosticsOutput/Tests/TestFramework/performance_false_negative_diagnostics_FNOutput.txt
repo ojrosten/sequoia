@@ -59,7 +59,7 @@ Task durations: fast 0.008s, slow 0.0403s
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 116
-Attempt 1 takes 3 standard errors and needs 2.25 to overlap [2.34, 3.66]; attempt 2 is slower
+Attempt 1 overlaps [2.34, 3.66] at 3 standard errors, not below 2.25; attempt 2 is slower
 
 The fast task is slower than the slow one
 Speed-up: 0.128 in [0.0651, 0.25]; predicted [2.34, 3.66]

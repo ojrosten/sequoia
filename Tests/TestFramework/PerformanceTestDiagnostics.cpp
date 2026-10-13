@@ -113,7 +113,7 @@ namespace sequoia::testing
                                make_cycling_spinner({30ms, 30ms, 30ms, 60ms, 80ms}),
                                {.prediction{.lower{1.7}, .upper{2.62}}, .minimum_trials{10}});
 
-    check_relative_performance("Attempt 1 takes 3 standard errors and needs 2.25 to overlap [2.34, 3.66]; "
+    check_relative_performance("Attempt 1 overlaps [2.34, 3.66] at 3 standard errors, not below 2.25; "
                                "attempt 2 is slower",
                                make_cycling_spinner({3ms, 4ms, 12ms, 12ms, 12ms}),
                                counted_spinner{50ms, trials_for_minimum_10[0], 1ms},
