@@ -1,4 +1,4 @@
-Tests/TestFramework/RunStampRegularTest.cpp, Line 145
+Tests/TestFramework/RunStampRegularTest.cpp, Line 149
 A first line which does not give the start
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Expected a start but found 'begun 2026-10-13T09:15:04.123Z'
 
 =======================================
 
-Tests/TestFramework/RunStampRegularTest.cpp, Line 164
+Tests/TestFramework/RunStampRegularTest.cpp, Line 168
 A file which does not exist
 
 Expected Exception Type:
@@ -16,12 +16,21 @@ Unable to open file output/TestsTemporaryData/TestFramework/RunStampRegularTest/
 
 =======================================
 
-Tests/TestFramework/RunStampRegularTest.cpp, Line 168
+Tests/TestFramework/RunStampRegularTest.cpp, Line 172
 An empty file
 
 Expected Exception Type:
 [std::runtime_error]
 No run stamp in output/TestsTemporaryData/TestFramework/RunStampRegularTest/run_stamp_regular_test/WorkingCopy/Empty.txt
+
+=======================================
+
+Tests/TestFramework/RunStampRegularTest.cpp, Line 178
+A file with a line after the stamp
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read the run stamp in output/TestsTemporaryData/TestFramework/RunStampRegularTest/run_stamp_regular_test/WorkingCopy/Followed.txt: Expected the end of the file but found 'next line'
 
 =======================================
 

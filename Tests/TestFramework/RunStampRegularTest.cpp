@@ -11,6 +11,8 @@
 
 #include <optional>
 #include <sstream>
+#include <stdexcept>
+#include <string>
 
 namespace sequoia::testing
 {
@@ -115,10 +117,12 @@ namespace sequoia::testing
 
     std::stringstream followed{to_string(stamp()) + "next line\n"};
     run_stamp readBack{};
-    followed >> readBack;
+    const bool readSucceeded{static_cast<bool>(followed >> readBack)};
     std::string rest{};
     std::getline(followed, rest);
 
+    check("A read of a stamp followed by another line succeeds", readSucceeded);
+    check(equality, "A stamp followed by another line reads as the stamp", readBack, stamp());
     check(equality, "operator>> leaves the line after a stamp unread", rest, std::string{"next line"});
   }
 
@@ -148,7 +152,7 @@ namespace sequoia::testing
     run_stamp readInto{stamp()};
     try
     {
-      std::stringstream s{"started 2026-13-14T09:15:04.123Z\n"};
+      std::stringstream s{"begun 2026-10-14T09:15:04.123Z\n"};
       s >> readInto;
     }
     catch(const std::runtime_error&)
@@ -167,5 +171,11 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       "An empty file",
       [this]() { return read_run_stamp(working_materials() / "Empty.txt"); });
+
+    write_to_file(working_materials() / "Followed.txt", to_string(stamp()) + "next line\n", std::ios_base::binary);
+
+    check_exception_thrown<std::runtime_error>(
+      "A file with a line after the stamp",
+      [this]() { return read_run_stamp(working_materials() / "Followed.txt"); });
   }
 }

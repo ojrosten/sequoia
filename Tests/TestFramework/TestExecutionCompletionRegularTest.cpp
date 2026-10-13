@@ -9,6 +9,8 @@
 
 #include <optional>
 #include <sstream>
+#include <stdexcept>
+#include <string>
 
 namespace sequoia::testing
 {
@@ -65,6 +67,19 @@ namespace sequoia::testing
           "A completion round-trips through operator<< and operator>>",
           readBackFromWritten(completion()),
           std::optional{completion()});
+
+    const auto withoutAttempts{
+      []() {
+        auto noAttempts{completion()};
+        noAttempts.performance_check_attempts.clear();
+        return noAttempts;
+      }()
+    };
+
+    check(equality,
+          "A completion with no performance check attempts round-trips through operator<< and operator>>",
+          readBackFromWritten(withoutAttempts),
+          std::optional{withoutAttempts});
   }
 
   void test_execution_completion_regular_test::test_end_of_stream()
@@ -152,6 +167,14 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       "A number of attempts with a label other than the one operator<< writes",
       readCompletion(timingLines + "check attempts 2\n"));
+
+    check_exception_thrown<std::runtime_error>(
+      "A completion followed by another completion",
+      readCompletion(timingLines + timingLines));
+
+    check_exception_thrown<std::runtime_error>(
+      "A blank line after a completion",
+      readCompletion(timingLines + "\n"));
 
     test_execution_completion readInto{completion()};
     try

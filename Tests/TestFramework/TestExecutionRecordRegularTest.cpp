@@ -207,6 +207,14 @@ namespace sequoia::testing
       "A record followed by another record",
       readRecord("started 2026-10-13T09:15:04.123Z\nstarted 2026-10-14T09:15:04.123Z\n"));
 
+    check_exception_thrown<std::runtime_error>(
+      "A finished record followed by another record",
+      readRecord(to_string(finished_record()) + "started 2026-10-14T09:15:04.123Z\n"));
+
+    check_exception_thrown<std::runtime_error>(
+      "A blank line after a record's start",
+      readRecord("started 2026-10-13T09:15:04.123Z\n\n"));
+
     test_execution_record readInto{finished_record()};
     try
     {

@@ -41,11 +41,11 @@ namespace sequoia::testing
 
     friend std::ostream& operator<<(std::ostream& s, const test_execution_completion& completion);
 
-    /** \brief Reads a completion which runs from the read position of `s`
-               to the end of `s`.
+    /** \brief Reads a completion from the read position of `s`.
 
-        A completion has no end marker: its entries of attempts run until
-        the stream ends. So nothing can follow a completion in `s`.
+        A completion must be the last thing in `s`. Nothing marks its last
+        entry of attempts, so each line after the runner overhead is read as
+        an entry of attempts, and any other line is refused.
 
         Sets `failbit` if the read position is at the end of `s`. Modifies
         `completion` only after reading a whole completion.
@@ -77,11 +77,11 @@ namespace sequoia::testing
 
     friend std::ostream& operator<<(std::ostream& s, const test_execution_record& record);
 
-    /** \brief Reads a record which runs from the read position of `s` to
-               the end of `s`.
+    /** \brief Reads a record from the read position of `s`.
 
-        Once the start is read, any text that follows is read as the
-        record's completion, which runs to the end of `s`.
+        A record must be the last thing in `s`: its completion has no end
+        marker, so any line after the start is read as part of the
+        completion.
 
         Sets `failbit` if the read position is at the end of `s`. Modifies
         `record` only after reading a whole record.
@@ -97,8 +97,8 @@ namespace sequoia::testing
 
   /** \brief Reads the record of a test's execution held by `file`.
 
-      \throws std::runtime_error if `file` cannot be opened, or does not hold
-              a record
+      \throws std::runtime_error if `file` cannot be opened, or holds
+              anything other than one record
    */
   [[nodiscard]]
   test_execution_record read_test_execution_record(const std::filesystem::path& file);
@@ -139,8 +139,8 @@ namespace sequoia::testing
 
   /** \brief Reads the stamp held by `file`.
 
-      \throws std::runtime_error if `file` cannot be opened, or does not hold
-              a stamp
+      \throws std::runtime_error if `file` cannot be opened, or holds
+              anything other than one stamp
    */
   [[nodiscard]]
   run_stamp read_run_stamp(const std::filesystem::path& file);

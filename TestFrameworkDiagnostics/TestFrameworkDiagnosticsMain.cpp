@@ -39,6 +39,7 @@ int main(int argc, char** argv)
     runner.register_test<failure_info_false_negative_test>();
     runner.register_test<test_execution_record_regular_test>();
     runner.register_test<test_execution_record_false_negative_test>();
+    runner.register_test<test_execution_completion_regular_test>();
     runner.register_test<file_system_utilities_free_test>();
     runner.register_test<output_free_test>();
     runner.register_test<dependency_analyzer_free_test>();
@@ -115,7 +116,6 @@ int main(int argc, char** argv)
     runner.register_test<performance_exceptions_test>();
     runner.register_test<run_stamp_regular_test>();
     runner.register_test<run_stamp_false_negative_test>();
-    runner.register_test<test_execution_completion_regular_test>();
 
     code = runner.execute();
   }

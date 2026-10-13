@@ -52,7 +52,25 @@ Expected an execution duration but found 'started 2026-10-14T09:15:04.123Z'
 
 =======================================
 
-Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 226
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 211
+A finished record followed by another record
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a number of attempts but found 'started 2026-10-14T09:15:04.123Z'
+
+=======================================
+
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 215
+A blank line after a record's start
+
+Expected Exception Type:
+[std::runtime_error]
+Expected an execution duration but found ''
+
+=======================================
+
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 234
 A file which does not exist
 
 Expected Exception Type:
@@ -61,7 +79,7 @@ Unable to open file output/TestsTemporaryData/TestFramework/TestExecutionRecordR
 
 =======================================
 
-Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 230
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 238
 An empty file
 
 Expected Exception Type:
@@ -70,7 +88,7 @@ No test execution record in output/TestsTemporaryData/TestFramework/TestExecutio
 
 =======================================
 
-Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 234
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 242
 A file whose text is not a record
 
 Expected Exception Type:

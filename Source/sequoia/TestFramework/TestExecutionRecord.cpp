@@ -151,17 +151,19 @@ namespace sequoia::testing
     [[nodiscard]]
     std::optional<test_execution_completion> read_completion(std::istream& s)
     {
-      if(test_execution_completion completion{}; more_to_read(s) && (s >> completion))
-        return completion;
+      if(!more_to_read(s))
+        return std::nullopt;
 
-      return std::nullopt;
+      test_execution_completion completion{};
+      s >> completion;
+      return completion;
     }
 
-    /** Reads a `T` from `file`. `description` names a `T` in the messages
-        of what this throws.
+    /** Reads the `T` which `file` holds. `description` names a `T` in the
+        messages of what this throws.
 
-        \throws std::runtime_error if `file` cannot be opened, or holds no
-                `T`, or reading a `T` from it throws
+        \throws std::runtime_error if `file` cannot be opened, holds no `T`,
+                holds anything after its `T`, or reading a `T` from it throws
      */
     template<class T>
     [[nodiscard]]
@@ -172,7 +174,12 @@ namespace sequoia::testing
         try
         {
           if(T value{}; ifile >> value)
+          {
+            if(std::string line{}; more_to_read(ifile) && std::getline(ifile, line))
+              throw std::runtime_error{std::format("Expected the end of the file but found '{}'", line)};
+
             return value;
+          }
         }
         catch(const std::runtime_error& e)
         {
