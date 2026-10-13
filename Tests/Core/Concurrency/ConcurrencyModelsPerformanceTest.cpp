@@ -127,9 +127,10 @@ namespace sequoia::testing
     test_waiting_task_return(std::chrono::milliseconds{15});
   }
 
-  /* Each model is constructed once, before its checks, and the checks reach it
-     by reference. A task which constructed its model would add the start and
-     join of a pool's threads to every trial's timing.
+  /* The checks take each waiting_task by reference, so its model is
+     constructed once, before the checks. Constructing the model inside a timed
+     call would add the start and join of a pool's threads to every trial's
+     timing.
 
      The lower bounds sit further below the ideal speed-up than a symmetric tolerance would put
      them, because a pool of N on a machine with N hardware threads has no headroom: the pool's
@@ -148,7 +149,7 @@ namespace sequoia::testing
     {
       waiting_task<wait, thread_pool<void>>        threadPoolTask{2u, wait{millisecs}, 2u};
       waiting_task<wait, thread_pool<void, false>> threadPoolMonoTask{2u, wait{millisecs}, 2u};
-      waiting_task<wait, serial<void>>             nullThreadTask{2u, wait{millisecs}};
+      const waiting_task<wait, serial<void>>       nullThreadTask{2u, wait{millisecs}};
       waiting_task<wait, asynchronous<void>>       asyncTask{2u, wait{millisecs}};
 
       check_relative_performance("Two Waiting tasks; pool_2/null",
@@ -165,7 +166,7 @@ namespace sequoia::testing
     {
       waiting_task<wait, thread_pool<void>>        threadPoolTask{4u, wait{millisecs}, 2u};
       waiting_task<wait, thread_pool<void, false>> threadPoolMonoTask{4u, wait{millisecs}, 2u};
-      waiting_task<wait, serial<void>>             nullThreadTask{4u, wait{millisecs}};
+      const waiting_task<wait, serial<void>>       nullThreadTask{4u, wait{millisecs}};
 
       check_relative_performance("Four Waiting tasks; pool_2/null",
                                  std::ref(threadPoolTask), std::ref(nullThreadTask),
@@ -178,7 +179,7 @@ namespace sequoia::testing
     {
       waiting_task<wait, thread_pool<void>>        threadPoolTask{4u, wait{millisecs}, 4u};
       waiting_task<wait, thread_pool<void, false>> threadPoolMonoTask{4u, wait{millisecs}, 4u};
-      waiting_task<wait, serial<void>>             nullThreadTask{4u, wait{millisecs}};
+      const waiting_task<wait, serial<void>>       nullThreadTask{4u, wait{millisecs}};
 
       check_relative_performance("Four Waiting tasks; pool_4/null",
                                  std::ref(threadPoolTask), std::ref(nullThreadTask),
@@ -197,7 +198,7 @@ namespace sequoia::testing
 
       waiting_task<wait_return, thread_pool<int>>        threadPoolTask{2u, waitReturnVal, 2u};
       waiting_task<wait_return, thread_pool<int, false>> threadPoolMonoTask{2u, waitReturnVal, 2u};
-      waiting_task<wait_return, serial<int>>             nullThreadTask{2u, waitReturnVal};
+      const waiting_task<wait_return, serial<int>>       nullThreadTask{2u, waitReturnVal};
       waiting_task<wait_return, asynchronous<int>>       asyncTask{2u, waitReturnVal};
 
       check_relative_performance("Two Waiting tasks; pool_2/null",
