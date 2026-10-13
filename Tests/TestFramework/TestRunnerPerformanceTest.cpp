@@ -450,7 +450,8 @@ namespace sequoia::testing
         exception:
         -# A speed-up of 8 passes at once.
         -# A check of nine trials is refused, which is the exception expected.
-        -# A speed-up of 0.25 never passes, and the exception expected follows.
+        -# A speed-up of 0.25 never passes; a check, then the exception
+           expected, follow.
      */
     class performance_checks_within_other_checks_test final : public performance_test
     {
@@ -485,6 +486,7 @@ namespace sequoia::testing
           "A failing performance check, then an exception",
           [this, &parameters]() {
             check_relative_performance("A speed-up of 0.25", counted_spinner{4ms}, counted_spinner{1ms}, parameters);
+            check("A check after the performance check", true);
             throw std::runtime_error{"After the performance check"};
           }
         );

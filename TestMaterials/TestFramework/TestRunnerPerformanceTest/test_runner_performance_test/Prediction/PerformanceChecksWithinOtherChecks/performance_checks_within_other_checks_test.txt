@@ -1,13 +1,13 @@
 performance_checks_within_other_checks_test
-Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 4]
+Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 5]
 Standard Performance Checks:               1;  Failures:  0
 
-Tests/Tests/TestFramework/TestRunnerPerformanceTest.cpp, Line 485
+Tests/Tests/TestFramework/TestRunnerPerformanceTest.cpp, Line 486
 A failing performance check, then an exception
 
 Expected Exception Type:
 [std::runtime_error]
-  Tests/Tests/TestFramework/TestRunnerPerformanceTest.cpp, Line 487
+  Tests/Tests/TestFramework/TestRunnerPerformanceTest.cpp, Line 488
   A speed-up of 0.25
 
   The fast task is slower than the slow one
