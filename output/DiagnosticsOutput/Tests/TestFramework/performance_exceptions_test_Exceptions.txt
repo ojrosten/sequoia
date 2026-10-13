@@ -44,20 +44,20 @@ Relative performance test requires minimum_trials >= 10
 =======================================
 
 Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 81
-Fast task makes a check
+Fast task performs a check
 
 Expected Exception Type:
-[std::invalid_argument]
-A check cannot be made within a performance check
+[std::logic_error]
+The tasks of a performance check cannot perform checks
 
 =======================================
 
 Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 86
-Slow task makes a performance check
+Slow task performs a performance check
 
 Expected Exception Type:
-[std::invalid_argument]
-A check cannot be made within a performance check
+[std::logic_error]
+The tasks of a performance check cannot perform checks
 
 =======================================
 

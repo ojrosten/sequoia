@@ -292,10 +292,10 @@ namespace sequoia::testing
 
        Any exception thrown by `fast` or `slow` propagates.
 
-       Made by the function given to another check, such as
-       `check_exception_thrown`, the check counts as a deep check of the
-       other, not as a performance check, and its failure as a failure of the
-       other.
+       A performance check made by the function given to another check, such
+       as `check_exception_thrown`, counts as a deep check of the other check,
+       not as a performance check. Its failure counts as a failure of the
+       other check.
 
        \throws std::invalid_argument if either end of `parameters.prediction`
        is not greater than 1, if its lower end exceeds its upper end, or if
@@ -304,7 +304,8 @@ namespace sequoia::testing
 
        \throws std::runtime_error if a trial times either task as zero.
 
-       \throws std::invalid_argument if `fast` or `slow` makes a check on `logger`.
+       \throws std::logic_error if `fast` or `slow` performs a check, such as
+       `check` or `check_relative_performance`.
    */
   template<test_mode Mode, performance_task F, performance_task S>
   bool check_relative_performance(std::string_view description,
