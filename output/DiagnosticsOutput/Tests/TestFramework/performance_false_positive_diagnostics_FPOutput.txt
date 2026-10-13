@@ -30,7 +30,7 @@ Task durations: fast 0.00183s, slow 0.00366s
 
 False Negative Failure:
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 203
-Attempts 1 and 2 fail at the gate; attempt 3's interval overlaps the prediction, but would not if significantly narrower
+Attempts 1 and 2 fail at the gate; attempt 3's interval overlaps the prediction, but would not if substantially narrower
 
 Speed-up: 2.82 in [1.36, 5.83]; predicted [4.86, 7.43]
 Trials: 20, attempt 3 of 3
@@ -40,7 +40,7 @@ Task durations: fast 0.005s, slow 0.0141s
 
 False Negative Failure:
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 210
-Attempt 2's interval lies above the prediction, and would overlap the prediction only if significantly wider; attempt 3's interval overlaps the prediction, but would not if significantly narrower
+Attempt 2's interval lies above the prediction, and would overlap the prediction only if substantially wider; attempt 3's interval overlaps the prediction, but would not if substantially narrower
 
 Speed-up: 6.48 in [2.89, 14.6]; predicted [2.21, 3.54]
 Trials: 20, attempt 3 of 3

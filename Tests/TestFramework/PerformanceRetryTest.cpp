@@ -77,9 +77,9 @@ namespace sequoia::testing
 
     check_relative_performance(
       "Attempt 1's interval lies below the prediction, "
-      "and would overlap the prediction only if significantly wider; "
+      "and would overlap the prediction only if substantially wider; "
       "attempt 2's wider interval overlaps the prediction, "
-      "but would not if significantly narrower",
+      "but would not if substantially narrower",
       fast,
       make_cycling_spinner({8ms, 12ms, 40ms, 40ms, 40ms}),
       parameters
