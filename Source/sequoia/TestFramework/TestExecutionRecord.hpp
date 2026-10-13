@@ -80,6 +80,10 @@ namespace sequoia::testing
 
   /** \brief The start of a run of tests.
 
+      A run of tests is a call to `test_runner::execute` which has tests to
+      run. Under `locate-instabilities`, one run covers every repetition,
+      including the repetitions made in separate processes.
+
       `operator>>` reads back what `operator<<` writes, provided that the
       start lies in the years 0 to 32767.
    */

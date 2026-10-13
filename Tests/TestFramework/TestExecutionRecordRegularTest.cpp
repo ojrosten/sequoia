@@ -249,6 +249,18 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       "A number of attempts with a label other than the one operator<< writes",
       readRecord(startLine + timingLines + "check attempts 2\n"));
+
+    test_execution_record readInto{finished_record()};
+    try
+    {
+      std::stringstream s{"started 2026-10-14T09:15:04.123Z\nexecution duration 2ms\n"};
+      s >> readInto;
+    }
+    catch(const std::runtime_error&)
+    {
+    }
+
+    check(equality, "A refused read leaves the record as it was", readInto, finished_record());
   }
 
   void test_execution_record_regular_test::test_refusals_of_files()

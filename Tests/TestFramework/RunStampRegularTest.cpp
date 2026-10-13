@@ -95,12 +95,23 @@ namespace sequoia::testing
     check("A read at the end of a stream fails", s.fail());
     check(equality, "A read at the end of a stream leaves the stamp as it was", readInto, stamp());
 
-    const auto text{to_string(stamp())};
-    std::stringstream unterminated{text.substr(0, text.size() - 1)};
-    run_stamp readBack{};
-    unterminated >> readBack;
+    auto readWithoutFinalLineBreak{
+      [](const run_stamp& written) -> std::optional<run_stamp> {
+        const auto text{to_string(written)};
+        std::stringstream unterminated{text.substr(0, text.size() - 1)};
 
-    check(equality, "A stamp with no final line break reads as one with the line break", readBack, stamp());
+        run_stamp readBack{};
+        if(unterminated >> readBack)
+          return readBack;
+
+        return std::nullopt;
+      }
+    };
+
+    check(equality,
+          "A stamp with no final line break reads as one with the line break",
+          readWithoutFinalLineBreak(stamp()),
+          std::optional{stamp()});
   }
 
   void run_stamp_regular_test::test_written_format()
@@ -129,6 +140,22 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       "A line after the start",
       readStamp("started 2026-10-13T09:15:04.123Z\nexecution duration 1500us\n"));
+
+    check_exception_thrown<std::runtime_error>(
+      "A blank line after the start",
+      readStamp("started 2026-10-13T09:15:04.123Z\n\n"));
+
+    run_stamp readInto{stamp()};
+    try
+    {
+      std::stringstream s{"started 2026-10-14T09:15:04.123Z\nexecution duration 1500us\n"};
+      s >> readInto;
+    }
+    catch(const std::runtime_error&)
+    {
+    }
+
+    check(equality, "A refused read leaves the stamp as it was", readInto, stamp());
   }
 
   void run_stamp_regular_test::test_refusals_of_files()

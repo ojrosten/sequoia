@@ -142,7 +142,7 @@ Expected a number of attempts but found 'check attempts 2'
 
 =======================================
 
-Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 257
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 269
 A file which does not exist
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ Unable to open file output/TestsTemporaryData/TestFramework/TestExecutionRecordR
 
 =======================================
 
-Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 261
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 273
 An empty file
 
 Expected Exception Type:
@@ -160,7 +160,7 @@ No test execution record in output/TestsTemporaryData/TestFramework/TestExecutio
 
 =======================================
 
-Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 265
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 277
 A file whose text is not a record
 
 Expected Exception Type:

@@ -12,9 +12,9 @@
 */
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
-#include "sequoia/TestFramework/TestExecutionRecord.hpp"
 #include "sequoia/TestFramework/FailureReporting.hpp"
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "sequoia/TestFramework/TestExecutionRecord.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/TestFramework/VersionedOutput.hpp"
 

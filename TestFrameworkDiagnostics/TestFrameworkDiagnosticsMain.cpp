@@ -113,8 +113,8 @@ int main(int argc, char** argv)
     runner.register_test<summary_free_test>();
     runner.register_test<performance_retry_test>();
     runner.register_test<performance_exceptions_test>();
-    runner.register_test<run_stamp_false_negative_test>();
     runner.register_test<run_stamp_regular_test>();
+    runner.register_test<run_stamp_false_negative_test>();
 
     code = runner.execute();
   }

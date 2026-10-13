@@ -179,10 +179,11 @@ namespace sequoia::testing
       };
     }
 
-    /** Reads a `T` from `file`, naming it by `description` in what throws.
+    /** Reads a `T` from `file`. `description` names a `T` in the messages
+        of what this throws.
 
-        \throws std::runtime_error if `file` cannot be opened, or does not hold
-                a `T`
+        \throws std::runtime_error if `file` cannot be opened, or holds no
+                `T`, or reading a `T` from it throws
      */
     template<class T>
     [[nodiscard]]
