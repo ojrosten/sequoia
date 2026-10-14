@@ -58,8 +58,8 @@ namespace sequoia::testing
     const auto& [totalRunTime, criticalPath]{durationsOfRun};
     return std::format("{}{}{}{}",
                        timing_line("Total Run Time",      totalRunTime),
-                       timing_line("Execution Time",      criticalPath.execution_duration),
-                       timing_line("Runner Overhead",     criticalPath.runner_overhead),
+                       timing_line("Execution Time",      criticalPath.spent_in_tests.execution_duration),
+                       timing_line("Runner Overhead",     criticalPath.spent_in_tests.runner_overhead),
                        timing_line("Scheduling Overhead", criticalPath.scheduling_overhead));
   }
 

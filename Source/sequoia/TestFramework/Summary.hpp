@@ -55,20 +55,40 @@ namespace sequoia::testing
     }
   }
 
+  /** \brief The execution duration and runner overhead of a test, or of
+             several tests summed.
+   */
+  struct durations_of_tests
+  {
+    log_summary::duration
+      execution_duration{},
+      runner_overhead{};
+
+    [[nodiscard]]
+    log_summary::duration total() const noexcept { return execution_duration + runner_overhead; }
+
+    [[nodiscard]]
+    friend durations_of_tests operator+(const durations_of_tests& lhs, const durations_of_tests& rhs) noexcept
+    {
+      return {
+        .execution_duration{lhs.execution_duration + rhs.execution_duration},
+        .runner_overhead   {lhs.runner_overhead    + rhs.runner_overhead}
+      };
+    }
+  };
+
   /** \brief The durations into which the critical path of an execution of
              tests divides the execution's wall clock.
 
       The critical path is a sequence of tests known to have run one after
-      another. `execution_duration` and `runner_overhead` are the sums of its
-      tests'. `scheduling_overhead` is the rest of the wall clock, which the
-      critical path spent outside its tests.
+      another. `spent_in_tests` sums its tests' durations, and
+      `scheduling_overhead` is the rest of the wall clock, which the critical
+      path spent outside its tests.
    */
   struct critical_path_durations
   {
-    log_summary::duration
-      execution_duration{},
-      runner_overhead{},
-      scheduling_overhead{};
+    durations_of_tests    spent_in_tests{};
+    log_summary::duration scheduling_overhead{};
   };
 
   /** \brief The durations reported for a run of tests.

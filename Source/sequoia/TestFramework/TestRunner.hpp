@@ -127,12 +127,11 @@ namespace sequoia::testing
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
 
-  /** \brief A test's durations, and the thread which executed the test. */
+  /** \brief The thread which executed a test, and the test's durations. */
   struct execution_info
   {
-    std::thread::id       thread_id{};
-    log_summary::duration execution_duration{},
-                          runner_overhead{};
+    std::thread::id    thread_id{};
+    durations_of_tests durations{};
   };
 
   /** \brief Divides `wallClock`, the wall clock of an execution of tests,

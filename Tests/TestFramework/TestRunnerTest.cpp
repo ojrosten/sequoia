@@ -3194,13 +3194,13 @@ namespace sequoia::testing
              const critical_path_durations& predicted) {
         check(equality,
               std::format("{}: execution duration", description),
-              obtained.execution_duration,
-              predicted.execution_duration);
+              obtained.spent_in_tests.execution_duration,
+              predicted.spent_in_tests.execution_duration);
 
         check(equality,
               std::format("{}: runner overhead", description),
-              obtained.runner_overhead,
-              predicted.runner_overhead);
+              obtained.spent_in_tests.runner_overhead,
+              predicted.spent_in_tests.runner_overhead);
 
         check(equality,
               std::format("{}: scheduling overhead", description),
@@ -3214,7 +3214,7 @@ namespace sequoia::testing
           threadIds
         | std::views::transform(
             [](std::thread::id id) {
-              return execution_info{.thread_id{id}, .execution_duration{25ms}, .runner_overhead{1ms}};
+              return execution_info{.thread_id{id}, .durations{.execution_duration{25ms}, .runner_overhead{1ms}}};
             })
         | std::ranges::to<std::vector>()
       };
@@ -3222,58 +3222,58 @@ namespace sequoia::testing
       checkApportionment(
         "Eight threads, which ran one test each, one after another",
         apportion_wall_clock(210ms, {}, oneExecutionPerThread),
-        {.execution_duration{25ms}, .runner_overhead{1ms}, .scheduling_overhead{184ms}});
+        {.spent_in_tests{.execution_duration{25ms}, .runner_overhead{1ms}}, .scheduling_overhead{184ms}});
     }
 
     {
       const std::array concurrent{
-        execution_info{.thread_id{threadIds[0]}, .execution_duration{30ms}, .runner_overhead{0ms}},
-        execution_info{.thread_id{threadIds[1]}, .execution_duration{20ms}, .runner_overhead{20ms}}
+        execution_info{.thread_id{threadIds[0]}, .durations{.execution_duration{30ms}, .runner_overhead{0ms}}},
+        execution_info{.thread_id{threadIds[1]}, .durations{.execution_duration{20ms}, .runner_overhead{20ms}}}
       };
 
       checkApportionment(
         "The busiest thread is the one with the most execution duration and runner overhead together",
         apportion_wall_clock(45ms, {}, concurrent),
-        {.execution_duration{20ms}, .runner_overhead{20ms}, .scheduling_overhead{5ms}});
+        {.spent_in_tests{.execution_duration{20ms}, .runner_overhead{20ms}}, .scheduling_overhead{5ms}});
     }
 
     {
       const std::array concurrent{
-        execution_info{.thread_id{threadIds[0]}, .execution_duration{10ms}, .runner_overhead{1ms}},
-        execution_info{.thread_id{threadIds[1]}, .execution_duration{15ms}, .runner_overhead{1ms}},
-        execution_info{.thread_id{threadIds[0]}, .execution_duration{10ms}, .runner_overhead{1ms}}
+        execution_info{.thread_id{threadIds[0]}, .durations{.execution_duration{10ms}, .runner_overhead{1ms}}},
+        execution_info{.thread_id{threadIds[1]}, .durations{.execution_duration{15ms}, .runner_overhead{1ms}}},
+        execution_info{.thread_id{threadIds[0]}, .durations{.execution_duration{10ms}, .runner_overhead{1ms}}}
       };
 
       checkApportionment(
         "A thread's tests are summed",
         apportion_wall_clock(25ms, {}, concurrent),
-        {.execution_duration{20ms}, .runner_overhead{2ms}, .scheduling_overhead{3ms}});
+        {.spent_in_tests{.execution_duration{20ms}, .runner_overhead{2ms}}, .scheduling_overhead{3ms}});
     }
 
     {
       const std::array sequential{
-        execution_info{.thread_id{threadIds[0]}, .execution_duration{5ms}, .runner_overhead{1ms}},
-        execution_info{.thread_id{threadIds[1]}, .execution_duration{5ms}, .runner_overhead{1ms}}
+        execution_info{.thread_id{threadIds[0]}, .durations{.execution_duration{5ms}, .runner_overhead{1ms}}},
+        execution_info{.thread_id{threadIds[1]}, .durations{.execution_duration{5ms}, .runner_overhead{1ms}}}
       };
 
       const std::array concurrent{
-        execution_info{.thread_id{threadIds[2]}, .execution_duration{10ms}, .runner_overhead{2ms}}
+        execution_info{.thread_id{threadIds[2]}, .durations{.execution_duration{10ms}, .runner_overhead{2ms}}}
       };
 
       checkApportionment(
         "Every sequential test lies on the critical path, before the busiest thread",
         apportion_wall_clock(30ms, sequential, concurrent),
-        {.execution_duration{20ms}, .runner_overhead{4ms}, .scheduling_overhead{6ms}});
+        {.spent_in_tests{.execution_duration{20ms}, .runner_overhead{4ms}}, .scheduling_overhead{6ms}});
 
       checkApportionment(
         "Sequential tests alone",
         apportion_wall_clock(15ms, sequential, {}),
-        {.execution_duration{10ms}, .runner_overhead{2ms}, .scheduling_overhead{3ms}});
+        {.spent_in_tests{.execution_duration{10ms}, .runner_overhead{2ms}}, .scheduling_overhead{3ms}});
 
       checkApportionment(
         "A wall clock equal to the tests' durations leaves no scheduling overhead",
         apportion_wall_clock(12ms, sequential, {}),
-        {.execution_duration{10ms}, .runner_overhead{2ms}, .scheduling_overhead{0ms}});
+        {.spent_in_tests{.execution_duration{10ms}, .runner_overhead{2ms}}, .scheduling_overhead{0ms}});
 
       check_exception_thrown<std::invalid_argument>(
         "A wall clock shorter than the critical path's tests",
@@ -3283,6 +3283,6 @@ namespace sequoia::testing
     checkApportionment(
       "No tests",
       apportion_wall_clock(2ms, {}, {}),
-      {.execution_duration{0ms}, .runner_overhead{0ms}, .scheduling_overhead{2ms}});
+      {.spent_in_tests{.execution_duration{0ms}, .runner_overhead{0ms}}, .scheduling_overhead{2ms}});
   }
 }

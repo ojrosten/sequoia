@@ -152,40 +152,11 @@ namespace sequoia::testing
       }
     }
 
-    /** The execution durations and runner overheads of tests, summed. */
-    struct durations_of_tests
-    {
-      log_summary::duration
-        execution_duration{},
-        runner_overhead{};
-
-      [[nodiscard]]
-      log_summary::duration total() const noexcept { return execution_duration + runner_overhead; }
-
-      [[nodiscard]]
-      friend durations_of_tests operator+(const durations_of_tests& lhs, const durations_of_tests& rhs) noexcept
-      {
-        return {
-          .execution_duration{lhs.execution_duration + rhs.execution_duration},
-          .runner_overhead   {lhs.runner_overhead    + rhs.runner_overhead}
-        };
-      }
-    };
-
     [[nodiscard]]
     durations_of_tests summed_durations(std::span<const execution_info> executions)
     {
-      auto durationsOf{
-        [](const execution_info& execution) {
-          return durations_of_tests{
-            .execution_duration{execution.execution_duration},
-            .runner_overhead   {execution.runner_overhead}
-          };
-        }
-      };
-
       return std::ranges::fold_left(
-               executions | std::views::transform(durationsOf),
+               executions | std::views::transform(&execution_info::durations),
                durations_of_tests{},
                std::plus{}
              );
@@ -205,7 +176,7 @@ namespace sequoia::testing
         }
       };
 
-      auto threadTotals{
+      auto threadDurations{
           executions
         | std::views::chunk_by(sameThread)
         | std::views::transform([](auto threadExecutions) { return summed_durations(threadExecutions); })
@@ -217,15 +188,17 @@ namespace sequoia::testing
         }
       };
 
-      return std::ranges::fold_left(threadTotals, durations_of_tests{}, busierOf);
+      return std::ranges::fold_left(threadDurations, durations_of_tests{}, busierOf);
     }
 
     constexpr auto execution_info_of{
       [](const auto& node) {
         return execution_info{
-          .thread_id         {node.executing_thread_id},
-          .execution_duration{node.summary.execution_duration()},
-          .runner_overhead   {node.summary.runner_overhead()}
+          .thread_id{node.executing_thread_id},
+          .durations{
+            .execution_duration{node.summary.execution_duration()},
+            .runner_overhead   {node.summary.runner_overhead()}
+          }
         };
       }
     };
@@ -962,8 +935,7 @@ namespace sequoia::testing
     }
 
     return {
-      .execution_duration {durationsOnCriticalPath.execution_duration},
-      .runner_overhead    {durationsOnCriticalPath.runner_overhead},
+      .spent_in_tests     {durationsOnCriticalPath},
       .scheduling_overhead{wallClock - durationsOnCriticalPath.total()}
     };
   }
