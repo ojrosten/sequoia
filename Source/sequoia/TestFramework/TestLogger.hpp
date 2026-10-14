@@ -335,18 +335,18 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr duration total() const noexcept { return execution_duration + runner_overhead; }
 
-    constexpr durations_of_tests& operator+=(const durations_of_tests& rhs) noexcept
+    [[nodiscard]]
+    friend constexpr durations_of_tests operator+(const durations_of_tests& lhs, const durations_of_tests& rhs) noexcept
     {
-      execution_duration += rhs.execution_duration;
-      runner_overhead    += rhs.runner_overhead;
-      return *this;
+      return {
+        .execution_duration{lhs.execution_duration + rhs.execution_duration},
+        .runner_overhead   {lhs.runner_overhead    + rhs.runner_overhead}
+      };
     }
 
-    [[nodiscard]]
-    friend constexpr durations_of_tests operator+(durations_of_tests lhs, const durations_of_tests& rhs) noexcept
+    constexpr durations_of_tests& operator+=(const durations_of_tests& rhs) noexcept
     {
-      lhs += rhs;
-      return lhs;
+      return *this = (*this + rhs);
     }
 
     [[nodiscard]]
