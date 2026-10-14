@@ -1167,7 +1167,8 @@ namespace sequoia::testing
     fs::create_directory(proj_paths().output().diagnostics());
     fs::create_directory(proj_paths().output().test_summaries());
 
-    write_run_stamp();
+    if(in_mode(runner_mode::test) && !in_sandbox())
+      write_run_stamp();
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -1569,11 +1570,8 @@ namespace sequoia::testing
 
   void test_runner::write_run_stamp() const
   {
-    if(in_mode(runner_mode::test) && (m_InstabilityMode != instability_mode::sandbox))
-    {
-      const run_stamp stamp{.start_time{current_time_to_the_millisecond()}};
-      overwrite_quietly(proj_paths().execution_records().stamp(), to_string(stamp));
-    }
+    const run_stamp stamp{.start_time{current_time_to_the_millisecond()}};
+    overwrite_quietly(proj_paths().execution_records().stamp(), to_string(stamp));
   }
 
   void test_runner::check_for_missing_tests()
@@ -1638,7 +1636,7 @@ namespace sequoia::testing
 
   return_code test_runner::run()
   {
-    if(m_InstabilityMode != instability_mode::sandbox)
+    if(!in_sandbox())
     {
       fs::remove_all(proj_paths().output().instability_analysis());
       check_for_coarse_sleeps();
@@ -1766,7 +1764,7 @@ namespace sequoia::testing
   {
     if(concurrent_execution()) sort_tests();
 
-    if(m_InstabilityMode == instability_mode::sandbox)
+    if(in_sandbox())
       return run_tests(m_RunnerID);
 
     auto code{return_code::success};

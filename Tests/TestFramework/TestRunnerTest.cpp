@@ -1619,11 +1619,15 @@ namespace sequoia::testing
     check(equivalence, "Exception Output", predictive_materials() / "ThrowingDiagnostics", diagnosticsDir);
   }
 
-  /** The fake tests tell the mechanism from its rivals: `record_reading_free_test` sees its record while it executes,
-      which a start time written only at the end would not produce; `escaping_exception_free_test` throws, which an
-      execution duration written only on normal completion would miss. Each fake test runs alone, so that a run's
-      return code is its test's alone. Each run removes the records directory before constructing its runner, so that
-      only that run can have written the stamp.
+  /** The fake tests tell the mechanism from its rivals.
+      `record_reading_free_test` sees its record while it executes, which a
+      start time written only at the end would not produce.
+      `escaping_exception_free_test` throws, which an execution duration
+      written only on normal completion would miss.
+
+      Each fake test runs alone, so that a run's return code is its test's
+      alone. Each run removes the records directory before constructing its
+      runner, so that only that run can have written the stamp.
    */
   void test_runner_test::test_recording_of_executions()
   {

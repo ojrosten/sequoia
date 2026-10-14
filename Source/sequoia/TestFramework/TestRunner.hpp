@@ -644,7 +644,7 @@ namespace sequoia::testing
 
       if(testToRun)
       {
-        if(m_InstabilityMode != instability_mode::sandbox)
+        if(!in_sandbox())
           clear_execution_records(executionRecordFile);
 
         m_Tests.push_back(std::move(*testToRun));
@@ -853,7 +853,6 @@ namespace sequoia::testing
 
     void check_for_coarse_sleeps();
 
-    /** \brief Writes the `run_stamp`, if this runner begins a run of tests. */
     void write_run_stamp() const;
 
     [[nodiscard]]
@@ -942,6 +941,9 @@ namespace sequoia::testing
 
     [[nodiscard]]
     bool in_mode(runner_mode m) const noexcept { return (m_RunnerMode & m) == m; }
+
+    [[nodiscard]]
+    bool in_sandbox() const noexcept { return m_InstabilityMode == instability_mode::sandbox; }
 
     void prune();
 
