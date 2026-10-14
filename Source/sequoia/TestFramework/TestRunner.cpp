@@ -90,7 +90,7 @@ namespace sequoia::testing
       replace_contents_quietly(file, text, write_mode::binary);
     }
 
-    void truncate_quietly(const fs::path& file)
+    void make_empty_file_quietly(const fs::path& file)
     {
       std::error_code selectsTheNonThrowingOverload{};
       fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
@@ -978,10 +978,7 @@ namespace sequoia::testing
 
   void test_to_run::clear_execution_records() const
   {
-    // The file is truncated rather than removed, so that an execution only
-    // appends to it. Creating the file during an execution would add to the
-    // runner's overhead for that test.
-    truncate_quietly(m_ExecutionRecord.file_path());
+    make_empty_file_quietly(m_ExecutionRecord.file_path());
   }
 
   [[nodiscard]]
