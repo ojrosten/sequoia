@@ -906,7 +906,7 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
-    /// Checks its own execution record while it executes
+    /// Checks its own execution records while it executes
     class record_reading_free_test final : public free_test
     {
     public:
@@ -941,7 +941,7 @@ namespace sequoia::testing
       return records | std::views::transform(hasCompletion) | std::ranges::to<std::vector>();
     }
 
-    /** The return code, test records and stamp of a run of one test */
+    /** The return code, execution records and stamp of a run of one test */
     struct recorded_run
     {
       return_code                            code{};
@@ -1666,10 +1666,9 @@ namespace sequoia::testing
           throwing.is_stamp_between_call_and_test());
   }
 
-  /** Under `locate-instabilities`, each repetition appends its test's
-      execution records to those of the repetitions before it. The records
-      directory is removed first, so that only this run can have written
-      records.
+  /** Under `locate-instabilities`, a test's file of execution records keeps
+      the records of every repetition. The records directory is removed
+      first, so that only this run can have written records.
    */
   void test_runner_test::test_recording_of_repetitions()
   {
@@ -1690,11 +1689,11 @@ namespace sequoia::testing
           std::vector{false, true, false, true});
   }
 
-  /** A run empties the file of execution records of each test it runs,
-      before appending its own records. The run leaves the file of a test it
-      does not run as it was. Both tests are given an unfinished record from
-      an earlier run. The run selects `passing_test` alone, so `failing_test`
-      is registered but not run.
+  /** For each test it includes, a run replaces the earlier execution records
+      with its own. The run leaves the records of any other test as they
+      were. Both tests' files start with an unfinished record from an
+      earlier run. The run selects `passing_test` alone, so `failing_test` is
+      registered but left out.
    */
   void test_runner_test::test_recording_of_successive_runs()
   {
@@ -2603,6 +2602,10 @@ namespace sequoia::testing
       analysis. The run selects a suite and a source, and excludes a source, each named with a space. The
       shell splits an unquoted word at the space. So if the coordinator does not quote the path, no
       sandbox runs, and if it does not quote a selection, the sandboxes record it as two arguments.
+
+      The selected test's file of execution records starts with an earlier
+      run's record. The script executes no test, so only the coordinator can
+      empty the file.
    */
   void test_runner_test::test_instability_analysis_in_sandboxes_from_a_path_with_a_space()
   {
@@ -2669,13 +2672,13 @@ namespace sequoia::testing
   /** A runner given a runner id is one sandbox. The sandbox writes its
       instability analysis records under its id. It leaves the other
       sandboxes' instability analysis records in place, and leaves the
-      analysis of every sandbox's records to the run which launched them all. The launching side is the subject of
+      analysis of every sandbox's records to the run which launched them
+      all. The launching side is the subject of
       `test_instability_analysis_in_sandboxes_from_a_path_with_a_space`.
 
-      The run which launched the sandboxes empties each test's file of
-      execution records when that run begins. So a sandbox appends its test's
-      execution records to those of the sandboxes before it. Here, fake
-      records stand for an earlier sandbox's.
+      A sandbox appends its test's execution records to those of the
+      sandboxes before it: only the run which launched the sandboxes empties
+      the test's file. Here, fake records stand for an earlier sandbox's.
    */
   void test_runner_test::test_sandboxed_repetition()
   {

@@ -263,10 +263,6 @@ namespace sequoia::testing
     check(equality, "A refused read leaves the record as it was", readInto, finished_record());
   }
 
-  /** `Repetitions.txt` holds the records of two executions of a test, as
-      the runner appends them: each execution's record with no completion,
-      then the same record with one.
-   */
   void test_execution_record_regular_test::test_reads_of_files()
   {
     check(equality,

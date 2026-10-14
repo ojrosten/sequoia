@@ -458,9 +458,9 @@ namespace sequoia::testing
     }
 
     /** \brief Empties the file of the test's execution records, creating
-               it if need be.
+               the file and its directory if need be.
 
-        A failure is skipped rather than reported.
+        A failure is not reported.
      */
     void clear_execution_records() const;
   private:
@@ -496,16 +496,15 @@ namespace sequoia::testing
     /** \brief An RAII wrapper to append a test's execution records to
                `file`.
 
-        On construction, appends a record giving the test's start time. On
-        destruction, appends that record again, with a completion: the test's
-        execution duration and the runner's overhead so far, from
-        `executionTimer`, and the number of attempts each of the test's
-        performance checks made, from `vessel`. So, unless a write fails, the
-        last record in `file` is of the test's latest execution, and has no
-        completion while the test executes.
+        On construction, appends a record of the test's start time. On
+        destruction, appends a record with the same start time and a
+        completion. `executionTimer` gives the completion's execution
+        duration and the runner's overhead so far. `vessel` gives the number
+        of attempts each of the test's performance checks made.
 
-        A write which fails is not reported, and may leave part of a record.
-        An allocation failure is not caught.
+        A write which fails is not reported. A write which fails part-way
+        may leave part of a record, and the file cannot then be read. An
+        allocation failure is not caught.
      */
     class [[nodiscard]] scoped_execution_record
     {
@@ -861,6 +860,10 @@ namespace sequoia::testing
     void reset_tests();
 
     /** \brief Empties the file of execution records of each test to be run.
+
+        The file of each test to be run then holds only the records of this
+        \ref run_stamp "run of tests". The file of any other test keeps its
+        records.
      */
     void clear_execution_records() const;
 

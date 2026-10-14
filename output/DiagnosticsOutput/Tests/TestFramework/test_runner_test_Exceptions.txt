@@ -256,7 +256,7 @@ No output discriminator
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1753
+Tests/TestFramework/TestRunnerTest.cpp, Line 1752
 An unselected test whose summary file is a selected test's
 
 Expected Exception Type:
@@ -267,7 +267,7 @@ Rename one, or change its summary discriminator.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1765
+Tests/TestFramework/TestRunnerTest.cpp, Line 1764
 A selected test whose summary file is an unselected test's
 
 Expected Exception Type:
@@ -278,7 +278,7 @@ Rename one, or change its summary discriminator.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2354
+Tests/TestFramework/TestRunnerTest.cpp, Line 2353
 Comparison against a dump never kept
 
 Expected Exception Type:
@@ -287,7 +287,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2354
+Tests/TestFramework/TestRunnerTest.cpp, Line 2353
 A dump kept under no name
 
 Expected Exception Type:
@@ -296,7 +296,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2354
+Tests/TestFramework/TestRunnerTest.cpp, Line 2353
 Comparison against no name
 
 Expected Exception Type:
@@ -305,7 +305,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3061
+Tests/TestFramework/TestRunnerTest.cpp, Line 3064
 Exit status 1 is not a runner's
 
 Expected Exception Type:
@@ -315,7 +315,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3061
+Tests/TestFramework/TestRunnerTest.cpp, Line 3064
 Exit status 2 is not a runner's
 
 Expected Exception Type:
@@ -325,7 +325,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3061
+Tests/TestFramework/TestRunnerTest.cpp, Line 3064
 Exit status 23 is not a runner's
 
 Expected Exception Type:
@@ -335,7 +335,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3061
+Tests/TestFramework/TestRunnerTest.cpp, Line 3064
 Exit status 64 is not a runner's
 
 Expected Exception Type:
@@ -345,7 +345,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3061
+Tests/TestFramework/TestRunnerTest.cpp, Line 3064
 Exit status 66 is not a runner's
 
 Expected Exception Type:
@@ -355,7 +355,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3061
+Tests/TestFramework/TestRunnerTest.cpp, Line 3064
 Exit status 77 is not a runner's
 
 Expected Exception Type:
@@ -365,7 +365,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3061
+Tests/TestFramework/TestRunnerTest.cpp, Line 3064
 Exit status 78 is not a runner's
 
 Expected Exception Type:
@@ -375,7 +375,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3061
+Tests/TestFramework/TestRunnerTest.cpp, Line 3064
 Exit status 80 is not a runner's
 
 Expected Exception Type:
@@ -385,7 +385,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3061
+Tests/TestFramework/TestRunnerTest.cpp, Line 3064
 Exit status 112 is not a runner's
 
 Expected Exception Type:
@@ -395,7 +395,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3105
+Tests/TestFramework/TestRunnerTest.cpp, Line 3108
 Bits no flag occupies
 
 Expected Exception Type:

@@ -978,9 +978,9 @@ namespace sequoia::testing
 
   void test_to_run::clear_execution_records() const
   {
-    // The file is made here, before the tests execute, so that the test's
-    // execution appends to a file which exists, and neither creates nor
-    // replaces one
+    // The file is truncated rather than removed, so that an execution only
+    // appends to it. Creating the file during an execution would add to the
+    // runner's overhead for that test.
     truncate_quietly(m_ExecutionRecord.file_path());
   }
 

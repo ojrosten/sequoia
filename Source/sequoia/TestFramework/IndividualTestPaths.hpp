@@ -165,20 +165,7 @@ namespace sequoia::testing
     std::filesystem::path m_Summary;
   };
 
-  /** \brief Where a test keeps the `test_execution_record`s of the latest
-             run of tests which was to run it.
-
-      A run of tests is as `run_stamp` defines it. The runner empties the
-      file as the run begins. Each time the test begins, the runner appends a
-      record of the test's start time, with no completion, to the file. Under
-      `locate-instabilities`, the test begins once per repetition. Once the
-      test has finished, the runner appends the record again, with its
-      completion. A write which fails is not reported. A write which fails
-      part-way may leave part of a record, and the file cannot then be read.
-
-      A last record with no completion marks a test which either did not
-      finish in the run that wrote the record, or whose finished record the
-      runner could not write.
+  /** \brief The path to where a test writes the records of its executions.
 
       The path is empty for default project paths.
    */

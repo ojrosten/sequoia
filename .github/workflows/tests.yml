@@ -912,26 +912,28 @@ jobs:
               echo "ok    no drift check, so no patch";;
           esac
 
-      # Each test has a file of execution records. A run empties the file of
-      # each test it will run as it begins; under --sandbox, the run which
-      # launches the sandboxes does. Each time the test begins, once per
-      # repetition, the runner appends a record of its start time, saying
-      # "finished no". When the test finishes, whether or not its body threw,
-      # the runner appends that record again, saying "finished yes", with the
-      # execution duration and the runner's overhead. So a "finished no"
-      # record not followed by a "finished yes" one names an execution that
-      # never finished: a test executing when the run, or one of its
-      # sandboxes, ended. The step lists such tests by the start of that
-      # execution, oldest first, since the hung test is likeliest the one that
-      # has run longest. The end-to-end test's generated project keeps records
-      # of its own. An execution which started before its run's stamp is from
-      # an earlier run, and the step marks it so.
+      # A test's file of execution records holds the records of the latest
+      # run of tests to include the test. That run executes the test once per
+      # repetition. Each execution has a record of its start time, saying
+      # "finished no". A record saying "finished yes" directly follows that
+      # record once the execution finishes, whether or not the test's body
+      # threw. So a "finished no" record not directly followed by a "finished
+      # yes" one names an execution which never finished: the test was
+      # executing when the run, or one of its sandboxes, ended.
       #
-      # The count of files holding records comes first: none, after a suite
-      # that ran, means that the records were not written, or not where this
-      # step looks. A file is empty if its run did not reach its test. The
-      # names are paths that a fork's PR controls, so the step prints them
-      # with workflow commands stopped.
+      # The step lists these tests by the start of their first unfinished
+      # execution, oldest first. The test which hung is likeliest the one
+      # which started first. The end-to-end test's generated project keeps
+      # records of its own. Every run of tests stamps its start. An execution
+      # which started before the stamp is from an earlier run, and the step
+      # marks it so.
+      #
+      # The count of files holding records comes first. A run which includes
+      # a test, but ends before the test executes, leaves the test's file
+      # empty. The count leaves out such a file. If the suite was not skipped,
+      # a count of none means that the records were not written, or not where
+      # this step looks. The names are paths that a fork's PR controls, so the
+      # step prints them with workflow commands stopped.
       - name: Name the tests that started and never finished
         if: ${{ always() && inputs.needs_testing == 'true' }}
         env:
@@ -1046,22 +1048,22 @@ jobs:
 
       # A performance check makes up to three attempts. It stops at the first
       # attempt which passes, so a green check does not say how often its
-      # first attempt failed. Each finished record in a test's file of
-      # execution records gives the number of attempts each of its
-      # performance checks made, one line per check, in the order of the
-      # checks. This step prints those numbers, one line per test, with each
-      # execution's numbers separated from the next's by a semicolon. An
-      # execution which made no performance check shows "none", and one which
-      # never finished shows "unfinished". In
-      # standard mode, a number above 1 means that the check's first attempt
-      # failed. Some tests are built to make more than one attempt:
-      # performance_retry_test, and the false-positive and false-negative
-      # diagnostics.
+      # first attempt failed. An execution's "finished yes" record gives the
+      # number of attempts each of the test's performance checks made, one
+      # line per check, in the order of the checks. This step prints those
+      # numbers, one line per test, and separates one execution's numbers
+      # from the next's with a semicolon. It prints "none" for an execution
+      # which made no performance check, and "unfinished" for one which never
+      # finished. In standard mode, a number above 1 means that the check's
+      # first attempt failed. Some tests are built to make more than one
+      # attempt: performance_retry_test, and the false-positive and
+      # false-negative diagnostics.
       #
-      # A test's file holds every repetition of the latest run which was to
-      # run the test, so a column which runs the suite more than once shows
-      # one run of each test, not every run. The records are in the artifact, for a
-      # count over several columns or runs.
+      # A test's file of execution records holds the records of one run of
+      # tests: the latest to include the test. So the step shows only the
+      # executions of each test's latest run, even in a column which starts
+      # more than one run. The records are in the artifact, for a count over
+      # several columns or runs.
       #
       # The names are paths that a fork's PR controls, so the step prints
       # them with workflow commands stopped. A report cannot fail the job.
