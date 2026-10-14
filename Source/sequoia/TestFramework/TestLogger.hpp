@@ -318,10 +318,42 @@ namespace sequoia::testing
 
   };
 
+  /** \brief The execution duration and runner overhead of a test, or of
+             several tests summed.
+
+      The execution duration is the time spent in `run_tests()`; the runner
+      overhead is the rest of the time the runner spent executing the test.
+   */
+  struct durations_of_tests
+  {
+    using duration = std::chrono::steady_clock::duration;
+
+    duration
+      execution_duration{},
+      runner_overhead{};
+
+    [[nodiscard]]
+    duration total() const noexcept { return execution_duration + runner_overhead; }
+
+    durations_of_tests& operator+=(const durations_of_tests& rhs) noexcept
+    {
+      execution_duration += rhs.execution_duration;
+      runner_overhead    += rhs.runner_overhead;
+      return *this;
+    }
+
+    [[nodiscard]]
+    friend durations_of_tests operator+(durations_of_tests lhs, const durations_of_tests& rhs) noexcept
+    {
+      lhs += rhs;
+      return lhs;
+    }
+  };
+
   class log_summary
   {
   public:
-    using duration = std::chrono::steady_clock::duration;
+    using duration = durations_of_tests::duration;
 
     // `{}` rather than `= default`, to stay identical to `modules-native`, where the
     // defaulted constructor of this class is emitted in no translation unit at all and the
@@ -399,19 +431,10 @@ namespace sequoia::testing
     [[nodiscard]]
     const std::string& caught_exceptions_output() const noexcept { return m_CaughtExceptionMessages; }
 
-    /** \brief How long the tests ran, excluding the runner's overhead. */
     [[nodiscard]]
-    duration execution_duration() const noexcept { return m_ExecutionDuration; }
+    const durations_of_tests& durations() const noexcept { return m_Durations; }
 
-    void execution_duration(const duration delta) { m_ExecutionDuration = delta; }
-
-    /** \brief How long the runner spent executing the tests, beyond their
-               execution duration.
-     */
-    [[nodiscard]]
-    duration runner_overhead() const noexcept { return m_RunnerOverhead; }
-
-    void runner_overhead(const duration delta) { m_RunnerOverhead = delta; }
+    void runner_overhead(const duration delta) { m_Durations.runner_overhead = delta; }
 
     log_summary& operator+=(const log_summary& rhs);
 
@@ -446,9 +469,7 @@ namespace sequoia::testing
 
     int m_ExceptionsInFlight{};
 
-    duration
-      m_ExecutionDuration{},
-      m_RunnerOverhead{};
+    durations_of_tests m_Durations{};
 
     log_summary(std::string_view name, const test_logger_base& logger, test_mode mode, const duration delta);
   };

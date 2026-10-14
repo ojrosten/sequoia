@@ -303,7 +303,7 @@ namespace sequoia::testing
     , m_DiagnosticsOutput{to_reduced_string(logger.results().diagnostics_output)}
     , m_CaughtExceptionMessages{to_reduced_string(logger.results().caught_exception_messages)}
     , m_CriticalFailures{logger.results().critical_failures}
-    , m_ExecutionDuration{delta}
+    , m_Durations{.execution_duration{delta}}
   {
     const auto performanceChecks{logger.results().top_level_performance_checks},
                performanceFailures{logger.results().top_level_performance_failures};
@@ -372,8 +372,7 @@ namespace sequoia::testing
 
     m_CriticalFailures   += rhs.m_CriticalFailures;
     m_ExceptionsInFlight += rhs.m_ExceptionsInFlight;
-    m_ExecutionDuration  += rhs.m_ExecutionDuration;
-    m_RunnerOverhead     += rhs.m_RunnerOverhead;
+    m_Durations          += rhs.m_Durations;
 
     return *this;
   }

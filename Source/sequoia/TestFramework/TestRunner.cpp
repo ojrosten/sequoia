@@ -195,10 +195,7 @@ namespace sequoia::testing
       [](const auto& node) {
         return execution_info{
           .thread_id{node.executing_thread_id},
-          .durations{
-            .execution_duration{node.summary.execution_duration()},
-            .runner_overhead   {node.summary.runner_overhead()}
-          }
+          .durations{node.summary.durations()}
         };
       }
     };
@@ -2065,7 +2062,7 @@ namespace sequoia::testing
             else
             {
               const auto heading{sequoia::indent(wt.summary.name() + ":", suiteIndent)};
-              stream << (serial ? append_indented(heading, durations_report(wt.summary), suiteIndent)
+              stream << (serial ? append_indented(heading, durations_report(wt.summary.durations()), suiteIndent)
                                 : heading + '\n');
             }
 

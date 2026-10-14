@@ -45,21 +45,20 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string durations_report(const log_summary& log)
+  std::string durations_report(const durations_of_tests& durations)
   {
     return std::format("{}{}",
-                       timing_line("Execution Time",  log.execution_duration()),
-                       timing_line("Runner Overhead", log.runner_overhead()));
+                       timing_line("Execution Time",  durations.execution_duration),
+                       timing_line("Runner Overhead", durations.runner_overhead));
   }
 
   [[nodiscard]]
   std::string durations_report(const durations_of_run& durationsOfRun)
   {
     const auto& [totalRunTime, criticalPath]{durationsOfRun};
-    return std::format("{}{}{}{}",
+    return std::format("{}{}{}",
                        timing_line("Total Run Time",      totalRunTime),
-                       timing_line("Execution Time",      criticalPath.spent_in_tests.execution_duration),
-                       timing_line("Runner Overhead",     criticalPath.spent_in_tests.runner_overhead),
+                       durations_report(criticalPath.spent_in_tests),
                        timing_line("Scheduling Overhead", criticalPath.scheduling_overhead));
   }
 
@@ -132,7 +131,7 @@ namespace sequoia::testing
 
     if((verbosity & summary_detail::timings) == summary_detail::timings)
     {
-      append_indented(summary, durations_report(log), ind_0);
+      append_indented(summary, durations_report(log.durations()), ind_0);
     }
     else if(!summary.empty())
     {
