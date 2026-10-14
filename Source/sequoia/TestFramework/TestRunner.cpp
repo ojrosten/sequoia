@@ -928,7 +928,7 @@ namespace sequoia::testing
                                                std::span<const execution_info> sequential,
                                                std::span<const execution_info> concurrent)
   {
-    const auto sequentialDurations{summed_durations(sequential)},
+    const auto sequentialDurations   {summed_durations(sequential)},
                busiestThreadDurations{busiest_thread_durations(concurrent | std::ranges::to<std::vector>())};
 
     const auto durationOfTests{sequentialDurations.total() + busiestThreadDurations.total()};
@@ -1934,7 +1934,12 @@ namespace sequoia::testing
     const durations_of_run durationsOfRun{.total{t.time_elapsed()}, .critical_path{criticalPathDurations}};
 
     stream() << "\n-----------Grand Totals-----------\n";
-    stream() << summarize(root_summary(), "", durationsOfRun, summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+    stream() << summarize(root_summary(),
+                          "",
+                          durationsOfRun,
+                          summary_detail::absent_checks | summary_detail::timings,
+                          indentation{"\t"},
+                          no_indent);
 
     if(const auto materialsUpdateReport{tracker.materials_update_report()}; !materialsUpdateReport.empty())
     {

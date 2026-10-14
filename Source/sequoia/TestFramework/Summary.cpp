@@ -63,7 +63,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, std::string_view namesuffix, const opt_durations_of_run& durationsOfRun, const summary_detail verbosity, indentation ind_0, indentation ind_1)
+  std::string summarize(const log_summary& log,
+                        std::string_view namesuffix,
+                        const opt_durations_of_run& durationsOfRun,
+                        const summary_detail verbosity,
+                        indentation ind_0,
+                        indentation ind_1)
   {
     constexpr std::size_t entries{6};
 
