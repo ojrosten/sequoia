@@ -57,7 +57,30 @@ namespace sequoia::testing
     }
   }
 
-  using opt_duration = std::optional<log_summary::duration>;
+  /** \brief The durations into which the critical path of an execution of
+             tests divides the execution's wall clock.
+
+      The critical path is the longest sequence of tests which ran one after
+      another. A test's length is its execution duration plus its runner
+      overhead. `scheduling_overhead` is the rest of the wall clock, which
+      the critical path spent outside its tests.
+   */
+  struct critical_path_durations
+  {
+    log_summary::duration
+      execution_duration{},
+      runner_overhead{},
+      scheduling_overhead{};
+  };
+
+  /** \brief The durations reported for a run of tests. */
+  struct run_durations
+  {
+    log_summary::duration   total{};
+    critical_path_durations critical_path{};
+  };
+
+  using opt_run_durations = std::optional<run_durations>;
 
   struct stringified_duration
   {
@@ -67,11 +90,14 @@ namespace sequoia::testing
   [[nodiscard]]
   stringified_duration stringify_duration(const log_summary::duration& d);
 
+  /** \brief Reports the run's durations if `runDurations` holds them, and
+             otherwise those of `log`.
+   */
   [[nodiscard]]
-  std::string report_time(const log_summary& log, opt_duration duration);
+  std::string report_time(const log_summary& log, const opt_run_durations& runDurations);
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, std::string_view namesuffix, opt_duration duration, const summary_detail verbosity, indentation ind_0, indentation ind_1);
+  std::string summarize(const log_summary& log, std::string_view namesuffix, const opt_run_durations& runDurations, const summary_detail verbosity, indentation ind_0, indentation ind_1);
 
   [[nodiscard]]
   std::string summarize(const log_summary& log, std::string_view namesuffix, summary_detail verbosity, indentation ind_0, indentation ind_1);

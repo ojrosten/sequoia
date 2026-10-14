@@ -16,7 +16,7 @@ unwritable_output_free_test:
 	Exception thrown after check completed
 	Last Recorded Message:
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 2867
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 2868
 	Run, though its versioned output cannot be written
 
 	[bool]
@@ -28,6 +28,7 @@ unwritable_output_free_test:
 [Total Run Time: 1.44ms]
 [Execution Time: 36.8us]
 [Runner Overhead: 679us]
+[Scheduling Overhead: 126us]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

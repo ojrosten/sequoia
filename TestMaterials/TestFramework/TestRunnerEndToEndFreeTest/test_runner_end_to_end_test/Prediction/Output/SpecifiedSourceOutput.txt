@@ -9,6 +9,7 @@ maybe_test:
 [Total Run Time: 627us]
 [Execution Time: 81.1us]
 [Runner Overhead: 735us]
+[Scheduling Overhead: 98.9us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

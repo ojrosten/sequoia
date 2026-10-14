@@ -25,6 +25,7 @@ probability_test:
 [Total Run Time: 3.69ms]
 [Execution Time: 1.72ms]
 [Runner Overhead: 6.33ms]
+[Scheduling Overhead: 236us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -58,6 +59,7 @@ probability_test:
 [Total Run Time: 2.66ms]
 [Execution Time: 771us]
 [Runner Overhead: 4.45ms]
+[Scheduling Overhead: 192us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

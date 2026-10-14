@@ -717,6 +717,8 @@ namespace sequoia::testing
   /** One test sleeps while its tests run, and again while the runner summarizes it. Its execution duration must
       lie between the first sleep and the sum of the two sleeps. The sum is what the execution duration would be if
       it included the runner's overhead. The printed output and the test's execution record must both say so.
+
+      The second sleep falls in the test's runner overhead, so the run's scheduling overhead must exclude it.
    */
   void test_runner_performance_test::test_runner_overhead_reported_apart()
   {
@@ -735,6 +737,11 @@ namespace sequoia::testing
     check(std::ranges::greater_equal{},
           "The printed runner overhead includes the sleep while summarizing",
           get_grand_total(outputStream.view(), "Runner Overhead"),
+          summarization_sleep);
+
+    check(std::ranges::less{},
+          "The printed scheduling overhead excludes the sleep while summarizing",
+          get_grand_total(outputStream.view(), "Scheduling Overhead"),
           summarization_sleep);
 
     check(within_tolerance{summarization_sleep / 2},
@@ -757,6 +764,9 @@ namespace sequoia::testing
       -# leaving out the first test subtracts its execution duration;
       -# taking the longest test rather than the busiest thread subtracts the execution duration of one of a pair;
       -# a wall clock adds the runner's overhead.
+
+      The summarizing sleeps of the tests on the critical path fall in the run's runner overhead, so none falls in its
+      scheduling overhead.
    */
   void test_runner_performance_test::test_execution_duration_of_busiest_thread()
   {
@@ -805,6 +815,11 @@ namespace sequoia::testing
           "The runner overhead includes the summarizing sleeps of the unparallelizable test and the busiest thread",
           get_grand_total(outputStream.view(), "Runner Overhead"),
           3 * summarization_sleep);
+
+    check(std::ranges::less{},
+          "The scheduling overhead excludes every summarizing sleep",
+          get_grand_total(outputStream.view(), "Scheduling Overhead"),
+          summarization_sleep);
   }
 
   /** `attempt_counting_performance_test`'s checks make 2, 1 and 3 attempts:

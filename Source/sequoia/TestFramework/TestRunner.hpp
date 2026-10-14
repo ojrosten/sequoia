@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/FailureReporting.hpp"
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/TestExecutionRecord.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/TestFramework/VersionedOutput.hpp"
@@ -125,6 +126,31 @@ namespace sequoia::testing
    */
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
+
+  /** \brief A test's durations, and the thread which executed the test. */
+  struct execution_info
+  {
+    std::thread::id       thread_id{};
+    log_summary::duration execution_duration{},
+                          runner_overhead{};
+  };
+
+  /** \brief Divides `wallClock`, the wall clock of an execution of tests,
+             along the execution's critical path.
+
+      `sequential` holds tests which ran one after another, before any test
+      in `concurrent`. Each test in `concurrent` ran on the thread its
+      `thread_id` names, after that thread's previous test. So the critical
+      path is `sequential`, followed by the tests of the thread whose tests'
+      execution durations and runner overheads sum to the most.
+
+      \throws std::invalid_argument if `wallClock` is shorter than the
+              durations of the critical path's tests summed.
+   */
+  [[nodiscard]]
+  critical_path_durations apportion_wall_clock(log_summary::duration wallClock,
+                                               std::span<const execution_info> sequential,
+                                               std::span<const execution_info> concurrent);
 
   /** \brief A directory for which removal failed, and the associated error. */
   struct removal_failure
@@ -864,32 +890,23 @@ namespace sequoia::testing
 
     return_code run_tests(std::optional<std::size_t> id);
 
-    struct run_durations
-    {
-      log_summary::duration execution_duration{}, runner_overhead{};
-    };
-
     /** \brief Executes each test, returning once every removal of a discarded
                materials root which the tests enqueued has finished.
 
-        \returns The run's durations if the tests ran concurrently; otherwise
-        `std::nullopt`, since a serial run's durations are the sums of its
-        tests'.
+        \returns The durations along the critical path of the tests'
+        execution.
      */
     [[nodiscard]]
-    std::optional<run_durations> execute_tests(std::optional<std::size_t> id);
+    critical_path_durations execute_tests(std::optional<std::size_t> id);
 
     /** \brief Executes the tests which are not parallelizable, then the rest
                concurrently.
-
-        \returns The run's execution duration, the non-parallelizable tests'
-        summed and then the busiest thread's; and its runner overhead, the wall
-        clock less that.
      */
     [[nodiscard]]
-    run_durations execute_concurrently(std::optional<std::size_t> id, discarded_materials_remover& remover);
+    critical_path_durations execute_concurrently(std::optional<std::size_t> id, discarded_materials_remover& remover);
 
-    void execute_serially(std::optional<std::size_t> id, discarded_materials_remover& remover);
+    [[nodiscard]]
+    critical_path_durations execute_serially(std::optional<std::size_t> id, discarded_materials_remover& remover);
 
     void report_results();
 

@@ -45,16 +45,25 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string report_time(const log_summary& log, const opt_duration duration)
+  std::string report_time(const log_summary& log, const opt_run_durations& runDurations)
   {
-    return std::format("{}{}{}",
-                       duration ? timing_line("Total Run Time", *duration) : "",
+    if(runDurations)
+    {
+      const auto& [total, criticalPath]{*runDurations};
+      return std::format("{}{}{}{}",
+                         timing_line("Total Run Time",      total),
+                         timing_line("Execution Time",      criticalPath.execution_duration),
+                         timing_line("Runner Overhead",     criticalPath.runner_overhead),
+                         timing_line("Scheduling Overhead", criticalPath.scheduling_overhead));
+    }
+
+    return std::format("{}{}",
                        timing_line("Execution Time",  log.execution_duration()),
                        timing_line("Runner Overhead", log.runner_overhead()));
   }
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, std::string_view namesuffix, const opt_duration duration, const summary_detail verbosity, indentation ind_0, indentation ind_1)
+  std::string summarize(const log_summary& log, std::string_view namesuffix, const opt_run_durations& runDurations, const summary_detail verbosity, indentation ind_0, indentation ind_1)
   {
     constexpr std::size_t entries{6};
 
@@ -118,7 +127,7 @@ namespace sequoia::testing
 
     if((verbosity & summary_detail::timings) == summary_detail::timings)
     {
-      append_indented(summary, report_time(log, duration), ind_0);
+      append_indented(summary, report_time(log, runDurations), ind_0);
     }
     else
     {

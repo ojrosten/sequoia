@@ -14,6 +14,7 @@ unparallelizable_slow_to_summarize_test:
 [Total Run Time: 296ms]
 [Execution Time: 80.6ms]
 [Runner Overhead: 211ms]
+[Scheduling Overhead: 142us]
 	Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 4]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

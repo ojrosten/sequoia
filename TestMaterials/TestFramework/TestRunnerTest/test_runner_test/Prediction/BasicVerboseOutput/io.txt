@@ -51,6 +51,7 @@ Tests:
 [Total Run Time: 1.39ms]
 [Execution Time: 223us]
 [Runner Overhead: 1.65ms]
+[Scheduling Overhead: 94.9us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     1;  Failures:  1
