@@ -48,19 +48,24 @@ namespace sequoia::testing
     }
 
     template<class R, class Comp>
-    concept make_heap_accepts = requires(R&& r, Comp comp) { sequoia::make_heap(std::forward<R>(r), comp); };
+    concept make_heap_accepts
+      =  requires(R&& r, Comp comp) { sequoia::make_heap(std::forward<R>(r), comp); };
 
     template<class R, class Comp>
-    concept sort_accepts = requires(R&& r, Comp comp) { sequoia::sort(std::forward<R>(r), comp); };
+    concept sort_accepts
+      =  requires(R&& r, Comp comp) { sequoia::sort(std::forward<R>(r), comp); };
 
     template<class R, class Comp>
-    concept stable_sort_accepts = requires(R&& r, Comp comp) { sequoia::stable_sort(std::forward<R>(r), comp); };
+    concept stable_sort_accepts
+      =  requires(R&& r, Comp comp) { sequoia::stable_sort(std::forward<R>(r), comp); };
 
     template<class R, class Comp>
-    concept cluster_accepts = requires(R&& r, Comp comp) { sequoia::cluster(std::forward<R>(r), comp); };
+    concept cluster_accepts
+      =  requires(R&& r, Comp comp) { sequoia::cluster(std::forward<R>(r), comp); };
 
     template<class R, class OutIter>
-    concept buffered_stable_sort_accepts = requires(R&& r, OutIter out) { sequoia::stable_sort(std::forward<R>(r), out); };
+    concept buffered_stable_sort_accepts
+      =  requires(R&& r, OutIter out) { sequoia::stable_sort(std::forward<R>(r), out); };
 
     struct single_pass_iterator
     {
@@ -70,9 +75,14 @@ namespace sequoia::testing
 
       int* ptr{};
 
+      [[nodiscard]]
       int& operator*() const { return *ptr; }
 
-      single_pass_iterator& operator++() { ++ptr; return *this; }
+      single_pass_iterator& operator++()
+      {
+        ++ptr;
+        return *this;
+      }
 
       void operator++(int) { ++ptr; }
     };

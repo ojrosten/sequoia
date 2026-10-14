@@ -881,7 +881,11 @@ namespace sequoia
       {
         if(begin.partition_index() != end.partition_index()) return;
 
-        sequoia::stable_sort(std::ranges::subrange{to_edge_iterator(begin), to_edge_iterator(end)}, std::move(comp), std::move(proj));
+        sequoia::stable_sort(
+          std::ranges::subrange{to_edge_iterator(begin), to_edge_iterator(end)},
+          std::move(comp),
+          std::move(proj)
+        );
       }
 
       template<class Comp, class Proj = std::identity>
