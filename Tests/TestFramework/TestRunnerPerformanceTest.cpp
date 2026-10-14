@@ -593,7 +593,7 @@ namespace sequoia::testing
 
   fs::path test_runner_performance_test::check_output(std::string_view description, std::string_view dirName, std::stringstream& output)
   {
-    fs::path filePath{write(dirName, output)};
+    const fs::path filePath{write(dirName, output)};
     check(equivalence, description, working_materials() /= dirName, predictive_materials() /= dirName);
 
     return filePath;
@@ -626,13 +626,15 @@ namespace sequoia::testing
   void test_runner_performance_test::test_parallel_acceleration()
   {
     std::stringstream outputStream{};
-    auto runner{make_slow_suite({{(minimal_fake_path()).generic_string()}}, outputStream)};
+    auto runner{make_slow_suite({{minimal_fake_path().generic_string()}}, outputStream)};
     check(equality, "Parallel acceleration return code", runner.execute(), return_code::success);
 
     const auto peak{peak_overlap(slow_test_base::execution_intervals())};
     outputStream << peak_overlap_line(peak);
 
-    auto outputFile{check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream)};
+    const auto outputFile{
+      check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream)
+    };
     check(within_tolerance{35.0}, "", get_grand_total(outputFile, "Execution Time"), 60.0);
 
     // Without parallel algorithms, the runner runs the tests on a pool of eight threads instead
@@ -646,13 +648,15 @@ namespace sequoia::testing
   {
     {
       std::stringstream outputStream{};
-      auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--thread-pool", "8"}}, outputStream)};
+      auto runner{make_slow_suite({{minimal_fake_path().generic_string(), "--thread-pool", "8"}}, outputStream)};
       check(equality, "Thread pool (8) return code", runner.execute(), return_code::success);
 
       const auto peak{peak_overlap(slow_test_base::execution_intervals())};
       outputStream << peak_overlap_line(peak);
 
-      auto outputFile{check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream)};
+      const auto outputFile{
+        check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream)
+      };
       check(within_tolerance{30.0}, "", get_grand_total(outputFile, "Execution Time"), 55.0);
       check(std::ranges::greater_equal{},
             "More than half of the pool's eight threads execute tests at once",
@@ -662,13 +666,15 @@ namespace sequoia::testing
 
     {
       std::stringstream outputStream{};
-      auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--thread-pool", "2"}}, outputStream)};
+      auto runner{make_slow_suite({{minimal_fake_path().generic_string(), "--thread-pool", "2"}}, outputStream)};
       check(equality, "Thread pool (2) return code", runner.execute(), return_code::success);
 
       const auto peak{peak_overlap(slow_test_base::execution_intervals())};
       outputStream << peak_overlap_line(peak);
 
-      auto outputFile{check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream)};
+      const auto outputFile{
+        check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream)
+      };
       check(within_tolerance{40.0}, "", get_grand_total(outputFile, "Execution Time"), 140.0);
       check(equality, "Both threads of the pool, and no more, execute tests at once", peak, std::ptrdiff_t{2});
     }
@@ -677,13 +683,13 @@ namespace sequoia::testing
   void test_runner_performance_test::test_serial_execution()
   {
     std::stringstream outputStream{};
-    auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--serial"}}, outputStream)};
+    auto runner{make_slow_suite({{minimal_fake_path().generic_string(), "--serial"}}, outputStream)};
     check(equality, "Serial execution return code", runner.execute(), return_code::success);
 
     const auto peak{peak_overlap(slow_test_base::execution_intervals())};
     outputStream << peak_overlap_line(peak);
 
-    auto outputFile{check_output(report({"Serial Output"}), "Serial Output", outputStream)};
+    const auto outputFile{check_output(report({"Serial Output"}), "Serial Output", outputStream)};
     check(within_tolerance{55.0}, "", get_grand_total(outputFile, "Execution Time"), 255.0);
     check(equality, "Tests execute one at a time in a serial run", peak, std::ptrdiff_t{1});
   }
