@@ -881,7 +881,7 @@ namespace sequoia
       {
         if(begin.partition_index() != end.partition_index()) return;
 
-        sequoia::stable_sort(to_edge_iterator(begin), to_edge_iterator(end), std::move(comp), std::move(proj));
+        sequoia::stable_sort(std::ranges::subrange{to_edge_iterator(begin), to_edge_iterator(end)}, std::move(comp), std::move(proj));
       }
 
       template<class Comp, class Proj = std::identity>
@@ -947,7 +947,7 @@ namespace sequoia
 
         for(edge_index_type i{}; i < edges.num_partitions(); ++i)
         {
-          sequoia::stable_sort(edges.begin_partition(i), edges.end_partition(i), graph_impl::edge_comparer{});
+          sequoia::stable_sort(edges.partition(i), graph_impl::edge_comparer{});
 
           if constexpr(clusterEdges)
           {
@@ -956,7 +956,7 @@ namespace sequoia
             {
               upperIter = std::ranges::find_if_not(upperIter, edges.end_partition(i), [target{lowerIter->target_node()}](const auto& wt) { return target == wt.target_node(); });
 
-              sequoia::cluster(lowerIter, upperIter, [](const auto& e1, const auto& e2) {
+              sequoia::cluster(std::ranges::subrange{lowerIter, upperIter}, [](const auto& e1, const auto& e2) {
                 return e1.weight() == e2.weight();
                 });
 

@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <functional>
 #include <iterator>
+#include <ranges>
 #include <vector>
 
 namespace sequoia
@@ -57,11 +58,20 @@ namespace sequoia
     }
   }
 
-  template<class Iter, class Comp=std::ranges::less, class Proj=std::identity>
-  constexpr void make_heap(Iter begin, Iter end, Comp comp = {}, Proj proj = {})
-  {
-    if(std::ranges::distance(begin, end) <= 1) return;
+  template<class Iter, class Comp, class Proj>
+  inline constexpr bool heap_sortable{
+       std::indirectly_swappable<Iter>
+    && std::indirect_strict_weak_order<Comp, std::projected<Iter, Proj>>
+  };
 
+  template<std::ranges::random_access_range R, class Comp=std::ranges::less, class Proj=std::identity>
+    requires heap_sortable<std::ranges::iterator_t<R>, Comp, Proj>
+  constexpr void make_heap(R&& r, Comp comp = {}, Proj proj = {})
+  {
+    if(std::ranges::distance(r) <= 1) return;
+
+    const auto begin{std::ranges::begin(r)};
+    const auto end{std::ranges::end(r)};
     auto current{begin+1};
     while(current != end)
     {
@@ -70,18 +80,17 @@ namespace sequoia
     }
   }
 
-  /// This version of swap is retained, at least for now, since it
-  /// is guaranteed to use ranges::iter_swap internally.
-  /// This means that the behaviour can be customized by overloading
-  /// iter_swap. Currently, this is exploited to sort graph nodes.
-  /// This needs further thought, not least since ranges::advance etc
-  /// cannot be used in the implementation
-  template<class Iter, class Comp=std::ranges::less, class Proj = std::identity>
-  constexpr void sort(Iter begin, Iter end, Comp comp = {}, Proj proj = {})
+  /// Sorts `r`, moving elements only through `std::ranges::iter_swap`.
+  /// An overload of `iter_swap` therefore customizes how elements move.
+  template<std::ranges::random_access_range R, class Comp=std::ranges::less, class Proj = std::identity>
+    requires heap_sortable<std::ranges::iterator_t<R>, Comp, Proj>
+  constexpr void sort(R&& r, Comp comp = {}, Proj proj = {})
   {
-    if(std::ranges::distance(begin, end) <= 1) return;
+    if(std::ranges::distance(r) <= 1) return;
 
-    sequoia::make_heap(begin, end, comp, proj);
+    const auto begin{std::ranges::begin(r)};
+    auto end{std::ranges::next(begin, std::ranges::end(r))};
+    sequoia::make_heap(r, comp, proj);
     while(end != begin)
     {
       std::ranges::iter_swap(begin, end-1);
@@ -97,40 +106,46 @@ namespace sequoia
          requires (std::is_copy_constructible_v<typename std::iterator_traits<Iter>::value_type> || is_initializable_v<typename std::iterator_traits<Iter>::value_type>);
        }
      && std::mergeable<Iter, Iter, typename std::vector<typename std::iterator_traits<Iter>::value_type>::iterator, Comp, Proj, Proj>
+     && std::indirectly_copyable<typename std::vector<typename std::iterator_traits<Iter>::value_type>::iterator, Iter>
   };
 
-  template<std::input_iterator Iter, std::weakly_incrementable OutIter, class Comp = std::ranges::less, class Proj = std::identity>
-    requires merge_sortable<Iter, Comp, Proj>
-  constexpr void stable_sort(Iter first, Iter last, OutIter out, Comp compare = {}, Proj proj = {})
+  template<std::ranges::forward_range R, std::forward_iterator OutIter, class Comp = std::ranges::less, class Proj = std::identity>
+    requires    merge_sortable<std::ranges::iterator_t<R>, Comp, Proj>
+             && std::mergeable<std::ranges::iterator_t<R>, std::ranges::iterator_t<R>, OutIter, Comp, Proj, Proj>
+             && std::indirectly_copyable<OutIter, std::ranges::iterator_t<R>>
+  constexpr void stable_sort(R&& r, OutIter out, Comp compare = {}, Proj proj = {})
   {
-    const auto dist{std::ranges::distance(first, last)};
+    const auto dist{std::ranges::distance(r)};
     if(dist < 2) return;
 
+    const auto first{std::ranges::begin(r)};
+    const auto last{std::ranges::end(r)};
     const auto partition{std::ranges::next(first, dist / 2)};
-    stable_sort(first, partition, out, compare, proj);
-    stable_sort(partition, last, std::ranges::next(out, dist / 2), compare, proj);
+    sequoia::stable_sort(std::ranges::subrange{first, partition}, out, compare, proj);
+    sequoia::stable_sort(std::ranges::subrange{partition, last}, std::ranges::next(out, dist / 2), compare, proj);
     std::ranges::merge(first, partition, partition, last, out, compare, proj, proj);
     std::ranges::copy(out, std::ranges::next(out, dist), first);
   }
 
-  template<std::input_iterator Iter, class Comp = std::ranges::less, class Proj = std::identity>
-    requires merge_sortable<Iter, Comp, Proj>
-  constexpr void stable_sort(Iter first, Iter last, Comp compare = {}, Proj proj = {})
+  template<std::ranges::forward_range R, class Comp = std::ranges::less, class Proj = std::identity>
+    requires merge_sortable<std::ranges::iterator_t<R>, Comp, Proj>
+  constexpr void stable_sort(R&& r, Comp compare = {}, Proj proj = {})
   {
-    using T = std::iterator_traits<Iter>::value_type;
+    using T = std::ranges::range_value_t<R>;
     auto v{
-      [first, last](){
-        if      constexpr (is_initializable_v<T>)           return std::vector<T>(std::ranges::distance(first, last));
-        else if constexpr (std::is_copy_constructible_v<T>) return std::vector<T>(first, last);
+      [&r](){
+        if      constexpr (is_initializable_v<T>)           return std::vector<T>(std::ranges::distance(r));
+        else if constexpr (std::is_copy_constructible_v<T>) return std::ranges::to<std::vector<T>>(r);
       }()
     };
 
-    stable_sort(first, last, v.begin(), std::move(compare), std::move(proj));
+    sequoia::stable_sort(r, v.begin(), std::move(compare), std::move(proj));
   }
 
   template<class Iter, class Comp, class Proj>
   inline constexpr bool clusterable{
        std::forward_iterator<Iter>
+    && std::indirectly_swappable<Iter>
     && requires(std::iter_reference_t<Iter> r, Comp comp, Proj proj){
         { comp(proj(r), proj(r)) } -> std::convertible_to<bool>;
        }
@@ -139,10 +154,12 @@ namespace sequoia
   /// \brief An algorithm which clusters together elements which compare equal.
   ///
   /// This is best used in situations where operator< is not defined.
-  template<std::forward_iterator Iter, class Comp=std::ranges::equal_to, class Proj = std::identity>
-    requires clusterable<Iter, Comp, Proj>
-  constexpr void cluster(Iter begin, Iter end, Comp comp = {}, Proj proj = {})
+  template<std::ranges::forward_range R, class Comp=std::ranges::equal_to, class Proj = std::identity>
+    requires clusterable<std::ranges::iterator_t<R>, Comp, Proj>
+  constexpr void cluster(R&& r, Comp comp = {}, Proj proj = {})
   {
+    const auto begin{std::ranges::begin(r)};
+    const auto end{std::ranges::end(r)};
     if(begin == end) return;
 
     auto current{begin};
@@ -161,6 +178,6 @@ namespace sequoia
       std::ranges::advance(current, 1);
     }
 
-    cluster(endOfCluster, end, comp, proj);
+    sequoia::cluster(std::ranges::subrange{endOfCluster, end}, comp, proj);
   }
 }

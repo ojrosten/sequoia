@@ -191,7 +191,7 @@ namespace sequoia
       template<class Compare>
       constexpr void sort_nodes(const edge_index_type first, const edge_index_type last, Compare c)
       {
-        sequoia::sort(pseudo_iterator{first, *this}, pseudo_iterator{last, *this}, std::move(c));
+        sequoia::sort(std::ranges::subrange{pseudo_iterator{first, *this}, pseudo_iterator{last, *this}}, std::move(c));
       }
 
       //===============================equality (not isomorphism) operators================================//

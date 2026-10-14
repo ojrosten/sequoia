@@ -23,6 +23,7 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+    void range_constraints();
 
     template<class Stability>
     void sort_basic_type(Stability stability);
@@ -35,5 +36,7 @@ namespace sequoia::testing
     void cluster_basic_type();
 
     void cluster_partial_edge();
+
+    void cluster_by_projection();
   };
 }

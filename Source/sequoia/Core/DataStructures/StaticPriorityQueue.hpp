@@ -72,7 +72,7 @@ namespace sequoia::data_structures
     {
       std::ranges::iter_swap(m_Q.begin(), m_Q.begin() + m_End -1);
       --m_End;
-      sequoia::make_heap(m_Q.begin(), m_Q.begin() + m_End, m_Compare);
+      sequoia::make_heap(std::ranges::subrange{m_Q.begin(), m_Q.begin() + m_End}, m_Compare);
     }
 
     [[nodiscard]]
@@ -102,7 +102,7 @@ namespace sequoia::data_structures
     constexpr static std::array<T, MaxDepth> make_Q(std::initializer_list<T> l, const Compare& compare)
     {
       auto q{utilities::to_array<T, MaxDepth>(l)};
-      sequoia::make_heap(q.begin(), q.end(), compare);
+      sequoia::make_heap(q, compare);
 
       return q;
     }
