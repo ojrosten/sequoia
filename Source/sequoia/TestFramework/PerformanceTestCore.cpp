@@ -117,7 +117,9 @@ namespace sequoia::testing
     };
 
     /** \brief Judges the speed-up of a fast task over a slow one from their
-               durations in each trial, each duration greater than zero.
+               durations in each trial.
+
+        Every duration must be greater than zero.
      */
     [[nodiscard]]
     speedup_judgement judge_speedup(std::span<const relative_performance_durations> trialDurations,
@@ -194,11 +196,12 @@ namespace sequoia::testing
                                  "a task too quick for the clock times as zero"};
     }
 
-    /** \brief Returns the reason a task is not distinguishable from its
-               baseline, if, in any trial, a task's duration net of its
-               baseline's is not greater than zero.
+    /** \brief Returns why a task is not distinguishable from its baseline,
+               if one is not.
 
-        The fast task's reason takes precedence over the slow task's.
+        A task is not distinguishable from its baseline if, in any trial, its
+        duration net of its baseline's is not greater than zero. The fast
+        task's reason takes precedence over the slow task's.
      */
     [[nodiscard]]
     std::optional<relative_performance_failure>

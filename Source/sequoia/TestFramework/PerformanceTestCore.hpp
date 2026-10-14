@@ -92,11 +92,11 @@ namespace sequoia::testing
   template<class T>
   concept performance_task = std::copy_constructible<T> && std::invocable<T&>;
 
-  /** \brief A task, and a baseline task whose duration
-             `check_relative_performance` subtracts from the task's.
+  /** \brief A task, paired with a baseline task.
 
-      A baseline typically repeats the task without the work whose speed is
-      in question, so that the difference times that work alone.
+      `check_relative_performance` judges the difference between their
+      durations. A baseline typically repeats the task without the work whose
+      speed is in question, so that the difference times that work alone.
    */
   template<class Task, class Baseline>
   struct task_with_baseline
@@ -173,11 +173,11 @@ namespace sequoia::testing
                their baselines, from their durations in each trial of one
                attempt.
 
-        The attempt fails if, in any trial, a task's duration does not exceed
-        its baseline's. The outcome then has no estimate of the speed-up.
-        Otherwise the estimate is judged as by the other overload, from the
-        differences between the tasks' durations and their baselines'. The
-        outcome's durations are the tasks' own, not the differences.
+        The outcome is a failure with no estimate if, in any trial, a task's
+        duration does not exceed its baseline's. Otherwise the outcome is the
+        other overload's for the differences between the tasks' durations and
+        their baselines', except that its durations are the tasks' own. In
+        either case, the outcome has the baselines' durations.
 
         \throws std::invalid_argument if `trialDurations` has fewer elements
         than `relative_performance_minimum_trials_floor`.
@@ -193,10 +193,12 @@ namespace sequoia::testing
 
     /** \brief Summarizes an attempt in lines of text.
 
-        The lines give the reason the attempt failed, if it did. Then they give
-        the speed-up, if the attempt estimated one, the trials and the task
-        durations. Last, they give the baseline durations, if the attempt
-        measured baselines.
+        The lines give:
+        -# The reason the attempt failed, if it did;
+        -# The speed-up, if the attempt estimated one;
+        -# The number of trials, and the attempt;
+        -# The task durations;
+        -# The baseline durations, if the attempt measured any.
      */
     [[nodiscard]]
     std::string summarize_attempt(const relative_performance_attempt_outcome& outcome,
@@ -246,7 +248,8 @@ namespace sequoia::testing
         Each task runs beside its baseline. The fast task and its baseline
         run first in half of the trials, rounded down. Each task runs before
         its baseline in half of the trials, rounded down. `generator` chooses
-        which trials those are, independently for each of the three.
+        those trials, independently for the order of the pairs and for each
+        task's order beside its baseline.
      */
     [[nodiscard]]
     std::vector<task_order_with_baselines> shuffled_task_orders_with_baselines(std::size_t trials,
@@ -533,21 +536,16 @@ namespace sequoia::testing
           beside its baseline. The fast task and its baseline run first in
           half of an attempt's trials, rounded down. Each task runs before its
           baseline in half of an attempt's trials, rounded down. Those trials
-          are chosen at random, independently for each of the three.
+          are chosen at random.
        -# Each attempt estimates the speed-up from the ratio of the tasks'
           durations net of their baselines' in each trial: the slow task's
           duration less `slow.baseline`'s, over the fast task's less
           `fast.baseline`'s.
        -# An attempt fails if, in any of its trials, either task's duration
-          does not exceed its baseline's. The reason the summary then gives is
-          that the task is not distinguishable from its baseline.
+          does not exceed its baseline's.
        -# Each of the four tasks runs at most
           `parameters.minimum_trials * A * (A + 3) / 4` times.
        -# The summary also gives each baseline's typical duration.
-
-       Each trial runs its own copy of each of the four tasks, as the other
-       overload does for its two. Any exception thrown by any of the four
-       propagates.
 
        \pre None of the four tasks performs a check using a different instance
        of the logger.
