@@ -34,22 +34,12 @@ namespace sequoia::testing
     [[nodiscard]]
     T to_number(std::string_view timing)
     {
-      if constexpr(!with_clang_v)
-      {
-        T x{};
-        if(std::from_chars(timing.data(), std::ranges::next(timing.data(), timing.size()), x).ec == std::errc{})
-          return x;
-      }
-      else
-      {
-        T x{};
-        std::stringstream ss{std::string{timing}};
-        if(ss >> x) return x;
-      }
+      if(T x{}; std::from_chars(timing.data(), timing.data() + timing.size(), x).ec == std::errc{})
+        return x;
 
-      throw std::runtime_error{"Unable to extract timing from: " + std::string{timing}};
+      throw std::runtime_error{std::format("Unable to extract timing from: {}", timing)};
     }
-    
+
     /** A duration as the runner prints it, a number followed by its unit, converted to milliseconds. */
     [[nodiscard]]
     double to_milliseconds(std::string_view printedDuration)
@@ -228,7 +218,7 @@ namespace sequoia::testing
         const auto start{std::chrono::steady_clock::now()};
         std::this_thread::sleep_for(25ms);
         st_ExecutionIntervals[index] = {start, std::chrono::steady_clock::now()};
-        check(equality, {"Integer equality"}, index, index);
+        check(equality, "Integer equality", index, index);
       }
     private:
       // Each test writes only its own element, and the checks read them once execute has returned, which waits for
