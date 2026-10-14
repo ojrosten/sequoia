@@ -165,20 +165,16 @@ namespace sequoia::testing
     std::filesystem::path m_Summary;
   };
 
-  /** \brief Where a test records its last execution: when it started and,
-             once it has finished, its execution duration and the runner's
-             overhead.
+  /** \brief Where a test keeps its latest `test_execution_record`.
 
-      A finished record also gives the number of attempts each of the test's
-      performance checks made. A check which threw before its last attempt
-      finished has no entry.
+      When a test begins, the runner writes the test's record with its start
+      time and no completion. Once the test has finished, the runner rewrites
+      the record with its completion. If a write fails, the file keeps the
+      record the runner last wrote. That record may be from an earlier run.
 
-      A test's record is the last one the runner managed to write. That is
-      normally the current run's: the start while the test executes, then the
-      whole record once the test has finished. If a write fails, an earlier
-      run's record remains. A record naming a start and no execution duration
-      marks a test which did not finish in the run that wrote the record, or
-      whose finished record could not be written.
+      A record with no completion marks a test which either did not finish
+      in the run that wrote the record, or whose finished record the runner
+      could not write.
 
       The path is empty for default project paths.
    */

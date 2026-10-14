@@ -1,0 +1,14 @@
+Tests/TestFramework/RunStampTestingDiagnostics.cpp, Line 22
+Start times differ
+
+[sequoia::testing::run_stamp]
+operator== returned false
+
+  Start time
+  [std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<long long, std::ratio<1, 1000> > >]
+  operator== returned false
+  Obtained : 1970-01-01 00:00:00.000
+  Predicted: 1970-01-01 00:00:00.001
+
+=======================================
+

@@ -65,10 +65,15 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/RegularStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/RegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
+               ${TestDir}/TestFramework/RunStampRegularTest.cpp
+               ${TestDir}/TestFramework/RunStampTestingDiagnostics.cpp
                ${TestDir}/TestFramework/SmartPointerFreeDiagnostics.cpp
                ${TestDir}/TestFramework/StringFreeDiagnostics.cpp
                ${TestDir}/TestFramework/SumTypesFreeDiagnostics.cpp
                ${TestDir}/TestFramework/SummaryFreeTest.cpp
+               ${TestDir}/TestFramework/TestExecutionCompletionRegularTest.cpp
+               ${TestDir}/TestFramework/TestExecutionRecordRegularTest.cpp
+               ${TestDir}/TestFramework/TestExecutionRecordTestingDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnosticsUtilities.cpp
                ${TestDir}/TestFramework/TestRunnerPerformanceTest.cpp

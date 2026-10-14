@@ -6,10 +6,10 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "TestRunnerPerformanceTest.hpp"
-#include "TestRunnerDiagnosticsUtilities.hpp"
 #include "PerformanceTestingUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
+#include "sequoia/TestFramework/TestExecutionRecord.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
@@ -19,7 +19,6 @@
 #include <chrono>
 #include <cmath>
 #include <format>
-#include <fstream>
 #include <ranges>
 #include <span>
 #include <stdexcept>
@@ -91,44 +90,22 @@ namespace sequoia::testing
       throw std::runtime_error{std::format("Unable to extract the {} from: {}", label, file.generic_string())};
     }
 
-    /** The duration labelled `label`, such as "execution duration", in the execution record `runner` keeps for
-        `Test`, in milliseconds.
-     */
+    /** Reads the completion of the record `runner` keeps for `Test`. */
     template<concrete_test Test>
     [[nodiscard]]
-    double get_recorded_duration(const test_runner& runner, std::string_view label)
+    test_execution_completion get_recorded_completion(const test_runner& runner)
     {
       const test_execution_record_path record{Test::source_file(), test_name<Test>(), runner.proj_paths()};
-      std::ifstream file{record.file_path()};
-      for(std::string line{}; std::getline(file, line);)
-      {
-        if(line.starts_with(label))
-          return to_milliseconds(std::string_view{line}.substr(label.size() + 1));
-      }
+      if(auto completion{read_test_execution_record(record.file_path()).completion})
+        return std::move(completion).value();
 
-      throw std::runtime_error{
-        std::format("Unable to extract the {} from: {}", label, record.file_path().generic_string())
-      };
+      throw std::runtime_error{std::format("No completion in: {}", record.file_path().generic_string())};
     }
 
-    /** The lines of the execution record `runner` keeps for `Test`, after the
-        three which give its start, its execution duration and the runner's
-        overhead.
-     */
-    template<concrete_test Test>
     [[nodiscard]]
-    std::vector<std::string> get_recorded_lines_after_timings(const test_runner& runner)
+    double in_milliseconds(std::chrono::microseconds duration)
     {
-      const test_execution_record_path record{Test::source_file(), test_name<Test>(), runner.proj_paths()};
-      const auto lines{execution_record_lines(record.file_path())};
-
-      constexpr std::size_t timingLines{3};
-      if(lines.size() < timingLines)
-        throw std::runtime_error{
-          std::format("Unable to extract the timings from: {}", record.file_path().generic_string())
-        };
-
-      return lines | std::views::drop(timingLines) | std::ranges::to<std::vector>();
+      return std::chrono::duration<double, std::milli>{duration}.count();
     }
 
     /** The summary `runner` writes for `Test`, with every measurement set to
@@ -756,12 +733,12 @@ namespace sequoia::testing
 
     check(within_tolerance{summarizing_sleep_ms / 2},
           "The recorded execution duration excludes the sleep while summarizing",
-          get_recorded_duration<slow_to_summarize_test_0>(runner, "execution duration"),
+          in_milliseconds(get_recorded_completion<slow_to_summarize_test_0>(runner).execution_duration),
           execution_sleep_ms + summarizing_sleep_ms / 2);
 
     check(std::ranges::greater_equal{},
           "The recorded runner overhead includes the sleep while summarizing",
-          get_recorded_duration<slow_to_summarize_test_0>(runner, "runner overhead"),
+          in_milliseconds(get_recorded_completion<slow_to_summarize_test_0>(runner).runner_overhead),
           summarizing_sleep_ms);
   }
 
@@ -789,12 +766,12 @@ namespace sequoia::testing
     const auto outputFile{check_output(report({"Busiest Thread Output"}), "BusiestThreadOutput", outputStream)};
 
     const auto firstDuration{
-      get_recorded_duration<unparallelizable_slow_to_summarize_test>(runner, "execution duration")
+      in_milliseconds(get_recorded_completion<unparallelizable_slow_to_summarize_test>(runner).execution_duration)
     };
     const std::array othersDurations{
-      get_recorded_duration<slow_to_summarize_test_0>(runner, "execution duration"),
-      get_recorded_duration<slow_to_summarize_test_1>(runner, "execution duration"),
-      get_recorded_duration<slow_to_summarize_test_2>(runner, "execution duration")
+      in_milliseconds(get_recorded_completion<slow_to_summarize_test_0>(runner).execution_duration),
+      in_milliseconds(get_recorded_completion<slow_to_summarize_test_1>(runner).execution_duration),
+      in_milliseconds(get_recorded_completion<slow_to_summarize_test_2>(runner).execution_duration)
     };
 
     const std::array pairedDurations{
@@ -827,7 +804,7 @@ namespace sequoia::testing
   /** `attempt_counting_performance_test`'s checks make 2, 1 and 3 attempts:
       distinct numbers, in neither sorted order nor its reverse, and not the
       checks' numbers of trials. Its other two checks end by throwing, one
-      before its first attempt and one during it, so the record has no line
+      before its first attempt and one during it, so the record has no entry
       for either. `performance_test_without_performance_checks` is the
       control: a performance test whose record gives no attempts.
    */
@@ -842,15 +819,13 @@ namespace sequoia::testing
 
     check(equality,
           "The record of a performance test gives the number of attempts each check made, in the order of the checks",
-          get_recorded_lines_after_timings<attempt_counting_performance_test>(runner),
-          std::vector<std::string>{"performance check attempts 2",
-                                   "performance check attempts 1",
-                                   "performance check attempts 3"});
+          get_recorded_completion<attempt_counting_performance_test>(runner).performance_check_attempts,
+          std::vector<std::size_t>{2, 1, 3});
 
     check(equality,
           "The record of a performance test which makes no performance check gives no attempts",
-          get_recorded_lines_after_timings<performance_test_without_performance_checks>(runner),
-          std::vector<std::string>{});
+          get_recorded_completion<performance_test_without_performance_checks>(runner).performance_check_attempts,
+          std::vector<std::size_t>{});
   }
 
   void test_runner_performance_test::test_summary_of_performance_checks_within_other_checks()
