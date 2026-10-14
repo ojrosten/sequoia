@@ -976,11 +976,6 @@ namespace sequoia::testing
     append_quietly(m_File, to_string(m_Record));
   }
 
-  void test_to_run::clear_execution_records() const
-  {
-    make_empty_file_quietly(m_ExecutionRecord.file_path());
-  }
-
   [[nodiscard]]
   log_summary test_to_run::execute(std::optional<std::size_t> index, discarded_materials_remover& remover)
   {
@@ -1171,6 +1166,12 @@ namespace sequoia::testing
     fs::create_directory(proj_paths().output().dir());
     fs::create_directory(proj_paths().output().diagnostics());
     fs::create_directory(proj_paths().output().test_summaries());
+
+    if(in_mode(runner_mode::test) && (m_InstabilityMode != instability_mode::sandbox))
+    {
+      const run_stamp stamp{.start_time{current_time_to_the_millisecond()}};
+      overwrite_quietly(proj_paths().execution_records().stamp(), to_string(stamp));
+    }
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -1635,9 +1636,6 @@ namespace sequoia::testing
     if(m_InstabilityMode != instability_mode::sandbox)
     {
       fs::remove_all(proj_paths().output().instability_analysis());
-      const run_stamp stamp{.start_time{current_time_to_the_millisecond()}};
-      overwrite_quietly(proj_paths().execution_records().stamp(), to_string(stamp));
-      clear_execution_records();
       check_for_coarse_sleeps();
     }
 
@@ -2083,14 +2081,6 @@ namespace sequoia::testing
     return failures;
   }
 
-  void test_runner::clear_execution_records() const
-  {
-    for(const auto& node : m_Suites.node_weights() | std::views::filter(holds_test))
-    {
-      node.optTest->clear_execution_records();
-    }
-  }
-
   [[nodiscard]]
   bool test_runner::nothing_to_do()
   {
@@ -2279,6 +2269,11 @@ namespace sequoia::testing
     m_LowerCaseTestNames.insert(ascii::to_lowercase(name));
     m_SourcesByLowerCasePrefix.try_emplace(lower_case_materials_prefix(source), source);
     m_TestNamesByLowerCaseSummary.try_emplace(ascii::to_lowercase(summary.file_path().generic_string()), name);
+  }
+
+  void test_runner::clear_execution_records(const test_execution_record_path& recordFile)
+  {
+    make_empty_file_quietly(recordFile.file_path());
   }
 
   [[nodiscard]]

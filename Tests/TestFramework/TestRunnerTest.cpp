@@ -736,13 +736,19 @@ namespace sequoia::testing
     };
 
     [[nodiscard]]
+    project_paths::customizer fake_project_customization()
+    {
+      return {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}};
+    }
+
+    [[nodiscard]]
     test_runner make_fake_runner(commandline_arguments& args, std::stringstream& outputStream)
     {
       return test_runner{args.size(),
                          args.get(),
                          "Oliver J. Rosten",
                          "  ",
-                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                         fake_project_customization(),
                          outputStream};
     }
 
@@ -945,15 +951,15 @@ namespace sequoia::testing
     struct recorded_run
     {
       return_code                            code{};
-      test_execution_record::start_time_type moment_before_run{};
+      test_execution_record::start_time_type moment_before_construction{};
       std::vector<test_execution_record>     execution_records{};
       run_stamp                              stamp{};
 
       [[nodiscard]]
-      bool is_stamp_between_call_and_test() const noexcept
+      bool is_stamp_between_construction_and_test() const noexcept
       {
         return !execution_records.empty()
-            && (moment_before_run <= stamp.start_time)
+            && (moment_before_construction <= stamp.start_time)
             && (stamp.start_time <= execution_records.front().start_time);
       }
     };
@@ -1494,6 +1500,7 @@ namespace sequoia::testing
          not the `std::logic_error` which refuses a duplicate name.
       -# The execution runs the tests registered before and after it.
       -# A runner whose only registration threw has nothing registered.
+      -# The test's file of execution records keeps an earlier run's record.
    */
   void test_runner_test::test_execution_after_a_registration_which_threw()
   {
@@ -1502,11 +1509,24 @@ namespace sequoia::testing
 
     auto runner{make_fake_runner(args, outputStream)};
 
+    const test_execution_record_path executionRecordPath{throwing_discriminator_test::source_file(),
+                                                         test_name<throwing_discriminator_test>(),
+                                                         runner.proj_paths()};
+
+    const auto earlierRecordText{to_string(test_execution_record{})};
+    fs::create_directories(executionRecordPath.file_path().parent_path());
+    write_to_file(executionRecordPath.file_path(), earlierRecordText, std::ios_base::binary);
+
     runner.register_test<failing_test>();
 
     auto registerThrowingTest{[&runner](){ runner.register_test<throwing_discriminator_test>(); }};
     check_exception_thrown<std::runtime_error>("Registration whose hook throws", registerThrowingTest);
     check_exception_thrown<std::runtime_error>("The same registration again", registerThrowingTest);
+
+    check(equality,
+          "A registration whose hook throws leaves the test's execution records as they were",
+          read_to_string(executionRecordPath.file_path(), std::ios_base::binary).value_or(""),
+          earlierRecordText);
 
     runner.register_test<passing_test>();
     check(equality, "Execution return code", runner.execute(), return_code::soft_failures);
@@ -1602,8 +1622,8 @@ namespace sequoia::testing
   /** The fake tests tell the mechanism from its rivals: `record_reading_free_test` sees its record while it executes,
       which a start time written only at the end would not produce; `escaping_exception_free_test` throws, which an
       execution duration written only on normal completion would miss. Each fake test runs alone, so that a run's
-      return code is its test's alone. Each run removes the records directory first, so that only that run can have
-      written the stamp.
+      return code is its test's alone. Each run removes the records directory before constructing its runner, so that
+      only that run can have written the stamp.
    */
   void test_runner_test::test_recording_of_executions()
   {
@@ -1611,25 +1631,21 @@ namespace sequoia::testing
       [this]<concrete_test Test>(std::type_identity<Test>) {
         std::stringstream outputStream{};
         commandline_arguments args{{minimal_fake_path().generic_string()}};
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
-
-        const auto& projPaths{runner.proj_paths()};
+        const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
         fs::remove_all(projPaths.execution_records().dir());
+
+        const auto momentBeforeConstruction{
+          std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now())
+        };
+        auto runner{make_fake_runner(args, outputStream)};
         runner.register_test<Test>();
 
-        const auto momentBeforeRun{std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now())};
         const auto code{runner.execute()};
         const test_execution_record_path testRecordPath{Test::source_file(), test_name<Test>(), projPaths};
 
         return recorded_run{
           .code{code},
-          .moment_before_run{momentBeforeRun},
+          .moment_before_construction{momentBeforeConstruction},
           .execution_records{read_test_execution_records(testRecordPath.file_path())},
           .stamp{read_run_stamp(projPaths.execution_records().stamp())}
         };
@@ -1659,11 +1675,11 @@ namespace sequoia::testing
           completion_flags_of(throwing.execution_records),
           std::vector{false, true});
 
-    check("The stamp's start time lies between the call to execute and the start time of a test which passed",
-          passing.is_stamp_between_call_and_test());
+    check("The stamp's start time lies between the runner's construction and the start time of a test which passed",
+          passing.is_stamp_between_construction_and_test());
 
-    check("The stamp's start time lies between the call to execute and the start time of a test whose body threw",
-          throwing.is_stamp_between_call_and_test());
+    check("The stamp's start time lies between the runner's construction and the start time of a test whose body threw",
+          throwing.is_stamp_between_construction_and_test());
   }
 
   /** Under `locate-instabilities`, a test's file of execution records keeps
@@ -1674,10 +1690,10 @@ namespace sequoia::testing
   {
     std::stringstream outputStream{};
     commandline_arguments args{{minimal_fake_path().generic_string(), "locate", "2"}};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
+    fs::remove_all(projPaths.execution_records().dir());
 
     auto runner{make_fake_runner(args, outputStream)};
-    const auto& projPaths{runner.proj_paths()};
-    fs::remove_all(projPaths.execution_records().dir());
     runner.register_test<passing_test>();
 
     check(equality, "Two repetitions of a passing test return code", runner.execute(), return_code::success);
@@ -1917,7 +1933,7 @@ namespace sequoia::testing
     const auto build{write_fake_build()};
 
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
-    const project_paths projPaths{args.size(), args.get(), {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
     const auto stamp{projPaths.prune().stamp()};
     fs::create_directories(stamp.parent_path());
     write_to_file(stamp, "", std::ios_base::out);
@@ -1945,11 +1961,7 @@ namespace sequoia::testing
     const auto build{write_fake_build()};
 
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
-    const project_paths::customizer customization{
-      .main_cpp{"TestSandbox/TestSandbox.cpp"},
-      .common_includes{"TestShared/SharedIncludes.hpp"}
-    };
-    const project_paths projPaths{args.size(), args.get(), customization};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
     const auto stamp{projPaths.prune().stamp()};
     fs::create_directories(stamp.parent_path());
     write_to_file(stamp, "", std::ios_base::out);
@@ -1969,19 +1981,21 @@ namespace sequoia::testing
     check_output("Prune selecting an unregistered test", "PruneSelectsUnregisteredOutput", outputStream);
   }
 
+  /** Every file the build read predates the previous run's prune stamp.
+      The registered test is not in the build, so it runs only if prune's
+      empty selection is taken for a selection of everything.
+
+      The records directory starts with an earlier run's run stamp, and the
+      test's file of execution records with an earlier run's record. The
+      run replaces the run stamp, though it has no test to run, and leaves
+      the record as it was.
+   */
   void test_runner_test::test_prune_with_nothing_stale()
   {
-    // Every file the build read predates the previous run's stamp. The
-    // registered test is not in the build, so it runs only if prune's empty
-    // selection is taken for a selection of everything.
     const auto build{write_fake_build()};
 
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
-    const project_paths::customizer customization{
-      .main_cpp{"TestSandbox/TestSandbox.cpp"},
-      .common_includes{"TestShared/SharedIncludes.hpp"}
-    };
-    const project_paths projPaths{args.size(), args.get(), customization};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
     const auto stamp{projPaths.prune().stamp()};
     fs::create_directories(stamp.parent_path());
     write_to_file(stamp, "", std::ios_base::out);
@@ -1993,12 +2007,31 @@ namespace sequoia::testing
     fs::last_write_time(stamp, now - 1s);
     fs::last_write_time(projPaths.executable(), now);
 
+    const test_execution_record_path
+      executionRecordPath{passing_test::source_file(), test_name<passing_test>(), projPaths};
+
+    const auto earlierRecordText{to_string(test_execution_record{})};
+    fs::create_directories(executionRecordPath.file_path().parent_path());
+    write_to_file(executionRecordPath.file_path(), earlierRecordText, std::ios_base::binary);
+    write_to_file(projPaths.execution_records().stamp(), to_string(run_stamp{}), std::ios_base::binary);
+
+    const auto momentBeforeConstruction{
+      std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now())
+    };
     std::stringstream outputStream{};
     auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     check(equality, "Prune with nothing stale return code", runner.execute(), return_code::success);
     check_output("Prune with nothing stale", "PruneWithNothingStaleOutput", outputStream);
+
+    check("A run which prune leaves with nothing to do writes its run stamp",
+          momentBeforeConstruction <= read_run_stamp(projPaths.execution_records().stamp()).start_time);
+
+    check(equality,
+          "A run which prune leaves with nothing to do leaves a test's execution records as they were",
+          read_to_string(executionRecordPath.file_path(), std::ios_base::binary).value_or(""),
+          earlierRecordText);
   }
 
   void test_runner_test::test_post_run_failure()
@@ -2647,8 +2680,6 @@ namespace sequoia::testing
                                 "exclude", excluded_from_spaced_suite_free_test::source_file().generic_string()}};
 
     auto runner{make_fake_runner(args, outputStream)};
-    runner.register_test<selected_in_spaced_suite_free_test>();
-    runner.register_test<excluded_from_spaced_suite_free_test>();
 
     const test_execution_record_path executionRecordPath{selected_in_spaced_suite_free_test::source_file(),
                                                          test_name<selected_in_spaced_suite_free_test>(),
@@ -2656,6 +2687,9 @@ namespace sequoia::testing
 
     fs::create_directories(executionRecordPath.file_path().parent_path());
     write_to_file(executionRecordPath.file_path(), to_string(test_execution_record{}), std::ios_base::binary);
+
+    runner.register_test<selected_in_spaced_suite_free_test>();
+    runner.register_test<excluded_from_spaced_suite_free_test>();
 
     check(equality, "Both sandboxes run, and the run succeeds", runner.execute(), return_code::success);
     check(equivalence,
@@ -2678,7 +2712,9 @@ namespace sequoia::testing
 
       A sandbox appends its test's execution records to those of the
       sandboxes before it: only the run which launched the sandboxes empties
-      the test's file. Here, fake records stand for an earlier sandbox's.
+      the test's file and writes the stamp. Here, fake records stand for an
+      earlier sandbox's, and a fake stamp for the launching run's. This test
+      function writes both before constructing the sandbox's runner.
    */
   void test_runner_test::test_sandboxed_repetition()
   {
@@ -2699,15 +2735,10 @@ namespace sequoia::testing
 
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "locate", "2", "--runner-id", "1"}};
-
-    auto runner{make_fake_runner(args, outputStream)};
-    runner.register_test<passing_test>();
-
-    // The run which launches the sandboxes prepares this folder first
-    setup_instability_analysis_prune_folder(runner.proj_paths());
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
 
     const test_execution_record_path
-      executionRecordPath{passing_test::source_file(), test_name<passing_test>(), runner.proj_paths()};
+      executionRecordPath{passing_test::source_file(), test_name<passing_test>(), projPaths};
 
     const std::vector<test_execution_record>
       earlierSandboxRecords{{}, {.completion{test_execution_completion{}}}};
@@ -2716,6 +2747,15 @@ namespace sequoia::testing
     write_to_file(executionRecordPath.file_path(),
                   to_string(earlierSandboxRecords.front()) + to_string(earlierSandboxRecords.back()),
                   std::ios_base::binary);
+
+    const auto stampTextOfLaunchingRun{to_string(run_stamp{})};
+    write_to_file(projPaths.execution_records().stamp(), stampTextOfLaunchingRun, std::ios_base::binary);
+
+    auto runner{make_fake_runner(args, outputStream)};
+    runner.register_test<passing_test>();
+
+    // The run which launches the sandboxes prepares this folder first
+    setup_instability_analysis_prune_folder(runner.proj_paths());
 
     check(equality, "Sandboxed repetition return code", runner.execute(), return_code::success);
     check_output("Sandboxed Repetition Output", "SandboxedRepetitionOutput", outputStream);
@@ -2729,6 +2769,11 @@ namespace sequoia::testing
           "The sandbox appends its test's execution records to those of an earlier sandbox",
           completion_flags_of(read_test_execution_records(executionRecordPath.file_path())),
           std::vector{false, true, false, true});
+
+    check(equality,
+          "The sandbox leaves the stamp of the run which launched it as it was",
+          read_to_string(projPaths.execution_records().stamp(), std::ios_base::binary).value_or(""),
+          stampTextOfLaunchingRun);
   }
 
   namespace
