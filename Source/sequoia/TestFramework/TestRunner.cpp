@@ -1167,11 +1167,7 @@ namespace sequoia::testing
     fs::create_directory(proj_paths().output().diagnostics());
     fs::create_directory(proj_paths().output().test_summaries());
 
-    if(in_mode(runner_mode::test) && (m_InstabilityMode != instability_mode::sandbox))
-    {
-      const run_stamp stamp{.start_time{current_time_to_the_millisecond()}};
-      overwrite_quietly(proj_paths().execution_records().stamp(), to_string(stamp));
-    }
+    write_run_stamp();
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -1569,6 +1565,15 @@ namespace sequoia::testing
     // The timer resolution belongs to the process, so the first runner's check serves every later runner in it
     static std::once_flag checked{};
     std::call_once(checked, warnIfCoarse);
+  }
+
+  void test_runner::write_run_stamp() const
+  {
+    if(in_mode(runner_mode::test) && (m_InstabilityMode != instability_mode::sandbox))
+    {
+      const run_stamp stamp{.start_time{current_time_to_the_millisecond()}};
+      overwrite_quietly(proj_paths().execution_records().stamp(), to_string(stamp));
+    }
   }
 
   void test_runner::check_for_missing_tests()
