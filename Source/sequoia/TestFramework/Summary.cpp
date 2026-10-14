@@ -49,9 +49,9 @@ namespace sequoia::testing
   {
     if(durationsOfRun)
     {
-      const auto& [total, criticalPath]{*durationsOfRun};
+      const auto& [totalRunTime, criticalPath]{*durationsOfRun};
       return std::format("{}{}{}{}",
-                         timing_line("Total Run Time",      total),
+                         timing_line("Total Run Time",      totalRunTime),
                          timing_line("Execution Time",      criticalPath.execution_duration),
                          timing_line("Runner Overhead",     criticalPath.runner_overhead),
                          timing_line("Scheduling Overhead", criticalPath.scheduling_overhead));

@@ -404,12 +404,12 @@ Unrecognized bits in return_code: 64
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3278
+Tests/TestFramework/TestRunnerTest.cpp, Line 3279
 A wall clock shorter than the critical path's tests
 
 Expected Exception Type:
 [std::invalid_argument]
-The wall clock, 11000000ns, is shorter than the durations of the critical path's tests, 12000000ns
+The wall clock, 11ms, is shorter than the durations of the critical path's tests, 12ms
 
 =======================================
 

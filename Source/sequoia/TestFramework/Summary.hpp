@@ -60,10 +60,10 @@ namespace sequoia::testing
   /** \brief The durations into which the critical path of an execution of
              tests divides the execution's wall clock.
 
-      The critical path is the longest sequence of tests which ran one after
-      another. A test's length is its execution duration plus its runner
-      overhead. `scheduling_overhead` is the rest of the wall clock, which
-      the critical path spent outside its tests.
+      The critical path is a sequence of tests known to have run one after
+      another. `execution_duration` and `runner_overhead` are the sums of its
+      tests'. `scheduling_overhead` is the rest of the wall clock, which the
+      critical path spent outside its tests.
    */
   struct critical_path_durations
   {
@@ -73,10 +73,14 @@ namespace sequoia::testing
       scheduling_overhead{};
   };
 
-  /** \brief The durations reported for a run of tests. */
+  /** \brief The durations reported for a run of tests.
+
+      `total_run_time` also holds the work which follows the tests'
+      execution, such as summarizing the tests.
+   */
   struct durations_of_run
   {
-    log_summary::duration   total{};
+    log_summary::duration   total_run_time{};
     critical_path_durations critical_path{};
   };
 

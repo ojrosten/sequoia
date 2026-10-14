@@ -139,10 +139,10 @@ namespace sequoia::testing
              along the execution's critical path.
 
       `sequential` holds tests which ran one after another, before any test
-      in `concurrent`. Each test in `concurrent` ran on the thread its
-      `thread_id` names, after that thread's previous test. So the critical
-      path is `sequential`, followed by the tests of the thread whose tests'
-      execution durations and runner overheads sum to the most.
+      in `concurrent`. The tests in `concurrent` which share a `thread_id`
+      ran one after another. The critical path is `sequential`, followed by
+      the tests of the thread whose tests' execution durations and runner
+      overheads sum to the most.
 
       \throws std::invalid_argument if `wallClock` is shorter than the
               durations of the critical path's tests summed.

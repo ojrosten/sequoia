@@ -3174,7 +3174,8 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    // Until a thread is joined, no other thread takes its id
+    // Until a thread is joined, no other thread takes its id, so these ids
+    // stay distinct while `threads` lives
     const auto threads{
         std::views::iota(0, 8)
       | std::views::transform([](int) { return std::jthread{[](){}}; })
