@@ -104,9 +104,12 @@ namespace sequoia::testing
 
   /** \brief The start time of a run of tests.
 
-      A run of tests is a call to `test_runner::execute` which has tests to
-      run. Under `locate-instabilities`, one run covers every repetition,
-      including the repetitions made in separate processes.
+      A run of tests begins when a `test_runner` is constructed with
+      arguments which ask it to run tests, whether or not any actually run
+      after filtering. Under `locate-instabilities`, one run covers every
+      repetition. A runner which makes a repetition in a separate process
+      begins no run of its own: the repetition belongs to the run of the
+      runner which launched the process.
 
       A `test_execution_record` is from an earlier run of tests if the
       record's start time precedes the stamp's.

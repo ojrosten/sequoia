@@ -456,13 +456,6 @@ namespace sequoia::testing
     {
       m_Vessel.reset_results();
     }
-
-    /** \brief Empties the file of the test's execution records, creating
-               the file and its directory if need be.
-
-        A failure is not reported.
-     */
-    void clear_execution_records() const;
   private:
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
 
@@ -621,9 +614,10 @@ namespace sequoia::testing
       constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
       const auto source{T::source_file()};
 
-      // Every check runs, and every hook returns, before the registration is
-      // recorded. So a registration which throws leaves no record behind,
-      // though the filter may have noted that the test matched a selection.
+      // Every check runs, and every hook returns, before the runner either
+      // notes the registration or empties the test's file of execution
+      // records. So a registration which throws does neither, though the
+      // filter may have noted that the test matched a selection.
       throw_if_name_refused(name, source);
       throw_if_materials_unplaceable(source);
 
@@ -633,6 +627,8 @@ namespace sequoia::testing
                                           get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)};
       throw_if_summary_collides(name, summaryFile);
 
+      const test_execution_record_path executionRecordFile{source, name, m_ProjPaths};
+
       // Only a run builds the test, so that neither `create`, `init` nor
       // `--help` calls its materials or output hooks.
       const bool toRun{m_Filter(source, enclosing_suites(source), isPerformanceTest) && in_mode(runner_mode::test)};
@@ -640,14 +636,19 @@ namespace sequoia::testing
         toRun ? std::optional<test_to_run>{std::in_place,
                                            test_vessel{make_test<T>(m_ProjPaths, m_CMakeCache, m_RecoveryMode)},
                                            summaryFile,
-                                           test_execution_record_path{source, name, m_ProjPaths}}
+                                           executionRecordFile}
               : std::nullopt
       };
 
       register_checked_test(name, source, summaryFile);
 
       if(testToRun)
+      {
+        if(!in_sandbox())
+          clear_execution_records(executionRecordFile);
+
         m_Tests.push_back(std::move(*testToRun));
+      }
     }
 
     /** \brief Runs the tests, as the command line asked.
@@ -852,17 +853,14 @@ namespace sequoia::testing
 
     void check_for_coarse_sleeps();
 
+    void write_run_stamp() const;
+
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }
 
     void sort_tests();
 
     void reset_tests();
-
-    /** \brief For each test to be run, ensures no execution records remain
-               on disk.
-     */
-    void clear_execution_records() const;
 
     return_code run_tests(std::optional<std::size_t> id);
 
@@ -944,6 +942,9 @@ namespace sequoia::testing
     [[nodiscard]]
     bool in_mode(runner_mode m) const noexcept { return (m_RunnerMode & m) == m; }
 
+    [[nodiscard]]
+    bool in_sandbox() const noexcept { return m_InstabilityMode == instability_mode::sandbox; }
+
     void prune();
 
     /// The reason prune selected every test, if it did; the filter holds the selection otherwise
@@ -999,6 +1000,12 @@ namespace sequoia::testing
     void register_checked_test(std::string_view name,
                                const std::filesystem::path& source,
                                const test_summary_path& summary);
+
+    /** \brief Empties `recordFile`, creating it and its directory if need be.
+
+        A failure is not reported.
+     */
+    static void clear_execution_records(const test_execution_record_path& recordFile);
 
     [[nodiscard]]
     std::string lower_case_materials_prefix(const std::filesystem::path& source) const;
