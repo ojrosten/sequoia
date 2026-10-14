@@ -30,7 +30,9 @@ namespace sequoia::testing
 
   namespace
   {
-    /** A duration as the runner prints it, a number followed by its unit, converted to milliseconds. */
+    /** Converts `printedDuration`, a duration in the form the runner prints,
+        to milliseconds.
+     */
     [[nodiscard]]
     double to_milliseconds(std::string_view printedDuration)
     {
@@ -49,8 +51,8 @@ namespace sequoia::testing
       return number->front() * conversion->second;
     }
 
-    /** The run's duration labelled `label`, such as "Execution Time", in milliseconds. It is read from the grand
-        totals, since every test reports durations of its own and the run's are the only ones these checks measure.
+    /** Returns the duration labelled `label` in the grand totals within
+        `file`, in milliseconds. A label is, for example, "Execution Time".
      */
     [[nodiscard]]
     double get_grand_total(const fs::path& file, std::string_view label)
@@ -89,8 +91,8 @@ namespace sequoia::testing
       return std::chrono::duration<double, std::milli>{duration}.count();
     }
 
-    /** The summary `runner` writes for `Test`, with every measurement set to
-        zero by `text_with_zeroed_measurements`.
+    /** Returns the summary `runner` wrote for `Test`, with its measured
+        values set to zero by `text_with_zeroed_measurements`.
      */
     template<concrete_test Test>
     [[nodiscard]]
@@ -142,24 +144,28 @@ namespace sequoia::testing
       return peak;
     }
 
-    /** \brief A line for the run's output giving `peak`, which CI reports for every run, passing or not. */
+    /** Returns a line for the run's output giving `peak`. CI reads it from
+        every run, passing or not.
+     */
     [[nodiscard]]
     std::string peak_overlap_line(std::ptrdiff_t peak)
     {
       return std::format("[Peak Overlap: {}]\n", peak);
     }
 
-    /** More than half of eight threads. A test which starts only after the others have finished, delayed by its
-        execution record perhaps, lowers the peak by one, so this tolerates three such tests and still fails if half
-        the threads are lost.
+    /** More than half of eight threads. A test which starts only after the
+        others have finished lowers the peak by one. So the floor tolerates
+        three such tests, and still fails if half the threads are lost.
      */
     constexpr std::ptrdiff_t eight_thread_peak_floor{5};
 
-    /** Eight tests are wanted, each sleeping the same amount, so that the checks below can
-        measure how the runner distributes them over threads, and how many it runs at once. They
-        are eight *classes* because a test's name is synthesized from its class: a class template
-        cannot supply a file-system-safe name, and registering one class twice - which is what
-        these used to do - would ask two tests to share it.
+    /** The number of slow tests. Each sleeps for the same duration, so that
+        the checks below can measure how the runner spreads the tests over
+        threads, and how many it runs at once.
+
+        Each slow test is a class of its own, since the runner names a test
+        after its class. A test may not be a class template, and the runner
+        refuses two registrations of one class.
      */
     constexpr std::size_t slow_test_count{8};
 
@@ -174,7 +180,9 @@ namespace sequoia::testing
         return std::source_location::current().file_name();
       }
 
-      /** \brief When each test's tests ran, by the index the test passes to `sleep_and_check`. */
+      /** Returns when each slow test's sleep began and ended, at the index
+          the test passes to `sleep_and_check`.
+       */
       [[nodiscard]]
       static std::span<const execution_interval, slow_test_count> execution_intervals() noexcept
       {
@@ -188,20 +196,11 @@ namespace sequoia::testing
       slow_test_base(slow_test_base&&)            noexcept = default;
       slow_test_base& operator=(slow_test_base&&) noexcept = default;
 
-      /** `sleep_for` overshoots by a few ms per call, and that cost is **per call and independent
-          of the duration requested**: eight of them contribute ~25ms whether each asks for 25ms or
-          for 100ms. Since the tolerances below are absolute, lengthening the sleeps would buy no
-          margin whatsoever - it would only shrink the error as a *fraction* of a total nothing
-          measures. So the sleeps are as short as the timings below can resolve, the overshoot is
-          absorbed by the tolerances, and anyone tempted to stabilise these checks by sleeping
-          longer will pay in run time and get nothing.
-
-          The duration also fixes the lower bound of every timing check below. Each is centred so
-          that its *lower* bound is exactly the nominal time for that execution model - 25ms for
-          eight tasks run concurrently, 100ms for eight tasks over a pool of two, 200ms for eight
-          run serially. So the lower half of each tolerance is not slack: it asserts that the
-          acceleration being claimed is real, and a run finishing faster than physics allows is a
-          failure rather than a bonus.
+      /** The lower bound of each timing check of the slow tests is the
+          nominal duration of eight such sleeps under that check's execution
+          model: 25 ms for eight tests at once, 100 ms over a pool of two
+          threads, and 200 ms run serially. A run which finishes sooner fails.
+          So the bounds must change with the sleep.
        */
       void sleep_and_check(std::size_t index)
       {
@@ -283,8 +282,8 @@ namespace sequoia::testing
 
     constexpr double execution_sleep_ms{20.0}, summarizing_sleep_ms{60.0};
 
-    /** The runner prints a duration to three significant figures, so it prints one below a second to within half a
-        millisecond.
+    /** The runner prints a duration to three significant figures, so it
+        prints a duration of less than a second to within half a millisecond.
      */
     constexpr double printed_duration_tolerance_ms{1.0};
 
