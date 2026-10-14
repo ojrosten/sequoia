@@ -3209,7 +3209,7 @@ namespace sequoia::testing
     };
 
     {
-      const auto oneTestPerThread{
+      const auto oneExecutionPerThread{
           threadIds
         | std::views::transform(
             [](std::thread::id id) {
@@ -3220,7 +3220,7 @@ namespace sequoia::testing
 
       checkApportionment(
         "Eight threads, which ran one test each, one after another",
-        apportion_wall_clock(210ms, {}, oneTestPerThread),
+        apportion_wall_clock(210ms, {}, oneExecutionPerThread),
         {.execution_duration{25ms}, .runner_overhead{1ms}, .scheduling_overhead{184ms}});
     }
 

@@ -74,13 +74,13 @@ namespace sequoia::testing
   };
 
   /** \brief The durations reported for a run of tests. */
-  struct run_durations
+  struct durations_of_run
   {
     log_summary::duration   total{};
     critical_path_durations critical_path{};
   };
 
-  using opt_run_durations = std::optional<run_durations>;
+  using opt_durations_of_run = std::optional<durations_of_run>;
 
   struct stringified_duration
   {
@@ -90,14 +90,14 @@ namespace sequoia::testing
   [[nodiscard]]
   stringified_duration stringify_duration(const log_summary::duration& d);
 
-  /** \brief Reports the run's durations if `runDurations` holds them, and
+  /** \brief Reports the run's durations if `durationsOfRun` holds them, and
              otherwise those of `log`.
    */
   [[nodiscard]]
-  std::string report_time(const log_summary& log, const opt_run_durations& runDurations);
+  std::string report_time(const log_summary& log, const opt_durations_of_run& durationsOfRun);
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, std::string_view namesuffix, const opt_run_durations& runDurations, const summary_detail verbosity, indentation ind_0, indentation ind_1);
+  std::string summarize(const log_summary& log, std::string_view namesuffix, const opt_durations_of_run& durationsOfRun, const summary_detail verbosity, indentation ind_0, indentation ind_1);
 
   [[nodiscard]]
   std::string summarize(const log_summary& log, std::string_view namesuffix, summary_detail verbosity, indentation ind_0, indentation ind_1);

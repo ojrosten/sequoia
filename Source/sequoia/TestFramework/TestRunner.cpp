@@ -153,7 +153,7 @@ namespace sequoia::testing
     }
 
     /** The execution durations and runner overheads of tests, summed. */
-    struct test_durations
+    struct durations_of_tests
     {
       log_summary::duration
         execution_duration{},
@@ -164,25 +164,25 @@ namespace sequoia::testing
     };
 
     [[nodiscard]]
-    test_durations summed_durations(std::span<const execution_info> executions)
+    durations_of_tests summed_durations(std::span<const execution_info> executions)
     {
       auto add{
-        [](const test_durations& sum, const execution_info& execution) {
-          return test_durations{
+        [](const durations_of_tests& sum, const execution_info& execution) {
+          return durations_of_tests{
             .execution_duration{sum.execution_duration + execution.execution_duration},
             .runner_overhead   {sum.runner_overhead    + execution.runner_overhead}
           };
         }
       };
 
-      return std::ranges::fold_left(executions, test_durations{}, add);
+      return std::ranges::fold_left(executions, durations_of_tests{}, add);
     }
 
     /** Groups the executions by thread, and returns the summed durations of
         the thread whose total is the largest.
      */
     [[nodiscard]]
-    test_durations busiest_thread_durations(std::vector<execution_info> executions)
+    durations_of_tests busiest_thread_durations(std::vector<execution_info> executions)
     {
       std::ranges::sort(executions, std::ranges::less{}, &execution_info::thread_id);
 
@@ -199,12 +199,12 @@ namespace sequoia::testing
       };
 
       auto busier{
-        [](const test_durations& lhs, const test_durations& rhs){
+        [](const durations_of_tests& lhs, const durations_of_tests& rhs){
           return lhs.total() < rhs.total() ? rhs : lhs;
         }
       };
 
-      return std::ranges::fold_left(threadTotals, test_durations{}, busier);
+      return std::ranges::fold_left(threadTotals, durations_of_tests{}, busier);
     }
 
     constexpr auto execution_info_of{
@@ -931,18 +931,18 @@ namespace sequoia::testing
     const auto sequentialDurations{summed_durations(sequential)},
                busiestThreadDurations{busiest_thread_durations(concurrent | std::ranges::to<std::vector>())};
 
-    const auto testsDuration{sequentialDurations.total() + busiestThreadDurations.total()};
-    if(wallClock < testsDuration)
+    const auto durationOfTests{sequentialDurations.total() + busiestThreadDurations.total()};
+    if(wallClock < durationOfTests)
       throw std::invalid_argument{
         std::format("The wall clock, {}, is shorter than the durations of the critical path's tests, {}",
                     wallClock,
-                    testsDuration)
+                    durationOfTests)
       };
 
     return {
       .execution_duration {sequentialDurations.execution_duration + busiestThreadDurations.execution_duration},
       .runner_overhead    {sequentialDurations.runner_overhead    + busiestThreadDurations.runner_overhead},
-      .scheduling_overhead{wallClock - testsDuration}
+      .scheduling_overhead{wallClock - durationOfTests}
     };
   }
 
@@ -1931,10 +1931,10 @@ namespace sequoia::testing
 
     report_results();
 
-    const run_durations runDurations{.total{t.time_elapsed()}, .critical_path{criticalPathDurations}};
+    const durations_of_run durationsOfRun{.total{t.time_elapsed()}, .critical_path{criticalPathDurations}};
 
     stream() << "\n-----------Grand Totals-----------\n";
-    stream() << summarize(root_summary(), "", runDurations, summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+    stream() << summarize(root_summary(), "", durationsOfRun, summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
 
     if(const auto materialsUpdateReport{tracker.materials_update_report()}; !materialsUpdateReport.empty())
     {
