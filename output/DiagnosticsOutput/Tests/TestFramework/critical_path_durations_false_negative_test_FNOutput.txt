@@ -1,0 +1,42 @@
+Tests/TestFramework/CriticalPathDurationsTestingDiagnostics.cpp, Line 42
+Execution durations differ
+
+[sequoia::testing::critical_path_durations]
+operator== returned false
+
+  Execution duration
+  [std::chrono::duration<long long, std::ratio<1, 1000000000> >]
+  operator== returned false
+  Obtained : 2000000ns
+  Predicted: 4000000ns
+
+=======================================
+
+Tests/TestFramework/CriticalPathDurationsTestingDiagnostics.cpp, Line 43
+Runner overheads differ
+
+[sequoia::testing::critical_path_durations]
+operator== returned false
+
+  Runner overhead
+  [std::chrono::duration<long long, std::ratio<1, 1000000000> >]
+  operator== returned false
+  Obtained : 1000000ns
+  Predicted: 4000000ns
+
+=======================================
+
+Tests/TestFramework/CriticalPathDurationsTestingDiagnostics.cpp, Line 44
+Scheduling overheads differ
+
+[sequoia::testing::critical_path_durations]
+operator== returned false
+
+  Scheduling overhead
+  [std::chrono::duration<long long, std::ratio<1, 1000000000> >]
+  operator== returned false
+  Obtained : 3000000ns
+  Predicted: 4000000ns
+
+=======================================
+

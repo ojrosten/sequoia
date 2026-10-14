@@ -161,6 +161,8 @@
 #include "TestFramework/CommandsFreeTest.hpp"
 #include "TestFramework/ComplexFreeDiagnostics.hpp"
 #include "TestFramework/ContainerFreeDiagnostics.hpp"
+#include "TestFramework/CriticalPathDurationsRegularTest.hpp"
+#include "TestFramework/CriticalPathDurationsTestingDiagnostics.hpp"
 #include "TestFramework/DependencyAnalyzerFreeTest.hpp"
 #include "TestFramework/DumpComparisonFreeTest.hpp"
 #include "TestFramework/ElementaryFreeDiagnostics.hpp"
