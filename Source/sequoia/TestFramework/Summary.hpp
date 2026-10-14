@@ -14,8 +14,6 @@
 #include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
 
-#include <optional>
-
 namespace sequoia::testing
 {
   /** bit mask for the level of detail */
@@ -84,8 +82,6 @@ namespace sequoia::testing
     critical_path_durations critical_path{};
   };
 
-  using opt_durations_of_run = std::optional<durations_of_run>;
-
   struct stringified_duration
   {
     std::string time, unit;
@@ -94,20 +90,20 @@ namespace sequoia::testing
   [[nodiscard]]
   stringified_duration stringify_duration(const log_summary::duration& d);
 
-  /** \brief Reports the run's durations if `durationsOfRun` holds them, and
-             otherwise those of `log`.
-   */
   [[nodiscard]]
-  std::string report_time(const log_summary& log, const opt_durations_of_run& durationsOfRun);
+  std::string report_time(const log_summary& log);
 
+  [[nodiscard]]
+  std::string report_time(const durations_of_run& durationsOfRun);
+
+  /** \brief Summarizes `log`, under a heading of its name and `namesuffix`.
+
+      A log with no name has no heading.
+   */
   [[nodiscard]]
   std::string summarize(const log_summary& log,
                         std::string_view namesuffix,
-                        const opt_durations_of_run& durationsOfRun,
                         const summary_detail verbosity,
                         indentation ind_0,
                         indentation ind_1);
-
-  [[nodiscard]]
-  std::string summarize(const log_summary& log, std::string_view namesuffix, summary_detail verbosity, indentation ind_0, indentation ind_1);
 }

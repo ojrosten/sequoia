@@ -45,27 +45,27 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string report_time(const log_summary& log, const opt_durations_of_run& durationsOfRun)
+  std::string report_time(const log_summary& log)
   {
-    if(durationsOfRun)
-    {
-      const auto& [totalRunTime, criticalPath]{*durationsOfRun};
-      return std::format("{}{}{}{}",
-                         timing_line("Total Run Time",      totalRunTime),
-                         timing_line("Execution Time",      criticalPath.execution_duration),
-                         timing_line("Runner Overhead",     criticalPath.runner_overhead),
-                         timing_line("Scheduling Overhead", criticalPath.scheduling_overhead));
-    }
-
     return std::format("{}{}",
                        timing_line("Execution Time",  log.execution_duration()),
                        timing_line("Runner Overhead", log.runner_overhead()));
   }
 
   [[nodiscard]]
+  std::string report_time(const durations_of_run& durationsOfRun)
+  {
+    const auto& [totalRunTime, criticalPath]{durationsOfRun};
+    return std::format("{}{}{}{}",
+                       timing_line("Total Run Time",      totalRunTime),
+                       timing_line("Execution Time",      criticalPath.execution_duration),
+                       timing_line("Runner Overhead",     criticalPath.runner_overhead),
+                       timing_line("Scheduling Overhead", criticalPath.scheduling_overhead));
+  }
+
+  [[nodiscard]]
   std::string summarize(const log_summary& log,
                         std::string_view namesuffix,
-                        const opt_durations_of_run& durationsOfRun,
                         const summary_detail verbosity,
                         indentation ind_0,
                         indentation ind_1)
@@ -132,9 +132,9 @@ namespace sequoia::testing
 
     if((verbosity & summary_detail::timings) == summary_detail::timings)
     {
-      append_indented(summary, report_time(log, durationsOfRun), ind_0);
+      append_indented(summary, report_time(log), ind_0);
     }
-    else
+    else if(!summary.empty())
     {
       summary.append("\n");
     }
@@ -171,11 +171,5 @@ namespace sequoia::testing
     }
 
     return summary;
-  }
-
-  [[nodiscard]]
-  std::string summarize(const log_summary& log, std::string_view namesuffix, const summary_detail verbosity, indentation ind_0, indentation ind_1)
-  {
-    return summarize(log, namesuffix, std::nullopt, verbosity, ind_0, ind_1);
   }
 }
