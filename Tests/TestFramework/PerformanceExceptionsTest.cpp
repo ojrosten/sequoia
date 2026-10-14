@@ -271,6 +271,11 @@ namespace sequoia::testing
 
     constexpr relative_performance_durations typical{.fast{1s}, .slow{2s}};
 
+    check(equality,
+          "As many atypical trials as trials",
+          trials_with_atypical(2, typical, {typical, typical}).size(),
+          2uz);
+
     check_exception_thrown<std::logic_error>(
       "More atypical trials than trials",
       [typical]() { return trials_with_atypical(1, typical, {typical, typical}); }

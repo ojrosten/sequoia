@@ -184,12 +184,12 @@ namespace sequoia::testing
         more of the trials than a tenth of them, rounded up. Otherwise the
         speed-ups net of the baselines are judged as the other overload
         judges speed-ups, from a trimmed mean of their logarithms, with two
-        differences. That mean trims a tenth of the trials, rounded up, from
-        each end, not a tenth of the speed-ups. And every extreme lies among
+        differences: that mean trims a tenth of the trials, rounded up, from
+        each end, not a tenth of the speed-ups; and every extreme lies among
         the speed-ups it trims.
 
-        In either case, the outcome has the tasks' own durations as its
-        `task_durations`, and has the baselines' durations.
+        In either case, the outcome's `task_durations` are the tasks' own,
+        and the outcome has `baseline_durations`.
 
         \throws std::invalid_argument if `trialDurations` has fewer elements
         than `relative_performance_minimum_trials_floor`.

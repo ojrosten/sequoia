@@ -196,7 +196,7 @@ namespace sequoia::testing
                                                   .baseline = []() { spin_for(10ms); }},
                                {.prediction{.lower{3.6}, .upper{4.4}}});
 
-    check_relative_performance("Tasks of 7 ms and 13 ms, without their baselines, predicted [3.6, 4.4]",
+    check_relative_performance("Tasks of 7 ms and 13 ms, without baselines, predicted [3.6, 4.4]",
                                []() { spin_for(7ms); },
                                []() { spin_for(13ms); },
                                {.prediction{.lower{3.6}, .upper{4.4}}});
@@ -412,9 +412,9 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("Tasks of 2 ms and 6 ms, with baselines which do nothing, predicted [2.5, 3.5]",
-                               task_with_baseline{.task = []() { spin_for(2ms); }, .baseline = []() {}},
-                               task_with_baseline{.task = []() { spin_for(6ms); }, .baseline = []() {}},
+    check_relative_performance("Tasks of 4 ms and 12 ms, with baselines which do nothing, predicted [2.5, 3.5]",
+                               task_with_baseline{.task = []() { spin_for(4ms); },  .baseline = []() {}},
+                               task_with_baseline{.task = []() { spin_for(12ms); }, .baseline = []() {}},
                                {.prediction{.lower{2.5}, .upper{3.5}}});
   }
 
@@ -484,8 +484,8 @@ namespace sequoia::testing
 
     // The trim drops one trial from each end of the floor's number of
     // trials, and two from each end of fifteen.
-    constexpr std::size_t trialsAtFloor            {relative_performance_minimum_trials_floor},
-                          trialsTrimmedTwoAtEachEnd{15};
+    constexpr std::size_t trialsAtFloor                  {relative_performance_minimum_trials_floor},
+                          trialsWithTwoTrimmedFromEachEnd{15};
 
     // Net of the baselines, the speed-up is 8. Without them it is 3. With the
     // baselines exchanged it is 3.5; with the fast baseline taken from both
@@ -494,7 +494,8 @@ namespace sequoia::testing
 
     // A task shorter than its baseline has a negative duration net of the
     // baseline. If both tasks are shorter than their baselines, the ratio of
-    // the slow task's net duration to the fast task's is positive.
+    // the slow task's net duration to the fast task's is positive, and the
+    // trial still counts at each end.
     constexpr durations_with_baselines
       fastAsLongAsBaseline    {.fast{.task{2s}, .baseline{2s}}, .slow{typical.slow}},
       slowAsLongAsBaseline    {.fast{typical.fast},             .slow{.task{2s},  .baseline{2s}}},
@@ -557,10 +558,10 @@ namespace sequoia::testing
       }
     }
 
-    // `relation` is "as long as" or "shorter than". The fixtures' speed-ups
-    // are 4, 8 and 16, so each expected speed-up is 2 raised to a mean of 2,
-    // 3 and 4.
-    auto checkTasksNoLongerThanBaselines{
+    // `relation` is "as long as" or "shorter than". Every finite speed-up is
+    // 4, 8 or 16, which is 2 to the power 2, 3 or 4. So each expected
+    // speed-up is 2 to the power of the mean of the exponents the trim keeps.
+    auto checkJudgementsWithTasksNoLongerThanBaselines{
       [&](std::string_view relation,
           durations_with_baselines fastNoLongerThanBaseline,
           durations_with_baselines slowNoLongerThanBaseline,
@@ -593,14 +594,14 @@ namespace sequoia::testing
                      {fastNoLongerThanBaseline, slowNoLongerThanBaseline},
                      8.0);
 
-        checkSpeedup(std::format("The trim drops a trial with both tasks {} their baselines at each end, "
-                                 "and the lowest and highest speed-ups",
+        checkSpeedup(std::format("A trial with both tasks {} their baselines fills one trimmed place at "
+                                 "each end, so the trim keeps the lowest and highest speed-ups",
                                  relation),
                      {bothNoLongerThanBaselines, speedupOf4, speedupOf16},
                      8.0);
 
-        checkSpeedup(std::format("The trim drops a trial with both tasks {} their baselines at each end, "
-                                 "and keeps the highest speed-up",
+        checkSpeedup(std::format("A trial with both tasks {} their baselines fills one trimmed place at "
+                                 "each end, so the trim keeps the highest speed-up",
                                  relation),
                      {bothNoLongerThanBaselines, speedupOf16},
                      std::exp2(28.0 / 9.0));
@@ -642,31 +643,34 @@ namespace sequoia::testing
       }
     };
 
-    checkTasksNoLongerThanBaselines("as long as", fastAsLongAsBaseline, slowAsLongAsBaseline, bothAsLongAsBaselines);
+    checkJudgementsWithTasksNoLongerThanBaselines("as long as",
+                                                  fastAsLongAsBaseline,
+                                                  slowAsLongAsBaseline,
+                                                  bothAsLongAsBaselines);
 
-    checkTasksNoLongerThanBaselines("shorter than",
-                                    fastShorterThanBaseline,
-                                    slowShorterThanBaseline,
-                                    bothShorterThanBaselines);
+    checkJudgementsWithTasksNoLongerThanBaselines("shorter than",
+                                                  fastShorterThanBaseline,
+                                                  slowShorterThanBaseline,
+                                                  bothShorterThanBaselines);
 
     check("Two trials in fifteen with a fast task as long as its baseline lie within the trim",
-          !judge(trials_with_atypical(trialsTrimmedTwoAtEachEnd,
+          !judge(trials_with_atypical(trialsWithTwoTrimmedFromEachEnd,
                                       typical,
                                       {fastAsLongAsBaseline, fastAsLongAsBaseline})).failure.has_value());
 
     check("Three trials in fifteen with a fast task as long as its baseline exceed the trim",
-          judge(trials_with_atypical(trialsTrimmedTwoAtEachEnd,
+          judge(trials_with_atypical(trialsWithTwoTrimmedFromEachEnd,
                                      typical,
                                      {fastAsLongAsBaseline, fastAsLongAsBaseline, fastAsLongAsBaseline})).failure
             == fast_task_too_often_no_longer_than_baseline);
 
     check("Two trials in fifteen with a slow task as long as its baseline lie within the trim",
-          !judge(trials_with_atypical(trialsTrimmedTwoAtEachEnd,
+          !judge(trials_with_atypical(trialsWithTwoTrimmedFromEachEnd,
                                       typical,
                                       {slowAsLongAsBaseline, slowAsLongAsBaseline})).failure.has_value());
 
     check("Three trials in fifteen with a slow task as long as its baseline exceed the trim",
-          judge(trials_with_atypical(trialsTrimmedTwoAtEachEnd,
+          judge(trials_with_atypical(trialsWithTwoTrimmedFromEachEnd,
                                      typical,
                                      {slowAsLongAsBaseline, slowAsLongAsBaseline, slowAsLongAsBaseline})).failure
             == slow_task_too_often_no_longer_than_baseline);
@@ -720,21 +724,21 @@ namespace sequoia::testing
       // mean is 2 s. The untrimmed mean is 2.8 s, and the trimmed geometric
       // mean is sqrt(3) s.
       constexpr durations_with_baselines
-        fastBaselineOf1 {.fast{.task{2s},  .baseline{1s}},  .slow{typical.slow}},
-        fastBaselineOf3 {.fast{.task{4s},  .baseline{3s}},  .slow{typical.slow}},
-        fastBaselineOf11{.fast{.task{12s}, .baseline{11s}}, .slow{typical.slow}};
+        fastBaselineOf1s {.fast{.task{2s},  .baseline{1s}},  .slow{typical.slow}},
+        fastBaselineOf3s {.fast{.task{4s},  .baseline{3s}},  .slow{typical.slow}},
+        fastBaselineOf11s{.fast{.task{12s}, .baseline{11s}}, .slow{typical.slow}};
 
       const auto outcome{
         judge(trials_with_atypical(trialsAtFloor,
-                                   fastBaselineOf1,
-                                   {fastBaselineOf3,
-                                    fastBaselineOf3,
-                                    fastBaselineOf3,
-                                    fastBaselineOf3,
-                                    fastBaselineOf11}))
+                                   fastBaselineOf1s,
+                                   {fastBaselineOf3s,
+                                    fastBaselineOf3s,
+                                    fastBaselineOf3s,
+                                    fastBaselineOf3s,
+                                    fastBaselineOf11s}))
       };
 
-      if(check("The baseline durations are given for baselines of two durations",
+      if(check("The baseline durations are given for baselines of three durations",
                outcome.baseline_durations.has_value()))
       {
         check(within_tolerance{tolerance},

@@ -110,7 +110,7 @@ Baseline durations: fast 0.001s, slow 0.01s
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 199
-Tasks of 7 ms and 13 ms, without their baselines, predicted [3.6, 4.4]
+Tasks of 7 ms and 13 ms, without baselines, predicted [3.6, 4.4]
 
 The fast task is faster than the slow one, but by less than predicted
 Speed-up: 1.86 in [1.86, 1.86]; predicted [3.6, 4.4]
@@ -122,7 +122,7 @@ Task durations: fast 0.007s, slow 0.013s
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 215
 Two trials in ten in which the fast task takes no longer than its baseline
 
-The fast task took no longer than its baseline in more than a tenth of the trials
+The fast task took no longer than its baseline in more of the trials than a tenth of them, rounded up
 Trials: 10, attempt 1 of 3
 Task durations: fast 0.004s, slow 0.01s
 Baseline durations: fast 0.00175s, slow 0.001s
@@ -132,7 +132,7 @@ Baseline durations: fast 0.00175s, slow 0.001s
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 223
 Two trials in ten in which the slow task takes no longer than its baseline
 
-The slow task took no longer than its baseline in more than a tenth of the trials
+The slow task took no longer than its baseline in more of the trials than a tenth of them, rounded up
 Trials: 10, attempt 1 of 3
 Task durations: fast 0.004s, slow 0.01s
 Baseline durations: fast 0.001s, slow 0.0025s
@@ -142,7 +142,7 @@ Baseline durations: fast 0.001s, slow 0.0025s
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 231
 One trial in ten in which both tasks take no longer than their baselines, and another in which the fast task does
 
-The fast task took no longer than its baseline in more than a tenth of the trials
+The fast task took no longer than its baseline in more of the trials than a tenth of them, rounded up
 Trials: 10, attempt 1 of 3
 Task durations: fast 0.004s, slow 0.01s
 Baseline durations: fast 0.00175s, slow 0.001s
@@ -152,7 +152,7 @@ Baseline durations: fast 0.00175s, slow 0.001s
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 241
 One trial in ten in which both tasks take no longer than their baselines, and another in which the slow task does
 
-The slow task took no longer than its baseline in more than a tenth of the trials
+The slow task took no longer than its baseline in more of the trials than a tenth of them, rounded up
 Trials: 10, attempt 1 of 3
 Task durations: fast 0.004s, slow 0.01s
 Baseline durations: fast 0.001s, slow 0.0025s

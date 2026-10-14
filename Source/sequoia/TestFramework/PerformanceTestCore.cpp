@@ -150,8 +150,8 @@ namespace sequoia::testing
 
     /** \brief Returns the trimmed mean of each baseline's durations.
 
-        The mean is arithmetic: a baseline's duration is subtracted from its
-        task's, and may be zero, which has no logarithm.
+        The mean is arithmetic, since a baseline's duration may be zero,
+        which has no logarithm.
      */
     [[nodiscard]]
     relative_performance_durations
@@ -271,9 +271,8 @@ namespace sequoia::testing
         counts as a speed-up of infinity, and so as a logarithm unbounded
         above. A trial in which the slow task did counts as a speed-up of
         zero, and so as a logarithm unbounded below. A trial in which both
-        did has no defined speed-up, and counts at each end. These trials are
-        counted, not held, since a floating-point type need not represent
-        infinity.
+        did counts at each end. These trials are counted, not held, since a
+        floating-point type need not represent infinity.
      */
     struct speedup_logarithms
     {
@@ -311,8 +310,8 @@ namespace sequoia::testing
       };
     }
 
-    /** \brief Returns which task took no longer than its baseline in more
-               than `numTrimmed` trials, if either did.
+    /** \brief Returns the failure of the task which took no longer than its
+               baseline in more than `numTrimmed` trials, if either did.
 
         An estimate trims `numTrimmed` logarithms from each end, so each end
         may hold that many unbounded logarithms, and no more. The fast task
@@ -334,9 +333,8 @@ namespace sequoia::testing
     /** \brief Estimates the mean of `speedupLogarithms` with `numTrimmed`
                trimmed from each end, and the mean's standard error.
 
-        Requires that neither count of unbounded logarithms exceeds
-        `numTrimmed`, and that the logarithms are of more than
-        `2 * numTrimmed` trials. So some logarithm is finite.
+        Requires that some logarithm is finite, and that neither count of
+        unbounded logarithms exceeds `numTrimmed`.
 
         Each unbounded logarithm lies within the trim. The trim drops it,
         and winsorizing replaces it with the nearest logarithm kept, so only
@@ -466,11 +464,10 @@ namespace sequoia::testing
           .baseline_durations{typicalBaselineDurations}
         };
 
-      // At most 2 * numTrimmed trials have an unbounded logarithm. Twice a
-      // tenth of the trials, rounded up, is fewer than the trials whenever
-      // there are three or more, as there are if the floor passes this
-      // assertion. So some logarithm is finite, as estimate_trimmed_mean
-      // requires.
+      // At most 2 * numTrimmed trials have an unbounded logarithm, and
+      // 2 * num_trimmed_from_each_end(n) < n for every n from three up. The
+      // floor passes this assertion only if it is three or more, so some
+      // logarithm is finite, as estimate_trimmed_mean requires.
       static_assert(relative_performance_minimum_trials_floor
                       > 2 * num_trimmed_from_each_end(relative_performance_minimum_trials_floor));
 

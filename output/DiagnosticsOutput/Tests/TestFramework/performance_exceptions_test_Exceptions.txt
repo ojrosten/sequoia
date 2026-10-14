@@ -214,7 +214,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 275
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 280
 More atypical trials than trials
 
 Expected Exception Type:
