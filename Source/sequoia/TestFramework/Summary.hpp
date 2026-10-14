@@ -67,6 +67,9 @@ namespace sequoia::testing
   {
     durations_of_tests    spent_in_tests{};
     log_summary::duration scheduling_overhead{};
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const critical_path_durations&, const critical_path_durations&) noexcept = default;
   };
 
   /** \brief The durations reported for a run of tests.
@@ -78,6 +81,9 @@ namespace sequoia::testing
   {
     log_summary::duration   total_run_time{};
     critical_path_durations critical_path{};
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const durations_of_run&, const durations_of_run&) noexcept = default;
   };
 
   struct stringified_duration

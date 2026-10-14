@@ -333,9 +333,9 @@ namespace sequoia::testing
       runner_overhead{};
 
     [[nodiscard]]
-    duration total() const noexcept { return execution_duration + runner_overhead; }
+    constexpr duration total() const noexcept { return execution_duration + runner_overhead; }
 
-    durations_of_tests& operator+=(const durations_of_tests& rhs) noexcept
+    constexpr durations_of_tests& operator+=(const durations_of_tests& rhs) noexcept
     {
       execution_duration += rhs.execution_duration;
       runner_overhead    += rhs.runner_overhead;
@@ -343,11 +343,14 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    friend durations_of_tests operator+(durations_of_tests lhs, const durations_of_tests& rhs) noexcept
+    friend constexpr durations_of_tests operator+(durations_of_tests lhs, const durations_of_tests& rhs) noexcept
     {
       lhs += rhs;
       return lhs;
     }
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const durations_of_tests&, const durations_of_tests&) noexcept = default;
   };
 
   class log_summary

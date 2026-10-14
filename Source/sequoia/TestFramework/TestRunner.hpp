@@ -132,6 +132,9 @@ namespace sequoia::testing
   {
     std::thread::id    thread_id{};
     durations_of_tests durations{};
+
+    [[nodiscard]]
+    friend bool operator==(const execution_info&, const execution_info&) noexcept = default;
   };
 
   /** \brief Divides `wallClock`, the wall clock of an execution of tests,
