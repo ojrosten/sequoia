@@ -97,7 +97,7 @@ namespace sequoia::testing
       `check_relative_performance` judges the ratio of the tasks' durations
       net of their baselines'. A baseline typically does what its task does
       except the work whose speed is in question, so that the difference
-      between their durations times that work alone. A baseline may do
+      between their durations measures that work alone. A baseline may do
       nothing at all.
    */
   template<class Task, class Baseline>
@@ -175,17 +175,21 @@ namespace sequoia::testing
                their baselines, from their durations in each trial of one
                attempt.
 
-        A trial in which a task's duration does not exceed its baseline's
-        counts as an extreme speed-up: infinite if the task is the fast one,
-        and zero if it is the slow one. A trial in which neither task's
-        duration exceeds its baseline's counts as both extremes.
+        A trial in which a task takes no longer than its baseline counts as
+        an extreme speed-up: infinite if the task is the fast one, and zero
+        if it is the slow one. A trial in which both tasks do counts as both
+        extremes, and so as two of the speed-ups which the estimate reads.
 
         The outcome is a failure with no estimate if either extreme occurs in
-        more than a tenth of the trials, rounded up. Otherwise the outcome is
-        the other overload's for the tasks' durations net of their
-        baselines', with each extreme among the outliers which the estimate
-        trims, and with the tasks' own durations as its `task_durations`. In
-        either case, the outcome has the baselines' durations.
+        more of the trials than a tenth of them, rounded up. Otherwise the
+        speed-ups net of the baselines are judged as the other overload
+        judges speed-ups, from a trimmed mean of their logarithms, with two
+        differences. That mean trims a tenth of the trials, rounded up, from
+        each end, not a tenth of the speed-ups. And every extreme lies among
+        the speed-ups it trims.
+
+        In either case, the outcome has the tasks' own durations as its
+        `task_durations`, and has the baselines' durations.
 
         \throws std::invalid_argument if `trialDurations` has fewer elements
         than `relative_performance_minimum_trials_floor`.
@@ -206,7 +210,7 @@ namespace sequoia::testing
         -# The speed-up, if the attempt estimated one;
         -# The number of trials, and the attempt;
         -# The task durations;
-        -# The baseline durations, if the tasks have baselines.
+        -# The baseline durations, if `outcome` has them.
      */
     [[nodiscard]]
     std::string summarize_attempt(const relative_performance_attempt_outcome& outcome,
@@ -560,13 +564,13 @@ namespace sequoia::testing
           durations net of their baselines' in each trial: `slow.task`'s
           duration less `slow.baseline`'s, over `fast.task`'s less
           `fast.baseline`'s.
-       -# A trial in which a task's duration does not exceed its baseline's
-          counts as an extreme speed-up: infinite if the task is `fast.task`,
-          and zero if it is `slow.task`. A trial in which neither task's
-          duration exceeds its baseline's counts as both extremes.
-       -# An attempt fails if either extreme occurs in more than a tenth of
-          its trials, rounded up. Otherwise the estimate discounts each
-          extreme as an outlier.
+       -# A trial in which a task takes no longer than its baseline counts as
+          an extreme speed-up: infinite if the task is `fast.task`, and zero
+          if it is `slow.task`. A trial in which both tasks do counts as both
+          extremes.
+       -# An attempt fails if either extreme occurs in more of its trials
+          than a tenth of them, rounded up. Otherwise the estimate drops each
+          extreme, as it drops other outliers.
        -# Each of the four tasks runs at most
           `parameters.minimum_trials * A * (A + 3) / 4` times.
        -# The summary also gives each baseline's typical duration. The

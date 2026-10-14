@@ -15,11 +15,14 @@
 #include <array>
 #include <chrono>
 #include <cstdint>
+#include <format>
 #include <functional>
 #include <initializer_list>
 #include <memory>
 #include <ranges>
 #include <span>
+#include <stdexcept>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -45,16 +48,24 @@ namespace sequoia::testing
     return std::ranges::fold_left(trialsOfAttempts | std::views::take(attempt - 1), 0uz, std::plus<>{});
   }
 
-  /** \brief Returns as many trials' durations as
-             `relative_performance_minimum_trials_floor`: those of `atypical`,
+  /** \brief Returns `numTrials` trials' durations: those of `atypical`,
              followed by `typical` for the rest.
+
+      \throws std::logic_error if `atypical` has more elements than
+      `numTrials`.
    */
   template<class Durations>
   [[nodiscard]]
-  constexpr auto trials_with_atypical(Durations typical, std::initializer_list<Durations> atypical)
+  std::vector<Durations> trials_with_atypical(std::size_t numTrials,
+                                              Durations typical,
+                                              std::initializer_list<Durations> atypical)
   {
-    std::array<Durations, relative_performance_minimum_trials_floor> durations{};
-    durations.fill(typical);
+    if(atypical.size() > numTrials)
+      throw std::logic_error{
+        std::format("{} atypical trials exceed the {} trials", atypical.size(), numTrials)
+      };
+
+    std::vector<Durations> durations(numTrials, typical);
     std::ranges::copy(atypical, durations.begin());
     return durations;
   }

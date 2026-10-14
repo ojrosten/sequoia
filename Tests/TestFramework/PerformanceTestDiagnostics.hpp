@@ -68,7 +68,7 @@ namespace sequoia::testing
 
     void test_tasks_no_longer_than_baselines();
 
-    void test_empty_baselines();
+    void test_baselines_doing_nothing();
   };
 
   class performance_utilities_test final : public free_test

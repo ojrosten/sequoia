@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <cmath>
 #include <format>
+#include <functional>
 #include <ranges>
 
 namespace sequoia::testing
@@ -126,10 +127,10 @@ namespace sequoia::testing
     }
 
     /** \brief Returns `average` of the fast durations, and of the slow. */
-    template<class Average>
+    template<class Averager>
     [[nodiscard]]
     relative_performance_durations typical_durations(std::span<const relative_performance_durations> trialDurations,
-                                                     Average average)
+                                                     Averager average)
     {
       auto fastOf{[](relative_performance_durations durations) { return durations.fast; }};
       auto slowOf{[](relative_performance_durations durations) { return durations.slow; }};
@@ -149,9 +150,8 @@ namespace sequoia::testing
 
     /** \brief Returns the trimmed mean of each baseline's durations.
 
-        Unlike a task's typical duration, the mean is arithmetic. A
-        baseline's durations are subtracted from its task's, not divided into
-        them, and may be zero, which has no logarithm.
+        The mean is arithmetic: a baseline's duration is subtracted from its
+        task's, and may be zero, which has no logarithm.
      */
     [[nodiscard]]
     relative_performance_durations
@@ -164,6 +164,12 @@ namespace sequoia::testing
     constexpr bool is_positive(std::chrono::duration<double> duration) noexcept
     {
       return duration > std::chrono::duration<double>::zero();
+    }
+
+    [[nodiscard]]
+    constexpr bool both_positive(relative_performance_durations durations) noexcept
+    {
+      return is_positive(durations.fast) && is_positive(durations.slow);
     }
 
     /** \brief Returns the logarithm of the slow duration over the fast. */
@@ -236,20 +242,16 @@ namespace sequoia::testing
         };
     }
 
-    void throw_if_any_duration_not_positive(std::span<const relative_performance_durations> trialDurations)
+    void throw_if_any_task_duration_not_positive(std::span<const relative_performance_durations> trialDurations)
     {
-      auto eitherNotPositive{
-        [](relative_performance_durations durations) {
-          return !is_positive(durations.fast) || !is_positive(durations.slow);
-        }
-      };
+      auto bothPositive{[](relative_performance_durations durations) { return both_positive(durations); }};
 
-      if(std::ranges::any_of(trialDurations, eitherNotPositive))
+      if(!std::ranges::all_of(trialDurations, bothPositive))
         throw std::runtime_error{"Relative performance test requires task durations > 0; "
                                  "a task too quick for the clock times as zero"};
     }
 
-    void throw_if_any_duration_negative(std::span<const relative_performance_durations> trialDurations)
+    void throw_if_any_baseline_duration_negative(std::span<const relative_performance_durations> trialDurations)
     {
       auto eitherNegative{
         [](relative_performance_durations durations) {
@@ -269,8 +271,9 @@ namespace sequoia::testing
         counts as a speed-up of infinity, and so as a logarithm unbounded
         above. A trial in which the slow task did counts as a speed-up of
         zero, and so as a logarithm unbounded below. A trial in which both
-        did has no sign, and counts at each end. These trials are counted,
-        not held, since a floating-point type need not represent infinity.
+        did has no defined speed-up, and counts at each end. These trials are
+        counted, not held, since a floating-point type need not represent
+        infinity.
      */
     struct speedup_logarithms
     {
@@ -285,18 +288,14 @@ namespace sequoia::testing
     [[nodiscard]]
     speedup_logarithms speedup_logarithms_of(std::span<const relative_performance_durations> netDurations)
     {
-      auto bothPositive{
-        [](relative_performance_durations durations) {
-          return is_positive(durations.fast) && is_positive(durations.slow);
-        }
-      };
+      auto bothPositive{[](relative_performance_durations durations) { return both_positive(durations); }};
+      auto isPositive  {[](std::chrono::duration<double> duration)    { return is_positive(duration); }};
 
       auto speedupLogarithmOf{[](relative_performance_durations durations) { return speedup_logarithm(durations); }};
 
       auto numNotPositive{
-        [netDurations](auto projection) {
-          auto notPositive{[](std::chrono::duration<double> duration) { return !is_positive(duration); }};
-          return static_cast<std::size_t>(std::ranges::count_if(netDurations, notPositive, projection));
+        [netDurations, isPositive](auto projection) {
+          return static_cast<std::size_t>(std::ranges::count_if(netDurations, std::not_fn(isPositive), projection));
         }
       };
 
@@ -312,12 +311,12 @@ namespace sequoia::testing
       };
     }
 
-    /** \brief Returns why the tasks took no longer than their baselines in
-               too many trials, if they did.
+    /** \brief Returns which task took no longer than its baseline in more
+               than `numTrimmed` trials, if either did.
 
         An estimate trims `numTrimmed` logarithms from each end, so each end
-        may hold that many unbounded logarithms, and no more. The fast task's
-        reason takes precedence over the slow task's.
+        may hold that many unbounded logarithms, and no more. The fast task
+        takes precedence over the slow task.
      */
     [[nodiscard]]
     std::optional<relative_performance_failure>
@@ -335,10 +334,11 @@ namespace sequoia::testing
     /** \brief Estimates the mean of `speedupLogarithms` with `numTrimmed`
                trimmed from each end, and the mean's standard error.
 
-        Requires that some logarithm is finite, and that neither count of
-        unbounded logarithms exceeds `numTrimmed`.
+        Requires that neither count of unbounded logarithms exceeds
+        `numTrimmed`, and that the logarithms are of more than
+        `2 * numTrimmed` trials. So some logarithm is finite.
 
-        So each unbounded logarithm lies within the trim. The trim drops it,
+        Each unbounded logarithm lies within the trim. The trim drops it,
         and winsorizing replaces it with the nearest logarithm kept, so only
         its place enters the estimate, not its value. The least finite
         logarithm therefore stands in for each one unbounded below, and the
@@ -389,18 +389,18 @@ namespace sequoia::testing
                                                        relative_performance_interval prediction)
     {
       throw_if_too_few_trials(trialDurations.size());
-      throw_if_any_duration_not_positive(trialDurations);
+      throw_if_any_task_duration_not_positive(trialDurations);
 
       auto speedupLogarithmOf{[](relative_performance_durations durations) { return speedup_logarithm(durations); }};
 
-      auto speedupLogarithms{
+      auto trialSpeedupLogarithms{
           trialDurations
         | std::views::transform(speedupLogarithmOf)
         | std::ranges::to<std::vector>()
       };
 
       const auto [failure, estimate]{
-        judge_speedup(estimate_trimmed_mean(std::move(speedupLogarithms)), overlapMultiplier, prediction)
+        judge_speedup(estimate_trimmed_mean(std::move(trialSpeedupLogarithms)), overlapMultiplier, prediction)
       };
 
       return {.failure{failure}, .estimate{estimate}, .task_durations{typical_task_durations(trialDurations)}};
@@ -447,16 +447,15 @@ namespace sequoia::testing
       const auto taskDurations    {transformedTrials(tasksOf)},
                  baselineDurations{transformedTrials(baselinesOf)};
 
-      throw_if_any_duration_not_positive(taskDurations);
-      throw_if_any_duration_negative(baselineDurations);
+      throw_if_any_task_duration_not_positive(taskDurations);
+      throw_if_any_baseline_duration_negative(baselineDurations);
 
       const auto typicalTaskDurations    {typical_task_durations(taskDurations)},
                  typicalBaselineDurations{typical_baseline_durations(baselineDurations)};
 
-      // A trial in which a task took no longer than its baseline is not
-      // dropped. The trial counts as an extreme logarithm, which the trim
-      // drops as it drops any outlier, so the trial adds no bias beyond the
-      // trim's own.
+      // A trial in which a task took no longer than its baseline is kept, as
+      // an extreme logarithm. The trim removes it as it removes any outlier,
+      // so the trial adds no bias beyond the trim's own.
       auto speedupLogarithms{speedup_logarithms_of(transformedTrials(netOf))};
       const auto numTrimmed{num_trimmed_from_each_end(trialDurations.size())};
 
@@ -466,6 +465,14 @@ namespace sequoia::testing
           .task_durations{typicalTaskDurations},
           .baseline_durations{typicalBaselineDurations}
         };
+
+      // At most 2 * numTrimmed trials have an unbounded logarithm. Twice a
+      // tenth of the trials, rounded up, is fewer than the trials whenever
+      // there are three or more, as there are if the floor passes this
+      // assertion. So some logarithm is finite, as estimate_trimmed_mean
+      // requires.
+      static_assert(relative_performance_minimum_trials_floor
+                      > 2 * num_trimmed_from_each_end(relative_performance_minimum_trials_floor));
 
       const auto [failure, estimate]{
         judge_speedup(estimate_trimmed_mean(std::move(speedupLogarithms), numTrimmed), overlapMultiplier, prediction)

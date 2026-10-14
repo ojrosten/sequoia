@@ -217,7 +217,11 @@ namespace sequoia::testing
         return [trial]() {
           // As many trials as the floor, so only a duration can be refused.
           constexpr relative_performance_durations typical{.fast{1s}, .slow{1s}};
-          return impl::judge_attempt(trials_with_atypical(typical, {trial}), 1.0, {.lower{2.0}, .upper{3.0}});
+          return impl::judge_attempt(
+                   trials_with_atypical(relative_performance_minimum_trials_floor, typical, {trial}),
+                   1.0,
+                   {.lower{2.0}, .upper{3.0}}
+                 );
         };
       }
     };
@@ -230,7 +234,11 @@ namespace sequoia::testing
           constexpr impl::relative_performance_durations_with_baselines
             typical{.fast{.task{2s}, .baseline{1s}}, .slow{.task{2s}, .baseline{1s}}};
 
-          return impl::judge_attempt(trials_with_atypical(typical, {trial}), 1.0, {.lower{2.0}, .upper{3.0}});
+          return impl::judge_attempt(
+                   trials_with_atypical(relative_performance_minimum_trials_floor, typical, {trial}),
+                   1.0,
+                   {.lower{2.0}, .upper{3.0}}
+                 );
         };
       }
     };

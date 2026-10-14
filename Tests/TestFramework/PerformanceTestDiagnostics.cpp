@@ -12,8 +12,11 @@
 
 #include <array>
 #include <chrono>
+#include <cmath>
+#include <format>
 #include <limits>
 #include <memory>
+#include <string_view>
 #include <utility>
 
 namespace sequoia::testing
@@ -185,14 +188,16 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("Tasks of 2 ms and 8 ms, with baselines of 1 ms and 6 ms, predicted [3.6, 4.4]",
-                               task_with_baseline{.task = []() { spin_for(2ms); }, .baseline = []() { spin_for(1ms); }},
-                               task_with_baseline{.task = []() { spin_for(8ms); }, .baseline = []() { spin_for(6ms); }},
+    check_relative_performance("Tasks of 4 ms and 16 ms, with baselines of 1 ms and 10 ms, predicted [3.6, 4.4]",
+                               task_with_baseline{.task     = []() { spin_for(4ms); },
+                                                  .baseline = []() { spin_for(1ms); }},
+                               task_with_baseline{.task     = []() { spin_for(16ms); },
+                                                  .baseline = []() { spin_for(10ms); }},
                                {.prediction{.lower{3.6}, .upper{4.4}}});
 
-    check_relative_performance("Tasks of 2 ms and 6 ms, without their baselines, predicted [3.6, 4.4]",
-                               []() { spin_for(2ms); },
-                               []() { spin_for(6ms); },
+    check_relative_performance("Tasks of 7 ms and 13 ms, without their baselines, predicted [3.6, 4.4]",
+                               []() { spin_for(7ms); },
+                               []() { spin_for(13ms); },
                                {.prediction{.lower{3.6}, .upper{4.4}}});
   }
 
@@ -200,42 +205,44 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    // Net of the baselines, the tasks take 1 ms and 3 ms, except where a
-    // baseline's cycle lasts longer than its task. The first attempt has ten
-    // trials, so the trim drops one trial from each end.
+    // Net of the baselines, the tasks take 3 ms and 9 ms, except in the
+    // trials in which a baseline spins for longer than its task. The first
+    // attempt has ten trials, so the trim drops one trial from each end.
     constexpr relative_performance_parameters parameters{.prediction{.lower{2.5}, .upper{3.5}}};
 
     check_relative_performance(
       "Two trials in ten in which the fast task takes no longer than its baseline",
-      task_with_baseline{.task     = []() { spin_for(2ms); },
-                         .baseline = make_cycling_spinner({1ms, 1ms, 3ms, 1ms, 1ms, 1ms, 3ms, 1ms, 1ms, 1ms})},
-      task_with_baseline{.task = []() { spin_for(4ms); }, .baseline = []() { spin_for(1ms); }},
+      task_with_baseline{.task     = []() { spin_for(4ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 7ms, 1ms, 1ms, 1ms, 7ms, 1ms, 1ms, 1ms})},
+      task_with_baseline{.task = []() { spin_for(10ms); }, .baseline = []() { spin_for(1ms); }},
       parameters
     );
 
     check_relative_performance(
       "Two trials in ten in which the slow task takes no longer than its baseline",
-      task_with_baseline{.task = []() { spin_for(2ms); }, .baseline = []() { spin_for(1ms); }},
-      task_with_baseline{.task     = []() { spin_for(4ms); },
-                         .baseline = make_cycling_spinner({1ms, 1ms, 5ms, 1ms, 1ms, 1ms, 5ms, 1ms, 1ms, 1ms})},
+      task_with_baseline{.task = []() { spin_for(4ms); }, .baseline = []() { spin_for(1ms); }},
+      task_with_baseline{.task     = []() { spin_for(10ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 13ms, 1ms, 1ms, 1ms, 13ms, 1ms, 1ms, 1ms})},
       parameters
     );
 
     check_relative_performance(
-      "One trial in ten in which both tasks, and another in which the fast task, take no longer than their baselines",
-      task_with_baseline{.task     = []() { spin_for(2ms); },
-                         .baseline = make_cycling_spinner({1ms, 1ms, 3ms, 1ms, 1ms, 1ms, 3ms, 1ms, 1ms, 1ms})},
+      "One trial in ten in which both tasks take no longer than their baselines, "
+      "and another in which the fast task does",
       task_with_baseline{.task     = []() { spin_for(4ms); },
-                         .baseline = make_cycling_spinner({1ms, 1ms, 5ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+                         .baseline = make_cycling_spinner({1ms, 1ms, 7ms, 1ms, 1ms, 1ms, 7ms, 1ms, 1ms, 1ms})},
+      task_with_baseline{.task     = []() { spin_for(10ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 13ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
       parameters
     );
 
     check_relative_performance(
-      "One trial in ten in which both tasks, and another in which the slow task, take no longer than their baselines",
-      task_with_baseline{.task     = []() { spin_for(2ms); },
-                         .baseline = make_cycling_spinner({1ms, 1ms, 3ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+      "One trial in ten in which both tasks take no longer than their baselines, "
+      "and another in which the slow task does",
       task_with_baseline{.task     = []() { spin_for(4ms); },
-                         .baseline = make_cycling_spinner({1ms, 1ms, 5ms, 1ms, 1ms, 1ms, 5ms, 1ms, 1ms, 1ms})},
+                         .baseline = make_cycling_spinner({1ms, 1ms, 7ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+      task_with_baseline{.task     = []() { spin_for(10ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 13ms, 1ms, 1ms, 1ms, 13ms, 1ms, 1ms, 1ms})},
       parameters
     );
   }
@@ -250,8 +257,8 @@ namespace sequoia::testing
 
     check_relative_performance(
       "Baselines of 1 ms; net of them, a speed-up of 2, then of 0.5, then of 2",
-      task_with_baseline{.task = counted_spinner{2ms, trials_for_minimum_10[0], 5ms}, .baseline = baseline},
-      task_with_baseline{.task = counted_spinner{3ms, trials_before_attempt(trials_for_minimum_10, 3), 9ms},
+      task_with_baseline{.task = counted_spinner{4ms, trials_for_minimum_10[0], 13ms}, .baseline = baseline},
+      task_with_baseline{.task = counted_spinner{7ms, trials_before_attempt(trials_for_minimum_10, 3), 25ms},
                          .baseline = baseline},
       parameters
     );
@@ -276,7 +283,7 @@ namespace sequoia::testing
     test_computations_not_optimized_away();
     test_relative_performance_with_baselines();
     test_tasks_no_longer_than_baselines();
-    test_empty_baselines();
+    test_baselines_doing_nothing();
   }
 
   void performance_false_positive_diagnostics::test_relative_performance()
@@ -347,9 +354,11 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("Tasks of 2 ms and 6 ms, with baselines of 1 ms and 2 ms, predicted [3.6, 4.4]",
-                               task_with_baseline{.task = []() { spin_for(2ms); }, .baseline = []() { spin_for(1ms); }},
-                               task_with_baseline{.task = []() { spin_for(6ms); }, .baseline = []() { spin_for(2ms); }},
+    check_relative_performance("Tasks of 7 ms and 13 ms, with baselines of 4 ms and 1 ms, predicted [3.6, 4.4]",
+                               task_with_baseline{.task     = []() { spin_for(7ms); },
+                                                  .baseline = []() { spin_for(4ms); }},
+                               task_with_baseline{.task     = []() { spin_for(13ms); },
+                                                  .baseline = []() { spin_for(1ms); }},
                                {.prediction{.lower{3.6}, .upper{4.4}}});
   }
 
@@ -357,51 +366,52 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    // Net of the baselines, the tasks take 1 ms and 3 ms, except where a
-    // baseline's cycle lasts longer than its task. The first attempt has ten
-    // trials, so the trim drops one trial from each end.
+    // Net of the baselines, the tasks take 3 ms and 9 ms, except in the
+    // trials in which a baseline spins for longer than its task. The first
+    // attempt has ten trials, so the trim drops one trial from each end.
     constexpr relative_performance_parameters parameters{.prediction{.lower{2.5}, .upper{3.5}}};
 
     check_relative_performance(
       "One trial in ten in which the fast task takes no longer than its baseline",
-      task_with_baseline{.task     = []() { spin_for(2ms); },
-                         .baseline = make_cycling_spinner({1ms, 1ms, 3ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
-      task_with_baseline{.task = []() { spin_for(4ms); }, .baseline = []() { spin_for(1ms); }},
+      task_with_baseline{.task     = []() { spin_for(4ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 7ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+      task_with_baseline{.task = []() { spin_for(10ms); }, .baseline = []() { spin_for(1ms); }},
       parameters
     );
 
     check_relative_performance(
       "One trial in ten in which the slow task takes no longer than its baseline",
-      task_with_baseline{.task = []() { spin_for(2ms); }, .baseline = []() { spin_for(1ms); }},
-      task_with_baseline{.task     = []() { spin_for(4ms); },
-                         .baseline = make_cycling_spinner({1ms, 1ms, 5ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+      task_with_baseline{.task = []() { spin_for(4ms); }, .baseline = []() { spin_for(1ms); }},
+      task_with_baseline{.task     = []() { spin_for(10ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 13ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
       parameters
     );
 
     check_relative_performance(
-      "One trial in ten in which the fast task, and another in which the slow task, takes no longer than its baseline",
-      task_with_baseline{.task     = []() { spin_for(2ms); },
-                         .baseline = make_cycling_spinner({1ms, 1ms, 3ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+      "One trial in ten in which the fast task takes no longer than its baseline, "
+      "and another in which the slow task does",
       task_with_baseline{.task     = []() { spin_for(4ms); },
-                         .baseline = make_cycling_spinner({1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 5ms, 1ms, 1ms, 1ms})},
+                         .baseline = make_cycling_spinner({1ms, 1ms, 7ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+      task_with_baseline{.task     = []() { spin_for(10ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 13ms, 1ms, 1ms, 1ms})},
       parameters
     );
 
     check_relative_performance(
       "One trial in ten in which both tasks take no longer than their baselines",
-      task_with_baseline{.task     = []() { spin_for(2ms); },
-                         .baseline = make_cycling_spinner({1ms, 1ms, 3ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
       task_with_baseline{.task     = []() { spin_for(4ms); },
-                         .baseline = make_cycling_spinner({1ms, 1ms, 5ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+                         .baseline = make_cycling_spinner({1ms, 1ms, 7ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+      task_with_baseline{.task     = []() { spin_for(10ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 13ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
       parameters
     );
   }
 
-  void performance_false_positive_diagnostics::test_empty_baselines()
+  void performance_false_positive_diagnostics::test_baselines_doing_nothing()
   {
     using namespace std::chrono_literals;
 
-    check_relative_performance("Tasks of 2 ms and 6 ms, with empty baselines, predicted [2.5, 3.5]",
+    check_relative_performance("Tasks of 2 ms and 6 ms, with baselines which do nothing, predicted [2.5, 3.5]",
                                task_with_baseline{.task = []() { spin_for(2ms); }, .baseline = []() {}},
                                task_with_baseline{.task = []() { spin_for(6ms); }, .baseline = []() {}},
                                {.prediction{.lower{2.5}, .upper{3.5}}});
@@ -471,19 +481,28 @@ namespace sequoia::testing
     constexpr relative_performance_interval prediction{.lower{7.5}, .upper{8.5}};
     constexpr double tolerance{1e-12};
 
+    // The trim drops one trial from each end of the floor's number of
+    // trials, and two from each end of fifteen.
+    constexpr std::size_t floorTrials      {relative_performance_minimum_trials_floor},
+                          trialsTrimmingTwo{15};
+
     // Net of the baselines, the speed-up is 8. Without them it is 3. With the
     // baselines exchanged it is 3.5; with the fast baseline taken from both
     // tasks it is 7, and with the slow baseline taken from both it is 4.
     constexpr durations_with_baselines typical{.fast{.task{3s}, .baseline{2s}}, .slow{.task{9s}, .baseline{1s}}};
 
-    // Each attempt judged here has as many trials as the floor, so the trim
-    // drops one trial from each end.
+    // A task shorter than its baseline has a negative duration net of the
+    // baseline. If both tasks are shorter than their baselines, the ratio of
+    // the slow task's net duration to the fast task's is positive.
     constexpr durations_with_baselines
-      fastAsLongAsBaseline {.fast{.task{2s}, .baseline{2s}}, .slow{typical.slow}},
-      slowAsLongAsBaseline {.fast{typical.fast},             .slow{.task{2s},  .baseline{2s}}},
-      bothAsLongAsBaselines{.fast{.task{2s}, .baseline{2s}}, .slow{.task{2s},  .baseline{2s}}},
-      speedupOf4           {.fast{typical.fast},             .slow{.task{5s},  .baseline{1s}}},
-      speedupOf16          {.fast{typical.fast},             .slow{.task{17s}, .baseline{1s}}};
+      fastAsLongAsBaseline    {.fast{.task{2s}, .baseline{2s}}, .slow{typical.slow}},
+      slowAsLongAsBaseline    {.fast{typical.fast},             .slow{.task{2s},  .baseline{2s}}},
+      bothAsLongAsBaselines   {.fast{.task{2s}, .baseline{2s}}, .slow{.task{2s},  .baseline{2s}}},
+      fastShorterThanBaseline {.fast{.task{1s}, .baseline{2s}}, .slow{typical.slow}},
+      slowShorterThanBaseline {.fast{typical.fast},             .slow{.task{1s},  .baseline{3s}}},
+      bothShorterThanBaselines{.fast{.task{1s}, .baseline{2s}}, .slow{.task{1s},  .baseline{3s}}},
+      speedupOf4              {.fast{typical.fast},             .slow{.task{5s},  .baseline{1s}}},
+      speedupOf16             {.fast{typical.fast},             .slow{.task{17s}, .baseline{1s}}};
 
     auto judge{
       [prediction](std::span<const durations_with_baselines> trialDurations) {
@@ -504,7 +523,7 @@ namespace sequoia::testing
     };
 
     {
-      const auto outcome{judge(trials_with_atypical(typical, {}))};
+      const auto outcome{judge(trials_with_atypical(floorTrials, typical, {}))};
 
       check("No failure net of the baselines", !outcome.failure.has_value());
 
@@ -529,63 +548,126 @@ namespace sequoia::testing
       }
     }
 
-    checkSpeedup("The trim drops one trial with a fast task as long as its baseline, and the lowest speed-up",
-                 trials_with_atypical(typical, {fastAsLongAsBaseline, speedupOf4}),
-                 8.0);
+    // `relation` is "as long as" or "shorter than". The fixtures' speed-ups
+    // are 4, 8 and 16, so each expected speed-up is 2 raised to a mean of 2,
+    // 3 and 4.
+    auto checkTasksNoLongerThanBaselines{
+      [&](std::string_view relation,
+          durations_with_baselines fastNoLonger,
+          durations_with_baselines slowNoLonger,
+          durations_with_baselines bothNoLonger) {
+        checkSpeedup(std::format("The trim drops a trial with a fast task {} its baseline, "
+                                 "and the lowest speed-up",
+                                 relation),
+                     trials_with_atypical(floorTrials, typical, {fastNoLonger, speedupOf4}),
+                     8.0);
 
-    checkSpeedup("The trim drops one trial with a slow task as long as its baseline, and the highest speed-up",
-                 trials_with_atypical(typical, {slowAsLongAsBaseline, speedupOf16}),
-                 8.0);
+        checkSpeedup(std::format("The trim drops a trial with a fast task {} its baseline, "
+                                 "and keeps the highest speed-up",
+                                 relation),
+                     trials_with_atypical(floorTrials, typical, {fastNoLonger, speedupOf16}),
+                     std::exp2(25.0 / 8.0));
 
-    checkSpeedup("The trim drops one trial with each task as long as its baseline",
-                 trials_with_atypical(typical, {fastAsLongAsBaseline, slowAsLongAsBaseline}),
-                 8.0);
+        checkSpeedup(std::format("The trim drops a trial with a slow task {} its baseline, "
+                                 "and the highest speed-up",
+                                 relation),
+                     trials_with_atypical(floorTrials, typical, {slowNoLonger, speedupOf16}),
+                     8.0);
 
-    checkSpeedup("The trim drops a trial with both tasks as long as their baselines, at each end",
-                 trials_with_atypical(typical, {bothAsLongAsBaselines, speedupOf4, speedupOf16}),
-                 8.0);
+        checkSpeedup(std::format("The trim drops a trial with a slow task {} its baseline, "
+                                 "and keeps the lowest speed-up",
+                                 relation),
+                     trials_with_atypical(floorTrials, typical, {slowNoLonger, speedupOf4}),
+                     std::exp2(23.0 / 8.0));
 
-    {
-      const auto outcome{judge(trials_with_atypical(typical, {fastAsLongAsBaseline, fastAsLongAsBaseline}))};
+        checkSpeedup(std::format("The trim drops one trial with each task {} its baseline", relation),
+                     trials_with_atypical(floorTrials, typical, {fastNoLonger, slowNoLonger}),
+                     8.0);
 
-      check("A fast task as long as its baseline in more trials than the trim drops",
-            outcome.failure == fast_task_too_often_no_longer_than_baseline);
-      check("No estimate with a fast task too often as long as its baseline", !outcome.estimate.has_value());
-      check("The baseline durations are given with a fast task too often as long as its baseline",
-            outcome.baseline_durations.has_value());
-    }
+        checkSpeedup(std::format("The trim drops a trial with both tasks {} their baselines at each end, "
+                                 "and the lowest and highest speed-ups",
+                                 relation),
+                     trials_with_atypical(floorTrials, typical, {bothNoLonger, speedupOf4, speedupOf16}),
+                     8.0);
 
-    {
-      const auto outcome{judge(trials_with_atypical(typical, {slowAsLongAsBaseline, slowAsLongAsBaseline}))};
+        checkSpeedup(std::format("The trim drops a trial with both tasks {} their baselines at each end, "
+                                 "and keeps the highest speed-up",
+                                 relation),
+                     trials_with_atypical(floorTrials, typical, {bothNoLonger, speedupOf16}),
+                     std::exp2(28.0 / 9.0));
 
-      check("A slow task as long as its baseline in more trials than the trim drops",
-            outcome.failure == slow_task_too_often_no_longer_than_baseline);
-      check("No estimate with a slow task too often as long as its baseline", !outcome.estimate.has_value());
-    }
+        {
+          const auto outcome{judge(trials_with_atypical(floorTrials, typical, {fastNoLonger, fastNoLonger}))};
 
-    check("A trial with both tasks as long as their baselines counts against the fast task",
-          judge(trials_with_atypical(typical, {bothAsLongAsBaselines, fastAsLongAsBaseline})).failure
+          check(std::format("A fast task {} its baseline in more trials than the trim drops", relation),
+                outcome.failure == fast_task_too_often_no_longer_than_baseline);
+          check(std::format("No estimate with a fast task too often {} its baseline", relation),
+                !outcome.estimate.has_value());
+          check(std::format("The baseline durations are given with a fast task too often {} its baseline", relation),
+                outcome.baseline_durations.has_value());
+        }
+
+        {
+          const auto outcome{judge(trials_with_atypical(floorTrials, typical, {slowNoLonger, slowNoLonger}))};
+
+          check(std::format("A slow task {} its baseline in more trials than the trim drops", relation),
+                outcome.failure == slow_task_too_often_no_longer_than_baseline);
+          check(std::format("No estimate with a slow task too often {} its baseline", relation),
+                !outcome.estimate.has_value());
+        }
+
+        check(std::format("A trial with both tasks {} their baselines counts against the fast task", relation),
+              judge(trials_with_atypical(floorTrials, typical, {bothNoLonger, fastNoLonger})).failure
+                == fast_task_too_often_no_longer_than_baseline);
+
+        check(std::format("A trial with both tasks {} their baselines counts against the slow task", relation),
+              judge(trials_with_atypical(floorTrials, typical, {bothNoLonger, slowNoLonger})).failure
+                == slow_task_too_often_no_longer_than_baseline);
+
+        check(std::format("The fast task's reason takes precedence, with tasks {} their baselines", relation),
+              judge(trials_with_atypical(floorTrials,
+                                         typical,
+                                         {fastNoLonger, fastNoLonger, slowNoLonger, slowNoLonger})).failure
+                == fast_task_too_often_no_longer_than_baseline);
+      }
+    };
+
+    checkTasksNoLongerThanBaselines("as long as", fastAsLongAsBaseline, slowAsLongAsBaseline, bothAsLongAsBaselines);
+
+    checkTasksNoLongerThanBaselines("shorter than",
+                                    fastShorterThanBaseline,
+                                    slowShorterThanBaseline,
+                                    bothShorterThanBaselines);
+
+    check("Two trials in fifteen with a fast task as long as its baseline lie within the trim",
+          !judge(trials_with_atypical(trialsTrimmingTwo,
+                                      typical,
+                                      {fastAsLongAsBaseline, fastAsLongAsBaseline})).failure.has_value());
+
+    check("Three trials in fifteen with a fast task as long as its baseline exceed the trim",
+          judge(trials_with_atypical(trialsTrimmingTwo,
+                                     typical,
+                                     {fastAsLongAsBaseline, fastAsLongAsBaseline, fastAsLongAsBaseline})).failure
             == fast_task_too_often_no_longer_than_baseline);
 
-    check("A trial with both tasks as long as their baselines counts against the slow task",
-          judge(trials_with_atypical(typical, {bothAsLongAsBaselines, slowAsLongAsBaseline})).failure
+    check("Two trials in fifteen with a slow task as long as its baseline lie within the trim",
+          !judge(trials_with_atypical(trialsTrimmingTwo,
+                                      typical,
+                                      {slowAsLongAsBaseline, slowAsLongAsBaseline})).failure.has_value());
+
+    check("Three trials in fifteen with a slow task as long as its baseline exceed the trim",
+          judge(trials_with_atypical(trialsTrimmingTwo,
+                                     typical,
+                                     {slowAsLongAsBaseline, slowAsLongAsBaseline, slowAsLongAsBaseline})).failure
             == slow_task_too_often_no_longer_than_baseline);
-
-    check("The fast task's reason takes precedence",
-          judge(trials_with_atypical(typical,
-                                     {fastAsLongAsBaseline,
-                                      fastAsLongAsBaseline,
-                                      slowAsLongAsBaseline,
-                                      slowAsLongAsBaseline})).failure
-            == fast_task_too_often_no_longer_than_baseline);
 
     {
       constexpr durations_with_baselines
         noFastBaseline{.fast{.task{3s}, .baseline{0s}}, .slow{typical.slow}},
         noSlowBaseline{.fast{typical.fast},             .slow{.task{9s}, .baseline{0s}}};
 
-      const auto withoutFastBaseline{judge(trials_with_atypical(noFastBaseline, {}))},
-                 withoutSlowBaseline{judge(trials_with_atypical(noSlowBaseline, {}))};
+      const auto withoutFastBaseline{judge(trials_with_atypical(floorTrials, noFastBaseline, {}))},
+                 withoutSlowBaseline{judge(trials_with_atypical(floorTrials, noSlowBaseline, {}))};
 
       if(check("An estimate with a fast baseline of zero", withoutFastBaseline.estimate.has_value()))
       {
@@ -623,20 +705,23 @@ namespace sequoia::testing
     }
 
     {
-      // Half the trials have a fast baseline of 1 s, and half of 3 s. The
-      // fast baseline's trimmed mean is 2 s, and its trimmed geometric mean is
-      // sqrt(3) s.
+      // Five trials have a fast baseline of 1 s, four of 3 s and one of 11 s.
+      // The trim drops a trial of 1 s and the trial of 11 s, so the trimmed
+      // mean is 2 s. The untrimmed mean is 2.8 s, and the trimmed geometric
+      // mean is sqrt(3) s.
       constexpr durations_with_baselines
-        longerFastBaseline {.fast{.task{4s}, .baseline{3s}}, .slow{typical.slow}},
-        shorterFastBaseline{.fast{.task{2s}, .baseline{1s}}, .slow{typical.slow}};
+        fastBaselineOf1 {.fast{.task{2s},  .baseline{1s}},  .slow{typical.slow}},
+        fastBaselineOf3 {.fast{.task{4s},  .baseline{3s}},  .slow{typical.slow}},
+        fastBaselineOf11{.fast{.task{12s}, .baseline{11s}}, .slow{typical.slow}};
 
       const auto outcome{
-        judge(trials_with_atypical(shorterFastBaseline,
-                                   {longerFastBaseline,
-                                    longerFastBaseline,
-                                    longerFastBaseline,
-                                    longerFastBaseline,
-                                    longerFastBaseline}))
+        judge(trials_with_atypical(floorTrials,
+                                   fastBaselineOf1,
+                                   {fastBaselineOf3,
+                                    fastBaselineOf3,
+                                    fastBaselineOf3,
+                                    fastBaselineOf3,
+                                    fastBaselineOf11}))
       };
 
       if(check("The baseline durations are given for baselines of two durations",

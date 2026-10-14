@@ -79,9 +79,9 @@ namespace sequoia::testing
     switch(failure)
     {
     case relative_performance_failure::fast_task_too_often_no_longer_than_baseline:
-      return "The fast task took no longer than its baseline in more trials than an attempt allows";
+      return "The fast task took no longer than its baseline in more than a tenth of the trials";
     case relative_performance_failure::slow_task_too_often_no_longer_than_baseline:
-      return "The slow task took no longer than its baseline in more trials than an attempt allows";
+      return "The slow task took no longer than its baseline in more than a tenth of the trials";
     case relative_performance_failure::not_distinguishably_faster:
       return "The fast task is not distinguishably faster than the slow one";
     case relative_performance_failure::slower:

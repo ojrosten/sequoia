@@ -160,7 +160,7 @@ Relative performance attempt requires at least 10 trials; it has 9
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 238
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 246
 A fast task timed as zero
 
 Expected Exception Type:
@@ -169,7 +169,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 240
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 248
 A slow task timed as zero
 
 Expected Exception Type:
@@ -178,7 +178,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 242
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 250
 A negative duration
 
 Expected Exception Type:
@@ -187,7 +187,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 246
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 254
 A fast task's baseline of negative duration
 
 Expected Exception Type:
@@ -196,7 +196,7 @@ Relative performance test requires baseline durations >= 0
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 250
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 258
 A slow task's baseline of negative duration
 
 Expected Exception Type:
@@ -205,7 +205,7 @@ Relative performance test requires baseline durations >= 0
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 254
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 262
 A slow task timed as zero, beside its baseline
 
 Expected Exception Type:

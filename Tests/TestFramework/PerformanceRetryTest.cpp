@@ -191,9 +191,9 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    const counted_spinner fast{2ms},
-                          fastBaseline{3ms, trials_for_minimum_11[0], 1ms},
-                          slow{3ms},
+    const counted_spinner fast{4ms},
+                          fastBaseline{7ms, trials_for_minimum_11[0], 1ms},
+                          slow{7ms},
                           slowBaseline{1ms};
 
     check_relative_performance("The fast task is shorter than its baseline at attempt 1; "
@@ -232,9 +232,9 @@ namespace sequoia::testing
         };
 
         check_relative_performance(description,
-                                   task_with_baseline{.task     = recordedTask(task::fast,          2ms),
+                                   task_with_baseline{.task     = recordedTask(task::fast,          4ms),
                                                       .baseline = recordedTask(task::fast_baseline, 1ms)},
-                                   task_with_baseline{.task     = recordedTask(task::slow,          3ms),
+                                   task_with_baseline{.task     = recordedTask(task::slow,          7ms),
                                                       .baseline = recordedTask(task::slow_baseline, 1ms)},
                                    retry_parameters);
 
