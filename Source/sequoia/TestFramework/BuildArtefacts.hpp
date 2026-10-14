@@ -22,10 +22,12 @@ namespace sequoia::testing
   /** \brief What a build compiled: the files its record contains, and for each object file, which of
              them were read to produce it.
 
-      `files` holds the files the build's record contains - object files, sources and headers, as the
-      build spells them. A `record` holds indices into `files` as a lightweight handle for an object
-      file and the inputs used to create it. `files[object_index]` is the object file itself, with the
-      `input_indices` indexing into `files` to acquire the files from which the object was produced.
+      `files` holds the files the build's record contains - object files,
+      sources and headers, as spelled by the build. A `record` holds indices
+      into `files` as a lightweight handle for an object file and the inputs
+      used to create it. `files[object_index]` is the object file itself, with
+      the `input_indices` indexing into `files` to acquire the files from which
+      the object was produced.
 
       \pre Each file is recorded only once.
 

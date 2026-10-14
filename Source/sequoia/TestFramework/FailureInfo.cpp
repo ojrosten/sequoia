@@ -50,7 +50,7 @@ namespace sequoia::testing
                once each message is projected.
 
         `failuresFromFiles` must be sorted stably by their projected failures,
-        so that each outcome is shown as the earliest of its runs recorded it.
+        so that each outcome is shown as recorded by the earliest of its runs.
      */
     [[nodiscard]]
     std::string analyse_output(const fs::path& filename, const std::vector<run_failures>& failuresFromFiles)

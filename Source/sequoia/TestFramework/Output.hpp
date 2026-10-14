@@ -53,7 +53,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string emphasise(std::string_view s);
 
-  /** \brief The code unit `c` as a failure report shows it.
+  /** \brief The code unit `c` as shown in a failure report.
       \returns
       -# For an alert, backspace, form feed, newline, carriage return, tab, vertical tab or NUL: its escape sequence,
          in single quotes;
@@ -194,11 +194,13 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string instability_footer();
 
-  /** \brief The file and line of `loc`, the file as `path_for_reporting` gives it, then `message` beneath them. */
+  /** \brief The file and line of `loc`, the file as given by
+             `path_for_reporting`, then `message` beneath them.
+   */
   [[nodiscard]]
   std::string report_line(std::string_view message, const std::filesystem::path& repository, const std::source_location loc);
 
-  /** \brief `file` as a report shows it.
+  /** \brief `file` as shown in a report.
       \returns
       -# For a relative `file`: `file` without its leading `..` components;
       -# For an absolute `file` and an absolute `repository`: the name of the directory `repository`, followed by the
@@ -248,20 +250,25 @@ namespace sequoia::testing
     std::optional<std::source_location> m_Loc{};
   };
 
-  /** \brief Respells a type name, as `demangle(std::string)` returns it when compiled by clang, into the spelling
-             shared by every supported toolchain, so that output which names a type does not depend on the compiler.
-             The overload is chosen by compiler, but its respellings are those libc++'s names need.
+  /** \brief Respells a type name, as returned by `demangle(std::string)` when
+             compiled by clang, into the spelling shared by every supported
+             toolchain, so that output which names a type does not depend on
+             the compiler. The overload is chosen by compiler, but its
+             respellings are those libc++'s names need.
    */
   [[nodiscard]]
   std::string tidy_name(std::string name, clang_type);
 
-  /** \brief Respells a type name, as `demangle(std::string)` returns it when compiled by gcc, into the shared
-             spelling; its respellings are those libstdc++'s names need.
+  /** \brief Respells a type name, as returned by `demangle(std::string)` when
+             compiled by gcc, into the shared spelling; its respellings are
+             those libstdc++'s names need.
    */
   [[nodiscard]]
   std::string tidy_name(std::string name, gcc_type);
 
-  /** \brief Respells a type name as MSVC's `type_info::name` writes it into the shared spelling. */
+  /** \brief Respells a type name, as written by MSVC's `type_info::name`,
+             into the shared spelling.
+   */
   [[nodiscard]]
   std::string tidy_name(std::string name, msvc_type);
 
