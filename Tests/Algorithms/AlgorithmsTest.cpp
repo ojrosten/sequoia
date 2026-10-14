@@ -13,6 +13,7 @@
 #include "sequoia/Maths/Graph/Edge.hpp"
 #include "sequoia/Core/Object/Handlers.hpp"
 
+#include <any>
 #include <array>
 #include <istream>
 #include <iterator>
@@ -67,6 +68,16 @@ namespace sequoia::testing
     concept buffered_stable_sort_accepts
       =  requires(R&& r, OutIter out) { sequoia::stable_sort(std::forward<R>(r), out); };
 
+    struct move_only_equal_to
+    {
+      move_only_equal_to() = default;
+      move_only_equal_to(move_only_equal_to&&) = default;
+      move_only_equal_to(const move_only_equal_to&) = delete;
+
+      [[nodiscard]]
+      constexpr bool operator()(int lhs, int rhs) const { return lhs == rhs; }
+    };
+
     struct single_pass_iterator
     {
       using value_type       = int;
@@ -96,57 +107,64 @@ namespace sequoia::testing
 
   void algorithms_test::run_tests()
   {
-    range_constraints();
+    algorithm_constraints();
 
     sort_basic_type(unstable{});
     sort_basic_type(stable{});
     sort_partial_edge(unstable{});
     sort_partial_edge(stable{});
+    sort_by_data_member(unstable{});
+    sort_by_data_member(stable{});
 
     stable_sort_stability();
 
     cluster_basic_type();
     cluster_partial_edge();
-    cluster_by_projection();
+    cluster_by_first_element();
   }
    
-  void algorithms_test::range_constraints()
+  void algorithms_test::algorithm_constraints()
   {
-    using array_t    = std::array<int, 3>;
-    using subrange_t = std::ranges::subrange<int*>;
-    using list_t     = std::list<int>;
-    using istream_t  = std::ranges::istream_view<int>;
-    using less_t     = std::ranges::less;
-    using equal_t    = std::ranges::equal_to;
+    using array_t        = std::array<int, 3>;
+    using subrange_t     = std::ranges::subrange<int*>;
+    using list_t         = std::list<int>;
+    using istream_view_t = std::ranges::istream_view<int>;
+    using less_t         = std::ranges::less;
+    using equal_to_t     = std::ranges::equal_to;
 
-    STATIC_CHECK( make_heap_accepts<      array_t&, less_t>);
-    STATIC_CHECK( make_heap_accepts<    subrange_t, less_t>);
-    STATIC_CHECK(!make_heap_accepts<const array_t&, less_t>);
-    STATIC_CHECK(!make_heap_accepts<       list_t&, less_t>);
-    STATIC_CHECK(!make_heap_accepts<      array_t&,    int>);
+    STATIC_CHECK( make_heap_accepts<       array_t&, less_t>);
+    STATIC_CHECK( make_heap_accepts<     subrange_t, less_t>);
+    STATIC_CHECK(!make_heap_accepts< const array_t&, less_t>);
+    STATIC_CHECK(!make_heap_accepts<        list_t&, less_t>);
+    STATIC_CHECK(!make_heap_accepts<       array_t&,    int>);
 
-    STATIC_CHECK( sort_accepts<      array_t&, less_t>);
-    STATIC_CHECK( sort_accepts<    subrange_t, less_t>);
-    STATIC_CHECK(!sort_accepts<const array_t&, less_t>);
-    STATIC_CHECK(!sort_accepts<       list_t&, less_t>);
-    STATIC_CHECK(!sort_accepts<      array_t&,    int>);
+    STATIC_CHECK( sort_accepts<       array_t&, less_t>);
+    STATIC_CHECK( sort_accepts<     subrange_t, less_t>);
+    STATIC_CHECK(!sort_accepts< const array_t&, less_t>);
+    STATIC_CHECK(!sort_accepts<        list_t&, less_t>);
+    STATIC_CHECK(!sort_accepts<       array_t&,    int>);
 
-    STATIC_CHECK( stable_sort_accepts<      array_t&, less_t>);
-    STATIC_CHECK( stable_sort_accepts<    subrange_t, less_t>);
-    STATIC_CHECK(!stable_sort_accepts<const array_t&, less_t>);
-    STATIC_CHECK(!stable_sort_accepts<    istream_t&, less_t>);
-    STATIC_CHECK(!stable_sort_accepts<      array_t&,    int>);
+    STATIC_CHECK( stable_sort_accepts<       array_t&, less_t>);
+    STATIC_CHECK( stable_sort_accepts<     subrange_t, less_t>);
+    STATIC_CHECK(!stable_sort_accepts< const array_t&, less_t>);
+    STATIC_CHECK(!stable_sort_accepts<istream_view_t&, less_t>);
+    STATIC_CHECK(!stable_sort_accepts<       array_t&,    int>);
 
     STATIC_CHECK( std::input_iterator<single_pass_iterator>);
     STATIC_CHECK(!std::forward_iterator<single_pass_iterator>);
     STATIC_CHECK( buffered_stable_sort_accepts<array_t&,                 int*>);
     STATIC_CHECK(!buffered_stable_sort_accepts<array_t&, single_pass_iterator>);
+    STATIC_CHECK(!buffered_stable_sort_accepts<array_t&,           const int*>);
+    STATIC_CHECK(!buffered_stable_sort_accepts<array_t&,            std::any*>);
 
-    STATIC_CHECK( cluster_accepts<      array_t&, equal_t>);
-    STATIC_CHECK( cluster_accepts<    subrange_t, equal_t>);
-    STATIC_CHECK(!cluster_accepts<const array_t&, equal_t>);
-    STATIC_CHECK(!cluster_accepts<    istream_t&, equal_t>);
-    STATIC_CHECK(!cluster_accepts<      array_t&,     int>);
+    STATIC_CHECK( cluster_accepts<       array_t&, equal_to_t>);
+    STATIC_CHECK( cluster_accepts<     subrange_t, equal_to_t>);
+    STATIC_CHECK(!cluster_accepts< const array_t&, equal_to_t>);
+    STATIC_CHECK(!cluster_accepts<istream_view_t&, equal_to_t>);
+    STATIC_CHECK(!cluster_accepts<       array_t&,        int>);
+
+    STATIC_CHECK( clusterable<int*, equal_to_t,         std::identity>);
+    STATIC_CHECK(!clusterable<int*, move_only_equal_to, std::identity>);
   }
 
   template<class Stability>
@@ -215,6 +233,16 @@ namespace sequoia::testing
     }
   }
 
+  template<class Stability>
+  void algorithms_test::sort_by_data_member(Stability stability)
+  {
+    using pair_t = std::pair<int, int>;
+    constexpr std::array<pair_t, 3> a{pair_t{3,0}, {1,2}, {2,1}}, prediction{pair_t{1,2}, {2,1}, {3,0}};
+
+    constexpr auto b = sort(stability, a, std::ranges::less{}, &pair_t::first);
+    check(equality, "Sort by a pointer to a data member", b, prediction);
+  }
+
   void algorithms_test::stable_sort_stability()
   {
     using pair_t = std::pair<int, int>;
@@ -260,7 +288,8 @@ namespace sequoia::testing
       check(equality, "", b, prediction);
     }
   }
-  void algorithms_test::cluster_by_projection()
+
+  void algorithms_test::cluster_by_first_element()
   {
     using pair_t = std::pair<int, int>;
     constexpr std::array<pair_t, 5>
@@ -269,12 +298,17 @@ namespace sequoia::testing
 
     {
       constexpr auto b = cluster(a, [](const pair_t& lhs, const pair_t& rhs){ return lhs.first == rhs.first; });
-      check(equality, "Cluster by first element", b, prediction);
+      check(equality, "Cluster by a comparison of first elements", b, prediction);
     }
 
     {
       constexpr auto b = cluster(a, std::ranges::equal_to{}, [](const pair_t& p){ return p.first; });
-      check(equality, "Cluster by first element", b, prediction);
+      check(equality, "Cluster by a projection onto first elements", b, prediction);
+    }
+
+    {
+      constexpr auto b = cluster(a, std::ranges::equal_to{}, &pair_t::first);
+      check(equality, "Cluster by a pointer to the first element", b, prediction);
     }
   }
 }

@@ -27,10 +27,10 @@ namespace sequoia
     if(current == begin) return;
 
     auto parent{begin + (std::ranges::distance(begin, current) - 1) / 2};
-    if(comp(proj(*parent), proj(*current)))
+    if(std::invoke(comp, std::invoke(proj, *parent), std::invoke(proj, *current)))
     {
       std::ranges::iter_swap(parent, current);
-      bubble_up(begin, parent, comp, proj);
+      sequoia::bubble_up(begin, parent, comp, proj);
     }
   }
 
@@ -44,20 +44,29 @@ namespace sequoia
       auto rightChild{begin + 2*(std::ranges::distance(begin, current) + 1)};
       auto leftChild{rightChild - 1};
 
-      auto dominantChild{comp(proj(*rightChild), proj(*leftChild)) ? leftChild : rightChild};
-      if(comp(proj(*current), proj(*dominantChild)))
+      const bool leftDominates{std::invoke(comp, std::invoke(proj, *rightChild), std::invoke(proj, *leftChild))};
+      auto dominantChild{leftDominates ? leftChild : rightChild};
+      if(std::invoke(comp, std::invoke(proj, *current), std::invoke(proj, *dominantChild)))
       {
         std::ranges::iter_swap(dominantChild, current);
-        bubble_down(begin, dominantChild, end, comp, proj);
+        sequoia::bubble_down(begin, dominantChild, end, comp, proj);
       }
     }
     else if(2* std::ranges::distance(begin, current) + 1 < std::ranges::distance(begin, end))
     {
       auto leftChild{begin + 2* std::ranges::distance(begin, current) + 1};
-      if(comp(proj(*current), proj(*leftChild))) std::ranges::iter_swap(leftChild, current);
+      if(std::invoke(comp, std::invoke(proj, *current), std::invoke(proj, *leftChild)))
+        std::ranges::iter_swap(leftChild, current);
     }
   }
 
+  /** \brief Whether `make_heap` and `sort` can order the elements `Iter`
+             reaches, by `Comp` applied to `Proj`.
+
+      Unlike `std::sortable`, `heap_sortable` does not require
+      `std::indirectly_movable_storable`: these algorithms move elements only
+      by swapping them.
+   */
   template<class Iter, class Comp, class Proj>
   inline constexpr bool heap_sortable{
        std::indirectly_swappable<Iter>
@@ -76,14 +85,16 @@ namespace sequoia
     auto current{begin+1};
     while(current != end)
     {
-      bubble_up(begin, current, comp, proj);
+      sequoia::bubble_up(begin, current, comp, proj);
       std::ranges::advance(current,1);
     }
   }
 
-  /** \brief Sorts `r`, moving elements only through `std::ranges::iter_swap`.
+  /** \brief Sorts `r`, not stably, moving elements only through
+             `std::ranges::iter_swap`.
 
-      An overload of `iter_swap` therefore customizes how elements move.
+      An `iter_swap` found by argument-dependent lookup therefore customizes
+      how elements move.
    */
   template<std::ranges::random_access_range R, class Comp = std::ranges::less, class Proj = std::identity>
     requires heap_sortable<std::ranges::iterator_t<R>, Comp, Proj>
@@ -98,7 +109,7 @@ namespace sequoia
     while(end != begin)
     {
       std::ranges::iter_swap(begin, end-1);
-      bubble_down(begin, begin, end-1, comp, proj);
+      sequoia::bubble_down(begin, begin, end-1, comp, proj);
       --end;
     }
   }
@@ -157,9 +168,7 @@ namespace sequoia
   inline constexpr bool clusterable{
        std::forward_iterator<Iter>
     && std::indirectly_swappable<Iter>
-    && requires(std::iter_reference_t<Iter> r, Comp comp, Proj proj){
-        { comp(proj(r), proj(r)) } -> std::convertible_to<bool>;
-       }
+    && std::indirect_equivalence_relation<Comp, std::projected<Iter, Proj>>
   };
 
   /** \brief An algorithm which clusters together elements which compare equal.
@@ -176,13 +185,16 @@ namespace sequoia
       return;
 
     auto current{begin};
-    while((current != end) && comp(proj(*current), proj(*begin))) std::ranges::advance(current, 1);
+    while((current != end) && std::invoke(comp, std::invoke(proj, *current), std::invoke(proj, *begin)))
+    {
+      std::ranges::advance(current, 1);
+    }
 
     auto endOfCluster{current};
 
     while(current != end)
     {
-      if(comp(proj(*current), proj(*begin)))
+      if(std::invoke(comp, std::invoke(proj, *current), std::invoke(proj, *begin)))
       {
         std::ranges::iter_swap(endOfCluster, current);
         std::ranges::advance(endOfCluster, 1);
