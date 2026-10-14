@@ -32,8 +32,8 @@ namespace sequoia::testing
   {
     using fractional_milliseconds = std::chrono::duration<double, std::milli>;
 
-    /** Reads `printedDuration`, a duration as `stringify_duration` prints
-        it.
+    /** Reads `printedDuration`, a duration as printed by
+        `stringify_duration`.
 
         Tries the number in `printedDuration` as seconds, milliseconds,
         microseconds and nanoseconds, and returns the first duration which
