@@ -719,32 +719,35 @@ namespace sequoia::testing
     }
 
     {
-      // Five trials have a fast baseline of 1 s, four of 3 s and one of 11 s.
-      // The trim drops a trial of 1 s and the trial of 11 s, so the trimmed
-      // mean is 2 s. The untrimmed mean is 2.8 s, and the trimmed geometric
-      // mean is sqrt(3) s.
+      // Of the ten trials, six have a fast baseline of 1 s; the other four
+      // have baselines of 2 s, 3 s, 4 s and 11 s. Trimming one trial from each
+      // end drops a trial of 1 s and the trial of 11 s, so the trimmed mean is
+      // 1.75 s. Every rival gives another value: the median 1 s, the
+      // winsorized mean 1.9 s, the untrimmed mean 2.6 s, a trim of two from
+      // each end 1.5 s, and the trimmed geometric mean 24^(1/8) s.
       constexpr durations_with_baselines
         fastBaselineOf1s {.fast{.task{2s},  .baseline{1s}},  .slow{typical.slow}},
+        fastBaselineOf2s {.fast{.task{3s},  .baseline{2s}},  .slow{typical.slow}},
         fastBaselineOf3s {.fast{.task{4s},  .baseline{3s}},  .slow{typical.slow}},
+        fastBaselineOf4s {.fast{.task{5s},  .baseline{4s}},  .slow{typical.slow}},
         fastBaselineOf11s{.fast{.task{12s}, .baseline{11s}}, .slow{typical.slow}};
 
       const auto outcome{
         judge(trials_with_atypical(trialsAtFloor,
                                    fastBaselineOf1s,
-                                   {fastBaselineOf3s,
+                                   {fastBaselineOf2s,
                                     fastBaselineOf3s,
-                                    fastBaselineOf3s,
-                                    fastBaselineOf3s,
+                                    fastBaselineOf4s,
                                     fastBaselineOf11s}))
       };
 
-      if(check("The baseline durations are given for baselines of three durations",
+      if(check("The baseline durations are given for baselines of five durations",
                outcome.baseline_durations.has_value()))
       {
         check(within_tolerance{tolerance},
               "A baseline's typical duration is its trimmed mean",
               outcome.baseline_durations->fast.count(),
-              2.0);
+              1.75);
       }
     }
   }
