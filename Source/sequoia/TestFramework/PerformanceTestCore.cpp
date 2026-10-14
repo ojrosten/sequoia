@@ -93,33 +93,37 @@ namespace sequoia::testing
 
       return std::chrono::duration<double>{std::exp(estimate_trimmed_mean(std::move(logDurations)).mean)};
     }
-  }
 
-  namespace impl
-  {
+    /** \brief Returns the trimmed geometric mean of each task's durations. */
     [[nodiscard]]
-    relative_performance_attempt_outcome judge_attempt(std::span<const relative_performance_durations> trialDurations,
-                                                       double overlapMultiplier,
-                                                       relative_performance_interval prediction)
+    relative_performance_durations typical_durations(std::span<const relative_performance_durations> trialDurations)
     {
-      if(trialDurations.size() < relative_performance_minimum_trials_floor)
-        throw std::invalid_argument{
-          std::format("Relative performance attempt requires at least {} trials; it has {}",
-                      relative_performance_minimum_trials_floor,
-                      trialDurations.size())
-        };
+      auto fastOf{[](relative_performance_durations durations) { return durations.fast; }};
+      auto slowOf{[](relative_performance_durations durations) { return durations.slow; }};
 
-      auto eitherNotPositive{
-        [](relative_performance_durations durations) {
-          constexpr auto zero{std::chrono::duration<double>::zero()};
-          return !(durations.fast > zero) || !(durations.slow > zero);
-        }
+      return {
+        .fast{trimmed_geometric_mean(trialDurations | std::views::transform(fastOf))},
+        .slow{trimmed_geometric_mean(trialDurations | std::views::transform(slowOf))}
       };
+    }
 
-      if(std::ranges::any_of(trialDurations, eitherNotPositive))
-        throw std::runtime_error{"Relative performance test requires task durations > 0; "
-                                 "a task too quick for the clock times as zero"};
+    /** \brief The reason a speed-up departs from the prediction, if it does,
+               and the estimate of the speed-up.
+     */
+    struct speedup_judgement
+    {
+      std::optional<relative_performance_failure> failure{};
+      relative_performance_estimate               estimate{};
+    };
 
+    /** \brief Judges the speed-up of a fast task over a slow one from their
+               durations in each trial, each duration greater than zero.
+     */
+    [[nodiscard]]
+    speedup_judgement judge_speedup(std::span<const relative_performance_durations> trialDurations,
+                                    double overlapMultiplier,
+                                    relative_performance_interval prediction)
+    {
       auto logRatio{
         [](relative_performance_durations durations) { return std::log(durations.slow / durations.fast); }
       };
@@ -157,19 +161,161 @@ namespace sequoia::testing
         }()
       };
 
-      auto fastOf{[](relative_performance_durations durations) { return durations.fast; }};
-      auto slowOf{[](relative_performance_durations durations) { return durations.slow; }};
-
       return {
         .failure{failure},
         .estimate{
           .speedup{std::exp(mean)},
           .interval{.lower{std::exp(intervalLower)}, .upper{std::exp(intervalUpper)}}
-        },
-        .durations{
-          .fast{trimmed_geometric_mean(trialDurations | std::views::transform(fastOf))},
-          .slow{trimmed_geometric_mean(trialDurations | std::views::transform(slowOf))}
         }
+      };
+    }
+
+    void throw_if_too_few_trials(std::size_t trials)
+    {
+      if(trials < relative_performance_minimum_trials_floor)
+        throw std::invalid_argument{
+          std::format("Relative performance attempt requires at least {} trials; it has {}",
+                      relative_performance_minimum_trials_floor,
+                      trials)
+        };
+    }
+
+    void throw_if_any_duration_not_positive(std::span<const relative_performance_durations> trialDurations)
+    {
+      auto eitherNotPositive{
+        [](relative_performance_durations durations) {
+          constexpr auto zero{std::chrono::duration<double>::zero()};
+          return !(durations.fast > zero) || !(durations.slow > zero);
+        }
+      };
+
+      if(std::ranges::any_of(trialDurations, eitherNotPositive))
+        throw std::runtime_error{"Relative performance test requires task durations > 0; "
+                                 "a task too quick for the clock times as zero"};
+    }
+
+    /** \brief Returns the reason a task is not distinguishable from its
+               baseline, if, in any trial, a task's duration net of its
+               baseline's is not greater than zero.
+
+        The fast task's reason takes precedence over the slow task's.
+     */
+    [[nodiscard]]
+    std::optional<relative_performance_failure>
+      failure_to_exceed_baselines(std::span<const relative_performance_durations> netDurations)
+    {
+      auto notPositive{
+        [](std::chrono::duration<double> duration) { return !(duration > std::chrono::duration<double>::zero()); }
+      };
+
+      if(std::ranges::any_of(netDurations, notPositive, &relative_performance_durations::fast))
+        return relative_performance_failure::fast_task_indistinguishable_from_baseline;
+
+      if(std::ranges::any_of(netDurations, notPositive, &relative_performance_durations::slow))
+        return relative_performance_failure::slow_task_indistinguishable_from_baseline;
+
+      return std::nullopt;
+    }
+
+    /** \brief Returns a balanced order for each of `trials` trials.
+
+        `first` is the order of half of the trials, rounded down, and
+        `second` the order of the rest. `generator` chooses which trials
+        those are.
+     */
+    template<class Order>
+    [[nodiscard]]
+    std::vector<Order> shuffled_orders(std::size_t trials, Order first, Order second, std::mt19937& generator)
+    {
+      auto orderOfTrial{
+        [first, second, numFirst{trials / 2}](std::size_t trial) { return trial < numFirst ? first : second; }
+      };
+
+      auto orders{
+          std::views::iota(0uz, trials)
+        | std::views::transform(orderOfTrial)
+        | std::ranges::to<std::vector>()
+      };
+
+      std::ranges::shuffle(orders, generator);
+      return orders;
+    }
+  }
+
+  namespace impl
+  {
+    [[nodiscard]]
+    relative_performance_attempt_outcome judge_attempt(std::span<const relative_performance_durations> trialDurations,
+                                                       double overlapMultiplier,
+                                                       relative_performance_interval prediction)
+    {
+      throw_if_too_few_trials(trialDurations.size());
+      throw_if_any_duration_not_positive(trialDurations);
+
+      const auto [failure, estimate]{judge_speedup(trialDurations, overlapMultiplier, prediction)};
+
+      return {.failure{failure}, .estimate{estimate}, .durations{typical_durations(trialDurations)}};
+    }
+
+    [[nodiscard]]
+    relative_performance_attempt_outcome
+      judge_attempt(std::span<const relative_performance_durations_with_baselines> trialDurations,
+                    double overlapMultiplier,
+                    relative_performance_interval prediction)
+    {
+      throw_if_too_few_trials(trialDurations.size());
+
+      auto tasksOf{
+        [](relative_performance_durations_with_baselines durations) -> relative_performance_durations {
+          return {.fast{durations.fast.task}, .slow{durations.slow.task}};
+        }
+      };
+
+      auto baselinesOf{
+        [](relative_performance_durations_with_baselines durations) -> relative_performance_durations {
+          return {.fast{durations.fast.baseline}, .slow{durations.slow.baseline}};
+        }
+      };
+
+      auto netOf{
+        [](relative_performance_durations_with_baselines durations) -> relative_performance_durations {
+          return {
+            .fast{durations.fast.task - durations.fast.baseline},
+            .slow{durations.slow.task - durations.slow.baseline}
+          };
+        }
+      };
+
+      auto projected{
+        [trialDurations](auto projection) {
+          return
+              trialDurations
+            | std::views::transform(projection)
+            | std::ranges::to<std::vector>();
+        }
+      };
+
+      const auto taskDurations    {projected(tasksOf)},
+                 baselineDurations{projected(baselinesOf)};
+
+      throw_if_any_duration_not_positive(taskDurations);
+      throw_if_any_duration_not_positive(baselineDurations);
+
+      const auto typicalTaskDurations    {typical_durations(taskDurations)},
+                 typicalBaselineDurations{typical_durations(baselineDurations)};
+
+      const auto netDurations{projected(netOf)};
+
+      if(const auto failure{failure_to_exceed_baselines(netDurations)})
+        return {.failure{failure}, .durations{typicalTaskDurations}, .baseline_durations{typicalBaselineDurations}};
+
+      const auto [failure, estimate]{judge_speedup(netDurations, overlapMultiplier, prediction)};
+
+      return {
+        .failure{failure},
+        .estimate{estimate},
+        .durations{typicalTaskDurations},
+        .baseline_durations{typicalBaselineDurations}
       };
     }
 
@@ -180,9 +326,10 @@ namespace sequoia::testing
                                   relative_performance_interval prediction)
     {
       return append_lines(outcome.failure ? verdict_summary(*outcome.failure) : "",
-                          speedup_summary(outcome.estimate, prediction),
+                          outcome.estimate ? speedup_summary(*outcome.estimate, prediction) : "",
                           trials_summary(trials, {.made{attemptsMade}, .allowed{relative_performance_max_attempts}}),
-                          task_durations_summary(outcome.durations));
+                          task_durations_summary(outcome.durations),
+                          outcome.baseline_durations ? baseline_durations_summary(*outcome.baseline_durations) : "");
     }
 
     [[nodiscard]]
@@ -201,20 +348,33 @@ namespace sequoia::testing
     [[nodiscard]]
     std::vector<task_order> shuffled_task_orders(std::size_t trials, std::mt19937& generator)
     {
-      auto orderOfTrial{
-        [numFastThenSlow{trials / 2}](std::size_t trial) {
-          return trial < numFastThenSlow ? task_order::fast_then_slow : task_order::slow_then_fast;
+      return shuffled_orders(trials, task_order::fast_then_slow, task_order::slow_then_fast, generator);
+    }
+
+    [[nodiscard]]
+    std::vector<task_order_with_baselines> shuffled_task_orders_with_baselines(std::size_t trials,
+                                                                               std::mt19937& generator)
+    {
+      auto shuffledBaselineOrders{
+        [trials, &generator]() {
+          return shuffled_orders(trials,
+                                 baseline_order::task_then_baseline,
+                                 baseline_order::baseline_then_task,
+                                 generator);
         }
       };
 
-      auto orders{
-          std::views::iota(0uz, trials)
-        | std::views::transform(orderOfTrial)
-        | std::ranges::to<std::vector>()
+      const auto pairOrders{shuffled_task_orders(trials, generator)};
+      const auto fastOrders{shuffledBaselineOrders()},
+                 slowOrders{shuffledBaselineOrders()};
+
+      auto trialOrder{
+        [](task_order pairs, baseline_order fast, baseline_order slow) -> task_order_with_baselines {
+          return {.pairs{pairs}, .fast{fast}, .slow{slow}};
+        }
       };
 
-      std::ranges::shuffle(orders, generator);
-      return orders;
+      return std::views::zip_transform(trialOrder, pairOrders, fastOrders, slowOrders) | std::ranges::to<std::vector>();
     }
   }
 

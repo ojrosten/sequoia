@@ -64,6 +64,9 @@ namespace sequoia::testing
 
         if(task_durations_summary(durations) == unindented)
           return indented(task_durations_summary({}));
+
+        if(baseline_durations_summary(durations) == unindented)
+          return indented(baseline_durations_summary({}));
       }
 
       return std::string{line};
@@ -75,6 +78,12 @@ namespace sequoia::testing
   {
     switch(failure)
     {
+    case relative_performance_failure::fast_task_indistinguishable_from_baseline:
+      return "The fast task is not distinguishable from its baseline: "
+             "in at least one trial, the baseline took at least as long as the task";
+    case relative_performance_failure::slow_task_indistinguishable_from_baseline:
+      return "The slow task is not distinguishable from its baseline: "
+             "in at least one trial, the baseline took at least as long as the task";
     case relative_performance_failure::not_distinguishably_faster:
       return "The fast task is not distinguishably faster than the slow one";
     case relative_performance_failure::slower:
@@ -109,6 +118,14 @@ namespace sequoia::testing
   std::string task_durations_summary(relative_performance_durations durations)
   {
     return std::format("Task durations: fast {:.3g}s, slow {:.3g}s", durations.fast.count(), durations.slow.count());
+  }
+
+  [[nodiscard]]
+  std::string baseline_durations_summary(relative_performance_durations durations)
+  {
+    return std::format("Baseline durations: fast {:.3g}s, slow {:.3g}s",
+                       durations.fast.count(),
+                       durations.slow.count());
   }
 
   [[nodiscard]]

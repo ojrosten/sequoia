@@ -19,11 +19,11 @@
 
 namespace sequoia::testing
 {
-  /** \brief Why `check_relative_performance` judged that the speed-up of a
-             fast task over a slow one departs from the prediction.
-   */
+  /** \brief Why an attempt of `check_relative_performance` failed. */
   enum class relative_performance_failure
   {
+    fast_task_indistinguishable_from_baseline,
+    slow_task_indistinguishable_from_baseline,
     not_distinguishably_faster,
     slower,
     faster_but_less_than_predicted,
@@ -83,16 +83,22 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string task_durations_summary(relative_performance_durations durations);
 
+  /** \brief Returns a line reporting the duration of each task's baseline. */
+  [[nodiscard]]
+  std::string baseline_durations_summary(relative_performance_durations durations);
+
   /** \brief Returns `text` with the measurements in its summary lines set to
              zero.
 
-      A summary line is one which `speedup_summary`, `trials_summary` or
-      `task_durations_summary` reprints exactly from the numbers it contains,
-      once any leading spaces and tabs are set aside. Its measurements are
-      these values, each with its uncertainty and its sample:
+      A summary line is one which `speedup_summary`, `trials_summary`,
+      `task_durations_summary` or `baseline_durations_summary` reprints
+      exactly from the numbers it contains, once any leading spaces and tabs
+      are set aside. Its measurements are these values, each with its
+      uncertainty and its sample:
       -# The speed-up, and the interval around it;
       -# The number of trials, and the attempt which made them;
-      -# The task durations.
+      -# The task durations;
+      -# The baseline durations.
 
       Every measurement is set to zero, except that the number of trials and
       the attempt stay as they are if `attemptCountStability` is
