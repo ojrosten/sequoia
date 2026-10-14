@@ -12,10 +12,10 @@
 #include "sequoia/TestFramework/TestExecutionRecord.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TextProcessing/Numbers.hpp"
 
 #include <algorithm>
 #include <array>
-#include <charconv>
 #include <chrono>
 #include <cmath>
 #include <format>
@@ -30,16 +30,6 @@ namespace sequoia::testing
 
   namespace
   {
-    template<class T>
-    [[nodiscard]]
-    T to_number(std::string_view timing)
-    {
-      if(T x{}; std::from_chars(timing.data(), timing.data() + timing.size(), x).ec == std::errc{})
-        return x;
-
-      throw std::runtime_error{std::format("Unable to extract timing from: {}", timing)};
-    }
-
     /** A duration as the runner prints it, a number followed by its unit, converted to milliseconds. */
     [[nodiscard]]
     double to_milliseconds(std::string_view printedDuration)
@@ -52,10 +42,11 @@ namespace sequoia::testing
       const auto unitStart{std::ranges::min(numberEnd, printedDuration.size())};
       auto unitOf{[](const auto& entry){ return entry.first; }};
       const auto conversion{std::ranges::find(millisecondsPerUnit, printedDuration.substr(unitStart), unitOf)};
-      if(conversion == millisecondsPerUnit.end())
-        throw std::runtime_error{std::format("Unable to read the unit of the duration {}", printedDuration)};
+      const auto number{extract_numbers_from<double, 1>(printedDuration.substr(0, unitStart))};
+      if(!number || (conversion == millisecondsPerUnit.end()))
+        throw std::runtime_error{std::format("Unable to read the duration {}", printedDuration)};
 
-      return to_number<double>(printedDuration.substr(0, unitStart)) * conversion->second;
+      return number->front() * conversion->second;
     }
 
     /** The run's duration labelled `label`, such as "Execution Time", in milliseconds. It is read from the grand
@@ -109,7 +100,7 @@ namespace sequoia::testing
       if(const auto optContents{read_to_string(summary.file_path(), std::ios_base::in)})
         return text_with_zeroed_measurements(optContents.value(), attempt_count_stability::typically_stable);
 
-      throw std::runtime_error{std::format("Unable to read the summary: {}", summary.file_path().generic_string())};
+      throw std::runtime_error{report_failed_read(summary.file_path())};
     }
 
     /** When a slow test's sleep began and ended. */
