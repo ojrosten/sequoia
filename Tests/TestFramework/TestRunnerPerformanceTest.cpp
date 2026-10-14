@@ -90,14 +90,14 @@ namespace sequoia::testing
       throw std::runtime_error{std::format("Unable to extract the {} from: {}", label, file.generic_string())};
     }
 
-    /** Reads the completion of the record `runner` keeps for `Test`. */
+    /** Reads the completion of the last record `runner` keeps for `Test`. */
     template<concrete_test Test>
     [[nodiscard]]
     test_execution_completion get_recorded_completion(const test_runner& runner)
     {
       const test_execution_record_path record{Test::source_file(), test_name<Test>(), runner.proj_paths()};
-      if(auto completion{read_test_execution_record(record.file_path()).completion})
-        return std::move(completion).value();
+      if(auto records{read_test_execution_records(record.file_path())}; !records.empty() && records.back().completion)
+        return std::move(records.back().completion).value();
 
       throw std::runtime_error{std::format("No completion in: {}", record.file_path().generic_string())};
     }
@@ -639,7 +639,7 @@ namespace sequoia::testing
     test_serial_execution();
     test_runner_overhead_reported_apart();
     test_execution_duration_of_busiest_thread();
-    test_execution_records_of_performance_checks();
+    test_recording_of_performance_check_attempts();
     test_summary_of_performance_checks_within_other_checks();
   }
 
@@ -808,7 +808,7 @@ namespace sequoia::testing
       for either. `performance_test_without_performance_checks` is the
       control: a performance test whose record gives no attempts.
    */
-  void test_runner_performance_test::test_execution_records_of_performance_checks()
+  void test_runner_performance_test::test_recording_of_performance_check_attempts()
   {
     std::stringstream outputStream{};
     commandline_arguments args{{minimal_fake_path().generic_string()}};

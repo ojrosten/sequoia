@@ -456,6 +456,13 @@ namespace sequoia::testing
     {
       m_Vessel.reset_results();
     }
+
+    /** \brief Empties the file of the test's execution records, creating
+               the file and its directory if need be.
+
+        A failure is not reported.
+     */
+    void clear_execution_records() const;
   private:
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
 
@@ -486,17 +493,18 @@ namespace sequoia::testing
       log_summary::duration m_ExecutionDuration{};
     };
 
-    /** \brief An RAII wrapper to write a test's execution record.
+    /** \brief An RAII wrapper to append a test's execution records to
+               `file`.
 
-        On construction, the record gives the test's start time. On
-        destruction, the record adds the test's execution duration and the
-        runner's overhead so far, from `executionTimer`. Then the record adds
-        the number of attempts each of the test's performance checks made, from
-        `vessel`.
+        On construction, appends a record of the test's start time. On
+        destruction, appends a record with the same start time and a
+        completion. `executionTimer` gives the completion's execution
+        duration and the runner's overhead so far. `vessel` gives the number
+        of attempts each of the test's performance checks made.
 
-        A record which cannot be written is skipped rather than reported. The
-        file then keeps the last record the runner managed to write, which
-        may be an earlier run's. An allocation failure is not caught.
+        A write which fails is not reported. A write which fails part-way
+        may leave part of a record, and the file cannot then be read. An
+        allocation failure is not caught.
      */
     class [[nodiscard]] scoped_execution_record
     {
@@ -850,6 +858,11 @@ namespace sequoia::testing
     void sort_tests();
 
     void reset_tests();
+
+    /** \brief For each test to be run, ensures no execution records remain
+               on disk.
+     */
+    void clear_execution_records() const;
 
     return_code run_tests(std::optional<std::size_t> id);
 

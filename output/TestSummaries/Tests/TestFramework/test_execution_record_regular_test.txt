@@ -1,2 +1,2 @@
 test_execution_record_regular_test
-Standard Top Level Checks:                30;  Failures:  0  [Deep checks: 313]
+Standard Top Level Checks:                32;  Failures:  0  [Deep checks: 352]

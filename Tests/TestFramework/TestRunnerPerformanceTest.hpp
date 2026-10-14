@@ -34,7 +34,7 @@ namespace sequoia::testing
 
     void test_execution_duration_of_busiest_thread();
 
-    void test_execution_records_of_performance_checks();
+    void test_recording_of_performance_check_attempts();
 
     void test_summary_of_performance_checks_within_other_checks();
 

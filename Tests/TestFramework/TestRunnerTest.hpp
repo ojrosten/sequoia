@@ -57,7 +57,11 @@ namespace sequoia::testing
 
     void test_throwing_tests();
 
-    void test_execution_records();
+    void test_recording_of_executions();
+
+    void test_recording_of_repetitions();
+
+    void test_recording_of_successive_runs();
 
     void test_summary_collision_with_an_unselected_test();
 
