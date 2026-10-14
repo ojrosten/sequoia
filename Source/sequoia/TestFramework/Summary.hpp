@@ -91,10 +91,10 @@ namespace sequoia::testing
   stringified_duration stringify_duration(const log_summary::duration& d);
 
   [[nodiscard]]
-  std::string report_time(const log_summary& log);
+  std::string durations_report(const log_summary& log);
 
   [[nodiscard]]
-  std::string report_time(const durations_of_run& durationsOfRun);
+  std::string durations_report(const durations_of_run& durationsOfRun);
 
   /** \brief Summarizes `log`, under a heading of its name and `namesuffix`.
 

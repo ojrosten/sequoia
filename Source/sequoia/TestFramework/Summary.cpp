@@ -45,7 +45,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string report_time(const log_summary& log)
+  std::string durations_report(const log_summary& log)
   {
     return std::format("{}{}",
                        timing_line("Execution Time",  log.execution_duration()),
@@ -53,7 +53,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string report_time(const durations_of_run& durationsOfRun)
+  std::string durations_report(const durations_of_run& durationsOfRun)
   {
     const auto& [totalRunTime, criticalPath]{durationsOfRun};
     return std::format("{}{}{}{}",
@@ -132,7 +132,7 @@ namespace sequoia::testing
 
     if((verbosity & summary_detail::timings) == summary_detail::timings)
     {
-      append_indented(summary, report_time(log), ind_0);
+      append_indented(summary, durations_report(log), ind_0);
     }
     else if(!summary.empty())
     {

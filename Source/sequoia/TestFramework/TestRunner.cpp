@@ -1956,7 +1956,7 @@ namespace sequoia::testing
     const durations_of_run durationsOfRun{.total_run_time{t.time_elapsed()}, .critical_path{criticalPathDurations}};
 
     stream() << "\n-----------Grand Totals-----------\n";
-    stream() << report_time(durationsOfRun);
+    stream() << durations_report(durationsOfRun);
     stream() << summarize(root_summary(), "", summary_detail::absent_checks, tab, no_indent);
 
     if(const auto materialsUpdateReport{tracker.materials_update_report()}; !materialsUpdateReport.empty())
@@ -2093,7 +2093,7 @@ namespace sequoia::testing
             else
             {
               const auto heading{sequoia::indent(wt.summary.name() + ":", suiteIndent)};
-              stream << (serial ? append_indented(heading, report_time(wt.summary), suiteIndent)
+              stream << (serial ? append_indented(heading, durations_report(wt.summary), suiteIndent)
                                 : heading + '\n');
             }
 
