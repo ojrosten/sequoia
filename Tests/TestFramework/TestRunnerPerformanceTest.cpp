@@ -35,8 +35,11 @@ namespace sequoia::testing
     /** Reads `printedDuration`, a duration as `stringify_duration` prints
         it.
 
-        \throws std::runtime_error if no duration reprints as
-                `printedDuration`
+        Tries the number in `printedDuration` as seconds, milliseconds,
+        microseconds and nanoseconds, and returns the first duration which
+        `stringify_duration` prints as `printedDuration`.
+
+        \throws std::runtime_error if none does
      */
     [[nodiscard]]
     fractional_milliseconds read_printed_duration(std::string_view printedDuration)
@@ -45,8 +48,13 @@ namespace sequoia::testing
         std::chrono::seconds{1}, std::chrono::milliseconds{1}, std::chrono::microseconds{1}, std::chrono::nanoseconds{1}
       };
 
+      constexpr fractional_milliseconds representableLimit{log_summary::duration::max()};
+
       auto reprintsAsPrinted{
-        [printedDuration](fractional_milliseconds candidate) {
+        [printedDuration, representableLimit](fractional_milliseconds candidate) {
+          if(!(std::chrono::abs(candidate) < representableLimit))
+            return false;
+
           const auto [time, unit]{stringify_duration(std::chrono::round<log_summary::duration>(candidate))};
           return std::format("{}{}", time, unit) == printedDuration;
         }
@@ -55,8 +63,8 @@ namespace sequoia::testing
       if(const auto optNumber{extract_numbers_from<double, 1>(printedDuration)})
       {
         const auto [count]{*optNumber};
-        auto inUnit{[count](fractional_milliseconds unit) { return count * unit; }};
-        auto candidates{units | std::views::transform(inUnit)};
+        auto candidateIn{[count](fractional_milliseconds unit) { return count * unit; }};
+        auto candidates{units | std::views::transform(candidateIn)};
         if(const auto found{std::ranges::find_if(candidates, reprintsAsPrinted)}; found != candidates.end())
           return *found;
       }
@@ -292,7 +300,7 @@ namespace sequoia::testing
       void run_tests() { sleep_and_check(7); }
     };
 
-    constexpr fractional_milliseconds execution_sleep{20}, summarizing_sleep{60};
+    constexpr fractional_milliseconds execution_sleep{20}, summarization_sleep{60};
 
     /** The runner prints a duration to three significant figures, so it
         prints a duration of less than a second to within half a millisecond.
@@ -323,7 +331,7 @@ namespace sequoia::testing
       [[nodiscard]]
       log_summary summarize(duration delta) const
       {
-        std::this_thread::sleep_for(summarizing_sleep);
+        std::this_thread::sleep_for(summarization_sleep);
         return free_test::summarize(delta);
       }
     protected:
@@ -603,15 +611,12 @@ namespace sequoia::testing
     return fake_project().append("build/CMade/FakeExe.txt");
   }
 
-  std::string test_runner_performance_test::check_output(std::string_view description,
-                                                         std::string_view dirName,
-                                                         const std::stringstream& output)
+  void test_runner_performance_test::check_output(std::string_view description,
+                                                  std::string_view dirName,
+                                                  const std::stringstream& output)
   {
-    const std::string printedOutput{output.str()};
-    write(dirName, printedOutput);
+    write(dirName, output.view());
     check(equivalence, description, working_materials() /= dirName, predictive_materials() /= dirName);
-
-    return printedOutput;
   }
 
   void test_runner_performance_test::write(std::string_view dirName, std::string_view printedOutput) const
@@ -641,12 +646,10 @@ namespace sequoia::testing
     const auto peak{peak_overlap(slow_test_base::execution_intervals())};
     outputStream << peak_overlap_line(peak);
 
-    const auto printedOutput{
-      check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream)
-    };
+    check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream);
     check(within_tolerance{fractional_milliseconds{35}},
           "",
-          get_grand_total(printedOutput, "Execution Time"),
+          get_grand_total(outputStream.view(), "Execution Time"),
           fractional_milliseconds{60});
 
     // Without parallel algorithms, the runner runs the tests on a pool of eight threads instead
@@ -666,12 +669,10 @@ namespace sequoia::testing
       const auto peak{peak_overlap(slow_test_base::execution_intervals())};
       outputStream << peak_overlap_line(peak);
 
-      const auto printedOutput{
-        check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream)
-      };
+      check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream);
       check(within_tolerance{fractional_milliseconds{30}},
             "",
-            get_grand_total(printedOutput, "Execution Time"),
+            get_grand_total(outputStream.view(), "Execution Time"),
             fractional_milliseconds{55});
       check(std::ranges::greater_equal{},
             "More than half of the pool's eight threads execute tests at once",
@@ -687,12 +688,10 @@ namespace sequoia::testing
       const auto peak{peak_overlap(slow_test_base::execution_intervals())};
       outputStream << peak_overlap_line(peak);
 
-      const auto printedOutput{
-        check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream)
-      };
+      check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream);
       check(within_tolerance{fractional_milliseconds{40}},
             "",
-            get_grand_total(printedOutput, "Execution Time"),
+            get_grand_total(outputStream.view(), "Execution Time"),
             fractional_milliseconds{140});
       check(equality, "Both threads of the pool, and no more, execute tests at once", peak, std::ptrdiff_t{2});
     }
@@ -707,10 +706,10 @@ namespace sequoia::testing
     const auto peak{peak_overlap(slow_test_base::execution_intervals())};
     outputStream << peak_overlap_line(peak);
 
-    const auto printedOutput{check_output(report({"Serial Output"}), "Serial Output", outputStream)};
+    check_output(report({"Serial Output"}), "Serial Output", outputStream);
     check(within_tolerance{fractional_milliseconds{55}},
           "",
-          get_grand_total(printedOutput, "Execution Time"),
+          get_grand_total(outputStream.view(), "Execution Time"),
           fractional_milliseconds{255});
     check(equality, "Tests execute one at a time in a serial run", peak, std::ptrdiff_t{1});
   }
@@ -727,26 +726,26 @@ namespace sequoia::testing
     runner.register_test<slow_to_summarize_test_0>();
     check(equality, "Runner overhead return code", runner.execute(), return_code::success);
 
-    const auto printedOutput{check_output(report({"Runner Overhead Output"}), "RunnerOverheadOutput", outputStream)};
-    check(within_tolerance{summarizing_sleep / 2},
+    check_output(report({"Runner Overhead Output"}), "RunnerOverheadOutput", outputStream);
+    check(within_tolerance{summarization_sleep / 2},
           "The printed execution duration excludes the sleep while summarizing",
-          get_grand_total(printedOutput, "Execution Time"),
-          execution_sleep + summarizing_sleep / 2);
+          get_grand_total(outputStream.view(), "Execution Time"),
+          execution_sleep + summarization_sleep / 2);
 
     check(std::ranges::greater_equal{},
           "The printed runner overhead includes the sleep while summarizing",
-          get_grand_total(printedOutput, "Runner Overhead"),
-          summarizing_sleep);
+          get_grand_total(outputStream.view(), "Runner Overhead"),
+          summarization_sleep);
 
-    check(within_tolerance{summarizing_sleep / 2},
+    check(within_tolerance{summarization_sleep / 2},
           "The recorded execution duration excludes the sleep while summarizing",
           in_milliseconds(get_recorded_completion<slow_to_summarize_test_0>(runner).execution_duration),
-          execution_sleep + summarizing_sleep / 2);
+          execution_sleep + summarization_sleep / 2);
 
     check(std::ranges::greater_equal{},
           "The recorded runner overhead includes the sleep while summarizing",
           in_milliseconds(get_recorded_completion<slow_to_summarize_test_0>(runner).runner_overhead),
-          summarizing_sleep);
+          summarization_sleep);
   }
 
   /** Four tests, each sleeping while its tests run and again while the runner summarizes it. One is not
@@ -770,7 +769,7 @@ namespace sequoia::testing
     runner.register_test<slow_to_summarize_test_2>();
     check(equality, "Busiest thread return code", runner.execute(), return_code::success);
 
-    const auto printedOutput{check_output(report({"Busiest Thread Output"}), "BusiestThreadOutput", outputStream)};
+    check_output(report({"Busiest Thread Output"}), "BusiestThreadOutput", outputStream);
 
     const auto firstDuration{
       in_milliseconds(get_recorded_completion<unparallelizable_slow_to_summarize_test>(runner).execution_duration)
@@ -787,7 +786,7 @@ namespace sequoia::testing
       othersDurations[1] + othersDurations[2]
     };
 
-    const auto executionDuration{get_grand_total(printedOutput, "Execution Time")};
+    const auto executionDuration{get_grand_total(outputStream.view(), "Execution Time")};
     auto distanceFromExecutionDuration{
       [executionDuration, firstDuration](fractional_milliseconds paired){
         return std::chrono::abs(executionDuration - (firstDuration + paired));
@@ -804,8 +803,8 @@ namespace sequoia::testing
 
     check(std::ranges::greater_equal{},
           "The runner overhead includes the summarizing sleeps of the unparallelizable test and the busiest thread",
-          get_grand_total(printedOutput, "Runner Overhead"),
-          3 * summarizing_sleep);
+          get_grand_total(outputStream.view(), "Runner Overhead"),
+          3 * summarization_sleep);
   }
 
   /** `attempt_counting_performance_test`'s checks make 2, 1 and 3 attempts:
