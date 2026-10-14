@@ -62,12 +62,14 @@ namespace sequoia::testing
   {
     if(atypical.size() > numTrials)
       throw std::logic_error{
-        std::format("{} atypical trials exceed the {} trials", atypical.size(), numTrials)
+        std::format("More atypical trials ({}) than trials ({})", atypical.size(), numTrials)
       };
 
-    std::vector<Durations> durations(numTrials, typical);
-    std::ranges::copy(atypical, durations.begin());
-    return durations;
+    auto durationsOfTrial{
+      [typical, atypical](std::size_t trial) { return trial < atypical.size() ? atypical.begin()[trial] : typical; }
+    };
+
+    return std::views::iota(0uz, numTrials) | std::views::transform(durationsOfTrial) | std::ranges::to<std::vector>();
   }
 
   /** \brief Keeps the calling thread busy until `t` has passed by the

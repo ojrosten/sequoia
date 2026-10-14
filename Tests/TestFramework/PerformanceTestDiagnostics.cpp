@@ -14,6 +14,7 @@
 #include <chrono>
 #include <cmath>
 #include <format>
+#include <initializer_list>
 #include <limits>
 #include <memory>
 #include <string_view>
@@ -483,8 +484,8 @@ namespace sequoia::testing
 
     // The trim drops one trial from each end of the floor's number of
     // trials, and two from each end of fifteen.
-    constexpr std::size_t floorTrials      {relative_performance_minimum_trials_floor},
-                          trialsTrimmingTwo{15};
+    constexpr std::size_t trialsAtFloor            {relative_performance_minimum_trials_floor},
+                          trialsTrimmedTwoAtEachEnd{15};
 
     // Net of the baselines, the speed-up is 8. Without them it is 3. With the
     // baselines exchanged it is 3.5; with the fast baseline taken from both
@@ -510,11 +511,19 @@ namespace sequoia::testing
       }
     };
 
+    // Judges as many trials as the floor: those of `atypical`, followed by
+    // typical ones.
+    auto judgeAtFloor{
+      [judge, typical](std::initializer_list<durations_with_baselines> atypical) {
+        return judge(trials_with_atypical(trialsAtFloor, typical, atypical));
+      }
+    };
+
     auto checkSpeedup{
-      [this, judge, tolerance](const reporter& description,
-                               std::span<const durations_with_baselines> trialDurations,
-                               double speedup) {
-        const auto outcome{judge(trialDurations)};
+      [this, judgeAtFloor, tolerance](const reporter& description,
+                                      std::initializer_list<durations_with_baselines> atypical,
+                                      double speedup) {
+        const auto outcome{judgeAtFloor(atypical)};
         if(check(description, outcome.estimate.has_value()))
         {
           check(within_tolerance{tolerance}, description, outcome.estimate->speedup, speedup);
@@ -523,7 +532,7 @@ namespace sequoia::testing
     };
 
     {
-      const auto outcome{judge(trials_with_atypical(floorTrials, typical, {}))};
+      const auto outcome{judgeAtFloor({})};
 
       check("No failure net of the baselines", !outcome.failure.has_value());
 
@@ -553,51 +562,51 @@ namespace sequoia::testing
     // 3 and 4.
     auto checkTasksNoLongerThanBaselines{
       [&](std::string_view relation,
-          durations_with_baselines fastNoLonger,
-          durations_with_baselines slowNoLonger,
-          durations_with_baselines bothNoLonger) {
+          durations_with_baselines fastNoLongerThanBaseline,
+          durations_with_baselines slowNoLongerThanBaseline,
+          durations_with_baselines bothNoLongerThanBaselines) {
         checkSpeedup(std::format("The trim drops a trial with a fast task {} its baseline, "
                                  "and the lowest speed-up",
                                  relation),
-                     trials_with_atypical(floorTrials, typical, {fastNoLonger, speedupOf4}),
+                     {fastNoLongerThanBaseline, speedupOf4},
                      8.0);
 
         checkSpeedup(std::format("The trim drops a trial with a fast task {} its baseline, "
                                  "and keeps the highest speed-up",
                                  relation),
-                     trials_with_atypical(floorTrials, typical, {fastNoLonger, speedupOf16}),
+                     {fastNoLongerThanBaseline, speedupOf16},
                      std::exp2(25.0 / 8.0));
 
         checkSpeedup(std::format("The trim drops a trial with a slow task {} its baseline, "
                                  "and the highest speed-up",
                                  relation),
-                     trials_with_atypical(floorTrials, typical, {slowNoLonger, speedupOf16}),
+                     {slowNoLongerThanBaseline, speedupOf16},
                      8.0);
 
         checkSpeedup(std::format("The trim drops a trial with a slow task {} its baseline, "
                                  "and keeps the lowest speed-up",
                                  relation),
-                     trials_with_atypical(floorTrials, typical, {slowNoLonger, speedupOf4}),
+                     {slowNoLongerThanBaseline, speedupOf4},
                      std::exp2(23.0 / 8.0));
 
         checkSpeedup(std::format("The trim drops one trial with each task {} its baseline", relation),
-                     trials_with_atypical(floorTrials, typical, {fastNoLonger, slowNoLonger}),
+                     {fastNoLongerThanBaseline, slowNoLongerThanBaseline},
                      8.0);
 
         checkSpeedup(std::format("The trim drops a trial with both tasks {} their baselines at each end, "
                                  "and the lowest and highest speed-ups",
                                  relation),
-                     trials_with_atypical(floorTrials, typical, {bothNoLonger, speedupOf4, speedupOf16}),
+                     {bothNoLongerThanBaselines, speedupOf4, speedupOf16},
                      8.0);
 
         checkSpeedup(std::format("The trim drops a trial with both tasks {} their baselines at each end, "
                                  "and keeps the highest speed-up",
                                  relation),
-                     trials_with_atypical(floorTrials, typical, {bothNoLonger, speedupOf16}),
+                     {bothNoLongerThanBaselines, speedupOf16},
                      std::exp2(28.0 / 9.0));
 
         {
-          const auto outcome{judge(trials_with_atypical(floorTrials, typical, {fastNoLonger, fastNoLonger}))};
+          const auto outcome{judgeAtFloor({fastNoLongerThanBaseline, fastNoLongerThanBaseline})};
 
           check(std::format("A fast task {} its baseline in more trials than the trim drops", relation),
                 outcome.failure == fast_task_too_often_no_longer_than_baseline);
@@ -608,7 +617,7 @@ namespace sequoia::testing
         }
 
         {
-          const auto outcome{judge(trials_with_atypical(floorTrials, typical, {slowNoLonger, slowNoLonger}))};
+          const auto outcome{judgeAtFloor({slowNoLongerThanBaseline, slowNoLongerThanBaseline})};
 
           check(std::format("A slow task {} its baseline in more trials than the trim drops", relation),
                 outcome.failure == slow_task_too_often_no_longer_than_baseline);
@@ -617,17 +626,18 @@ namespace sequoia::testing
         }
 
         check(std::format("A trial with both tasks {} their baselines counts against the fast task", relation),
-              judge(trials_with_atypical(floorTrials, typical, {bothNoLonger, fastNoLonger})).failure
+              judgeAtFloor({bothNoLongerThanBaselines, fastNoLongerThanBaseline}).failure
                 == fast_task_too_often_no_longer_than_baseline);
 
         check(std::format("A trial with both tasks {} their baselines counts against the slow task", relation),
-              judge(trials_with_atypical(floorTrials, typical, {bothNoLonger, slowNoLonger})).failure
+              judgeAtFloor({bothNoLongerThanBaselines, slowNoLongerThanBaseline}).failure
                 == slow_task_too_often_no_longer_than_baseline);
 
         check(std::format("The fast task's reason takes precedence, with tasks {} their baselines", relation),
-              judge(trials_with_atypical(floorTrials,
-                                         typical,
-                                         {fastNoLonger, fastNoLonger, slowNoLonger, slowNoLonger})).failure
+              judgeAtFloor({fastNoLongerThanBaseline,
+                            fastNoLongerThanBaseline,
+                            slowNoLongerThanBaseline,
+                            slowNoLongerThanBaseline}).failure
                 == fast_task_too_often_no_longer_than_baseline);
       }
     };
@@ -640,23 +650,23 @@ namespace sequoia::testing
                                     bothShorterThanBaselines);
 
     check("Two trials in fifteen with a fast task as long as its baseline lie within the trim",
-          !judge(trials_with_atypical(trialsTrimmingTwo,
+          !judge(trials_with_atypical(trialsTrimmedTwoAtEachEnd,
                                       typical,
                                       {fastAsLongAsBaseline, fastAsLongAsBaseline})).failure.has_value());
 
     check("Three trials in fifteen with a fast task as long as its baseline exceed the trim",
-          judge(trials_with_atypical(trialsTrimmingTwo,
+          judge(trials_with_atypical(trialsTrimmedTwoAtEachEnd,
                                      typical,
                                      {fastAsLongAsBaseline, fastAsLongAsBaseline, fastAsLongAsBaseline})).failure
             == fast_task_too_often_no_longer_than_baseline);
 
     check("Two trials in fifteen with a slow task as long as its baseline lie within the trim",
-          !judge(trials_with_atypical(trialsTrimmingTwo,
+          !judge(trials_with_atypical(trialsTrimmedTwoAtEachEnd,
                                       typical,
                                       {slowAsLongAsBaseline, slowAsLongAsBaseline})).failure.has_value());
 
     check("Three trials in fifteen with a slow task as long as its baseline exceed the trim",
-          judge(trials_with_atypical(trialsTrimmingTwo,
+          judge(trials_with_atypical(trialsTrimmedTwoAtEachEnd,
                                      typical,
                                      {slowAsLongAsBaseline, slowAsLongAsBaseline, slowAsLongAsBaseline})).failure
             == slow_task_too_often_no_longer_than_baseline);
@@ -666,8 +676,8 @@ namespace sequoia::testing
         noFastBaseline{.fast{.task{3s}, .baseline{0s}}, .slow{typical.slow}},
         noSlowBaseline{.fast{typical.fast},             .slow{.task{9s}, .baseline{0s}}};
 
-      const auto withoutFastBaseline{judge(trials_with_atypical(floorTrials, noFastBaseline, {}))},
-                 withoutSlowBaseline{judge(trials_with_atypical(floorTrials, noSlowBaseline, {}))};
+      const auto withoutFastBaseline{judge(trials_with_atypical(trialsAtFloor, noFastBaseline, {}))},
+                 withoutSlowBaseline{judge(trials_with_atypical(trialsAtFloor, noSlowBaseline, {}))};
 
       if(check("An estimate with a fast baseline of zero", withoutFastBaseline.estimate.has_value()))
       {
@@ -715,7 +725,7 @@ namespace sequoia::testing
         fastBaselineOf11{.fast{.task{12s}, .baseline{11s}}, .slow{typical.slow}};
 
       const auto outcome{
-        judge(trials_with_atypical(floorTrials,
+        judge(trials_with_atypical(trialsAtFloor,
                                    fastBaselineOf1,
                                    {fastBaselineOf3,
                                     fastBaselineOf3,

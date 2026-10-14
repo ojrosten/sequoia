@@ -1,4 +1,4 @@
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 49
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 50
 Minimum speed-up of 1
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 51
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 52
 Maximum speed-up of 1
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 53
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 54
 Minimum speed-up of NaN
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 55
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 56
 Minimum speed-up exceeding the maximum
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ prediction.upper must be >= prediction.lower
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 57
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 58
 Too few trials
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Relative performance test requires minimum_trials >= 10
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 73
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 74
 Minimum speed-up of 1, with baselines
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 77
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 78
 Maximum speed-up of 1, with baselines
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 81
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 82
 Minimum speed-up of NaN, with baselines
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Relative performance test requires speed-up factors > 1
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 85
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 86
 Minimum speed-up exceeding the maximum, with baselines
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ prediction.upper must be >= prediction.lower
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 89
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 90
 Too few trials, with baselines
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ Relative performance test requires minimum_trials >= 10
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 110
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 111
 Fast task performs a check
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ Checks cannot be nested within a performance check
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 115
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 116
 Slow task performs a performance check
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ Checks cannot be nested within a performance check
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 127
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 128
 Fast task's baseline performs a check
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ Checks cannot be nested within a performance check
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 133
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 134
 Slow task's baseline performs a check
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ Checks cannot be nested within a performance check
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 150
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 151
 Fast task throws
 
 Expected Exception Type:
@@ -133,7 +133,7 @@ Fast task failure
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 163
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 164
 Slow task's baseline throws
 
 Expected Exception Type:
@@ -142,7 +142,7 @@ Slow baseline failure
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 188
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 189
 An attempt with one trial fewer than the floor
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ Relative performance attempt requires at least 10 trials; it has 9
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 207
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 208
 An attempt with baselines and one trial fewer than the floor
 
 Expected Exception Type:
@@ -160,7 +160,7 @@ Relative performance attempt requires at least 10 trials; it has 9
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 246
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 247
 A fast task timed as zero
 
 Expected Exception Type:
@@ -169,7 +169,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 248
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 249
 A slow task timed as zero
 
 Expected Exception Type:
@@ -178,7 +178,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 250
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 251
 A negative duration
 
 Expected Exception Type:
@@ -187,7 +187,7 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 254
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 255
 A fast task's baseline of negative duration
 
 Expected Exception Type:
@@ -196,7 +196,7 @@ Relative performance test requires baseline durations >= 0
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 258
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 259
 A slow task's baseline of negative duration
 
 Expected Exception Type:
@@ -205,12 +205,21 @@ Relative performance test requires baseline durations >= 0
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 262
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 263
 A slow task timed as zero, beside its baseline
 
 Expected Exception Type:
 [std::runtime_error]
 Relative performance test requires task durations > 0; a task too quick for the clock times as zero
+
+=======================================
+
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 275
+More atypical trials than trials
+
+Expected Exception Type:
+[std::logic_error]
+More atypical trials (2) than trials (1)
 
 =======================================
 

@@ -393,14 +393,14 @@ namespace sequoia::testing
 
       auto speedupLogarithmOf{[](relative_performance_durations durations) { return speedup_logarithm(durations); }};
 
-      auto trialSpeedupLogarithms{
+      auto speedupLogarithmsOfTrials{
           trialDurations
         | std::views::transform(speedupLogarithmOf)
         | std::ranges::to<std::vector>()
       };
 
       const auto [failure, estimate]{
-        judge_speedup(estimate_trimmed_mean(std::move(trialSpeedupLogarithms)), overlapMultiplier, prediction)
+        judge_speedup(estimate_trimmed_mean(std::move(speedupLogarithmsOfTrials)), overlapMultiplier, prediction)
       };
 
       return {.failure{failure}, .estimate{estimate}, .task_durations{typical_task_durations(trialDurations)}};

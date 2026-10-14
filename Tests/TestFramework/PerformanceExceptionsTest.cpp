@@ -28,6 +28,7 @@ namespace sequoia::testing
     test_throwing_task();
     test_attempt_with_too_few_trials();
     test_non_positive_durations();
+    test_more_atypical_trials_than_trials();
   }
 
   void performance_exceptions_test::test_invalid_arguments()
@@ -261,6 +262,18 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       "A slow task timed as zero, beside its baseline",
       judgeAttemptWithBaselinesContaining({.fast{.task{2s}, .baseline{1s}}, .slow{.task{0s}, .baseline{1s}}})
+    );
+  }
+
+  void performance_exceptions_test::test_more_atypical_trials_than_trials()
+  {
+    using namespace std::chrono_literals;
+
+    constexpr relative_performance_durations typical{.fast{1s}, .slow{2s}};
+
+    check_exception_thrown<std::logic_error>(
+      "More atypical trials than trials",
+      [typical]() { return trials_with_atypical(1, typical, {typical, typical}); }
     );
   }
 }
