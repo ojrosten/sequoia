@@ -257,7 +257,7 @@ namespace sequoia::testing
 
       const auto [failure, estimate]{judge_speedup(trialDurations, overlapMultiplier, prediction)};
 
-      return {.failure{failure}, .estimate{estimate}, .durations{typical_durations(trialDurations)}};
+      return {.failure{failure}, .estimate{estimate}, .task_durations{typical_durations(trialDurations)}};
     }
 
     [[nodiscard]]
@@ -289,7 +289,7 @@ namespace sequoia::testing
         }
       };
 
-      auto projected{
+      auto transformedTrials{
         [trialDurations](auto projection) {
           return
               trialDurations
@@ -298,8 +298,8 @@ namespace sequoia::testing
         }
       };
 
-      const auto taskDurations    {projected(tasksOf)},
-                 baselineDurations{projected(baselinesOf)};
+      const auto taskDurations    {transformedTrials(tasksOf)},
+                 baselineDurations{transformedTrials(baselinesOf)};
 
       throw_if_any_duration_not_positive(taskDurations);
       throw_if_any_duration_not_positive(baselineDurations);
@@ -307,17 +307,21 @@ namespace sequoia::testing
       const auto typicalTaskDurations    {typical_durations(taskDurations)},
                  typicalBaselineDurations{typical_durations(baselineDurations)};
 
-      const auto netDurations{projected(netOf)};
+      const auto netDurations{transformedTrials(netOf)};
 
       if(const auto failure{failure_to_exceed_baselines(netDurations)})
-        return {.failure{failure}, .durations{typicalTaskDurations}, .baseline_durations{typicalBaselineDurations}};
+        return {
+          .failure{failure},
+          .task_durations{typicalTaskDurations},
+          .baseline_durations{typicalBaselineDurations}
+        };
 
       const auto [failure, estimate]{judge_speedup(netDurations, overlapMultiplier, prediction)};
 
       return {
         .failure{failure},
         .estimate{estimate},
-        .durations{typicalTaskDurations},
+        .task_durations{typicalTaskDurations},
         .baseline_durations{typicalBaselineDurations}
       };
     }
@@ -331,7 +335,7 @@ namespace sequoia::testing
       return append_lines(outcome.failure ? verdict_summary(*outcome.failure) : "",
                           outcome.estimate ? speedup_summary(*outcome.estimate, prediction) : "",
                           trials_summary(trials, {.made{attemptsMade}, .allowed{relative_performance_max_attempts}}),
-                          task_durations_summary(outcome.durations),
+                          task_durations_summary(outcome.task_durations),
                           outcome.baseline_durations ? baseline_durations_summary(*outcome.baseline_durations) : "");
     }
 
@@ -361,8 +365,8 @@ namespace sequoia::testing
       auto shuffledBaselineOrders{
         [trials, &generator]() {
           return shuffled_orders(trials,
-                                 baseline_order::task_then_baseline,
-                                 baseline_order::baseline_then_task,
+                                 task_and_baseline_order::task_then_baseline,
+                                 task_and_baseline_order::baseline_then_task,
                                  generator);
         }
       };
@@ -372,7 +376,7 @@ namespace sequoia::testing
                  slowOrders{shuffledBaselineOrders()};
 
       auto trialOrder{
-        [](task_order pairs, baseline_order fast, baseline_order slow) -> task_order_with_baselines {
+        [](task_order pairs, task_and_baseline_order fast, task_and_baseline_order slow) -> task_order_with_baselines {
           return {.pairs{pairs}, .fast{fast}, .slow{slow}};
         }
       };

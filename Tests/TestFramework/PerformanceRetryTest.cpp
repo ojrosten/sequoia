@@ -222,10 +222,10 @@ namespace sequoia::testing
       [this](const reporter& description) {
         const auto taskCalls{std::make_shared<std::vector<task>>()};
         auto recordedTask{
-          [taskCalls](task t, std::chrono::milliseconds duration) {
-            return [taskCalls, t, duration]() {
+          [taskCalls](task t, std::chrono::milliseconds spinDuration) {
+            return [taskCalls, t, spinDuration]() {
               taskCalls->push_back(t);
-              spin_for(duration);
+              spin_for(spinDuration);
             };
           }
         };
@@ -249,15 +249,15 @@ namespace sequoia::testing
     {
       auto isFast{[](task t) { return (t == task::fast) || (t == task::fast_baseline); }};
 
-      auto pairsAdjacent{
+      auto pairsAreAdjacent{
         [isFast](std::span<const task> trialCalls) {
           return (isFast(trialCalls[0]) == isFast(trialCalls[1])) && (isFast(trialCalls[2]) == isFast(trialCalls[3]));
         }
       };
 
-      auto fastPairFirst{[isFast](std::span<const task> trialCalls) { return isFast(trialCalls[0]); }};
+      auto fastPairRunsFirst{[isFast](std::span<const task> trialCalls) { return isFast(trialCalls[0]); }};
 
-      auto taskBeforeBaseline{
+      auto taskRunsBeforeBaseline{
         [](task t, task baseline) {
           return [t, baseline](std::span<const task> trialCalls) {
             return std::ranges::find(trialCalls, t) < std::ranges::find(trialCalls, baseline);
@@ -273,7 +273,7 @@ namespace sequoia::testing
         }
       };
 
-      auto countTrials{
+      auto trialsWhere{
         [callsOfTrial, numTrials{taskCalls.size() / callsPerTrial}](auto predicate) {
           return static_cast<std::size_t>(
             std::ranges::count_if(std::views::iota(0uz, numTrials) | std::views::transform(callsOfTrial), predicate)
@@ -281,15 +281,18 @@ namespace sequoia::testing
         }
       };
 
-      check(equality, "Trials in which each task runs beside its baseline", countTrials(pairsAdjacent), trials);
-      check(equality, "Trials in which the fast task and its baseline run first", countTrials(fastPairFirst), trials / 2);
+      check(equality, "Trials in which each task runs beside its baseline", trialsWhere(pairsAreAdjacent), trials);
+      check(equality,
+            "Trials in which the fast task and its baseline run first",
+            trialsWhere(fastPairRunsFirst),
+            trials / 2);
       check(equality,
             "Trials in which the fast task runs before its baseline",
-            countTrials(taskBeforeBaseline(task::fast, task::fast_baseline)),
+            trialsWhere(taskRunsBeforeBaseline(task::fast, task::fast_baseline)),
             trials / 2);
       check(equality,
             "Trials in which the slow task runs before its baseline",
-            countTrials(taskBeforeBaseline(task::slow, task::slow_baseline)),
+            trialsWhere(taskRunsBeforeBaseline(task::slow, task::slow_baseline)),
             trials / 2);
     }
 

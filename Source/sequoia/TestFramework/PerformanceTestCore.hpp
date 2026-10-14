@@ -133,7 +133,7 @@ namespace sequoia::testing
     {
       std::optional<relative_performance_failure>   failure{};
       std::optional<relative_performance_estimate>  estimate{};
-      relative_performance_durations                durations{};
+      relative_performance_durations                task_durations{};
       std::optional<relative_performance_durations> baseline_durations{};
     };
 
@@ -221,16 +221,16 @@ namespace sequoia::testing
 
     enum class task_order { fast_then_slow, slow_then_fast };
 
-    enum class baseline_order { task_then_baseline, baseline_then_task };
+    enum class task_and_baseline_order { task_then_baseline, baseline_then_task };
 
     /** \brief The order in which a trial runs the fast and slow tasks, each
                beside its baseline.
      */
     struct task_order_with_baselines
     {
-      task_order     pairs{};
-      baseline_order fast{},
-                     slow{};
+      task_order              pairs{};
+      task_and_baseline_order fast{},
+                              slow{};
     };
 
     /** \brief Returns the order in which the two tasks run in each of
@@ -274,9 +274,10 @@ namespace sequoia::testing
      */
     template<performance_task T, performance_task B>
     [[nodiscard]]
-    task_and_baseline_durations time_task_and_baseline(const task_with_baseline<T, B>& pair, baseline_order order)
+    task_and_baseline_durations time_task_and_baseline(const task_with_baseline<T, B>& pair,
+                                                       task_and_baseline_order order)
     {
-      if(order == baseline_order::task_then_baseline)
+      if(order == task_and_baseline_order::task_then_baseline)
         return {.task{profile(pair.task)}, .baseline{profile(pair.baseline)}};
 
       const auto baselineDuration{profile(pair.baseline)};
@@ -381,7 +382,9 @@ namespace sequoia::testing
 
       auto executeAttempt{
         [&fast, &slow, &generator, &parameters](std::size_t attempt) {
-          return judge_attempt(time_attempt(fast, slow, trials_of_attempt(parameters.minimum_trials, attempt), generator),
+          const auto trials{trials_of_attempt(parameters.minimum_trials, attempt)};
+
+          return judge_attempt(time_attempt(fast, slow, trials, generator),
                                overlap_multiplier(Mode, attempt),
                                parameters.prediction);
         }

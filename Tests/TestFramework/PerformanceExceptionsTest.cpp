@@ -121,20 +121,18 @@ namespace sequoia::testing
       )
     );
 
+    auto checkingBaseline{[this]() { check("A check within a performance check", true); }};
+
     check_exception_thrown<std::logic_error>(
       "Fast task's baseline performs a check",
-      checkWithTasks(
-        task_with_baseline{.task = []() {}, .baseline = [this]() { check("A check within a performance check", true); }},
-        task_with_baseline{.task = []() {}, .baseline = []() {}}
-      )
+      checkWithTasks(task_with_baseline{.task = []() {}, .baseline = checkingBaseline},
+                     task_with_baseline{.task = []() {}, .baseline = []() {}})
     );
 
     check_exception_thrown<std::logic_error>(
       "Slow task's baseline performs a check",
-      checkWithTasks(
-        task_with_baseline{.task = []() {}, .baseline = []() {}},
-        task_with_baseline{.task = []() {}, .baseline = [this]() { check("A check within a performance check", true); }}
-      )
+      checkWithTasks(task_with_baseline{.task = []() {}, .baseline = []() {}},
+                     task_with_baseline{.task = []() {}, .baseline = checkingBaseline})
     );
   }
 

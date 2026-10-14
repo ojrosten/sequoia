@@ -37,6 +37,8 @@ namespace sequoia::testing
       void operator()() && {}
     };
 
+    using copyable_task_with_baseline = task_with_baseline<copyable_task, copyable_task>;
+
     template<class Task>
     concept profilable = requires(Task task) { profile(std::move(task)); };
 
@@ -51,7 +53,7 @@ namespace sequoia::testing
     };
 
     template<class Fast, class FastBaseline, class Slow, class SlowBaseline>
-    inline constexpr bool checkable_tasks_with_baselines_v{
+    inline constexpr bool checkable_with_baselines_v{
       requires(performance_extender<test_mode::standard>& extender,
                Fast fast,
                FastBaseline fastBaseline,
@@ -343,15 +345,18 @@ namespace sequoia::testing
     STATIC_CHECK(!checkable_tasks_v<rvalue_only_task,    copyable_task>);
     STATIC_CHECK(!checkable_tasks_v<   copyable_task, rvalue_only_task>);
 
-    STATIC_CHECK( checkable_tasks_with_baselines_v<   copyable_task,    copyable_task,    copyable_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_with_baselines_v<  move_only_task,    copyable_task,    copyable_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_with_baselines_v<   copyable_task,   move_only_task,    copyable_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_with_baselines_v<   copyable_task,    copyable_task,   move_only_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_with_baselines_v<   copyable_task,    copyable_task,    copyable_task,   move_only_task>);
-    STATIC_CHECK(!checkable_tasks_with_baselines_v<rvalue_only_task,    copyable_task,    copyable_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_with_baselines_v<   copyable_task, rvalue_only_task,    copyable_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_with_baselines_v<   copyable_task,    copyable_task, rvalue_only_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_with_baselines_v<   copyable_task,    copyable_task,    copyable_task, rvalue_only_task>);
+    STATIC_CHECK( checkable_with_baselines_v<   copyable_task,    copyable_task,    copyable_task,    copyable_task>);
+    STATIC_CHECK(!checkable_with_baselines_v<  move_only_task,    copyable_task,    copyable_task,    copyable_task>);
+    STATIC_CHECK(!checkable_with_baselines_v<   copyable_task,   move_only_task,    copyable_task,    copyable_task>);
+    STATIC_CHECK(!checkable_with_baselines_v<   copyable_task,    copyable_task,   move_only_task,    copyable_task>);
+    STATIC_CHECK(!checkable_with_baselines_v<   copyable_task,    copyable_task,    copyable_task,   move_only_task>);
+    STATIC_CHECK(!checkable_with_baselines_v<rvalue_only_task,    copyable_task,    copyable_task,    copyable_task>);
+    STATIC_CHECK(!checkable_with_baselines_v<   copyable_task, rvalue_only_task,    copyable_task,    copyable_task>);
+    STATIC_CHECK(!checkable_with_baselines_v<   copyable_task,    copyable_task, rvalue_only_task,    copyable_task>);
+    STATIC_CHECK(!checkable_with_baselines_v<   copyable_task,    copyable_task,    copyable_task, rvalue_only_task>);
+
+    STATIC_CHECK(!checkable_tasks_v<              copyable_task, copyable_task_with_baseline>);
+    STATIC_CHECK(!checkable_tasks_v<copyable_task_with_baseline,               copyable_task>);
   }
 
   void performance_utilities_test::test_exception_specifications()
@@ -396,8 +401,8 @@ namespace sequoia::testing
         check(within_tolerance{1e-12}, "The speed-up net of the baselines", outcome.estimate->speedup, 8.0);
       }
 
-      check(within_tolerance{1e-12}, "The fast task's own duration", outcome.durations.fast.count(), 3.0);
-      check(within_tolerance{1e-12}, "The slow task's own duration", outcome.durations.slow.count(), 9.0);
+      check(within_tolerance{1e-12}, "The fast task's own duration", outcome.task_durations.fast.count(), 3.0);
+      check(within_tolerance{1e-12}, "The slow task's own duration", outcome.task_durations.slow.count(), 9.0);
 
       if(check("The baseline durations are given", outcome.baseline_durations.has_value()))
       {
@@ -450,7 +455,7 @@ namespace sequoia::testing
 
   void performance_utilities_test::test_shuffled_task_orders_with_baselines()
   {
-    using impl::task_order, impl::baseline_order, impl::task_order_with_baselines;
+    using impl::task_order, impl::task_and_baseline_order, impl::task_order_with_baselines;
 
     // Enough trials that independent shuffles agree in every trial only with
     // a negligible probability. The generator's seed is fixed, so a given
@@ -460,24 +465,33 @@ namespace sequoia::testing
 
     const auto orders{impl::shuffled_task_orders_with_baselines(trials, generator)};
 
-    auto countOf{
+    auto trialsWhere{
       [&orders](auto predicate) { return static_cast<std::size_t>(std::ranges::count_if(orders, predicate)); }
     };
 
-    auto fastPairFirst{[](task_order_with_baselines order) { return order.pairs == task_order::fast_then_slow; }};
-    auto fastTaskFirst{
-      [](task_order_with_baselines order) { return order.fast == baseline_order::task_then_baseline; }
+    auto fastPairRunsFirst{[](task_order_with_baselines order) { return order.pairs == task_order::fast_then_slow; }};
+    auto fastTaskRunsFirst{
+      [](task_order_with_baselines order) { return order.fast == task_and_baseline_order::task_then_baseline; }
     };
-    auto slowTaskFirst{
-      [](task_order_with_baselines order) { return order.slow == baseline_order::task_then_baseline; }
+    auto slowTaskRunsFirst{
+      [](task_order_with_baselines order) { return order.slow == task_and_baseline_order::task_then_baseline; }
     };
     auto inPairOrdersDiffer{[](task_order_with_baselines order) { return order.fast != order.slow; }};
 
-    check(equality, "Trials in which the fast task and its baseline run first", countOf(fastPairFirst), trials / 2);
-    check(equality, "Trials in which the fast task runs before its baseline",   countOf(fastTaskFirst), trials / 2);
-    check(equality, "Trials in which the slow task runs before its baseline",   countOf(slowTaskFirst), trials / 2);
+    check(equality,
+          "Trials in which the fast task and its baseline run first",
+          trialsWhere(fastPairRunsFirst),
+          trials / 2);
+    check(equality,
+          "Trials in which the fast task runs before its baseline",
+          trialsWhere(fastTaskRunsFirst),
+          trials / 2);
+    check(equality,
+          "Trials in which the slow task runs before its baseline",
+          trialsWhere(slowTaskRunsFirst),
+          trials / 2);
     check("The fast and slow tasks' orders beside their baselines are shuffled independently",
-          countOf(inPairOrdersDiffer) > 0);
+          trialsWhere(inPairOrdersDiffer) > 0);
   }
 
   void performance_utilities_test::test_postprocessing()
