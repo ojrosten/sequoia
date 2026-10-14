@@ -44,6 +44,20 @@ namespace sequoia::testing
     return std::ranges::fold_left(trialsOfAttempts | std::views::take(attempt - 1), 0uz, std::plus<>{});
   }
 
+  /** \brief Returns as many trials' durations as
+             `relative_performance_minimum_trials_floor`, each `typical`
+             except the middle one, which is `atypical`.
+   */
+  template<class Durations>
+  [[nodiscard]]
+  constexpr auto trials_with_one_atypical(Durations typical, Durations atypical)
+  {
+    std::array<Durations, relative_performance_minimum_trials_floor> durations{};
+    durations.fill(typical);
+    durations[durations.size() / 2] = atypical;
+    return durations;
+  }
+
   /** \brief Keeps the calling thread busy until `t` has passed by the
              steady clock.
 

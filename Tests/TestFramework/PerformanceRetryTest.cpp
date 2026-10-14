@@ -13,6 +13,7 @@
 #include <functional>
 #include <memory>
 #include <ranges>
+#include <span>
 #include <vector>
 
 namespace sequoia::testing
@@ -43,6 +44,8 @@ namespace sequoia::testing
     test_constant_gate_multiplier();
     test_trimmed_estimate();
     test_task_orders();
+    test_pass_at_second_attempt_with_baselines();
+    test_task_orders_with_baselines();
   }
 
   void performance_retry_test::test_pass_at_second_attempt()
@@ -182,5 +185,115 @@ namespace sequoia::testing
 
     check("A second check runs the tasks in another order",
           recordTaskCalls("The same tasks, checked again") != taskCalls);
+  }
+
+  void performance_retry_test::test_pass_at_second_attempt_with_baselines()
+  {
+    using namespace std::chrono_literals;
+
+    const counted_spinner fast{2ms},
+                          fastBaseline{3ms, trials_for_minimum_11[0], 1ms},
+                          slow{3ms},
+                          slowBaseline{1ms};
+
+    check_relative_performance("The fast task is shorter than its baseline at attempt 1; "
+                               "net of the baselines, a speed-up of 2 at attempt 2",
+                               task_with_baseline{.task = fast, .baseline = fastBaseline},
+                               task_with_baseline{.task = slow, .baseline = slowBaseline},
+                               retry_parameters);
+
+    constexpr auto callsOfEach{trials_before_attempt(trials_for_minimum_11, 3)};
+
+    check(equality, "Calls of the fast task",          fast.calls(),         callsOfEach);
+    check(equality, "Calls of the fast task's baseline", fastBaseline.calls(), callsOfEach);
+    check(equality, "Calls of the slow task",          slow.calls(),         callsOfEach);
+    check(equality, "Calls of the slow task's baseline", slowBaseline.calls(), callsOfEach);
+  }
+
+  void performance_retry_test::test_task_orders_with_baselines()
+  {
+    using namespace std::chrono_literals;
+
+    enum class task { fast, fast_baseline, slow, slow_baseline };
+
+    constexpr std::size_t callsPerTrial{4}, trials{trials_for_minimum_11[0]};
+
+    auto recordTaskCalls{
+      [this](const reporter& description) {
+        const auto taskCalls{std::make_shared<std::vector<task>>()};
+        auto recordedTask{
+          [taskCalls](task t, std::chrono::milliseconds duration) {
+            return [taskCalls, t, duration]() {
+              taskCalls->push_back(t);
+              spin_for(duration);
+            };
+          }
+        };
+
+        check_relative_performance(description,
+                                   task_with_baseline{.task     = recordedTask(task::fast,          2ms),
+                                                      .baseline = recordedTask(task::fast_baseline, 1ms)},
+                                   task_with_baseline{.task     = recordedTask(task::slow,          3ms),
+                                                      .baseline = recordedTask(task::slow_baseline, 1ms)},
+                                   retry_parameters);
+
+        return *taskCalls;
+      }
+    };
+
+    const auto taskCalls{
+      recordTaskCalls("Net of the baselines, a speed-up of 2, each task and baseline recording its calls")
+    };
+
+    if(check(equality, "Calls of the tasks and baselines", taskCalls.size(), callsPerTrial * trials))
+    {
+      auto isFast{[](task t) { return (t == task::fast) || (t == task::fast_baseline); }};
+
+      auto pairsAdjacent{
+        [isFast](std::span<const task> trialCalls) {
+          return (isFast(trialCalls[0]) == isFast(trialCalls[1])) && (isFast(trialCalls[2]) == isFast(trialCalls[3]));
+        }
+      };
+
+      auto fastPairFirst{[isFast](std::span<const task> trialCalls) { return isFast(trialCalls[0]); }};
+
+      auto taskBeforeBaseline{
+        [](task t, task baseline) {
+          return [t, baseline](std::span<const task> trialCalls) {
+            return std::ranges::find(trialCalls, t) < std::ranges::find(trialCalls, baseline);
+          };
+        }
+      };
+
+      // TO DO: taskCalls | std::views::chunk(callsPerTrial), once libc++ has
+      // chunk (P2442)
+      auto callsOfTrial{
+        [&taskCalls](std::size_t trial) {
+          return std::span<const task>{taskCalls}.subspan(trial * callsPerTrial, callsPerTrial);
+        }
+      };
+
+      auto countTrials{
+        [callsOfTrial, numTrials{taskCalls.size() / callsPerTrial}](auto predicate) {
+          return static_cast<std::size_t>(
+            std::ranges::count_if(std::views::iota(0uz, numTrials) | std::views::transform(callsOfTrial), predicate)
+          );
+        }
+      };
+
+      check(equality, "Trials in which each task runs beside its baseline", countTrials(pairsAdjacent), trials);
+      check(equality, "Trials in which the fast task and its baseline run first", countTrials(fastPairFirst), trials / 2);
+      check(equality,
+            "Trials in which the fast task runs before its baseline",
+            countTrials(taskBeforeBaseline(task::fast, task::fast_baseline)),
+            trials / 2);
+      check(equality,
+            "Trials in which the slow task runs before its baseline",
+            countTrials(taskBeforeBaseline(task::slow, task::slow_baseline)),
+            trials / 2);
+    }
+
+    check("A second check runs the tasks and baselines in another order",
+          recordTaskCalls("The same tasks and baselines, checked again") != taskCalls);
   }
 }

@@ -36,6 +36,10 @@ namespace sequoia::testing
     void test_fail_at_second_attempt();
 
     void test_confidence_multiplier_from_first_attempt();
+
+    void test_relative_performance_with_baselines();
+
+    void test_fail_at_second_attempt_with_baselines();
   };
 
   class performance_false_positive_diagnostics final : public performance_false_positive_test
@@ -57,6 +61,8 @@ namespace sequoia::testing
     void test_confidence_multiplier();
 
     void test_computations_not_optimized_away();
+
+    void test_relative_performance_with_baselines();
   };
 
   class performance_utilities_test final : public free_test
@@ -75,6 +81,10 @@ namespace sequoia::testing
     void test_exception_specifications();
 
     void test_default_minimum_trials();
+
+    void test_judgement_with_baselines();
+
+    void test_shuffled_task_orders_with_baselines();
 
     void test_postprocessing();
 
