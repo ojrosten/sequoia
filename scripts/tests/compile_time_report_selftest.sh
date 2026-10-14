@@ -341,7 +341,7 @@ EOF
   unit_object="CMakeFiles/T.dir/src/Plain.cpp.o"
   printf '%s\t%s\n' "$unit_object" \
     "fakecc -DX -MD -MT $unit_object -MF $unit_object.d -o $unit_object -c /src/Plain.cpp" >> "$d/commands.txt"
-  # Modules, as CMake gives them to clang: a module's interface writes its BMI
+  # Modules, as given to clang by CMake: a module's interface writes its BMI
   # to the path which -fmodule-output= gives in the unit's response file, and
   # an importer's response file names the BMIs it reads.
   local unit_flags

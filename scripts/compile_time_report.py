@@ -32,7 +32,7 @@ as this machine's.
 """
 import argparse, collections, contextlib, json, os, re, shlex, subprocess, sys, tempfile
 
-# A source location as clang writes it in a detail: <file:line:column...>.
+# A source location as written by clang in a detail: <file:line:column...>.
 LOC = re.compile(r"<(?P<file>[^:<>]+):(?P<line>\d+):\d+")
 
 

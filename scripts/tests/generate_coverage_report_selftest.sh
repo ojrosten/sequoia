@@ -46,7 +46,7 @@
 #   - the controls pin every option given to each lcov call,
 #     check_tracefile.py and genhtml. genhtml runs once, given the three error
 #     categories lcov 2.5 knows. On Darwin, removal takes Homebrew's
-#     prefix, as brew gives it, and the other toolchains' paths too, and an
+#     prefix, as given by brew, and the other toolchains' paths too, and an
 #     unused pattern is no error;
 #   - on Darwin, genhtml is given GNU c++filt from Homebrew's binutils, under
 #     the prefix brew gives, and the script refuses to start without brew or
@@ -293,7 +293,7 @@ run() {
   cat "$case_dir/out" "$case_dir/err" > "$case_dir/all"
 }
 
-# The options the script passes to each call, as the stand-ins log them.
+# The options the script passes to each call, as logged by the stand-ins.
 capture_options='--keep-going --filter range --rc geninfo_unexecuted_blocks=1 --rc check_data_consistency=0'
 capture_options+=' --ignore-errors empty --ignore-errors inconsistent,inconsistent --ignore-errors format,format'
 read_options='--rc check_data_consistency=0 --rc derive_function_end_line=0'

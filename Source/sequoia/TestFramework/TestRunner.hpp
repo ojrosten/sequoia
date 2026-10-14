@@ -99,7 +99,8 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code to_return_code(const log_summary& summary) noexcept;
 
-  /** \brief The `return_code` which `exitStatus` carries, as `to_exit_code` encodes it.
+  /** \brief The `return_code` which `exitStatus` carries, as encoded by
+             `to_exit_code`.
 
       On Windows, a tool can exit with a Win32 error code, such as 87, 110 or 111, which `to_exit_code`
       also returns. This function reads that status as a runner's.
@@ -110,8 +111,8 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code child_return_code(int exitStatus, std::string_view childDescription);
 
-  /** \brief Returns `message` as the runner compares it across runs when
-             looking for instabilities: with its measurements set to zero.
+  /** \brief Returns `message` as compared by the runner across runs in a
+             search for instabilities: with its measurements set to zero.
    */
   [[nodiscard]]
   std::string instability_projection(std::string_view message);
@@ -179,8 +180,8 @@ namespace sequoia::testing
       scratchpad.
 
       \returns
-      -# The future of the discarded root's removal, as `enqueue_removal`
-         returns it, if the temporary root was moved;
+      -# The future of the discarded root's removal, as returned by
+         `enqueue_removal`, if the temporary root was moved;
       -# Otherwise, a ready future holding the leftover's failure, if any.
 
       \throws std::logic_error if `materials` names no test

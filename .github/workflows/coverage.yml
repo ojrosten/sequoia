@@ -311,7 +311,7 @@ jobs:
           if cmp -s "$baseline" "$tightened"; then changed=no; else changed=yes; fi
           if grep -q '^notice: ' "$verdict"; then noticed=yes; else noticed=no; fi
           if [ "$changed" = yes ] && [ "$noticed" = no ]; then
-            echo "::error title=Uncalled functions::$baseline is not as the script writes it: tightening it with no notice changed it. Make it again as the diff below shows"
+            echo "::error title=Uncalled functions::$baseline is not as written by the script: tightening it with no notice changed it. Make it again as the diff below shows"
             diff "$baseline" "$tightened" || true
             exit 1
           fi

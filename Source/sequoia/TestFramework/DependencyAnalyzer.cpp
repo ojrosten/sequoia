@@ -101,7 +101,7 @@ namespace sequoia::testing
 
     /** A file which the build recorded, and whether the file is the toolchain's. The path has two parts:
         -# The file's directory, made weakly canonical if the filesystem can resolve the directory;
-        -# The file's own name, as the compilation spelled it.
+        -# The file's own name, as spelled by the compilation.
      */
     struct recorded_file
     {
