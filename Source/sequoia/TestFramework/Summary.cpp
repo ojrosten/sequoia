@@ -45,16 +45,29 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string report_time(const log_summary& log, const opt_duration duration)
+  std::string durations_report(const durations_of_tests& durations)
   {
-    return std::format("{}{}{}",
-                       duration ? timing_line("Total Run Time", *duration) : "",
-                       timing_line("Execution Time",  log.execution_duration()),
-                       timing_line("Runner Overhead", log.runner_overhead()));
+    return std::format("{}{}",
+                       timing_line("Execution Time",  durations.execution_duration),
+                       timing_line("Runner Overhead", durations.runner_overhead));
   }
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, std::string_view namesuffix, const opt_duration duration, const summary_detail verbosity, indentation ind_0, indentation ind_1)
+  std::string durations_report(const durations_of_run& durationsOfRun)
+  {
+    const auto& [totalRunTime, criticalPath]{durationsOfRun};
+    return std::format("{}{}{}",
+                       timing_line("Total Run Time",      totalRunTime),
+                       durations_report(criticalPath.spent_in_tests),
+                       timing_line("Scheduling Overhead", criticalPath.scheduling_overhead));
+  }
+
+  [[nodiscard]]
+  std::string summarize(const log_summary& log,
+                        std::string_view namesuffix,
+                        const summary_detail verbosity,
+                        indentation ind_0,
+                        indentation ind_1)
   {
     constexpr std::size_t entries{6};
 
@@ -118,9 +131,9 @@ namespace sequoia::testing
 
     if((verbosity & summary_detail::timings) == summary_detail::timings)
     {
-      append_indented(summary, report_time(log, duration), ind_0);
+      append_indented(summary, durations_report(log.durations()), ind_0);
     }
-    else
+    else if(!summary.empty())
     {
       summary.append("\n");
     }
@@ -157,11 +170,5 @@ namespace sequoia::testing
     }
 
     return summary;
-  }
-
-  [[nodiscard]]
-  std::string summarize(const log_summary& log, std::string_view namesuffix, const summary_detail verbosity, indentation ind_0, indentation ind_1)
-  {
-    return summarize(log, namesuffix, std::nullopt, verbosity, ind_0, ind_1);
   }
 }

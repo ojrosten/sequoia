@@ -8,6 +8,7 @@ scratch_writing_free_test:
 [Total Run Time: 1.11ms]
 [Execution Time: 86.1us]
 [Runner Overhead: 536us]
+[Scheduling Overhead: 3us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

@@ -12,7 +12,7 @@ Tests:
         [Runner Overhead: 725us]
             False Positive Checks:                     1;  Failures:  1
 
-            Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 174
+            Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 175
             False negative failure
 
             [int]
@@ -28,7 +28,7 @@ Tests:
             False Negative Checks:                     1;  Failures:  1
 
             False Negative Failure:
-            Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 157
+            Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 158
             False positive failure
 
             [int]
@@ -40,7 +40,7 @@ Tests:
         [Runner Overhead: 586us]
             Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-            Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 100
+            Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 101
             Standard Failure
 
             [int]
@@ -55,6 +55,7 @@ Tests:
 [Total Run Time: 1.41ms]
 [Execution Time: 187us]
 [Runner Overhead: 2.01ms]
+[Scheduling Overhead: 12us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     1;  Failures:  1

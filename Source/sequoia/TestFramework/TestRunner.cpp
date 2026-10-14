@@ -152,25 +152,21 @@ namespace sequoia::testing
       }
     }
 
-    struct execution_info
-    {
-      std::thread::id       thread_id{};
-      log_summary::duration duration{};
-    };
-
     [[nodiscard]]
-    log_summary::duration summed_duration(std::span<const execution_info> executions)
+    durations_of_tests summed_durations(std::span<const execution_info> executions)
     {
       return std::ranges::fold_left(
-               executions | std::views::transform(&execution_info::duration),
-               log_summary::duration{},
+               executions | std::views::transform(&execution_info::durations),
+               durations_of_tests{},
                std::plus{}
              );
     }
 
-    /** Groups the executions by thread, and returns the largest of the groups' summed durations. */
+    /** Returns the summed durations of the thread whose tests' durations sum
+        to the most.
+     */
     [[nodiscard]]
-    log_summary::duration busiest_thread_execution_duration(std::vector<execution_info> executions)
+    durations_of_tests busiest_thread_durations(std::vector<execution_info> executions)
     {
       std::ranges::sort(executions, std::ranges::less{}, &execution_info::thread_id);
 
@@ -180,14 +176,29 @@ namespace sequoia::testing
         }
       };
 
-      auto threadTotals{
+      auto threadDurations{
           executions
         | std::views::chunk_by(sameThread)
-        | std::views::transform(summed_duration)
+        | std::views::transform([](auto threadExecutions) { return summed_durations(threadExecutions); })
       };
 
-      return std::ranges::fold_left(threadTotals, log_summary::duration{}, std::ranges::max);
+      auto busierOf{
+        [](const durations_of_tests& lhs, const durations_of_tests& rhs){
+          return std::ranges::max(lhs, rhs, std::ranges::less{}, &durations_of_tests::total);
+        }
+      };
+
+      return std::ranges::fold_left(threadDurations, durations_of_tests{}, busierOf);
     }
+
+    constexpr auto execution_info_of{
+      [](const auto& node) {
+        return execution_info{
+          .thread_id{node.executing_thread_id},
+          .durations{node.summary.durations()}
+        };
+      }
+    };
 
     constexpr std::array<std::string_view, 3> materials_kinds{"WorkingCopy", "Prediction", "Auxiliary"};
 
@@ -893,6 +904,37 @@ namespace sequoia::testing
                          : (code & dirty_return_codes) | return_code::incomplete_run};
 
     return runner_exit_offset + static_cast<int>(std::to_underlying(carried));
+  }
+
+  [[nodiscard]]
+  critical_path_durations apportion_wall_clock(const log_summary::duration wallClock,
+                                               std::span<const execution_info> sequential,
+                                               std::span<const execution_info> concurrent)
+  {
+    const auto durationsOnCriticalPath{
+      summed_durations(sequential) + busiest_thread_durations(concurrent | std::ranges::to<std::vector>())
+    };
+
+    if(wallClock < durationsOnCriticalPath.total())
+    {
+      auto printed{
+        [](const log_summary::duration d) {
+          const auto [time, unit]{stringify_duration(d)};
+          return std::format("{}{}", time, unit);
+        }
+      };
+
+      throw std::invalid_argument{
+        std::format("The wall clock, {}, is shorter than the durations of the critical path's tests, {}",
+                    printed(wallClock),
+                    printed(durationsOnCriticalPath.total()))
+      };
+    }
+
+    return {
+      .spent_in_tests     {durationsOnCriticalPath},
+      .scheduling_overhead{wallClock - durationsOnCriticalPath.total()}
+    };
   }
 
   [[nodiscard]]
@@ -1843,7 +1885,7 @@ namespace sequoia::testing
     // Without the flush, a run killed while the tests are silent would never show that they had begun
     stream() << running_tests_message(m_ConcurrencyMode) << std::flush;
 
-    const auto concurrentDurations{execute_tests(id)};
+    const auto criticalPathDurations{execute_tests(id)};
     const auto removalFailures{extract_discarded_materials_removal_failures()};
 
     test_tracker tracker{proj_paths(), id, m_Filter.selects() ? is_filtered::yes : is_filtered::no, m_Filter.tests_left_out()};
@@ -1880,15 +1922,11 @@ namespace sequoia::testing
 
     report_results();
 
-    if(concurrentDurations)
-    {
-      auto& rootSummary{m_Suites.begin_node_weights()->summary};
-      rootSummary.execution_duration(concurrentDurations->execution_duration);
-      rootSummary.runner_overhead(concurrentDurations->runner_overhead);
-    }
+    const durations_of_run durationsOfRun{.total_run_time{t.time_elapsed()}, .critical_path{criticalPathDurations}};
 
     stream() << "\n-----------Grand Totals-----------\n";
-    stream() << summarize(root_summary(), "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+    stream() << durations_report(durationsOfRun);
+    stream() << summarize(root_summary(), "", summary_detail::absent_checks, tab, no_indent);
 
     if(const auto materialsUpdateReport{tracker.materials_update_report()}; !materialsUpdateReport.empty())
     {
@@ -1918,19 +1956,18 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::optional<test_runner::run_durations> test_runner::execute_tests(const std::optional<std::size_t> id)
+  critical_path_durations test_runner::execute_tests(const std::optional<std::size_t> id)
   {
     discarded_materials_remover remover{};
     if(concurrent_execution())
       return execute_concurrently(id, remover);
 
-    execute_serially(id, remover);
-    return std::nullopt;
+    return execute_serially(id, remover);
   }
 
   [[nodiscard]]
-  test_runner::run_durations test_runner::execute_concurrently(const std::optional<std::size_t> id,
-                                                               discarded_materials_remover& remover)
+  critical_path_durations test_runner::execute_concurrently(const std::optional<std::size_t> id,
+                                                            discarded_materials_remover& remover)
   {
     auto first{std::ranges::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
     auto next{std::ranges::find_if(first, m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest->parallelizable(); })};
@@ -1962,30 +1999,18 @@ namespace sequoia::testing
 
     const auto wallClock{asyncTimer.time_elapsed()};
 
-    auto executionInfoOf{
-      [](const suite_node& wt){
-        return execution_info{.thread_id{wt.executing_thread_id}, .duration{wt.summary.execution_duration()}};
-      }
-    };
-
     auto executionInfos{
-      [executionInfoOf](std::span<const suite_node> nodes){
-        return nodes | std::views::transform(executionInfoOf) | std::ranges::to<std::vector>();
+      [](std::span<const suite_node> nodes){
+        return nodes | std::views::transform(execution_info_of) | std::ranges::to<std::vector>();
       }
     };
 
-    // The longest the tests ran one after another: those which are not parallelizable, then the busiest thread's
-    const auto executionDuration{
-        summed_duration(executionInfos(nonParallelizable))
-      + busiest_thread_execution_duration(executionInfos(parallelizable))
-    };
-    return run_durations{
-      .execution_duration{executionDuration},
-      .runner_overhead{wallClock - executionDuration}
-    };
+    return apportion_wall_clock(wallClock, executionInfos(nonParallelizable), executionInfos(parallelizable));
   }
 
-  void test_runner::execute_serially(const std::optional<std::size_t> id, discarded_materials_remover& remover)
+  [[nodiscard]]
+  critical_path_durations test_runner::execute_serially(const std::optional<std::size_t> id,
+                                                        discarded_materials_remover& remover)
   {
     using namespace maths;
     auto execute{
@@ -1996,7 +2021,18 @@ namespace sequoia::testing
       }
     };
 
+    const timer serialTimer{};
     traverse(depth_first, m_Suites, find_disconnected_t{}, execute, null_func_obj{}, null_func_obj{});
+    const auto wallClock{serialTimer.time_elapsed()};
+
+    const auto executions{
+        m_Suites.node_weights()
+      | std::views::filter(holds_test)
+      | std::views::transform(execution_info_of)
+      | std::ranges::to<std::vector>()
+    };
+
+    return apportion_wall_clock(wallClock, executions, {});
   }
 
   void test_runner::report_results()
@@ -2026,7 +2062,7 @@ namespace sequoia::testing
             else
             {
               const auto heading{sequoia::indent(wt.summary.name() + ":", suiteIndent)};
-              stream << (serial ? append_indented(heading, report_time(wt.summary, std::nullopt), suiteIndent)
+              stream << (serial ? append_indented(heading, durations_report(wt.summary.durations()), suiteIndent)
                                 : heading + '\n');
             }
 

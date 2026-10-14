@@ -10,6 +10,7 @@ passing_test:
 [Total Run Time: 407us]
 [Execution Time: 105us]
 [Runner Overhead: 366us]
+[Scheduling Overhead: 8.37us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -20,4 +21,4 @@ passing_test:
 Dump compared with 'before': 1 check missing, 0 checks added
 
 Missing:
-  Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 100: Standard Failure
+  Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 101: Standard Failure

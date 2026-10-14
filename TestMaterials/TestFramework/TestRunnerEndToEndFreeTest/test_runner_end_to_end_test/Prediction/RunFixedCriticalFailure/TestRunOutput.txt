@@ -8,6 +8,7 @@ foo_test:
 [Total Run Time: 4.56ms]
 [Execution Time: 4.09ms]
 [Runner Overhead: 1.98ms]
+[Scheduling Overhead: 4.79us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 47]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

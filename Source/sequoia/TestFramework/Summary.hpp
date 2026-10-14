@@ -14,8 +14,6 @@
 #include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
 
-#include <optional>
-
 namespace sequoia::testing
 {
   /** bit mask for the level of detail */
@@ -57,7 +55,36 @@ namespace sequoia::testing
     }
   }
 
-  using opt_duration = std::optional<log_summary::duration>;
+  /** \brief The durations into which the critical path of an execution of
+             tests divides the execution's wall clock.
+
+      The critical path is a sequence of tests known to have run one after
+      another. `spent_in_tests` sums its tests' durations, and
+      `scheduling_overhead` is the rest of the wall clock, which the critical
+      path spent outside its tests.
+   */
+  struct critical_path_durations
+  {
+    durations_of_tests    spent_in_tests{};
+    log_summary::duration scheduling_overhead{};
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const critical_path_durations&, const critical_path_durations&) noexcept = default;
+  };
+
+  /** \brief The durations reported for a run of tests.
+
+      `total_run_time` also holds the work which follows the tests'
+      execution, such as summarizing the tests.
+   */
+  struct durations_of_run
+  {
+    log_summary::duration   total_run_time{};
+    critical_path_durations critical_path{};
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const durations_of_run&, const durations_of_run&) noexcept = default;
+  };
 
   struct stringified_duration
   {
@@ -68,11 +95,19 @@ namespace sequoia::testing
   stringified_duration stringify_duration(const log_summary::duration& d);
 
   [[nodiscard]]
-  std::string report_time(const log_summary& log, opt_duration duration);
+  std::string durations_report(const durations_of_tests& durations);
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, std::string_view namesuffix, opt_duration duration, const summary_detail verbosity, indentation ind_0, indentation ind_1);
+  std::string durations_report(const durations_of_run& durationsOfRun);
 
+  /** \brief Summarizes `log`, under a heading of its name and `namesuffix`.
+
+      A log with no name has no heading.
+   */
   [[nodiscard]]
-  std::string summarize(const log_summary& log, std::string_view namesuffix, summary_detail verbosity, indentation ind_0, indentation ind_1);
+  std::string summarize(const log_summary& log,
+                        std::string_view namesuffix,
+                        const summary_detail verbosity,
+                        indentation ind_0,
+                        indentation ind_1);
 }

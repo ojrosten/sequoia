@@ -133,6 +133,8 @@ namespace sequoia::testing
 
     void test_return_code_names();
 
+    void test_wall_clock_apportionment();
+
     template<std::invocable<test_runner&> Manipulator, concrete_test... Ts>
     void test_instability_analysis(std::string_view message,
                                    std::string_view outputDirName,

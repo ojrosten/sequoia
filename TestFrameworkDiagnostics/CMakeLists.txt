@@ -40,6 +40,8 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/CommandsFreeTest.cpp
                ${TestDir}/TestFramework/ComplexFreeDiagnostics.cpp
                ${TestDir}/TestFramework/ContainerFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/CriticalPathDurationsRegularTest.cpp
+               ${TestDir}/TestFramework/CriticalPathDurationsTestingDiagnostics.cpp
                ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp
                ${TestDir}/TestFramework/DumpComparisonFreeTest.cpp
                ${TestDir}/TestFramework/ElementaryFreeDiagnostics.cpp
