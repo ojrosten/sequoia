@@ -46,6 +46,8 @@ namespace sequoia::testing
 
     std::filesystem::path write(std::string_view dirName, std::stringstream& output) const;
 
-    std::filesystem::path check_output(std::string_view description, std::string_view dirName, std::stringstream& output);
+    std::filesystem::path check_output(std::string_view description,
+                                       std::string_view dirName,
+                                       std::stringstream& output);
   };
 }

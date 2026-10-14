@@ -30,8 +30,8 @@ namespace sequoia::testing
 
   namespace
   {
-    /** Converts `printedDuration`, a duration in the form the runner prints,
-        to milliseconds.
+    /** Converts `printedDuration`, a duration in the form
+        `stringify_duration` gives, to milliseconds.
      */
     [[nodiscard]]
     double to_milliseconds(std::string_view printedDuration)
@@ -44,15 +44,15 @@ namespace sequoia::testing
       const auto unitStart{std::ranges::min(numberEnd, printedDuration.size())};
       auto unitOf{[](const auto& entry){ return entry.first; }};
       const auto conversion{std::ranges::find(millisecondsPerUnit, printedDuration.substr(unitStart), unitOf)};
-      const auto number{extract_numbers_from<double, 1>(printedDuration.substr(0, unitStart))};
-      if(!number || (conversion == millisecondsPerUnit.end()))
+      const auto optNumber{extract_numbers_from<double, 1>(printedDuration.substr(0, unitStart))};
+      if(!optNumber || (conversion == millisecondsPerUnit.end()))
         throw std::runtime_error{std::format("Unable to read the duration {}", printedDuration)};
 
-      return number->front() * conversion->second;
+      return optNumber->front() * conversion->second;
     }
 
     /** Returns the duration labelled `label` in the grand totals within
-        `file`, in milliseconds. A label is, for example, "Execution Time".
+        `file`, in milliseconds.
      */
     [[nodiscard]]
     double get_grand_total(const fs::path& file, std::string_view label)
@@ -91,8 +91,8 @@ namespace sequoia::testing
       return std::chrono::duration<double, std::milli>{duration}.count();
     }
 
-    /** Returns the summary `runner` wrote for `Test`, with its measured
-        values set to zero by `text_with_zeroed_measurements`.
+    /** Returns the summary `runner` wrote for `Test`, passed through
+        `text_with_zeroed_measurements`.
      */
     template<concrete_test Test>
     [[nodiscard]]
@@ -144,8 +144,9 @@ namespace sequoia::testing
       return peak;
     }
 
-    /** Returns a line for the run's output giving `peak`. CI reads it from
-        every run, passing or not.
+    /** Returns the line which reports `peak`. CI's step reporting the
+        performance test's timings parses it from every run, passing or not,
+        so a change to its form breaks that step.
      */
     [[nodiscard]]
     std::string peak_overlap_line(std::ptrdiff_t peak)
@@ -180,8 +181,8 @@ namespace sequoia::testing
         return std::source_location::current().file_name();
       }
 
-      /** Returns when each slow test's sleep began and ended, at the index
-          the test passes to `sleep_and_check`.
+      /** Returns each slow test's `execution_interval`, at the index the
+          test passes to `sleep_and_check`.
        */
       [[nodiscard]]
       static std::span<const execution_interval, slow_test_count> execution_intervals() noexcept
@@ -196,11 +197,14 @@ namespace sequoia::testing
       slow_test_base(slow_test_base&&)            noexcept = default;
       slow_test_base& operator=(slow_test_base&&) noexcept = default;
 
-      /** The lower bound of each timing check of the slow tests is the
-          nominal duration of eight such sleeps under that check's execution
-          model: 25 ms for eight tests at once, 100 ms over a pool of two
-          threads, and 200 ms run serially. A run which finishes sooner fails.
-          So the bounds must change with the sleep.
+      /** Sleeps for 25 ms, records the sleep's `execution_interval` at
+          `index`, and makes one check.
+
+          The lower bound of each timing check of the slow tests is the
+          nominal duration of eight of these sleeps under that check's
+          execution model: 25 ms for eight tests at once, 100 ms over a pool
+          of two threads, and 200 ms run serially. So the bounds must change
+          with the sleep. A run which finishes sooner than its bound fails.
        */
       void sleep_and_check(std::size_t index)
       {
@@ -591,7 +595,9 @@ namespace sequoia::testing
     return fake_project().append("build/CMade/FakeExe.txt");
   }
 
-  fs::path test_runner_performance_test::check_output(std::string_view description, std::string_view dirName, std::stringstream& output)
+  fs::path test_runner_performance_test::check_output(std::string_view description,
+                                                      std::string_view dirName,
+                                                      std::stringstream& output)
   {
     const fs::path filePath{write(dirName, output)};
     check(equivalence, description, working_materials() /= dirName, predictive_materials() /= dirName);
