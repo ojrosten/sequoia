@@ -859,11 +859,8 @@ namespace sequoia::testing
 
     void reset_tests();
 
-    /** \brief Empties the file of execution records of each test to be run.
-
-        The file of each test to be run then holds only the records of this
-        \ref run_stamp "run of tests". The file of any other test keeps its
-        records.
+    /** \brief For each test to be run, ensures no execution records remain
+               on disk.
      */
     void clear_execution_records() const;
 
