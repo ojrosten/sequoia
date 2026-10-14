@@ -98,7 +98,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"Standard Failure"}, 43, 42);
+        check(equality, "Standard Failure", 43, 42);
       }
     };
 
@@ -155,7 +155,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"False positive failure"}, 42, 42);
+        check(equality, "False positive failure", 42, 42);
       }
     };
 
@@ -172,7 +172,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"False negative failure"}, 43, 42);
+        check(equality, "False negative failure", 43, 42);
       }
     };
 
@@ -196,7 +196,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"Flipper"}, flipper{}.x, true);
+        check(equality, "Flipper", flipper{}.x, true);
       }
     };
 
@@ -221,7 +221,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"Period 4"}, periodic<4>{}.x, 1);
+        check(equality, "Period 4", periodic<4>{}.x, 1);
       }
     };
 
@@ -239,8 +239,8 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"Period 2: Pass/Fail/Pass"}, periodic<2>{}.x, 1);
-        check({"Period 3: Pass/Pass/Fail"}, periodic<3>{}.x > 0);
+        check(equality, "Period 2: Pass/Fail/Pass", periodic<2>{}.x, 1);
+        check("Period 3: Pass/Pass/Fail", periodic<3>{}.x > 0);
       }
     };
 
@@ -257,9 +257,9 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check({"Always fails"}, false);
+        check("Always fails", false);
 
-        check(equality, {"Flipper"}, flipper{}.x, true);
+        check(equality, "Flipper", flipper{}.x, true);
       }
     };
 
@@ -276,7 +276,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check({"Always fails"}, false);
+        check("Always fails", false);
       }
     };
 
@@ -297,7 +297,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check({"Always passes"}, true);
+        check("Always passes", true);
       }
     };
 
@@ -314,7 +314,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check({"Always passes"}, true);
+        check("Always passes", true);
       }
     };
 
@@ -2966,8 +2966,8 @@ namespace sequoia::testing
   }
 
   /** Before the run, the fake test's temporary root holds `PreviousRun.txt`,
-      and its discarded root holds `DeadRun.txt`, as a run which died would
-      leave it. After the run:
+      and its discarded root holds `DeadRun.txt`, as if left by a run which
+      died. After the run:
       -# `DeadRun.txt` is gone. The test's preparation removes it before
          moving the temporary root, which otherwise could not be moved to the
          discarded root, and would be removed in place;

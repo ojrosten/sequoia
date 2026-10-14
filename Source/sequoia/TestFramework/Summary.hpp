@@ -29,32 +29,6 @@ NAMESPACE_SEQUOIA_AS_BITMASK
 
 namespace sequoia::testing
 {
-  template<std::forward_iterator Iter> void pad_right(Iter begin, Iter end, std::string_view suffix)
-  {
-    auto maxIter{std::ranges::max_element(begin, end, std::ranges::less{}, [](const std::string& s) { return s.size(); })};
-
-    const auto maxChars{maxIter->size()};
-
-    for(; begin != end; ++begin)
-    {
-      auto& s{*begin};
-      s += std::string(maxChars - s.size(), ' ') += std::string{suffix};
-    }
-  }
-
-  template<std::forward_iterator Iter> void pad_left(Iter begin, Iter end, const std::size_t minChars)
-  {
-    auto maxIter{std::ranges::max_element(begin, end, std::ranges::less{}, [](const std::string& s) { return s.size(); })};
-
-    const auto maxChars{std::ranges::max(maxIter->size(), minChars)};
-
-    for(; begin != end; ++begin)
-    {
-      auto& s{*begin};
-      s = std::string(maxChars - s.size(), ' ') + s;
-    }
-  }
-
   /** \brief The durations into which the critical path of an execution of
              tests divides the execution's wall clock.
 
