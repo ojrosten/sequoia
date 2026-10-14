@@ -78,12 +78,10 @@ namespace sequoia::testing
   {
     switch(failure)
     {
-    case relative_performance_failure::fast_task_indistinguishable_from_baseline:
-      return "The fast task is not distinguishable from its baseline: "
-             "in at least one trial, the baseline took at least as long as the task";
-    case relative_performance_failure::slow_task_indistinguishable_from_baseline:
-      return "The slow task is not distinguishable from its baseline: "
-             "in at least one trial, the baseline took at least as long as the task";
+    case relative_performance_failure::fast_task_too_often_no_longer_than_baseline:
+      return "The fast task took no longer than its baseline in more trials than an attempt allows";
+    case relative_performance_failure::slow_task_too_often_no_longer_than_baseline:
+      return "The slow task took no longer than its baseline in more trials than an attempt allows";
     case relative_performance_failure::not_distinguishably_faster:
       return "The fast task is not distinguishably faster than the slow one";
     case relative_performance_failure::slower:

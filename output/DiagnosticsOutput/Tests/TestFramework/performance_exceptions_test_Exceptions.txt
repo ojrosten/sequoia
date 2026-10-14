@@ -188,11 +188,11 @@ Relative performance test requires task durations > 0; a task too quick for the 
 =======================================
 
 Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 246
-A fast task's baseline timed as zero
+A fast task's baseline of negative duration
 
 Expected Exception Type:
 [std::runtime_error]
-Relative performance test requires task durations > 0; a task too quick for the clock times as zero
+Relative performance test requires baseline durations >= 0
 
 =======================================
 
@@ -201,7 +201,7 @@ A slow task's baseline of negative duration
 
 Expected Exception Type:
 [std::runtime_error]
-Relative performance test requires task durations > 0; a task too quick for the clock times as zero
+Relative performance test requires baseline durations >= 0
 
 =======================================
 

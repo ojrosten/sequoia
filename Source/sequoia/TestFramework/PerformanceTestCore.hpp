@@ -94,9 +94,11 @@ namespace sequoia::testing
 
   /** \brief A task, paired with a baseline task.
 
-      `check_relative_performance` judges the difference between their
-      durations. A baseline typically repeats the task without the work whose
-      speed is in question, so that the difference times that work alone.
+      `check_relative_performance` judges the ratio of the tasks' durations
+      net of their baselines'. A baseline typically does what its task does
+      except the work whose speed is in question, so that the difference
+      between their durations times that work alone. A baseline may do
+      nothing at all.
    */
   template<class Task, class Baseline>
   struct task_with_baseline
@@ -173,17 +175,23 @@ namespace sequoia::testing
                their baselines, from their durations in each trial of one
                attempt.
 
-        The outcome is a failure with no estimate if, in any trial, a task's
-        duration does not exceed its baseline's. Otherwise the outcome is the
-        other overload's for the differences between the tasks' durations and
-        their baselines', except that its durations are the tasks' own. In
+        A trial in which a task's duration does not exceed its baseline's
+        counts as an extreme speed-up: infinite if the task is the fast one,
+        and zero if it is the slow one. A trial in which both tasks' durations
+        do counts as both extremes.
+
+        The outcome is a failure with no estimate if either extreme occurs in
+        more than a tenth of the trials, rounded up. Otherwise the outcome is
+        the other overload's for the tasks' durations net of their
+        baselines', with each extreme among the outliers which the estimate
+        trims, and with the tasks' own durations as its `task_durations`. In
         either case, the outcome has the baselines' durations.
 
         \throws std::invalid_argument if `trialDurations` has fewer elements
         than `relative_performance_minimum_trials_floor`.
 
-        \throws std::runtime_error if any duration, of a task or of a
-        baseline, is not greater than zero.
+        \throws std::runtime_error if any task's duration is not greater than
+        zero, or if any baseline's duration is negative.
      */
     [[nodiscard]]
     relative_performance_attempt_outcome
@@ -198,7 +206,7 @@ namespace sequoia::testing
         -# The speed-up, if the attempt estimated one;
         -# The number of trials, and the attempt;
         -# The task durations;
-        -# The baseline durations, if the attempt measured any.
+        -# The baseline durations, if the tasks have baselines.
      */
     [[nodiscard]]
     std::string summarize_attempt(const relative_performance_attempt_outcome& outcome,
@@ -263,10 +271,10 @@ namespace sequoia::testing
     relative_performance_durations time_trial(const F& fast, const S& slow, task_order order)
     {
       if(order == task_order::fast_then_slow)
-        return {.fast{profile(fast)}, .slow{profile(slow)}};
+        return {.fast{testing::profile(fast)}, .slow{testing::profile(slow)}};
 
-      const auto slowDuration{profile(slow)};
-      return {.fast{profile(fast)}, .slow{slowDuration}};
+      const auto slowDuration{testing::profile(slow)};
+      return {.fast{testing::profile(fast)}, .slow{slowDuration}};
     }
 
     /** \brief Returns the duration of a call of a task and of its baseline,
@@ -278,10 +286,10 @@ namespace sequoia::testing
                                                        task_and_baseline_order order)
     {
       if(order == task_and_baseline_order::task_then_baseline)
-        return {.task{profile(pair.task)}, .baseline{profile(pair.baseline)}};
+        return {.task{testing::profile(pair.task)}, .baseline{testing::profile(pair.baseline)}};
 
-      const auto baselineDuration{profile(pair.baseline)};
-      return {.task{profile(pair.task)}, .baseline{baselineDuration}};
+      const auto baselineDuration{testing::profile(pair.baseline)};
+      return {.task{testing::profile(pair.task)}, .baseline{baselineDuration}};
     }
 
     /** \brief Returns the duration of a call of each task and of each
@@ -294,10 +302,33 @@ namespace sequoia::testing
                                                              task_order_with_baselines order)
     {
       if(order.pairs == task_order::fast_then_slow)
-        return {.fast{time_task_and_baseline(fast, order.fast)}, .slow{time_task_and_baseline(slow, order.slow)}};
+        return {
+          .fast{impl::time_task_and_baseline(fast, order.fast)},
+          .slow{impl::time_task_and_baseline(slow, order.slow)}
+        };
 
-      const auto slowDurations{time_task_and_baseline(slow, order.slow)};
-      return {.fast{time_task_and_baseline(fast, order.fast)}, .slow{slowDurations}};
+      const auto slowDurations{impl::time_task_and_baseline(slow, order.slow)};
+      return {.fast{impl::time_task_and_baseline(fast, order.fast)}, .slow{slowDurations}};
+    }
+
+    /** \brief Returns the durations of the tasks in each trial, with the
+               tasks of each trial called in its element of `orders`.
+     */
+    template<class Fast, class Slow, class Order>
+    [[nodiscard]]
+    auto time_trials(const Fast& fast, const Slow& slow, const std::vector<Order>& orders)
+    {
+      using durations_t = decltype(impl::time_trial(fast, slow, orders.front()));
+
+      // Not std::views::transform: time_trial is not equality-preserving, so
+      // it does not model the regular_invocable the view requires.
+      std::vector<durations_t> trialDurations{};
+      trialDurations.reserve(orders.size());
+      std::ranges::transform(orders,
+                             std::back_inserter(trialDurations),
+                             [&fast, &slow](Order order) { return impl::time_trial(fast, slow, order); });
+
+      return trialDurations;
     }
 
     /** \brief Returns the durations of the tasks in each of `trials` trials.
@@ -311,15 +342,7 @@ namespace sequoia::testing
                                                              std::size_t trials,
                                                              std::mt19937& generator)
     {
-      // Not std::views::transform: time_trial is not equality-preserving, so
-      // it does not model the regular_invocable the view requires.
-      std::vector<relative_performance_durations> trialDurations{};
-      trialDurations.reserve(trials);
-      std::ranges::transform(shuffled_task_orders(trials, generator),
-                             std::back_inserter(trialDurations),
-                             [&fast, &slow](task_order order) { return time_trial(fast, slow, order); });
-
-      return trialDurations;
+      return impl::time_trials(fast, slow, shuffled_task_orders(trials, generator));
     }
 
     /** \brief Returns the durations of the tasks and their baselines in each
@@ -335,21 +358,13 @@ namespace sequoia::testing
                                                                             std::size_t trials,
                                                                             std::mt19937& generator)
     {
-      // Not std::views::transform: time_trial is not equality-preserving, so
-      // it does not model the regular_invocable the view requires.
-      std::vector<relative_performance_durations_with_baselines> trialDurations{};
-      trialDurations.reserve(trials);
-      std::ranges::transform(shuffled_task_orders_with_baselines(trials, generator),
-                             std::back_inserter(trialDurations),
-                             [&fast, &slow](task_order_with_baselines order) { return time_trial(fast, slow, order); });
-
-      return trialDurations;
+      return impl::time_trials(fast, slow, shuffled_task_orders_with_baselines(trials, generator));
     }
 
     /** \brief Whether `time_attempt` times `fast` against `slow`. */
     template<class Fast, class Slow>
     concept timeable_against = requires(const Fast& fast, const Slow& slow, std::mt19937& generator) {
-      time_attempt(fast, slow, std::size_t{}, generator);
+      impl::time_attempt(fast, slow, std::size_t{}, generator);
     };
 
     /** \brief How many attempts `check_relative_performance` made, and the
@@ -384,7 +399,7 @@ namespace sequoia::testing
         [&fast, &slow, &generator, &parameters](std::size_t attempt) {
           const auto trials{trials_of_attempt(parameters.minimum_trials, attempt)};
 
-          return judge_attempt(time_attempt(fast, slow, trials, generator),
+          return judge_attempt(impl::time_attempt(fast, slow, trials, generator),
                                overlap_multiplier(Mode, attempt),
                                parameters.prediction);
         }
@@ -536,19 +551,26 @@ namespace sequoia::testing
        The check is the one which the overload taking two tasks makes, with
        these differences:
        -# Each trial runs all four tasks, and times each. Each task runs
-          beside its baseline. The fast task and its baseline run first in
-          half of an attempt's trials, rounded down. Each task runs before its
-          baseline in half of an attempt's trials, rounded down. Those trials
-          are chosen at random.
+          immediately before or after its baseline. The fast task and its
+          baseline run first in half of an attempt's trials, rounded down.
+          Each task runs before its baseline in half of an attempt's trials,
+          rounded down. Each of those sets of trials is chosen at random.
        -# Each attempt estimates the speed-up from the ratio of the tasks'
-          durations net of their baselines' in each trial: the slow task's
-          duration less `slow.baseline`'s, over the fast task's less
+          durations net of their baselines' in each trial: `slow.task`'s
+          duration less `slow.baseline`'s, over `fast.task`'s less
           `fast.baseline`'s.
-       -# An attempt fails if, in any of its trials, either task's duration
-          does not exceed its baseline's.
+       -# A trial in which a task's duration does not exceed its baseline's
+          counts as an extreme speed-up: infinite if the task is `fast.task`,
+          and zero if it is `slow.task`. A trial in which both tasks'
+          durations do counts as both extremes.
+       -# An attempt fails if either extreme occurs in more than a tenth of
+          its trials, rounded up. Otherwise the estimate discounts each
+          extreme as an outlier.
        -# Each of the four tasks runs at most
           `parameters.minimum_trials * A * (A + 3) / 4` times.
-       -# The summary also gives each baseline's typical duration.
+       -# The summary also gives each baseline's typical duration. The
+          summary gives no speed-up if the last attempt failed for too many
+          extremes.
 
        \pre None of the four tasks performs a check using a different instance
        of the logger.
@@ -558,8 +580,8 @@ namespace sequoia::testing
        `parameters.minimum_trials` is less than
        `relative_performance_minimum_trials_floor`.
 
-       \throws std::runtime_error if a trial times any of the four tasks as
-       zero.
+       \throws std::runtime_error if a trial times `fast.task` or `slow.task`
+       as zero.
 
        \throws std::logic_error if any of the four tasks performs a check,
        such as `check` or `check_relative_performance`, using the same

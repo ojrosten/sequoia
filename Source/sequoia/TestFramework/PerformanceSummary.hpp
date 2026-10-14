@@ -22,8 +22,8 @@ namespace sequoia::testing
   /** \brief Why an attempt of `check_relative_performance` failed. */
   enum class relative_performance_failure
   {
-    fast_task_indistinguishable_from_baseline,
-    slow_task_indistinguishable_from_baseline,
+    fast_task_too_often_no_longer_than_baseline,
+    slow_task_too_often_no_longer_than_baseline,
     not_distinguishably_faster,
     slower,
     faster_but_less_than_predicted,
@@ -61,9 +61,7 @@ namespace sequoia::testing
    */
   enum class attempt_count_stability { fluctuating, typically_stable };
 
-  /** \brief Returns a line stating why the speed-up departs from the
-             prediction.
-   */
+  /** \brief Returns a line stating why an attempt failed. */
   [[nodiscard]]
   std::string_view verdict_summary(relative_performance_failure failure);
 

@@ -44,7 +44,8 @@ namespace sequoia::testing
       double mean{}, standard_error{};
     };
 
-    /** \brief Estimates the trimmed mean of `data`, and its standard error.
+    /** \brief Estimates the mean of `data` with `numTrimmed` data trimmed
+               from each end, and the mean's standard error.
 
         The standard error is Tukey and McLaughlin's:
 
@@ -54,12 +55,11 @@ namespace sequoia::testing
         s_w the winsorized sample standard deviation.
      */
     [[nodiscard]]
-    trimmed_mean_estimate estimate_trimmed_mean(std::vector<double> data)
+    trimmed_mean_estimate estimate_trimmed_mean(std::vector<double> data, std::size_t numTrimmed)
     {
       std::ranges::sort(data);
 
       const auto n{data.size()};
-      const auto numTrimmed{num_trimmed_from_each_end(n)};
 
       const auto winsorizedVariance{
         maths::winsorized_sample_variance(data, numTrimmed).variance
@@ -74,12 +74,43 @@ namespace sequoia::testing
       };
     }
 
+    /** \brief Estimates the trimmed mean of `data`, and its standard error.
+
+        The estimate trims `num_trimmed_from_each_end(data.size())` data from
+        each end.
+     */
+    [[nodiscard]]
+    trimmed_mean_estimate estimate_trimmed_mean(std::vector<double> data)
+    {
+      const auto numTrimmed{num_trimmed_from_each_end(data.size())};
+      return estimate_trimmed_mean(std::move(data), numTrimmed);
+    }
+
+    template<class Durations>
+    concept duration_range =    std::ranges::input_range<Durations>
+                             && std::ranges::viewable_range<Durations>
+                             && std::same_as<std::ranges::range_value_t<Durations>, std::chrono::duration<double>>;
+
+    /** \brief Returns the trimmed mean of `durations`. */
+    template<duration_range Durations>
+    [[nodiscard]]
+    std::chrono::duration<double> trimmed_mean(Durations&& durations)
+    {
+      auto countOf{[](std::chrono::duration<double> duration) { return duration.count(); }};
+
+      auto counts{
+          std::forward<Durations>(durations)
+        | std::views::transform(countOf)
+        | std::ranges::to<std::vector>()
+      };
+
+      return std::chrono::duration<double>{estimate_trimmed_mean(std::move(counts)).mean};
+    }
+
     /** \brief Returns the exponential of the trimmed mean of the logarithms of
                `durations`.
      */
-    template<std::ranges::input_range Durations>
-      requires std::ranges::viewable_range<Durations>
-            && std::same_as<std::ranges::range_value_t<Durations>, std::chrono::duration<double>>
+    template<duration_range Durations>
     [[nodiscard]]
     std::chrono::duration<double> trimmed_geometric_mean(Durations&& durations)
     {
@@ -94,17 +125,52 @@ namespace sequoia::testing
       return std::chrono::duration<double>{std::exp(estimate_trimmed_mean(std::move(logDurations)).mean)};
     }
 
-    /** \brief Returns the trimmed geometric mean of each task's durations. */
+    /** \brief Returns `average` of the fast durations, and of the slow. */
+    template<class Average>
     [[nodiscard]]
-    relative_performance_durations typical_durations(std::span<const relative_performance_durations> trialDurations)
+    relative_performance_durations typical_durations(std::span<const relative_performance_durations> trialDurations,
+                                                     Average average)
     {
       auto fastOf{[](relative_performance_durations durations) { return durations.fast; }};
       auto slowOf{[](relative_performance_durations durations) { return durations.slow; }};
 
       return {
-        .fast{trimmed_geometric_mean(trialDurations | std::views::transform(fastOf))},
-        .slow{trimmed_geometric_mean(trialDurations | std::views::transform(slowOf))}
+        .fast{average(trialDurations | std::views::transform(fastOf))},
+        .slow{average(trialDurations | std::views::transform(slowOf))}
       };
+    }
+
+    /** \brief Returns the trimmed geometric mean of each task's durations. */
+    [[nodiscard]]
+    relative_performance_durations typical_task_durations(std::span<const relative_performance_durations> taskDurations)
+    {
+      return typical_durations(taskDurations, [](auto durations) { return trimmed_geometric_mean(durations); });
+    }
+
+    /** \brief Returns the trimmed mean of each baseline's durations.
+
+        Unlike a task's typical duration, the mean is arithmetic. A
+        baseline's durations are subtracted from its task's, not divided into
+        them, and may be zero, which has no logarithm.
+     */
+    [[nodiscard]]
+    relative_performance_durations
+      typical_baseline_durations(std::span<const relative_performance_durations> baselineDurations)
+    {
+      return typical_durations(baselineDurations, [](auto durations) { return trimmed_mean(durations); });
+    }
+
+    [[nodiscard]]
+    constexpr bool is_positive(std::chrono::duration<double> duration) noexcept
+    {
+      return duration > std::chrono::duration<double>::zero();
+    }
+
+    /** \brief Returns the logarithm of the slow duration over the fast. */
+    [[nodiscard]]
+    double log_ratio(relative_performance_durations durations)
+    {
+      return std::log(durations.slow / durations.fast);
     }
 
     /** \brief The reason a speed-up departs from the prediction, if it does,
@@ -116,27 +182,15 @@ namespace sequoia::testing
       relative_performance_estimate               estimate{};
     };
 
-    /** \brief Judges the speed-up of a fast task over a slow one from their
-               durations in each trial.
-
-        Every duration must be greater than zero.
+    /** \brief Judges the speed-up of a fast task over a slow one from the
+               trimmed mean of the logarithms of their trials' speed-ups.
      */
     [[nodiscard]]
-    speedup_judgement judge_speedup(std::span<const relative_performance_durations> trialDurations,
+    speedup_judgement judge_speedup(trimmed_mean_estimate logRatioEstimate,
                                     double overlapMultiplier,
                                     relative_performance_interval prediction)
     {
-      auto logRatio{
-        [](relative_performance_durations durations) { return std::log(durations.slow / durations.fast); }
-      };
-
-      auto logRatios{
-          trialDurations
-        | std::views::transform(logRatio)
-        | std::ranges::to<std::vector>()
-      };
-
-      const auto [mean, standardError]{estimate_trimmed_mean(std::move(logRatios))};
+      const auto [mean, standardError]{logRatioEstimate};
 
       // The gate takes confidence_multiplier on every attempt, not
       // overlapMultiplier. An early attempt's overlapMultiplier is smaller,
@@ -186,8 +240,7 @@ namespace sequoia::testing
     {
       auto eitherNotPositive{
         [](relative_performance_durations durations) {
-          constexpr auto zero{std::chrono::duration<double>::zero()};
-          return !(durations.fast > zero) || !(durations.slow > zero);
+          return !is_positive(durations.fast) || !is_positive(durations.slow);
         }
       };
 
@@ -196,31 +249,114 @@ namespace sequoia::testing
                                  "a task too quick for the clock times as zero"};
     }
 
-    /** \brief Returns why a task is not distinguishable from its baseline,
-               if one is not.
-
-        A task is not distinguishable from its baseline if, in any trial, its
-        duration net of its baseline's is not greater than zero. The fast
-        task's reason takes precedence over the slow task's.
-     */
-    [[nodiscard]]
-    std::optional<relative_performance_failure>
-      failure_to_exceed_baselines(std::span<const relative_performance_durations> netDurations)
+    void throw_if_any_duration_negative(std::span<const relative_performance_durations> trialDurations)
     {
-      auto notPositive{
-        [](std::chrono::duration<double> duration) { return !(duration > std::chrono::duration<double>::zero()); }
+      auto eitherNegative{
+        [](relative_performance_durations durations) {
+          constexpr auto zero{std::chrono::duration<double>::zero()};
+          return (durations.fast < zero) || (durations.slow < zero);
+        }
       };
 
-      if(std::ranges::any_of(netDurations, notPositive, &relative_performance_durations::fast))
-        return relative_performance_failure::fast_task_indistinguishable_from_baseline;
+      if(std::ranges::any_of(trialDurations, eitherNegative))
+        throw std::runtime_error{"Relative performance test requires baseline durations >= 0"};
+    }
 
-      if(std::ranges::any_of(netDurations, notPositive, &relative_performance_durations::slow))
-        return relative_performance_failure::slow_task_indistinguishable_from_baseline;
+    /** \brief The logarithms of the speed-ups, net of the baselines, in the
+               trials of an attempt.
+
+        A trial in which the fast task took no longer than its baseline
+        counts as a speed-up of infinity, and so as a log-ratio unbounded
+        above. A trial in which the slow task did counts as a speed-up of
+        zero, and so as a log-ratio unbounded below. A trial in which both
+        did has no sign, and counts at each end. These trials are counted,
+        not held, since a floating-point type need not represent infinity.
+     */
+    struct net_log_ratios
+    {
+      std::vector<double> finite{};
+      std::size_t         num_unbounded_above{},
+                          num_unbounded_below{};
+    };
+
+    /** \brief Returns the logarithms of the speed-ups in each trial, given
+               the tasks' durations net of their baselines'.
+     */
+    [[nodiscard]]
+    net_log_ratios net_log_ratios_of(std::span<const relative_performance_durations> netDurations)
+    {
+      auto bothPositive{
+        [](relative_performance_durations durations) {
+          return is_positive(durations.fast) && is_positive(durations.slow);
+        }
+      };
+
+      auto logRatioOf{[](relative_performance_durations durations) { return log_ratio(durations); }};
+
+      auto numNotPositive{
+        [netDurations](auto projection) {
+          auto notPositive{[](std::chrono::duration<double> duration) { return !is_positive(duration); }};
+          return static_cast<std::size_t>(std::ranges::count_if(netDurations, notPositive, projection));
+        }
+      };
+
+      return {
+        .finite{
+            netDurations
+          | std::views::filter(bothPositive)
+          | std::views::transform(logRatioOf)
+          | std::ranges::to<std::vector>()
+        },
+        .num_unbounded_above{numNotPositive(&relative_performance_durations::fast)},
+        .num_unbounded_below{numNotPositive(&relative_performance_durations::slow)}
+      };
+    }
+
+    /** \brief Returns why the tasks took no longer than their baselines in
+               too many trials, if they did.
+
+        An estimate trims `numTrimmed` log-ratios from each end, so each end
+        may hold that many unbounded log-ratios, and no more. The fast task's
+        reason takes precedence over the slow task's.
+     */
+    [[nodiscard]]
+    std::optional<relative_performance_failure> failure_to_exceed_baselines(const net_log_ratios& logRatios,
+                                                                            std::size_t numTrimmed)
+    {
+      if(logRatios.num_unbounded_above > numTrimmed)
+        return relative_performance_failure::fast_task_too_often_no_longer_than_baseline;
+
+      if(logRatios.num_unbounded_below > numTrimmed)
+        return relative_performance_failure::slow_task_too_often_no_longer_than_baseline;
 
       return std::nullopt;
     }
 
-    /** \brief Returns a balanced order for each of `trials` trials.
+    /** \brief Estimates the mean of `logRatios` with `numTrimmed` trimmed
+               from each end, and the mean's standard error.
+
+        Requires that some log-ratio is finite, and that neither count of
+        unbounded log-ratios exceeds `numTrimmed`.
+
+        So each unbounded log-ratio lies within the trim. The trim drops
+        it, and winsorizing replaces it with the nearest log-ratio kept, so
+        only its place enters the estimate, not its value. So the least
+        finite log-ratio stands in for each one unbounded below, and the
+        greatest for each one unbounded above.
+     */
+    [[nodiscard]]
+    trimmed_mean_estimate estimate_trimmed_mean(net_log_ratios logRatios, std::size_t numTrimmed)
+    {
+      const auto [least, greatest]{std::ranges::minmax(logRatios.finite)};
+
+      auto data{std::move(logRatios.finite)};
+      data.insert(data.end(), logRatios.num_unbounded_below, least);
+      data.insert(data.end(), logRatios.num_unbounded_above, greatest);
+
+      return estimate_trimmed_mean(std::move(data), numTrimmed);
+    }
+
+    /** \brief Returns an order for each of `trials` trials.
 
         `first` is the order of half of the trials, rounded down, and
         `second` the order of the rest. `generator` chooses which trials
@@ -255,9 +391,19 @@ namespace sequoia::testing
       throw_if_too_few_trials(trialDurations.size());
       throw_if_any_duration_not_positive(trialDurations);
 
-      const auto [failure, estimate]{judge_speedup(trialDurations, overlapMultiplier, prediction)};
+      auto logRatioOf{[](relative_performance_durations durations) { return log_ratio(durations); }};
 
-      return {.failure{failure}, .estimate{estimate}, .task_durations{typical_durations(trialDurations)}};
+      auto logRatios{
+          trialDurations
+        | std::views::transform(logRatioOf)
+        | std::ranges::to<std::vector>()
+      };
+
+      const auto [failure, estimate]{
+        judge_speedup(estimate_trimmed_mean(std::move(logRatios)), overlapMultiplier, prediction)
+      };
+
+      return {.failure{failure}, .estimate{estimate}, .task_durations{typical_task_durations(trialDurations)}};
     }
 
     [[nodiscard]]
@@ -302,21 +448,28 @@ namespace sequoia::testing
                  baselineDurations{transformedTrials(baselinesOf)};
 
       throw_if_any_duration_not_positive(taskDurations);
-      throw_if_any_duration_not_positive(baselineDurations);
+      throw_if_any_duration_negative(baselineDurations);
 
-      const auto typicalTaskDurations    {typical_durations(taskDurations)},
-                 typicalBaselineDurations{typical_durations(baselineDurations)};
+      const auto typicalTaskDurations    {typical_task_durations(taskDurations)},
+                 typicalBaselineDurations{typical_baseline_durations(baselineDurations)};
 
-      const auto netDurations{transformedTrials(netOf)};
+      // A trial in which a task took no longer than its baseline is not
+      // dropped. The trial counts as an extreme log-ratio, which the trim
+      // drops as it drops any outlier, so the trial adds no bias beyond the
+      // trim's own.
+      auto logRatios{net_log_ratios_of(transformedTrials(netOf))};
+      const auto numTrimmed{num_trimmed_from_each_end(trialDurations.size())};
 
-      if(const auto failure{failure_to_exceed_baselines(netDurations)})
+      if(const auto failure{failure_to_exceed_baselines(logRatios, numTrimmed)})
         return {
           .failure{failure},
           .task_durations{typicalTaskDurations},
           .baseline_durations{typicalBaselineDurations}
         };
 
-      const auto [failure, estimate]{judge_speedup(netDurations, overlapMultiplier, prediction)};
+      const auto [failure, estimate]{
+        judge_speedup(estimate_trimmed_mean(std::move(logRatios), numTrimmed), overlapMultiplier, prediction)
+      };
 
       return {
         .failure{failure},

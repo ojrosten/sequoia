@@ -250,7 +250,7 @@ namespace sequoia::testing
     {
       auto isFast{[](task t) { return (t == task::fast) || (t == task::fast_baseline); }};
 
-      auto pairsAreAdjacent{
+      auto eachPairIsContiguous{
         [isFast](std::span<const task> trialCalls) {
           return (isFast(trialCalls[0]) == isFast(trialCalls[1])) && (isFast(trialCalls[2]) == isFast(trialCalls[3]));
         }
@@ -282,7 +282,7 @@ namespace sequoia::testing
         }
       };
 
-      check(equality, "Trials in which each task runs beside its baseline", trialsWhere(pairsAreAdjacent), trials);
+      check(equality, "Trials in which each task runs beside its baseline", trialsWhere(eachPairIsContiguous), trials);
       check(equality,
             "Trials in which the fast task and its baseline run first",
             trialsWhere(fastPairRunsFirst),

@@ -39,6 +39,8 @@ namespace sequoia::testing
 
     void test_relative_performance_with_baselines();
 
+    void test_tasks_no_longer_than_baselines();
+
     void test_fail_at_second_attempt_with_baselines();
   };
 
@@ -63,6 +65,10 @@ namespace sequoia::testing
     void test_computations_not_optimized_away();
 
     void test_relative_performance_with_baselines();
+
+    void test_tasks_no_longer_than_baselines();
+
+    void test_empty_baselines();
   };
 
   class performance_utilities_test final : public free_test

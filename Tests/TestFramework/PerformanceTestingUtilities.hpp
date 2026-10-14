@@ -16,6 +16,7 @@
 #include <chrono>
 #include <cstdint>
 #include <functional>
+#include <initializer_list>
 #include <memory>
 #include <ranges>
 #include <span>
@@ -45,16 +46,16 @@ namespace sequoia::testing
   }
 
   /** \brief Returns as many trials' durations as
-             `relative_performance_minimum_trials_floor`, each `typical`
-             except the middle one, which is `atypical`.
+             `relative_performance_minimum_trials_floor`: those of `atypical`,
+             followed by `typical` for the rest.
    */
   template<class Durations>
   [[nodiscard]]
-  constexpr auto trials_with_one_atypical(Durations typical, Durations atypical)
+  constexpr auto trials_with_atypical(Durations typical, std::initializer_list<Durations> atypical)
   {
     std::array<Durations, relative_performance_minimum_trials_floor> durations{};
     durations.fill(typical);
-    durations[durations.size() / 2] = atypical;
+    std::ranges::copy(atypical, durations.begin());
     return durations;
   }
 
@@ -96,13 +97,14 @@ namespace sequoia::testing
              starting again after the last.
 
       Every copy of the task shares one count of the calls made, so any
-      five consecutive calls spin for each duration once.
+      `N` consecutive calls spin for each duration once.
    */
+  template<std::size_t N>
   [[nodiscard]]
-  inline auto make_cycling_spinner(const std::array<std::chrono::milliseconds, 5>& durations)
+  auto make_cycling_spinner(const std::chrono::milliseconds (&durations)[N])
   {
-    return [durations, calls{std::make_shared<std::size_t>()}]() {
-      spin_for(durations[(*calls)++ % durations.size()]);
+    return [cycle{std::to_array(durations)}, calls{std::make_shared<std::size_t>()}]() {
+      spin_for(cycle[(*calls)++ % N]);
     };
   }
 
