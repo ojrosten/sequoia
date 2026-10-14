@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <array>
 #include <format>
+#include <optional>
+#include <ranges>
 
 namespace sequoia::testing
 {
@@ -29,6 +31,19 @@ namespace sequoia::testing
       const auto [dur, unit]{stringify_duration(d)};
       return std::format("[{}: {}{}]\n", label, dur, unit);
     }
+
+    /** The label of a kind of check, how many checks of that kind ran, how
+        many of those failed and, for standard top-level checks of which any
+        ran, how many deep checks they made.
+     */
+    struct counts_of_checks
+    {
+      std::string_view label{};
+      std::size_t
+        checks{},
+        failures{};
+      std::optional<std::size_t> deep_checks{};
+    };
   }
 
   [[nodiscard]]
@@ -36,7 +51,8 @@ namespace sequoia::testing
   {
     using namespace std::chrono;
     const auto count{duration_cast<nanoseconds>(d).count()};
-    // A count is written in the larger of two units once it rounds to a thousand of the smaller, at three significant figures
+    // A count is written in the larger of two units once it rounds to a
+    // thousand of the smaller, at three significant figures
     if(count >= 999'500'000) return {to_string<std::ratio<1>>(d), "s"};
     if(count >= 999'500)     return {to_string<std::milli>(d),   "ms"};
     if(count >= 1'000)       return {to_string<std::micro>(d),   "us"};
@@ -69,67 +85,93 @@ namespace sequoia::testing
                         indentation ind_0,
                         indentation ind_1)
   {
-    constexpr std::size_t entries{6};
+    auto verbosityIncludes{
+      [verbosity](const summary_detail detail) { return (verbosity & detail) == detail; }
+    };
 
-    auto indent{
-      [ind_0, ind_1](){
-        return std::string{ind_0}.append(ind_1);
+    const std::array counts{
+      counts_of_checks{
+        .label      {"Standard Top Level Checks:"},
+        .checks     {log.standard_top_level_checks()},
+        .failures   {log.standard_top_level_failures()},
+        .deep_checks{log.standard_top_level_checks() ? std::optional{log.standard_deep_checks()} : std::nullopt}
+      },
+      counts_of_checks{
+        .label   {"Standard Performance Checks:"},
+        .checks  {log.standard_performance_checks()},
+        .failures{log.standard_performance_failures()}
+      },
+      counts_of_checks{
+        .label   {"False Positive Checks:"},
+        .checks  {log.false_positive_checks()},
+        .failures{log.false_positive_failures()}
+      },
+      counts_of_checks{
+        .label   {"False Positive Performance Checks:"},
+        .checks  {log.false_positive_performance_checks()},
+        .failures{log.false_positive_performance_failures()}
+      },
+      counts_of_checks{
+        .label   {"False Negative Checks:"},
+        .checks  {log.false_negative_checks()},
+        .failures{log.false_negative_failures()}
+      },
+      counts_of_checks{
+        .label   {"False Negative Performance Checks:"},
+        .checks  {log.false_negative_performance_checks()},
+        .failures{log.false_negative_performance_failures()}
       }
     };
 
-    std::array<std::string, entries> summaries{
-      indent().append("Standard Top Level Checks:"),
-      indent().append("Standard Performance Checks:"),
-      indent().append("False Positive Checks:"),
-      indent().append("False Positive Performance Checks:"),
-      indent().append("False Negative Checks:"),
-      indent().append("False Negative Performance Checks:")
+    auto labelWidthOf   {[](const counts_of_checks& c) { return c.label.size(); }};
+    auto checksWidthOf  {[](const counts_of_checks& c) { return std::formatted_size("{}", c.checks); }};
+    auto failuresWidthOf{[](const counts_of_checks& c) { return std::formatted_size("{}", c.failures); }};
+
+    auto widestOf{
+      [&counts](auto widthOf) { return std::ranges::max(counts | std::views::transform(widthOf)); }
     };
 
-    pad_right(summaries.begin(), summaries.end(), "  ");
+    constexpr std::size_t minChecksWidth{8}, minFailuresWidth{2};
+    const auto
+      labelWidth   {widestOf(labelWidthOf)},
+      checksWidth  {std::ranges::max(minChecksWidth,   widestOf(checksWidthOf))},
+      failuresWidth{std::ranges::max(minFailuresWidth, widestOf(failuresWidthOf))};
 
-    std::array<std::string, entries> checkNums{
-      std::to_string(log.standard_top_level_checks()),
-      std::to_string(log.standard_performance_checks()),
-      std::to_string(log.false_positive_checks()),
-      std::to_string(log.false_positive_performance_checks()),
-      std::to_string(log.false_negative_checks()),
-      std::to_string(log.false_negative_performance_checks())
+    auto isReported{
+      [absentChecksReported{verbosityIncludes(summary_detail::absent_checks)}](const counts_of_checks& c) {
+        return absentChecksReported || (c.checks > 0);
+      }
     };
 
-    constexpr std::size_t minChars{8};
-    pad_left(checkNums.begin(), checkNums.end(), minChars);
+    const indentation lineIndent{ind_0 + ind_1};
 
-    const auto len{10u - std::ranges::min(std::size_t{minChars}, checkNums.front().size())};
-
-    for(std::size_t i{}; i<entries; ++i)
-    {
-      summaries[i].append(std::format("{};{:{}}Failures: ", checkNums[i], "", len));
-    }
-
-    std::array<std::string, entries> failures{
-      std::to_string(log.standard_top_level_failures()),
-      std::to_string(log.standard_performance_failures()),
-      std::to_string(log.false_positive_failures()),
-      std::to_string(log.false_positive_performance_failures()),
-      std::to_string(log.false_negative_failures()),
-      std::to_string(log.false_negative_performance_failures())
+    auto lineOf{
+      [&lineIndent, labelWidth, checksWidth, failuresWidth](const counts_of_checks& c) {
+        const std::string deepChecksNote{c.deep_checks ? std::format("  [Deep checks: {}]", *c.deep_checks) : ""};
+        return std::format("{}{:<{}}  {:>{}};  Failures: {:>{}}{}\n",
+                           std::string_view{lineIndent},
+                           c.label,
+                           labelWidth,
+                           c.checks,
+                           checksWidth,
+                           c.failures,
+                           failuresWidth,
+                           deepChecksNote);
+      }
     };
 
-    pad_left(failures.begin(), failures.end(), 2);
-
-    for(std::size_t i{}; i < entries; ++i)
-    {
-      summaries[i] += failures[i];
-    }
-
-    if(log.standard_top_level_checks())
-      summaries.front().append(std::format("  [Deep checks: {}]", log.standard_deep_checks()));
+    const auto checksReport{
+        counts
+      | std::views::filter(isReported)
+      | std::views::transform(lineOf)
+      | std::views::join
+      | std::ranges::to<std::string>()
+    };
 
     const std::string name{log.name().empty() ? "" : std::string{log.name()} += namesuffix};
     std::string summary{sequoia::indent(name, ind_0)};
 
-    if((verbosity & summary_detail::timings) == summary_detail::timings)
+    if(verbosityIncludes(summary_detail::timings))
     {
       append_indented(summary, durations_report(log.durations()), ind_0);
     }
@@ -138,35 +180,16 @@ namespace sequoia::testing
       summary.append("\n");
     }
 
-    if((verbosity & summary_detail::absent_checks) == summary_detail::absent_checks)
-    {
-      std::ranges::for_each(summaries, [&summary](const std::string& s){ (summary += s) += "\n"; } );
-    }
-    else
-    {
-      const std::array<std::size_t, entries> checks{
-        log.standard_top_level_checks(),
-        log.standard_performance_checks(),
-        log.false_positive_checks(),
-        log.false_positive_performance_checks(),
-        log.false_negative_checks(),
-        log.false_negative_performance_checks()
-      };
-
-      for(std::size_t i{}; i<entries; ++i)
-      {
-        if(checks[i]) summary += summaries[i] += "\n";
-      }
-    }
+    summary.append(checksReport);
 
     if(log.critical_failures())
     {
       summary.append(std::format("\n******  Critical Failures:  {}  ******\n\n", log.critical_failures()));
     }
 
-    if((verbosity & summary_detail::failure_messages) == summary_detail::failure_messages)
+    if(verbosityIncludes(summary_detail::failure_messages))
     {
-      append_indented(summary, log.failure_messages(), ind_0 + ind_1);
+      append_indented(summary, log.failure_messages(), lineIndent);
     }
 
     return summary;
