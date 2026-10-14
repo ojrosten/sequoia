@@ -87,12 +87,12 @@ namespace sequoia::testing
     }
 
     template<class Durations>
-    concept duration_range =    std::ranges::input_range<Durations>
+    concept range_of_durations =    std::ranges::input_range<Durations>
                              && std::ranges::viewable_range<Durations>
                              && std::same_as<std::ranges::range_value_t<Durations>, std::chrono::duration<double>>;
 
     /** \brief Returns the trimmed mean of `durations`. */
-    template<duration_range Durations>
+    template<range_of_durations Durations>
     [[nodiscard]]
     std::chrono::duration<double> trimmed_mean(Durations&& durations)
     {
@@ -110,7 +110,7 @@ namespace sequoia::testing
     /** \brief Returns the exponential of the trimmed mean of the logarithms of
                `durations`.
      */
-    template<duration_range Durations>
+    template<range_of_durations Durations>
     [[nodiscard]]
     std::chrono::duration<double> trimmed_geometric_mean(Durations&& durations)
     {
@@ -168,7 +168,7 @@ namespace sequoia::testing
 
     /** \brief Returns the logarithm of the slow duration over the fast. */
     [[nodiscard]]
-    double log_ratio(relative_performance_durations durations)
+    double speedup_logarithm(relative_performance_durations durations)
     {
       return std::log(durations.slow / durations.fast);
     }
@@ -186,11 +186,11 @@ namespace sequoia::testing
                trimmed mean of the logarithms of their trials' speed-ups.
      */
     [[nodiscard]]
-    speedup_judgement judge_speedup(trimmed_mean_estimate logRatioEstimate,
+    speedup_judgement judge_speedup(trimmed_mean_estimate speedupLogarithmEstimate,
                                     double overlapMultiplier,
                                     relative_performance_interval prediction)
     {
-      const auto [mean, standardError]{logRatioEstimate};
+      const auto [mean, standardError]{speedupLogarithmEstimate};
 
       // The gate takes confidence_multiplier on every attempt, not
       // overlapMultiplier. An early attempt's overlapMultiplier is smaller,
@@ -266,13 +266,13 @@ namespace sequoia::testing
                trials of an attempt.
 
         A trial in which the fast task took no longer than its baseline
-        counts as a speed-up of infinity, and so as a log-ratio unbounded
+        counts as a speed-up of infinity, and so as a logarithm unbounded
         above. A trial in which the slow task did counts as a speed-up of
-        zero, and so as a log-ratio unbounded below. A trial in which both
+        zero, and so as a logarithm unbounded below. A trial in which both
         did has no sign, and counts at each end. These trials are counted,
         not held, since a floating-point type need not represent infinity.
      */
-    struct net_log_ratios
+    struct speedup_logarithms
     {
       std::vector<double> finite{};
       std::size_t         num_unbounded_above{},
@@ -283,7 +283,7 @@ namespace sequoia::testing
                the tasks' durations net of their baselines'.
      */
     [[nodiscard]]
-    net_log_ratios net_log_ratios_of(std::span<const relative_performance_durations> netDurations)
+    speedup_logarithms speedup_logarithms_of(std::span<const relative_performance_durations> netDurations)
     {
       auto bothPositive{
         [](relative_performance_durations durations) {
@@ -291,7 +291,7 @@ namespace sequoia::testing
         }
       };
 
-      auto logRatioOf{[](relative_performance_durations durations) { return log_ratio(durations); }};
+      auto speedupLogarithmOf{[](relative_performance_durations durations) { return speedup_logarithm(durations); }};
 
       auto numNotPositive{
         [netDurations](auto projection) {
@@ -304,7 +304,7 @@ namespace sequoia::testing
         .finite{
             netDurations
           | std::views::filter(bothPositive)
-          | std::views::transform(logRatioOf)
+          | std::views::transform(speedupLogarithmOf)
           | std::ranges::to<std::vector>()
         },
         .num_unbounded_above{numNotPositive(&relative_performance_durations::fast)},
@@ -315,43 +315,43 @@ namespace sequoia::testing
     /** \brief Returns why the tasks took no longer than their baselines in
                too many trials, if they did.
 
-        An estimate trims `numTrimmed` log-ratios from each end, so each end
-        may hold that many unbounded log-ratios, and no more. The fast task's
+        An estimate trims `numTrimmed` logarithms from each end, so each end
+        may hold that many unbounded logarithms, and no more. The fast task's
         reason takes precedence over the slow task's.
      */
     [[nodiscard]]
-    std::optional<relative_performance_failure> failure_to_exceed_baselines(const net_log_ratios& logRatios,
-                                                                            std::size_t numTrimmed)
+    std::optional<relative_performance_failure>
+      failure_to_exceed_baselines(const speedup_logarithms& speedupLogarithms, std::size_t numTrimmed)
     {
-      if(logRatios.num_unbounded_above > numTrimmed)
+      if(speedupLogarithms.num_unbounded_above > numTrimmed)
         return relative_performance_failure::fast_task_too_often_no_longer_than_baseline;
 
-      if(logRatios.num_unbounded_below > numTrimmed)
+      if(speedupLogarithms.num_unbounded_below > numTrimmed)
         return relative_performance_failure::slow_task_too_often_no_longer_than_baseline;
 
       return std::nullopt;
     }
 
-    /** \brief Estimates the mean of `logRatios` with `numTrimmed` trimmed
-               from each end, and the mean's standard error.
+    /** \brief Estimates the mean of `speedupLogarithms` with `numTrimmed`
+               trimmed from each end, and the mean's standard error.
 
-        Requires that some log-ratio is finite, and that neither count of
-        unbounded log-ratios exceeds `numTrimmed`.
+        Requires that some logarithm is finite, and that neither count of
+        unbounded logarithms exceeds `numTrimmed`.
 
-        So each unbounded log-ratio lies within the trim. The trim drops
-        it, and winsorizing replaces it with the nearest log-ratio kept, so
-        only its place enters the estimate, not its value. So the least
-        finite log-ratio stands in for each one unbounded below, and the
+        So each unbounded logarithm lies within the trim. The trim drops it,
+        and winsorizing replaces it with the nearest logarithm kept, so only
+        its place enters the estimate, not its value. The least finite
+        logarithm therefore stands in for each one unbounded below, and the
         greatest for each one unbounded above.
      */
     [[nodiscard]]
-    trimmed_mean_estimate estimate_trimmed_mean(net_log_ratios logRatios, std::size_t numTrimmed)
+    trimmed_mean_estimate estimate_trimmed_mean(speedup_logarithms speedupLogarithms, std::size_t numTrimmed)
     {
-      const auto [least, greatest]{std::ranges::minmax(logRatios.finite)};
+      const auto [least, greatest]{std::ranges::minmax(speedupLogarithms.finite)};
 
-      auto data{std::move(logRatios.finite)};
-      data.insert(data.end(), logRatios.num_unbounded_below, least);
-      data.insert(data.end(), logRatios.num_unbounded_above, greatest);
+      auto data{std::move(speedupLogarithms.finite)};
+      data.insert(data.end(), speedupLogarithms.num_unbounded_below, least);
+      data.insert(data.end(), speedupLogarithms.num_unbounded_above, greatest);
 
       return estimate_trimmed_mean(std::move(data), numTrimmed);
     }
@@ -391,16 +391,16 @@ namespace sequoia::testing
       throw_if_too_few_trials(trialDurations.size());
       throw_if_any_duration_not_positive(trialDurations);
 
-      auto logRatioOf{[](relative_performance_durations durations) { return log_ratio(durations); }};
+      auto speedupLogarithmOf{[](relative_performance_durations durations) { return speedup_logarithm(durations); }};
 
-      auto logRatios{
+      auto speedupLogarithms{
           trialDurations
-        | std::views::transform(logRatioOf)
+        | std::views::transform(speedupLogarithmOf)
         | std::ranges::to<std::vector>()
       };
 
       const auto [failure, estimate]{
-        judge_speedup(estimate_trimmed_mean(std::move(logRatios)), overlapMultiplier, prediction)
+        judge_speedup(estimate_trimmed_mean(std::move(speedupLogarithms)), overlapMultiplier, prediction)
       };
 
       return {.failure{failure}, .estimate{estimate}, .task_durations{typical_task_durations(trialDurations)}};
@@ -454,13 +454,13 @@ namespace sequoia::testing
                  typicalBaselineDurations{typical_baseline_durations(baselineDurations)};
 
       // A trial in which a task took no longer than its baseline is not
-      // dropped. The trial counts as an extreme log-ratio, which the trim
+      // dropped. The trial counts as an extreme logarithm, which the trim
       // drops as it drops any outlier, so the trial adds no bias beyond the
       // trim's own.
-      auto logRatios{net_log_ratios_of(transformedTrials(netOf))};
+      auto speedupLogarithms{speedup_logarithms_of(transformedTrials(netOf))};
       const auto numTrimmed{num_trimmed_from_each_end(trialDurations.size())};
 
-      if(const auto failure{failure_to_exceed_baselines(logRatios, numTrimmed)})
+      if(const auto failure{failure_to_exceed_baselines(speedupLogarithms, numTrimmed)})
         return {
           .failure{failure},
           .task_durations{typicalTaskDurations},
@@ -468,7 +468,7 @@ namespace sequoia::testing
         };
 
       const auto [failure, estimate]{
-        judge_speedup(estimate_trimmed_mean(std::move(logRatios), numTrimmed), overlapMultiplier, prediction)
+        judge_speedup(estimate_trimmed_mean(std::move(speedupLogarithms), numTrimmed), overlapMultiplier, prediction)
       };
 
       return {

@@ -177,8 +177,8 @@ namespace sequoia::testing
 
         A trial in which a task's duration does not exceed its baseline's
         counts as an extreme speed-up: infinite if the task is the fast one,
-        and zero if it is the slow one. A trial in which both tasks' durations
-        do counts as both extremes.
+        and zero if it is the slow one. A trial in which neither task's
+        duration exceeds its baseline's counts as both extremes.
 
         The outcome is a failure with no estimate if either extreme occurs in
         more than a tenth of the trials, rounded up. Otherwise the outcome is
@@ -311,8 +311,9 @@ namespace sequoia::testing
       return {.fast{impl::time_task_and_baseline(fast, order.fast)}, .slow{slowDurations}};
     }
 
-    /** \brief Returns the durations of the tasks in each trial, with the
-               tasks of each trial called in its element of `orders`.
+    /** \brief Returns the durations of the tasks in one trial for each
+               element of `orders`, which gives the order in which that trial
+               calls the tasks.
      */
     template<class Fast, class Slow, class Order>
     [[nodiscard]]
@@ -561,8 +562,8 @@ namespace sequoia::testing
           `fast.baseline`'s.
        -# A trial in which a task's duration does not exceed its baseline's
           counts as an extreme speed-up: infinite if the task is `fast.task`,
-          and zero if it is `slow.task`. A trial in which both tasks'
-          durations do counts as both extremes.
+          and zero if it is `slow.task`. A trial in which neither task's
+          duration exceeds its baseline's counts as both extremes.
        -# An attempt fails if either extreme occurs in more than a tenth of
           its trials, rounded up. Otherwise the estimate discounts each
           extreme as an outlier.

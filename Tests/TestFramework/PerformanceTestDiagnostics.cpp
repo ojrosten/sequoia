@@ -202,7 +202,7 @@ namespace sequoia::testing
 
     // Net of the baselines, the tasks take 1 ms and 3 ms, except where a
     // baseline's cycle lasts longer than its task. The first attempt has ten
-    // trials, so the trim drops one log-ratio from each end.
+    // trials, so the trim drops one trial from each end.
     constexpr relative_performance_parameters parameters{.prediction{.lower{2.5}, .upper{3.5}}};
 
     check_relative_performance(
@@ -359,7 +359,7 @@ namespace sequoia::testing
 
     // Net of the baselines, the tasks take 1 ms and 3 ms, except where a
     // baseline's cycle lasts longer than its task. The first attempt has ten
-    // trials, so the trim drops one log-ratio from each end.
+    // trials, so the trim drops one trial from each end.
     constexpr relative_performance_parameters parameters{.prediction{.lower{2.5}, .upper{3.5}}};
 
     check_relative_performance(
@@ -477,7 +477,7 @@ namespace sequoia::testing
     constexpr durations_with_baselines typical{.fast{.task{3s}, .baseline{2s}}, .slow{.task{9s}, .baseline{1s}}};
 
     // Each attempt judged here has as many trials as the floor, so the trim
-    // drops one log-ratio from each end.
+    // drops one trial from each end.
     constexpr durations_with_baselines
       fastAsLongAsBaseline {.fast{.task{2s}, .baseline{2s}}, .slow{typical.slow}},
       slowAsLongAsBaseline {.fast{typical.fast},             .slow{.task{2s},  .baseline{2s}}},
