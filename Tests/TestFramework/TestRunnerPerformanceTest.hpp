@@ -44,8 +44,10 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path minimal_fake_path() const;
 
-    std::filesystem::path write(std::string_view dirName, std::stringstream& output) const;
+    void write(std::string_view dirName, std::string_view printedOutput) const;
 
-    std::filesystem::path check_output(std::string_view description, std::string_view dirName, std::stringstream& output);
+    void check_output(std::string_view description,
+                      std::string_view dirName,
+                      const std::stringstream& output);
   };
 }
