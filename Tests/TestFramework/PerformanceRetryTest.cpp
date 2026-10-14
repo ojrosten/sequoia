@@ -204,9 +204,9 @@ namespace sequoia::testing
 
     constexpr auto callsOfEach{trials_before_attempt(trials_for_minimum_11, 3)};
 
-    check(equality, "Calls of the fast task",          fast.calls(),         callsOfEach);
+    check(equality, "Calls of the fast task",            fast.calls(),         callsOfEach);
     check(equality, "Calls of the fast task's baseline", fastBaseline.calls(), callsOfEach);
-    check(equality, "Calls of the slow task",          slow.calls(),         callsOfEach);
+    check(equality, "Calls of the slow task",            slow.calls(),         callsOfEach);
     check(equality, "Calls of the slow task's baseline", slowBaseline.calls(), callsOfEach);
   }
 
@@ -216,7 +216,8 @@ namespace sequoia::testing
 
     enum class task { fast, fast_baseline, slow, slow_baseline };
 
-    constexpr std::size_t callsPerTrial{4}, trials{trials_for_minimum_11[0]};
+    constexpr std::size_t callsPerTrial{4},
+                          trials{trials_for_minimum_11[0]};
 
     auto recordTaskCalls{
       [this](const reporter& description) {

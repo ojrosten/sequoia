@@ -378,6 +378,7 @@ namespace sequoia::testing
     using enum relative_performance_failure;
 
     constexpr relative_performance_interval prediction{.lower{7.5}, .upper{8.5}};
+    constexpr double tolerance{1e-12};
 
     // Net of the baselines, the speed-up is 8. Without them it is 3. With the
     // baselines exchanged it is 3.5; with the fast baseline taken from both
@@ -398,16 +399,22 @@ namespace sequoia::testing
 
       if(check("An estimate net of the baselines", outcome.estimate.has_value()))
       {
-        check(within_tolerance{1e-12}, "The speed-up net of the baselines", outcome.estimate->speedup, 8.0);
+        check(within_tolerance{tolerance}, "The speed-up net of the baselines", outcome.estimate->speedup, 8.0);
       }
 
-      check(within_tolerance{1e-12}, "The fast task's own duration", outcome.task_durations.fast.count(), 3.0);
-      check(within_tolerance{1e-12}, "The slow task's own duration", outcome.task_durations.slow.count(), 9.0);
+      check(within_tolerance{tolerance}, "The fast task's own duration", outcome.task_durations.fast.count(), 3.0);
+      check(within_tolerance{tolerance}, "The slow task's own duration", outcome.task_durations.slow.count(), 9.0);
 
       if(check("The baseline durations are given", outcome.baseline_durations.has_value()))
       {
-        check(within_tolerance{1e-12}, "The fast baseline's duration", outcome.baseline_durations->fast.count(), 2.0);
-        check(within_tolerance{1e-12}, "The slow baseline's duration", outcome.baseline_durations->slow.count(), 1.0);
+        check(within_tolerance{tolerance},
+              "The fast baseline's duration",
+              outcome.baseline_durations->fast.count(),
+              2.0);
+        check(within_tolerance{tolerance},
+              "The slow baseline's duration",
+              outcome.baseline_durations->slow.count(),
+              1.0);
       }
     }
 
