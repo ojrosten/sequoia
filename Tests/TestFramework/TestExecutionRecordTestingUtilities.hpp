@@ -9,6 +9,7 @@
 
 /** \file */
 
+#include "sequoia/TestFramework/ChronoCheckers.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
 #include "sequoia/TestFramework/TestExecutionRecord.hpp"
