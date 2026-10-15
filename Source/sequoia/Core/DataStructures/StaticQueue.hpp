@@ -13,7 +13,6 @@
  */
 
 #include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
-#include "sequoia/Algorithms/Algorithms.hpp"
 
 namespace sequoia::data_structures
 {
