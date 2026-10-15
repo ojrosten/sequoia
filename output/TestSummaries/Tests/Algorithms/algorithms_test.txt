@@ -1,2 +1,2 @@
 algorithms_test
-Standard Top Level Checks:                60;  Failures:  0  [Deep checks: 370]
+Standard Top Level Checks:               131;  Failures:  0  [Deep checks: 813]
