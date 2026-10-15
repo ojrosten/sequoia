@@ -419,8 +419,11 @@ namespace sequoia::testing
     std::filesystem::path make_path(std::optional<std::size_t> id, std::string_view extension) const;
   };
 
-  /** \brief Paths of each test's record of its last execution, and of the stamp of the run that last started,
-             under a directory keyed on the executable's directory relative to the build root.
+  /** \brief The directory of the execution records written by one test
+             executable, and the file within it holding the run stamp.
+
+      Each test executable has its own directory, named after the
+      executable's directory relative to the build root.
    */
 
   class execution_record_paths
@@ -438,11 +441,7 @@ namespace sequoia::testing
       return m_Dir;
     }
 
-    /** \brief The file in which each run of tests writes its `run_stamp`.
-
-        A test's record is from an earlier run if the record's start time
-        precedes the stamp's.
-     */
+    /** \brief The file in which each run of tests writes its `run_stamp`. */
     [[nodiscard]]
     std::filesystem::path stamp() const;
 

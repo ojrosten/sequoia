@@ -22,6 +22,7 @@ critical_free_test:
 [Total Run Time: 501us]
 [Execution Time: 207us]
 [Runner Overhead: 605us]
+[Scheduling Overhead: 8.96us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 0]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -42,6 +43,7 @@ critical_free_test:
 [Total Run Time: 330us]
 [Execution Time: 50.6us]
 [Runner Overhead: 437us]
+[Scheduling Overhead: 4.88us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

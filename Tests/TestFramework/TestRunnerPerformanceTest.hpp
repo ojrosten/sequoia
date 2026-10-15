@@ -34,7 +34,7 @@ namespace sequoia::testing
 
     void test_execution_duration_of_busiest_thread();
 
-    void test_execution_records_of_performance_checks();
+    void test_recording_of_performance_check_attempts();
 
     void test_summary_of_performance_checks_within_other_checks();
 
@@ -44,8 +44,10 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path minimal_fake_path() const;
 
-    std::filesystem::path write(std::string_view dirName, std::stringstream& output) const;
+    void write(std::string_view dirName, std::string_view printedOutput) const;
 
-    std::filesystem::path check_output(std::string_view description, std::string_view dirName, std::stringstream& output);
+    void check_output(std::string_view description,
+                      std::string_view dirName,
+                      const std::stringstream& output);
   };
 }

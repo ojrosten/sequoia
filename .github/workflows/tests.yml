@@ -912,19 +912,28 @@ jobs:
               echo "ok    no drift check, so no patch";;
           esac
 
-      # Every test writes an execution record: its start time when it begins,
-      # and its execution duration and the runner's overhead when it
-      # finishes, whether or not its body threw. A record which says
-      # "finished no" names a test that was executing when the run ended. The
-      # step lists such tests oldest start time first, since the hung test is
-      # likeliest the one that has run longest. The end-to-end test's generated project keeps
-      # records of its own. A record older than its run's stamp is from an
-      # earlier run, and the step marks it so.
+      # A test's file of execution records holds the records of the latest
+      # run of tests to include the test. That run executes the test once per
+      # repetition. Each execution has a record of its start time, saying
+      # "finished no". A record saying "finished yes" directly follows that
+      # record once the execution finishes, whether or not the test's body
+      # threw. So a "finished no" record not directly followed by a "finished
+      # yes" one names an execution which never finished: the test was
+      # executing when the run, or one of its sandboxes, ended.
       #
-      # The count of records comes first: none, after a suite that ran, means
-      # that the records were not written, or not where this step looks. The
-      # names are paths that a fork's PR controls, so the step prints them
-      # with workflow commands stopped.
+      # The step lists these tests by the start of their first unfinished
+      # execution, oldest first. The test which hung is likeliest the one
+      # which started first. The end-to-end test's generated project keeps
+      # records of its own. Every run of tests stamps its start. An execution
+      # which started before the stamp is from an earlier run, and the step
+      # marks it so.
+      #
+      # The count of files holding records comes first. A run which includes
+      # a test, but ends before the test executes, leaves the test's file
+      # empty. The count leaves out such a file. If the suite was not skipped,
+      # a count of none means that the records were not written, or not where
+      # this step looks. The names are paths that a fork's PR controls, so the
+      # step prints them with workflow commands stopped.
       - name: Name the tests that started and never finished
         if: ${{ always() && inputs.needs_testing == 'true' }}
         env:
@@ -934,7 +943,7 @@ jobs:
           generated=output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject
           roots="output/ExecutionRecords $generated/output/ExecutionRecords"
           records=$(for root in $roots; do
-                      [ ! -d "$root" ] || find "$root" -type f \( -name '*.txt' -o -name run.stamp \)
+                      [ ! -d "$root" ] || find "$root" -type f \( \( -name '*.txt' -size +0 \) -o -name run.stamp \)
                     done)
           tests=$(printf '%s\n' "$records" | grep '\.txt$' || true)
           count=$(printf '%s' "$tests" | grep -c . || true)
@@ -946,14 +955,21 @@ jobs:
           if [ "$SUITE" = success ] && [ "$REPEAT" != failure ] && [ "$REPEAT" != cancelled ]; then succeeded=true; fi
 
           started() { sed -n 's/^started //p' "$1"; }
+          unfinished_start() {
+            awk '/^started / { start = $2 }
+                 /^finished no$/ { n++; starts[n] = start; finished[n] = 0 }
+                 /^finished yes$/ { finished[n] = 1 }
+                 END { for (i = 1; i <= n; i++) if (!finished[i]) { print starts[i]; exit } }' "$1"
+          }
           start_of_run() {
             dir=$(dirname "$1")
             while [ "$dir" != . ] && [ ! -f "$dir/run.stamp" ]; do dir=$(dirname "$dir"); done
             [ ! -f "$dir/run.stamp" ] || started "$dir/run.stamp"
           }
           unfinished=$(printf '%s\n' "$tests" | while IFS= read -r record; do
-                         if [ -z "$record" ] || ! grep -q '^finished no$' "$record"; then continue; fi
-                         start=$(started "$record")
+                         [ -n "$record" ] || continue
+                         start=$(unfinished_start "$record")
+                         [ -n "$start" ] || continue
                          run_start=$(start_of_run "$record")
                          if [[ -n "$run_start" && "$start" < "$run_start" ]]; then
                            echo "$start ${record%.txt} (from an earlier run)"
@@ -990,13 +1006,13 @@ jobs:
                   -e "s|^\([^ ]*\) $generated/output/ExecutionRecords/|  \1  generated project: |"
           echo "::$token::"
 
-      # The step prints two durations for each check of the performance test,
-      # from the Grand Totals of the output the check wrote: the Execution
-      # Time, on which the timing checks assert, and the Runner Overhead. Where
-      # the check measured it, the step also prints the peak number of the
-      # check's tests that ran at once. A check prints its values only when it
-      # fails, and setting the checks' bounds needs the distribution, not only
-      # the tail.
+      # The step prints three durations for each check of the performance
+      # test, from the Grand Totals of the output the check wrote: the
+      # Execution Time, on which the timing checks assert, the Runner Overhead
+      # and the Scheduling Overhead. Where the check measured it, the step also
+      # prints the peak number of the check's tests that ran at once. A check
+      # prints its values only when it fails, and setting the checks' bounds
+      # needs the distribution, not only the tail.
       #
       # The step prints each duration with its unit, since the runner writes
       # one of a second or more in seconds. The step finds the checks from
@@ -1024,26 +1040,32 @@ jobs:
             check=$(basename "$(dirname "$file")")
             execution=$(grand_total "$file" 'Execution Time')
             overhead=$(grand_total "$file" 'Runner Overhead')
+            scheduling=$(grand_total "$file" 'Scheduling Overhead')
             peak=$(sed -n 's/^\[Peak Overlap: \([0-9]*\)\]$/\1/p' "$file" | head -1)
             echo "performance timing: $check: ${execution:-unparsed}," \
-                 "runner overhead ${overhead:-unparsed}${peak:+, peak overlap $peak}"
+                 "runner overhead ${overhead:-unparsed}," \
+                 "scheduling overhead ${scheduling:-unparsed}${peak:+, peak overlap $peak}"
           done
           [ "$found" -gt 0 ] || echo "no performance timings: the working copy holds no io.txt"
 
       # A performance check makes up to three attempts. It stops at the first
       # attempt which passes, so a green check does not say how often its
-      # first attempt failed. A test's execution record gives the number of
-      # attempts each of its performance checks made, one line per check, in
-      # the order of the checks. This step prints those numbers, one line per
-      # test. In standard mode, a number above 1 means that the check's first
-      # attempt failed. Some tests are built to make more than one attempt:
-      # performance_retry_test, and the false-positive and false-negative
-      # diagnostics.
+      # first attempt failed. An execution's "finished yes" record gives the
+      # number of attempts each of the test's performance checks made, one
+      # line per check, in the order of the checks. This step prints those
+      # numbers, one line per test, and separates one execution's numbers
+      # from the next's with a semicolon. It prints "none" for an execution
+      # which made no performance check, and "unfinished" for one which never
+      # finished. In standard mode, a number above 1 means that the check's
+      # first attempt failed. Some tests are built to make more than one
+      # attempt: performance_retry_test, and the false-positive and
+      # false-negative diagnostics.
       #
-      # Each record is of the last run of its test, so a column which runs
-      # the suite more than once shows one run of each test, not every run.
-      # The records are in the artifact, for a count over several columns or
-      # runs.
+      # A test's file of execution records holds the records of one run of
+      # tests: the latest to include the test. So the step shows only the
+      # executions of each test's latest run, even in a column which starts
+      # more than one run. The records are in the artifact, for a count over
+      # several columns or runs.
       #
       # The names are paths that a fork's PR controls, so the step prints
       # them with workflow commands stopped. A report cannot fail the job.
@@ -1059,7 +1081,17 @@ jobs:
           echo "::stop-commands::$token"
           found=0
           while IFS= read -r record; do
-            attempts=$(sed -n 's/^performance check attempts //p' "$record" | paste -sd ' ' -)
+            attempts=$(awk '/^finished no$/ { n++; attempts[n] = "unfinished" }
+                            /^finished yes$/ { attempts[n] = "" }
+                            /^performance check attempts / {
+                              attempts[n] = attempts[n] (attempts[n] == "" ? "" : " ") $4; found = 1
+                            }
+                            END {
+                              if (!found) exit
+                              for (i = 1; i <= n; i++)
+                                printf "%s%s", (i > 1 ? "; " : ""), (attempts[i] == "" ? "none" : attempts[i])
+                              print ""
+                            }' "$record")
             [ -n "$attempts" ] || continue
             found=$((found + 1))
             echo "performance check attempts: ${record#output/ExecutionRecords/}: $attempts"

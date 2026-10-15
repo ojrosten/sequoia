@@ -155,7 +155,7 @@ namespace sequoia::testing
 
   namespace
   {
-    /* The log's layout, as ninja's deps_log.cc writes it:
+    /* The log's layout, as written by ninja's deps_log.cc:
 
        1. The signature line, then a version word. Version 4, which ninja has written since 1.11,
           is supported; earlier versions are not.
@@ -172,8 +172,8 @@ namespace sequoia::testing
        2. If ninja was interrupted while appending, the last record may be incomplete, its size word
           promising more bytes than the file holds. Ninja ignores such a record and truncates the
           file; this reader ignores it too, returning the records before it.
-       3. Paths are as the compiler reported them, so a relative one is relative to the build
-          directory.
+       3. Paths are as reported by the compiler, so a relative one is relative
+          to the build directory.
      */
     constexpr std::string_view signature{"# ninjadeps\n"};
     constexpr std::uint32_t deps_flag{0x80000000u}, max_record_size{(1u << 19) - 1};
@@ -496,8 +496,9 @@ namespace sequoia::testing
              && ascii::same_ignoring_case(spelling.substr(spelling.size() - extension.size()), extension);
     }
 
-    /** The tracker's logs of one kind, decoded: under each source the tracker names, the files that
-        compilation touched, as the tracker spells them.
+    /** The tracker's logs of one kind, decoded: under each source the
+        tracker names, the files that compilation touched, as spelled by the
+        tracker.
 
         The entries are views into the texts the class holds, which must therefore outlive them; the
         texts are read first, all of them, so that no view is taken into a string which a later read
@@ -710,10 +711,12 @@ namespace sequoia::testing
       return ((dot == tracker_path_view::npos) || (dot == 0)) ? filename : filename.substr(0, dot);
     }
 
-    /** The object among the files the compilation of `source` wrote, as the tracker spells it; none, if
-        the compilation wrote no object. Sources compiled by one invocation share their writes; each object
-        bears its source's stem, or the source's whole name where stems collide, whatever the case. Where
-        the build names objects by hash (`CMAKE_INTERMEDIATE_DIR_STRATEGY`) nothing in the log tells them
+    /** The object among the files the compilation of `source` wrote, as
+        spelled by the tracker; none, if the compilation wrote no object.
+        Sources compiled by one invocation share their writes; each object
+        bears its source's stem, or the source's whole name where stems
+        collide, whatever the case. Where the build names objects by hash
+        (`CMAKE_INTERMEDIATE_DIR_STRATEGY`) nothing in the log tells them
         apart, and such an entry is refused rather than guessed at.
      */
     [[nodiscard]]
@@ -754,7 +757,7 @@ namespace sequoia::testing
 
     /** The records of one `.tlog` directory, its files numbered into `files`.
 
-        The tracker's logs, as MSBuild writes them:
+        The tracker's logs, as written by MSBuild:
         -# The read log lists, under each source, every file the compiler read; the write log lists what
            the compiler wrote, which is where the object file is named. `is_tlog` gives their names.
         -# A source is a line beginning `^`. Sources compiled by one invocation share a line, separated
@@ -766,9 +769,11 @@ namespace sequoia::testing
         -# A file is listed in the order the compiler opened it, and more than once where it was opened
            more than once.
 
-        Hence, where sources share their writes, each object file is given to the source whose stem or
-        name the object file bears, compared without regard to ASCII case; what cannot be told apart is
-        refused rather than guessed. Each record lists its inputs as the compiler opened them, each once.
+        Hence, where sources share their writes, each object file is given to
+        the source whose stem or name the object file bears, compared without
+        regard to ASCII case; what cannot be told apart is refused rather than
+        guessed. Each record lists its inputs as opened by the compiler, each
+        once.
 
         The logs name a file once per opening, so each spelling is recovered and numbered on first sight,
         and looked up once per entry thereafter.

@@ -6,7 +6,6 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "VectorNonlinearRepresentationsTest.hpp"
-#include "sequoia/Physics/PhysicalValues.hpp"
 
 #include "../Maths/Geometry/GeometryTestingUtilities.hpp"
 

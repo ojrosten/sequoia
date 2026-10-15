@@ -32,7 +32,7 @@ namespace sequoia::testing
                             cmake cache directory of `buildPaths`: a build tree is named after the
                             configure preset that produced it.
       \param output         File to which the command's output is directed.
-      \param cacheOverride  Spelled `VAR=VALUE`, as `cmake -D` expects it.
+      \param cacheOverride  Spelled `VAR=VALUE`, as expected by `cmake -D`.
    */
   [[nodiscard]]
   runtime::shell_command cmake_cmd(const build_paths& buildPaths,

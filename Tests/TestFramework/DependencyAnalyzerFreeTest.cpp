@@ -593,7 +593,8 @@ namespace sequoia::testing
     test_sequoia_change_not_checked(projPaths);
     test_sequoia_target_within_build_tree(fake);
 
-    // The same build, as ninja records it when the compiler is MSVC, and as Visual Studio's tracker would have recorded it
+    // The same build, as recorded by ninja when the compiler is MSVC;
+    // Visual Studio's tracker would have recorded the same
     write_build_artefacts(fake, build_system::ninja_with_msvc, recorded_sources::all);
     test_dependencies(projPaths);
     test_sequoia_change(projPaths, build_system::ninja_with_msvc);

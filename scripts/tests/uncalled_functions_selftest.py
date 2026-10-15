@@ -17,7 +17,7 @@ The demanglers are given in the order the script is to try them. The expected
 keys are llvm-cxxfilt's and GNU c++filt's spellings, which agree on every name
 here that both can demangle. The mangled names are those g++ 15 and g++ 16
 both give, except two: UNDEMANGLED, which no compiler gives, and TWICE_CAFE,
-which is spelt as lcov writes it. gcc emits the C2 and D2 variants of a
+which is spelt as written by lcov. gcc emits the C2 and D2 variants of a
 constructor and destructor in sequoia's own tracefiles, and they are the C1 and
 D1 names with the variant letter changed.
 """
@@ -84,7 +84,7 @@ COND_DOUBLE     = '_ZN2ns4condIdE1fEvQnt8integralIT_E'
 # which llvm-cxxfilt spells ns::s<int>::friend operator==(...) and GNU c++filt
 # cannot demangle
 FRIEND_EQUAL    = '_ZN2ns1sIiEFeqERKS1_S3_Q1cIT_E'
-# ns::twice<ns::café>(ns::café) as lcov writes it. lcov writes a function
+# ns::twice<ns::café>(ns::café) as written by lcov. lcov writes a function
 # name's letters from U+0080 to U+00FF as single Latin-1 bytes, so a tracefile
 # need not be UTF-8; sequoia's café_free_test is such a name. The length
 # before `caf` is still g++'s count of the UTF-8 bytes. Neither demangler
@@ -340,7 +340,7 @@ class Keys(unittest.TestCase):
     def test_a_requires_clause_within_a_template_argument(self):
         """The first ` requires ` lies within a template argument; only the
         second ends the name. The shape is a lambda's, from an initialiser of
-        a constrained constructor, as llvm-cxxfilt prints it."""
+        a constrained constructor, as printed by llvm-cxxfilt."""
         self.assertEqual(script.key("ns::w<ns::g(int) requires c<T>::'lambda'()>::w(int) requires d<int>"),
                          'ns::w::w')
 

@@ -8,10 +8,9 @@
 #pragma once
 
 /** \file
-    \brief The record of a test's execution and the stamp of a run of tests,
-           and the functions which write and read them.
-
-    `run_stamp`'s brief defines what a run of tests is.
+    \brief The record of a test's execution and the stamp of a
+           \ref sequoia::testing::run_stamp "run of tests", together with
+           the functions which write and read them.
  */
 
 #include <chrono>
@@ -92,19 +91,28 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string to_string(const test_execution_record& record);
 
-  /** \brief Reads the record of a test's execution held by `file`.
+  /** \brief Reads every `test_execution_record` in `file`, in the order in
+             which `file` holds them.
+
+      \returns The records; none if `file` is empty.
 
       \throws std::runtime_error if `file` cannot be opened, or holds
-              anything other than one record
+              anything other than a sequence of records
    */
   [[nodiscard]]
-  test_execution_record read_test_execution_record(const std::filesystem::path& file);
+  std::vector<test_execution_record> read_test_execution_records(const std::filesystem::path& file);
 
   /** \brief The start time of a run of tests.
 
-      A run of tests is a call to `test_runner::execute` which has tests to
-      run. Under `locate-instabilities`, one run covers every repetition,
-      including the repetitions made in separate processes.
+      A run of tests begins when a `test_runner` is constructed with
+      arguments which ask it to run tests, whether or not any actually run
+      after filtering. Under `locate-instabilities`, one run covers every
+      repetition. A runner which makes a repetition in a separate process
+      begins no run of its own: the repetition belongs to the run of the
+      runner which launched the process.
+
+      A `test_execution_record` is from an earlier run of tests if the
+      record's start time precedes the stamp's.
 
       `operator>>` reads back what `operator<<` writes, provided that the
       start time lies in the years 0 to 32767.

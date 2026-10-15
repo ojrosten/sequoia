@@ -12,7 +12,7 @@
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
-#include "Maths/Graph/GraphTestingUtilities.hpp"
+#include "Maths/Graph/Tree/TreeTestingUtilities.hpp"
 
 #include <format>
 

@@ -8,6 +8,7 @@ foo_test:
 [Total Run Time: 5.14ms]
 [Execution Time: 2.2ms]
 [Runner Overhead: 2.55ms]
+[Scheduling Overhead: 5.75us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 47]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -24,6 +25,7 @@ foo_test:
 [Total Run Time: 5.06ms]
 [Execution Time: 2.23ms]
 [Runner Overhead: 2.45ms]
+[Scheduling Overhead: 5.58us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 47]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

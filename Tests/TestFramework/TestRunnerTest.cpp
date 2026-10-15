@@ -7,13 +7,14 @@
 
 #include "TestRunnerTest.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
+#include "CriticalPathDurationsTestingUtilities.hpp"
+#include "TestExecutionRecordTestingUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
 #include "TestFramework/BuildArtefactsTestingUtilities.hpp"
 
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
-#include "sequoia/TestFramework/TestExecutionRecord.hpp"
 
 namespace sequoia::testing
 {
@@ -97,7 +98,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"Standard Failure"}, 43, 42);
+        check(equality, "Standard Failure", 43, 42);
       }
     };
 
@@ -154,7 +155,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"False positive failure"}, 42, 42);
+        check(equality, "False positive failure", 42, 42);
       }
     };
 
@@ -171,7 +172,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"False negative failure"}, 43, 42);
+        check(equality, "False negative failure", 43, 42);
       }
     };
 
@@ -195,7 +196,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"Flipper"}, flipper{}.x, true);
+        check(equality, "Flipper", flipper{}.x, true);
       }
     };
 
@@ -220,7 +221,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"Period 4"}, periodic<4>{}.x, 1);
+        check(equality, "Period 4", periodic<4>{}.x, 1);
       }
     };
 
@@ -238,8 +239,8 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"Period 2: Pass/Fail/Pass"}, periodic<2>{}.x, 1);
-        check({"Period 3: Pass/Pass/Fail"}, periodic<3>{}.x > 0);
+        check(equality, "Period 2: Pass/Fail/Pass", periodic<2>{}.x, 1);
+        check("Period 3: Pass/Pass/Fail", periodic<3>{}.x > 0);
       }
     };
 
@@ -256,9 +257,9 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check({"Always fails"}, false);
+        check("Always fails", false);
 
-        check(equality, {"Flipper"}, flipper{}.x, true);
+        check(equality, "Flipper", flipper{}.x, true);
       }
     };
 
@@ -275,7 +276,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check({"Always fails"}, false);
+        check("Always fails", false);
       }
     };
 
@@ -296,7 +297,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check({"Always passes"}, true);
+        check("Always passes", true);
       }
     };
 
@@ -313,7 +314,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check({"Always passes"}, true);
+        check("Always passes", true);
       }
     };
 
@@ -736,13 +737,19 @@ namespace sequoia::testing
     };
 
     [[nodiscard]]
+    project_paths::customizer fake_project_customization()
+    {
+      return {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}};
+    }
+
+    [[nodiscard]]
     test_runner make_fake_runner(commandline_arguments& args, std::stringstream& outputStream)
     {
       return test_runner{args.size(),
                          args.get(),
                          "Oliver J. Rosten",
                          "  ",
-                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                         fake_project_customization(),
                          outputStream};
     }
 
@@ -906,7 +913,7 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
-    /// Checks its own execution record while it executes
+    /// Checks its own execution records while it executes
     class record_reading_free_test final : public free_test
     {
     public:
@@ -921,10 +928,11 @@ namespace sequoia::testing
       void run_tests()
       {
         const test_execution_record_path record{source_file(), name(), get_project_paths()};
-        if(check("While a test executes, its record exists", fs::exists(record.file_path())))
+        const auto records{read_test_execution_records(record.file_path())};
+        if(check("While a test executes, it has a record", !records.empty()))
         {
-          check("While a test executes, its record has no completion",
-                !read_test_execution_record(record.file_path()).completion.has_value());
+          check("While a test executes, its last record has no completion",
+                !records.back().completion.has_value());
         }
 
         check("While a test executes, the run's stamp already exists",
@@ -932,18 +940,28 @@ namespace sequoia::testing
       }
     };
 
-    /** The return code, test record and stamp of a run of one test */
+    [[nodiscard]]
+    std::vector<bool> completion_flags_of(const std::vector<test_execution_record>& records)
+    {
+      auto hasCompletion{[](const test_execution_record& record) { return record.completion.has_value(); }};
+
+      return records | std::views::transform(hasCompletion) | std::ranges::to<std::vector>();
+    }
+
+    /** The return code, execution records and stamp of a run of one test */
     struct recorded_run
     {
       return_code                            code{};
-      test_execution_record::start_time_type moment_before_run{};
-      test_execution_record                  test_record{};
+      test_execution_record::start_time_type moment_before_construction{};
+      std::vector<test_execution_record>     execution_records{};
       run_stamp                              stamp{};
 
       [[nodiscard]]
-      bool is_stamp_between_call_and_test() const noexcept
+      bool is_stamp_between_construction_and_test() const noexcept
       {
-        return (moment_before_run <= stamp.start_time) && (stamp.start_time <= test_record.start_time);
+        return !execution_records.empty()
+            && (moment_before_construction <= stamp.start_time)
+            && (stamp.start_time <= execution_records.front().start_time);
       }
     };
 
@@ -985,7 +1003,9 @@ namespace sequoia::testing
     test_verbose_output();
     test_serial_verbose_output();
     test_throwing_tests();
-    test_execution_records();
+    test_recording_of_executions();
+    test_recording_of_repetitions();
+    test_recording_of_successive_runs();
     test_summary_collision_with_an_unselected_test();
     test_discriminated_summary();
     test_filtered_suites();
@@ -1020,6 +1040,7 @@ namespace sequoia::testing
     test_sandboxed_repetition();
     test_exit_statuses();
     test_return_code_names();
+    test_wall_clock_apportionment();
   }
 
   void test_runner_test::test_discriminator_hooks()
@@ -1481,6 +1502,7 @@ namespace sequoia::testing
          not the `std::logic_error` which refuses a duplicate name.
       -# The execution runs the tests registered before and after it.
       -# A runner whose only registration threw has nothing registered.
+      -# The test's file of execution records keeps an earlier run's record.
    */
   void test_runner_test::test_execution_after_a_registration_which_threw()
   {
@@ -1489,11 +1511,24 @@ namespace sequoia::testing
 
     auto runner{make_fake_runner(args, outputStream)};
 
+    const test_execution_record_path executionRecordPath{throwing_discriminator_test::source_file(),
+                                                         test_name<throwing_discriminator_test>(),
+                                                         runner.proj_paths()};
+
+    const auto earlierRecordText{to_string(test_execution_record{})};
+    fs::create_directories(executionRecordPath.file_path().parent_path());
+    write_to_file(executionRecordPath.file_path(), earlierRecordText, std::ios_base::binary);
+
     runner.register_test<failing_test>();
 
     auto registerThrowingTest{[&runner](){ runner.register_test<throwing_discriminator_test>(); }};
     check_exception_thrown<std::runtime_error>("Registration whose hook throws", registerThrowingTest);
     check_exception_thrown<std::runtime_error>("The same registration again", registerThrowingTest);
+
+    check(equality,
+          "A registration whose hook throws leaves the test's execution records as they were",
+          read_to_string(executionRecordPath.file_path(), std::ios_base::binary).value_or(""),
+          earlierRecordText);
 
     runner.register_test<passing_test>();
     check(equality, "Execution return code", runner.execute(), return_code::soft_failures);
@@ -1586,38 +1621,38 @@ namespace sequoia::testing
     check(equivalence, "Exception Output", predictive_materials() / "ThrowingDiagnostics", diagnosticsDir);
   }
 
-  /** The fake tests tell the mechanism from its rivals: `record_reading_free_test` sees its record while it executes,
-      which a start time written only at the end would not produce; `escaping_exception_free_test` throws, which an
-      execution duration written only on normal completion would miss. Each fake test runs alone, so that a run's
-      return code is its test's alone. Each run removes the records directory first, so that only that run can have
-      written the stamp.
+  /** The fake tests tell the mechanism from its rivals.
+      `record_reading_free_test` sees its record while it executes, which a
+      start time written only at the end would not produce.
+      `escaping_exception_free_test` throws, which an execution duration
+      written only on normal completion would miss.
+
+      Each fake test runs alone, so that a run's return code is its test's
+      alone. Each run removes the records directory before constructing its
+      runner, so that only that run can have written the stamp.
    */
-  void test_runner_test::test_execution_records()
+  void test_runner_test::test_recording_of_executions()
   {
     auto runAlone{
       [this]<concrete_test Test>(std::type_identity<Test>) {
         std::stringstream outputStream{};
         commandline_arguments args{{minimal_fake_path().generic_string()}};
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
-
-        const auto& projPaths{runner.proj_paths()};
+        const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
         fs::remove_all(projPaths.execution_records().dir());
+
+        const auto momentBeforeConstruction{
+          std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now())
+        };
+        auto runner{make_fake_runner(args, outputStream)};
         runner.register_test<Test>();
 
-        const auto momentBeforeRun{std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now())};
         const auto code{runner.execute()};
         const test_execution_record_path testRecordPath{Test::source_file(), test_name<Test>(), projPaths};
 
         return recorded_run{
           .code{code},
-          .moment_before_run{momentBeforeRun},
-          .test_record{read_test_execution_record(testRecordPath.file_path())},
+          .moment_before_construction{momentBeforeConstruction},
+          .execution_records{read_test_execution_records(testRecordPath.file_path())},
           .stamp{read_run_stamp(projPaths.execution_records().stamp())}
         };
       }
@@ -1636,14 +1671,86 @@ namespace sequoia::testing
           throwing.code,
           return_code::critical_failures);
 
-    check("The record of a test which passed has a completion",     passing.test_record.completion.has_value());
-    check("The record of a test whose body threw has a completion", throwing.test_record.completion.has_value());
+    check(equality,
+          "A test which passed is recorded as it starts, and again, with a completion, as it finishes",
+          completion_flags_of(passing.execution_records),
+          std::vector{false, true});
 
-    check("The stamp's start time lies between the call to execute and the start time of a test which passed",
-          passing.is_stamp_between_call_and_test());
+    check(equality,
+          "A test whose body threw is recorded as it starts, and again, with a completion, as it finishes",
+          completion_flags_of(throwing.execution_records),
+          std::vector{false, true});
 
-    check("The stamp's start time lies between the call to execute and the start time of a test whose body threw",
-          throwing.is_stamp_between_call_and_test());
+    check("The stamp's start time lies between the runner's construction and the start time of a test which passed",
+          passing.is_stamp_between_construction_and_test());
+
+    check("The stamp's start time lies between the runner's construction and the start time of a test whose body threw",
+          throwing.is_stamp_between_construction_and_test());
+  }
+
+  /** Under `locate-instabilities`, a test's file of execution records keeps
+      the records of every repetition. The records directory is removed
+      first, so that only this run can have written records.
+   */
+  void test_runner_test::test_recording_of_repetitions()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{minimal_fake_path().generic_string(), "locate", "2"}};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
+    fs::remove_all(projPaths.execution_records().dir());
+
+    auto runner{make_fake_runner(args, outputStream)};
+    runner.register_test<passing_test>();
+
+    check(equality, "Two repetitions of a passing test return code", runner.execute(), return_code::success);
+
+    const test_execution_record_path record{passing_test::source_file(), test_name<passing_test>(), projPaths};
+    check(equality,
+          "Each repetition of a test is recorded as it starts, and again, with a completion, as it finishes",
+          completion_flags_of(read_test_execution_records(record.file_path())),
+          std::vector{false, true, false, true});
+  }
+
+  /** For each test it includes, a run replaces the earlier execution records
+      with its own. The run leaves the records of any other test as they
+      were. Both tests' files start with an unfinished record from an
+      earlier run. The run selects `passing_test` alone, so `failing_test` is
+      registered but left out.
+   */
+  void test_runner_test::test_recording_of_successive_runs()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{minimal_fake_path().generic_string(),
+                                "select",
+                                passing_test::source_file().generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+    const auto& projPaths{runner.proj_paths()};
+    const test_execution_record_path
+      selectedTestRecordPath{passing_test::source_file(), test_name<passing_test>(), projPaths},
+      unselectedTestRecordPath{failing_test::source_file(), test_name<failing_test>(), projPaths};
+
+    const auto earlierRecordText{to_string(test_execution_record{})};
+    for(const auto& record : {selectedTestRecordPath, unselectedTestRecordPath})
+    {
+      fs::create_directories(record.file_path().parent_path());
+      write_to_file(record.file_path(), earlierRecordText, std::ios_base::binary);
+    }
+
+    runner.register_test<passing_test>();
+    runner.register_test<failing_test>();
+
+    check(equality, "A run of the selected test return code", runner.execute(), return_code::success);
+
+    check(equality,
+          "A run replaces an earlier run's execution records of a test it runs with its own",
+          completion_flags_of(read_test_execution_records(selectedTestRecordPath.file_path())),
+          std::vector{false, true});
+
+    check(equality,
+          "A run leaves the execution records of a test it does not run as they were",
+          read_to_string(unselectedTestRecordPath.file_path(), std::ios_base::binary).value_or(""),
+          earlierRecordText);
   }
 
   /** `summary_collider_test_twin` is selected and `summary_collider_test` is
@@ -1832,7 +1939,7 @@ namespace sequoia::testing
     const auto build{write_fake_build()};
 
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
-    const project_paths projPaths{args.size(), args.get(), {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
     const auto stamp{projPaths.prune().stamp()};
     fs::create_directories(stamp.parent_path());
     write_to_file(stamp, "", std::ios_base::out);
@@ -1860,11 +1967,7 @@ namespace sequoia::testing
     const auto build{write_fake_build()};
 
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
-    const project_paths::customizer customization{
-      .main_cpp{"TestSandbox/TestSandbox.cpp"},
-      .common_includes{"TestShared/SharedIncludes.hpp"}
-    };
-    const project_paths projPaths{args.size(), args.get(), customization};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
     const auto stamp{projPaths.prune().stamp()};
     fs::create_directories(stamp.parent_path());
     write_to_file(stamp, "", std::ios_base::out);
@@ -1884,19 +1987,21 @@ namespace sequoia::testing
     check_output("Prune selecting an unregistered test", "PruneSelectsUnregisteredOutput", outputStream);
   }
 
+  /** Every file the build read predates the previous run's prune stamp.
+      The registered test is not in the build, so it runs only if prune's
+      empty selection is taken for a selection of everything.
+
+      The records directory starts with an earlier run's run stamp, and the
+      test's file of execution records with an earlier run's record. The
+      run replaces the run stamp, though it has no test to run, and leaves
+      the record as it was.
+   */
   void test_runner_test::test_prune_with_nothing_stale()
   {
-    // Every file the build read predates the previous run's stamp. The
-    // registered test is not in the build, so it runs only if prune's empty
-    // selection is taken for a selection of everything.
     const auto build{write_fake_build()};
 
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
-    const project_paths::customizer customization{
-      .main_cpp{"TestSandbox/TestSandbox.cpp"},
-      .common_includes{"TestShared/SharedIncludes.hpp"}
-    };
-    const project_paths projPaths{args.size(), args.get(), customization};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
     const auto stamp{projPaths.prune().stamp()};
     fs::create_directories(stamp.parent_path());
     write_to_file(stamp, "", std::ios_base::out);
@@ -1908,12 +2013,31 @@ namespace sequoia::testing
     fs::last_write_time(stamp, now - 1s);
     fs::last_write_time(projPaths.executable(), now);
 
+    const test_execution_record_path
+      executionRecordPath{passing_test::source_file(), test_name<passing_test>(), projPaths};
+
+    const auto earlierRecordText{to_string(test_execution_record{})};
+    fs::create_directories(executionRecordPath.file_path().parent_path());
+    write_to_file(executionRecordPath.file_path(), earlierRecordText, std::ios_base::binary);
+    write_to_file(projPaths.execution_records().stamp(), to_string(run_stamp{}), std::ios_base::binary);
+
+    const auto momentBeforeConstruction{
+      std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now())
+    };
     std::stringstream outputStream{};
     auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     check(equality, "Prune with nothing stale return code", runner.execute(), return_code::success);
     check_output("Prune with nothing stale", "PruneWithNothingStaleOutput", outputStream);
+
+    check("A run which prune leaves with nothing to do writes its run stamp",
+          momentBeforeConstruction <= read_run_stamp(projPaths.execution_records().stamp()).start_time);
+
+    check(equality,
+          "A run which prune leaves with nothing to do leaves a test's execution records as they were",
+          read_to_string(executionRecordPath.file_path(), std::ios_base::binary).value_or(""),
+          earlierRecordText);
   }
 
   void test_runner_test::test_post_run_failure()
@@ -2517,6 +2641,10 @@ namespace sequoia::testing
       analysis. The run selects a suite and a source, and excludes a source, each named with a space. The
       shell splits an unquoted word at the space. So if the coordinator does not quote the path, no
       sandbox runs, and if it does not quote a selection, the sandboxes record it as two arguments.
+
+      The selected test's file of execution records starts with an earlier
+      run's record. The script executes no test, so only the coordinator can
+      empty the file.
    */
   void test_runner_test::test_instability_analysis_in_sandboxes_from_a_path_with_a_space()
   {
@@ -2558,6 +2686,14 @@ namespace sequoia::testing
                                 "exclude", excluded_from_spaced_suite_free_test::source_file().generic_string()}};
 
     auto runner{make_fake_runner(args, outputStream)};
+
+    const test_execution_record_path executionRecordPath{selected_in_spaced_suite_free_test::source_file(),
+                                                         test_name<selected_in_spaced_suite_free_test>(),
+                                                         runner.proj_paths()};
+
+    fs::create_directories(executionRecordPath.file_path().parent_path());
+    write_to_file(executionRecordPath.file_path(), to_string(test_execution_record{}), std::ios_base::binary);
+
     runner.register_test<selected_in_spaced_suite_free_test>();
     runner.register_test<excluded_from_spaced_suite_free_test>();
 
@@ -2566,13 +2702,25 @@ namespace sequoia::testing
           "Each sandbox is given the repetitions, its runner id and the selections, each as one argument",
           outputDir,
           predictive_materials() /= "SandboxesFromAPathWithASpace");
+
+    check(equality,
+          "The run which launches the sandboxes empties the file of execution records of each test to be run",
+          read_test_execution_records(executionRecordPath.file_path()),
+          std::vector<test_execution_record>{});
   }
 
   /** A runner given a runner id is one sandbox. The sandbox writes its
-      records under its id. It leaves the other sandboxes' records in
-      place, and leaves the analysis of every sandbox's records to the run
-      which launched them all. The launching side is the subject of
+      instability analysis records under its id. It leaves the other
+      sandboxes' instability analysis records in place, and leaves the
+      analysis of every sandbox's records to the run which launched them
+      all. The launching side is the subject of
       `test_instability_analysis_in_sandboxes_from_a_path_with_a_space`.
+
+      A sandbox appends its test's execution records to those of the
+      sandboxes before it: only the run which launched the sandboxes empties
+      the test's file and writes the stamp. Here, fake records stand for an
+      earlier sandbox's, and a fake stamp for the launching run's. This test
+      function writes both before constructing the sandbox's runner.
    */
   void test_runner_test::test_sandboxed_repetition()
   {
@@ -2593,6 +2741,21 @@ namespace sequoia::testing
 
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "locate", "2", "--runner-id", "1"}};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
+
+    const test_execution_record_path
+      executionRecordPath{passing_test::source_file(), test_name<passing_test>(), projPaths};
+
+    const std::vector<test_execution_record>
+      earlierSandboxRecords{{}, {.completion{test_execution_completion{}}}};
+
+    fs::create_directories(executionRecordPath.file_path().parent_path());
+    write_to_file(executionRecordPath.file_path(),
+                  to_string(earlierSandboxRecords.front()) + to_string(earlierSandboxRecords.back()),
+                  std::ios_base::binary);
+
+    const auto stampTextOfLaunchingRun{to_string(run_stamp{})};
+    write_to_file(projPaths.execution_records().stamp(), stampTextOfLaunchingRun, std::ios_base::binary);
 
     auto runner{make_fake_runner(args, outputStream)};
     runner.register_test<passing_test>();
@@ -2602,11 +2765,21 @@ namespace sequoia::testing
 
     check(equality, "Sandboxed repetition return code", runner.execute(), return_code::success);
     check_output("Sandboxed Repetition Output", "SandboxedRepetitionOutput", outputStream);
-    check("The sandbox writes its records under its id", fs::exists(recordOf(1)));
+    check("The sandbox writes its instability analysis records under its id", fs::exists(recordOf(1)));
     check(equality,
-          "The sandbox leaves another sandbox's records in place",
+          "The sandbox leaves another sandbox's instability analysis records in place",
           read_to_string(recordOf(0), std::ios_base::in).value_or(""),
           anotherRecord);
+
+    check(equality,
+          "The sandbox appends its test's execution records to those of an earlier sandbox",
+          completion_flags_of(read_test_execution_records(executionRecordPath.file_path())),
+          std::vector{false, true, false, true});
+
+    check(equality,
+          "The sandbox leaves the stamp of the run which launched it as it was",
+          read_to_string(projPaths.execution_records().stamp(), std::ios_base::binary).value_or(""),
+          stampTextOfLaunchingRun);
   }
 
   namespace
@@ -2666,13 +2839,14 @@ namespace sequoia::testing
     const test_execution_record_path
       record{stray_materials_free_test::source_file(), test_name<stray_materials_free_test>(), runner.proj_paths()};
 
-    const auto completion{read_test_execution_record(record.file_path()).completion};
-    if(check("The record of a test whose materials could not be prepared has a completion", completion.has_value()))
+    const auto records{read_test_execution_records(record.file_path())};
+    if(check("The last record of a test whose materials could not be prepared has a completion",
+             !records.empty() && records.back().completion.has_value()))
     {
       check(equality,
             "A test whose materials could not be prepared has an execution duration of zero: "
             "preparing them is overhead",
-            completion->execution_duration,
+            records.back().completion->execution_duration,
             std::chrono::microseconds{});
     }
   }
@@ -2792,8 +2966,8 @@ namespace sequoia::testing
   }
 
   /** Before the run, the fake test's temporary root holds `PreviousRun.txt`,
-      and its discarded root holds `DeadRun.txt`, as a run which died would
-      leave it. After the run:
+      and its discarded root holds `DeadRun.txt`, as if left by a run which
+      died. After the run:
       -# `DeadRun.txt` is gone. The test's preparation removes it before
          moving the temporary root, which otherwise could not be moved to the
          discarded root, and would be removed in place;
@@ -2984,5 +3158,132 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       "Bits no flag occupies",
       [](){ return to_string(static_cast<return_code>(64)); });
+  }
+
+  /** Each scenario's prediction differs from that of a rival rule:
+      -# Eight threads which ran one test each, one after another: a runner
+         overhead of the wall clock less the execution duration;
+      -# The busiest thread: the thread chosen by its execution duration
+         alone;
+      -# A thread's tests summed: the longest test in place of the busiest
+         thread;
+      -# Sequential tests before the busiest thread: the sequential tests
+         left out;
+      -# Sequential tests alone: the sequential tests grouped by thread.
+   */
+  void test_runner_test::test_wall_clock_apportionment()
+  {
+    using namespace std::chrono_literals;
+
+    // Until a thread is joined, no other thread takes its id, so these ids
+    // stay distinct while `threads` lives
+    const auto threads{
+        std::views::iota(0, 8)
+      | std::views::transform([](int) { return std::jthread{[](){}}; })
+      | std::ranges::to<std::vector>()
+    };
+
+    const auto threadIds{
+        threads
+      | std::views::transform([](const std::jthread& thread) { return thread.get_id(); })
+      | std::ranges::to<std::vector>()
+    };
+
+    {
+      const auto oneExecutionPerThread{
+          threadIds
+        | std::views::transform(
+            [](std::thread::id id) {
+              return execution_info{.thread_id{id}, .durations{.execution_duration{25ms}, .runner_overhead{1ms}}};
+            })
+        | std::ranges::to<std::vector>()
+      };
+
+      check(equality,
+            "Eight threads, which ran one test each, one after another",
+            apportion_wall_clock(210ms, {}, oneExecutionPerThread),
+            critical_path_durations{
+              .spent_in_tests     {.execution_duration{25ms}, .runner_overhead{1ms}},
+              .scheduling_overhead{184ms}
+            });
+    }
+
+    {
+      const std::array concurrent{
+        execution_info{.thread_id{threadIds[0]}, .durations{.execution_duration{30ms}, .runner_overhead{0ms}}},
+        execution_info{.thread_id{threadIds[1]}, .durations{.execution_duration{20ms}, .runner_overhead{20ms}}}
+      };
+
+      check(equality,
+            "The busiest thread is the one with the most execution duration and runner overhead together",
+            apportion_wall_clock(45ms, {}, concurrent),
+            critical_path_durations{
+              .spent_in_tests     {.execution_duration{20ms}, .runner_overhead{20ms}},
+              .scheduling_overhead{5ms}
+            });
+    }
+
+    {
+      const std::array concurrent{
+        execution_info{.thread_id{threadIds[0]}, .durations{.execution_duration{10ms}, .runner_overhead{1ms}}},
+        execution_info{.thread_id{threadIds[1]}, .durations{.execution_duration{15ms}, .runner_overhead{1ms}}},
+        execution_info{.thread_id{threadIds[0]}, .durations{.execution_duration{10ms}, .runner_overhead{1ms}}}
+      };
+
+      check(equality,
+            "A thread's tests are summed",
+            apportion_wall_clock(25ms, {}, concurrent),
+            critical_path_durations{
+              .spent_in_tests     {.execution_duration{20ms}, .runner_overhead{2ms}},
+              .scheduling_overhead{3ms}
+            });
+    }
+
+    {
+      const std::array sequential{
+        execution_info{.thread_id{threadIds[0]}, .durations{.execution_duration{5ms}, .runner_overhead{1ms}}},
+        execution_info{.thread_id{threadIds[1]}, .durations{.execution_duration{5ms}, .runner_overhead{1ms}}}
+      };
+
+      const std::array concurrent{
+        execution_info{.thread_id{threadIds[2]}, .durations{.execution_duration{10ms}, .runner_overhead{2ms}}}
+      };
+
+      check(equality,
+            "Every sequential test lies on the critical path, before the busiest thread",
+            apportion_wall_clock(30ms, sequential, concurrent),
+            critical_path_durations{
+              .spent_in_tests     {.execution_duration{20ms}, .runner_overhead{4ms}},
+              .scheduling_overhead{6ms}
+            });
+
+      check(equality,
+            "Sequential tests alone",
+            apportion_wall_clock(15ms, sequential, {}),
+            critical_path_durations{
+              .spent_in_tests     {.execution_duration{10ms}, .runner_overhead{2ms}},
+              .scheduling_overhead{3ms}
+            });
+
+      check(equality,
+            "A wall clock equal to the tests' durations leaves no scheduling overhead",
+            apportion_wall_clock(12ms, sequential, {}),
+            critical_path_durations{
+              .spent_in_tests     {.execution_duration{10ms}, .runner_overhead{2ms}},
+              .scheduling_overhead{0ms}
+            });
+
+      check_exception_thrown<std::invalid_argument>(
+        "A wall clock shorter than the critical path's tests",
+        [&sequential](){ return apportion_wall_clock(11ms, sequential, {}); });
+    }
+
+    check(equality,
+          "No tests",
+          apportion_wall_clock(2ms, {}, {}),
+          critical_path_durations{
+            .spent_in_tests     {.execution_duration{0ms}, .runner_overhead{0ms}},
+            .scheduling_overhead{2ms}
+          });
   }
 }
