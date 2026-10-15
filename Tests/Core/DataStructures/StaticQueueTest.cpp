@@ -12,6 +12,14 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    template<auto operation>
+    constexpr bool completes_in_constant_evaluation{
+      requires { typename std::bool_constant<(operation(), true)>; }
+    };
+  }
+
   [[nodiscard]]
   std::filesystem::path test_static_queue::source_file()
   {
@@ -20,9 +28,22 @@ namespace sequoia::testing
 
   void test_static_queue::run_tests()
   {
+    check_front_back_and_pop_in_constant_evaluation();
     check_depth_0();
     check_depth_1();
     check_depth_2();
+  }
+
+  void test_static_queue::check_front_back_and_pop_in_constant_evaluation()
+  {
+    using queue_t = data_structures::static_queue<int, 1>;
+
+    STATIC_CHECK( completes_in_constant_evaluation<[]() { return queue_t{1}.front(); }>);
+    STATIC_CHECK(!completes_in_constant_evaluation<[]() { return queue_t{}.front();  }>);
+    STATIC_CHECK( completes_in_constant_evaluation<[]() { return queue_t{1}.back();  }>);
+    STATIC_CHECK(!completes_in_constant_evaluation<[]() { return queue_t{}.back();   }>);
+    STATIC_CHECK( completes_in_constant_evaluation<[]() { queue_t{1}.pop(); }>);
+    STATIC_CHECK(!completes_in_constant_evaluation<[]() { queue_t{}.pop();  }>);
   }
 
   void test_static_queue::check_depth_0()
@@ -36,6 +57,9 @@ namespace sequoia::testing
 
     check_exception_thrown<std::logic_error>("Can't push to null queue", [&t]() { t.push(1); });
     check_exception_thrown<std::logic_error>("Can't construct non-null null queue", []() { static_queue<int, 0>{1}; });
+    check_exception_thrown<std::logic_error>("Can't access front of null queue", [&t]() { return t.front(); });
+    check_exception_thrown<std::logic_error>("Can't access back of null queue", [&t]() { return t.back(); });
+    check_exception_thrown<std::logic_error>("Can't pop from null queue", [&t]() { t.pop(); });
   }
 
   void test_static_queue::check_depth_1()
@@ -52,6 +76,12 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>( "Can't construct queue of depth 1 with 2 elements", []() { static_queue<int, 1>{1, 2}; });
 
     t.pop();
+
+    check_exception_thrown<std::logic_error>("Can't access front of empty queue", [&t]() { return t.front(); });
+    check_exception_thrown<std::logic_error>("Can't access back of empty queue", [&t]() { return t.back(); });
+    check_exception_thrown<std::logic_error>("Can't pop from empty queue", [&t]() { t.pop(); });
+    check(equality, "A refused pop leaves the queue empty", t, static_queue<int, 1>{});
+
     t.push(1);
     check(equality, "", t, s);
   }

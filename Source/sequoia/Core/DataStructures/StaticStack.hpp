@@ -49,13 +49,19 @@ namespace sequoia::data_structures
     }
 
     [[nodiscard]]
-    constexpr const T& top() const noexcept
+    constexpr const T& top() const
     {
+      if(empty())
+        throw std::logic_error("Attempting to access the top of an empty stack");
+
       return m_Stack[m_End - 1];
     }
 
-    constexpr void pop() noexcept
+    constexpr void pop()
     {
+      if(empty())
+        throw std::logic_error("Attempting to pop an empty stack");
+
       --m_End;
     }
 

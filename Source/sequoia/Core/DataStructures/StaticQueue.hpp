@@ -67,27 +67,48 @@ namespace sequoia::data_structures
     }
 
     [[nodiscard]]
-    constexpr const T& back() const noexcept
+    constexpr const T& back() const
     {
+      if(empty())
+      {
+        throw std::logic_error("Attempting to access the back of an empty queue");
+      }
+
       return m_Queue[m_Back];
     }
 
     [[nodiscard]]
-    constexpr const T& front() const noexcept
+    constexpr const T& front() const
     {
+      if(empty())
+      {
+        throw std::logic_error("Attempting to access the front of an empty queue");
+      }
+
       return m_Queue[m_Front];
     }
 
-    constexpr void pop() noexcept
+    constexpr void pop()
     {
-      if(m_Front == m_Back)
+      if constexpr(MaxDepth > 0)
       {
-        m_Front = MaxDepth;
-        m_Back = MaxDepth;
+        if(empty())
+        {
+          throw std::logic_error("Attempting to pop an empty queue");
+        }
+        else if(m_Front == m_Back)
+        {
+          m_Front = MaxDepth;
+          m_Back = MaxDepth;
+        }
+        else
+        {
+          m_Front = (m_Front + 1) % MaxDepth;
+        }
       }
       else
       {
-        m_Front = (m_Front + 1) % MaxDepth;
+        throw std::logic_error("Attempting to pop an empty queue");
       }
     }
 
