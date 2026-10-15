@@ -137,14 +137,21 @@ namespace sequoia
     sequoia::sort(std::ranges::begin(r), std::ranges::end(r), std::move(comp), std::move(proj));
   }
 
+  namespace impl
+  {
+    template<class Iter>
+    using merge_buffer_iterator_t = std::vector<typename std::iterator_traits<Iter>::value_type>::iterator;
+  }
+
   template<class Iter, class Comp, class Proj>
   inline constexpr bool merge_sortable{
      requires{
          typename std::iterator_traits<Iter>::value_type;
-         requires (std::is_copy_constructible_v<typename std::iterator_traits<Iter>::value_type> || is_initializable_v<typename std::iterator_traits<Iter>::value_type>);
+         requires (   std::is_copy_constructible_v<typename std::iterator_traits<Iter>::value_type>
+                   || is_initializable_v<typename std::iterator_traits<Iter>::value_type>);
        }
-     && std::mergeable<Iter, Iter, typename std::vector<typename std::iterator_traits<Iter>::value_type>::iterator, Comp, Proj, Proj>
-     && std::indirectly_copyable<typename std::vector<typename std::iterator_traits<Iter>::value_type>::iterator, Iter>
+     && std::mergeable<Iter, Iter, impl::merge_buffer_iterator_t<Iter>, Comp, Proj, Proj>
+     && std::indirectly_copyable<impl::merge_buffer_iterator_t<Iter>, Iter>
   };
 
   template
