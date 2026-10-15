@@ -14,9 +14,9 @@ namespace sequoia::testing
 {
   namespace
   {
-    template<auto operation>
-    constexpr bool completes_in_constant_evaluation{
-      requires { typename std::bool_constant<(operation(), true)>; }
+    template<auto Operation>
+    inline constexpr bool invocation_is_constant_expression_v{
+      requires { typename std::bool_constant<(Operation(), true)>; }
     };
   }
 
@@ -64,10 +64,10 @@ namespace sequoia::testing
 
     using queue_t = data_structures::static_priority_queue<int, 1>;
 
-    STATIC_CHECK( completes_in_constant_evaluation<[]() { return queue_t{1}.top(); }>);
-    STATIC_CHECK(!completes_in_constant_evaluation<[]() { return queue_t{}.top();  }>);
-    STATIC_CHECK( completes_in_constant_evaluation<[]() { queue_t{1}.pop(); }>);
-    STATIC_CHECK(!completes_in_constant_evaluation<[]() { queue_t{}.pop();  }>);
+    STATIC_CHECK( invocation_is_constant_expression_v<[]() { return queue_t{1}.top(); }>);
+    STATIC_CHECK(!invocation_is_constant_expression_v<[]() { return queue_t{}.top();  }>);
+    STATIC_CHECK( invocation_is_constant_expression_v<[]() { queue_t{1}.pop(); }>);
+    STATIC_CHECK(!invocation_is_constant_expression_v<[]() { queue_t{}.pop();  }>);
   }
 
   void test_static_priority_queue::check_depth_0()
