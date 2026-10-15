@@ -64,6 +64,7 @@
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
 #include "sequoia/TestFramework/BinaryRelationships.hpp"
 #include "sequoia/TestFramework/Advice.hpp"
+#include "sequoia/TestFramework/ProjectPaths.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/Core/Meta/Utilities.hpp"
 

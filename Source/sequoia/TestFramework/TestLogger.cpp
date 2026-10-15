@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/TestFramework/TestLogger.hpp"
-#include "sequoia/TestFramework/DumpComparison.hpp"
+#include "sequoia/TestFramework/DumpFormat.hpp"
 
 #include <format>
 #include <fstream>

@@ -11,6 +11,8 @@
 
 #include "FailureInfoTestingUtilities.hpp"
 
+#include "sequoia/TestFramework/InstabilityAnalysis.hpp"
+
 namespace sequoia::testing
 {
   class failure_info_test final : public regular_test

@@ -12,7 +12,7 @@
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
 
-#include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/Parsing/CommandLineMessages.hpp"
 #include "sequoia/TestFramework/Commands.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Characters.hpp"

@@ -7,6 +7,7 @@ sequoia_init()
 set(SourceList
     Maths/Graph/GraphErrors.cpp
     Parsing/CommandLineArguments.cpp
+    Parsing/CommandLineMessages.cpp
     PlatformSpecific/Helpers.cpp
     Runtime/ShellCommands.cpp
     Streaming/Streaming.cpp
@@ -25,6 +26,7 @@ set(SourceList
     TestFramework/FileSystemUtilities.cpp
     TestFramework/FreeTestCore.cpp
     TestFramework/IndividualTestPaths.cpp
+    TestFramework/InstabilityAnalysis.cpp
     TestFramework/MaterialsUpdater.cpp
     TestFramework/MoveOnlyTestCore.cpp
     TestFramework/Output.cpp
@@ -41,6 +43,7 @@ set(SourceList
     TestFramework/TestLogger.cpp
     TestFramework/TestRunner.cpp
     TestFramework/TestRunnerUtilities.cpp
+    TestFramework/TimingUtilities.cpp
     TestFramework/VersionedOutput.cpp
     TextProcessing/Indent.cpp
     TextProcessing/Patterns.cpp
