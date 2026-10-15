@@ -14,9 +14,9 @@ namespace sequoia::testing
 {
   namespace
   {
-    template<auto operation>
-    constexpr bool completes_in_constant_evaluation{
-      requires { typename std::bool_constant<(operation(), true)>; }
+    template<auto Operation>
+    inline constexpr bool invocation_is_constant_expression_v{
+      requires { typename std::bool_constant<(Operation(), true)>; }
     };
   }
 
@@ -38,12 +38,12 @@ namespace sequoia::testing
   {
     using queue_t = data_structures::static_queue<int, 1>;
 
-    STATIC_CHECK( completes_in_constant_evaluation<[]() { return queue_t{1}.front(); }>);
-    STATIC_CHECK(!completes_in_constant_evaluation<[]() { return queue_t{}.front();  }>);
-    STATIC_CHECK( completes_in_constant_evaluation<[]() { return queue_t{1}.back();  }>);
-    STATIC_CHECK(!completes_in_constant_evaluation<[]() { return queue_t{}.back();   }>);
-    STATIC_CHECK( completes_in_constant_evaluation<[]() { queue_t{1}.pop(); }>);
-    STATIC_CHECK(!completes_in_constant_evaluation<[]() { queue_t{}.pop();  }>);
+    STATIC_CHECK( invocation_is_constant_expression_v<[]() { return queue_t{1}.front(); }>);
+    STATIC_CHECK(!invocation_is_constant_expression_v<[]() { return queue_t{}.front();  }>);
+    STATIC_CHECK( invocation_is_constant_expression_v<[]() { return queue_t{1}.back();  }>);
+    STATIC_CHECK(!invocation_is_constant_expression_v<[]() { return queue_t{}.back();   }>);
+    STATIC_CHECK( invocation_is_constant_expression_v<[]() { queue_t{1}.pop(); }>);
+    STATIC_CHECK(!invocation_is_constant_expression_v<[]() { queue_t{}.pop();  }>);
   }
 
   void test_static_queue::check_depth_0()

@@ -14,9 +14,9 @@ namespace sequoia::testing
 {
   namespace
   {
-    template<auto operation>
-    constexpr bool completes_in_constant_evaluation{
-      requires { typename std::bool_constant<(operation(), true)>; }
+    template<auto Operation>
+    inline constexpr bool invocation_is_constant_expression_v{
+      requires { typename std::bool_constant<(Operation(), true)>; }
     };
   }
 
@@ -38,10 +38,10 @@ namespace sequoia::testing
   {
     using stack_t = data_structures::static_stack<int, 1>;
 
-    STATIC_CHECK( completes_in_constant_evaluation<[]() { return stack_t{1}.top(); }>);
-    STATIC_CHECK(!completes_in_constant_evaluation<[]() { return stack_t{}.top();  }>);
-    STATIC_CHECK( completes_in_constant_evaluation<[]() { stack_t{1}.pop(); }>);
-    STATIC_CHECK(!completes_in_constant_evaluation<[]() { stack_t{}.pop();  }>);
+    STATIC_CHECK( invocation_is_constant_expression_v<[]() { return stack_t{1}.top(); }>);
+    STATIC_CHECK(!invocation_is_constant_expression_v<[]() { return stack_t{}.top();  }>);
+    STATIC_CHECK( invocation_is_constant_expression_v<[]() { stack_t{1}.pop(); }>);
+    STATIC_CHECK(!invocation_is_constant_expression_v<[]() { stack_t{}.pop();  }>);
   }
 
   void test_static_stack::check_depth_0()
