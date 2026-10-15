@@ -32,12 +32,12 @@ namespace sequoia::data_structures
     {
     }
 
-    constexpr static_queue(const static_queue&)    = default;
-    constexpr static_queue(static_queue&) noexcept = default;
+    constexpr static_queue(const static_queue&)     = default;
+    constexpr static_queue(static_queue&&) noexcept = default;
     ~static_queue() = default;
 
-    constexpr static_queue& operator=(const static_queue&)    = default;
-    constexpr static_queue& operator=(static_queue&) noexcept = default;
+    constexpr static_queue& operator=(const static_queue&)     = default;
+    constexpr static_queue& operator=(static_queue&&) noexcept = default;
 
     constexpr void push(const T& val)
     {

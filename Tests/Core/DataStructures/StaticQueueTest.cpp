@@ -9,17 +9,12 @@
 #include "StaticQueueTestingUtilities.hpp"
 
 #include "sequoia/Core/DataStructures/StaticQueue.hpp"
+#include "sequoia/Core/Meta/TypeTraits.hpp"
+
+#include <memory>
 
 namespace sequoia::testing
 {
-  namespace
-  {
-    template<auto Operation>
-    inline constexpr bool invocation_is_constant_expression_v{
-      requires { typename std::bool_constant<(Operation(), true)>; }
-    };
-  }
-
   [[nodiscard]]
   std::filesystem::path test_static_queue::source_file()
   {
@@ -28,10 +23,19 @@ namespace sequoia::testing
 
   void test_static_queue::run_tests()
   {
+    check_moves_do_not_copy();
     check_front_back_and_pop_in_constant_evaluation();
     check_depth_0();
     check_depth_1();
     check_depth_2();
+  }
+
+  void test_static_queue::check_moves_do_not_copy()
+  {
+    using queue_t = data_structures::static_queue<std::unique_ptr<int>, 1>;
+
+    STATIC_CHECK(std::is_move_constructible_v<queue_t>);
+    STATIC_CHECK(std::is_move_assignable_v<queue_t>);
   }
 
   void test_static_queue::check_front_back_and_pop_in_constant_evaluation()
@@ -120,6 +124,8 @@ namespace sequoia::testing
     a.push(5);
     a.push(7);
     check(equality, "", a, static_queue<int, 2>{5, 7});
+    check(equality, "The front is the earliest element remaining", a.front(), 5);
+    check(equality, "The back is the latest element pushed"      , a.back() , 7);
 
     check_exception_thrown<std::logic_error>("Trying to push 3 elements to a queue of depth 2", [&a]() { a.push(0); });
 
@@ -128,6 +134,8 @@ namespace sequoia::testing
 
     a.push(4);
     check(equality, "", a, static_queue<int, 2>{7, 4});
+    check(equality, "The front is the earliest element remaining, once storage wraps around", a.front(), 7);
+    check(equality, "The back is the latest element pushed, once storage wraps around"      , a.back() , 4);
 
     check_exception_thrown<std::logic_error>("Trying to push 3 elements to a queue of depth 2", [&a]() { a.push(0); });
 

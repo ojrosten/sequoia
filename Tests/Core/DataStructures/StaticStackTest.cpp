@@ -9,17 +9,12 @@
 #include "StaticStackTestingUtilities.hpp"
 
 #include "sequoia/Core/DataStructures/StaticStack.hpp"
+#include "sequoia/Core/Meta/TypeTraits.hpp"
+
+#include <memory>
 
 namespace sequoia::testing
 {
-  namespace
-  {
-    template<auto Operation>
-    inline constexpr bool invocation_is_constant_expression_v{
-      requires { typename std::bool_constant<(Operation(), true)>; }
-    };
-  }
-
   [[nodiscard]]
   std::filesystem::path test_static_stack::source_file()
   {
@@ -28,10 +23,19 @@ namespace sequoia::testing
 
   void test_static_stack::run_tests()
   {
+    check_moves_do_not_copy();
     check_top_and_pop_in_constant_evaluation();
     check_depth_0();
     check_depth_1();
     check_depth_2();
+  }
+
+  void test_static_stack::check_moves_do_not_copy()
+  {
+    using stack_t = data_structures::static_stack<std::unique_ptr<int>, 1>;
+
+    STATIC_CHECK(std::is_move_constructible_v<stack_t>);
+    STATIC_CHECK(std::is_move_assignable_v<stack_t>);
   }
 
   void test_static_stack::check_top_and_pop_in_constant_evaluation()

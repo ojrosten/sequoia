@@ -1,2 +1,2 @@
 test_static_queue
-Standard Top Level Checks:                35;  Failures:  0  [Deep checks: 369]
+Standard Top Level Checks:                41;  Failures:  0  [Deep checks: 375]

@@ -1,2 +1,2 @@
 test_static_stack
-Standard Top Level Checks:                20;  Failures:  0  [Deep checks: 88]
+Standard Top Level Checks:                22;  Failures:  0  [Deep checks: 90]
