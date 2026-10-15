@@ -20,10 +20,36 @@ namespace sequoia::testing
 
   void test_static_priority_queue::run_tests()
   {
+    check_constant_evaluation();
     check_depth_0();
     check_depth_1();
     check_depth_2();
     check_depth_3();
+    check_list_shorter_than_depth();
+  }
+
+  /** The queue's unused slots hold `int{}`. Every element of the list is
+      negative, so an unused slot that joined the heap would become a top.
+   */
+  constexpr auto test_static_priority_queue::successive_tops_of_list_shorter_than_depth()
+  {
+    using namespace data_structures;
+
+    static_priority_queue<int, 4> q{-3, -1, -2};
+
+    const int first{q.top()};
+    q.pop();
+    const int second{q.top()};
+    q.pop();
+
+    return std::array{first, second, q.top()};
+  }
+
+  void test_static_priority_queue::check_constant_evaluation()
+  {
+    constexpr auto tops{successive_tops_of_list_shorter_than_depth()};
+
+    STATIC_CHECK(tops == std::array{-1, -2, -3});
   }
 
   void test_static_priority_queue::check_depth_0()
@@ -142,5 +168,15 @@ namespace sequoia::testing
 
     t.pop();
     check(equality, "", t, queue_t{});
+  }
+
+  void test_static_priority_queue::check_list_shorter_than_depth()
+  {
+    check(
+      equality,
+      "Each top of a queue built from a list shorter than its depth is the greatest element remaining",
+      successive_tops_of_list_shorter_than_depth(),
+      std::array{-1, -2, -3}
+    );
   }
 }

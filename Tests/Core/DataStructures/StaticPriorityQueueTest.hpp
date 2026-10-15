@@ -24,11 +24,14 @@ namespace sequoia::testing
     void run_tests();
   private:
 
+    void check_constant_evaluation();
     void check_depth_0();
     void check_depth_1();
     void check_depth_2();
     void check_depth_3();
+    void check_list_shorter_than_depth();
 
     constexpr static auto make_static_priority_queue_3();
+    constexpr static auto successive_tops_of_list_shorter_than_depth();
   };
 }
