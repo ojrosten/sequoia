@@ -63,15 +63,18 @@ namespace sequoia::data_structures
     }
 
     [[nodiscard]]
-    constexpr const T& top() const noexcept
+    constexpr const T& top() const
     {
+      if(empty())
+        throw std::logic_error("Attempting to access the top of an empty priority_queue");
+
       return *m_Q.begin();
     }
 
-    constexpr void pop() noexcept
+    constexpr void pop()
     {
       if(empty())
-        return;
+        throw std::logic_error("Attempting to pop an empty priority_queue");
 
       std::ranges::iter_swap(m_Q.begin(), m_Q.begin() + m_End -1);
       --m_End;

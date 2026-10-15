@@ -12,6 +12,14 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    template<auto operation>
+    constexpr bool completes_in_constant_evaluation{
+      requires { typename std::bool_constant<(operation(), true)>; }
+    };
+  }
+
   [[nodiscard]]
   std::filesystem::path test_static_priority_queue::source_file()
   {
@@ -20,7 +28,7 @@ namespace sequoia::testing
 
   void test_static_priority_queue::run_tests()
   {
-    check_pops_in_constant_evaluation();
+    check_top_and_pop_in_constant_evaluation();
     check_depth_0();
     check_depth_1();
     check_depth_2();
@@ -48,21 +56,18 @@ namespace sequoia::testing
     return std::array{first, second, q.top()};
   }
 
-  void test_static_priority_queue::check_pops_in_constant_evaluation()
+  void test_static_priority_queue::check_top_and_pop_in_constant_evaluation()
   {
     constexpr auto tops{successive_tops_from_list_shorter_than_depth()};
 
     STATIC_CHECK(tops == std::array{-1, -2, -3});
 
-    constexpr bool isEmptyAfterPoppingEmpty{
-      []() {
-        data_structures::static_priority_queue<int, 1> q{};
-        q.pop();
-        return q.empty();
-      }()
-    };
+    using queue_t = data_structures::static_priority_queue<int, 1>;
 
-    STATIC_CHECK(isEmptyAfterPoppingEmpty);
+    STATIC_CHECK( completes_in_constant_evaluation<[]() { return queue_t{1}.top(); }>);
+    STATIC_CHECK(!completes_in_constant_evaluation<[]() { return queue_t{}.top();  }>);
+    STATIC_CHECK( completes_in_constant_evaluation<[]() { queue_t{1}.pop(); }>);
+    STATIC_CHECK(!completes_in_constant_evaluation<[]() { queue_t{}.pop();  }>);
   }
 
   void test_static_priority_queue::check_depth_0()
@@ -76,9 +81,8 @@ namespace sequoia::testing
 
     check_exception_thrown<std::logic_error>("Can't push to null queue", [&t]() { t.push(1); });
     check_exception_thrown<std::logic_error>("Can't construct non-null null queue", []() { static_priority_queue<int, 0>{1}; });
-
-    t.pop();
-    check(equality, "Popping a null queue leaves it empty", t, s);
+    check_exception_thrown<std::logic_error>("Can't access top of null queue", [&t]() { return t.top(); });
+    check_exception_thrown<std::logic_error>("Can't pop from null queue", [&t]() { t.pop(); });
   }
 
   void test_static_priority_queue::check_depth_1()
@@ -98,8 +102,8 @@ namespace sequoia::testing
     t.pop();
     check(equality, "", t, queue_t{});
 
-    t.pop();
-    check(equality, "Popping an empty queue leaves it empty", t, queue_t{});
+    check_exception_thrown<std::logic_error>("Can't access top of empty queue", [&t]() { return t.top(); });
+    check_exception_thrown<std::logic_error>("Can't pop from empty queue", [&t]() { t.pop(); });
 
     t.push(1);
     check(equality, "", t, queue_t{1});
