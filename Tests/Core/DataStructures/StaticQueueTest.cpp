@@ -55,11 +55,11 @@ namespace sequoia::testing
 
     check(equality, "Equality of null queues", t, s);
 
-    check_exception_thrown<std::logic_error>("Can't push to null queue", [&t]() { t.push(1); });
+    check_exception_thrown<std::logic_error>("Can't push to null queue"           , [&t]() { t.push(1); });
     check_exception_thrown<std::logic_error>("Can't construct non-null null queue", []() { static_queue<int, 0>{1}; });
-    check_exception_thrown<std::logic_error>("Can't access front of null queue", [&t]() { return t.front(); });
-    check_exception_thrown<std::logic_error>("Can't access back of null queue", [&t]() { return t.back(); });
-    check_exception_thrown<std::logic_error>("Can't pop from null queue", [&t]() { t.pop(); });
+    check_exception_thrown<std::logic_error>("Can't access front of null queue"   , [&t]() { return t.front(); });
+    check_exception_thrown<std::logic_error>("Can't access back of null queue"    , [&t]() { return t.back(); });
+    check_exception_thrown<std::logic_error>("Can't pop from null queue"          , [&t]() { t.pop(); });
   }
 
   void test_static_queue::check_depth_1()
@@ -78,8 +78,8 @@ namespace sequoia::testing
     t.pop();
 
     check_exception_thrown<std::logic_error>("Can't access front of empty queue", [&t]() { return t.front(); });
-    check_exception_thrown<std::logic_error>("Can't access back of empty queue", [&t]() { return t.back(); });
-    check_exception_thrown<std::logic_error>("Can't pop from empty queue", [&t]() { t.pop(); });
+    check_exception_thrown<std::logic_error>("Can't access back of empty queue" , [&t]() { return t.back(); });
+    check_exception_thrown<std::logic_error>("Can't pop from empty queue"       , [&t]() { t.pop(); });
     check(equality, "A refused pop leaves the queue empty", t, static_queue<int, 1>{});
 
     t.push(1);

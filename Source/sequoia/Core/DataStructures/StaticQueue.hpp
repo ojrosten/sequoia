@@ -99,7 +99,7 @@ namespace sequoia::data_structures
         else if(m_Front == m_Back)
         {
           m_Front = MaxDepth;
-          m_Back = MaxDepth;
+          m_Back  = MaxDepth;
         }
         else
         {

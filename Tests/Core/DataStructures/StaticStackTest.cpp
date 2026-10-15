@@ -53,10 +53,10 @@ namespace sequoia::testing
 
     check(equality, "Equality of null queues", t, s);
 
-    check_exception_thrown<std::logic_error>("Can't push to null stack", [&t]() { t.push(1); });
+    check_exception_thrown<std::logic_error>("Can't push to null stack"           , [&t]() { t.push(1); });
     check_exception_thrown<std::logic_error>("Can't construct non-null null stack", []() { static_stack<int, 0>{1}; });
-    check_exception_thrown<std::logic_error>("Can't access top of null stack", [&t]() { return t.top(); });
-    check_exception_thrown<std::logic_error>("Can't pop from null stack", [&t]() { t.pop(); });
+    check_exception_thrown<std::logic_error>("Can't access top of null stack"     , [&t]() { return t.top(); });
+    check_exception_thrown<std::logic_error>("Can't pop from null stack"          , [&t]() { t.pop(); });
   }
 
   void test_static_stack::check_depth_1()
@@ -77,7 +77,7 @@ namespace sequoia::testing
     check(equality, "", t, stack_t{});
 
     check_exception_thrown<std::logic_error>("Can't access top of empty stack", [&t]() { return t.top(); });
-    check_exception_thrown<std::logic_error>("Can't pop from empty stack", [&t]() { t.pop(); });
+    check_exception_thrown<std::logic_error>("Can't pop from empty stack"     , [&t]() { t.pop(); });
     check(equality, "A refused pop leaves the stack empty", t, stack_t{});
 
     t.push(1);
