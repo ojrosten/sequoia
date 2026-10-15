@@ -8,13 +8,13 @@
 #include "TestRunnerTest.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "CriticalPathDurationsTestingUtilities.hpp"
+#include "TestExecutionRecordTestingUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
 #include "TestFramework/BuildArtefactsTestingUtilities.hpp"
 
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
-#include "sequoia/TestFramework/TestExecutionRecord.hpp"
 
 namespace sequoia::testing
 {

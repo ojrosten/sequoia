@@ -947,7 +947,7 @@ namespace sequoia
 
         for(edge_index_type i{}; i < edges.num_partitions(); ++i)
         {
-          sequoia::stable_sort(edges.begin_partition(i), edges.end_partition(i), graph_impl::edge_comparer{});
+          sequoia::stable_sort(edges.partition(i), graph_impl::edge_comparer{});
 
           if constexpr(clusterEdges)
           {

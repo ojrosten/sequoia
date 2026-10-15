@@ -23,17 +23,33 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+    void algorithm_constraints();
 
-    template<class Stability>
-    void sort_basic_type(Stability stability);
+    template<class Form>
+    void make_heap_by_second_element(Form form);
 
-    template<class Stability>
-    void sort_partial_edge(Stability stability);
+    template<class Stability, class Form>
+    void sort_basic_type(Stability stability, Form form);
 
-    void stable_sort_stability();
+    template<class Stability, class Form>
+    void sort_partial_edge(Stability stability, Form form);
 
-    void cluster_basic_type();
+    template<class Stability, class Form>
+    void sort_by_second_element(Stability stability, Form form);
 
-    void cluster_partial_edge();
+    template<class Form>
+    void stable_sort_stability(Form form);
+
+    template<class Form>
+    void stable_sort_with_buffer(Form form);
+
+    template<class Form>
+    void cluster_basic_type(Form form);
+
+    template<class Form>
+    void cluster_partial_edge(Form form);
+
+    template<class Form>
+    void cluster_by_first_element(Form form);
   };
 }
