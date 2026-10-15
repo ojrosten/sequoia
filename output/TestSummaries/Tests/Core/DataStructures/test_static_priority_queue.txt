@@ -1,2 +1,2 @@
 test_static_priority_queue
-Standard Top Level Checks:                27;  Failures:  0  [Deep checks: 290]
+Standard Top Level Checks:                28;  Failures:  0  [Deep checks: 295]

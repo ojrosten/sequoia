@@ -20,22 +20,25 @@ namespace sequoia::testing
 
   void test_static_priority_queue::run_tests()
   {
-    check_constant_evaluation();
+    check_pops_in_constant_evaluation();
     check_depth_0();
     check_depth_1();
     check_depth_2();
     check_depth_3();
-    check_list_shorter_than_depth();
+    check_construction_from_list_shorter_than_depth();
   }
 
-  /** The queue's unused slots hold `int{}`. Every element of the list is
-      negative, so an unused slot that joined the heap would become a top.
+  /** The queue value-initialises the slots beyond the list, so they hold zero.
+      Every element of the list is negative, so a slot heapified with the list
+      would be the first top. The greatest element of the list is last, so
+      heapifying too few of the list's elements would give the wrong first top
+      too.
    */
-  constexpr auto test_static_priority_queue::successive_tops_of_list_shorter_than_depth()
+  constexpr auto test_static_priority_queue::successive_tops_from_list_shorter_than_depth()
   {
     using namespace data_structures;
 
-    static_priority_queue<int, 4> q{-3, -1, -2};
+    static_priority_queue<int, 4> q{-3, -2, -1};
 
     const int first{q.top()};
     q.pop();
@@ -45,13 +48,13 @@ namespace sequoia::testing
     return std::array{first, second, q.top()};
   }
 
-  void test_static_priority_queue::check_constant_evaluation()
+  void test_static_priority_queue::check_pops_in_constant_evaluation()
   {
-    constexpr auto tops{successive_tops_of_list_shorter_than_depth()};
+    constexpr auto tops{successive_tops_from_list_shorter_than_depth()};
 
     STATIC_CHECK(tops == std::array{-1, -2, -3});
 
-    constexpr bool isEmptyAfterPop{
+    constexpr bool isEmptyAfterPoppingEmpty{
       []() {
         data_structures::static_priority_queue<int, 1> q{};
         q.pop();
@@ -59,7 +62,7 @@ namespace sequoia::testing
       }()
     };
 
-    STATIC_CHECK(isEmptyAfterPop);
+    STATIC_CHECK(isEmptyAfterPoppingEmpty);
   }
 
   void test_static_priority_queue::check_depth_0()
@@ -74,6 +77,8 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>("Can't push to null queue", [&t]() { t.push(1); });
     check_exception_thrown<std::logic_error>("Can't construct non-null null queue", []() { static_priority_queue<int, 0>{1}; });
 
+    t.pop();
+    check(equality, "Popping a null queue leaves it empty", t, s);
   }
 
   void test_static_priority_queue::check_depth_1()
@@ -183,12 +188,12 @@ namespace sequoia::testing
     check(equality, "", t, queue_t{});
   }
 
-  void test_static_priority_queue::check_list_shorter_than_depth()
+  void test_static_priority_queue::check_construction_from_list_shorter_than_depth()
   {
     check(
       equality,
-      "Each top of a queue built from a list shorter than its depth is the greatest element remaining",
-      successive_tops_of_list_shorter_than_depth(),
+      "Each top of a queue built from a list shorter than the queue's depth is the greatest element remaining",
+      successive_tops_from_list_shorter_than_depth(),
       std::array{-1, -2, -3}
     );
   }
