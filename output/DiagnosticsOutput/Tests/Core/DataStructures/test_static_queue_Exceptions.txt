@@ -61,7 +61,7 @@ initializer_list of size 2 too big for array: expected at most 1 elements
 
 =======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 80
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 81
 Can't access front of empty queue
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Attempting to access the front of an empty queue
 
 =======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 81
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 82
 Can't access back of empty queue
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Attempting to access the back of an empty queue
 
 =======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 82
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 83
 Can't pop from empty queue
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ Attempting to pop an empty queue
 
 =======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 114
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 115
 Can't construct queue of depth 2 with 3 elements
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ initializer_list of size 3 too big for array: expected at most 2 elements
 
 =======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 123
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 124
 Trying to push 3 elements to a queue of depth 2
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ Attempting to exceed maximum queue depth
 
 =======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 131
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 132
 Trying to push 3 elements to a queue of depth 2
 
 Expected Exception Type:

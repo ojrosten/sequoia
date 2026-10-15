@@ -76,6 +76,7 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>( "Can't construct queue of depth 1 with 2 elements", []() { static_queue<int, 1>{1, 2}; });
 
     t.pop();
+    check(equality, "", t, static_queue<int, 1>{});
 
     check_exception_thrown<std::logic_error>("Can't access front of empty queue", [&t]() { return t.front(); });
     check_exception_thrown<std::logic_error>("Can't access back of empty queue" , [&t]() { return t.back(); });

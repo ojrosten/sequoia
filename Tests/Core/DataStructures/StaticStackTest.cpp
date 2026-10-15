@@ -51,7 +51,7 @@ namespace sequoia::testing
     constexpr static_stack<int, 0> s{};
     static_stack<int, 0> t{};
 
-    check(equality, "Equality of null queues", t, s);
+    check(equality, "Equality of null stacks", t, s);
 
     check_exception_thrown<std::logic_error>("Can't push to null stack"           , [&t]() { t.push(1); });
     check_exception_thrown<std::logic_error>("Can't construct non-null null stack", []() { static_stack<int, 0>{1}; });
