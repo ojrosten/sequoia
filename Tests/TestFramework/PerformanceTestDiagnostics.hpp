@@ -36,6 +36,12 @@ namespace sequoia::testing
     void test_fail_at_second_attempt();
 
     void test_confidence_multiplier_from_first_attempt();
+
+    void test_relative_performance_with_baselines();
+
+    void test_tasks_no_longer_than_baselines();
+
+    void test_fail_at_second_attempt_with_baselines();
   };
 
   class performance_false_positive_diagnostics final : public performance_false_positive_test
@@ -57,29 +63,11 @@ namespace sequoia::testing
     void test_confidence_multiplier();
 
     void test_computations_not_optimized_away();
-  };
 
-  class performance_utilities_test final : public free_test
-  {
-  public:
-    using free_test::free_test;
+    void test_relative_performance_with_baselines();
 
-    [[nodiscard]]
-    static std::filesystem::path source_file();
+    void test_tasks_no_longer_than_baselines();
 
-    void run_tests();
-  private:
-
-    void test_task_constraints();
-
-    void test_exception_specifications();
-
-    void test_default_minimum_trials();
-
-    void test_postprocessing();
-
-    void test_zeroed_measurements();
-
-    void test_coarse_sleep();
+    void test_baselines_doing_nothing();
   };
 }

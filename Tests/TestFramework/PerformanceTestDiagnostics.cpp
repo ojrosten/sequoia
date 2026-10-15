@@ -8,49 +8,10 @@
 #include "PerformanceTestDiagnostics.hpp"
 #include "PerformanceTestingUtilities.hpp"
 
-#include "sequoia/Streaming/Streaming.hpp"
-
-#include <array>
 #include <chrono>
-#include <limits>
-#include <memory>
-#include <utility>
 
 namespace sequoia::testing
 {
-  namespace
-  {
-    struct copyable_task
-    {
-      void operator()() const {}
-    };
-
-    struct move_only_task
-    {
-      std::unique_ptr<int> resource{};
-
-      void operator()() const {}
-    };
-
-    struct rvalue_only_task
-    {
-      void operator()() && {}
-    };
-
-    template<class Task>
-    concept profilable = requires(Task task) { profile(std::move(task)); };
-
-    template<class Fast, class Slow>
-    inline constexpr bool checkable_tasks_v{
-      requires(performance_extender<test_mode::standard>& extender,
-               Fast fast,
-               Slow slow,
-               const relative_performance_parameters& parameters) {
-        extender.check_relative_performance("", std::move(fast), std::move(slow), parameters);
-      }
-    };
-  }
-
   [[nodiscard]]
   std::filesystem::path performance_false_negative_diagnostics::source_file()
   {
@@ -70,6 +31,9 @@ namespace sequoia::testing
     test_significance_gate();
     test_fail_at_second_attempt();
     test_confidence_multiplier_from_first_attempt();
+    test_relative_performance_with_baselines();
+    test_tasks_no_longer_than_baselines();
+    test_fail_at_second_attempt_with_baselines();
   }
 
   void performance_false_negative_diagnostics::test_relative_performance()
@@ -159,6 +123,86 @@ namespace sequoia::testing
                                parameters);
   }
 
+  void performance_false_negative_diagnostics::test_relative_performance_with_baselines()
+  {
+    using namespace std::chrono_literals;
+
+    check_relative_performance("Tasks of 4 ms and 16 ms, with baselines of 1 ms and 10 ms, predicted [3.6, 4.4]",
+                               task_with_baseline{.task     = []() { spin_for(4ms); },
+                                                  .baseline = []() { spin_for(1ms); }},
+                               task_with_baseline{.task     = []() { spin_for(16ms); },
+                                                  .baseline = []() { spin_for(10ms); }},
+                               {.prediction{.lower{3.6}, .upper{4.4}}});
+
+    check_relative_performance("Tasks of 7 ms and 13 ms, without baselines, predicted [3.6, 4.4]",
+                               []() { spin_for(7ms); },
+                               []() { spin_for(13ms); },
+                               {.prediction{.lower{3.6}, .upper{4.4}}});
+  }
+
+  void performance_false_negative_diagnostics::test_tasks_no_longer_than_baselines()
+  {
+    using namespace std::chrono_literals;
+
+    // The tasks' net durations are 3 ms and 9 ms, except in the trials in
+    // which a baseline spins for longer than its task. The first attempt has
+    // ten trials, so the trim drops one trial from each end.
+    constexpr relative_performance_parameters parameters{.prediction{.lower{2.5}, .upper{3.5}}};
+
+    check_relative_performance(
+      "Two trials in ten in which the fast task takes no longer than its baseline",
+      task_with_baseline{.task     = []() { spin_for(4ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 7ms, 1ms, 1ms, 1ms, 7ms, 1ms, 1ms, 1ms})},
+      task_with_baseline{.task = []() { spin_for(10ms); }, .baseline = []() { spin_for(1ms); }},
+      parameters
+    );
+
+    check_relative_performance(
+      "Two trials in ten in which the slow task takes no longer than its baseline",
+      task_with_baseline{.task = []() { spin_for(4ms); }, .baseline = []() { spin_for(1ms); }},
+      task_with_baseline{.task     = []() { spin_for(10ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 13ms, 1ms, 1ms, 1ms, 13ms, 1ms, 1ms, 1ms})},
+      parameters
+    );
+
+    check_relative_performance(
+      "One trial in ten in which both tasks take no longer than their baselines, "
+      "and another in which the fast task does",
+      task_with_baseline{.task     = []() { spin_for(4ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 7ms, 1ms, 1ms, 1ms, 7ms, 1ms, 1ms, 1ms})},
+      task_with_baseline{.task     = []() { spin_for(10ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 13ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+      parameters
+    );
+
+    check_relative_performance(
+      "One trial in ten in which both tasks take no longer than their baselines, "
+      "and another in which the slow task does",
+      task_with_baseline{.task     = []() { spin_for(4ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 7ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+      task_with_baseline{.task     = []() { spin_for(10ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 13ms, 1ms, 1ms, 1ms, 13ms, 1ms, 1ms, 1ms})},
+      parameters
+    );
+  }
+
+  void performance_false_negative_diagnostics::test_fail_at_second_attempt_with_baselines()
+  {
+    using namespace std::chrono_literals;
+
+    constexpr relative_performance_parameters parameters{.prediction{.lower{1.8}, .upper{2.2}}};
+
+    auto baseline{[]() { spin_for(1ms); }};
+
+    check_relative_performance(
+      "Baselines of 1 ms; from the net durations, a speed-up of 2, then of 0.5, then of 2",
+      task_with_baseline{.task = counted_spinner{4ms, trials_for_minimum_10[0], 13ms}, .baseline = baseline},
+      task_with_baseline{.task = counted_spinner{7ms, trials_before_attempt(trials_for_minimum_10, 3), 25ms},
+                         .baseline = baseline},
+      parameters
+    );
+  }
+
   [[nodiscard]]
   std::filesystem::path performance_false_positive_diagnostics::source_file()
   {
@@ -176,6 +220,9 @@ namespace sequoia::testing
     test_relative_performance();
     test_confidence_multiplier();
     test_computations_not_optimized_away();
+    test_relative_performance_with_baselines();
+    test_tasks_no_longer_than_baselines();
+    test_baselines_doing_nothing();
   }
 
   void performance_false_positive_diagnostics::test_relative_performance()
@@ -242,396 +289,70 @@ namespace sequoia::testing
                                {.prediction{.lower{1.5}, .upper{2.5}}});
   }
 
-  [[nodiscard]]
-  std::filesystem::path performance_utilities_test::source_file()
+  void performance_false_positive_diagnostics::test_relative_performance_with_baselines()
   {
-    return std::source_location::current().file_name();
+    using namespace std::chrono_literals;
+
+    check_relative_performance("Tasks of 7 ms and 13 ms, with baselines of 4 ms and 1 ms, predicted [3.6, 4.4]",
+                               task_with_baseline{.task     = []() { spin_for(7ms); },
+                                                  .baseline = []() { spin_for(4ms); }},
+                               task_with_baseline{.task     = []() { spin_for(13ms); },
+                                                  .baseline = []() { spin_for(1ms); }},
+                               {.prediction{.lower{3.6}, .upper{4.4}}});
   }
 
-  void performance_utilities_test::run_tests()
+  void performance_false_positive_diagnostics::test_tasks_no_longer_than_baselines()
   {
-    test_task_constraints();
-    test_exception_specifications();
-    test_default_minimum_trials();
-    test_postprocessing();
-    test_zeroed_measurements();
-    test_coarse_sleep();
+    using namespace std::chrono_literals;
+
+    // The tasks' net durations are 3 ms and 9 ms, except in the trials in
+    // which a baseline spins for longer than its task. The first attempt has
+    // ten trials, so the trim drops one trial from each end.
+    constexpr relative_performance_parameters parameters{.prediction{.lower{2.5}, .upper{3.5}}};
+
+    check_relative_performance(
+      "One trial in ten in which the fast task takes no longer than its baseline",
+      task_with_baseline{.task     = []() { spin_for(4ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 7ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+      task_with_baseline{.task = []() { spin_for(10ms); }, .baseline = []() { spin_for(1ms); }},
+      parameters
+    );
+
+    check_relative_performance(
+      "One trial in ten in which the slow task takes no longer than its baseline",
+      task_with_baseline{.task = []() { spin_for(4ms); }, .baseline = []() { spin_for(1ms); }},
+      task_with_baseline{.task     = []() { spin_for(10ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 13ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+      parameters
+    );
+
+    check_relative_performance(
+      "One trial in ten in which the fast task takes no longer than its baseline, "
+      "and another in which the slow task does",
+      task_with_baseline{.task     = []() { spin_for(4ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 7ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+      task_with_baseline{.task     = []() { spin_for(10ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 13ms, 1ms, 1ms, 1ms})},
+      parameters
+    );
+
+    check_relative_performance(
+      "One trial in ten in which both tasks take no longer than their baselines",
+      task_with_baseline{.task     = []() { spin_for(4ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 7ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+      task_with_baseline{.task     = []() { spin_for(10ms); },
+                         .baseline = make_cycling_spinner({1ms, 1ms, 13ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms, 1ms})},
+      parameters
+    );
   }
 
-  void performance_utilities_test::test_task_constraints()
+  void performance_false_positive_diagnostics::test_baselines_doing_nothing()
   {
-    STATIC_CHECK( profilable<   copyable_task>);
-    STATIC_CHECK(!profilable<rvalue_only_task>);
-
-    STATIC_CHECK( checkable_tasks_v<   copyable_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_v<  move_only_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_v<   copyable_task,   move_only_task>);
-    STATIC_CHECK(!checkable_tasks_v<rvalue_only_task,    copyable_task>);
-    STATIC_CHECK(!checkable_tasks_v<   copyable_task, rvalue_only_task>);
-  }
-
-  void performance_utilities_test::test_exception_specifications()
-  {
-    STATIC_CHECK(noexcept(do_not_optimize_away(0)));
-  }
-
-  void performance_utilities_test::test_default_minimum_trials()
-  {
-    constexpr relative_performance_parameters parameters{.prediction{.lower{2.0}, .upper{3.0}}};
-
-    STATIC_CHECK(parameters.minimum_trials == relative_performance_minimum_trials_floor);
-  }
-
-  void performance_utilities_test::test_postprocessing()
-  {
-    using enum attempt_count_stability;
-
-    {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
-      std::string_view reference{"Speed-up: 2.01 in [1.98, 2.04]; predicted [2, 3]\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), reference);
-    }
-
-    {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
-      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2.1, 3]\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
-      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3.1]\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
-      std::string_view reference{"Speed-up: 1.34 in (1.22, 1.47); predicted [2, 3]\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
-      std::string_view reference{"Speed-up: 1.340 in [1.22, 1.47]; predicted [2, 3]\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
-      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3] 4 5 6 7\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
-      std::string_view reference{"Speed-up: 1.34 in [1.22]; predicted [2, 3]\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Trials: 15, attempt 3 of 3\n"};
-      std::string_view reference{"Trials: 5, attempt 1 of 3\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), reference);
-    }
-
-    {
-      std::string_view latest   {"Trials: 5, attempt 1 of 3\n"};
-      std::string_view reference{"Trials: 5, attempt 1 of 4\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Trials: 5, attempt 1 of 3\n"};
-      std::string_view reference{"Trials: 05, attempt 1 of 3\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Trials: 5, attempt 1 of 3\n"};
-      std::string_view reference{"Trials: 5.5, attempt 1 of 3\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Trials: 5, attempt 1 of 3\n"};
-      std::string_view reference{"Trials: -5, attempt 1 of 3\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Task durations: fast 0.005s, slow 0.0067s\n"};
-      std::string_view reference{"Task durations: fast 0.00101s, slow 0.00402s\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), reference);
-    }
-
-    {
-      std::string_view latest   {"Task durations: fast 0.005s, slow 0.0067s\n"};
-      std::string_view reference{"Task durations: fast 0.005ms, slow 0.0067s\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Task durations: fast 0.005s, slow 0.0067s\n"};
-      std::string_view reference{"Task durations: slow 0.005s, fast 0.0067s\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Task durations: fast 0.005s, slow 0.0067s\n"};
-      std::string_view reference{"Task durations: fast 0.005s, slow 0.0067s FAILED\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"The fast task is slower than the slow one\n"};
-      std::string_view reference{"The fast task is not distinguishably faster than the slow one\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Line 40\n"
-                                 "The fast task is slower than the slow one\n"
-                                 "Speed-up: 0.5 in [0.499, 0.501]; predicted [2, 3]\n"
-                                 "Trials: 5, attempt 1 of 3\n"
-                                 "Task durations: fast 0.002s, slow 0.001s\n"};
-      std::string_view reference{"Line 40\n"
-                                 "The fast task is slower than the slow one\n"
-                                 "Speed-up: 0.497 in [0.495, 0.499]; predicted [2, 3]\n"
-                                 "Trials: 10, attempt 2 of 3\n"
-                                 "Task durations: fast 0.00201s, slow 0.001s\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), reference);
-    }
-
-    {
-      std::string_view latest   {"Line 40\n"
-                                 "Speed-up: 0.5 in [0.499, 0.501]; predicted [2, 3]\n"};
-      std::string_view reference{"Line 41\n"
-                                 "Speed-up: 0.497 in [0.495, 0.499]; predicted [2, 3]\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"
-                                 "Trials: 15, attempt 3 of 3\n"};
-      std::string_view reference{"Trials: 15, attempt 3 of 3\n"
-                                 "Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
-      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"
-                                 "Trials: 15, attempt 3 of 3\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
-      std::string_view reference{""};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      std::string_view latest   {""};
-      std::string_view reference{"Speed-up: 1.34 in [1.22, 1.47]; predicted [2, 3]\n"};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), latest);
-    }
-
-    {
-      constexpr auto infinity{std::numeric_limits<double>::infinity()};
-      constexpr auto nan{std::numeric_limits<double>::quiet_NaN()};
-      using fractional_seconds = std::chrono::duration<double>;
-
-      const std::string latest{
-        append_lines(speedup_summary({infinity, {1e+06, -nan}}, {2, 3}),
-                     task_durations_summary({fractional_seconds{9.9e-05}, fractional_seconds{0}}))
-      };
-
-      const std::string reference{
-        append_lines(speedup_summary({1.04,     {1e-07,  2.5}}, {2, 3}),
-                     task_durations_summary({fractional_seconds{0.001},   fractional_seconds{nan}}))
-      };
-
-      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{reference});
-    }
-
-    {
-      const std::string latest{
-        append_lines(trials_summary(15, {3, 3}), speedup_summary({1.04, {1.01, 1.07}}, {2, 3}))
-      };
-
-      const std::string reference{
-        append_lines(trials_summary(5,  {1, 3}), speedup_summary({1.02, {1.00, 1.04}}, {2, 3}))
-      };
-
-      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{reference});
-    }
-
-    {
-      const std::string latest   {trials_summary(15, {3, 3})};
-      const std::string reference{trials_summary(15, {3, 4})};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{latest});
-    }
-
-    {
-      using fractional_seconds = std::chrono::duration<double>;
-
-      const std::string latest{
-        append_lines(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}),
-                     trials_summary(15, {3, 3}),
-                     task_durations_summary({fractional_seconds{0.001},  fractional_seconds{0.00104}}))
-      };
-
-      const std::string reference{
-        append_lines(speedup_summary({1.02, {1.00, 1.04}}, {2, 3}),
-                     trials_summary(15, {3, 3}),
-                     task_durations_summary({fractional_seconds{0.0011}, fractional_seconds{0.00112}}))
-      };
-
-      check(equality, "", postprocess(latest, reference, typically_stable), std::string_view{reference});
-    }
-
-    {
-      const std::string latest   {trials_summary(15, {3, 3})};
-      const std::string reference{trials_summary(20, {3, 3})};
-
-      check(equality, "", postprocess(latest, reference, typically_stable), std::string_view{latest});
-    }
-
-    {
-      const std::string latest   {trials_summary(15, {3, 3})};
-      const std::string reference{trials_summary(15, {2, 3})};
-
-      check(equality, "", postprocess(latest, reference, typically_stable), std::string_view{latest});
-    }
-
-    {
-      const std::string latest   {speedup_summary({1.04, {1.01, 1.07}}, {2, 3})};
-      const std::string reference{speedup_summary({1.04, {1.01, 1.07}}, {2, 4})};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{latest});
-    }
-
-    {
-      const std::string latest   {std::format("Line 40\n\n{}", speedup_summary({1.04, {1.01, 1.07}}, {2, 3}))};
-      const std::string reference{std::format("Line 40\n{}",   speedup_summary({1.02, {1.00, 1.04}}, {2, 3}))};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{latest});
-    }
-
-    {
-      const std::string latest   {std::format("{}\n", speedup_summary({1.04, {1.01, 1.07}}, {2, 3}))};
-      const std::string reference{std::format("{}",   speedup_summary({1.02, {1.00, 1.04}}, {2, 3}))};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{latest});
-    }
-
-    {
-      using fractional_seconds = std::chrono::duration<double>;
-      const indentation nested{"  "};
-
-      const std::string latest{
-        indent(append_lines(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}),
-                            trials_summary(15, {3, 3}),
-                            task_durations_summary({fractional_seconds{0.001},  fractional_seconds{0.00104}})),
-               nested)
-      };
-
-      const std::string reference{
-        indent(append_lines(speedup_summary({1.02, {1.00, 1.04}}, {2, 3}),
-                            trials_summary(5,  {1, 3}),
-                            task_durations_summary({fractional_seconds{0.0011}, fractional_seconds{0.00112}})),
-               nested)
-      };
-
-      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{reference});
-    }
-
-    {
-      const std::string latest   {indent(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}), indentation{"  "})};
-      const std::string reference{indent(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}), indentation{"    "})};
-
-      check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{latest});
-    }
-  }
-
-  void performance_utilities_test::test_zeroed_measurements()
-  {
-    using fractional_seconds = std::chrono::duration<double>;
-    using enum attempt_count_stability;
-
-    check(equality,
-          "The speed-up and the interval around it are zeroed, and the predicted interval kept",
-          text_with_zeroed_measurements(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}), fluctuating),
-          speedup_summary({}, {2, 3}));
-
-    check(equality,
-          "The number of trials and the attempt are zeroed, and the number of attempts allowed kept",
-          text_with_zeroed_measurements(trials_summary(15, {3, 3}), fluctuating),
-          trials_summary(0, {0, 3}));
-
-    check(equality,
-          "The task durations are zeroed",
-          text_with_zeroed_measurements(task_durations_summary({fractional_seconds{0.001}, fractional_seconds{0.002}}),
-                                        fluctuating),
-          task_durations_summary({}));
-
-    check(equality,
-          "With the attempt count typically stable, the number of trials and the attempt are kept",
-          text_with_zeroed_measurements(trials_summary(15, {3, 3}), typically_stable),
-          trials_summary(15, {3, 3}));
-
-    check(equality,
-          "With the attempt count typically stable, the speed-up, its interval and the task durations are zeroed",
-          text_with_zeroed_measurements(
-            append_lines(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}),
-                         task_durations_summary({fractional_seconds{0.001}, fractional_seconds{0.002}})),
-            typically_stable),
-          append_lines(speedup_summary({}, {2, 3}), task_durations_summary({})));
-  }
-
-  void performance_utilities_test::test_coarse_sleep()
-  {
-    using fractional_milliseconds = std::chrono::duration<double, std::milli>;
-
-    constexpr fractional_milliseconds target{5.0};
-
-    check("Rounded up to Windows' default tick", is_coarse_sleep(fractional_milliseconds{15.2}, target));
-    check("Exactly twice the target", is_coarse_sleep(fractional_milliseconds{10.0}, target));
-    check("Just under twice the target", !is_coarse_sleep(fractional_milliseconds{9.9}, target));
-    check("A 1 ms timer resolution in effect", !is_coarse_sleep(fractional_milliseconds{5.4}, target));
-
-    write_to_file(working_materials() /= "CoarseSleepMessage.txt",
-                  coarse_sleep_message(fractional_milliseconds{15.2}, target),
-                  std::ios_base::out);
-
-    check(equivalence,
-          "Message",
-          working_materials() /= "CoarseSleepMessage.txt",
-          predictive_materials() /= "CoarseSleepMessage.txt");
+    using namespace std::chrono_literals;
+
+    check_relative_performance("Tasks of 4 ms and 12 ms, with baselines which do nothing, predicted [2.5, 3.5]",
+                               task_with_baseline{.task = []() { spin_for(4ms); },  .baseline = []() {}},
+                               task_with_baseline{.task = []() { spin_for(12ms); }, .baseline = []() {}},
+                               {.prediction{.lower{2.5}, .upper{3.5}}});
   }
 }

@@ -185,6 +185,7 @@
 #include "TestFramework/PerformanceExceptionsTest.hpp"
 #include "TestFramework/PerformanceRetryTest.hpp"
 #include "TestFramework/PerformanceTestDiagnostics.hpp"
+#include "TestFramework/PerformanceUtilitiesFreeTest.hpp"
 #include "TestFramework/ProjectPathsFreeTest.hpp"
 #include "TestFramework/RegularStateTransitionDiagnostics.hpp"
 #include "TestFramework/RegularTestDiagnostics.hpp"

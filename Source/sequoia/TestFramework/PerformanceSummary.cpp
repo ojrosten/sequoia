@@ -47,10 +47,10 @@ namespace sequoia::testing
       if(const auto numbers{extract_numbers_from<std::size_t, 3>(unindented)};
          numbers && (attemptCountStability == attempt_count_stability::fluctuating))
       {
-        const auto [trials, attemptsMade, attemptsAllowed]{*numbers};
+        const auto [numTrials, attemptsMade, attemptsAllowed]{*numbers};
         const relative_performance_attempt_progress progress{.made{attemptsMade}, .allowed{attemptsAllowed}};
 
-        if(trials_summary(trials, progress) == unindented)
+        if(trials_summary(numTrials, progress) == unindented)
           return indented(trials_summary(0, {.allowed{progress.allowed}}));
       }
 
@@ -64,6 +64,9 @@ namespace sequoia::testing
 
         if(task_durations_summary(durations) == unindented)
           return indented(task_durations_summary({}));
+
+        if(baseline_durations_summary(durations) == unindented)
+          return indented(baseline_durations_summary({}));
       }
 
       return std::string{line};
@@ -75,6 +78,10 @@ namespace sequoia::testing
   {
     switch(failure)
     {
+    case relative_performance_failure::fast_task_too_often_no_longer_than_baseline:
+      return "The fast task took no longer than its baseline in more than a tenth of trials (rounded up)";
+    case relative_performance_failure::slow_task_too_often_no_longer_than_baseline:
+      return "The slow task took no longer than its baseline in more than a tenth of trials (rounded up)";
     case relative_performance_failure::not_distinguishably_faster:
       return "The fast task is not distinguishably faster than the slow one";
     case relative_performance_failure::slower:
@@ -100,15 +107,23 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string trials_summary(std::size_t trials, relative_performance_attempt_progress progress)
+  std::string trials_summary(std::size_t numTrials, relative_performance_attempt_progress progress)
   {
-    return std::format("Trials: {}, attempt {} of {}", trials, progress.made, progress.allowed);
+    return std::format("Trials: {}, attempt {} of {}", numTrials, progress.made, progress.allowed);
   }
 
   [[nodiscard]]
   std::string task_durations_summary(relative_performance_durations durations)
   {
     return std::format("Task durations: fast {:.3g}s, slow {:.3g}s", durations.fast.count(), durations.slow.count());
+  }
+
+  [[nodiscard]]
+  std::string baseline_durations_summary(relative_performance_durations durations)
+  {
+    return std::format("Baseline durations: fast {:.3g}s, slow {:.3g}s",
+                       durations.fast.count(),
+                       durations.slow.count());
   }
 
   [[nodiscard]]

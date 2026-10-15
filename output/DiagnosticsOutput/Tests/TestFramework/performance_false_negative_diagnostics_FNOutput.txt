@@ -1,14 +1,14 @@
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 79
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 43
 Fast task 4 ms, slow task cycling through (2, 3, 4, 5, 6) ms, predicted [1.2, 1.5]
 
 The fast task is not distinguishably faster than the slow one
-Speed-up: 0.949 in [0.584, 1.54]; predicted [1.2, 1.5]
+Speed-up: 0.949 in [0.585, 1.54]; predicted [1.2, 1.5]
 Trials: 10, attempt 1 of 3
 Task durations: fast 0.004s, slow 0.0038s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 84
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 48
 Fast task 2 ms, slow task 1 ms, predicted [1.5, 2.0]
 
 The fast task is slower than the slow one
@@ -18,7 +18,7 @@ Task durations: fast 0.002s, slow 0.001s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 89
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 53
 Speed-up of 2, predicted [3.0, 3.0]
 
 The fast task is faster than the slow one, but by less than predicted
@@ -28,7 +28,7 @@ Task durations: fast 0.001s, slow 0.002s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 94
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 58
 Speed-up of 4, predicted [2.0, 2.5]
 
 The fast task is suspiciously fast: faster than predicted
@@ -38,7 +38,7 @@ Task durations: fast 0.001s, slow 0.004s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 104
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 Attempt 1's interval lies below the prediction, and would overlap the prediction only if substantially wider; later speed-ups lie inside the prediction
 
 The fast task is faster than the slow one, but by less than predicted
@@ -48,7 +48,7 @@ Task durations: fast 0.005s, slow 0.0287s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 111
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 75
 Attempt 1's interval lies above the prediction, and would overlap the prediction only if substantially wider; later speed-ups lie inside the prediction
 
 The fast task is suspiciously fast: faster than predicted
@@ -58,43 +58,115 @@ Task durations: fast 0.008s, slow 0.0403s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 118
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 82
 Attempt 1's interval overlaps the prediction, but would lie above the prediction if substantially narrower; attempt 2 is slower
 
 The fast task is slower than the slow one
-Speed-up: 0.128 in [0.0651, 0.25]; predicted [2.34, 3.66]
-Trials: 15, attempt 2 of 3
-Task durations: fast 0.00784s, slow 0.001s
+Speed-up: 0.138 in [0.0718, 0.266]; predicted [2.34, 3.66]
+Trials: 16, attempt 2 of 3
+Task durations: fast 0.00724s, slow 0.001s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 130
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 94
 Attempt 1's interval includes a speed-up of 1, and overlaps the prediction
 
 The fast task is not distinguishably faster than the slow one
-Speed-up: 1.59 in [0.791, 3.19]; predicted [1.4, 1.8]
+Speed-up: 1.59 in [0.792, 3.19]; predicted [1.4, 1.8]
 Trials: 10, attempt 1 of 3
 Task durations: fast 0.002s, slow 0.00318s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 142
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 106
 A speed-up of 2, then of 0.5, then of 2
 
 The fast task is slower than the slow one
 Speed-up: 0.5 in [0.5, 0.5]; predicted [1.8, 2.2]
-Trials: 15, attempt 2 of 3
+Trials: 16, attempt 2 of 3
 Task durations: fast 0.004s, slow 0.002s
 
 =======================================
 
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 154
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 118
 Attempt 1's interval overlaps the prediction, but would lie below the prediction if substantially narrower; attempt 2 is slower
 
 The fast task is slower than the slow one
-Speed-up: 0.647 in [0.521, 0.804]; predicted [2.92, 4.38]
-Trials: 15, attempt 2 of 3
-Task durations: fast 0.004s, slow 0.00259s
+Speed-up: 0.633 in [0.515, 0.78]; predicted [2.92, 4.38]
+Trials: 16, attempt 2 of 3
+Task durations: fast 0.004s, slow 0.00253s
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 130
+Tasks of 4 ms and 16 ms, with baselines of 1 ms and 10 ms, predicted [3.6, 4.4]
+
+The fast task is faster than the slow one, but by less than predicted
+Speed-up: 2 in [2, 2]; predicted [3.6, 4.4]
+Trials: 10, attempt 1 of 3
+Task durations: fast 0.004s, slow 0.016s
+Baseline durations: fast 0.001s, slow 0.01s
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 137
+Tasks of 7 ms and 13 ms, without baselines, predicted [3.6, 4.4]
+
+The fast task is faster than the slow one, but by less than predicted
+Speed-up: 1.86 in [1.86, 1.86]; predicted [3.6, 4.4]
+Trials: 10, attempt 1 of 3
+Task durations: fast 0.007s, slow 0.013s
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 153
+Two trials in ten in which the fast task takes no longer than its baseline
+
+The fast task took no longer than its baseline in more than a tenth of trials (rounded up)
+Trials: 10, attempt 1 of 3
+Task durations: fast 0.004s, slow 0.01s
+Baseline durations: fast 0.00175s, slow 0.001s
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 161
+Two trials in ten in which the slow task takes no longer than its baseline
+
+The slow task took no longer than its baseline in more than a tenth of trials (rounded up)
+Trials: 10, attempt 1 of 3
+Task durations: fast 0.004s, slow 0.01s
+Baseline durations: fast 0.001s, slow 0.0025s
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 169
+One trial in ten in which both tasks take no longer than their baselines, and another in which the fast task does
+
+The fast task took no longer than its baseline in more than a tenth of trials (rounded up)
+Trials: 10, attempt 1 of 3
+Task durations: fast 0.004s, slow 0.01s
+Baseline durations: fast 0.00175s, slow 0.001s
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 179
+One trial in ten in which both tasks take no longer than their baselines, and another in which the slow task does
+
+The slow task took no longer than its baseline in more than a tenth of trials (rounded up)
+Trials: 10, attempt 1 of 3
+Task durations: fast 0.004s, slow 0.01s
+Baseline durations: fast 0.001s, slow 0.0025s
+
+=======================================
+
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 198
+Baselines of 1 ms; from the net durations, a speed-up of 2, then of 0.5, then of 2
+
+The fast task is slower than the slow one
+Speed-up: 0.5 in [0.5, 0.5]; predicted [1.8, 2.2]
+Trials: 16, attempt 2 of 3
+Task durations: fast 0.013s, slow 0.007s
+Baseline durations: fast 0.001s, slow 0.001s
 
 =======================================
 

@@ -195,6 +195,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/PerformanceExceptionsTest.cpp
                ${TestDir}/TestFramework/PerformanceRetryTest.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
+               ${TestDir}/TestFramework/PerformanceUtilitiesFreeTest.cpp
                ${TestDir}/TestFramework/ProjectPathsFreeTest.cpp
                ${TestDir}/TestFramework/RegularStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/RegularTestDiagnostics.cpp

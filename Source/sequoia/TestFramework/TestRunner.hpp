@@ -13,7 +13,9 @@
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/FailureReporting.hpp"
-#include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework/PerformanceTestTraits.hpp"
+#include "sequoia/TestFramework/ReturnCodes.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/TestExecutionRecord.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
@@ -50,23 +52,6 @@ namespace sequoia::testing
     dynamic,   /// determined implicitly by the stl
     fixed      /// fixed-size thread pool
   };
-
-  /** \brief The outcome of a test run: `success`, or a set of flags, one for each kind of failure.
-
-      The flags occupy consecutive bits, from the lowest. A new flag needs a row in
-      `return_code_names` (TestRunner.cpp). No check catches a missing row for the highest flag.
-   */
-  enum class return_code : unsigned {
-    success                = 0,
-    versioned_output_diffs = 1 << 0,
-    soft_failures          = 1 << 1,
-    critical_failures      = 1 << 2,
-    incomplete_run         = 1 << 3,
-    post_run_failures      = 1 << 4
-  };
-
-  [[nodiscard]]
-  std::string to_string(return_code code);
 }
 
 NAMESPACE_SEQUOIA_AS_BITMASK
@@ -76,23 +61,6 @@ NAMESPACE_SEQUOIA_AS_BITMASK
 
   template<>
   struct as_bitmask<sequoia::testing::recovery_mode> : std::true_type {};
-
-  template<>
-  struct as_bitmask<sequoia::testing::return_code> : std::true_type {};
-}
-
-namespace std
-{
-  template<>
-  struct formatter<sequoia::testing::return_code>
-  {
-    constexpr auto parse(auto& ctx) { return ctx.begin(); }
-
-    auto format(sequoia::testing::return_code code, auto& ctx) const -> decltype(ctx.out())
-    {
-      return std::format_to(ctx.out(), "{}", sequoia::testing::to_string(code));
-    }
-  };
 }
 
 namespace sequoia::testing
@@ -100,33 +68,11 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code to_return_code(const log_summary& summary) noexcept;
 
-  /** \brief The `return_code` which `exitStatus` carries, as encoded by
-             `to_exit_code`.
-
-      On Windows, a tool can exit with a Win32 error code, such as 87, 110 or 111, which `to_exit_code`
-      also returns. This function reads that status as a runner's.
-
-      \throws std::runtime_error if `exitStatus` is not a status which `to_exit_code` returns. The
-              message begins with `childDescription`.
-   */
-  [[nodiscard]]
-  return_code child_return_code(int exitStatus, std::string_view childDescription);
-
   /** \brief Returns `message` as compared by the runner across runs in a
              search for instabilities: with its measurements set to zero.
    */
   [[nodiscard]]
   std::string instability_projection(std::string_view message);
-
-  /** \brief Encodes `code` as a runner's exit status.
-
-      \returns
-      -# 0, if `code` is `return_code::success`;
-      -# 80 plus the value of `code`, if every bit of `code` is a flag;
-      -# Otherwise, 80 plus the value of the flags of `code`, with `incomplete_run` set.
-   */
-  [[nodiscard]]
-  int to_exit_code(return_code code) noexcept;
 
   /** \brief The thread which executed a test, and the test's durations. */
   struct execution_info
@@ -640,7 +586,7 @@ namespace sequoia::testing
     void register_test()
     {
       constexpr std::string_view name{test_name<T>()};
-      constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
+      constexpr auto testKind{is_performance_test_v<T> ? test_kind::performance : test_kind::functional};
       const auto source{T::source_file()};
 
       // Every check runs, and every hook returns, before the runner either
@@ -660,7 +606,7 @@ namespace sequoia::testing
 
       // Only a run builds the test, so that neither `create`, `init` nor
       // `--help` calls its materials or output hooks.
-      const bool toRun{m_Filter(source, enclosing_suites(source), isPerformanceTest) && in_mode(runner_mode::test)};
+      const bool toRun{m_Filter(source, enclosing_suites(source), testKind) && in_mode(runner_mode::test)};
       auto testToRun{
         toRun ? std::optional<test_to_run>{std::in_place,
                                            test_vessel{make_test<T>(m_ProjPaths, m_CMakeCache, m_RecoveryMode)},
@@ -707,7 +653,7 @@ namespace sequoia::testing
     enum class instability_mode { none = 0, single_instance, coordinator, sandbox };
     enum class versioned_output_mode { unchecked = 0, checked = 1 };
     enum class performance_mode { included = 0, excluded = 1 };
-    enum class is_performance_test : bool { no, yes };
+    enum class test_kind : bool { functional, performance };
 
 
     class path_equivalence
@@ -761,7 +707,7 @@ namespace sequoia::testing
       [[nodiscard]]
       bool operator()(const normal_path& source,
                       std::span<const std::string> suites,
-                      is_performance_test isPerformanceTest);
+                      test_kind testKind);
 
       [[nodiscard]]
       std::optional<std::ranges::subrange<items_map_type::const_iterator>> selected_items() const noexcept

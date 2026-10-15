@@ -10,6 +10,7 @@
 /** \file */
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework/PerformanceTestCore.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
 
 namespace sequoia::testing
