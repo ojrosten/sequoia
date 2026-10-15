@@ -50,6 +50,16 @@ namespace sequoia::testing
     constexpr auto tops{successive_tops_of_list_shorter_than_depth()};
 
     STATIC_CHECK(tops == std::array{-1, -2, -3});
+
+    constexpr bool isEmptyAfterPop{
+      []() {
+        data_structures::static_priority_queue<int, 1> q{};
+        q.pop();
+        return q.empty();
+      }()
+    };
+
+    STATIC_CHECK(isEmptyAfterPop);
   }
 
   void test_static_priority_queue::check_depth_0()
@@ -82,6 +92,9 @@ namespace sequoia::testing
 
     t.pop();
     check(equality, "", t, queue_t{});
+
+    t.pop();
+    check(equality, "Popping an empty queue leaves it empty", t, queue_t{});
 
     t.push(1);
     check(equality, "", t, queue_t{1});
