@@ -8,7 +8,7 @@
 #pragma once
 
 /** \file
-    \brief The outcome of a test run, and its encoding as a runner's exit status.
+    \brief A test run's outcome, and its encoding as a runner's exit status.
 */
 
 #include "sequoia/Core/Logic/Bitmask.hpp"

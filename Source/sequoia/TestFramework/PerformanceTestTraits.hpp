@@ -8,7 +8,8 @@
 #pragma once
 
 /** \file
-    \brief Trait identifying performance tests, specialized in PerformanceTestCore.hpp.
+    \brief The trait identifying performance tests, which
+           PerformanceTestCore.hpp specializes.
 */
 
 #include <type_traits>
