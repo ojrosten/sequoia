@@ -11,7 +11,7 @@
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 #include "sequoia/TestFramework/Commands.hpp"
-#include "sequoia/TestFramework/TestRunner.hpp"
+#include "sequoia/TestFramework/ReturnCodes.hpp"
 
 namespace sequoia::testing
 {

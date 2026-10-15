@@ -12,6 +12,7 @@
 */
 
 #include "sequoia/TestFramework/PerformanceSummary.hpp"
+#include "sequoia/TestFramework/PerformanceTestTraits.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/PlatformSpecific/Macros.hpp"
@@ -713,7 +714,8 @@ namespace sequoia::testing
   using performance_false_negative_test = basic_performance_test<test_mode::false_negative>;
 
   template<concrete_test T>
-  inline constexpr bool is_performance_test_v{std::derived_from<T, basic_performance_test<T::mode>>};
+    requires std::derived_from<T, basic_performance_test<T::mode>>
+  struct is_performance_test<T> : std::true_type {};
 
   template<concrete_test T>
     requires is_performance_test_v<T>
