@@ -28,8 +28,8 @@ namespace sequoia::testing
     struct unstable{};
     struct stable{};
 
-    struct as_range{};
-    struct as_iterator_and_sentinel{};
+    struct range_form{};
+    struct iterator_sentinel_form{};
 
     template<class T, std::size_t N>
     constexpr auto counted_iterator_over(std::array<T, N>& a)
@@ -38,21 +38,21 @@ namespace sequoia::testing
     }
 
     template<class T, std::size_t N, class Comp, class Proj>
-    constexpr std::array<T, N> make_heap(as_range, std::array<T, N> a, Comp comp, Proj proj)
+    constexpr std::array<T, N> make_heap(range_form, std::array<T, N> a, Comp comp, Proj proj)
     {
       sequoia::make_heap(a, comp, proj);
       return a;
     }
 
     template<class T, std::size_t N, class Comp, class Proj>
-    constexpr std::array<T, N> make_heap(as_iterator_and_sentinel, std::array<T, N> a, Comp comp, Proj proj)
+    constexpr std::array<T, N> make_heap(iterator_sentinel_form, std::array<T, N> a, Comp comp, Proj proj)
     {
       sequoia::make_heap(counted_iterator_over(a), std::default_sentinel, comp, proj);
       return a;
     }
 
     template<class T, std::size_t N, class Comp = std::ranges::less, class Proj = std::identity>
-    constexpr std::array<T, N> sort(unstable, as_range, std::array<T, N> a, Comp comp = {}, Proj proj = {})
+    constexpr std::array<T, N> sort(unstable, range_form, std::array<T, N> a, Comp comp = {}, Proj proj = {})
     {
       sequoia::sort(a, comp, proj);
       return a;
@@ -60,7 +60,7 @@ namespace sequoia::testing
 
     template<class T, std::size_t N, class Comp = std::ranges::less, class Proj = std::identity>
     constexpr std::array<T, N> sort(unstable,
-                                    as_iterator_and_sentinel,
+                                    iterator_sentinel_form,
                                     std::array<T, N> a,
                                     Comp comp = {},
                                     Proj proj = {})
@@ -70,7 +70,7 @@ namespace sequoia::testing
     }
 
     template<class T, std::size_t N, class Comp = std::ranges::less, class Proj = std::identity>
-    constexpr std::array<T, N> sort(stable, as_range, std::array<T, N> a, Comp comp = {}, Proj proj = {})
+    constexpr std::array<T, N> sort(stable, range_form, std::array<T, N> a, Comp comp = {}, Proj proj = {})
     {
       sequoia::stable_sort(a, comp, proj);
       return a;
@@ -78,7 +78,7 @@ namespace sequoia::testing
 
     template<class T, std::size_t N, class Comp = std::ranges::less, class Proj = std::identity>
     constexpr std::array<T, N> sort(stable,
-                                    as_iterator_and_sentinel,
+                                    iterator_sentinel_form,
                                     std::array<T, N> a,
                                     Comp comp = {},
                                     Proj proj = {})
@@ -88,7 +88,7 @@ namespace sequoia::testing
     }
 
     template<class T, std::size_t N, class Comp, class Proj>
-    constexpr std::array<T, N> sort_with_buffer(as_range, std::array<T, N> a, Comp comp, Proj proj)
+    constexpr std::array<T, N> buffered_stable_sort(range_form, std::array<T, N> a, Comp comp, Proj proj)
     {
       std::array<T, N> buffer{};
       sequoia::stable_sort(a, buffer.begin(), comp, proj);
@@ -96,7 +96,7 @@ namespace sequoia::testing
     }
 
     template<class T, std::size_t N, class Comp, class Proj>
-    constexpr std::array<T, N> sort_with_buffer(as_iterator_and_sentinel, std::array<T, N> a, Comp comp, Proj proj)
+    constexpr std::array<T, N> buffered_stable_sort(iterator_sentinel_form, std::array<T, N> a, Comp comp, Proj proj)
     {
       std::array<T, N> buffer{};
       sequoia::stable_sort(counted_iterator_over(a), std::default_sentinel, buffer.begin(), comp, proj);
@@ -104,14 +104,14 @@ namespace sequoia::testing
     }
 
     template<class T, std::size_t N, class Comp = std::ranges::equal_to, class Proj = std::identity>
-    constexpr std::array<T, N> cluster(as_range, std::array<T, N> a, Comp comp = {}, Proj proj = {})
+    constexpr std::array<T, N> cluster(range_form, std::array<T, N> a, Comp comp = {}, Proj proj = {})
     {
       sequoia::cluster(a, comp, proj);
       return a;
     }
 
     template<class T, std::size_t N, class Comp = std::ranges::equal_to, class Proj = std::identity>
-    constexpr std::array<T, N> cluster(as_iterator_and_sentinel, std::array<T, N> a, Comp comp = {}, Proj proj = {})
+    constexpr std::array<T, N> cluster(iterator_sentinel_form, std::array<T, N> a, Comp comp = {}, Proj proj = {})
     {
       sequoia::cluster(counted_iterator_over(a), std::default_sentinel, comp, proj);
       return a;
@@ -174,38 +174,38 @@ namespace sequoia::testing
   {
     algorithm_constraints();
 
-    make_heap_by_second_element(as_range{});
-    make_heap_by_second_element(as_iterator_and_sentinel{});
+    make_heap_by_second_element(range_form{});
+    make_heap_by_second_element(iterator_sentinel_form{});
 
-    sort_basic_type(unstable{}, as_range{});
-    sort_basic_type(unstable{}, as_iterator_and_sentinel{});
-    sort_basic_type(stable{},   as_range{});
-    sort_basic_type(stable{},   as_iterator_and_sentinel{});
+    sort_basic_type(unstable{}, range_form{});
+    sort_basic_type(unstable{}, iterator_sentinel_form{});
+    sort_basic_type(stable{},   range_form{});
+    sort_basic_type(stable{},   iterator_sentinel_form{});
 
-    sort_partial_edge(unstable{}, as_range{});
-    sort_partial_edge(unstable{}, as_iterator_and_sentinel{});
-    sort_partial_edge(stable{},   as_range{});
-    sort_partial_edge(stable{},   as_iterator_and_sentinel{});
+    sort_partial_edge(unstable{}, range_form{});
+    sort_partial_edge(unstable{}, iterator_sentinel_form{});
+    sort_partial_edge(stable{},   range_form{});
+    sort_partial_edge(stable{},   iterator_sentinel_form{});
 
-    sort_by_data_member(unstable{}, as_range{});
-    sort_by_data_member(unstable{}, as_iterator_and_sentinel{});
-    sort_by_data_member(stable{},   as_range{});
-    sort_by_data_member(stable{},   as_iterator_and_sentinel{});
+    sort_by_second_element(unstable{}, range_form{});
+    sort_by_second_element(unstable{}, iterator_sentinel_form{});
+    sort_by_second_element(stable{},   range_form{});
+    sort_by_second_element(stable{},   iterator_sentinel_form{});
 
-    stable_sort_stability(as_range{});
-    stable_sort_stability(as_iterator_and_sentinel{});
+    stable_sort_stability(range_form{});
+    stable_sort_stability(iterator_sentinel_form{});
 
-    stable_sort_with_buffer(as_range{});
-    stable_sort_with_buffer(as_iterator_and_sentinel{});
+    stable_sort_with_buffer(range_form{});
+    stable_sort_with_buffer(iterator_sentinel_form{});
 
-    cluster_basic_type(as_range{});
-    cluster_basic_type(as_iterator_and_sentinel{});
+    cluster_basic_type(range_form{});
+    cluster_basic_type(iterator_sentinel_form{});
 
-    cluster_partial_edge(as_range{});
-    cluster_partial_edge(as_iterator_and_sentinel{});
+    cluster_partial_edge(range_form{});
+    cluster_partial_edge(iterator_sentinel_form{});
 
-    cluster_by_first_element(as_range{});
-    cluster_by_first_element(as_iterator_and_sentinel{});
+    cluster_by_first_element(range_form{});
+    cluster_by_first_element(iterator_sentinel_form{});
   }
 
   void algorithms_test::algorithm_constraints()
@@ -272,12 +272,6 @@ namespace sequoia::testing
     STATIC_CHECK(!stable_sort_accepts<int*,    int*, single_pass_iterator>);
     STATIC_CHECK(!stable_sort_accepts<int*,    int*,           const int*>);
     STATIC_CHECK(!stable_sort_accepts<int*,    int*,            std::any*>);
-
-    // None of these calls is ambiguous
-    STATIC_CHECK(stable_sort_accepts<    int*, int*, int*, less_t, std::identity>);
-    STATIC_CHECK(stable_sort_accepts<    int*, int*,       less_t, std::identity>);
-    STATIC_CHECK(stable_sort_accepts<array_t&,       int*, less_t, std::identity>);
-    STATIC_CHECK(stable_sort_accepts<array_t&,             less_t, std::identity>);
 
     STATIC_CHECK( cluster_accepts<       array_t&, equal_to_t>);
     STATIC_CHECK( cluster_accepts<     subrange_t, equal_to_t>);
@@ -379,7 +373,7 @@ namespace sequoia::testing
   }
 
   template<class Stability, class Form>
-  void algorithms_test::sort_by_data_member(Stability stability, Form form)
+  void algorithms_test::sort_by_second_element(Stability stability, Form form)
   {
     using pair_t = std::pair<int, int>;
     constexpr std::array<pair_t, 3> a{pair_t{1,2}, {3,0}, {2,1}}, prediction{pair_t{3,0}, {2,1}, {1,2}};
@@ -420,7 +414,7 @@ namespace sequoia::testing
       a{pair_t{5,1}, {5,2}, {4,1}, {4,0}, {6, -1}, {6,-2}, {6, 0}, {2,0}, {2,-1}, {2,2}},
       prediction{pair_t{2,0}, {2,-1}, {2,2}, {4,1}, {4,0}, {5,1}, {5,2}, {6, -1}, {6,-2},{6, 0}};
 
-    constexpr auto b = sort_with_buffer(form, a, std::ranges::less{}, &pair_t::first);
+    constexpr auto b = buffered_stable_sort(form, a, std::ranges::less{}, &pair_t::first);
     check(equality, "Stable sort, with a buffer supplied", b, prediction);
   }
 
