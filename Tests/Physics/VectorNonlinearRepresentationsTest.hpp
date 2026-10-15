@@ -9,9 +9,7 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
-
-#include "sequoia/Physics/PhysicalValues.hpp"
+#include "PhysicalValueTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
