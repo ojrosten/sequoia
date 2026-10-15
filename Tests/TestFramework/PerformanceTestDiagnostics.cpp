@@ -19,6 +19,7 @@
 #include <memory>
 #include <string_view>
 #include <utility>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -206,9 +207,9 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    // Net of the baselines, the tasks take 3 ms and 9 ms, except in the
-    // trials in which a baseline spins for longer than its task. The first
-    // attempt has ten trials, so the trim drops one trial from each end.
+    // The tasks' net durations are 3 ms and 9 ms, except in the trials in
+    // which a baseline spins for longer than its task. The first attempt has
+    // ten trials, so the trim drops one trial from each end.
     constexpr relative_performance_parameters parameters{.prediction{.lower{2.5}, .upper{3.5}}};
 
     check_relative_performance(
@@ -257,7 +258,7 @@ namespace sequoia::testing
     auto baseline{[]() { spin_for(1ms); }};
 
     check_relative_performance(
-      "Baselines of 1 ms; net of them, a speed-up of 2, then of 0.5, then of 2",
+      "Baselines of 1 ms; from the net durations, a speed-up of 2, then of 0.5, then of 2",
       task_with_baseline{.task = counted_spinner{4ms, trials_for_minimum_10[0], 13ms}, .baseline = baseline},
       task_with_baseline{.task = counted_spinner{7ms, trials_before_attempt(trials_for_minimum_10, 3), 25ms},
                          .baseline = baseline},
@@ -367,9 +368,9 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    // Net of the baselines, the tasks take 3 ms and 9 ms, except in the
-    // trials in which a baseline spins for longer than its task. The first
-    // attempt has ten trials, so the trim drops one trial from each end.
+    // The tasks' net durations are 3 ms and 9 ms, except in the trials in
+    // which a baseline spins for longer than its task. The first attempt has
+    // ten trials, so the trim drops one trial from each end.
     constexpr relative_performance_parameters parameters{.prediction{.lower{2.5}, .upper{3.5}}};
 
     check_relative_performance(
@@ -427,10 +428,12 @@ namespace sequoia::testing
   void performance_utilities_test::run_tests()
   {
     test_task_constraints();
+    test_timing_constraints();
     test_exception_specifications();
     test_default_minimum_trials();
     test_judgement_with_baselines();
-    test_shuffled_task_orders_with_baselines();
+    test_shuffled_baselined_task_orders();
+    test_call_in_order();
     test_postprocessing();
     test_zeroed_measurements();
     test_coarse_sleep();
@@ -461,6 +464,31 @@ namespace sequoia::testing
     STATIC_CHECK(!checkable_tasks_v<copyable_task_with_baseline,               copyable_task>);
   }
 
+  void performance_utilities_test::test_timing_constraints()
+  {
+    using impl::call_order, impl::baselined_task_order, impl::constructible_from_calls_v, impl::one_trial_timeable_v;
+
+    using int_call         = int(*)();
+    using string_view_call = std::string_view(*)();
+    using unary_call       = int(*)(int);
+
+    using int_pair             = std::pair<int, int>;
+    using int_string_view_pair = std::pair<int, std::string_view>;
+
+    STATIC_CHECK( constructible_from_calls_v<int_pair,             int_call,         int_call>);
+    STATIC_CHECK( constructible_from_calls_v<int_string_view_pair, int_call,         string_view_call>);
+    STATIC_CHECK(!constructible_from_calls_v<int_string_view_pair, string_view_call, int_call>);
+    STATIC_CHECK(!constructible_from_calls_v<int_pair,             unary_call,       int_call>);
+    STATIC_CHECK(!constructible_from_calls_v<int_pair,             int_call,         unary_call>);
+
+    STATIC_CHECK( one_trial_timeable_v<copyable_task,               copyable_task,               call_order>);
+    STATIC_CHECK(!one_trial_timeable_v<copyable_task,               copyable_task,               baselined_task_order>);
+    STATIC_CHECK(!one_trial_timeable_v<rvalue_only_task,            copyable_task,               call_order>);
+    STATIC_CHECK(!one_trial_timeable_v<copyable_task,               rvalue_only_task,            call_order>);
+    STATIC_CHECK( one_trial_timeable_v<copyable_task_with_baseline, copyable_task_with_baseline, baselined_task_order>);
+    STATIC_CHECK(!one_trial_timeable_v<copyable_task_with_baseline, copyable_task_with_baseline, call_order>);
+  }
+
   void performance_utilities_test::test_exception_specifications()
   {
     STATIC_CHECK(noexcept(do_not_optimize_away(0)));
@@ -487,15 +515,15 @@ namespace sequoia::testing
     constexpr std::size_t trialsAtFloor                  {relative_performance_minimum_trials_floor},
                           trialsWithTwoTrimmedFromEachEnd{15};
 
-    // Net of the baselines, the speed-up is 8. Without them it is 3. With the
+    // From the net durations, the speed-up is 8; from the tasks' own, 3. With the
     // baselines exchanged it is 3.5; with the fast baseline taken from both
     // tasks it is 7, and with the slow baseline taken from both it is 4.
     constexpr durations_with_baselines typical{.fast{.task{3s}, .baseline{2s}}, .slow{.task{9s}, .baseline{1s}}};
 
-    // A task shorter than its baseline has a negative duration net of the
-    // baseline. If both tasks are shorter than their baselines, the ratio of
-    // the slow task's net duration to the fast task's is positive, and the
-    // trial still counts at each end.
+    // A task shorter than its baseline has a negative net duration. If both
+    // tasks are shorter than their baselines, the ratio of the slow task's net
+    // duration to the fast task's is positive, and the trial still counts at
+    // each end.
     constexpr durations_with_baselines
       fastAsLongAsBaseline    {.fast{.task{2s}, .baseline{2s}}, .slow{typical.slow}},
       slowAsLongAsBaseline    {.fast{typical.fast},             .slow{.task{2s},  .baseline{2s}}},
@@ -508,7 +536,7 @@ namespace sequoia::testing
 
     auto judge{
       [prediction](std::span<const durations_with_baselines> trialDurations) {
-        return impl::judge_attempt(trialDurations, 1.0, prediction);
+        return impl::judge_trials(trialDurations, 1.0, prediction);
       }
     };
 
@@ -524,36 +552,36 @@ namespace sequoia::testing
       [this, judgeAtFloor, tolerance](const reporter& description,
                                       std::initializer_list<durations_with_baselines> atypical,
                                       double speedup) {
-        const auto outcome{judgeAtFloor(atypical)};
-        if(check(description, outcome.estimate.has_value()))
+        const auto judgement{judgeAtFloor(atypical)};
+        if(check(description, judgement.estimate.has_value()))
         {
-          check(within_tolerance{tolerance}, description, outcome.estimate->speedup, speedup);
+          check(within_tolerance{tolerance}, description, judgement.estimate->speedup, speedup);
         }
       }
     };
 
     {
-      const auto outcome{judgeAtFloor({})};
+      const auto judgement{judgeAtFloor({})};
 
-      check("No failure net of the baselines", !outcome.failure.has_value());
+      check("No failure from the net durations", !judgement.failure.has_value());
 
-      if(check("An estimate net of the baselines", outcome.estimate.has_value()))
+      if(check("An estimate from the net durations", judgement.estimate.has_value()))
       {
-        check(within_tolerance{tolerance}, "The speed-up net of the baselines", outcome.estimate->speedup, 8.0);
+        check(within_tolerance{tolerance}, "The speed-up from the net durations", judgement.estimate->speedup, 8.0);
       }
 
-      check(within_tolerance{tolerance}, "The fast task's own duration", outcome.task_durations.fast.count(), 3.0);
-      check(within_tolerance{tolerance}, "The slow task's own duration", outcome.task_durations.slow.count(), 9.0);
+      check(within_tolerance{tolerance}, "The fast task's own duration", judgement.task_durations.fast.count(), 3.0);
+      check(within_tolerance{tolerance}, "The slow task's own duration", judgement.task_durations.slow.count(), 9.0);
 
-      if(check("The baseline durations are given", outcome.baseline_durations.has_value()))
+      if(check("The baseline durations are given", judgement.baseline_durations.has_value()))
       {
         check(within_tolerance{tolerance},
               "The fast baseline's duration",
-              outcome.baseline_durations->fast.count(),
+              judgement.baseline_durations->fast.count(),
               2.0);
         check(within_tolerance{tolerance},
               "The slow baseline's duration",
-              outcome.baseline_durations->slow.count(),
+              judgement.baseline_durations->slow.count(),
               1.0);
       }
     }
@@ -607,23 +635,23 @@ namespace sequoia::testing
                      std::exp2(28.0 / 9.0));
 
         {
-          const auto outcome{judgeAtFloor({fastNoLongerThanBaseline, fastNoLongerThanBaseline})};
+          const auto judgement{judgeAtFloor({fastNoLongerThanBaseline, fastNoLongerThanBaseline})};
 
           check(std::format("A fast task {} its baseline in more trials than the trim drops", relation),
-                outcome.failure == fast_task_too_often_no_longer_than_baseline);
+                judgement.failure == fast_task_too_often_no_longer_than_baseline);
           check(std::format("No estimate with a fast task too often {} its baseline", relation),
-                !outcome.estimate.has_value());
+                !judgement.estimate.has_value());
           check(std::format("The baseline durations are given with a fast task too often {} its baseline", relation),
-                outcome.baseline_durations.has_value());
+                judgement.baseline_durations.has_value());
         }
 
         {
-          const auto outcome{judgeAtFloor({slowNoLongerThanBaseline, slowNoLongerThanBaseline})};
+          const auto judgement{judgeAtFloor({slowNoLongerThanBaseline, slowNoLongerThanBaseline})};
 
           check(std::format("A slow task {} its baseline in more trials than the trim drops", relation),
-                outcome.failure == slow_task_too_often_no_longer_than_baseline);
+                judgement.failure == slow_task_too_often_no_longer_than_baseline);
           check(std::format("No estimate with a slow task too often {} its baseline", relation),
-                !outcome.estimate.has_value());
+                !judgement.estimate.has_value());
         }
 
         check(std::format("A trial with both tasks {} their baselines counts against the fast task", relation),
@@ -732,7 +760,7 @@ namespace sequoia::testing
         fastBaselineOf4s {.fast{.task{5s},  .baseline{4s}},  .slow{typical.slow}},
         fastBaselineOf11s{.fast{.task{12s}, .baseline{11s}}, .slow{typical.slow}};
 
-      const auto outcome{
+      const auto judgement{
         judge(trials_with_atypical(trialsAtFloor,
                                    fastBaselineOf1s,
                                    {fastBaselineOf2s,
@@ -742,45 +770,47 @@ namespace sequoia::testing
       };
 
       if(check("The baseline durations are given for baselines of five durations",
-               outcome.baseline_durations.has_value()))
+               judgement.baseline_durations.has_value()))
       {
         check(within_tolerance{tolerance},
               "A baseline's typical duration is its trimmed mean",
-              outcome.baseline_durations->fast.count(),
+              judgement.baseline_durations->fast.count(),
               1.75);
       }
     }
   }
 
-  void performance_utilities_test::test_shuffled_task_orders_with_baselines()
+  void performance_utilities_test::test_shuffled_baselined_task_orders()
   {
-    using impl::task_order, impl::task_and_baseline_order, impl::task_order_with_baselines;
+    using impl::call_order, impl::baselined_task_order;
 
     // Enough trials that independent shuffles agree in every trial only with
     // a negligible probability. The generator's seed is fixed, so a given
     // standard library gives the same orders on every run.
-    constexpr std::size_t trials{101};
+    constexpr std::size_t trials{100};
     std::mt19937 generator{std::mt19937::default_seed};
 
-    const auto orders{impl::shuffled_task_orders_with_baselines(trials, generator)};
+    const auto orders{impl::shuffled_baselined_task_orders(trials, generator)};
 
     auto trialsWhere{
       [&orders](auto predicate) { return static_cast<std::size_t>(std::ranges::count_if(orders, predicate)); }
     };
 
-    auto fastPairRunsFirst{[](task_order_with_baselines order) { return order.pairs == task_order::fast_then_slow; }};
+    auto fastPairRunsFirst{
+      [](baselined_task_order order) { return order.fast_vs_slow == call_order::first_then_second; }
+    };
     auto fastTaskRunsFirst{
-      [](task_order_with_baselines order) { return order.fast == task_and_baseline_order::task_then_baseline; }
+      [](baselined_task_order order) { return order.fast_vs_baseline == call_order::first_then_second; }
     };
     auto slowTaskRunsFirst{
-      [](task_order_with_baselines order) { return order.slow == task_and_baseline_order::task_then_baseline; }
+      [](baselined_task_order order) { return order.slow_vs_baseline == call_order::first_then_second; }
     };
 
     // Two orders shuffled independently agree in some trials, and not in all.
     auto agreeInSomeTrialsNotAll{
       [&trialsWhere](auto firstOrder, auto secondOrder) {
         auto bothAgree{
-          [firstOrder, secondOrder](task_order_with_baselines order) { return firstOrder(order) == secondOrder(order); }
+          [firstOrder, secondOrder](baselined_task_order order) { return firstOrder(order) == secondOrder(order); }
         };
 
         const auto agreements{trialsWhere(bothAgree)};
@@ -806,6 +836,50 @@ namespace sequoia::testing
           agreeInSomeTrialsNotAll(fastPairRunsFirst, slowTaskRunsFirst));
     check("The fast and slow tasks' orders beside their baselines are shuffled independently",
           agreeInSomeTrialsNotAll(fastTaskRunsFirst, slowTaskRunsFirst));
+  }
+
+  void performance_utilities_test::test_call_in_order()
+  {
+    using impl::call_order;
+    using results_t = std::pair<int, int>;
+
+    // Each call records itself, so the record gives the order of the calls.
+    auto callInOrder{
+      [](call_order order) {
+        std::vector<std::string_view> calls{};
+        const auto results{
+          impl::call_in_order<results_t>([&calls]() { calls.push_back("first");  return 1; },
+                                         [&calls]() { calls.push_back("second"); return 2; },
+                                         order)
+        };
+
+        return std::pair{calls, results};
+      }
+    };
+
+    {
+      const auto [calls, results]{callInOrder(call_order::first_then_second)};
+      check(equality,
+            "first_then_second calls the first first",
+            calls,
+            std::vector<std::string_view>{"first", "second"});
+      check(equality,
+            "first_then_second gives the results in the order of the calls' parameters",
+            results,
+            results_t{1, 2});
+    }
+
+    {
+      const auto [calls, results]{callInOrder(call_order::second_then_first)};
+      check(equality,
+            "second_then_first calls the second first",
+            calls,
+            std::vector<std::string_view>{"second", "first"});
+      check(equality,
+            "second_then_first gives the results in the order of the calls' parameters",
+            results,
+            results_t{1, 2});
+    }
   }
 
   void performance_utilities_test::test_postprocessing()

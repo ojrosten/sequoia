@@ -22,8 +22,9 @@ namespace sequoia::testing
   {
     constexpr std::chrono::milliseconds spin_unit{2};
 
-    /** \brief Parameters with an odd minimum, so that a number of trials
-               rounded down differs from one rounded up.
+    /** \brief Parameters with an odd minimum, so that the number of trials
+               in an attempt shows how it is rounded: 11 becomes 12 in attempt
+               1, and 16.5 becomes 16 in attempt 2.
      */
     constexpr relative_performance_parameters retry_parameters{
       .prediction{.lower{1.8}, .upper{2.2}}, .minimum_trials{11}
@@ -61,14 +62,17 @@ namespace sequoia::testing
   void performance_retry_test::test_pass_at_final_attempt()
   {
     constexpr auto attempts{relative_performance_max_attempts};
-    constexpr auto maximumCalls{retry_parameters.minimum_trials * attempts * (attempts + 3) / 4};
+    constexpr auto maximumCalls       {retry_parameters.minimum_trials * attempts * (attempts + 3) / 4 + attempts},
+                   everyAttemptsTrials{trials_before_attempt(trials_for_minimum_11, attempts + 1)};
+
+    STATIC_CHECK(everyAttemptsTrials <= maximumCalls);
 
     const counted_spinner fast{spin_unit},
                           slow{spin_unit, trials_before_attempt(trials_for_minimum_11, 3), 2 * spin_unit};
 
     check_relative_performance("A speed-up of 1 until the final attempt, then of 2", fast, slow, retry_parameters);
-    check(equality, "Calls of the fast task, the contract's maximum", fast.calls(), maximumCalls);
-    check(equality, "Calls of the slow task, the contract's maximum", slow.calls(), maximumCalls);
+    check(equality, "Calls of the fast task, every attempt's trials", fast.calls(), everyAttemptsTrials);
+    check(equality, "Calls of the slow task, every attempt's trials", slow.calls(), everyAttemptsTrials);
   }
 
   void performance_retry_test::test_rising_overlap_multiplier()
@@ -197,7 +201,7 @@ namespace sequoia::testing
                           slowBaseline{1ms};
 
     check_relative_performance("The fast task is shorter than its baseline at attempt 1; "
-                               "net of the baselines, a speed-up of 2 at attempt 2",
+                               "from the net durations, a speed-up of 2 at attempt 2",
                                task_with_baseline{.task = fast, .baseline = fastBaseline},
                                task_with_baseline{.task = slow, .baseline = slowBaseline},
                                retry_parameters);
@@ -243,7 +247,7 @@ namespace sequoia::testing
     };
 
     const auto taskCalls{
-      recordTaskCalls("Net of the baselines, a speed-up of 2, each task and baseline recording its calls")
+      recordTaskCalls("From the net durations, a speed-up of 2, each task and baseline recording its calls")
     };
 
     if(check(equality, "Calls of the tasks and baselines", taskCalls.size(), callsPerTrial * trials))

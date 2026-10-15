@@ -75,7 +75,7 @@ namespace sequoia::testing
              made them, and how many attempts are allowed.
    */
   [[nodiscard]]
-  std::string trials_summary(std::size_t trials, relative_performance_attempt_progress progress);
+  std::string trials_summary(std::size_t numTrials, relative_performance_attempt_progress progress);
 
   /** \brief Returns a line reporting the duration of each task. */
   [[nodiscard]]

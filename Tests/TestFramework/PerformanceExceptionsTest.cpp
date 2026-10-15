@@ -29,6 +29,7 @@ namespace sequoia::testing
     test_attempt_with_too_few_trials();
     test_non_positive_durations();
     test_more_atypical_trials_than_trials();
+    test_odd_number_of_trials();
   }
 
   void performance_exceptions_test::test_invalid_arguments()
@@ -182,7 +183,7 @@ namespace sequoia::testing
           }()
         };
 
-        return impl::judge_attempt(trialDurations, 1.0, {.lower{2.0}, .upper{3.0}});
+        return impl::judge_trials(trialDurations, 1.0, {.lower{2.0}, .upper{3.0}});
       }
     };
 
@@ -201,7 +202,7 @@ namespace sequoia::testing
           }()
         };
 
-        return impl::judge_attempt(trialDurations, 1.0, {.lower{2.0}, .upper{3.0}});
+        return impl::judge_trials(trialDurations, 1.0, {.lower{2.0}, .upper{3.0}});
       }
     };
 
@@ -218,7 +219,7 @@ namespace sequoia::testing
         return [trial]() {
           // As many trials as the floor, so only a duration can be refused.
           constexpr relative_performance_durations typical{.fast{1s}, .slow{1s}};
-          return impl::judge_attempt(
+          return impl::judge_trials(
                    trials_with_atypical(relative_performance_minimum_trials_floor, typical, {trial}),
                    1.0,
                    {.lower{2.0}, .upper{3.0}}
@@ -235,7 +236,7 @@ namespace sequoia::testing
           constexpr impl::relative_performance_durations_with_baselines
             typical{.fast{.task{2s}, .baseline{1s}}, .slow{.task{2s}, .baseline{1s}}};
 
-          return impl::judge_attempt(
+          return impl::judge_trials(
                    trials_with_atypical(relative_performance_minimum_trials_floor, typical, {trial}),
                    1.0,
                    {.lower{2.0}, .upper{3.0}}
@@ -279,6 +280,22 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       "More atypical trials than trials",
       [typical]() { return trials_with_atypical(1, typical, {typical, typical}); }
+    );
+  }
+
+  void performance_exceptions_test::test_odd_number_of_trials()
+  {
+    constexpr std::size_t oddTrials{relative_performance_minimum_trials_floor + 1};
+    std::mt19937 generator{std::mt19937::default_seed};
+
+    check_exception_thrown<std::invalid_argument>(
+      "Call orders for an odd number of trials",
+      [&generator]() { return impl::shuffled_call_orders(oddTrials, generator); }
+    );
+
+    check_exception_thrown<std::invalid_argument>(
+      "Task orders with baselines for an odd number of trials",
+      [&generator]() { return impl::shuffled_baselined_task_orders(oddTrials, generator); }
     );
   }
 }
