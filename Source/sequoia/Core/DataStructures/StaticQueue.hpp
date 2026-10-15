@@ -42,13 +42,14 @@ namespace sequoia::data_structures
 
     constexpr void push(const T& val)
     {
+      if(size() == MaxDepth)
+      {
+        throw std::logic_error("Attempting to exceed maximum queue depth");
+      }
+
       if constexpr(MaxDepth > 0)
       {
-        if(size() == MaxDepth)
-        {
-          throw std::logic_error("Attempting to exceed maximum queue depth");
-        }
-        else if(m_Front == MaxDepth)
+        if(m_Front == MaxDepth)
         {
           m_Front = 0;
           m_Back  = 0;
@@ -59,10 +60,6 @@ namespace sequoia::data_structures
         }
 
         m_Queue[m_Back] = val;
-      }
-      else
-      {
-        throw std::logic_error("Attempting to exceed maximum queue depth");
       }
     }
 
@@ -90,13 +87,14 @@ namespace sequoia::data_structures
 
     constexpr void pop()
     {
+      if(empty())
+      {
+        throw std::logic_error("Attempting to pop an empty queue");
+      }
+
       if constexpr(MaxDepth > 0)
       {
-        if(empty())
-        {
-          throw std::logic_error("Attempting to pop an empty queue");
-        }
-        else if(m_Front == m_Back)
+        if(m_Front == m_Back)
         {
           m_Front = MaxDepth;
           m_Back  = MaxDepth;
@@ -105,10 +103,6 @@ namespace sequoia::data_structures
         {
           m_Front = (m_Front + 1) % MaxDepth;
         }
-      }
-      else
-      {
-        throw std::logic_error("Attempting to pop an empty queue");
       }
     }
 
