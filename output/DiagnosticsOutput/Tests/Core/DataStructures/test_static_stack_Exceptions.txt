@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 37
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 60
 Can't push to null stack
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Attempting to exceed max stack depth
 
 =======================================
 
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 38
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 61
 Can't construct non-null null stack
 
 Expected Exception Type:
@@ -16,7 +16,25 @@ initializer_list of size 1 too big for array: expected at most 0 elements
 
 =======================================
 
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 52
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 62
+Can't access top of null stack
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to access the top of an empty stack
+
+=======================================
+
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 63
+Can't pop from null stack
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to pop an empty stack
+
+=======================================
+
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 77
 Trying to push two elements to stack of depth 1
 
 Expected Exception Type:
@@ -25,12 +43,30 @@ Attempting to exceed max stack depth
 
 =======================================
 
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 53
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 78
 Can't construct stack of depth 1 with 2 elements
 
 Expected Exception Type:
 [std::logic_error]
 initializer_list of size 2 too big for array: expected at most 1 elements
+
+=======================================
+
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 83
+Can't access top of empty stack
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to access the top of an empty stack
+
+=======================================
+
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 84
+Can't pop from empty stack
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to pop an empty stack
 
 =======================================
 

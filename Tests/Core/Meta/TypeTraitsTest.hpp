@@ -47,5 +47,7 @@ namespace sequoia::testing
     void test_is_deep_copy_constructible();
 
     void test_is_deep_copy_assignable();
+
+    void test_invocation_is_constant_expression();
   };
 }

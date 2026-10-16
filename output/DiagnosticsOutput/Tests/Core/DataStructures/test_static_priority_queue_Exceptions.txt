@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 82
+Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 86
 Can't push to null queue
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Attempting to exceed max priority_queue depth
 
 =======================================
 
-Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 83
+Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 87
 Can't construct non-null null queue
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ initializer_list of size 1 too big for array: expected at most 0 elements
 
 =======================================
 
-Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 84
+Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 88
 Can't access top of null queue
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Attempting to access the top of an empty priority_queue
 
 =======================================
 
-Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 85
+Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 89
 Can't pop from null queue
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Attempting to pop an empty priority_queue
 
 =======================================
 
-Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 99
+Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 103
 Trying to push two elements to queue of depth 1
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Attempting to exceed max priority_queue depth
 
 =======================================
 
-Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 100
+Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 104
 Can't construct queue of depth 1 with 2 elements
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ initializer_list of size 2 too big for array: expected at most 1 elements
 
 =======================================
 
-Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 105
+Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 109
 Can't access top of empty queue
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ Attempting to access the top of an empty priority_queue
 
 =======================================
 
-Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 106
+Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 110
 Can't pop from empty queue
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Attempting to pop an empty priority_queue
 
 =======================================
 
-Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 126
+Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 131
 Trying to push three elements to queue of depth 2
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Attempting to exceed max priority_queue depth
 
 =======================================
 
-Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 127
+Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 132
 Can't construct queue of depth 2 with 3 elements
 
 Expected Exception Type:
