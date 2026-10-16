@@ -15,10 +15,14 @@
 #include <array>
 #include <chrono>
 #include <cstdint>
+#include <format>
 #include <functional>
+#include <initializer_list>
 #include <memory>
 #include <ranges>
 #include <span>
+#include <stdexcept>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -28,8 +32,8 @@ namespace sequoia::testing
       The numbers are not in the contract. Tests which use them pin the
       implementation's choice, and change with it.
    */
-  inline constexpr auto trials_for_minimum_10{std::to_array<std::size_t>({10, 15, 20})},
-                        trials_for_minimum_11{std::to_array<std::size_t>({11, 16, 22})};
+  inline constexpr auto trials_for_minimum_10{std::to_array<std::size_t>({10, 16, 20})},
+                        trials_for_minimum_11{std::to_array<std::size_t>({12, 16, 22})};
 
   static_assert(trials_for_minimum_10.size() == relative_performance_max_attempts);
   static_assert(trials_for_minimum_11.size() == relative_performance_max_attempts);
@@ -42,6 +46,30 @@ namespace sequoia::testing
   constexpr std::size_t trials_before_attempt(std::span<const std::size_t> trialsOfAttempts, std::size_t attempt)
   {
     return std::ranges::fold_left(trialsOfAttempts | std::views::take(attempt - 1), 0uz, std::plus<>{});
+  }
+
+  /** \brief Returns `numTrials` trials' durations: those of `atypical`,
+             followed by `typical` for the rest.
+
+      \throws std::logic_error if `atypical` has more elements than
+      `numTrials`.
+   */
+  template<class Durations>
+  [[nodiscard]]
+  std::vector<Durations> trials_with_atypical(std::size_t numTrials,
+                                              Durations typical,
+                                              std::initializer_list<Durations> atypical)
+  {
+    if(atypical.size() > numTrials)
+      throw std::logic_error{
+        std::format("More atypical trials ({}) than trials ({})", atypical.size(), numTrials)
+      };
+
+    auto durationsOfTrial{
+      [typical, atypical](std::size_t trial) { return trial < atypical.size() ? atypical.begin()[trial] : typical; }
+    };
+
+    return std::views::iota(0uz, numTrials) | std::views::transform(durationsOfTrial) | std::ranges::to<std::vector>();
   }
 
   /** \brief Keeps the calling thread busy until `t` has passed by the
@@ -82,13 +110,14 @@ namespace sequoia::testing
              starting again after the last.
 
       Every copy of the task shares one count of the calls made, so any
-      five consecutive calls spin for each duration once.
+      `N` consecutive calls spin for each duration once.
    */
+  template<std::size_t N>
   [[nodiscard]]
-  inline auto make_cycling_spinner(const std::array<std::chrono::milliseconds, 5>& durations)
+  auto make_cycling_spinner(const std::chrono::milliseconds (&durations)[N])
   {
-    return [durations, calls{std::make_shared<std::size_t>()}]() {
-      spin_for(durations[(*calls)++ % durations.size()]);
+    return [cycle{std::to_array(durations)}, calls{std::make_shared<std::size_t>()}]() {
+      spin_for(cycle[(*calls)++ % N]);
     };
   }
 

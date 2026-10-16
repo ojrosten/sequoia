@@ -33,6 +33,7 @@ set(SourceList
     TestFramework/ProjectCreator.cpp
     TestFramework/ProjectPaths.cpp
     TestFramework/RegularTestCore.cpp
+    TestFramework/ReturnCodes.cpp
     TestFramework/SemanticsCheckersDetails.cpp
     TestFramework/Summary.cpp
     TestFramework/TestCreator.cpp

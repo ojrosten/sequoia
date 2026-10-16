@@ -35,5 +35,9 @@ namespace sequoia::testing
     void test_trimmed_estimate();
 
     void test_task_orders();
+
+    void test_pass_at_second_attempt_with_baselines();
+
+    void test_task_orders_with_baselines();
   };
 }

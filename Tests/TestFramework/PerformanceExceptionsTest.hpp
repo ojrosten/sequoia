@@ -33,5 +33,9 @@ namespace sequoia::testing
     void test_attempt_with_too_few_trials();
 
     void test_non_positive_durations();
+
+    void test_more_atypical_trials_than_trials();
+
+    void test_odd_number_of_trials();
   };
 }
