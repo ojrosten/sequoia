@@ -28,6 +28,7 @@ set(SourceList
     TestFramework/FreeTestCore.cpp
     TestFramework/IndividualTestPaths.cpp
     TestFramework/InstabilityAnalysis.cpp
+    TestFramework/InstabilityProjection.cpp
     TestFramework/MaterialsUpdater.cpp
     TestFramework/MoveOnlyTestCore.cpp
     TestFramework/Output.cpp

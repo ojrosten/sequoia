@@ -13,15 +13,13 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  bool is_coarse_sleep(std::chrono::duration<double, std::milli> slept,
-                       std::chrono::duration<double, std::milli> target)
+  bool is_coarse_sleep(floating_point_milliseconds slept, floating_point_milliseconds target)
   {
     return slept >= 2 * target;
   }
 
   [[nodiscard]]
-  std::string coarse_sleep_message(std::chrono::duration<double, std::milli> slept,
-                                   std::chrono::duration<double, std::milli> target)
+  std::string coarse_sleep_message(floating_point_milliseconds slept, floating_point_milliseconds target)
   {
     using parsing::commandline::warning;
     return warning({std::format("Sleeps of {:.1f} ms repeatedly lasted {:.1f} ms or more, "

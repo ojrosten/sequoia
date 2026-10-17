@@ -9,6 +9,7 @@
 #include "PerformanceTestingUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
+#include "sequoia/TestFramework/FloatingPointDurations.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/TestExecutionRecord.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
@@ -30,8 +31,6 @@ namespace sequoia::testing
 
   namespace
   {
-    using fractional_milliseconds = std::chrono::duration<double, std::milli>;
-
     /** Reads `printedDuration`, a duration as printed by
         `stringify_duration`.
 
@@ -42,16 +41,16 @@ namespace sequoia::testing
         \throws std::runtime_error if none does
      */
     [[nodiscard]]
-    fractional_milliseconds read_printed_duration(std::string_view printedDuration)
+    floating_point_milliseconds read_printed_duration(std::string_view printedDuration)
     {
-      constexpr std::array<fractional_milliseconds, 4> units{
+      constexpr std::array<floating_point_milliseconds, 4> units{
         std::chrono::seconds{1}, std::chrono::milliseconds{1}, std::chrono::microseconds{1}, std::chrono::nanoseconds{1}
       };
 
-      constexpr fractional_milliseconds representableLimit{log_summary::duration::max()};
+      constexpr floating_point_milliseconds representableLimit{log_summary::duration::max()};
 
       auto reprintsAsPrinted{
-        [printedDuration, representableLimit](fractional_milliseconds candidate) {
+        [printedDuration, representableLimit](floating_point_milliseconds candidate) {
           if(!(std::chrono::abs(candidate) < representableLimit))
             return false;
 
@@ -63,7 +62,7 @@ namespace sequoia::testing
       if(const auto optNumber{extract_numbers_from<double, 1>(printedDuration)})
       {
         const auto [count]{*optNumber};
-        auto candidateIn{[count](fractional_milliseconds unit) { return count * unit; }};
+        auto candidateIn{[count](floating_point_milliseconds unit) { return count * unit; }};
         auto candidates{units | std::views::transform(candidateIn)};
         if(const auto found{std::ranges::find_if(candidates, reprintsAsPrinted)}; found != candidates.end())
           return *found;
@@ -76,7 +75,7 @@ namespace sequoia::testing
         `printedOutput`.
      */
     [[nodiscard]]
-    fractional_milliseconds get_grand_total(std::string_view printedOutput, std::string_view label)
+    floating_point_milliseconds get_grand_total(std::string_view printedOutput, std::string_view label)
     {
       const auto pattern{std::format("[{}: ", label)};
       if(const auto pos{printedOutput.find(pattern, printedOutput.find("Grand Totals"))}; pos != std::string_view::npos)
@@ -102,7 +101,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    fractional_milliseconds in_milliseconds(std::chrono::microseconds duration)
+    floating_point_milliseconds in_milliseconds(std::chrono::microseconds duration)
     {
       return duration;
     }
@@ -300,12 +299,12 @@ namespace sequoia::testing
       void run_tests() { sleep_and_check(7); }
     };
 
-    constexpr fractional_milliseconds execution_sleep{20}, summarization_sleep{60};
+    constexpr floating_point_milliseconds execution_sleep{20}, summarization_sleep{60};
 
     /** The runner prints a duration to three significant figures, so it
         prints a duration of less than a second to within half a millisecond.
      */
-    constexpr fractional_milliseconds printed_duration_tolerance{1};
+    constexpr floating_point_milliseconds printed_duration_tolerance{1};
 
     /** Sleeps while its tests run, and sleeps again while the runner summarizes it. The runner summarizes a test after
         its tests have run, so the first sleep falls in the test's execution duration and the second in the runner's
@@ -647,10 +646,10 @@ namespace sequoia::testing
     outputStream << peak_overlap_line(peak);
 
     check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream);
-    check(within_tolerance{fractional_milliseconds{35}},
+    check(within_tolerance{floating_point_milliseconds{35}},
           "",
           get_grand_total(outputStream.view(), "Execution Time"),
-          fractional_milliseconds{60});
+          floating_point_milliseconds{60});
 
     // Without parallel algorithms, the runner runs the tests on a pool of eight threads instead
     check(std::ranges::greater_equal{},
@@ -670,10 +669,10 @@ namespace sequoia::testing
       outputStream << peak_overlap_line(peak);
 
       check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream);
-      check(within_tolerance{fractional_milliseconds{30}},
+      check(within_tolerance{floating_point_milliseconds{30}},
             "",
             get_grand_total(outputStream.view(), "Execution Time"),
-            fractional_milliseconds{55});
+            floating_point_milliseconds{55});
       check(std::ranges::greater_equal{},
             "More than half of the pool's eight threads execute tests at once",
             peak,
@@ -689,10 +688,10 @@ namespace sequoia::testing
       outputStream << peak_overlap_line(peak);
 
       check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream);
-      check(within_tolerance{fractional_milliseconds{40}},
+      check(within_tolerance{floating_point_milliseconds{40}},
             "",
             get_grand_total(outputStream.view(), "Execution Time"),
-            fractional_milliseconds{140});
+            floating_point_milliseconds{140});
       check(equality, "Both threads of the pool, and no more, execute tests at once", peak, std::ptrdiff_t{2});
     }
   }
@@ -707,10 +706,10 @@ namespace sequoia::testing
     outputStream << peak_overlap_line(peak);
 
     check_output(report({"Serial Output"}), "Serial Output", outputStream);
-    check(within_tolerance{fractional_milliseconds{55}},
+    check(within_tolerance{floating_point_milliseconds{55}},
           "",
           get_grand_total(outputStream.view(), "Execution Time"),
-          fractional_milliseconds{255});
+          floating_point_milliseconds{255});
     check(equality, "Tests execute one at a time in a serial run", peak, std::ptrdiff_t{1});
   }
 
@@ -798,7 +797,7 @@ namespace sequoia::testing
 
     const auto executionDuration{get_grand_total(outputStream.view(), "Execution Time")};
     auto distanceFromExecutionDuration{
-      [executionDuration, firstDuration](fractional_milliseconds paired){
+      [executionDuration, firstDuration](floating_point_milliseconds paired){
         return std::chrono::abs(executionDuration - (firstDuration + paired));
       }
     };
