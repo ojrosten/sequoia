@@ -16,6 +16,7 @@ set(SourceList
     TestFramework/AllocationCheckersDetails.cpp
     TestFramework/BuildArtefacts.cpp
     TestFramework/CMakeCache.cpp
+    TestFramework/CoarseSleeps.cpp
     TestFramework/Commands.cpp
     TestFramework/ConcreteTypeCheckers.cpp
     TestFramework/DependencyAnalyzer.cpp

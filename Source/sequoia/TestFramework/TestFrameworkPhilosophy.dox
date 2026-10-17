@@ -356,6 +356,7 @@
 	directory itself, with no original counterpart, and so nothing for a rename to detach. Within it,
 	`WorkingCopy` and `Auxiliary` are reserved for the temporary materials.
 
+	\anchor discriminator_hooks
 	What a test records may sometimes have to vary, for example with the configuration of the build
 	tree or with the hardware found at run time. A test may therefore declare up to three hooks. Each
 	hook is a public static member function which takes `const cmake_cache&` and returns a name. A hook

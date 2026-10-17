@@ -15,12 +15,11 @@
 
 namespace sequoia::testing
 {
-  /** \brief The form of a dump, shared by the logger, which writes dumps,
-             and by `compare_dumps`, which reads them.
+  /** \brief The form of a dump of a test run.
 
-      A top-level check is its message, then the message of every check
-      nested in it, one per line, then the separator. An empty message
-      writes nothing.
+      A top-level check is written as its message, then the message of every
+      check nested in it, each followed by a newline, then the separator. An
+      empty message is not written; the separator still is.
    */
   namespace dump_format
   {

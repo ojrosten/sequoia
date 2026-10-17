@@ -8,14 +8,13 @@
 #pragma once
 
 /** \file
-    \brief Timing of tasks, and detection of coarse sleeps.
+    \brief Timing of tasks.
  */
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
 #include <chrono>
 #include <concepts>
-#include <string>
 #include <type_traits>
 
 #if defined(SEQUOIA_MSVC_COMPILER)
@@ -87,18 +86,4 @@ namespace sequoia::testing
 
     return t.time_elapsed();
   }
-
-  /** \brief Whether `slept`, compared to `target`, indicates sleeps rounded
-             up to a coarse timer tick.
-   */
-  [[nodiscard]]
-  bool is_coarse_sleep(std::chrono::duration<double, std::milli> slept,
-                       std::chrono::duration<double, std::milli> target);
-
-  /** \brief A warning that sleeps of `target` lasted `slept` or more, so
-             timings built on sleeps are unreliable.
-   */
-  [[nodiscard]]
-  std::string coarse_sleep_message(std::chrono::duration<double, std::milli> slept,
-                                   std::chrono::duration<double, std::milli> target);
 }

@@ -7,6 +7,7 @@
 
 #include "sequoia/TestFramework/TestRunner.hpp"
 
+#include "sequoia/TestFramework/CoarseSleeps.hpp"
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/DumpComparison.hpp"
 #include "sequoia/TestFramework/InstabilityAnalysis.hpp"

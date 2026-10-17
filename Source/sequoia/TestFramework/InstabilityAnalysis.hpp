@@ -20,13 +20,13 @@
 
 namespace sequoia::testing
 {
-  /** \brief A map from a failure's message to the form in which it is compared
-             with the same failure from other runs.
+  /** \brief A function from a failure's message to the form in which it is
+             compared with the same failure from other runs.
    */
   using message_projection = erased_function<std::string(std::string_view) const>;
 
-  /** \brief Reports each test whose runs, `trials` of them, failed
-             differently.
+  /** \brief Reports each test whose `trials` runs did not all record the
+             same failures.
 
       Each failure's message passes through `projection` before the runs are
       compared, so that what the projection discards, such as measurements, is
