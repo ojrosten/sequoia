@@ -205,6 +205,7 @@
 #include "TestFramework/TestRunnerPerformanceTest.hpp"
 #include "TestFramework/TestRunnerProjectCreation.hpp"
 #include "TestFramework/TestRunnerProjectFiles.hpp"
+#include "TestFramework/TestRunnerReportedDurationsFreeTest.hpp"
 #include "TestFramework/TestRunnerTest.hpp"
 #include "TestFramework/TestRunnerTestCreation.hpp"
 #include "TestFramework/VersionedOutputFreeTest.hpp"

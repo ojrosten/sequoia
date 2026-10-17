@@ -10,7 +10,6 @@
 /** \file */
 
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
-#include "sequoia/PlatformSpecific/Helpers.hpp"
 
 namespace sequoia::testing
 {
@@ -31,13 +30,13 @@ namespace sequoia::testing
 
     void test_serial_execution();
 
-    void test_runner_overhead_reported_apart();
-
-    void test_execution_duration_of_busiest_thread();
-
     void test_recording_of_performance_check_attempts();
 
     void test_summary_of_performance_checks_within_other_checks();
+
+    void check_speedup_over_serial_execution(std::string_view description,
+                                             std::vector<std::string> modeArguments,
+                                             relative_performance_interval prediction);
 
     [[nodiscard]]
     std::filesystem::path fake_project() const;
