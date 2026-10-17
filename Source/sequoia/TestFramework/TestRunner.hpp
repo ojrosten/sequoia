@@ -70,12 +70,6 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code to_return_code(const log_summary& summary) noexcept;
 
-  /** \brief Returns `message` as compared by the runner across runs in a
-             search for instabilities: with its measurements set to zero.
-   */
-  [[nodiscard]]
-  std::string instability_projection(std::string_view message);
-
   /** \brief The thread which executed a test, and the test's durations. */
   struct execution_info
   {

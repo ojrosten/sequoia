@@ -8,16 +8,13 @@
 #pragma once
 
 /** \file
-    \brief The separator which ends each top-level check in a dump.
+    \brief Durations with a floating-point representation.
  */
 
-#include <string_view>
+#include <chrono>
 
 namespace sequoia::testing
 {
-  namespace dump_format
-  {
-    /** \brief The separator which ends each top-level check in a dump. */
-    constexpr std::string_view check_separator{"\n=======================================\n\n"};
-  }
+  using floating_point_seconds      = std::chrono::duration<double>;
+  using floating_point_milliseconds = std::chrono::duration<double, std::milli>;
 }
