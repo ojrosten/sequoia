@@ -7,17 +7,20 @@
 
 #include "sequoia/TestFramework/TestRunner.hpp"
 
+#include "sequoia/TestFramework/CoarseSleeps.hpp"
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/DumpComparison.hpp"
+#include "sequoia/TestFramework/InstabilityAnalysis.hpp"
 #include "sequoia/TestFramework/MaterialsUpdater.hpp"
 #include "sequoia/TestFramework/PerformanceSummary.hpp"
-#include "sequoia/TestFramework/PerformanceTestCore.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/TestCreator.hpp"
+#include "sequoia/TestFramework/TimingUtilities.hpp"
 
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/Parsing/CommandLineMessages.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"

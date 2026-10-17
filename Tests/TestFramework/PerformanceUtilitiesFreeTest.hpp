@@ -9,6 +9,7 @@
 
 /** \file */
 
+#include "sequoia/TestFramework/CoarseSleeps.hpp"
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
 
 namespace sequoia::testing

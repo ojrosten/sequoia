@@ -13,9 +13,8 @@
 
 #include "sequoia/TestFramework/PerformanceSummary.hpp"
 #include "sequoia/TestFramework/PerformanceTestTraits.hpp"
-#include "sequoia/TestFramework/RegularTestCore.hpp"
-#include "sequoia/TestFramework/FileEditors.hpp"
-#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework/TimingUtilities.hpp"
 
 #include <algorithm>
 #include <chrono>
@@ -28,63 +27,8 @@
 #include <span>
 #include <type_traits>
 
-#if defined(SEQUOIA_MSVC_COMPILER)
-  #include <atomic>
-  #include <memory>
-#endif
-
 namespace sequoia::testing
 {
-  /** \brief Prevents the optimizer from removing the computation of `value`.
-
-      The compiler must treat `value` as read at the call, and as possibly
-      changed by it. So an optimized build computes `value` before the call,
-      even if nothing else reads `value`. And a computation after the call
-      which depends on the state of `value` is made after the call.
-
-      The compiler may still compute `value` earlier, at any point after the
-      inputs to the computation are known. That may be during compilation.
-   */
-  template<class T>
-  void do_not_optimize_away(const T& value) noexcept
-  {
-#if defined(SEQUOIA_MSVC_COMPILER)
-    // The store lets code outside this function reach `value`. MSVC compiles
-    // the fence as a compiler barrier: every write to memory such code can
-    // reach completes before the fence, and every read of it after the fence
-    // is made afresh. Without either, the computation of `value` may be lost.
-    static thread_local const T* volatile observedAddress{};
-    observedAddress = std::addressof(value);
-    std::atomic_signal_fence(std::memory_order_seq_cst);
-#else
-    // The memory clobber makes the compiler treat all memory as possibly read
-    // and changed: both `value` and memory it points to, such as a vector's
-    // elements. Without it, only the bytes of `value` would be read.
-    asm volatile("" : : "m"(value) : "memory");
-#endif
-  }
-
-  /** \brief Returns the duration of a call of `task`.
-
-      The duration includes the computation of any value the call returns,
-      even if nothing else reads the value.
-   */
-  template<class Task>
-    requires std::invocable<Task&>
-  [[nodiscard]]
-  std::chrono::duration<double> profile(Task task)
-  {
-    const timer t{};
-    do_not_optimize_away(task);
-
-    if constexpr(std::is_void_v<std::invoke_result_t<Task&>>)
-      task();
-    else
-      do_not_optimize_away(task());
-
-    return t.time_elapsed();
-  }
-
   /** \brief A type that `check_relative_performance` accepts as a task. */
   template<class T>
   concept performance_task = std::copy_constructible<T> && std::invocable<T&>;
@@ -628,16 +572,6 @@ namespace sequoia::testing
   {
     return impl::check_speedup(description, logger, fast, slow, parameters);
   }
-
-  /** \brief Whether `slept`, compared to `target`, indicates sleeps rounded up to a coarse timer tick. */
-  [[nodiscard]]
-  bool is_coarse_sleep(std::chrono::duration<double, std::milli> slept,
-                       std::chrono::duration<double, std::milli> target);
-
-  /** \brief A warning that sleeps of `target` lasted `slept` or more, so timings built on sleeps are unreliable. */
-  [[nodiscard]]
-  std::string coarse_sleep_message(std::chrono::duration<double, std::milli> slept,
-                                   std::chrono::duration<double, std::milli> target);
 
   /** \brief class template for plugging into the checker class template
       \anchor performance_extender_primary

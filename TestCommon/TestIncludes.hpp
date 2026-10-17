@@ -175,6 +175,7 @@
 #include "TestFramework/FreeCheckersMetaFreeTest.hpp"
 #include "TestFramework/FunctionFreeDiagnostics.hpp"
 #include "TestFramework/IndividualTestPathsFreeTest.hpp"
+#include "TestFramework/InstabilityAnalysisFreeTest.hpp"
 #include "TestFramework/MaterialsUpdaterFreeTest.hpp"
 #include "TestFramework/MoveOnlyStateTransitionDiagnostics.hpp"
 #include "TestFramework/MoveOnlyTestDiagnostics.hpp"

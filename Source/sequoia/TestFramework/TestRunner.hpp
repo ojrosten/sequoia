@@ -11,6 +11,7 @@
     \brief Utilities for running tests from the command line.
 */
 
+#include "sequoia/TestFramework/CMakeCache.hpp"
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/FailureReporting.hpp"
 #include "sequoia/TestFramework/FreeTestCore.hpp"
@@ -19,6 +20,7 @@
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/TestExecutionRecord.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
+#include "sequoia/TestFramework/TimingUtilities.hpp"
 #include "sequoia/TestFramework/VersionedOutput.hpp"
 
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
@@ -513,6 +515,91 @@ namespace sequoia::testing
     test_execution_record_path m_ExecutionRecord{};
     discarded_materials_remover::future_type m_DiscardedMaterialsRemovalFailureFuture{};
   };
+
+  /** \name discriminator_probes
+      \brief Probes for the \ref discriminator_hooks "discriminator hooks" a
+             test may declare.
+
+      Each probe is for one hook. For a test `T`, it asks two things:
+      -# `declared_v`: whether the test declares the hook in any form. A data
+         member or member function of that name counts, whether static or
+         not, and whatever its signature. Where the name is overloaded, a
+         member callable through `T&`, either with a `const cmake_cache&` or
+         with no arguments, counts;
+      -# `conforming_v`: whether the hook can be called through the class
+         with a `const cmake_cache&`, and whether that call returns something
+         convertible to `std::string`.
+
+      Each probe's `discriminator` makes that call, and returns the result as
+      a `std::string`.
+
+      A hook which is not public is invisible to every probe.
+   */
+  ///@{
+  template<class T>
+  struct output_discriminator_probe
+  {
+    static constexpr bool declared_v{
+         requires { &T::output_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.output_discriminator(cache); }
+      || requires(T& t){ t.output_discriminator(); }
+    };
+
+    static constexpr bool conforming_v{
+      requires(const cmake_cache& cache){ { T::output_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::output_discriminator(cache);
+    }
+  };
+
+  template<class T>
+  struct summary_discriminator_probe
+  {
+    static constexpr bool declared_v{
+         requires { &T::summary_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.summary_discriminator(cache); }
+      || requires(T& t){ t.summary_discriminator(); }
+    };
+
+    static constexpr bool conforming_v{
+      requires(const cmake_cache& cache){ { T::summary_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::summary_discriminator(cache);
+    }
+  };
+
+  template<class T>
+  struct materials_discriminator_probe
+  {
+    static constexpr bool declared_v{
+         requires { &T::materials_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.materials_discriminator(cache); }
+      || requires(T& t){ t.materials_discriminator(); }
+    };
+
+    static constexpr bool conforming_v{
+      requires(const cmake_cache& cache){ { T::materials_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::materials_discriminator(cache);
+    }
+  };
+
+  ///@}
 
   /** \brief Calls the hook of `T` that `Probe` probes for.
 
