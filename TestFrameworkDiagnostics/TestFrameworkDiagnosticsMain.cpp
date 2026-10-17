@@ -119,6 +119,7 @@ int main(int argc, char** argv)
     runner.register_test<critical_path_durations_false_negative_test>();
     runner.register_test<critical_path_durations_regular_test>();
     runner.register_test<instability_analysis_free_test>();
+    runner.register_test<test_runner_reported_durations_free_test>();
 
     code = runner.execute();
   }

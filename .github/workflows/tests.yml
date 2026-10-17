@@ -1006,19 +1006,19 @@ jobs:
                   -e "s|^\([^ ]*\) $generated/output/ExecutionRecords/|  \1  generated project: |"
           echo "::$token::"
 
-      # The step prints three durations for each check of the performance
-      # test, from the Grand Totals of the output the check wrote: the
-      # Execution Time, on which the timing checks assert, the Runner Overhead
-      # and the Scheduling Overhead. Where the check measured it, the step also
-      # prints the peak number of the check's tests that ran at once. A check
-      # prints its values only when it fails, and setting the checks' bounds
-      # needs the distribution, not only the tail.
+      # The step prints three durations for each run of the runner that the
+      # performance test and the reported-durations test check, from the
+      # Grand Totals of the output the run wrote: the Execution Time, the
+      # Runner Overhead and the Scheduling Overhead. Where the check measured
+      # it, the step also prints the peak number of the run's tests that ran at
+      # once. A check prints its values only when it fails, and setting the
+      # checks' bounds needs the distribution, not only the tail.
       #
       # The step prints each duration with its unit, since the runner writes
-      # one of a second or more in seconds. The step finds the checks from
-      # the io.txt files in the working copy, so a renamed check is still
-      # printed. A column that excludes the performance tests has no working
-      # copy, and the step says so.
+      # one of a second or more in seconds. The step finds the runs from the
+      # io.txt files in the two tests' working copies, so a renamed run is
+      # still printed. A test that did not run has no working copy, and the
+      # step says so.
       #
       # A check's name is a directory name, and its values pass a filter of
       # digits, letters, dots and plus signs. Neither begins a line, so nothing
@@ -1027,26 +1027,30 @@ jobs:
         if: ${{ always() && inputs.needs_testing == 'true' }}
         continue-on-error: true
         run: |
-          dir="output/TestsTemporaryData/TestFramework/TestRunnerPerformanceTest/test_runner_performance_test/WorkingCopy"
-          if [ ! -d "$dir" ]; then
-            echo "no performance timings: the performance test did not run"
-            exit 0
-          fi
           grand_total() { sed -n '/Grand Totals/,$p' "$1" | sed -n "s/.*$2: \([0-9.e+]*[a-z]*\)\].*/\1/p" | head -1; }
-          found=0
-          for file in "$dir"/*/io.txt; do
-            [ -f "$file" ] || continue
-            found=$((found + 1))
-            check=$(basename "$(dirname "$file")")
-            execution=$(grand_total "$file" 'Execution Time')
-            overhead=$(grand_total "$file" 'Runner Overhead')
-            scheduling=$(grand_total "$file" 'Scheduling Overhead')
-            peak=$(sed -n 's/^\[Peak Overlap: \([0-9]*\)\]$/\1/p' "$file" | head -1)
-            echo "performance timing: $check: ${execution:-unparsed}," \
-                 "runner overhead ${overhead:-unparsed}," \
-                 "scheduling overhead ${scheduling:-unparsed}${peak:+, peak overlap $peak}"
+          for dir in \
+            output/TestsTemporaryData/TestFramework/TestRunnerPerformanceTest/test_runner_performance_test/WorkingCopy \
+            output/TestsTemporaryData/TestFramework/TestRunnerReportedDurationsFreeTest/test_runner_reported_durations_free_test/WorkingCopy
+          do
+            if [ ! -d "$dir" ]; then
+              echo "no performance timings: no working copy at $dir"
+              continue
+            fi
+            found=0
+            for file in "$dir"/*/io.txt; do
+              [ -f "$file" ] || continue
+              found=$((found + 1))
+              check=$(basename "$(dirname "$file")")
+              execution=$(grand_total "$file" 'Execution Time')
+              overhead=$(grand_total "$file" 'Runner Overhead')
+              scheduling=$(grand_total "$file" 'Scheduling Overhead')
+              peak=$(sed -n 's/^\[Peak Overlap: \([0-9]*\)\]$/\1/p' "$file" | head -1)
+              echo "performance timing: $check: ${execution:-unparsed}," \
+                   "runner overhead ${overhead:-unparsed}," \
+                   "scheduling overhead ${scheduling:-unparsed}${peak:+, peak overlap $peak}"
+            done
+            [ "$found" -gt 0 ] || echo "no performance timings: $dir holds no io.txt"
           done
-          [ "$found" -gt 0 ] || echo "no performance timings: the working copy holds no io.txt"
 
       # A performance check makes up to three attempts. It stops at the first
       # attempt which passes, so a green check does not say how often its
@@ -1099,9 +1103,9 @@ jobs:
           [ "$found" -gt 0 ] || echo "no performance check attempts: no execution record names a performance check"
           echo "::$token::"
 
-      # The artifact takes the performance test's working copy for its io.txt
-      # files, which hold the timings that "Report the performance test's
-      # timings" prints. It does not take the versioned trees: the patch holds
+      # The artifact takes the working copies of the performance test and the
+      # reported-durations test for their io.txt files, which hold the timings
+      # that "Report the performance test's timings" prints. It does not take the versioned trees: the patch holds
       # what moved in them, without the megabytes that did not. The artifact
       # keeps its `-drift` name because statistical.yml collects the artifacts
       # by it.
@@ -1119,6 +1123,7 @@ jobs:
             output/Drift/
             output/ExecutionRecords/
             output/TestsTemporaryData/TestFramework/TestRunnerPerformanceTest/test_runner_performance_test/WorkingCopy/
+            output/TestsTemporaryData/TestFramework/TestRunnerReportedDurationsFreeTest/test_runner_reported_durations_free_test/WorkingCopy/
             output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/ExecutionRecords/
             output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/WorkingCopy/InitOutput/
             run-log/

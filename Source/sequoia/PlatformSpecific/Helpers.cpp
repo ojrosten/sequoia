@@ -12,6 +12,16 @@
   #include "Windows.h"
 #endif
 
+#ifdef __APPLE__
+  #include <sys/event.h>
+  #include <unistd.h>
+
+  #include <cerrno>
+  #include <cstdint>
+#endif
+
+#include <thread>
+
 #if defined(SEQUOIA_MSVC_DEBUG_RUNTIME)
   #include "crtdbg.h"
 
@@ -22,6 +32,68 @@
 
 namespace sequoia
 {
+  #ifdef __APPLE__
+    namespace
+    {
+      /** \brief RAII type holding a kqueue. */
+      class [[nodiscard]] kqueue_descriptor
+      {
+      public:
+        kqueue_descriptor()
+          : m_Descriptor{kqueue()}
+        {}
+
+        kqueue_descriptor(const kqueue_descriptor&)            = delete;
+        kqueue_descriptor& operator=(const kqueue_descriptor&) = delete;
+
+        ~kqueue_descriptor()
+        {
+          if(m_Descriptor >= 0)
+            close(m_Descriptor);
+        }
+
+        /** \returns A negative value if creating the kqueue failed. */
+        [[nodiscard]]
+        int get() const noexcept { return m_Descriptor; }
+      private:
+        int m_Descriptor;
+      };
+
+      /** \brief Sleeps until `deadline` on a kqueue timer with
+                 `NOTE_CRITICAL`.
+
+          The kernel may defer the wake-up of an ordinary sleep, to coalesce
+          it with other timers, by a quarter of the sleep's length or more.
+
+          \returns false, possibly before `deadline`, if the kqueue fails.
+       */
+      [[nodiscard]]
+      bool critical_timer_sleep_until(std::chrono::steady_clock::time_point deadline)
+      {
+        static thread_local const kqueue_descriptor queue{};
+        if(queue.get() < 0)
+          return false;
+
+        for(auto now{std::chrono::steady_clock::now()}; now < deadline; now = std::chrono::steady_clock::now())
+        {
+          const auto remaining{std::chrono::ceil<std::chrono::nanoseconds>(deadline - now)};
+          struct kevent64_s request{}, fired{};
+          EV_SET64(&request, 1, EVFILT_TIMER, EV_ADD | EV_ONESHOT, NOTE_NSECONDS | NOTE_CRITICAL,
+                   static_cast<std::int64_t>(remaining.count()), 0, 0, 0);
+
+          const int events{kevent64(queue.get(), &request, 1, &fired, 1, 0, nullptr)};
+          if((events < 0) && (errno != EINTR))
+            return false;
+
+          if((events == 1) && (fired.flags & EV_ERROR))
+            return false;
+        }
+
+        return true;
+      }
+    }
+  #endif
+
   #if defined(SEQUOIA_MSVC_DEBUG_RUNTIME)
     namespace
     {
@@ -96,6 +168,25 @@ namespace sequoia
       // Without a request for a timer resolution, Windows ends a sleep only on a tick of its default timer.
       // The timer ticks about every 15.6 ms, so each sleep is rounded up to a whole number of ticks.
       static const finest_timer_resolution resolution{};
+    #endif
+  }
+
+  void precise_sleep_for(std::chrono::nanoseconds duration)
+  {
+    if(duration <= std::chrono::nanoseconds::zero())
+      return;
+
+    #ifdef __APPLE__
+      using clock = std::chrono::steady_clock;
+      const auto now{clock::now()};
+      const auto deadline{duration < clock::time_point::max() - now ? now + duration : clock::time_point::max()};
+      if(critical_timer_sleep_until(deadline))
+        return;
+
+      if(const auto remaining{deadline - std::chrono::steady_clock::now()}; remaining > remaining.zero())
+        std::this_thread::sleep_for(remaining);
+    #else
+      std::this_thread::sleep_for(duration);
     #endif
   }
 

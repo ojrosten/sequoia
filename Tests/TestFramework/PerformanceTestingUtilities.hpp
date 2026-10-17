@@ -80,7 +80,7 @@ namespace sequoia::testing
       ratio of two tasks' durations. A spin ends at the first reading of the
       clock past its deadline.
    */
-  inline void spin_for(std::chrono::milliseconds t)
+  inline void spin_for(std::chrono::microseconds t)
   {
     const auto deadline{std::chrono::steady_clock::now() + t};
     while(std::chrono::steady_clock::now() < deadline) {}
@@ -130,16 +130,16 @@ namespace sequoia::testing
   {
   public:
     /** \brief Spins for `duration` on every call. */
-    explicit counted_spinner(std::chrono::milliseconds duration)
+    explicit counted_spinner(std::chrono::microseconds duration)
       : counted_spinner{duration, 0, duration}
     {}
 
     /** \brief Spins for `initial` on each of the first `initialCalls`
                calls, and for `later` on every call thereafter.
      */
-    counted_spinner(std::chrono::milliseconds initial,
+    counted_spinner(std::chrono::microseconds initial,
                     std::size_t initialCalls,
-                    std::chrono::milliseconds later)
+                    std::chrono::microseconds later)
       : m_Initial{initial}
       , m_Later{later}
       , m_InitialCalls{initialCalls}
@@ -153,7 +153,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::size_t calls() const noexcept { return *m_Calls; }
   private:
-    std::chrono::milliseconds m_Initial{}, m_Later{};
+    std::chrono::microseconds m_Initial{}, m_Later{};
     std::size_t m_InitialCalls{};
     std::shared_ptr<std::size_t> m_Calls{std::make_shared<std::size_t>()};
   };
