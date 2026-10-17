@@ -13,7 +13,8 @@
  */
 
 #include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
-#include "sequoia/Algorithms/Algorithms.hpp"
+
+#include <algorithm>
 
 namespace sequoia::data_structures
 {
@@ -32,12 +33,12 @@ namespace sequoia::data_structures
     {
     }
 
-    constexpr static_stack(const static_stack&)    = default;
-    constexpr static_stack(static_stack&) noexcept = default;
+    constexpr static_stack(const static_stack&)     = default;
+    constexpr static_stack(static_stack&&) noexcept = default;
     ~static_stack() = default;
 
-    constexpr static_stack& operator=(const static_stack&)    = default;
-    constexpr static_stack& operator=(static_stack&) noexcept = default;
+    constexpr static_stack& operator=(const static_stack&)     = default;
+    constexpr static_stack& operator=(static_stack&&) noexcept = default;
 
     constexpr void push(const T& val)
     {
@@ -49,13 +50,19 @@ namespace sequoia::data_structures
     }
 
     [[nodiscard]]
-    constexpr const T& top() const noexcept
+    constexpr const T& top() const
     {
+      if(empty())
+        throw std::logic_error("Attempting to access the top of an empty stack");
+
       return m_Stack[m_End - 1];
     }
 
-    constexpr void pop() noexcept
+    constexpr void pop()
     {
+      if(empty())
+        throw std::logic_error("Attempting to pop an empty stack");
+
       --m_End;
     }
 
