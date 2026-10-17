@@ -11,8 +11,6 @@
 
 #include "FailureInfoTestingUtilities.hpp"
 
-#include "sequoia/TestFramework/InstabilityAnalysis.hpp"
-
 namespace sequoia::testing
 {
   class failure_info_test final : public regular_test
@@ -32,8 +30,6 @@ namespace sequoia::testing
     void check_round_trip();
 
     void check_end_of_stream();
-
-    void check_instability_analysis();
 
     void check_written_format();
   };

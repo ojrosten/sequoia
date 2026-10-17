@@ -185,6 +185,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/FreeCheckersMetaFreeTest.cpp
                ${TestDir}/TestFramework/FunctionFreeDiagnostics.cpp
                ${TestDir}/TestFramework/IndividualTestPathsFreeTest.cpp
+               ${TestDir}/TestFramework/InstabilityAnalysisFreeTest.cpp
                ${TestDir}/TestFramework/MaterialsUpdaterFreeTest.cpp
                ${TestDir}/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyTestDiagnostics.cpp
