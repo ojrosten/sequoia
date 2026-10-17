@@ -14,6 +14,7 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
+#include <chrono>
 #include <format>
 #include <filesystem>
 #include <optional>
@@ -48,6 +49,29 @@ namespace sequoia::testing
       std::ostringstream os{};
       os << std::boolalpha << val;
       return os.str();
+    }
+  };
+
+  /** \brief Serializes a `std::chrono::duration` as its count followed by its
+             units suffix.
+
+      By the C++ standard, streaming a duration streams its count, and
+      formatting a duration without a format specification streams the
+      duration. So a duration whose count cannot be streamed can be neither
+      streamed nor formatted without a format specification, even when
+      `std::formattable` holds for it.
+      libc++'s `std::filesystem::file_time_type` counts in an `__int128`,
+      which libc++ cannot stream.
+   */
+  template<class Rep, class Period>
+    requires (!serializable_to<Rep, std::stringstream>) && std::formattable<Rep, char>
+  struct serializer<std::chrono::duration<Rep, Period>>
+  {
+    [[nodiscard]]
+    static std::string make(const std::chrono::duration<Rep, Period>& d)
+    {
+      // The units suffix depends on the period alone
+      return std::format("{}{:%q}", d.count(), std::chrono::duration<long long, Period>{});
     }
   };
 

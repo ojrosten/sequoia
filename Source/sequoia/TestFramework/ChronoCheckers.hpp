@@ -20,10 +20,17 @@
 
 namespace sequoia::testing
 {
-  /** \brief Compares instance of `std::chrono::time_point`
+  /** \brief Compares instances of `std::chrono::time_point` by their times
+             since their clock's epoch, in the time point's own duration.
 
-      For the advice to be invoked, `tutor` must be constructed by a function object
-      with an overload `operator()(std::chrono::nanoseconds, std::chrono::nanoseconds)`.
+      An advisor receives the obtained and predicted times since the clock's
+      epoch. An advisor whose only call operator takes
+      `std::chrono::nanoseconds` is also used when
+      `std::common_type_t<std::chrono::nanoseconds, Duration>` is
+      `std::chrono::nanoseconds`. Converting a time more than
+      about 292 years from the epoch to nanoseconds overflows. Under MSVC,
+      `std::chrono::file_clock`'s epoch is 1601, so converting any
+      present-day instance of a `std::filesystem::file_time_type` overflows.
    */
 
   template<class Clock, class Duration>
@@ -32,14 +39,13 @@ namespace sequoia::testing
     using type = std::chrono::time_point<Clock, Duration>;
 
     template<test_mode Mode, class Advisor>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
+    static void test(equality_check_t,
+                     test_logger<Mode>& logger,
+                     const type& obtained,
+                     const type& prediction,
+                     const tutor<Advisor>& advisor)
     {
-      using ns = std::chrono::nanoseconds;
-      check(equality,
-            "Time since epoch",
-            logger,
-            std::chrono::duration_cast<ns>(obtained.time_since_epoch()),
-            std::chrono::duration_cast<ns>(prediction.time_since_epoch()), advisor);
+      check(equality, "Time since epoch", logger, obtained.time_since_epoch(), prediction.time_since_epoch(), advisor);
     }
   };
 }

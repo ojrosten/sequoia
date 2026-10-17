@@ -1,15 +1,31 @@
 False Negative Failure:
-Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 44
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 62
 
 [std::chrono::duration<long long, std::ratio<1, 1> >]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 47
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 65
 Time point
 
 [std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<long long, std::ratio<1, 1000000000> > >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 66
+Time point beyond the range of a count of nanoseconds
+
+[std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<long long, std::ratio<1, 1> > >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 76
+A file time's duration prints as its count followed by its units suffix
+
+[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 
 =======================================
 
