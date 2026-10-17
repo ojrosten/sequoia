@@ -440,7 +440,7 @@ namespace sequoia::testing
     constexpr std::chrono::milliseconds sleep_duration_for_overlap_checks{10};
 
     /** The sleep of each slow test in a run timed by a speed-up check. */
-    constexpr std::chrono::milliseconds sleep_duration_for_speedup_checks{5};
+    constexpr std::chrono::milliseconds sleep_duration_for_speedup_checks{20};
 
     /** Runs the slow tests with the command line `arguments`, which begins
         with the fake project's executable, each test sleeping for

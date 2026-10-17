@@ -18,6 +18,11 @@ namespace sequoia::testing
   public:
     using free_test::free_test;
 
+    /** Serial, since other tests running concurrently inflate the durations
+        which its checks bound
+     */
+    using parallelizable_type = std::false_type;
+
     [[nodiscard]]
     static std::filesystem::path source_file();
 
