@@ -115,14 +115,14 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        precise_sleep_for(execution_sleep);
+        precise_sleep_for(std::chrono::duration_cast<std::chrono::nanoseconds>(execution_sleep));
         check("Slept", true);
       }
 
       [[nodiscard]]
       log_summary summarize(duration delta) const
       {
-        precise_sleep_for(summarization_sleep);
+        precise_sleep_for(std::chrono::duration_cast<std::chrono::nanoseconds>(summarization_sleep));
         return free_test::summarize(delta);
       }
     protected:

@@ -62,8 +62,10 @@ namespace sequoia
       /** \brief Sleeps until `deadline` on a kqueue timer with
                  `NOTE_CRITICAL`.
 
-          \returns false if the kqueue fails, which it may do before
-          `deadline`.
+          The kernel may defer the wake-up of an ordinary sleep, to coalesce
+          it with other timers, by a quarter of the sleep's length or more.
+
+          \returns false, possibly before `deadline`, if the kqueue fails.
        */
       [[nodiscard]]
       bool critical_timer_sleep_until(std::chrono::steady_clock::time_point deadline)
@@ -175,7 +177,9 @@ namespace sequoia
       return;
 
     #ifdef __APPLE__
-      const auto deadline{std::chrono::steady_clock::now() + duration};
+      using clock = std::chrono::steady_clock;
+      const auto now{clock::now()};
+      const auto deadline{duration < clock::time_point::max() - now ? now + duration : clock::time_point::max()};
       if(critical_timer_sleep_until(deadline))
         return;
 

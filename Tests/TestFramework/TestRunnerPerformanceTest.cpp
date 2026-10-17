@@ -130,7 +130,6 @@ namespace sequoia::testing
 
       static void clear_execution_intervals() noexcept { st_ExecutionIntervals = {}; }
 
-      /** Sets the duration for which each slow test sleeps. */
       static void set_sleep_duration(std::chrono::milliseconds duration) noexcept { st_SleepDuration = duration; }
     protected:
       ~slow_test_base() = default;
@@ -443,7 +442,8 @@ namespace sequoia::testing
     /** The sleep of each slow test in a run timed by a speed-up check. */
     constexpr std::chrono::milliseconds sleep_duration_for_speedup_checks{5};
 
-    /** Runs the slow tests with `arguments`, each test sleeping for
+    /** Runs the slow tests with the command line `arguments`, which begins
+        with the fake project's executable, each test sleeping for
         `sleep_duration`.
 
         \throws std::runtime_error if the run does not succeed
@@ -589,8 +589,7 @@ namespace sequoia::testing
 
   /** Checks the speed-up of a run of the slow tests with `modeArguments`
       over a serial run. Each run's baseline is a run in the same mode in
-      which the tests do not sleep, so the speed-up excludes the runner's
-      costs which do not depend on the tests' durations.
+      which the tests do not sleep.
    */
   void test_runner_performance_test::check_speedup_over_serial_execution(std::string_view description,
                                                                          std::vector<std::string> modeArguments,
