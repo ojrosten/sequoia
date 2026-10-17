@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/TestFramework/TestLogger.hpp"
-#include "sequoia/TestFramework/CheckSeparator.hpp"
+#include "sequoia/TestFramework/SeparatorAfterCheck.hpp"
 
 #include <format>
 #include <fstream>
@@ -60,7 +60,7 @@ namespace sequoia::testing
       if(!file.empty())
       {
         if(std::ofstream of{file, std::ios_base::app})
-          of << check_separator;
+          of << separator_after_check;
       }
     }
 

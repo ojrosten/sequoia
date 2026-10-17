@@ -40,7 +40,7 @@ namespace sequoia::testing
       std::string dump{};
       for(const auto check : checks)
       {
-        dump.append(std::format("{}\n{}", check, check_separator));
+        dump.append(std::format("{}\n{}", check, separator_after_check));
       }
 
       return dump;

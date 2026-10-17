@@ -64,15 +64,15 @@ namespace sequoia::testing
       predictive_materials() / "MeasuredValuesAnalysis.txt"
     );
 
-    write_to_file(working_materials() / "MeasuredValuesUnprojectedAnalysis.txt",
+    write_to_file(working_materials() / "MeasuredValuesIdentityProjectionAnalysis.txt",
                   instability_analysis(working_materials() / "MeasuredValues", 2, identity_projection),
                   std::ios_base::binary);
 
     check(
       equivalence,
       "Outputs which differ only in measurements, compared under the identity projection",
-      working_materials() / "MeasuredValuesUnprojectedAnalysis.txt",
-      predictive_materials() / "MeasuredValuesUnprojectedAnalysis.txt"
+      working_materials() / "MeasuredValuesIdentityProjectionAnalysis.txt",
+      predictive_materials() / "MeasuredValuesIdentityProjectionAnalysis.txt"
     );
 
     write_to_file(working_materials() / "VerdictsAnalysis.txt",
