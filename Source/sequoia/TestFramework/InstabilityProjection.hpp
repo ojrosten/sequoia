@@ -16,11 +16,13 @@
 
 namespace sequoia::testing
 {
-  /** \brief Returns `message` in the form in which a search for instabilities
-             compares failures across runs.
+  /** \brief Returns `message` with every measurement in its summary lines set
+             to zero.
 
-      The form is `message` as returned by `text_with_zeroed_measurements`,
-      with `attempt_count_stability::fluctuating`.
+      Measurements and summary lines are as defined by
+      `text_with_zeroed_measurements`. The number of trials and the attempt
+      are among the values set to zero, since they can differ from run to
+      run.
    */
   [[nodiscard]]
   std::string instability_projection(std::string_view message);

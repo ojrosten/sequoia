@@ -14,8 +14,13 @@ namespace sequoia::testing
 {
   namespace
   {
-    constexpr auto zeroing_projection {[](std::string_view message) { return instability_projection(message); }};
-    constexpr auto identity_projection{[](std::string_view message) { return std::string{message}; }};
+    constexpr auto measurement_zeroing_projection{
+      [](std::string_view message) { return instability_projection(message); }
+    };
+
+    constexpr auto identity_projection{
+      [](std::string_view message) { return std::string{message}; }
+    };
   }
 
   [[nodiscard]]
@@ -28,7 +33,7 @@ namespace sequoia::testing
   {
     auto analyseMalformed{
       [this]() {
-        return instability_analysis(working_materials() / "Malformed", 2, zeroing_projection);
+        return instability_analysis(working_materials() / "Malformed", 2, measurement_zeroing_projection);
       }
     };
     check_exception_thrown<std::runtime_error>("A malformed file of failures, named by the instability analysis",
@@ -38,7 +43,7 @@ namespace sequoia::testing
   void instability_analysis_free_test::check_instability_analysis()
   {
     write_to_file(working_materials() / "StableAnalysis.txt",
-                  instability_analysis(working_materials() / "Stable", 2, zeroing_projection),
+                  instability_analysis(working_materials() / "Stable", 2, measurement_zeroing_projection),
                   std::ios_base::binary);
 
     check(
@@ -49,7 +54,7 @@ namespace sequoia::testing
     );
 
     write_to_file(working_materials() / "MeasuredValuesAnalysis.txt",
-                  instability_analysis(working_materials() / "MeasuredValues", 2, zeroing_projection),
+                  instability_analysis(working_materials() / "MeasuredValues", 2, measurement_zeroing_projection),
                   std::ios_base::binary);
 
     check(
@@ -71,7 +76,7 @@ namespace sequoia::testing
     );
 
     write_to_file(working_materials() / "VerdictsAnalysis.txt",
-                  instability_analysis(working_materials() / "Verdicts", 2, zeroing_projection),
+                  instability_analysis(working_materials() / "Verdicts", 2, measurement_zeroing_projection),
                   std::ios_base::binary);
 
     check(
@@ -84,7 +89,7 @@ namespace sequoia::testing
     write_to_file(working_materials() / "VerdictsAfterMeasuredValuesAnalysis.txt",
                   instability_analysis(working_materials() / "VerdictsAfterMeasuredValues",
                                        3,
-                                       zeroing_projection),
+                                       measurement_zeroing_projection),
                   std::ios_base::binary);
 
     check(

@@ -31,13 +31,13 @@ namespace sequoia::testing
     check("Just under twice the target", !is_coarse_sleep(floating_point_milliseconds{9.9}, target));
     check("A 1 ms timer resolution in effect", !is_coarse_sleep(floating_point_milliseconds{5.4}, target));
 
-    write_to_file(working_materials() /= "CoarseSleepMessage.txt",
+    write_to_file(working_materials() / "CoarseSleepMessage.txt",
                   coarse_sleep_message(floating_point_milliseconds{15.2}, target),
                   std::ios_base::out);
 
     check(equivalence,
           "Message",
-          working_materials() /= "CoarseSleepMessage.txt",
-          predictive_materials() /= "CoarseSleepMessage.txt");
+          working_materials() / "CoarseSleepMessage.txt",
+          predictive_materials() / "CoarseSleepMessage.txt");
   }
 }

@@ -16,5 +16,5 @@
 namespace sequoia::testing
 {
   /** \brief The separator which ends each top-level check in a dump. */
-  constexpr std::string_view check_separator{"\n=======================================\n\n"};
+  inline constexpr std::string_view check_separator{"\n=======================================\n\n"};
 }
