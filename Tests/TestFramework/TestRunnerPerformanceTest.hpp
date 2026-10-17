@@ -10,6 +10,7 @@
 /** \file */
 
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "sequoia/PlatformSpecific/Helpers.hpp"
 
 namespace sequoia::testing
 {

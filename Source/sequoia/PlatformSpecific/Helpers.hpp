@@ -11,8 +11,28 @@
     \brief Platform-dependent utilities
  */
 
+#include <chrono>
+
 namespace sequoia
 {
+  /** \brief Sleeps for at least `duration`, as measured by
+             `std::chrono::steady_clock`, overshooting as little as the
+             platform allows.
+
+      On macOS the sleep waits on a kqueue timer with `NOTE_CRITICAL`, which
+      the kernel does not defer to coalesce it with other timers. The kernel
+      may defer an ordinary sleep by a quarter of its length, or more. If the
+      kqueue fails, the rest of the sleep is a `std::this_thread::sleep_for`.
+      Elsewhere the whole sleep is a `std::this_thread::sleep_for`.
+   */
+  void precise_sleep_for(std::chrono::nanoseconds duration);
+
+  template<class Rep, class Period>
+  void precise_sleep_for(std::chrono::duration<Rep, Period> duration)
+  {
+    precise_sleep_for(std::chrono::ceil<std::chrono::nanoseconds>(duration));
+  }
+
   /** \brief Sets the timer resolution of the process to the finest that Windows offers, until the process exits.
 
       If Windows refuses, nothing changes. Later calls do nothing. On other platforms, the function does nothing.

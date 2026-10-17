@@ -226,7 +226,7 @@ namespace sequoia::testing
       {
         using namespace std::chrono_literals;
         const auto start{std::chrono::steady_clock::now()};
-        std::this_thread::sleep_for(25ms);
+        precise_sleep_for(25ms);
         st_ExecutionIntervals[index] = {start, std::chrono::steady_clock::now()};
         check(equality, "Integer equality", index, index);
       }
@@ -324,14 +324,14 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        std::this_thread::sleep_for(execution_sleep);
+        precise_sleep_for(execution_sleep);
         check("Slept", true);
       }
 
       [[nodiscard]]
       log_summary summarize(duration delta) const
       {
-        std::this_thread::sleep_for(summarization_sleep);
+        precise_sleep_for(summarization_sleep);
         return free_test::summarize(delta);
       }
     protected:
