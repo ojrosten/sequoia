@@ -8,21 +8,16 @@
 #pragma once
 
 /** \file
-    \brief The form of a dump of a test run.
+    \brief The separator which ends each top-level check in a dump.
  */
 
 #include <string_view>
 
 namespace sequoia::testing
 {
-  /** \brief The form of a dump of a test run.
-
-      A top-level check is written as its message, then the message of every
-      check nested in it, each followed by a newline, then the separator. An
-      empty message is not written; the separator still is.
-   */
   namespace dump_format
   {
+    /** \brief The separator which ends each top-level check in a dump. */
     constexpr std::string_view check_separator{"\n=======================================\n\n"};
   }
 }
