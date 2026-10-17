@@ -14,7 +14,6 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
-#include "sequoia/TestFramework/ChronoCheckers.hpp"
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
 #include <deque>
