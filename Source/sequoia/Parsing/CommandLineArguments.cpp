@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/Parsing/CommandLineMessages.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
@@ -27,31 +28,6 @@ namespace sequoia::parsing::commandline
     bool is_help_request(std::string_view arg) noexcept
     {
       return std::ranges::contains(help_requests, arg);
-    }
-
-    [[nodiscard]]
-    std::string make(std::string_view type, std::string_view message, const indentation& indent)
-    {
-      return std::format("{}{}: {}", std::string_view{indent}, type, message);
-    }
-
-    [[nodiscard]]
-    std::string make(std::string_view type, std::initializer_list<std::string_view> messages, const indentation& indent)
-    {
-      if(std::ranges::empty(messages)) return {};
-
-      // Continuation lines start beneath the first message, past "<type>: "
-      const auto continuationIndent{indent + indentation{std::string(type.size() + 2, ' ')}};
-
-      auto appendContinuation{
-        [&continuationIndent](std::string mess, std::string_view message) -> std::string {
-          append_indented(mess, message, continuationIndent);
-          return mess;
-        }
-      };
-
-      return std::ranges::fold_left(messages | std::views::drop(1), make(type, *messages.begin(), indent), appendContinuation)
-               .append(2, '\n');
     }
 
     template<std::ranges::input_range Strings>
@@ -231,30 +207,6 @@ namespace sequoia::parsing::commandline
 
       return sections;
     }
-  }
-
-  [[nodiscard]]
-  std::string error(std::string_view message, indentation indent)
-  {
-    return make("Error", message, indent);
-  }
-
-  [[nodiscard]]
-  std::string error(std::initializer_list<std::string_view> messages, indentation indent)
-  {
-    return make("Error", messages, indent);
-  }
-
-  [[nodiscard]]
-  std::string warning(std::string_view message, indentation indent)
-  {
-    return make("Warning", message, indent);
-  }
-
-  [[nodiscard]]
-  std::string warning(std::initializer_list<std::string_view> messages, indentation indent)
-  {
-    return make("Warning", messages, indent);
   }
 
   argument_parser::argument_parser(int argc, char** argv, const options_forest& options)

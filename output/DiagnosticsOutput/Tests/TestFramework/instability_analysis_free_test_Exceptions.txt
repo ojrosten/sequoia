@@ -1,0 +1,9 @@
+Tests/TestFramework/InstabilityAnalysisFreeTest.cpp, Line 30
+A malformed file of failures, named by the instability analysis
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read the failures in output/TestsTemporaryData/TestFramework/InstabilityAnalysisFreeTest/instability_analysis_free_test/WorkingCopy/Malformed/Output_0.txt: Expected 9 characters but the stream ended after 4
+
+=======================================
+

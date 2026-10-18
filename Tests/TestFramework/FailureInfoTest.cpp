@@ -7,7 +7,7 @@
 
 #include "FailureInfoTest.hpp"
 
-#include "sequoia/TestFramework/TestRunner.hpp"
+#include "sequoia/Streaming/Streaming.hpp"
 
 namespace sequoia::testing
 {
@@ -41,16 +41,6 @@ namespace sequoia::testing
                                                readFailureInfo("check: 1\nlength: 5\nabc\n"));
     check_exception_thrown<std::runtime_error>("A message longer than its length",
                                                readFailureInfo("check: 1\nlength: 3\nabcd\n"));
-
-    auto instabilityProjection{[](std::string_view message) { return instability_projection(message); }};
-
-    auto analyseMalformed{
-      [this, instabilityProjection]() {
-        return instability_analysis(working_materials() / "Malformed", 2, instabilityProjection);
-      }
-    };
-    check_exception_thrown<std::runtime_error>("A malformed file of failures, named by the instability analysis",
-                                               analyseMalformed);
   }
 
   void failure_info_test::check_failure_info()
@@ -108,70 +98,6 @@ namespace sequoia::testing
     check(equality, "A read at the end of a stream leaves the failure as it was", info, failure_info{1, "foo"});
   }
 
-  void failure_info_test::check_instability_analysis()
-  {
-    auto instabilityProjection{[](std::string_view message) { return instability_projection(message); }};
-
-    write_to_file(working_materials() / "StableAnalysis.txt",
-                  instability_analysis(working_materials() / "Stable", 2, instabilityProjection),
-                  std::ios_base::binary);
-
-    check(
-      equivalence,
-      "Outputs which agree, beside a file which is not a .txt file",
-      working_materials() / "StableAnalysis.txt",
-      predictive_materials() / "StableAnalysis.txt"
-    );
-
-    write_to_file(working_materials() / "MeasuredValuesAnalysis.txt",
-                  instability_analysis(working_materials() / "MeasuredValues", 2, instabilityProjection),
-                  std::ios_base::binary);
-
-    check(
-      equivalence,
-      "Outputs which differ only in measurements",
-      working_materials() / "MeasuredValuesAnalysis.txt",
-      predictive_materials() / "MeasuredValuesAnalysis.txt"
-    );
-
-    auto unchanged{[](std::string_view message) { return std::string{message}; }};
-
-    write_to_file(working_materials() / "MeasuredValuesUnprojectedAnalysis.txt",
-                  instability_analysis(working_materials() / "MeasuredValues", 2, unchanged),
-                  std::ios_base::binary);
-
-    check(
-      equivalence,
-      "Outputs which differ only in measurements, compared with no projection",
-      working_materials() / "MeasuredValuesUnprojectedAnalysis.txt",
-      predictive_materials() / "MeasuredValuesUnprojectedAnalysis.txt"
-    );
-
-    write_to_file(working_materials() / "VerdictsAnalysis.txt",
-                  instability_analysis(working_materials() / "Verdicts", 2, instabilityProjection),
-                  std::ios_base::binary);
-
-    check(
-      equivalence,
-      "Outputs which differ in a verdict, as well as in measurements",
-      working_materials() / "VerdictsAnalysis.txt",
-      predictive_materials() / "VerdictsAnalysis.txt"
-    );
-
-    write_to_file(working_materials() / "VerdictsAfterMeasuredValuesAnalysis.txt",
-                  instability_analysis(working_materials() / "VerdictsAfterMeasuredValues",
-                                       3,
-                                       instabilityProjection),
-                  std::ios_base::binary);
-
-    check(
-      equivalence,
-      "Outputs which differ in a verdict, after a failure which differs only in measurements",
-      working_materials() / "VerdictsAfterMeasuredValuesAnalysis.txt",
-      predictive_materials() / "VerdictsAfterMeasuredValuesAnalysis.txt"
-    );
-  }
-
   void failure_info_test::check_written_format()
   {
     std::stringstream s{};
@@ -192,7 +118,6 @@ namespace sequoia::testing
     check_failure_info();
     check_round_trip();
     check_end_of_stream();
-    check_instability_analysis();
     check_written_format();
   }
 }

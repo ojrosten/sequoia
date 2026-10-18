@@ -9,6 +9,7 @@
 
 /** \file */
 
+#include "sequoia/TestFramework/CMakeCache.hpp"
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 
 #include <vector>

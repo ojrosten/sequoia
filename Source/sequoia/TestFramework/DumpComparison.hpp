@@ -23,16 +23,6 @@
 
 namespace sequoia::testing
 {
-  /** \brief The form of a dump, shared by the logger which writes one and the reader.
-
-      A top-level check is its message, then the message of every check nested in it, one per
-      line, then the separator. An empty message writes nothing.
-   */
-  namespace dump_format
-  {
-    constexpr std::string_view check_separator{"\n=======================================\n\n"};
-  }
-
   /** \brief The checks in one dump and not the other.
 
       A check is identified by everything the dump records of it but the line numbers of its

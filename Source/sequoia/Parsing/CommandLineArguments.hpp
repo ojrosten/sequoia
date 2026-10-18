@@ -20,7 +20,6 @@
 
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
-#include "sequoia/TextProcessing/Indent.hpp"
 
 #include <vector>
 #include <string>
@@ -132,18 +131,6 @@ namespace sequoia::parsing::commandline
     operations_forest operations;
     std::string help{};
   };
-
-  [[nodiscard]]
-  std::string error(std::string_view message, indentation indent=indentation{"  "});
-
-  [[nodiscard]]
-  std::string error(std::initializer_list<std::string_view> messages, indentation indent=indentation{"  "});
-
-  [[nodiscard]]
-  std::string warning(std::string_view message, indentation indent=indentation{"  "});
-
-  [[nodiscard]]
-  std::string warning(std::initializer_list<std::string_view> messages, indentation indent=indentation{"  "});
 
   /** \brief Parses the command line arguments against a forest of options, building the \ref sequoia::parsing::commandline::operation "operation" forest.
 

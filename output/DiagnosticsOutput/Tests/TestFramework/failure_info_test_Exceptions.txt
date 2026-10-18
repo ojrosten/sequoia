@@ -52,12 +52,3 @@ Expected a line break after 3 characters
 
 =======================================
 
-Tests/TestFramework/FailureInfoTest.cpp, Line 52
-A malformed file of failures, named by the instability analysis
-
-Expected Exception Type:
-[std::runtime_error]
-Unable to read the failures in output/TestsTemporaryData/TestFramework/FailureInfoTest/failure_info_test/WorkingCopy/Malformed/Output_0.txt: Expected 9 characters but the stream ended after 4
-
-=======================================
-

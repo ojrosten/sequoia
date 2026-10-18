@@ -12,7 +12,7 @@
 #include "sequoia/Maths/Arithmetic/ArithmeticCasts.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
-#include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/Parsing/CommandLineMessages.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <algorithm>
