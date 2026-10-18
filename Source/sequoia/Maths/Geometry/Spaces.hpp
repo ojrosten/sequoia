@@ -11,6 +11,20 @@
     @brief Abstractions pertaining to vector spaces, affine spaces and their
            generalizations.
 
+    Vector space are ubiquitous in mathematics, physics and very many related
+    disciplines. Supreficially, they are easy to handle in a programming
+    language such as C++; however, to do so in a way which reflects the
+    mathematical struture as faithfully as possible is surprisingly subtle.
+    Moreover, a vector space is just one of a family of mathematical structures 
+    which, though not necesarily quite as familiar, are just as prevalent.
+    Affine spaces are like vector spaces without a distinguished origin.
+    Convex spaces support linear interpolation between pairs of points but,
+    unlike affine spaces, may have a boundary. A disc with a slice removed
+    can be embedded in a convex or affine space but is neither. In this section
+    we will elucidate the various mathematical structures, arriving at something
+    sufficiently general to represent the cases of physical interest with
+    which this librarh is primarily concerned.
+    
     Representing abstract algebraic structures in C++ presents an interesting
     challenge. At root, the fundamental abstraction is a set; indeed, a vector
     space is nothing but a set with some additional structure defined. However,
@@ -251,8 +265,7 @@
     convex space is a partial M-torsor for which, whenever two points belong
     to the space, so do the points lying between them. Intuitively, this
     corresponds to being able to linearly interpolate (lerp): given two points
-    p and q
-    and a parameter t in the range [0, 1], we may construct intermediate
+    p and q and a parameter t in the range [0, 1], we may construct intermediate
     points, r, using the recipe
     \f[
         r = (1 - t)p + t q.
@@ -271,8 +284,8 @@
     Therefore, we define convex spaces to be refinements of a partial
     M-torsor for which the commutative ring is an ordered field. (Note: this
     rules out the case of the dyadic rationals which satisfy both
-    conditions above; if a use case for these ever arises the framework can
-    be enhanced.)
+    conditions above but constitutes a ring but not a field; if a use case for
+    these ever arises the framework can be enhanced.)
 
     The relationships between the structures introduced above form a DAG, in
     which refinements appear below that which they refine:
@@ -291,13 +304,16 @@
     ordered field, whereas there is nothing untoward about an affine space
     over the complex numbers.
 
-    The diagram orders the structures by refinement alone, and the order in
+    The diagram orders the structures by refinement, whereas the order in
     which they must be defined runs the other way: a partial M-torsor is a
     set together with a free module acting on it, so free modules are prior
-    to everything above them here, just as vector spaces are prior to affine
-    spaces. There is no circularity: free modules and vector spaces appear as
+    to everything above them, just as vector spaces are prior to affine
+    spaces.
+    **I don't understand this!**
+    There is no circularity: free modules and vector spaces appear as
     nodes at all only because a free module is an M-affine space over itself.
 
+    **This paragraph seems dubious**
     Nor are the edges all of a kind. Most impose a condition: that the action
     is total, or that the ring is a field or an ordered field. The two edges
     descending into a free module and into a vector space are not of this
@@ -320,9 +336,9 @@
     one-dimensional interval and the associated free module of translations.
     Perhaps we represent the interval by all the `double`s in the range [0.0,
     1.0]. What happens if we start at the point 0.5 and use `operator+` to
-    perform the translation 0.5 + 1.0? We must decide, since there is no way
-    for us to stop clients from writing such an expression. Broadly speaking,
-    there are four approaches:
+    perform the translation 0.5 + 1.0? As implementers we must decide, what
+    happens since there is no way for us to stop clients from writing such an
+    expression. Broadly speaking, there are four approaches:
     -# Treat this as undefined behaviour;
 
     -# Treat the behaviour as exceptional;
@@ -341,7 +357,7 @@
     but in a sense which maps rather well onto our intuition. Since C++26, this
     precondition may be expressible in code.
 
-    @par Exceptional behaviour
+    @par Exceptional behaviour **reword this**
     Two things are in play here - the mathematics and its C++ representation -
     and it is worth being clear about which is which. A partial function is the
     same thing as a total function whose codomain has been enlarged by a single
@@ -398,7 +414,7 @@
        as a fundamental domain for this larger group rather than as a set on
        which M acts.
 
-    Of the six possibilities canvassed, only the first two - which between them
+    Of the six possibilities elucidated, only the first two - which between them
     leave the mathematics as the partial torsor - keep M acting on the set by
     translations. The absorbing state and clamping retain totality at the
     expense of the group law, while the two periodic remappings retain the
@@ -417,11 +433,11 @@
     common way by using constraints to enable or disable specific operations.
     Thus, the coordinates class template is templated on, amongst other things,
     a partial_m_torsor. To define such a space just requires introducing a
-    struct exposing a small amount of data (types and values) known at compile
-    time. These data determine whether we intend to model a vector space, a
-    free module over a commutative ring, an affine space or whatever. This is
-    sufficient for the coordinates implementation to expose the correct set of
-    operations, giving a high degree of both type safety and expressivity.
+    struct exposing a small amount of data known at compile time. These data
+    determine whether we intend to model a vector space, a free module over a
+    commutative ring, an affine space or whatever. This is  sufficient for the
+    coordinates implementation to expose the correct set of operations, giving
+    a high degree of both type safety and expressivity.
  */
 
 
@@ -445,7 +461,7 @@
 namespace sequoia::maths
 {
   /** @defgroup MathematicalStructure Structure
-      @brief Traits to indicate whether types self-identify as various algebraic structure.
+      @brief Traits to indicate whether types self-identify as various algebraic structures.
 
       As outlined in the introductory remarks, there is a crucial distinction between
       using a type to name a set e.g. `struct reals {};` and a representation of
@@ -998,19 +1014,22 @@ namespace sequoia::maths
   /** @ingroup Spaces
       @brief concept for convex spaces
 
-      Convexity is closure under linear interpolation between pairs of points.
-      Two things are required, and neither implies the other.
+      Convexity is closure under linear interpolation between pairs of points,
+      which requires the following:
 
-      First, the commutative ring must be an ordered field, so that the
+      -# The commutative ring must be an ordered field, so that the
       interpolation \f$ r = (1 - t)p + t q \f$ both makes sense and yields
       points properly between \f$ p \f$ and \f$ q \f$; see the introduction
-      for why anything weaker will not do.
+      for why anything weaker will not do. **This paragraph is weak**
 
-      Secondly, the space must be closed under that operation, which no amount
-      of reflection on the ring can establish: a partial M-torsor over the reals
-      is free to comprise, say, two disjoint intervals. Hence a space must
-      identify as convex - unless it is affine, for which the action of the free
-      module is total and closure is therefore automatic.
+      -# The space must be closed under the interpolation operation. While
+      this is automatically true of an affine space over an ordered field, it is
+      not true for a general partial M-torsor (an example of which would be two disjoint
+      intervals, or a disc with a slice removed). Therefore, a convex space which
+      is not affine must explicitly identify itself as being convex.
+
+      **We should ensure it's a hard error for a space to identify as convex
+      but for the ring not to be an ordered field**
    */
   template<class T>
   concept convex_space =    partial_m_torsor<T>
@@ -2098,7 +2117,7 @@ namespace sequoia::maths
   
   // TO DO constrain coordinates_type to hold things satisfying a coords concept?
   template<class R>
-  concept representation = std::default_initializable<R>
+  concept representation = std::default_initializable<R> //<-- looks slightly odd but is used for the implementation
                         && has_value_type_v<R>
                         && has_free_module_representation_v<R>
                         && (has_coordinates_type_v<R> || has_bounds_v<R>);
@@ -2110,7 +2129,7 @@ namespace sequoia::maths
     // TO DO not this, since the set could be anything and the rep applies to the coordinates
     // but maybe something along these lines
     // && weak_representation_for<value_type_of_t<R>, set_type_of_t<Space>>
-      && bounds_for<decltype(R::bounds_v), Space>
+    && bounds_for<decltype(R::bounds_v), Space> //<-- looks inconsistent, since representation may not define bounds_v
       && (representation_for_single_value<R, Space> || representation_for_span<R, Space>);
 
   /** @ingroup Representation
