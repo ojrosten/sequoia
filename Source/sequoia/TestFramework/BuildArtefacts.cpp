@@ -55,8 +55,7 @@ namespace sequoia::testing
       }
     };
 
-    /** Numbers files as a reader assembles a `compilations`: the file numbered `i` becomes `files[i]`
-        of the result.
+    /** Numbers files as a reader assembles a `compilations`.
 
         A file is identified by its path exactly as spelled. Two spellings of one file - `C:\a\b.cpp`
         and `C:/a/b.cpp`, a path through a symlink and its target - are two entries, so a reader must
@@ -946,12 +945,50 @@ namespace sequoia::testing
       return configuration;
     }
 
+    /** `compiled` with its files cut to those its records name, numbered in the order in which the records
+        first name them.
+     */
+    [[nodiscard]]
+    compilations with_named_files_only(compilations compiled)
+    {
+      auto& [files, records]{compiled};
+
+      std::vector<std::optional<file_index>> indexInNamedFiles(files.size());
+      std::vector<fs::path> namedFiles{};
+      auto indexOf{
+        [&](file_index i) {
+          auto& index{indexInNamedFiles[i]};
+          if(!index)
+          {
+            index = namedFiles.size();
+            namedFiles.push_back(std::move(files[i]));
+          }
+
+          return *index;
+        }
+      };
+
+      for(auto& record : records)
+      {
+        record.object_index = indexOf(record.object_index);
+        std::ranges::transform(record.input_indices, record.input_indices.begin(), indexOf);
+      }
+
+      return compilations{.files{std::move(namedFiles)}, .records{std::move(records)}};
+    }
+
     /** The compilations of a Ninja build, from the log `.ninja_deps` and the statements in `statementsFile`.
 
-        The log gives every compilation ninja has ever recorded, and is trimmed to the object files the
-        build currently has, which the statements name. Each record then has its source put first among
-        the inputs: gcc and clang report the source among a compilation's inputs, MSVC reports the headers
-        alone, and the statement names the source in either case.
+        The log gives the last compilation ninja recorded of every object it has
+        built since it last recompacted the log. Three steps follow:
+        -# The records are trimmed to the object files the build currently has,
+           which the statements name;
+        -# Each record has its source put first among its inputs: gcc and clang
+           report the source among a compilation's inputs, MSVC reports the
+           headers alone, and the statement names the source in either case;
+        -# The files are trimmed to those the remaining records name. The log
+           also holds the files of the records which later ones superseded, and
+           of the objects the build no longer has, which may no longer exist.
 
         \throws std::runtime_error if
         -# There is no log, nothing having been built;
@@ -1007,7 +1044,7 @@ namespace sequoia::testing
                       statementsFile.lexically_relative(tree.build_directory).generic_string())
         };
 
-      return compilations{.files{std::move(files).release_files()}, .records{std::move(records)}};
+      return with_named_files_only({.files{std::move(files).release_files()}, .records{std::move(records)}});
     }
 
     /** Every target's tracker-log directory in `configuration`: a `.tlog` directory whose parent is named

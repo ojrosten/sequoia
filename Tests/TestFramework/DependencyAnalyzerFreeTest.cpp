@@ -478,10 +478,22 @@ namespace sequoia::testing
       statements.append(std::format("build {}/unrelated{}: CXX_COMPILER unrelated.cpp\n",
                                     testAllObjects.directory.generic_string(),
                                     testAllObjects.extension));
-      auto logged{records};
+
+      /* The first record is superseded by the record of the same object which
+         follows it. It, and the retired object's record, each name a header of
+         a toolchain directory since removed: prune must not refuse on account
+         of a file which no current compilation reads.
+       */
+      const auto removedToolchainDirectory{fake_toolchain_header(fake).parent_path() / "RemovedVersion"};
+      std::vector<compilation_record> logged{
+        {.object{records.front().object}, .inputs{records.front().inputs.front(), removedToolchainDirectory / "chrono"}}
+      };
+      logged.insert(logged.end(), records.begin(), records.end());
       logged.push_back({.object{testAllObjects.directory
                                   / std::format("Tests/Retired/RetiredTest.cpp{}", testAllObjects.extension)},
-                        .inputs{fake / "Tests/Retired/RetiredTest.cpp", fake / "Tests/Retired/Gone.hpp"}});
+                        .inputs{fake / "Tests/Retired/RetiredTest.cpp",
+                                fake / "Tests/Retired/Gone.hpp",
+                                removedToolchainDirectory / "ratio"}});
 
       // MSVC reports the headers it read but not the source, which the statement supplies
       if(system == build_system::ninja_with_msvc)
@@ -723,6 +735,17 @@ namespace sequoia::testing
       "A file the build read cannot be read",
       [&projPaths, &orphan]() {
         const hidden_for_scope hidden{orphan};
+        return tests_to_run(projPaths);
+      },
+      normalise_out_of_date_message
+    );
+
+    // A toolchain header a current compilation reads is still refused when unreadable: the files no current
+    // compilation reads are dropped for being unread, not for being missing
+    check_exception_thrown<std::runtime_error>(
+      "A toolchain header the build read cannot be read",
+      [&projPaths, &toolchainHeader]() {
+        const hidden_for_scope hidden{toolchainHeader};
         return tests_to_run(projPaths);
       },
       normalise_out_of_date_message

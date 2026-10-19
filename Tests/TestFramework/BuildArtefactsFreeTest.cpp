@@ -63,6 +63,17 @@ namespace sequoia::testing
               {"a.o", {"a.cpp", "/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/SDKSettings.json", "a.h"}},
               {"c.o", {"c.cpp", "/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/SDKSettings.json"}}
             });
+
+      // `sub dir/b.h`, which only the superseded record names, has gone; the order pinned is our choice
+      check(equality,
+            "A log ninja wrote: the table holds only the files the remaining records name",
+            read_compilations(built, {}).files,
+            std::vector<fs::path>{"a.o",
+                                  "a.cpp",
+                                  "/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/SDKSettings.json",
+                                  "a.h",
+                                  "c.o",
+                                  "c.cpp"});
     }
 
     {
@@ -422,6 +433,10 @@ namespace sequoia::testing
             "A source which wrote no object is not a compilation",
             expand(read_compilations(tree, configuration)),
             std::vector<compilation_record>{});
+      check(equality,
+            "The table holds none of the files of a source which wrote no object",
+            read_compilations(tree, configuration).files,
+            std::vector<fs::path>{});
     }
   }
 
@@ -513,6 +528,14 @@ namespace sequoia::testing
               {"CMakeFiles/x.dir/b.cpp.o", {"/proj/b.cpp", "/proj/b.h"}},
               {"CMakeFiles/x.dir/c.cpp.o", {"/proj/c.cpp", "/proj/c.h"}}
             });
+
+      // The order pinned is the implementation's choice
+      check(equality,
+            "The table holds no file which only the retired object's record names",
+            read_compilations(tree, {}).files,
+            std::vector<fs::path>{"CMakeFiles/x.dir/a.cpp.o", "/proj/a.cpp", "/proj/a.h",
+                                  "CMakeFiles/x.dir/b.cpp.o", "/proj/b.cpp", "/proj/b.h",
+                                  "CMakeFiles/x.dir/c.cpp.o", "/proj/c.cpp", "/proj/c.h"});
 
       write_to_file(root / "build.ninja",
                     "build CMakeFiles/x.dir/a.cpp.o CXX_COMPILER /proj/a.cpp\n",
