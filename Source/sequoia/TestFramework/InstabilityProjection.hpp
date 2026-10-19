@@ -8,16 +8,22 @@
 #pragma once
 
 /** \file
-    \brief The separator which ends each top-level check in a dump.
+    \brief The form in which a search for instabilities compares failures.
  */
 
+#include <string>
 #include <string_view>
 
 namespace sequoia::testing
 {
-  namespace dump_format
-  {
-    /** \brief The separator which ends each top-level check in a dump. */
-    constexpr std::string_view check_separator{"\n=======================================\n\n"};
-  }
+  /** \brief Returns `message` with every measurement in its summary lines set
+             to zero.
+
+      Measurements and summary lines are as defined by
+      `text_with_zeroed_measurements`. The number of trials and the attempt
+      are among the values set to zero, since they can differ from run to
+      run.
+   */
+  [[nodiscard]]
+  std::string instability_projection(std::string_view message);
 }

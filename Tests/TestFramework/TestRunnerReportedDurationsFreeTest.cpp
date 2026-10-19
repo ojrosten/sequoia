@@ -8,6 +8,7 @@
 #include "TestRunnerReportedDurationsFreeTest.hpp"
 #include "TestRunnerTestingUtilities.hpp"
 
+#include "sequoia/TestFramework/FloatingPointDurations.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
@@ -26,8 +27,6 @@ namespace sequoia::testing
 
   namespace
   {
-    using fractional_milliseconds = std::chrono::duration<double, std::milli>;
-
     /** Reads `printedDuration`, a duration as printed by
         `stringify_duration`.
 
@@ -38,16 +37,16 @@ namespace sequoia::testing
         \throws std::runtime_error if none does
      */
     [[nodiscard]]
-    fractional_milliseconds read_printed_duration(std::string_view printedDuration)
+    double_precision_milliseconds read_printed_duration(std::string_view printedDuration)
     {
-      constexpr std::array<fractional_milliseconds, 4> units{
+      constexpr std::array<double_precision_milliseconds, 4> units{
         std::chrono::seconds{1}, std::chrono::milliseconds{1}, std::chrono::microseconds{1}, std::chrono::nanoseconds{1}
       };
 
-      constexpr fractional_milliseconds representableLimit{log_summary::duration::max()};
+      constexpr double_precision_milliseconds representableLimit{log_summary::duration::max()};
 
       auto reprintsAsPrinted{
-        [printedDuration, representableLimit](fractional_milliseconds candidate) {
+        [printedDuration, representableLimit](double_precision_milliseconds candidate) {
           if(!(std::chrono::abs(candidate) < representableLimit))
             return false;
 
@@ -59,7 +58,7 @@ namespace sequoia::testing
       if(const auto optNumber{extract_numbers_from<double, 1>(printedDuration)})
       {
         const auto [count]{*optNumber};
-        auto candidateIn{[count](fractional_milliseconds unit) { return count * unit; }};
+        auto candidateIn{[count](double_precision_milliseconds unit) { return count * unit; }};
         auto candidates{units | std::views::transform(candidateIn)};
         if(const auto found{std::ranges::find_if(candidates, reprintsAsPrinted)}; found != candidates.end())
           return *found;
@@ -72,7 +71,7 @@ namespace sequoia::testing
         `printedOutput`.
      */
     [[nodiscard]]
-    fractional_milliseconds get_grand_total(std::string_view printedOutput, std::string_view label)
+    double_precision_milliseconds get_grand_total(std::string_view printedOutput, std::string_view label)
     {
       const auto pattern{std::format("[{}: ", label)};
       if(const auto pos{printedOutput.find(pattern, printedOutput.find("Grand Totals"))}; pos != std::string_view::npos)
@@ -86,17 +85,17 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    fractional_milliseconds in_milliseconds(std::chrono::microseconds duration)
+    double_precision_milliseconds in_milliseconds(std::chrono::microseconds duration)
     {
       return duration;
     }
 
-    constexpr fractional_milliseconds execution_sleep{20}, summarization_sleep{60};
+    constexpr double_precision_milliseconds execution_sleep{20}, summarization_sleep{60};
 
     /** The runner prints a duration to three significant figures, so it
         prints a duration of less than a second to within half a millisecond.
      */
-    constexpr fractional_milliseconds printed_duration_tolerance{1};
+    constexpr double_precision_milliseconds printed_duration_tolerance{1};
 
     /** Sleeps while its tests run, and sleeps again while the runner summarizes it. The runner summarizes a test after
         its tests have run, so the first sleep falls in the test's execution duration and the second in the runner's
@@ -271,7 +270,7 @@ namespace sequoia::testing
 
     const auto executionDuration{get_grand_total(outputStream.view(), "Execution Time")};
     auto distanceFromExecutionDuration{
-      [executionDuration, firstDuration](fractional_milliseconds paired){
+      [executionDuration, firstDuration](double_precision_milliseconds paired){
         return std::chrono::abs(executionDuration - (firstDuration + paired));
       }
     };
