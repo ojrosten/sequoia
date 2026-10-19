@@ -217,6 +217,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/TestRunnerPerformanceTest.cpp
                ${TestDir}/TestFramework/TestRunnerProjectCreation.cpp
                ${TestDir}/TestFramework/TestRunnerProjectFiles.cpp
+               ${TestDir}/TestFramework/TestRunnerReportedDurationsFreeTest.cpp
                ${TestDir}/TestFramework/TestRunnerTest.cpp
                ${TestDir}/TestFramework/TestRunnerTestCreation.cpp
                ${TestDir}/TestFramework/VersionedOutputFreeTest.cpp

@@ -9,17 +9,12 @@
 #include "StaticPriorityQueueTestingUtilities.hpp"
 
 #include "sequoia/Core/DataStructures/StaticPriorityQueue.hpp"
+#include "sequoia/Core/Meta/TypeTraits.hpp"
+
+#include <memory>
 
 namespace sequoia::testing
 {
-  namespace
-  {
-    template<auto Operation>
-    inline constexpr bool invocation_is_constant_expression_v{
-      requires { typename std::bool_constant<(Operation(), true)>; }
-    };
-  }
-
   [[nodiscard]]
   std::filesystem::path test_static_priority_queue::source_file()
   {
@@ -28,12 +23,21 @@ namespace sequoia::testing
 
   void test_static_priority_queue::run_tests()
   {
+    check_moves_do_not_copy();
     check_top_and_pop_in_constant_evaluation();
     check_depth_0();
     check_depth_1();
     check_depth_2();
     check_depth_3();
     check_construction_from_list_shorter_than_depth();
+  }
+
+  void test_static_priority_queue::check_moves_do_not_copy()
+  {
+    using queue_t = data_structures::static_priority_queue<std::unique_ptr<int>, 1>;
+
+    STATIC_CHECK(std::is_move_constructible_v<queue_t>);
+    STATIC_CHECK(std::is_move_assignable_v<queue_t>);
   }
 
   /** The queue value-initialises the slots beyond the list, so they hold zero.
@@ -79,10 +83,10 @@ namespace sequoia::testing
 
     check(equality, "Equality of null queues", t, s);
 
-    check_exception_thrown<std::logic_error>("Can't push to null queue", [&t]() { t.push(1); });
+    check_exception_thrown<std::logic_error>("Can't push to null queue"           , [&t]() { t.push(1); });
     check_exception_thrown<std::logic_error>("Can't construct non-null null queue", []() { static_priority_queue<int, 0>{1}; });
-    check_exception_thrown<std::logic_error>("Can't access top of null queue", [&t]() { return t.top(); });
-    check_exception_thrown<std::logic_error>("Can't pop from null queue", [&t]() { t.pop(); });
+    check_exception_thrown<std::logic_error>("Can't access top of null queue"     , [&t]() { return t.top(); });
+    check_exception_thrown<std::logic_error>("Can't pop from null queue"          , [&t]() { t.pop(); });
   }
 
   void test_static_priority_queue::check_depth_1()
@@ -103,7 +107,8 @@ namespace sequoia::testing
     check(equality, "", t, queue_t{});
 
     check_exception_thrown<std::logic_error>("Can't access top of empty queue", [&t]() { return t.top(); });
-    check_exception_thrown<std::logic_error>("Can't pop from empty queue", [&t]() { t.pop(); });
+    check_exception_thrown<std::logic_error>("Can't pop from empty queue"     , [&t]() { t.pop(); });
+    check(equality, "A refused pop leaves the queue empty", t, queue_t{});
 
     t.push(1);
     check(equality, "", t, queue_t{1});

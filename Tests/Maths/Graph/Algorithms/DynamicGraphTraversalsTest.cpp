@@ -9,6 +9,7 @@
 #include "Maths/Graph/Dynamic/DynamicGraphTestingUtilities.hpp"
 
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
+#include "sequoia/PlatformSpecific/Helpers.hpp"
 
 #include <format>
 
@@ -148,7 +149,7 @@ namespace sequoia::testing
     std::vector<int> task(Graph& graph, const int upper, const bool early, const std::chrono::microseconds pause, Args&&... args)
     {
       auto fn = [upper, pause](const std::size_t index) {
-        std::this_thread::sleep_for(pause);
+        precise_sleep_for(pause);
         const auto n{upper + static_cast<int>(index)};
         return n * (n + 1) / 2;
       };

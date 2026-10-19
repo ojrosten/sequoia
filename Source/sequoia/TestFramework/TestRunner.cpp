@@ -75,7 +75,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::chrono::duration<double> typical_sleep_duration(std::chrono::milliseconds target)
     {
-      auto sleepForTarget{[target]() { std::this_thread::sleep_for(target); }};
+      auto sleepForTarget{[target]() { precise_sleep_for(target); }};
 
       std::array<std::chrono::duration<double>, 3> durations{};
       std::ranges::generate(durations, [&sleepForTarget]() { return profile(sleepForTarget); });

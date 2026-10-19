@@ -10,8 +10,7 @@
 /** \file */
 
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
-
-#include <thread>
+#include "sequoia/PlatformSpecific/Helpers.hpp"
 
 namespace sequoia::testing
 {
@@ -38,7 +37,7 @@ namespace sequoia::testing
 
     void operator()() const
     {
-      std::this_thread::sleep_for(m_Wait);
+      precise_sleep_for(m_Wait);
     }
   };
 }

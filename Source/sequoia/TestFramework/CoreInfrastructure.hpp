@@ -14,6 +14,7 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
+#include <chrono>
 #include <format>
 #include <filesystem>
 #include <optional>
@@ -51,6 +52,33 @@ namespace sequoia::testing
     }
   };
 
+  /** \brief Serializes a `std::chrono::duration` as its count followed by its
+             units suffix.
+
+      According to the C++ standard:
+      -# Streaming a duration streams its count.
+      -# Formatting a duration without a format specification streams the
+         duration.
+
+      Therefore, a duration whose count cannot be streamed can be neither
+      streamed nor formatted without a format specification, even when the
+      `std::formattable` concept is satisfied.
+
+      libc++'s `std::filesystem::file_time_type` counts in an `__int128`,
+      which libc++ cannot stream.
+   */
+  template<class Rep, class Period>
+    requires (!serializable_to<Rep, std::stringstream>) && std::formattable<Rep, char>
+  struct serializer<std::chrono::duration<Rep, Period>>
+  {
+    [[nodiscard]]
+    static std::string make(const std::chrono::duration<Rep, Period>& d)
+    {
+      // The units suffix depends on the period alone
+      return std::format("{}{:%q}", d.count(), std::chrono::duration<long long, Period>{});
+    }
+  };
+
   template<class T>
   concept serializable = requires(serializer<T>& s, T& t) {
     s.make(t);
@@ -62,6 +90,33 @@ namespace sequoia::testing
   {
     return serializer<T>::make(value);
   }
+
+  /** \brief Serializes a `std::chrono::time_point` which can be neither
+             formatted nor streamed, as its time since its clock's epoch.
+
+      The C++ standard library formats and streams the time points of most of
+      its clocks, such as those of `std::chrono::system_clock` and
+      `std::chrono::file_clock`, but not those of `std::chrono::steady_clock`.
+      `std::chrono::high_resolution_clock` may be an alias of either, so
+      whether this serializer prints its time points depends on the library.
+
+      A standard time point which `std::formattable` accepts but which its
+      formatter cannot print, such as a `std::chrono::sys_time` with a
+      floating-point count, is claimed by the serializer for formattable
+      types, whose `make` then fails to compile.
+   */
+  template<class Clock, class Duration>
+    requires    (!std::formattable<std::chrono::time_point<Clock, Duration>, char>)
+             && (!serializable_to<std::chrono::time_point<Clock, Duration>, std::stringstream>)
+             && serializable<Duration>
+  struct serializer<std::chrono::time_point<Clock, Duration>>
+  {
+    [[nodiscard]]
+    static std::string make(const std::chrono::time_point<Clock, Duration>& t)
+    {
+      return to_string(t.time_since_epoch()).append(" since epoch");
+    }
+  };
 
   /** \brief Primary class template mapping a type to itself.
 

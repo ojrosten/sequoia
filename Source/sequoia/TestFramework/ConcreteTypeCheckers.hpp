@@ -50,7 +50,6 @@
     is the right include when that is what you want.
  */
 
-#include "sequoia/TestFramework/ChronoCheckers.hpp"
 #include "sequoia/TestFramework/FunctionCheckers.hpp"
 #include "sequoia/TestFramework/PathCheckers.hpp"
 #include "sequoia/TestFramework/PointerCheckers.hpp"
