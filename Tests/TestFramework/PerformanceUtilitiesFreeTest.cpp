@@ -87,6 +87,7 @@ namespace sequoia::testing
     test_timing_constraints();
     test_exception_specifications();
     test_default_minimum_trials();
+    test_overlap_multipliers();
     test_judgement_with_baselines();
     test_shuffled_baselined_task_orders();
     test_call_in_order();
@@ -154,6 +155,23 @@ namespace sequoia::testing
     constexpr relative_performance_parameters parameters{.prediction{.lower{2.0}, .upper{3.0}}};
 
     STATIC_CHECK(parameters.minimum_trials == relative_performance_minimum_trials_floor);
+  }
+
+  void performance_utilities_free_test::test_overlap_multipliers()
+  {
+    using enum test_mode;
+
+    // The multipliers are not in the contract. These checks pin the
+    // implementation's choice, and change with it.
+    check(equality, "Multiplier in standard mode, attempt 1",       impl::overlap_multiplier(standard,       1), 1.0);
+    check(equality, "Multiplier in standard mode, attempt 2",       impl::overlap_multiplier(standard,       2), 2.0);
+    check(equality, "Multiplier in standard mode, attempt 3",       impl::overlap_multiplier(standard,       3), 3.0);
+    check(equality, "Multiplier in false-positive mode, attempt 1", impl::overlap_multiplier(false_positive, 1), 1.0);
+    check(equality, "Multiplier in false-positive mode, attempt 2", impl::overlap_multiplier(false_positive, 2), 2.0);
+    check(equality, "Multiplier in false-positive mode, attempt 3", impl::overlap_multiplier(false_positive, 3), 3.0);
+    check(equality, "Multiplier in false-negative mode, attempt 1", impl::overlap_multiplier(false_negative, 1), 3.0);
+    check(equality, "Multiplier in false-negative mode, attempt 2", impl::overlap_multiplier(false_negative, 2), 3.0);
+    check(equality, "Multiplier in false-negative mode, attempt 3", impl::overlap_multiplier(false_negative, 3), 3.0);
   }
 
   void performance_utilities_free_test::test_judgement_with_baselines()

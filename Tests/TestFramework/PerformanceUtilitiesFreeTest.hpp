@@ -32,6 +32,8 @@ namespace sequoia::testing
 
     void test_default_minimum_trials();
 
+    void test_overlap_multipliers();
+
     void test_judgement_with_baselines();
 
     void test_shuffled_baselined_task_orders();
