@@ -38,8 +38,7 @@ namespace sequoia
       /** \brief RAII type holding a kqueue.
 
           A kqueue is a queue, kept by the kernel, of events for which a
-          process has registered, such as a timer firing. A process holds a
-          kqueue as a file descriptor.
+          process has registered, such as a timer firing.
        */
       class [[nodiscard]] kqueue_descriptor
       {
