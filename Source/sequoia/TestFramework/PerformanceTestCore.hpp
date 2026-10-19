@@ -489,9 +489,6 @@ namespace sequoia::testing
 
        Any exception thrown by `fast` or `slow` propagates.
 
-       \pre Neither `fast` nor `slow` performs a check using a different
-       instance of the logger.
-
        \throws std::invalid_argument if either end of `parameters.prediction`
        is not greater than 1, if its lower end exceeds its upper end, or if
        `parameters.minimum_trials` is less than
@@ -547,9 +544,6 @@ namespace sequoia::testing
        -# The summary also gives each baseline's trimmed mean duration. The
           summary gives no speed-up if the last attempt failed for too many
           extremes.
-
-       \pre None of the four tasks performs a check using a different instance
-       of the logger.
 
        \throws std::invalid_argument if either end of `parameters.prediction`
        is not greater than 1, if its lower end exceeds its upper end, or if
