@@ -51,8 +51,10 @@ namespace sequoia::testing
       std::chrono::steady_clock::time_point start{}, end{};
     };
 
-    /** The largest number of `intervals` which overlap at any instant. An interval contains its start but not its
-        end, so one which ends as another starts does not overlap it, and an empty interval overlaps nothing.
+    /** The largest number of `intervals` which overlap at any instant. An
+        interval contains its start but not its end, so one which ends as
+        another starts does not overlap it, and an empty interval overlaps
+        nothing.
      */
     [[nodiscard]]
     std::size_t peak_overlap(std::span<const execution_interval> intervals)
