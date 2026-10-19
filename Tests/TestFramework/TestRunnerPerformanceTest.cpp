@@ -53,33 +53,28 @@ namespace sequoia::testing
         end, so one which ends as another starts does not overlap it, and an empty interval overlaps nothing.
      */
     [[nodiscard]]
-    std::ptrdiff_t peak_overlap(std::span<const execution_interval> intervals)
+    std::size_t peak_overlap(std::span<const execution_interval> intervals)
     {
-      using change_t = std::pair<std::chrono::steady_clock::time_point, std::ptrdiff_t>;
-      auto endpoints{
-        [](const execution_interval& interval){
-          return std::array{change_t{interval.start, 1}, change_t{interval.end, -1}};
+      auto numContaining{
+        [intervals](std::chrono::steady_clock::time_point instant) {
+          auto contains{
+            [instant](const execution_interval& interval) {
+              return (interval.start <= instant) && (instant < interval.end);
+            }
+          };
+
+          return static_cast<std::size_t>(std::ranges::count_if(intervals, contains));
         }
       };
 
-      auto changes{
+      // The overlap rises only at a start, so its peak is reached at one
+      auto overlapsAtStarts{
           intervals
-        | std::views::transform(endpoints)
-        | std::views::join
-        | std::ranges::to<std::vector>()
+        | std::views::transform(&execution_interval::start)
+        | std::views::transform(numContaining)
       };
 
-      // At one instant an end, -1, sorts before a start, +1
-      std::ranges::sort(changes);
-
-      std::ptrdiff_t overlap{}, peak{};
-      for(const auto& change : changes)
-      {
-        overlap += change.second;
-        peak = std::ranges::max(peak, overlap);
-      }
-
-      return peak;
+      return std::ranges::fold_left(overlapsAtStarts, std::size_t{}, std::ranges::max);
     }
 
     /** Returns the line which reports `peak`. CI's step reporting the
@@ -87,7 +82,7 @@ namespace sequoia::testing
         so a change to its form breaks that step.
      */
     [[nodiscard]]
-    std::string peak_overlap_line(std::ptrdiff_t peak)
+    std::string peak_overlap_line(std::size_t peak)
     {
       return std::format("[Peak Overlap: {}]\n", peak);
     }
@@ -96,7 +91,7 @@ namespace sequoia::testing
         others have finished lowers the peak by one. So the floor tolerates
         three such tests, and still fails if half the threads are lost.
      */
-    constexpr std::ptrdiff_t eight_thread_peak_floor{5};
+    constexpr std::size_t eight_thread_peak_floor{5};
 
     /** The number of slow tests. Each sleeps for the same duration, so that
         the checks below can measure how the runner spreads the tests over
@@ -522,7 +517,7 @@ namespace sequoia::testing
     check(std::ranges::greater_equal{},
           "Tests execute at once in parallel",
           peak,
-          has_parallel_algorithms_v ? std::ptrdiff_t{2} : eight_thread_peak_floor);
+          has_parallel_algorithms_v ? std::size_t{2} : eight_thread_peak_floor);
 
     check_speedup_over_serial_execution("Parallel execution is faster than serial execution",
                                         {},
@@ -564,7 +559,7 @@ namespace sequoia::testing
       outputStream << peak_overlap_line(peak);
 
       check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream);
-      check(equality, "Both threads of the pool, and no more, execute tests at once", peak, std::ptrdiff_t{2});
+      check(equality, "Both threads of the pool, and no more, execute tests at once", peak, std::size_t{2});
 
       check_speedup_over_serial_execution("A pool of two threads is about twice as fast as serial execution",
                                           {"--thread-pool", "2"},
@@ -584,7 +579,7 @@ namespace sequoia::testing
     outputStream << peak_overlap_line(peak);
 
     check_output(report({"Serial Output"}), "Serial Output", outputStream);
-    check(equality, "Tests execute one at a time in a serial run", peak, std::ptrdiff_t{1});
+    check(equality, "Tests execute one at a time in a serial run", peak, std::size_t{1});
   }
 
   /** Checks the speed-up of a run of the slow tests with `modeArguments`
