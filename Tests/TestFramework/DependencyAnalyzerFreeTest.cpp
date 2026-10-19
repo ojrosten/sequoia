@@ -247,9 +247,11 @@ namespace sequoia::testing
      includes. The fake project has the layout of a project which `init` created, so the sequoia
      headers which its tests include lie within the project's copy of sequoia.
 
-     The fake build names a directory of the real sequoia as one of the toolchain's. The toolchain
-     headers which a unit reads from that directory therefore exist, and lie outside the fake project,
-     as a toolchain's headers would.
+     Every file the fake build reads from outside the fake project is the
+     toolchain's. Some units read headers of the real sequoia's: files which
+     exist, and which lie outside the fake project. Every unit reads a
+     stand-in for a header of the compiler's. The stand-in lies beside the
+     fake project, so outside the fake project's root.
    */
   namespace
   {
@@ -311,11 +313,14 @@ namespace sequoia::testing
       return units;
     }
 
-    /// The fake project's stand-in for a toolchain header, read by every unit, which the tests may touch
+    /** The stand-in for a header of the compiler's. Every unit reads the
+        stand-in, and the tests may touch it. The stand-in lies beside `fake`,
+        so outside the fake project's root.
+     */
     [[nodiscard]]
     fs::path fake_toolchain_header(const fs::path& fake)
     {
-      return fake / "Toolchain" / "include" / "vector";
+      return fake.parent_path() / "Toolchain" / "include" / "vector";
     }
   }
 
@@ -424,13 +429,12 @@ namespace sequoia::testing
       }
     };
 
-    // What the build tree says of itself; the fake project's source dir is itself, and two directories stand in for
-    // the toolchain's: one of the real sequoia's, and one of the fake project's own
     if(const auto header{fake_toolchain_header(fake)}; !fs::exists(header))
     {
       // Once: the artefacts are written several times over, and the header's modification time is the tests' to set
       fs::create_directories(header.parent_path());
       write_to_file(header, "", std::ios_base::out);
+      fs::last_write_time(header, m_ResetTime);
     }
     fs::remove_all(buildDir / "CMakeFiles");
     fs::remove_all(buildDir / "TestAll.dir");
@@ -444,14 +448,10 @@ namespace sequoia::testing
     {
       fs::create_directories(buildDir / objects_of(system, target, visualStudioConfiguration).directory);
     }
-    fs::create_directories(buildDir / "CMakeFiles" / "4.1.2");
+    // What the build tree says of itself; the fake project's source dir is
+    // the fake project itself
     write_to_file(buildDir / "CMakeCache.txt",
                   std::format("# Fake\nCMAKE_GENERATOR:INTERNAL={}\nCMAKE_HOME_DIRECTORY:INTERNAL={}\n", ninja ? "Ninja" : "Visual Studio 18 2026", fake.generic_string()),
-                  std::ios_base::out);
-    write_to_file(buildDir / "CMakeFiles" / "4.1.2" / "CMakeCXXCompiler.cmake",
-                  std::format("set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"{};{}\")\n",
-                              (realSequoiaSourceRepo / "sequoia" / "TextProcessing").generic_string(),
-                              fake_toolchain_header(fake).parent_path().generic_string()),
                   std::ios_base::out);
 
     if(ninja)
@@ -663,7 +663,9 @@ namespace sequoia::testing
           stamp_at(-3000ms));
   }
 
-  /// The out-of-date message names a file and two time stamps, none of which is stable across machines
+  /** The out-of-date message names two time stamps, which are not stable
+      across machines, and a file, which is masked if it is the fake project's
+   */
   std::string dependency_analyzer_free_test::normalise_out_of_date_message(const project_paths& paths, std::string message)
   {
     message = default_exception_message_postprocessor{}(paths, std::move(message));
@@ -1113,8 +1115,9 @@ namespace sequoia::testing
       check(equality,
             "A record which names no object compiled from sequoia's sources",
             warningFor(toolchain.parent_path()),
-            std::format("{}the build's record names no object compiled from within FakeProject/Toolchain/include\n",
-                        notCheckedPreface));
+            std::format("{}the build's record names no object compiled from within {}\n",
+                        notCheckedPreface,
+                        toolchain.parent_path().generic_string()));
     }
 
     {

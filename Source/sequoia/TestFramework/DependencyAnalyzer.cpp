@@ -86,12 +86,6 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    bool in_toolchain(const fs::path& file, const build_tree& tree)
-    {
-      return std::ranges::any_of(tree.implicit_include_directories, [&file](const fs::path& dir){ return in_repo(file, dir); });
-    }
-
-    [[nodiscard]]
     fs::path weakly_canonical_or_as_given(const fs::path& path)
     {
       std::error_code error{};
@@ -99,17 +93,9 @@ namespace sequoia::testing
       return error ? path : weaklyCanonical;
     }
 
-    /** A file which the build recorded, and whether the file is the toolchain's. The path has two parts:
+    /** The path of each of `files`, in two parts:
         -# The file's directory, made weakly canonical if the filesystem can resolve the directory;
         -# The file's own name, as spelled by the compilation.
-     */
-    struct recorded_file
-    {
-      fs::path path{};
-      bool toolchain{};
-    };
-
-    /** The recorded file for each of `files`.
 
         The build records each path as the build's configuration spelled the path: through whatever symlink, and
         in whatever case. project_paths holds canonical paths, so this function resolves each file's directory:
@@ -124,43 +110,37 @@ namespace sequoia::testing
            finds a file whatever its case, that case may differ from the header's own. The header then does not
            match the stem of the source with the same name.
 
-        The function asks the filesystem once per directory, for the directory's weakly canonical path and for whether
-        the directory is the toolchain's.
+        The function asks the filesystem once per directory.
      */
     [[nodiscard]]
-    std::vector<recorded_file> recorded_files(const build_tree& tree, std::span<const fs::path> files)
+    std::vector<fs::path> resolved_paths(const build_tree& tree, std::span<const fs::path> files)
     {
-      std::map<fs::path, recorded_file> directories{};
-      auto directoryFacts{
-        [&tree, &directories](const fs::path& dir) -> const recorded_file& {
+      std::map<fs::path, fs::path> directories{};
+      auto resolvedDirectory{
+        [&directories](const fs::path& dir) -> const fs::path& {
           if(const auto found{directories.find(dir)}; found != directories.end())
             return found->second;
 
-          const auto path{weakly_canonical_or_as_given(dir)};
-          const recorded_file facts{.path{path}, .toolchain{in_toolchain(path, tree)}};
-          return directories.emplace(dir, facts).first->second;
+          return directories.emplace(dir, weakly_canonical_or_as_given(dir)).first->second;
         }
       };
 
-      auto fileFacts{
-        [&tree, &directoryFacts](const fs::path& p) {
+      auto resolvedPath{
+        [&tree, &resolvedDirectory](const fs::path& p) {
           const auto asRecorded{(p.is_absolute() ? p : tree.build_directory / p).lexically_normal()};
-          const auto& directory{directoryFacts(asRecorded.parent_path())};
-
-          return recorded_file{.path{directory.path / asRecorded.filename()},
-                               .toolchain{directory.toolchain}};
+          return resolvedDirectory(asRecorded.parent_path()) / asRecorded.filename();
         }
       };
 
-      return files | std::views::transform(fileFacts) | std::ranges::to<std::vector>();
+      return files | std::views::transform(resolvedPath) | std::ranges::to<std::vector>();
     }
 
     /// Whether the source of `record` lies within `dir`
     [[nodiscard]]
-    bool compiled_from(const compilations::record& record, std::span<const recorded_file> files, const fs::path& dir)
+    bool compiled_from(const compilations::record& record, std::span<const fs::path> files, const fs::path& dir)
     {
       // read_compilations puts the source first among the inputs
-      return in_repo(files[record.input_indices.front()].path, dir);
+      return in_repo(files[record.input_indices.front()], dir);
     }
 
     /** Every test class may optionally define test materials. For a test class `bar_test`, defined in
@@ -209,8 +189,8 @@ namespace sequoia::testing
         not seen - in a source of a different name, or in a header of a different name which only some
         other compilation reads - although the program links either way.
 
-        The toolchain's own headers are read by every translation unit, so a change to one is a change
-        to every test; their newest modification is kept apart, and they are left out of the graph.
+        The toolchain's files, which `read_files` defines, are not nodes: the
+        class keeps only the newest of their modifications.
      */
     class dependency_graph
     {
@@ -425,7 +405,10 @@ namespace sequoia::testing
              -# The edges which `add_dependencies` adds.
           -# The toolchain's files.
 
-          `recorded_files` gives each file's path, and whether the file is the toolchain's.
+          A file is the toolchain's exactly when its path, as given by
+          `resolved_paths`, lies outside the project's root. The files of the
+          compiler, of the platform and of any library installed elsewhere are
+          the toolchain's.
        */
       [[nodiscard]]
       static files_read_by_build read_files(const build_tree& tree, const project_paths& projPaths)
@@ -434,8 +417,14 @@ namespace sequoia::testing
 
         const auto& [files, records]{compilations};
 
-        const auto fileFactsTable{recorded_files(tree, files)};
-        auto isProjectFile{[&fileFactsTable](compilations::file_index fileIndex){ return !fileFactsTable[fileIndex].toolchain; }};
+        const auto resolvedPaths{resolved_paths(tree, files)};
+
+        // Per file rather than per input: a file is the input of many compilations
+        auto inProject{[projectRoot{projPaths.project_root()}](const fs::path& p){ return in_repo(p, projectRoot); }};
+        const auto projectFiles{
+          resolvedPaths | std::views::transform(inProject) | std::ranges::to<std::vector<bool>>()
+        };
+        auto isProjectFile{[&projectFiles](compilations::file_index fileIndex){ return projectFiles[fileIndex]; }};
 
         graph_type g{};
         std::vector<std::optional<node_index>> nodeOfFile(files.size());
@@ -445,15 +434,15 @@ namespace sequoia::testing
           [&](compilations::file_index fileIndex) {
             auto& node{nodeOfFile[fileIndex]};
             if(!node)
-              node = g.add_node(file_info{.file{fileFactsTable[fileIndex].path}});
+              node = g.add_node(file_info{.file{resolvedPaths[fileIndex]}});
 
             return *node;
           }
         };
 
         auto isTest{
-          [&fileFactsTable, testsRepo{projPaths.tests().repo()}](const compilations::record& record) {
-            return compiled_from(record, fileFactsTable, testsRepo);
+          [&resolvedPaths, testsRepo{projPaths.tests().repo()}](const compilations::record& record) {
+            return compiled_from(record, resolvedPaths, testsRepo);
           }
         };
 
@@ -477,10 +466,13 @@ namespace sequoia::testing
 
         add_dependencies(g);
 
+        // The build's tree lies within the project's root, so no object file
+        // is the toolchain's
+        auto pathOf{[&resolvedPaths](compilations::file_index fileIndex){ return resolvedPaths[fileIndex]; }};
         auto toolchainFiles{
-            fileFactsTable
-          | std::views::filter(&recorded_file::toolchain)
-          | std::views::transform(&recorded_file::path)
+            std::views::iota(compilations::file_index{}, resolvedPaths.size())
+          | std::views::filter(std::not_fn(isProjectFile))
+          | std::views::transform(pathOf)
           | std::ranges::to<std::vector>()
         };
 
@@ -898,12 +890,14 @@ namespace sequoia::testing
                                                     const fs::path& sequoiaSources)
     {
       const auto& [files, records]{compiled};
-      const auto facts{recorded_files(tree, files)};
+      const auto resolvedPaths{resolved_paths(tree, files)};
       const auto root{weakly_canonical_or_as_given(sequoiaSources)};
 
-      auto isOwnFile{[&facts, &root](compilations::file_index i){ return in_repo(facts[i].path, root); }};
+      auto isOwnFile{[&resolvedPaths, &root](compilations::file_index i){ return in_repo(resolvedPaths[i], root); }};
       auto isSequoiaObject{
-        [&facts, &root](const compilations::record& record){ return compiled_from(record, facts, root); }
+        [&resolvedPaths, &root](const compilations::record& record) {
+          return compiled_from(record, resolvedPaths, root);
+        }
       };
 
       // The loop asks for each file's modification time once, however many objects' compilations read the file.
@@ -912,7 +906,7 @@ namespace sequoia::testing
       std::optional<sequoia_file> newest{};
       for(const auto& record : records | std::views::filter(isSequoiaObject))
       {
-        const auto& object{facts[record.object_index].path};
+        const auto& object{resolvedPaths[record.object_index]};
         for(const auto i : record.input_indices | std::views::filter(isOwnFile))
         {
           if(visited[i])
@@ -920,7 +914,7 @@ namespace sequoia::testing
 
           visited[i] = true;
 
-          const auto& file{facts[i].path};
+          const auto& file{resolvedPaths[i]};
           std::error_code error{};
           const auto time{fs::last_write_time(file, error)};
           if(error)
