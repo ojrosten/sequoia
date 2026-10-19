@@ -12,7 +12,8 @@
            warnings about them.
  */
 
-#include <chrono>
+#include "sequoia/TestFramework/FloatingPointDurations.hpp"
+
 #include <string>
 
 namespace sequoia::testing
@@ -21,13 +22,11 @@ namespace sequoia::testing
              up to a coarse timer tick.
    */
   [[nodiscard]]
-  bool is_coarse_sleep(std::chrono::duration<double, std::milli> slept,
-                       std::chrono::duration<double, std::milli> target);
+  bool is_coarse_sleep(double_precision_milliseconds slept, double_precision_milliseconds target);
 
   /** \brief A warning that sleeps of `target` lasted `slept` or more, so
              timings built on sleeps are unreliable.
    */
   [[nodiscard]]
-  std::string coarse_sleep_message(std::chrono::duration<double, std::milli> slept,
-                                   std::chrono::duration<double, std::milli> target);
+  std::string coarse_sleep_message(double_precision_milliseconds slept, double_precision_milliseconds target);
 }

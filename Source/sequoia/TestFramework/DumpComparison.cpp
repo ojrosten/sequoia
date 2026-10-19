@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/TestFramework/DumpComparison.hpp"
-#include "sequoia/TestFramework/DumpFormat.hpp"
+#include "sequoia/TestFramework/SeparatorAfterCheck.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
@@ -135,7 +135,7 @@ namespace sequoia::testing
       throw std::runtime_error{std::format("Unable to read the dump {}", dump.generic_string())};
 
     return   *text
-           | std::views::split(dump_format::check_separator)
+           | std::views::split(separator_after_check)
            | std::views::transform([](const auto& check){ return trimmed_of_newlines(std::string_view{check}); })
            | std::views::filter([](const std::string& check){ return !check.empty(); })
            | std::ranges::to<std::vector>();
