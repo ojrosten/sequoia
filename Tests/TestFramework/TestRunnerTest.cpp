@@ -1815,12 +1815,7 @@ namespace sequoia::testing
     std::stringstream excludingStream{};
     commandline_arguments excludingArgs{{minimal_fake_path().generic_string(), "prune", "exclude", "Failing/absent_test.cpp"}};
 
-    test_runner excludingRunner{excludingArgs.size(),
-                                excludingArgs.get(),
-                                "Oliver J. Rosten",
-                                "  ",
-                                {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                                excludingStream};
+    auto excludingRunner{make_fake_project_runner(excludingArgs, excludingStream)};
 
     check(equality, "Prune with an exclusion return code", excludingRunner.execute(), return_code::success);
     check_output("Prune with an exclusion", "PruneWithExclusionOutput", excludingStream);
@@ -2347,12 +2342,7 @@ namespace sequoia::testing
     fs::remove_all(output_paths{fake_project()}.dir());
     std::stringstream recoveringStream{};
     commandline_arguments recoveringArgs{{minimal_fake_path().generic_string(), "recover"}};
-    test_runner recoveringRunner{recoveringArgs.size(),
-                                 recoveringArgs.get(),
-                                 "Oliver J. Rosten",
-                                 "  ",
-                                 {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                                 recoveringStream};
+    auto recoveringRunner{make_fake_project_runner(recoveringArgs, recoveringStream)};
 
     recoveringRunner.register_test<passing_test>();
     check(equality, "recover on a fresh tree", recoveringRunner.execute(), return_code::success);
@@ -2360,12 +2350,7 @@ namespace sequoia::testing
 
     // A run which records nothing must not leave the previous run's record looking like the new run's
     std::stringstream emptyRecoveryStream{};
-    test_runner emptyRecoveryRunner{recoveringArgs.size(),
-                                    recoveringArgs.get(),
-                                    "Oliver J. Rosten",
-                                    "  ",
-                                    {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                                    emptyRecoveryStream};
+    auto emptyRecoveryRunner{make_fake_project_runner(recoveringArgs, emptyRecoveryStream)};
 
     check(equality, "recover with no tests", emptyRecoveryRunner.execute(), return_code::success);
     check("A recovery run which ran no check leaves no recovery file", !fs::exists(recovery.recovery_file()));
@@ -2814,12 +2799,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<unwritable_output_free_test>();
     runner.register_test<beside_unwritable_output_free_test>();
