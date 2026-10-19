@@ -640,8 +640,9 @@ jobs:
             cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/repeat.log"
 
       # An advisory column does not gate, so a failing test cannot make the
-      # suite step red. This step reads the run, and raises an error naming
-      # every test file with a failure.
+      # suite step red. This step reads the first pass's log, and raises an
+      # error naming every test file the log cites with a failure. A second
+      # pass's log, where the column runs one, is not read.
       #
       # Drift is a second thing the suite step cannot make red here. Where the
       # column checks the versioned output, a run whose output moved writes the
@@ -692,7 +693,7 @@ jobs:
           fi
           if [ -n "$failing" ]; then
             echo "::error title=Advisory run needs action::${{ matrix.name }}: $(echo "$failing" | tr '\n' ' '). This column does not gate, so the job is green."
-          elif [ '${{ steps.suite.outcome }}' != 'success' ]; then
+          elif [ -z "$drifted" ] && [ '${{ steps.suite.outcome }}' != 'success' ]; then
             # The suite step failed, yet named no test and wrote no patch: a
             # crash, a timeout or something else cut the run short. The suite
             # did not pass, whatever the log's last lines say.
