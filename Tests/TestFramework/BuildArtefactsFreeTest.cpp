@@ -447,18 +447,21 @@ namespace sequoia::testing
     write_to_file(cache,
                   "# CMake cache\r\nCMAKE_GENERATOR:INTERNAL=Ninja\r\nCMAKE_HOME_DIRECTORY:INTERNAL=/proj\r\n",
                   std::ios_base::binary);
+
+    // `read_build_tree` canonicalises the implicit include directories. No
+    // machine has the ones below, so it returns them as written.
     write_to_file(root / "CMakeFiles" / "3.31.6" / "CMakeCXXCompiler.cmake",
-                  "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"/usr/include/c++/14;/usr/include\")\n",
+                  "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"/fixture/include/c++/14;/fixture/include\")\n",
                   std::ios_base::out);
     write_to_file(root / "CMakeFiles" / "4.0.3" / "CMakeCXXCompiler.cmake",
-                  "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"/usr/include/c++/15;/usr/include\")\n",
+                  "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"/fixture/include/c++/15;/fixture/include\")\n",
                   std::ios_base::out);
     write_to_file(root / "CMakeFiles" / "4.1.2" / "CMakeCXXCompiler.cmake",
                   "set(CMAKE_CXX_COMPILER \"/usr/bin/c++\")\n"
-                  "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"/usr/include/c++/16;/usr/include\")\n",
+                  "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"/fixture/include/c++/16;/fixture/include\")\n",
                   std::ios_base::out);
     write_to_file(root / "CMakeFiles" / "4.2.0" / "CMakeCXXCompiler.cmake",
-                  "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"/usr/include\")\n",
+                  "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"/fixture/include\")\n",
                   std::ios_base::out);
 
     // `read_build_tree`'s contract leaves the order of the implicit include
@@ -466,10 +469,10 @@ namespace sequoia::testing
     // the implementation's choice of reading the compiler information files
     // in the order of their paths.
     const std::vector<fs::path> implicitIncludeDirectories{
-      "/usr/include/c++/14", "/usr/include",
-      "/usr/include/c++/15", "/usr/include",
-      "/usr/include/c++/16", "/usr/include",
-      "/usr/include"
+      "/fixture/include/c++/14", "/fixture/include",
+      "/fixture/include/c++/15", "/fixture/include",
+      "/fixture/include/c++/16", "/fixture/include",
+      "/fixture/include"
     };
 
     const auto tree{read_build_tree(cache)};
