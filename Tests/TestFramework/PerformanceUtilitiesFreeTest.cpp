@@ -164,15 +164,15 @@ namespace sequoia::testing
 
     // The multipliers are not in the contract. These checks pin the
     // implementation's choice, and change with it.
-    check(equality, "Standard mode, attempt 1",       impl::overlap_multiplier(standard,       1), 1.0);
-    check(equality, "Standard mode, attempt 2",       impl::overlap_multiplier(standard,       2), 2.0);
-    check(equality, "Standard mode, attempt 3",       impl::overlap_multiplier(standard,       3), 3.0);
-    check(equality, "False-positive mode, attempt 1", impl::overlap_multiplier(false_positive, 1), 1.0);
-    check(equality, "False-positive mode, attempt 2", impl::overlap_multiplier(false_positive, 2), 2.0);
-    check(equality, "False-positive mode, attempt 3", impl::overlap_multiplier(false_positive, 3), 3.0);
-    check(equality, "False-negative mode, attempt 1", impl::overlap_multiplier(false_negative, 1), 3.0);
-    check(equality, "False-negative mode, attempt 2", impl::overlap_multiplier(false_negative, 2), 3.0);
-    check(equality, "False-negative mode, attempt 3", impl::overlap_multiplier(false_negative, 3), 3.0);
+    check(equality, "Multiplier in standard mode, attempt 1",       impl::overlap_multiplier(standard,       1), 1.0);
+    check(equality, "Multiplier in standard mode, attempt 2",       impl::overlap_multiplier(standard,       2), 2.0);
+    check(equality, "Multiplier in standard mode, attempt 3",       impl::overlap_multiplier(standard,       3), 3.0);
+    check(equality, "Multiplier in false-positive mode, attempt 1", impl::overlap_multiplier(false_positive, 1), 1.0);
+    check(equality, "Multiplier in false-positive mode, attempt 2", impl::overlap_multiplier(false_positive, 2), 2.0);
+    check(equality, "Multiplier in false-positive mode, attempt 3", impl::overlap_multiplier(false_positive, 3), 3.0);
+    check(equality, "Multiplier in false-negative mode, attempt 1", impl::overlap_multiplier(false_negative, 1), 3.0);
+    check(equality, "Multiplier in false-negative mode, attempt 2", impl::overlap_multiplier(false_negative, 2), 3.0);
+    check(equality, "Multiplier in false-negative mode, attempt 3", impl::overlap_multiplier(false_negative, 3), 3.0);
   }
 
   void performance_utilities_free_test::test_judgement_with_baselines()
