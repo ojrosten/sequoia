@@ -83,7 +83,7 @@ namespace sequoia::testing
     const counted_spinner fast{8ms, trials_before_attempt(trials_for_minimum_10, 3), 7ms};
 
     check_relative_performance(
-      "Attempts 1 and 2's intervals lie below the prediction, "
+      "The intervals of attempts 1 and 2 lie below the prediction, "
       "and attempt 2's would overlap the prediction only if substantially wider; "
       "attempt 3's wider interval overlaps the prediction, "
       "but would not if substantially narrower; "
