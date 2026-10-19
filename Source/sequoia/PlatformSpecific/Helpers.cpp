@@ -90,8 +90,15 @@ namespace sequoia
           struct kevent64_s request{}, fired{};
           // Timer 1 fires once, `remaining` nanoseconds from now, and the
           // kernel then deletes it
-          EV_SET64(&request, 1, EVFILT_TIMER, EV_ADD | EV_ONESHOT, NOTE_NSECONDS | NOTE_CRITICAL,
-                   static_cast<std::int64_t>(remaining.count()), 0, 0, 0);
+          EV_SET64(&request,
+                   1,
+                   EVFILT_TIMER,
+                   EV_ADD | EV_ONESHOT,
+                   NOTE_NSECONDS | NOTE_CRITICAL,
+                   static_cast<std::int64_t>(remaining.count()),
+                   0,
+                   0,
+                   0);
 
           const int events{kevent64(queue.get(), &request, 1, &fired, 1, 0, nullptr)};
           if((events < 0) && (errno != EINTR))
