@@ -62,24 +62,33 @@ namespace sequoia
       private:
         int m_Descriptor;
       };
+    }
+  #endif
 
-      /** \brief Sleeps until `deadline` on a kqueue timer with
-                 `NOTE_CRITICAL`.
+  namespace
+  {
+    /** \brief Sleeps until `deadline` on a timer which the kernel is asked
+               not to defer.
 
-          Each call to `kevent64` registers a timer with the kqueue, then waits
-          for an event. `NOTE_CRITICAL` asks the kernel not to defer the timer
-          to coalesce it with others. A signal can end a wait early. The
-          function then waits again for the time still remaining.
+        On macOS, the timer is a kqueue timer with `NOTE_CRITICAL`. Each call
+        to `kevent64` registers a timer with the kqueue, then waits for an
+        event. `NOTE_CRITICAL` asks the kernel not to defer the timer to
+        coalesce it with others. A signal can end a wait early. The function
+        then waits again for the time still remaining.
 
-          Each thread holds a kqueue of its own. Every timer has the same
-          identifier, so threads sharing a kqueue would replace each other's
-          timers.
+        Each thread holds a kqueue of its own. Every timer has the same
+        identifier, so threads sharing a kqueue would replace each other's
+        timers.
 
-          \returns false, possibly before `deadline`, if the kqueue fails.
-       */
-      [[nodiscard]]
-      bool critical_timer_sleep_until(std::chrono::steady_clock::time_point deadline)
-      {
+        Away from macOS, the function has no such timer, and returns false
+        at once.
+
+        \returns false, possibly before `deadline`, if the kqueue fails.
+     */
+    [[nodiscard]]
+    bool critical_timer_sleep_until([[maybe_unused]] std::chrono::steady_clock::time_point deadline)
+    {
+      #ifdef __APPLE__
         static thread_local const kqueue_descriptor queue{};
         if(queue.get() < 0)
           return false;
@@ -111,9 +120,11 @@ namespace sequoia
         }
 
         return true;
-      }
+      #else
+        return false;
+      #endif
     }
-  #endif
+  }
 
   #if defined(SEQUOIA_MSVC_DEBUG_RUNTIME)
     namespace
@@ -197,18 +208,14 @@ namespace sequoia
     if(duration <= std::chrono::nanoseconds::zero())
       return;
 
-    #ifdef __APPLE__
-      using clock = std::chrono::steady_clock;
-      const auto now{clock::now()};
-      const auto deadline{duration < clock::time_point::max() - now ? now + duration : clock::time_point::max()};
-      if(critical_timer_sleep_until(deadline))
-        return;
+    using clock = std::chrono::steady_clock;
+    const auto now{clock::now()};
+    const auto deadline{duration < clock::time_point::max() - now ? now + duration : clock::time_point::max()};
+    if(critical_timer_sleep_until(deadline))
+      return;
 
-      if(const auto remaining{deadline - std::chrono::steady_clock::now()}; remaining > remaining.zero())
-        std::this_thread::sleep_for(remaining);
-    #else
-      std::this_thread::sleep_for(duration);
-    #endif
+    if(const auto remaining{deadline - clock::now()}; remaining > remaining.zero())
+      std::this_thread::sleep_for(remaining);
   }
 
   debug_report_redirector::debug_report_redirector()
