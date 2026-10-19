@@ -13,8 +13,8 @@
 #endif
 
 #ifdef __APPLE__
-  #include <sys/event.h>
-  #include <unistd.h>
+  #include "sys/event.h"
+  #include "unistd.h"
 
   #include <cerrno>
   #include <cstdint>
