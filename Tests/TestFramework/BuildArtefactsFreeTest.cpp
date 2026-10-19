@@ -429,15 +429,30 @@ namespace sequoia::testing
   {
     const auto scratch{scratchpad_materials()};
     const auto root{scratch / "build"};
+
+    // Four compiler information directories, as a tree configured by four
+    // versions of CMake has. If their files are read unsorted, the checks of
+    // the implicit include directories fail on macOS: APFS lists these
+    // directories out of sorted order, whatever the order of their creation.
+    // The directories are created in neither sorted nor reverse-sorted order,
+    // so the checks also fail on a filesystem which lists entries in the order
+    // of their creation, or its reverse.
     fs::create_directories(root / "CMakeFiles" / "4.1.2");
     fs::create_directories(root / "CMakeFiles" / "4.2.0");
+    fs::create_directories(root / "CMakeFiles" / "3.31.6");
+    fs::create_directories(root / "CMakeFiles" / "4.0.3");
     const auto cache{root / "CMakeCache.txt"};
 
-    // Two compiler information directories, as a tree configured by two versions of CMake has, and CRLF, as
-    // Windows writes
+    // CRLF, as Windows writes
     write_to_file(cache,
                   "# CMake cache\r\nCMAKE_GENERATOR:INTERNAL=Ninja\r\nCMAKE_HOME_DIRECTORY:INTERNAL=/proj\r\n",
                   std::ios_base::binary);
+    write_to_file(root / "CMakeFiles" / "3.31.6" / "CMakeCXXCompiler.cmake",
+                  "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"/usr/include/c++/14;/usr/include\")\n",
+                  std::ios_base::out);
+    write_to_file(root / "CMakeFiles" / "4.0.3" / "CMakeCXXCompiler.cmake",
+                  "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"/usr/include/c++/15;/usr/include\")\n",
+                  std::ios_base::out);
     write_to_file(root / "CMakeFiles" / "4.1.2" / "CMakeCXXCompiler.cmake",
                   "set(CMAKE_CXX_COMPILER \"/usr/bin/c++\")\n"
                   "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"/usr/include/c++/16;/usr/include\")\n",
@@ -446,13 +461,24 @@ namespace sequoia::testing
                   "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"/usr/include\")\n",
                   std::ios_base::out);
 
+    // `read_build_tree`'s contract leaves the order of the implicit include
+    // directories open. The checks against `implicitIncludeDirectories` pin
+    // the implementation's choice of reading the compiler information files
+    // in the order of their paths.
+    const std::vector<fs::path> implicitIncludeDirectories{
+      "/usr/include/c++/14", "/usr/include",
+      "/usr/include/c++/15", "/usr/include",
+      "/usr/include/c++/16", "/usr/include",
+      "/usr/include"
+    };
+
     const auto tree{read_build_tree(cache)};
     check(equality, "Build directory", tree.build_directory, root);
     check(equality, "Generator", tree.generator, std::string{"Ninja"});
     check(equality,
           "Implicit include directories, from every compiler information file",
           tree.implicit_include_directories,
-          std::vector<fs::path>{"/usr/include/c++/16", "/usr/include", "/usr/include"});
+          implicitIncludeDirectories);
 
     fs::create_directories(root / "CMakeFiles" / "4.3.0");
     write_to_file(root / "CMakeFiles" / "4.3.0" / "CMakeCXXCompiler.cmake",
@@ -461,7 +487,7 @@ namespace sequoia::testing
     check(equality,
           "A compiler information file naming no implicit include directories, as MSVC's does, adds none",
           read_build_tree(cache).implicit_include_directories,
-          std::vector<fs::path>{"/usr/include/c++/16", "/usr/include", "/usr/include"});
+          implicitIncludeDirectories);
 
     fs::create_directories(root / "CMakeFiles" / "4.4.0");
     write_to_file(root / "CMakeFiles" / "4.4.0" / "CMakeCXXCompiler.cmake",
@@ -470,7 +496,7 @@ namespace sequoia::testing
     check(equality,
           "A compiler information file which does not set the implicit include directories adds none",
           read_build_tree(cache).implicit_include_directories,
-          std::vector<fs::path>{"/usr/include/c++/16", "/usr/include", "/usr/include"});
+          implicitIncludeDirectories);
 
     const auto unconfigured{scratch / "unconfigured"};
     fs::create_directories(unconfigured);

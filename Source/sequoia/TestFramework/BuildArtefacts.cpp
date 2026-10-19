@@ -902,10 +902,18 @@ namespace sequoia::testing
 
       auto compilerInfo{[](const fs::directory_entry& entry){ return entry.path() / "CMakeCXXCompiler.cmake"; }};
 
-      return fs::directory_iterator{cmakeFiles}
-           | std::views::filter([](const fs::directory_entry& entry){ return entry.is_directory(); })
-           | std::views::transform(compilerInfo)
-           | std::views::filter([](const fs::path& info){ return fs::exists(info); })
+      // Directory iteration fixes no order, so the files are sorted manually:
+      // every machine then reads one tree identically
+      auto compilerInfoFiles{
+          fs::directory_iterator{cmakeFiles}
+        | std::views::filter([](const fs::directory_entry& entry){ return entry.is_directory(); })
+        | std::views::transform(compilerInfo)
+        | std::views::filter([](const fs::path& info){ return fs::exists(info); })
+        | std::ranges::to<std::vector>()
+      };
+      std::ranges::sort(compilerInfoFiles);
+
+      return compilerInfoFiles
            | std::views::transform(directoriesIn)
            | std::views::join
            | std::ranges::to<std::vector>();
