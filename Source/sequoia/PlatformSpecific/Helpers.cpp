@@ -86,7 +86,7 @@ namespace sequoia
         \returns false, possibly before `deadline`, if the kqueue fails.
      */
     [[nodiscard]]
-    bool critical_timer_sleep_until([[maybe_unused]] std::chrono::steady_clock::time_point deadline)
+    bool try_precise_sleep_until([[maybe_unused]] std::chrono::steady_clock::time_point deadline)
     {
       #ifdef __APPLE__
         static thread_local const kqueue_descriptor queue{};
@@ -211,7 +211,7 @@ namespace sequoia
     using clock = std::chrono::steady_clock;
     const auto now{clock::now()};
     const auto deadline{duration < clock::time_point::max() - now ? now + duration : clock::time_point::max()};
-    if(critical_timer_sleep_until(deadline))
+    if(try_precise_sleep_until(deadline))
       return;
 
     if(const auto remaining{deadline - clock::now()}; remaining > remaining.zero())
