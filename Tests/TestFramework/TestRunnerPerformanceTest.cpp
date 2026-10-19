@@ -18,9 +18,11 @@
 #include <array>
 #include <chrono>
 #include <format>
+#include <numeric>
 #include <ranges>
 #include <span>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 namespace sequoia::testing
@@ -55,26 +57,28 @@ namespace sequoia::testing
     [[nodiscard]]
     std::size_t peak_overlap(std::span<const execution_interval> intervals)
     {
-      auto numContaining{
-        [intervals](std::chrono::steady_clock::time_point instant) {
-          auto contains{
-            [instant](const execution_interval& interval) {
-              return (interval.start <= instant) && (instant < interval.end);
-            }
-          };
-
-          return static_cast<std::size_t>(std::ranges::count_if(intervals, contains));
+      using change_t = std::pair<std::chrono::steady_clock::time_point, std::ptrdiff_t>;
+      auto endpoints{
+        [](const execution_interval& interval){
+          return std::array{change_t{interval.start, 1}, change_t{interval.end, -1}};
         }
       };
 
-      // The overlap rises only at a start, so its peak is reached at one
-      auto overlapsAtStarts{
+      auto changes{
           intervals
-        | std::views::transform(&execution_interval::start)
-        | std::views::transform(numContaining)
+        | std::views::transform(endpoints)
+        | std::views::join
+        | std::ranges::to<std::vector>()
       };
 
-      return std::ranges::fold_left(overlapsAtStarts, std::size_t{}, std::ranges::max);
+      // At one instant an end, -1, sorts before a start, +1
+      std::ranges::sort(changes);
+
+      // The overlap just after each change is the sum of the changes up to it
+      auto overlaps{changes | std::views::values | std::ranges::to<std::vector>()};
+      std::inclusive_scan(overlaps.begin(), overlaps.end(), overlaps.begin());
+
+      return static_cast<std::size_t>(std::ranges::fold_left(overlaps, std::ptrdiff_t{}, std::ranges::max));
     }
 
     /** Returns the line which reports `peak`. CI's step reporting the
