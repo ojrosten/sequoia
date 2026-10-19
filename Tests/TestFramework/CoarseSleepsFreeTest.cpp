@@ -24,15 +24,15 @@ namespace sequoia::testing
 
   void coarse_sleeps_free_test::test_coarse_sleep()
   {
-    constexpr floating_point_milliseconds target{5.0};
+    constexpr double_precision_milliseconds target{5.0};
 
-    check("Rounded up to Windows' default tick", is_coarse_sleep(floating_point_milliseconds{15.2}, target));
-    check("Exactly twice the target", is_coarse_sleep(floating_point_milliseconds{10.0}, target));
-    check("Just under twice the target", !is_coarse_sleep(floating_point_milliseconds{9.9}, target));
-    check("A 1 ms timer resolution in effect", !is_coarse_sleep(floating_point_milliseconds{5.4}, target));
+    check("Rounded up to Windows' default tick", is_coarse_sleep(double_precision_milliseconds{15.2}, target));
+    check("Exactly twice the target", is_coarse_sleep(double_precision_milliseconds{10.0}, target));
+    check("Just under twice the target", !is_coarse_sleep(double_precision_milliseconds{9.9}, target));
+    check("A 1 ms timer resolution in effect", !is_coarse_sleep(double_precision_milliseconds{5.4}, target));
 
     write_to_file(working_materials() / "CoarseSleepMessage.txt",
-                  coarse_sleep_message(floating_point_milliseconds{15.2}, target),
+                  coarse_sleep_message(double_precision_milliseconds{15.2}, target),
                   std::ios_base::out);
 
     check(equivalence,

@@ -15,6 +15,6 @@
 
 namespace sequoia::testing
 {
-  using floating_point_seconds      = std::chrono::duration<double>;
-  using floating_point_milliseconds = std::chrono::duration<double, std::milli>;
+  using double_precision_seconds      = std::chrono::duration<double>;
+  using double_precision_milliseconds = std::chrono::duration<double, std::milli>;
 }

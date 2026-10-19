@@ -735,12 +735,12 @@ namespace sequoia::testing
 
       const std::string latest{
         append_lines(speedup_summary({infinity, {1e+06, -nan}}, {2, 3}),
-                     task_durations_summary({floating_point_seconds{9.9e-05}, floating_point_seconds{0}}))
+                     task_durations_summary({double_precision_seconds{9.9e-05}, double_precision_seconds{0}}))
       };
 
       const std::string reference{
         append_lines(speedup_summary({1.04,     {1e-07,  2.5}}, {2, 3}),
-                     task_durations_summary({floating_point_seconds{0.001},   floating_point_seconds{nan}}))
+                     task_durations_summary({double_precision_seconds{0.001},   double_precision_seconds{nan}}))
       };
 
       check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{reference});
@@ -769,13 +769,13 @@ namespace sequoia::testing
       const std::string latest{
         append_lines(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}),
                      trials_summary(15, {3, 3}),
-                     task_durations_summary({floating_point_seconds{0.001},  floating_point_seconds{0.00104}}))
+                     task_durations_summary({double_precision_seconds{0.001},  double_precision_seconds{0.00104}}))
       };
 
       const std::string reference{
         append_lines(speedup_summary({1.02, {1.00, 1.04}}, {2, 3}),
                      trials_summary(15, {3, 3}),
-                     task_durations_summary({floating_point_seconds{0.0011}, floating_point_seconds{0.00112}}))
+                     task_durations_summary({double_precision_seconds{0.0011}, double_precision_seconds{0.00112}}))
       };
 
       check(equality, "", postprocess(latest, reference, typically_stable), std::string_view{reference});
@@ -822,14 +822,16 @@ namespace sequoia::testing
       const std::string latest{
         indent(append_lines(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}),
                             trials_summary(15, {3, 3}),
-                            task_durations_summary({floating_point_seconds{0.001},  floating_point_seconds{0.00104}})),
+                            task_durations_summary(
+                              {double_precision_seconds{0.001},  double_precision_seconds{0.00104}})),
                nested)
       };
 
       const std::string reference{
         indent(append_lines(speedup_summary({1.02, {1.00, 1.04}}, {2, 3}),
                             trials_summary(5,  {1, 3}),
-                            task_durations_summary({floating_point_seconds{0.0011}, floating_point_seconds{0.00112}})),
+                            task_durations_summary(
+                              {double_precision_seconds{0.0011}, double_precision_seconds{0.00112}})),
                nested)
       };
 
@@ -861,14 +863,14 @@ namespace sequoia::testing
     check(equality,
           "The task durations are zeroed",
           text_with_zeroed_measurements(
-            task_durations_summary({floating_point_seconds{0.001}, floating_point_seconds{0.002}}),
+            task_durations_summary({double_precision_seconds{0.001}, double_precision_seconds{0.002}}),
             fluctuating),
           task_durations_summary({}));
 
     check(equality,
           "The baseline durations are zeroed",
           text_with_zeroed_measurements(
-            baseline_durations_summary({floating_point_seconds{0.001}, floating_point_seconds{0.002}}),
+            baseline_durations_summary({double_precision_seconds{0.001}, double_precision_seconds{0.002}}),
             fluctuating),
           baseline_durations_summary({}));
 
@@ -881,7 +883,7 @@ namespace sequoia::testing
           "With the attempt count typically stable, the speed-up, its interval and the task durations are zeroed",
           text_with_zeroed_measurements(
             append_lines(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}),
-                         task_durations_summary({floating_point_seconds{0.001}, floating_point_seconds{0.002}})),
+                         task_durations_summary({double_precision_seconds{0.001}, double_precision_seconds{0.002}})),
             typically_stable),
           append_lines(speedup_summary({}, {2, 3}), task_durations_summary({})));
   }
