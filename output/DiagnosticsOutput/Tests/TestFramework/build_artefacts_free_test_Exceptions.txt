@@ -142,7 +142,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 513
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 487
 A cache which does not exist
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ cmake_cache: no CMakeCache.txt in output/TestsTemporaryData/TestFramework/BuildA
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 516
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 490
 A Ninja tree which has not been built has no log
 
 Expected Exception Type:
@@ -160,7 +160,7 @@ output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_f
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 547
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 521
 A build statement with no rule
 
 Expected Exception Type:
@@ -169,7 +169,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 606
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 580
 A log none of whose objects build.ninja names is two spellings of one tree, not an empty build
 
 Expected Exception Type:
@@ -178,7 +178,7 @@ None of the objects output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTe
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 644
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 618
 Ninja Multi-Config: a configuration with no statements
 
 Expected Exception Type:
@@ -187,7 +187,7 @@ Unable to open output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 647
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 621
 Ninja Multi-Config: no configuration
 
 Expected Exception Type:
@@ -196,7 +196,7 @@ A configuration is required to read the build in output/TestsTemporaryData/TestF
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 654
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 628
 Ninja Multi-Config: a log none of whose objects the configuration's statements name
 
 Expected Exception Type:
@@ -205,7 +205,7 @@ None of the objects output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTe
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 660
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 634
 Xcode: a generator whose record of dependencies is not understood
 
 Expected Exception Type:
@@ -214,7 +214,7 @@ The build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/buil
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 665
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 639
 A cache which names no generator was not written by CMake
 
 Expected Exception Type:
