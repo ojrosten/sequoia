@@ -35,7 +35,12 @@ namespace sequoia
   #ifdef __APPLE__
     namespace
     {
-      /** \brief RAII type holding a kqueue. */
+      /** \brief RAII type holding a kqueue.
+
+          A kqueue is a queue, kept by the kernel, of events for which a
+          process has registered, such as a timer firing. A process holds a
+          kqueue as a file descriptor.
+       */
       class [[nodiscard]] kqueue_descriptor
       {
       public:
@@ -62,8 +67,14 @@ namespace sequoia
       /** \brief Sleeps until `deadline` on a kqueue timer with
                  `NOTE_CRITICAL`.
 
-          The kernel may defer the wake-up of an ordinary sleep, to coalesce
-          it with other timers, by a quarter of the sleep's length or more.
+          Each call to `kevent64` registers a timer with the kqueue, then waits
+          for an event. `NOTE_CRITICAL` asks the kernel not to defer the timer
+          to coalesce it with others. A signal can end a wait early. The
+          function then waits again for the time still remaining.
+
+          Each thread holds a kqueue of its own. Every timer has the same
+          identifier, so threads sharing a kqueue would replace each other's
+          timers.
 
           \returns false, possibly before `deadline`, if the kqueue fails.
        */
@@ -78,6 +89,8 @@ namespace sequoia
         {
           const auto remaining{std::chrono::ceil<std::chrono::nanoseconds>(deadline - now)};
           struct kevent64_s request{}, fired{};
+          // Timer 1 fires once, `remaining` nanoseconds from now, and the
+          // kernel then deletes it
           EV_SET64(&request, 1, EVFILT_TIMER, EV_ADD | EV_ONESHOT, NOTE_NSECONDS | NOTE_CRITICAL,
                    static_cast<std::int64_t>(remaining.count()), 0, 0, 0);
 
@@ -85,6 +98,8 @@ namespace sequoia
           if((events < 0) && (errno != EINTR))
             return false;
 
+          // The kernel reports a refused registration as an event flagged
+          // EV_ERROR
           if((events == 1) && (fired.flags & EV_ERROR))
             return false;
         }

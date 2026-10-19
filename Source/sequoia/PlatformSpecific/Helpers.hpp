@@ -18,10 +18,13 @@ namespace sequoia
   /** \brief Sleeps for at least `duration`, as measured by
              `std::chrono::steady_clock`.
 
-      On macOS the sleep waits on a kqueue timer with `NOTE_CRITICAL`, which
-      the kernel does not defer to coalesce it with other timers. If the
-      kqueue fails, the rest of the sleep is a `std::this_thread::sleep_for`.
-      Elsewhere the whole sleep is a `std::this_thread::sleep_for`.
+      On macOS, the kernel may defer the wake-up from a sleep, to coalesce
+      the wake-up with others and so save power. So a
+      `std::this_thread::sleep_for` may overshoot by a quarter of its length
+      or more. On macOS, this function asks the kernel not to defer
+      the wake-up. If the request fails, the rest of the sleep is a
+      `std::this_thread::sleep_for`. Elsewhere the whole sleep is a
+      `std::this_thread::sleep_for`.
    */
   void precise_sleep_for(std::chrono::nanoseconds duration);
 
