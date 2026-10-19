@@ -1,3 +1,3 @@
   Warning: Sleeps of 5.0 ms repeatedly lasted 15.2 ms or more, so timings built on sleeps are unreliable
-           The likely cause is that the machine is heavily loaded
+           On Windows, the likely cause is that the finest timer resolution is not in effect
 
