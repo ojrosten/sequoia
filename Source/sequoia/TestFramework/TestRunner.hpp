@@ -907,8 +907,6 @@ namespace sequoia::testing
 
     void check_for_missing_tests();
 
-    void check_for_coarse_sleeps();
-
     void write_run_stamp() const;
 
     [[nodiscard]]

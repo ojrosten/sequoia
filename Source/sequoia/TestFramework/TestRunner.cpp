@@ -71,19 +71,95 @@ namespace sequoia::testing
         | std::ranges::to<std::vector>();
     }
 
-    /** \brief How long a sleep of `target` typically lasts on this machine. */
-    [[nodiscard]]
-    std::chrono::duration<double> typical_sleep_duration(std::chrono::milliseconds target)
+    /** \brief How long a sleep lasted, and the outcome of its requests for
+               precise timers.
+     */
+    struct measured_sleep
     {
-      auto sleepForTarget{[target]() { precise_sleep_for(target); }};
+      std::chrono::duration<double> duration{};
+      timer_request_outcome         precise_timer_outcome{};
+    };
 
-      std::array<std::chrono::duration<double>, 3> durations{};
-      std::ranges::generate(durations, [&sleepForTarget]() { return profile(sleepForTarget); });
-      std::ranges::sort(durations);
+    /** \brief How long sleeps of one length typically last, and the outcome
+               of their requests for precise timers.
+     */
+    struct sleep_assessment
+    {
+      std::chrono::duration<double> typical_duration{};
+      timer_request_outcome         precise_timer_outcome{};
+    };
+
+    /** \brief Sleeps for `target` several times, and assesses the sleeps.
+
+        \returns The median of the sleeps' durations, and the outcomes of
+                 every sleep's requests for precise timers, combined by
+                 `combine_timer_request_outcomes`.
+     */
+    [[nodiscard]]
+    sleep_assessment assess_sleeps(std::chrono::milliseconds target)
+    {
+      auto sleepAndMeasure{
+        [target]() {
+          const timer t{};
+          const auto outcome{precise_sleep_for(target)};
+          return measured_sleep{.duration{t.time_elapsed()}, .precise_timer_outcome{outcome}};
+        }
+      };
+
+      const auto sleeps{
+        [&sleepAndMeasure]() {
+          std::array<measured_sleep, 3> measuredSleeps{};
+          std::ranges::generate(measuredSleeps, sleepAndMeasure);
+          std::ranges::sort(measuredSleeps, std::ranges::less{}, &measured_sleep::duration);
+          return measuredSleeps;
+        }()
+      };
+
+      auto combine{
+        [](timer_request_outcome lhs, timer_request_outcome rhs) { return combine_timer_request_outcomes(lhs, rhs); }
+      };
 
       // The fastest sleep is not typical: the first sleep can end within the timer tick it starts in, even
       // when every later sleep is rounded up to a whole tick.
-      return durations[1];
+      return {
+        .typical_duration{sleeps[1].duration},
+        .precise_timer_outcome{
+          std::ranges::fold_left(
+            sleeps | std::views::transform(&measured_sleep::precise_timer_outcome),
+            timer_request_outcome::not_made,
+            combine
+          )
+        }
+      };
+    }
+
+    /** \brief Writes a warning to `stream` if sleeps on this machine are
+               coarse.
+
+        Only the first call in the process checks.
+     */
+    void check_for_coarse_sleeps(std::ostream& stream, timer_request_outcome finestTimerResolutionOutcome)
+    {
+      auto warnIfCoarse{
+        [&stream, finestTimerResolutionOutcome]() {
+          constexpr std::chrono::milliseconds target{5};
+          if(const auto assessment{assess_sleeps(target)}; is_coarse_sleep(assessment.typical_duration, target))
+          {
+            const auto evidence{
+              choose_sleep_timing_evidence({.finest_timer_resolution{finestTimerResolutionOutcome},
+                                            .precise_timer{assessment.precise_timer_outcome}})
+            };
+
+            stream << coarse_sleep_message(assessment.typical_duration, target, evidence) << std::flush;
+          }
+        }
+      };
+
+      // The timer resolution belongs to the process. Each thread requests its
+      // own precise timers, and the outcome on the thread checked stands in
+      // for the outcomes on the others.
+      static std::once_flag checked{};
+      std::call_once(checked, warnIfCoarse);
     }
 
     void overwrite_quietly(const fs::path& file, std::string_view text)
@@ -1484,21 +1560,6 @@ namespace sequoia::testing
     }
   }
 
-  void test_runner::check_for_coarse_sleeps()
-  {
-    auto warnIfCoarse{
-      [this]() {
-        constexpr std::chrono::milliseconds target{5};
-        if(const auto typicalSleep{typical_sleep_duration(target)}; is_coarse_sleep(typicalSleep, target))
-          stream() << coarse_sleep_message(typicalSleep, target) << std::flush;
-      }
-    };
-
-    // The timer resolution belongs to the process, so the first runner's check serves every later runner in it
-    static std::once_flag checked{};
-    std::call_once(checked, warnIfCoarse);
-  }
-
   void test_runner::write_run_stamp() const
   {
     const run_stamp stamp{.start_time{current_time_to_the_millisecond()}};
@@ -1550,7 +1611,6 @@ namespace sequoia::testing
     const scoped_terminate_handler terminationReported{report_termination};
     const debug_report_redirector debugReportRedirector{};
     const windows_crash_report_enabler windowsCrashReportEnabler{};
-    set_finest_windows_timer_resolution();
 
     fs::create_directories(proj_paths().prune().dir());
     build_suite_tree();
@@ -1567,10 +1627,11 @@ namespace sequoia::testing
 
   return_code test_runner::run()
   {
+    const auto finestTimerResolutionOutcome{set_finest_windows_timer_resolution()};
     if(!in_sandbox())
     {
       fs::remove_all(proj_paths().output().instability_analysis());
-      check_for_coarse_sleeps();
+      check_for_coarse_sleeps(stream(), finestTimerResolutionOutcome);
     }
 
     const auto baseline{versioned_output_baseline()};
