@@ -218,7 +218,7 @@ Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 288
 Trials before a 0th attempt
 
 Expected Exception Type:
-[std::logic_error]
+[std::out_of_range]
 An attempt number must lie between 1 and one past the number of attempts
 
 =======================================
@@ -227,7 +227,7 @@ Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 293
 Trials before an attempt two after the last
 
 Expected Exception Type:
-[std::logic_error]
+[std::out_of_range]
 An attempt number must lie between 1 and one past the number of attempts
 
 =======================================

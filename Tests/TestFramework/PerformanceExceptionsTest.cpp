@@ -284,12 +284,12 @@ namespace sequoia::testing
           trials_before_nth_attempt(trials_per_attempt_for_minimum_10, attempts + 1),
           everyAttemptsTrials);
 
-    check_exception_thrown<std::logic_error>(
+    check_exception_thrown<std::out_of_range>(
       "Trials before a 0th attempt",
       []() { return trials_before_nth_attempt(trials_per_attempt_for_minimum_10, 0); }
     );
 
-    check_exception_thrown<std::logic_error>(
+    check_exception_thrown<std::out_of_range>(
       "Trials before an attempt two after the last",
       []() { return trials_before_nth_attempt(trials_per_attempt_for_minimum_10, attempts + 2); }
     );

@@ -46,14 +46,14 @@ namespace sequoia::testing
       Attempts are numbered from 1, and `n` may name the attempt after the
       last, which gives the trials of every attempt.
 
-      \throws std::logic_error if `n` is zero or exceeds
+      \throws std::out_of_range if `n` is zero or exceeds
       `trialsPerAttempt.size() + 1`.
    */
   [[nodiscard]]
   constexpr std::size_t trials_before_nth_attempt(std::span<const std::size_t> trialsPerAttempt, std::size_t n)
   {
     if((n == 0) || (n > trialsPerAttempt.size() + 1))
-      throw std::logic_error{"An attempt number must lie between 1 and one past the number of attempts"};
+      throw std::out_of_range{"An attempt number must lie between 1 and one past the number of attempts"};
 
     return std::ranges::fold_left(trialsPerAttempt | std::views::take(n - 1), 0uz, std::plus<>{});
   }
