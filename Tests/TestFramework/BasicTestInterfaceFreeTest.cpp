@@ -6,11 +6,10 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "BasicTestInterfaceFreeTest.hpp"
-#include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "TestRunnerTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
-#include "sequoia/TestFramework/TestRunner.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
@@ -59,12 +58,7 @@ namespace sequoia::testing
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
     std::stringstream outputStream{};
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    const auto runner{make_fake_project_runner(args, outputStream)};
 
     test_file_paths(runner.proj_paths());
     test_materials(runner.proj_paths());

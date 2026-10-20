@@ -9,7 +9,7 @@
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "CriticalPathDurationsTestingUtilities.hpp"
 #include "TestExecutionRecordTestingUtilities.hpp"
-#include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "TestRunnerTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
 #include "TestFramework/BuildArtefactsTestingUtilities.hpp"
 
@@ -736,26 +736,9 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
-    [[nodiscard]]
-    project_paths::customizer fake_project_customization()
-    {
-      return {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}};
-    }
-
-    [[nodiscard]]
-    test_runner make_fake_runner(commandline_arguments& args, std::stringstream& outputStream)
-    {
-      return test_runner{args.size(),
-                         args.get(),
-                         "Oliver J. Rosten",
-                         "  ",
-                         fake_project_customization(),
-                         outputStream};
-    }
-
     test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
     {
-      auto runner{make_fake_runner(args, outputStream)};
+      auto runner{make_fake_project_runner(args, outputStream)};
 
       runner.register_test<failing_test>();
       runner.register_test<failing_fp_test>();
@@ -1196,7 +1179,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
   
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<foo_test>();
         runner.register_test<foo_test>();
@@ -1208,7 +1191,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
 
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<foo_test>();
         runner.register_test<another_namespace::foo_test>();
@@ -1220,13 +1203,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<outer_free_test>();
         runner.register_test<inner_free_test>();
@@ -1238,13 +1215,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<inner_free_test>();
         runner.register_test<outer_free_test>();
@@ -1256,13 +1227,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<outer_free_test>();
         runner.register_test<differently_cased_inner_free_test>();
@@ -1274,13 +1239,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<foo_test>();
         runner.register_test<Foo_test>();
@@ -1292,13 +1251,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<outer_free_test>();
         runner.register_test<deeply_inner_free_test>();
@@ -1310,13 +1263,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<differently_cased_inner_free_test>();
         runner.register_test<outer_free_test>();
@@ -1328,13 +1275,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<outer_free_test>();
         runner.register_test<adjacent_free_test>();
@@ -1348,13 +1289,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<non_ascii_free_test>();
       });
@@ -1365,13 +1300,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<caf\u00E9_free_test>();
       });
@@ -1382,13 +1311,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<sourceless_free_test>();
       });
@@ -1399,13 +1322,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<summary_collider_test>();
         runner.register_test<summary_collider_test_twin>();
@@ -1435,7 +1352,7 @@ namespace sequoia::testing
     {
       commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v", "recover", "dump"}};
   
-      auto runner{make_fake_runner(args, outputStream)};
+      auto runner{make_fake_project_runner(args, outputStream)};
 
       runner.register_test<bar_free_test>();
       runner.register_test<foo_test>();
@@ -1464,7 +1381,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     check(equality, "No tests return code", runner.execute(), return_code::success);
     check_output("No Tests", "NoTests", outputStream);
@@ -1486,7 +1403,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<failing_test>();
     check(equality, "First execution return code", runner.execute(), return_code::soft_failures);
@@ -1509,7 +1426,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     const test_execution_record_path executionRecordPath{throwing_discriminator_test::source_file(),
                                                          test_name<throwing_discriminator_test>(),
@@ -1535,7 +1452,7 @@ namespace sequoia::testing
     check_output("Execution", "ExecutionAfterARegistrationWhichThrewOutput", outputStream);
 
     std::stringstream nothingRegisteredStream{};
-    auto nothingRegisteredRunner{make_fake_runner(args, nothingRegisteredStream)};
+    auto nothingRegisteredRunner{make_fake_project_runner(args, nothingRegisteredStream)};
     check_exception_thrown<std::runtime_error>(
       "The only registration, whose hook throws",
       [&nothingRegisteredRunner](){ nothingRegisteredRunner.register_test<throwing_discriminator_test>(); }
@@ -1553,7 +1470,7 @@ namespace sequoia::testing
     commandline_arguments args{{zeroth_arg(), "--help"}};
     std::stringstream outputStream{};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<throwing_discriminator_test>();
     check(equality, "Return code", runner.execute(), return_code::success);
@@ -1606,7 +1523,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<throwing_test>();
     runner.register_test<platform_specific_throwing_test>();
@@ -1643,7 +1560,7 @@ namespace sequoia::testing
         const auto momentBeforeConstruction{
           std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now())
         };
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
         runner.register_test<Test>();
 
         const auto code{runner.execute()};
@@ -1699,7 +1616,7 @@ namespace sequoia::testing
     const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
     fs::remove_all(projPaths.execution_records().dir());
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
     runner.register_test<passing_test>();
 
     check(equality, "Two repetitions of a passing test return code", runner.execute(), return_code::success);
@@ -1724,7 +1641,7 @@ namespace sequoia::testing
                                 "select",
                                 passing_test::source_file().generic_string()}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
     const auto& projPaths{runner.proj_paths()};
     const test_execution_record_path
       selectedTestRecordPath{passing_test::source_file(), test_name<passing_test>(), projPaths},
@@ -1767,7 +1684,7 @@ namespace sequoia::testing
 
     {
       std::stringstream outputStream{};
-      auto runner{make_fake_runner(args, outputStream)};
+      auto runner{make_fake_project_runner(args, outputStream)};
 
       runner.register_test<summary_collider_test_twin>();
       check_exception_thrown<std::runtime_error>(
@@ -1776,7 +1693,7 @@ namespace sequoia::testing
     }
 
     std::stringstream outputStream{};
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     const auto& projPaths{runner.proj_paths()};
     fs::remove_all(projPaths.output().test_summaries());
@@ -1806,7 +1723,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     const auto& projPaths{runner.proj_paths()};
     fs::remove_all(projPaths.output().test_summaries());
@@ -1832,7 +1749,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing"}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
 
@@ -1850,7 +1767,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Absent", "test", "absent_test.cpp"}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     runner.register_test<failing_test>();
@@ -1868,7 +1785,7 @@ namespace sequoia::testing
       {(minimal_fake_path()).generic_string(), "select", "Absent", "select", "absent_test.cpp"}
     };
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     runner.register_test<failing_test>();
@@ -1884,7 +1801,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     check(equality, "Prune with no stamp return code", runner.execute(), return_code::success);
     check_output("Prune with no stamp", "PruneWithNoStamp", outputStream);
@@ -1898,12 +1815,7 @@ namespace sequoia::testing
     std::stringstream excludingStream{};
     commandline_arguments excludingArgs{{minimal_fake_path().generic_string(), "prune", "exclude", "Failing/absent_test.cpp"}};
 
-    test_runner excludingRunner{excludingArgs.size(),
-                                excludingArgs.get(),
-                                "Oliver J. Rosten",
-                                "  ",
-                                {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                                excludingStream};
+    auto excludingRunner{make_fake_project_runner(excludingArgs, excludingStream)};
 
     check(equality, "Prune with an exclusion return code", excludingRunner.execute(), return_code::success);
     check_output("Prune with an exclusion", "PruneWithExclusionOutput", excludingStream);
@@ -1954,7 +1866,7 @@ namespace sequoia::testing
     fs::last_write_time(projPaths.executable(), now);
 
     std::stringstream outputStream{};
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     check(equality, "Prune with changed toolchain return code", runner.execute(), return_code::success);
     check_output("Prune with changed toolchain", "PruneWithChangedToolchain", outputStream);
@@ -1980,7 +1892,7 @@ namespace sequoia::testing
     fs::last_write_time(projPaths.executable(), now);
 
     std::stringstream outputStream{};
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     check(equality, "Prune selecting an unregistered test return code", runner.execute(), return_code::success);
@@ -2025,7 +1937,7 @@ namespace sequoia::testing
       std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now())
     };
     std::stringstream outputStream{};
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     check(equality, "Prune with nothing stale return code", runner.execute(), return_code::success);
@@ -2045,7 +1957,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing"}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     runner.register_test<failing_test>();
@@ -2064,7 +1976,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<stale_predictions_free_test>();
 
@@ -2091,7 +2003,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<throwing_stale_predictions_free_test>();
 
@@ -2121,7 +2033,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<type_swapped_predictions_free_test>();
 
@@ -2140,7 +2052,7 @@ namespace sequoia::testing
   {
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<variant_free_test>();
 
@@ -2187,7 +2099,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<stale_predictions_free_test>();
     runner.register_test<variant_free_test>();
@@ -2214,7 +2126,7 @@ namespace sequoia::testing
       std::stringstream outputStream{};
       commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-      auto runner{make_fake_runner(args, outputStream)};
+      auto runner{make_fake_project_runner(args, outputStream)};
 
       using namespace object;
 
@@ -2231,7 +2143,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v"}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<namesake_test>();
     runner.register_test<under_namesake_test>();
@@ -2245,7 +2157,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v"}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     using namespace object;
 
@@ -2267,7 +2179,7 @@ namespace sequoia::testing
         argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
         commandline_arguments args{argList};
 
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         runner.register_test<fake_performance_test>();
@@ -2292,7 +2204,7 @@ namespace sequoia::testing
         argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
         commandline_arguments args{argList};
 
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         runner.register_test<failing_test>();
@@ -2335,7 +2247,7 @@ namespace sequoia::testing
         commandline_arguments args{argList};
 
         std::stringstream outputStream{};
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         runner.register_test<fake_performance_test>();
@@ -2373,7 +2285,7 @@ namespace sequoia::testing
         commandline_arguments args{argList};
 
         std::stringstream outputStream{};
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         if(registered != registrations::passing)
@@ -2395,7 +2307,7 @@ namespace sequoia::testing
           commandline_arguments args{argList};
 
           std::stringstream outputStream{};
-          auto runner{make_fake_runner(args, outputStream)};
+          auto runner{make_fake_project_runner(args, outputStream)};
 
           runner.register_test<passing_test>();
           return runner.execute();
@@ -2430,12 +2342,7 @@ namespace sequoia::testing
     fs::remove_all(output_paths{fake_project()}.dir());
     std::stringstream recoveringStream{};
     commandline_arguments recoveringArgs{{minimal_fake_path().generic_string(), "recover"}};
-    test_runner recoveringRunner{recoveringArgs.size(),
-                                 recoveringArgs.get(),
-                                 "Oliver J. Rosten",
-                                 "  ",
-                                 {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                                 recoveringStream};
+    auto recoveringRunner{make_fake_project_runner(recoveringArgs, recoveringStream)};
 
     recoveringRunner.register_test<passing_test>();
     check(equality, "recover on a fresh tree", recoveringRunner.execute(), return_code::success);
@@ -2443,12 +2350,7 @@ namespace sequoia::testing
 
     // A run which records nothing must not leave the previous run's record looking like the new run's
     std::stringstream emptyRecoveryStream{};
-    test_runner emptyRecoveryRunner{recoveringArgs.size(),
-                                    recoveringArgs.get(),
-                                    "Oliver J. Rosten",
-                                    "  ",
-                                    {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                                    emptyRecoveryStream};
+    auto emptyRecoveryRunner{make_fake_project_runner(recoveringArgs, emptyRecoveryStream)};
 
     check(equality, "recover with no tests", emptyRecoveryRunner.execute(), return_code::success);
     check("A recovery run which ran no check leaves no recovery file", !fs::exists(recovery.recovery_file()));
@@ -2461,7 +2363,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg(), "--thread-pool", std::string{poolSize}}};
 
         std::stringstream outputStream{};
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         check(equality, append_lines(description, "Return code"), runner.execute(), return_code::success);
@@ -2565,7 +2467,7 @@ namespace sequoia::testing
 
     commandline_arguments args{argGenerator()};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     (runner.register_test<std::remove_cvref_t<Ts>>(), ...);
 
@@ -2685,7 +2587,7 @@ namespace sequoia::testing
                                 "select", selected_in_spaced_suite_free_test::source_file().generic_string(),
                                 "exclude", excluded_from_spaced_suite_free_test::source_file().generic_string()}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     const test_execution_record_path executionRecordPath{selected_in_spaced_suite_free_test::source_file(),
                                                          test_name<selected_in_spaced_suite_free_test>(),
@@ -2757,7 +2659,7 @@ namespace sequoia::testing
     const auto stampTextOfLaunchingRun{to_string(run_stamp{})};
     write_to_file(projPaths.execution_records().stamp(), stampTextOfLaunchingRun, std::ios_base::binary);
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
     runner.register_test<passing_test>();
 
     // The run which launches the sandboxes prepares this folder first
@@ -2828,7 +2730,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<stray_materials_free_test>();
     runner.register_test<unaffected_free_test>();
@@ -2897,12 +2799,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<unwritable_output_free_test>();
     runner.register_test<beside_unwritable_output_free_test>();
@@ -2925,7 +2822,7 @@ namespace sequoia::testing
 
     {
       std::stringstream outputStream{};
-      auto runner{make_fake_runner(args, outputStream)};
+      auto runner{make_fake_project_runner(args, outputStream)};
       runner.register_test<passing_test>();
 
       check(equality, "Drifted versioned output return code", runner.execute(), return_code::versioned_output_diffs);
@@ -2935,7 +2832,7 @@ namespace sequoia::testing
 
     {
       std::stringstream outputStream{};
-      auto runner{make_fake_runner(args, outputStream)};
+      auto runner{make_fake_project_runner(args, outputStream)};
       runner.register_test<passing_test>();
 
       check(equality, "Stable versioned output return code", runner.execute(), return_code::success);
@@ -2981,7 +2878,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<scratch_writing_free_test>();
 
@@ -3016,7 +2913,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<scratch_writing_free_test>();
 
@@ -3047,7 +2944,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    const auto runner{make_fake_runner(args, outputStream)};
+    const auto runner{make_fake_project_runner(args, outputStream)};
     const auto& projPaths{runner.proj_paths()};
 
     const cmake_cache cache{projPaths.build()};
