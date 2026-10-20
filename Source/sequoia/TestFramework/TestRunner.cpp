@@ -2074,7 +2074,8 @@ namespace sequoia::testing
                             "No action required."});
         break;
       case prune_fallback_reason::toolchain_changed:
-        stream() << warning({"The toolchain has changed since the previous run, so prune is ignored and every test runs.",
+        stream() << warning({"A file the build read from outside the project has changed since the previous run, "
+                             "so prune is ignored and every test runs.",
                             "No action required."});
         break;
       }

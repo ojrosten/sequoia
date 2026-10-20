@@ -48,19 +48,14 @@ namespace sequoia::testing
     friend bool operator==(const compilations&, const compilations&) noexcept = default;
   };
 
-  /** \brief What a CMake build tree says about itself.
-
-      `implicit_include_directories` holds the compiler's built-in include
-      directories, canonical and sorted, with no duplicates.
-   */
+  /** \brief Salient properties of a CMake build tree. */
   struct build_tree
   {
     std::filesystem::path build_directory{};
     std::string generator{};
-    std::vector<std::filesystem::path> implicit_include_directories{};
   };
 
-  /** \brief Reads a build tree's description of itself from its `CMakeCache.txt`.
+  /** \brief Reads a build tree's salient properties from `cacheFile`.
 
       \throws std::runtime_error if the cache cannot be read, or names no generator.
    */

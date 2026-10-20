@@ -1826,16 +1826,14 @@ namespace sequoia::testing
   {
     fs::remove_all(output_paths{fake_project()}.dir());
 
-    // A build of one test's source, Tests/ThingTest.cpp, which read one toolchain header
+    // A build of one test's source, Tests/ThingTest.cpp. The compilation
+    // read one toolchain header, which lies outside the fake project.
     const auto buildDir{minimal_fake_path().parent_path()};
-    const fake_build build{.source{fake_project() / "Tests" / "ThingTest.cpp"}, .toolchainHeader{fake_project() / "Toolchain" / "vector"}};
+    const fake_build build{.source{fake_project() / "Tests" / "ThingTest.cpp"},
+                           .toolchainHeader{fake_project().parent_path() / "Toolchain" / "include" / "vector"}};
     fs::create_directories(build.toolchainHeader.parent_path());
-    fs::create_directories(buildDir / "CMakeFiles" / "4.1.2");
     write_to_file(build.source, "", std::ios_base::out);
     write_to_file(build.toolchainHeader, "", std::ios_base::out);
-    write_to_file(buildDir / "CMakeFiles" / "4.1.2" / "CMakeCXXCompiler.cmake",
-                  std::format("set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"{}\")\n", build.toolchainHeader.parent_path().generic_string()),
-                  std::ios_base::out);
     write_to_file(buildDir / "build.ninja",
                   std::format("build CMakeFiles/x.dir/ThingTest.cpp.o: CXX_COMPILER {}\n", build.source.generic_string()),
                   std::ios_base::out);

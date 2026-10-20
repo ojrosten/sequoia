@@ -14,7 +14,6 @@
 
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Characters.hpp"
-#include "sequoia/TextProcessing/Patterns.hpp"
 
 #include <algorithm>
 #include <bit>
@@ -845,17 +844,6 @@ namespace sequoia::testing
 
   namespace
   {
-    /// The value of `set(NAME "value")` in a CMake script
-    [[nodiscard]]
-    std::optional<std::string> cmake_script_value(std::string_view text, std::string_view name)
-    {
-      const auto [first, last]{find_sandwiched_text(text, std::format("set({} \"", name), "\"")};
-      if(first < last)
-        return std::string{text.substr(first, last - first)};
-
-      return std::nullopt;
-    }
-
     /// The generator a CMake cache names
     [[nodiscard]]
     std::string generator_of(const fs::path& cacheFile)
@@ -866,68 +854,14 @@ namespace sequoia::testing
 
       return *generator;
     }
-
-    /** The compiler's built-in include directories, canonical.
-
-        CMake records them as `CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES` in
-        `<buildDirectory>/CMakeFiles/<version>/CMakeCXXCompiler.cmake`; a tree without that file
-        yields none.
-     */
-    [[nodiscard]]
-    std::vector<fs::path> implicit_include_directories_of(const fs::path& buildDirectory)
-    {
-      // Canonical, so that a directory reached through a symlink - macOS's SDK is one - compares equal to the files beneath it
-      auto canonical{
-        [](std::string_view dir) {
-          std::error_code error{};
-          const auto canonicalDir{fs::weakly_canonical(fs::path{dir}, error)};
-          return error ? fs::path{dir}.lexically_normal() : canonicalDir;
-        }
-      };
-
-      auto directoriesIn{
-        [canonical](const fs::path& info) {
-          const auto directories{cmake_script_value(read(info), "CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES").value_or("")};
-          return std::views::split(directories, ';')
-               | std::views::transform([](auto dirRange){ return std::string_view{dirRange}; })
-               | std::views::filter([](std::string_view dir){ return !dir.empty(); })
-               | std::views::transform(canonical)
-               | std::ranges::to<std::vector>();
-        }
-      };
-
-      const auto cmakeFiles{buildDirectory / "CMakeFiles"};
-      if(!fs::is_directory(cmakeFiles))
-        return {};
-
-      auto compilerInfo{[](const fs::directory_entry& entry){ return entry.path() / "CMakeCXXCompiler.cmake"; }};
-
-      auto directories{
-          fs::directory_iterator{cmakeFiles}
-        | std::views::filter([](const fs::directory_entry& entry){ return entry.is_directory(); })
-        | std::views::transform(compilerInfo)
-        | std::views::filter([](const fs::path& info){ return fs::exists(info); })
-        | std::views::transform(directoriesIn)
-        | std::views::join
-        | std::ranges::to<std::vector>()
-      };
-
-      std::ranges::sort(directories);
-      directories.erase(std::ranges::unique(directories).begin(), directories.end());
-
-      return directories;
-    }
   }
 
   [[nodiscard]]
   build_tree read_build_tree(const fs::path& cacheFile)
   {
-    const auto buildDirectory{cacheFile.parent_path()};
-
     return build_tree{
-      .build_directory{buildDirectory},
-      .generator{generator_of(cacheFile)},
-      .implicit_include_directories{implicit_include_directories_of(buildDirectory)}
+      .build_directory{cacheFile.parent_path()},
+      .generator{generator_of(cacheFile)}
     };
   }
 
