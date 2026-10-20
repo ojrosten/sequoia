@@ -30,7 +30,7 @@ Top-level option with neither invocable
 
 Expected Exception Type:
 [std::logic_error]
-  Error: Commandline option not bound to a function object
+  Error: option "--async" is not bound to a function object
 
 =======================================
 
@@ -39,7 +39,7 @@ Top-level option with neither invocable, though not encountered
 
 Expected Exception Type:
 [std::logic_error]
-  Error: Commandline option not bound to a function object
+  Error: option "--verbose" is not bound to a function object
 
 =======================================
 

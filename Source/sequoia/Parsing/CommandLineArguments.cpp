@@ -238,8 +238,15 @@ namespace sequoia::parsing::commandline
     void throw_if_any_top_level_option_unbound(const options_forest& options)
     {
       auto isUnbound{[](const option_tree& o){ return !has_function_object(root_weight(o)); }};
-      if(std::ranges::any_of(top_level_options(options), isUnbound))
-        throw std::logic_error{error("Commandline option not bound to a function object")};
+      auto topLevelOptions{top_level_options(options)};
+      if(const auto unbound{std::ranges::find_if(topLevelOptions, isUnbound)};
+         unbound != topLevelOptions.end())
+      {
+        const option& opt{root_weight(*unbound)};
+        throw std::logic_error{
+          error(std::format("option \"{}\" is not bound to a function object", std::string_view{opt.name}))
+        };
+      }
     }
 
     /** \brief Parses `argv` against `options` in its constructor. */
