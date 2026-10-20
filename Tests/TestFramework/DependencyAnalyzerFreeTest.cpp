@@ -360,6 +360,16 @@ namespace sequoia::testing
       return fake.parent_path() / "LinkedFakeProject";
     }
 
+    /** Where a copy of the fake project's `Stuff/Foo.cpp` goes: beside the
+        stand-in toolchain header's directory, so outside the fake project's
+        root.
+     */
+    [[nodiscard]]
+    fs::path foo_cpp_outside_the_root(const fs::path& fake)
+    {
+      return fake.parent_path() / "Toolchain" / "src" / "Foo.cpp";
+    }
+
     /** The path of the stand-in toolchain header's directory through a
         symlink. The tests make the symlink within `fake`, so within the fake
         project's root.
@@ -442,6 +452,13 @@ namespace sequoia::testing
       [sources, &isTest](const unit& u) { return (sources != recorded_sources::all_but_the_tests) || !isTest(u); }
     };
 
+    auto compiledFromOutside{
+      [sources](const unit& u) {
+        return (sources == recorded_sources::foo_cpp_compiled_from_outside)
+            && (u.source == "Source/fakeProject/Stuff/Foo.cpp");
+      }
+    };
+
     const auto root{
         (sources == recorded_sources::all_under_another_root) ? fake.parent_path() / "AnotherRoot"
       : (sources == recorded_sources::through_symlinks)       ? fake_project_via_symlink(fake)
@@ -480,12 +497,25 @@ namespace sequoia::testing
           {
             record.inputs.push_back(realSequoiaSourceRepo / input);
           }
+          if(compiledFromOutside(u))
+          {
+            record.inputs.front() = foo_cpp_outside_the_root(fake);
+            record.inputs.push_back(recordedPath("Source/fakeProject/Stuff/Baz.hpp"));
+          }
           record.inputs.push_back(recordedToolchainHeader);
           return record;
         };
       }
     };
 
+    if(const auto copy{foo_cpp_outside_the_root(fake)};
+       (sources == recorded_sources::foo_cpp_compiled_from_outside) && !fs::exists(copy))
+    {
+      // Once, like the stand-in header
+      fs::create_directories(copy.parent_path());
+      fs::copy_file(fake / "Source/fakeProject/Stuff/Foo.cpp", copy);
+      fs::last_write_time(copy, m_ResetTime);
+    }
     if(const auto header{fake_toolchain_header(fake)}; !fs::exists(header))
     {
       // Once: the artefacts are written several times over, and the header's modification time is the tests' to set
@@ -653,6 +683,7 @@ namespace sequoia::testing
     test_exceptions(projPaths);
     test_recorded_sources(projPaths);
     test_paths_recorded_through_symlinks(projPaths);
+    test_object_compiled_from_outside_the_root(projPaths);
     test_dependencies(projPaths);
     test_sequoia_sources();
     test_sequoia_change(projPaths, build_system::ninja);
@@ -895,6 +926,42 @@ namespace sequoia::testing
             test_selection{prune_fallback_reason::toolchain_changed});
       fs::last_write_time(toolchainHeader, m_ResetTime);
     }
+
+    write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
+  }
+
+  /* The record compiles `Stuff/Foo.cpp` from a copy outside the fake
+     project's root, and the compilation reads the project's `Foo.hpp` and
+     `Baz.hpp`. The copy is the toolchain's, so a change to it runs every
+     test. The object compiled from the copy is a node, which the stem rule
+     joins to `Foo.hpp`. So a change to `Baz.hpp` selects the tests which read
+     `Foo.hpp`, besides `BarFreeTest`, which reads `Baz.hpp` itself.
+   */
+  void dependency_analyzer_free_test::test_object_compiled_from_outside_the_root(const project_paths& projPaths)
+  {
+    const auto fake{auxiliary_materials() /= "FakeProject"};
+    fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
+
+    write_build_artefacts(fake, build_system::ninja, recorded_sources::foo_cpp_compiled_from_outside);
+
+    const auto copy{foo_cpp_outside_the_root(fake)};
+    fs::last_write_time(copy, m_ResetTime + earlyEditOffset);
+    check(equality,
+          "Copy of a source outside the project stale: every test runs",
+          (tests_to_run(projPaths)),
+          test_selection{prune_fallback_reason::toolchain_changed});
+    fs::last_write_time(copy, m_ResetTime);
+
+    check_tests_to_run("Header read only by an object compiled from outside the project",
+                       projPaths,
+                       {.stale{{{projPaths.source().project() / "Stuff" / "Baz.hpp"}, modification_time::early}},
+                         .to_run{{"Stuff/BarFreeTest.cpp"},
+                                 {"Stuff/FooTest.cpp"},
+                                 {"Stuff/FooTestingDiagnostics.cpp"},
+                                 {"Utilities/Thing/UniqueThingTest.cpp"},
+                                 {"Utilities/Thing/UniqueThingTestingDiagnostics.cpp"}}},
+                       {},
+                       {});
 
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
   }

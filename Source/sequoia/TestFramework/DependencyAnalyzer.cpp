@@ -231,11 +231,11 @@ namespace sequoia::testing
       /** Every file the build read is checked once against the executable's
           stamp.
 
-          \throws std::runtime_error if a file post-dates the executable, or a
-          file's modification time cannot be read.
+          \throws std::runtime_error if a file is no older than the executable,
+          or a file's modification time cannot be read.
        */
       dependency_graph(const build_tree& tree, const project_paths& projPaths)
-        : dependency_graph{projPaths, get_stamp(projPaths.executable()), read_files(tree, projPaths)}
+        : dependency_graph{tree, projPaths, get_stamp(projPaths.executable())}
       {}
 
       /// The translation units built from sources in the tests repository
@@ -259,13 +259,13 @@ namespace sequoia::testing
         return std::ranges::any_of(m_Graph.cnode_weights(), readFrom);
       }
     private:
-      /** A file the build names; for an object file, the node of the source it
-          was compiled from
+      /** A file the build names; for an object file, the source it was
+          compiled from
        */
       struct file_info
       {
         fs::path file{};
-        std::optional<std::size_t> source{};
+        std::optional<fs::path> source{};
 
         [[nodiscard]]
         bool is_object_file() const noexcept { return source.has_value(); }
@@ -277,7 +277,7 @@ namespace sequoia::testing
       struct files_read_by_build
       {
         graph_type project_graph;
-        std::vector<fs::path> toolchain_files;
+        fs::file_time_type toolchain_newest_modification;
       };
 
       fs::path m_TestsRepo;
@@ -285,10 +285,16 @@ namespace sequoia::testing
       fs::file_time_type m_ToolchainNewestModification;
       std::vector<translation_unit> m_TestTranslationUnits;
 
+      dependency_graph(const build_tree& tree,
+                       const project_paths& projPaths,
+                       std::optional<fs::file_time_type> executableStamp)
+        : dependency_graph{projPaths, executableStamp, read_files(tree, projPaths, executableStamp)}
+      {}
+
       dependency_graph(const project_paths& projPaths, std::optional<fs::file_time_type> executableStamp, files_read_by_build&& filesRead)
         : m_TestsRepo{projPaths.tests().repo()}
         , m_Graph{std::move(filesRead.project_graph)}
-        , m_ToolchainNewestModification{newest_modification(filesRead.toolchain_files, executableStamp)}
+        , m_ToolchainNewestModification{filesRead.toolchain_newest_modification}
         , m_TestTranslationUnits{read_test_translation_units(executableStamp)}
       {}
 
@@ -312,8 +318,8 @@ namespace sequoia::testing
       /** The modification time of a file the build read, checked against the
           executable's stamp.
 
-          \throws std::runtime_error if the file post-dates the executable, or
-          its modification time cannot be read.
+          \throws std::runtime_error if the file is no older than the
+          executable, or its modification time cannot be read.
        */
       [[nodiscard]]
       static fs::file_time_type modification_time(const fs::path& file, std::optional<fs::file_time_type> executableStamp)
@@ -339,17 +345,6 @@ namespace sequoia::testing
         return time;
       }
 
-      /** The newest modification among `files`, each checked; the earliest
-          time, if there are none
-       */
-      [[nodiscard]]
-      static fs::file_time_type newest_modification(std::span<const fs::path> files, std::optional<fs::file_time_type> executableStamp)
-      {
-        auto times{files | std::views::transform([executableStamp](const fs::path& file){ return modification_time(file, executableStamp); })};
-
-        return std::ranges::fold_left(times, fs::file_time_type::min(), std::ranges::max);
-      }
-
       /** The modification time of every file the build read, by node; an
           object file, being a product rather than something read, holds the
           earliest time, which no fold for the newest can see.
@@ -358,8 +353,8 @@ namespace sequoia::testing
           `TestMain.cpp` is read by no test's translation unit, and is the case
           which made the executable stale without prune noticing.
 
-          \throws std::runtime_error if a file post-dates the executable, or a
-          file's modification time cannot be read.
+          \throws std::runtime_error if a file is no older than the executable,
+          or a file's modification time cannot be read.
        */
       [[nodiscard]]
       std::vector<fs::file_time_type> modification_times(std::optional<fs::file_time_type> executableStamp) const
@@ -382,7 +377,7 @@ namespace sequoia::testing
         auto isTest{
           [this](node_index i) {
             const auto& info{node(i)};
-            return info.is_object_file() && in_repo(file(*info.source), m_TestsRepo);
+            return info.is_object_file() && in_repo(*info.source, m_TestsRepo);
           }
         };
 
@@ -398,7 +393,7 @@ namespace sequoia::testing
           [&](node_index object) {
             return
               translation_unit{
-                .source{fs::relative(file(*node(object).source), m_TestsRepo)},
+                .source{fs::relative(*node(object).source, m_TestsRepo)},
                 .newest_modification{newest_modification(object, times)}
               };
           }
@@ -439,19 +434,26 @@ namespace sequoia::testing
                 project's which the compilation of an object file read. The
                 tests' object files take the first nodes. The other files
                 follow in the order in which the record first names them;
-             -# The node of each object file names the node of its source;
+             -# The node of each object file names its source;
              -# An edge from each object file to each file of the project's
                 which its compilation read;
              -# The edges which `add_dependencies` adds.
-          -# The toolchain's files.
+          -# The newest modification among the toolchain's files, each checked
+             against `executableStamp`; the earliest time, if the build read
+             none of them.
 
-          A file is the toolchain's exactly when its path, as given by
+          A file is taken to belong to the toolchain when its path, as given by
           `resolved_paths`, lies outside the project's root. The files of the
           compiler, of the platform and of any library installed elsewhere are
           the toolchain's.
+
+          \throws std::runtime_error if a file of the toolchain's is no older
+          than the executable, or its modification time cannot be read.
        */
       [[nodiscard]]
-      static files_read_by_build read_files(const build_tree& tree, const project_paths& projPaths)
+      static files_read_by_build read_files(const build_tree& tree,
+                                            const project_paths& projPaths,
+                                            std::optional<fs::file_time_type> executableStamp)
       {
         const auto compilations{read_compilations(tree, projPaths.build().configuration())};
 
@@ -497,12 +499,13 @@ namespace sequoia::testing
         for(const auto& record : records)
         {
           const auto objectNode{nodeOf(record.object_index)};
-          const auto sourceNode{nodeOf(record.input_indices.front())};
+          const auto& source{resolvedPaths[record.input_indices.front()]};
+          auto setSource{[&source](file_info& info){ info.source = source; }};
 
-          g.mutate_node_weight(g.cbegin_node_weights() + objectNode, [sourceNode](file_info& info){ info.source = sourceNode; });
-          for(const auto inputNode : record.input_indices | std::views::filter(isProjectFile) | std::views::transform(nodeOf))
+          g.mutate_node_weight(g.cbegin_node_weights() + objectNode, setSource);
+          for(const auto inputIndex : record.input_indices | std::views::filter(isProjectFile))
           {
-            g.join(objectNode, inputNode);
+            g.join(objectNode, nodeOf(inputIndex));
           }
         }
 
@@ -510,15 +513,24 @@ namespace sequoia::testing
 
         // The build's tree lies within the project's root, so no object file
         // is the toolchain's
-        auto pathOf{[&resolvedPaths](compilations::file_index fileIndex){ return resolvedPaths[fileIndex]; }};
-        auto toolchainFiles{
-            std::views::iota(compilations::file_index{}, resolvedPaths.size())
-          | std::views::filter(std::not_fn(isProjectFile))
-          | std::views::transform(pathOf)
-          | std::ranges::to<std::vector>()
+        auto modificationOf{
+          [&resolvedPaths, executableStamp](compilations::file_index fileIndex) {
+            return modification_time(resolvedPaths[fileIndex], executableStamp);
+          }
         };
 
-        return files_read_by_build{.project_graph{std::move(g)}, .toolchain_files{std::move(toolchainFiles)}};
+        auto toolchainModifications{
+            std::views::iota(compilations::file_index{}, resolvedPaths.size())
+          | std::views::filter(std::not_fn(isProjectFile))
+          | std::views::transform(modificationOf)
+        };
+
+        return files_read_by_build{
+          .project_graph{std::move(g)},
+          .toolchain_newest_modification{
+            std::ranges::fold_left(toolchainModifications, fs::file_time_type::min(), std::ranges::max)
+          }
+        };
       }
 
       /** An edge from each header to each object file whose source both shares
@@ -541,11 +553,12 @@ namespace sequoia::testing
 
         for(const auto objectNode : std::views::iota(node_index{}, g.order()) | std::views::filter(isObjectFile))
         {
-          const auto sourceNode{*node_of(g, objectNode).source};
+          const auto source{*node_of(g, objectNode).source};
+          const auto sourceStem{source.stem().string()};
 
           auto implements{
             [&](node_index inputNode) {
-              return (inputNode != sourceNode) && (stems[inputNode] == stems[sourceNode]);
+              return (stems[inputNode] == sourceStem) && (file(inputNode) != source);
             }
           };
 
