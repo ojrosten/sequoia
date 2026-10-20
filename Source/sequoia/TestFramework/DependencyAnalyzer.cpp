@@ -210,17 +210,13 @@ namespace sequoia::testing
         reads. A definition anywhere else is not seen---in a source of a
         different name, or in a header of a different name which only some
         other compilation reads---although the program links either way.
-
-        The toolchain's files, which `read_files` defines, are not nodes;
-        however, `toolchain_newest_modification()` returns the newest of their
-        modifications.
      */
     class dependency_graph
     {
     public:
       /** A test's translation unit: its source, relative to the tests
-          repository, and the newest modification among the files the unit was
-          built from.
+          repository, and the newest modification among the project's files the
+          unit was built from.
        */
       struct translation_unit
       {
