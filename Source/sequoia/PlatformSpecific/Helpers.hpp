@@ -28,12 +28,6 @@ namespace sequoia
       the kernel is asked not to defer. If a request fails, the rest of the
       sleep is a `std::this_thread::sleep_for`. Elsewhere the whole sleep is
       a `std::this_thread::sleep_for`.
-
-      \returns
-      -# `timer_request_outcome::failed` if a request failed;
-      -# `timer_request_outcome::granted` if a request was granted, and none
-         failed;
-      -# `timer_request_outcome::not_made` otherwise, as away from macOS.
    */
   timer_request_outcome precise_sleep_for(std::chrono::nanoseconds duration);
 
@@ -41,8 +35,7 @@ namespace sequoia
 
       If Windows refuses, nothing changes. Later calls do nothing. On other platforms, the function does nothing.
 
-      \returns The outcome of the first call's request; on other platforms,
-               `timer_request_outcome::not_made`.
+      \returns The outcome of the first call's request.
    */
   [[nodiscard]]
   timer_request_outcome set_finest_windows_timer_resolution();

@@ -29,8 +29,12 @@ namespace sequoia::testing
         return "Windows granted the request for the finest timer resolution";
       case sleep_timing_evidence::precise_timer_request_granted:
         return "The kernel accepted every request for a precise timer";
+      case sleep_timing_evidence::finest_timer_resolution_request_not_observed:
+        return "The outcome of the request for the finest timer resolution was not observed";
+      case sleep_timing_evidence::precise_timer_request_not_observed:
+        return "The outcome of a request for a precise timer was not observed";
       case sleep_timing_evidence::no_timer_request_made:
-        return "The runner saw no outcome of a request for a timer finer than the default";
+        return "No request for a timer finer than the default was made";
       }
 
       throw std::logic_error{"Unhandled sleep_timing_evidence"};
@@ -52,6 +56,9 @@ namespace sequoia::testing
     if((lhs == timer_request_outcome::granted) || (rhs == timer_request_outcome::granted))
       return timer_request_outcome::granted;
 
+    if((lhs == timer_request_outcome::not_observed) || (rhs == timer_request_outcome::not_observed))
+      return timer_request_outcome::not_observed;
+
     return timer_request_outcome::not_made;
   }
 
@@ -69,6 +76,12 @@ namespace sequoia::testing
 
     if(outcomes.precise_timer == timer_request_outcome::granted)
       return sleep_timing_evidence::precise_timer_request_granted;
+
+    if(outcomes.finest_timer_resolution == timer_request_outcome::not_observed)
+      return sleep_timing_evidence::finest_timer_resolution_request_not_observed;
+
+    if(outcomes.precise_timer == timer_request_outcome::not_observed)
+      return sleep_timing_evidence::precise_timer_request_not_observed;
 
     return sleep_timing_evidence::no_timer_request_made;
   }

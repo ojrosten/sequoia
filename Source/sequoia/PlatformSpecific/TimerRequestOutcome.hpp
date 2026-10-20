@@ -13,11 +13,6 @@
 
 namespace sequoia
 {
-  /** \brief The outcome of a request for a timer finer than the default, as
-             observed by the function making the request.
-
-      `not_made` means that the function observed neither a failure nor a
-      grant: either it made no request, or it could not observe the outcome.
-   */
-  enum class timer_request_outcome { not_made, failed, granted };
+  /** \brief The outcome of a request for a timer finer than the default. */
+  enum class timer_request_outcome { not_made, not_observed, failed, granted };
 }

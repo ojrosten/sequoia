@@ -39,15 +39,26 @@ namespace sequoia::testing
   {
     using enum timer_request_outcome;
 
-    check("Neither request made", combine_timer_request_outcomes(not_made, not_made) == not_made);
-    check("A granted request, then none made", combine_timer_request_outcomes(granted, not_made) == granted);
-    check("No request made, then a granted one", combine_timer_request_outcomes(not_made, granted) == granted);
-    check("Both requests granted", combine_timer_request_outcomes(granted, granted) == granted);
-    check("A failed request, then none made", combine_timer_request_outcomes(failed, not_made) == failed);
-    check("No request made, then a failed one", combine_timer_request_outcomes(not_made, failed) == failed);
-    check("A failed request, then a granted one", combine_timer_request_outcomes(failed, granted) == failed);
-    check("A granted request, then a failed one", combine_timer_request_outcomes(granted, failed) == failed);
-    check("Both requests failed", combine_timer_request_outcomes(failed, failed) == failed);
+    auto combine{
+      [](timer_request_outcome lhs, timer_request_outcome rhs) { return combine_timer_request_outcomes(lhs, rhs); }
+    };
+
+    check("Neither request made", combine(not_made, not_made) == not_made);
+    check("An unobserved request, then none made", combine(not_observed, not_made) == not_observed);
+    check("No request made, then an unobserved one", combine(not_made, not_observed) == not_observed);
+    check("Both requests unobserved", combine(not_observed, not_observed) == not_observed);
+    check("A granted request, then none made", combine(granted, not_made) == granted);
+    check("No request made, then a granted one", combine(not_made, granted) == granted);
+    check("A granted request, then an unobserved one", combine(granted, not_observed) == granted);
+    check("An unobserved request, then a granted one", combine(not_observed, granted) == granted);
+    check("Both requests granted", combine(granted, granted) == granted);
+    check("A failed request, then none made", combine(failed, not_made) == failed);
+    check("No request made, then a failed one", combine(not_made, failed) == failed);
+    check("A failed request, then an unobserved one", combine(failed, not_observed) == failed);
+    check("An unobserved request, then a failed one", combine(not_observed, failed) == failed);
+    check("A failed request, then a granted one", combine(failed, granted) == failed);
+    check("A granted request, then a failed one", combine(granted, failed) == failed);
+    check("Both requests failed", combine(failed, failed) == failed);
   }
 
   void coarse_sleeps_free_test::test_choice_of_sleep_timing_evidence()
@@ -55,7 +66,7 @@ namespace sequoia::testing
     using enum timer_request_outcome;
     using evidence = sleep_timing_evidence;
 
-    check("No outcome of a request is observed",
+    check("No request is made",
           choose_sleep_timing_evidence({.finest_timer_resolution{not_made}, .precise_timer{not_made}})
             == evidence::no_timer_request_made);
 
@@ -67,6 +78,10 @@ namespace sequoia::testing
           choose_sleep_timing_evidence({.finest_timer_resolution{granted}, .precise_timer{not_made}})
             == evidence::finest_timer_resolution_request_granted);
 
+    check("The outcome of the request for the finest timer resolution was not observed",
+          choose_sleep_timing_evidence({.finest_timer_resolution{not_observed}, .precise_timer{not_made}})
+            == evidence::finest_timer_resolution_request_not_observed);
+
     check("A request for a precise timer failed",
           choose_sleep_timing_evidence({.finest_timer_resolution{not_made}, .precise_timer{failed}})
             == evidence::precise_timer_request_failed);
@@ -74,6 +89,10 @@ namespace sequoia::testing
     check("The requests for a precise timer were granted",
           choose_sleep_timing_evidence({.finest_timer_resolution{not_made}, .precise_timer{granted}})
             == evidence::precise_timer_request_granted);
+
+    check("The outcome of a request for a precise timer was not observed",
+          choose_sleep_timing_evidence({.finest_timer_resolution{not_made}, .precise_timer{not_observed}})
+            == evidence::precise_timer_request_not_observed);
 
     check("A failed request for a precise timer is chosen over a granted request for the finest timer resolution",
           choose_sleep_timing_evidence({.finest_timer_resolution{granted}, .precise_timer{failed}})
@@ -90,6 +109,27 @@ namespace sequoia::testing
     check("A granted request for the finest timer resolution is chosen over a granted request for a precise timer",
           choose_sleep_timing_evidence({.finest_timer_resolution{granted}, .precise_timer{granted}})
             == evidence::finest_timer_resolution_request_granted);
+
+    check("A failed request for a precise timer is chosen over an unobserved request for the finest timer resolution",
+          choose_sleep_timing_evidence({.finest_timer_resolution{not_observed}, .precise_timer{failed}})
+            == evidence::precise_timer_request_failed);
+
+    check("A failed request for the finest timer resolution is chosen over an unobserved request for a precise timer",
+          choose_sleep_timing_evidence({.finest_timer_resolution{failed}, .precise_timer{not_observed}})
+            == evidence::finest_timer_resolution_request_failed);
+
+    check("A granted request for a precise timer is chosen over an unobserved request for the finest timer resolution",
+          choose_sleep_timing_evidence({.finest_timer_resolution{not_observed}, .precise_timer{granted}})
+            == evidence::precise_timer_request_granted);
+
+    check("A granted request for the finest timer resolution is chosen over an unobserved request for a precise timer",
+          choose_sleep_timing_evidence({.finest_timer_resolution{granted}, .precise_timer{not_observed}})
+            == evidence::finest_timer_resolution_request_granted);
+
+    check("An unobserved request for the finest timer resolution is chosen over "
+          "an unobserved request for a precise timer",
+          choose_sleep_timing_evidence({.finest_timer_resolution{not_observed}, .precise_timer{not_observed}})
+            == evidence::finest_timer_resolution_request_not_observed);
   }
 
   void coarse_sleeps_free_test::test_coarse_sleep_messages()
@@ -122,7 +162,15 @@ namespace sequoia::testing
                  sleep_timing_evidence::precise_timer_request_granted,
                  "PreciseTimerRequestGranted.txt");
 
-    checkMessage("No outcome of a request is observed",
+    checkMessage("The outcome of the request for the finest timer resolution was not observed",
+                 sleep_timing_evidence::finest_timer_resolution_request_not_observed,
+                 "FinestTimerResolutionRequestNotObserved.txt");
+
+    checkMessage("The outcome of a request for a precise timer was not observed",
+                 sleep_timing_evidence::precise_timer_request_not_observed,
+                 "PreciseTimerRequestNotObserved.txt");
+
+    checkMessage("No request is made",
                  sleep_timing_evidence::no_timer_request_made,
                  "NoTimerRequestMade.txt");
   }

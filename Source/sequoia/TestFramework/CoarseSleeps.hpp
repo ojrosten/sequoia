@@ -30,8 +30,6 @@ namespace sequoia::testing
 
   /** \brief The observations a process can make of its requests for timers
              finer than the default.
-
-      `no_timer_request_made` is the observation of no outcome.
    */
   enum class sleep_timing_evidence
   {
@@ -39,6 +37,8 @@ namespace sequoia::testing
     precise_timer_request_failed,
     finest_timer_resolution_request_granted,
     precise_timer_request_granted,
+    finest_timer_resolution_request_not_observed,
+    precise_timer_request_not_observed,
     no_timer_request_made
   };
 
@@ -50,19 +50,17 @@ namespace sequoia::testing
 
   /** \brief Combines the outcomes of two requests for timers.
 
-      \returns
-      -# `timer_request_outcome::failed` if either request failed;
-      -# `timer_request_outcome::granted` if either request was granted, and
-         neither failed;
-      -# `timer_request_outcome::not_made` otherwise.
+      \returns Whichever of `lhs` and `rhs` comes first in the order
+               `failed`, `granted`, `not_observed`, `not_made`.
    */
   [[nodiscard]]
   timer_request_outcome combine_timer_request_outcomes(timer_request_outcome lhs, timer_request_outcome rhs);
 
   /** \brief Chooses what `outcomes` show about the timing of sleeps.
 
-      A failed request takes precedence over a granted one, and the request
-      for the finest timer resolution over the request for a precise timer.
+      An outcome takes precedence in the order `failed`, `granted`,
+      `not_observed`. Where both requests have the same outcome, the request
+      for the finest timer resolution takes precedence.
    */
   [[nodiscard]]
   sleep_timing_evidence choose_sleep_timing_evidence(outcomes_of_timer_requests outcomes);

@@ -86,9 +86,11 @@ namespace sequoia
         \returns
         -# `timer_request_outcome::failed`, possibly before `deadline`, if the
            kqueue cannot be created, refuses a timer, or fails while waiting;
-        -# `timer_request_outcome::not_made` if `deadline` passes before any
-           timer fires, or away from macOS;
-        -# `timer_request_outcome::granted` otherwise.
+        -# `timer_request_outcome::granted` if a timer fires;
+        -# `timer_request_outcome::not_observed` if a signal interrupts every
+           wait;
+        -# `timer_request_outcome::not_made` if `deadline` passes before the
+           first wait, or away from macOS.
      */
     [[nodiscard]]
     timer_request_outcome try_precise_sleep_until([[maybe_unused]] std::chrono::steady_clock::time_point deadline)
@@ -119,9 +121,12 @@ namespace sequoia
 
           const int events{kevent64(queue.get(), &request, 1, &fired, 1, 0, nullptr)};
 
-          // An interrupted wait does not show whether the kernel accepted the
-          // timer
-          if(const bool interrupted{(events < 0) && (errno == EINTR)}; !interrupted)
+          if(const bool interrupted{(events < 0) && (errno == EINTR)}; interrupted)
+          {
+            if(outcome == timer_request_outcome::not_made)
+              outcome = timer_request_outcome::not_observed;
+          }
+          else
           {
             const bool waitFailed{events < 0};
             // The kernel reports a refused registration as an event flagged

@@ -1,2 +1,2 @@
 coarse_sleeps_free_test
-Standard Top Level Checks:                27;  Failures:  0  [Deep checks: 52]
+Standard Top Level Checks:                43;  Failures:  0  [Deep checks: 78]
