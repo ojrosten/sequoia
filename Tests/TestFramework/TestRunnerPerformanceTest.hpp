@@ -38,17 +38,6 @@ namespace sequoia::testing
                                              const std::vector<std::string>& arguments,
                                              relative_performance_interval prediction);
 
-    [[nodiscard]]
-    std::filesystem::path fake_project() const;
-
-    [[nodiscard]]
-    std::filesystem::path minimal_fake_path() const;
-
-    template<class... ModeArguments>
-      requires (std::convertible_to<const ModeArguments&, std::string> && ...)
-    [[nodiscard]]
-    std::vector<std::string> fake_project_command_line(const ModeArguments&... modeArguments) const;
-
     void write(std::string_view dirName, std::string_view printedOutput) const;
 
     void check_output(std::string_view description,
