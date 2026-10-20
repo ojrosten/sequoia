@@ -155,8 +155,8 @@ namespace sequoia::testing
         }
       };
 
-      // The timer resolution belongs to the process. Each thread requests its
-      // own precise timers, so the check judges only the thread it runs on.
+      // The first runner in the process checks. A later runner, such as one a
+      // test creates, makes no check, so its output carries no warning.
       static std::once_flag checked{};
       std::call_once(checked, warnIfCoarse);
     }
