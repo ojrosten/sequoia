@@ -28,11 +28,8 @@ namespace sequoia::testing
     return fake_project_root(materials).append("build/CMade/FakeExe.txt");
   }
 
-  /** \brief Returns the path of the executable of the fake project in
-             `materials`, followed by `arguments`.
-
-      The executable comes first because `project_paths` works out a
-      project's root from `argv[0]`.
+  /** \brief Returns the command line which runs the fake project in
+             `materials` with `arguments`.
    */
   template<class... Arguments>
     requires (std::convertible_to<const Arguments&, std::string> && ...)
