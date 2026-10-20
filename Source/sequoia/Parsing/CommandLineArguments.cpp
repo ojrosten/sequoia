@@ -420,8 +420,8 @@ namespace sequoia::parsing::commandline
                                                        operation_data currentOperationData,
                                                        top_level topLevel)
     {
-      // A group is a dash followed by single-character aliases, each spelt without its own dash; any
-      // further dash is ignored
+      // A group is a dash followed by single-character aliases, each spelt without its own dash;
+      // any further dash is ignored
       if((arg.size() < 2) || (arg[0] != '-') || (arg[1] == ' ') || (arg[1] == '-'))
         return false;
 
@@ -481,8 +481,7 @@ namespace sequoia::parsing::commandline
     [[nodiscard]]
     std::string outcome_builder::generate_help(const Options& options) const
     {
-      // The described option is the one most recently encountered. When none has been encountered,
-      // help was requested at the top level, and the top-level options, `options`, are described.
+      // The described option is the one most recently encountered
       auto path{m_OptionsEntered};
       if(m_MostRecentlyEncounteredOption && (path.empty() || (path.back() != m_MostRecentlyEncounteredOption)))
         path.push_back(m_MostRecentlyEncounteredOption);
@@ -497,6 +496,8 @@ namespace sequoia::parsing::commandline
       auto names{path | std::views::transform(spacedNameOf)};
       usage = std::ranges::fold_left(names, std::move(usage), std::plus{});
 
+      // No option encountered means that help was requested at the top level, so `options` are
+      // the top-level options
       if(path.empty())
         return std::format("{}{}\n{}", usage, continuation_of(options), sections_of(options));
 

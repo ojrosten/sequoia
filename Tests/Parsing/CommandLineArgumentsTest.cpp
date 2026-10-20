@@ -253,6 +253,10 @@ namespace sequoia::testing
       return parse({{"foo"}}, {{{"--help", {}, {}, fo{}}}});
     });
 
+    check_exception_thrown<std::logic_error>("An option named as a help request, and with neither invocable", [](){
+      return parse({{"foo"}}, {{{"--help", {}, {}}}});
+    });
+
     check_exception_thrown<std::logic_error>("A nested option aliased as a help request", [](){
       return parse({{"foo"}}, {{{"create", {"c"}, {}, fo{}, {}, "", {{"--header", {"-h"}, {"header"}}}}}});
     });

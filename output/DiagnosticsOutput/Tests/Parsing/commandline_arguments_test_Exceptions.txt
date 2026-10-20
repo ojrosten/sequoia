@@ -143,6 +143,15 @@ Expected Exception Type:
 =======================================
 
 Tests/Parsing/CommandLineArgumentsTest.cpp, Line 256
+An option named as a help request, and with neither invocable
+
+Expected Exception Type:
+[std::logic_error]
+  Error: option "--help" is spelt as a help request
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 260
 A nested option aliased as a help request
 
 Expected Exception Type:
@@ -151,7 +160,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 313
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 317
 A nested option, not bound to a function object, missing its argument
 
 Expected Exception Type:
@@ -160,7 +169,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 319
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 323
 A nested option, not bound to a function object, missing two of its three arguments
 
 Expected Exception Type:
@@ -169,7 +178,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 325
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 329
 A dash after something other than a dash, at a nested level
 
 Expected Exception Type:
@@ -178,7 +187,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 441
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 445
 Two options, one with nesting, illegal argument
 
 Expected Exception Type:
