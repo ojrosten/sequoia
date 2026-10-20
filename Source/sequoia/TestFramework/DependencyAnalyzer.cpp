@@ -94,24 +94,31 @@ namespace sequoia::testing
     }
 
     /** The path of each of `files`, in two parts:
-        -# The file's directory, made weakly canonical if the filesystem can resolve the directory;
+        -# The file's directory, made weakly canonical if the filesystem can
+           resolve the directory;
         -# The file's own name, as spelled by the compilation.
 
         A path the build records as relative is relative to the build
         directory, since Ninja runs each compilation there.
 
-        The build records each path as the build's configuration spelled the path: through whatever symlink, and
-        in whatever case. project_paths holds canonical paths, so this function resolves each file's directory:
-        -# A directory which the filesystem can resolve is made weakly canonical;
-        -# A directory which the filesystem cannot resolve keeps its recorded spelling. A directory without
-           permission is one cause, and a symlink loop is another. Reading the modification time of a file in
-           such a directory then fails, and the failure gives the reason.
+        The build records each path as the build's configuration spelled the
+        path: through whatever symlink, and in whatever case. project_paths
+        holds canonical paths, so this function resolves each file's
+        directory:
+        -# A directory which the filesystem can resolve is made weakly
+           canonical;
+        -# A directory which the filesystem cannot resolve keeps its recorded
+           spelling. A directory without permission is one cause, and a
+           symlink loop is another. Reading the modification time of a file
+           in such a directory then fails, and the failure gives the reason.
 
         A file's own name keeps the compilation's spelling:
-        -# A file which is itself a symlink keeps its name. `last_write_time` follows the symlink;
-        -# A header keeps the case in which the compilation spelled the header's name. On a filesystem which
-           finds a file whatever its case, that case may differ from the header's own. The header then does not
-           match the stem of the source with the same name.
+        -# A file which is itself a symlink keeps its name. `last_write_time`
+           follows the symlink;
+        -# A header keeps the case in which the compilation spelled the
+           header's name. On a filesystem which finds a file whatever its
+           case, that case may differ from the header's own. The header then
+           does not match the stem of the source with the same name.
 
         The function asks the filesystem once per directory.
      */
