@@ -93,13 +93,19 @@ namespace sequoia::testing
   class commandline_arguments
   {
   public:
+    commandline_arguments(std::vector<std::string> args);
+
+    commandline_arguments(const commandline_arguments&)     = delete;
+    commandline_arguments(commandline_arguments&&) noexcept = default;
+
+    commandline_arguments& operator=(const commandline_arguments&)     = delete;
+    commandline_arguments& operator=(commandline_arguments&&) noexcept = default;
+
     [[nodiscard]]
     int size() const noexcept
     {
       return static_cast<int>(m_Args.size());
     }
-
-    commandline_arguments(std::vector<std::string> args);
 
     [[nodiscard]]
     char** get() noexcept
