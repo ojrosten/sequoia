@@ -435,14 +435,14 @@ namespace sequoia::testing
 
           \returns The files, in two parts:
           -# A graph of the project's files:
-          -# A node for every object file, and for every file of the project's
-             which the compilation of an object file read. The tests' object
-             files take the first nodes. The other files follow in the order in
-             which the record first names them;
-          -# The node of each object file names the node of its source;
-          -# An edge from each object file to each file of the project's which
-             its compilation read;
-          -# The edges which `add_dependencies` adds.
+             -# A node for every object file, and for every file of the
+                project's which the compilation of an object file read. The
+                tests' object files take the first nodes. The other files
+                follow in the order in which the record first names them;
+             -# The node of each object file names the node of its source;
+             -# An edge from each object file to each file of the project's
+                which its compilation read;
+             -# The edges which `add_dependencies` adds.
           -# The toolchain's files.
 
           A file is the toolchain's exactly when its path, as given by
@@ -902,8 +902,8 @@ namespace sequoia::testing
         -# The target named by the first `<target>.dir` on the path of `object`
            relative to `buildDirectory`;
         -# `nullopt` if either:
-        -# `object` does not lie within `buildDirectory`;
-        -# No directory on that path is named `<target>.dir`.
+           -# `object` does not lie within `buildDirectory`;
+           -# No directory on that path is named `<target>.dir`.
      */
     [[nodiscard]]
     std::optional<std::string> target_of(const fs::path& object, const fs::path& buildDirectory)
