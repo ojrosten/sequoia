@@ -10,10 +10,12 @@
 /** \file
     \brief Parsing of commandline arguments.
 
-    The philosophy is to specify a forest whose nodes are instances of sequoia::parsing::commandline::option.
+    The philosophy is to specify a forest whose nodes are instances of
+    sequoia::parsing::commandline::option.
     This is used at runtime, as the command line arguments are parsed to generate a forest
     whose nodes are instances of sequoia::parsing::commandline::operation.
-    Each tree of this forest is then traversed, and the function objects held by the `operation`s invoked.
+    Each tree of this forest is then traversed, and the function objects held
+    by the `operation`s invoked.
 */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
@@ -114,8 +116,8 @@ namespace sequoia::parsing::commandline
 
   /** \brief The result of parse().
 
-      -# `zeroth_arg`: the zeroth argument, typically the path of the executable; empty if `argc` is
-         zero.
+      -# `zeroth_arg`: the zeroth argument, typically the path of the
+         executable; empty if `argc` is zero.
       -# `operations`: one \ref operation tree per top-level option encountered, in the order
          encountered, the root holding the option's function objects and arguments. A nested option
          encountered adds a node beneath the node of its enclosing option if the nested option has a
@@ -155,8 +157,8 @@ namespace sequoia::parsing::commandline
               all of its parameters.
       \throws std::runtime_error if a group of aliases names an option with parameters or with
               nested options.
-      \throws std::logic_error if both the function objects, `early` and `late`, belonging to a
-              top-level `option` are null.
+      \throws std::logic_error if both the function objects, `early` and `late`, belonging to
+              a top-level `option` are null.
       \throws std::logic_error if an option's name or alias is spelt as a help request.
 
       \returns The \ref sequoia::parsing::commandline::outcome "outcome".
