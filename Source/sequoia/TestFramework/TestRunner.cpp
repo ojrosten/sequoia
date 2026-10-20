@@ -135,30 +135,19 @@ namespace sequoia::testing
 
     /** \brief Writes a warning to `stream` if sleeps on this machine are
                coarse.
-
-        Only the first call in the process checks.
      */
     void check_for_coarse_sleeps(std::ostream& stream, timer_request_outcome finestTimerResolutionOutcome)
     {
-      auto warnIfCoarse{
-        [&stream, finestTimerResolutionOutcome]() {
-          constexpr std::chrono::milliseconds target{5};
-          if(const auto assessment{assess_sleeps(target)}; is_coarse_sleep(assessment.typical_duration, target))
-          {
-            const auto outcome{
-              combine_timer_request_outcomes(finestTimerResolutionOutcome, assessment.precise_timer_outcome)
-            };
+      constexpr std::chrono::milliseconds target{5};
+      if(const auto assessment{assess_sleeps(target)}; is_coarse_sleep(assessment.typical_duration, target))
+      {
+        const auto outcome{
+          combine_timer_request_outcomes(finestTimerResolutionOutcome, assessment.precise_timer_outcome)
+        };
 
-            stream << coarse_sleep_message(assessment.typical_duration, target, platform_timer_request, outcome)
-                   << std::flush;
-          }
-        }
-      };
-
-      // The first runner in the process checks. A later runner, such as one a
-      // test creates, makes no check, so its output carries no warning.
-      static std::once_flag checked{};
-      std::call_once(checked, warnIfCoarse);
+        stream << coarse_sleep_message(assessment.typical_duration, target, platform_timer_request, outcome)
+               << std::flush;
+      }
     }
 
     void overwrite_quietly(const fs::path& file, std::string_view text)
@@ -1628,10 +1617,20 @@ namespace sequoia::testing
   {
     const auto finestTimerResolutionOutcome{set_finest_windows_timer_resolution()};
     if(!in_sandbox())
-    {
       fs::remove_all(proj_paths().output().instability_analysis());
-      check_for_coarse_sleeps(stream(), finestTimerResolutionOutcome);
-    }
+
+    auto checkForCoarseSleeps{
+      [this, finestTimerResolutionOutcome]() {
+        if(!in_sandbox())
+          check_for_coarse_sleeps(stream(), finestTimerResolutionOutcome);
+      }
+    };
+
+    // Only the first runner in the process may check. A sandbox's runner makes
+    // no check, since its coordinator has made one. A runner a test creates is
+    // never first, so it writes no warning into the output its test compares.
+    static std::once_flag coarseSleepsChecked{};
+    std::call_once(coarseSleepsChecked, checkForCoarseSleeps);
 
     const auto baseline{versioned_output_baseline()};
     const auto code{  m_InstabilityMode == instability_mode::coordinator
