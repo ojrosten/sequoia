@@ -505,8 +505,8 @@ namespace sequoia::testing
     {
       fs::create_directories(buildDir / objects_of(system, target, visualStudioConfiguration).directory);
     }
-    // What the build tree says of itself; the fake project's source dir is
-    // the fake project itself
+    // The salient properties of the fake build tree. The fake project is
+    // its own source directory
     write_to_file(buildDir / "CMakeCache.txt",
                   std::format("# Fake\nCMAKE_GENERATOR:INTERNAL={}\nCMAKE_HOME_DIRECTORY:INTERNAL={}\n", ninja ? "Ninja" : "Visual Studio 18 2026", fake.generic_string()),
                   std::ios_base::out);

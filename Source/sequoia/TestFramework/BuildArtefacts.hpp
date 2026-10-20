@@ -48,14 +48,14 @@ namespace sequoia::testing
     friend bool operator==(const compilations&, const compilations&) noexcept = default;
   };
 
-  /** \brief What a CMake build tree says about itself. */
+  /** \brief Salient properties of a CMake build tree. */
   struct build_tree
   {
     std::filesystem::path build_directory{};
     std::string generator{};
   };
 
-  /** \brief Reads a build tree's description of itself from its `CMakeCache.txt`.
+  /** \brief Reads a build tree's salient properties from `cacheFile`.
 
       \throws std::runtime_error if the cache cannot be read, or names no generator.
    */
