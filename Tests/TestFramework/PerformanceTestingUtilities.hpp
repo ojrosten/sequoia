@@ -43,13 +43,17 @@ namespace sequoia::testing
   /** \brief Returns the number of trials made before the `n`th attempt,
              given the number in each attempt.
 
-      \throws std::logic_error if `n` is zero.
+      Attempts are numbered from 1, and `n` may name the attempt after the
+      last, which gives the trials of every attempt.
+
+      \throws std::logic_error if `n` is zero or exceeds
+      `trialsPerAttempt.size() + 1`.
    */
   [[nodiscard]]
   constexpr std::size_t trials_before_nth_attempt(std::span<const std::size_t> trialsPerAttempt, std::size_t n)
   {
-    if(n == 0)
-      throw std::logic_error{"Attempts are numbered from 1, so there is no 0th attempt"};
+    if((n == 0) || (n > trialsPerAttempt.size() + 1))
+      throw std::logic_error{"An attempt number must lie between 1 and one past the number of attempts"};
 
     return std::ranges::fold_left(trialsPerAttempt | std::views::take(n - 1), 0uz, std::plus<>{});
   }

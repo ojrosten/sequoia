@@ -214,7 +214,25 @@ Relative performance test requires task durations > 0; a task too quick for the 
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 282
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 288
+Trials before a 0th attempt
+
+Expected Exception Type:
+[std::logic_error]
+An attempt number must lie between 1 and one past the number of attempts
+
+=======================================
+
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 293
+Trials before an attempt two after the last
+
+Expected Exception Type:
+[std::logic_error]
+An attempt number must lie between 1 and one past the number of attempts
+
+=======================================
+
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 310
 More atypical trials than trials
 
 Expected Exception Type:
@@ -223,16 +241,7 @@ More atypical trials (2) than trials (1)
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 295
-Trials before a 0th attempt
-
-Expected Exception Type:
-[std::logic_error]
-Attempts are numbered from 1, so there is no 0th attempt
-
-=======================================
-
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 306
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 321
 Call orders for an odd number of trials
 
 Expected Exception Type:
@@ -241,7 +250,7 @@ Call orders require an even number of trials, not 11
 
 =======================================
 
-Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 311
+Tests/TestFramework/PerformanceExceptionsTest.cpp, Line 326
 Task orders with baselines for an odd number of trials
 
 Expected Exception Type:
