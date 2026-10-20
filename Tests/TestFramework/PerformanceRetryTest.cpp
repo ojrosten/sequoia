@@ -52,23 +52,23 @@ namespace sequoia::testing
   void performance_retry_test::test_pass_at_second_attempt()
   {
     const counted_spinner fast{spin_unit},
-                          slow{spin_unit, trials_for_minimum_11[0], 2 * spin_unit};
+                          slow{spin_unit, trials_per_attempt_with_minimum_11[0], 2 * spin_unit};
 
     check_relative_performance("A speed-up of 1, then of 2", fast, slow, retry_parameters);
-    check(equality, "Calls of the fast task", fast.calls(), trials_before_attempt(trials_for_minimum_11, 3));
-    check(equality, "Calls of the slow task", slow.calls(), trials_before_attempt(trials_for_minimum_11, 3));
+    check(equality, "Calls of the fast task", fast.calls(), trials_before_nth_attempt(trials_per_attempt_with_minimum_11, 3));
+    check(equality, "Calls of the slow task", slow.calls(), trials_before_nth_attempt(trials_per_attempt_with_minimum_11, 3));
   }
 
   void performance_retry_test::test_pass_at_final_attempt()
   {
     constexpr auto attempts{relative_performance_max_attempts};
     constexpr auto maximumCalls       {retry_parameters.minimum_trials * attempts * (attempts + 3) / 4 + attempts},
-                   everyAttemptsTrials{trials_before_attempt(trials_for_minimum_11, attempts + 1)};
+                   everyAttemptsTrials{trials_before_nth_attempt(trials_per_attempt_with_minimum_11, attempts + 1)};
 
     STATIC_CHECK(everyAttemptsTrials <= maximumCalls);
 
     const counted_spinner fast{spin_unit},
-                          slow{spin_unit, trials_before_attempt(trials_for_minimum_11, 3), 2 * spin_unit};
+                          slow{spin_unit, trials_before_nth_attempt(trials_per_attempt_with_minimum_11, 3), 2 * spin_unit};
 
     check_relative_performance("A speed-up of 1 until the final attempt, then of 2", fast, slow, retry_parameters);
     check(equality, "Calls of the fast task, every attempt's trials", fast.calls(), everyAttemptsTrials);
@@ -80,10 +80,10 @@ namespace sequoia::testing
     using namespace std::chrono_literals;
 
     constexpr auto attempts{relative_performance_max_attempts};
-    constexpr auto everyAttemptsTrials{trials_before_attempt(trials_for_minimum_10, attempts + 1)};
+    constexpr auto everyAttemptsTrials{trials_before_nth_attempt(trials_per_attempt_with_minimum_10, attempts + 1)};
 
     constexpr relative_performance_parameters parameters{.prediction{.lower{5.35}, .upper{8.56}}};
-    const counted_spinner fast{6ms, trials_before_attempt(trials_for_minimum_10, attempts), 4ms};
+    const counted_spinner fast{6ms, trials_before_nth_attempt(trials_per_attempt_with_minimum_10, attempts), 4ms};
 
     check_relative_performance(
       "The intervals of attempts 1 and 2 lie below the prediction, "
@@ -102,7 +102,7 @@ namespace sequoia::testing
     using namespace std::chrono_literals;
 
     constexpr relative_performance_parameters parameters{.prediction{.lower{1.05}, .upper{4}}};
-    const counted_spinner fast{2ms, trials_for_minimum_10[0], 1ms};
+    const counted_spinner fast{2ms, trials_per_attempt_with_minimum_10[0], 1ms};
 
     check_relative_performance(
       "Attempt 1's interval excludes a speed-up of 1, "
@@ -112,7 +112,7 @@ namespace sequoia::testing
       make_cycling_spinner({2ms, 2ms, 3ms, 4ms, 9ms}),
       parameters
     );
-    check(equality, "Calls of the fast task", fast.calls(), trials_before_attempt(trials_for_minimum_10, 3));
+    check(equality, "Calls of the fast task", fast.calls(), trials_before_nth_attempt(trials_per_attempt_with_minimum_10, 3));
   }
 
   void performance_retry_test::test_trimmed_estimate()
@@ -130,7 +130,7 @@ namespace sequoia::testing
       counted_spinner{4ms},
       parameters
     );
-    check(equality, "Calls of the fast task", fast.calls(), trials_for_minimum_10[0]);
+    check(equality, "Calls of the fast task", fast.calls(), trials_per_attempt_with_minimum_10[0]);
   }
 
   void performance_retry_test::test_task_orders()
@@ -155,7 +155,7 @@ namespace sequoia::testing
                                    recordedTask(task::fast, counted_spinner{spin_unit}),
                                    recordedTask(task::slow,
                                                 counted_spinner{spin_unit,
-                                                                trials_before_attempt(trials_for_minimum_11, 3),
+                                                                trials_before_nth_attempt(trials_per_attempt_with_minimum_11, 3),
                                                                 2 * spin_unit}),
                                    retry_parameters);
 
@@ -169,12 +169,12 @@ namespace sequoia::testing
 
     auto tasksRunFirstInAttempt{
       [&taskCalls](std::size_t attempt) {
-        const auto priorTrials{trials_before_attempt(trials_for_minimum_11, attempt)};
+        const auto priorTrials{trials_before_nth_attempt(trials_per_attempt_with_minimum_11, attempt)};
 
         return
             taskCalls
           | std::views::drop(2 * priorTrials)
-          | std::views::take(2 * trials_for_minimum_11[attempt - 1])
+          | std::views::take(2 * trials_per_attempt_with_minimum_11[attempt - 1])
           | std::views::stride(2)
           | std::ranges::to<std::vector>();
       }
@@ -187,7 +187,7 @@ namespace sequoia::testing
       check(equality,
             std::format("Trials of attempt {} in which the fast task runs first", attempt),
             static_cast<std::size_t>(std::ranges::count_if(tasksRunFirstInAttempt(attempt), isFast)),
-            trials_for_minimum_11[attempt - 1] / 2);
+            trials_per_attempt_with_minimum_11[attempt - 1] / 2);
     }
 
     check("A second check runs the tasks in another order",
@@ -199,7 +199,7 @@ namespace sequoia::testing
     using namespace std::chrono_literals;
 
     const counted_spinner fast{4ms},
-                          fastBaseline{7ms, trials_for_minimum_11[0], 1ms},
+                          fastBaseline{7ms, trials_per_attempt_with_minimum_11[0], 1ms},
                           slow{7ms},
                           slowBaseline{1ms};
 
@@ -209,7 +209,7 @@ namespace sequoia::testing
                                task_with_baseline{.task = slow, .baseline = slowBaseline},
                                retry_parameters);
 
-    constexpr auto callsOfEach{trials_before_attempt(trials_for_minimum_11, 3)};
+    constexpr auto callsOfEach{trials_before_nth_attempt(trials_per_attempt_with_minimum_11, 3)};
 
     check(equality, "Calls of the fast task",            fast.calls(),         callsOfEach);
     check(equality, "Calls of the fast task's baseline", fastBaseline.calls(), callsOfEach);
@@ -224,7 +224,7 @@ namespace sequoia::testing
     enum class task { fast, fast_baseline, slow, slow_baseline };
 
     constexpr std::size_t callsPerTrial{4},
-                          trials{trials_for_minimum_11[0]};
+                          trials{trials_per_attempt_with_minimum_11[0]};
 
     auto recordTaskCalls{
       [this](const reporter& description) {

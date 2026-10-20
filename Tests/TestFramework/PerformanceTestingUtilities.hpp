@@ -27,25 +27,26 @@
 namespace sequoia::testing
 {
   /** \brief The number of trials in each attempt of
-             `check_relative_performance`, for minima of 10 and 11.
+             `check_relative_performance`, when `minimum_trials` is 10 and
+             when it is 11.
 
       The numbers are not in the contract. Tests which use them pin the
       implementation's choice, and change with it.
    */
-  inline constexpr auto trials_for_minimum_10{std::to_array<std::size_t>({10, 16, 20})},
-                        trials_for_minimum_11{std::to_array<std::size_t>({12, 16, 22})};
+  inline constexpr auto trials_per_attempt_with_minimum_10{std::to_array<std::size_t>({10, 16, 20})},
+                        trials_per_attempt_with_minimum_11{std::to_array<std::size_t>({12, 16, 22})};
 
-  static_assert(trials_for_minimum_10.size() == relative_performance_max_attempts);
-  static_assert(trials_for_minimum_11.size() == relative_performance_max_attempts);
-  static_assert(trials_for_minimum_10.front() == relative_performance_minimum_trials_floor);
+  static_assert(trials_per_attempt_with_minimum_10.size() == relative_performance_max_attempts);
+  static_assert(trials_per_attempt_with_minimum_11.size() == relative_performance_max_attempts);
+  static_assert(trials_per_attempt_with_minimum_10.front() == relative_performance_minimum_trials_floor);
 
-  /** \brief Returns the number of trials made before attempt `attempt`,
+  /** \brief Returns the number of trials made before the `n`th attempt,
              given the number in each attempt.
    */
   [[nodiscard]]
-  constexpr std::size_t trials_before_attempt(std::span<const std::size_t> trialsOfAttempts, std::size_t attempt)
+  constexpr std::size_t trials_before_nth_attempt(std::span<const std::size_t> trialsPerAttempt, std::size_t n)
   {
-    return std::ranges::fold_left(trialsOfAttempts | std::views::take(attempt - 1), 0uz, std::plus<>{});
+    return std::ranges::fold_left(trialsPerAttempt | std::views::take(n - 1), 0uz, std::plus<>{});
   }
 
   /** \brief Returns `numTrials` trials' durations: those of `atypical`,
