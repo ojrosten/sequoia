@@ -189,19 +189,25 @@ namespace sequoia::testing
       return std::nullopt;
     }
 
-    /** \brief The dependency graph of the executable, as recorded by the build which produced the executable.
+    /** \brief The dependency graph of the executable, as recorded by the build
+               which produced the executable.
 
-        The build associates each object file with the files consumed to create it. Typically these will be
-        headers. Suppose `Foo.hpp` depends on `Bar.hpp`. This is an explicit dependency. However, it is natural
-        that definitions for declarations within `Bar.hpp` are in its associated source file `Bar.cpp`.
-        Therefore, in principle, changes to `Bar.cpp` can trigger a change in behaviour of functions declared
-        in `Bar.hpp` and consumed by `Foo.hpp`. Therefore there is a dependency of `Foo.hpp` on `Bar.cpp`.
+        The build associates each object file with the files consumed to create
+        it. Typically these will be headers. Suppose `Foo.hpp` depends on
+        `Bar.hpp`. This is an explicit dependency. However, it is natural that
+        definitions for declarations within `Bar.hpp` are in its associated
+        source file `Bar.cpp`. Therefore, in principle, changes to `Bar.cpp`
+        can trigger a change in behaviour of functions declared in `Bar.hpp`
+        and consumed by `Foo.hpp`. Therefore there is a dependency of `Foo.hpp`
+        on `Bar.cpp`.
 
-        The build does not record that dependency: how a definition reaches an object is settled at link
-        time, and the record holds only what each compilation read. So prune infers the dependency by
-        name, and relies on a precondition: a definition is either in a file the consuming compilation
-        reads, or in the source named for a header the compilation reads. A definition anywhere else is
-        not seen - in a source of a different name, or in a header of a different name which only some
+        The build does not record that dependency: how a definition reaches an
+        object is settled at link time, and the record holds only what each
+        compilation read. So prune infers the dependency by name, and relies on
+        a precondition: a definition is either in a file the consuming
+        compilation reads, or in the source named for a header the compilation
+        reads. A definition anywhere else is not seen - in a source of a
+        different name, or in a header of a different name which only some
         other compilation reads - although the program links either way.
 
         The toolchain's files, which `read_files` defines, are not nodes: the
