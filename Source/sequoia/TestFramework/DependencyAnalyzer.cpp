@@ -97,6 +97,9 @@ namespace sequoia::testing
         -# The file's directory, made weakly canonical if the filesystem can resolve the directory;
         -# The file's own name, as spelled by the compilation.
 
+        A path the build records as relative is relative to the build
+        directory, since Ninja runs each compilation there.
+
         The build records each path as the build's configuration spelled the path: through whatever symlink, and
         in whatever case. project_paths holds canonical paths, so this function resolves each file's directory:
         -# A directory which the filesystem can resolve is made weakly canonical;
