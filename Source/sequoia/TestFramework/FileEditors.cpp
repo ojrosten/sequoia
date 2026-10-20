@@ -151,18 +151,24 @@ namespace sequoia::testing
     const auto       executionIndentEnd{contentsView.find_first_not_of(blanks, executionLineStart)};
     std::string_view executionIndent   {contentsView.substr(executionLineStart, executionIndentEnd - executionLineStart)};
 
-    auto registrationOf{
-      [](std::string_view test) { return std::format("runner.register_test<{}>();", test); }
+    auto registrationPrefixOf{
+      [](std::string_view test) { return std::format("runner.register_test<{}>(", test); }
     };
 
+    auto registrationOf{
+      [registrationPrefixOf](std::string_view test) { return std::format("{});", registrationPrefixOf(test)); }
+    };
+
+    // Only the prefix is matched, since a registration may pass arguments to
+    // the test's constructor.
     auto isRegistered{
-      [contentsView, blanks, registrationOf](std::string_view test) {
-        const auto registration{registrationOf(test)};
+      [contentsView, blanks, registrationPrefixOf](std::string_view test) {
+        const auto registrationPrefix{registrationPrefixOf(test)};
         auto startsWithRegistration{
-          [&registration, blanks](auto&& line) {
+          [&registrationPrefix, blanks](auto&& line) {
             std::string_view lineView    {std::ranges::begin(line), std::ranges::end(line)};
             const auto       contentStart{std::ranges::min(lineView.find_first_not_of(blanks), lineView.size())};
-            return lineView.substr(contentStart).starts_with(registration);
+            return lineView.substr(contentStart).starts_with(registrationPrefix);
           }
         };
 

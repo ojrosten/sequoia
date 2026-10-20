@@ -115,6 +115,10 @@ namespace sequoia::testing
                       "SeveralTests/Main.cpp",
                       {"gamma_test", "alpha_test", "beta_test"});
 
+    checkRegistration("Skipping a test registered with arguments",
+                      "RegisteredWithArguments/Main.cpp",
+                      {"gamma_test", "alpha_test"});
+
     check_exception_thrown<std::runtime_error>(
       "A main with no call to runner.execute",
       [this]() { add_test_registrations(working_materials() /= "Registration/NoExecution/Main.cpp", {"gamma_test"}); }
