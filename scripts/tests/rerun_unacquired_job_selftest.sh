@@ -79,14 +79,13 @@ chmod +x "$tmp/bin/gh"
 not_acquired='The job was not acquired by Runner of type hosted even after multiple attempts'
 failed_to_be_acquired='The job was not started because it repeatedly failed to be acquired (5 attempts).'
 
-# job <id> <conclusion> <steps> <runner> <name> [<annotation>]: one job of a
-# jobs list.
+# job <id> <conclusion> <step count> <runner> <name> [<annotation>]: one job of
+# a jobs list.
 job() {
-  local steps
-  steps=$(seq "$3" | jq -R . | jq -s .)
-  jq -n --argjson id "$1" --arg conclusion "$2" --argjson steps "$steps" --arg runner "$4" --arg name "$5" \
+  jq -n --argjson id "$1" --arg conclusion "$2" --argjson step_count "$3" --arg runner "$4" --arg name "$5" \
         --arg annotation "${6:-}" \
-     '{id: $id, name: $name, conclusion: $conclusion, steps: $steps,
+     '{id: $id, name: $name, conclusion: $conclusion,
+       steps: [range(1; $step_count + 1) | tostring],
        runner_name: (if $runner == "" then null else $runner end),
        annotation: (if $annotation == "" then null else $annotation end)}'
 }
