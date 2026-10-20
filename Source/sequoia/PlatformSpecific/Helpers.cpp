@@ -86,8 +86,8 @@ namespace sequoia
         \returns
         -# `timer_request_outcome::failed`, possibly before `deadline`, if the
            kqueue cannot be created, refuses a timer, or fails while waiting;
-        -# `timer_request_outcome::not_made` if `deadline` passes before a
-           timer is registered, or away from macOS;
+        -# `timer_request_outcome::not_made` if `deadline` passes before any
+           timer fires, or away from macOS;
         -# `timer_request_outcome::granted` otherwise.
      */
     [[nodiscard]]
@@ -99,7 +99,9 @@ namespace sequoia
           return timer_request_outcome::failed;
 
         auto outcome{timer_request_outcome::not_made};
-        for(auto now{std::chrono::steady_clock::now()}; now < deadline; now = std::chrono::steady_clock::now())
+        for(auto now{std::chrono::steady_clock::now()};
+            (now < deadline) && (outcome != timer_request_outcome::failed);
+            now = std::chrono::steady_clock::now())
         {
           const auto remaining{std::chrono::ceil<std::chrono::nanoseconds>(deadline - now)};
           struct kevent64_s request{}, fired{};
@@ -116,15 +118,18 @@ namespace sequoia
                    0);
 
           const int events{kevent64(queue.get(), &request, 1, &fired, 1, 0, nullptr)};
-          if((events < 0) && (errno != EINTR))
-            return timer_request_outcome::failed;
 
-          // The kernel reports a refused registration as an event flagged
-          // EV_ERROR
-          if((events == 1) && (fired.flags & EV_ERROR))
-            return timer_request_outcome::failed;
-
-          outcome = timer_request_outcome::granted;
+          // An interrupted wait does not show whether the kernel accepted the
+          // timer
+          if(const bool interrupted{(events < 0) && (errno == EINTR)}; !interrupted)
+          {
+            const bool waitFailed{events < 0};
+            // The kernel reports a refused registration as an event flagged
+            // EV_ERROR
+            const bool registrationRefused{(events == 1) && (fired.flags & EV_ERROR)};
+            outcome = (waitFailed || registrationRefused) ? timer_request_outcome::failed
+                                                          : timer_request_outcome::granted;
+          }
         }
 
         return outcome;
@@ -229,11 +234,11 @@ namespace sequoia
     const auto now{clock::now()};
     const auto deadline{duration < clock::time_point::max() - now ? now + duration : clock::time_point::max()};
     const auto outcome{try_precise_sleep_until(deadline)};
-    if(outcome == timer_request_outcome::granted)
-      return outcome;
-
-    if(const auto remaining{deadline - clock::now()}; remaining > remaining.zero())
-      std::this_thread::sleep_for(remaining);
+    if(outcome != timer_request_outcome::granted)
+    {
+      if(const auto remaining{deadline - clock::now()}; remaining > remaining.zero())
+        std::this_thread::sleep_for(remaining);
+    }
 
     return outcome;
   }

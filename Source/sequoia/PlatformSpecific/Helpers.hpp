@@ -31,10 +31,9 @@ namespace sequoia
 
       \returns
       -# `timer_request_outcome::failed` if a request failed;
-      -# `timer_request_outcome::granted` if a request was made, and none
+      -# `timer_request_outcome::granted` if a request was granted, and none
          failed;
-      -# `timer_request_outcome::not_made` if no request was made, as away
-         from macOS.
+      -# `timer_request_outcome::not_made` otherwise, as away from macOS.
    */
   timer_request_outcome precise_sleep_for(std::chrono::nanoseconds duration);
 
