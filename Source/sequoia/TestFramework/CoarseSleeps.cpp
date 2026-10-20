@@ -30,7 +30,7 @@ namespace sequoia::testing
       case sleep_timing_evidence::precise_timer_request_granted:
         return "The kernel accepted every request for a precise timer";
       case sleep_timing_evidence::no_timer_request_made:
-        return "No request for a precise timer is made on this platform";
+        return "The runner saw no outcome of a request for a timer finer than the default";
       }
 
       throw std::logic_error{"Unhandled sleep_timing_evidence"};

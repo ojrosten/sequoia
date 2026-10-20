@@ -28,8 +28,10 @@ namespace sequoia::testing
     timer_request_outcome precise_timer{};
   };
 
-  /** \brief What a process observed of its requests for timers finer than
-             the default, including that it made none.
+  /** \brief The observations a process can make of its requests for timers
+             finer than the default.
+
+      `no_timer_request_made` is the observation of no outcome.
    */
   enum class sleep_timing_evidence
   {

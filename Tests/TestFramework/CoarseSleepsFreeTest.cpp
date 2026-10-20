@@ -55,7 +55,7 @@ namespace sequoia::testing
     using enum timer_request_outcome;
     using evidence = sleep_timing_evidence;
 
-    check("No request is made",
+    check("No outcome of a request is observed",
           choose_sleep_timing_evidence({.finest_timer_resolution{not_made}, .precise_timer{not_made}})
             == evidence::no_timer_request_made);
 
@@ -122,7 +122,7 @@ namespace sequoia::testing
                  sleep_timing_evidence::precise_timer_request_granted,
                  "PreciseTimerRequestGranted.txt");
 
-    checkMessage("No request is made",
+    checkMessage("No outcome of a request is observed",
                  sleep_timing_evidence::no_timer_request_made,
                  "NoTimerRequestMade.txt");
   }
