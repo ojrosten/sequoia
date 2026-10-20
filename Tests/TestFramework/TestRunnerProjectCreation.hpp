@@ -31,12 +31,6 @@ namespace sequoia::testing
     void test_ide_launch_commands();
 
     [[nodiscard]]
-    std::filesystem::path fake_project() const;
-
-    [[nodiscard]]
-    std::string zeroth_arg() const;
-
-    [[nodiscard]]
     project_paths::customizer make_project_paths() const;
   };
 }

@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "BasicTestInterfaceFreeTest.hpp"
+#include "FakeProjectTestingUtilities.hpp"
 #include "TestRunnerTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
 
@@ -41,21 +42,9 @@ namespace sequoia::testing
     return std::source_location::current().file_name();
   }
 
-  [[nodiscard]]
-  fs::path basic_test_interface_free_test::fake_project() const
-  {
-    return working_materials() /= "FakeProject";
-  }
-
-  [[nodiscard]]
-  fs::path basic_test_interface_free_test::minimal_fake_path() const
-  {
-    return fake_project().append("build/CMade/FakeExe.txt");
-  }
-
   void basic_test_interface_free_test::run_tests()
   {
-    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+    commandline_arguments args{fake_project_commandline(working_materials())};
 
     std::stringstream outputStream{};
     const auto runner{make_fake_project_runner(args, outputStream)};

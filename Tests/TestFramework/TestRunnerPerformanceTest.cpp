@@ -6,11 +6,11 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "TestRunnerPerformanceTest.hpp"
+#include "FakeProjectTestingUtilities.hpp"
 #include "PerformanceTestingUtilities.hpp"
 #include "TestRunnerTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/TestExecutionRecord.hpp"
-#include "sequoia/TestFramework/TestRunner.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
@@ -485,27 +485,6 @@ namespace sequoia::testing
     return std::source_location::current().file_name();
   }
 
-  [[nodiscard]]
-  fs::path test_runner_performance_test::fake_project() const
-  {
-    return auxiliary_materials() /= "FakeProject";
-  }
-
-  [[nodiscard]]
-  fs::path test_runner_performance_test::minimal_fake_path() const
-  {
-    return fake_project().append("build/CMade/FakeExe.txt");
-  }
-
-  template<class... ModeArguments>
-    requires (std::convertible_to<const ModeArguments&, std::string> && ...)
-  [[nodiscard]]
-  std::vector<std::string>
-    test_runner_performance_test::fake_project_command_line(const ModeArguments&... modeArguments) const
-  {
-    return {minimal_fake_path().generic_string(), modeArguments...};
-  }
-
   void test_runner_performance_test::check_output(std::string_view description,
                                                   std::string_view dirName,
                                                   const std::stringstream& output)
@@ -532,7 +511,7 @@ namespace sequoia::testing
 
   void test_runner_performance_test::test_parallel_acceleration()
   {
-    const auto arguments{fake_project_command_line()};
+    const auto arguments{fake_project_commandline(auxiliary_materials())};
     std::stringstream outputStream{};
     auto runner{make_slow_suite(arguments, outputStream, sleep_duration_for_overlap_checks)};
     check(equality, "Parallel acceleration return code", runner.execute(), return_code::success);
@@ -557,7 +536,7 @@ namespace sequoia::testing
   void test_runner_performance_test::test_thread_pool_acceleration()
   {
     {
-      const auto arguments{fake_project_command_line("--thread-pool", "8")};
+      const auto arguments{fake_project_commandline(auxiliary_materials(), "--thread-pool", "8")};
       std::stringstream outputStream{};
       auto runner{make_slow_suite(arguments, outputStream, sleep_duration_for_overlap_checks)};
       check(equality, "Thread pool (8) return code", runner.execute(), return_code::success);
@@ -577,7 +556,7 @@ namespace sequoia::testing
     }
 
     {
-      const auto arguments{fake_project_command_line("--thread-pool", "2")};
+      const auto arguments{fake_project_commandline(auxiliary_materials(), "--thread-pool", "2")};
       std::stringstream outputStream{};
       auto runner{make_slow_suite(arguments, outputStream, sleep_duration_for_overlap_checks)};
       check(equality, "Thread pool (2) return code", runner.execute(), return_code::success);
@@ -597,7 +576,7 @@ namespace sequoia::testing
   void test_runner_performance_test::test_serial_execution()
   {
     std::stringstream outputStream{};
-    auto runner{make_slow_suite(fake_project_command_line("--serial"),
+    auto runner{make_slow_suite(fake_project_commandline(auxiliary_materials(), "--serial"),
                                 outputStream,
                                 sleep_duration_for_overlap_checks)};
     check(equality, "Serial execution return code", runner.execute(), return_code::success);
@@ -611,8 +590,9 @@ namespace sequoia::testing
 
   /** Checks the speed-up of a run of the slow tests with the command line
       `arguments` over a serial run of the slow tests. Callers must build
-      `arguments` with `fake_project_command_line`, as the serial run's
-      command line is built.
+      `arguments` by calling `fake_project_commandline` with
+      `auxiliary_materials()`; the check builds the serial run's command
+      line the same way.
    */
   void test_runner_performance_test::check_speedup_over_serial_execution(std::string_view description,
                                                                          const std::vector<std::string>& arguments,
@@ -620,7 +600,7 @@ namespace sequoia::testing
   {
     check_relative_performance(description,
                                make_task_with_baseline(arguments),
-                               make_task_with_baseline(fake_project_command_line("--serial")),
+                               make_task_with_baseline(fake_project_commandline(auxiliary_materials(), "--serial")),
                                {.prediction{prediction}});
   }
 
@@ -634,7 +614,7 @@ namespace sequoia::testing
   void test_runner_performance_test::test_recording_of_performance_check_attempts()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{fake_project_command_line()};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
     auto runner{make_fake_project_runner(args, outputStream)};
     runner.register_test<attempt_counting_performance_test>();
     runner.register_test<performance_test_without_performance_checks>();
@@ -658,7 +638,7 @@ namespace sequoia::testing
     using false_negative_test = performance_checks_within_other_checks_false_negative_test;
 
     std::stringstream outputStream{};
-    commandline_arguments args{fake_project_command_line()};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
     auto runner{make_fake_project_runner(args, outputStream)};
     runner.register_test<standard_test>();
     runner.register_test<false_positive_test>();
