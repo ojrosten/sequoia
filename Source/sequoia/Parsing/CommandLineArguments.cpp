@@ -258,9 +258,9 @@ namespace sequoia::parsing::commandline
 
       /** \brief The operation an option contributes its arguments to.
 
-          An option not bound to a function object shares the operation of
-          the option enclosing it. The first `enclosing_args_supplied`
-          arguments of that operation belong to the enclosing options.
+          An option not bound to a function object shares the operation of the option enclosing it.
+          The first `enclosing_args_supplied` arguments of that operation belong to the enclosing
+          options.
        */
       struct operation_data
       {
@@ -421,8 +421,8 @@ namespace sequoia::parsing::commandline
                                                        operation_data currentOperationData,
                                                        top_level topLevel)
     {
-      // A group is a dash followed by single-character aliases, each spelt
-      // without its own dash; any further dash is ignored
+      // A group is a dash followed by single-character aliases, each spelt without its own dash; any
+      // further dash is ignored
       if((arg.size() < 2) || (arg[0] != '-') || (arg[1] == ' ') || (arg[1] == '-'))
         return false;
 

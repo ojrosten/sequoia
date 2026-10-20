@@ -114,8 +114,8 @@ namespace sequoia::parsing::commandline
 
   /** \brief The result of parse().
 
-      -# `zeroth_arg`: the zeroth argument, typically the path of the
-         executable; empty if `argc` is zero.
+      -# `zeroth_arg`: the zeroth argument, typically the path of the executable; empty if `argc` is
+         zero.
       -# `operations`: one \ref operation tree per top-level option encountered, in the order
          encountered, the root holding the option's function objects and arguments. A nested option
          encountered adds a node beneath the node of its enclosing option if the nested option has a
