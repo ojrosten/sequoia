@@ -18,11 +18,15 @@ namespace sequoia::testing
   public:
     using free_test::free_test;
 
+    using parallelizable_type = std::false_type;
+
     [[nodiscard]]
     static std::filesystem::path source_file();
 
     void run_tests();
   private:
+    void test_slow_test_runner_constraint();
+
     void test_serial_execution();
 
     void check_output(std::string_view description, std::string_view dirName, const std::stringstream& output);

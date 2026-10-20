@@ -255,7 +255,7 @@ namespace sequoia::testing
       void operator()() const
       {
         std::stringstream outputStream{};
-        auto runner{make_slow_suite(arguments, outputStream, sleep_duration)};
+        auto runner{make_slow_test_runner<test_runner_performance_test>(arguments, outputStream, sleep_duration)};
         if(runner.execute() != return_code::success)
           throw std::runtime_error{"A run of the slow tests did not succeed"};
       }
@@ -311,10 +311,12 @@ namespace sequoia::testing
   {
     const auto arguments{fake_project_commandline(auxiliary_materials())};
     std::stringstream outputStream{};
-    auto runner{make_slow_suite(arguments, outputStream, sleep_duration_for_overlap_checks)};
+    auto runner{make_slow_test_runner<test_runner_performance_test>(arguments,
+                                                                    outputStream,
+                                                                    sleep_duration_for_overlap_checks)};
     check(equality, "Parallel acceleration return code", runner.execute(), return_code::success);
 
-    const auto peak{peak_overlap(slow_test_base::execution_intervals())};
+    const auto peak{peak_overlap(slow_test_sleep_intervals())};
     outputStream << peak_overlap_line(peak);
 
     check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream);
@@ -336,10 +338,12 @@ namespace sequoia::testing
     {
       const auto arguments{fake_project_commandline(auxiliary_materials(), "--thread-pool", "8")};
       std::stringstream outputStream{};
-      auto runner{make_slow_suite(arguments, outputStream, sleep_duration_for_overlap_checks)};
+      auto runner{make_slow_test_runner<test_runner_performance_test>(arguments,
+                                                                      outputStream,
+                                                                      sleep_duration_for_overlap_checks)};
       check(equality, "Thread pool (8) return code", runner.execute(), return_code::success);
 
-      const auto peak{peak_overlap(slow_test_base::execution_intervals())};
+      const auto peak{peak_overlap(slow_test_sleep_intervals())};
       outputStream << peak_overlap_line(peak);
 
       check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream);
@@ -356,10 +360,12 @@ namespace sequoia::testing
     {
       const auto arguments{fake_project_commandline(auxiliary_materials(), "--thread-pool", "2")};
       std::stringstream outputStream{};
-      auto runner{make_slow_suite(arguments, outputStream, sleep_duration_for_overlap_checks)};
+      auto runner{make_slow_test_runner<test_runner_performance_test>(arguments,
+                                                                      outputStream,
+                                                                      sleep_duration_for_overlap_checks)};
       check(equality, "Thread pool (2) return code", runner.execute(), return_code::success);
 
-      const auto peak{peak_overlap(slow_test_base::execution_intervals())};
+      const auto peak{peak_overlap(slow_test_sleep_intervals())};
       outputStream << peak_overlap_line(peak);
 
       check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream);

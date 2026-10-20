@@ -18,6 +18,41 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
+  namespace
+  {
+    template<class CallingTest>
+    concept make_slow_test_runner_accepts
+      = requires(std::vector<std::string> arguments, std::stringstream& outputStream) {
+          make_slow_test_runner<CallingTest>(arguments, outputStream, sleep_duration_for_overlap_checks);
+        };
+
+    // Two callers which differ only in whether they are parallelizable
+
+    class parallelizable_calling_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file();
+
+      void run_tests();
+    };
+
+    class unparallelizable_calling_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      using parallelizable_type = std::false_type;
+
+      [[nodiscard]]
+      static fs::path source_file();
+
+      void run_tests();
+    };
+  }
+
   [[nodiscard]]
   fs::path test_runner_serial_execution_free_test::source_file()
   {
@@ -36,18 +71,28 @@ namespace sequoia::testing
 
   void test_runner_serial_execution_free_test::run_tests()
   {
+    test_slow_test_runner_constraint();
     test_serial_execution();
+  }
+
+  void test_runner_serial_execution_free_test::test_slow_test_runner_constraint()
+  {
+    STATIC_CHECK( make_slow_test_runner_accepts<test_runner_serial_execution_free_test>);
+    STATIC_CHECK( make_slow_test_runner_accepts<unparallelizable_calling_test>);
+    STATIC_CHECK(!make_slow_test_runner_accepts<parallelizable_calling_test>);
   }
 
   void test_runner_serial_execution_free_test::test_serial_execution()
   {
     std::stringstream outputStream{};
-    auto runner{make_slow_suite(fake_project_commandline(auxiliary_materials(), "--serial"),
-                                outputStream,
-                                sleep_duration_for_overlap_checks)};
+    auto runner{make_slow_test_runner<test_runner_serial_execution_free_test>(
+                  fake_project_commandline(auxiliary_materials(), "--serial"),
+                  outputStream,
+                  sleep_duration_for_overlap_checks
+                )};
     check(equality, "Serial execution return code", runner.execute(), return_code::success);
 
-    const auto peak{peak_overlap(slow_test_base::execution_intervals())};
+    const auto peak{peak_overlap(slow_test_sleep_intervals())};
     outputStream << peak_overlap_line(peak);
 
     check_output(report({"Serial Output"}), "Serial Output", outputStream);
