@@ -113,7 +113,7 @@ namespace sequoia::testing
       return !m_Ptrs.empty() ? &m_Ptrs[0] : nullptr;
     }
   private:
-    std::vector<std::string> m_Args;
-    std::vector<char*> m_Ptrs;
+    std::vector<std::string> m_Args{};
+    std::vector<char*>       m_Ptrs{};
   };
 }
