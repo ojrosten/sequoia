@@ -1026,7 +1026,7 @@ namespace sequoia::testing
         throw std::runtime_error{std::format("{} has no dependency log; has anything been built?", tree.build_directory.generic_string())};
 
       const auto sourcesByObjectFile{read_ninja_sources(statementsFile)};
-      auto [loggedFiles, loggedRecords]{read_ninja_deps(log)};
+      auto [loggedFiles, records]{read_ninja_deps(log)};
       path_table files{std::move(loggedFiles)};
 
       auto buildHasObjectFile{
@@ -1035,36 +1035,31 @@ namespace sequoia::testing
         }
       };
 
-      /* A compiler that reports the source has named the source among the inputs, and the source moves to the
-         front; MSVC reports the headers alone, and the source is inserted - into the table, which the log never
-         gave the source, and at the front of the inputs.
+      if(!records.empty() && std::ranges::none_of(records, buildHasObjectFile))
+        throw std::runtime_error{
+          std::format("None of the objects {} records is named by {}; are the two spelled differently?",
+                      log.generic_string(),
+                      statementsFile.lexically_relative(tree.build_directory).generic_string())
+        };
+
+      std::erase_if(records, std::not_fn(buildHasObjectFile));
+
+      /* Under gcc and clang the log names the source among the inputs, so
+         `files.insert` returns the source's existing index. Under MSVC the
+         log names the headers alone, so `files.insert` numbers the source.
        */
-      auto withSourceFirst{
-        [&](compilations::record& record) {
+      auto putSourceFirst{
+        [&sourcesByObjectFile, &files](compilations::record& record) {
           const auto sourceIndex{files.insert(sourcesByObjectFile.at(files[record.object_index].generic_string()))};
           auto& inputIndices{record.input_indices};
           if(const auto found{std::ranges::find(inputIndices, sourceIndex)}; found != inputIndices.end())
             std::ranges::rotate(inputIndices.begin(), found, found + 1);
           else
             inputIndices.insert(inputIndices.begin(), sourceIndex);
-
-          return compilations::record{.object_index{record.object_index}, .input_indices{std::move(inputIndices)}};
         }
       };
 
-      auto records{
-          loggedRecords
-        | std::views::filter(buildHasObjectFile)
-        | std::views::transform(withSourceFirst)
-        | std::ranges::to<std::vector>()
-      };
-
-      if(records.empty() && !loggedRecords.empty())
-        throw std::runtime_error{
-          std::format("None of the objects {} records is named by {}; are the two spelled differently?",
-                      log.generic_string(),
-                      statementsFile.lexically_relative(tree.build_directory).generic_string())
-        };
+      std::ranges::for_each(records, putSourceFirst);
 
       return with_named_files_only({.files{std::move(files).release_files()}, .records{std::move(records)}});
     }
