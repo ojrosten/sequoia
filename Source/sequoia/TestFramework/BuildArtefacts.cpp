@@ -25,6 +25,7 @@
 #include <fstream>
 #include <functional>
 #include <map>
+#include <numeric>
 #include <optional>
 #include <ranges>
 #include <span>
@@ -945,36 +946,57 @@ namespace sequoia::testing
       return configuration;
     }
 
-    /** `compiled` with its files cut to those its records name, numbered in the order in which the records
-        first name them.
-     */
+    /** `compiled` with its files cut to those its records name. */
     [[nodiscard]]
     compilations with_named_files_only(compilations compiled)
     {
       auto& [files, records]{compiled};
 
-      std::vector<std::optional<file_index>> indexInNamedFiles(files.size());
-      std::vector<fs::path> namedFiles{};
-      auto indexOf{
-        [&](file_index i) {
-          auto& index{indexInNamedFiles[i]};
-          if(!index)
+      const auto isNamed{
+        [&files, &records]() {
+          std::vector<bool> named(files.size());
+          for(const auto& [objectIndex, inputIndices] : records)
           {
-            index = namedFiles.size();
-            namedFiles.push_back(std::move(files[i]));
+            named[objectIndex] = true;
+            for(const auto inputIndex : inputIndices)
+            {
+              named[inputIndex] = true;
+            }
           }
 
-          return *index;
-        }
+          return named;
+        }()
       };
 
-      for(auto& record : records)
+      // A named file's new index counts the named files preceding it; an
+      // unnamed file's entry is a dummy entry that is never read below.
+      const auto newIndices{
+        [&isNamed]() {
+          std::vector<file_index> indices(isNamed.size());
+          std::exclusive_scan(isNamed.begin(), isNamed.end(), indices.begin(), file_index{});
+          return indices;
+        }()
+      };
+
+      auto newIndexOf{[&newIndices](file_index i) { return newIndices[i]; }};
+      for(auto& [objectIndex, inputIndices] : records)
       {
-        record.object_index = indexOf(record.object_index);
-        std::ranges::transform(record.input_indices, record.input_indices.begin(), indexOf);
+        objectIndex = newIndexOf(objectIndex);
+        std::ranges::transform(inputIndices, inputIndices.begin(), newIndexOf);
       }
 
-      return compilations{.files{std::move(namedFiles)}, .records{std::move(records)}};
+      auto isNamedFile{[](const auto& fileAndIsNamed) { return std::get<1>(fileAndIsNamed); }};
+
+      return compilations{
+        .files{
+            std::views::zip(files, isNamed)
+          | std::views::filter(isNamedFile)
+          | std::views::keys
+          | std::views::as_rvalue
+          | std::ranges::to<std::vector>()
+        },
+        .records{std::move(records)}
+      };
     }
 
     /** The compilations of a Ninja build, from the log `.ninja_deps` and the statements in `statementsFile`.
