@@ -133,7 +133,7 @@ namespace sequoia::testing
       };
 
       // An algorithm, not a view: `resolvedPath` fills `directories` as it
-      // goes, and `std::views::transform` admits no call with side effects
+      // goes, and `std::views::transform` requires `std::regular_invocable`
       std::vector<fs::path> resolvedPaths{};
       resolvedPaths.reserve(files.size());
       std::ranges::transform(files, std::back_inserter(resolvedPaths), resolvedPath);
