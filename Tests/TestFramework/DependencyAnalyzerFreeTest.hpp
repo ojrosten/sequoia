@@ -130,12 +130,16 @@ namespace sequoia::testing
                                                       std::string_view source,
                                                       std::string_view configuration);
 
-    /// Which of the fake project's sources the build's record names, and where it says they are
-    enum class recorded_sources { all, all_but_the_tests, all_under_another_root, sources_relative };
+    /** Which of the fake project's sources the build's record names, and how
+        the record spells each file's path
+     */
+    enum class recorded_sources { all, all_but_the_tests, all_under_another_root, sources_relative, through_symlinks };
 
     void write_build_artefacts(const std::filesystem::path& fake, build_system system, recorded_sources sources);
 
     void test_recorded_sources(const project_paths& projPaths);
+
+    void test_paths_recorded_through_symlinks(const project_paths& projPaths);
 
     /// A file of the fake project, and the file's modification time as an offset from the reset time
     struct timed_edit

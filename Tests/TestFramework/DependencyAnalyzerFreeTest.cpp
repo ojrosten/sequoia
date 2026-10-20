@@ -125,6 +125,34 @@ namespace sequoia::testing
       fs::file_time_type m_DirectoryTime{};
     };
 
+    /** An RAII wrapper to make a directory symlink. The destructor removes
+        the symlink, and restores the modification time of the symlink's
+        directory.
+     */
+    class directory_symlink_for_scope
+    {
+    public:
+      directory_symlink_for_scope(const fs::path& target, fs::path symlink)
+        : m_Symlink{std::move(symlink)}
+        , m_DirectoryTime{fs::last_write_time(m_Symlink.parent_path())}
+      {
+        fs::create_directory_symlink(target, m_Symlink);
+      }
+
+      directory_symlink_for_scope(const directory_symlink_for_scope&)            = delete;
+      directory_symlink_for_scope& operator=(const directory_symlink_for_scope&) = delete;
+
+      ~directory_symlink_for_scope()
+      {
+        std::error_code error{};
+        fs::remove(m_Symlink, error);
+        fs::last_write_time(m_Symlink.parent_path(), m_DirectoryTime, error);
+      }
+    private:
+      fs::path m_Symlink{};
+      fs::file_time_type m_DirectoryTime{};
+    };
+
     [[nodiscard]]
     constexpr fs::file_time_type stamp_at(std::chrono::milliseconds sinceEpoch)
     {
@@ -322,6 +350,25 @@ namespace sequoia::testing
     {
       return fake.parent_path() / "Toolchain" / "include" / "vector";
     }
+
+    /** The fake project's path through a symlink. The tests make the symlink
+        beside `fake`, so outside the fake project's root.
+     */
+    [[nodiscard]]
+    fs::path fake_project_via_symlink(const fs::path& fake)
+    {
+      return fake.parent_path() / "LinkedFakeProject";
+    }
+
+    /** The path of the stand-in toolchain header's directory through a
+        symlink. The tests make the symlink within `fake`, so within the fake
+        project's root.
+     */
+    [[nodiscard]]
+    fs::path toolchain_header_directory_via_symlink(const fs::path& fake)
+    {
+      return fake / "LinkedToolchainDirectory";
+    }
   }
 
   /// As the fake project's CMakeLists.txt files make them
@@ -395,7 +442,17 @@ namespace sequoia::testing
       [sources, &isTest](const unit& u) { return (sources != recorded_sources::all_but_the_tests) || !isTest(u); }
     };
 
-    const auto root{(sources == recorded_sources::all_under_another_root) ? fake.parent_path() / "AnotherRoot" : fake};
+    const auto root{
+        (sources == recorded_sources::all_under_another_root) ? fake.parent_path() / "AnotherRoot"
+      : (sources == recorded_sources::through_symlinks)       ? fake_project_via_symlink(fake)
+      :                                                         fake
+    };
+
+    const auto recordedToolchainHeader{
+        (sources == recorded_sources::through_symlinks)
+      ? toolchain_header_directory_via_symlink(fake) / fake_toolchain_header(fake).filename()
+      : fake_toolchain_header(fake)
+    };
 
     // Under `sources_relative`, the record spells the paths of the fake project's sources as a build given relative
     // paths spells them: relative to the build directory, and not lexically normal
@@ -423,7 +480,7 @@ namespace sequoia::testing
           {
             record.inputs.push_back(realSequoiaSourceRepo / input);
           }
-          record.inputs.push_back(fake_toolchain_header(fake));
+          record.inputs.push_back(recordedToolchainHeader);
           return record;
         };
       }
@@ -595,6 +652,7 @@ namespace sequoia::testing
 
     test_exceptions(projPaths);
     test_recorded_sources(projPaths);
+    test_paths_recorded_through_symlinks(projPaths);
     test_dependencies(projPaths);
     test_sequoia_sources();
     test_sequoia_change(projPaths, build_system::ninja);
@@ -795,6 +853,49 @@ namespace sequoia::testing
     fs::last_write_time(toolchainHeader, m_ResetTime);
 
     fs::remove_all(anotherRoot);
+    write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
+  }
+
+  /* Prune classifies each file the build read by the file's resolved path.
+     Here the record spells the fake project through a symlink outside the
+     fake project's root. The record spells the stand-in toolchain header
+     through a symlink within that root. If prune classified each file as
+     spelled by the record:
+     -# The project's files would be the toolchain's, so a change to a
+        test's source would run every test;
+     -# The stand-in header would be the project's, so a change to the
+        stand-in would select every test through the graph, rather than
+        fall back to running every test.
+     The check of the stand-in also fails if a file is the project's when
+     either of its spellings lies within the root.
+   */
+  void dependency_analyzer_free_test::test_paths_recorded_through_symlinks(const project_paths& projPaths)
+  {
+    const auto fake{auxiliary_materials() /= "FakeProject"};
+    fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
+
+    const auto toolchainHeader{fake_toolchain_header(fake)};
+    {
+      const directory_symlink_for_scope projectSymlink{fake, fake_project_via_symlink(fake)};
+      const directory_symlink_for_scope toolchainSymlink{toolchainHeader.parent_path(),
+                                                         toolchain_header_directory_via_symlink(fake)};
+      write_build_artefacts(fake, build_system::ninja, recorded_sources::through_symlinks);
+
+      check_tests_to_run("Test cpp stale, recorded through a symlink to the project",
+                         projPaths,
+                         {.stale{{{projPaths.tests().repo() / "HouseAllocationTest.cpp"}, modification_time::early}},
+                           .to_run{{"HouseAllocationTest.cpp"}}},
+                         {},
+                         {});
+
+      fs::last_write_time(toolchainHeader, m_ResetTime + earlyEditOffset);
+      check(equality,
+            "Toolchain header stale, recorded through a symlink within the project: every test runs",
+            (tests_to_run(projPaths)),
+            test_selection{prune_fallback_reason::toolchain_changed});
+      fs::last_write_time(toolchainHeader, m_ResetTime);
+    }
+
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
   }
 
