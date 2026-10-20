@@ -43,7 +43,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 88
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 89
 Typo in argument
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 92
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 93
 Alias mismatch
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 96
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 97
 Missing alias
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 100
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 101
 Extra space in argument
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 125
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 126
 Concatenated alias with only partial match
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 129
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 130
 Concatenated alias naming an option with parameters
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 134
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 135
 Concatenated alias naming an option with nested options
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 139
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 140
 Concatenated aliases without the leading dash
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 143
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 144
 A dash after something other than a dash
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 168
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 169
 Final argument missing
 
 Expected Exception Type:
@@ -133,7 +133,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 251
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 252
 An option named as a help request
 
 Expected Exception Type:
@@ -142,7 +142,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 255
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 256
 A nested option aliased as a help request
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 312
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 313
 A nested option, not bound to a function object, missing its argument
 
 Expected Exception Type:
@@ -160,7 +160,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 318
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 319
 A nested option, not bound to a function object, missing two of its three arguments
 
 Expected Exception Type:
@@ -169,7 +169,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 324
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 325
 A dash after something other than a dash, at a nested level
 
 Expected Exception Type:
@@ -178,7 +178,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 440
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 441
 Two options, one with nesting, illegal argument
 
 Expected Exception Type:
