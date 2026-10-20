@@ -158,12 +158,13 @@ namespace sequoia::testing
       return in_repo(files[record.input_indices.front()], dir);
     }
 
-    /** Every test class may optionally define test materials. For a test class `bar_test`, defined in
-        `Tests/Foo/Bar.cpp`, any materials are in the folder `TestMaterials/Foo/Bar/bar_test`.
-        For the purposes of pruning, we look for modifications one level up, i.e. within
-        `TestMaterials/Foo/Bar/`. This gives pruning the same granularity for both sources and test
-        materials. Per-class granularity for materials is possible, but the trade-off does not
-        currently seem worthwhile.
+    /** Every test class may optionally define test materials. For a test class
+        `bar_test`, defined in `Tests/Foo/Bar.cpp`, any materials are in the
+        folder `TestMaterials/Foo/Bar/bar_test`. For the purposes of pruning,
+        we look for modifications one level up, i.e. within
+        `TestMaterials/Foo/Bar/`. This gives pruning the same granularity for
+        both sources and test materials. Per-class granularity for materials is
+        possible, but the trade-off does not currently seem worthwhile.
      */
     [[nodiscard]]
     std::optional<fs::file_time_type> materials_modification_time(const fs::path& relFilePath, const fs::path& materialsRepo)
@@ -217,8 +218,9 @@ namespace sequoia::testing
     class dependency_graph
     {
     public:
-      /** A test's translation unit: its source, relative to the tests repository, and the newest
-          modification among the files the unit was built from.
+      /** A test's translation unit: its source, relative to the tests
+          repository, and the newest modification among the files the unit was
+          built from.
        */
       struct translation_unit
       {
@@ -226,10 +228,11 @@ namespace sequoia::testing
         fs::file_time_type newest_modification;
       };
 
-      /** Every file the build read is checked once against the executable's stamp.
+      /** Every file the build read is checked once against the executable's
+          stamp.
 
-          \throws std::runtime_error if a file post-dates the executable, or a file's modification time
-          cannot be read.
+          \throws std::runtime_error if a file post-dates the executable, or a
+          file's modification time cannot be read.
        */
       dependency_graph(const build_tree& tree, const project_paths& projPaths)
         : dependency_graph{projPaths, get_stamp(projPaths.executable()), read_files(tree, projPaths)}
@@ -239,11 +242,15 @@ namespace sequoia::testing
       [[nodiscard]]
       std::span<const translation_unit> get_test_translation_units() const noexcept { return m_TestTranslationUnits; }
 
-      /// The newest modification among the toolchain's files the build read; the earliest time, if it read none
+      /** The newest modification among the toolchain's files the build read;
+          the earliest time, if it read none
+       */
       [[nodiscard]]
       fs::file_time_type toolchain_newest_modification() const noexcept { return m_ToolchainNewestModification; }
 
-      /// Whether the build read any file of the project's under `directory`; the object files it wrote there do not count
+      /** Whether the build read any file of the project's under `directory`;
+          the object files it wrote there do not count
+       */
       [[nodiscard]]
       bool reads_from(const fs::path& directory) const
       {
@@ -252,7 +259,9 @@ namespace sequoia::testing
         return std::ranges::any_of(m_Graph.cnode_weights(), readFrom);
       }
     private:
-      /// A file the build names; for an object file, the node of the source it was compiled from
+      /** A file the build names; for an object file, the node of the source it
+          was compiled from
+       */
       struct file_info
       {
         fs::path file{};
@@ -300,10 +309,11 @@ namespace sequoia::testing
         return g.cbegin_node_weights()[i];
       }
 
-      /** The modification time of a file the build read, checked against the executable's stamp.
+      /** The modification time of a file the build read, checked against the
+          executable's stamp.
 
-          \throws std::runtime_error if the file post-dates the executable, or its modification time
-          cannot be read.
+          \throws std::runtime_error if the file post-dates the executable, or
+          its modification time cannot be read.
        */
       [[nodiscard]]
       static fs::file_time_type modification_time(const fs::path& file, std::optional<fs::file_time_type> executableStamp)
@@ -329,7 +339,9 @@ namespace sequoia::testing
         return time;
       }
 
-      /// The newest modification among `files`, each checked; the earliest time, if there are none
+      /** The newest modification among `files`, each checked; the earliest
+          time, if there are none
+       */
       [[nodiscard]]
       static fs::file_time_type newest_modification(std::span<const fs::path> files, std::optional<fs::file_time_type> executableStamp)
       {
@@ -338,15 +350,16 @@ namespace sequoia::testing
         return std::ranges::fold_left(times, fs::file_time_type::min(), std::ranges::max);
       }
 
-      /** The modification time of every file the build read, by node; an object file, being a product
-          rather than something read, holds the earliest time, which no fold for the newest can see.
+      /** The modification time of every file the build read, by node; an
+          object file, being a product rather than something read, holds the
+          earliest time, which no fold for the newest can see.
 
-          Every file is checked, whether or not a test depends on it: an edited `TestMain.cpp` is read by
-          no test's translation unit, and is the case which made the executable stale without prune
-          noticing.
+          Every file is checked, whether or not a test depends on it: an edited
+          `TestMain.cpp` is read by no test's translation unit, and is the case
+          which made the executable stale without prune noticing.
 
-          \throws std::runtime_error if a file post-dates the executable, or a file's modification time
-          cannot be read.
+          \throws std::runtime_error if a file post-dates the executable, or a
+          file's modification time cannot be read.
        */
       [[nodiscard]]
       std::vector<fs::file_time_type> modification_times(std::optional<fs::file_time_type> executableStamp) const
@@ -360,7 +373,9 @@ namespace sequoia::testing
         return m_Graph.cnode_weights() | std::views::transform(modificationTime) | std::ranges::to<std::vector>();
       }
 
-      /// The nodes of the object files whose source lies in the tests repository: the leading nodes, by construction
+      /** The nodes of the object files whose source lies in the tests
+          repository: the leading nodes, by construction
+       */
       [[nodiscard]]
       auto get_test_object_file_nodes() const
       {
@@ -415,16 +430,19 @@ namespace sequoia::testing
         return newest;
       }
 
-      /** Reads, from the build's record, the files which each compilation read.
+      /** Reads, from the build's record, the files which each compilation
+          read.
 
           \returns The files, in two parts:
           -# A graph of the project's files:
-             -# A node for every object file, and for every file of the project's which the compilation of an
-                object file read. The tests' object files take the first nodes. The other files follow in the
-                order in which the record first names them;
-             -# The node of each object file names the node of its source;
-             -# An edge from each object file to each file of the project's which its compilation read;
-             -# The edges which `add_dependencies` adds.
+          -# A node for every object file, and for every file of the project's
+             which the compilation of an object file read. The tests' object
+             files take the first nodes. The other files follow in the order in
+             which the record first names them;
+          -# The node of each object file names the node of its source;
+          -# An edge from each object file to each file of the project's which
+             its compilation read;
+          -# The edges which `add_dependencies` adds.
           -# The toolchain's files.
 
           A file is the toolchain's exactly when its path, as given by
@@ -441,7 +459,8 @@ namespace sequoia::testing
 
         const auto resolvedPaths{resolved_paths(tree, files)};
 
-        // Per file rather than per input: a file is the input of many compilations
+        // Per file rather than per input: a file is the input of many
+        // compilations
         auto inProject{[projectRoot{projPaths.project_root()}](const fs::path& p){ return in_repo(p, projectRoot); }};
         const auto projectFiles{
           resolvedPaths | std::views::transform(inProject) | std::ranges::to<std::vector<bool>>()
@@ -468,7 +487,8 @@ namespace sequoia::testing
           }
         };
 
-        // The tests' object files take the leading indices, so that they form a block the graph can walk without a filter
+        // The tests' object files take the leading indices, so that they form
+        // a block the graph can walk without a filter
         for(const auto& record : records | std::views::filter(isTest))
         {
           nodeOf(record.object_index);
@@ -501,8 +521,9 @@ namespace sequoia::testing
         return files_read_by_build{.project_graph{std::move(g)}, .toolchain_files{std::move(toolchainFiles)}};
       }
 
-      /** An edge from each header to each object file whose source both shares the header's stem and
-          includes the header: the convention that `Foo.cpp` implements `Foo.hpp`.
+      /** An edge from each header to each object file whose source both shares
+          the header's stem and includes the header: the convention that
+          `Foo.cpp` implements `Foo.hpp`.
        */
       static void add_dependencies(graph_type& g)
       {
@@ -538,7 +559,9 @@ namespace sequoia::testing
       }
     };
 
-    /// Whether a test has passed since everything it depends on last changed, its materials included
+    /** Whether a test has passed since everything it depends on last changed,
+        its materials included
+     */
     class passing_tests
     {
     public:
@@ -549,8 +572,9 @@ namespace sequoia::testing
         , m_PassesStamp{get_stamp(projPaths.prune().selected_passes(std::nullopt))}
       {}
 
-      /** A test is stale if its dependencies or its materials moved after the threshold, unless
-          it is recorded as passing since then - see the comment on the comparison.
+      /** A test is stale if its dependencies or its materials moved after the
+          threshold, unless it is recorded as passing since then - see the
+          comment on the comparison.
        */
       [[nodiscard]]
       bool is_stale(const fs::path& relPath, fs::file_time_type newestDependencyModification) const
@@ -563,13 +587,16 @@ namespace sequoia::testing
         if(newestModification <= m_StalenessThreshold)
           return false;
 
-        /* `>=` rather than `>`. Following a modification to either code or test materials, a build
-           may be performed and the tests are run. After the tests are executed, the 'passes' file may
-           be written. Therefore, this write happens at a strictly later time than the aforementioned
-           modification. However, the filesystem may not represent times with sufficient accuracy to
-           be able to resolve this difference. For example, libstdc++ on macOS rounds filesystem times
-           down to the nearest second. In this case, a comparison using '>' could return false, in
-           the situation where the 'passes' file was actually written after modifications were made.
+        /* `>=` rather than `>`. Following a modification to either code or
+           test materials, a build may be performed and the tests are run.
+           After the tests are executed, the 'passes' file may be written.
+           Therefore, this write happens at a strictly later time than the
+           aforementioned modification. However, the filesystem may not
+           represent times with sufficient accuracy to be able to resolve this
+           difference. For example, libstdc++ on macOS rounds filesystem times
+           down to the nearest second. In this case, a comparison using '>'
+           could return false, in the situation where the 'passes' file was
+           actually written after modifications were made.
          */
         const auto passedAt{time_of_recorded_pass(relPath)};
         const bool passedSince{passedAt && (m_PassesStamp.value() >= newestModification) && (passedAt.value() > newestModification)};
@@ -596,7 +623,9 @@ namespace sequoia::testing
       }
     };
 
-    /// The stale tests; none at all if the toolchain changed since the threshold, since then every test is stale
+    /** The stale tests; none at all if the toolchain changed since the
+        threshold, since then every test is stale
+     */
     [[nodiscard]]
     std::optional<std::vector<fs::path>> find_stale_tests(fs::file_time_type stalenessThreshold, const project_paths& projPaths)
     {
@@ -605,11 +634,13 @@ namespace sequoia::testing
 
       const auto tests{graph.get_test_translation_units()};
 
-      /* With no tests selected, prune runs nothing and reports that nothing has changed. That is the
-         truth when the project has no tests, and a permanent silence when it has tests which the
-         build's record spells under some other path than project_paths expects - a tree configured
-         through a symlink, or in another case - since then nothing would ever be selected again. The
-         two are told apart by whether the record names anything of the project's at all.
+      /* With no tests selected, prune runs nothing and reports that nothing
+         has changed. That is the truth when the project has no tests, and a
+         permanent silence when it has tests which the build's record spells
+         under some other path than project_paths expects - a tree configured
+         through a symlink, or in another case - since then nothing would ever
+         be selected again. The two are told apart by whether the record names
+         anything of the project's at all.
        */
       if(tests.empty() && !graph.reads_from(projPaths.project_root()))
         throw std::runtime_error{
@@ -629,9 +660,10 @@ namespace sequoia::testing
         }
       };
 
-      /* `copy` rather than `to<vector>`: `to` sizes a filtered range by walking it before copying
-         from it, and advancing a `filter` iterator evaluates the predicate, so every unit after the
-         first stale one would be judged twice - and the judgement walks that unit's materials.
+      /* `copy` rather than `to<vector>`: `to` sizes a filtered range by
+         walking it before copying from it, and advancing a `filter` iterator
+         evaluates the predicate, so every unit after the first stale one would
+         be judged twice - and the judgement walks that unit's materials.
        */
       std::vector<fs::path> staleTests{};
       std::ranges::copy(
@@ -666,10 +698,12 @@ namespace sequoia::testing
       }
     };
 
-    /** Sorted by path; where a path recurs, only its most recent record is kept.
+    /** Sorted by path; where a path recurs, only its most recent record is
+        kept.
 
-        A path recurs when records of one test from different runs are merged: the repetitions of an
-        instability analysis, or a selected run's results with those already on disk.
+        A path recurs when records of one test from different runs are merged:
+        the repetitions of an instability analysis, or a selected run's results
+        with those already on disk.
      */
     [[nodiscard]]
     std::vector<prune_record> unique_by_path(std::vector<prune_record> records)
@@ -691,12 +725,13 @@ namespace sequoia::testing
       );
     }
 
-    /** Aggregates the passes which the repetitions of an instability analysis recorded.
+    /** Aggregates the passes which the repetitions of an instability analysis
+        recorded.
 
         \returns
         -# `nullopt`, if any repetition wrote no passes file;
-        -# Otherwise, a record of each test which passed in every repetition. The record carries the
-           first repetition's stamp.
+        -# Otherwise, a record of each test which passed in every repetition.
+           The record carries the first repetition's stamp.
      */
     [[nodiscard]]
     std::optional<std::vector<prune_record>> aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
@@ -850,7 +885,9 @@ namespace sequoia::testing
 
   namespace
   {
-    /// One of sequoia's own files. `object` is the first object in the record whose compilation read the file.
+    /** One of sequoia's own files. `object` is the first object in the record
+        whose compilation read the file.
+     */
     struct sequoia_file
     {
       fs::path file{};
@@ -858,14 +895,15 @@ namespace sequoia::testing
       fs::file_time_type time{};
     };
 
-    /** The target to which `object` belongs. By default, CMake puts a target's objects within a directory
-        `<target>.dir` of the build tree.
+    /** The target to which `object` belongs. By default, CMake puts a target's
+        objects within a directory `<target>.dir` of the build tree.
 
         \returns
-        -# The target named by the first `<target>.dir` on the path of `object` relative to `buildDirectory`;
+        -# The target named by the first `<target>.dir` on the path of `object`
+           relative to `buildDirectory`;
         -# `nullopt` if either:
-           -# `object` does not lie within `buildDirectory`;
-           -# No directory on that path is named `<target>.dir`.
+        -# `object` does not lie within `buildDirectory`;
+        -# No directory on that path is named `<target>.dir`.
      */
     [[nodiscard]]
     std::optional<std::string> target_of(const fs::path& object, const fs::path& buildDirectory)
@@ -897,14 +935,17 @@ namespace sequoia::testing
       return "sequoia has changed since this executable was built; please build the executable again.";
     }
 
-    /** The newest of sequoia's own files, as `throw_if_sequoia_changed_since_build` defines those files.
+    /** The newest of sequoia's own files, as
+        `throw_if_sequoia_changed_since_build` defines those files.
 
         \returns
-        -# The file, with the first object in the record whose compilation read the file;
-        -# `nullopt` if no object in the record has its source within `sequoiaSources`.
+        -# The file, with the first object in the record whose compilation read
+           the file;
+        -# `nullopt` if no object in the record has its source within
+           `sequoiaSources`.
 
-        \throws std::runtime_error if this function cannot read the modification time of one of sequoia's own
-        files.
+        \throws std::runtime_error if this function cannot read the
+        modification time of one of sequoia's own files.
      */
     [[nodiscard]]
     std::optional<sequoia_file> newest_sequoia_file(const build_tree& tree,
@@ -922,8 +963,9 @@ namespace sequoia::testing
         }
       };
 
-      // The loop asks for each file's modification time once, however many objects' compilations read the file.
-      // A view would need a stateful filter for that.
+      // The loop asks for each file's modification time once, however many
+      // objects' compilations read the file. A view would need a stateful
+      // filter for that.
       std::vector<bool> visited(files.size());
       std::optional<sequoia_file> newest{};
       for(const auto& record : records | std::views::filter(isSequoiaObject))
@@ -956,9 +998,10 @@ namespace sequoia::testing
       return newest;
     }
 
-    /** Whether `dir`, or any entry within `dir`, may have changed since `stamp`. An entry may have changed if:
-        -# The entry is no older than `stamp`. Directories count, since deleting an entry moves the time of the
-           entry's directory;
+    /** Whether `dir`, or any entry within `dir`, may have changed since
+        `stamp`. An entry may have changed if:
+        -# The entry is no older than `stamp`. Directories count, since
+           deleting an entry moves the time of the entry's directory;
         -# This function cannot read the entry's time.
      */
     [[nodiscard]]
@@ -983,7 +1026,8 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path sequoia_sources()
   {
-    // This file lies in TestFramework, one directory below the directory of sequoia's sources
+    // This file lies in TestFramework, one directory below the directory of
+    // sequoia's sources
     return fs::path{std::source_location::current().file_name()}.parent_path().parent_path();
   }
 
@@ -1007,7 +1051,8 @@ namespace sequoia::testing
       return;
     }
 
-    // The executable can vanish after the runner starts, if a rebuild relinks it
+    // The executable can vanish after the runner starts, if a rebuild relinks
+    // it
     const auto executableStamp{get_stamp(projPaths.executable())};
     if(!executableStamp)
     {
