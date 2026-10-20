@@ -28,6 +28,7 @@ namespace sequoia::testing
     test_throwing_task();
     test_attempt_with_too_few_trials();
     test_non_positive_durations();
+    test_attempt_number_out_of_range();
     test_more_atypical_trials_than_trials();
     test_odd_number_of_trials();
   }
@@ -263,6 +264,34 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       "A slow task timed as zero, beside its baseline",
       judgeAttemptWithBaselinesContaining({.fast{.task{2s}, .baseline{1s}}, .slow{.task{0s}, .baseline{1s}}})
+    );
+  }
+
+  void performance_exceptions_test::test_attempt_number_out_of_range()
+  {
+    constexpr auto attempts{relative_performance_max_attempts};
+    constexpr auto everyAttemptsTrials{
+      trials_per_attempt_for_minimum_10[0] + trials_per_attempt_for_minimum_10[1] + trials_per_attempt_for_minimum_10[2]
+    };
+
+    check(equality,
+          "No trials precede the 1st attempt",
+          trials_before_nth_attempt(trials_per_attempt_for_minimum_10, 1),
+          0uz);
+
+    check(equality,
+          "Every attempt's trials precede the attempt after the last",
+          trials_before_nth_attempt(trials_per_attempt_for_minimum_10, attempts + 1),
+          everyAttemptsTrials);
+
+    check_exception_thrown<std::out_of_range>(
+      "Trials before a 0th attempt",
+      []() { return trials_before_nth_attempt(trials_per_attempt_for_minimum_10, 0); }
+    );
+
+    check_exception_thrown<std::out_of_range>(
+      "Trials before an attempt two after the last",
+      []() { return trials_before_nth_attempt(trials_per_attempt_for_minimum_10, attempts + 2); }
     );
   }
 

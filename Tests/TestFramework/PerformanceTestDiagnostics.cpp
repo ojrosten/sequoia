@@ -68,14 +68,14 @@ namespace sequoia::testing
     check_relative_performance("Attempt 1's interval lies below the prediction, "
                                "and would overlap the prediction only if substantially wider; "
                                "later speed-ups lie inside the prediction",
-                               counted_spinner{5ms, trials_for_minimum_10[0], 1ms},
+                               counted_spinner{5ms, trials_per_attempt_for_minimum_10[0], 1ms},
                                make_cycling_spinner({5ms, 30ms, 40ms, 40ms, 40ms}),
                                {.prediction{.lower{20.4}, .upper{41.1}}});
 
     check_relative_performance("Attempt 1's interval lies above the prediction, "
                                "and would overlap the prediction only if substantially wider; "
                                "later speed-ups lie inside the prediction",
-                               counted_spinner{8ms, trials_for_minimum_10[0], 20ms},
+                               counted_spinner{8ms, trials_per_attempt_for_minimum_10[0], 20ms},
                                make_cycling_spinner({30ms, 30ms, 30ms, 60ms, 80ms}),
                                {.prediction{.lower{1.7}, .upper{2.62}}});
 
@@ -83,7 +83,7 @@ namespace sequoia::testing
                                "but would lie above the prediction if substantially narrower; "
                                "attempt 2 is slower",
                                make_cycling_spinner({3ms, 4ms, 12ms, 12ms, 12ms}),
-                               counted_spinner{50ms, trials_for_minimum_10[0], 1ms},
+                               counted_spinner{50ms, trials_per_attempt_for_minimum_10[0], 1ms},
                                {.prediction{.lower{2.34}, .upper{3.66}}});
   }
 
@@ -104,8 +104,8 @@ namespace sequoia::testing
     constexpr relative_performance_parameters parameters{.prediction{.lower{1.8}, .upper{2.2}}};
 
     check_relative_performance("A speed-up of 2, then of 0.5, then of 2",
-                               counted_spinner{1ms, trials_for_minimum_10[0],                        4ms},
-                               counted_spinner{2ms, trials_before_attempt(trials_for_minimum_10, 3), 8ms},
+                               counted_spinner{1ms, trials_per_attempt_for_minimum_10[0],                            4ms},
+                               counted_spinner{2ms, trials_before_nth_attempt(trials_per_attempt_for_minimum_10, 3), 8ms},
                                parameters);
   }
 
@@ -118,7 +118,7 @@ namespace sequoia::testing
     check_relative_performance("Attempt 1's interval overlaps the prediction, "
                                "but would lie below the prediction if substantially narrower; "
                                "attempt 2 is slower",
-                               counted_spinner{1ms, trials_for_minimum_10[0], 4ms},
+                               counted_spinner{1ms, trials_per_attempt_for_minimum_10[0], 4ms},
                                make_cycling_spinner({2ms, 2ms, 3ms, 3ms, 3ms}),
                                parameters);
   }
@@ -196,8 +196,8 @@ namespace sequoia::testing
 
     check_relative_performance(
       "Baselines of 1 ms; from the net durations, a speed-up of 2, then of 0.5, then of 2",
-      task_with_baseline{.task = counted_spinner{4ms, trials_for_minimum_10[0], 13ms}, .baseline = baseline},
-      task_with_baseline{.task = counted_spinner{7ms, trials_before_attempt(trials_for_minimum_10, 3), 25ms},
+      task_with_baseline{.task = counted_spinner{4ms, trials_per_attempt_for_minimum_10[0], 13ms}, .baseline = baseline},
+      task_with_baseline{.task = counted_spinner{7ms, trials_before_nth_attempt(trials_per_attempt_for_minimum_10, 3), 25ms},
                          .baseline = baseline},
       parameters
     );
@@ -252,7 +252,7 @@ namespace sequoia::testing
     check_relative_performance("Attempts 1 and 2 fail at the gate; "
                                "attempt 3's interval overlaps the prediction, "
                                "but would not if substantially narrower",
-                               counted_spinner{8ms, trials_before_attempt(trials_for_minimum_10, 3), 5ms},
+                               counted_spinner{8ms, trials_before_nth_attempt(trials_per_attempt_for_minimum_10, 3), 5ms},
                                make_cycling_spinner({4ms, 6ms, 20ms, 30ms, 30ms}),
                                {.prediction{.lower{4.86}, .upper{7.43}}});
 
@@ -260,7 +260,7 @@ namespace sequoia::testing
                                "and would overlap the prediction only if substantially wider; "
                                "attempt 3's interval overlaps the prediction, "
                                "but would not if substantially narrower",
-                               counted_spinner{1ms, trials_before_attempt(trials_for_minimum_10, 3), 2ms},
+                               counted_spinner{1ms, trials_before_nth_attempt(trials_per_attempt_for_minimum_10, 3), 2ms},
                                make_cycling_spinner({5ms, 5ms, 10ms, 40ms, 40ms}),
                                {.prediction{.lower{2.21}, .upper{3.54}}});
   }
