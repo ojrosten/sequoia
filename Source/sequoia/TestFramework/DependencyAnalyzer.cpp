@@ -198,7 +198,7 @@ namespace sequoia::testing
         definitions for declarations within `Bar.hpp` are in its associated
         source file `Bar.cpp`. Therefore, in principle, changes to `Bar.cpp`
         can trigger a change in behaviour of functions declared in `Bar.hpp`
-        and consumed by `Foo.hpp`. Therefore there is a dependency of `Foo.hpp`
+        and consumed by `Foo.hpp`. This is an implicit dependency of `Foo.hpp`
         on `Bar.cpp`.
 
         The build does not record that dependency: how a definition reaches an
@@ -206,12 +206,13 @@ namespace sequoia::testing
         compilation read. So prune infers the dependency by name, and relies on
         a precondition: a definition is either in a file the consuming
         compilation reads, or in the source named for a header the compilation
-        reads. A definition anywhere else is not seen - in a source of a
+        reads. A definition anywhere else is not seen---in a source of a
         different name, or in a header of a different name which only some
-        other compilation reads - although the program links either way.
+        other compilation reads---although the program links either way.
 
-        The toolchain's files, which `read_files` defines, are not nodes: the
-        class keeps only the newest of their modifications.
+        The toolchain's files, which `read_files` defines, are not nodes;
+        however, `toolchain_newest_modification()` returns the newest of their
+        modifications.
      */
     class dependency_graph
     {
