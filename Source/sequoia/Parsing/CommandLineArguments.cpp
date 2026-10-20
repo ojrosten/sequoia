@@ -235,6 +235,13 @@ namespace sequoia::parsing::commandline
       }
     }
 
+    void throw_if_any_top_level_option_unbound(const options_forest& options)
+    {
+      auto isUnbound{[](const option_tree& o){ return !has_function_object(root_weight(o)); }};
+      if(std::ranges::any_of(top_level_options(options), isUnbound))
+        throw std::logic_error{error("Commandline option not bound to a function object")};
+    }
+
     /** \brief Parses `argv` against `options` in its constructor. */
     class outcome_builder
     {
@@ -393,9 +400,6 @@ namespace sequoia::parsing::commandline
 
       if(topLevel == top_level::yes)
       {
-        if(!has_function_object(opt))
-          throw std::logic_error{error("Commandline option not bound to a function object")};
-
         m_Outcome.operations.push_back({{{opt.early, opt.late, {}}}});
         return {{m_Outcome.operations.back(), 0}};
       }
@@ -511,6 +515,7 @@ namespace sequoia::parsing::commandline
   outcome parse(int argc, char** argv, const options_forest& options)
   {
     throw_if_any_spelt_as_help_request(options);
+    throw_if_any_top_level_option_unbound(options);
 
     return outcome_builder{argc, argv, options}.release_outcome();
   }

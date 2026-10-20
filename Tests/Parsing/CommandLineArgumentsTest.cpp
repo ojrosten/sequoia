@@ -49,7 +49,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>("Top-level option with neither invocable", [](){
       return parse({{"foo", "--async"}}, {{{"--async", {}, {}}}});
     });
- 
+    check_exception_thrown<std::logic_error>("Top-level option with neither invocable, though not encountered", [](){
+      return parse({{"foo", "--async"}}, {{{"--async", {}, {}, fo{}}}, {{"--verbose", {}, {}}}});
+    });
+
     check(weak_equivalence, "", parsing::commandline::parse(0, nullptr, {}), outcome{});
  
     check(weak_equivalence,

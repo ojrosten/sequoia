@@ -155,8 +155,8 @@ namespace sequoia::parsing::commandline
               all of its parameters.
       \throws std::runtime_error if a group of aliases names an option with parameters or with
               nested options.
-      \throws std::logic_error if a top-level `option` is encountered whose
-              function objects, `early` and `late`, are both null.
+      \throws std::logic_error if both the function objects, `early` and `late`, belonging to a
+              top-level `option` are null.
       \throws std::logic_error if an option's name or alias is spelt as a help request.
 
       \returns The \ref sequoia::parsing::commandline::outcome "outcome".
