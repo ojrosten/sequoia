@@ -35,7 +35,7 @@ namespace sequoia::testing
     void test_summary_of_performance_checks_within_other_checks();
 
     void check_speedup_over_serial_execution(std::string_view description,
-                                             const std::vector<std::string>& modeArguments,
+                                             const std::vector<std::string>& arguments,
                                              relative_performance_interval prediction);
 
     [[nodiscard]]

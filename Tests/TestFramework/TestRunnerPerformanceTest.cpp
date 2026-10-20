@@ -462,6 +462,21 @@ namespace sequoia::testing
           throw std::runtime_error{"A run of the slow tests did not succeed"};
       }
     };
+
+    /** Makes a run of the slow tests with the command line `arguments`, each
+        test sleeping for `sleep_duration_for_speedup_checks`, and pairs the
+        run with its baseline. The baseline runs the slow tests with the same
+        command line, and no test sleeps.
+     */
+    [[nodiscard]]
+    task_with_baseline<run_of_slow_tests, run_of_slow_tests>
+    make_task_with_baseline(const std::vector<std::string>& arguments)
+    {
+      return {
+        .task{arguments, sleep_duration_for_speedup_checks},
+        .baseline{arguments, {}}
+      };
+    }
   }
 
   [[nodiscard]]
@@ -508,10 +523,9 @@ namespace sequoia::testing
 
   void test_runner_performance_test::test_parallel_acceleration()
   {
+    const std::vector<std::string> arguments{minimal_fake_path().generic_string()};
     std::stringstream outputStream{};
-    auto runner{make_slow_suite({{minimal_fake_path().generic_string()}},
-                                outputStream,
-                                sleep_duration_for_overlap_checks)};
+    auto runner{make_slow_suite(arguments, outputStream, sleep_duration_for_overlap_checks)};
     check(equality, "Parallel acceleration return code", runner.execute(), return_code::success);
 
     const auto peak{peak_overlap(slow_test_base::execution_intervals())};
@@ -526,7 +540,7 @@ namespace sequoia::testing
           has_parallel_algorithms_v ? std::size_t{2} : eight_thread_peak_floor);
 
     check_speedup_over_serial_execution("Parallel execution is faster than serial execution",
-                                        {},
+                                        arguments,
                                         has_parallel_algorithms_v ? relative_performance_interval{2, 9}
                                                                   : relative_performance_interval{6, 9});
   }
@@ -534,10 +548,9 @@ namespace sequoia::testing
   void test_runner_performance_test::test_thread_pool_acceleration()
   {
     {
+      const std::vector<std::string> arguments{minimal_fake_path().generic_string(), "--thread-pool", "8"};
       std::stringstream outputStream{};
-      auto runner{make_slow_suite({{minimal_fake_path().generic_string(), "--thread-pool", "8"}},
-                                  outputStream,
-                                  sleep_duration_for_overlap_checks)};
+      auto runner{make_slow_suite(arguments, outputStream, sleep_duration_for_overlap_checks)};
       check(equality, "Thread pool (8) return code", runner.execute(), return_code::success);
 
       const auto peak{peak_overlap(slow_test_base::execution_intervals())};
@@ -550,15 +563,14 @@ namespace sequoia::testing
             eight_thread_peak_floor);
 
       check_speedup_over_serial_execution("A pool of eight threads is about eight times faster than serial execution",
-                                          {"--thread-pool", "8"},
+                                          arguments,
                                           {6, 9});
     }
 
     {
+      const std::vector<std::string> arguments{minimal_fake_path().generic_string(), "--thread-pool", "2"};
       std::stringstream outputStream{};
-      auto runner{make_slow_suite({{minimal_fake_path().generic_string(), "--thread-pool", "2"}},
-                                  outputStream,
-                                  sleep_duration_for_overlap_checks)};
+      auto runner{make_slow_suite(arguments, outputStream, sleep_duration_for_overlap_checks)};
       check(equality, "Thread pool (2) return code", runner.execute(), return_code::success);
 
       const auto peak{peak_overlap(slow_test_base::execution_intervals())};
@@ -568,17 +580,16 @@ namespace sequoia::testing
       check(equality, "Both threads of the pool, and no more, execute tests at once", peak, std::size_t{2});
 
       check_speedup_over_serial_execution("A pool of two threads is about twice as fast as serial execution",
-                                          {"--thread-pool", "2"},
+                                          arguments,
                                           {1.8, 2.1});
     }
   }
 
   void test_runner_performance_test::test_serial_execution()
   {
+    const std::vector<std::string> arguments{minimal_fake_path().generic_string(), "--serial"};
     std::stringstream outputStream{};
-    auto runner{make_slow_suite({{minimal_fake_path().generic_string(), "--serial"}},
-                                outputStream,
-                                sleep_duration_for_overlap_checks)};
+    auto runner{make_slow_suite(arguments, outputStream, sleep_duration_for_overlap_checks)};
     check(equality, "Serial execution return code", runner.execute(), return_code::success);
 
     const auto peak{peak_overlap(slow_test_base::execution_intervals())};
@@ -588,28 +599,17 @@ namespace sequoia::testing
     check(equality, "Tests execute one at a time in a serial run", peak, std::size_t{1});
   }
 
-  /** Checks the speed-up of a run of the slow tests with `modeArguments`
-      over a serial run. Each run's baseline is a run in the same mode in
-      which the tests do not sleep.
+  /** Checks the speed-up of a run of the slow tests with the command line
+      `arguments` over a serial run of the slow tests. `arguments` must begin
+      with `minimal_fake_path()`, as the serial run's command line does.
    */
   void test_runner_performance_test::check_speedup_over_serial_execution(std::string_view description,
-                                                                         const std::vector<std::string>& modeArguments,
+                                                                         const std::vector<std::string>& arguments,
                                                                          relative_performance_interval prediction)
   {
-    auto taskWithBaselineFor{
-      [fakePath{minimal_fake_path().generic_string()}](const std::vector<std::string>& argumentsOfMode) {
-        std::vector<std::string> arguments{fakePath};
-        arguments.append_range(argumentsOfMode);
-        return task_with_baseline<run_of_slow_tests, run_of_slow_tests>{
-          .task{arguments, sleep_duration_for_speedup_checks},
-          .baseline{arguments, {}}
-        };
-      }
-    };
-
     check_relative_performance(description,
-                               taskWithBaselineFor(modeArguments),
-                               taskWithBaselineFor({"--serial"}),
+                               make_task_with_baseline(arguments),
+                               make_task_with_baseline({minimal_fake_path().generic_string(), "--serial"}),
                                {.prediction{prediction}});
   }
 
