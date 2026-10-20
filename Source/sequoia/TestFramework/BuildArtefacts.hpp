@@ -19,19 +19,14 @@
 
 namespace sequoia::testing
 {
-  /** \brief What a build compiled: the files its record contains, and for each object file, which of
-             them were read to produce it.
+  /** \brief A build's compilations: for each, the files read and the object
+             file produced.
 
-      `files` holds the files the build's record contains - object files,
-      sources and headers, as spelled by the build. A `record` holds indices
-      into `files` as a lightweight handle for an object file and the inputs
-      used to create it. `files[object_index]` is the object file itself, with
-      the `input_indices` indexing into `files` to acquire the files from which
-      the object was produced.
-
-      \pre Each file is recorded only once.
-
-      \pre Every index is less than `files.size()`.
+      `files` holds object files, sources and headers, as spelled by the
+      build. A `record` holds indices into `files` as a lightweight handle for
+      an object file and the inputs used to create it. `files[object_index]`
+      is the object file itself, with the `input_indices` indexing into `files`
+      to acquire the files from which the object was produced.
    */
   struct compilations
   {
@@ -73,6 +68,11 @@ namespace sequoia::testing
   build_tree read_build_tree(const std::filesystem::path& cacheFile);
 
   /** \brief Every compilation the build currently has, each with its source first among its inputs.
+
+      In the result:
+      -# No two of `files` are spelled alike.
+      -# Every index in `records` is less than `files.size()`.
+      -# Every file in `files` is named by one of `records`.
 
       If the generator is multi-config, the compilations are those of `configuration`. Otherwise
       `configuration` is ignored.
