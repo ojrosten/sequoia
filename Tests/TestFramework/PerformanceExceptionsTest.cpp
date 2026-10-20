@@ -29,6 +29,7 @@ namespace sequoia::testing
     test_attempt_with_too_few_trials();
     test_non_positive_durations();
     test_more_atypical_trials_than_trials();
+    test_trials_before_0th_attempt();
     test_odd_number_of_trials();
   }
 
@@ -280,6 +281,19 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       "More atypical trials than trials",
       [typical]() { return trials_with_atypical(1, typical, {typical, typical}); }
+    );
+  }
+
+  void performance_exceptions_test::test_trials_before_0th_attempt()
+  {
+    check(equality,
+          "No trials precede the 1st attempt",
+          trials_before_nth_attempt(trials_per_attempt_for_minimum_10, 1),
+          0uz);
+
+    check_exception_thrown<std::logic_error>(
+      "Trials before a 0th attempt",
+      []() { return trials_before_nth_attempt(trials_per_attempt_for_minimum_10, 0); }
     );
   }
 

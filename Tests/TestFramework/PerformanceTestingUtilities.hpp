@@ -33,19 +33,24 @@ namespace sequoia::testing
       The numbers are not in the contract. Tests which use them pin the
       implementation's choice, and change with it.
    */
-  inline constexpr auto trials_per_attempt_with_minimum_10{std::to_array<std::size_t>({10, 16, 20})},
-                        trials_per_attempt_with_minimum_11{std::to_array<std::size_t>({12, 16, 22})};
+  inline constexpr auto trials_per_attempt_for_minimum_10{std::to_array<std::size_t>({10, 16, 20})},
+                        trials_per_attempt_for_minimum_11{std::to_array<std::size_t>({12, 16, 22})};
 
-  static_assert(trials_per_attempt_with_minimum_10.size() == relative_performance_max_attempts);
-  static_assert(trials_per_attempt_with_minimum_11.size() == relative_performance_max_attempts);
-  static_assert(trials_per_attempt_with_minimum_10.front() == relative_performance_minimum_trials_floor);
+  static_assert(trials_per_attempt_for_minimum_10.size() == relative_performance_max_attempts);
+  static_assert(trials_per_attempt_for_minimum_11.size() == relative_performance_max_attempts);
+  static_assert(trials_per_attempt_for_minimum_10.front() == relative_performance_minimum_trials_floor);
 
   /** \brief Returns the number of trials made before the `n`th attempt,
              given the number in each attempt.
+
+      \throws std::logic_error if `n` is zero.
    */
   [[nodiscard]]
   constexpr std::size_t trials_before_nth_attempt(std::span<const std::size_t> trialsPerAttempt, std::size_t n)
   {
+    if(n == 0)
+      throw std::logic_error{"Attempts are numbered from 1, so there is no 0th attempt"};
+
     return std::ranges::fold_left(trialsPerAttempt | std::views::take(n - 1), 0uz, std::plus<>{});
   }
 

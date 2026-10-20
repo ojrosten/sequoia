@@ -252,7 +252,7 @@ namespace sequoia::testing
 
         check_relative_performance("A speed-up of 1, then of 8",
                                    counted_spinner{spin_unit},
-                                   counted_spinner{spin_unit, trials_per_attempt_with_minimum_10[0], 8 * spin_unit},
+                                   counted_spinner{spin_unit, trials_per_attempt_for_minimum_10[0], 8 * spin_unit},
                                    parameters);
 
         check_exception_thrown<std::invalid_argument>(
