@@ -178,9 +178,6 @@ namespace sequoia::parsing::commandline
       return entries | std::views::transform(row) | std::views::join | std::ranges::to<std::string>();
     }
 
-    /** \brief The "Commands:" and "Options:" sections for a level, each present only if it has
-        entries, help listed last among the options; nothing for a level with none.
-     */
     [[nodiscard]]
     help_entry help_entry_of(const option_tree& opt)
     {
@@ -188,6 +185,10 @@ namespace sequoia::parsing::commandline
       return {entry_of(opt), description.substr(0, description.find('\n'))};
     }
 
+    /** \brief The "Commands:" and "Options:" sections for a level, each
+        present only if it has entries, help listed last among the options;
+        nothing for a level with none.
+     */
     template<std::ranges::input_range Options>
     [[nodiscard]]
     std::string sections_of(const Options& level)
