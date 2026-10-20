@@ -615,30 +615,53 @@ namespace sequoia::testing
       return null_discriminator;
   }
 
+  /** \brief Whether `T` is initializable from `Args` followed by the
+             arguments `make_test` gives every test.
+   */
+  template<class T, class... Args>
+  inline constexpr bool initializable_as_test_from_v{
+    initializable_from<T,
+                       Args...,
+                       const std::string_view&,
+                       const std::filesystem::path&,
+                       const project_paths&,
+                       individual_materials_paths,
+                       active_recovery_files,
+                       std::optional<std::string>>
+  };
+
   /** \brief Makes a test of type `T` for the project at `projPaths`.
 
-      The test's discriminators are read from `cache`, and `mode` chooses its
-      recovery files. An exception which a discriminator hook of `T` throws
-      propagates.
+      `T` is initialized from `args`, followed by the arguments the framework
+      gives every test. The test's discriminators are read from `cache`, and
+      `mode` chooses its recovery files.
+
+      An exception which a discriminator hook of `T` throws propagates. Every
+      hook of `T` is called before `args` are forwarded, so such an exception
+      leaves `args` as they were.
    */
-  template<concrete_test T>
+  template<concrete_test T, class... Args>
+    requires initializable_as_test_from_v<T, Args...>
   [[nodiscard]]
-  T make_test(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode)
+  T make_test(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode, Args&&... args)
   {
     constexpr std::string_view name{test_name<T>()};
-    const auto source{T::source_file()};
+    const std::filesystem::path source{T::source_file()};
 
-    return T{name,
+    individual_materials_paths materials{source,
+                                         name,
+                                         projPaths,
+                                         get_discriminator<materials_discriminator_probe, T>(cache)};
+    active_recovery_files      recoveryFiles{make_active_recovery_paths(mode, projPaths)};
+    std::optional<std::string> outputDiscriminator{get_discriminator<output_discriminator_probe, T>(cache)};
+
+    return T{std::forward<Args>(args)...,
+             name,
              source,
              projPaths,
-             individual_materials_paths{
-               source,
-               name,
-               projPaths,
-               get_discriminator<materials_discriminator_probe, T>(cache)
-             },
-             make_active_recovery_paths(mode, projPaths),
-             get_discriminator<output_discriminator_probe, T>(cache)};
+             std::move(materials),
+             std::move(recoveryFiles),
+             std::move(outputDiscriminator)};
   }
 
   /** \brief Consumes command-line arguments and holds all test suites.
@@ -663,12 +686,28 @@ namespace sequoia::testing
     test_runner& operator=(const test_runner&)     = delete;
     test_runner& operator=(test_runner&&) noexcept = default;
 
-    template<concrete_test T>
-    void register_test()
+    /** \brief Registers a test of type `T`.
+
+        A registration builds the test only if the command line asks for a run
+        of tests and selects the test. The test is initialized from `args`,
+        followed by the arguments the framework gives every test. So a
+        registration forwards `args` at most once, and only if it builds the
+        test.
+
+        An exception from a check of the registration, or from any hook of
+        `T`, leaves `args` as they were.
+
+        Parallelizable tests may run concurrently with one another. So an
+        argument which several of them share must be safe to use from several
+        threads.
+     */
+    template<concrete_test T, class... Args>
+      requires initializable_as_test_from_v<T, Args...>
+    void register_test(Args&&... args)
     {
       constexpr std::string_view name{test_name<T>()};
       constexpr auto testKind{is_performance_test_v<T> ? test_kind::performance : test_kind::functional};
-      const auto source{T::source_file()};
+      const std::filesystem::path source{T::source_file()};
 
       // Every check runs, and every hook returns, before the runner either
       // notes the registration or empties the test's file of execution
@@ -690,7 +729,10 @@ namespace sequoia::testing
       const bool toRun{m_Filter(source, enclosing_suites(source), testKind) && in_mode(runner_mode::test)};
       auto testToRun{
         toRun ? std::optional<test_to_run>{std::in_place,
-                                           test_vessel{make_test<T>(m_ProjPaths, m_CMakeCache, m_RecoveryMode)},
+                                           test_vessel{make_test<T>(m_ProjPaths,
+                                                                    m_CMakeCache,
+                                                                    m_RecoveryMode,
+                                                                    std::forward<Args>(args)...)},
                                            summaryFile,
                                            executionRecordFile}
               : std::nullopt

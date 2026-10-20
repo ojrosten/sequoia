@@ -736,6 +736,118 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
+    using shared_run_count_t = std::shared_ptr<std::atomic<std::size_t>>;
+
+    /** A base for tests given a count shared with the caller, which each run
+        of the test increments. The count is atomic, since parallelizable tests
+        may run concurrently.
+     */
+    class run_counting_free_test_base : public free_test
+    {
+    public:
+      template<class... Args>
+      explicit run_counting_free_test_base(shared_run_count_t runCount, Args&&... args)
+        : free_test{std::forward<Args>(args)...}
+        , m_RunCount{std::move(runCount)}
+      {}
+
+      void run_tests()
+      {
+        ++*m_RunCount;
+      }
+    private:
+      shared_run_count_t m_RunCount{};
+    };
+
+    class run_counting_free_test final : public run_counting_free_test_base
+    {
+    public:
+      using run_counting_free_test_base::run_counting_free_test_base;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<run_counting_free_test>();
+      }
+    };
+
+    class run_counting_free_test_twin final : public run_counting_free_test_base
+    {
+    public:
+      using run_counting_free_test_base::run_counting_free_test_base;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<run_counting_free_test_twin>();
+      }
+    };
+
+    class run_counting_throwing_materials_discriminator_test final : public run_counting_free_test_base
+    {
+    public:
+      using run_counting_free_test_base::run_counting_free_test_base;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<run_counting_throwing_materials_discriminator_test>();
+      }
+
+      [[nodiscard]]
+      static std::string materials_discriminator(const cmake_cache&)
+      {
+        throw std::runtime_error{"No materials discriminator"};
+      }
+    };
+
+    class run_counting_throwing_output_discriminator_test final : public run_counting_free_test_base
+    {
+    public:
+      using run_counting_free_test_base::run_counting_free_test_base;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<run_counting_throwing_output_discriminator_test>();
+      }
+
+      [[nodiscard]]
+      static std::string output_discriminator(const cmake_cache&)
+      {
+        throw std::runtime_error{"No output discriminator"};
+      }
+    };
+
+    using unique_resource_t = std::unique_ptr<std::size_t>;
+
+    /** A test given a resource which it alone owns. */
+    class resource_owning_free_test final : public free_test
+    {
+    public:
+      template<class... Args>
+      explicit resource_owning_free_test(unique_resource_t resource, Args&&... args)
+        : free_test{std::forward<Args>(args)...}
+        , m_Resource{std::move(resource)}
+      {}
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<resource_owning_free_test>();
+      }
+
+      void run_tests() {}
+    private:
+      unique_resource_t m_Resource{};
+    };
+
+    /** \brief Whether `test_runner::register_test<T>` accepts `Args`. */
+    template<class T, class... Args>
+    inline constexpr bool registrable_with_v{
+      requires(test_runner& runner, Args&&... args) { runner.register_test<T>(std::forward<Args>(args)...); }
+    };
+
     test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
     {
       auto runner{make_fake_project_runner(args, outputStream)};
@@ -976,12 +1088,15 @@ namespace sequoia::testing
   void test_runner_test::run_tests()
   {
     test_discriminator_hooks();
+    test_registration_constraints();
     test_exceptions();
     test_critical_errors();
     test_basic_output();
     test_tests_registered_between_executions();
     test_execution_after_a_registration_which_threw();
     test_registration_outside_a_run();
+    test_registration_with_arguments();
+    test_arguments_when_no_test_is_built();
     test_help_output();
     test_verbose_output();
     test_serial_verbose_output();
@@ -1067,6 +1182,36 @@ namespace sequoia::testing
 
     STATIC_CHECK(Probe<overloaded_nullary_hooks_test>::declared_v);
     STATIC_CHECK(!Probe<overloaded_nullary_hooks_test>::conforming_v);
+  }
+
+  /** Checks which arguments `register_test` admits and refuses:
+      -# A test taking no arguments of its own admits none, and refuses a
+         count.
+      -# A test taking a shared count first admits the count as an lvalue, a
+         const lvalue or an rvalue, and refuses no count and an `int`.
+      -# A test taking a unique resource first admits the resource as an
+         rvalue, and refuses it as an lvalue.
+      -# `concrete_test` refuses a type which is not a test.
+      A surplus argument is not refused, since the constructor of
+      `run_counting_free_test_base` takes everything after the count as an
+      unconstrained pack.
+   */
+  void test_runner_test::test_registration_constraints()
+  {
+    STATIC_CHECK(registrable_with_v<passing_test>);
+    STATIC_CHECK(!registrable_with_v<passing_test, shared_run_count_t>);
+
+    STATIC_CHECK(registrable_with_v<run_counting_free_test, shared_run_count_t&>);
+    STATIC_CHECK(registrable_with_v<run_counting_free_test, const shared_run_count_t&>);
+    STATIC_CHECK(registrable_with_v<run_counting_free_test, shared_run_count_t>);
+
+    STATIC_CHECK(!registrable_with_v<run_counting_free_test>);
+    STATIC_CHECK(!registrable_with_v<run_counting_free_test, int>);
+
+    STATIC_CHECK(registrable_with_v<resource_owning_free_test, unique_resource_t>);
+    STATIC_CHECK(!registrable_with_v<resource_owning_free_test, unique_resource_t&>);
+
+    STATIC_CHECK(!registrable_with_v<foo>);
   }
 
   void test_runner_test::write(std::string_view dirName, std::stringstream& output) const
@@ -1457,6 +1602,114 @@ namespace sequoia::testing
 
     runner.register_test<throwing_discriminator_test>();
     check(equality, "Return code", runner.execute(), return_code::success);
+  }
+
+  /** Two tests share a count with the caller, and each run of either
+      increments it:
+      -# A registration given an lvalue copy of the count leaves the copy as
+         it was.
+      -# A registration given an rvalue copy of the count moves from it.
+      -# After the run, the count is two only if both tests incremented the
+         count to which every copy points.
+   */
+  void test_runner_test::test_registration_with_arguments()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
+
+    auto runner{make_fake_project_runner(args, outputStream)};
+
+    const auto runCount      {std::make_shared<std::atomic<std::size_t>>()};
+    auto       copiedRunCount{runCount};
+    auto       movedRunCount {runCount};
+    runner.register_test<run_counting_free_test>(copiedRunCount);
+    runner.register_test<run_counting_free_test_twin>(std::move(movedRunCount));
+
+    check("An lvalue argument is left as it was", copiedRunCount == runCount);
+    check("An rvalue argument is moved from", movedRunCount == nullptr);
+    check(equality, "Return code", runner.execute(), return_code::success);
+    check(equality, "Each test increments the count its registration was given", runCount->load(), 2uz);
+  }
+
+  /** A registration leaves its arguments as they were if it builds no test.
+      Each argument is an rvalue, which the constructor of these tests would
+      have moved from. No test is built:
+      -# For a test which the command line does not select.
+      -# Outside a run.
+      -# For a test whose name a registration has already taken.
+      -# For a test whose materials discriminator throws.
+      -# For a test whose output discriminator throws.
+   */
+  void test_runner_test::test_arguments_when_no_test_is_built()
+  {
+    auto checkArgumentLeftAsItWas{
+      [this](std::string_view description,
+             commandline_arguments args,
+             std::invocable<test_runner&, shared_run_count_t&&> auto registration) {
+        std::stringstream outputStream{};
+        auto runner{make_fake_project_runner(args, outputStream)};
+
+        const auto runCount       {std::make_shared<std::atomic<std::size_t>>()};
+        auto       runCountForTest{runCount};
+        registration(runner, std::move(runCountForTest));
+
+        check(description, runCountForTest == runCount);
+      }
+    };
+
+    auto registerRunCountingTest{
+      [](test_runner& runner, shared_run_count_t&& runCount) {
+        runner.register_test<run_counting_free_test>(std::move(runCount));
+      }
+    };
+
+    checkArgumentLeftAsItWas("A test the command line does not select",
+                             fake_project_commandline(auxiliary_materials(),
+                                                      "select",
+                                                      passing_test::source_file().generic_string()),
+                             registerRunCountingTest);
+
+    checkArgumentLeftAsItWas("A registration outside a run",
+                             fake_project_commandline(auxiliary_materials(), "--help"),
+                             registerRunCountingTest);
+
+    checkArgumentLeftAsItWas(
+      "A registration under a name already taken",
+      fake_project_commandline(auxiliary_materials()),
+      [this](test_runner& runner, shared_run_count_t&& runCount) {
+        runner.register_test<run_counting_free_test>(std::make_shared<std::atomic<std::size_t>>());
+        check_exception_thrown<std::logic_error>(
+          "The second registration throws",
+          [&runner, &runCount](){ runner.register_test<run_counting_free_test>(std::move(runCount)); }
+        );
+      }
+    );
+
+    checkArgumentLeftAsItWas(
+      "A registration whose materials discriminator throws",
+      fake_project_commandline(auxiliary_materials()),
+      [this](test_runner& runner, shared_run_count_t&& runCount) {
+        check_exception_thrown<std::runtime_error>(
+          "The registration throws",
+          [&runner, &runCount](){
+            runner.register_test<run_counting_throwing_materials_discriminator_test>(std::move(runCount));
+          }
+        );
+      }
+    );
+
+    checkArgumentLeftAsItWas(
+      "A registration whose output discriminator throws",
+      fake_project_commandline(auxiliary_materials()),
+      [this](test_runner& runner, shared_run_count_t&& runCount) {
+        check_exception_thrown<std::runtime_error>(
+          "The registration throws",
+          [&runner, &runCount](){
+            runner.register_test<run_counting_throwing_output_discriminator_test>(std::move(runCount));
+          }
+        );
+      }
+    );
   }
 
   void test_runner_test::test_help_output()

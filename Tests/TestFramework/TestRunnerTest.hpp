@@ -34,6 +34,8 @@ namespace sequoia::testing
     template<template<class> class Probe>
     void test_discriminator_probe();
 
+    void test_registration_constraints();
+
     void test_exceptions();
 
     void test_critical_errors();
@@ -51,6 +53,10 @@ namespace sequoia::testing
     void test_execution_after_a_registration_which_threw();
 
     void test_registration_outside_a_run();
+
+    void test_registration_with_arguments();
+
+    void test_arguments_when_no_test_is_built();
 
     void test_help_output();
 
