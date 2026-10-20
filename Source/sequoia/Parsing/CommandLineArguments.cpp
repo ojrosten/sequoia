@@ -270,8 +270,7 @@ namespace sequoia::parsing::commandline
 
       int                      m_Index{1}, m_ArgCount{};
       char**                   m_Argv{};
-      const options_forest&    m_Options;
-      outcome                  m_Outcome;
+      outcome                  m_Outcome{};
       option_tree              m_MostRecentlyEncounteredOption{};
       std::vector<option_tree> m_OptionsEntered{};
 
@@ -289,14 +288,14 @@ namespace sequoia::parsing::commandline
                           operation_data currentOperationData,
                           top_level topLevel) -> operation_data;
 
+      template<std::ranges::input_range Options>
       [[nodiscard]]
-      std::string generate_help() const;
+      std::string generate_help(const Options& options) const;
     };
 
     outcome_builder::outcome_builder(int argc, char** argv, const options_forest& options)
       : m_ArgCount{argc}
       , m_Argv{argv}
-      , m_Options{options}
       , m_Outcome{argc ? argv[0] : "", {}}
     {
       parse(top_level_options(options), {}, top_level::yes);
@@ -317,7 +316,7 @@ namespace sequoia::parsing::commandline
 
         if(is_help_request(arg))
         {
-          m_Outcome.help = generate_help();
+          m_Outcome.help = generate_help(options);
           break;
         }
 
@@ -478,13 +477,12 @@ namespace sequoia::parsing::commandline
       return true;
     }
 
+    template<std::ranges::input_range Options>
     [[nodiscard]]
-    std::string outcome_builder::generate_help() const
+    std::string outcome_builder::generate_help(const Options& options) const
     {
-      const auto topLevelOptions{top_level_options(m_Options)};
-
-      // The described option is the one most recently encountered;
-      // when none has been encountered, the top level is described
+      // The described option is the one most recently encountered. When none has been encountered,
+      // help was requested at the top level, and the top-level options, `options`, are described.
       auto path{m_OptionsEntered};
       if(m_MostRecentlyEncounteredOption && (path.empty() || (path.back() != m_MostRecentlyEncounteredOption)))
         path.push_back(m_MostRecentlyEncounteredOption);
@@ -500,7 +498,7 @@ namespace sequoia::parsing::commandline
       usage = std::ranges::fold_left(names, std::move(usage), std::plus{});
 
       if(path.empty())
-        return std::format("{}{}\n{}", usage, continuation_of(topLevelOptions), sections_of(topLevelOptions));
+        return std::format("{}{}\n{}", usage, continuation_of(options), sections_of(options));
 
       const option_tree& described{path.back()};
       usage += continuation_of(described);
