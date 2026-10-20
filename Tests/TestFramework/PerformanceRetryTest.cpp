@@ -79,19 +79,23 @@ namespace sequoia::testing
   {
     using namespace std::chrono_literals;
 
-    constexpr relative_performance_parameters parameters{.prediction{.lower{4.62}, .upper{7.4}}};
-    const counted_spinner fast{8ms};
+    constexpr auto attempts{relative_performance_max_attempts};
+    constexpr auto everyAttemptsTrials{trials_before_attempt(trials_for_minimum_10, attempts + 1)};
+
+    constexpr relative_performance_parameters parameters{.prediction{.lower{4.88}, .upper{7.81}}};
+    const counted_spinner fast{8ms, trials_before_attempt(trials_for_minimum_10, attempts), 7ms};
 
     check_relative_performance(
-      "Attempt 1's interval lies below the prediction, "
-      "and would overlap the prediction only if substantially wider; "
-      "attempt 2's wider interval overlaps the prediction, "
-      "but would not if substantially narrower",
+      "The intervals of attempts 1 and 2 lie below the prediction, "
+      "and attempt 2's would overlap the prediction only if substantially wider; "
+      "at attempt 3 the fast task speeds up, and the wider interval overlaps the prediction, "
+      "but would not if substantially narrower; "
+      "any multiplier wide enough for attempt 3 would let attempt 1 overlap too",
       fast,
-      make_cycling_spinner({8ms, 12ms, 40ms, 40ms, 40ms}),
+      make_cycling_spinner({8ms, 10ms, 30ms, 40ms, 40ms}),
       parameters
     );
-    check(equality, "Calls of the fast task", fast.calls(), trials_before_attempt(trials_for_minimum_10, 3));
+    check(equality, "Calls of the fast task, every attempt's trials", fast.calls(), everyAttemptsTrials);
   }
 
   void performance_retry_test::test_constant_gate_multiplier()

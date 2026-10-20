@@ -11,8 +11,8 @@
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/DumpComparison.hpp"
 #include "sequoia/TestFramework/InstabilityAnalysis.hpp"
+#include "sequoia/TestFramework/InstabilityProjection.hpp"
 #include "sequoia/TestFramework/MaterialsUpdater.hpp"
-#include "sequoia/TestFramework/PerformanceSummary.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/TestCreator.hpp"
@@ -75,7 +75,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::chrono::duration<double> typical_sleep_duration(std::chrono::milliseconds target)
     {
-      auto sleepForTarget{[target]() { std::this_thread::sleep_for(target); }};
+      auto sleepForTarget{[target]() { precise_sleep_for(target); }};
 
       std::array<std::chrono::duration<double>, 3> durations{};
       std::ranges::generate(durations, [&sleepForTarget]() { return profile(sleepForTarget); });
@@ -782,12 +782,6 @@ namespace sequoia::testing
     inline constexpr bool acts_on_every_alternative_v<Act, std::variant<Nascents...>>{
       (std::invocable<const Act&, Nascents&, const parsing::commandline::arg_list&> && ...)
     };
-  }
-
-  [[nodiscard]]
-  std::string instability_projection(std::string_view message)
-  {
-    return text_with_zeroed_measurements(message, attempt_count_stability::fluctuating);
   }
 
   [[nodiscard]]

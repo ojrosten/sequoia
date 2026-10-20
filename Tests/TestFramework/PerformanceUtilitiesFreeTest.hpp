@@ -9,7 +9,6 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/CoarseSleeps.hpp"
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
 
 namespace sequoia::testing
@@ -33,6 +32,8 @@ namespace sequoia::testing
 
     void test_default_minimum_trials();
 
+    void test_overlap_multipliers();
+
     void test_judgement_with_baselines();
 
     void test_shuffled_baselined_task_orders();
@@ -42,7 +43,5 @@ namespace sequoia::testing
     void test_postprocessing();
 
     void test_zeroed_measurements();
-
-    void test_coarse_sleep();
   };
 }

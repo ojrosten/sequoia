@@ -8,7 +8,7 @@
 #include "PerformanceUtilitiesFreeTest.hpp"
 #include "PerformanceTestingUtilities.hpp"
 
-#include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TestFramework/FloatingPointDurations.hpp"
 
 #include <array>
 #include <chrono>
@@ -87,12 +87,12 @@ namespace sequoia::testing
     test_timing_constraints();
     test_exception_specifications();
     test_default_minimum_trials();
+    test_overlap_multipliers();
     test_judgement_with_baselines();
     test_shuffled_baselined_task_orders();
     test_call_in_order();
     test_postprocessing();
     test_zeroed_measurements();
-    test_coarse_sleep();
   }
 
   void performance_utilities_free_test::test_task_constraints()
@@ -155,6 +155,23 @@ namespace sequoia::testing
     constexpr relative_performance_parameters parameters{.prediction{.lower{2.0}, .upper{3.0}}};
 
     STATIC_CHECK(parameters.minimum_trials == relative_performance_minimum_trials_floor);
+  }
+
+  void performance_utilities_free_test::test_overlap_multipliers()
+  {
+    using enum test_mode;
+
+    // The multipliers are not in the contract. These checks pin the
+    // implementation's choice, and change with it.
+    check(equality, "Multiplier in standard mode, attempt 1",       impl::overlap_multiplier(standard,       1), 1.0);
+    check(equality, "Multiplier in standard mode, attempt 2",       impl::overlap_multiplier(standard,       2), 2.0);
+    check(equality, "Multiplier in standard mode, attempt 3",       impl::overlap_multiplier(standard,       3), 3.0);
+    check(equality, "Multiplier in false-positive mode, attempt 1", impl::overlap_multiplier(false_positive, 1), 1.0);
+    check(equality, "Multiplier in false-positive mode, attempt 2", impl::overlap_multiplier(false_positive, 2), 2.0);
+    check(equality, "Multiplier in false-positive mode, attempt 3", impl::overlap_multiplier(false_positive, 3), 3.0);
+    check(equality, "Multiplier in false-negative mode, attempt 1", impl::overlap_multiplier(false_negative, 1), 3.0);
+    check(equality, "Multiplier in false-negative mode, attempt 2", impl::overlap_multiplier(false_negative, 2), 3.0);
+    check(equality, "Multiplier in false-negative mode, attempt 3", impl::overlap_multiplier(false_negative, 3), 3.0);
   }
 
   void performance_utilities_free_test::test_judgement_with_baselines()
@@ -733,16 +750,15 @@ namespace sequoia::testing
     {
       constexpr auto infinity{std::numeric_limits<double>::infinity()};
       constexpr auto nan{std::numeric_limits<double>::quiet_NaN()};
-      using fractional_seconds = std::chrono::duration<double>;
 
       const std::string latest{
         append_lines(speedup_summary({infinity, {1e+06, -nan}}, {2, 3}),
-                     task_durations_summary({fractional_seconds{9.9e-05}, fractional_seconds{0}}))
+                     task_durations_summary({double_precision_seconds{9.9e-05}, double_precision_seconds{0}}))
       };
 
       const std::string reference{
         append_lines(speedup_summary({1.04,     {1e-07,  2.5}}, {2, 3}),
-                     task_durations_summary({fractional_seconds{0.001},   fractional_seconds{nan}}))
+                     task_durations_summary({double_precision_seconds{0.001},   double_precision_seconds{nan}}))
       };
 
       check(equality, "", postprocess(latest, reference, fluctuating), std::string_view{reference});
@@ -768,18 +784,16 @@ namespace sequoia::testing
     }
 
     {
-      using fractional_seconds = std::chrono::duration<double>;
-
       const std::string latest{
         append_lines(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}),
                      trials_summary(15, {3, 3}),
-                     task_durations_summary({fractional_seconds{0.001},  fractional_seconds{0.00104}}))
+                     task_durations_summary({double_precision_seconds{0.001},  double_precision_seconds{0.00104}}))
       };
 
       const std::string reference{
         append_lines(speedup_summary({1.02, {1.00, 1.04}}, {2, 3}),
                      trials_summary(15, {3, 3}),
-                     task_durations_summary({fractional_seconds{0.0011}, fractional_seconds{0.00112}}))
+                     task_durations_summary({double_precision_seconds{0.0011}, double_precision_seconds{0.00112}}))
       };
 
       check(equality, "", postprocess(latest, reference, typically_stable), std::string_view{reference});
@@ -821,20 +835,21 @@ namespace sequoia::testing
     }
 
     {
-      using fractional_seconds = std::chrono::duration<double>;
       const indentation nested{"  "};
 
       const std::string latest{
         indent(append_lines(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}),
                             trials_summary(15, {3, 3}),
-                            task_durations_summary({fractional_seconds{0.001},  fractional_seconds{0.00104}})),
+                            task_durations_summary(
+                              {double_precision_seconds{0.001},  double_precision_seconds{0.00104}})),
                nested)
       };
 
       const std::string reference{
         indent(append_lines(speedup_summary({1.02, {1.00, 1.04}}, {2, 3}),
                             trials_summary(5,  {1, 3}),
-                            task_durations_summary({fractional_seconds{0.0011}, fractional_seconds{0.00112}})),
+                            task_durations_summary(
+                              {double_precision_seconds{0.0011}, double_precision_seconds{0.00112}})),
                nested)
       };
 
@@ -851,7 +866,6 @@ namespace sequoia::testing
 
   void performance_utilities_free_test::test_zeroed_measurements()
   {
-    using fractional_seconds = std::chrono::duration<double>;
     using enum attempt_count_stability;
 
     check(equality,
@@ -866,14 +880,15 @@ namespace sequoia::testing
 
     check(equality,
           "The task durations are zeroed",
-          text_with_zeroed_measurements(task_durations_summary({fractional_seconds{0.001}, fractional_seconds{0.002}}),
-                                        fluctuating),
+          text_with_zeroed_measurements(
+            task_durations_summary({double_precision_seconds{0.001}, double_precision_seconds{0.002}}),
+            fluctuating),
           task_durations_summary({}));
 
     check(equality,
           "The baseline durations are zeroed",
           text_with_zeroed_measurements(
-            baseline_durations_summary({fractional_seconds{0.001}, fractional_seconds{0.002}}),
+            baseline_durations_summary({double_precision_seconds{0.001}, double_precision_seconds{0.002}}),
             fluctuating),
           baseline_durations_summary({}));
 
@@ -886,29 +901,8 @@ namespace sequoia::testing
           "With the attempt count typically stable, the speed-up, its interval and the task durations are zeroed",
           text_with_zeroed_measurements(
             append_lines(speedup_summary({1.04, {1.01, 1.07}}, {2, 3}),
-                         task_durations_summary({fractional_seconds{0.001}, fractional_seconds{0.002}})),
+                         task_durations_summary({double_precision_seconds{0.001}, double_precision_seconds{0.002}})),
             typically_stable),
           append_lines(speedup_summary({}, {2, 3}), task_durations_summary({})));
-  }
-
-  void performance_utilities_free_test::test_coarse_sleep()
-  {
-    using fractional_milliseconds = std::chrono::duration<double, std::milli>;
-
-    constexpr fractional_milliseconds target{5.0};
-
-    check("Rounded up to Windows' default tick", is_coarse_sleep(fractional_milliseconds{15.2}, target));
-    check("Exactly twice the target", is_coarse_sleep(fractional_milliseconds{10.0}, target));
-    check("Just under twice the target", !is_coarse_sleep(fractional_milliseconds{9.9}, target));
-    check("A 1 ms timer resolution in effect", !is_coarse_sleep(fractional_milliseconds{5.4}, target));
-
-    write_to_file(working_materials() /= "CoarseSleepMessage.txt",
-                  coarse_sleep_message(fractional_milliseconds{15.2}, target),
-                  std::ios_base::out);
-
-    check(equivalence,
-          "Message",
-          working_materials() /= "CoarseSleepMessage.txt",
-          predictive_materials() /= "CoarseSleepMessage.txt");
   }
 }

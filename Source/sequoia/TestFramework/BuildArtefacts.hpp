@@ -53,7 +53,11 @@ namespace sequoia::testing
     friend bool operator==(const compilations&, const compilations&) noexcept = default;
   };
 
-  /** \brief What a CMake build tree says about itself. */
+  /** \brief What a CMake build tree says about itself.
+
+      `implicit_include_directories` holds the compiler's built-in include
+      directories, canonical and sorted, with no duplicates.
+   */
   struct build_tree
   {
     std::filesystem::path build_directory{};
