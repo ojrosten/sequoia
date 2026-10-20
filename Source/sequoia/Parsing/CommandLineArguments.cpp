@@ -17,11 +17,15 @@
 #include <ranges>
 #include <span>
 #include <stdexcept>
+#include <utility>
 
 namespace sequoia::parsing::commandline
 {
   namespace
   {
+    using option_tree         = maths::const_tree_adaptor<options_tree>;
+    using operations_sub_tree = maths::tree_adaptor<operations_tree>;
+
     constexpr std::array<std::string_view, 2> help_requests{"--help", "-h"};
 
     [[nodiscard]]
@@ -45,6 +49,12 @@ namespace sequoia::parsing::commandline
     bool has_function_object(const option& opt) noexcept
     {
       return opt.early || opt.late;
+    }
+
+    [[nodiscard]]
+    bool has_alias(const option& opt, std::string_view alias) noexcept
+    {
+      return std::ranges::contains(opt.aliases, alias);
     }
 
     [[nodiscard]]
@@ -207,230 +217,301 @@ namespace sequoia::parsing::commandline
 
       return sections;
     }
-  }
 
-  argument_parser::argument_parser(int argc, char** argv, const options_forest& options)
-    : m_ArgCount{argc}
-    , m_Argv{argv}
-    , m_Options{&options}
-    , m_ZerothArg{m_ArgCount ? m_Argv[0] : ""}
-  {
-    for(const auto& tree : options)
+    void throw_if_any_spelt_as_help_request(const options_forest& options)
     {
-      maths::traverse(maths::depth_first, tree, maths::ignore_disconnected_t{}, [&tree](const auto node) {
-        const option& opt{tree.cbegin_node_weights()[node]};
-        if(is_help_request(opt.name) || std::ranges::any_of(opt.aliases, [](const proper_string& alias){ return is_help_request(alias); }))
-          throw std::logic_error{error(std::format("option \"{}\" is spelt as a help request", std::string_view{opt.name}))};
-      });
+      for(const auto& tree : options)
+      {
+        maths::traverse(maths::depth_first, tree, maths::ignore_disconnected_t{}, [&tree](const auto node) {
+          const option& opt{tree.cbegin_node_weights()[node]};
+          auto isSpeltAsHelpRequest{[](const proper_string& s){ return is_help_request(s); }};
+          if(isSpeltAsHelpRequest(opt.name) || std::ranges::any_of(opt.aliases, isSpeltAsHelpRequest))
+          {
+            throw std::logic_error{
+              error(std::format("option \"{}\" is spelt as a help request", std::string_view{opt.name}))
+            };
+          }
+        });
+      }
     }
 
-    parse(top_level_options(options), {}, top_level::yes);
-  }
-
-  template<std::ranges::input_range Options>
-  void argument_parser::parse(const Options& options, const operation_data& previousOperationData, top_level topLevel)
-  {
-    if(std::ranges::empty(options)) return;
-
-    // A help request met at any level of nesting ends parsing at every level
-    option_tree currentOptionTree{};
-    auto currentOperationData{previousOperationData};
-    while((m_Index < m_ArgCount) && m_Help.empty())
+    /** \brief Parses `argv` against `options` in its constructor. */
+    class outcome_builder
     {
-      std::string_view arg{m_Argv[m_Index++]};
+    public:
+      outcome_builder(int argc, char** argv, const options_forest& options);
 
-      if(is_help_request(arg))
+      [[nodiscard]]
+      outcome release_outcome() &&
       {
-        m_Help = generate_help();
-        break;
+        return std::move(m_Outcome);
       }
+    private:
+      enum class top_level { yes, no };
 
-      if(!currentOperationData.oper_tree || !currentOptionTree)
+      /** \brief The operation an option contributes its arguments to.
+
+          An option not bound to a function object shares the operation of
+          the option enclosing it. The first `enclosing_args_supplied`
+          arguments of that operation belong to the enclosing options.
+       */
+      struct operation_data
       {
-        if(arg.empty()) continue;
+        operations_sub_tree oper_tree{};
+        std::size_t         enclosing_args_supplied{};
+      };
 
-        const auto optionsIter{
-          std::ranges::find_if(options,
-                               [arg](const auto& tree) {
-                                 return (root_weight(tree).name == arg) || is_alias(root_weight(tree), arg);
-                               })
-        };
+      int                      m_Index{1}, m_ArgCount{};
+      char**                   m_Argv{};
+      const options_forest&    m_Options;
+      outcome                  m_Outcome;
+      option_tree              m_MostRecentlyEncounteredOption{};
+      std::vector<option_tree> m_OptionsEntered{};
 
-        if(optionsIter == std::ranges::end(options))
+      template<std::ranges::input_range Options>
+      void parse(const Options& options, const operation_data& previousOperationData, top_level topLevel);
+
+      template<std::ranges::input_range Options>
+      [[nodiscard]]
+      bool process_concatenated_aliases(const Options& options,
+                                        std::string_view arg,
+                                        operation_data currentOperationData,
+                                        top_level topLevel);
+
+      auto process_option(option_tree currentOptionTree,
+                          operation_data currentOperationData,
+                          top_level topLevel) -> operation_data;
+
+      [[nodiscard]]
+      std::string generate_help() const;
+    };
+
+    outcome_builder::outcome_builder(int argc, char** argv, const options_forest& options)
+      : m_ArgCount{argc}
+      , m_Argv{argv}
+      , m_Options{options}
+      , m_Outcome{argc ? argv[0] : "", {}}
+    {
+      parse(top_level_options(options), {}, top_level::yes);
+    }
+
+    template<std::ranges::input_range Options>
+    void outcome_builder::parse(const Options& options, const operation_data& previousOperationData, top_level topLevel)
+    {
+      if(std::ranges::empty(options))
+        return;
+
+      option_tree currentOptionTree{};
+      auto currentOperationData{previousOperationData};
+      // A help request met at any level of nesting ends parsing at every level
+      while((m_Index < m_ArgCount) && m_Outcome.help.empty())
+      {
+        std::string_view arg{m_Argv[m_Index++]};
+
+        if(is_help_request(arg))
         {
-          if(process_concatenated_aliases(options, arg, currentOperationData, topLevel))
+          m_Outcome.help = generate_help();
+          break;
+        }
+
+        if(!currentOperationData.oper_tree || !currentOptionTree)
+        {
+          if(arg.empty())
             continue;
 
-          if(topLevel == top_level::yes)
-            throw std::runtime_error{error(std::format("unrecognized option '{}'", arg))};
+          const auto optionsIter{
+            std::ranges::find_if(options,
+                                 [arg](const auto& tree) {
+                                   return (root_weight(tree).name == arg) || has_alias(root_weight(tree), arg);
+                                 })
+          };
 
-          // Roll back and see if the current argument makes sense at the previous level
-          --m_Index;
-          return;
+          if(optionsIter == std::ranges::end(options))
+          {
+            if(process_concatenated_aliases(options, arg, currentOperationData, topLevel))
+              continue;
+
+            if(topLevel == top_level::yes)
+              throw std::runtime_error{error(std::format("unrecognized option '{}'", arg))};
+
+            // Leave the argument for an enclosing level to match
+            --m_Index;
+            return;
+          }
+
+          currentOptionTree = *optionsIter;
+          currentOperationData = process_option(currentOptionTree, currentOperationData, topLevel);
         }
-
-        currentOptionTree = *optionsIter;
-        currentOperationData = process_option(currentOptionTree, currentOperationData, topLevel);
-      }
-      else
-      {
-        if(  root_weight(currentOperationData.oper_tree).arguments.size()
-           < root_weight(currentOptionTree).parameters.size() + currentOperationData.enclosing_args_supplied)
+        else
         {
-          mutate_root_weight(currentOperationData.oper_tree, [arg](auto& w) { w.arguments.emplace_back(arg); });
+          if(  root_weight(currentOperationData.oper_tree).arguments.size()
+             < root_weight(currentOptionTree).parameters.size() + currentOperationData.enclosing_args_supplied)
+          {
+            mutate_root_weight(currentOperationData.oper_tree, [arg](auto& w) { w.arguments.emplace_back(arg); });
+          }
+        }
+
+        if(   root_weight(currentOperationData.oper_tree).arguments.size()
+           == root_weight(currentOptionTree).parameters.size() + currentOperationData.enclosing_args_supplied)
+        {
+          m_OptionsEntered.push_back(currentOptionTree);
+          parse(nested_options(currentOptionTree), currentOperationData, top_level::no);
+          m_OptionsEntered.pop_back();
+
+          currentOptionTree = {};
+          currentOperationData = previousOperationData;
         }
       }
 
-      if(   root_weight(currentOperationData.oper_tree).arguments.size()
-         == root_weight(currentOptionTree).parameters.size() + currentOperationData.enclosing_args_supplied)
+      if(m_Outcome.help.empty() && !m_Outcome.operations.empty() && currentOptionTree)
       {
-        m_OptionsEntered.push_back(currentOptionTree);
-        parse(nested_options(currentOptionTree), currentOperationData, top_level::no);
-        m_OptionsEntered.pop_back();
+        const auto& params{root_weight(currentOptionTree).parameters};
+        const auto expected{params.size()};
+        const auto actual{  root_weight(currentOperationData.oper_tree).arguments.size()
+                          - currentOperationData.enclosing_args_supplied};
 
-        currentOptionTree = {};
-        currentOperationData = previousOperationData;
+        if(actual != expected)
+        {
+          throw std::runtime_error{
+            error(std::format("while parsing option \"{}\": expected {}, [{}], but found {}",
+                              std::string_view{root_weight(currentOptionTree).name},
+                              with_count("argument", expected),
+                              join(params, ", "),
+                              with_count("argument", actual)))
+          };
+        }
       }
     }
 
-    if(m_Help.empty() && !m_Operations.empty() && currentOptionTree)
+    auto outcome_builder::process_option(option_tree currentOptionTree,
+                                         operation_data currentOperationData,
+                                         top_level topLevel) -> operation_data
     {
-      const auto& params{root_weight(currentOptionTree).parameters};
-      const auto expected{params.size()};
-      const auto actual{root_weight(currentOperationData.oper_tree).arguments.size() - currentOperationData.enclosing_args_supplied};
+      m_MostRecentlyEncounteredOption = currentOptionTree;
 
-      if(actual != expected)
+      const option& opt{root_weight(currentOptionTree)};
+
+      if(topLevel == top_level::yes)
+      {
+        if(!has_function_object(opt))
+          throw std::logic_error{error("Commandline option not bound to a function object")};
+
+        m_Outcome.operations.push_back({{{opt.early, opt.late, {}}}});
+        return {{m_Outcome.operations.back(), 0}};
+      }
+
+      if(has_function_object(opt))
+      {
+        auto& latestOperationsTree{m_Outcome.operations.back()};
+        const auto node{latestOperationsTree.add_node(currentOperationData.oper_tree.node(), opt.early, opt.late)};
+        return {{latestOperationsTree, node}};
+      }
+
+      return {currentOperationData.oper_tree, root_weight(currentOperationData.oper_tree).arguments.size()};
+    }
+
+    template<std::ranges::input_range Options>
+    [[nodiscard]]
+    bool outcome_builder::process_concatenated_aliases(const Options& options,
+                                                       std::string_view arg,
+                                                       operation_data currentOperationData,
+                                                       top_level topLevel)
+    {
+      // A group is a dash followed by single-character aliases, each spelt
+      // without its own dash; any further dash is ignored
+      if((arg.size() < 2) || (arg[0] != '-') || (arg[1] == ' ') || (arg[1] == '-'))
+        return false;
+
+      auto optionOf{
+        [&options](char c) -> option_tree {
+          const auto alias{std::string{'-'} + c};
+          auto hasAlias{[&alias](const auto& tree) { return has_alias(root_weight(tree), alias); }};
+          const auto iter{std::ranges::find_if(options, hasAlias)};
+          return (iter == std::ranges::end(options)) ? option_tree{} : *iter;
+        }
+      };
+
+      const auto groupOptions{
+          arg.substr(1)
+        | std::views::filter([](char c){ return c != '-'; })
+        | std::views::transform(optionOf)
+        | std::ranges::to<std::vector>()
+      };
+
+      if(std::ranges::contains(groupOptions, option_tree{}))
+        return false;
+
+      auto hasParameters{[](const option_tree& o){ return has_parameters(o); }};
+      if(const auto refused{std::ranges::find_if(groupOptions, hasParameters)};
+         refused != groupOptions.end())
       {
         throw std::runtime_error{
-          error(std::format("while parsing option \"{}\": expected {}, [{}], but found {}",
-                            std::string_view{root_weight(currentOptionTree).name},
-                            with_count("argument", expected),
-                            join(params, ", "),
-                            with_count("argument", actual)))
+          error(std::format("option \"{}\" expects {}, "
+                            "so its alias cannot be concatenated with others, as in '{}'",
+                            std::string_view{root_weight(*refused).name},
+                            with_count("argument", root_weight(*refused).parameters.size()),
+                            arg))
         };
       }
-    }
-  }
 
-  auto argument_parser::process_option(option_tree currentOptionTree, operation_data currentOperationData, top_level topLevel) -> operation_data
-  {
-    m_MostRecentlyEncounteredOption = currentOptionTree;
-
-    const option& opt{root_weight(currentOptionTree)};
-
-    if(topLevel == top_level::yes)
-    {
-      if(!has_function_object(opt))
-        throw std::logic_error{error("Commandline option not bound to a function object")};
-
-      m_Operations.push_back({{{opt.early, opt.late, {}}}});
-      return {{m_Operations.back(), 0}};
-    }
-
-    if(has_function_object(opt))
-    {
-      const auto node{m_Operations.back().add_node(currentOperationData.oper_tree.node(), opt.early, opt.late)};
-      return {{m_Operations.back(), node}};
-    }
-
-    return {currentOperationData.oper_tree, root_weight(currentOperationData.oper_tree).arguments.size()};
-  }
-
-  template<std::ranges::input_range Options>
-  [[nodiscard]]
-  bool argument_parser::process_concatenated_aliases(const Options& options, std::string_view arg, operation_data currentOperationData, top_level topLevel)
-  {
-    // A group is a dash followed by single-character aliases, each spelt without its own dash
-    if((arg.size() < 2) || (arg[0] != '-') || (arg[1] == ' ') || (arg[1] == '-'))
-      return false;
-
-    auto optionOf{
-      [&options](char c) -> option_tree {
-        const auto alias{std::string{'-'} + c};
-        const auto iter{std::ranges::find_if(options, [&alias](const auto& tree) { return is_alias(root_weight(tree), alias); })};
-        return (iter == std::ranges::end(options)) ? option_tree{} : *iter;
+      auto hasNestedOptions{[](const option_tree& o){ return has_nested_options(o); }};
+      if(const auto refused{std::ranges::find_if(groupOptions, hasNestedOptions)};
+         refused != groupOptions.end())
+      {
+        throw std::runtime_error{
+          error(std::format("option \"{}\" has nested options, "
+                            "so its alias cannot be concatenated with others, as in '{}'",
+                            std::string_view{root_weight(*refused).name},
+                            arg))
+        };
       }
-    };
 
-    const auto groupOptions{
-        arg.substr(1)
-      | std::views::filter([](char c){ return c != '-'; })
-      | std::views::transform(optionOf)
-      | std::ranges::to<std::vector>()
-    };
+      for(const auto& option : groupOptions)
+      {
+        process_option(option, currentOperationData, topLevel);
+      }
 
-    if(std::ranges::contains(groupOptions, option_tree{}))
-      return false;
+      return true;
+    }
 
-    if(const auto refused{std::ranges::find_if(groupOptions, [](const option_tree& o){ return has_parameters(o); })};
-       refused != groupOptions.end())
+    [[nodiscard]]
+    std::string outcome_builder::generate_help() const
     {
-      throw std::runtime_error{
-        error(std::format("option \"{}\" expects {}, so its alias cannot be concatenated with others, as in '{}'",
-                          std::string_view{root_weight(*refused).name},
-                          with_count("argument", root_weight(*refused).parameters.size()),
-                          arg))
+      const auto topLevelOptions{top_level_options(m_Options)};
+
+      // The described option is the one most recently encountered;
+      // when none has been encountered, the top level is described
+      auto path{m_OptionsEntered};
+      if(m_MostRecentlyEncounteredOption && (path.empty() || (path.back() != m_MostRecentlyEncounteredOption)))
+        path.push_back(m_MostRecentlyEncounteredOption);
+
+      auto usage{std::string{"Usage:"}};
+      if(const auto executable{std::filesystem::path{m_Outcome.zeroth_arg}.stem().string()}; !executable.empty())
+        usage += std::format(" {}", executable);
+
+      auto spacedNameOf{
+        [](const option_tree& o){ return std::format(" {}", std::string_view{root_weight(o).name}); }
       };
+      auto names{path | std::views::transform(spacedNameOf)};
+      usage = std::ranges::fold_left(names, std::move(usage), std::plus{});
+
+      if(path.empty())
+        return std::format("{}{}\n{}", usage, continuation_of(topLevelOptions), sections_of(topLevelOptions));
+
+      const option_tree& described{path.back()};
+      usage += continuation_of(described);
+      if(const auto& description{root_weight(described).description}; !description.empty())
+        usage += std::format("\n\n{}", description);
+
+      return std::format("{}\n{}", usage, sections_of(nested_options(described)));
     }
-
-    if(const auto refused{std::ranges::find_if(groupOptions, [](const option_tree& o){ return has_nested_options(o); })};
-       refused != groupOptions.end())
-    {
-      throw std::runtime_error{
-        error(std::format("option \"{}\" has nested options, so its alias cannot be concatenated with others, as in '{}'",
-                          std::string_view{root_weight(*refused).name},
-                          arg))
-      };
-    }
-
-    for(const auto& option : groupOptions)
-    {
-      process_option(option, currentOperationData, topLevel);
-    }
-
-    return true;
-  }
-
-  [[nodiscard]]
-  bool argument_parser::is_alias(const option& opt, std::string_view s) noexcept
-  {
-    return std::ranges::contains(opt.aliases, s);
-  }
-
-  [[nodiscard]]
-  std::string argument_parser::generate_help() const
-  {
-    const auto topLevelOptions{top_level_options(*m_Options)};
-
-    // The described option is the one most recently encountered;
-    // when none has been encountered, the top level is described
-    auto path{m_OptionsEntered};
-    if(m_MostRecentlyEncounteredOption && (path.empty() || (path.back() != m_MostRecentlyEncounteredOption)))
-      path.push_back(m_MostRecentlyEncounteredOption);
-
-    auto usage{std::string{"Usage:"}};
-    if(const auto executable{std::filesystem::path{m_ZerothArg}.stem().string()}; !executable.empty())
-      usage += std::format(" {}", executable);
-
-    auto names{path | std::views::transform([](const option_tree& o){ return std::format(" {}", std::string_view{root_weight(o).name}); })};
-    usage = std::ranges::fold_left(names, std::move(usage), std::plus{});
-
-    if(path.empty())
-      return std::format("{}{}\n{}", usage, continuation_of(topLevelOptions), sections_of(topLevelOptions));
-
-    const option_tree& described{path.back()};
-    usage += continuation_of(described);
-    if(const auto& description{root_weight(described).description}; !description.empty())
-      usage += std::format("\n\n{}", description);
-
-    return std::format("{}\n{}", usage, sections_of(nested_options(described)));
   }
 
   [[nodiscard]]
   outcome parse(int argc, char** argv, const options_forest& options)
   {
-    argument_parser p{argc, argv, options};
+    throw_if_any_spelt_as_help_request(options);
 
-    return p.get();
+    return outcome_builder{argc, argv, options}.release_outcome();
   }
 }

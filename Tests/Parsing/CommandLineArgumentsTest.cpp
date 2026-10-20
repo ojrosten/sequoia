@@ -178,17 +178,6 @@ namespace sequoia::testing
                 {{{"create",  {}, {"class_name", "directory"}, fo{}}},
                  {{"--async", {}, {}, fo{}}}}),
           outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {"class", "dir"}}} }});
-
-
-    {
-      commandline_arguments a{{"foo", "--async", "create", "class", "dir"}};
-
-      check(weak_equivalence,
-            "Two options, invoked with argument_parser",
-            argument_parser{a.size(), a.get(), { {{"create",  {}, {"class_name", "directory"}, fo{}}},
-                                                               {{"--async", {}, {}, fo{}}} }},
-            outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {"class", "dir"}}}}});
-    }
   }
 
   void commandline_arguments_test::test_flat_parsing_help()
@@ -214,16 +203,6 @@ namespace sequoia::testing
                        {{"--async", {}, {}, fo{}}}}),
                outcome{"foo", {}},
                "FlatParsingHelp/MultiOption.txt");
-
-    {
-      commandline_arguments a{{"foo", "--help"}};
-
-      check_help("Multi-option help, with argument_parser",
-                 argument_parser{a.size(), a.get(), { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
-                                                                    {{"--async", {}, {}, fo{}}} }}.get(),
-                 outcome{"foo", {}},
-                 "FlatParsingHelp/MultiOptionArgumentParser.txt");
-    }
 
     check_help("Help requested after an option without parameters or nested options describes that option",
                parse({{"foo", "--async", "--help"}},
