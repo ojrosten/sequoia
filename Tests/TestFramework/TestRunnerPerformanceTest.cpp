@@ -443,9 +443,8 @@ namespace sequoia::testing
     /** The sleep of each slow test in a run timed by a speed-up check. */
     constexpr std::chrono::milliseconds sleep_duration_for_speedup_checks{20};
 
-    /** Runs the slow tests with the command line `arguments`, which begins
-        with the fake project's executable, each test sleeping for
-        `sleep_duration`.
+    /** Runs the slow tests with the command line `arguments`, each test
+        sleeping for `sleep_duration`.
 
         \throws std::runtime_error if the run does not succeed
      */
@@ -462,6 +461,22 @@ namespace sequoia::testing
           throw std::runtime_error{"A run of the slow tests did not succeed"};
       }
     };
+
+    using run_of_slow_tests_with_baseline_t = task_with_baseline<run_of_slow_tests, run_of_slow_tests>;
+
+    /** Makes a run of the slow tests with the command line `arguments`, each
+        test sleeping for `sleep_duration_for_speedup_checks`, and pairs the
+        run with its baseline. The baseline runs the slow tests with the same
+        command line, and no test sleeps.
+     */
+    [[nodiscard]]
+    run_of_slow_tests_with_baseline_t make_task_with_baseline(const std::vector<std::string>& arguments)
+    {
+      return {
+        .task{arguments, sleep_duration_for_speedup_checks},
+        .baseline{arguments, {}}
+      };
+    }
   }
 
   [[nodiscard]]
@@ -480,6 +495,15 @@ namespace sequoia::testing
   fs::path test_runner_performance_test::minimal_fake_path() const
   {
     return fake_project().append("build/CMade/FakeExe.txt");
+  }
+
+  template<class... ModeArguments>
+    requires (std::convertible_to<const ModeArguments&, std::string> && ...)
+  [[nodiscard]]
+  std::vector<std::string>
+    test_runner_performance_test::fake_project_command_line(const ModeArguments&... modeArguments) const
+  {
+    return {minimal_fake_path().generic_string(), modeArguments...};
   }
 
   void test_runner_performance_test::check_output(std::string_view description,
@@ -508,10 +532,9 @@ namespace sequoia::testing
 
   void test_runner_performance_test::test_parallel_acceleration()
   {
+    const auto arguments{fake_project_command_line()};
     std::stringstream outputStream{};
-    auto runner{make_slow_suite({{minimal_fake_path().generic_string()}},
-                                outputStream,
-                                sleep_duration_for_overlap_checks)};
+    auto runner{make_slow_suite(arguments, outputStream, sleep_duration_for_overlap_checks)};
     check(equality, "Parallel acceleration return code", runner.execute(), return_code::success);
 
     const auto peak{peak_overlap(slow_test_base::execution_intervals())};
@@ -526,7 +549,7 @@ namespace sequoia::testing
           has_parallel_algorithms_v ? std::size_t{2} : eight_thread_peak_floor);
 
     check_speedup_over_serial_execution("Parallel execution is faster than serial execution",
-                                        {},
+                                        arguments,
                                         has_parallel_algorithms_v ? relative_performance_interval{2, 9}
                                                                   : relative_performance_interval{6, 9});
   }
@@ -534,10 +557,9 @@ namespace sequoia::testing
   void test_runner_performance_test::test_thread_pool_acceleration()
   {
     {
+      const auto arguments{fake_project_command_line("--thread-pool", "8")};
       std::stringstream outputStream{};
-      auto runner{make_slow_suite({{minimal_fake_path().generic_string(), "--thread-pool", "8"}},
-                                  outputStream,
-                                  sleep_duration_for_overlap_checks)};
+      auto runner{make_slow_suite(arguments, outputStream, sleep_duration_for_overlap_checks)};
       check(equality, "Thread pool (8) return code", runner.execute(), return_code::success);
 
       const auto peak{peak_overlap(slow_test_base::execution_intervals())};
@@ -550,15 +572,14 @@ namespace sequoia::testing
             eight_thread_peak_floor);
 
       check_speedup_over_serial_execution("A pool of eight threads is about eight times faster than serial execution",
-                                          {"--thread-pool", "8"},
+                                          arguments,
                                           {6, 9});
     }
 
     {
+      const auto arguments{fake_project_command_line("--thread-pool", "2")};
       std::stringstream outputStream{};
-      auto runner{make_slow_suite({{minimal_fake_path().generic_string(), "--thread-pool", "2"}},
-                                  outputStream,
-                                  sleep_duration_for_overlap_checks)};
+      auto runner{make_slow_suite(arguments, outputStream, sleep_duration_for_overlap_checks)};
       check(equality, "Thread pool (2) return code", runner.execute(), return_code::success);
 
       const auto peak{peak_overlap(slow_test_base::execution_intervals())};
@@ -568,7 +589,7 @@ namespace sequoia::testing
       check(equality, "Both threads of the pool, and no more, execute tests at once", peak, std::size_t{2});
 
       check_speedup_over_serial_execution("A pool of two threads is about twice as fast as serial execution",
-                                          {"--thread-pool", "2"},
+                                          arguments,
                                           {1.8, 2.1});
     }
   }
@@ -576,7 +597,7 @@ namespace sequoia::testing
   void test_runner_performance_test::test_serial_execution()
   {
     std::stringstream outputStream{};
-    auto runner{make_slow_suite({{minimal_fake_path().generic_string(), "--serial"}},
+    auto runner{make_slow_suite(fake_project_command_line("--serial"),
                                 outputStream,
                                 sleep_duration_for_overlap_checks)};
     check(equality, "Serial execution return code", runner.execute(), return_code::success);
@@ -588,28 +609,18 @@ namespace sequoia::testing
     check(equality, "Tests execute one at a time in a serial run", peak, std::size_t{1});
   }
 
-  /** Checks the speed-up of a run of the slow tests with `modeArguments`
-      over a serial run. Each run's baseline is a run in the same mode in
-      which the tests do not sleep.
+  /** Checks the speed-up of a run of the slow tests with the command line
+      `arguments` over a serial run of the slow tests. Callers must build
+      `arguments` with `fake_project_command_line`, as the serial run's
+      command line is built.
    */
   void test_runner_performance_test::check_speedup_over_serial_execution(std::string_view description,
-                                                                         const std::vector<std::string>& modeArguments,
+                                                                         const std::vector<std::string>& arguments,
                                                                          relative_performance_interval prediction)
   {
-    auto taskWithBaselineFor{
-      [fakePath{minimal_fake_path().generic_string()}](const std::vector<std::string>& argumentsOfMode) {
-        std::vector<std::string> arguments{fakePath};
-        arguments.append_range(argumentsOfMode);
-        return task_with_baseline<run_of_slow_tests, run_of_slow_tests>{
-          .task{arguments, sleep_duration_for_speedup_checks},
-          .baseline{arguments, {}}
-        };
-      }
-    };
-
     check_relative_performance(description,
-                               taskWithBaselineFor(modeArguments),
-                               taskWithBaselineFor({"--serial"}),
+                               make_task_with_baseline(arguments),
+                               make_task_with_baseline(fake_project_command_line("--serial")),
                                {.prediction{prediction}});
   }
 
@@ -623,7 +634,7 @@ namespace sequoia::testing
   void test_runner_performance_test::test_recording_of_performance_check_attempts()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{minimal_fake_path().generic_string()}};
+    commandline_arguments args{fake_project_command_line()};
     auto runner{make_fake_project_runner(args, outputStream)};
     runner.register_test<attempt_counting_performance_test>();
     runner.register_test<performance_test_without_performance_checks>();
@@ -647,7 +658,7 @@ namespace sequoia::testing
     using false_negative_test = performance_checks_within_other_checks_false_negative_test;
 
     std::stringstream outputStream{};
-    commandline_arguments args{{minimal_fake_path().generic_string()}};
+    commandline_arguments args{fake_project_command_line()};
     auto runner{make_fake_project_runner(args, outputStream)};
     runner.register_test<standard_test>();
     runner.register_test<false_positive_test>();
