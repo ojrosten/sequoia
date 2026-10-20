@@ -21,8 +21,8 @@ namespace sequoia::testing
   {
     test_coarse_sleep();
     test_combination_of_timer_request_outcomes();
-    test_choice_of_sleep_timing_evidence();
     test_coarse_sleep_messages();
+    test_outcomes_without_a_request();
   }
 
   void coarse_sleeps_free_test::test_coarse_sleep()
@@ -61,117 +61,85 @@ namespace sequoia::testing
     check("Both requests failed", combine(failed, failed) == failed);
   }
 
-  void coarse_sleeps_free_test::test_choice_of_sleep_timing_evidence()
-  {
-    using enum timer_request_outcome;
-    using evidence = sleep_timing_evidence;
-
-    check("No request is made",
-          choose_sleep_timing_evidence({.finest_timer_resolution{not_made}, .precise_timer{not_made}})
-            == evidence::no_timer_request_made);
-
-    check("The request for the finest timer resolution failed",
-          choose_sleep_timing_evidence({.finest_timer_resolution{failed}, .precise_timer{not_made}})
-            == evidence::finest_timer_resolution_request_failed);
-
-    check("The request for the finest timer resolution was granted",
-          choose_sleep_timing_evidence({.finest_timer_resolution{granted}, .precise_timer{not_made}})
-            == evidence::finest_timer_resolution_request_granted);
-
-    check("The outcome of the request for the finest timer resolution was not observed",
-          choose_sleep_timing_evidence({.finest_timer_resolution{not_observed}, .precise_timer{not_made}})
-            == evidence::finest_timer_resolution_request_not_observed);
-
-    check("A request for a precise timer failed",
-          choose_sleep_timing_evidence({.finest_timer_resolution{not_made}, .precise_timer{failed}})
-            == evidence::precise_timer_request_failed);
-
-    check("The requests for a precise timer were granted",
-          choose_sleep_timing_evidence({.finest_timer_resolution{not_made}, .precise_timer{granted}})
-            == evidence::precise_timer_request_granted);
-
-    check("The outcome of a request for a precise timer was not observed",
-          choose_sleep_timing_evidence({.finest_timer_resolution{not_made}, .precise_timer{not_observed}})
-            == evidence::precise_timer_request_not_observed);
-
-    check("A failed request for a precise timer is chosen over a granted request for the finest timer resolution",
-          choose_sleep_timing_evidence({.finest_timer_resolution{granted}, .precise_timer{failed}})
-            == evidence::precise_timer_request_failed);
-
-    check("A failed request for the finest timer resolution is chosen over a granted request for a precise timer",
-          choose_sleep_timing_evidence({.finest_timer_resolution{failed}, .precise_timer{granted}})
-            == evidence::finest_timer_resolution_request_failed);
-
-    check("A failed request for the finest timer resolution is chosen over a failed request for a precise timer",
-          choose_sleep_timing_evidence({.finest_timer_resolution{failed}, .precise_timer{failed}})
-            == evidence::finest_timer_resolution_request_failed);
-
-    check("A granted request for the finest timer resolution is chosen over a granted request for a precise timer",
-          choose_sleep_timing_evidence({.finest_timer_resolution{granted}, .precise_timer{granted}})
-            == evidence::finest_timer_resolution_request_granted);
-
-    check("A failed request for a precise timer is chosen over an unobserved request for the finest timer resolution",
-          choose_sleep_timing_evidence({.finest_timer_resolution{not_observed}, .precise_timer{failed}})
-            == evidence::precise_timer_request_failed);
-
-    check("A failed request for the finest timer resolution is chosen over an unobserved request for a precise timer",
-          choose_sleep_timing_evidence({.finest_timer_resolution{failed}, .precise_timer{not_observed}})
-            == evidence::finest_timer_resolution_request_failed);
-
-    check("A granted request for a precise timer is chosen over an unobserved request for the finest timer resolution",
-          choose_sleep_timing_evidence({.finest_timer_resolution{not_observed}, .precise_timer{granted}})
-            == evidence::precise_timer_request_granted);
-
-    check("A granted request for the finest timer resolution is chosen over an unobserved request for a precise timer",
-          choose_sleep_timing_evidence({.finest_timer_resolution{granted}, .precise_timer{not_observed}})
-            == evidence::finest_timer_resolution_request_granted);
-
-    check("An unobserved request for the finest timer resolution is chosen over "
-          "an unobserved request for a precise timer",
-          choose_sleep_timing_evidence({.finest_timer_resolution{not_observed}, .precise_timer{not_observed}})
-            == evidence::finest_timer_resolution_request_not_observed);
-  }
-
   void coarse_sleeps_free_test::test_coarse_sleep_messages()
   {
     const double_precision_milliseconds target{5.0};
     const double_precision_milliseconds slept{15.2};
 
     auto checkMessage{
-      [this, target, slept](const reporter& description, sleep_timing_evidence evidence, std::string_view fileName) {
+      [this, target, slept](const reporter& description,
+                            timer_request request,
+                            timer_request_outcome outcome,
+                            std::string_view fileName) {
         write_to_file(working_materials() /= fileName,
-                      coarse_sleep_message(slept, target, evidence),
+                      coarse_sleep_message(slept, target, request, outcome),
                       std::ios_base::out);
         check(equivalence, description, working_materials() /= fileName, predictive_materials() /= fileName);
       }
     };
 
     checkMessage("The request for the finest timer resolution failed",
-                 sleep_timing_evidence::finest_timer_resolution_request_failed,
+                 timer_request::finest_timer_resolution,
+                 timer_request_outcome::failed,
                  "FinestTimerResolutionRequestFailed.txt");
 
-    checkMessage("A request for a precise timer failed",
-                 sleep_timing_evidence::precise_timer_request_failed,
-                 "PreciseTimerRequestFailed.txt");
-
     checkMessage("The request for the finest timer resolution was granted",
-                 sleep_timing_evidence::finest_timer_resolution_request_granted,
+                 timer_request::finest_timer_resolution,
+                 timer_request_outcome::granted,
                  "FinestTimerResolutionRequestGranted.txt");
 
-    checkMessage("The requests for a precise timer were granted",
-                 sleep_timing_evidence::precise_timer_request_granted,
-                 "PreciseTimerRequestGranted.txt");
-
     checkMessage("The outcome of the request for the finest timer resolution was not observed",
-                 sleep_timing_evidence::finest_timer_resolution_request_not_observed,
+                 timer_request::finest_timer_resolution,
+                 timer_request_outcome::not_observed,
                  "FinestTimerResolutionRequestNotObserved.txt");
 
+    checkMessage("No request for the finest timer resolution was made",
+                 timer_request::finest_timer_resolution,
+                 timer_request_outcome::not_made,
+                 "FinestTimerResolutionRequestNotMade.txt");
+
+    checkMessage("A request for a precise timer failed",
+                 timer_request::precise_timer,
+                 timer_request_outcome::failed,
+                 "PreciseTimerRequestFailed.txt");
+
+    checkMessage("The requests for a precise timer were granted",
+                 timer_request::precise_timer,
+                 timer_request_outcome::granted,
+                 "PreciseTimerRequestGranted.txt");
+
     checkMessage("The outcome of a request for a precise timer was not observed",
-                 sleep_timing_evidence::precise_timer_request_not_observed,
+                 timer_request::precise_timer,
+                 timer_request_outcome::not_observed,
                  "PreciseTimerRequestNotObserved.txt");
 
-    checkMessage("No request is made",
-                 sleep_timing_evidence::no_timer_request_made,
+    checkMessage("No request for a precise timer was made",
+                 timer_request::precise_timer,
+                 timer_request_outcome::not_made,
+                 "PreciseTimerRequestNotMade.txt");
+
+    checkMessage("The platform makes no request",
+                 timer_request::none,
+                 timer_request_outcome::not_made,
                  "NoTimerRequestMade.txt");
+  }
+
+  void coarse_sleeps_free_test::test_outcomes_without_a_request()
+  {
+    const double_precision_milliseconds target{5.0};
+    const double_precision_milliseconds slept{15.2};
+
+    auto checkRefusal{
+      [this, target, slept](const reporter& description, timer_request_outcome outcome) {
+        check_exception_thrown<std::logic_error>(
+          description,
+          [target, slept, outcome]() { return coarse_sleep_message(slept, target, timer_request::none, outcome); }
+        );
+      }
+    };
+
+    checkRefusal("An unobserved outcome without a request", timer_request_outcome::not_observed);
+    checkRefusal("A failed outcome without a request", timer_request_outcome::failed);
+    checkRefusal("A granted outcome without a request", timer_request_outcome::granted);
   }
 }

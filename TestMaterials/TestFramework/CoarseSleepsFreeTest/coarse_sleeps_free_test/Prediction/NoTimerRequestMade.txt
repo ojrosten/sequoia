@@ -1,3 +1,3 @@
   Warning: Sleeps of 5.0 ms repeatedly lasted 15.2 ms or more, so timings built on sleeps are unreliable
-           No request for a timer finer than the default was made
+           This platform makes no request for more precise sleeps
 

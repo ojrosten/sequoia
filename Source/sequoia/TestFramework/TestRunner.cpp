@@ -145,12 +145,12 @@ namespace sequoia::testing
           constexpr std::chrono::milliseconds target{5};
           if(const auto assessment{assess_sleeps(target)}; is_coarse_sleep(assessment.typical_duration, target))
           {
-            const auto evidence{
-              choose_sleep_timing_evidence({.finest_timer_resolution{finestTimerResolutionOutcome},
-                                            .precise_timer{assessment.precise_timer_outcome}})
+            const auto outcome{
+              combine_timer_request_outcomes(finestTimerResolutionOutcome, assessment.precise_timer_outcome)
             };
 
-            stream << coarse_sleep_message(assessment.typical_duration, target, evidence) << std::flush;
+            stream << coarse_sleep_message(assessment.typical_duration, target, platform_timer_request, outcome)
+                   << std::flush;
           }
         }
       };

@@ -8,11 +8,14 @@
 #pragma once
 
 /** \file
-    \brief The outcome of a request for a timer finer than the default.
+    \brief Requests for more precise sleeps, and their outcomes.
  */
 
 namespace sequoia
 {
-  /** \brief The outcome of a request for a timer finer than the default. */
+  /** \brief The request a platform makes for more precise sleeps, if any. */
+  enum class timer_request { none, finest_timer_resolution, precise_timer };
+
+  /** \brief The outcome of a request for more precise sleeps. */
   enum class timer_request_outcome { not_made, not_observed, failed, granted };
 }

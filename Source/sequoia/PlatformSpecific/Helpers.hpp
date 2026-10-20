@@ -11,7 +11,7 @@
     \brief Platform-dependent utilities
  */
 
-#include "sequoia/PlatformSpecific/TimerRequestOutcome.hpp"
+#include "sequoia/PlatformSpecific/TimerRequests.hpp"
 
 #include <chrono>
 
@@ -39,6 +39,17 @@ namespace sequoia
    */
   [[nodiscard]]
   timer_request_outcome set_finest_windows_timer_resolution();
+
+  /** \brief The request this platform makes for more precise sleeps. */
+  inline constexpr timer_request platform_timer_request{
+    #if defined(_WIN32)
+      timer_request::finest_timer_resolution
+    #elif defined(__APPLE__)
+      timer_request::precise_timer
+    #else
+      timer_request::none
+    #endif
+  };
 
   /** \brief An RAII wrapper to redirect the assertion and error reports of MSVC's debug runtime to standard error.
 
