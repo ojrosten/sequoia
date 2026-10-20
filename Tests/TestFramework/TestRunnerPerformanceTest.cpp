@@ -593,12 +593,13 @@ namespace sequoia::testing
       which the tests do not sleep.
    */
   void test_runner_performance_test::check_speedup_over_serial_execution(std::string_view description,
-                                                                         std::vector<std::string> modeArguments,
+                                                                         const std::vector<std::string>& modeArguments,
                                                                          relative_performance_interval prediction)
   {
     auto taskWithBaselineFor{
-      [fakePath{minimal_fake_path().generic_string()}](std::vector<std::string> arguments) {
-        arguments.insert(arguments.begin(), fakePath);
+      [fakePath{minimal_fake_path().generic_string()}](const std::vector<std::string>& argumentsOfMode) {
+        std::vector<std::string> arguments{fakePath};
+        arguments.append_range(argumentsOfMode);
         return task_with_baseline<run_of_slow_tests, run_of_slow_tests>{
           .task{arguments, sleep_duration_for_speedup_checks},
           .baseline{arguments, {}}
@@ -607,7 +608,7 @@ namespace sequoia::testing
     };
 
     check_relative_performance(description,
-                               taskWithBaselineFor(std::move(modeArguments)),
+                               taskWithBaselineFor(modeArguments),
                                taskWithBaselineFor({"--serial"}),
                                {.prediction{prediction}});
   }
