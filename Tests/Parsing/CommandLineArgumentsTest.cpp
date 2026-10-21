@@ -48,6 +48,7 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>("Empty parameter", []() { return option{"test", {}, {""}, fo{}}; });
     check_exception_thrown<std::logic_error>("Empty tree", [](){
       return parse({{"foo"}}, {{{"--async", {}, {}, fo{}}},
+                               options_tree{},
                                options_tree{}});
     });
     check_exception_thrown<std::logic_error>("Top-level option with neither invocable", [](){
@@ -259,6 +260,11 @@ namespace sequoia::testing
 
     check_exception_thrown<std::logic_error>("An option named as a help request, and with neither invocable", [](){
       return parse({{"foo"}}, {{{"--help", {}, {}}}});
+    });
+
+    check_exception_thrown<std::logic_error>("An empty tree, after an option named as a help request", [](){
+      return parse({{"foo"}}, {{{"--help", {}, {}, fo{}}},
+                               options_tree{}});
     });
 
     check_exception_thrown<std::logic_error>("A nested option aliased as a help request", [](){

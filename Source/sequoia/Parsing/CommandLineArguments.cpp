@@ -94,12 +94,12 @@ namespace sequoia::parsing::commandline
       return std::ranges::any_of(options, [](const option_tree& o){ return is_command(root_weight(o)); });
     }
 
-    /** \brief Returns placeholders for the options of a level in a usage line.
+    /** \brief Returns the placeholders that stand for the options of a level.
 
         The result holds, in order:
         -# "[command]", if any of the options is a command.
-        -# "[options]", if there is any command or option, since help is then
-           an option too.
+        -# "[options]", if there are any options, commands included, since
+           the help then lists `--help` among them.
      */
     template<std::ranges::input_range Options>
     [[nodiscard]]
@@ -115,7 +115,7 @@ namespace sequoia::parsing::commandline
       return continuation;
     }
 
-    /** \brief Returns what may follow an option on the command line.
+    /** \brief Returns the placeholders that follow an option's names.
 
         The result holds a placeholder for each of the option's parameters,
         then the placeholders for its nested options, as in
@@ -130,10 +130,10 @@ namespace sequoia::parsing::commandline
       return std::ranges::fold_left(placeholders, std::string{}, std::plus{}) + continuation_of(nested_options(opt));
     }
 
-    /** \brief Returns an option's entry in the help.
+    /** \brief Returns the text that names an option in the help.
 
-        The entry holds the option's names, as in "name, alias, alias", then
-        the option's continuation.
+        The text holds the option's names, as in "name, alias, alias", then
+        the placeholders that follow them.
      */
     [[nodiscard]]
     std::string entry_of(const option_tree& opt)
@@ -151,12 +151,11 @@ namespace sequoia::parsing::commandline
 
     constexpr std::size_t help_indent_width{2}, help_column_gap{2}, help_column_limit{40};
 
-    /** \brief Chooses the column where the descriptions of `entries` start.
+    /** \brief Returns the column that leaves just enough room for `entries`.
 
-        The column leaves just enough room for an indent of
-        `help_indent_width`, the widest entry and a gap of `help_column_gap`,
-        but is at most `help_column_limit`. It is zero if there are no
-        entries.
+        The room is for an indent of `help_indent_width`, the widest entry and
+        a gap of `help_column_gap`. The column is at most `help_column_limit`.
+        The column is zero if `entries` is empty.
      */
     [[nodiscard]]
     std::size_t description_column(std::span<const help_entry> entries)
@@ -204,7 +203,7 @@ namespace sequoia::parsing::commandline
 
         If the level has commands, a "Commands:" section lists them. If the
         level has commands or options, an "Options:" section lists the
-        level's options, then help. A level with neither gets no section.
+        level's options, then `--help`. A level with neither gets no section.
      */
     template<std::ranges::input_range Options>
     [[nodiscard]]
