@@ -66,7 +66,8 @@ namespace sequoia::testing
     /** \brief Returns the temporary copy of the test's original working copy,
                if the test has one.
 
-        Otherwise, returns an empty directory.
+        If the test has materials but no working copy, returns an empty
+        directory.
 
         \throws std::logic_error if the test was constructed with no materials paths
         \throws std::runtime_error if the test has no materials, naming where they belong

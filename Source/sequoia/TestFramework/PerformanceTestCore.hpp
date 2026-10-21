@@ -70,8 +70,10 @@ namespace sequoia::testing
 
   namespace impl
   {
-    /** \brief A judgement of the speed-up of a fast task over a slow one:
-               whether it failed---and if so, why---and its measurements.
+    /** \brief A judgement of the speed-up of a fast task over a slow one,
+               and the measurements behind it.
+
+        `failure` is `std::nullopt` if the judgement did not fail.
      */
     struct relative_performance_judgement
     {

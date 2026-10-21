@@ -159,8 +159,10 @@ namespace sequoia::testing
     return default_prediction_message(to_string(obtained), to_string(prediction));
   }
 
-  /** \brief Whether the failure message of a comparison is final, and so shows the obtained and predicted values, or
-             is followed by finer-grained checks that show them.
+  /** \brief Whether the failure message of a comparison is final.
+
+      A final message shows the obtained and predicted values. Otherwise,
+      finer-grained checks follow the message and show those values.
    */
   template<bool IsFinalMessage>
   struct final_message_constant : std::bool_constant<IsFinalMessage> {};
@@ -200,8 +202,9 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string instability_footer();
 
-  /** \brief The file and line of `loc`, the file as given by
-             `path_for_reporting`, then `message` beneath them.
+  /** \brief Returns `message` beneath the file and line of `loc`.
+
+      The file is shown as given by `path_for_reporting`.
    */
   [[nodiscard]]
   std::string report_line(std::string_view message, const std::filesystem::path& repository, const std::source_location loc);
@@ -335,13 +338,13 @@ namespace sequoia::testing
   };
 
 
-  /** \brief Joins the names `type_demangler` makes for `T` and `U...`.
-
-      A comma and a new line separate consecutive names.
-   */
   template<class T, class... U>
   struct type_list_demangler
   {
+    /** \brief Joins the names `type_demangler` makes for `T` and `U...`.
+
+        A comma and a new line separate consecutive names.
+     */
     [[nodiscard]]
     static std::string make()
     {

@@ -320,8 +320,9 @@ namespace sequoia::testing
 
   /** \brief The execution duration and runner overhead of one or more tests.
 
-      The execution duration is the time spent in `run_tests()`; the runner
-      overhead is the rest of the time the runner spent executing the test.
+      The execution duration is the time a test spent in `run_tests()`; the
+      runner overhead is the rest of the time the runner spent executing the
+      test.
       For several tests, both durations are sums over the tests.
    */
   struct durations_of_tests

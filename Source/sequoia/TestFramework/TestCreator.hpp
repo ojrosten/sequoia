@@ -122,7 +122,7 @@ namespace sequoia::testing
 
     void full_name(std::string name) { m_FullName = std::move(name); }
 
-    /** \brief Returns the path of the testing utilities, if any were given.
+    /** \brief Returns the path of the testing utilities, if one was given.
 
         Otherwise, returns an empty path.
      */
@@ -211,7 +211,7 @@ namespace sequoia::testing
     /** \brief Returns the generic form of the path of the testing utilities,
                relative to `host_dir()` if they lie within it.
 
-        Otherwise, returns the path relative to the tests repository.
+        Otherwise, returns its generic form relative to the tests repository.
      */
     [[nodiscard]]
     std::string testing_utilities_include() const;
