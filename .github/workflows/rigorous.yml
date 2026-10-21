@@ -11,7 +11,7 @@ name: rigorous
 #   - Does the suite pass consistently? Races and timings are probabilistic,
 #     and each run is one trial.
 #   - Does it still pass in today's environment? The hosted images roll, and
-#     the PPA's gcc-15 is a moving snapshot.
+#     gcc-15 is a moving snapshot, in the Ubuntu archive as in the PPA.
 # Both need repetition on a fixed tree, and main is the tree meant to be
 # fixed. A scheduled run fires from the default branch, so nothing here names
 # main.
@@ -80,7 +80,7 @@ name: rigorous
 #
 # It must be macOS rather than Linux. Clang as shipped uses libc++ on macOS
 # but libstdc++ on Linux, where the feature macro is defined and TBB comes
-# straight back. Do not "regularise" this column to ubuntu-latest.
+# straight back. Do not "regularise" this column to ubuntu-26.04.
 #
 # Linux · GCC · Release exists because -O3 asks questions Debug cannot. Its
 # `exec_args` is explicitly empty, which is not the same as omitting the key:
@@ -181,9 +181,9 @@ jobs:
       exec_args: '--check-versioned-output'
       columns: >-
         [
-          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output"},
+          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-26.04",   "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output"},
           {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output", "repeat_args": "locate;5;--check-versioned-output;--exclude-performance;exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
-          {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15", "exec_args": ""},
+          {"name": "Linux · GCC · Release",    "os": "ubuntu-26.04",   "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15", "exec_args": ""},
           {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance", "repeat_args": "locate;20;--check-versioned-output;--exclude-performance;exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
           {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output"},
           {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output;--exclude-performance"}
