@@ -52,7 +52,7 @@ namespace sequoia::testing
     return static_cast<std::size_t>(std::ranges::fold_left(overlaps, std::ptrdiff_t{}, std::ranges::max));
   }
 
-  void append_peak_overlap(std::ostream& stream, std::size_t peak)
+  void write_peak_overlap(std::ostream& stream, std::size_t peak)
   {
     stream << std::format("[Peak Overlap: {}]\n", peak);
   }

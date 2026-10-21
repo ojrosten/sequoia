@@ -404,7 +404,7 @@ namespace sequoia::testing
     check(equality, "Parallel acceleration return code", runner.execute(), return_code::success);
 
     const auto peak{peak_overlap(acceleration_slow_test_base::sleep_intervals())};
-    append_peak_overlap(outputStream, peak);
+    write_peak_overlap(outputStream, peak);
 
     check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream);
 
@@ -429,7 +429,7 @@ namespace sequoia::testing
       check(equality, "Thread pool (8) return code", runner.execute(), return_code::success);
 
       const auto peak{peak_overlap(acceleration_slow_test_base::sleep_intervals())};
-      append_peak_overlap(outputStream, peak);
+      write_peak_overlap(outputStream, peak);
 
       check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream);
       check(std::ranges::greater_equal{},
@@ -449,7 +449,7 @@ namespace sequoia::testing
       check(equality, "Thread pool (2) return code", runner.execute(), return_code::success);
 
       const auto peak{peak_overlap(acceleration_slow_test_base::sleep_intervals())};
-      append_peak_overlap(outputStream, peak);
+      write_peak_overlap(outputStream, peak);
 
       check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream);
       check(equality, "Both threads of the pool, and no more, execute tests at once", peak, std::size_t{2});

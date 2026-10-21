@@ -3,26 +3,25 @@ Running tests, synchronously...
 
 slow_test_0:
 [Execution Time: 10.1ms]
-[Runner Overhead: 281us]
+[Runner Overhead: 475us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 slow_test_1:
 [Execution Time: 10.1ms]
-[Runner Overhead: 249us]
+[Runner Overhead: 396us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 slow_test_2:
 [Execution Time: 10.1ms]
-[Runner Overhead: 278us]
+[Runner Overhead: 350us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 31.9ms]
+[Total Run Time: 32.3ms]
 [Execution Time: 30.3ms]
-[Runner Overhead: 808us]
-[Scheduling Overhead: 7.88us]
+[Runner Overhead: 1.22ms]
+[Scheduling Overhead: 19.9us]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 3]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
-[Peak Overlap: 1]

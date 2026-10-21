@@ -56,11 +56,11 @@ namespace sequoia::testing
   [[nodiscard]]
   std::size_t peak_overlap(std::span<const sleep_interval> intervals);
 
-  /** Appends `[Peak Overlap: <peak>]` and a newline to `stream`. CI's step
+  /** Writes `[Peak Overlap: <peak>]` and a newline to `stream`. CI's step
       "Report the performance test's timings" parses this text, and prints
       no peak overlap if it cannot.
    */
-  void append_peak_overlap(std::ostream& stream, std::size_t peak);
+  void write_peak_overlap(std::ostream& stream, std::size_t peak);
 
   /** The base of each slow test of `Family`. A slow test's `run_tests` must
       make one call to `sleep_and_check`. The tests registered together must

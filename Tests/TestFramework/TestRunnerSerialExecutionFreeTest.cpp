@@ -192,10 +192,10 @@ namespace sequoia::testing
                 )};
     check(equality, "Serial execution return code", runner.execute(), return_code::success);
 
-    const auto peak{peak_overlap(serial_slow_test_base::sleep_intervals())};
-    append_peak_overlap(outputStream, peak);
-
     check_output(report({"Serial Output"}), "Serial Output", outputStream);
-    check(equality, "Tests execute one at a time in a serial run", peak, std::size_t{1});
+    check(equality,
+          "Tests execute one at a time in a serial run",
+          peak_overlap(serial_slow_test_base::sleep_intervals()),
+          std::size_t{1});
   }
 }
