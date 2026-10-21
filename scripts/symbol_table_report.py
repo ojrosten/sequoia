@@ -8,7 +8,7 @@ CMake configured with the Ninja generator. The target is the executable's path
 relative to the build directory, which is also its name as a ninja target.
 The record holds:
   - the commit at which the source tree stands, and whether the tree is clean;
-  - the toolchain, as the build directory records it: the C++ compiler's and
+  - the toolchain, as recorded by the build directory: the C++ compiler's and
     the linker's paths, ids and versions, the standard library, and nm;
   - the cache's build type and flags. A target's own flags are not among them;
   - the number of symbols nm lists for the executable, and the size in bytes
@@ -48,18 +48,22 @@ CACHE_ENTRY = re.compile(r"(?P<name>[A-Za-z_][^:]*):(?P<type>[A-Z]+)=(?P<value>.
 # An entry of a compiler record: set(NAME "VALUE").
 RECORD_ENTRY = re.compile(r'set\((?P<name>[A-Za-z_]\w*) "(?P<value>[^"]*)"\)')
 
-# The C++ standard libraries, each as the compiler record names it among the
-# libraries the compiler links implicitly.
+# The C++ standard libraries, keyed by their names in a compiler record's
+# CMAKE_CXX_IMPLICIT_LINK_LIBRARIES.
 STANDARD_LIBRARIES = {"c++": "libc++", "stdc++": "libstdc++"}
 
 # libc++'s inline namespace, std::__1, as it appears in a mangled name.
 LIBCXX_NAMESPACE = "St3__1"
 
-ELF_MAGIC     = b"\x7fELF"
-MACH_O_MAGIC  = b"\xcf\xfa\xed\xfe"  # MH_MAGIC_64, little-endian
-SHT_SYMTAB    = 2
-SHT_STRTAB    = 3
-LC_SYMTAB     = 0x2
+ELF_MAGIC           = b"\x7fELF"
+E_SHOFF             = 0x28                 # offsets within a 64-bit ELF header
+E_SHENTSIZE         = 0x3A
+SHT_SYMTAB          = 2
+SHT_STRTAB          = 3
+MACH_O_MAGIC        = b"\xcf\xfa\xed\xfe"  # MH_MAGIC_64, little-endian
+MH_NCMDS            = 16                   # an offset within a 64-bit Mach-O header
+MACH_HEADER_64_SIZE = 32
+LC_SYMTAB           = 0x2
 
 
 def run(command, cwd=None):
@@ -87,13 +91,13 @@ def read_cache(build_dir):
     return {m["name"]: m["value"] for m in map(CACHE_ENTRY.fullmatch, lines) if m}
 
 
-def entry(entries, name, source):
+def entry(entries, name, file_name):
     """Returns the value of the entry `name`.
 
-    Exits, naming `source`, if there is no such entry.
+    Exits, naming `file_name`, if there is no such entry.
     """
     if name not in entries:
-        sys.exit(f"{source} has no entry {name}")
+        sys.exit(f"{file_name} has no entry {name}")
     return entries[name]
 
 
@@ -102,8 +106,7 @@ def compiler_record_path(build_dir, cache):
     configured the build directory.
 
     A build directory configured by several releases of CMake holds a record
-    for each.
-    \throws Exits unless exactly one record matches the cache's version.
+    for each. Exits unless exactly one record matches the cache's version.
     """
     version = ".".join(entry(cache, f"CMAKE_CACHE_{part}_VERSION", "CMakeCache.txt")
                        for part in ("MAJOR", "MINOR", "PATCH"))
@@ -161,7 +164,7 @@ def ninja(cache, build_dir, *arguments):
     return run([entry(cache, "CMAKE_MAKE_PROGRAM", "CMakeCache.txt"), "-C", build_dir, *arguments])
 
 
-def string_table(path):
+def format_and_string_table_size(path):
     """Returns the format of the executable at `path`, and the size in bytes
     of the string table holding the names of its symbols.
 
@@ -172,9 +175,9 @@ def string_table(path):
         with open(path, "rb") as f:
             magic = f.read(4)
             if magic == ELF_MAGIC:
-                return "ELF", elf_string_table(f, path)
+                return "ELF", elf_string_table_size(f, path)
             if magic == MACH_O_MAGIC:
-                return "Mach-O", mach_o_string_table(f, path)
+                return "Mach-O", mach_o_string_table_size(f, path)
     except OSError as e:
         sys.exit(f"{path} cannot be read: {e}")
     except struct.error:
@@ -185,7 +188,7 @@ def string_table(path):
 def read_at(f, offset, size):
     """Returns the `size` bytes of `f` at `offset`.
 
-    \throws struct.error if the file ends before them.
+    Raises struct.error if the file ends before them.
     """
     f.seek(offset)
     data = f.read(size)
@@ -194,14 +197,14 @@ def read_at(f, offset, size):
     return data
 
 
-def elf_string_table(f, path):
+def elf_string_table_size(f, path):
     """Returns the size of the string table to which the ELF file's symbol
     table links."""
     elf_class, data_encoding = read_at(f, 4, 2)
     if (elf_class, data_encoding) != (2, 1):
         sys.exit(f"{path} is an ELF file, but not a 64-bit little-endian one")
-    shoff, = struct.unpack("<Q", read_at(f, 0x28, 8))
-    shentsize, shnum = struct.unpack("<HH", read_at(f, 0x3A, 4))
+    shoff, = struct.unpack("<Q", read_at(f, E_SHOFF, 8))
+    shentsize, shnum = struct.unpack("<HH", read_at(f, E_SHENTSIZE, 4))
     def section(index):  # (sh_type, sh_size, sh_link)
         fields = struct.unpack("<IIQQQQIIQQ", read_at(f, shoff + index * shentsize, 64))
         return fields[1], fields[5], fields[6]
@@ -219,11 +222,11 @@ def elf_string_table(f, path):
     return sections[link][1]
 
 
-def mach_o_string_table(f, path):
+def mach_o_string_table_size(f, path):
     """Returns the size of the string table which the Mach-O file's LC_SYMTAB
     command names."""
-    ncmds, sizeofcmds = struct.unpack("<II", read_at(f, 16, 8))
-    commands = read_at(f, 32, sizeofcmds)
+    ncmds, sizeofcmds = struct.unpack("<II", read_at(f, MH_NCMDS, 8))
+    commands = read_at(f, MACH_HEADER_64_SIZE, sizeofcmds)
     sizes, offset = [], 0
     for _ in range(ncmds):
         cmd, cmdsize = struct.unpack_from("<II", commands, offset)
@@ -255,7 +258,7 @@ def nm_version(nm):
     return lines[0].strip()
 
 
-def objects(cache, build_dir, target, root):
+def linked_objects_by_source(cache, build_dir, target, root):
     """Returns the path of each object ninja links into `target`, keyed by
     the path of its source relative to the repository at `root`.
 
@@ -287,7 +290,7 @@ def objects(cache, build_dir, target, root):
     return out
 
 
-def report(build_dir, target):
+def record_of(build_dir, target):
     """Returns the record of the executable `target` in `build_dir`."""
     cache = read_cache(build_dir)
     generator = entry(cache, "CMAKE_GENERATOR", "CMakeCache.txt")
@@ -303,7 +306,7 @@ def report(build_dir, target):
     executable = os.path.join(build_dir, target)
     if not os.path.isfile(executable):
         sys.exit(f"{executable} is not a file")
-    file_format, string_table_bytes = string_table(executable)
+    file_format, string_table_bytes = format_and_string_table_size(executable)
     nm = entry(cache, "CMAKE_NM", "CMakeCache.txt")
     listed = symbols(nm, executable)
     if not listed:
@@ -315,11 +318,11 @@ def report(build_dir, target):
 
     source_dir = entry(cache, "CMAKE_HOME_DIRECTORY", "CMakeCache.txt")
     root = run(["git", "-C", source_dir, "rev-parse", "--show-toplevel"]).strip()
-    linked = objects(cache, build_dir, target, root)
+    objects_by_source = linked_objects_by_source(cache, build_dir, target, root)
     with concurrent.futures.ThreadPoolExecutor(max_workers=os.cpu_count()) as pool:
-        counts = dict(zip(linked, pool.map(
+        counts = dict(zip(objects_by_source, pool.map(
             lambda obj: len(symbols(nm, os.path.join(build_dir, obj), "--defined-only")),
-            linked.values())))
+            objects_by_source.values())))
 
     build_type = entry(cache, "CMAKE_BUILD_TYPE", "CMakeCache.txt")
     flags = ["CMAKE_CXX_FLAGS", "CMAKE_EXE_LINKER_FLAGS"]
@@ -353,7 +356,7 @@ def main():
     ap.add_argument("build_dir")
     ap.add_argument("target", help="the executable's path relative to the build directory")
     a = ap.parse_args()
-    json.dump(report(a.build_dir, a.target), sys.stdout, indent=1, sort_keys=True)
+    json.dump(record_of(a.build_dir, a.target), sys.stdout, indent=1, sort_keys=True)
     print()
 
 
