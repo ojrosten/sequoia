@@ -1,2 +1,2 @@
 smart_pointer_false_positive_free_diagnostics
-False Positive Checks:                    12;  Failures:  0
+False Positive Checks:                    15;  Failures:  0

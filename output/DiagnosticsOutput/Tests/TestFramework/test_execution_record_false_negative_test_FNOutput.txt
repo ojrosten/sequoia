@@ -22,12 +22,9 @@ operator== returned false
   [std::optional<sequoia::testing::test_execution_completion>]
   operator== returned false
 
+    [bool]
     Obtained : null
     Predicted: not null
-    [bool]
-    operator== returned false
-    Obtained : false
-    Predicted: true
 
 =======================================
 

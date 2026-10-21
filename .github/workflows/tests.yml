@@ -173,6 +173,10 @@ jobs:
       # pipefail fails the check although the name is listed. On ubuntu-26.04
       # the pipe failed this way for g++-15 on every Linux column. -F because a
       # name may hold a `.`, which a regex matches against any character.
+      #
+      # The removal of the Chrome and Microsoft lists, the retry paragraph and
+      # the `apt-get update` of this step are repeated in coverage.yml; change
+      # both.
       - name: Install the toolchain (Linux)
         if: inputs.needs_testing == 'true' && runner.os == 'Linux'
         run: |

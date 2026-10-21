@@ -35,9 +35,7 @@ namespace sequoia::testing
     {
       const bool obtainedHoldsValue{obtained}, predictedHoldsValue{prediction};
 
-      check(nullable_type_message(obtainedHoldsValue, predictedHoldsValue),
-            logger,
-            obtainedHoldsValue == predictedHoldsValue);
+      check(both_or_neither_null(), "", logger, obtainedHoldsValue, predictedHoldsValue);
     }
   };
 

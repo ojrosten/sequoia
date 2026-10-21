@@ -46,11 +46,7 @@ namespace sequoia::testing
       {
         const auto obtainedHoldsValue{static_cast<bool>(obtained)}, predictedHoldsValue{static_cast<bool>(prediction)};
 
-        check(equality,
-              nullable_type_message(obtainedHoldsValue, predictedHoldsValue),
-              logger,
-              obtainedHoldsValue,
-              predictedHoldsValue);
+        check(both_or_neither_null(), "", logger, obtainedHoldsValue, predictedHoldsValue);
       }
     }
   };
