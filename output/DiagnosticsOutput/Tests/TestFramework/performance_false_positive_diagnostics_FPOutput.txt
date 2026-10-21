@@ -1,5 +1,5 @@
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 232
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 276
 Speed-up of 2, predicted [1.8, 2.1]
 
 Speed-up: 2 in [2, 2]; predicted [1.8, 2.1]
@@ -9,7 +9,7 @@ Task durations: fast 0.001s, slow 0.002s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 237
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 282
 Speed-up of 4, predicted [3.4, 4.1]
 
 Speed-up: 4 in [4, 4]; predicted [3.4, 4.1]
@@ -19,7 +19,7 @@ Task durations: fast 0.001s, slow 0.004s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 242
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 288
 Durations varying together, a speed-up of 2 in every trial, predicted [1.8, 2.2]
 
 Speed-up: 2 in [2, 2]; predicted [1.8, 2.2]
@@ -29,7 +29,7 @@ Task durations: fast 0.00183s, slow 0.00366s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 252
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 301
 Attempts 1 and 2 fail at the gate; attempt 3's interval overlaps the prediction, but would not if substantially narrower
 
 Speed-up: 2.82 in [1.36, 5.83]; predicted [4.86, 7.43]
@@ -39,7 +39,7 @@ Task durations: fast 0.005s, slow 0.0141s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 259
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 314
 Attempt 2's interval lies above the prediction, and would overlap the prediction only if substantially wider; attempt 3's interval overlaps the prediction, but would not if substantially narrower
 
 Speed-up: 6.48 in [2.89, 14.6]; predicted [2.21, 3.54]
@@ -49,27 +49,7 @@ Task durations: fast 0.002s, slow 0.013s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 280
-A speed-up of 2 in computing a value a task passes to do_not_optimize_away, predicted [1.5, 2.5]
-
-Speed-up: 2 in [1.99, 2.01]; predicted [1.5, 2.5]
-Trials: 10, attempt 1 of 3
-Task durations: fast 0.00748s, slow 0.015s
-
-=======================================
-
-False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 286
-A speed-up of 2 in computing the value a task returns, predicted [1.5, 2.5]
-
-Speed-up: 1.95 in [1.92, 1.98]; predicted [1.5, 2.5]
-Trials: 10, attempt 1 of 3
-Task durations: fast 0.00782s, slow 0.0152s
-
-=======================================
-
-False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 296
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 335
 Tasks of 7 ms and 13 ms, with baselines of 4 ms and 1 ms, predicted [3.6, 4.4]
 
 Speed-up: 4 in [4, 4]; predicted [3.6, 4.4]
@@ -80,7 +60,7 @@ Baseline durations: fast 0.004s, slow 0.001s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 314
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 355
 One trial in ten in which the fast task takes no longer than its baseline
 
 Speed-up: 3 in [3, 3]; predicted [2.5, 3.5]
@@ -91,7 +71,7 @@ Baseline durations: fast 0.001s, slow 0.001s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 322
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 366
 One trial in ten in which the slow task takes no longer than its baseline
 
 Speed-up: 3 in [3, 3]; predicted [2.5, 3.5]
@@ -102,7 +82,7 @@ Baseline durations: fast 0.001s, slow 0.001s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 330
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 377
 One trial in ten in which the fast task takes no longer than its baseline, and another in which the slow task does
 
 Speed-up: 3 in [3, 3]; predicted [2.5, 3.5]
@@ -113,7 +93,7 @@ Baseline durations: fast 0.001s, slow 0.001s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 340
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 392
 One trial in ten in which both tasks take no longer than their baselines
 
 Speed-up: 3 in [3, 3]; predicted [2.5, 3.5]
@@ -124,13 +104,13 @@ Baseline durations: fast 0.001s, slow 0.001s
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 353
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 412
 Tasks of 4 ms and 12 ms, with baselines which do nothing, predicted [2.5, 3.5]
 
 Speed-up: 3 in [3, 3]; predicted [2.5, 3.5]
 Trials: 10, attempt 1 of 3
 Task durations: fast 0.004s, slow 0.012s
-Baseline durations: fast 1.57e-08s, slow 1.57e-08s
+Baseline durations: fast 0s, slow 0s
 
 =======================================
 
