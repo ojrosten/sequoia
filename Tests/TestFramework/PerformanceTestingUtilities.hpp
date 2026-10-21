@@ -181,7 +181,7 @@ namespace sequoia::testing
     [[nodiscard]]
     time_point now() const noexcept { return m_Now; }
 
-    void advance(duration d) noexcept { m_Now += d; }
+    void advance(duration elapsed) noexcept { m_Now += elapsed; }
   private:
     time_point m_Now{};
   };

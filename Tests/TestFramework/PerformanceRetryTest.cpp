@@ -255,10 +255,10 @@ namespace sequoia::testing
         scripted_clock clock{};
         const auto taskCalls{std::make_shared<std::vector<task>>()};
         auto recordedTask{
-          [taskCalls, &clock](task t, scripted_clock::duration duration) {
-            return [taskCalls, &clock, t, duration]() {
+          [taskCalls, &clock](task t, scripted_clock::duration taskDuration) {
+            return [taskCalls, &clock, t, taskDuration]() {
               taskCalls->push_back(t);
-              clock.advance(duration);
+              clock.advance(taskDuration);
             };
           }
         };
