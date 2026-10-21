@@ -19,10 +19,9 @@ namespace sequoia::testing
   namespace
   {
     template<class Tree>
-    concept forest_beneath_callable
-      = requires(const Tree& tree) {
-          forest_beneath(tree, 0);
-        };
+    inline constexpr bool forest_beneath_callable_v{
+      requires(const Tree& tree) { forest_beneath(tree, 0); }
+    };
   }
 
   [[nodiscard]]
@@ -233,10 +232,10 @@ namespace sequoia::testing
 
   void tree_test::test_forest_beneath_constraints()
   {
-    STATIC_CHECK( forest_beneath_callable<directed_tree<tree_link_direction::forward,     null_weight, int>>);
-    STATIC_CHECK(!forest_beneath_callable<directed_tree<tree_link_direction::backward,    null_weight, int>>);
-    STATIC_CHECK(!forest_beneath_callable<directed_tree<tree_link_direction::symmetric,   null_weight, int>>);
-    STATIC_CHECK(!forest_beneath_callable<undirected_tree<tree_link_direction::symmetric, null_weight, int>>);
+    STATIC_CHECK( forest_beneath_callable_v<directed_tree<tree_link_direction::forward,     null_weight, int>>);
+    STATIC_CHECK(!forest_beneath_callable_v<directed_tree<tree_link_direction::backward,    null_weight, int>>);
+    STATIC_CHECK(!forest_beneath_callable_v<directed_tree<tree_link_direction::symmetric,   null_weight, int>>);
+    STATIC_CHECK(!forest_beneath_callable_v<undirected_tree<tree_link_direction::symmetric, null_weight, int>>);
   }
 
   void tree_test::test_adaptors_at_absent_nodes()
