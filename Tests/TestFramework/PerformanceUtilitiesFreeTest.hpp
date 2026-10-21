@@ -26,6 +26,8 @@ namespace sequoia::testing
 
     void test_task_constraints();
 
+    void test_clock_constraints();
+
     void test_timing_constraints();
 
     void test_exception_specifications();

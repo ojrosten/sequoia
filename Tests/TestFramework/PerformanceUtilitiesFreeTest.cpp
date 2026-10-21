@@ -44,8 +44,18 @@ namespace sequoia::testing
 
     using copyable_task_with_baseline = task_with_baseline<copyable_task, copyable_task>;
 
-    template<class Task>
-    concept profilable = requires(Task task) { profile(std::move(task)); };
+    struct non_const_clock
+    {
+      std::chrono::steady_clock::time_point now() { return {}; }
+    };
+
+    struct count_reading_clock
+    {
+      int now() const { return 0; }
+    };
+
+    template<class Task, class Clock>
+    concept profilable = requires(Task task, const Clock& clock) { profile(std::move(task), clock); };
 
     template<class Fast, class Slow>
     inline constexpr bool checkable_tasks_v{
@@ -73,6 +83,28 @@ namespace sequoia::testing
         );
       }
     };
+
+    template<class Clock>
+    inline constexpr bool checkable_with_clock_v{
+      requires(performance_extender<test_mode::standard>& extender,
+               const relative_performance_parameters& parameters,
+               const Clock& clock) {
+        extender.check_relative_performance("", copyable_task{}, copyable_task{}, parameters, clock);
+      }
+    };
+
+    template<class Clock>
+    inline constexpr bool checkable_with_baselines_and_clock_v{
+      requires(performance_extender<test_mode::standard>& extender,
+               const relative_performance_parameters& parameters,
+               const Clock& clock) {
+        extender.check_relative_performance("",
+                                            copyable_task_with_baseline{},
+                                            copyable_task_with_baseline{},
+                                            parameters,
+                                            clock);
+      }
+    };
   }
 
   [[nodiscard]]
@@ -84,6 +116,7 @@ namespace sequoia::testing
   void performance_utilities_free_test::run_tests()
   {
     test_task_constraints();
+    test_clock_constraints();
     test_timing_constraints();
     test_exception_specifications();
     test_default_minimum_trials();
@@ -97,8 +130,8 @@ namespace sequoia::testing
 
   void performance_utilities_free_test::test_task_constraints()
   {
-    STATIC_CHECK( profilable<   copyable_task>);
-    STATIC_CHECK(!profilable<rvalue_only_task>);
+    STATIC_CHECK( profilable<   copyable_task, std::chrono::steady_clock>);
+    STATIC_CHECK(!profilable<rvalue_only_task, std::chrono::steady_clock>);
 
     STATIC_CHECK( checkable_tasks_v<   copyable_task,    copyable_task>);
     STATIC_CHECK(!checkable_tasks_v<  move_only_task,    copyable_task>);
@@ -120,6 +153,25 @@ namespace sequoia::testing
     STATIC_CHECK(!checkable_tasks_v<copyable_task_with_baseline,               copyable_task>);
   }
 
+  void performance_utilities_free_test::test_clock_constraints()
+  {
+    STATIC_CHECK( performance_clock<std::chrono::steady_clock>);
+    STATIC_CHECK( performance_clock<std::chrono::system_clock>);
+    STATIC_CHECK( performance_clock<scripted_clock>);
+    STATIC_CHECK(!performance_clock<int>);
+    STATIC_CHECK(!performance_clock<non_const_clock>);
+    STATIC_CHECK(!performance_clock<count_reading_clock>);
+
+    STATIC_CHECK( profilable<copyable_task, scripted_clock>);
+    STATIC_CHECK(!profilable<copyable_task, non_const_clock>);
+
+    STATIC_CHECK( checkable_with_clock_v<scripted_clock>);
+    STATIC_CHECK(!checkable_with_clock_v<non_const_clock>);
+
+    STATIC_CHECK( checkable_with_baselines_and_clock_v<scripted_clock>);
+    STATIC_CHECK(!checkable_with_baselines_and_clock_v<non_const_clock>);
+  }
+
   void performance_utilities_free_test::test_timing_constraints()
   {
     using impl::call_order, impl::baselined_task_order, impl::constructible_from_calls_v, impl::one_trial_timeable_v;
@@ -137,12 +189,17 @@ namespace sequoia::testing
     STATIC_CHECK(!constructible_from_calls_v<int_pair,             unary_call,       int_call>);
     STATIC_CHECK(!constructible_from_calls_v<int_pair,             int_call,         unary_call>);
 
-    STATIC_CHECK( one_trial_timeable_v<copyable_task,               copyable_task,               call_order>);
-    STATIC_CHECK(!one_trial_timeable_v<copyable_task,               copyable_task,               baselined_task_order>);
-    STATIC_CHECK(!one_trial_timeable_v<rvalue_only_task,            copyable_task,               call_order>);
-    STATIC_CHECK(!one_trial_timeable_v<copyable_task,               rvalue_only_task,            call_order>);
-    STATIC_CHECK( one_trial_timeable_v<copyable_task_with_baseline, copyable_task_with_baseline, baselined_task_order>);
-    STATIC_CHECK(!one_trial_timeable_v<copyable_task_with_baseline, copyable_task_with_baseline, call_order>);
+    using std::chrono::steady_clock;
+    using with_baseline = copyable_task_with_baseline;
+
+    STATIC_CHECK( one_trial_timeable_v<copyable_task,    copyable_task,    call_order,           steady_clock>);
+    STATIC_CHECK(!one_trial_timeable_v<copyable_task,    copyable_task,    baselined_task_order, steady_clock>);
+    STATIC_CHECK(!one_trial_timeable_v<rvalue_only_task, copyable_task,    call_order,           steady_clock>);
+    STATIC_CHECK(!one_trial_timeable_v<copyable_task,    rvalue_only_task, call_order,           steady_clock>);
+    STATIC_CHECK(!one_trial_timeable_v<copyable_task,    copyable_task,    call_order,           non_const_clock>);
+    STATIC_CHECK( one_trial_timeable_v<with_baseline,    with_baseline,    baselined_task_order, steady_clock>);
+    STATIC_CHECK(!one_trial_timeable_v<with_baseline,    with_baseline,    call_order,           steady_clock>);
+    STATIC_CHECK(!one_trial_timeable_v<with_baseline,    with_baseline,    baselined_task_order, non_const_clock>);
   }
 
   void performance_utilities_free_test::test_exception_specifications()
