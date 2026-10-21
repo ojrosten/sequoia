@@ -382,8 +382,11 @@ namespace sequoia::maths
   template<std::input_or_output_iterator Iterator, class Adaptor>
   using forest_iterator = utilities::iterator<Iterator, forest_dereference_policy<Iterator, Adaptor>>;
 
-  /** \brief Returns adaptors of `tree` at the targets of `node`'s edges. */
+  /** \brief Returns the subtrees rooted at `node`'s children, as adaptors of
+             `tree`.
+   */
   template<dynamic_tree T>
+    requires (T::link_dir == tree_link_direction::forward)
   [[nodiscard]]
   auto forest_beneath(const T& tree, typename T::size_type node)
   {

@@ -32,6 +32,8 @@ namespace sequoia::testing
 
     void test_forest_ranges();
 
+    void test_forest_beneath_constraints();
+
     void test_adaptors_at_absent_nodes();
   };
 }

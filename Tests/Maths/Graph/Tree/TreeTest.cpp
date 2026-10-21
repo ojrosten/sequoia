@@ -16,6 +16,15 @@ namespace sequoia::testing
 {
   using namespace maths;
 
+  namespace
+  {
+    template<class Tree>
+    concept forest_beneath_callable
+      = requires(const Tree& tree) {
+          forest_beneath(tree, 0);
+        };
+  }
+
   [[nodiscard]]
   std::filesystem::path tree_test::source_file()
   {
@@ -35,6 +44,7 @@ namespace sequoia::testing
     test_tree_unweighted_nodes<undirected_tree<tree_link_direction::symmetric, null_weight, null_weight>>();
 
     test_forest_ranges();
+    test_forest_beneath_constraints();
     test_adaptors_at_absent_nodes();
   }
 
@@ -219,6 +229,14 @@ namespace sequoia::testing
 
     const std::vector<tree_t> forest{tree, tree_t{{-1}}};
     check(equality, "A forest's trees, each at its root", rootWeights(forest_of(forest)), std::vector<int>{42, -1});
+  }
+
+  void tree_test::test_forest_beneath_constraints()
+  {
+    STATIC_CHECK( forest_beneath_callable<directed_tree<tree_link_direction::forward,     null_weight, int>>);
+    STATIC_CHECK(!forest_beneath_callable<directed_tree<tree_link_direction::backward,    null_weight, int>>);
+    STATIC_CHECK(!forest_beneath_callable<directed_tree<tree_link_direction::symmetric,   null_weight, int>>);
+    STATIC_CHECK(!forest_beneath_callable<undirected_tree<tree_link_direction::symmetric, null_weight, int>>);
   }
 
   void tree_test::test_adaptors_at_absent_nodes()
