@@ -677,10 +677,11 @@ namespace sequoia::testing
 
     /** \brief Summarizes the checks.
 
-        In false-positive and false-negative modes, `postprocess` chooses
-        between the run's diagnostics output and the contents of the existing
-        diagnostics file, given `attempt_count_stability::fluctuating`. The
-        summary carries the chosen text.
+        In false-positive and false-negative modes, if the run's diagnostics
+        output differs from the versioned output only in measured values
+        (timings, numbers of trials and attempts made), the summary ignores
+        the former in favour of the latter. This ensures measurement noise
+        does not cause the versioned output to fluctuate.
      */
     [[nodiscard]]
     log_summary summarize(duration delta) const;
