@@ -11,7 +11,7 @@ name: rigorous
 #   - Does the suite pass consistently? Races and timings are probabilistic,
 #     and each run is one trial.
 #   - Does it still pass in today's environment? The hosted images roll, and
-#     gcc-15 is a moving snapshot, in the Ubuntu archive as in the PPA.
+#     so do the compilers installed on them.
 # Both need repetition on a fixed tree, and main is the tree meant to be
 # fixed. A scheduled run fires from the default branch, so nothing here names
 # main.
@@ -80,7 +80,7 @@ name: rigorous
 #
 # It must be macOS rather than Linux. Clang as shipped uses libc++ on macOS
 # but libstdc++ on Linux, where the feature macro is defined and TBB comes
-# straight back. Do not "regularise" this column to ubuntu-26.04.
+# straight back. Do not "regularise" this column to Linux.
 #
 # Linux · GCC · Release exists because -O3 asks questions Debug cannot. Its
 # `exec_args` is explicitly empty, which is not the same as omitting the key:

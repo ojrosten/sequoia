@@ -10,9 +10,9 @@ name: coverage
 # dispatches. baseline-tightener.yml calls it to measure staging, and proposes
 # the tightened baseline this workflow uploads.
 #
-# The toolchain steps repeat tests.yml's rather than calling it, because
-# coverage runs the suite through ctest, serially, not through the `run`
-# target.
+# The job has toolchain steps of its own rather than calling tests.yml,
+# because coverage runs the suite through ctest, serially, not through the
+# `run` target.
 on:
   workflow_call:
     inputs:
@@ -114,7 +114,7 @@ jobs:
           # index into an error, which scripts/retry.sh retries.
           sudo scripts/retry.sh 3 180 -- add-apt-repository -y --no-update ppa:ubuntu-toolchain-r/test
           sudo scripts/retry.sh 3 180 -- apt-get update -qq --error-on=any \
-            || { echo "::error::An apt index could not be fetched; the first E: line above names it"; exit 1; }
+            || { echo "::error::The apt indexes could not be fetched: each attempt above says why"; exit 1; }
           # The Perl packages are for lcov, installed below from its release.
           # Without Capture::Tiny, DateTime, Date::Parse and
           # Devel::StackTrace, lcov's tools do not start. geninfo reads gcov's
