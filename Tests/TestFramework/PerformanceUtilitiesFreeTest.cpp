@@ -46,12 +46,33 @@ namespace sequoia::testing
 
     struct non_const_now_clock
     {
-      std::chrono::steady_clock::time_point now() { return {}; }
+      using time_point = std::chrono::steady_clock::time_point;
+
+      time_point now() { return {}; }
     };
 
     struct int_now_clock
     {
-      int now() const { return 0; }
+      using time_point = int;
+
+      time_point now() const { return 0; }
+    };
+
+    struct millisecond_now_clock
+    {
+      using time_point = std::chrono::steady_clock::time_point;
+
+      std::chrono::time_point<std::chrono::steady_clock, std::chrono::milliseconds> now() const { return {}; }
+    };
+
+    struct rvalue_subtrahend_clock
+    {
+      struct time_point
+      {
+        friend std::chrono::nanoseconds operator-(const time_point&, time_point&&) { return {}; }
+      };
+
+      time_point now() const { return {}; }
     };
 
     template<class Task, class Clock>
@@ -160,6 +181,8 @@ namespace sequoia::testing
     STATIC_CHECK(!performance_clock<int>);
     STATIC_CHECK(!performance_clock<non_const_now_clock>);
     STATIC_CHECK(!performance_clock<int_now_clock>);
+    STATIC_CHECK(!performance_clock<millisecond_now_clock>);
+    STATIC_CHECK(!performance_clock<rvalue_subtrahend_clock>);
 
     STATIC_CHECK( profilable_with<copyable_task, scripted_clock>);
     STATIC_CHECK(!profilable_with<copyable_task, non_const_now_clock>);

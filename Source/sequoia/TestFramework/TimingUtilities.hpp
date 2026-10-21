@@ -68,8 +68,9 @@ namespace sequoia::testing
 
   /** \brief A type from which `profile` can read the time. */
   template<class Clock>
-  concept performance_clock = requires(const Clock& clock) {
-    { clock.now() - clock.now() } -> std::convertible_to<std::chrono::duration<double>>;
+  concept performance_clock = requires(const Clock& clock, const typename Clock::time_point& start) {
+    { clock.now() }         -> std::same_as<typename Clock::time_point>;
+    { clock.now() - start } -> std::convertible_to<std::chrono::duration<double>>;
   };
 
   /** \brief Returns the duration of a call of `task`, as measured by `clock`.
