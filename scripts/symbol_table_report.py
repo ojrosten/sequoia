@@ -12,17 +12,25 @@ The record holds:
     versions, and the standard library, as recorded by the build directory,
     and the path and version of the build directory's nm;
   - the cache's build type and flags. A target's own flags are not among them;
-  - the number of symbols nm lists for the executable, and the size in bytes
-    of the string table holding their names;
+  - the number of symbols nm lists for the executable, and the total length
+    of their names in bytes;
   - for each object among the target's inputs, as ninja lists them, the
     number of symbols the object defines, keyed by the path of its source
-    relative to the repository. The inputs include every member of a static
-    library the target links, whether or not the linker takes it.
+    relative to the repository.
 
-The string table also holds names nm does not list: on Mach-O, the debug
-map's paths to the objects; on ELF, the source files' paths. So its size
-changes with the path of the checkout, and records are comparable only
-between builds at the same path.
+The names are those nm lists by default, imported symbols among them. Each
+is mangled, as the executable holds it, so on Mach-O it starts with the
+underscore nm shows, and the newline ending it in nm's listing is not
+counted. nm lists no debugging symbols by default, so the total does not
+depend on the path of the checkout, unless a name holds a path itself. The
+size of the string table holding the names would depend on it: the table
+also holds the debug map's paths to the objects on Mach-O, and the source
+files' paths on ELF.
+
+The objects are ninja's inputs to the link. So every member of a static
+library the target links is among them, and is counted whether or not the
+linker takes it from the library. The executable's counts are read from
+the executable itself, and are unaffected.
 
 The objects' counts do not sum to the executable's. An inline function or a
 template instantiation used in several objects is defined in each of them,
@@ -44,14 +52,13 @@ The script refuses, rather than write a record which may be wrong, if
     compiler or an implicit include directory which no longer exists;
   - the compiler record names both standard libraries or neither, or names
     the one whose inline namespace the executable's symbols do not show;
-  - the executable is not a 64-bit little-endian ELF or Mach-O file with one
-    symbol table, or nm lists no symbols for it;
+  - the executable is not a file, or nm lists no symbols for it;
   - ninja lists no objects for the target, or its compilation database has
     no entry for one, or two objects share a source, or a source cannot be
     named relative to the repository.
 Windows executables are not supported.
 """
-import argparse, concurrent.futures, json, os, re, struct, subprocess, sys
+import argparse, concurrent.futures, json, os, re, subprocess, sys
 
 # An entry of CMakeCache.txt: NAME:TYPE=VALUE.
 CACHE_ENTRY = re.compile(r"(?P<name>[A-Za-z_][^:]*):(?P<type>[A-Z]+)=(?P<value>.*)")
@@ -65,16 +72,6 @@ STANDARD_LIBRARIES = {"c++": "libc++", "stdc++": "libstdc++"}
 
 # libc++'s inline namespace, std::__1, as it appears in a mangled name.
 LIBCXX_NAMESPACE = "St3__1"
-
-ELF_MAGIC           = b"\x7fELF"
-E_SHOFF             = 0x28                 # offsets within a 64-bit ELF header
-E_SHENTSIZE         = 0x3A
-SHT_SYMTAB          = 2
-SHT_STRTAB          = 3
-MACH_O_MAGIC        = b"\xcf\xfa\xed\xfe"  # MH_MAGIC_64, little-endian
-MH_NCMDS            = 16                   # an offset within a 64-bit Mach-O header
-MACH_HEADER_64_SIZE = 32
-LC_SYMTAB           = 0x2
 
 
 def run(command):
@@ -176,86 +173,10 @@ def ninja(cache, build_dir, *arguments):
     return run([entry(cache, "CMAKE_MAKE_PROGRAM", "CMakeCache.txt"), "-C", build_dir, *arguments])
 
 
-def format_and_string_table_size(path):
-    """Returns the format of the executable at `path`, and the size in bytes
-    of the string table holding the names of its symbols.
-
-    Exits unless the executable is a 64-bit little-endian ELF or Mach-O file
-    with one symbol table.
-    """
-    try:
-        with open(path, "rb") as f:
-            magic = f.read(4)
-            if magic == ELF_MAGIC:
-                return "ELF", elf_string_table_size(f, path)
-            if magic == MACH_O_MAGIC:
-                return "Mach-O", mach_o_string_table_size(f, path)
-    except OSError as e:
-        sys.exit(f"{path} cannot be read: {e}")
-    except struct.error:
-        sys.exit(f"{path} is truncated")
-    sys.exit(f"{path} is neither a 64-bit little-endian ELF file nor a 64-bit little-endian Mach-O file")
-
-
-def read_at(f, offset, size):
-    """Returns the `size` bytes of `f` at `offset`.
-
-    Raises struct.error if the file ends before them.
-    """
-    f.seek(offset)
-    data = f.read(size)
-    if len(data) != size:
-        raise struct.error("truncated")
-    return data
-
-
-def elf_string_table_size(f, path):
-    """Returns the size of the string table to which the ELF file's symbol
-    table links."""
-    elf_class, data_encoding = read_at(f, 4, 2)
-    if (elf_class, data_encoding) != (2, 1):
-        sys.exit(f"{path} is an ELF file, but not a 64-bit little-endian one")
-    shoff, = struct.unpack("<Q", read_at(f, E_SHOFF, 8))
-    shentsize, shnum = struct.unpack("<HH", read_at(f, E_SHENTSIZE, 4))
-    def section(index):  # (sh_type, sh_size, sh_link)
-        fields = struct.unpack("<IIQQQQIIQQ", read_at(f, shoff + index * shentsize, 64))
-        return fields[1], fields[5], fields[6]
-    # A file with too many sections for e_shnum holds the count in section
-    # 0's sh_size.
-    if shnum == 0 and shoff:
-        shnum = section(0)[1]
-    sections = [section(i) for i in range(shnum)]
-    symbol_tables = [s for s in sections if s[0] == SHT_SYMTAB]
-    if len(symbol_tables) != 1:
-        sys.exit(f"{path} has {len(symbol_tables)} symbol tables, rather than one")
-    link = symbol_tables[0][2]
-    if link >= len(sections) or sections[link][0] != SHT_STRTAB:
-        sys.exit(f"the symbol table of {path} does not link to a string table")
-    return sections[link][1]
-
-
-def mach_o_string_table_size(f, path):
-    """Returns the size of the string table which the Mach-O file's LC_SYMTAB
-    command names."""
-    ncmds, sizeofcmds = struct.unpack("<II", read_at(f, MH_NCMDS, 8))
-    commands = read_at(f, MACH_HEADER_64_SIZE, sizeofcmds)
-    sizes, offset = [], 0
-    for _ in range(ncmds):
-        cmd, cmdsize = struct.unpack_from("<II", commands, offset)
-        if cmdsize == 0:
-            sys.exit(f"{path} has a load command of size 0")
-        if cmd == LC_SYMTAB:
-            sizes.append(struct.unpack_from("<IIII", commands, offset + 8)[3])
-        offset += cmdsize
-    if len(sizes) != 1:
-        sys.exit(f"{path} has {len(sizes)} LC_SYMTAB commands, rather than one")
-    return sizes[0]
-
-
 def symbols(nm, path, *options):
-    """Returns the symbols which nm lists for the file at `path`, one line
-    each."""
-    return [line for line in run([nm, "-P", *options, path]).splitlines() if line]
+    """Returns the names of the symbols which nm lists for the file at
+    `path`."""
+    return [name for name in run([nm, "--format=just-symbols", *options, path]).splitlines() if name]
 
 
 def nm_version(nm):
@@ -318,12 +239,11 @@ def record_of(build_dir, target):
     executable = os.path.join(build_dir, target)
     if not os.path.isfile(executable):
         sys.exit(f"{executable} is not a file")
-    file_format, string_table_bytes = format_and_string_table_size(executable)
     nm = entry(cache, "CMAKE_NM", "CMakeCache.txt")
     listed = symbols(nm, executable)
     if not listed:
         sys.exit(f"nm lists no symbols for {executable}")
-    if any(LIBCXX_NAMESPACE in line for line in listed) != (library == "libc++"):
+    if any(LIBCXX_NAMESPACE in name for name in listed) != (library == "libc++"):
         sys.exit(f"{record_path} says the compiler links {library}, and the symbols of {executable} "
                  f"say otherwise: they {'do not ' if library == 'libc++' else ''}include libc++'s "
                  "inline namespace")
@@ -355,9 +275,8 @@ def record_of(build_dir, target):
             "nm": {"path": nm, "version": nm_version(nm)},
         },
         "cache": {name: entry(cache, name, "CMakeCache.txt") for name in ["CMAKE_BUILD_TYPE", *flags]},
-        "executable": {"format": file_format,
-                       "symbols": len(listed),
-                       "string_table_bytes": string_table_bytes},
+        "executable": {"symbols":           len(listed),
+                       "symbol_name_bytes": sum(len(name.encode("utf-8")) for name in listed)},
         "defined_symbols_by_object": counts,
     }
 

@@ -9,8 +9,9 @@ name: selftests
 # The inventory job checks that every selftest runs somewhere.
 #
 # symbol_table_report's selftest links its fixture in the platform's own
-# format. So the Linux job controls the script on ELF executables, and the
-# macOS job controls it on Mach-O executables.
+# format, and reads it with the platform's nm. So the Linux job controls the
+# script with GNU nm on ELF executables, and the macOS job controls it with
+# llvm-nm on Mach-O executables.
 #
 # No job runs on Windows. snapshot_at_deadline runs on every Windows column,
 # but its selftest compiles a POSIX stand-in, so nothing controls its Windows

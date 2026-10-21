@@ -13,14 +13,14 @@
 # fixture's CMakeCache.txt and compiler record itself, and a stand-in for
 # ninja answers from files in the build directory. So each control can hold
 # the shape under test, and the selftest needs neither CMake nor ninja. The
-# executable is in this platform's format alone; the controls of the other
-# format, and of every format the script refuses, read files the selftest
-# writes byte by byte. The claims:
+# claims:
 #
 #   - a record holds the commit, whether the tree is clean, the toolchain as
 #     the compiler record names it, the cache's build type and flags, the
-#     executable's symbols as nm counts them, and its string table's size as
-#     readelf or otool reports it;
+#     number of symbols nm lists for the executable, and the total length in
+#     bytes of their names;
+#   - that total is the same for a fixture built at another path, although
+#     the size of the string table holding the names is not;
 #   - each object ninja links into the target is keyed by its source's path
 #     relative to the repository, and holds the symbols nm finds defined in
 #     it. An object in the build directory which ninja does not link is left
@@ -34,11 +34,7 @@
 #     or for which nm lists nothing, are each an error;
 #   - so are an empty selection of objects, an object ninja's compilation
 #     database does not know, a source outside the repository, two objects
-#     from one source, and a failure of ninja, nm or git;
-#   - the string table's size is read from a 64-bit little-endian ELF or
-#     Mach-O file, including an ELF file with more sections than its header
-#     can count. Any other file, and one whose symbol table cannot be found
-#     or does not link to a string table, is an error.
+#     from one source, and a failure of ninja, nm or git.
 #
 # A control which checks that something is absent also checks that the run
 # succeeded, and that something beside it is present.
@@ -79,16 +75,20 @@ refuses() { # refuses <name> <pattern>: the run failed, saying why, and wrote no
   if [[ -s $out ]]; then fail "$1 wrote a record"; fi
 }
 
+value() { # value <python expression over the record d>
+  python3 -c 'import json, sys
+d = json.load(open(sys.argv[1]))
+print(eval(sys.argv[2]))' "$out" "$1" 2>&1
+}
+
 field() { # field <name> <python expression over the record d> <expected>
   local got
   total=$((total+1))
-  got=$(python3 -c 'import json, sys
-d = json.load(open(sys.argv[1]))
-print(eval(sys.argv[2]))' "$out" "$2" 2>&1)
+  got=$(value "$2")
   if [[ $got != "$3" ]]; then fail "$1 (expected $3, got $got)"; fi
 }
 
-# The fixture ------------------------------------------------------------------
+# The fixture -----------------------------------------------------------------
 
 # fixture: a repository at $repo holding a built target at $build, and the
 # files the stand-in ninja answers from, which a control may then change
@@ -96,24 +96,43 @@ fixture() {
   repo="$work/repo"; build="$repo/build/TestAll/fixture"; objects="$build/CMakeFiles/TestAll.dir"
   mkdir -p "$repo/TestAll" "$repo/Tests" "$objects" "$build/CMakeFiles/stale.dir" "$build/ninja"
   # Both translation units instantiate seq_fixture_shared<int>, so that the
-  # executable keeps one copy of what both objects define.
+  # executable keeps one copy of what both objects define. Main.cpp defines
+  # a name holding a character which UTF-8 encodes in two bytes, so that the
+  # names' total can tell bytes from characters.
   cat > "$repo/Tests/Shared.hpp" <<'EOF'
 #include <string>
 template<class T> std::string seq_fixture_shared(T t) { return std::to_string(t); }
 EOF
-  printf '#include "Shared.hpp"\nstd::string seq_fixture_a(int n) { return seq_fixture_shared(n) + "a"; }\n' > "$repo/Tests/A.cpp"
-  printf '#include "Shared.hpp"\nstd::string seq_fixture_b(int n) { return seq_fixture_shared(n) + "b"; }\nint seq_fixture_b2() { return 2; }\n' > "$repo/Tests/B.cpp"
-  printf '#include <string>\nstd::string seq_fixture_a(int);\nstd::string seq_fixture_b(int);\nint main() { return static_cast<int>((seq_fixture_a(1) + seq_fixture_b(2)).size()); }\n' > "$repo/TestAll/Main.cpp"
+  cat > "$repo/Tests/A.cpp" <<'EOF'
+#include "Shared.hpp"
+std::string seq_fixture_a(int n) { return seq_fixture_shared(n) + "a"; }
+EOF
+  cat > "$repo/Tests/B.cpp" <<'EOF'
+#include "Shared.hpp"
+std::string seq_fixture_b(int n) { return seq_fixture_shared(n) + "b"; }
+int seq_fixture_b2() { return 2; }
+EOF
+  cat > "$repo/TestAll/Main.cpp" <<'EOF'
+#include <string>
+std::string seq_fixture_a(int);
+std::string seq_fixture_b(int);
+int seq_fixture_café() { return 0; }
+int main() { return static_cast<int>((seq_fixture_a(1) + seq_fixture_b(2)).size()) + seq_fixture_café(); }
+EOF
   printf 'int seq_fixture_stale() { return 0; }\n' > "$repo/Tests/Stale.cpp"
   printf '/build\n' > "$repo/.gitignore"
   git -C "$repo" init -q
   git -C "$repo" add -A
   git -C "$repo" -c user.name=fixture -c user.email=fixture@example.com commit -q -m fixture
   local unit
+  # Debug information puts the paths of the objects, or of their sources,
+  # into the executable's string table.
   for unit in Tests/A Tests/B TestAll/Main; do
-    c++ -std=c++17 -c "$repo/$unit.cpp" -o "$objects/${unit##*/}.cpp.o" || { echo "the fixture does not compile"; exit 1; }
+    c++ -std=c++17 -g -c "$repo/$unit.cpp" -o "$objects/${unit##*/}.cpp.o" \
+      || { echo "the fixture does not compile"; exit 1; }
   done
-  c++ -c "$repo/Tests/Stale.cpp" -o "$build/CMakeFiles/stale.dir/Stale.cpp.o" || { echo "the fixture does not compile"; exit 1; }
+  c++ -c "$repo/Tests/Stale.cpp" -o "$build/CMakeFiles/stale.dir/Stale.cpp.o" \
+    || { echo "the fixture does not compile"; exit 1; }
   c++ -o "$build/TestAll" "$objects/A.cpp.o" "$objects/B.cpp.o" "$objects/Main.cpp.o" \
     || { echo "the fixture does not link"; exit 1; }
 
@@ -169,10 +188,11 @@ compilations() {
   local unit
   printf '['
   for unit in Tests/A Tests/B TestAll/Main; do
-    printf '{"directory": "%s", "command": "c++", "file": "%s", "output": "CMakeFiles/TestAll.dir/%s.cpp.o"},\n' \
+    printf '{"directory": "%s", "command": "c++", "file": "%s",\n "output": "CMakeFiles/TestAll.dir/%s.cpp.o"},\n' \
       "$build" "$repo/$unit.cpp" "${unit##*/}"
   done
-  printf '{"directory": "%s", "command": "c++", "file": "../../../Tests/Stale.cpp", "output": "CMakeFiles/stale.dir/Stale.cpp.o"},\n' "$build"
+  printf '{"directory": "%s", "command": "c++", "file": "../../../Tests/Stale.cpp",\n "output": "%s"},\n' \
+    "$build" CMakeFiles/stale.dir/Stale.cpp.o
   printf '{"directory": "%s", "command": "", "file": "x", "output": "all"}]\n' "$build"
 }
 
@@ -196,12 +216,13 @@ EOF
 chmod +x "$tmp/bin/ninja"
 
 case "$(uname -s)" in
-  Darwin) platform=Mach-O; platform_libraries="c++";             other_libraries="stdc++;m" ;;
-  *)      platform=ELF;    platform_libraries="stdc++;m;gcc_s;c"; other_libraries="c++;m"   ;;
+  Darwin) platform=Mach-O; platform_libraries="c++";             other_libraries="stdc++;m"; standard_library=libc++    ;;
+  *)      platform=ELF;    platform_libraries="stdc++;m;gcc_s;c"; other_libraries="c++;m";   standard_library=libstdc++ ;;
 esac
 
-# string_table_oracle <executable>: the size of its string table, as readelf
-# or otool reports it
+# string_table_oracle <executable>: the size of its string table, as reported
+# by readelf or otool. The path controls compare it between two fixtures, so
+# that they can tell the names' total from it
 string_table_oracle() {
   if [[ $platform == ELF ]]; then
     local size
@@ -212,6 +233,10 @@ string_table_oracle() {
   fi
 }
 
+# name_bytes_oracle <executable>: the total length in bytes of the names nm
+# lists in its POSIX format, the first field of each line
+name_bytes_oracle() { nm -P "$1" | LC_ALL=C awk '{ total += length($1) } END { print total }'; }
+
 # defined_oracle <object>: the symbols defined in it, as plain nm lists them
 defined_oracle() { nm "$1" | awk 'NF == 3' | wc -l | tr -d ' '; }
 
@@ -220,8 +245,11 @@ record_controls() {
   fixture
   head=$(git -C "$repo" rev-parse HEAD)
   symbols=$(nm "$build/TestAll" | wc -l | tr -d ' ')
-  bytes=$(string_table_oracle "$build/TestAll")
+  bytes=$(name_bytes_oracle "$build/TestAll")
   if [[ -z $bytes || $symbols -eq 0 ]]; then echo "the oracles read nothing of the fixture"; exit 1; fi
+  if ! nm "$build/TestAll" | LC_ALL=C grep -q 'seq_fixture_café'; then
+    echo "nm lists no name of the fixture whose bytes outnumber its characters"; exit 1
+  fi
 
   run "$build" TestAll
   exits "a record is written" 0
@@ -232,18 +260,20 @@ record_controls() {
                                    "[('id', 'Fixture'), ('path', '$(command -v c++)'), ('version', '1.2.3')]"
   field "the linker"               'sorted(d["toolchain"]["linker"].items())' \
                                    "[('id', 'FixtureLD'), ('path', '/fixture/ld'), ('version', '4.5')]"
-  field "the standard library"     'd["toolchain"]["standard_library"]'     "$( [[ $platform == ELF ]] && echo libstdc++ || echo libc++)"
+  field "the standard library"     'd["toolchain"]["standard_library"]'     "$standard_library"
   field "the nm"                   'd["toolchain"]["nm"]["path"]'           "$nm_path"
   field "the nm version"           'd["toolchain"]["nm"]["version"]'        "$("$nm_path" --version | grep -m1 '[0-9]' | sed 's/^ *//; s/ *$//')"
   field "the cache"                'sorted(d["cache"].items())' \
-    "[('CMAKE_BUILD_TYPE', 'Debug'), ('CMAKE_CXX_FLAGS', '-fixture-flag'), ('CMAKE_CXX_FLAGS_DEBUG', '-g'), ('CMAKE_EXE_LINKER_FLAGS', ''), ('CMAKE_EXE_LINKER_FLAGS_DEBUG', '-fixture-link-flag')]"
-  field "the format"               'd["executable"]["format"]'              "$platform"
-  field "the symbols, as nm counts them" 'd["executable"]["symbols"]'      "$symbols"
-  field "the string table's size"  'd["executable"]["string_table_bytes"]'  "$bytes"
+    "[('CMAKE_BUILD_TYPE', 'Debug'), ('CMAKE_CXX_FLAGS', '-fixture-flag'), ('CMAKE_CXX_FLAGS_DEBUG', '-g'), \
+('CMAKE_EXE_LINKER_FLAGS', ''), ('CMAKE_EXE_LINKER_FLAGS_DEBUG', '-fixture-link-flag')]"
+  field "the symbols, as nm counts them" 'd["executable"]["symbols"]'           "$symbols"
+  field "the names' total"         'd["executable"]["symbol_name_bytes"]'   "$bytes"
   field "the objects linked, keyed by source" 'sorted(d["defined_symbols_by_object"])' \
                                    "['TestAll/Main.cpp', 'Tests/A.cpp', 'Tests/B.cpp']"
-  field "an object's defined symbols"  'd["defined_symbols_by_object"]["Tests/A.cpp"]' "$(defined_oracle "$objects/A.cpp.o")"
-  field "another object's"             'd["defined_symbols_by_object"]["Tests/B.cpp"]' "$(defined_oracle "$objects/B.cpp.o")"
+  field "an object's defined symbols" 'd["defined_symbols_by_object"]["Tests/A.cpp"]' \
+                                     "$(defined_oracle "$objects/A.cpp.o")"
+  field "another object's"           'd["defined_symbols_by_object"]["Tests/B.cpp"]' \
+                                     "$(defined_oracle "$objects/B.cpp.o")"
   field "objects differ in their counts" \
     'd["defined_symbols_by_object"]["Tests/B.cpp"] - d["defined_symbols_by_object"]["Tests/A.cpp"]' 1
 
@@ -423,107 +453,33 @@ tool_controls() {
   refuses "a source directory outside a repository" 'git -C .* rev-parse --show-toplevel failed'
 }
 
-# The formats --------------------------------------------------------------------
+# The checkout's path ---------------------------------------------------------
 
-# synthetic <path> <kind>: writes a file of the kind named, byte by byte
-synthetic() {
-  python3 - "$1" "$2" <<'EOF'
-import struct, sys
-path, kind = sys.argv[1:]
+# A fixture built at a longer path holds the same names, and the paths its
+# debug information holds are longer. So the string table's size differs
+# between the two fixtures. The names' total must not.
+path_controls() {
+  local bytes table
+  fixture
+  run "$build" TestAll
+  exits "a record is written at one path" 0
+  bytes=$(value 'd["executable"]["symbol_name_bytes"]')
+  table=$(string_table_oracle "$build/TestAll")
 
-def elf(sections, ident=b"\x7fELF\x02\x01", count_in_section_0=False):
-    """An ELF header, then its section headers. Each section is
-    (sh_type, sh_size, sh_link)."""
-    shoff = 64
-    headers = b"".join(struct.pack("<IIQQQQIIQQ", 0, t, 0, 0, 0, size, link, 0, 0, 0)
-                       for t, size, link in sections)
-    shnum = 0 if count_in_section_0 else len(sections)
-    header = ident.ljust(16, b"\0") + struct.pack("<HHIQQQIHHHHHH", 2, 62, 1, 0, 0, shoff, 0, 64, 0, 0, 64, shnum, 0)
-    return header + headers
-
-def mach_o(commands, magic=b"\xcf\xfa\xed\xfe"):
-    """A Mach-O header, then its load commands, each (cmd, payload)."""
-    body = b"".join(struct.pack("<II", cmd, 8 + len(payload)) + payload for cmd, payload in commands)
-    return magic + struct.pack("<IIIIIII", 0x100000c, 0, 2, len(commands), len(body), 0, 0) + body
-
-symtab = lambda strsize: (2, struct.pack("<IIII", 0, 10, 0, strsize))
-segment = (0x19, b"\0" * 64)
-files = {
-    "elf":              elf([(0, 0, 0), (2, 48, 2), (3, 1234, 0), (3, 9999, 0)]),
-    "elf-dynsym":       elf([(0, 0, 0), (11, 48, 4), (2, 48, 3), (3, 1234, 0), (3, 77, 0)]),
-    "elf-many":         elf([(0, 4, 0), (2, 48, 2), (3, 5678, 0), (3, 99, 0)], count_in_section_0=True),
-    "elf-no-symtab":    elf([(0, 0, 0), (3, 1234, 0)]),
-    "elf-two-symtabs":  elf([(0, 0, 0), (2, 48, 3), (2, 48, 3), (3, 1234, 0)]),
-    "elf-link-other":   elf([(0, 0, 0), (2, 48, 2), (1, 1234, 0)]),
-    "elf-link-beyond":  elf([(0, 0, 0), (2, 48, 7), (3, 1234, 0)]),
-    "elf-32":           elf([(0, 0, 0), (2, 48, 2), (3, 1234, 0)], ident=b"\x7fELF\x01\x01"),
-    "elf-big-endian":   elf([(0, 0, 0), (2, 48, 2), (3, 1234, 0)], ident=b"\x7fELF\x02\x02"),
-    "elf-truncated":    elf([(0, 0, 0), (2, 48, 2), (3, 1234, 0)])[:100],
-    "mach-o":           mach_o([segment, symtab(4321), segment]),
-    "mach-o-no-symtab": mach_o([segment]),
-    "mach-o-two-symtabs": mach_o([symtab(1), symtab(2)]),
-    "mach-o-zero-command": mach_o([segment])[:32] + struct.pack("<II", 0x19, 0) + b"\0" * 64,
-    "mach-o-truncated": mach_o([symtab(4321), segment])[:-10],
-    "mach-o-32":        mach_o([symtab(4321)], magic=b"\xce\xfa\xed\xfe"),
-    "mach-o-fat":       b"\xca\xfe\xba\xbe" + b"\0" * 60,
-    "pe":               b"MZ" + b"\0" * 62,
-    "empty":            b"",
-}
-with open(path, "wb") as f:
-    f.write(files[kind])
-EOF
-}
-
-# string_table <kind>: the subject's format_and_string_table_size on a
-# synthetic file of that kind, its output in $out, its errors in $err, and its
-# exit status in $rc
-string_table() {
-  synthetic "$work/$1" "$1"
-  python3 -B -c 'import importlib.util, sys
-spec = importlib.util.spec_from_file_location("subject", sys.argv[1])
-subject = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(subject)
-print(*subject.format_and_string_table_size(sys.argv[2]))' "$subject" "$work/$1" > "$out" 2> "$err"
-  rc=$?
-}
-
-format_controls() {
-  string_table elf
-  exits "an ELF file is read" 0
-  check "an ELF file's string table is the symbol table's" yes '^ELF 1234$' "$out"
-  string_table elf-dynsym
-  exits "an ELF file with a dynamic symbol table is read" 0
-  check "a dynamic symbol table is not the symbol table" yes '^ELF 1234$' "$out"
-  string_table elf-many
-  exits "an ELF file counting its sections in section 0 is read" 0
-  check "every section counted in section 0 is read" yes '^ELF 5678$' "$out"
-  string_table elf-no-symtab;      refuses "an ELF file with no symbol table" 'has 0 symbol tables, rather than one'
-  string_table elf-two-symtabs;    refuses "an ELF file with two symbol tables" 'has 2 symbol tables, rather than one'
-  string_table elf-link-other;     refuses "a symbol table linked to another section" 'does not link to a string table'
-  string_table elf-link-beyond;    refuses "a symbol table linked beyond the sections" 'does not link to a string table'
-  string_table elf-32;             refuses "a 32-bit ELF file" 'not a 64-bit little-endian one'
-  string_table elf-big-endian;     refuses "a big-endian ELF file" 'not a 64-bit little-endian one'
-  string_table elf-truncated;      refuses "a truncated ELF file" 'is truncated'
-
-  string_table mach-o
-  exits "a Mach-O file is read" 0
-  check "a Mach-O file's string table is LC_SYMTAB's" yes '^Mach-O 4321$' "$out"
-  string_table mach-o-no-symtab;   refuses "a Mach-O file with no LC_SYMTAB" 'has 0 LC_SYMTAB commands, rather than one'
-  string_table mach-o-two-symtabs; refuses "a Mach-O file with two LC_SYMTABs" 'has 2 LC_SYMTAB commands, rather than one'
-  string_table mach-o-zero-command; refuses "a load command of size 0" 'has a load command of size 0'
-  string_table mach-o-truncated;   refuses "a truncated Mach-O file" 'is truncated'
-
-  local kind
-  for kind in mach-o-32 mach-o-fat pe empty; do
-    string_table "$kind"
-    refuses "a file of kind $kind" 'is neither a 64-bit little-endian ELF file nor'
-  done
+  work="$work/a/longer/path"; mkdir -p "$work"
+  fixture
+  if [[ -z $table || $(string_table_oracle "$build/TestAll") == "$table" ]]; then
+    echo "the fixture's string table has the same size at both paths, so it cannot tell the rival"; exit 1
+  fi
+  run "$build" TestAll
+  exits "a record is written at a longer path" 0
+  field "the names' total does not depend on the path" 'd["executable"]["symbol_name_bytes"]' "$bytes"
 }
 
 run_controls() { # run_controls <script>: sets fails, and total, the controls run
   subject=$1 fails=0 total=0
   local control
-  for control in record_controls record_selection_controls object_controls tool_controls format_controls; do
+  for control in record_controls path_controls record_selection_controls object_controls tool_controls; do
     work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
     "$control"
   done
@@ -559,7 +515,7 @@ MUTATIONS = [
     ('a library matched within a name',  'if library in linked]', 'if any(library in name for name in linked)]'),
     ('two standard libraries accepted',  'if len(named) != 1:', 'if not named:'),
     ('no standard library accepted',     'if len(named) != 1:', 'if len(named) > 1:'),
-    ('the symbols not consulted',        'if any(LIBCXX_NAMESPACE in line for line in listed) != (library == "libc++"):',
+    ('the symbols not consulted',        'if any(LIBCXX_NAMESPACE in name for name in listed) != (library == "libc++"):',
                                          'if False:'),
     ('an empty listing accepted',        'if not listed:\n        sys.exit(f"nm lists no symbols', 'if False:\n        sys.exit(f"nm lists no symbols'),
     ('the PATH nm run',                  'listed = symbols(nm, executable)', 'listed = symbols("nm", executable)'),
@@ -576,22 +532,14 @@ MUTATIONS = [
                                          'os.path.join(compilation["directory"], compilation["file"])', 'compilation["file"]'),
     ('a shared source overwritten',      'if key in out:', 'if False:'),
     ('a bad database crashes',           'except (json.JSONDecodeError, TypeError, KeyError) as e:', 'except json.JSONDecodeError as e:'),
-    ('ELF of any class',                 'if (elf_class, data_encoding) != (2, 1):', 'if data_encoding != 1:'),
-    ('ELF of any byte order',            'if (elf_class, data_encoding) != (2, 1):', 'if elf_class != 2:'),
-    ('the section count in the header only', 'if shnum == 0 and shoff:', 'if False:'),
-    ('the first symbol table of several','if len(symbol_tables) != 1:', 'if not symbol_tables:'),
-    ('a symbol table linked anywhere',   'if link >= len(sections) or sections[link][0] != SHT_STRTAB:', 'if link >= len(sections):'),
-    ('a link beyond the sections crashes', 'if link >= len(sections) or sections[link][0]', 'if sections[link][0]'),
-    ('the dynamic symbol table read',    'symbol_tables = [s for s in sections if s[0] == SHT_SYMTAB]',
-                                         'symbol_tables = [s for s in sections if s[0] in (SHT_SYMTAB, 11)][-1:]'),
-    ('the largest string table read',    'return sections[link][1]', 'return max(s[1] for s in sections if s[0] == SHT_STRTAB)'),
-    ('a truncated read accepted',        'if len(data) != size:', 'if False:'),
-    ('a zero-sized command loops',       'if cmdsize == 0:\n            sys.exit', 'if False:\n            sys.exit'),
-    ('the last LC_SYMTAB of several',    'if len(sizes) != 1:', 'if not sizes:'),
-    ('a symbol table entry for its strings',
-                                         'sizes.append(struct.unpack_from("<IIII", commands, offset + 8)[3])',
-                                         'sizes.append(struct.unpack_from("<IIII", commands, offset + 8)[1])'),
-    ('any magic read as Mach-O',         'if magic == MACH_O_MAGIC:', 'if True:'),
+    ('the newline counted',              'len(name.encode("utf-8")) for name in listed',
+                                         'len(name.encode("utf-8")) + 1 for name in listed'),
+    ('characters counted, not bytes',    'len(name.encode("utf-8")) for name in listed', 'len(name) for name in listed'),
+    ('the names demangled',              '[nm, "--format=just-symbols", *options, path]',
+                                         '[nm, "--format=just-symbols", "--demangle", *options, path]'),
+    ('the POSIX lines summed',           '[nm, "--format=just-symbols", *options, path]', '[nm, "-P", *options, path]'),
+    ('debugging symbols listed',         'listed = symbols(nm, executable)', 'listed = symbols(nm, executable, "-a")'),
+    ('the defined names alone summed',   'for name in listed)},', 'for name in symbols(nm, executable, "--defined-only"))},'),
     ('the nm version from the first line', 'if re.search(r"\\d", line)]', 'if line]'),
     ('no nm version accepted',           'if not lines:\n        sys.exit(f"{nm} --version', 'if False:\n        sys.exit(f"{nm} --version'),
     ('a dirty tree called clean',        '"clean": run(["git", "-C", root, "status", "--porcelain", "--untracked-files=all"]) == "",',
