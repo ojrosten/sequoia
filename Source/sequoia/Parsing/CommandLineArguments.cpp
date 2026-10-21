@@ -222,6 +222,19 @@ namespace sequoia::parsing::commandline
       return sections;
     }
 
+    void throw_if_any_tree_empty(const options_forest& options)
+    {
+      auto isEmpty{[](const options_tree& tree){ return tree.order() == 0; }};
+      if(const auto emptyTree{std::ranges::find_if(options, isEmpty)};
+         emptyTree != options.end())
+      {
+        throw std::invalid_argument{
+          error(std::format("tree at index {} of the options forest is empty",
+                            std::ranges::distance(options.begin(), emptyTree)))
+        };
+      }
+    }
+
     void throw_if_any_spelt_as_help_request(const options_forest& options)
     {
       for(const auto& tree : options)
@@ -231,7 +244,7 @@ namespace sequoia::parsing::commandline
           auto isSpeltAsHelpRequest{[](const proper_string& s){ return is_help_request(s); }};
           if(isSpeltAsHelpRequest(opt.name) || std::ranges::any_of(opt.aliases, isSpeltAsHelpRequest))
           {
-            throw std::logic_error{
+            throw std::invalid_argument{
               error(std::format("option \"{}\" is spelt as a help request", std::string_view{opt.name}))
             };
           }
@@ -247,7 +260,7 @@ namespace sequoia::parsing::commandline
          unbound != topLevelOptions.end())
       {
         const option& opt{root_weight(*unbound)};
-        throw std::logic_error{
+        throw std::invalid_argument{
           error(std::format("option \"{}\" is not bound to a function object", std::string_view{opt.name}))
         };
       }
@@ -524,6 +537,7 @@ namespace sequoia::parsing::commandline
   [[nodiscard]]
   outcome parse(int argc, char** argv, const options_forest& options)
   {
+    throw_if_any_tree_empty(options);
     throw_if_any_spelt_as_help_request(options);
     throw_if_any_top_level_option_unbound(options);
 

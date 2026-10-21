@@ -46,17 +46,19 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>("Empty name",      []() { return option{"", {}, {}, fo{}}; });
     check_exception_thrown<std::logic_error>("Empty alias",     []() { return option{"test", {""}, {}, fo{}}; });
     check_exception_thrown<std::logic_error>("Empty parameter", []() { return option{"test", {}, {""}, fo{}}; });
-    check_exception_thrown<std::out_of_range>("Empty tree", [](){
+    check_exception_thrown<std::invalid_argument>("Empty tree", [](){
       return parse({{"foo"}}, {{{"--async", {}, {}, fo{}}},
+                               options_tree{},
                                options_tree{}});
     });
-    check_exception_thrown<std::logic_error>("Top-level option with neither invocable", [](){
+    check_exception_thrown<std::invalid_argument>("Top-level option with neither invocable", [](){
       return parse({{"foo", "--async"}}, {{{"--async", {}, {}}}});
     });
-    check_exception_thrown<std::logic_error>("Top-level option with neither invocable, though not encountered", [](){
-      return parse({{"foo", "--async"}}, {{{"--async",   {}, {}, fo{}}},
-                                          {{"--verbose", {}, {}}}});
-    });
+    check_exception_thrown<std::invalid_argument>("Top-level option with neither invocable, though not encountered",
+      [](){
+        return parse({{"foo", "--async"}}, {{{"--async",   {}, {}, fo{}}},
+                                            {{"--verbose", {}, {}}}});
+      });
 
     check(weak_equivalence, "", parsing::commandline::parse(0, nullptr, {}), outcome{});
  
@@ -253,20 +255,20 @@ namespace sequoia::testing
                outcome{"foo", {}},
                "FlatParsingHelp/ShortFlagAlone.txt");
 
-    check_exception_thrown<std::logic_error>("An option named as a help request", [](){
+    check_exception_thrown<std::invalid_argument>("An option named as a help request", [](){
       return parse({{"foo"}}, {{{"--help", {}, {}, fo{}}}});
     });
 
-    check_exception_thrown<std::logic_error>("An option named as a help request, and with neither invocable", [](){
+    check_exception_thrown<std::invalid_argument>("An option named as a help request, and with neither invocable", [](){
       return parse({{"foo"}}, {{{"--help", {}, {}}}});
     });
 
-    check_exception_thrown<std::logic_error>("An empty tree, before an option named as a help request", [](){
+    check_exception_thrown<std::invalid_argument>("An empty tree, before an option named as a help request", [](){
       return parse({{"foo"}}, {options_tree{},
                                {{"--help", {}, {}, fo{}}}});
     });
 
-    check_exception_thrown<std::logic_error>("A nested option aliased as a help request", [](){
+    check_exception_thrown<std::invalid_argument>("A nested option aliased as a help request", [](){
       return parse({{"foo"}}, {{{"create", {"c"}, {}, fo{}, {}, "", {{"--header", {"-h"}, {"header"}}}}}});
     });
 

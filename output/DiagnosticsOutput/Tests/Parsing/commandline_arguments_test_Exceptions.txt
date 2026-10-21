@@ -29,30 +29,30 @@ Tests/Parsing/CommandLineArgumentsTest.cpp, Line 49
 Empty tree
 
 Expected Exception Type:
-[std::out_of_range]
-connectivity::root_weight_iter: node index 0 out of range - graph order is 0
+[std::invalid_argument]
+  Error: tree at index 1 of the options forest is empty
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 53
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 54
 Top-level option with neither invocable
 
 Expected Exception Type:
-[std::logic_error]
+[std::invalid_argument]
   Error: option "--async" is not bound to a function object
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 56
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 57
 Top-level option with neither invocable, though not encountered
 
 Expected Exception Type:
-[std::logic_error]
+[std::invalid_argument]
   Error: option "--verbose" is not bound to a function object
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 93
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 95
 Typo in argument
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 97
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 99
 Alias mismatch
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 101
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 103
 Missing alias
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 105
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 107
 Extra space in argument
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 130
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 132
 Concatenated alias with only partial match
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 134
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 136
 Concatenated alias naming an option with parameters
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 139
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 141
 Concatenated alias naming an option with nested options
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 144
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 146
 Concatenated aliases without the leading dash
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 148
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 150
 A dash after something other than a dash
 
 Expected Exception Type:
@@ -133,7 +133,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 173
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 175
 Final argument missing
 
 Expected Exception Type:
@@ -142,43 +142,43 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 256
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 258
 An option named as a help request
 
 Expected Exception Type:
-[std::logic_error]
+[std::invalid_argument]
   Error: option "--help" is spelt as a help request
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 260
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 262
 An option named as a help request, and with neither invocable
 
 Expected Exception Type:
-[std::logic_error]
+[std::invalid_argument]
   Error: option "--help" is spelt as a help request
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 264
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 266
 An empty tree, before an option named as a help request
 
 Expected Exception Type:
-[std::logic_error]
-  Error: option "--help" is spelt as a help request
+[std::invalid_argument]
+  Error: tree at index 0 of the options forest is empty
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 269
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 271
 A nested option aliased as a help request
 
 Expected Exception Type:
-[std::logic_error]
+[std::invalid_argument]
   Error: option "--header" is spelt as a help request
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 326
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 328
 A nested option, not bound to a function object, missing its argument
 
 Expected Exception Type:
@@ -187,7 +187,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 332
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 334
 A nested option, not bound to a function object, missing two of its three arguments
 
 Expected Exception Type:
@@ -196,7 +196,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 338
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 340
 A dash after something other than a dash, at a nested level
 
 Expected Exception Type:
@@ -205,7 +205,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 454
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 456
 Two options, one with nesting, illegal argument
 
 Expected Exception Type:
