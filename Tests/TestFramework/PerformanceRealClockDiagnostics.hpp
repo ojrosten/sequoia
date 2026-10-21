@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class timed_computation_false_positive_diagnostics final : public performance_false_positive_test
+  class performance_real_clock_false_positive_diagnostics final : public performance_false_positive_test
   {
   public:
     using performance_false_positive_test::performance_false_positive_test;

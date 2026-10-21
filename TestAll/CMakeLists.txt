@@ -195,6 +195,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PathFreeDiagnostics.cpp
                ${TestDir}/TestFramework/PerformanceExceptionsTest.cpp
+               ${TestDir}/TestFramework/PerformanceRealClockDiagnostics.cpp
                ${TestDir}/TestFramework/PerformanceRetryTest.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
                ${TestDir}/TestFramework/PerformanceUtilitiesFreeTest.cpp
@@ -222,7 +223,6 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/TestRunnerSerialExecutionFreeTest.cpp
                ${TestDir}/TestFramework/TestRunnerTest.cpp
                ${TestDir}/TestFramework/TestRunnerTestCreation.cpp
-               ${TestDir}/TestFramework/TimedComputationDiagnostics.cpp
                ${TestDir}/TestFramework/VersionedOutputFreeTest.cpp
                ${TestDir}/TextProcessing/CharactersFreeTest.cpp
                ${TestDir}/TextProcessing/IndentFreeTest.cpp

@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "TimedComputationDiagnostics.hpp"
+#include "PerformanceRealClockDiagnostics.hpp"
 
 #include <algorithm>
 #include <cstdint>
@@ -38,17 +38,17 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path timed_computation_false_positive_diagnostics::source_file()
+  std::filesystem::path performance_real_clock_false_positive_diagnostics::source_file()
   {
     return std::source_location::current().file_name();
   }
 
-  void timed_computation_false_positive_diagnostics::run_tests()
+  void performance_real_clock_false_positive_diagnostics::run_tests()
   {
     test_computations_not_optimized_away();
   }
 
-  void timed_computation_false_positive_diagnostics::test_computations_not_optimized_away()
+  void performance_real_clock_false_positive_diagnostics::test_computations_not_optimized_away()
   {
     // Nothing but do_not_optimize_away uses the result of either task's
     // computation. Without do_not_optimize_away, an optimized build removes
