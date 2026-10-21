@@ -361,6 +361,7 @@ namespace sequoia::testing
       int* p{};
 
       check(equality, "Equality of null pointer with itself", p, p);
+      check(equivalence, "Equivalence of null pointer with itself", p, p);
       check(equality, "Equality of non-null pointer with itself", &x, &x);
       check(equivalence, "Different pointers pointing to the same values", &x, &y);
     }
