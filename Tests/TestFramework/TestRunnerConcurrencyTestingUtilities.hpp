@@ -88,13 +88,13 @@ namespace sequoia::testing
       -# Such a test is registered with two runners which execute at the
          same time.
 
-      `Family` must be declared in an anonymous namespace, so that only the
-      tests of one translation unit can use the family. If two units used
-      one family, each would define the family's shared state as a weak
-      symbol. gcc on macOS may address a unit's `std::source_location` data
-      relative to such a symbol, and the linker may take the symbol from the
-      other unit (GCC PR 126723). A test may then report the other unit's
-      file as its source.
+      Due to a current GCC bug (PR 126723), `Family` must be declared in an
+      anonymous namespace, so that only the tests of one translation unit can
+      use the family. If two units used one family, each would define the
+      family's shared state as a weak symbol. gcc on macOS may address a unit's
+      `std::source_location` data relative to such a symbol, and the linker may
+      take the symbol from the other unit. A test may then report the other
+      unit's file as its source.
    */
   template<class Family>
   class test_which_sleeps_base : public free_test
