@@ -83,20 +83,27 @@ namespace sequoia
         identifier, so threads sharing a kqueue would replace each other's
         timers.
 
-        Away from macOS, the function has no such timer, and returns false
-        at once.
-
-        \returns false, possibly before `deadline`, if the kqueue fails.
+        \returns
+        -# `timer_request_outcome::failed`, possibly before `deadline`, if the
+           kqueue cannot be created, refuses a timer, or fails while waiting;
+        -# `timer_request_outcome::granted` if a timer fires;
+        -# `timer_request_outcome::not_observed` if a signal interrupts every
+           wait;
+        -# `timer_request_outcome::not_made` if `deadline` passes before the
+           first wait, or away from macOS.
      */
     [[nodiscard]]
-    bool try_precise_sleep_until([[maybe_unused]] std::chrono::steady_clock::time_point deadline)
+    timer_request_outcome try_precise_sleep_until([[maybe_unused]] std::chrono::steady_clock::time_point deadline)
     {
       #ifdef __APPLE__
         static thread_local const kqueue_descriptor queue{};
         if(queue.get() < 0)
-          return false;
+          return timer_request_outcome::failed;
 
-        for(auto now{std::chrono::steady_clock::now()}; now < deadline; now = std::chrono::steady_clock::now())
+        auto outcome{timer_request_outcome::not_made};
+        for(auto now{std::chrono::steady_clock::now()};
+            (now < deadline) && (outcome != timer_request_outcome::failed);
+            now = std::chrono::steady_clock::now())
         {
           const auto remaining{std::chrono::ceil<std::chrono::nanoseconds>(deadline - now)};
           struct kevent64_s request{}, fired{};
@@ -113,18 +120,26 @@ namespace sequoia
                    0);
 
           const int events{kevent64(queue.get(), &request, 1, &fired, 1, 0, nullptr)};
-          if((events < 0) && (errno != EINTR))
-            return false;
 
-          // The kernel reports a refused registration as an event flagged
-          // EV_ERROR
-          if((events == 1) && (fired.flags & EV_ERROR))
-            return false;
+          if(const bool interrupted{(events < 0) && (errno == EINTR)}; interrupted)
+          {
+            if(outcome == timer_request_outcome::not_made)
+              outcome = timer_request_outcome::not_observed;
+          }
+          else
+          {
+            const bool waitFailed{events < 0};
+            // The kernel reports a refused registration as an event flagged
+            // EV_ERROR
+            const bool registrationRefused{(events == 1) && (fired.flags & EV_ERROR)};
+            outcome = (waitFailed || registrationRefused) ? timer_request_outcome::failed
+                                                          : timer_request_outcome::granted;
+          }
         }
 
-        return true;
+        return outcome;
       #else
-        return false;
+        return timer_request_outcome::not_made;
       #endif
     }
   }
@@ -191,34 +206,46 @@ namespace sequoia
           if(m_Period > 0)
             timeEndPeriod(m_Period);
         }
+
+        [[nodiscard]]
+        timer_request_outcome outcome() const noexcept
+        {
+          return m_Period > 0 ? timer_request_outcome::granted : timer_request_outcome::failed;
+        }
       private:
         unsigned int m_Period{};
       };
     }
   #endif
 
-  void set_finest_windows_timer_resolution()
+  timer_request_outcome set_finest_windows_timer_resolution()
   {
     #ifdef _WIN32
       // Without a request for a timer resolution, Windows ends a sleep only on a tick of its default timer.
       // The timer ticks about every 15.6 ms, so each sleep is rounded up to a whole number of ticks.
       static const finest_timer_resolution resolution{};
+      return resolution.outcome();
+    #else
+      return timer_request_outcome::not_made;
     #endif
   }
 
-  void precise_sleep_for(std::chrono::nanoseconds duration)
+  timer_request_outcome precise_sleep_for(std::chrono::nanoseconds duration)
   {
     if(duration <= std::chrono::nanoseconds::zero())
-      return;
+      return timer_request_outcome::not_made;
 
     using clock = std::chrono::steady_clock;
     const auto now{clock::now()};
     const auto deadline{duration < clock::time_point::max() - now ? now + duration : clock::time_point::max()};
-    if(try_precise_sleep_until(deadline))
-      return;
+    const auto outcome{try_precise_sleep_until(deadline)};
+    if(outcome != timer_request_outcome::granted)
+    {
+      if(const auto remaining{deadline - clock::now()}; remaining > remaining.zero())
+        std::this_thread::sleep_for(remaining);
+    }
 
-    if(const auto remaining{deadline - clock::now()}; remaining > remaining.zero())
-      std::this_thread::sleep_for(remaining);
+    return outcome;
   }
 
   debug_report_redirector::debug_report_redirector()

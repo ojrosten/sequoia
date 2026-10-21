@@ -34,6 +34,8 @@ namespace sequoia::testing
 
     void test_non_positive_durations();
 
+    void test_attempt_number_out_of_range();
+
     void test_more_atypical_trials_than_trials();
 
     void test_odd_number_of_trials();

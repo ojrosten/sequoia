@@ -24,5 +24,11 @@ namespace sequoia::testing
     void run_tests();
   private:
     void test_coarse_sleep();
+
+    void test_combination_of_timer_request_outcomes();
+
+    void test_coarse_sleep_messages();
+
+    void test_outcomes_without_a_request();
   };
 }

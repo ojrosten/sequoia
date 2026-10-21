@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "TestRunnerReportedDurationsFreeTest.hpp"
+#include "FakeProjectTestingUtilities.hpp"
 #include "TestRunnerTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/FloatingPointDurations.hpp"
@@ -164,12 +165,6 @@ namespace sequoia::testing
     return std::source_location::current().file_name();
   }
 
-  [[nodiscard]]
-  fs::path test_runner_reported_durations_free_test::minimal_fake_path() const
-  {
-    return auxiliary_materials() /= "FakeProject/build/CMade/FakeExe.txt";
-  }
-
   void test_runner_reported_durations_free_test::check_output(std::string_view description,
                                                               std::string_view dirName,
                                                               const std::stringstream& output)
@@ -195,7 +190,7 @@ namespace sequoia::testing
   void test_runner_reported_durations_free_test::test_runner_overhead_reported_apart()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{minimal_fake_path().generic_string(), "--serial"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "--serial")};
     auto runner{make_fake_project_runner(args, outputStream)};
     runner.register_test<slow_to_summarize_test_0>();
     check(equality, "Runner overhead return code", runner.execute(), return_code::success);
@@ -243,7 +238,7 @@ namespace sequoia::testing
   void test_runner_reported_durations_free_test::test_execution_duration_of_busiest_thread()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{minimal_fake_path().generic_string(), "--thread-pool", "2"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "--thread-pool", "2")};
     auto runner{make_fake_project_runner(args, outputStream)};
     runner.register_test<unparallelizable_slow_to_summarize_test>();
     runner.register_test<slow_to_summarize_test_0>();

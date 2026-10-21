@@ -639,17 +639,10 @@ jobs:
           ../scripts/snapshot_at_deadline.sh "$deadline" "$RUNNER_TEMP/repeat-snapshot.txt" TestAll -- \
             cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/repeat.log"
 
-      # An advisory column does not gate, so this step reads its run. Not
-      # every failure there is a defect: TestRunnerPerformanceTest asserts
-      # absolute durations, eight 25ms sleeps against a window of 60ms +- 35,
-      # which a shared hosted runner may not hold. There, the same commit took
-      # 196ms and 603ms of wall-clock time. Every other failure is a defect.
-      #
-      # The step classifies a failure by the test that failed, not by the
-      # summary row. The timing assertions are `check(within_tolerance{...},
-      # ...)`, which count in the standard row; the performance rows count
-      # only `check_relative_performance`. The step names every failing file,
-      # so a new failure cannot hide behind a tolerated one.
+      # An advisory column does not gate, so a failing test cannot make the
+      # suite step red. This step reads the first pass's log, and raises an
+      # error naming every test file the log cites with a failure. A second
+      # pass's log, where the column runs one, is not read.
       #
       # Drift is a second thing the suite step cannot make red here. Where the
       # column checks the versioned output, a run whose output moved writes the
@@ -668,13 +661,8 @@ jobs:
             exit 0
           fi
 
-          # Tests whose failures are understood: timing assertions a hosted
-          # runner cannot hold.
-          tolerated_tests='TestRunnerPerformanceTest\.cpp'
-
           failing=$({ grep -oE 'Tests/[A-Za-z0-9/_]+\.cpp, Line [0-9]+' "$log" || true; } \
                       | sed 's/, Line.*//' | sort -u)
-          actionable=$({ echo "$failing" | grep -vE "$tolerated_tests" || true; } | sed '/^$/d')
 
           # The step reads the files' names from the `diff --git` headers,
           # which every file in the patch has. A removed file has no `+++ b/`
@@ -703,11 +691,9 @@ jobs:
           if [ -n "$drifted" ]; then
             echo "::error title=Advisory run needs action::${{ matrix.name }}: versioned output moved: $(echo "$drifted" | tr '\n' ' '). This column does not gate, so the job is green; the patch is on this page, or in the artifact if too big for it."
           fi
-          if [ -n "$actionable" ]; then
-            echo "::error title=Advisory run needs action::${{ matrix.name }}: $(echo "$actionable" | tr '\n' ' '). This column does not gate, so the job is green; the failures are real."
-          elif [ -n "$failing" ]; then
-            echo "::warning title=Advisory run::${{ matrix.name }}: only the timing assertions this runner cannot hold. Nothing to act on."
-          elif [ '${{ steps.suite.outcome }}' != 'success' ]; then
+          if [ -n "$failing" ]; then
+            echo "::error title=Advisory run needs action::${{ matrix.name }}: $(echo "$failing" | tr '\n' ' '). This column does not gate, so the job is green."
+          elif [ -z "$drifted" ] && [ '${{ steps.suite.outcome }}' != 'success' ]; then
             # The suite step failed, yet named no test and wrote no patch: a
             # crash, a timeout or something else cut the run short. The suite
             # did not pass, whatever the log's last lines say.

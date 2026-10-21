@@ -1,0 +1,3 @@
+  Warning: Sleeps of 5.0 ms repeatedly lasted 15.2 ms or more, so timings built on sleeps are unreliable
+           The likely cause is that a request for a precise timer failed, so a sleep fell back to a plain sleep
+

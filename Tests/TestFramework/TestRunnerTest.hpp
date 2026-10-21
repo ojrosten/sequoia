@@ -9,6 +9,8 @@
 
 /** \file */
 
+#include "FakeProjectTestingUtilities.hpp"
+
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
@@ -159,15 +161,6 @@ namespace sequoia::testing
                                    std::string_view numRuns,
                                    return_code expected,
                                    Ts&&... ts);
-
-    [[nodiscard]]
-    std::filesystem::path fake_project() const;
-
-    [[nodiscard]]
-    std::filesystem::path minimal_fake_path() const;
-
-    [[nodiscard]]
-    std::string zeroth_arg() const;
 
     void write(std::string_view dirName, std::stringstream& output) const;
 
