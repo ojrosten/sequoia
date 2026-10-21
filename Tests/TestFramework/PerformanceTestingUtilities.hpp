@@ -189,8 +189,9 @@ namespace sequoia::testing
   /** \brief Returns a task which advances `clock` by each of `durations` in
              turn, starting again after the last.
 
-      Every copy of the task shares one count of the calls made, so any
-      `N` consecutive calls advance `clock` by each duration once.
+      Every copy of the task advances `clock` itself, and shares one count
+      of the calls made, so any `N` consecutive calls advance `clock` by each
+      duration once.
    */
   template<std::size_t N>
   [[nodiscard]]
@@ -204,8 +205,8 @@ namespace sequoia::testing
   /** \brief A task which advances a `scripted_clock`, and counts its
              invocations.
 
-      Every copy of the task shares one count of the invocations, so the
-      count covers every trial of every attempt.
+      Every copy of the task advances the same clock, and shares one count
+      of the invocations, so the count covers every trial of every attempt.
    */
   class counted_scripted_task
   {
@@ -253,6 +254,6 @@ namespace sequoia::testing
   using basic_scripted_clock_test = basic_test<Mode, performance_extender<Mode>>;
 
   using scripted_clock_test                = basic_scripted_clock_test<test_mode::standard>;
-  using scripted_clock_false_negative_test = basic_scripted_clock_test<test_mode::false_negative>;
   using scripted_clock_false_positive_test = basic_scripted_clock_test<test_mode::false_positive>;
+  using scripted_clock_false_negative_test = basic_scripted_clock_test<test_mode::false_negative>;
 }

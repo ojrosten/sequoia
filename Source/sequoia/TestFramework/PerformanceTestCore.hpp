@@ -235,7 +235,7 @@ namespace sequoia::testing
       return {first(), std::move(secondResult)};
     }
 
-    /** \brief Returns the duration of a call of each task, as read from
+    /** \brief Returns the duration of a call of each task, as measured by
                `clock`, with the tasks called in `order`.
      */
     template<performance_task F, performance_task S, performance_clock Clock>
@@ -252,7 +252,7 @@ namespace sequoia::testing
     }
 
     /** \brief Returns the duration of a call of a task and of its baseline,
-               as read from `clock`, with the two called in `order`.
+               as measured by `clock`, with the two called in `order`.
      */
     template<performance_task T, performance_task B, performance_clock Clock>
     [[nodiscard]]
@@ -267,7 +267,7 @@ namespace sequoia::testing
     }
 
     /** \brief Returns the duration of a call of each task and of each
-               baseline, as read from `clock`, with the four called in
+               baseline, as measured by `clock`, with the four called in
                `order`.
      */
     template<performance_task F, performance_task FB, performance_task S, performance_task SB, performance_clock Clock>
@@ -293,9 +293,11 @@ namespace sequoia::testing
       }
     };
 
-    /** \brief Returns the durations of the tasks, as read from `clock`, in
-               one trial for each element of `orders`, which gives the order
-               in which that trial calls the tasks.
+    /** \brief Returns the durations of the tasks in one trial for each
+               element of `orders`, as measured by `clock`.
+
+        Each element of `orders` gives the order in which its trial calls
+        the tasks.
      */
     template<class Fast, class Slow, class Order, class Clock>
       requires one_trial_timeable_v<Fast, Slow, Order, Clock>
@@ -317,8 +319,8 @@ namespace sequoia::testing
       return trialDurations;
     }
 
-    /** \brief Returns the durations of the tasks, as read from `clock`, in
-               each of `numTrials` trials.
+    /** \brief Returns the durations of the tasks in each of `numTrials`
+               trials, as measured by `clock`.
 
         `generator` chooses the order of the tasks in each trial.
      */
@@ -333,8 +335,8 @@ namespace sequoia::testing
       return impl::time_each_trial(fast, slow, shuffled_call_orders(numTrials, generator), clock);
     }
 
-    /** \brief Returns the durations of the tasks and their baselines, as read
-               from `clock`, in each of `numTrials` trials.
+    /** \brief Returns the durations of the tasks and their baselines in each
+               of `numTrials` trials, as measured by `clock`.
 
         `generator` chooses the order of the tasks and baselines in each
         trial.
@@ -472,13 +474,13 @@ namespace sequoia::testing
        \param slow        The task against which fast is compared
        \param parameters  The predicted interval of speed-ups, and the fewest
                           trials allowed in any attempt
-       \param clock       The clock from which each duration is read
+       \param clock       The clock which measures each duration
 
        The check makes up to A attempts, where A is
        `relative_performance_max_attempts`. Each attempt runs an even number
        of trials, at least `parameters.minimum_trials`. Each trial runs both
-       tasks, and times each. The fast task runs first in half of an
-       attempt's trials, chosen at random.
+       tasks, and times each by reading `clock` itself, never a copy. The
+       fast task runs first in half of an attempt's trials, chosen at random.
 
        Each trial runs its own copy of each task, made before the timing
        starts. So state a task holds by value starts afresh in every trial,
@@ -544,7 +546,7 @@ namespace sequoia::testing
                           baseline
        \param parameters  The predicted interval of speed-ups, and the fewest
                           trials allowed in any attempt
-       \param clock       The clock from which each duration is read
+       \param clock       The clock which measures each duration
 
        The check is the one which the overload of `check_relative_performance`
        taking two tasks makes, with these differences:

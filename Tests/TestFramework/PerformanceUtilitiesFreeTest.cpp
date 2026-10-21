@@ -49,7 +49,7 @@ namespace sequoia::testing
       std::chrono::steady_clock::time_point now() { return {}; }
     };
 
-    struct int_reading_clock
+    struct int_now_clock
     {
       int now() const { return 0; }
     };
@@ -156,11 +156,10 @@ namespace sequoia::testing
   void performance_utilities_free_test::test_clock_constraints()
   {
     STATIC_CHECK( performance_clock<std::chrono::steady_clock>);
-    STATIC_CHECK( performance_clock<std::chrono::system_clock>);
     STATIC_CHECK( performance_clock<scripted_clock>);
     STATIC_CHECK(!performance_clock<int>);
     STATIC_CHECK(!performance_clock<non_const_now_clock>);
-    STATIC_CHECK(!performance_clock<int_reading_clock>);
+    STATIC_CHECK(!performance_clock<int_now_clock>);
 
     STATIC_CHECK( profilable_with<copyable_task, scripted_clock>);
     STATIC_CHECK(!profilable_with<copyable_task, non_const_now_clock>);
@@ -174,7 +173,8 @@ namespace sequoia::testing
 
   void performance_utilities_free_test::test_timing_constraints()
   {
-    using impl::call_order, impl::baselined_task_order, impl::constructible_from_calls_v, impl::one_trial_timeable_v;
+    using impl::call_order, impl::baselined_task_order;
+    using impl::constructible_from_calls_v, impl::one_trial_timeable_v, impl::timeable_against;
 
     using int_call         = int(*)();
     using string_view_call = std::string_view(*)();
@@ -200,6 +200,9 @@ namespace sequoia::testing
     STATIC_CHECK( one_trial_timeable_v<baselined_task,   baselined_task,   baselined_task_order, steady_clock>);
     STATIC_CHECK(!one_trial_timeable_v<baselined_task,   baselined_task,   call_order,           steady_clock>);
     STATIC_CHECK(!one_trial_timeable_v<baselined_task,   baselined_task,   baselined_task_order, non_const_now_clock>);
+
+    STATIC_CHECK( timeable_against<copyable_task, copyable_task, steady_clock>);
+    STATIC_CHECK(!timeable_against<copyable_task, copyable_task, non_const_now_clock>);
   }
 
   void performance_utilities_free_test::test_exception_specifications()

@@ -19,7 +19,7 @@ namespace sequoia::testing
 {
   namespace
   {
-    constexpr std::chrono::milliseconds duration_unit{2};
+    constexpr std::chrono::milliseconds unit_duration{2};
 
     /** \brief Parameters with an odd minimum, so that the number of trials
                in an attempt shows how it is rounded: 11 becomes 12 in attempt
@@ -51,8 +51,8 @@ namespace sequoia::testing
   void performance_retry_test::test_pass_at_second_attempt()
   {
     scripted_clock clock{};
-    const counted_scripted_task fast{clock, duration_unit},
-                                slow{clock, duration_unit, trials_per_attempt_for_minimum_11[0], 2 * duration_unit};
+    const counted_scripted_task fast{clock, unit_duration},
+                                slow{clock, unit_duration, trials_per_attempt_for_minimum_11[0], 2 * unit_duration};
 
     check_relative_performance("A speed-up of 1, then of 2", fast, slow, retry_parameters, clock);
     check(equality, "Calls of the fast task", fast.calls(), trials_before_nth_attempt(trials_per_attempt_for_minimum_11, 3));
@@ -68,11 +68,11 @@ namespace sequoia::testing
     STATIC_CHECK(everyAttemptsTrials <= maximumCalls);
 
     scripted_clock clock{};
-    const counted_scripted_task fast{clock, duration_unit},
+    const counted_scripted_task fast{clock, unit_duration},
                                 slow{clock,
-                                     duration_unit,
+                                     unit_duration,
                                      trials_before_nth_attempt(trials_per_attempt_for_minimum_11, 3),
-                                     2 * duration_unit};
+                                     2 * unit_duration};
 
     check_relative_performance("A speed-up of 1 until the final attempt, then of 2",
                                fast,
@@ -170,13 +170,13 @@ namespace sequoia::testing
         };
 
         check_relative_performance(description,
-                                   recordedTask(task::fast, counted_scripted_task{clock, duration_unit}),
+                                   recordedTask(task::fast, counted_scripted_task{clock, unit_duration}),
                                    recordedTask(task::slow,
                                                 counted_scripted_task{
                                                   clock,
-                                                  duration_unit,
+                                                  unit_duration,
                                                   trials_before_nth_attempt(trials_per_attempt_for_minimum_11, 3),
-                                                  2 * duration_unit
+                                                  2 * unit_duration
                                                 }),
                                    retry_parameters,
                                    clock);

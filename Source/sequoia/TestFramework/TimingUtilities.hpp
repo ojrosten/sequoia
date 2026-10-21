@@ -72,7 +72,7 @@ namespace sequoia::testing
     { clock.now() - clock.now() } -> std::convertible_to<std::chrono::duration<double>>;
   };
 
-  /** \brief Returns the duration of a call of `task`, as read from `clock`.
+  /** \brief Returns the duration of a call of `task`, as measured by `clock`.
 
       The duration is the difference between readings of `clock.now()`
       before and after the call. The duration includes the computation of
