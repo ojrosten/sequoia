@@ -146,6 +146,7 @@ namespace sequoia::testing
         kind, and as many tasks. None of its tasks sleeps.
      */
     template<std::invocable Task, class ThreadModel>
+      requires std::constructible_from<Task, std::chrono::milliseconds>
     class waiting_task_with_baseline
     {
     public:
@@ -183,16 +184,18 @@ namespace sequoia::testing
 
   /* Each check judges the speed-up of the tasks net of their baselines. The
      purpose of a baseline is to dispatch its tasks and collect their results
-     as its waiting_task does, so that the cost of doing so is not judged.
+     as the sleeping waiting_task does, so that the cost of doing so is not
+     judged.
 
-     A baseline pushes each of its tasks while no task sleeps. A waiting_task
-     pushes all but its first task while earlier tasks sleep, and so hides the
-     cost of those pushes. The baseline subtracts that cost anyway. So a model
-     whose pushes are costly measures a speed-up above the ideal. The excess
-     grows as the sleep shortens.
+     A baseline pushes each of its tasks while no task sleeps. The sleeping
+     waiting_task of a concurrent model pushes all but its first task while
+     earlier tasks sleep, and so hides the cost of those pushes. The check
+     subtracts that cost anyway. So, for a model whose pushes are costly, the
+     check measures a speed-up above the ideal, by a fraction which grows as
+     the sleep shortens.
 
      Each pool is constructed before its checks. The checks take the pool's
-     waiting_task by reference, so no trial times the start or join of the
+     waiting_tasks by reference, so no trial times the start or join of the
      pool's threads.
 
      The lower bounds sit further below the ideal speed-up than a symmetric
