@@ -52,7 +52,16 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 95
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 62
+Top-level option with neither invocable, and an unknown argument
+
+Expected Exception Type:
+[std::invalid_argument]
+  Error: option "--async" is not bound to a function object
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 99
 Typo in argument
 
 Expected Exception Type:
@@ -61,7 +70,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 99
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 103
 Alias mismatch
 
 Expected Exception Type:
@@ -70,7 +79,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 103
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 107
 Missing alias
 
 Expected Exception Type:
@@ -79,7 +88,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 107
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 111
 Extra space in argument
 
 Expected Exception Type:
@@ -88,7 +97,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 132
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 136
 Concatenated alias with only partial match
 
 Expected Exception Type:
@@ -97,7 +106,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 136
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 140
 Concatenated alias naming an option with parameters
 
 Expected Exception Type:
@@ -106,7 +115,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 141
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 145
 Concatenated alias naming an option with nested options
 
 Expected Exception Type:
@@ -115,7 +124,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 146
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 150
 Concatenated aliases without the leading dash
 
 Expected Exception Type:
@@ -124,7 +133,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 150
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 154
 A dash after something other than a dash
 
 Expected Exception Type:
@@ -133,7 +142,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 175
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 179
 Final argument missing
 
 Expected Exception Type:
@@ -142,7 +151,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 258
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 262
 An option named as a help request
 
 Expected Exception Type:
@@ -151,7 +160,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 262
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 266
 An option named as a help request, and with neither invocable
 
 Expected Exception Type:
@@ -160,7 +169,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 266
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 270
 An empty tree, before an option named as a help request
 
 Expected Exception Type:
@@ -169,7 +178,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 271
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 275
 A nested option aliased as a help request
 
 Expected Exception Type:
@@ -178,7 +187,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 328
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 332
 A nested option, not bound to a function object, missing its argument
 
 Expected Exception Type:
@@ -187,7 +196,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 334
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 338
 A nested option, not bound to a function object, missing two of its three arguments
 
 Expected Exception Type:
@@ -196,7 +205,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 340
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 344
 A dash after something other than a dash, at a nested level
 
 Expected Exception Type:
@@ -205,7 +214,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 456
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 460
 Two options, one with nesting, illegal argument
 
 Expected Exception Type:

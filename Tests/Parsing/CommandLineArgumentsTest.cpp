@@ -59,6 +59,10 @@ namespace sequoia::testing
         return parse({{"foo", "--async"}}, {{{"--async",   {}, {}, fo{}}},
                                             {{"--verbose", {}, {}}}});
       });
+    check_exception_thrown<std::invalid_argument>("Top-level option with neither invocable, and an unknown argument",
+      [](){
+        return parse({{"foo", "--nonsense"}}, {{{"--async", {}, {}}}});
+      });
 
     check(weak_equivalence, "", parsing::commandline::parse(0, nullptr, {}), outcome{});
  
