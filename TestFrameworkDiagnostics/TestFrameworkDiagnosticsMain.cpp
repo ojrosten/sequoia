@@ -123,6 +123,7 @@ int main(int argc, char** argv)
     runner.register_test<test_runner_reported_durations_free_test>();
     runner.register_test<coarse_sleeps_free_test>();
     runner.register_test<test_runner_serial_execution_free_test>();
+    runner.register_test<test_runner_recorded_performance_checks_free_test>();
 
     code = runner.execute();
   }
