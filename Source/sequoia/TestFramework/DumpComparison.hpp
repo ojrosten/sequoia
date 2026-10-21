@@ -43,6 +43,9 @@ namespace sequoia::testing
 
       Each check is read with its nested checks, and without surrounding
       newlines. A check which recorded nothing is not among them.
+
+      \throws std::runtime_error if `dump` is not a regular file,
+              or cannot be opened.
    */
   [[nodiscard]]
   std::vector<std::string> read_dump(const std::filesystem::path& dump);
@@ -51,7 +54,8 @@ namespace sequoia::testing
 
       \returns The checks in the baseline and not the dump (`missing`), and in the dump and not
                the baseline (`added`), each in the order they appear in the dump which holds them.
-      \throws std::runtime_error if either file cannot be read.
+      \throws std::runtime_error if `baseline` or `dump` is not a regular file,
+              or cannot be opened.
    */
   [[nodiscard]]
   dump_comparison compare_dumps(const std::filesystem::path& baseline, const std::filesystem::path& dump);
