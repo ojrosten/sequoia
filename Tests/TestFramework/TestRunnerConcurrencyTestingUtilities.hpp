@@ -156,9 +156,6 @@ namespace sequoia::testing
     inline static std::chrono::milliseconds st_SleepDuration{};
   };
 
-  /** Whether `TestsWhichSleep` holds at least one type, and each derives from
-      `Family`'s `test_which_sleeps_base`.
-   */
   template<class Family, class... TestsWhichSleep>
   inline constexpr bool are_tests_which_sleep_of_v{
     (sizeof...(TestsWhichSleep) > 0) && (std::derived_from<TestsWhichSleep, test_which_sleeps_base<Family>> && ...)
@@ -182,7 +179,5 @@ namespace sequoia::testing
     return runner;
   }
 
-  /** The sleep duration of the tests in a run whose peak overlap is checked.
-   */
   inline constexpr std::chrono::milliseconds sleep_duration_for_overlap_checks{10};
 }

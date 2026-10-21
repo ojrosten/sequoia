@@ -239,9 +239,6 @@ namespace sequoia::testing
       }
     };
 
-    /** The family of tests which sleep, run by
-        `test_runner_performance_test`.
-     */
     struct acceleration_family {};
 
     using acceleration_family_base = test_which_sleeps_base<acceleration_family>;
@@ -310,9 +307,6 @@ namespace sequoia::testing
       void run_tests() { sleep_and_check(7); }
     };
 
-    /** Returns a runner made from `arguments`, with the acceleration
-        family's eight tests registered, each to sleep for `sleepDuration`.
-     */
     [[nodiscard]]
     test_runner make_acceleration_family_runner(const std::vector<std::string>& arguments,
                                                 std::stringstream& outputStream,
@@ -329,14 +323,9 @@ namespace sequoia::testing
                                               test_which_sleeps_7>(arguments, outputStream, sleepDuration);
     }
 
-    /** The sleep duration of the tests in a run timed by a speed-up check. */
     constexpr std::chrono::milliseconds sleep_duration_for_speedup_checks{20};
 
-    /** Runs the acceleration family's tests with the command line
-        `arguments`, each test sleeping for `sleep_duration`.
-
-        \throws std::runtime_error if the run does not succeed
-     */
+    /** \throws std::runtime_error if the run does not succeed */
     struct run_of_acceleration_family
     {
       std::vector<std::string> arguments;
@@ -354,11 +343,8 @@ namespace sequoia::testing
     using acceleration_family_task_with_baseline_t = task_with_baseline<run_of_acceleration_family,
                                                                         run_of_acceleration_family>;
 
-    /** Makes a run of the acceleration family's tests with the command line
-        `arguments`, each test sleeping for
-        `sleep_duration_for_speedup_checks`, and pairs the run with its
-        baseline. The baseline runs the same tests with the same command line,
-        and no test sleeps.
+    /** The baseline runs the same tests with the same command line, and no
+        test sleeps.
      */
     [[nodiscard]]
     acceleration_family_task_with_baseline_t make_task_with_baseline(const std::vector<std::string>& arguments)

@@ -153,11 +153,9 @@ namespace sequoia::testing
           return_code::critical_failures);
   }
 
-  /** Makes a runner of the active family, then prepares a run of the idle
-      family, then executes the runner. If the two families shared their
-      state, the idle family's sleep duration would replace the active
-      family's, and the active test would write the idle family's sleep
-      interval.
+  /** If the two families shared their state, the idle family's sleep
+      duration would replace the active family's, and the active test would
+      write the idle family's sleep interval.
    */
   void test_runner_serial_execution_free_test::test_separation_of_families_of_tests_which_sleep()
   {
