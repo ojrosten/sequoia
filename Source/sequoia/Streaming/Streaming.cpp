@@ -49,9 +49,14 @@ namespace sequoia
        */
       std::string text(size, '\0');
       ifile.read(text.data(), static_cast<std::streamsize>(size));
-      text.resize(static_cast<std::size_t>(ifile.gcount()));
 
-      return text;
+      // A read which delivers fewer characters than it asks for sets
+      // failbit, so only badbit can mark an error.
+      if(!ifile.bad())
+      {
+        text.resize(static_cast<std::size_t>(ifile.gcount()));
+        return text;
+      }
     }
 
     return std::nullopt;

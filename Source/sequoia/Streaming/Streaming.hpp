@@ -37,7 +37,8 @@ namespace sequoia
       \returns `std::nullopt` if
                -# `file` is not a regular file;
                -# `file` cannot be opened;
-               -# The size of `file` cannot be read.
+               -# The size of `file` cannot be determined;
+               -# The standard library reports an error while reading `file`.
    */
   [[nodiscard]]
   std::optional<std::string> read_to_string(const std::filesystem::path& file, std::ios_base::openmode mode);
