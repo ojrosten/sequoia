@@ -239,104 +239,103 @@ namespace sequoia::testing
       }
     };
 
-    /** The family of the slow tests whose runs the performance test checks. */
+    /** The performance test's family of tests which sleep. */
     struct acceleration_family {};
 
-    using acceleration_slow_test_base = slow_test_base<acceleration_family>;
+    using acceleration_family_base = test_which_sleeps_base<acceleration_family>;
 
-    class slow_test_0 final : public acceleration_slow_test_base
+    class test_which_sleeps_0 final : public acceleration_family_base
     {
     public:
-      using slow_test_base::slow_test_base;
+      using test_which_sleeps_base::test_which_sleeps_base;
 
       void run_tests() { sleep_and_check(0); }
     };
 
-    class slow_test_1 final : public acceleration_slow_test_base
+    class test_which_sleeps_1 final : public acceleration_family_base
     {
     public:
-      using slow_test_base::slow_test_base;
+      using test_which_sleeps_base::test_which_sleeps_base;
 
       void run_tests() { sleep_and_check(1); }
     };
 
-    class slow_test_2 final : public acceleration_slow_test_base
+    class test_which_sleeps_2 final : public acceleration_family_base
     {
     public:
-      using slow_test_base::slow_test_base;
+      using test_which_sleeps_base::test_which_sleeps_base;
 
       void run_tests() { sleep_and_check(2); }
     };
 
-    class slow_test_3 final : public acceleration_slow_test_base
+    class test_which_sleeps_3 final : public acceleration_family_base
     {
     public:
-      using slow_test_base::slow_test_base;
+      using test_which_sleeps_base::test_which_sleeps_base;
 
       void run_tests() { sleep_and_check(3); }
     };
 
-    class slow_test_4 final : public acceleration_slow_test_base
+    class test_which_sleeps_4 final : public acceleration_family_base
     {
     public:
-      using slow_test_base::slow_test_base;
+      using test_which_sleeps_base::test_which_sleeps_base;
 
       void run_tests() { sleep_and_check(4); }
     };
 
-    class slow_test_5 final : public acceleration_slow_test_base
+    class test_which_sleeps_5 final : public acceleration_family_base
     {
     public:
-      using slow_test_base::slow_test_base;
+      using test_which_sleeps_base::test_which_sleeps_base;
 
       void run_tests() { sleep_and_check(5); }
     };
 
-    class slow_test_6 final : public acceleration_slow_test_base
+    class test_which_sleeps_6 final : public acceleration_family_base
     {
     public:
-      using slow_test_base::slow_test_base;
+      using test_which_sleeps_base::test_which_sleeps_base;
 
       void run_tests() { sleep_and_check(6); }
     };
 
-    class slow_test_7 final : public acceleration_slow_test_base
+    class test_which_sleeps_7 final : public acceleration_family_base
     {
     public:
-      using slow_test_base::slow_test_base;
+      using test_which_sleeps_base::test_which_sleeps_base;
 
       void run_tests() { sleep_and_check(7); }
     };
 
     /** Returns a runner made from `arguments`, with the acceleration
-        family's eight slow tests registered, each to sleep for
-        `sleepDuration`.
+        family's eight tests registered, each to sleep for `sleepDuration`.
      */
     [[nodiscard]]
     test_runner make_acceleration_family_runner(const std::vector<std::string>& arguments,
                                                 std::stringstream& outputStream,
                                                 std::chrono::milliseconds sleepDuration)
     {
-      return make_slow_test_runner<acceleration_family,
-                                   slow_test_0,
-                                   slow_test_1,
-                                   slow_test_2,
-                                   slow_test_3,
-                                   slow_test_4,
-                                   slow_test_5,
-                                   slow_test_6,
-                                   slow_test_7>(arguments, outputStream, sleepDuration);
+      return make_runner_of_tests_which_sleep<acceleration_family,
+                                              test_which_sleeps_0,
+                                              test_which_sleeps_1,
+                                              test_which_sleeps_2,
+                                              test_which_sleeps_3,
+                                              test_which_sleeps_4,
+                                              test_which_sleeps_5,
+                                              test_which_sleeps_6,
+                                              test_which_sleeps_7>(arguments, outputStream, sleepDuration);
     }
 
-    /** The sleep of each slow test in a run timed by a speed-up check. */
+    /** The sleep duration of the tests in a run timed by a speed-up check. */
     constexpr std::chrono::milliseconds sleep_duration_for_speedup_checks{20};
 
-    /** Runs the slow tests with the command line `arguments`, each test
-        sleeping for `sleep_duration`.
+    /** Runs the acceleration family's tests with the command line
+        `arguments`, each test sleeping for `sleep_duration`.
 
         \throws std::runtime_error if the run does not succeed
      */
-    struct run_of_slow_tests
+    struct run_of_tests_which_sleep
     {
       std::vector<std::string> arguments;
       std::chrono::milliseconds sleep_duration;
@@ -346,19 +345,21 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         auto runner{make_acceleration_family_runner(arguments, outputStream, sleep_duration)};
         if(runner.execute() != return_code::success)
-          throw std::runtime_error{"A run of the slow tests did not succeed"};
+          throw std::runtime_error{"A run of the tests which sleep did not succeed"};
       }
     };
 
-    using run_of_slow_tests_with_baseline_t = task_with_baseline<run_of_slow_tests, run_of_slow_tests>;
+    using run_of_tests_which_sleep_with_baseline_t = task_with_baseline<run_of_tests_which_sleep,
+                                                                        run_of_tests_which_sleep>;
 
-    /** Makes a run of the slow tests with the command line `arguments`, each
-        test sleeping for `sleep_duration_for_speedup_checks`, and pairs the
-        run with its baseline. The baseline runs the slow tests with the same
-        command line, and no test sleeps.
+    /** Makes a run of the acceleration family's tests with the command line
+        `arguments`, each test sleeping for
+        `sleep_duration_for_speedup_checks`, and pairs the run with its
+        baseline. The baseline runs the same tests with the same command line,
+        and no test sleeps.
      */
     [[nodiscard]]
-    run_of_slow_tests_with_baseline_t make_task_with_baseline(const std::vector<std::string>& arguments)
+    run_of_tests_which_sleep_with_baseline_t make_task_with_baseline(const std::vector<std::string>& arguments)
     {
       return {
         .task{arguments, sleep_duration_for_speedup_checks},
@@ -403,7 +404,7 @@ namespace sequoia::testing
     auto runner{make_acceleration_family_runner(arguments, outputStream, sleep_duration_for_overlap_checks)};
     check(equality, "Parallel acceleration return code", runner.execute(), return_code::success);
 
-    const auto peak{peak_overlap(acceleration_slow_test_base::sleep_intervals())};
+    const auto peak{peak_overlap(acceleration_family_base::sleep_intervals())};
     print_peak_overlap(outputStream, peak);
 
     check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream);
@@ -428,7 +429,7 @@ namespace sequoia::testing
       auto runner{make_acceleration_family_runner(arguments, outputStream, sleep_duration_for_overlap_checks)};
       check(equality, "Thread pool (8) return code", runner.execute(), return_code::success);
 
-      const auto peak{peak_overlap(acceleration_slow_test_base::sleep_intervals())};
+      const auto peak{peak_overlap(acceleration_family_base::sleep_intervals())};
       print_peak_overlap(outputStream, peak);
 
       check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream);
@@ -448,7 +449,7 @@ namespace sequoia::testing
       auto runner{make_acceleration_family_runner(arguments, outputStream, sleep_duration_for_overlap_checks)};
       check(equality, "Thread pool (2) return code", runner.execute(), return_code::success);
 
-      const auto peak{peak_overlap(acceleration_slow_test_base::sleep_intervals())};
+      const auto peak{peak_overlap(acceleration_family_base::sleep_intervals())};
       print_peak_overlap(outputStream, peak);
 
       check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream);
@@ -460,10 +461,10 @@ namespace sequoia::testing
     }
   }
 
-  /** Checks the speed-up of a run of the slow tests with the command line
-      `arguments` over a serial run of the slow tests. Callers must build
-      `arguments` by calling `fake_project_commandline` with
-      `auxiliary_materials()`; the check builds the serial run's command
+  /** Checks the speed-up of a run of the acceleration family's tests with
+      the command line `arguments` over a serial run of the same tests.
+      Callers must build `arguments` by calling `fake_project_commandline`
+      with `auxiliary_materials()`; the check builds the serial run's command
       line the same way.
    */
   void test_runner_performance_test::check_speedup_over_serial_execution(std::string_view description,

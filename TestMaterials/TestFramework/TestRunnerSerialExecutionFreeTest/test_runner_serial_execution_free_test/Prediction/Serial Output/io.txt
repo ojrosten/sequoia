@@ -1,15 +1,15 @@
 
 Running tests, synchronously...
 
-slow_test_0:
+test_which_sleeps_0:
 [Execution Time: 10.1ms]
 [Runner Overhead: 475us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_1:
+test_which_sleeps_1:
 [Execution Time: 10.1ms]
 [Runner Overhead: 396us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_2:
+test_which_sleeps_2:
 [Execution Time: 10.1ms]
 [Runner Overhead: 350us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]

@@ -63,18 +63,18 @@ namespace sequoia::testing
    */
   void print_peak_overlap(std::ostream& stream, std::size_t peak);
 
-  /** The base of each slow test of `Family`. A slow test's `run_tests` must
-      make one call to `sleep_and_check`. The tests registered together must
-      pass it distinct indices, from 0 to one less than their number. The
-      sleep intervals of a run give a lower bound on how many of the
-      family's tests the runner executed at the same time.
+  /** The base of each of `Family`'s tests which sleep. The `run_tests` of a
+      test which sleeps must make one call to `sleep_and_check`. The tests
+      registered together must pass it distinct indices, from 0 to one less
+      than their number. The sleep intervals of a run give a lower bound on how
+      many of the family's tests the runner executed at the same time.
 
       The tests of one family share one sleep duration and one set of sleep
-      intervals. So from a call of `make_slow_test_runner` to the last read
-      of `sleep_intervals` after the runner executes, nothing else may
-      prepare a run of the family or execute another runner of it. The
-      repetitions of a run of tests execute one after another, so a test
-      which makes runners of the family breaks this only in these cases:
+      intervals. So from a call of `make_runner_of_tests_which_sleep` to the
+      last read of `sleep_intervals` after the runner executes, nothing else
+      may prepare a run of the family or execute another runner of it. The
+      repetitions of a run of tests execute one after another, so a test which
+      makes runners of the family breaks this only in these cases:
       -# Two such tests are parallelizable.
       -# Such a test makes or executes a second runner of the family
          between the making of the first and the last read of its
@@ -91,7 +91,7 @@ namespace sequoia::testing
       file as its source.
    */
   template<class Family>
-  class slow_test_base : public free_test
+  class test_which_sleeps_base : public free_test
   {
   public:
     using free_test::free_test;
@@ -122,10 +122,10 @@ namespace sequoia::testing
       st_SleepDuration = sleepDuration;
     }
   protected:
-    ~slow_test_base() = default;
+    ~test_which_sleeps_base() = default;
 
-    slow_test_base(slow_test_base&&)            noexcept = default;
-    slow_test_base& operator=(slow_test_base&&) noexcept = default;
+    test_which_sleeps_base(test_which_sleeps_base&&)            noexcept = default;
+    test_which_sleeps_base& operator=(test_which_sleeps_base&&) noexcept = default;
 
     /** Sleeps for the duration last passed to `prepare_run`, records the
         sleep's interval at `index` of the family's sleep intervals, and
@@ -150,32 +150,33 @@ namespace sequoia::testing
     inline static std::chrono::milliseconds st_SleepDuration{};
   };
 
-  /** Whether `SlowTests` holds at least one type, and each derives from
-      `Family`'s `slow_test_base`.
+  /** Whether `TestsWhichSleep` holds at least one type, and each derives from
+      `Family`'s `test_which_sleeps_base`.
    */
-  template<class Family, class... SlowTests>
-  inline constexpr bool are_slow_tests_of_v{
-    (sizeof...(SlowTests) > 0) && (std::derived_from<SlowTests, slow_test_base<Family>> && ...)
+  template<class Family, class... TestsWhichSleep>
+  inline constexpr bool are_tests_which_sleep_of_v{
+    (sizeof...(TestsWhichSleep) > 0) && (std::derived_from<TestsWhichSleep, test_which_sleeps_base<Family>> && ...)
   };
 
-  /** Returns a runner made from `args`, with each of `SlowTests` registered
-      to sleep for `sleepDuration`. On return, the family's sleep intervals
-      are empty, one for each of `SlowTests`.
+  /** Returns a runner made from `args`, with each of `TestsWhichSleep`
+      registered to sleep for `sleepDuration`. On return, the family's sleep
+      intervals are empty, one for each of `TestsWhichSleep`.
    */
-  template<class Family, concrete_test... SlowTests>
-    requires are_slow_tests_of_v<Family, SlowTests...>
+  template<class Family, concrete_test... TestsWhichSleep>
+    requires are_tests_which_sleep_of_v<Family, TestsWhichSleep...>
   [[nodiscard]]
-  test_runner make_slow_test_runner(commandline_arguments args,
-                                    std::stringstream& outputStream,
-                                    std::chrono::milliseconds sleepDuration)
+  test_runner make_runner_of_tests_which_sleep(commandline_arguments args,
+                                               std::stringstream& outputStream,
+                                               std::chrono::milliseconds sleepDuration)
   {
     auto runner{make_fake_project_runner(args, outputStream)};
-    slow_test_base<Family>::prepare_run(sizeof...(SlowTests), sleepDuration);
-    (runner.register_test<SlowTests>(), ...);
+    test_which_sleeps_base<Family>::prepare_run(sizeof...(TestsWhichSleep), sleepDuration);
+    (runner.register_test<TestsWhichSleep>(), ...);
 
     return runner;
   }
 
-  /** The sleep of each slow test in a run whose peak overlap is checked. */
+  /** The sleep duration of the tests in a run whose peak overlap is checked.
+   */
   inline constexpr std::chrono::milliseconds sleep_duration_for_overlap_checks{10};
 }

@@ -27,47 +27,47 @@ namespace sequoia::testing
   {
     struct serial_family {};
 
-    using serial_slow_test_base = slow_test_base<serial_family>;
+    using serial_family_base = test_which_sleeps_base<serial_family>;
 
-    class slow_test_0 final : public serial_slow_test_base
+    class test_which_sleeps_0 final : public serial_family_base
     {
     public:
-      using slow_test_base::slow_test_base;
+      using test_which_sleeps_base::test_which_sleeps_base;
 
       void run_tests() { sleep_and_check(0); }
     };
 
-    class slow_test_1 final : public serial_slow_test_base
+    class test_which_sleeps_1 final : public serial_family_base
     {
     public:
-      using slow_test_base::slow_test_base;
+      using test_which_sleeps_base::test_which_sleeps_base;
 
       void run_tests() { sleep_and_check(1); }
     };
 
-    class slow_test_2 final : public serial_slow_test_base
+    class test_which_sleeps_2 final : public serial_family_base
     {
     public:
-      using slow_test_base::slow_test_base;
+      using test_which_sleeps_base::test_which_sleeps_base;
 
       void run_tests() { sleep_and_check(2); }
     };
 
     struct active_family {};
 
-    using active_slow_test_base = slow_test_base<active_family>;
+    using active_family_base = test_which_sleeps_base<active_family>;
 
-    class active_slow_test final : public active_slow_test_base
+    class active_test_which_sleeps final : public active_family_base
     {
     public:
-      using slow_test_base::slow_test_base;
+      using test_which_sleeps_base::test_which_sleeps_base;
 
       void run_tests() { sleep_and_check(0); }
     };
 
     struct idle_family {};
 
-    using idle_slow_test_base = slow_test_base<idle_family>;
+    using idle_family_base = test_which_sleeps_base<idle_family>;
 
     /** A sleep duration longer than any sleep of the active family's test,
         whose own sleep duration is zero. The idle family has no tests, so
@@ -75,10 +75,12 @@ namespace sequoia::testing
      */
     constexpr std::chrono::seconds idle_family_sleep_duration{1};
 
-    template<class Family, class... SlowTests>
-    inline constexpr bool make_slow_test_runner_accepts_v{
+    template<class Family, class... TestsWhichSleep>
+    inline constexpr bool make_runner_of_tests_which_sleep_accepts_v{
       requires(std::vector<std::string> arguments, std::stringstream& outputStream) {
-        make_slow_test_runner<Family, SlowTests...>(arguments, outputStream, sleep_duration_for_overlap_checks);
+        make_runner_of_tests_which_sleep<Family, TestsWhichSleep...>(arguments,
+                                                                     outputStream,
+                                                                     sleep_duration_for_overlap_checks);
       }
     };
   }
@@ -101,19 +103,24 @@ namespace sequoia::testing
 
   void test_runner_serial_execution_free_test::run_tests()
   {
-    test_slow_test_runner_constraints();
+    test_constraints_on_runner_of_tests_which_sleep();
     test_reversed_and_empty_steady_clock_intervals();
     test_index_beyond_registered_tests();
-    test_separation_of_slow_test_families();
+    test_separation_of_families_of_tests_which_sleep();
     test_serial_execution();
   }
 
-  void test_runner_serial_execution_free_test::test_slow_test_runner_constraints()
+  void test_runner_serial_execution_free_test::test_constraints_on_runner_of_tests_which_sleep()
   {
-    STATIC_CHECK( make_slow_test_runner_accepts_v<serial_family, slow_test_0, slow_test_1, slow_test_2>);
-    STATIC_CHECK(!make_slow_test_runner_accepts_v<serial_family>);
-    STATIC_CHECK(!make_slow_test_runner_accepts_v<serial_family, serial_slow_test_base>);
-    STATIC_CHECK(!make_slow_test_runner_accepts_v<serial_family, slow_test_0, active_slow_test>);
+    STATIC_CHECK( make_runner_of_tests_which_sleep_accepts_v<serial_family,
+                                                             test_which_sleeps_0,
+                                                             test_which_sleeps_1,
+                                                             test_which_sleeps_2>);
+    STATIC_CHECK(!make_runner_of_tests_which_sleep_accepts_v<serial_family>);
+    STATIC_CHECK(!make_runner_of_tests_which_sleep_accepts_v<serial_family, serial_family_base>);
+    STATIC_CHECK(!make_runner_of_tests_which_sleep_accepts_v<serial_family,
+                                                             test_which_sleeps_0,
+                                                             active_test_which_sleeps>);
   }
 
   void test_runner_serial_execution_free_test::test_reversed_and_empty_steady_clock_intervals()
@@ -134,14 +141,14 @@ namespace sequoia::testing
   void test_runner_serial_execution_free_test::test_index_beyond_registered_tests()
   {
     std::stringstream outputStream{};
-    auto runner{make_slow_test_runner<serial_family, slow_test_1>(
+    auto runner{make_runner_of_tests_which_sleep<serial_family, test_which_sleeps_1>(
                   fake_project_commandline(auxiliary_materials()),
                   outputStream,
                   std::chrono::milliseconds{}
                 )};
 
     check(equality,
-          "A slow test passing an index beyond the tests registered with it fails critically",
+          "A test which sleeps fails critically if it passes an index beyond the tests registered with it",
           runner.execute(),
           return_code::critical_failures);
   }
@@ -152,26 +159,26 @@ namespace sequoia::testing
       family's, and the active test would write the idle family's sleep
       interval.
    */
-  void test_runner_serial_execution_free_test::test_separation_of_slow_test_families()
+  void test_runner_serial_execution_free_test::test_separation_of_families_of_tests_which_sleep()
   {
     std::stringstream activeOutput{};
-    auto activeRunner{make_slow_test_runner<active_family, active_slow_test>(
+    auto activeRunner{make_runner_of_tests_which_sleep<active_family, active_test_which_sleeps>(
                         fake_project_commandline(auxiliary_materials()),
                         activeOutput,
                         std::chrono::milliseconds{}
                       )};
 
     // One interval, for the active test to write if the families shared it
-    idle_slow_test_base::prepare_run(1, idle_family_sleep_duration);
+    idle_family_base::prepare_run(1, idle_family_sleep_duration);
 
     check(equality, "Active family's return code", activeRunner.execute(), return_code::success);
 
     check("A family's run leaves another family's sleep intervals as they were",
-          std::ranges::equal(idle_slow_test_base::sleep_intervals(), std::array{steady_clock_interval{}}));
+          std::ranges::equal(idle_family_base::sleep_intervals(), std::array{steady_clock_interval{}}));
 
     auto durationOf{[](const steady_clock_interval& interval) { return interval.end_time() - interval.start_time(); }};
     const auto longestSleep{
-      std::ranges::fold_left(active_slow_test_base::sleep_intervals() | std::views::transform(durationOf),
+      std::ranges::fold_left(active_family_base::sleep_intervals() | std::views::transform(durationOf),
                              std::chrono::steady_clock::duration{},
                              std::ranges::max)
     };
@@ -185,7 +192,10 @@ namespace sequoia::testing
   void test_runner_serial_execution_free_test::test_serial_execution()
   {
     std::stringstream outputStream{};
-    auto runner{make_slow_test_runner<serial_family, slow_test_0, slow_test_1, slow_test_2>(
+    auto runner{make_runner_of_tests_which_sleep<serial_family,
+                                                 test_which_sleeps_0,
+                                                 test_which_sleeps_1,
+                                                 test_which_sleeps_2>(
                   fake_project_commandline(auxiliary_materials(), "--serial"),
                   outputStream,
                   sleep_duration_for_overlap_checks
@@ -195,7 +205,7 @@ namespace sequoia::testing
     check_output(report({"Serial Output"}), "Serial Output", outputStream);
     check(equality,
           "Tests execute one at a time in a serial run",
-          peak_overlap(serial_slow_test_base::sleep_intervals()),
+          peak_overlap(serial_family_base::sleep_intervals()),
           std::size_t{1});
   }
 }

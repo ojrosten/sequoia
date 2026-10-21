@@ -23,13 +23,13 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    void test_slow_test_runner_constraints();
+    void test_constraints_on_runner_of_tests_which_sleep();
 
     void test_reversed_and_empty_steady_clock_intervals();
 
     void test_index_beyond_registered_tests();
 
-    void test_separation_of_slow_test_families();
+    void test_separation_of_families_of_tests_which_sleep();
 
     void test_serial_execution();
 
