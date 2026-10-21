@@ -382,7 +382,7 @@ namespace sequoia::maths
   template<std::input_or_output_iterator Iterator, class Adaptor>
   using forest_iterator = utilities::iterator<Iterator, forest_dereference_policy<Iterator, Adaptor>>;
 
-  /** \brief The subtrees beneath a node, one per edge, each as an adaptor of the tree. */
+  /** \brief Returns adaptors of `tree` at the targets of `node`'s edges. */
   template<dynamic_tree T>
   [[nodiscard]]
   auto forest_beneath(const T& tree, typename T::size_type node)
@@ -393,7 +393,7 @@ namespace sequoia::maths
     return std::ranges::subrange{iterator{edges.begin(), tree}, iterator{edges.end(), tree}};
   }
 
-  /** \brief A forest's trees, each as an adaptor. */
+  /** \brief Returns adaptors of `trees`, one per tree, at node 0. */
   template<std::ranges::input_range Trees>
     requires dynamic_tree<std::ranges::range_value_t<Trees>>
   [[nodiscard]]
