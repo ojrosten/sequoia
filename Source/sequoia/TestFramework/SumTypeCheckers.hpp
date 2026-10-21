@@ -80,10 +80,7 @@ namespace sequoia::testing
       {
         const bool obtainedHoldsValue{obtained}, predictedHoldsValue{prediction};
 
-        check_both_or_neither_hold_a_value(nullable_type_message(obtainedHoldsValue, predictedHoldsValue),
-                                           logger,
-                                           obtainedHoldsValue,
-                                           predictedHoldsValue);
+        check(both_or_neither_hold_a_value{"not null", "null"}, "", logger, obtainedHoldsValue, predictedHoldsValue);
       }
     }
   };
@@ -100,11 +97,9 @@ namespace sequoia::testing
     {
       if(obtained.has_value() != prediction.has_value())
       {
-        auto holds{[](const type& e){ return e.has_value() ? "a value" : "an error"; }};
-        check_both_or_neither_hold_a_value(default_prediction_message(holds(obtained), holds(prediction)),
-                                           logger,
-                                           obtained.has_value(),
-                                           prediction.has_value());
+        const bool obtainedHoldsValue{obtained.has_value()}, predictedHoldsValue{prediction.has_value()};
+
+        check(both_or_neither_hold_a_value{"a value", "an error"}, "", logger, obtainedHoldsValue, predictedHoldsValue);
       }
       else if(obtained)
       {

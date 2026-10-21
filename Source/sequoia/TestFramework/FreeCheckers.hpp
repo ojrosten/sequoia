@@ -703,25 +703,6 @@ namespace sequoia::testing
     return check(equality, std::move(description), logger, obtained, true, std::move(advisor));
   }
 
-  /** \brief Checks that `obtainedHoldsValue` equals `predictedHoldsValue`.
-
-      Only a failure reports `failureMessage`.
-   */
-  template<test_mode Mode>
-  bool check_both_or_neither_hold_a_value(std::string_view failureMessage,
-                                          test_logger<Mode>& logger,
-                                          const bool obtainedHoldsValue,
-                                          const bool predictedHoldsValue)
-  {
-    sentinel<Mode> sentry{logger, make_type_info<bool>()};
-
-    sentry.log_check();
-    if(obtainedHoldsValue != predictedHoldsValue)
-      sentry.log_failure(failureMessage);
-
-    return !sentry.failure_detected();
-  }
-
   /** \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
 
       This class template is templated on the enum class test_mode, with an Extender which will become
