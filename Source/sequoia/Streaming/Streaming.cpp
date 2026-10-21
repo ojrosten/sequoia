@@ -21,7 +21,7 @@ namespace sequoia
   [[nodiscard]]
   std::string report_failed_read(const std::filesystem::path& file)
   {
-    return std::format("Unable to open file {} for reading\n", file.generic_string());
+    return std::format("Unable to read file {}\n", file.generic_string());
   }
 
   [[nodiscard]]
