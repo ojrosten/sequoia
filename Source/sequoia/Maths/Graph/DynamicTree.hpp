@@ -384,6 +384,8 @@ namespace sequoia::maths
 
   /** \brief Returns the subtrees rooted at `node`'s children, as adaptors of
              `tree`.
+
+      \throws std::out_of_range if `tree` lacks `node`.
    */
   template<dynamic_tree T>
     requires (T::link_dir == tree_link_direction::forward)

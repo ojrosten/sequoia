@@ -225,6 +225,8 @@ namespace sequoia::testing
     check(equality, "Subtrees beneath the root",       rootWeights(forest_beneath(tree, 0)), std::vector<int>{-7, 6});
     check(equality, "Subtrees beneath an inner node",  rootWeights(forest_beneath(tree, 2)), std::vector<int>{3});
     check(equality, "Subtrees beneath a leaf",         rootWeights(forest_beneath(tree, 1)), std::vector<int>{});
+    check_exception_thrown<std::out_of_range>("Subtrees beneath a node the tree lacks",
+                                              [&tree](){ return forest_beneath(tree, 4); });
 
     const std::vector<tree_t> forest{tree, tree_t{{-1}}};
     check(equality, "A forest's trees, each at its root", rootWeights(forest_of(forest)), std::vector<int>{42, -1});
