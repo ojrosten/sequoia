@@ -140,16 +140,17 @@ namespace sequoia::testing
       Task m_Task;
     };
 
-    /** A waiting_task whose tasks sleep, and its baseline: a waiting_task
-        with a model of its own, of the same kind, to which as many tasks are
-        pushed, none of which sleeps.
+    /** A waiting_task whose tasks sleep, paired with a baseline.
+
+        The baseline is a waiting_task with a model of its own, of the same
+        kind, and as many tasks. None of its tasks sleeps.
      */
     template<std::invocable Task, class ThreadModel>
     class waiting_task_with_baseline
     {
     public:
       using waiting_task_type = waiting_task<Task, ThreadModel>;
-      using references_type   = task_with_baseline<std::reference_wrapper<waiting_task_type>,
+      using by_reference_type = task_with_baseline<std::reference_wrapper<waiting_task_type>,
                                                    std::reference_wrapper<waiting_task_type>>;
 
       template<class... ModelArgs>
@@ -161,7 +162,7 @@ namespace sequoia::testing
       {}
 
       [[nodiscard]]
-      references_type references() { return {.task{m_Task}, .baseline{m_Baseline}}; }
+      by_reference_type by_reference() { return {.task{m_Task}, .baseline{m_Baseline}}; }
     private:
       waiting_task_type m_Task,
                         m_Baseline;
@@ -184,6 +185,12 @@ namespace sequoia::testing
      purpose of a baseline is to dispatch its tasks and collect their results
      as its waiting_task does, so that the cost of doing so is not judged.
 
+     A baseline pushes each of its tasks while no task sleeps. A waiting_task
+     pushes all but its first task while earlier tasks sleep, and so hides the
+     cost of those pushes. The baseline subtracts that cost anyway. So a model
+     whose pushes are costly measures a speed-up above the ideal. The excess
+     grows as the sleep shortens.
+
      Each pool is constructed before its checks. The checks take the pool's
      waiting_task by reference, so no trial times the start or join of the
      pool's threads.
@@ -195,7 +202,8 @@ namespace sequoia::testing
      parallelise from a machine with nothing spare, which is the distinction these checks exist
      to make.
 
-     The upper bounds are not slack: exceeding the ideal would mean the serial baseline was wrong.
+     The upper bounds are not slack: exceeding the ideal by more than the cost of the hidden pushes
+     would mean the serial tasks' durations were wrong.
 
      This is a holding position. Bounds which have to be widened whenever the hardware changes are
      measuring the machine as much as the code.
@@ -209,13 +217,13 @@ namespace sequoia::testing
       waiting_task_with_baseline<wait, asynchronous<void>>       asyncTask{2u, millisecs};
 
       check_relative_performance("Two Waiting tasks; pool_2/null",
-                                 threadPoolTask.references(), nullThreadTask.references(),
+                                 threadPoolTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
       check_relative_performance("Two Waiting tasks; pool_2M/null",
-                                 threadPoolMonoTask.references(), nullThreadTask.references(),
+                                 threadPoolMonoTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
       check_relative_performance("Two Waiting tasks; async/null",
-                                 asyncTask.references(), nullThreadTask.references(),
+                                 asyncTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
     }
 
@@ -225,10 +233,10 @@ namespace sequoia::testing
       waiting_task_with_baseline<wait, serial<void>>             nullThreadTask{4u, millisecs};
 
       check_relative_performance("Four Waiting tasks; pool_2/null",
-                                 threadPoolTask.references(), nullThreadTask.references(),
+                                 threadPoolTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
       check_relative_performance("Four Waiting tasks; pool_2M/null",
-                                 threadPoolMonoTask.references(), nullThreadTask.references(),
+                                 threadPoolMonoTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
     }
 
@@ -238,10 +246,10 @@ namespace sequoia::testing
       waiting_task_with_baseline<wait, serial<void>>             nullThreadTask{4u, millisecs};
 
       check_relative_performance("Four Waiting tasks; pool_4/null",
-                                 threadPoolTask.references(), nullThreadTask.references(),
+                                 threadPoolTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{3.5}, .upper{4.1}}});
       check_relative_performance("Four Waiting tasks; pool_4M/null",
-                                 threadPoolMonoTask.references(), nullThreadTask.references(),
+                                 threadPoolMonoTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{3.5}, .upper{4.1}}});
     }
   }
@@ -255,13 +263,13 @@ namespace sequoia::testing
       waiting_task_with_baseline<wait_and_return, asynchronous<int>>       asyncTask{2u, millisecs};
 
       check_relative_performance("Two Waiting tasks; pool_2/null",
-                                 threadPoolTask.references(), nullThreadTask.references(),
+                                 threadPoolTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
       check_relative_performance("Two Waiting tasks; pool_2M/null",
-                                 threadPoolMonoTask.references(), nullThreadTask.references(),
+                                 threadPoolMonoTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
       check_relative_performance("Two Waiting tasks; async/null",
-                                 asyncTask.references(), nullThreadTask.references(),
+                                 asyncTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
     }
   }
