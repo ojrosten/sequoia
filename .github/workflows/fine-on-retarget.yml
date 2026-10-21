@@ -85,6 +85,9 @@ jobs:
       HEAD_REF: ${{ github.event.pull_request.head.ref }}
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
     steps:
+      - name: SCRATCH (roadmap 394) dump the event
+        run: |
+          jq '{action, changes, sender: .sender.login, base: .pull_request.base.ref, base_sha: .pull_request.base.sha, head_sha: .pull_request.head.sha}' "$GITHUB_EVENT_PATH"
       - name: Dispatch fine on the head branch
         run: |
           echo "Retargeted from $FROM to staging; head $HEAD_REPO:$HEAD_REF at $HEAD_SHA"
