@@ -58,14 +58,14 @@ namespace sequoia::testing
       time_point now() const { return 0; }
     };
 
-    struct millisecond_now_clock
+    struct mismatched_now_clock
     {
       using time_point = std::chrono::steady_clock::time_point;
 
       std::chrono::time_point<std::chrono::steady_clock, std::chrono::milliseconds> now() const { return {}; }
     };
 
-    struct rvalue_subtrahend_clock
+    struct rvalue_only_subtrahend_clock
     {
       struct time_point
       {
@@ -181,8 +181,8 @@ namespace sequoia::testing
     STATIC_CHECK(!performance_clock<int>);
     STATIC_CHECK(!performance_clock<non_const_now_clock>);
     STATIC_CHECK(!performance_clock<int_now_clock>);
-    STATIC_CHECK(!performance_clock<millisecond_now_clock>);
-    STATIC_CHECK(!performance_clock<rvalue_subtrahend_clock>);
+    STATIC_CHECK(!performance_clock<mismatched_now_clock>);
+    STATIC_CHECK(!performance_clock<rvalue_only_subtrahend_clock>);
 
     STATIC_CHECK( profilable_with<copyable_task, scripted_clock>);
     STATIC_CHECK(!profilable_with<copyable_task, non_const_now_clock>);
