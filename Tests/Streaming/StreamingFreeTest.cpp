@@ -45,6 +45,10 @@ namespace sequoia::testing
 
     check(equality, "", read_to_string(working_materials() /= "Foo.txt", std::ios_base::in), std::optional{"hello, World"s});
     check(equality, "", read_to_string(working_materials() /= "Bar.txt", std::ios_base::in), std::optional<std::string>{});
+    check(equality,
+          "A directory is not read",
+          read_to_string(working_materials(), std::ios_base::in),
+          std::optional<std::string>{});
 
     write_to_file(working_materials() /= "Empty.txt", "", std::ios_base::out);
     check(equality, "An empty file", read_to_string(working_materials() /= "Empty.txt", std::ios_base::in), std::optional{""s});

@@ -34,6 +34,9 @@ namespace sequoia
   std::optional<std::string> read_to_string(const std::filesystem::path& file, std::ios_base::openmode mode)
   {
     std::error_code error{};
+    if(!std::filesystem::is_regular_file(file, error))
+      return std::nullopt;
+
     const auto size{std::filesystem::file_size(file, error)};
     if(error)
       return std::nullopt;
