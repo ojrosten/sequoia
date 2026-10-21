@@ -52,7 +52,8 @@ The script refuses, rather than write a record which may be wrong, if
     compiler or an implicit include directory which no longer exists;
   - the compiler record names both standard libraries or neither, or names
     the one whose inline namespace the executable's symbols do not show;
-  - the executable is not a file, or nm lists no symbols for it;
+  - the executable is not a file, or is a static library or a universal
+    binary, or nm lists no symbols for it;
   - ninja lists no objects for the target, or its compilation database has
     no entry for one, or two objects share a source, or a source cannot be
     named relative to the repository.
@@ -72,6 +73,12 @@ STANDARD_LIBRARIES = {"c++": "libc++", "stdc++": "libstdc++"}
 
 # libc++'s inline namespace, std::__1, as it appears in a mangled name.
 LIBCXX_NAMESPACE = "St3__1"
+
+# The first bytes of a static library, of a universal binary with 32-bit
+# offsets, and of one with 64-bit offsets. Each holds several objects. nm
+# lists a static library member by member, and a universal binary for one
+# architecture.
+CONTAINER_MAGICS = (b"!<arch>\n", b"\xca\xfe\xba\xbe", b"\xca\xfe\xba\xbf")
 
 
 def run(command):
@@ -239,6 +246,12 @@ def record_of(build_dir, target):
     executable = os.path.join(build_dir, target)
     if not os.path.isfile(executable):
         sys.exit(f"{executable} is not a file")
+    try:
+        with open(executable, "rb") as f:
+            if f.read(8).startswith(CONTAINER_MAGICS):
+                sys.exit(f"{executable} is a static library or a universal binary, not one executable")
+    except OSError as e:
+        sys.exit(f"{executable} cannot be read: {e}")
     nm = entry(cache, "CMAKE_NM", "CMakeCache.txt")
     listed = symbols(nm, executable)
     if not listed:

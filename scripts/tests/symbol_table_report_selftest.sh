@@ -322,6 +322,19 @@ record_controls() {
   refuses "an absent executable" 'Absent is not a file'
   run "$build" CMakeFiles
   refuses "a directory in the executable's place" 'CMakeFiles is not a file'
+
+  ar rc "$build/libfixture.a" "$objects/A.cpp.o"
+  run "$build" libfixture.a
+  refuses "a static library in the executable's place" 'libfixture\.a is a static library or a universal binary'
+  local magic
+  for magic in '\xca\xfe\xba\xbe' '\xca\xfe\xba\xbf'; do
+    { printf "$magic"; cat "$build/TestAll"; } > "$build/Universal"
+    run "$build" Universal
+    refuses "a universal binary, magic $magic, in the executable's place" 'Universal is a static library or a'
+  done
+  chmod 000 "$build/Universal"
+  run "$build" Universal
+  refuses "an executable which cannot be read" 'Universal cannot be read'
 }
 
 record_selection_controls() {
@@ -583,6 +596,11 @@ MUTATIONS = [
     ('the linker named as the compiler', '"linker":   {"path":    record["CMAKE_CXX_COMPILER_LINKER"],',
                                          '"linker":   {"path":    record["CMAKE_CXX_COMPILER"],'),
     ('the executable a directory',       'if not os.path.isfile(executable):', 'if not os.path.exists(executable):'),
+    ('a static library accepted',        'CONTAINER_MAGICS = (b"!<arch>\\n", ', 'CONTAINER_MAGICS = ('),
+    ('a universal binary accepted',      'b"\\xca\\xfe\\xba\\xbe", ', ''),
+    ('a 64-bit universal binary accepted', ', b"\\xca\\xfe\\xba\\xbf")', ')'),
+    ('an unreadable executable crashes', 'except OSError as e:\n        sys.exit(f"{executable} cannot be read',
+                                         'except ValueError as e:\n        sys.exit(f"{executable} cannot be read'),
     ('a record not UTF-8 crashes',       'text = f.read()\n    except (OSError, UnicodeDecodeError) as e:',
                                          'text = f.read()\n    except OSError as e:'),
 ]
