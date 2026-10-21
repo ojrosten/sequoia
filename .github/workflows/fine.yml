@@ -56,6 +56,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # SCRATCH (roadmap 394): a job the audit does not need, so the audit's second
+  # step fails and the run is red.
+  scratch_red:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo scratch
+
   # One decision for the whole run, which every job below takes as an input.
   scope:
     uses: ./.github/workflows/scope.yml
