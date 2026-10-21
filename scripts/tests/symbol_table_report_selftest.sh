@@ -88,6 +88,10 @@ field() { # field <name> <python expression over the record d> <expected>
   if [[ $got != "$3" ]]; then fail "$1 (expected $3, got $got)"; fi
 }
 
+# with_entry <name> <value>: the compiler record saved in $work/record, with
+# the value of the entry <name> replaced by <value>
+with_entry() { sed "s|^set($1 \"[^\"]*\")|set($1 \"$2\")|" "$work/record"; }
+
 # The fixture -----------------------------------------------------------------
 
 # fixture: a repository at $repo holding a built target at $build, and the
@@ -216,8 +220,10 @@ EOF
 chmod +x "$tmp/bin/ninja"
 
 case "$(uname -s)" in
-  Darwin) platform=Mach-O; platform_libraries="c++";             other_libraries="stdc++;m"; standard_library=libc++    ;;
-  *)      platform=ELF;    platform_libraries="stdc++;m;gcc_s;c"; other_libraries="c++;m";   standard_library=libstdc++ ;;
+  Darwin) platform=Mach-O; standard_library=libc++
+          platform_libraries="c++";             other_libraries="stdc++;m" ;;
+  *)      platform=ELF;    standard_library=libstdc++
+          platform_libraries="stdc++;m;gcc_s;c"; other_libraries="c++;m"   ;;
 esac
 
 # string_table_oracle <executable>: the size of its string table, as reported
@@ -262,7 +268,8 @@ record_controls() {
                                    "[('id', 'FixtureLD'), ('path', '/fixture/ld'), ('version', '4.5')]"
   field "the standard library"     'd["toolchain"]["standard_library"]'     "$standard_library"
   field "the nm"                   'd["toolchain"]["nm"]["path"]'           "$nm_path"
-  field "the nm version"           'd["toolchain"]["nm"]["version"]'        "$("$nm_path" --version | grep -m1 '[0-9]' | sed 's/^ *//; s/ *$//')"
+  field "the nm version"           'd["toolchain"]["nm"]["version"]' \
+                                   "$("$nm_path" --version | grep -m1 '[0-9]' | sed 's/^ *//; s/ *$//')"
   field "the cache"                'sorted(d["cache"].items())' \
     "[('CMAKE_BUILD_TYPE', 'Debug'), ('CMAKE_CXX_FLAGS', '-fixture-flag'), ('CMAKE_CXX_FLAGS_DEBUG', '-g'), \
 ('CMAKE_EXE_LINKER_FLAGS', ''), ('CMAKE_EXE_LINKER_FLAGS_DEBUG', '-fixture-link-flag')]"
@@ -330,7 +337,8 @@ record_selection_controls() {
   run "$build" TestAll
   refuses "a directory for the cache's CMake with no record" 'holds 0 C\+\+ compiler records'
   rm -r "$build/CMakeFiles/4.4.3"; mv "$build/CMakeFiles/4.4.4" "$build/CMakeFiles/4.4.3"
-  mkdir -p "$build/CMakeFiles/4.4.3-rc1"; cp "$build/CMakeFiles/4.4.3/CMakeCXXCompiler.cmake" "$build/CMakeFiles/4.4.3-rc1/"
+  mkdir -p "$build/CMakeFiles/4.4.3-rc1"
+  cp "$build/CMakeFiles/4.4.3/CMakeCXXCompiler.cmake" "$build/CMakeFiles/4.4.3-rc1/"
   run "$build" TestAll
   refuses "two records for the cache's CMake" 'holds 2 C\+\+ compiler records for CMake 4\.4\.3'
   rm -r "$build/CMakeFiles/4.4.3-rc1"
@@ -352,7 +360,7 @@ record_selection_controls() {
     grep -v "^set($name \"" "$work/record" > "$record"
     run "$build" TestAll
     refuses "a record without $name" "has no entry $name\$"
-    sed "s|^set($name \"[^\"]*\")|set($name \"\")|" "$work/record" > "$record"
+    with_entry "$name" "" > "$record"
     run "$build" TestAll
     refuses "a record with an empty $name" "has an empty entry $name\$"
   done
@@ -360,25 +368,23 @@ record_selection_controls() {
   printf 'set(CMAKE_CXX_COMPILER_ID "\xff")\n' > "$record"
   run "$build" TestAll
   refuses "a record which is not UTF-8" 'CMakeCXXCompiler\.cmake cannot be read'
-  sed "s|^set(CMAKE_CXX_COMPILER \"[^\"]*\")|set(CMAKE_CXX_COMPILER \"$work/gone/c++\")|" "$work/record" > "$record"
+  with_entry CMAKE_CXX_COMPILER "$work/gone/c++" > "$record"
   run "$build" TestAll
   refuses "a record naming a compiler which has gone" "names $work/gone/c\+\+, which no longer exists"
-  sed "s|^set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"[^\"]*\")|set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"$repo/Tests;$work/gone/include\")|" \
-    "$work/record" > "$record"
+  with_entry CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "$repo/Tests;$work/gone/include" > "$record"
   run "$build" TestAll
   refuses "a record naming an include directory which has gone" "names $work/gone/include, which no longer exists"
 
-  sed "s|^set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES \"[^\"]*\")|set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES \"m;c\")|" "$work/record" > "$record"
+  with_entry CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "m;c" > "$record"
   run "$build" TestAll
   refuses "a record naming no standard library" 'names 0 standard libraries'
-  sed "s|^set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES \"[^\"]*\")|set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES \"c++;stdc++\")|" "$work/record" > "$record"
+  with_entry CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "c++;stdc++" > "$record"
   run "$build" TestAll
   refuses "a record naming both standard libraries" 'names 2 standard libraries'
-  sed "s|^set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES \"[^\"]*\")|set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES \"$other_libraries\")|" "$work/record" > "$record"
+  with_entry CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "$other_libraries" > "$record"
   run "$build" TestAll
   refuses "a record naming the standard library the symbols contradict" 'the symbols of .* say otherwise'
-  sed "s|^set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES \"[^\"]*\")|set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES \"gcc;c++abi;stdc++fs;${platform_libraries}\")|" \
-    "$work/record" > "$record"
+  with_entry CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "gcc;c++abi;stdc++fs;$platform_libraries" > "$record"
   run "$build" TestAll
   exits "a library whose name holds the standard library's is another library" 0
   cp "$work/record" "$record"
@@ -397,7 +403,8 @@ object_controls() {
   printf '%s\n' CMakeFiles/TestAll.dir/A.cpp.o CMakeFiles/stale.dir/Stale.cpp.o > "$build/ninja/inputs"
   run "$build" TestAll
   exits "a source named relative to the build directory" 0
-  field "is keyed relative to the repository" 'sorted(d["defined_symbols_by_object"])' "['Tests/A.cpp', 'Tests/Stale.cpp']"
+  field "is keyed relative to the repository" 'sorted(d["defined_symbols_by_object"])' \
+                                              "['Tests/A.cpp', 'Tests/Stale.cpp']"
 
   printf '%s\n' CMakeFiles/TestAll.dir/A.cpp.o > "$build/ninja/inputs"
   compilations | sed "s|\"$repo/Tests/A.cpp\"|\"$work/Outside.cpp\"|" > "$build/ninja/compdb"
@@ -432,7 +439,12 @@ object_controls() {
 
 tool_controls() {
   fixture
-  printf '#!/bin/sh\n[ "$1" = --version ] && echo "fixture nm 9.9"\nexit 0\n' > "$work/silent-nm"; chmod +x "$work/silent-nm"
+  cat > "$work/silent-nm" <<'EOF'
+#!/bin/sh
+[ "$1" = --version ] && echo "fixture nm 9.9"
+exit 0
+EOF
+  chmod +x "$work/silent-nm"
   sed -i.bak "s|^CMAKE_NM:FILEPATH=.*|CMAKE_NM:FILEPATH=$work/silent-nm|" "$build/CMakeCache.txt"
   run "$build" TestAll
   refuses "an nm which lists nothing" 'nm lists no symbols for'
@@ -442,7 +454,11 @@ tool_controls() {
   sed -i.bak "s|^CMAKE_NM:FILEPATH=.*|CMAKE_NM:FILEPATH=$work/absent-nm|" "$build/CMakeCache.txt"
   run "$build" TestAll
   refuses "an nm which cannot be run" 'absent-nm could not be run'
-  printf '#!/bin/sh\n[ "$1" = --version ] && { echo "nm, without its number"; exit 0; }\nexec %s "$@"\n' "$nm_path" > "$work/silent-nm"
+  cat > "$work/silent-nm" <<EOF
+#!/bin/sh
+[ "\$1" = --version ] && { echo "nm, without its number"; exit 0; }
+exec $nm_path "\$@"
+EOF
   sed -i.bak "s|^CMAKE_NM:FILEPATH=.*|CMAKE_NM:FILEPATH=$work/silent-nm|" "$build/CMakeCache.txt"
   run "$build" TestAll
   refuses "an nm which prints no version" 'prints no version'
@@ -491,7 +507,8 @@ mutants() { # mutants <dir>: writes <dir>/<n>/symbol_table_report.py, and
   python3 - "$script" "$1" <<'EOF'
 import os, sys
 MUTATIONS = [
-    ('a failed command read',            'if r.returncode:\n        sys.exit(f"{\' \'.join(command)}', 'if False:\n        sys.exit(f"{\' \'.join(command)}'),
+    ('a failed command read',            'if r.returncode:\n        sys.exit(f"{\' \'.join(command)}',
+                                         'if False:\n        sys.exit(f"{\' \'.join(command)}'),
     ('a command not started crashes',    'except OSError as e:\n        sys.exit(f"{command[0]} could not be run',
                                          'except ValueError as e:\n        sys.exit(f"{command[0]} could not be run'),
     ('an absent entry read as empty',    'if name not in entries:\n        sys.exit', 'if False:\n        sys.exit'),
@@ -502,12 +519,14 @@ MUTATIONS = [
     ('any record of the release',        'if (d == version or d.startswith(version + "-"))',
                                          'if (d.startswith(version))'),
     ('the first of several records',     'if len(matches) != 1:', 'if not matches:'),
-    ('a directory without a record',     '\n                     and os.path.isfile(os.path.join(files, d, "CMakeCXXCompiler.cmake")))',
+    ('a directory without a record',     '\n                     and os.path.isfile(os.path.join(files, d, '
+                                         '"CMakeCXXCompiler.cmake")))',
                                          ')'),
     ('an empty record entry accepted',   'if not entry(record, name, path):', 'if entry(record, name, path) is None:'),
     ('the linker id unchecked',          '"CMAKE_CXX_COMPILER_LINKER_ID",\n', '\n'),
     ('the include directories unchecked for staleness',
-                                         'for named in [record["CMAKE_CXX_COMPILER"], *record["CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES"].split(";")]:',
+                                         'for named in [record["CMAKE_CXX_COMPILER"], '
+                                         '*record["CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES"].split(";")]:',
                                          'for named in [record["CMAKE_CXX_COMPILER"]]:'),
     ('the compiler unchecked for staleness',
                                          'for named in [record["CMAKE_CXX_COMPILER"], *record',
@@ -515,40 +534,54 @@ MUTATIONS = [
     ('a library matched within a name',  'if library in linked]', 'if any(library in name for name in linked)]'),
     ('two standard libraries accepted',  'if len(named) != 1:', 'if not named:'),
     ('no standard library accepted',     'if len(named) != 1:', 'if len(named) > 1:'),
-    ('the symbols not consulted',        'if any(LIBCXX_NAMESPACE in name for name in listed) != (library == "libc++"):',
+    ('the symbols not consulted',        'if any(LIBCXX_NAMESPACE in name for name in listed)'
+                                         ' != (library == "libc++"):',
                                          'if False:'),
-    ('an empty listing accepted',        'if not listed:\n        sys.exit(f"nm lists no symbols', 'if False:\n        sys.exit(f"nm lists no symbols'),
+    ('an empty listing accepted',        'if not listed:\n        sys.exit(f"nm lists no symbols',
+                                         'if False:\n        sys.exit(f"nm lists no symbols'),
     ('the PATH nm run',                  'listed = symbols(nm, executable)', 'listed = symbols("nm", executable)'),
     ('an object counts every symbol',    'objects_by_source.values())))',
-                                         'objects_by_source.values())))\n    counts = {k: len(symbols(nm, os.path.join(build_dir, o)))'
-                                         ' for k, o in objects_by_source.items()}'),
+                                         'objects_by_source.values())))\n    counts = {k: len(symbols(nm, '
+                                         'os.path.join(build_dir, o))) for k, o in objects_by_source.items()}'),
     ('every input an object',            'if line.endswith(".o")]', 'if line]'),
-    ('no objects accepted',              'if not linked:\n        sys.exit(f"ninja lists no objects', 'if False:\n        sys.exit(f"ninja lists no objects'),
-    ('an unknown object skipped',        'sys.exit(f"ninja\'s compilation database has no entry for {obj}")', 'continue'),
+    ('no objects accepted',              'if not linked:\n        sys.exit(f"ninja lists no objects',
+                                         'if False:\n        sys.exit(f"ninja lists no objects'),
+    ('an unknown object skipped',        'sys.exit(f"ninja\'s compilation database has no entry for {obj}")',
+                                         'continue'),
     ('a source outside kept',            'if os.path.commonpath([source, root]) != root:', 'if False:'),
-    ('a source matched by prefix',       'if os.path.commonpath([source, root]) != root:', 'if not source.startswith(root):'),
+    ('a source matched by prefix',       'if os.path.commonpath([source, root]) != root:',
+                                         'if not source.startswith(root):'),
     ('a source keyed absolutely',        'key = os.path.relpath(source, root)', 'key = source'),
     ('a source not resolved from the build directory',
-                                         'os.path.join(compilation["directory"], compilation["file"])', 'compilation["file"]'),
+                                         'os.path.join(compilation["directory"], compilation["file"])',
+                                         'compilation["file"]'),
     ('a shared source overwritten',      'if key in out:', 'if False:'),
-    ('a bad database crashes',           'except (json.JSONDecodeError, TypeError, KeyError) as e:', 'except json.JSONDecodeError as e:'),
+    ('a bad database crashes',           'except (json.JSONDecodeError, TypeError, KeyError) as e:',
+                                         'except json.JSONDecodeError as e:'),
     ('the newline counted',              'len(name.encode("utf-8")) for name in listed',
                                          'len(name.encode("utf-8")) + 1 for name in listed'),
-    ('characters counted, not bytes',    'len(name.encode("utf-8")) for name in listed', 'len(name) for name in listed'),
+    ('characters counted, not bytes',    'len(name.encode("utf-8")) for name in listed',
+                                         'len(name) for name in listed'),
     ('the names demangled',              '[nm, "--format=just-symbols", *options, path]',
                                          '[nm, "--format=just-symbols", "--demangle", *options, path]'),
     ('the POSIX lines summed',           '[nm, "--format=just-symbols", *options, path]', '[nm, "-P", *options, path]'),
     ('debugging symbols listed',         'listed = symbols(nm, executable)', 'listed = symbols(nm, executable, "-a")'),
-    ('the defined names alone summed',   'for name in listed)},', 'for name in symbols(nm, executable, "--defined-only"))},'),
+    ('the defined names alone summed',   'for name in listed)},',
+                                         'for name in symbols(nm, executable, "--defined-only"))},'),
     ('the nm version from the first line', 'if re.search(r"\\d", line)]', 'if line]'),
-    ('no nm version accepted',           'if not lines:\n        sys.exit(f"{nm} --version', 'if False:\n        sys.exit(f"{nm} --version'),
-    ('a dirty tree called clean',        '"clean": run(["git", "-C", root, "status", "--porcelain", "--untracked-files=all"]) == "",',
+    ('no nm version accepted',           'if not lines:\n        sys.exit(f"{nm} --version',
+                                         'if False:\n        sys.exit(f"{nm} --version'),
+    ('a dirty tree called clean',        '"clean": run(["git", "-C", root, "status", "--porcelain", '
+                                         '"--untracked-files=all"]) == "",',
                                          '"clean": True,'),
     ('untracked files as git is configured',
-                                         '"status", "--porcelain", "--untracked-files=all"]', '"status", "--porcelain"]'),
+                                         '"status", "--porcelain", "--untracked-files=all"]',
+                                         '"status", "--porcelain"]'),
     ('the type\'s flags left out',       'if build_type:\n        flags +=', 'if False:\n        flags +='),
-    ('the linker\'s flags left out',     'flags = ["CMAKE_CXX_FLAGS", "CMAKE_EXE_LINKER_FLAGS"]', 'flags = ["CMAKE_CXX_FLAGS"]'),
-    ('the linker named as the compiler', '"linker":   {"path":    record["CMAKE_CXX_COMPILER_LINKER"],', '"linker":   {"path":    record["CMAKE_CXX_COMPILER"],'),
+    ('the linker\'s flags left out',     'flags = ["CMAKE_CXX_FLAGS", "CMAKE_EXE_LINKER_FLAGS"]',
+                                         'flags = ["CMAKE_CXX_FLAGS"]'),
+    ('the linker named as the compiler', '"linker":   {"path":    record["CMAKE_CXX_COMPILER_LINKER"],',
+                                         '"linker":   {"path":    record["CMAKE_CXX_COMPILER"],'),
     ('the executable a directory',       'if not os.path.isfile(executable):', 'if not os.path.exists(executable):'),
     ('a record not UTF-8 crashes',       'text = f.read()\n    except (OSError, UnicodeDecodeError) as e:',
                                          'text = f.read()\n    except OSError as e:'),
