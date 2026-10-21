@@ -167,4 +167,93 @@ namespace sequoia::testing
     std::size_t m_InitialCalls{};
     std::shared_ptr<std::size_t> m_Calls{std::make_shared<std::size_t>()};
   };
+
+  /** \brief A clock whose reading changes only through `advance`. */
+  class scripted_clock
+  {
+  public:
+    using duration   = std::chrono::nanoseconds;
+
+    // Not std::chrono::time_point<scripted_clock>: the standard requires a
+    // time_point's clock to meet Cpp17Clock, which needs a static now().
+    using time_point = std::chrono::time_point<std::chrono::steady_clock, duration>;
+
+    [[nodiscard]]
+    time_point now() const noexcept { return m_Now; }
+
+    void advance(duration elapsed) noexcept { m_Now += elapsed; }
+  private:
+    time_point m_Now{};
+  };
+
+  /** \brief Returns a task which advances `clock` by each of `durations` in
+             turn, starting again after the last.
+
+      Every copy of the task advances `clock` itself, and shares one count
+      of the calls made, so any `N` consecutive calls advance `clock` by each
+      duration once.
+   */
+  template<std::size_t N>
+  [[nodiscard]]
+  auto make_cycling_scripted_task(scripted_clock& clock, const scripted_clock::duration (&durations)[N])
+  {
+    return [&clock, cycle{std::to_array(durations)}, calls{std::make_shared<std::size_t>()}]() {
+      clock.advance(cycle[(*calls)++ % N]);
+    };
+  }
+
+  /** \brief A task which advances a `scripted_clock`, and counts its
+             invocations.
+
+      Every copy of the task advances the same clock, and shares one count
+      of the invocations, so the count covers every trial of every attempt.
+   */
+  class counted_scripted_task
+  {
+  public:
+    /** \brief Advances `clock` by `duration` on every call. */
+    counted_scripted_task(scripted_clock& clock, scripted_clock::duration duration)
+      : counted_scripted_task{clock, duration, 0, duration}
+    {}
+
+    /** \brief Advances `clock` by `initial` on each of the first
+               `initialCalls` calls, and by `later` on every call thereafter.
+     */
+    counted_scripted_task(scripted_clock& clock,
+                          scripted_clock::duration initial,
+                          std::size_t initialCalls,
+                          scripted_clock::duration later)
+      : m_Clock{&clock}
+      , m_Initial{initial}
+      , m_Later{later}
+      , m_InitialCalls{initialCalls}
+    {}
+
+    void operator()() const
+    {
+      m_Clock->advance((*m_Calls)++ < m_InitialCalls ? m_Initial : m_Later);
+    }
+
+    [[nodiscard]]
+    std::size_t calls() const noexcept { return *m_Calls; }
+  private:
+    scripted_clock* m_Clock{};
+    scripted_clock::duration m_Initial{}, m_Later{};
+    std::size_t m_InitialCalls{};
+    std::shared_ptr<std::size_t> m_Calls{std::make_shared<std::size_t>()};
+  };
+
+  /** \brief A test whose performance checks are meant to read a
+             `scripted_clock`.
+
+      The test is not a performance test, so it may run alongside other
+      tests. A performance check which reads a real clock belongs in a
+      performance test.
+   */
+  template<test_mode Mode>
+  using basic_scripted_clock_test = basic_test<Mode, performance_extender<Mode>>;
+
+  using scripted_clock_test                = basic_scripted_clock_test<test_mode::standard>;
+  using scripted_clock_false_positive_test = basic_scripted_clock_test<test_mode::false_positive>;
+  using scripted_clock_false_negative_test = basic_scripted_clock_test<test_mode::false_negative>;
 }

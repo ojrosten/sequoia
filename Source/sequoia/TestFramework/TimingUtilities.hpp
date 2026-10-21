@@ -66,17 +66,25 @@ namespace sequoia::testing
 #endif
   }
 
-  /** \brief Returns the duration of a call of `task`.
+  /** \brief A type from which `profile` can read the time. */
+  template<class Clock>
+  concept performance_clock = requires(const Clock& clock, const typename Clock::time_point& start) {
+    { clock.now() }         -> std::same_as<typename Clock::time_point>;
+    { clock.now() - start } -> std::convertible_to<std::chrono::duration<double>>;
+  };
 
-      The duration includes the computation of any value the call returns,
-      even if nothing else reads the value.
+  /** \brief Returns the duration of a call of `task`, as measured by `clock`.
+
+      The duration is the difference between readings of `clock.now()`
+      before and after the call. The duration includes the computation of
+      any value the call returns, even if nothing else reads the value.
    */
-  template<class Task>
+  template<class Task, performance_clock Clock>
     requires std::invocable<Task&>
   [[nodiscard]]
-  std::chrono::duration<double> profile(Task task)
+  std::chrono::duration<double> profile(Task task, const Clock& clock)
   {
-    const timer t{};
+    const auto start{clock.now()};
     do_not_optimize_away(task);
 
     if constexpr(std::is_void_v<std::invoke_result_t<Task&>>)
@@ -84,6 +92,6 @@ namespace sequoia::testing
     else
       do_not_optimize_away(task());
 
-    return t.time_elapsed();
+    return clock.now() - start;
   }
 }

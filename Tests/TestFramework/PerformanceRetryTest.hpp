@@ -9,14 +9,14 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "PerformanceTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class performance_retry_test final : public performance_test
+  class performance_retry_test final : public scripted_clock_test
   {
   public:
-    using performance_test::performance_test;
+    using scripted_clock_test::scripted_clock_test;
 
     [[nodiscard]]
     static std::filesystem::path source_file();
