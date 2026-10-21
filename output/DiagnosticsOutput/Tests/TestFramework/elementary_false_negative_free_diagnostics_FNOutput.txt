@@ -358,7 +358,7 @@ Predicted: not null
 =======================================
 
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 113
-Equality for non-null vs null pointer
+Equality for non-null vs. null pointer
 
 [int*]
 operator== returned false
@@ -391,7 +391,7 @@ Checking for equivalence with:
 =======================================
 
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 116
-Equivalence for non-null vs null pointer
+Equivalence for non-null vs. null pointer
 
 Comparison performed using:
 [sequoia::testing::value_tester<int*>]
@@ -431,7 +431,7 @@ Predicted: not null
 =======================================
 
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 124
-Equality for non-null vs null pointer
+Equality for non-null vs. null pointer
 
 [int const*]
 operator== returned false
@@ -464,7 +464,7 @@ Checking for equivalence with:
 =======================================
 
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 127
-Equivalence for non-null vs null pointer
+Equivalence for non-null vs. null pointer
 
 Comparison performed using:
 [sequoia::testing::value_tester<int const*>]
@@ -504,7 +504,7 @@ Predicted: not null
 =======================================
 
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 135
-Equality for non-null vs null pointer
+Equality for non-null vs. null pointer
 
 [int*]
 operator== returned false
@@ -537,7 +537,7 @@ Checking for equivalence with:
 =======================================
 
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 138
-Equivalence for non-null vs null pointer
+Equivalence for non-null vs. null pointer
 
 Comparison performed using:
 [sequoia::testing::value_tester<int*>]
@@ -577,7 +577,7 @@ Predicted: not null
 =======================================
 
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 146
-Equality for non-null vs null pointer
+Equality for non-null vs. null pointer
 
 [int const*]
 operator== returned false
@@ -610,7 +610,7 @@ Checking for equivalence with:
 =======================================
 
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 149
-Equivalence for non-null vs null pointer
+Equivalence for non-null vs. null pointer
 
 Comparison performed using:
 [sequoia::testing::value_tester<int const*>]
@@ -650,7 +650,7 @@ Predicted: not null
 =======================================
 
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 157
-Equality for non-null vs null pointer
+Equality for non-null vs. null pointer
 
 [int volatile*]
 operator== returned false
@@ -679,7 +679,7 @@ Predicted: not null
 =======================================
 
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 165
-Equality for non-null vs null pointer
+Equality for non-null vs. null pointer
 
 [int const volatile*]
 operator== returned false
