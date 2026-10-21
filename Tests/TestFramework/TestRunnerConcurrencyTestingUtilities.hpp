@@ -179,5 +179,5 @@ namespace sequoia::testing
     return runner;
   }
 
-  inline constexpr std::chrono::milliseconds sleep_duration_for_overlap_checks{10};
+  inline constexpr std::chrono::milliseconds sleep_duration_for_overlap_checks{40};
 }
