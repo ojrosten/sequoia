@@ -69,8 +69,10 @@ namespace sequoia::testing
         If the test has materials but no working copy, returns an empty
         directory.
 
-        \throws std::logic_error if the test was constructed with no materials paths
-        \throws std::runtime_error if the test has no materials, naming where they belong
+        \throws std::logic_error if the test was constructed with no materials
+                paths
+        \throws std::runtime_error if the test has no materials, naming where
+                they belong
      */
     [[nodiscard]]
     std::filesystem::path working_materials() const;
@@ -94,13 +96,14 @@ namespace sequoia::testing
     /** \brief Returns a directory for the test's own use.
 
         The directory has no original counterpart. Whenever the materials are
-        prepared, it holds nothing but the temporary copies of the working
-        copy and auxiliary materials.
+        prepared, it holds nothing but the temporary copies of the working copy
+        and auxiliary materials.
 
-        It is the root beneath which those copies are made, so `WorkingCopy` and `Auxiliary` are
-        reserved names within it; nothing enforces this.
+        It is the root beneath which those copies are made, so `WorkingCopy`
+        and `Auxiliary` are reserved names within it; nothing enforces this.
 
-        \throws std::logic_error if the test was constructed with no materials paths
+        \throws std::logic_error if the test was constructed with no materials
+                paths
      */
     [[nodiscard]]
     std::filesystem::path scratchpad_materials() const;

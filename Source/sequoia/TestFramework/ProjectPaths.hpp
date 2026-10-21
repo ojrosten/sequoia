@@ -246,9 +246,9 @@ namespace sequoia::testing
 
         Otherwise, returns an empty string.
 
-        By default, a multi-config build puts each configuration's executable in a directory named
-        after the configuration, directly within the build tree. For such a build, the name is the
-        executable's configuration.
+        By default, a multi-config build puts each configuration's executable
+        in a directory named after the configuration, directly within the build
+        tree. For such a build, the name is the executable's configuration.
      */
     [[nodiscard]]
     std::string configuration() const;

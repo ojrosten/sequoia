@@ -46,9 +46,10 @@ namespace sequoia::testing
 
         If the code is `return_code::success`, the exit status is 0 instead.
 
-        A runner therefore exits either with 0 or with a status from `runner_exit_offset + 1` to
-        `max_runner_exit_status`. That range is clear of these statuses, which a process gives when
-        it fails for reasons of its own:
+        A runner therefore exits either with 0 or with a status from
+        `runner_exit_offset + 1` to `max_runner_exit_status`. That range is
+        clear of these statuses, which a process gives when it fails for
+        reasons of its own:
         -# 1 and 2, generically;
         -# 23, from LeakSanitizer;
         -# 64 to 78, from BSD's sysexits;
