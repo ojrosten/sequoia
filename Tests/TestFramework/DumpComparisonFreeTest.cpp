@@ -91,6 +91,10 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>("A dump which does not exist", [this](){
       return read_dump(scratchpad_materials() /= "Absent.txt");
     });
+
+    check_exception_thrown<std::runtime_error>("A dump which is a directory", [this](){
+      return read_dump(scratchpad_materials());
+    });
   }
 
   void dump_comparison_free_test::test_comparison()

@@ -33,11 +33,11 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
     {
-      const bool obtainedIsNull{obtained}, predictionIsNull{prediction};
+      const bool obtainedHoldsValue{obtained}, predictedHoldsValue{prediction};
 
-      check(nullable_type_message(obtainedIsNull, predictionIsNull),
+      check(nullable_type_message(obtainedHoldsValue, predictedHoldsValue),
             logger,
-            (obtainedIsNull && predictionIsNull) || (!obtainedIsNull && !predictionIsNull));
+            obtainedHoldsValue == predictedHoldsValue);
     }
   };
 
