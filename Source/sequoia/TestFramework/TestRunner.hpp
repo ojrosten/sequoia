@@ -361,7 +361,7 @@ namespace sequoia::testing
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
-  /** \brief A test to run, and the paths of the files which the runner
+  /** \brief A test to run, with the paths of the files which the runner
              writes for it.
    */
   class test_to_run

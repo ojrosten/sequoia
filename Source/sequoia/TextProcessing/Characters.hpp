@@ -183,21 +183,15 @@ namespace sequoia
 
   namespace ascii
   {
-    /** \brief Returns the lowercase form of a character or of a string.
-
-        For a character, the result has the character's type. For a string, the
-        result is a `std::basic_string` of the string's character type. The
-        string may be a `std::basic_string_view`, a `std::basic_string`, or a
-        pointer to a null-terminated string such as a literal.
+    /** \brief The lowercase form of a character, of the same type, or of a string, as a `std::basic_string` of its
+               character type. A string may be a `std::basic_string_view`, a `std::basic_string`, or a pointer to a
+               null-terminated string such as a literal.
      */
     inline constexpr impl::case_conversion<impl::to_lowercase_character> to_lowercase{};
 
-    /** \brief Returns the uppercase form of a character or of a string.
-
-        For a character, the result has the character's type. For a string, the
-        result is a `std::basic_string` of the string's character type. The
-        string may be a `std::basic_string_view`, a `std::basic_string`, or a
-        pointer to a null-terminated string such as a literal.
+    /** \brief The uppercase form of a character, of the same type, or of a string, as a `std::basic_string` of its
+               character type. A string may be a `std::basic_string_view`, a `std::basic_string`, or a pointer to a
+               null-terminated string such as a literal.
      */
     inline constexpr impl::case_conversion<impl::to_uppercase_character> to_uppercase{};
 

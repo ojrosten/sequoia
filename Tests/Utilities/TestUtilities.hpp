@@ -22,9 +22,7 @@
 
 namespace sequoia::testing
 {
-  /** \brief Returns `message` with every path within the project root made
-             relative to the root.
-   */
+  /** \brief `message`, with every path beneath the project root made relative to the root. */
   [[nodiscard]]
   inline std::string relative_to_root(const project_paths& projPaths, std::string message)
   {
@@ -58,10 +56,8 @@ namespace sequoia::testing
     std::filesystem::path m_File{};
   };
 
-  /** \brief A directory which is removed with its contents when the object
-             is destroyed.
-
-      The object does not create the directory.
+  /** \brief A directory which is removed, with its contents, when the object is destroyed. The object
+             does not create the directory.
    */
   class transient_directory
   {

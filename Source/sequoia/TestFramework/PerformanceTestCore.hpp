@@ -94,7 +94,9 @@ namespace sequoia::testing
                                     baseline{};
     };
 
-    /** \brief The durations of the fast and slow tasks and their baselines. */
+    /** \brief The durations of the fast and slow tasks, each with its
+               baseline's.
+     */
     struct relative_performance_durations_with_baselines
     {
       task_and_baseline_durations fast{},

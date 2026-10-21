@@ -49,10 +49,7 @@ namespace sequoia::testing
     return line_breaks{static_cast<std::size_t>(n)};
   }
 
-  /** \brief Returns `s` between `--` and `--`.
-
-      An empty `s` gives an empty string.
-   */
+  /** \brief `s` between `--` and `--`; empty if `s` is empty. */
   [[nodiscard]]
   std::string emphasise(std::string_view s);
 
@@ -113,11 +110,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string operator_message(std::string_view op, std::string_view retVal);
 
-  /** \brief Returns a message giving the obtained and predicted states of a
-             nullable value.
-
-      The message lays out the states as `default_prediction_message` lays
-      out values. Each state is `null` or `not null`.
+  /** \brief The obtained and predicted states of a nullable value, each `null` or `not null`, laid out as
+             `default_prediction_message` lays out values.
    */
   [[nodiscard]]
   std::string nullable_type_message(bool obtainedHoldsValue, bool predictedHoldsValue);
@@ -219,10 +213,8 @@ namespace sequoia::testing
   struct no_source_location_t{};
   inline constexpr no_source_location_t no_source_location{};
 
-  /** \brief A check's description and source location.
-
-      By default, the location is the constructor's call site. A `reporter`
-      made with `no_source_location` has no location.
+  /** \brief The description of a check, with the source location of the check; by default, the location of the
+             constructor's call site. A `reporter` made with `no_source_location` has none.
    */
   class reporter
   {
@@ -335,9 +327,8 @@ namespace sequoia::testing
   };
 
 
-  /** \brief Joins the names `type_demangler` makes for `T` and `U...`.
-
-      A comma and a new line separate consecutive names.
+  /** \brief The name `type_demangler` makes for `T`; then, for each of `U...`, a comma and, on a new line, the
+             name `type_demangler` makes for that type.
    */
   template<class T, class... U>
   struct type_list_demangler
