@@ -109,8 +109,8 @@ namespace sequoia::testing
   {
     std::string_view m_NameOfStateWithValue{}, m_NameOfStateWithoutValue{};
   public:
-    constexpr both_or_neither_hold_a_value(std::string_view nameOfStateWithValue,
-                                           std::string_view nameOfStateWithoutValue)
+    constexpr explicit both_or_neither_hold_a_value(std::string_view nameOfStateWithValue,
+                                                    std::string_view nameOfStateWithoutValue)
       : m_NameOfStateWithValue{nameOfStateWithValue}
       , m_NameOfStateWithoutValue{nameOfStateWithoutValue}
     {}
@@ -121,8 +121,9 @@ namespace sequoia::testing
       return holdsValue ? m_NameOfStateWithValue : m_NameOfStateWithoutValue;
     }
 
+    template<std::same_as<bool> T>
     [[nodiscard]]
-    constexpr bool operator()(const bool obtainedHoldsValue, const bool predictedHoldsValue) const noexcept
+    constexpr bool operator()(const T obtainedHoldsValue, const T predictedHoldsValue) const noexcept
     {
       return obtainedHoldsValue == predictedHoldsValue;
     }
