@@ -77,19 +77,6 @@ namespace sequoia::testing
     }
   };
 
-  template<>
-  struct value_tester<parsing::commandline::argument_parser>
-  {
-    using type = parsing::commandline::argument_parser;
-    using prediction_type = parsing::commandline::outcome;
-
-    template<test_mode Mode>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const prediction_type& prediction)
-    {
-      check(weak_equivalence, "", logger, obtained.get(), prediction);
-    }
-  };
-
   class commandline_arguments
   {
   public:

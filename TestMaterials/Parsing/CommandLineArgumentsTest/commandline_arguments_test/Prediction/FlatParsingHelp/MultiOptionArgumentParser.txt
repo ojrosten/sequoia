@@ -1,8 +1,0 @@
-Usage: foo [command] [options]
-
-Commands:
-  create, -c <class_name> <directory>
-
-Options:
-  --async
-  --help, -h                           Describe the command or option this follows; alone, the top level

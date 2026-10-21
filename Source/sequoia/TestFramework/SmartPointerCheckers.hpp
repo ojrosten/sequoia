@@ -49,13 +49,13 @@ namespace sequoia::testing
       }
       else
       {
-        const bool obtainedIsNull{obtained}, predictionIsNull{prediction};
+        const bool obtainedHoldsValue{obtained}, predictedHoldsValue{prediction};
 
         check(equality,
-              nullable_type_message(obtainedIsNull, predictionIsNull),
+              nullable_type_message(obtainedHoldsValue, predictedHoldsValue),
               logger,
-              static_cast<bool>(obtained),
-              static_cast<bool>(prediction));
+              obtainedHoldsValue,
+              predictedHoldsValue);
       }
     }
   };
