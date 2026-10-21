@@ -204,7 +204,7 @@ namespace sequoia::testing
 
     check_output(report({"Serial Output"}), "Serial Output", outputStream);
     check(equality,
-          "Tests execute one at a time in a serial run",
+          "No two tests' sleeps overlap in a serial run",
           peak_overlap(serial_family_base::sleep_intervals()),
           std::size_t{1});
   }

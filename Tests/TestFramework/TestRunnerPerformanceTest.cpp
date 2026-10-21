@@ -453,7 +453,7 @@ namespace sequoia::testing
       print_peak_overlap(outputStream, peak);
 
       check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream);
-      check(equality, "Both threads of the pool, and no more, execute tests at once", peak, std::size_t{2});
+      check(equality, "Two tests' sleeps overlap, and no three do", peak, std::size_t{2});
 
       check_speedup_over_serial_execution("A pool of two threads is about twice as fast as serial execution",
                                           arguments,
