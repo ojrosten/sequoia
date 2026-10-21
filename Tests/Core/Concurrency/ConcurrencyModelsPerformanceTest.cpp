@@ -195,18 +195,19 @@ namespace sequoia::testing
      waiting_task by reference, so no trial times the start or join of the
      pool's threads.
 
-     The lower bounds sit further below the ideal speed-up than a symmetric tolerance would put
-     them, because a pool of N on a machine with N hardware threads has no headroom: the pool's
-     threads and the thread waiting on them are N+1 runnable entities on N cores, and
-     instrumentation costs the rest. A tighter bound does not distinguish a pool which failed to
-     parallelise from a machine with nothing spare, which is the distinction these checks exist
-     to make.
+     The lower bounds sit further below the ideal speed-up than a symmetric
+     tolerance would put them, because a pool of N on a machine with N hardware
+     threads has no headroom: the pool's threads and the thread waiting on them
+     are N+1 runnable entities on N cores, and instrumentation costs the rest.
+     A tighter bound does not distinguish a pool which failed to parallelise
+     from a machine with nothing spare, which is the distinction these checks
+     exist to make.
 
-     The upper bounds are not slack: exceeding the ideal by more than the cost of the hidden pushes
-     would mean the serial tasks' durations were wrong.
+     The upper bounds are not slack: exceeding the ideal by more than the cost
+     of the hidden pushes would mean the serial tasks' durations were wrong.
 
-     This is a holding position. Bounds which have to be widened whenever the hardware changes are
-     measuring the machine as much as the code.
+     This is a holding position. Bounds which have to be widened whenever the
+     hardware changes are measuring the machine as much as the code.
   */
   void threading_models_performance_test::test_waiting_task(const std::chrono::milliseconds millisecs)
   {
