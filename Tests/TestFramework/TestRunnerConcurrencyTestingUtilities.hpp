@@ -20,6 +20,7 @@
 #include <ostream>
 #include <source_location>
 #include <span>
+#include <string_view>
 #include <vector>
 
 namespace sequoia::testing
@@ -62,6 +63,13 @@ namespace sequoia::testing
       no peak overlap if it cannot.
    */
   void print_peak_overlap(std::ostream& stream, std::size_t peak);
+
+  /** SCRATCH, not for merging: prints to stderr and appends to
+      $GITHUB_WORKSPACE/run-log/peaks.txt a line
+      `SCRATCH-PEAK <label> peak <peak> sleep_ms <ms> starts_us ... durs_us ...`
+      giving each interval's start (from the earliest) and duration in microseconds.
+   */
+  void scratch_report_run(std::string_view label, std::span<const steady_clock_interval> intervals);
 
   /** The base of each of `Family`'s tests which sleep. The `run_tests` of a
       test which sleeps must make one call to `sleep_and_check`. The tests

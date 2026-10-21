@@ -394,6 +394,7 @@ namespace sequoia::testing
 
     const auto peak{peak_overlap(acceleration_family_base::sleep_intervals())};
     print_peak_overlap(outputStream, peak);
+    scratch_report_run("parallel", acceleration_family_base::sleep_intervals());
 
     check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream);
 
@@ -419,6 +420,7 @@ namespace sequoia::testing
 
       const auto peak{peak_overlap(acceleration_family_base::sleep_intervals())};
       print_peak_overlap(outputStream, peak);
+    scratch_report_run("pool8", acceleration_family_base::sleep_intervals());
 
       check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream);
       check(std::ranges::greater_equal{},
@@ -439,6 +441,7 @@ namespace sequoia::testing
 
       const auto peak{peak_overlap(acceleration_family_base::sleep_intervals())};
       print_peak_overlap(outputStream, peak);
+    scratch_report_run("pool2", acceleration_family_base::sleep_intervals());
 
       check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream);
       check(equality, "Two tests' sleeps overlap, and no three do", peak, std::size_t{2});
