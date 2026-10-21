@@ -10,10 +10,12 @@
 /** \file
     \brief Parsing of commandline arguments.
 
-    The philosophy is to specify a forest whose nodes are instance of sequoia::parsing::commandline::option.
+    The philosophy is to specify a forest whose nodes are instances of
+    sequoia::parsing::commandline::option.
     This is used at runtime, as the command line arguments are parsed to generate a forest
     whose nodes are instances of sequoia::parsing::commandline::operation.
-    This tree is then traversed, and the function objects held by the `operation`s invoked.
+    Each tree of this forest is then traversed, and the function objects held
+    by the `operation`s invoked.
 */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
@@ -108,15 +110,14 @@ namespace sequoia::parsing::commandline
 
   using options_tree   = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, option>;
   using options_forest = std::vector<options_tree>;
-  using option_tree    = maths::const_tree_adaptor<options_tree>;
-  
-  using operations_tree     = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, operation>;
-  using operations_sub_tree = maths::tree_adaptor<operations_tree>;
-  using operations_forest   = std::vector<operations_tree>;
+
+  using operations_tree   = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, operation>;
+  using operations_forest = std::vector<operations_tree>;
 
   /** \brief The result of parse().
 
-      -# `zeroth_arg`: the zeroth argument, typically the path of the executable.
+      -# `zeroth_arg`: the zeroth argument, typically the path of the
+         executable; empty if `argc` is zero.
       -# `operations`: one \ref operation tree per top-level option encountered, in the order
          encountered, the root holding the option's function objects and arguments. A nested option
          encountered adds a node beneath the node of its enclosing option if the nested option has a
@@ -156,9 +157,11 @@ namespace sequoia::parsing::commandline
               all of its parameters.
       \throws std::runtime_error if a group of aliases names an option with parameters or with
               nested options.
-      \throws std::logic_error if both the function objects, `early` and `late`, belonging to
-              a top-level `option` are null.
-      \throws std::logic_error if an option's name or alias is spelt as a help request.
+      \throws std::invalid_argument if a tree of `options` is empty.
+      \throws std::invalid_argument if both the function objects, `early` and
+              `late`, belonging to a top-level `option` are null.
+      \throws std::invalid_argument if an option's name or alias is spelt as a
+              help request.
 
       \returns The \ref sequoia::parsing::commandline::outcome "outcome".
    */
@@ -195,53 +198,4 @@ namespace sequoia::parsing::commandline
 
     return help;
   }
-
-  /** \brief Parses command line arguments, building \ref outcome from an \ref option forest. */
-  class argument_parser
-  {
-  public:
-
-    argument_parser(int argc, char** argv, const options_forest& options);
-
-    [[nodiscard]]
-    outcome get() const
-    {
-      return {m_ZerothArg, m_Operations, m_Help};
-    }
-  private:
-    enum class top_level { yes, no };
-
-    /** \brief The operation an option contributes its arguments to.
-
-        An option not bound to a function object shares the operation of the option enclosing it,
-        the first `enclosing_args_supplied` arguments of which were supplied to the enclosing options.
-     */
-    struct operation_data
-    {
-      operations_sub_tree oper_tree{};
-      std::size_t         enclosing_args_supplied{};
-    };
-
-    operations_forest m_Operations{};
-    int m_Index{1}, m_ArgCount{};
-    char** m_Argv{};
-    const options_forest* m_Options{};
-    std::string m_ZerothArg{}, m_Help{};
-    option_tree m_MostRecentlyEncounteredOption{};
-    std::vector<option_tree> m_OptionsEntered{};
-
-    template<std::ranges::input_range Options>
-    void parse(const Options& options, const operation_data& previousOperationData, top_level topLevel);
-
-    template<std::ranges::input_range Options>
-    [[nodiscard]]
-    bool process_concatenated_aliases(const Options& options, std::string_view arg, operation_data currentOperationData, top_level topLevel);
-
-    auto process_option(option_tree currentOptionTree, operation_data currentOperationData, top_level topLevel)->operation_data;
-
-    [[nodiscard]]
-    std::string generate_help() const;
-
-    static bool is_alias(const option& opt, std::string_view s) noexcept;
-  };
 }
