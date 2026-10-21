@@ -25,7 +25,7 @@ namespace sequoia::testing
   private:
     void test_slow_test_runner_constraints();
 
-    void test_reversed_and_empty_sleep_intervals();
+    void test_reversed_and_empty_steady_clock_intervals();
 
     void test_index_beyond_registered_tests();
 

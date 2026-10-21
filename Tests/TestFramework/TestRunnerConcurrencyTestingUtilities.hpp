@@ -24,18 +24,19 @@
 
 namespace sequoia::testing
 {
-  /** The interval of time over which a slow test sleeps. The interval
-      contains its start time but not its end time.
+  /** A half-open interval of `std::chrono::steady_clock` time points. The
+      interval contains each time point from its start time up to, but not
+      including, its end time.
    */
-  class sleep_interval
+  class steady_clock_interval
   {
   public:
     using time_point = std::chrono::steady_clock::time_point;
 
-    sleep_interval() = default;
+    steady_clock_interval() = default;
 
     /** \throws std::invalid_argument if `end` is earlier than `start` */
-    sleep_interval(time_point start, time_point end);
+    steady_clock_interval(time_point start, time_point end);
 
     [[nodiscard]]
     time_point start_time() const noexcept { return m_Start; }
@@ -44,23 +45,23 @@ namespace sequoia::testing
     time_point end_time() const noexcept { return m_End; }
 
     [[nodiscard]]
-    friend bool operator==(const sleep_interval&, const sleep_interval&) noexcept = default;
+    friend bool operator==(const steady_clock_interval&, const steady_clock_interval&) noexcept = default;
   private:
-    time_point m_Start{};
-    time_point m_End{};
+    time_point m_Start{},
+               m_End{};
   };
 
   /** Returns the largest number of `intervals` which contain the same
       instant.
    */
   [[nodiscard]]
-  std::size_t peak_overlap(std::span<const sleep_interval> intervals);
+  std::size_t peak_overlap(std::span<const steady_clock_interval> intervals);
 
-  /** Writes `[Peak Overlap: <peak>]` and a newline to `stream`. CI's step
+  /** Prints `[Peak Overlap: <peak>]` and a newline to `stream`. CI's step
       "Report the performance test's timings" parses this text, and prints
       no peak overlap if it cannot.
    */
-  void write_peak_overlap(std::ostream& stream, std::size_t peak);
+  void print_peak_overlap(std::ostream& stream, std::size_t peak);
 
   /** The base of each slow test of `Family`. A slow test's `run_tests` must
       make one call to `sleep_and_check`. The tests registered together must
@@ -101,13 +102,13 @@ namespace sequoia::testing
       return std::source_location::current().file_name();
     }
 
-    /** Returns the `sleep_interval` each test of the family recorded since
-        the last `prepare_run`, at the index the test passed to
-        `sleep_and_check`. A test which has recorded none has an empty
-        interval.
+    /** Returns the intervals for which the family's tests slept since the
+        last `prepare_run`. Each test's interval is at the index the test
+        passed to `sleep_and_check`. An index at which no test has recorded
+        an interval holds an empty interval.
      */
     [[nodiscard]]
-    static std::vector<sleep_interval> sleep_intervals()
+    static std::vector<steady_clock_interval> sleep_intervals()
     {
       return st_SleepIntervals;
     }
@@ -117,7 +118,7 @@ namespace sequoia::testing
      */
     static void prepare_run(std::size_t numTests, std::chrono::milliseconds sleepDuration)
     {
-      st_SleepIntervals.assign(numTests, sleep_interval{});
+      st_SleepIntervals.assign(numTests, steady_clock_interval{});
       st_SleepDuration = sleepDuration;
     }
   protected:
@@ -127,7 +128,8 @@ namespace sequoia::testing
     slow_test_base& operator=(slow_test_base&&) noexcept = default;
 
     /** Sleeps for the duration last passed to `prepare_run`, records the
-        sleep's `sleep_interval` at `index`, and makes one check.
+        sleep's interval at `index` of the family's sleep intervals, and
+        makes one check.
 
         \throws std::out_of_range if `index` is not less than the number of
                 tests last passed to `prepare_run`
@@ -136,13 +138,13 @@ namespace sequoia::testing
     {
       const auto start{std::chrono::steady_clock::now()};
       precise_sleep_for(st_SleepDuration);
-      st_SleepIntervals.at(index) = sleep_interval{start, std::chrono::steady_clock::now()};
+      st_SleepIntervals.at(index) = steady_clock_interval{start, std::chrono::steady_clock::now()};
       check(equality, "Integer equality", index, index);
     }
   private:
     // Each test writes only its own element. A runner's execute waits for
     // every test, so the elements may be read once it returns.
-    inline static std::vector<sleep_interval> st_SleepIntervals{};
+    inline static std::vector<steady_clock_interval> st_SleepIntervals{};
 
     // Set before a run begins, and read only by its tests
     inline static std::chrono::milliseconds st_SleepDuration{};

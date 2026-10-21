@@ -102,7 +102,7 @@ namespace sequoia::testing
   void test_runner_serial_execution_free_test::run_tests()
   {
     test_slow_test_runner_constraints();
-    test_reversed_and_empty_sleep_intervals();
+    test_reversed_and_empty_steady_clock_intervals();
     test_index_beyond_registered_tests();
     test_separation_of_slow_test_families();
     test_serial_execution();
@@ -116,18 +116,18 @@ namespace sequoia::testing
     STATIC_CHECK(!make_slow_test_runner_accepts_v<serial_family, slow_test_0, active_slow_test>);
   }
 
-  void test_runner_serial_execution_free_test::test_reversed_and_empty_sleep_intervals()
+  void test_runner_serial_execution_free_test::test_reversed_and_empty_steady_clock_intervals()
   {
     const auto now{std::chrono::steady_clock::now()};
 
     check_exception_thrown<std::invalid_argument>(
-      "A sleep interval which ends before it starts is refused",
-      [now]() { return sleep_interval{now, now - std::chrono::steady_clock::duration{1}}; }
+      "A steady clock interval which ends before it starts is refused",
+      [now]() { return steady_clock_interval{now, now - std::chrono::steady_clock::duration{1}}; }
     );
 
     check(equality,
-          "An empty sleep interval overlaps nothing",
-          peak_overlap(std::array{sleep_interval{now, now}}),
+          "An empty steady clock interval contains no time point",
+          peak_overlap(std::array{steady_clock_interval{now, now}}),
           std::size_t{});
   }
 
@@ -167,9 +167,9 @@ namespace sequoia::testing
     check(equality, "Active family's return code", activeRunner.execute(), return_code::success);
 
     check("A family's run leaves another family's sleep intervals as they were",
-          std::ranges::equal(idle_slow_test_base::sleep_intervals(), std::array{sleep_interval{}}));
+          std::ranges::equal(idle_slow_test_base::sleep_intervals(), std::array{steady_clock_interval{}}));
 
-    auto durationOf{[](const sleep_interval& interval) { return interval.end_time() - interval.start_time(); }};
+    auto durationOf{[](const steady_clock_interval& interval) { return interval.end_time() - interval.start_time(); }};
     const auto longestSleep{
       std::ranges::fold_left(active_slow_test_base::sleep_intervals() | std::views::transform(durationOf),
                              std::chrono::steady_clock::duration{},

@@ -9,7 +9,6 @@
 
 #include <algorithm>
 #include <array>
-#include <format>
 #include <numeric>
 #include <ranges>
 #include <stdexcept>
@@ -17,20 +16,20 @@
 
 namespace sequoia::testing
 {
-  sleep_interval::sleep_interval(time_point start, time_point end)
+  steady_clock_interval::steady_clock_interval(time_point start, time_point end)
     : m_Start{start}
     , m_End{end}
   {
     if(end < start)
-      throw std::invalid_argument{"A sleep interval cannot end before it starts"};
+      throw std::invalid_argument{"A steady clock interval cannot end before it starts"};
   }
 
   [[nodiscard]]
-  std::size_t peak_overlap(std::span<const sleep_interval> intervals)
+  std::size_t peak_overlap(std::span<const steady_clock_interval> intervals)
   {
-    using change_t = std::pair<sleep_interval::time_point, std::ptrdiff_t>;
+    using change_t = std::pair<steady_clock_interval::time_point, std::ptrdiff_t>;
     auto endpoints{
-      [](const sleep_interval& interval){
+      [](const steady_clock_interval& interval){
         return std::array{change_t{interval.start_time(), 1}, change_t{interval.end_time(), -1}};
       }
     };
@@ -52,8 +51,8 @@ namespace sequoia::testing
     return static_cast<std::size_t>(std::ranges::fold_left(overlaps, std::ptrdiff_t{}, std::ranges::max));
   }
 
-  void write_peak_overlap(std::ostream& stream, std::size_t peak)
+  void print_peak_overlap(std::ostream& stream, std::size_t peak)
   {
-    stream << std::format("[Peak Overlap: {}]\n", peak);
+    std::println(stream, "[Peak Overlap: {}]", peak);
   }
 }
