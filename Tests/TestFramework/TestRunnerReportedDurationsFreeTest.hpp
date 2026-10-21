@@ -32,9 +32,6 @@ namespace sequoia::testing
 
     void test_execution_duration_of_busiest_thread();
 
-    [[nodiscard]]
-    std::filesystem::path minimal_fake_path() const;
-
     void check_output(std::string_view description, std::string_view dirName, const std::stringstream& output);
   };
 }

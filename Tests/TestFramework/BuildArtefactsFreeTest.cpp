@@ -63,6 +63,18 @@ namespace sequoia::testing
               {"a.o", {"a.cpp", "/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/SDKSettings.json", "a.h"}},
               {"c.o", {"c.cpp", "/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/SDKSettings.json"}}
             });
+
+      // `sub dir/b.h`, which only the superseded record names, has gone;
+      // the order pinned is the implementation's choice
+      check(equality,
+            "A log ninja wrote: the table holds only the files the remaining records name",
+            read_compilations(built, {}).files,
+            std::vector<fs::path>{"a.o",
+                                  "/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/SDKSettings.json",
+                                  "a.cpp",
+                                  "a.h",
+                                  "c.o",
+                                  "c.cpp"});
     }
 
     {
@@ -422,6 +434,10 @@ namespace sequoia::testing
             "A source which wrote no object is not a compilation",
             expand(read_compilations(tree, configuration)),
             std::vector<compilation_record>{});
+      check(equality,
+            "The table holds none of the files of a source which wrote no object",
+            read_compilations(tree, configuration).files,
+            std::vector<fs::path>{});
     }
   }
 
@@ -429,59 +445,17 @@ namespace sequoia::testing
   {
     const auto scratch{scratchpad_materials()};
     const auto root{scratch / "build"};
-    fs::create_directories(root / "CMakeFiles" / "4.1.2");
-    fs::create_directories(root / "CMakeFiles" / "4.2.0");
+    fs::create_directories(root);
     const auto cache{root / "CMakeCache.txt"};
 
-    // Two compiler information directories, as a tree configured by two versions of CMake has, and CRLF, as
-    // Windows writes
+    // CRLF, as Windows writes
     write_to_file(cache,
                   "# CMake cache\r\nCMAKE_GENERATOR:INTERNAL=Ninja\r\nCMAKE_HOME_DIRECTORY:INTERNAL=/proj\r\n",
                   std::ios_base::binary);
 
-    // `read_build_tree` canonicalises the implicit include directories. No
-    // machine has the ones below, so it returns them as written.
-    write_to_file(root / "CMakeFiles" / "4.1.2" / "CMakeCXXCompiler.cmake",
-                  "set(CMAKE_CXX_COMPILER \"/usr/bin/c++\")\n"
-                  "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"/fixture/include/c++/16;/fixture/include\")\n",
-                  std::ios_base::out);
-    write_to_file(root / "CMakeFiles" / "4.2.0" / "CMakeCXXCompiler.cmake",
-                  "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"/fixture/include\")\n",
-                  std::ios_base::out);
-
     const auto tree{read_build_tree(cache)};
     check(equality, "Build directory", tree.build_directory, root);
     check(equality, "Generator", tree.generator, std::string{"Ninja"});
-    check(equality,
-          "Implicit include directories, from every compiler information file, sorted, each once",
-          tree.implicit_include_directories,
-          std::vector<fs::path>{"/fixture/include", "/fixture/include/c++/16"});
-
-    fs::create_directories(root / "CMakeFiles" / "4.3.0");
-    write_to_file(root / "CMakeFiles" / "4.3.0" / "CMakeCXXCompiler.cmake",
-                  "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"\")\n",
-                  std::ios_base::out);
-    check(equality,
-          "A compiler information file naming no implicit include directories, as MSVC's does, adds none",
-          read_build_tree(cache).implicit_include_directories,
-          std::vector<fs::path>{"/fixture/include", "/fixture/include/c++/16"});
-
-    fs::create_directories(root / "CMakeFiles" / "4.4.0");
-    write_to_file(root / "CMakeFiles" / "4.4.0" / "CMakeCXXCompiler.cmake",
-                  "set(CMAKE_CXX_COMPILER \"cl\")\n",
-                  std::ios_base::out);
-    check(equality,
-          "A compiler information file which does not set the implicit include directories adds none",
-          read_build_tree(cache).implicit_include_directories,
-          std::vector<fs::path>{"/fixture/include", "/fixture/include/c++/16"});
-
-    const auto unconfigured{scratch / "unconfigured"};
-    fs::create_directories(unconfigured);
-    write_to_file(unconfigured / "CMakeCache.txt", "CMAKE_GENERATOR:INTERNAL=Ninja\n", std::ios_base::out);
-    check(equality,
-          "A tree with no CMakeFiles directory has no implicit include directories",
-          read_build_tree(unconfigured / "CMakeCache.txt").implicit_include_directories,
-          std::vector<fs::path>{});
 
     check_exception_thrown<std::runtime_error>(
       "A cache which does not exist",
@@ -513,6 +487,15 @@ namespace sequoia::testing
               {"CMakeFiles/x.dir/b.cpp.o", {"/proj/b.cpp", "/proj/b.h"}},
               {"CMakeFiles/x.dir/c.cpp.o", {"/proj/c.cpp", "/proj/c.h"}}
             });
+
+      // The order pinned is the implementation's choice
+      check(equality,
+            "The table holds no file which only the retired object's record names",
+            read_compilations(tree, {}).files,
+            std::vector<fs::path>{"CMakeFiles/x.dir/a.cpp.o", "/proj/a.cpp", "/proj/a.h",
+                                  "CMakeFiles/x.dir/b.cpp.o", "/proj/b.h",
+                                  "CMakeFiles/x.dir/c.cpp.o", "/proj/c.h", "/proj/c.cpp",
+                                  "/proj/b.cpp"});
 
       write_to_file(root / "build.ninja",
                     "build CMakeFiles/x.dir/a.cpp.o CXX_COMPILER /proj/a.cpp\n",

@@ -28,10 +28,11 @@
 # event exists. A re-run joins its workflow's concurrency group, and so could
 # cancel that newer run.
 #
-# Once <attempt> reaches max_attempts, the script re-runs nothing, and warns.
-# Whether GitHub starts this script's workflow again when an attempt it asked
-# for finishes is not documented. If it does not, a person re-runs any loss the
-# first request did not reach.
+# GitHub starts this script's workflow again when an attempt the script asked
+# for finishes, so the script re-runs a job lost in that attempt too. Once
+# <attempt> reaches max_attempts, the script re-runs nothing, and warns. Run
+# 39478109862 lost its macOS column in attempts 1 and 2, and the script asked
+# for attempts 2 and 3.
 #
 # The jobs are read through read_settled_jobs.sh, beside this script, which
 # waits for every job to have a conclusion, since the jobs API can lag.

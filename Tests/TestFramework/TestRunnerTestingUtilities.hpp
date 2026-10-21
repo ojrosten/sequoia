@@ -21,13 +21,19 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
+  inline project_paths::customizer fake_project_customization()
+  {
+    return {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}};
+  }
+
+  [[nodiscard]]
   inline test_runner make_fake_project_runner(commandline_arguments& args, std::stringstream& outputStream)
   {
     return test_runner{args.size(),
                        args.get(),
                        "Oliver J. Rosten",
                        "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       fake_project_customization(),
                        outputStream};
   }
 

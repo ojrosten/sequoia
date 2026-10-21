@@ -26,8 +26,12 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string describe_exception(std::exception_ptr e);
 
-  /** \brief A terminate handler: writes `describe_exception` of `std::current_exception()` to standard error, then
-             calls `std::abort`.
+  /** \brief Reports the current exception on standard error, then calls
+             `std::abort`.
+
+      The function is a terminate handler. The report gives
+      `describe_exception` of `std::current_exception()`. If describing the
+      exception throws, the report says that it could not be described.
    */
   [[noreturn]]
   void report_termination() noexcept;

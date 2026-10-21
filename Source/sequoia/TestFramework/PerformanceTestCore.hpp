@@ -70,8 +70,10 @@ namespace sequoia::testing
 
   namespace impl
   {
-    /** \brief A judgement of the speed-up of a fast task over a slow one:
-               whether it failed---and if so, why---and its measurements.
+    /** \brief A judgement of the speed-up of a fast task over a slow one,
+               and the measurements behind it.
+
+        `failure` is `std::nullopt` if the judgement did not fail.
      */
     struct relative_performance_judgement
     {
@@ -94,9 +96,7 @@ namespace sequoia::testing
                                     baseline{};
     };
 
-    /** \brief The durations of the fast and slow tasks, each with its
-               baseline's.
-     */
+    /** \brief The durations of the fast and slow tasks and their baselines. */
     struct relative_performance_durations_with_baselines
     {
       task_and_baseline_durations fast{},
@@ -489,9 +489,6 @@ namespace sequoia::testing
 
        Any exception thrown by `fast` or `slow` propagates.
 
-       \pre Neither `fast` nor `slow` performs a check using a different
-       instance of the logger.
-
        \throws std::invalid_argument if either end of `parameters.prediction`
        is not greater than 1, if its lower end exceeds its upper end, or if
        `parameters.minimum_trials` is less than
@@ -547,9 +544,6 @@ namespace sequoia::testing
        -# The summary also gives each baseline's trimmed mean duration. The
           summary gives no speed-up if the last attempt failed for too many
           extremes.
-
-       \pre None of the four tasks performs a check using a different instance
-       of the logger.
 
        \throws std::invalid_argument if either end of `parameters.prediction`
        is not greater than 1, if its lower end exceeds its upper end, or if

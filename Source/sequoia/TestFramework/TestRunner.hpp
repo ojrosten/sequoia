@@ -361,7 +361,7 @@ namespace sequoia::testing
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
-  /** \brief A test to run, with the paths of the files which the runner
+  /** \brief A test to run, and the paths of the files which the runner
              writes for it.
    */
   class test_to_run
@@ -906,8 +906,6 @@ namespace sequoia::testing
     void check_argument_consistency();
 
     void check_for_missing_tests();
-
-    void check_for_coarse_sleeps();
 
     void write_run_stamp() const;
 
