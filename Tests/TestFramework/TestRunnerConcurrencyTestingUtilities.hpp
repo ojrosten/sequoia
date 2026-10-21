@@ -66,8 +66,14 @@ namespace sequoia::testing
   /** The base of each of `Family`'s tests which sleep. The `run_tests` of a
       test which sleeps must make one call to `sleep_and_check`. The tests
       registered together must pass it distinct indices, from 0 to one less
-      than their number. The sleep intervals of a run give a lower bound on how
-      many of the family's tests the runner executed at the same time.
+      than their number.
+
+      Each test records the interval for which it slept, and a test's sleep
+      lies within its total execution time. So tests whose sleeps overlap ran
+      at the same time, though tests which ran at the same time need not have
+      overlapping sleeps. The `peak_overlap` of a run's sleep intervals
+      therefore never exceeds the number of the family's tests the runner
+      executed at once.
 
       The tests of one family share one sleep duration and one set of sleep
       intervals. So from a call of `make_runner_of_tests_which_sleep` to the
