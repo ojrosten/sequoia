@@ -20,7 +20,9 @@
 #     number of symbols nm lists for the executable, and the total length in
 #     bytes of their names;
 #   - that total is the same for a fixture built at another path, although
-#     the size of the string table holding the names is not;
+#     the executable is not, and on Mach-O nor is the size of the string
+#     table holding the names;
+#   - nm's listing is split into names at newlines alone;
 #   - each object ninja links into the target is keyed by its source's path
 #     relative to the repository, and holds the symbols nm finds defined in
 #     it. An object in the build directory which ninja does not link is left
@@ -30,8 +32,9 @@
 #   - a build with work to do, a generator other than Ninja, a compiler record
 #     with an entry missing or empty or naming a path which no longer exists,
 #     a record naming both standard libraries or neither, or naming the one
-#     the executable's symbols contradict, and an executable which is missing,
-#     or for which nm lists nothing, are each an error;
+#     the executable's symbols contradict, and an executable which is
+#     missing, unreadable, neither an ELF file nor a thin Mach-O file, or one
+#     for which nm lists nothing, are each an error;
 #   - so are an empty selection of objects, an object ninja's compilation
 #     database does not know, a source outside the repository, two objects
 #     from one source, and a failure of ninja, nm or git.
@@ -75,7 +78,7 @@ refuses() { # refuses <name> <pattern>: the run failed, saying why, and wrote no
   if [[ -s $out ]]; then fail "$1 wrote a record"; fi
 }
 
-value() { # value <python expression over the record d>
+record_value() { # record_value <python expression over the record d>
   python3 -c 'import json, sys
 d = json.load(open(sys.argv[1]))
 print(eval(sys.argv[2]))' "$out" "$1" 2>&1
@@ -84,13 +87,13 @@ print(eval(sys.argv[2]))' "$out" "$1" 2>&1
 field() { # field <name> <python expression over the record d> <expected>
   local got
   total=$((total+1))
-  got=$(value "$2")
+  got=$(record_value "$2")
   if [[ $got != "$3" ]]; then fail "$1 (expected $3, got $got)"; fi
 }
 
-# with_entry <name> <value>: the compiler record saved in $work/record, with
+# record_with_entry <name> <value>: the compiler record saved in $work/record, with
 # the value of the entry <name> replaced by <value>
-with_entry() { sed "s|^set($1 \"[^\"]*\")|set($1 \"$2\")|" "$work/record"; }
+record_with_entry() { sed "s|^set($1 \"[^\"]*\")|set($1 \"$2\")|" "$work/record"; }
 
 # The fixture -----------------------------------------------------------------
 
@@ -129,8 +132,8 @@ EOF
   git -C "$repo" add -A
   git -C "$repo" -c user.name=fixture -c user.email=fixture@example.com commit -q -m fixture
   local unit
-  # Debug information puts the paths of the objects, or of their sources,
-  # into the executable's string table.
+  # Debug information puts the paths of the sources into the executable, and
+  # on Mach-O the paths of the objects into its string table.
   for unit in Tests/A Tests/B TestAll/Main; do
     c++ -std=c++17 -g -c "$repo/$unit.cpp" -o "$objects/${unit##*/}.cpp.o" \
       || { echo "the fixture does not compile"; exit 1; }
@@ -226,21 +229,13 @@ case "$(uname -s)" in
           platform_libraries="stdc++;m;gcc_s;c"; other_libraries="c++;m"   ;;
 esac
 
-# string_table_oracle <executable>: the size of its string table, as reported
-# by readelf or otool. The path controls compare it between two fixtures, so
-# that they can tell the names' total from it
-string_table_oracle() {
-  if [[ $platform == ELF ]]; then
-    local size
-    size=$(readelf -SW "$1" | sed -nE 's/.*\] \.strtab +STRTAB +[0-9a-f]+ +[0-9a-f]+ +([0-9a-f]+) .*/\1/p')
-    [[ -n $size ]] && echo $((16#$size))
-  else
-    otool -l "$1" | awk '$1 == "strsize" {print $2}'
-  fi
-}
+# string_table_oracle <executable>: the size of a Mach-O executable's string
+# table, as reported by otool
+string_table_oracle() { otool -l "$1" | awk '$1 == "strsize" {print $2}'; }
 
 # name_bytes_oracle <executable>: the total length in bytes of the names nm
-# lists in its POSIX format, the first field of each line
+# lists in its POSIX format, the first field of each line. The fixture's
+# names hold no whitespace, which would split a name
 name_bytes_oracle() { nm -P "$1" | LC_ALL=C awk '{ total += length($1) } END { print total }'; }
 
 # defined_oracle <object>: the symbols defined in it, as plain nm lists them
@@ -273,7 +268,7 @@ record_controls() {
   field "the cache"                'sorted(d["cache"].items())' \
     "[('CMAKE_BUILD_TYPE', 'Debug'), ('CMAKE_CXX_FLAGS', '-fixture-flag'), ('CMAKE_CXX_FLAGS_DEBUG', '-g'), \
 ('CMAKE_EXE_LINKER_FLAGS', ''), ('CMAKE_EXE_LINKER_FLAGS_DEBUG', '-fixture-link-flag')]"
-  field "the symbols, as nm counts them" 'd["executable"]["symbols"]'           "$symbols"
+  field "the symbols, as nm counts them" 'd["executable"]["symbols"]'       "$symbols"
   field "the names' total"         'd["executable"]["symbol_name_bytes"]'   "$bytes"
   field "the objects linked, keyed by source" 'sorted(d["defined_symbols_by_object"])' \
                                    "['TestAll/Main.cpp', 'Tests/A.cpp', 'Tests/B.cpp']"
@@ -325,16 +320,26 @@ record_controls() {
 
   ar rc "$build/libfixture.a" "$objects/A.cpp.o"
   run "$build" libfixture.a
-  refuses "a static library in the executable's place" 'libfixture\.a is a static library or a universal binary'
+  refuses "a static library in the executable's place" 'libfixture\.a is neither an ELF file nor a thin Mach-O'
+  # A thin archive, two universal binaries, a Windows executable, and an
+  # empty file
   local magic
-  for magic in '\xca\xfe\xba\xbe' '\xca\xfe\xba\xbf'; do
-    { printf "$magic"; cat "$build/TestAll"; } > "$build/Universal"
-    run "$build" Universal
-    refuses "a universal binary, magic $magic, in the executable's place" 'Universal is a static library or a'
+  for magic in '!<thin>\n' '\xca\xfe\xba\xbe' '\xca\xfe\xba\xbf' 'MZ' ''; do
+    { printf "$magic"; [[ -n $magic ]] && cat "$build/TestAll"; } > "$build/Other"
+    run "$build" Other
+    refuses "a file starting '$magic' in the executable's place" 'Other is neither an ELF file nor a thin Mach-O'
   done
-  chmod 000 "$build/Universal"
-  run "$build" Universal
-  refuses "an executable which cannot be read" 'Universal cannot be read'
+  # ELF, and Mach-O of each width and byte order. The file is not otherwise
+  # an image, so nm refuses it.
+  for magic in '\x7fELF' '\xcf\xfa\xed\xfe' '\xce\xfa\xed\xfe' '\xfe\xed\xfa\xcf' '\xfe\xed\xfa\xce'; do
+    { printf "$magic"; head -c 60 /dev/zero; } > "$build/Image"
+    run "$build" Image
+    refuses "a file starting '$magic', which only nm" 'Image failed with exit status'
+    check "a file starting '$magic' passes the format check" no 'neither an ELF file nor'
+  done
+  chmod 000 "$build/Image"
+  run "$build" Image
+  refuses "an executable which cannot be read" 'Image cannot be read'
 }
 
 record_selection_controls() {
@@ -373,7 +378,7 @@ record_selection_controls() {
     grep -v "^set($name \"" "$work/record" > "$record"
     run "$build" TestAll
     refuses "a record without $name" "has no entry $name\$"
-    with_entry "$name" "" > "$record"
+    record_with_entry "$name" "" > "$record"
     run "$build" TestAll
     refuses "a record with an empty $name" "has an empty entry $name\$"
   done
@@ -381,23 +386,23 @@ record_selection_controls() {
   printf 'set(CMAKE_CXX_COMPILER_ID "\xff")\n' > "$record"
   run "$build" TestAll
   refuses "a record which is not UTF-8" 'CMakeCXXCompiler\.cmake cannot be read'
-  with_entry CMAKE_CXX_COMPILER "$work/gone/c++" > "$record"
+  record_with_entry CMAKE_CXX_COMPILER "$work/gone/c++" > "$record"
   run "$build" TestAll
   refuses "a record naming a compiler which has gone" "names $work/gone/c\+\+, which no longer exists"
-  with_entry CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "$repo/Tests;$work/gone/include" > "$record"
+  record_with_entry CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "$repo/Tests;$work/gone/include" > "$record"
   run "$build" TestAll
   refuses "a record naming an include directory which has gone" "names $work/gone/include, which no longer exists"
 
-  with_entry CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "m;c" > "$record"
+  record_with_entry CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "m;c" > "$record"
   run "$build" TestAll
   refuses "a record naming no standard library" 'names 0 standard libraries'
-  with_entry CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "c++;stdc++" > "$record"
+  record_with_entry CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "c++;stdc++" > "$record"
   run "$build" TestAll
   refuses "a record naming both standard libraries" 'names 2 standard libraries'
-  with_entry CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "$other_libraries" > "$record"
+  record_with_entry CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "$other_libraries" > "$record"
   run "$build" TestAll
   refuses "a record naming the standard library the symbols contradict" 'the symbols of .* say otherwise'
-  with_entry CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "gcc;c++abi;stdc++fs;$platform_libraries" > "$record"
+  record_with_entry CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "gcc;c++abi;stdc++fs;$platform_libraries" > "$record"
   run "$build" TestAll
   exits "a library whose name holds the standard library's is another library" 0
   cp "$work/record" "$record"
@@ -475,6 +480,22 @@ EOF
   sed -i.bak "s|^CMAKE_NM:FILEPATH=.*|CMAKE_NM:FILEPATH=$work/silent-nm|" "$build/CMakeCache.txt"
   run "$build" TestAll
   refuses "an nm which prints no version" 'prints no version'
+
+  # An nm which lists one more name, holding a form feed. Python's
+  # splitlines would split the name there; nm ends a name only at a newline.
+  local symbols bytes
+  symbols=$(nm "$build/TestAll" | wc -l | tr -d ' ')
+  bytes=$(name_bytes_oracle "$build/TestAll")
+  cat > "$work/form-feed-nm" <<EOF
+#!/bin/sh
+$nm_path "\$@" && printf 'seq_fixture\fname\n'
+EOF
+  chmod +x "$work/form-feed-nm"
+  sed -i.bak "s|^CMAKE_NM:FILEPATH=.*|CMAKE_NM:FILEPATH=$work/form-feed-nm|" "$build/CMakeCache.txt"
+  run "$build" TestAll
+  exits "a record is written from a name holding a form feed" 0
+  field "a name holding a form feed is one symbol" 'd["executable"]["symbols"]' "$((symbols + 1))"
+  field "and its every byte is counted" 'd["executable"]["symbol_name_bytes"]' "$((bytes + 16))"
   sed -i.bak "s|^CMAKE_NM:FILEPATH=.*|CMAKE_NM:FILEPATH=$nm_path|" "$build/CMakeCache.txt"
 
   rm -rf "$repo/.git"
@@ -485,20 +506,29 @@ EOF
 # The checkout's path ---------------------------------------------------------
 
 # A fixture built at a longer path holds the same names, and the paths its
-# debug information holds are longer. So the string table's size differs
-# between the two fixtures. The names' total must not.
-path_controls() {
-  local bytes table
+# debug information holds are longer, so the two executables differ. On
+# Mach-O, so do the sizes of their string tables. The names' total must not
+# differ.
+checkout_path_controls() {
+  local bytes first
   fixture
   run "$build" TestAll
   exits "a record is written at one path" 0
-  bytes=$(value 'd["executable"]["symbol_name_bytes"]')
-  table=$(string_table_oracle "$build/TestAll")
+  bytes=$(record_value 'd["executable"]["symbol_name_bytes"]')
+  first="$build/TestAll"
 
   work="$work/a/longer/path"; mkdir -p "$work"
   fixture
-  if [[ -z $table || $(string_table_oracle "$build/TestAll") == "$table" ]]; then
-    echo "the fixture's string table has the same size at both paths, so it cannot tell the rival"; exit 1
+  if cmp -s "$first" "$build/TestAll"; then
+    echo "the fixture's executable is the same at both paths, so it cannot show the total ignores the path"; exit 1
+  fi
+  if [[ $platform == Mach-O ]]; then
+    local table second
+    table=$(string_table_oracle "$first")
+    second=$(string_table_oracle "$build/TestAll")
+    if [[ -z $table || -z $second || $second == "$table" ]]; then
+      echo "the fixture's string table has the same size at both paths, so it cannot tell the rival"; exit 1
+    fi
   fi
   run "$build" TestAll
   exits "a record is written at a longer path" 0
@@ -508,7 +538,7 @@ path_controls() {
 run_controls() { # run_controls <script>: sets fails, and total, the controls run
   subject=$1 fails=0 total=0
   local control
-  for control in record_controls path_controls record_selection_controls object_controls tool_controls; do
+  for control in record_controls checkout_path_controls record_selection_controls object_controls tool_controls; do
     work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
     "$control"
   done
@@ -596,10 +626,14 @@ MUTATIONS = [
     ('the linker named as the compiler', '"linker":   {"path":    record["CMAKE_CXX_COMPILER_LINKER"],',
                                          '"linker":   {"path":    record["CMAKE_CXX_COMPILER"],'),
     ('the executable a directory',       'if not os.path.isfile(executable):', 'if not os.path.exists(executable):'),
-    ('a static library accepted',        'CONTAINER_MAGICS = (b"!<arch>\\n", ', 'CONTAINER_MAGICS = ('),
-    ('a universal binary accepted',      'b"\\xca\\xfe\\xba\\xbe", ', ''),
-    ('a 64-bit universal binary accepted', ', b"\\xca\\xfe\\xba\\xbf")', ')'),
-    ('too few bytes read for the magics', 'f.read(max(map(len, CONTAINER_MAGICS)))', 'f.read(4)'),
+    ('any file accepted',                'if not first_bytes.startswith(IMAGE_MAGICS):', 'if False:'),
+    ('ELF refused',                      'IMAGE_MAGICS = (b"\\x7fELF",', 'IMAGE_MAGICS = ('),
+    ('64-bit Mach-O refused',            'b"\\xcf\\xfa\\xed\\xfe", ', ''),
+    ('32-bit Mach-O refused',            ', b"\\xce\\xfa\\xed\\xfe"', ''),
+    ('big-endian 64-bit Mach-O refused', 'b"\\xfe\\xed\\xfa\\xcf", ', ''),
+    ('big-endian 32-bit Mach-O refused', ', b"\\xfe\\xed\\xfa\\xce")', ')'),
+    ('too few bytes read for the magics', 'f.read(max(map(len, IMAGE_MAGICS)))', 'f.read(3)'),
+    ('a name split at a line separator', '.split("\\n") if name]', '.splitlines() if name]'),
     ('an unreadable executable crashes', 'except OSError as e:\n        sys.exit(f"{executable} cannot be read',
                                          'except ValueError as e:\n        sys.exit(f"{executable} cannot be read'),
     ('a record not UTF-8 crashes',       'text = f.read()\n    except (OSError, UnicodeDecodeError) as e:',

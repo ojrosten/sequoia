@@ -20,16 +20,16 @@ The record holds:
 
 The names are those nm lists by default, imported symbols among them. Each
 is mangled, as the executable holds it, so on Mach-O it starts with the
-underscore nm shows, and the newline ending it in nm's listing is not
-counted. nm lists no debugging symbols by default, so the total does not
-depend on the path of the checkout, unless a name holds a path itself. The
-size of the string table holding the names would depend on it: the table
-also holds the debug map's paths to the objects on Mach-O, and the source
-files' paths on ELF.
+underscore Mach-O prefixes to C and C++ names, and the newline ending it in
+nm's listing is not counted. nm lists no debugging symbols by default, so
+the total does not depend on the path of the checkout, unless a name holds
+a path itself. On Mach-O, the size of the string table holding the names
+would depend on it, since the table also holds the debug map's paths to the
+objects.
 
 The objects are ninja's inputs to the link. So every member of a static
 library the target links is among them, and is counted whether or not the
-linker takes it from the library. The executable's counts are read from
+linker takes it from the library. The executable's figures are read from
 the executable itself, and are unaffected.
 
 The objects' counts do not sum to the executable's. An inline function or a
@@ -52,8 +52,8 @@ The script refuses, rather than write a record which may be wrong, if
     compiler or an implicit include directory which no longer exists;
   - the compiler record names both standard libraries or neither, or names
     the one whose inline namespace the executable's symbols do not show;
-  - the executable is not a file, or is a static library or a universal
-    binary, or nm lists no symbols for it;
+  - the executable is not a file, or cannot be read, or is neither an ELF
+    file nor a thin Mach-O file, or nm lists no symbols for it;
   - ninja lists no objects for the target, or its compilation database has
     no entry for one, or two objects share a source, or a source cannot be
     named relative to the repository.
@@ -74,11 +74,11 @@ STANDARD_LIBRARIES = {"c++": "libc++", "stdc++": "libstdc++"}
 # libc++'s inline namespace, std::__1, as it appears in a mangled name.
 LIBCXX_NAMESPACE = "St3__1"
 
-# The first bytes of a static library, of a universal binary with 32-bit
-# offsets, and of one with 64-bit offsets. Each holds several objects. nm
-# lists a static library member by member, and a universal binary for one
-# architecture.
-CONTAINER_MAGICS = (b"!<arch>\n", b"\xca\xfe\xba\xbe", b"\xca\xfe\xba\xbf")
+# The first bytes of an ELF file, and of a thin Mach-O file of either width
+# and byte order.
+IMAGE_MAGICS = (b"\x7fELF",
+                b"\xcf\xfa\xed\xfe", b"\xce\xfa\xed\xfe",
+                b"\xfe\xed\xfa\xcf", b"\xfe\xed\xfa\xce")
 
 
 def run(command):
@@ -183,7 +183,7 @@ def ninja(cache, build_dir, *arguments):
 def symbols(nm, path, *options):
     """Returns the names of the symbols which nm lists for the file at
     `path`."""
-    return [name for name in run([nm, "--format=just-symbols", *options, path]).splitlines() if name]
+    return [name for name in run([nm, "--format=just-symbols", *options, path]).split("\n") if name]
 
 
 def nm_version(nm):
@@ -248,11 +248,13 @@ def record_of(build_dir, target):
         sys.exit(f"{executable} is not a file")
     try:
         with open(executable, "rb") as f:
-            first_bytes = f.read(max(map(len, CONTAINER_MAGICS)))
+            first_bytes = f.read(max(map(len, IMAGE_MAGICS)))
     except OSError as e:
         sys.exit(f"{executable} cannot be read: {e}")
-    if first_bytes.startswith(CONTAINER_MAGICS):
-        sys.exit(f"{executable} is a static library or a universal binary, not one executable")
+    # nm lists a static library member by member, or merged, and a universal
+    # binary for one architecture alone, with no error.
+    if not first_bytes.startswith(IMAGE_MAGICS):
+        sys.exit(f"{executable} is neither an ELF file nor a thin Mach-O file")
     nm = entry(cache, "CMAKE_NM", "CMakeCache.txt")
     listed = symbols(nm, executable)
     if not listed:
