@@ -384,12 +384,9 @@ Comparison performed using:
 Checking for equivalence with:
 [int*]
 
+  [bool]
   Obtained : null
   Predicted: not null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 
@@ -446,12 +443,9 @@ Comparison performed using:
 Checking for equivalence with:
 [int const*]
 
+  [bool]
   Obtained : null
   Predicted: not null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 
@@ -508,12 +502,9 @@ Comparison performed using:
 Checking for equivalence with:
 [int*]
 
+  [bool]
   Obtained : null
   Predicted: not null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 
@@ -570,12 +561,9 @@ Comparison performed using:
 Checking for equivalence with:
 [int const*]
 
+  [bool]
   Obtained : null
   Predicted: not null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 

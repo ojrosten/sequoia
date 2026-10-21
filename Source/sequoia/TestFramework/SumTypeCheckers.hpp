@@ -18,7 +18,6 @@
 
 #include <any>
 #include <expected>
-#include <format>
 #include <optional>
 #include <variant>
 
@@ -81,11 +80,10 @@ namespace sequoia::testing
       {
         const bool obtainedHoldsValue{obtained}, predictedHoldsValue{prediction};
 
-        check(equality,
-              nullable_type_message(obtainedHoldsValue, predictedHoldsValue),
-              logger,
-              obtainedHoldsValue,
-              predictedHoldsValue);
+        check_both_or_neither_hold_a_value(nullable_type_message(obtainedHoldsValue, predictedHoldsValue),
+                                           logger,
+                                           obtainedHoldsValue,
+                                           predictedHoldsValue);
       }
     }
   };
@@ -103,11 +101,10 @@ namespace sequoia::testing
       if(obtained.has_value() != prediction.has_value())
       {
         auto holds{[](const type& e){ return e.has_value() ? "a value" : "an error"; }};
-        check(equality,
-              std::format("Obtained : {}\nPredicted: {}", holds(obtained), holds(prediction)),
-              logger,
-              obtained.has_value(),
-              prediction.has_value());
+        check_both_or_neither_hold_a_value(default_prediction_message(holds(obtained), holds(prediction)),
+                                           logger,
+                                           obtained.has_value(),
+                                           prediction.has_value());
       }
       else if(obtained)
       {
