@@ -63,8 +63,10 @@ namespace sequoia::testing
       return m_Name;
     }
 
-    /** \brief The temporary copy of the test's original working copy, or an empty directory if the
-               test has materials but no working copy.
+    /** \brief Returns the temporary copy of the test's original working copy,
+               if the test has one.
+
+        Otherwise, returns an empty directory.
 
         \throws std::logic_error if the test was constructed with no materials paths
         \throws std::runtime_error if the test has no materials, naming where they belong
@@ -88,9 +90,11 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path auxiliary_materials() const;
 
-    /** \brief A directory for the test's own use, with no original counterpart, holding nothing
-               but the temporary copies of the working copy and auxiliary materials whenever the
-               materials are prepared.
+    /** \brief Returns a directory for the test's own use.
+
+        The directory has no original counterpart. Whenever the materials are
+        prepared, it holds nothing but the temporary copies of the working
+        copy and auxiliary materials.
 
         It is the root beneath which those copies are made, so `WorkingCopy` and `Auxiliary` are
         reserved names within it; nothing enforces this.

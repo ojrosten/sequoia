@@ -41,8 +41,10 @@ namespace sequoia::testing
                   "The flags with rows in return_code_names do not occupy consecutive bits from the lowest; "
                   "give every return_code flag a row, and keep the flags consecutive");
 
-    /** \brief The number a runner adds to its `return_code` to give its exit status, unless the
-               code is success.
+    /** \brief The number a runner adds to its `return_code` to give its exit
+               status.
+
+        If the code is `return_code::success`, the exit status is 0 instead.
 
         A runner therefore exits either with 0 or with a status from `runner_exit_offset + 1` to
         `max_runner_exit_status`. That range is clear of these statuses, which a process gives when

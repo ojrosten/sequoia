@@ -77,8 +77,8 @@ namespace sequoia::testing
       return m_MaterialsDiscriminator;
     }
 
-    /** \brief The original root: `original_test_root()`, followed by the materials discriminator if one
-        was given.
+    /** \brief Returns `original_test_root()`, followed by the materials
+               discriminator if one was given.
      */
     [[nodiscard]]
     std::filesystem::path original_materials_root() const;

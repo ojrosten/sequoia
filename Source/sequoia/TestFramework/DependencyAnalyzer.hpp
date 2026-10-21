@@ -71,7 +71,9 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::file_time_type staleness_threshold(std::filesystem::file_time_type stamp);
 
-  /** \brief The prune records in `file`; none if there is no such file.
+  /** \brief Reads the prune records in `file`.
+
+      Returns no records if `file` cannot be opened.
 
       \throws std::runtime_error if the file does not parse as prune records.
    */

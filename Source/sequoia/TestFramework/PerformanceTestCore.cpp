@@ -195,8 +195,10 @@ namespace sequoia::testing
       }
     };
 
-    /** \brief The reason a speed-up departs from the prediction, if it does,
-               and the estimate of the speed-up.
+    /** \brief The estimate of a speed-up, and the reason the speed-up departs
+               from the prediction.
+
+        `failure` is `std::nullopt` if there is no departure.
      */
     struct speedup_judgement
     {
