@@ -210,6 +210,7 @@
 #include "TestFramework/TestRunnerSerialExecutionFreeTest.hpp"
 #include "TestFramework/TestRunnerTest.hpp"
 #include "TestFramework/TestRunnerTestCreation.hpp"
+#include "TestFramework/TimedComputationDiagnostics.hpp"
 #include "TestFramework/VersionedOutputFreeTest.hpp"
 #include "TextProcessing/CharactersFreeTest.hpp"
 #include "TextProcessing/IndentFreeTest.hpp"

@@ -14,7 +14,6 @@
 #include <algorithm>
 #include <array>
 #include <chrono>
-#include <cstdint>
 #include <format>
 #include <functional>
 #include <initializer_list>
@@ -94,41 +93,6 @@ namespace sequoia::testing
   {
     const auto deadline{std::chrono::steady_clock::now() + t};
     while(std::chrono::steady_clock::now() < deadline) {}
-  }
-
-  /** \brief Returns the state of Marsaglia's 64-bit xorshift generator
-             after `steps` steps from `seed`.
-
-      Each step depends on the one before, so the computation takes time in
-      proportion to `steps`.
-   */
-  [[nodiscard]]
-  constexpr std::uint64_t xorshift_state(std::uint64_t seed, std::size_t steps) noexcept
-  {
-    auto nextState{
-      [](std::uint64_t state, std::size_t) {
-        state ^= state << 13;
-        state ^= state >> 7;
-        return state ^ (state << 17);
-      }
-    };
-
-    return std::ranges::fold_left(std::views::iota(0uz, steps), seed, nextState);
-  }
-
-  /** \brief Returns a task which spins for each of `durations` in turn,
-             starting again after the last.
-
-      Every copy of the task shares one count of the calls made, so any
-      `N` consecutive calls spin for each duration once.
-   */
-  template<std::size_t N>
-  [[nodiscard]]
-  auto make_cycling_spinner(const std::chrono::milliseconds (&durations)[N])
-  {
-    return [cycle{std::to_array(durations)}, calls{std::make_shared<std::size_t>()}]() {
-      spin_for(cycle[(*calls)++ % N]);
-    };
   }
 
   /** \brief A task which spins, and counts its invocations.

@@ -675,6 +675,13 @@ namespace sequoia::testing
 
     using base_type::base_type;
 
+    /** \brief Summarizes the checks.
+
+        In false-positive and false-negative modes, `postprocess` chooses
+        between the run's diagnostics output and the contents of the existing
+        diagnostics file, given `attempt_count_stability::fluctuating`. The
+        summary carries the chosen text.
+     */
     [[nodiscard]]
     log_summary summarize(duration delta) const;
   protected:
@@ -682,24 +689,6 @@ namespace sequoia::testing
 
     basic_performance_test(basic_performance_test&&)            noexcept = default;
     basic_performance_test& operator=(basic_performance_test&&) noexcept = default;
-
-    /** \brief Summarizes the checks.
-
-        `postprocess` chooses between the run's diagnostics output and the
-        contents of the existing diagnostics file, given
-        `attemptCountStability`. The summary carries the chosen text.
-
-        A test whose checks typically make the same number of attempts from
-        run to run may hide `summarize(duration)` with its own. Its
-        replacement calls this one with
-        `attempt_count_stability::typically_stable`. The diagnostics output
-        then records the number of trials and the attempt. So a run in which
-        a check makes a different number of attempts changes the diagnostics
-        file.
-     */
-    [[nodiscard]]
-    log_summary summarize(duration delta, attempt_count_stability attemptCountStability) const
-      requires (Mode != test_mode::standard);
   };
 
   /** \anchor performance_test_alias */

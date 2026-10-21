@@ -222,6 +222,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/TestRunnerSerialExecutionFreeTest.cpp
                ${TestDir}/TestFramework/TestRunnerTest.cpp
                ${TestDir}/TestFramework/TestRunnerTestCreation.cpp
+               ${TestDir}/TestFramework/TimedComputationDiagnostics.cpp
                ${TestDir}/TestFramework/VersionedOutputFreeTest.cpp
                ${TestDir}/TextProcessing/CharactersFreeTest.cpp
                ${TestDir}/TextProcessing/IndentFreeTest.cpp
