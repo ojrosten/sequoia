@@ -91,8 +91,8 @@ field() { # field <name> <python expression over the record d> <expected>
   if [[ $got != "$3" ]]; then fail "$1 (expected $3, got $got)"; fi
 }
 
-# record_with_entry <name> <value>: the compiler record saved in $work/record, with
-# the value of the entry <name> replaced by <value>
+# record_with_entry <name> <value>: the compiler record saved in
+# $work/record, with the value of the entry <name> replaced by <value>
 record_with_entry() { sed "s|^set($1 \"[^\"]*\")|set($1 \"$2\")|" "$work/record"; }
 
 # The fixture -----------------------------------------------------------------
