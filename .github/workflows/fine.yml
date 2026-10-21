@@ -56,6 +56,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Posts the commit status "fine (dispatched)", pending and linked to this run,
+  # when a dispatched run starts. A dispatched run's jobs appear on no pull
+  # request's checks page, so staging's required "Every job ran and every job
+  # gates" would otherwise wait with no link to the run that reports it. `report`
+  # replaces the status with the outcome. The context is not a required check's
+  # name, so the status gates nothing.
+  #
+  # The job runs in every run, because `audit` needs it and fails on a skipped
+  # job; only a dispatched run posts. If the post fails, the step warns and the
+  # job still succeeds, so the run's result is unchanged.
+  announce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      statuses: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Post the pending status on the dispatched commit
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          if ! gh api -X POST "repos/$GH_REPO/statuses/$GITHUB_SHA" -f state=pending \
+                 -f context='fine (dispatched)' -f description='running' -f target_url="$RUN_URL" > /dev/null; then
+            echo "::warning::could not post the pending status on $GITHUB_SHA; the run is unaffected"
+          fi
+
   # One decision for the whole run, which every job below takes as an input.
   scope:
     uses: ./.github/workflows/scope.yml
@@ -100,10 +128,11 @@ jobs:
   # the rule, shows as a red check rather than only as a PR that waits on a name
   # nothing reports, or merges ungated. The second and third steps run even when
   # an earlier step fails, so each reports independently. Same shape as
-  # rigorous's audit, without the modes.
+  # rigorous's audit, without the modes. It does not need `report`, which needs it,
+  # so the second step leaves `report` out of the comparison.
   audit:
     name: Every job ran and every job gates
-    needs: [scope, fine, coverage]
+    needs: [announce, scope, fine, coverage]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -126,13 +155,14 @@ jobs:
         if: ${{ !cancelled() }}
         run: |
           # The workflow file is fetched at GITHUB_WORKFLOW_SHA, the commit this run
-          # read it from. Its jobs and this job's `needs` are compared both ways, so
-          # that a file read wrongly - no jobs, or the wrong ones - fails the step.
+          # read it from. The step compares the jobs of that file, except this one and
+          # `report`, with this job's `needs`, both ways, so that a file read wrongly
+          # - no jobs, or the wrong ones - fails it.
           set -o pipefail
           workflow=${GITHUB_WORKFLOW_REF#"$GITHUB_REPOSITORY/"}
           workflow=${workflow%%@*}
           gh api -H 'Accept: application/vnd.github.raw' "repos/$GH_REPO/contents/$workflow?ref=$GITHUB_WORKFLOW_SHA" \
-            | yq -r '.jobs | keys | .[]' | grep -vxF "$GITHUB_JOB" | sort > jobs.txt
+            | yq -r '.jobs | keys | .[]' | grep -vxF -e "$GITHUB_JOB" -e report | sort > jobs.txt
           jq -r 'keys[]' <<<"$RESULTS" | sort > needed.txt
           echo "jobs of $workflow but this one:"; sed 's/^/  /' jobs.txt
           echo "jobs this one needs:"; sed 's/^/  /' needed.txt
@@ -159,3 +189,36 @@ jobs:
             exit 1
           fi
           echo "staging requires this job, pinned to the app that reports it"
+
+  # Replaces `announce`'s pending status with the audit's outcome, on a
+  # dispatched run only. The job runs on `always()`, not `!cancelled()`, so a
+  # cancelled run still reports. The status ends `success` only if the audit
+  # succeeded, `error` if it was cancelled, and `failure` otherwise. If the post
+  # fails, the step warns and the job still succeeds, so a red audit stays red
+  # and a green run stays green.
+  report:
+    name: Report the dispatched run on its commit
+    needs: audit
+    if: ${{ always() && github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      statuses: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      AUDIT: ${{ needs.audit.result }}
+    steps:
+      - name: Post the outcome on the dispatched commit
+        run: |
+          case "$AUDIT" in
+            success)   state=success ;;
+            cancelled) state=error ;;
+            *)         state=failure ;;
+          esac
+          echo "audit: $AUDIT, so the status is $state"
+          if ! gh api -X POST "repos/$GH_REPO/statuses/$GITHUB_SHA" -f state="$state" \
+                 -f context='fine (dispatched)' -f description="audit: $AUDIT" -f target_url="$RUN_URL" > /dev/null; then
+            echo "::warning::could not post the $state status on $GITHUB_SHA; the status stays pending"
+          fi
