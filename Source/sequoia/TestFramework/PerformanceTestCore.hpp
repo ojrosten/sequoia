@@ -235,111 +235,131 @@ namespace sequoia::testing
       return {first(), std::move(secondResult)};
     }
 
-    /** \brief Returns the duration of a call of each task, with the tasks
-               called in `order`.
+    /** \brief Returns the duration of a call of each task, as measured by
+               `clock`, with the tasks called in `order`.
      */
-    template<performance_task F, performance_task S>
+    template<performance_task F, performance_task S, performance_clock Clock>
     [[nodiscard]]
-    relative_performance_durations time_one_trial(const F& fast, const S& slow, call_order order)
+    relative_performance_durations time_one_trial(const F& fast,
+                                                  const S& slow,
+                                                  call_order order,
+                                                  const Clock& clock)
     {
-      return call_in_order<relative_performance_durations>([&fast]() { return testing::profile(fast); },
-                                                           [&slow]() { return testing::profile(slow); },
-                                                           order);
+      return call_in_order<relative_performance_durations>(
+               [&fast, &clock]() { return testing::profile(fast, clock); },
+               [&slow, &clock]() { return testing::profile(slow, clock); },
+               order);
     }
 
     /** \brief Returns the duration of a call of a task and of its baseline,
-               with the two called in `order`.
+               as measured by `clock`, with the two called in `order`.
      */
-    template<performance_task T, performance_task B>
+    template<performance_task T, performance_task B, performance_clock Clock>
     [[nodiscard]]
-    task_and_baseline_durations time_task_and_baseline(const task_with_baseline<T, B>& pair, call_order order)
+    task_and_baseline_durations time_task_and_baseline(const task_with_baseline<T, B>& pair,
+                                                       call_order order,
+                                                       const Clock& clock)
     {
-      return call_in_order<task_and_baseline_durations>([&pair]() { return testing::profile(pair.task); },
-                                                        [&pair]() { return testing::profile(pair.baseline); },
-                                                        order);
+      return call_in_order<task_and_baseline_durations>(
+               [&pair, &clock]() { return testing::profile(pair.task, clock); },
+               [&pair, &clock]() { return testing::profile(pair.baseline, clock); },
+               order);
     }
 
     /** \brief Returns the duration of a call of each task and of each
-               baseline, with the four called in `order`.
+               baseline, as measured by `clock`, with the four called in
+               `order`.
      */
-    template<performance_task F, performance_task FB, performance_task S, performance_task SB>
+    template<performance_task F, performance_task FB, performance_task S, performance_task SB, performance_clock Clock>
     [[nodiscard]]
     relative_performance_durations_with_baselines time_one_trial(const task_with_baseline<F, FB>& fast,
                                                                  const task_with_baseline<S, SB>& slow,
-                                                                 baselined_task_order order)
+                                                                 baselined_task_order order,
+                                                                 const Clock& clock)
     {
       return call_in_order<relative_performance_durations_with_baselines>(
-               [&fast, order]() { return impl::time_task_and_baseline(fast, order.fast_vs_baseline); },
-               [&slow, order]() { return impl::time_task_and_baseline(slow, order.slow_vs_baseline); },
+               [&fast, order, &clock]() { return impl::time_task_and_baseline(fast, order.fast_vs_baseline, clock); },
+               [&slow, order, &clock]() { return impl::time_task_and_baseline(slow, order.slow_vs_baseline, clock); },
                order.fast_vs_slow);
     }
 
     /** \brief Whether `time_one_trial` times a `Fast` against a `Slow` in an
-               `Order`.
+               `Order`, reading a `Clock`.
      */
-    template<class Fast, class Slow, class Order>
+    template<class Fast, class Slow, class Order, class Clock>
     inline constexpr bool one_trial_timeable_v{
-      requires(const Fast& fast, const Slow& slow, Order order) { impl::time_one_trial(fast, slow, order); }
+      requires(const Fast& fast, const Slow& slow, Order order, const Clock& clock) {
+        impl::time_one_trial(fast, slow, order, clock);
+      }
     };
 
     /** \brief Returns the durations of the tasks in one trial for each
-               element of `orders`, which gives the order in which that trial
-               calls the tasks.
+               element of `orders`, as measured by `clock`.
+
+        Each element of `orders` gives the order in which its trial calls
+        the tasks.
      */
-    template<class Fast, class Slow, class Order>
-      requires one_trial_timeable_v<Fast, Slow, Order>
+    template<class Fast, class Slow, class Order, class Clock>
+      requires one_trial_timeable_v<Fast, Slow, Order, Clock>
     [[nodiscard]]
-    auto time_each_trial(const Fast& fast, const Slow& slow, const std::vector<Order>& orders)
+    auto time_each_trial(const Fast& fast, const Slow& slow, const std::vector<Order>& orders, const Clock& clock)
     {
-      using durations_t = decltype(impl::time_one_trial(fast, slow, orders.front()));
+      using durations_t = decltype(impl::time_one_trial(fast, slow, orders.front(), clock));
 
       // Not std::views::transform: time_one_trial is not equality-preserving,
       // so it does not model the regular_invocable the view requires.
       std::vector<durations_t> trialDurations{};
       trialDurations.reserve(orders.size());
-      std::ranges::transform(orders,
-                             std::back_inserter(trialDurations),
-                             [&fast, &slow](Order order) { return impl::time_one_trial(fast, slow, order); });
+      std::ranges::transform(
+        orders,
+        std::back_inserter(trialDurations),
+        [&fast, &slow, &clock](Order order) { return impl::time_one_trial(fast, slow, order, clock); }
+      );
 
       return trialDurations;
     }
 
     /** \brief Returns the durations of the tasks in each of `numTrials`
-               trials.
+               trials, as measured by `clock`.
 
         `generator` chooses the order of the tasks in each trial.
      */
-    template<performance_task F, performance_task S>
+    template<performance_task F, performance_task S, performance_clock Clock>
     [[nodiscard]]
     std::vector<relative_performance_durations> time_attempt(const F& fast,
                                                              const S& slow,
                                                              std::size_t numTrials,
-                                                             std::mt19937& generator)
+                                                             std::mt19937& generator,
+                                                             const Clock& clock)
     {
-      return impl::time_each_trial(fast, slow, shuffled_call_orders(numTrials, generator));
+      return impl::time_each_trial(fast, slow, shuffled_call_orders(numTrials, generator), clock);
     }
 
     /** \brief Returns the durations of the tasks and their baselines in each
-               of `numTrials` trials.
+               of `numTrials` trials, as measured by `clock`.
 
         `generator` chooses the order of the tasks and baselines in each
         trial.
      */
-    template<performance_task F, performance_task FB, performance_task S, performance_task SB>
+    template<performance_task F, performance_task FB, performance_task S, performance_task SB, performance_clock Clock>
     [[nodiscard]]
     std::vector<relative_performance_durations_with_baselines> time_attempt(const task_with_baseline<F, FB>& fast,
                                                                             const task_with_baseline<S, SB>& slow,
                                                                             std::size_t numTrials,
-                                                                            std::mt19937& generator)
+                                                                            std::mt19937& generator,
+                                                                            const Clock& clock)
     {
-      return impl::time_each_trial(fast, slow, shuffled_baselined_task_orders(numTrials, generator));
+      return impl::time_each_trial(fast, slow, shuffled_baselined_task_orders(numTrials, generator), clock);
     }
 
-    /** \brief Whether `time_attempt` times `fast` against `slow`. */
-    template<class Fast, class Slow>
-    concept timeable_against = requires(const Fast& fast, const Slow& slow, std::mt19937& generator) {
-      impl::time_attempt(fast, slow, std::size_t{}, generator);
-    };
+    /** \brief Whether `time_attempt` times `fast` against `slow`, reading
+               `clock`.
+     */
+    template<class Fast, class Slow, class Clock>
+    concept timeable_against
+      = requires(const Fast& fast, const Slow& slow, std::mt19937& generator, const Clock& clock) {
+          impl::time_attempt(fast, slow, std::size_t{}, generator, clock);
+        };
 
     /** \brief How many attempts `check_relative_performance` made, and the
                judgement of the last.
@@ -358,12 +378,13 @@ namespace sequoia::testing
         which fails. In every mode, they stop after the last attempt allowed,
         whatever its outcome.
      */
-    template<test_mode Mode, class Fast, class Slow>
-      requires timeable_against<Fast, Slow>
+    template<test_mode Mode, class Fast, class Slow, class Clock>
+      requires timeable_against<Fast, Slow, Clock>
     [[nodiscard]]
     relative_performance_conclusion execute_attempts(const Fast& fast,
                                                      const Slow& slow,
-                                                     const relative_performance_parameters& parameters)
+                                                     const relative_performance_parameters& parameters,
+                                                     const Clock& clock)
     {
       static_assert(relative_performance_max_attempts > 0);
 
@@ -373,7 +394,7 @@ namespace sequoia::testing
         [&](std::size_t attempt) {
           const auto numTrials{num_trials_for_attempt(parameters.minimum_trials, attempt)};
 
-          return judge_trials(impl::time_attempt(fast, slow, numTrials, generator),
+          return judge_trials(impl::time_attempt(fast, slow, numTrials, generator, clock),
                               overlap_multiplier(Mode, attempt),
                               parameters.prediction);
         }
@@ -399,13 +420,14 @@ namespace sequoia::testing
                with the predicted interval, as each overload of
                `check_relative_performance` states.
      */
-    template<test_mode Mode, class Fast, class Slow>
-      requires timeable_against<Fast, Slow>
+    template<test_mode Mode, class Fast, class Slow, class Clock>
+      requires timeable_against<Fast, Slow, Clock>
     bool check_speedup(std::string_view description,
                        test_logger<Mode>& logger,
                        const Fast& fast,
                        const Slow& slow,
-                       const relative_performance_parameters& parameters)
+                       const relative_performance_parameters& parameters,
+                       const Clock& clock)
     {
       sentinel<Mode> sentry{logger, std::string{description}};
       sentry.log_performance_check();
@@ -424,7 +446,7 @@ namespace sequoia::testing
         };
       }
 
-      const auto [attempts, judgement]{execute_attempts<Mode>(fast, slow, parameters)};
+      const auto [attempts, judgement]{execute_attempts<Mode>(fast, slow, parameters, clock)};
       sentry.log_performance_check_attempts(attempts);
 
       sentry.append_to_message(
@@ -452,12 +474,13 @@ namespace sequoia::testing
        \param slow        The task against which fast is compared
        \param parameters  The predicted interval of speed-ups, and the fewest
                           trials allowed in any attempt
+       \param clock       The clock which measures each duration
 
        The check makes up to A attempts, where A is
        `relative_performance_max_attempts`. Each attempt runs an even number
        of trials, at least `parameters.minimum_trials`. Each trial runs both
-       tasks, and times each. The fast task runs first in half of an
-       attempt's trials, chosen at random.
+       tasks, and times each by reading `clock` itself, never a copy. The
+       fast task runs first in half of an attempt's trials, chosen at random.
 
        Each trial runs its own copy of each task, made before the timing
        starts. So state a task holds by value starts afresh in every trial,
@@ -500,14 +523,15 @@ namespace sequoia::testing
        `check` or `check_relative_performance`, using the same instance of
        the logger.
    */
-  template<test_mode Mode, performance_task F, performance_task S>
+  template<test_mode Mode, performance_task F, performance_task S, performance_clock Clock>
   bool check_relative_performance(std::string_view description,
                                   test_logger<Mode>& logger,
                                   F fast,
                                   S slow,
-                                  const relative_performance_parameters& parameters)
+                                  const relative_performance_parameters& parameters,
+                                  const Clock& clock)
   {
-    return impl::check_speedup(description, logger, fast, slow, parameters);
+    return impl::check_speedup(description, logger, fast, slow, parameters, clock);
   }
 
   /** \brief Checks that the speed-up of `fast.task` over `slow.task`, each
@@ -522,6 +546,7 @@ namespace sequoia::testing
                           baseline
        \param parameters  The predicted interval of speed-ups, and the fewest
                           trials allowed in any attempt
+       \param clock       The clock which measures each duration
 
        The check is the one which the overload of `check_relative_performance`
        taking two tasks makes, with these differences:
@@ -557,14 +582,20 @@ namespace sequoia::testing
        such as `check` or `check_relative_performance`, using the same
        instance of the logger.
    */
-  template<test_mode Mode, performance_task F, performance_task FB, performance_task S, performance_task SB>
+  template<test_mode Mode,
+           performance_task F,
+           performance_task FB,
+           performance_task S,
+           performance_task SB,
+           performance_clock Clock>
   bool check_relative_performance(std::string_view description,
                                   test_logger<Mode>& logger,
                                   task_with_baseline<F, FB> fast,
                                   task_with_baseline<S, SB> slow,
-                                  const relative_performance_parameters& parameters)
+                                  const relative_performance_parameters& parameters,
+                                  const Clock& clock)
   {
-    return impl::check_speedup(description, logger, fast, slow, parameters);
+    return impl::check_speedup(description, logger, fast, slow, parameters, clock);
   }
 
   /** \brief class template for plugging into the checker class template
@@ -578,32 +609,41 @@ namespace sequoia::testing
 
     performance_extender() = default;
 
-    template<class Self, performance_task F, performance_task S>
+    template<class Self, performance_task F, performance_task S, performance_clock Clock = std::chrono::steady_clock>
     bool check_relative_performance(this Self& self,
                                     const reporter& description,
                                     F fast,
                                     S slow,
-                                    const relative_performance_parameters& parameters)
+                                    const relative_performance_parameters& parameters,
+                                    const Clock& clock = Clock{})
     {
       return testing::check_relative_performance(self.report(description),
                                                  self.m_Logger,
                                                  std::move(fast),
                                                  std::move(slow),
-                                                 parameters);
+                                                 parameters,
+                                                 clock);
     }
 
-    template<class Self, performance_task F, performance_task FB, performance_task S, performance_task SB>
+    template<class Self,
+             performance_task F,
+             performance_task FB,
+             performance_task S,
+             performance_task SB,
+             performance_clock Clock = std::chrono::steady_clock>
     bool check_relative_performance(this Self& self,
                                     const reporter& description,
                                     task_with_baseline<F, FB> fast,
                                     task_with_baseline<S, SB> slow,
-                                    const relative_performance_parameters& parameters)
+                                    const relative_performance_parameters& parameters,
+                                    const Clock& clock = Clock{})
     {
       return testing::check_relative_performance(self.report(description),
                                                  self.m_Logger,
                                                  std::move(fast),
                                                  std::move(slow),
-                                                 parameters);
+                                                 parameters,
+                                                 clock);
     }
   protected:
     ~performance_extender() = default;
@@ -635,6 +675,14 @@ namespace sequoia::testing
 
     using base_type::base_type;
 
+    /** \brief Summarizes the checks.
+
+        In false-positive and false-negative modes, if the run's diagnostics
+        output differs from the versioned output only in measured values
+        (timings, numbers of trials and attempts made), the summary ignores
+        the former in favour of the latter. This ensures measurement noise
+        does not cause the versioned output to fluctuate.
+     */
     [[nodiscard]]
     log_summary summarize(duration delta) const;
   protected:
@@ -642,24 +690,6 @@ namespace sequoia::testing
 
     basic_performance_test(basic_performance_test&&)            noexcept = default;
     basic_performance_test& operator=(basic_performance_test&&) noexcept = default;
-
-    /** \brief Summarizes the checks.
-
-        `postprocess` chooses between the run's diagnostics output and the
-        contents of the existing diagnostics file, given
-        `attemptCountStability`. The summary carries the chosen text.
-
-        A test whose checks typically make the same number of attempts from
-        run to run may hide `summarize(duration)` with its own. Its
-        replacement calls this one with
-        `attempt_count_stability::typically_stable`. The diagnostics output
-        then records the number of trials and the attempt. So a run in which
-        a check makes a different number of attempts changes the diagnostics
-        file.
-     */
-    [[nodiscard]]
-    log_summary summarize(duration delta, attempt_count_stability attemptCountStability) const
-      requires (Mode != test_mode::standard);
   };
 
   /** \anchor performance_test_alias */

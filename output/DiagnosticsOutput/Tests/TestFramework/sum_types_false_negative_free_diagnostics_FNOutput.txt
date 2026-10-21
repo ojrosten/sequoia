@@ -157,12 +157,9 @@ Empty vs non-empty std::optional
 [std::optional<int>]
 operator== returned false
 
+  [bool]
   Obtained : null
   Predicted: not null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 
@@ -172,12 +169,9 @@ Non-empty vs empty std::optional
 [std::optional<int>]
 operator== returned false
 
+  [bool]
   Obtained : not null
   Predicted: null
-  [bool]
-  operator== returned false
-  Obtained : true
-  Predicted: false
 
 =======================================
 
@@ -218,12 +212,9 @@ Comparison performed using:
 Checking for equivalence with:
 [std::optional<sequoia::testing::only_equivalence_checkable>]
 
+  [bool]
   Obtained : null
   Predicted: not null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 
@@ -235,12 +226,9 @@ Comparison performed using:
 Checking for equivalence with:
 [std::optional<sequoia::testing::only_equivalence_checkable>]
 
+  [bool]
   Obtained : not null
   Predicted: null
-  [bool]
-  operator== returned false
-  Obtained : true
-  Predicted: false
 
 =======================================
 
@@ -274,12 +262,9 @@ Comparison performed using:
 Checking for weak equivalence with:
 [std::optional<sequoia::testing::only_weakly_checkable>]
 
+  [bool]
   Obtained : null
   Predicted: not null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 
@@ -291,12 +276,9 @@ Comparison performed using:
 Checking for weak equivalence with:
 [std::optional<sequoia::testing::only_weakly_checkable>]
 
+  [bool]
   Obtained : not null
   Predicted: null
-  [bool]
-  operator== returned false
-  Obtained : true
-  Predicted: false
 
 =======================================
 
@@ -334,12 +316,9 @@ A value vs an error
 [std::expected<int, std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
 operator== returned false
 
+  [bool]
   Obtained : a value
   Predicted: an error
-  [bool]
-  operator== returned false
-  Obtained : true
-  Predicted: false
 
 =======================================
 
@@ -349,12 +328,9 @@ An error vs a value
 [std::expected<int, std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
 operator== returned false
 
+  [bool]
   Obtained : an error
   Predicted: a value
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 

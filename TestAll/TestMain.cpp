@@ -93,6 +93,7 @@ int main(int argc, char** argv)
     runner.register_test<orderable_regular_allocation_false_negative_diagnostics>();
     runner.register_test<performance_false_negative_diagnostics>();
     runner.register_test<performance_false_positive_diagnostics>();
+    runner.register_test<performance_real_clock_false_positive_diagnostics>();
     runner.register_test<performance_utilities_free_test>();
     runner.register_test<relational_false_negative_diagnostics>();
     runner.register_test<relational_false_positive_diagnostics>();

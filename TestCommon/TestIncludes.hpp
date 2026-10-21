@@ -185,6 +185,7 @@
 #include "TestFramework/OutputFreeTest.hpp"
 #include "TestFramework/PathFreeDiagnostics.hpp"
 #include "TestFramework/PerformanceExceptionsTest.hpp"
+#include "TestFramework/PerformanceRealClockDiagnostics.hpp"
 #include "TestFramework/PerformanceRetryTest.hpp"
 #include "TestFramework/PerformanceTestDiagnostics.hpp"
 #include "TestFramework/PerformanceUtilitiesFreeTest.hpp"
