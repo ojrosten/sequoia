@@ -113,6 +113,7 @@ namespace sequoia::testing
       check(equality, "Equality for non-null vs null pointer", &x, p);
       check(equality, "Equality for different pointers", &x, &y);
       check(equivalence, "Equivalence for null vs. non-null pointer", p, &x);
+      check(equivalence, "Equivalence for non-null vs null pointer", &x, p);
       check(equivalence, "Different pointers pointing to different values", &x, &z);
     }
 
@@ -123,6 +124,7 @@ namespace sequoia::testing
       check(equality, "Equality for non-null vs null pointer", &x, p);
       check(equality, "Equality for different pointers", &x, &y);
       check(equivalence, "Equivalence for null vs. non-null pointer", p, &x);
+      check(equivalence, "Equivalence for non-null vs null pointer", &x, p);
       check(equivalence, "Different pointers pointing to different values", &x, &z);
     }
 
@@ -133,6 +135,7 @@ namespace sequoia::testing
       check(equality, "Equality for non-null vs null pointer", &x, p);
       check(equality, "Equality for different pointers", &x, &y);
       check(equivalence, "Equivalence for null vs. non-null pointer", p, &x);
+      check(equivalence, "Equivalence for non-null vs null pointer", &x, p);
       check(equivalence, "Different pointers pointing to different values", &x, &z);
     }
 
@@ -143,6 +146,7 @@ namespace sequoia::testing
       check(equality, "Equality for non-null vs null pointer", &x, p);
       check(equality, "Equality for different pointers", &x, &y);
       check(equivalence, "Equivalence for null vs. non-null pointer", p, &x);
+      check(equivalence, "Equivalence for non-null vs null pointer", &x, p);
       check(equivalence, "Different pointers pointing to different values", &x, &z);
     }
 
