@@ -219,6 +219,19 @@ namespace sequoia::parsing::commandline
       return sections;
     }
 
+    void throw_if_any_tree_empty(const options_forest& options)
+    {
+      auto isEmpty{[](const options_tree& tree){ return tree.order() == 0; }};
+      if(const auto empty{std::ranges::find_if(options, isEmpty)};
+         empty != options.end())
+      {
+        throw std::logic_error{
+          error(std::format("tree at index {} of the options forest is empty",
+                            std::ranges::distance(options.begin(), empty)))
+        };
+      }
+    }
+
     void throw_if_any_spelt_as_help_request(const options_forest& options)
     {
       for(const auto& tree : options)
@@ -521,6 +534,7 @@ namespace sequoia::parsing::commandline
   [[nodiscard]]
   outcome parse(int argc, char** argv, const options_forest& options)
   {
+    throw_if_any_tree_empty(options);
     throw_if_any_spelt_as_help_request(options);
     throw_if_any_top_level_option_unbound(options);
 
