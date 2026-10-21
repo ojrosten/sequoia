@@ -123,6 +123,12 @@ namespace sequoia::testing
   std::string nullable_type_message(bool obtainedHoldsValue, bool predictedHoldsValue);
 
   [[nodiscard]]
+  constexpr std::string_view name_of_nullable_state(const bool holdsValue) noexcept
+  {
+    return holdsValue ? "not null" : "null";
+  }
+
+  [[nodiscard]]
   std::string equality_operator_failure_message();
 
   /** \brief The message that two pointers, neither null, point to different addresses. */
