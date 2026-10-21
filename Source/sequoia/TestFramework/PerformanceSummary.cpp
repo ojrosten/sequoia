@@ -128,12 +128,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string text_with_zeroed_measurements(std::string_view text)
   {
-    auto lineWithZeroedMeasurements{
-      [](auto line)
-      {
-        return line_with_zeroed_measurements(std::string_view{line});
-      }
-    };
+    auto lineWithZeroedMeasurements{[](auto line) { return line_with_zeroed_measurements(std::string_view{line}); }};
 
     return
         text
