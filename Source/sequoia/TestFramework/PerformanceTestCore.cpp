@@ -545,13 +545,10 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view postprocess(std::string_view testOutput,
-                               std::string_view referenceOutput,
-                               attempt_count_stability attemptCountStability)
+  std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput)
   {
     const bool differOnlyInMeasurements{
-         text_with_zeroed_measurements(testOutput,      attemptCountStability)
-      == text_with_zeroed_measurements(referenceOutput, attemptCountStability)
+      text_with_zeroed_measurements(testOutput) == text_with_zeroed_measurements(referenceOutput)
     };
 
     return differOnlyInMeasurements ? referenceOutput : testOutput;
@@ -583,9 +580,7 @@ namespace sequoia::testing
         }()
       };
 
-      std::string outputToUse{
-        postprocess(summary.diagnostics_output(), referenceOutput, attempt_count_stability::fluctuating)
-      };
+      std::string outputToUse{postprocess(summary.diagnostics_output(), referenceOutput)};
       summary.diagnostics_output(std::move(outputToUse));
 
       return summary;
