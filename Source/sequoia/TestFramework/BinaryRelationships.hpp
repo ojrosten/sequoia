@@ -143,6 +143,9 @@ namespace sequoia::testing
     }
   };
 
+  /** \brief Returns a `both_or_neither_hold_a_value` which names each state by
+             `name_of_nullable_state`.
+   */
   [[nodiscard]]
   constexpr both_or_neither_hold_a_value both_or_neither_null()
   {

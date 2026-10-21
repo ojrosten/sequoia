@@ -110,17 +110,17 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string operator_message(std::string_view op, std::string_view retVal);
 
-  [[nodiscard]]
-  constexpr std::string_view name_of_nullable_state(const bool holdsValue) noexcept
-  {
-    return holdsValue ? "not null" : "null";
-  }
-
   /** \brief The obtained and predicted states of a nullable value, each `null` or `not null`, laid out as
              `default_prediction_message` lays out values.
    */
   [[nodiscard]]
   std::string nullable_type_message(bool obtainedHoldsValue, bool predictedHoldsValue);
+
+  [[nodiscard]]
+  constexpr std::string_view name_of_nullable_state(const bool holdsValue) noexcept
+  {
+    return holdsValue ? "not null" : "null";
+  }
 
   [[nodiscard]]
   std::string equality_operator_failure_message();
