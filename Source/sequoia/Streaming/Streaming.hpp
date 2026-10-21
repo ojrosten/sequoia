@@ -35,7 +35,7 @@ namespace sequoia
   /** \brief Reads the contents of `file`, opened in `mode`.
 
       \returns `std::nullopt` if
-               -# `file` is not a regular file;
+               -# `file` does not resolve to a regular file;
                -# `file` cannot be opened;
                -# The size of `file` cannot be determined;
                -# The standard library reports an error while reading `file`.

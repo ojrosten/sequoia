@@ -50,6 +50,29 @@ namespace sequoia::testing
           read_to_string(working_materials(), std::ios_base::in),
           std::optional<std::string>{});
 
+    {
+      // read_to_string follows symbolic links. Making one under Windows
+      // needs a privilege, so there each link's target stands in for its
+      // link, and the check count is the same on every platform.
+      const auto foo{working_materials() /= "Foo.txt"},
+                 linkToFoo{with_windows_v ? foo : (scratchpad_materials() /= "LinkToFoo.txt")},
+                 linkToDirectory{with_windows_v ? working_materials() : (scratchpad_materials() /= "LinkToDirectory")};
+      if constexpr(!with_windows_v)
+      {
+        fs::create_symlink(foo, linkToFoo);
+        fs::create_directory_symlink(working_materials(), linkToDirectory);
+      }
+
+      check(equality,
+            "A regular file is read through a symbolic link",
+            read_to_string(linkToFoo, std::ios_base::in),
+            std::optional{"hello, World"s});
+      check(equality,
+            "A directory is not read through a symbolic link",
+            read_to_string(linkToDirectory, std::ios_base::in),
+            std::optional<std::string>{});
+    }
+
     write_to_file(working_materials() /= "Empty.txt", "", std::ios_base::out);
     check(equality, "An empty file", read_to_string(working_materials() /= "Empty.txt", std::ios_base::in), std::optional{""s});
 
