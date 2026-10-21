@@ -239,7 +239,9 @@ namespace sequoia::testing
       }
     };
 
-    /** The performance test's family of tests which sleep. */
+    /** The family of tests which sleep, run by
+        `test_runner_performance_test`.
+     */
     struct acceleration_family {};
 
     using acceleration_family_base = test_which_sleeps_base<acceleration_family>;
@@ -335,7 +337,7 @@ namespace sequoia::testing
 
         \throws std::runtime_error if the run does not succeed
      */
-    struct run_of_tests_which_sleep
+    struct run_of_acceleration_family
     {
       std::vector<std::string> arguments;
       std::chrono::milliseconds sleep_duration;
@@ -345,12 +347,12 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         auto runner{make_acceleration_family_runner(arguments, outputStream, sleep_duration)};
         if(runner.execute() != return_code::success)
-          throw std::runtime_error{"A run of the tests which sleep did not succeed"};
+          throw std::runtime_error{"A run of the acceleration family's tests did not succeed"};
       }
     };
 
-    using run_of_tests_which_sleep_with_baseline_t = task_with_baseline<run_of_tests_which_sleep,
-                                                                        run_of_tests_which_sleep>;
+    using acceleration_family_task_with_baseline_t = task_with_baseline<run_of_acceleration_family,
+                                                                        run_of_acceleration_family>;
 
     /** Makes a run of the acceleration family's tests with the command line
         `arguments`, each test sleeping for
@@ -359,7 +361,7 @@ namespace sequoia::testing
         and no test sleeps.
      */
     [[nodiscard]]
-    run_of_tests_which_sleep_with_baseline_t make_task_with_baseline(const std::vector<std::string>& arguments)
+    acceleration_family_task_with_baseline_t make_task_with_baseline(const std::vector<std::string>& arguments)
     {
       return {
         .task{arguments, sleep_duration_for_speedup_checks},

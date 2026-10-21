@@ -23,7 +23,7 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    void test_constraints_on_runner_of_tests_which_sleep();
+    void test_constraints_on_make_runner_of_tests_which_sleep();
 
     void test_reversed_and_empty_steady_clock_intervals();
 

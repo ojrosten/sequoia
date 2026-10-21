@@ -103,14 +103,14 @@ namespace sequoia::testing
 
   void test_runner_serial_execution_free_test::run_tests()
   {
-    test_constraints_on_runner_of_tests_which_sleep();
+    test_constraints_on_make_runner_of_tests_which_sleep();
     test_reversed_and_empty_steady_clock_intervals();
     test_index_beyond_registered_tests();
     test_separation_of_families_of_tests_which_sleep();
     test_serial_execution();
   }
 
-  void test_runner_serial_execution_free_test::test_constraints_on_runner_of_tests_which_sleep()
+  void test_runner_serial_execution_free_test::test_constraints_on_make_runner_of_tests_which_sleep()
   {
     STATIC_CHECK( make_runner_of_tests_which_sleep_accepts_v<serial_family,
                                                              test_which_sleeps_0,
@@ -148,7 +148,7 @@ namespace sequoia::testing
                 )};
 
     check(equality,
-          "A test which sleeps fails critically if it passes an index beyond the tests registered with it",
+          "A test which sleeps fails critically if the index it passes is not less than the number of tests registered",
           runner.execute(),
           return_code::critical_failures);
   }
