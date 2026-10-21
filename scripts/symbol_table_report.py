@@ -8,35 +8,46 @@ CMake configured with the Ninja generator. The target is the executable's path
 relative to the build directory, which is also its name as a ninja target.
 The record holds:
   - the commit at which the source tree stands, and whether the tree is clean;
-  - the toolchain, as recorded by the build directory: the C++ compiler's and
-    the linker's paths, ids and versions, the standard library, and nm;
+  - the toolchain: the C++ compiler's and the linker's paths, ids and
+    versions, and the standard library, as recorded by the build directory,
+    and the path and version of the build directory's nm;
   - the cache's build type and flags. A target's own flags are not among them;
   - the number of symbols nm lists for the executable, and the size in bytes
     of the string table holding their names;
-  - for each object linked into the executable, the number of symbols the
-    object defines, keyed by the path of its source relative to the
-    repository.
+  - for each object among the target's inputs, as ninja lists them, the
+    number of symbols the object defines, keyed by the path of its source
+    relative to the repository. The inputs include every member of a static
+    library the target links, whether or not the linker takes it.
+
+The string table also holds names nm does not list: on Mach-O, the debug
+map's paths to the objects; on ELF, the source files' paths. So its size
+changes with the path of the checkout, and records are comparable only
+between builds at the same path.
 
 The objects' counts do not sum to the executable's. An inline function or a
 template instantiation used in several objects is defined in each of them,
-and the linker keeps one copy.
+and the linker keeps one copy. The executable's count also includes the
+symbols it imports.
 
 The toolchain comes from the compiler record CMake writes when it first
-configures the build directory, CMakeFiles/<cmake version>/CMakeCXXCompiler.cmake,
-and not from the environment. A compiler upgraded in place leaves the record
-naming the old one. So the script refuses a record which names a path that no
-longer exists. An upgrade that keeps every path goes unseen.
+configures the build directory,
+CMakeFiles/<cmake version>/CMakeCXXCompiler.cmake, and not from the
+environment. A compiler upgraded in place leaves the record naming the old
+one. So the script refuses a record naming a compiler or an implicit include
+directory which no longer exists. An upgrade that keeps those paths goes
+unseen.
 
 The script refuses, rather than write a record which may be wrong, if
   - ninja has work to do for the target, since the executable would not be
     the source tree's;
-  - the compiler record cannot be found, or lacks an entry, or names a path
-    which no longer exists;
+  - the compiler record cannot be found, or lacks an entry, or names a
+    compiler or an implicit include directory which no longer exists;
   - the compiler record names both standard libraries or neither, or names
     the one whose inline namespace the executable's symbols do not show;
   - the executable is not a 64-bit little-endian ELF or Mach-O file with one
     symbol table, or nm lists no symbols for it;
-  - ninja lists no objects for the target, or an object's source cannot be
+  - ninja lists no objects for the target, or its compilation database has
+    no entry for one, or two objects share a source, or a source cannot be
     named relative to the repository.
 Windows executables are not supported.
 """
@@ -66,13 +77,13 @@ MACH_HEADER_64_SIZE = 32
 LC_SYMTAB           = 0x2
 
 
-def run(command, cwd=None):
+def run(command):
     """Returns the standard output of `command`.
 
     Exits, naming the command, if it cannot be started or fails.
     """
     try:
-        r = subprocess.run(command, capture_output=True, encoding="utf-8", cwd=cwd)
+        r = subprocess.run(command, capture_output=True, encoding="utf-8")
     except OSError as e:
         sys.exit(f"{command[0]} could not be run: {e}")
     if r.returncode:
@@ -102,7 +113,7 @@ def entry(entries, name, file_name):
 
 
 def compiler_record_path(build_dir, cache):
-    """Returns the path of the compiler record written by the cmake which
+    """Returns the path of the compiler record written by the CMake which
     configured the build directory.
 
     A build directory configured by several releases of CMake holds a record
@@ -123,8 +134,9 @@ def compiler_record_path(build_dir, cache):
 def read_compiler_record(path):
     """Returns the entries of the compiler record at `path`, by name.
 
-    Exits if an entry the record of a toolchain needs is absent or empty, or
-    if the record names a path which no longer exists.
+    Exits if an entry the script reads is absent or empty, or if the record
+    names a compiler or an implicit include directory which no longer
+    exists.
     """
     try:
         with open(path, encoding="utf-8") as f:
@@ -330,7 +342,7 @@ def record_of(build_dir, target):
         flags += [f"CMAKE_CXX_FLAGS_{build_type.upper()}", f"CMAKE_EXE_LINKER_FLAGS_{build_type.upper()}"]
     return {
         "commit": run(["git", "-C", root, "rev-parse", "HEAD"]).strip(),
-        "clean": run(["git", "-C", root, "status", "--porcelain"]) == "",
+        "clean": run(["git", "-C", root, "status", "--porcelain", "--untracked-files=all"]) == "",
         "target": target,
         "toolchain": {
             "compiler": {"path":    record["CMAKE_CXX_COMPILER"],

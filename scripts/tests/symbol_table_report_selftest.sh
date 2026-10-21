@@ -258,6 +258,13 @@ record_controls() {
   field "a dirty tree" 'd["clean"]' False
   git -C "$repo" checkout -q -- Tests/A.cpp
 
+  : > "$repo/Tests/Untracked.cpp"
+  git -C "$repo" config status.showUntrackedFiles no
+  run "$build" TestAll
+  exits "a record of a tree with an untracked file is written" 0
+  field "an untracked file, however git is configured, makes the tree dirty" 'd["clean"]' False
+  rm "$repo/Tests/Untracked.cpp"
+
   echo '[1/2] Building CXX object CMakeFiles/TestAll.dir/A.cpp.o' > "$build/ninja/dry-run"
   run "$build" TestAll
   refuses "a build with work to do" 'ninja has work to do for TestAll'
@@ -412,7 +419,7 @@ tool_controls() {
   sed -i.bak "s|^CMAKE_NM:FILEPATH=.*|CMAKE_NM:FILEPATH=$nm_path|" "$build/CMakeCache.txt"
 
   rm -rf "$repo/.git"
-  run "$build" TestAll
+  GIT_CEILING_DIRECTORIES=$work run "$build" TestAll
   refuses "a source directory outside a repository" 'git -C .* rev-parse --show-toplevel failed'
 }
 
@@ -467,8 +474,9 @@ with open(path, "wb") as f:
 EOF
 }
 
-# string_table <kind>: the subject's string_table on a synthetic file of that
-# kind, its output in $out, its errors in $err, and its exit status in $rc
+# string_table <kind>: the subject's format_and_string_table_size on a
+# synthetic file of that kind, its output in $out, its errors in $err, and its
+# exit status in $rc
 string_table() {
   synthetic "$work/$1" "$1"
   python3 -B -c 'import importlib.util, sys
@@ -586,7 +594,10 @@ MUTATIONS = [
     ('any magic read as Mach-O',         'if magic == MACH_O_MAGIC:', 'if True:'),
     ('the nm version from the first line', 'if re.search(r"\\d", line)]', 'if line]'),
     ('no nm version accepted',           'if not lines:\n        sys.exit(f"{nm} --version', 'if False:\n        sys.exit(f"{nm} --version'),
-    ('a dirty tree called clean',        '"clean": run(["git", "-C", root, "status", "--porcelain"]) == "",', '"clean": True,'),
+    ('a dirty tree called clean',        '"clean": run(["git", "-C", root, "status", "--porcelain", "--untracked-files=all"]) == "",',
+                                         '"clean": True,'),
+    ('untracked files as git is configured',
+                                         '"status", "--porcelain", "--untracked-files=all"]', '"status", "--porcelain"]'),
     ('the type\'s flags left out',       'if build_type:\n        flags +=', 'if False:\n        flags +='),
     ('the linker\'s flags left out',     'flags = ["CMAKE_CXX_FLAGS", "CMAKE_EXE_LINKER_FLAGS"]', 'flags = ["CMAKE_CXX_FLAGS"]'),
     ('the linker named as the compiler', '"linker":   {"path":    record["CMAKE_CXX_COMPILER_LINKER"],', '"linker":   {"path":    record["CMAKE_CXX_COMPILER"],'),
