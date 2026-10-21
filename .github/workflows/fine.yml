@@ -42,8 +42,8 @@ on:
   # fine-on-retarget.yml dispatches this workflow on the head branch of a pull
   # request retargeted to staging, because the retarget starts no pull_request
   # run here. The dispatched run tests the head merged into staging, as the pull
-  # request's own run would, and reports on the head commit, where staging's rule
-  # looks for this workflow's audit.
+  # request's own run would. The dispatched run's audit also posts its outcome
+  # on the head commit as a commit status; the audit's last step says why.
   workflow_dispatch:
 
 # A push to a PR that already has a run in flight cancels that run: a superseded
@@ -107,6 +107,10 @@ jobs:
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read
+      checks: read
+      statuses: write
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
@@ -159,3 +163,39 @@ jobs:
             exit 1
           fi
           echo "staging requires this job, pinned to the app that reports it"
+
+      # GitHub does not count a dispatched run's checks towards a pull
+      # request's required checks. GitHub's page "Troubleshooting required
+      # status checks" says so under "Checks from some workflow jobs are not
+      # evaluated", naming workflow_dispatch. So a dispatched run also posts
+      # this job's outcome as a commit status, named as this job, on the
+      # commit the run tested. The status is success if every step above
+      # succeeded, and failure otherwise.
+      #
+      # Staging's rule accepts the status, because GitHub Actions, the app the
+      # rule pins, posts it. The status cannot mask a red check: when a check
+      # and a status share a required name, GitHub requires both to pass. A red
+      # status holds the pull request until a dispatched run on the same commit
+      # passes, or a push starts fine on a new head.
+      #
+      # Scratch PR #345 measured this on 2026-10-21. A retarget to staging by
+      # hand fired the same `edited` event, with `changes.base`, as GitHub's
+      # automatic retarget. The dispatched audit passed on the head, but the
+      # pull request stayed BLOCKED, and the audit was missing from its checks.
+      # A commit status of this name, posted from a dispatched run, took the
+      # pull request to CLEAN.
+      #
+      # The status would merely repeat the check if GitHub began to count a
+      # dispatched run's checks.
+      - name: Post this job's outcome on a dispatched commit
+        if: ${{ always() && github.event_name == 'workflow_dispatch' }}
+        env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+          OUTCOME: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ "$OUTCOME" = success ]; then state=success; else state=failure; fi
+          name=$(gh api "repos/$GH_REPO/check-runs/$CHECK_RUN_ID" --jq .name)
+          gh api -X POST "repos/$GH_REPO/statuses/$GITHUB_SHA" -f state="$state" -f context="$name" \
+            -f description="dispatched run: $OUTCOME" -f target_url="$RUN_URL" > /dev/null
+          echo "posted '$name' as $state on $GITHUB_SHA"

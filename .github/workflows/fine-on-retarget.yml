@@ -27,7 +27,10 @@ name: fine-on-retarget
 # GITHUB_TOKEN can start a run at once on a branch of its choosing. GitHub
 # documents that any other event the GITHUB_TOKEN causes starts no run,
 # except that a pull request's opened, synchronize or reopened event starts
-# one that waits for approval.
+# one that waits for approval. GitHub does not count a dispatched run's checks
+# towards a pull request's required checks. So a dispatched run of fine posts
+# its audit's outcome as a commit status as well, and the status counts.
+# fine.yml's audit gives the evidence.
 #
 # Why the dispatched run makes its own merge. Even a pull_request run would
 # test the wrong tree: GitHub's merge ref can stay merged into the old base
@@ -61,6 +64,9 @@ name: fine-on-retarget
 #     head's fine.yml has no workflow_dispatch, GitHub is documented to refuse
 #     the dispatch, and the job fails. Neither case has been seen here. A push
 #     starts fine in both.
+#   - A head whose fine.yml does not post the commit status. The dispatched
+#     run then counts for nothing, as on #335 on 2026-10-21, and the pull
+#     request waits. A push starts fine.
 #   - A pull request that conflicts with its new base. GitHub starts no
 #     pull_request run for such a pull request, so neither this workflow nor
 #     fine runs. Resolving the conflict needs a push, and the push starts fine.
