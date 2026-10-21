@@ -29,11 +29,15 @@ jobs:
   coverage:
     name: Coverage · Linux · GCC
     # Pinned, as lcov is below, so that the Ubuntu release changes only in a
-    # PR. ubuntu-26.04's archive carries g++-15, so the job needs no PPA and
-    # Launchpad is not a dependency of any gate. GitHub still rebuilds the
-    # image weekly. A PR that moves the job to another release:
+    # PR. ubuntu-26.04's archive carries g++-15, so the job needs no PPA.
+    # GitHub rebuilds the image weekly, and `apt-get install g++-15` takes the
+    # archive's newest. A rebuilt image or archive that bumps the upstream
+    # version of g++-15, llvm-cxxfilt-22 or c++filt makes the gate on
+    # uncalled functions refuse every run, until a PR regenerates
+    # coverage_reports/uncalled_functions.txt. A PR that moves the job to
+    # another release:
     #   -# changes the runs-on line;
-    #   -# finds the release's demanglers, with the listing step of 36950811f,
+    #   -# finds the release's demanglers, with the listing step of 96027fcab,
     #      and sets LLVM_CXXFILT and GNU_CXXFILT below;
     #   -# checks that the release provides g++-15;
     #   -# regenerates coverage_reports/uncalled_functions.txt, whose header
@@ -91,7 +95,8 @@ jobs:
           # `apt-get update`, and with it the job.
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
-          # g++-15 comes from the Ubuntu archive, which ubuntu-26.04 carries.
+          # The image has g++-15 15.2.0 preinstalled; the install moves it
+          # only if the archive has a newer one.
           # The archive is a live dependency of this job, and an index refresh
           # has hung until the job's timeout, before any compiler ran. So
           # scripts/retry.sh runs each apt command: an attempt that fails, or
@@ -100,10 +105,8 @@ jobs:
           # processes apt starts. A whole install step takes 22-126 s, so the
           # limits leave room for every retry within the job.
           #
-          # `apt-get update` reports an index it could not fetch as a warning,
-          # and exits 0, so packages of that index go missing and the check
-          # below blames the image. `--error-on=any` turns a failed index into
-          # an error, which scripts/retry.sh retries.
+          # Repeated from tests.yml, whose comment on the step says why
+          # `--error-on=any` is passed; change both.
           sudo scripts/retry.sh 3 180 -- apt-get update -qq --error-on=any \
             || { echo "::error::The apt indexes could not be fetched: each attempt above says why"; exit 1; }
           # The Perl packages are for lcov, installed below from its release.
@@ -121,30 +124,14 @@ jobs:
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
           sudo scripts/retry.sh 3 300 -- apt-get install -y "${packages[@]}"
-          # ubuntu-24.04's CMake is below sequoia's floor of 4.2, the release
-          # that added CMAKE_INTERMEDIATE_DIR_STRATEGY; the Windows presets set
-          # it in build_system/ShortObjectPaths.cmake. So this job fetches one
-          # from Kitware - the host the checkout already comes from - and puts
-          # it first on PATH. An older cmake surviving this step is loud: the
-          # configure step's cmake_minimum_required refuses it. The tarball has
-          # no apt signature behind it, so its checksum is pinned.
-          cmake_version=4.4.3
-          cmake_sha256=d6c83076c575bc00b823522ac974bda66d0af05d6ddc30e739c12385cf32c6cc
-          cmake_tarball=$RUNNER_TEMP/cmake.tar.gz
-          cmake_url=https://github.com/Kitware/CMake/releases/download/v$cmake_version/cmake-$cmake_version-linux-x86_64.tar.gz
-          if [ "$(uname -m)" != x86_64 ]; then echo "::error::No CMake build is fetched for $(uname -m)"; exit 1; fi
-          if ! curl -fsSL -o "$cmake_tarball" "$cmake_url"; then echo "::error::CMake $cmake_version could not be fetched from Kitware's release page"; exit 1; fi
-          if ! echo "$cmake_sha256  $cmake_tarball" | sha256sum --check --quiet; then echo "::error::The CMake tarball does not match its published checksum"; exit 1; fi
-          tar -xzf "$cmake_tarball" -C "$RUNNER_TEMP"
-          echo "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin" >> "$GITHUB_PATH"
           # lcov comes from its release rather than apt, so that its version
-          # does not move with the image: the 24.04 archive has 2.0 and the
-          # 26.04 one 2.4. From the same coverage data, lcov 2.0 and 2.5 write
-          # different function records and count different function totals.
+          # does not move with the image, whose archive has 2.4. From the same
+          # coverage data, lcov 2.0 and 2.5 write different function records
+          # and count different function totals; 2.4 was not measured.
           # Keep it at the version Homebrew installs, so that CI and a Mac run
-          # the same lcov. The tarball's checksum is pinned for the same reason
-          # as CMake's. Each tool prints the version and, after a hyphen, the
-          # release number from the tarball's .version file.
+          # the same lcov. The tarball has no apt signature behind it, so its
+          # checksum is pinned. Each tool prints the version and, after a
+          # hyphen, the release number from the tarball's .version file.
           lcov_version=2.5
           lcov_release=0
           lcov_sha256=7e5e5a154bd5f3557659c328cab376764e7abd238bb403c424472c296b175126
@@ -168,7 +155,7 @@ jobs:
               || { echo "::error::$tool on PATH reports ${reported##* }, not the pinned $pinned"; exit 1; }
           done
           g++-15 --version | head -1
-          "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin/cmake" --version | head -1
+          cmake --version | head -1
 
       - name: Give git an identity
         if: env.NEEDS_TESTING == 'true'
