@@ -194,6 +194,7 @@ namespace sequoia::testing
                 )};
     check(equality, "Serial execution return code", runner.execute(), return_code::success);
 
+    scratch_report_run("serial", serial_family_base::sleep_intervals());
     check_output(report({"Serial Output"}), "Serial Output", outputStream);
     check(equality,
           "No two tests' sleeps overlap in a serial run",

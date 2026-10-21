@@ -8,6 +8,12 @@
 #include "TestRunnerConcurrencyTestingUtilities.hpp"
 
 #include <algorithm>
+#include <cstdlib>
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <iostream>
+#include <string>
 #include <array>
 #include <numeric>
 #include <ranges>
@@ -54,5 +60,27 @@ namespace sequoia::testing
   void print_peak_overlap(std::ostream& stream, std::size_t peak)
   {
     std::println(stream, "[Peak Overlap: {}]", peak);
+  }
+
+  void scratch_report_run(std::string_view label, std::span<const steady_clock_interval> intervals)
+  {
+    using namespace std::chrono;
+    auto earliest{steady_clock::time_point::max()};
+    for(const auto& i : intervals) earliest = std::min(earliest, i.start_time());
+
+    std::string line{std::format("SCRATCH-PEAK {} peak {} sleep_ms {} starts_us", label, peak_overlap(intervals), sleep_duration_for_overlap_checks.count())};
+    for(const auto& i : intervals) line += std::format(" {}", duration_cast<microseconds>(i.start_time() - earliest).count());
+    line += " durs_us";
+    for(const auto& i : intervals) line += std::format(" {}", duration_cast<microseconds>(i.end_time() - i.start_time()).count());
+
+    std::cerr << line << std::endl;
+    if(const char* ws{std::getenv("GITHUB_WORKSPACE")})
+    {
+      const std::filesystem::path dir{std::filesystem::path{ws} / "run-log"};
+      std::error_code ec{};
+      std::filesystem::create_directories(dir, ec);
+      std::ofstream file{dir / "peaks.txt", std::ios_base::app};
+      file << line << '\n';
+    }
   }
 }

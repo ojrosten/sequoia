@@ -1,5 +1,9 @@
 name: statistical
 
+# SCRATCH, not for merging: the macOS Release and Debug columns, with the
+# performance tests, to measure their failure rate before --exclude-performance
+# is lifted there.
+
 # Measures how often main fails. The gate answers "does this tree pass" once,
 # and one trial is the right sample for a deterministic question. Races and
 # timings are probabilistic, so a single green says almost nothing about
@@ -104,14 +108,13 @@ jobs:
       needs_testing: ${{ 'true' }}
       merge_into: ''
       warnings_as_errors: false
-      exec_args: 'locate;${{ needs.trials.outputs.n }};--exclude-performance'
-      suite_timeout_minutes: 200
-      job_timeout_minutes: 240
+      exec_args: 'locate;${{ needs.trials.outputs.n }}'
+      suite_timeout_minutes: 300
+      job_timeout_minutes: 340
       columns: >-
         [
-          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan"},
-          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan"}
+          {"name": "macOS · Clang · Release", "os": "macos-latest", "configure": "llvm-env-release", "build": "llvm-env-release"},
+          {"name": "macOS · Clang · Debug",   "os": "macos-latest", "configure": "llvm-env",         "build": "llvm-env"}
         ]
 
   # Writes the sample up as a measurement: the tree, the trials, what each
@@ -180,9 +183,8 @@ jobs:
             fi
             echo "" >> "$report"
           done <<'COLUMNS'
-          llvm-env-tsan|macOS · Clang · TSan
-          gcc-env-asan-ubsan|Linux · GCC · ASan+UBSan
-          msvc-asan|Windows · MSVC · ASan
+          llvm-env-release|macOS · Clang · Release
+          llvm-env|macOS · Clang · Debug
           COLUMNS
 
           {
