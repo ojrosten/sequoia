@@ -29,11 +29,11 @@ jobs:
   coverage:
     name: Coverage · Linux · GCC
     # Pinned, as lcov is below, so that the Ubuntu release changes only in a
-    # PR. ubuntu-26.04's archive carries g++-15, so the job needs no PPA.
-    # GitHub rebuilds the image weekly, and `apt-get install g++-15` takes the
-    # archive's newest. A rebuilt image or archive that bumps the upstream
-    # version of g++-15, llvm-cxxfilt-22 or c++filt makes the gate on
-    # uncalled functions refuse every run, until a PR regenerates
+    # PR. ubuntu-26.04's archive carries g++-15, where ubuntu-24.04's stops at
+    # g++-14. GitHub rebuilds the image weekly. A new upstream version of
+    # g++-15, which `apt-get install` takes from the archive, or of
+    # llvm-cxxfilt-22 or c++filt, which change only with the image, makes
+    # the gate on uncalled functions refuse every run, until a PR regenerates
     # coverage_reports/uncalled_functions.txt. A PR that moves the job to
     # another release:
     #   -# changes the runs-on line;
@@ -90,13 +90,16 @@ jobs:
       - name: Install the toolchain
         if: env.NEEDS_TESTING == 'true'
         run: |
+          # Repeated from tests.yml's "Install the toolchain (Linux)", whose
+          # comments carry the reasoning: this removal of the Chrome and
+          # Microsoft lists, the retry paragraph and the `apt-get update`
+          # below; change both.
+          #
           # The hosted image ships Chrome's and Microsoft's apt repositories,
           # which nothing here installs from. A bad index from either fails
           # `apt-get update`, and with it the job.
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
-          # The image has g++-15 15.2.0 preinstalled; the install moves it
-          # only if the archive has a newer one.
           # The archive is a live dependency of this job, and an index refresh
           # has hung until the job's timeout, before any compiler ran. So
           # scripts/retry.sh runs each apt command: an attempt that fails, or
@@ -104,9 +107,6 @@ jobs:
           # script runs as root, so that stopping an attempt reaches the
           # processes apt starts. A whole install step takes 22-126 s, so the
           # limits leave room for every retry within the job.
-          #
-          # Repeated from tests.yml, whose comment on the step says why
-          # `--error-on=any` is passed; change both.
           sudo scripts/retry.sh 3 180 -- apt-get update -qq --error-on=any \
             || { echo "::error::The apt indexes could not be fetched: each attempt above says why"; exit 1; }
           # The Perl packages are for lcov, installed below from its release.
@@ -124,10 +124,10 @@ jobs:
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
           sudo scripts/retry.sh 3 300 -- apt-get install -y "${packages[@]}"
-          # lcov comes from its release rather than apt, so that its version
-          # does not move with the image, whose archive has 2.4. From the same
-          # coverage data, lcov 2.0 and 2.5 write different function records
-          # and count different function totals; 2.4 was not measured.
+          # lcov comes from its release rather than apt, whose version differs
+          # by Ubuntu release: ubuntu-24.04 has 2.0 and ubuntu-26.04 2.4. From
+          # the same coverage data, lcov 2.0 and 2.5 write different function
+          # records and count different function totals.
           # Keep it at the version Homebrew installs, so that CI and a Mac run
           # the same lcov. The tarball has no apt signature behind it, so its
           # checksum is pinned. Each tool prints the version and, after a
