@@ -701,12 +701,6 @@ namespace sequoia::testing
 
       return name;
     }
-
-    [[nodiscard]]
-    std::string nullable_type_message(const bool holdsValue)
-    {
-      return std::string{holdsValue ? "not " : ""}.append("null");
-    }
   }
 
   [[nodiscard]]
@@ -817,8 +811,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string nullable_type_message(const bool obtainedHoldsValue, const bool predictedHoldsValue)
   {
-    return std::string{"Obtained : "}.append(nullable_type_message(obtainedHoldsValue)).append("\n")
-               .append("Predicted: ").append(nullable_type_message(predictedHoldsValue));
+    return default_prediction_message(name_of_nullable_state(obtainedHoldsValue),
+                                      name_of_nullable_state(predictedHoldsValue));
   }
 
   [[nodiscard]]
