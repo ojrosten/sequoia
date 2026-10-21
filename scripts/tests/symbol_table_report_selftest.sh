@@ -599,6 +599,7 @@ MUTATIONS = [
     ('a static library accepted',        'CONTAINER_MAGICS = (b"!<arch>\\n", ', 'CONTAINER_MAGICS = ('),
     ('a universal binary accepted',      'b"\\xca\\xfe\\xba\\xbe", ', ''),
     ('a 64-bit universal binary accepted', ', b"\\xca\\xfe\\xba\\xbf")', ')'),
+    ('too few bytes read for the magics', 'f.read(max(map(len, CONTAINER_MAGICS)))', 'f.read(4)'),
     ('an unreadable executable crashes', 'except OSError as e:\n        sys.exit(f"{executable} cannot be read',
                                          'except ValueError as e:\n        sys.exit(f"{executable} cannot be read'),
     ('a record not UTF-8 crashes',       'text = f.read()\n    except (OSError, UnicodeDecodeError) as e:',

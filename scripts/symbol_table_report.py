@@ -248,10 +248,11 @@ def record_of(build_dir, target):
         sys.exit(f"{executable} is not a file")
     try:
         with open(executable, "rb") as f:
-            if f.read(8).startswith(CONTAINER_MAGICS):
-                sys.exit(f"{executable} is a static library or a universal binary, not one executable")
+            first_bytes = f.read(max(map(len, CONTAINER_MAGICS)))
     except OSError as e:
         sys.exit(f"{executable} cannot be read: {e}")
+    if first_bytes.startswith(CONTAINER_MAGICS):
+        sys.exit(f"{executable} is a static library or a universal binary, not one executable")
     nm = entry(cache, "CMAKE_NM", "CMakeCache.txt")
     listed = symbols(nm, executable)
     if not listed:
