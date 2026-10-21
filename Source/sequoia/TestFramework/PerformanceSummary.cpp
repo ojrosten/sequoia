@@ -23,7 +23,7 @@ namespace sequoia::testing
         and which values they are.
      */
     [[nodiscard]]
-    std::string line_with_zeroed_measurements(std::string_view line, attempt_count_stability attemptCountStability)
+    std::string line_with_zeroed_measurements(std::string_view line)
     {
       const auto indentationSize{std::min(line.find_first_not_of(" \t"), line.size())};
       const std::string_view indentation{line.substr(0, indentationSize)}, unindented{line.substr(indentationSize)};
@@ -44,8 +44,7 @@ namespace sequoia::testing
           return indented(speedup_summary({}, prediction));
       }
 
-      if(const auto numbers{extract_numbers_from<std::size_t, 3>(unindented)};
-         numbers && (attemptCountStability == attempt_count_stability::fluctuating))
+      if(const auto numbers{extract_numbers_from<std::size_t, 3>(unindented)})
       {
         const auto [numTrials, attemptsMade, attemptsAllowed]{*numbers};
         const relative_performance_attempt_progress progress{.made{attemptsMade}, .allowed{attemptsAllowed}};
@@ -127,14 +126,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string text_with_zeroed_measurements(std::string_view text, attempt_count_stability attemptCountStability)
+  std::string text_with_zeroed_measurements(std::string_view text)
   {
-    auto lineWithZeroedMeasurements{
-      [attemptCountStability](auto line)
-      {
-        return line_with_zeroed_measurements(std::string_view{line}, attemptCountStability);
-      }
-    };
+    auto lineWithZeroedMeasurements{[](auto line) { return line_with_zeroed_measurements(std::string_view{line}); }};
 
     return
         text

@@ -204,6 +204,7 @@
 #include "TestFramework/TestExecutionRecordTestingDiagnostics.hpp"
 #include "TestFramework/TestRunnerDiagnostics.hpp"
 #include "TestFramework/TestRunnerEndToEndFreeTest.hpp"
+#include "TestFramework/TestRunnerPerformanceCheckOutcomesFreeTest.hpp"
 #include "TestFramework/TestRunnerPerformanceTest.hpp"
 #include "TestFramework/TestRunnerProjectCreation.hpp"
 #include "TestFramework/TestRunnerProjectFiles.hpp"

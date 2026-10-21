@@ -13,6 +13,6 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string instability_projection(std::string_view message)
   {
-    return text_with_zeroed_measurements(message, attempt_count_stability::fluctuating);
+    return text_with_zeroed_measurements(message);
   }
 }
