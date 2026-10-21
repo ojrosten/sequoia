@@ -186,8 +186,7 @@ jobs:
           # stops at g++-14, so a column there needs the toolchain PPA on
           # Launchpad, whose index has answered 503 for hours. The tiers name
           # ubuntu-26.04 rather than ubuntu-latest, so that the release changes
-          # only in a PR. coverage.yml adds the PPA, on ubuntu-24.04, and says
-          # why.
+          # only in a PR.
           #
           # The archive is a live dependency of every Linux column, and an
           # index refresh has hung until the job's timeout, before any compiler
