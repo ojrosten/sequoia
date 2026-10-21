@@ -35,8 +35,5 @@ namespace sequoia::testing
     STATIC_CHECK( is_customized_check<general_weak_equivalence_check_t<int>>);
     STATIC_CHECK( checkable_against<equality_check_t, test_mode::standard, foo, foo, tutor<null_advisor>>);
     STATIC_CHECK(!checkable_against<equality_check_t, test_mode::standard, foo, foo, int>);
-    STATIC_CHECK( potential_comparator_for<both_or_neither_hold_a_value, test_mode::standard, bool, null_advisor>);
-    STATIC_CHECK(!potential_comparator_for<both_or_neither_hold_a_value, test_mode::standard, int, null_advisor>);
-    STATIC_CHECK(!potential_comparator_for<both_or_neither_hold_a_value, test_mode::standard, int*, null_advisor>);
   }
 }

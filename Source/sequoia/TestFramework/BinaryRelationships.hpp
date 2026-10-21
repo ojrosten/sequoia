@@ -107,12 +107,13 @@ namespace sequoia::testing
    */
   class both_or_neither_hold_a_value
   {
-    std::string_view m_NameOfStateWithValue{}, m_NameOfStateWithoutValue{};
+    std::string m_NameOfStateWithValue{},
+                m_NameOfStateWithoutValue{};
   public:
-    constexpr explicit both_or_neither_hold_a_value(std::string_view nameOfStateWithValue,
-                                                    std::string_view nameOfStateWithoutValue)
-      : m_NameOfStateWithValue{nameOfStateWithValue}
-      , m_NameOfStateWithoutValue{nameOfStateWithoutValue}
+    constexpr explicit both_or_neither_hold_a_value(std::string nameOfStateWithValue,
+                                                    std::string nameOfStateWithoutValue)
+      : m_NameOfStateWithValue{std::move(nameOfStateWithValue)}
+      , m_NameOfStateWithoutValue{std::move(nameOfStateWithoutValue)}
     {}
 
     [[nodiscard]]
@@ -121,9 +122,8 @@ namespace sequoia::testing
       return holdsValue ? m_NameOfStateWithValue : m_NameOfStateWithoutValue;
     }
 
-    template<std::same_as<bool> T>
     [[nodiscard]]
-    constexpr bool operator()(const T obtainedHoldsValue, const T predictedHoldsValue) const noexcept
+    constexpr bool operator()(const bool obtainedHoldsValue, const bool predictedHoldsValue) const noexcept
     {
       return obtainedHoldsValue == predictedHoldsValue;
     }
@@ -142,6 +142,13 @@ namespace sequoia::testing
       return default_prediction_message(c.name_of_state(obtainedHoldsValue), c.name_of_state(predictedHoldsValue));
     }
   };
+
+  [[nodiscard]]
+  constexpr both_or_neither_hold_a_value both_or_neither_null()
+  {
+    return both_or_neither_hold_a_value{std::string{name_of_nullable_state(true)},
+                                        std::string{name_of_nullable_state(false)}};
+  }
 
   template<>
   struct failure_reporter<std::ranges::equal_to>
