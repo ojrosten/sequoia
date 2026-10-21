@@ -70,8 +70,10 @@ namespace sequoia::testing
 
   namespace impl
   {
-    /** \brief A judgement of the speed-up of a fast task over a slow one:
-               whether it failed---and if so, why---and its measurements.
+    /** \brief A judgement of the speed-up of a fast task over a slow one,
+               and the measurements behind it.
+
+        `failure` is `std::nullopt` if the judgement did not fail.
      */
     struct relative_performance_judgement
     {
@@ -94,9 +96,7 @@ namespace sequoia::testing
                                     baseline{};
     };
 
-    /** \brief The durations of the fast and slow tasks, each with its
-               baseline's.
-     */
+    /** \brief The durations of the fast and slow tasks and their baselines. */
     struct relative_performance_durations_with_baselines
     {
       task_and_baseline_durations fast{},
