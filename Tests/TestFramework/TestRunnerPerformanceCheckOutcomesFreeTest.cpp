@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "TestRunnerRecordedPerformanceChecksFreeTest.hpp"
+#include "TestRunnerPerformanceCheckOutcomesFreeTest.hpp"
 #include "FakeProjectTestingUtilities.hpp"
 #include "PerformanceTestingUtilities.hpp"
 #include "TestRunnerTestingUtilities.hpp"
@@ -22,7 +22,9 @@ namespace sequoia::testing
 
   namespace
   {
-    /** Copies the summary `runner` wrote for `Test` into `directory`. */
+    /** Copies the summary `runner` wrote for `Test` into `directory`. The
+        copy has the summary's filename.
+     */
     template<concrete_test Test>
     void copy_summary(const test_runner& runner, const fs::path& directory)
     {
@@ -262,12 +264,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path test_runner_recorded_performance_checks_free_test::source_file()
+  fs::path test_runner_performance_check_outcomes_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }
 
-  void test_runner_recorded_performance_checks_free_test::run_tests()
+  void test_runner_performance_check_outcomes_free_test::run_tests()
   {
     test_recording_of_performance_check_attempts();
     test_summary_of_performance_checks_within_other_checks();
@@ -277,10 +279,11 @@ namespace sequoia::testing
       numbers, in neither sorted order nor its reverse, and not the checks'
       numbers of trials. Its other two checks end by throwing, one before its
       first attempt and one during it, so the record has no entry for either.
-      `scripted_clock_test_without_performance_checks` is the control: a test
-      on the same base whose record gives no attempts.
+      `scripted_clock_test_without_performance_checks` is the control. It is a
+      `scripted_clock_test`, as `attempt_counting_test` is, and makes no
+      performance check.
    */
-  void test_runner_recorded_performance_checks_free_test::test_recording_of_performance_check_attempts()
+  void test_runner_performance_check_outcomes_free_test::test_recording_of_performance_check_attempts()
   {
     std::stringstream outputStream{};
     commandline_arguments args{fake_project_commandline(auxiliary_materials())};
@@ -300,7 +303,7 @@ namespace sequoia::testing
           std::vector<std::size_t>{});
   }
 
-  void test_runner_recorded_performance_checks_free_test::test_summary_of_performance_checks_within_other_checks()
+  void test_runner_performance_check_outcomes_free_test::test_summary_of_performance_checks_within_other_checks()
   {
     using standard_test       = performance_checks_within_other_checks_test;
     using false_positive_test = performance_checks_within_other_checks_false_positive_test;

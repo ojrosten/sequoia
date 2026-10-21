@@ -1088,6 +1088,9 @@ jobs:
       # what moved in them, without the megabytes that did not. The artifact
       # keeps its `-drift` name because statistical.yml collects the artifacts
       # by it.
+      # The artifact also takes the performance-check-outcomes test's working
+      # copy, which holds the summaries that the test compares with its
+      # predictions.
       #
       # A working copy lies under <source path less extension>/<test class>,
       # so the paths below name both. A wrong path goes unnoticed:
@@ -1102,6 +1105,7 @@ jobs:
             output/Drift/
             output/ExecutionRecords/
             output/TestsTemporaryData/TestFramework/TestRunnerPerformanceTest/test_runner_performance_test/WorkingCopy/
+            output/TestsTemporaryData/TestFramework/TestRunnerPerformanceCheckOutcomesFreeTest/test_runner_performance_check_outcomes_free_test/WorkingCopy/
             output/TestsTemporaryData/TestFramework/TestRunnerReportedDurationsFreeTest/test_runner_reported_durations_free_test/WorkingCopy/
             output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/ExecutionRecords/
             output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/WorkingCopy/InitOutput/

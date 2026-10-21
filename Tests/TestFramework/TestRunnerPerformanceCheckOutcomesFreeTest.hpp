@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class test_runner_recorded_performance_checks_free_test final : public free_test
+  class test_runner_performance_check_outcomes_free_test final : public free_test
   {
   public:
     using free_test::free_test;
