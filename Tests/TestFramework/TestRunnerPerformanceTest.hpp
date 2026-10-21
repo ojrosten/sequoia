@@ -28,8 +28,6 @@ namespace sequoia::testing
 
     void test_thread_pool_acceleration();
 
-    void test_serial_execution();
-
     void test_recording_of_performance_check_attempts();
 
     void test_summary_of_performance_checks_within_other_checks();
