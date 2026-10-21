@@ -35,6 +35,7 @@ namespace sequoia::testing
     test_tree_unweighted_nodes<undirected_tree<tree_link_direction::symmetric, null_weight, null_weight>>();
 
     test_forest_ranges();
+    test_adaptors_at_absent_nodes();
   }
 
   template<maths::dynamic_tree Tree>
@@ -218,5 +219,32 @@ namespace sequoia::testing
 
     const std::vector<tree_t> forest{tree, tree_t{{-1}}};
     check(equality, "A forest's trees, each at its root", rootWeights(forest_of(forest)), std::vector<int>{42, -1});
+  }
+
+  void tree_test::test_adaptors_at_absent_nodes()
+  {
+    using tree_t = directed_tree<tree_link_direction::forward, null_weight, int>;
+
+    const std::vector<tree_t> forest{tree_t{}};
+    const auto adaptorOfEmptyTree{*forest_of(forest).begin()};
+
+    check("An empty tree's adaptor is false", !adaptorOfEmptyTree);
+    check_exception_thrown<std::out_of_range>("root_weight of an empty tree's adaptor",
+                                              [&adaptorOfEmptyTree](){ return root_weight(adaptorOfEmptyTree); });
+    check_exception_thrown<std::out_of_range>("root_weight_iter of an empty tree's adaptor",
+                                              [&adaptorOfEmptyTree](){ return root_weight_iter(adaptorOfEmptyTree); });
+
+    // 42 with children -7 and 6
+    tree_t tree{{42, {{-7}, {6}}}};
+    const tree_adaptor<tree_t> rootAdaptor{tree, 0};
+    tree_adaptor<tree_t> leafAdaptor{tree, 2};
+    tree.prune(0);
+
+    check_exception_thrown<std::out_of_range>("root_weight of an adaptor at a node its tree has lost",
+                                              [&rootAdaptor](){ return root_weight(rootAdaptor); });
+
+    // At node 0, the node storage would refuse the mutation itself
+    check_exception_thrown<std::out_of_range>("mutate_root_weight of an adaptor beyond the end of its tree",
+                                              [&leafAdaptor](){ mutate_root_weight(leafAdaptor, [](int& w){ ++w; }); });
   }
 }

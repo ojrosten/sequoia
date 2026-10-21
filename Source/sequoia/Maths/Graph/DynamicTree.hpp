@@ -12,6 +12,7 @@
 */
 
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
+#include "sequoia/Maths/Graph/GraphErrors.hpp"
 
 #include <ranges>
 
@@ -285,20 +286,26 @@ namespace sequoia::maths
   template<class Tree>
   using const_tree_adaptor = basic_tree_adaptor<const Tree>;
 
+  /** \throws std::out_of_range if `adaptor` is at a node its tree lacks. */
   template<dynamic_tree T>
   [[nodiscard]]
   auto root_weight_iter(const basic_tree_adaptor<T>& adaptor)
   {
-    return adaptor.tree().cbegin_node_weights() + adaptor.node();
+    const auto& tree{adaptor.tree()};
+    graph_errors::check_node_index_range("root_weight_iter", tree.order(), adaptor.node());
+
+    return tree.cbegin_node_weights() + adaptor.node();
   }
 
+  /** \throws std::out_of_range if `adaptor` is at a node its tree lacks. */
   template<dynamic_tree T>
   [[nodiscard]]
   const auto& root_weight(const basic_tree_adaptor<T>& adaptor)
   {
-    return adaptor.tree().cbegin_node_weights()[adaptor.node()];
+    return *root_weight_iter(adaptor);
   }
 
+  /** \throws std::out_of_range if `adaptor` is at a node its tree lacks. */
   template<dynamic_tree T, class Fn>
     requires std::invocable<Fn&, typename T::node_weight_type&>
   std::invoke_result_t<Fn&, typename T::node_weight_type&> mutate_root_weight(basic_tree_adaptor<T>& adaptor, Fn fn)

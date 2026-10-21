@@ -31,5 +31,7 @@ namespace sequoia::testing
     void test_tree_unweighted_nodes();
 
     void test_forest_ranges();
+
+    void test_adaptors_at_absent_nodes();
   };
 }
