@@ -1,0 +1,9 @@
+Tests/TestFramework/TestRunnerSerialExecutionFreeTest.cpp, Line 124
+A sleep interval which ends before it starts is refused
+
+Expected Exception Type:
+[std::invalid_argument]
+A sleep interval cannot end before it starts
+
+=======================================
+

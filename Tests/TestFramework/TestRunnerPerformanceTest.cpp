@@ -239,6 +239,95 @@ namespace sequoia::testing
       }
     };
 
+    /** The family of the slow tests whose runs the performance test checks. */
+    struct acceleration_family {};
+
+    using acceleration_slow_test_base = slow_test_base<acceleration_family>;
+
+    class slow_test_0 final : public acceleration_slow_test_base
+    {
+    public:
+      using slow_test_base::slow_test_base;
+
+      void run_tests() { sleep_and_check(0); }
+    };
+
+    class slow_test_1 final : public acceleration_slow_test_base
+    {
+    public:
+      using slow_test_base::slow_test_base;
+
+      void run_tests() { sleep_and_check(1); }
+    };
+
+    class slow_test_2 final : public acceleration_slow_test_base
+    {
+    public:
+      using slow_test_base::slow_test_base;
+
+      void run_tests() { sleep_and_check(2); }
+    };
+
+    class slow_test_3 final : public acceleration_slow_test_base
+    {
+    public:
+      using slow_test_base::slow_test_base;
+
+      void run_tests() { sleep_and_check(3); }
+    };
+
+    class slow_test_4 final : public acceleration_slow_test_base
+    {
+    public:
+      using slow_test_base::slow_test_base;
+
+      void run_tests() { sleep_and_check(4); }
+    };
+
+    class slow_test_5 final : public acceleration_slow_test_base
+    {
+    public:
+      using slow_test_base::slow_test_base;
+
+      void run_tests() { sleep_and_check(5); }
+    };
+
+    class slow_test_6 final : public acceleration_slow_test_base
+    {
+    public:
+      using slow_test_base::slow_test_base;
+
+      void run_tests() { sleep_and_check(6); }
+    };
+
+    class slow_test_7 final : public acceleration_slow_test_base
+    {
+    public:
+      using slow_test_base::slow_test_base;
+
+      void run_tests() { sleep_and_check(7); }
+    };
+
+    /** Returns a runner made from `arguments`, with the acceleration
+        family's eight slow tests registered, each to sleep for
+        `sleepDuration`.
+     */
+    [[nodiscard]]
+    test_runner make_acceleration_family_runner(const std::vector<std::string>& arguments,
+                                                std::stringstream& outputStream,
+                                                std::chrono::milliseconds sleepDuration)
+    {
+      return make_slow_test_runner<acceleration_family,
+                                   slow_test_0,
+                                   slow_test_1,
+                                   slow_test_2,
+                                   slow_test_3,
+                                   slow_test_4,
+                                   slow_test_5,
+                                   slow_test_6,
+                                   slow_test_7>(arguments, outputStream, sleepDuration);
+    }
+
     /** The sleep of each slow test in a run timed by a speed-up check. */
     constexpr std::chrono::milliseconds sleep_duration_for_speedup_checks{20};
 
@@ -255,7 +344,7 @@ namespace sequoia::testing
       void operator()() const
       {
         std::stringstream outputStream{};
-        auto runner{make_slow_test_runner<test_runner_performance_test>(arguments, outputStream, sleep_duration)};
+        auto runner{make_acceleration_family_runner(arguments, outputStream, sleep_duration)};
         if(runner.execute() != return_code::success)
           throw std::runtime_error{"A run of the slow tests did not succeed"};
       }
@@ -311,13 +400,11 @@ namespace sequoia::testing
   {
     const auto arguments{fake_project_commandline(auxiliary_materials())};
     std::stringstream outputStream{};
-    auto runner{make_slow_test_runner<test_runner_performance_test>(arguments,
-                                                                    outputStream,
-                                                                    sleep_duration_for_overlap_checks)};
+    auto runner{make_acceleration_family_runner(arguments, outputStream, sleep_duration_for_overlap_checks)};
     check(equality, "Parallel acceleration return code", runner.execute(), return_code::success);
 
-    const auto peak{peak_overlap(slow_test_sleep_intervals())};
-    outputStream << peak_overlap_line(peak);
+    const auto peak{peak_overlap(acceleration_slow_test_base::sleep_intervals())};
+    append_peak_overlap(outputStream, peak);
 
     check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream);
 
@@ -338,13 +425,11 @@ namespace sequoia::testing
     {
       const auto arguments{fake_project_commandline(auxiliary_materials(), "--thread-pool", "8")};
       std::stringstream outputStream{};
-      auto runner{make_slow_test_runner<test_runner_performance_test>(arguments,
-                                                                      outputStream,
-                                                                      sleep_duration_for_overlap_checks)};
+      auto runner{make_acceleration_family_runner(arguments, outputStream, sleep_duration_for_overlap_checks)};
       check(equality, "Thread pool (8) return code", runner.execute(), return_code::success);
 
-      const auto peak{peak_overlap(slow_test_sleep_intervals())};
-      outputStream << peak_overlap_line(peak);
+      const auto peak{peak_overlap(acceleration_slow_test_base::sleep_intervals())};
+      append_peak_overlap(outputStream, peak);
 
       check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream);
       check(std::ranges::greater_equal{},
@@ -360,13 +445,11 @@ namespace sequoia::testing
     {
       const auto arguments{fake_project_commandline(auxiliary_materials(), "--thread-pool", "2")};
       std::stringstream outputStream{};
-      auto runner{make_slow_test_runner<test_runner_performance_test>(arguments,
-                                                                      outputStream,
-                                                                      sleep_duration_for_overlap_checks)};
+      auto runner{make_acceleration_family_runner(arguments, outputStream, sleep_duration_for_overlap_checks)};
       check(equality, "Thread pool (2) return code", runner.execute(), return_code::success);
 
-      const auto peak{peak_overlap(slow_test_sleep_intervals())};
-      outputStream << peak_overlap_line(peak);
+      const auto peak{peak_overlap(acceleration_slow_test_base::sleep_intervals())};
+      append_peak_overlap(outputStream, peak);
 
       check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream);
       check(equality, "Both threads of the pool, and no more, execute tests at once", peak, std::size_t{2});

@@ -11,76 +11,167 @@
 
 #include "TestRunnerTestingUtilities.hpp"
 
+#include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 
 #include <chrono>
+#include <concepts>
 #include <cstddef>
+#include <ostream>
+#include <source_location>
 #include <span>
-#include <string>
+#include <vector>
 
 namespace sequoia::testing
 {
-  /** When a slow test's sleep began and ended. */
-  struct sleep_interval
+  /** The interval of time over which a slow test sleeps. The interval
+      contains its start time but not its end time.
+   */
+  class sleep_interval
   {
-    std::chrono::steady_clock::time_point start{};
-    std::chrono::steady_clock::time_point end{};
+  public:
+    using time_point = std::chrono::steady_clock::time_point;
+
+    sleep_interval() = default;
+
+    /** \throws std::invalid_argument if `end` is earlier than `start` */
+    sleep_interval(time_point start, time_point end);
+
+    [[nodiscard]]
+    time_point start_time() const noexcept { return m_Start; }
+
+    [[nodiscard]]
+    time_point end_time() const noexcept { return m_End; }
+
+    [[nodiscard]]
+    friend bool operator==(const sleep_interval&, const sleep_interval&) noexcept = default;
+  private:
+    time_point m_Start{};
+    time_point m_End{};
   };
 
-  /** The largest number of `intervals` which overlap at any instant. An
-      interval contains its start but not its end, so one which ends as
-      another starts does not overlap it, and an empty interval overlaps
-      nothing.
+  /** Returns the largest number of `intervals` which contain the same
+      instant.
    */
   [[nodiscard]]
   std::size_t peak_overlap(std::span<const sleep_interval> intervals);
 
-  /** Returns the line which reports `peak`. CI's step "Report the
-      performance test's timings" parses this line from each of the
-      performance test's runs, and prints no peak overlap if it cannot.
+  /** Appends `[Peak Overlap: <peak>]` and a newline to `stream`. CI's step
+      "Report the performance test's timings" parses this text, and prints
+      no peak overlap if it cannot.
    */
-  [[nodiscard]]
-  std::string peak_overlap_line(std::size_t peak);
+  void append_peak_overlap(std::ostream& stream, std::size_t peak);
 
-  /** The number of slow tests. Each sleeps for the same duration, so that a
-      run of them shows how the runner spreads tests over threads, and how
-      many it runs at once.
+  /** The base of each slow test of `Family`. A slow test's `run_tests` must
+      make one call to `sleep_and_check`. The tests registered together must
+      pass it distinct indices, from 0 to one less than their number. The
+      sleep intervals of a run give a lower bound on how many of the
+      family's tests the runner executed at the same time.
+
+      The tests of one family share one sleep duration and one set of sleep
+      intervals. So from a call of `make_slow_test_runner` to the last read
+      of `sleep_intervals` after the runner executes, nothing else may
+      prepare a run of the family or execute another runner of it. The
+      repetitions of a run of tests execute one after another, so a test
+      which makes runners of the family breaks this only in these cases:
+      -# Two such tests are parallelizable.
+      -# Such a test makes or executes a second runner of the family
+         between the making of the first and the last read of its
+         intervals.
+      -# Such a test is registered with two runners which execute at the
+         same time.
+
+      `Family` must be declared in an anonymous namespace, so that only the
+      tests of one translation unit can use the family. If two units used
+      one family, each would define the family's shared state as a weak
+      symbol. gcc on macOS may address a unit's `std::source_location` data
+      relative to such a symbol, and the linker may take the symbol from the
+      other unit (GCC PR 126723). A test may then report the other unit's
+      file as its source.
    */
-  inline constexpr std::size_t slow_test_count{8};
-
-  /** Returns each slow test's `sleep_interval` in the latest run of the
-      slow tests, at the slow test's index.
-   */
-  [[nodiscard]]
-  std::span<const sleep_interval, slow_test_count> slow_test_sleep_intervals() noexcept;
-
-  namespace impl
+  template<class Family>
+  class slow_test_base : public free_test
   {
+  public:
+    using free_test::free_test;
+
     [[nodiscard]]
-    test_runner make_slow_test_runner(commandline_arguments& args,
-                                      std::stringstream& outputStream,
-                                      std::chrono::milliseconds sleepDuration);
-  }
+    static std::filesystem::path source_file()
+    {
+      return std::source_location::current().file_name();
+    }
 
-  /** Clears the slow tests' sleep intervals, and returns a runner made from
-      `args` with the slow tests registered, each to sleep for
-      `sleepDuration`.
+    /** Returns the `sleep_interval` each test of the family recorded since
+        the last `prepare_run`, at the index the test passed to
+        `sleep_and_check`. A test which has recorded none has an empty
+        interval.
+     */
+    [[nodiscard]]
+    static std::vector<sleep_interval> sleep_intervals()
+    {
+      return st_SleepIntervals;
+    }
 
-      Every runner returned shares one sleep duration and one set of sleep
-      intervals with the others. A caller's window runs from this call to
-      its last read of `slow_test_sleep_intervals`, and no two callers'
-      windows may overlap. The constraint on `CallingTest`, the test making
-      the call, ensures this: tests which are not parallelizable execute
-      one at a time.
+    /** Sets the sleep of each test of the family to `sleepDuration`, and
+        replaces the sleep intervals with `numTests` empty ones.
+     */
+    static void prepare_run(std::size_t numTests, std::chrono::milliseconds sleepDuration)
+    {
+      st_SleepIntervals.assign(numTests, sleep_interval{});
+      st_SleepDuration = sleepDuration;
+    }
+  protected:
+    ~slow_test_base() = default;
+
+    slow_test_base(slow_test_base&&)            noexcept = default;
+    slow_test_base& operator=(slow_test_base&&) noexcept = default;
+
+    /** Sleeps for the duration last passed to `prepare_run`, records the
+        sleep's `sleep_interval` at `index`, and makes one check.
+
+        \throws std::out_of_range if `index` is not less than the number of
+                tests last passed to `prepare_run`
+     */
+    void sleep_and_check(std::size_t index)
+    {
+      const auto start{std::chrono::steady_clock::now()};
+      precise_sleep_for(st_SleepDuration);
+      st_SleepIntervals.at(index) = sleep_interval{start, std::chrono::steady_clock::now()};
+      check(equality, "Integer equality", index, index);
+    }
+  private:
+    // Each test writes only its own element. A runner's execute waits for
+    // every test, so the elements may be read once it returns.
+    inline static std::vector<sleep_interval> st_SleepIntervals{};
+
+    // Set before a run begins, and read only by its tests
+    inline static std::chrono::milliseconds st_SleepDuration{};
+  };
+
+  /** Whether `SlowTests` holds at least one type, and each derives from
+      `Family`'s `slow_test_base`.
    */
-  template<concrete_test CallingTest>
-    requires (!is_parallelizable_v<CallingTest>)
+  template<class Family, class... SlowTests>
+  inline constexpr bool are_slow_tests_of_v{
+    (sizeof...(SlowTests) > 0) && (std::derived_from<SlowTests, slow_test_base<Family>> && ...)
+  };
+
+  /** Returns a runner made from `args`, with each of `SlowTests` registered
+      to sleep for `sleepDuration`. On return, the family's sleep intervals
+      are empty, one for each of `SlowTests`.
+   */
+  template<class Family, concrete_test... SlowTests>
+    requires are_slow_tests_of_v<Family, SlowTests...>
   [[nodiscard]]
   test_runner make_slow_test_runner(commandline_arguments args,
                                     std::stringstream& outputStream,
                                     std::chrono::milliseconds sleepDuration)
   {
-    return impl::make_slow_test_runner(args, outputStream, sleepDuration);
+    auto runner{make_fake_project_runner(args, outputStream)};
+    slow_test_base<Family>::prepare_run(sizeof...(SlowTests), sleepDuration);
+    (runner.register_test<SlowTests>(), ...);
+
+    return runner;
   }
 
   /** The sleep of each slow test in a run whose peak overlap is checked. */
