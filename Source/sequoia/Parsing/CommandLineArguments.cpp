@@ -239,12 +239,12 @@ namespace sequoia::parsing::commandline
     void throw_if_any_tree_empty(const options_forest& options)
     {
       auto isEmpty{[](const options_tree& tree){ return tree.order() == 0; }};
-      if(const auto empty{std::ranges::find_if(options, isEmpty)};
-         empty != options.end())
+      if(const auto emptyTree{std::ranges::find_if(options, isEmpty)};
+         emptyTree != options.end())
       {
         throw std::logic_error{
           error(std::format("tree at index {} of the options forest is empty",
-                            std::ranges::distance(options.begin(), empty)))
+                            std::ranges::distance(options.begin(), emptyTree)))
         };
       }
     }

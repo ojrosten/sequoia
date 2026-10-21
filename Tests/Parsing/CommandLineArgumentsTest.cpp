@@ -46,7 +46,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>("Empty name",      []() { return option{"", {}, {}, fo{}}; });
     check_exception_thrown<std::logic_error>("Empty alias",     []() { return option{"test", {""}, {}, fo{}}; });
     check_exception_thrown<std::logic_error>("Empty parameter", []() { return option{"test", {}, {""}, fo{}}; });
-    check_exception_thrown<std::logic_error>("Empty tree",      []() { return parse({{"foo"}}, {options_tree{}}); });
+    check_exception_thrown<std::logic_error>("Empty tree", [](){
+      return parse({{"foo"}}, {{{"--async", {}, {}, fo{}}},
+                               options_tree{}});
+    });
     check_exception_thrown<std::logic_error>("Top-level option with neither invocable", [](){
       return parse({{"foo", "--async"}}, {{{"--async", {}, {}}}});
     });
