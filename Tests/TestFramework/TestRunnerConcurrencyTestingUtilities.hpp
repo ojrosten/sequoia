@@ -78,7 +78,7 @@ namespace sequoia::testing
       The tests of one family share one sleep duration and one set of sleep
       intervals. So from a call of `make_runner_of_tests_which_sleep` to the
       last read of `sleep_intervals` after the runner executes, nothing else
-      may prepare a run of the family or execute another runner of it. The
+      may prepare a run of the same family or execute another runner of it. The
       repetitions of a run of tests execute one after another, so a test which
       makes runners of the family breaks this only in these cases:
       -# Two such tests are parallelizable.
