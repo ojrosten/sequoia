@@ -182,10 +182,10 @@ namespace sequoia::testing
     test_waiting_task_return(std::chrono::milliseconds{15});
   }
 
-  /* Each check judges the speed-up of the tasks net of their baselines. The
-     purpose of a baseline is to dispatch its tasks and collect their results
-     as the sleeping waiting_task does, so that the cost of doing so is not
-     judged.
+  /* Each check subtracts each baseline's duration from its task's, and judges
+     the speed-up by what remains. The purpose of a baseline is to dispatch
+     its tasks and collect their results as the sleeping waiting_task does, so
+     that the cost of doing so is not judged.
 
      A baseline pushes each of its tasks while no task sleeps. The sleeping
      waiting_task of a concurrent model pushes all but its first task while
