@@ -69,12 +69,6 @@ namespace sequoia::testing
 
     using idle_family_base = test_which_sleeps_base<idle_family>;
 
-    /** A sleep duration longer than any sleep of the active family's test,
-        whose own sleep duration is zero. The idle family has no tests, so
-        the duration costs no time.
-     */
-    constexpr std::chrono::seconds idle_family_sleep_duration{1};
-
     template<class Family, class... TestsWhichSleep>
     inline constexpr bool make_runner_of_tests_which_sleep_accepts_v{
       requires(std::vector<std::string> arguments, std::stringstream& outputStream) {
@@ -166,8 +160,8 @@ namespace sequoia::testing
                         std::chrono::milliseconds{}
                       )};
 
-    // One interval, for the active test to write if the families shared it
-    idle_family_base::prepare_run(1, idle_family_sleep_duration);
+    constexpr std::chrono::seconds idleFamilySleepDuration{1};
+    idle_family_base::prepare_run(1, idleFamilySleepDuration);
 
     check(equality, "Active family's return code", activeRunner.execute(), return_code::success);
 
@@ -184,7 +178,7 @@ namespace sequoia::testing
     check(std::ranges::less{},
           "A family's tests sleep for their family's duration",
           longestSleep,
-          std::chrono::steady_clock::duration{idle_family_sleep_duration});
+          std::chrono::steady_clock::duration{idleFamilySleepDuration});
   }
 
   void test_runner_serial_execution_free_test::test_serial_execution()
