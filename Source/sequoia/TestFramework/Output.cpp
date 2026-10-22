@@ -370,7 +370,7 @@ namespace sequoia::testing
       char* end{};
       const auto first {name.data() + start};
       const auto value {std::strtold(first, &end)};
-      const auto length{std::ranges::distance(first, end)};
+      const auto length{utilities::unchecked_conversion_to<size_type>(std::ranges::distance(first, end))};
       if(length == 0)
         return start;
 
@@ -424,7 +424,7 @@ namespace sequoia::testing
                                  name.end(),
                                  is_identifier_delimiter)
           };
-          pos = std::ranges::distance(name.begin(), identifierEnd);
+          pos = utilities::unchecked_conversion_to<size_type>(std::ranges::distance(name.begin(), identifierEnd));
           continue;
         }
 
@@ -440,7 +440,7 @@ namespace sequoia::testing
                                      name.end(),
                                      ascii::is_digit)
           };
-          pos = std::ranges::distance(name.begin(), digitsEnd);
+          pos = utilities::unchecked_conversion_to<size_type>(std::ranges::distance(name.begin(), digitsEnd));
         }
 
         pos = erase_literal_suffix(name, pos);

@@ -11,6 +11,7 @@
     \brief A collection of constexpr algorithms.
 */
 
+#include "sequoia/Core/ContainerUtilities/ArithmeticCasts.hpp"
 #include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <algorithm>
@@ -206,7 +207,7 @@ namespace sequoia
     using T = std::iterator_traits<I>::value_type;
     auto v{
       [elements{std::ranges::subrange{first, last}}](){
-        if      constexpr (is_initializable_v<T>)           return std::vector<T>(std::ranges::distance(elements));
+        if      constexpr (is_initializable_v<T>)           return std::vector<T>(utilities::unchecked_conversion_to<std::size_t>(std::ranges::distance(elements)));
         else if constexpr (std::is_copy_constructible_v<T>) return std::ranges::to<std::vector<T>>(elements);
       }()
     };

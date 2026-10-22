@@ -100,15 +100,16 @@ namespace sequoia
         : m_Buckets(allocator)
       {
         m_Buckets.reserve(list.size());
-        for(auto iter{list.begin()}; iter != list.end(); ++iter)
+        std::size_t partitionIndex{};
+        for(const auto& bucket : list)
         {
           add_slot();
-          const auto dist{std::ranges::distance(list.begin(), iter)};
-          m_Buckets[dist].reserve(iter->size());
-          for(const auto& element : (*iter))
+          m_Buckets[partitionIndex].reserve(bucket.size());
+          for(const auto& element : bucket)
           {
-            push_back_to_partition(dist, element);
+            push_back_to_partition(partitionIndex, element);
           }
+          ++partitionIndex;
         }
       }
 
@@ -124,9 +125,8 @@ namespace sequoia
         for(auto i{other.m_Buckets.cbegin()}; i != other.m_Buckets.cend(); ++i)
         {
           const auto& bucket{*i};
-          const auto dist{std::ranges::distance(other.m_Buckets.cbegin(), i)};
           add_slot();
-          m_Buckets.back().reserve(other.m_Buckets[dist].size());
+          m_Buckets.back().reserve(bucket.size());
           for(const auto& elt : bucket)
           {
             m_Buckets.back().push_back(elt);
@@ -680,10 +680,11 @@ namespace sequoia
 
             if(len_i != len_j)
             {
+              const auto delta{len_j - len_i};
               m_Partitions.mutate(maths::unsafe_t{},
                                   m_Partitions.begin() + numeric::unchecked_conversion_to<std::ptrdiff_t>(i),
                                   m_Partitions.begin() + numeric::unchecked_conversion_to<std::ptrdiff_t>(j),
-                                  [len_i, len_j](const index_type index) -> index_type { return static_cast<index_type>(index + len_j - len_i);});
+                                  [delta](const index_type index) -> index_type { return static_cast<index_type>(numeric::unchecked_conversion_to<std::ptrdiff_t>(index) + delta);});
             }
           }
         }
@@ -912,7 +913,7 @@ namespace sequoia
           if(const auto numErased{std::ranges::distance(first, last)}; numErased > 0)
           {
             const auto next{m_Data.erase(first.base_iterator(), last.base_iterator())};
-            decrement_partition_indices(firstPartition, num_partitions(), numErased);
+            decrement_partition_indices(firstPartition, num_partitions(), utilities::unchecked_conversion_to<index_type>(numErased));
 
             return {next, firstPartition};
           }
@@ -947,14 +948,15 @@ namespace sequoia
       {
         m_Partitions.reserve(list.size());
         m_Data.reserve(std::accumulate(list.begin(), list.end(), std::size_t{}, [](std::size_t n, auto l) { return n += l.size(); }));
-        for(auto iter{list.begin()}; iter != list.end(); ++iter)
+        std::size_t partitionIndex{};
+        for(const auto& bucket : list)
         {
           add_slot();
-          const auto dist{std::ranges::distance(list.begin(), iter)};
-          for(const auto& element : (*iter))
+          for(const auto& element : bucket)
           {
-            push_back_to_partition(dist, element);
+            push_back_to_partition(partitionIndex, element);
           }
+          ++partitionIndex;
         }
       }
 
