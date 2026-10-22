@@ -25,9 +25,11 @@
 #     or the other push created it; a push refused every time fails, after a
 #     bounded number of attempts;
 #   - a remote which cannot be listed is a failure, not a branch to create;
-#   - a record which cannot be read, or names no commit, or was made from a
-#     tree which was not clean, and arguments of any other number, are each
-#     refused, and nothing is pushed;
+#   - a record which cannot be read, or was made from a tree which was not
+#     clean, or names no commit of the clone by its full name, and arguments
+#     of any other number, are each refused, and nothing is pushed. A record
+#     names no commit by its full name if its commit is an absent object, an
+#     object which is no commit, a branch's name or an abbreviated name;
 #   - the clone the script runs in keeps its branches, index and working tree;
 #     a push updates the clone's remote-tracking branch, as any push does.
 #
@@ -70,9 +72,6 @@ exits() { # exits <name> <status|nonzero>
   elif [[ $rc -ne $2 ]]; then fail "$1 (expected exit $2, got $rc: $(cat "$err"))"; fi
 }
 
-A=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-B=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-
 # record <file> <commit> <symbols> <run id> [<clean>]: a record, laid out
 # unlike jq's output, so that a stored copy which jq has rewritten differs
 record() {
@@ -80,8 +79,8 @@ record() {
   printf ' "commit": "%s", "clean": %s,\n "executable": {"symbols": %s}}\n' "$2" "${5:-true}" "$3" >> "$1"
 }
 
-# fixture: a bare remote, the clone the script runs in with one commit of its
-# own, and the records
+# fixture: a bare remote; the clone the script runs in, with two commits, $A
+# and $B, which it has pushed to the remote; and the records
 fixture() {
   remote="$work/remote.git" clone="$work/clone"
   mkdir "$work/bin"
@@ -91,6 +90,10 @@ fixture() {
   echo source > "$clone/source"
   git -C "$clone" add source
   git -C "$clone" "${identity[@]}" commit --quiet -m source
+  A=$(git -C "$clone" rev-parse HEAD)
+  git -C "$clone" "${identity[@]}" commit --quiet --allow-empty -m later
+  B=$(git -C "$clone" rev-parse HEAD)
+  git -C "$clone" push --quiet origin main
   echo uncommitted > "$clone/source"
   record "$work/A.json"        "$A" 100 1
   record "$work/A-rerun.json"  "$A" 100 2
@@ -116,6 +119,9 @@ store() { run origin metrics symbol-table/linux "$work/$1.json"; }
 tip() { git --git-dir="$remote" rev-parse --verify --quiet refs/heads/metrics; }
 parents() { git --git-dir="$remote" log -1 --format=%P "$1"; }
 files() { git --git-dir="$remote" ls-tree -r --name-only refs/heads/metrics | tr '\n' ' '; }
+paths() { # paths <path>...: the paths in the order `files` lists them
+  printf '%s\n' "$@" | LC_ALL=C sort | tr '\n' ' '
+}
 held() { git --git-dir="$remote" show "refs/heads/metrics:symbol-table/linux/$1.json" 2>&1; }
 
 # rival <body>: a stand-in for git, ahead of it on the script's PATH, which
@@ -171,7 +177,7 @@ beside_controls() {
   store B
   exits "a second commit's record is stored" 0
   same "it is a commit on the tip" "$first" "$(parents "$(tip)")"
-  same "it is beside the first" "symbol-table/linux/$A.json symbol-table/linux/$B.json " "$(files)"
+  same "it is beside the first" "$(paths "symbol-table/linux/$A.json" "symbol-table/linux/$B.json")" "$(files)"
   same "the first is unchanged" "$(cat "$work/A.json")" "$(held "$A")"
   same "the second is held byte for byte" "$(cat "$work/B.json")" "$(held "$B")"
   unchanged_clone "a second record"
@@ -218,7 +224,7 @@ rival_controls() {
   exits "a push refused because another came first is retried" 0
   says "the refusal is reported" 'Attempt 1 of 5' "$out"
   same "the retry is a commit on the other push's" "$rival" "$(parents "$(tip)")"
-  same "every record is kept" "rival symbol-table/linux/$A.json symbol-table/linux/$B.json " "$(files)"
+  same "every record is kept" "$(paths rival "symbol-table/linux/$A.json" "symbol-table/linux/$B.json")" "$(files)"
   unchanged_clone "a retried push"
 
   work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
@@ -246,15 +252,19 @@ refusal_controls() {
   says "it says why" 'was made from a tree which was not clean' "$err"
   same "nothing is pushed for a record of a tree not clean" "" "$(tip)"
 
-  record "$work/short.json" abc123 100 1
-  store short
-  exits "a record naming no full commit" nonzero
-  says "it says why" "names no commit: its commit is 'abc123'" "$err"
+  local name
+  for name in "${A:0:12}" main "$(git -C "$clone" rev-parse "$A^{tree}")" \
+              ffffffffffffffffffffffffffffffffffffffff ""; do
+    record "$work/misnamed.json" "$name" 100 1
+    store misnamed
+    exits "a record whose commit is '$name'" nonzero
+    says "it says why" "names no commit of this clone by its full name: its commit is '$name'" "$err"
+  done
 
   echo '{"clean": true}' > "$work/none.json"
   store none
   exits "a record with no commit" nonzero
-  says "it says why" "names no commit: its commit is 'null'" "$err"
+  says "it says why" "names no commit of this clone by its full name: its commit is 'null'" "$err"
 
   echo '{"commit": ' > "$work/broken.json"
   store broken
@@ -292,7 +302,16 @@ mutant() { # mutant <description> <text> <replacement>
   mutants=$((mutants+1))
 }
 mutant 'arguments unchecked'           'if [ $# -ne 4 ]; then' 'if false; then'
-mutant 'any commit accepted'           '[[ $commit =~ ^[0-9a-f]{40}$ ]] ||' 'true ||'
+mutant 'any commit accepted'           'full_name=$(git rev-parse --verify --quiet "$commit^{commit}") && [' \
+                                       'true || ['
+mutant 'a commit by any name'          ' && [ "$full_name" = "$commit" ] \' ' \'
+mutant 'the status of rev-parse ignored' \
+                                       'full_name=$(git rev-parse --verify --quiet "$commit^{commit}") && [' \
+                                       'full_name=$(git rev-parse --verify --quiet "$commit^{commit}" || true) && ['
+mutant 'any object accepted'           '"$commit^{commit}"' '"$commit"'
+mutant 'the shape alone checked' \
+       'full_name=$(git rev-parse --verify --quiet "$commit^{commit}") && [ "$full_name" = "$commit" ]' \
+       '[[ $commit =~ ^[0-9a-f]{40}$ ]]'
 mutant 'a tree not clean accepted'     '[ "$(jq '"'"'.clean'"'"' "$record")" = true ] \' 'true \'
 mutant 'a record held read from its blob' \
        'git rev-parse --verify --quiet "$tip:$path" > /dev/null' \
