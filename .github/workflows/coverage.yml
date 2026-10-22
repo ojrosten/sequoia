@@ -91,10 +91,11 @@ jobs:
       - name: Install the toolchain
         if: env.NEEDS_TESTING == 'true'
         run: |
-          # This removal of the Chrome and Microsoft lists, the retry paragraph,
-          # the `apt-get update` and the exact-name package check below repeat
-          # tests.yml's "Install the toolchain (Linux)", which also says why
-          # `--error-on=any` is passed; change both.
+          # This removal of the Chrome and Microsoft lists, the retry
+          # paragraph, the `apt-get update` and the exact-name package check
+          # below repeat tests.yml's "Install the toolchain (Linux)", which
+          # also says why `--error-on=any` is passed and why packages are
+          # matched by exact name; change both.
           #
           # The hosted image ships Chrome's and Microsoft's apt repositories,
           # which nothing here installs from. A bad index from either fails
@@ -117,8 +118,6 @@ jobs:
           # JSON::PP.
           packages=(g++-15 ninja-build libtbb-dev
                     libcapture-tiny-perl libdatetime-perl libdevel-stacktrace-perl libjson-xs-perl libtimedate-perl)
-          # The list is searched by exact name, as in tests.yml's "Install the
-          # toolchain (Linux)", which says why.
           names=$(apt-cache pkgnames)
           for pkg in "${packages[@]}"; do
             grep -qFx -- "$pkg" <<< "$names" \
@@ -140,8 +139,9 @@ jobs:
           tar -xzf "$lcov_tarball" -C "$RUNNER_TEMP"
           # --old-file=doc stops install rebuilding the documentation the
           # tarball ships, which needs Sphinx.
-          # LCOV_CXX is a command-line variable because sudo drops CXX, and
-          # the extension's build would then use plain g++.
+          # sudo drops the job's CXX, from which lcov's Makefile.PL would take
+          # the compiler, so it would build the extension with plain g++;
+          # LCOV_CXX names it on make's command line.
           sudo make -C "$RUNNER_TEMP/lcov-$lcov_version" --old-file=doc LCOV_CXX=g++-15 install
           # Each tool must report the pinned release. That is the only proof
           # the install worked, since lcov's Makefile can exit 0 after a
@@ -154,14 +154,31 @@ jobs:
             [ "${reported##* }" = "$pinned" ] \
               || { echo "::error::$tool on PATH reports ${reported##* }, not the pinned $pinned"; exit 1; }
           done
-          # The release builds an XS extension with g++-15. When the extension
-          # does not load, lcovutil.pm falls back to pure Perl without a word,
-          # and the run is slower. So the step fails on it, with the error
-          # lcovutil.pm recorded, newlines encoded for the annotation. Exit
-          # status 3 marks that failure; any other means Perl never got as far
-          # as running the check.
-          perl -I/usr/local/lib/lcov -Mlcovutil -e 'if ($lcovutil::XS_LOADED) { print "lcov XS extension: loaded\n"; exit 0 } $e = $lcovutil::XS_LOAD_ERROR // "no error recorded"; $e =~ s/%/%25/g; $e =~ s/\r/%0D/g; $e =~ s/\n/%0A/g; print "::error::lcov XS extension did not load, so lcov would run in pure Perl: $e\n"; exit 3' \
-            || { [ $? -eq 3 ] || echo "::error::Perl could not load lcovutil.pm from /usr/local/lib/lcov"; exit 1; }
+          # The install builds an XS extension. When the extension does not
+          # load, lcovutil.pm falls back to pure Perl without a word, and the
+          # run is slower. So the step fails on it. One Perl script checks
+          # both that lcovutil.pm loads and that the extension did. On failure
+          # it prints the reason as an error annotation, encoded for the
+          # annotation. A missing perl fails the step by itself.
+          LCOV_PERL_DIR=/usr/local/lib/lcov perl -e '
+            my $dir = $ENV{LCOV_PERL_DIR};
+            unshift @INC, $dir;
+            my $reason;
+            if (!eval { require lcovutil; 1 }) {
+              $reason = "Perl could not load lcovutil.pm from $dir: $@";
+            } elsif (!$lcovutil::XS_LOADED) {
+              $reason = "lcov XS extension did not load, so lcov would run in pure Perl: "
+                        . ($lcovutil::XS_LOAD_ERROR || "LCOV_PURE_PERL is set");
+            } else {
+              print "lcov XS extension: loaded\n";
+              exit 0;
+            }
+            chomp $reason;
+            $reason =~ s/%/%25/g;
+            $reason =~ s/\r/%0D/g;
+            $reason =~ s/\n/%0A/g;
+            print "::error::$reason\n";
+            exit 1;'
           g++-15 --version | head -1
           cmake --version | head -1
 
