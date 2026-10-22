@@ -83,6 +83,11 @@ FUNCTION(sequoia_set_compile_options target)
         target_compile_options(${target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/wd4702>)
     else()
         target_compile_options(${target} PUBLIC -Wall -Wextra -Wpedantic -Wshadow)
+
+        # PRIVATE, so that a generated project's own targets get these via sequoia_finalize_library
+        # and sequoia_finalize_tests, without sequoia imposing them on every consumer. gcc's
+        # -Wconversion does not imply -Wsign-conversion.
+        target_compile_options(${target} PRIVATE -Wconversion -Wsign-conversion)
     endif()
 
     target_compile_options(${target} PRIVATE ${WARNING_SUPPRESSIONS})
