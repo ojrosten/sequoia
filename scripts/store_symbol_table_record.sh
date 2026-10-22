@@ -50,8 +50,8 @@ index="$work/index" held_file="$work/held"
 # without_run <file>: the record in <file>, its keys sorted, without its run
 without_run() { jq -S 'del(.run)' "$1" || die "$1 cannot be read as JSON"; }
 
-# store_once: 0 if the record is stored or already held, 1 if the push was
-# refused; any other failure exits. The function is called as a condition, so
+# store_once: 0 if the record is stored or already held, 1 if the push
+# failed; any other failure exits. The function is called as a condition, so
 # set -e does not reach into it, and each command's failure is handled here.
 store_once() {
   local status=0 tip='' held offered blob tree new_tip

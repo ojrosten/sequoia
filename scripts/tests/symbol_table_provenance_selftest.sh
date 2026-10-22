@@ -262,7 +262,8 @@ mutant 'split at the first colon'       'line[:-len(suffix)].split(", ")]' 'line
 mutant 'the owners not split'           'line[:-len(suffix)].split(", ")]' '[line[:-len(suffix)]]]'
 mutant 'the first of several owners'    'if len(owners) != 1:' 'if not owners:'
 mutant 'an empty version accepted'      'if not version:' 'if False:'
-mutant 'the package named by the path'  'name = owner_of(os.path.realpath(path))' 'name = owner_of(path) and os.path.basename(path)'
+mutant 'the package named by the path'  'name = owner_of(os.path.realpath(path))' \
+                                        'name = owner_of(os.path.realpath(path)) and os.path.basename(path)'
 mutant "the symlink's owner named"      'owner_of(os.path.realpath(path))' 'owner_of(path)'
 mutant 'the path made absolute only'    'owner_of(os.path.realpath(path))' 'owner_of(os.path.abspath(path))'
 mutant 'an empty variable accepted'     'if not value:' 'if value is None:'

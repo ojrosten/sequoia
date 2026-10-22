@@ -291,7 +291,9 @@ mutant() { # mutant <description> <text> <replacement>
 mutant 'arguments unchecked'           'if [ $# -ne 4 ]; then' 'if false; then'
 mutant 'any commit accepted'           '[[ $commit =~ ^[0-9a-f]{40}$ ]] ||' 'true ||'
 mutant 'a tree not clean accepted'     '[ "$(jq '"'"'.clean'"'"' "$record")" = true ] \' 'true \'
-mutant 'a record held read from its blob' 'git rev-parse --verify --quiet "$tip:$path" > /dev/null' 'git cat-file -e "$tip:$path" 2> /dev/null'
+mutant 'a record held read from its blob' \
+       'git rev-parse --verify --quiet "$tip:$path" > /dev/null' \
+       'git cat-file -e "$tip:$path" 2> /dev/null'
 mutant 'stored under one name'         'path="$directory/$commit.json"' 'path="$directory/record.json"'
 mutant 'a failed listing taken for no branch' '    2) echo "$remote has no branch' '    *) echo "$remote has no branch'
 mutant 'the run compared too'          "without_run() { jq -S 'del(.run)'" "without_run() { jq -S '.'"
