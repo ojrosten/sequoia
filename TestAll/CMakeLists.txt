@@ -16,6 +16,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Concurrency/ConcurrencyModelsPerformanceTest.cpp
                ${TestDir}/Core/Concurrency/ConcurrencyModelsTest.cpp
                ${TestDir}/Core/ContainerUtilities/ArrayUtilitiesTest.cpp
+               ${TestDir}/Core/ContainerUtilities/IndexCastsFreeTest.cpp
                ${TestDir}/Core/ContainerUtilities/IteratorTest.cpp
                ${TestDir}/Core/DataStructures/BucketedSequenceAllocationTest.cpp
                ${TestDir}/Core/DataStructures/BucketedSequenceRegularTest.cpp

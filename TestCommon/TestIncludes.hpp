@@ -9,6 +9,7 @@
 #include "Core/Concurrency/ConcurrencyModelsPerformanceTest.hpp"
 #include "Core/Concurrency/ConcurrencyModelsTest.hpp"
 #include "Core/ContainerUtilities/ArrayUtilitiesTest.hpp"
+#include "Core/ContainerUtilities/IndexCastsFreeTest.hpp"
 #include "Core/ContainerUtilities/IteratorTest.hpp"
 #include "Core/DataStructures/BucketedSequenceAllocationTest.hpp"
 #include "Core/DataStructures/BucketedSequenceRegularTest.hpp"
