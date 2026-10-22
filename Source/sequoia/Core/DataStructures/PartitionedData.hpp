@@ -32,25 +32,25 @@ namespace sequoia
   {
     //===================================A Custom Iterator===================================//
 
-    template<class Container, std::integral IndexType>
+    template<class Container, integer IndexType>
     using partition_iterator
       = utilities::iterator<
           typename Container::iterator,
           utilities::identity_dereference_policy<typename Container::iterator, partition_impl::partition_index_policy<false, IndexType>>>;
 
-    template<class Container, std::integral IndexType>
+    template<class Container, integer IndexType>
     using const_partition_iterator
       = utilities::iterator<
           typename Container::const_iterator,
           utilities::identity_dereference_policy<typename Container::const_iterator, partition_impl::partition_index_policy<false, IndexType>>>;
 
-    template<class Container, std::integral IndexType>
+    template<class Container, integer IndexType>
     using reverse_partition_iterator
       = utilities::iterator<
           typename Container::reverse_iterator,
           utilities::identity_dereference_policy<typename Container::reverse_iterator, partition_impl::partition_index_policy<true, IndexType>>>;
 
-    template<class Container, std::integral IndexType>
+    template<class Container, integer IndexType>
     using const_reverse_partition_iterator
       = utilities::iterator<
           typename Container::const_reverse_iterator,

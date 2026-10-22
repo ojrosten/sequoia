@@ -34,6 +34,14 @@ namespace sequoia
 
         move_only_weight& operator=(move_only_weight&&) noexcept = default;
       };
+
+      template<class IndexType>
+      concept partial_edge_admits
+        = requires { typename partial_edge<by_value<int>, null_meta_data, IndexType>; };
+
+      template<class IndexType>
+      concept embedded_partial_edge_admits
+        = requires { typename embedded_partial_edge<by_value<int>, null_meta_data, IndexType>; };
     }
 
     [[nodiscard]]
@@ -45,6 +53,7 @@ namespace sequoia
     void test_edges::run_tests()
     {
       test_copyability();
+      test_index_type_constraint();
 
       test_plain_partial_edge();
       test_partial_edge_indep_weight();
@@ -93,6 +102,17 @@ namespace sequoia
 
       STATIC_CHECK(std::is_copy_constructible_v<copyable_edge>);
       STATIC_CHECK(std::is_copy_assignable_v<copyable_edge>);
+    }
+
+    void test_edges::test_index_type_constraint()
+    {
+      STATIC_CHECK( partial_edge_admits<unsigned char>);
+      STATIC_CHECK(!partial_edge_admits<char>);
+      STATIC_CHECK(!partial_edge_admits<bool>);
+
+      STATIC_CHECK( embedded_partial_edge_admits<unsigned char>);
+      STATIC_CHECK(!embedded_partial_edge_admits<char>);
+      STATIC_CHECK(!embedded_partial_edge_admits<bool>);
     }
 
     void test_edges::test_plain_partial_edge()
