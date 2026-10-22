@@ -35,8 +35,8 @@ jobs:
     # llvm-cxxfilt-22 or c++filt, makes the gate on uncalled functions refuse
     # every run, until a PR regenerates
     # coverage_reports/uncalled_functions.txt. The demanglers change with
-    # the image, and c++filt also with binutils, which a g++-15 upgrade can
-    # pull in. A PR that moves the job to another release:
+    # the image, and c++filt also when `apt-get install` upgrades binutils, as
+    # a g++-15 upgrade can require. A PR that moves the job to another release:
     #   -# changes the runs-on line;
     #   -# finds the release's demanglers, with the listing step of 96027fcab,
     #      and sets LLVM_CXXFILT and GNU_CXXFILT below;
@@ -91,10 +91,11 @@ jobs:
       - name: Install the toolchain
         if: env.NEEDS_TESTING == 'true'
         run: |
-          # This removal of the Chrome and Microsoft lists, the retry paragraph
-          # and the `apt-get update` below repeat tests.yml's "Install the
-          # toolchain (Linux)", which also says why `--error-on=any` is passed;
-          # change both.
+          # This removal of the Chrome and Microsoft lists, the retry
+          # paragraph, the `apt-get update` and the exact-name package check
+          # below repeat tests.yml's "Install the toolchain (Linux)", which
+          # also says why `--error-on=any` is passed and why packages are
+          # matched by exact name; change both.
           #
           # The hosted image ships Chrome's and Microsoft's apt repositories,
           # which nothing here installs from. A bad index from either fails
@@ -117,18 +118,15 @@ jobs:
           # JSON::PP.
           packages=(g++-15 ninja-build libtbb-dev
                     libcapture-tiny-perl libdatetime-perl libdevel-stacktrace-perl libjson-xs-perl libtimedate-perl)
-          # The list is read once and searched by exact name, as in tests.yml's
-          # "Install the toolchain (Linux)", which says why.
           names=$(apt-cache pkgnames)
           for pkg in "${packages[@]}"; do
             grep -qFx -- "$pkg" <<< "$names" \
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
           sudo scripts/retry.sh 3 300 -- apt-get install -y "${packages[@]}"
-          # lcov comes from its release rather than apt, whose version differs
-          # by Ubuntu release: ubuntu-24.04 has 2.0 and ubuntu-26.04 2.4. Keep
-          # it at the version Homebrew installs, so that CI and a Mac run the
-          # same lcov. The tarball has no apt signature behind it, so its
+          # lcov comes from its release rather than apt (2.4 on ubuntu-26.04),
+          # at the version Homebrew installs, so that CI and a Mac run the same
+          # lcov. The tarball has no apt signature behind it, so its
           # checksum is pinned. Each tool prints the version and, after a
           # hyphen, the release number from the tarball's .version file.
           lcov_version=2.6
@@ -141,7 +139,10 @@ jobs:
           tar -xzf "$lcov_tarball" -C "$RUNNER_TEMP"
           # --old-file=doc stops install rebuilding the documentation the
           # tarball ships, which needs Sphinx.
-          sudo make -C "$RUNNER_TEMP/lcov-$lcov_version" --old-file=doc install
+          # sudo drops the job's CXX, from which lcov's Makefile.PL would take
+          # the compiler, so it would build the extension with plain g++;
+          # LCOV_CXX names it on make's command line.
+          sudo make -C "$RUNNER_TEMP/lcov-$lcov_version" --old-file=doc LCOV_CXX=g++-15 install
           # Each tool must report the pinned release. That is the only proof
           # the install worked, since lcov's Makefile can exit 0 after a
           # partial install. It also stops another lcov earlier on PATH from
@@ -153,11 +154,31 @@ jobs:
             [ "${reported##* }" = "$pinned" ] \
               || { echo "::error::$tool on PATH reports ${reported##* }, not the pinned $pinned"; exit 1; }
           done
-          # The release builds an XS extension with the g++ on PATH. When the
-          # extension does not load, lcovutil.pm falls back to pure Perl
-          # without a word, and the run is slower. So the step fails on it.
-          perl -I/usr/local/lib/lcov -Mlcovutil -e 'print "lcov XS extension: ", ($lcovutil::XS_LOADED ? "loaded" : "not loaded: $lcovutil::XS_LOAD_ERROR"), "\n"; exit !$lcovutil::XS_LOADED' \
-            || { echo "::error::lcov's XS extension did not load: it would run in pure Perl"; exit 1; }
+          # The install builds an XS extension. When the extension does not
+          # load, lcovutil.pm falls back to pure Perl without a word, and the
+          # run is slower. So the step fails on it. One Perl script checks
+          # both that lcovutil.pm loads and that the extension did. On failure
+          # it prints the reason as an error annotation, encoded for the
+          # annotation. A missing perl fails the step by itself.
+          LCOV_PERL_DIR=/usr/local/lib/lcov perl -e '
+            my $dir = $ENV{LCOV_PERL_DIR};
+            unshift @INC, $dir;
+            my $reason;
+            if (!eval { require lcovutil; 1 }) {
+              $reason = "Perl could not load lcovutil.pm from $dir: $@";
+            } elsif (!$lcovutil::XS_LOADED) {
+              $reason = "lcov XS extension did not load, so lcov would run in pure Perl: "
+                        . ($lcovutil::XS_LOAD_ERROR || "LCOV_PURE_PERL is set");
+            } else {
+              print "lcov XS extension: loaded\n";
+              exit 0;
+            }
+            chomp $reason;
+            $reason =~ s/%/%25/g;
+            $reason =~ s/\r/%0D/g;
+            $reason =~ s/\n/%0A/g;
+            print "::error::$reason\n";
+            exit 1;'
           g++-15 --version | head -1
           cmake --version | head -1
 
