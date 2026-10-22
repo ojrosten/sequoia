@@ -6,15 +6,17 @@ does not hold.
 
 Writes the record to standard output, with
   - for each tool of the record's toolchain, the Debian package which owns
-    the tool's path, and the package's version; and
+    the tool's executable, and the package's version; and
   - the GitHub Actions run which made the record: its id, its attempt, and
     the attempt's URL.
 
 A distribution's archive can rebuild a compiler without changing what
 `--version` prints, so the package's version tells two toolchains apart
 where the record's version may not. The package is the one dpkg says owns
-the path the record names, which is the path the build ran, rather than the
-package the job asked apt for.
+the executable which the record's path resolves to, which is the file the
+build ran, rather than the package the job asked apt for. Where the path is
+a symlink, the two can differ: on Ubuntu, g++-15 owns /usr/bin/g++-15, a
+symlink to x86_64-linux-gnu-g++-15, which g++-15-x86-64-linux-gnu owns.
 
 The run is read from the variables GitHub Actions sets in every job:
 GITHUB_SERVER_URL, GITHUB_REPOSITORY, GITHUB_RUN_ID and GITHUB_RUN_ATTEMPT.
@@ -59,8 +61,9 @@ def owner_of(path):
 
 
 def package_of(path):
-    """Returns the name and version of the package owning `path`."""
-    name = owner_of(path)
+    """Returns the name and version of the package owning the executable
+    which `path` resolves to."""
+    name = owner_of(os.path.realpath(path))
     version = run(["dpkg-query", "--show", "--showformat=${Version}", name]).strip()
     if not version:
         sys.exit(f"dpkg-query gives no version for {name}")

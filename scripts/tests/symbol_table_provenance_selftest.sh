@@ -11,9 +11,11 @@
 #
 # Each control is a claim the script exists to keep:
 #   - each tool of the record's toolchain gains the name and the version of
-#     the package dpkg says owns the tool's path, which need not be the
-#     path's last component; the record gains the run's id, attempt and URL;
-#     and nothing else in the record changes;
+#     the package dpkg says owns the tool's executable, which need not be the
+#     path's last component; where the path is a symlink, the package is the
+#     one owning the file it resolves to, not the one owning the symlink; the
+#     record gains the run's id, attempt and URL; and nothing else in the
+#     record changes;
 #   - a package whose name carries its architecture is named in full, and a
 #     line of dpkg's reporting a diversion names no owner;
 #   - a path with no owner, or with two, a package with no version, and a
@@ -25,12 +27,16 @@
 # A refusal writes no record and says why.
 #
 # A stand-in for dpkg-query answers from files in the fixture, so the
-# selftest needs no Debian system.
+# selftest needs no Debian system. The tools are files in the fixture, so
+# that what a path resolves to is the fixture's, not the system's: Ubuntu's
+# /usr/bin/ld is a symlink.
 
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
 script="$here/../symbol_table_provenance.py"
-tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
+# Resolved, since the script resolves each tool's path: on macOS, the
+# temporary directory is under /var, a symlink to /private/var.
+tmp=$(cd "$(mktemp -d)" && pwd -P); trap 'rm -rf "$tmp"' EXIT
 verbose=yes
 
 fail() {
@@ -54,23 +60,31 @@ esac
 EOF
 chmod +x "$tmp/bin/dpkg-query"
 
-# fixture: a record, and dpkg's answers for its three tools
+# fixture: a record, its three tools, and dpkg's answers for them. The
+# compiler's path is a symlink to $compiler, and one package owns the
+# symlink, another the file it resolves to.
 fixture() {
+  local bin="$work/usr/bin"
+  compiler="$bin/x86_64-linux-gnu-g++-15"
   export DPKG="$work/dpkg"
-  mkdir -p "$DPKG/search/usr/bin" "$DPKG/version"
-  echo 'g++-15: /usr/bin/g++-15'                   > "$DPKG/search/usr/bin/g++-15"
-  echo 'binutils-x86-64-linux-gnu: /usr/bin/ld'    > "$DPKG/search/usr/bin/ld"
-  printf '%s\n' 'diversion by nm-wrapper from: /usr/bin/nm' 'diversion by nm-wrapper to: /usr/bin/nm.real' \
-                'binutils:amd64: /usr/bin/nm'      > "$DPKG/search/usr/bin/nm"
-  echo -n '15.2.0-16ubuntu1' > "$DPKG/version/g++-15"
+  mkdir -p "$bin" "$DPKG/search$bin" "$DPKG/version"
+  touch "$compiler" "$bin/ld" "$bin/nm"
+  ln -sf x86_64-linux-gnu-g++-15 "$bin/g++-15"
+  echo "g++-15: $bin/g++-15"                       > "$DPKG/search$bin/g++-15"
+  echo "g++-15-x86-64-linux-gnu: $compiler"        > "$DPKG/search$compiler"
+  echo "binutils-x86-64-linux-gnu: $bin/ld"        > "$DPKG/search$bin/ld"
+  printf '%s\n' "diversion by nm-wrapper from: $bin/nm" "diversion by nm-wrapper to: $bin/nm.real" \
+                "binutils:amd64: $bin/nm"          > "$DPKG/search$bin/nm"
+  echo -n '15.2.0-16ubuntu0' > "$DPKG/version/g++-15"
+  echo -n '15.2.0-16ubuntu1' > "$DPKG/version/g++-15-x86-64-linux-gnu"
   echo -n '2.46-1ubuntu2'    > "$DPKG/version/binutils-x86-64-linux-gnu"
   echo -n '2.46-1ubuntu3'    > "$DPKG/version/binutils:amd64"
-  cat > "$work/record.json" <<'EOF'
+  cat > "$work/record.json" <<EOF
 {"commit": "0123456789abcdef0123456789abcdef01234567", "clean": true,
  "executable": {"symbols": 3, "symbol_name_bytes": 30},
- "toolchain": {"compiler": {"path": "/usr/bin/g++-15", "id": "GNU", "version": "15.2.0"},
-               "linker":   {"path": "/usr/bin/ld", "id": "GNU", "version": "2.46"},
-               "nm":       {"path": "/usr/bin/nm", "version": "GNU nm 2.46"},
+ "toolchain": {"compiler": {"path": "$bin/g++-15", "id": "GNU", "version": "15.2.0"},
+               "linker":   {"path": "$bin/ld", "id": "GNU", "version": "2.46"},
+               "nm":       {"path": "$bin/nm", "version": "GNU nm 2.46"},
                "standard_library": "libstdc++"}}
 EOF
 }
@@ -125,8 +139,8 @@ record_controls() {
   fixture
   run
   exits "a record is written" 0
-  field "the compiler's package" \
-        'd["toolchain"]["compiler"]["package"]' "{'name': 'g++-15', 'version': '15.2.0-16ubuntu1'}"
+  field "the compiler's package owns its executable, not the symlink to it" \
+        'd["toolchain"]["compiler"]["package"]' "{'name': 'g++-15-x86-64-linux-gnu', 'version': '15.2.0-16ubuntu1'}"
   field "the linker's package is its path's owner, not its name" \
         'd["toolchain"]["linker"]["package"]' "{'name': 'binutils-x86-64-linux-gnu', 'version': '2.46-1ubuntu2'}"
   field "nm's package is named with its architecture, and past the diversion" \
@@ -146,24 +160,24 @@ print(d == json.load(open(sys.argv[2])))' "$out" "$work/record.json" > "$work/un
 
 dpkg_controls() {
   fixture
-  echo 'g++-15, g++-15-multilib: /usr/bin/g++-15' > "$DPKG/search/usr/bin/g++-15"
+  echo "g++-15-x86-64-linux-gnu, g++-15-multilib: $compiler" > "$DPKG/search$compiler"
   run
-  refuses "a path with two owners" 'names 2 packages owning /usr/bin/g\+\+-15'
+  refuses "a path with two owners" 'names 2 packages owning .*/usr/bin/x86_64-linux-gnu-g\+\+-15'
 
   fixture
-  echo 'diversion by other from: /usr/bin/g++-15' > "$DPKG/search/usr/bin/g++-15"
+  echo "diversion by other from: $compiler" > "$DPKG/search$compiler"
   run
-  refuses "a path whose only line is a diversion" 'names 0 packages owning /usr/bin/g\+\+-15'
+  refuses "a path whose only line is a diversion" 'names 0 packages owning .*/usr/bin/x86_64-linux-gnu-g\+\+-15'
 
   fixture
-  rm "$DPKG/search/usr/bin/ld"
+  rm "$DPKG/search$work/usr/bin/ld"
   run
-  refuses "a path dpkg-query does not know" 'dpkg-query --search /usr/bin/ld failed'
+  refuses "a path dpkg-query does not know" 'dpkg-query --search .*/usr/bin/ld failed'
 
   fixture
-  : > "$DPKG/version/g++-15"
+  : > "$DPKG/version/g++-15-x86-64-linux-gnu"
   run
-  refuses "a package with no version" 'no version for g\+\+-15'
+  refuses "a package with no version" 'no version for g\+\+-15-x86-64-linux-gnu'
 
   fixture
   rm "$DPKG/version/binutils:amd64"
@@ -199,7 +213,7 @@ record_shape_controls() {
   fixture
   edit_record 'd["toolchain"]["nm"]["package"] = {"name": "x", "version": "1"}'
   run
-  refuses "a tool which already has a package" 'already has a package for /usr/bin/nm'
+  refuses "a tool which already has a package" 'already has a package for .*/usr/bin/nm'
 
   fixture
   edit_record 'd["run"] = {"id": 1}'
@@ -248,7 +262,9 @@ mutant 'split at the first colon'       'line[:-len(suffix)].split(", ")]' 'line
 mutant 'the owners not split'           'line[:-len(suffix)].split(", ")]' '[line[:-len(suffix)]]]'
 mutant 'the first of several owners'    'if len(owners) != 1:' 'if not owners:'
 mutant 'an empty version accepted'      'if not version:' 'if False:'
-mutant 'the package named by the path'  'name = owner_of(path)' 'name = owner_of(path) and os.path.basename(path)'
+mutant 'the package named by the path'  'name = owner_of(os.path.realpath(path))' 'name = owner_of(path) and os.path.basename(path)'
+mutant "the symlink's owner named"      'owner_of(os.path.realpath(path))' 'owner_of(path)'
+mutant 'the path made absolute only'    'owner_of(os.path.realpath(path))' 'owner_of(os.path.abspath(path))'
 mutant 'an empty variable accepted'     'if not value:' 'if value is None:'
 mutant 'any id accepted'                'if not value.isdecimal():' 'if False:'
 mutant 'the attempt left out of the URL' '/actions/runs/{run_id}/attempts/{attempt}"' '/actions/runs/{run_id}"'
