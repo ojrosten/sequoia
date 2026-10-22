@@ -27,7 +27,7 @@ on:
   workflow_call:
     inputs:
       needs_testing:
-        description: 'Whether the change touches anything the suite reads, scripts included: `true` or `false`, from scope.yml. Anything else fails every job.'
+        description: 'Whether the change touches anything the selftests read: `true` or `false`, from scope.yml. Anything else fails every job.'
         required: true
         type: string
 

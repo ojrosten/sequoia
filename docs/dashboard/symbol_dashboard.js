@@ -14,7 +14,9 @@
   const commitsPerPage = 100;
 
   // The most listings of history a view fetches. It keeps one view within
-  // the anonymous limit of 60 API calls an hour.
+  // the anonymous limit of 60 API calls an hour. A record off staging's
+  // first-parent history makes the walk head for the root, so a first view
+  // then spends all of them.
   const maxCommitPages = 40;
 
   // The most records fetched at once.
@@ -100,14 +102,16 @@
   /**
    * Lists what is wrong with `record`, stored under the name `commit`.
    *
-   * A record with no problem holds `commit` as its commit, a toolchain, the
-   * executable's symbols and name bytes, and a count of defined symbols for
-   * each object.
+   * A record with no problem is an object holding `commit` as its commit, a
+   * clean tree, a toolchain, the executable's symbols and name bytes, and a
+   * count of defined symbols for each object.
    */
   function problemsWith(record, commit) {
+    if (record === null || typeof record !== 'object' || Array.isArray(record)) return ['it is not a JSON object'];
     const problems = [];
     const isCount = value => Number.isInteger(value) && value >= 0;
     if (record.commit !== commit) problems.push(`it names commit ${record.commit}`);
+    if (record.clean !== true) problems.push('it was not measured on a clean tree');
     if (record.toolchain === null || typeof record.toolchain !== 'object') problems.push('it has no toolchain');
     const executable = record.executable || {};
     if (!isCount(executable.symbols)) problems.push('it has no count of the executable\'s symbols');
@@ -154,8 +158,8 @@
     const objects = new Set([...Object.keys(countsBefore), ...Object.keys(countsAfter)]);
     return [...objects]
       .map(object => {
-        const was = object in countsBefore ? countsBefore[object] : null;
-        const is  = object in countsAfter  ? countsAfter[object]  : null;
+        const was = Object.hasOwn(countsBefore, object) ? countsBefore[object] : null;
+        const is  = Object.hasOwn(countsAfter,  object) ? countsAfter[object]  : null;
         return {object, before: was, after: is, delta: (is || 0) - (was || 0)};
       })
       .filter(mover => mover.delta !== 0)

@@ -210,7 +210,11 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
       return [from, from + 1].map(k => ({sha: sha(k), parents: [{sha: sha(k + 1)}],
                                          commit: {committer: {date: '2026-01-01T00:00:00Z'}, message: 'm'}}));
     };
-    const source = fixtureSource({commits: listing});
+    let listings = 0;
+    const source = fixtureSource({commits: start => {
+      if (++listings > dashboard.maxCommitPages + 5) throw new Error('the walk went on past the limit of listings');
+      return listing(start);
+    }});
     const loaded = await dashboard.loadHistory(source, new Map());
     assert.strictEqual(source.calls.filter(call => call[0] === 'commits').length, dashboard.maxCommitPages);
     assert.strictEqual(loaded.pages, dashboard.maxCommitPages);
@@ -265,12 +269,25 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.deepStrictEqual(movers.map(mover => mover.object), ['a', 'b', 'c']);
   });
 
+  await control('a record which is not an object is a problem, and the others load', async () => {
+    const source = fixtureSource({record: recordPath => recordPath.includes(c.F6) ? null : read(recordPath)});
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.deepStrictEqual(column.problems.find(p => p.path.includes(c.F6)).problems, ['it is not a JSON object']);
+    assert.strictEqual(column.points.length, 5);
+  });
+
+  await control('objects named as the prototype\'s properties move as any other', () => {
+    const movers = dashboard.movers({defined_symbols_by_object: {}}, {defined_symbols_by_object: {constructor: 3}});
+    assert.deepStrictEqual(movers, [{object: 'constructor', before: null, after: 3, delta: 3}]);
+  });
+
   await control('a stored record has no problem', () => {
     assert.deepStrictEqual(dashboard.problemsWith(recordOf('F5'), c.F5), []);
   });
 
   for (const [name, change, problem] of [
     ['no toolchain',              r => { delete r.toolchain; },                       'it has no toolchain'],
+    ['a tree not clean',          r => { r.clean = false; },                          'it was not measured on a clean tree'],
     ['no count of symbols',       r => { delete r.executable.symbols; },              'it has no count of the executable\'s symbols'],
     ['a fractional count',        r => { r.executable.symbols = 1.5; },               'it has no count of the executable\'s symbols'],
     ['a negative count of bytes', r => { r.executable.symbol_name_bytes = -1; },      'it has no count of the executable\'s name bytes'],
@@ -360,6 +377,9 @@ MUTATIONS = [
                                           'new Set(Object.keys(countsAfter))'),
     ('unmoved objects kept',              '.filter(mover => mover.delta !== 0)', ''),
     ('the commit not checked',            "if (record.commit !== commit) problems.push", "if (false) problems.push"),
+    ('a record not an object read',       "Array.isArray(record)) return ['it is not a JSON object'];", "false) return [];"),
+    ('a dirty tree accepted',             "if (record.clean !== true) problems.push", "if (false) problems.push"),
+    ('prototype keys counted',            'Object.hasOwn(countsBefore, object)', 'object in countsBefore'),
     ('any toolchain accepted',            "if (record.toolchain === null || typeof record.toolchain !== 'object')", 'if (false)'),
     ('fractions accepted',                'Number.isInteger(value) && value >= 0', "typeof value === 'number' && value >= 0"),
     ('negative counts accepted',          'Number.isInteger(value) && value >= 0', 'Number.isInteger(value)'),
