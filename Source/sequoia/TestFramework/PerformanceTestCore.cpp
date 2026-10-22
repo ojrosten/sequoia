@@ -78,7 +78,7 @@ namespace sequoia::testing
 
       const std::ranges::subrange kept{data.cbegin() + numeric::unchecked_conversion_to<std::ptrdiff_t>(numTrimmed),
                                        data.cend()   - numeric::unchecked_conversion_to<std::ptrdiff_t>(numTrimmed)};
-      const double fractionKept{1.0 - 2.0 * numTrimmed / n};
+      const double fractionKept{1.0 - 2.0 * static_cast<double>(numTrimmed) / static_cast<double>(n)};
 
       return {
         .mean{maths::mean(kept).value()},

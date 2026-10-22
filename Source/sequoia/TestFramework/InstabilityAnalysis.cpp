@@ -60,7 +60,7 @@ namespace sequoia::testing
 
       auto to_percent{
         [&failuresFromFiles](auto num){
-          return std::format("{:3.1f}", 100 * static_cast<double>(num) / failuresFromFiles.size());
+          return std::format("{:3.1f}", 100 * static_cast<double>(num) / static_cast<double>(failuresFromFiles.size()));
         }
       };
 
