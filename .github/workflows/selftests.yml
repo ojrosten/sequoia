@@ -8,6 +8,10 @@ name: selftests
 # found, since report_crashes' selftest passes on Linux having run nothing.
 # The inventory job checks that every selftest runs somewhere.
 #
+# symbol_dashboard's selftest runs on Linux alone. Its subject is the
+# dashboard's script, which runs in a browser, so the platform's only part is
+# the node that stands in for the browser; the image ships one.
+#
 # symbol_table_report's selftest links its fixture in the platform's own
 # format, and reads it with the platform's nm. So the Linux job controls the
 # script with GNU nm on ELF executables, and the macOS job controls it with
@@ -48,7 +52,7 @@ jobs:
             packages: gdb
             selftests: compile_time_report cron_expression_at generate_coverage_report
               propose_tightened_baseline read_settled_jobs rerun_unacquired_job retry snapshot_at_deadline
-              symbol_table_report
+              symbol_dashboard symbol_table_report
           # report_crashes' selftest runs on macOS alone. The system there writes
           # the crash reports its macOS controls read, and its Linux and Windows
           # controls run through stand-ins for uname, file and gdb. One of those

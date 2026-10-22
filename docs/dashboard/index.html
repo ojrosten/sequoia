@@ -1,0 +1,601 @@
+<!doctype html>
+<!--
+  TestAll's symbol counts along staging's history, read live from the
+  metrics branch. symbol_dashboard.js holds the data logic; this page fetches
+  and draws.
+
+  ?commit=<prefix> selects the point of the commit whose hash starts with
+  <prefix>, rather than the latest. ?column=<name> shows that column.
+
+  Adding ?fixtures=<directory> reads the records, and the API's answers, from
+  <directory> instead of GitHub, laid out as in
+  scripts/tests/symbol_dashboard. To preview the page against that fixture,
+  serve the checkout's root, for instance with `python3 -m http.server`, and
+  open /docs/dashboard/?fixtures=../../scripts/tests/symbol_dashboard.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sequoia symbol counts</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page:           #f9f9f7;
+    --surface:        #fcfcfb;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --grid:           #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11, 11, 11, 0.10);
+    --series:         #2a78d6;
+    --critical:       #d03b3b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page:           #0d0d0d;
+      --surface:        #1a1a19;
+      --text-primary:   #f0efec;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --grid:           #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255, 255, 255, 0.10);
+      --series:         #3987e5;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page:           #0d0d0d;
+    --surface:        #1a1a19;
+    --text-primary:   #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --grid:           #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255, 255, 255, 0.10);
+    --series:         #3987e5;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--text-primary);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  h2 { font-size: 16px; margin: 0; }
+  a { color: inherit; }
+  .lede, .note, figcaption p { color: var(--text-secondary); margin: 4px 0 0; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; margin-top: 16px;
+  }
+  .filters { margin-top: 16px; }
+  .filters select { font: inherit; margin-left: 8px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; }
+  .tile .label { color: var(--text-secondary); font-size: 13px; }
+  .tile .value { font-size: 24px; font-weight: 600; }
+  .tile .detail { color: var(--text-muted); font-size: 13px; }
+  figure { margin: 0; position: relative; }
+  .plot { margin-top: 8px; }
+  .plot svg { display: block; width: 100%; overflow: visible; }
+  .plot svg:focus { outline: none; }
+  .plot svg:focus-visible { outline: 2px solid var(--series); outline-offset: 4px; border-radius: 4px; }
+  .axis text { fill: var(--text-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .break-label { fill: var(--text-secondary); font-size: 12px; }
+  .tooltip {
+    position: absolute; pointer-events: none; z-index: 1; max-width: 340px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+    padding: 8px 10px; font-size: 13px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  }
+  .tooltip strong { display: block; font-size: 15px; }
+  .tooltip span { display: block; color: var(--text-secondary); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  th { color: var(--text-secondary); font-weight: 600; }
+  td.number, th.number { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.object { word-break: break-all; }
+  tr.selected td { background: var(--grid); }
+  tr.change td { color: var(--text-secondary); font-style: italic; }
+  .scroll { overflow-x: auto; }
+  details { margin-top: 12px; }
+  summary { cursor: pointer; color: var(--text-secondary); }
+  .alert { border-left: 3px solid var(--critical); }
+  .alert h2::before { content: "\26A0\FE0E  "; color: var(--critical); }
+  code { font-size: 13px; }
+  #problems li { overflow-wrap: anywhere; }
+  footer { color: var(--text-muted); font-size: 13px; margin-top: 24px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>TestAll's symbol table</h1>
+    <p class="lede">Each point is a commit on <code>staging</code>'s first-parent history, built by CI and measured
+      by <code>scripts/symbol_table_report.py</code>. A gap in a line, and a rule across the charts, mark a change of
+      toolchain: the points on either side were built by different compilers, linkers or packages, so the step
+      between them is not a change in sequoia.</p>
+  </header>
+  <div class="filters" id="filters" hidden><label>Column<select id="column"></select></label></div>
+  <section class="card" id="message" role="status"><p>Loading the records&hellip;</p></section>
+  <div id="dashboard" hidden>
+    <div class="tiles" id="tiles"></div>
+    <figure class="card">
+      <figcaption><h2>Symbols in the executable</h2>
+        <p>The number of symbols <code>nm</code> lists for <code>TestAll</code>, imported symbols among them.
+          Select a point, or use the arrow keys, to see what moved.</p></figcaption>
+      <div class="plot" id="symbols-plot"></div>
+    </figure>
+    <figure class="card">
+      <figcaption><h2>Bytes of symbol names</h2>
+        <p>The total length of those symbols' mangled names. It grows faster than the count when the names
+          grow longer.</p></figcaption>
+      <div class="plot" id="bytes-plot"></div>
+    </figure>
+    <div class="tooltip" id="tooltip" hidden></div>
+    <section class="card" id="movers"></section>
+    <section class="card">
+      <h2>Every point</h2>
+      <details><summary>Show the table</summary><div class="scroll"><table id="points"></table></div></details>
+    </section>
+    <section class="card alert" id="problems" hidden></section>
+  </div>
+  <footer id="footer"></footer>
+</main>
+<script src="symbol_dashboard.js"></script>
+<script>
+'use strict';
+(() => {
+  const repository = 'ojrosten/sequoia';
+  const api        = `https://api.github.com/repos/${repository}`;
+  const raw        = `https://raw.githubusercontent.com/${repository}/metrics/`;
+  const cacheKey   = 'sequoia-symbol-dashboard-commits';
+  const defaultColumn = 'linux-gcc-debug';
+  const topMovers  = 15;
+  const parameters = new URLSearchParams(location.search);
+  const fixtures   = parameters.get('fixtures');
+  const meter      = {calls: 0, records: 0, remaining: null, reset: null};
+  const svgNamespace = 'http://www.w3.org/2000/svg';
+
+  const integer = new Intl.NumberFormat('en-GB');
+  const signed  = value => (value > 0 ? '+' : value < 0 ? '−' : '') + integer.format(Math.abs(value));
+  const percent = (delta, base) => {
+    const fraction  = 100 * delta / base;
+    const magnitude = Math.abs(fraction);
+    return (fraction > 0 ? '+' : fraction < 0 ? '−' : '')
+         + (magnitude >= 0.1 || magnitude === 0 ? magnitude.toFixed(2) : magnitude.toPrecision(2)) + '%';
+  };
+  const shortDate = iso => new Date(iso).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', timeZone: 'UTC'});
+  const longDate  = iso => new Date(iso).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'});
+  const clock     = seconds => new Date(seconds * 1000).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'});
+  const short     = commit => commit.slice(0, 7);
+  const commitUrl = commit => `https://github.com/${repository}/commit/${commit}`;
+
+  // Builds an element, sets its attributes, and appends its children,
+  // strings as text.
+  function element(name, attributes = {}, ...children) {
+    const node = name.startsWith('svg:') ? document.createElementNS(svgNamespace, name.slice(4)) : document.createElement(name);
+    for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, value);
+    for (const child of children) node.append(child);
+    return node;
+  }
+  const link = (href, text) => element('a', {href}, text);
+
+  // Fetches JSON from `url`. Returns null on a 404 if `absentAs404`, and
+  // throws on any other failure, naming the url.
+  async function fetchJson(url, absentAs404, onResponse = () => {}) {
+    let response;
+    try { response = await fetch(url, {headers: {Accept: 'application/vnd.github+json'}}); }
+    catch (error) { throw new Error(`${url} could not be reached: ${error.message}`); }
+    onResponse(response);
+    if (response.status === 404 && absentAs404) return null;
+    if (!response.ok) {
+      let message = '';
+      try { message = (await response.json()).message || ''; } catch (error) { /* a body which is not JSON */ }
+      if ((response.status === 403 || response.status === 429) && response.headers.get('x-ratelimit-remaining') === '0') {
+        throw new Error(`GitHub's limit of 60 API calls an hour, for a reader not signed in, is spent. It resets at ${clock(response.headers.get('x-ratelimit-reset'))}.`);
+      }
+      throw new Error(`${url} answered ${response.status}${message ? ': ' + message : ''}`);
+    }
+    try { return await response.json(); }
+    catch (error) { throw new Error(`${url} did not answer with JSON: ${error.message}`); }
+  }
+
+  function githubSource() {
+    const count = response => {
+      ++meter.calls;
+      meter.remaining = response.headers.get('x-ratelimit-remaining');
+      meter.reset     = response.headers.get('x-ratelimit-reset');
+    };
+    return {
+      tree:    () => fetchJson(`${api}/git/trees/metrics?recursive=1`, true, count),
+      commits: (page, head) => fetchJson(
+        `${api}/commits?sha=${head || 'staging'}&per_page=${symbolDashboard.commitsPerPage}&page=${page}`, false, count),
+      record:  path => { ++meter.records; return fetchJson(raw + path, false); }
+    };
+  }
+
+  function fixtureSource(directory) {
+    const base = directory.replace(/\/*$/, '/');
+    return {
+      tree:    () => fetchJson(base + 'tree.json', true),
+      commits: page => fetchJson(`${base}commits/${page}.json`, false),
+      record:  path => { ++meter.records; return fetchJson(base + path, false); }
+    };
+  }
+
+  // The summaries of commits fetched by earlier views. A commit's parents,
+  // date and subject never change, so the cache cannot go stale; losing it
+  // costs only API calls.
+  function knownCommits() {
+    if (fixtures) return new Map();
+    try { return new Map(Object.entries(JSON.parse(localStorage.getItem(cacheKey) || '{}'))); }
+    catch (error) { return new Map(); }
+  }
+  function remember(known) {
+    if (fixtures) return;
+    try { localStorage.setItem(cacheKey, JSON.stringify(Object.fromEntries(known))); }
+    catch (error) { /* storage is a convenience: without it, the next view fetches again */ }
+  }
+
+  function showMessage(title, text, isError) {
+    const message = document.getElementById('message');
+    message.className = 'card' + (isError ? ' alert' : '');
+    message.setAttribute('role', isError ? 'alert' : 'status');
+    message.replaceChildren(element('h2', {}, title), element('p', {}, text));
+    message.hidden = false;
+  }
+
+  function describeChange(change) {
+    return change.map(({path, before, after}) => `${path}: ${before ?? 'absent'} → ${after ?? 'absent'}`).join('; ');
+  }
+
+  // Ticks ------------------------------------------------------------------
+
+  function niceStep(span, count) {
+    const raw  = span / count;
+    const unit = 10 ** Math.floor(Math.log10(raw));
+    return unit * ([1, 2, 2.5, 5, 10].find(m => m * unit >= raw));
+  }
+  function scaleOf(values) {
+    let low = Math.min(...values), high = Math.max(...values);
+    if (low === high) { const pad = Math.max(1, Math.abs(low) * 0.001); low -= pad; high += pad; }
+    const step = niceStep(high - low, 4);
+    low  = Math.floor(low / step) * step;
+    high = Math.ceil(high / step) * step;
+    const ticks = [];
+    for (let tick = low; tick <= high + step / 2; tick += step) ticks.push(tick);
+    return {low, high, step, ticks};
+  }
+  function compact(value, step, high) {
+    const [divisor, suffix] = high >= 1e6 ? [1e6, 'M'] : high >= 1e3 ? [1e3, 'K'] : [1, ''];
+    const decimals = Math.max(0, Math.ceil(-Math.log10(step / divisor) - 1e-9));
+    return (value / divisor).toFixed(decimals) + suffix;
+  }
+
+  // Charts -----------------------------------------------------------------
+
+  const state = {points: [], selected: 0, hovered: null, charts: []};
+
+  // Draws the points' values of one measure into `container`, one line per
+  // run, with a rule at each change of toolchain. Returns the chart's
+  // functions to mark the hovered and selected points.
+  function drawChart(container, measure, height, labelBreaks) {
+    const points = state.points;
+    const width  = Math.max(280, container.clientWidth);
+    const margin = {top: labelBreaks ? 22 : 8, right: 12, bottom: 26, left: 56};
+    const plotWidth  = width - margin.left - margin.right;
+    const plotHeight = height - margin.top - margin.bottom;
+    const values = points.map(point => measure.value(point.record));
+    const scale  = scaleOf(values);
+    const pitch  = plotWidth / points.length;
+    const x = index => margin.left + (index + 0.5) * pitch;
+    const y = value => margin.top + plotHeight * (scale.high - value) / (scale.high - scale.low);
+
+    const svg = element('svg:svg', {viewBox: `0 0 ${width} ${height}`, height, tabindex: 0, role: 'img',
+                                    'aria-label': `${measure.name} at each point; the table below lists every value`});
+    const axis = element('svg:g', {class: 'axis'});
+    for (const tick of scale.ticks) {
+      axis.append(element('svg:line', {x1: margin.left, x2: width - margin.right, y1: y(tick), y2: y(tick),
+                                       stroke: tick === scale.low ? 'var(--baseline)' : 'var(--grid)', 'stroke-width': 1}));
+      axis.append(element('svg:text', {x: margin.left - 8, y: y(tick) + 4, 'text-anchor': 'end'},
+                          compact(tick, scale.step, scale.high)));
+    }
+    const labels = Math.max(1, Math.min(points.length, Math.floor(plotWidth / 80)));
+    const labelled = new Set(Array.from({length: labels}, (_, i) =>
+      labels === 1 ? points.length - 1 : Math.round(i * (points.length - 1) / (labels - 1))));
+    for (const index of labelled) {
+      axis.append(element('svg:text', {x: x(index), y: height - 6, 'text-anchor': 'middle'}, shortDate(points[index].date)));
+    }
+    svg.append(axis);
+
+    points.forEach((point, index) => {
+      if (!point.toolchainChange) return;
+      const at = (x(index - 1) + x(index)) / 2;
+      svg.append(element('svg:line', {x1: at, x2: at, y1: labelBreaks ? 16 : margin.top, y2: margin.top + plotHeight,
+                                      stroke: 'var(--text-muted)', 'stroke-width': 1}));
+      if (labelBreaks) svg.append(element('svg:text', {x: at, y: 11, 'text-anchor': 'middle', class: 'break-label'}, 'toolchain'));
+    });
+
+    const runs = new Map();
+    points.forEach((point, index) => {
+      if (!runs.has(point.run)) runs.set(point.run, []);
+      runs.get(point.run).push(`${x(index).toFixed(1)},${y(values[index]).toFixed(1)}`);
+    });
+    for (const run of runs.values()) {
+      svg.append(element('svg:polyline', {points: run.join(' '), fill: 'none', stroke: 'var(--series)', 'stroke-width': 2,
+                                          'stroke-linejoin': 'round', 'stroke-linecap': 'round'}));
+    }
+    if (pitch >= 14) {
+      points.forEach((point, index) => svg.append(element('svg:circle', {cx: x(index), cy: y(values[index]), r: 4,
+        fill: 'var(--series)', stroke: 'var(--surface)', 'stroke-width': 2})));
+    }
+
+    const crosshair = element('svg:line', {y1: margin.top, y2: margin.top + plotHeight, stroke: 'var(--text-muted)',
+                                           'stroke-width': 1, visibility: 'hidden'});
+    const hoverDot  = element('svg:circle', {r: 5, fill: 'var(--series)', stroke: 'var(--surface)', 'stroke-width': 2, visibility: 'hidden'});
+    const selectDot = element('svg:circle', {r: 6, fill: 'var(--surface)', stroke: 'var(--series)', 'stroke-width': 3});
+    svg.append(crosshair, selectDot, hoverDot);
+
+    const overlay = element('svg:rect', {x: margin.left, y: 0, width: plotWidth, height, fill: 'transparent'});
+    const indexAt = event => {
+      const bounds = svg.getBoundingClientRect();
+      const offset = (event.clientX - bounds.left) * width / bounds.width;
+      return Math.max(0, Math.min(points.length - 1, Math.floor((offset - margin.left) / pitch)));
+    };
+    overlay.addEventListener('pointermove', event => hover(indexAt(event)));
+    overlay.addEventListener('pointerleave', () => hover(null));
+    overlay.addEventListener('click', event => select(indexAt(event)));
+    svg.append(overlay);
+    svg.addEventListener('keydown', event => {
+      const moves = {ArrowLeft: -1, ArrowRight: 1, Home: -Infinity, End: Infinity};
+      if (!(event.key in moves)) return;
+      event.preventDefault();
+      select(Math.max(0, Math.min(points.length - 1, state.selected + moves[event.key])));
+      hover(state.selected, svg);
+    });
+    svg.addEventListener('focus', () => hover(state.selected, svg));
+    svg.addEventListener('blur', () => hover(null));
+    container.replaceChildren(svg);
+
+    return {
+      svg,
+      markHover(index) {
+        const shown = index === null ? 'hidden' : 'visible';
+        crosshair.setAttribute('visibility', shown);
+        hoverDot.setAttribute('visibility', shown);
+        if (index === null) return;
+        crosshair.setAttribute('x1', x(index)); crosshair.setAttribute('x2', x(index));
+        hoverDot.setAttribute('cx', x(index)); hoverDot.setAttribute('cy', y(values[index]));
+      },
+      markSelected(index) {
+        selectDot.setAttribute('cx', x(index)); selectDot.setAttribute('cy', y(values[index]));
+      },
+      anchor: index => ({x: x(index) / width, y: y(values[index]) / height})
+    };
+  }
+
+  const measures = [
+    {name: 'Symbols',              value: record => record.executable.symbols,           unit: 'symbols'},
+    {name: 'Bytes of symbol names', value: record => record.executable.symbol_name_bytes, unit: 'bytes of names'}
+  ];
+
+  function changeOn(index, measure) {
+    if (index === 0) return null;
+    const before = measure.value(state.points[index - 1].record);
+    const after  = measure.value(state.points[index].record);
+    return {delta: after - before, before};
+  }
+
+  function hover(index, from) {
+    state.hovered = index;
+    for (const chart of state.charts) chart.markHover(index);
+    const tooltip = document.getElementById('tooltip');
+    if (index === null) { tooltip.hidden = true; return; }
+    const point = state.points[index];
+    const symbols = changeOn(index, measures[0]);
+    tooltip.replaceChildren(
+      element('strong', {}, `${integer.format(point.record.executable.symbols)} symbols`),
+      element('span', {}, symbols ? `${signed(symbols.delta)} (${percent(symbols.delta, symbols.before)}) on the previous point`
+                                  : 'The first point'),
+      element('span', {}, `${integer.format(point.record.executable.symbol_name_bytes)} bytes of names`),
+      element('span', {}, `${short(point.commit)} · ${longDate(point.date)}`),
+      element('span', {}, point.subject));
+    if (point.toolchainChange) tooltip.append(element('span', {}, `Toolchain changed: ${describeChange(point.toolchainChange)}`));
+    const chart  = state.charts.find(c => c.svg === from) || state.charts.find(c => c.svg.matches(':hover')) || state.charts[0];
+    const figure = chart.svg.closest('figure');
+    const bounds = chart.svg.getBoundingClientRect();
+    const where  = chart.anchor(index);
+    const left   = figure.offsetLeft + chart.svg.parentNode.offsetLeft + where.x * bounds.width;
+    const top    = figure.offsetTop + chart.svg.parentNode.offsetTop + where.y * bounds.height;
+    tooltip.hidden = false;
+    const flip = left + 16 + tooltip.offsetWidth > document.querySelector('main').clientWidth;
+    tooltip.style.left = `${flip ? left - 16 - tooltip.offsetWidth : left + 16}px`;
+    tooltip.style.top  = `${Math.max(0, top - tooltip.offsetHeight - 12)}px`;
+  }
+
+  function select(index) {
+    state.selected = index;
+    for (const chart of state.charts) chart.markSelected(index);
+    drawMovers();
+    for (const row of document.querySelectorAll('#points tr[data-index]')) {
+      row.classList.toggle('selected', Number(row.dataset.index) === index);
+    }
+  }
+
+  function drawCharts() {
+    state.charts = [
+      drawChart(document.getElementById('symbols-plot'), measures[0], 260, true),
+      drawChart(document.getElementById('bytes-plot'),   measures[1], 180, false)
+    ];
+    for (const chart of state.charts) chart.markSelected(state.selected);
+  }
+
+  // Panels -----------------------------------------------------------------
+
+  function drawTiles() {
+    const points  = state.points;
+    const latest  = points[points.length - 1];
+    const change  = changeOn(points.length - 1, measures[0]);
+    const tile = (label, value, detail) => element('div', {class: 'tile'},
+      element('div', {class: 'label'}, label), element('div', {class: 'value'}, value), element('div', {class: 'detail'}, detail));
+    document.getElementById('tiles').replaceChildren(
+      tile('Symbols at the latest point', integer.format(latest.record.executable.symbols), `${short(latest.commit)}, ${longDate(latest.date)}`),
+      tile('Change on the point before', change ? signed(change.delta) : '—',
+           change ? percent(change.delta, change.before) + (latest.toolchainChange ? ', across a toolchain change' : '') : 'There is only one point'),
+      tile('Points', integer.format(points.length), `${longDate(points[0].date)} to ${longDate(latest.date)}`));
+  }
+
+  function drawMovers() {
+    const panel = document.getElementById('movers');
+    const index = state.selected;
+    const point = state.points[index];
+    panel.replaceChildren(element('h2', {}, 'What moved at ', link(commitUrl(point.commit), short(point.commit))),
+                          element('p', {class: 'note'}, `${longDate(point.date)}: ${point.subject}`));
+    if (index === 0) {
+      panel.append(element('p', {}, 'This is the first point, so there is nothing to compare it with.'));
+      return;
+    }
+    const previous = state.points[index - 1];
+    const symbols  = changeOn(index, measures[0]);
+    const movers   = symbolDashboard.movers(previous.record, point.record);
+    const objects  = Object.keys(point.record.defined_symbols_by_object).length;
+    panel.append(element('p', {}, 'Against ', link(commitUrl(previous.commit), short(previous.commit)),
+      `, the point before, the executable's symbols went from ${integer.format(symbols.before)} to `
+      + `${integer.format(point.record.executable.symbols)} (${signed(symbols.delta)}, ${percent(symbols.delta, symbols.before)}). `
+      + `${movers.length} of ${objects} objects changed their count of defined symbols.`));
+    if (point.toolchainChange) {
+      panel.append(element('p', {class: 'note'}, `The toolchain changed between these points, so the movement may be the toolchain's: `
+        + describeChange(point.toolchainChange)));
+    }
+    if (movers.length === 0) return;
+    const table = rows => {
+      const body = rows.map(mover => element('tr', {},
+        element('td', {class: 'object'}, mover.object),
+        element('td', {class: 'number'}, mover.before === null ? 'absent' : integer.format(mover.before)),
+        element('td', {class: 'number'}, mover.after === null ? 'absent' : integer.format(mover.after)),
+        element('td', {class: 'number'}, signed(mover.delta))));
+      return element('div', {class: 'scroll'}, element('table', {},
+        element('thead', {}, element('tr', {}, element('th', {}, 'Object, by its source'), element('th', {class: 'number'}, 'Before'),
+                                       element('th', {class: 'number'}, 'After'), element('th', {class: 'number'}, 'Change'))),
+        element('tbody', {}, ...body)));
+    };
+    panel.append(table(movers.slice(0, topMovers)));
+    if (movers.length > topMovers) {
+      panel.append(element('details', {}, element('summary', {}, `The other ${movers.length - topMovers} objects that moved`),
+                           table(movers.slice(topMovers))));
+    }
+  }
+
+  function drawPointsTable() {
+    const header = element('tr', {}, ...['Commit', 'Date', 'Symbols', 'Change', 'Bytes of names', 'Subject'].map((text, i) =>
+      element('th', {class: i >= 2 && i <= 4 ? 'number' : ''}, text)));
+    const rows = [];
+    state.points.forEach((point, index) => {
+      if (point.toolchainChange) {
+        rows.push(element('tr', {class: 'change'}, element('td', {colspan: 6}, `Toolchain changed: ${describeChange(point.toolchainChange)}`)));
+      }
+      const change = changeOn(index, measures[0]);
+      const row = element('tr', {'data-index': index},
+        element('td', {}, link(commitUrl(point.commit), short(point.commit))),
+        element('td', {}, longDate(point.date)),
+        element('td', {class: 'number'}, integer.format(point.record.executable.symbols)),
+        element('td', {class: 'number'}, change ? signed(change.delta) : ''),
+        element('td', {class: 'number'}, integer.format(point.record.executable.symbol_name_bytes)),
+        element('td', {}, point.subject));
+      row.addEventListener('click', () => select(index));
+      rows.push(row);
+    });
+    document.getElementById('points').replaceChildren(element('thead', {}, header), element('tbody', {}, ...rows.reverse()));
+  }
+
+  function drawProblems(column) {
+    const panel = document.getElementById('problems');
+    panel.hidden = column.problems.length === 0;
+    panel.replaceChildren(element('h2', {}, `${column.problems.length} records not plotted`),
+      element('ul', {}, ...column.problems.map(({path, problems}) => element('li', {}, element('code', {}, path), `: ${problems.join('; ')}.`))));
+  }
+
+  function showColumn(column) {
+    state.points = column.points;
+    drawProblems(column);
+    const dashboard = document.getElementById('dashboard');
+    dashboard.hidden = false;
+    const hasPoints = column.points.length > 0;
+    for (const node of dashboard.children) if (node.id !== 'problems' && node.id !== 'tooltip') node.hidden = !hasPoints;
+    if (!hasPoints) {
+      showMessage('Nothing to plot', `None of the records of ${column.name} can be plotted; the list below says why.`, true);
+      return;
+    }
+    document.getElementById('message').hidden = true;
+    const asked = parameters.get('commit');
+    const found = asked ? column.points.findIndex(point => point.commit.startsWith(asked)) : -1;
+    state.selected = found >= 0 ? found : column.points.length - 1;
+    drawTiles();
+    drawCharts();
+    drawPointsTable();
+    select(state.selected);
+  }
+
+  function describeCalls(loaded) {
+    const footer = document.getElementById('footer');
+    const plural = (count, noun) => `${count} ${noun}${count === 1 ? '' : 's'}`;
+    const pages  = loaded && loaded.state === 'loaded' ? loaded.pages : 0;
+    const read   = `This view read ${plural(meter.records, 'record')} and ${plural(pages, 'page')} of staging's history`;
+    if (fixtures) {
+      footer.textContent = `Preview: ${read} from ${fixtures}, not from GitHub.`;
+      return;
+    }
+    const remaining = meter.remaining === null ? '.' : `; ${meter.remaining} remain until ${clock(meter.reset)}.`;
+    footer.textContent = `${read}, with ${plural(meter.calls, 'call')} to GitHub's API. The API allows a reader who is not `
+                       + `signed in 60 calls an hour${remaining} The records come from raw.githubusercontent.com, `
+                       + 'which the limit does not count.';
+  }
+
+  async function main() {
+    const source = fixtures ? fixtureSource(fixtures) : githubSource();
+    const known  = knownCommits();
+    let loaded;
+    try { loaded = await symbolDashboard.loadHistory(source, known); }
+    catch (error) {
+      showMessage('The records could not be loaded', error.message, true);
+      describeCalls(null);
+      return;
+    }
+    remember(known);
+    describeCalls(loaded);
+    if (loaded.state === 'absent') {
+      showMessage('No records yet', 'The metrics branch does not exist yet, so there is nothing to plot. CI creates it when it stores the first record.', false);
+      return;
+    }
+    if (loaded.state === 'empty') {
+      showMessage('No records yet', 'The metrics branch holds no records under symbol-table/, so there is nothing to plot.', false);
+      return;
+    }
+    const columns = new Map(loaded.columns.map(column => [column.name, column]));
+    const chosen  = parameters.get('column') || (columns.has(defaultColumn) ? defaultColumn : loaded.columns[0].name);
+    if (!columns.has(chosen)) {
+      showMessage('No such column', `The metrics branch has no column ${chosen}; it has ${[...columns.keys()].join(', ')}.`, true);
+      return;
+    }
+    const picker = document.getElementById('column');
+    picker.replaceChildren(...[...columns.keys()].map(name => element('option', {value: name}, name)));
+    picker.value = chosen;
+    picker.addEventListener('change', () => showColumn(columns.get(picker.value)));
+    document.getElementById('filters').hidden = columns.size < 2;
+    showColumn(columns.get(chosen));
+    let pending = null;
+    new ResizeObserver(() => {
+      cancelAnimationFrame(pending);
+      pending = requestAnimationFrame(() => { if (state.points.length) { drawCharts(); } });
+    }).observe(document.querySelector('main'));
+  }
+
+  main();
+})();
+</script>
+</body>
+</html>

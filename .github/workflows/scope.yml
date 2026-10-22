@@ -76,7 +76,8 @@ jobs:
           REPO_URL: ${{ github.server_url }}/${{ github.repository }}
         run: |
           # What each check does not read, as git globs. The suite reads nothing
-          # under docs/ or coverage_reports/. The coverage job reads what the
+          # under docs/ or coverage_reports/ but docs/dashboard, whose script
+          # the selftests control. The coverage job reads what the
           # suite reads, and the baseline of its gate,
           # coverage_reports/uncalled_functions.txt; the published reports lie
           # in coverage_reports/'s subdirectories. Doxygen reads Source/ and
@@ -86,7 +87,7 @@ jobs:
           # the documentation's list is wrong.
           ignored_by() {
             case "$1" in
-              suite)         echo 'docs/** coverage_reports/**';;
+              suite)         echo 'docs/* docs/config/** docs/html/** coverage_reports/**';;
               documentation) echo 'docs/html/** coverage_reports/**';;
               coverage)      echo 'docs/** coverage_reports/*/**';;
             esac
