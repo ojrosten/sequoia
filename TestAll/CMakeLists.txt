@@ -195,6 +195,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PathFreeDiagnostics.cpp
                ${TestDir}/TestFramework/PerformanceExceptionsTest.cpp
+               ${TestDir}/TestFramework/PerformanceRealClockDiagnostics.cpp
                ${TestDir}/TestFramework/PerformanceRetryTest.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
                ${TestDir}/TestFramework/PerformanceUtilitiesFreeTest.cpp
@@ -211,13 +212,16 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/TestExecutionCompletionRegularTest.cpp
                ${TestDir}/TestFramework/TestExecutionRecordRegularTest.cpp
                ${TestDir}/TestFramework/TestExecutionRecordTestingDiagnostics.cpp
+               ${TestDir}/TestFramework/TestRunnerConcurrencyTestingUtilities.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnosticsUtilities.cpp
                ${TestDir}/TestFramework/TestRunnerEndToEndFreeTest.cpp
+               ${TestDir}/TestFramework/TestRunnerPerformanceCheckOutcomesFreeTest.cpp
                ${TestDir}/TestFramework/TestRunnerPerformanceTest.cpp
                ${TestDir}/TestFramework/TestRunnerProjectCreation.cpp
                ${TestDir}/TestFramework/TestRunnerProjectFiles.cpp
                ${TestDir}/TestFramework/TestRunnerReportedDurationsFreeTest.cpp
+               ${TestDir}/TestFramework/TestRunnerSerialExecutionFreeTest.cpp
                ${TestDir}/TestFramework/TestRunnerTest.cpp
                ${TestDir}/TestFramework/TestRunnerTestCreation.cpp
                ${TestDir}/TestFramework/VersionedOutputFreeTest.cpp

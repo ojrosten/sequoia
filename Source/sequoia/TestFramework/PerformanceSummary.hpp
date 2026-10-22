@@ -55,12 +55,6 @@ namespace sequoia::testing
     std::chrono::duration<double> fast{}, slow{};
   };
 
-  /** \brief Whether the number of attempts each relative performance check
-             makes is expected to vary from run to run, or typically to stay
-             the same.
-   */
-  enum class attempt_count_stability { fluctuating, typically_stable };
-
   /** \brief Returns a line stating why an attempt failed. */
   [[nodiscard]]
   std::string_view verdict_summary(relative_performance_failure failure);
@@ -98,14 +92,12 @@ namespace sequoia::testing
       -# The task durations;
       -# The baseline durations.
 
-      Every measurement is set to zero, except that the number of trials and
-      the attempt stay as they are if `attemptCountStability` is
-      `attempt_count_stability::typically_stable`. The leading spaces and tabs,
-      the predicted interval and the number of attempts allowed stay as they
-      are too, and so does every other line. So the results for two texts are
-      equal if and only if the texts differ only in the values set to zero,
-      provided no measurement prints as a value beyond the largest `double`.
+      The leading spaces and tabs, the predicted interval and the number of
+      attempts allowed stay as they are, and so does every other line. So the
+      results for two texts are equal if and only if the texts differ only in
+      the values set to zero, provided no measurement prints as a value beyond
+      the largest `double`.
    */
   [[nodiscard]]
-  std::string text_with_zeroed_measurements(std::string_view text, attempt_count_stability attemptCountStability);
+  std::string text_with_zeroed_measurements(std::string_view text);
 }
