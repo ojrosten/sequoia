@@ -82,7 +82,7 @@ jobs:
 
       # As in tests.yml's "Install the toolchain (Linux)", which says why:
       #   - the step removes Chrome's and Microsoft's apt repositories;
-      #   - `apt-get update` turns a failed index into an error;
+      #   - `--error-on=any` turns a failed index into an error;
       #   - each package is checked by exact name first;
       #   - scripts/retry.sh retries each apt command that fetches, through
       #     scripts/apt_get_with_mirror_fallback.sh, with limits that leave

@@ -141,7 +141,7 @@ jobs:
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
           sudo scripts/retry.sh 3 180 -- scripts/apt_get_with_mirror_fallback.sh update -qq --error-on=any \
-            || { echo "::error::The apt indexes could not be fetched: each attempt above says why"; exit 1; }
+            || { echo "::error::apt-get update failed: each attempt above says why"; exit 1; }
           packages=("$CXX" ninja-build libtbb-dev)
           names=$(apt-cache pkgnames)
           for pkg in "${packages[@]}"; do

@@ -174,9 +174,10 @@ jobs:
       # the pipe failed this way for g++-15 on every Linux column. -F because a
       # name may hold a `.`, which a regex matches against any character.
       #
-      # This step's removal of the Chrome and Microsoft lists, retry paragraph,
-      # `apt-get update` and exact-name package check are repeated in
-      # coverage.yml's "Install the toolchain"; change both.
+      # This step's removal of the Chrome and Microsoft lists, retry
+      # paragraphs, `apt-get update` and exact-name package check are repeated
+      # in coverage.yml's "Install the toolchain", and in part in
+      # symbol-table.yml, docs.yml and selftests.yml; change them all.
       - name: Install the toolchain (Linux)
         if: inputs.needs_testing == 'true' && runner.os == 'Linux'
         run: |
@@ -204,16 +205,17 @@ jobs:
           # The command retried is scripts/apt_get_with_mirror_fallback.sh, so
           # that a later attempt fetches from another mirror first. On
           # 2026-10-22, azure.archive.ubuntu.com, the mirror the image prefers,
-          # stalled until an attempt's limit, and the retry stalled on it again
-          # (run 39767016365, its docs job). In another run, apt turned to
-          # archive.ubuntu.com within one attempt, of its own accord, and
-          # fetched 95 MB from it in 6 s (run 39772556372, attempt 2, its docs
-          # job).
+          # stalled most of an attempt, and the retry fetched from it again,
+          # too slowly to finish (run 39767016365, its docs job). In another
+          # run, apt turned to archive.ubuntu.com within one attempt, of its
+          # own accord, and fetched 95 MB from it in 6 s (run 39772556372,
+          # attempt 2, its docs job).
           #
           # Only the download is retried. The install then runs once, from the
-          # downloaded packages, with no download. An attempt stopped while
-          # dpkg runs leaves dpkg holding its lock, so every later attempt
-          # fails at once (run 39748507037, its docs job).
+          # downloaded packages, with no download. apt-get runs dpkg in a
+          # session of its own, so stopping an attempt leaves dpkg running and
+          # holding its lock. Every later attempt then fails at once (run
+          # 39748507037, its docs job).
           #
           # `apt-get update` reports an index it could not fetch as a warning,
           # and exits 0. The packages of that index are then missing from the
@@ -221,7 +223,7 @@ jobs:
           # in runs 39614191959 and 39617611706. `--error-on=any` turns a
           # failed index into an error, which scripts/retry.sh retries.
           sudo scripts/retry.sh 3 180 -- scripts/apt_get_with_mirror_fallback.sh update -qq --error-on=any \
-            || { echo "::error::The apt indexes could not be fetched: each attempt above says why"; exit 1; }
+            || { echo "::error::apt-get update failed: each attempt above says why"; exit 1; }
           # gdb reads the stacks for a hung suite's snapshot and for a crash's
           # core; the image has none.
           packages=("${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev gdb)

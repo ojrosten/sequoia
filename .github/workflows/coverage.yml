@@ -108,13 +108,17 @@ jobs:
           # that fails, or runs past its limit, is retried a bounded number of
           # times. The script runs as root, so that stopping an attempt reaches
           # the processes apt starts. A whole install step takes 22-126 s, so
-          # the limits leave room for every retry within the job. The command
-          # retried is scripts/apt_get_with_mirror_fallback.sh, so that a later
-          # attempt fetches from another mirror first. Only the download is
-          # retried, and the install then runs once, with no download, since
-          # an attempt stopped while dpkg runs leaves dpkg holding its lock.
+          # the limits leave room for every retry within the job.
+          #
+          # The command retried is scripts/apt_get_with_mirror_fallback.sh, so
+          # that a later attempt fetches from another mirror first.
+          #
+          # Only the download is retried. The install then runs once, from the
+          # downloaded packages, with no download. apt-get runs dpkg in a
+          # session of its own, so stopping an attempt leaves dpkg running and
+          # holding its lock. Every later attempt then fails at once.
           sudo scripts/retry.sh 3 180 -- scripts/apt_get_with_mirror_fallback.sh update -qq --error-on=any \
-            || { echo "::error::The apt indexes could not be fetched: each attempt above says why"; exit 1; }
+            || { echo "::error::apt-get update failed: each attempt above says why"; exit 1; }
           # The Perl packages are for lcov, installed below from its release.
           # Without Capture::Tiny, DateTime, Date::Parse and
           # Devel::StackTrace, lcov's tools do not start. geninfo reads gcov's

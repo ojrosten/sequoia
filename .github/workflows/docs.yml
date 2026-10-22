@@ -67,7 +67,7 @@ jobs:
           # Quiet rather than silent, so that a slow index shows which
           # repository it is. As in tests.yml's "Install the toolchain
           # (Linux)", which says why:
-          #   - `apt-get update` turns a failed index into an error;
+          #   - `--error-on=any` turns a failed index into an error;
           #   - scripts/retry.sh retries each apt command that fetches, through
           #     scripts/apt_get_with_mirror_fallback.sh, with limits that leave
           #     room for every retry within this step;
