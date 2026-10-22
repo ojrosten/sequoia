@@ -1,7 +1,7 @@
 name: scope
 
-# Whether a change holds anything for the suite, the Doxygen gate or the coverage
-# job to test.
+# Whether a change holds anything for the suite, the Doxygen gate, the coverage
+# job or the script selftests to test.
 # Called once by each tier, whose jobs take the answers as inputs.
 #
 # Why this exists. A required check that never reports holds its pull request at
@@ -55,6 +55,9 @@ on:
       coverage:
         description: '`true` if the change touches a path the coverage job reads, `false` if not.'
         value: ${{ jobs.decide.outputs.coverage }}
+      selftests:
+        description: '`true` if the change touches a path the script selftests read, `false` if not.'
+        value: ${{ jobs.decide.outputs.selftests }}
 
 jobs:
   decide:
@@ -65,6 +68,7 @@ jobs:
       suite: ${{ steps.decide.outputs.suite }}
       documentation: ${{ steps.decide.outputs.documentation }}
       coverage: ${{ steps.decide.outputs.coverage }}
+      selftests: ${{ steps.decide.outputs.selftests }}
     steps:
       - id: decide
         env:
@@ -76,10 +80,11 @@ jobs:
           REPO_URL: ${{ github.server_url }}/${{ github.repository }}
         run: |
           # What each check does not read, as git globs. The suite reads nothing
-          # under docs/ or coverage_reports/. The coverage job reads what the
-          # suite reads, and the baseline of its gate,
-          # coverage_reports/uncalled_functions.txt; the published reports lie
-          # in coverage_reports/'s subdirectories. Doxygen reads Source/ and
+          # under docs/ or coverage_reports/. The script selftests read what the
+          # suite reads, and docs/dashboard, whose script one of them controls.
+          # The coverage job reads what the suite reads, and the baseline of its
+          # gate, coverage_reports/uncalled_functions.txt; the published reports
+          # lie in coverage_reports/'s subdirectories. Doxygen reads Source/ and
           # Tests/, named by the Doxyfile's INPUT and EXAMPLE_PATH, and
           # docs/config, which holds the Doxyfile and what it includes; its
           # output is docs/html. Should the Doxyfile ever read from docs/html,
@@ -87,11 +92,12 @@ jobs:
           ignored_by() {
             case "$1" in
               suite)         echo 'docs/** coverage_reports/**';;
+              selftests)     echo 'docs/* docs/config/** docs/html/** coverage_reports/**';;
               documentation) echo 'docs/html/** coverage_reports/**';;
               coverage)      echo 'docs/** coverage_reports/*/**';;
             esac
           }
-          checks=(suite documentation coverage)
+          checks=(suite documentation coverage selftests)
 
           test_everything() {
             for check in "${checks[@]}"; do echo "$check=true" >> "$GITHUB_OUTPUT"; done
