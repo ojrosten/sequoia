@@ -9,6 +9,7 @@
 #include "PerformanceTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/FloatingPointDurations.hpp"
+#include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
 #include <array>
 #include <chrono>
@@ -17,6 +18,8 @@
 #include <initializer_list>
 #include <limits>
 #include <memory>
+#include <optional>
+#include <ranges>
 #include <string_view>
 #include <utility>
 #include <vector>
@@ -126,6 +129,67 @@ namespace sequoia::testing
                                             clock);
       }
     };
+
+    constexpr scripted_clock::duration fast_task_duration        {std::chrono::milliseconds{4}},
+                                       shorter_slow_task_duration{std::chrono::milliseconds{8}},
+                                       longer_slow_task_duration {std::chrono::milliseconds{16}};
+
+    /** \brief The conclusion of executed attempts, held with their mode and
+               prediction.
+     */
+    struct execution_of_attempts
+    {
+      test_mode                             mode{};
+      relative_performance_interval         prediction{};
+      impl::relative_performance_conclusion conclusion{};
+    };
+
+    /** \brief Executes attempts in `Mode` against `prediction`, timing a
+               fast task which takes `fast_task_duration` against a slow task
+               which takes `shorter_slow_task_duration` and
+               `longer_slow_task_duration` in turn.
+     */
+    template<test_mode Mode>
+    [[nodiscard]]
+    execution_of_attempts execute_scripted_attempts(relative_performance_interval prediction)
+    {
+      scripted_clock clock{};
+
+      return {
+        .mode{Mode},
+        .prediction{prediction},
+        .conclusion{
+          impl::execute_attempts<Mode>(
+            counted_scripted_task{clock, fast_task_duration},
+            make_cycling_scripted_task(clock, {shorter_slow_task_duration, longer_slow_task_duration}),
+            {.prediction{prediction}, .minimum_trials{relative_performance_minimum_trials_floor}},
+            clock)
+        }
+      };
+    }
+
+    /** \brief Returns the durations of the trials of attempt `attempt` of
+               `execute_scripted_attempts`.
+     */
+    [[nodiscard]]
+    std::vector<relative_performance_durations> trial_durations_of_attempt(std::size_t attempt)
+    {
+      auto durationsOfTrial{
+        [](std::size_t trial) -> relative_performance_durations {
+          // Every attempt follows an even number of trials, so the slow
+          // task's cycle starts afresh with each attempt.
+          return {
+            .fast{fast_task_duration},
+            .slow{(trial % 2 == 0) ? shorter_slow_task_duration : longer_slow_task_duration}
+          };
+        }
+      };
+
+      return
+          std::views::iota(0uz, trials_per_attempt_for_minimum_10.at(attempt - 1))
+        | std::views::transform(durationsOfTrial)
+        | std::ranges::to<std::vector>();
+    }
   }
 
   [[nodiscard]]
@@ -142,6 +206,7 @@ namespace sequoia::testing
     test_exception_specifications();
     test_default_minimum_trials();
     test_overlap_multipliers();
+    test_multiplier_given_to_each_attempt();
     test_judgement_with_baselines();
     test_shuffled_baselined_task_orders();
     test_call_in_order();
@@ -255,6 +320,99 @@ namespace sequoia::testing
     check(equality, "Multiplier in false-negative mode, attempt 1", impl::overlap_multiplier(false_negative, 1), 3.0);
     check(equality, "Multiplier in false-negative mode, attempt 2", impl::overlap_multiplier(false_negative, 2), 3.0);
     check(equality, "Multiplier in false-negative mode, attempt 3", impl::overlap_multiplier(false_negative, 3), 3.0);
+  }
+
+  void performance_utilities_free_test::test_multiplier_given_to_each_attempt()
+  {
+    using enum test_mode;
+
+    auto lowerEndOfEstimate{[](const relative_performance_estimate& estimate) { return estimate.interval.lower; }};
+    auto upperEndOfEstimate{[](const relative_performance_estimate& estimate) { return estimate.interval.upper; }};
+
+    auto lowerEndAt{
+      [lowerEndOfEstimate](std::size_t attempt, double multiplier) {
+        // Any prediction gives the same interval.
+        constexpr relative_performance_interval prediction{.lower{2}, .upper{3}};
+
+        const auto estimate{impl::judge_trials(trial_durations_of_attempt(attempt), multiplier, prediction).estimate};
+        return estimate.transform(lowerEndOfEstimate);
+      }
+    };
+
+    constexpr std::array<std::pair<std::size_t, std::size_t>, 3> pairsOfAttempts{{{1, 2}, {1, 3}, {2, 3}}};
+
+    for(const auto attempt : std::views::iota(1uz, relative_performance_max_attempts + 1))
+    {
+      for(const auto& [first, second] : pairsOfAttempts)
+      {
+        check(std::format("Attempt {}'s trials give intervals with different lower ends "
+                          "at the standard multipliers of attempts {} and {}",
+                          attempt,
+                          first,
+                          second),
+              lowerEndAt(attempt, impl::overlap_multiplier(standard, first))
+                != lowerEndAt(attempt, impl::overlap_multiplier(standard, second)));
+      }
+    }
+
+    auto checkConclusion{
+      [this, lowerEndOfEstimate, upperEndOfEstimate](std::string_view scenario,
+                                                     const execution_of_attempts& execution,
+                                                     std::size_t attempts) {
+        const auto& conclusion{execution.conclusion};
+        const auto expected{
+          impl::judge_trials(trial_durations_of_attempt(attempts),
+                             impl::overlap_multiplier(execution.mode, attempts),
+                             execution.prediction)
+        };
+
+        check(equality, std::format("{}: the number of attempts", scenario), conclusion.attempts, attempts);
+        check(std::format("{}: the failure of attempt {}", scenario, attempts),
+              conclusion.judgement.failure == expected.failure);
+        check(equality,
+              std::format("{}: the lower end of attempt {}'s interval", scenario, attempts),
+              conclusion.judgement.estimate.transform(lowerEndOfEstimate),
+              expected.estimate.transform(lowerEndOfEstimate));
+        check(equality,
+              std::format("{}: the upper end of attempt {}'s interval", scenario, attempts),
+              conclusion.judgement.estimate.transform(upperEndOfEstimate),
+              expected.estimate.transform(upperEndOfEstimate));
+      }
+    };
+
+    // The predictions below suit the estimator, the multipliers and the
+    // number of trials in each attempt, none of which is in the contract.
+    // These checks pin the implementation's choices, and change with them.
+    checkConclusion("Standard mode, with attempt 1's interval overlapping the prediction",
+                    execute_scripted_attempts<standard>({.lower{2.5}, .upper{3}}),
+                    1);
+
+    checkConclusion("Standard mode, with attempt 1's interval below the prediction, and attempt 2's overlapping it",
+                    execute_scripted_attempts<standard>({.lower{3.4}, .upper{5}}),
+                    2);
+
+    checkConclusion("Standard mode, with the intervals of attempts 1 and 2 below the prediction, "
+                    "and attempt 3's overlapping it",
+                    execute_scripted_attempts<standard>({.lower{3.7}, .upper{5}}),
+                    3);
+
+    checkConclusion("False-positive mode, with attempt 1's interval below the prediction, "
+                    "and attempt 2's overlapping it",
+                    execute_scripted_attempts<false_positive>({.lower{3.4}, .upper{5}}),
+                    2);
+
+    checkConclusion("False-negative mode, with attempt 1's interval below the prediction",
+                    execute_scripted_attempts<false_negative>({.lower{5}, .upper{6}}),
+                    1);
+
+    checkConclusion("False-negative mode, with attempt 1's interval overlapping the prediction, "
+                    "and attempt 2's below it",
+                    execute_scripted_attempts<false_negative>({.lower{4.2}, .upper{6}}),
+                    2);
+
+    checkConclusion("False-negative mode, with every attempt's interval overlapping the prediction",
+                    execute_scripted_attempts<false_negative>({.lower{3.4}, .upper{5}}),
+                    3);
   }
 
   void performance_utilities_free_test::test_judgement_with_baselines()
