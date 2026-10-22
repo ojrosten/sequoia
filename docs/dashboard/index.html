@@ -212,8 +212,8 @@
     };
     return {
       tree:    () => fetchJson(`${api}/git/trees/metrics?recursive=1`, true, count),
-      commits: (page, head) => fetchJson(
-        `${api}/commits?sha=${head || 'staging'}&per_page=${symbolDashboard.commitsPerPage}&page=${page}`, false, count),
+      commits: start => fetchJson(
+        `${api}/commits?sha=${start || 'staging'}&per_page=${symbolDashboard.commitsPerPage}`, false, count),
       record:  path => { ++meter.records; return fetchJson(raw + path, false); }
     };
   }
@@ -222,7 +222,7 @@
     const base = directory.replace(/\/*$/, '/');
     return {
       tree:    () => fetchJson(base + 'tree.json', true),
-      commits: page => fetchJson(`${base}commits/${page}.json`, false),
+      commits: start => fetchJson(`${base}commits/${start || 'staging'}.json`, false),
       record:  path => { ++meter.records; return fetchJson(base + path, false); }
     };
   }

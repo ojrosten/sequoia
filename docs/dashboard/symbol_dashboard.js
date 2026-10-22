@@ -10,11 +10,11 @@
 
   const recordPathPattern = /^symbol-table\/([^/]+)\/([0-9a-f]{40})\.json$/;
 
-  // The commits API's largest page.
+  // The commits API's largest page, as the number of commits it lists.
   const commitsPerPage = 100;
 
-  // The most pages of history a view fetches. It keeps one view within the
-  // anonymous limit of 60 API calls an hour.
+  // The most listings of history a view fetches. It keeps one view within
+  // the anonymous limit of 60 API calls an hour.
   const maxCommitPages = 40;
 
   // The most records fetched at once.
@@ -185,23 +185,26 @@
   /**
    * Fetches staging's history through `source` until the first-parent walk
    * from its head finds every commit of `wanted`, reaches a root, or has
-   * fetched `maxCommitPages` pages.
+   * fetched `maxCommitPages` listings.
    *
-   * `known` maps commits to their summaries, and gains those of every
-   * commit fetched.
+   * Each listing after the first starts at the commit where the walk left
+   * `known`. `known` maps commits to their summaries, and gains those of
+   * every commit fetched.
+   *
+   * Throws if a listing lacks the commit it starts at.
    */
   async function walkStaging(source, known, wanted) {
-    const firstPage = await source.commits(1, null);
-    if (firstPage.length === 0) throw new Error('GitHub listed no commits on staging');
-    const head = firstPage[0].sha;
-    for (const commit of firstPage) known.set(commit.sha, summarise(commit));
+    const learn = listing => { for (const commit of listing) known.set(commit.sha, summarise(commit)); };
+    const first = await source.commits(null);
+    if (first.length === 0) throw new Error('GitHub listed no commits on staging');
+    learn(first);
+    const head = first[0].sha;
     let walk  = walkFirstParents(known, head, wanted);
     let pages = 1;
-    let exhausted = false;
-    while (walk.unknown && !exhausted && pages < maxCommitPages) {
-      const page = await source.commits(++pages, head);
-      for (const commit of page) known.set(commit.sha, summarise(commit));
-      exhausted = page.length === 0;
+    while (walk.unknown && pages < maxCommitPages) {
+      learn(await source.commits(walk.unknown));
+      ++pages;
+      if (!known.has(walk.unknown)) throw new Error(`GitHub's listing of the history from ${walk.unknown} lacks that commit`);
       walk = walkFirstParents(known, head, wanted);
     }
     return {head, pages, walk};
@@ -214,8 +217,9 @@
    * `source` has three asynchronous functions:
    *  - tree(), the listing of the metrics branch as the git trees API gives
    *    it, or null if the branch does not exist;
-   *  - commits(page, head), a page of the commits API's listing of `head`,
-   *    or of staging if `head` is null;
+   *  - commits(start), the first page of the commits API's listing of the
+   *    history from the commit `start`, or from staging's head if `start` is
+   *    null;
    *  - record(path), the record at `path` on the metrics branch.
    * `known` is as for walkStaging.
    *
@@ -240,7 +244,7 @@
     const fetched = new Map(entries.map((entry, index) => [entry.path, outcomes[index]]));
     const historyOrder = walk.found.slice().reverse();
     const notFound = walk.unknown
-      ? `it is not among the ${pages} pages of staging's history fetched`
+      ? `the walk along staging's first parents stopped after ${pages} pages of history, before reaching it`
       : 'it is not on staging\'s first-parent history';
     const columns = [...listing].map(([name, columnEntries]) => {
       const problems = [];

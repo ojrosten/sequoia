@@ -11,7 +11,8 @@
 # The controls run the script under node, which must be on PATH. They read
 # the fixture in symbol_dashboard/, which mirrors what GitHub serves:
 #   - tree.json, the git trees API's listing of the metrics branch;
-#   - commits/<page>.json, the commits API's pages of staging's history;
+#   - commits/<start>.json, the commits API's first page of the history from
+#     the commit <start>, or from staging's head;
 #   - symbol-table/<column>/<commit>.json, the records.
 # Every record is a record CI stored, of 680,086 symbols, with its commit and
 # counts changed. Two hold the counts of CI's symbol_table_report runs
@@ -25,9 +26,11 @@
 #     else listed there; a truncated listing is an error;
 #   - the points are ordered by staging's first-parent history, not by the
 #     listing, and a record of a commit off that history is a problem;
-#   - the history is fetched page by page from staging's head, until every
-#     record's commit is found, the walk reaches a root, a page is empty, or
-#     the limit of pages is reached. Commits already known are not fetched;
+#   - the history is fetched from staging's head, then from each commit at
+#     which the walk leaves what is known, until every record's commit is
+#     found, the walk reaches a root, or the limit of listings is reached.
+#     Commits already known are not fetched, and a listing lacking the
+#     commit it starts at is an error;
 #   - a run of points ends where the toolchain changes, and the first point
 #     of the next run names each difference. A toolchain whose keys are
 #     reordered is the same toolchain;
@@ -82,8 +85,8 @@ const c = {
 };
 const read = file => JSON.parse(fs.readFileSync(path.join(fixture, file), 'utf-8'));
 const recordOf = name => read(`symbol-table/linux-gcc-debug/${c[name]}.json`);
-const pagesOfFixture = [1, 2, 3, 4].map(page => read(`commits/${page}.json`));
-const allCommits = new Map(pagesOfFixture.flat().map(commit => [commit.sha, dashboard.summarise(commit)]));
+const listingFrom = start => read(`commits/${start || 'staging'}.json`);
+const allCommits = new Map([null, c.F3, c.F1].flatMap(listingFrom).map(commit => [commit.sha, dashboard.summarise(commit)]));
 
 // A source reading the fixture, which records each call made through it.
 function fixtureSource(changes = {}) {
@@ -91,9 +94,9 @@ function fixtureSource(changes = {}) {
   return {
     calls,
     tree:    async ()           => { calls.push(['tree']); return 'tree' in changes ? changes.tree : read('tree.json'); },
-    commits: async (page, head) => {
-      calls.push(['commits', page, head]);
-      return changes.commits ? changes.commits(page) : (pagesOfFixture[page - 1] || []);
+    commits: async start => {
+      calls.push(['commits', start]);
+      return changes.commits ? changes.commits(start) : listingFrom(start);
     },
     record:  async recordPath   => {
       calls.push(['record', recordPath]);
@@ -164,11 +167,11 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.deepStrictEqual(problems.get('R0'), [`it names commit ${c.F1}`]);
   });
 
-  await control('history is fetched from staging\'s head until the walk reaches a root', async () => {
+  await control('history is fetched from each commit at which the walk leaves what is known', async () => {
     const source = fixtureSource();
     const loaded = await dashboard.loadHistory(source, new Map());
     assert.deepStrictEqual(source.calls.filter(call => call[0] === 'commits'),
-                           [['commits', 1, null], ['commits', 2, c.F7], ['commits', 3, c.F7]]);
+                           [['commits', null], ['commits', c.F3], ['commits', c.F1]]);
     assert.strictEqual(loaded.pages, 3);
     assert.strictEqual(source.calls.filter(call => call[0] === 'tree').length, 1);
   });
@@ -176,7 +179,7 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
   await control('commits already known are not fetched', async () => {
     const source = fixtureSource();
     await dashboard.loadHistory(source, new Map(allCommits));
-    assert.deepStrictEqual(source.calls.filter(call => call[0] === 'commits'), [['commits', 1, null]]);
+    assert.deepStrictEqual(source.calls.filter(call => call[0] === 'commits'), [['commits', null]]);
   });
 
   await control('the commits fetched become known', async () => {
@@ -185,27 +188,35 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.deepStrictEqual(names([...known.keys()]).sort(), ['B1', 'B2', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'R0']);
   });
 
-  await control('an empty page ends the walk, and the unplaced records say so', async () => {
-    const source = fixtureSource({commits: page => page === 1 ? pagesOfFixture[0] : []});
-    const loaded = await dashboard.loadHistory(source, new Map());
-    assert.strictEqual(loaded.pages, 2);
-    assert.deepStrictEqual(names(loaded.columns[0].points.map(point => point.commit)), ['F4', 'F5', 'F6', 'F7']);
-    const unplaced = loaded.columns[0].problems.find(p => p.path.includes(c.F1));
-    assert.deepStrictEqual(unplaced.problems, ['it is not among the 2 pages of staging\'s history fetched']);
+  await control('a listing lacking the commit it starts at is an error', async () => {
+    const source = fixtureSource({commits: start => start === null ? listingFrom(null) : listingFrom(c.F1)});
+    await assert.rejects(dashboard.loadHistory(source, new Map()), new RegExp(`listing of the history from ${c.F3} lacks that commit`));
+  });
+
+  await control('the walk fetches the history from where the known commits end', async () => {
+    const known = new Map(allCommits);
+    known.delete(c.F1);
+    const source = fixtureSource();
+    const loaded = await dashboard.loadHistory(source, known);
+    assert.deepStrictEqual(source.calls.filter(call => call[0] === 'commits'), [['commits', null], ['commits', c.F1]]);
+    assert.deepStrictEqual(names(loaded.columns[0].points.map(point => point.commit)), ['F1', 'F2', 'F4', 'F5', 'F6', 'F7']);
   });
 
   await control('the walk fetches no more than the limit of pages', async () => {
     // An endless history in which no record's commit lies.
     const sha = n => n.toString(16).padStart(40, '0');
-    const page = n => Array.from({length: 2}, (_, i) => {
-      const k = 2 * (n - 1) + i + 1;
-      return {sha: sha(k), parents: [{sha: sha(k + 1)}], commit: {committer: {date: '2026-01-01T00:00:00Z'}, message: 'm'}};
-    });
-    const source = fixtureSource({commits: page});
+    const listing = start => {
+      const from = start === null ? 1 : parseInt(start, 16);
+      return [from, from + 1].map(k => ({sha: sha(k), parents: [{sha: sha(k + 1)}],
+                                         commit: {committer: {date: '2026-01-01T00:00:00Z'}, message: 'm'}}));
+    };
+    const source = fixtureSource({commits: listing});
     const loaded = await dashboard.loadHistory(source, new Map());
     assert.strictEqual(source.calls.filter(call => call[0] === 'commits').length, dashboard.maxCommitPages);
     assert.strictEqual(loaded.pages, dashboard.maxCommitPages);
     assert.strictEqual(loaded.columns[0].points.length, 0);
+    assert.ok(loaded.columns[0].problems[0].problems.includes(
+      `the walk along staging's first parents stopped after ${dashboard.maxCommitPages} pages of history, before reaching it`));
   });
 
   await control('a run ends where the toolchain changes, and its successor names the change', async () => {
@@ -330,13 +341,13 @@ MUTATIONS = [
     ('the points in listing order',       'const historyOrder = walk.found.slice().reverse();', 'const historyOrder = [...wanted];'),
     ('the points newest first',           'const historyOrder = walk.found.slice().reverse();', 'const historyOrder = walk.found.slice();'),
     ('records off the history plotted',   'if (!walk.found.includes(entry.commit)) entryProblems.push(notFound);', ''),
-    ('the walk always fetches every page','while (walk.unknown && !exhausted', 'while (!exhausted'),
-    ('an empty page ignored',             'exhausted = page.length === 0;', 'exhausted = false;'),
-    ('no limit of pages',                 '&& pages < maxCommitPages) {', ') {'),
-    ('later pages from staging',          'await source.commits(++pages, head);', 'await source.commits(++pages, null);'),
+    ('no limit of listings',              'while (walk.unknown && pages < maxCommitPages) {', 'while (walk.unknown) {'),
+    ('a listing at the limit too many',   'while (walk.unknown && pages < maxCommitPages) {', 'while (walk.unknown && pages <= maxCommitPages) {'),
+    ('later listings from staging',       'learn(await source.commits(walk.unknown));', 'learn(await source.commits(null));'),
+    ('a listing lacking its start kept',  'if (!known.has(walk.unknown)) throw', 'if (false) throw'),
     ('the known commits ignored',         'let walk  = walkFirstParents(known, head, wanted);',
                                           'let walk  = {unknown: head};'),
-    ('fetched commits not kept',          'for (const commit of page) known.set(commit.sha, summarise(commit));', ''),
+    ('fetched commits not kept',          'for (const commit of listing) known.set(commit.sha, summarise(commit));', ''),
     ('toolchains compared as written',    'canonical(previous.record.toolchain) !== canonical(record.toolchain)',
                                           'JSON.stringify(previous.record.toolchain) !== JSON.stringify(record.toolchain)'),
     ('keys left unsorted',                'Object.keys(value).sort().map(', 'Object.keys(value).map('),
