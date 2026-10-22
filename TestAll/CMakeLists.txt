@@ -15,6 +15,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Algorithms/AlgorithmsTest.cpp
                ${TestDir}/Core/Concurrency/ConcurrencyModelsPerformanceTest.cpp
                ${TestDir}/Core/Concurrency/ConcurrencyModelsTest.cpp
+               ${TestDir}/Core/ContainerUtilities/ArithmeticCastsFreeTest.cpp
                ${TestDir}/Core/ContainerUtilities/ArrayUtilitiesTest.cpp
                ${TestDir}/Core/ContainerUtilities/IndexCastsFreeTest.cpp
                ${TestDir}/Core/ContainerUtilities/IteratorTest.cpp
@@ -56,7 +57,6 @@ target_sources(TestAll PRIVATE
                ${TestDir}/FileSystem/NormalPathTest.cpp
                ${TestDir}/FileSystem/NormalPathTestingDiagnostics.cpp
                ${TestDir}/Maths/Algebra/RatioFreeTest.cpp
-               ${TestDir}/Maths/Arithmetic/ArithmeticCastsFreeTest.cpp
                ${TestDir}/Maths/Arithmetic/SaturatingArithmeticFreeTest.cpp
                ${TestDir}/Maths/Geometry/AbsoluteCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp

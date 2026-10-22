@@ -18,7 +18,7 @@
 #include <stdexcept>
 #include <utility>
 
-namespace sequoia::maths
+namespace sequoia::utilities
 {
   /** \brief Converts `val` to `To` if it is in range, and throws `std::domain_error` otherwise. */
   template<integer To, integer From>

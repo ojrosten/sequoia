@@ -10,7 +10,7 @@
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 #include "sequoia/Core/ContainerUtilities/IndexCasts.hpp"
-#include "sequoia/Maths/Arithmetic/ArithmeticCasts.hpp"
+#include "sequoia/Core/ContainerUtilities/ArithmeticCasts.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 #include "sequoia/Parsing/CommandLineMessages.hpp"
@@ -35,7 +35,7 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
-  using maths::checked_conversion_to;
+  using utilities::checked_conversion_to;
 
   namespace
   {

@@ -6,11 +6,11 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "ArithmeticCastsFreeTest.hpp"
-#include "sequoia/Maths/Arithmetic/ArithmeticCasts.hpp"
+#include "sequoia/Core/ContainerUtilities/ArithmeticCasts.hpp"
 
 namespace sequoia::testing
 {
-  using namespace maths;
+  using namespace utilities;
 
   namespace
   {
