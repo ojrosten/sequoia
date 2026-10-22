@@ -61,20 +61,20 @@ EOF
 chmod +x "$tmp/bin/dpkg-query"
 
 # fixture: a record, its three tools, and dpkg's answers for them. The
-# compiler's path is a symlink to $compiler, and one package owns the
-# symlink, another the file it resolves to.
+# compiler's path is a symlink to $compiler_executable, and one package owns
+# the symlink, another the file it resolves to.
 fixture() {
   local bin="$work/usr/bin"
-  compiler="$bin/x86_64-linux-gnu-g++-15"
+  compiler_executable="$bin/x86_64-linux-gnu-g++-15"
   export DPKG="$work/dpkg"
   mkdir -p "$bin" "$DPKG/search$bin" "$DPKG/version"
-  touch "$compiler" "$bin/ld" "$bin/nm"
+  touch "$compiler_executable" "$bin/ld" "$bin/nm"
   ln -sf x86_64-linux-gnu-g++-15 "$bin/g++-15"
-  echo "g++-15: $bin/g++-15"                       > "$DPKG/search$bin/g++-15"
-  echo "g++-15-x86-64-linux-gnu: $compiler"        > "$DPKG/search$compiler"
-  echo "binutils-x86-64-linux-gnu: $bin/ld"        > "$DPKG/search$bin/ld"
+  echo "g++-15: $bin/g++-15"                                   > "$DPKG/search$bin/g++-15"
+  echo "g++-15-x86-64-linux-gnu: $compiler_executable"         > "$DPKG/search$compiler_executable"
+  echo "binutils-x86-64-linux-gnu: $bin/ld"                    > "$DPKG/search$bin/ld"
   printf '%s\n' "diversion by nm-wrapper from: $bin/nm" "diversion by nm-wrapper to: $bin/nm.real" \
-                "binutils:amd64: $bin/nm"          > "$DPKG/search$bin/nm"
+                "binutils:amd64: $bin/nm"                      > "$DPKG/search$bin/nm"
   echo -n '15.2.0-16ubuntu0' > "$DPKG/version/g++-15"
   echo -n '15.2.0-16ubuntu1' > "$DPKG/version/g++-15-x86-64-linux-gnu"
   echo -n '2.46-1ubuntu2'    > "$DPKG/version/binutils-x86-64-linux-gnu"
@@ -160,12 +160,12 @@ print(d == json.load(open(sys.argv[2])))' "$out" "$work/record.json" > "$work/un
 
 dpkg_controls() {
   fixture
-  echo "g++-15-x86-64-linux-gnu, g++-15-multilib: $compiler" > "$DPKG/search$compiler"
+  echo "g++-15-x86-64-linux-gnu, g++-15-multilib: $compiler_executable" > "$DPKG/search$compiler_executable"
   run
   refuses "a path with two owners" 'names 2 packages owning .*/usr/bin/x86_64-linux-gnu-g\+\+-15'
 
   fixture
-  echo "diversion by other from: $compiler" > "$DPKG/search$compiler"
+  echo "diversion by other from: $compiler_executable" > "$DPKG/search$compiler_executable"
   run
   refuses "a path whose only line is a diversion" 'names 0 packages owning .*/usr/bin/x86_64-linux-gnu-g\+\+-15'
 

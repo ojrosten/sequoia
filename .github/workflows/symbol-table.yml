@@ -85,22 +85,22 @@ jobs:
       - name: Record the symbol table
         run: |
           mkdir "$RUNNER_TEMP/symbol-table"
-          record="$RUNNER_TEMP/symbol-table/linux-gcc-debug.json"
+          record_file="$RUNNER_TEMP/symbol-table/linux-gcc-debug.json"
           python3 -B scripts/symbol_table_report.py build/TestAll/gcc-env TestAll > "$RUNNER_TEMP/report.json"
-          python3 -B scripts/symbol_table_provenance.py "$RUNNER_TEMP/report.json" > "$record"
-          jq -c '{commit, clean, executable, toolchain}' "$record"
-          echo "RECORD=$record" >> "$GITHUB_ENV"
+          python3 -B scripts/symbol_table_provenance.py "$RUNNER_TEMP/report.json" > "$record_file"
+          jq -c '{commit, clean, executable, toolchain}' "$record_file"
+          echo "RECORD_FILE=$record_file" >> "$GITHUB_ENV"
 
       - name: Upload the record
         uses: actions/upload-artifact@v7
         with:
           name: symbol-table-linux-gcc-debug
-          path: ${{ env.RECORD }}
+          path: ${{ env.RECORD_FILE }}
           if-no-files-found: error
 
       - name: Store the record on the data branch
         if: env.STORES_RECORD == 'true'
-        run: scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" symbol-table/linux-gcc-debug "$RECORD"
+        run: scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" symbol-table/linux-gcc-debug "$RECORD_FILE"
 
       - name: Nothing to store
         if: env.STORES_RECORD != 'true'
