@@ -21,9 +21,9 @@
 # a person should judge. Nothing is ever overwritten.
 #
 # A branch which does not exist is created, with no history. The push is
-# never forced. When it is refused - because another run pushed first - the
-# script fetches the branch again and builds its commit afresh on the new
-# tip, a bounded number of times.
+# never forced. When it fails - as it does when another run pushed first -
+# the script fetches the branch again and builds its commit afresh on the
+# new tip, a bounded number of times.
 #
 # The script refuses a record which cannot be read, which names no commit, or
 # whose tree was not clean, since its counts would then not be the commit's.
@@ -63,7 +63,10 @@ store_once() {
     *) die "git ls-remote $remote failed with exit status $status";;
   esac
 
-  if [ -n "$tip" ] && git cat-file -e "$tip:$path" 2> /dev/null; then
+  # The tree alone says whether the record is held: a clone without blobs
+  # must fetch the record's blob to show it, and a failure to fetch it is
+  # not a record absent.
+  if [ -n "$tip" ] && git rev-parse --verify --quiet "$tip:$path" > /dev/null; then
     git show "$tip:$path" > "$held_file" || die "git show $tip:$path failed"
     held=$(without_run "$held_file") || exit 1
     offered=$(without_run "$record") || exit 1
@@ -92,6 +95,6 @@ store_once() {
 
 for ((attempt = 1; attempt <= attempts; ++attempt)); do
   if store_once; then exit 0; fi
-  echo "Attempt $attempt of $attempts: the push to $branch was refused; fetching it again"
+  echo "Attempt $attempt of $attempts: the push to $branch failed; fetching it again"
 done
-die "The push to $branch was refused $attempts times"
+die "The push to $branch failed $attempts times"

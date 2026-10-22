@@ -13,9 +13,6 @@ name: coarse
 # stays: a merge into it can produce a tree nothing has tested, since "require
 # branches up to date" is deliberately off.
 #
-# Nor metrics, which holds the symbol-table records the symbol-table job
-# stores, and no source.
-#
 # Windows is here rather than only in the gates because clang and gcc agreeing is
 # weak evidence about MSVC. macOS joined on 2026-09-11, when work started arriving
 # from a Windows machine as well as the Mac: "we develop on the Mac" had been the
@@ -71,7 +68,6 @@ on:
   push:
     branches-ignore:
       - main
-      - metrics
   workflow_dispatch:
 
 # A push to a branch that already has a run in flight cancels that run: it
@@ -107,10 +103,10 @@ jobs:
       # broken rather than untidy. The gates refuse warnings outright.
       warnings_as_errors: false
       exec_args: '--check-versioned-output'
-      # The Linux column records its symbol table. Removing
-      # SEQUOIA_FORCE_INLINE from erased_target's constructor added 12,982
-      # symbols (+1.91%) to its TestAll on 2026-10-21, so this column sees a
-      # regression of that size.
+      # The Linux column records its symbol table, since it sees the
+      # regressions the record exists to show: removing SEQUOIA_FORCE_INLINE
+      # from erased_target's constructor added 12,982 symbols (+1.91%) to its
+      # TestAll on 2026-10-21.
       columns: >-
         [
           {"name": "Linux · GCC · Debug",   "os": "ubuntu-26.04",   "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15", "records_symbol_table_as": "linux-gcc-debug"},

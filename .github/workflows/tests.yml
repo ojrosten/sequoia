@@ -497,8 +497,8 @@ jobs:
         run: cmake --build --preset ${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/build.log"
 
       # A column naming `records_symbol_table_as` records the symbol table of
-      # the TestAll it has just built, as a JSON record, <the name>.json, in the
-      # artifact symbol-table-<the name>.
+      # the TestAll it has just built, as a JSON record, <the name>.json, in
+      # the artifact symbol-table-<the name>.
       #
       # The record is made before the suite runs, while the tree is the
       # commit's: a run can write files into the tree, and the record would

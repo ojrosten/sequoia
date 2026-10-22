@@ -18,6 +18,8 @@
 #     leaves the branch as it was, and says which run made the record held;
 #     one which differs elsewhere is refused, with the difference shown, and
 #     the branch left as it was;
+#   - in a clone without blobs, a held record whose blob cannot be fetched is
+#     a failure, not a record absent;
 #   - a push refused because another push came first is retried on the new
 #     tip, so that both pushes' records are kept, whether the branch existed
 #     or the other push created it; a push refused every time fails, after a
@@ -189,6 +191,22 @@ same_commit_controls() {
   unchanged_clone "a record for a commit held"
 }
 
+# A clone without blobs, as CI's sparse checkout makes, must fetch a held
+# record's blob to read it. GIT_NO_LAZY_FETCH stands in for that fetch
+# failing.
+blobless_controls() {
+  local first
+  fixture
+  store A; first=$(tip)
+  git --git-dir="$remote" config uploadpack.allowFilter true
+  git clone --quiet --filter=blob:none --no-checkout "file://$remote" "$work/blobless" 2> /dev/null
+  clone="$work/blobless"
+  GIT_NO_LAZY_FETCH=1 store A-other
+  exits "a held record whose blob cannot be fetched" nonzero
+  says "it says the record could not be read" 'git show .* failed' "$err"
+  same "the record held is not replaced" "$first" "$(tip)"
+}
+
 rival_controls() {
   fixture
   store A
@@ -213,7 +231,7 @@ rival_controls() {
   rival 'exit 1'
   store A
   exits "a push refused every time" nonzero
-  says "it fails after the attempts" 'refused 5 times' "$err"
+  says "it fails after the attempts" 'failed 5 times' "$err"
   same "nothing is pushed" "" "$(tip)"
 }
 
@@ -258,7 +276,8 @@ refusal_controls() {
 run_controls() { # run_controls <script>: sets fails, and total, the controls run
   subject=$1 fails=0 total=0
   local control
-  for control in create_controls beside_controls same_commit_controls rival_controls refusal_controls; do
+  for control in create_controls beside_controls same_commit_controls blobless_controls rival_controls \
+                 refusal_controls; do
     work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
     "$control"
   done
@@ -272,6 +291,7 @@ mutant() { # mutant <description> <text> <replacement>
 mutant 'arguments unchecked'           'if [ $# -ne 4 ]; then' 'if false; then'
 mutant 'any commit accepted'           '[[ $commit =~ ^[0-9a-f]{40}$ ]] ||' 'true ||'
 mutant 'a tree not clean accepted'     '[ "$(jq '"'"'.clean'"'"' "$record")" = true ] \' 'true \'
+mutant 'a record held read from its blob' 'git rev-parse --verify --quiet "$tip:$path" > /dev/null' 'git cat-file -e "$tip:$path" 2> /dev/null'
 mutant 'stored under one name'         'path="$directory/$commit.json"' 'path="$directory/record.json"'
 mutant 'a failed listing taken for no branch' '    2) echo "$remote has no branch' '    *) echo "$remote has no branch'
 mutant 'the run compared too'          "without_run() { jq -S 'del(.run)'" "without_run() { jq -S '.'"
