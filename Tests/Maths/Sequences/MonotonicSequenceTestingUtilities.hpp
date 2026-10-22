@@ -9,6 +9,7 @@
 
 /** \file */
 
+#include "sequoia/Core/ContainerUtilities/ArithmeticCasts.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
