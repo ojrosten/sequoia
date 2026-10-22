@@ -14,9 +14,8 @@ name: fine
 # ASan and UBSan share one build. TSan cannot join them, being mutually exclusive
 # with ASan, so it is a column of its own in rigorous.
 #
-# Every column runs the performance tests. coarse.yml gives the measurement on
-# which the macOS column runs them, and the failure rate at which to exclude
-# them again.
+# Every column runs the performance tests. coarse.yml gives the sample on
+# whose strength the macOS column runs them, and when to exclude them again.
 #
 # Every column also carries `--check-versioned-output`, spelt out per column
 # because a column's `exec_args` REPLACES the tier's rather than adding to it.
