@@ -35,10 +35,10 @@ namespace sequoia::testing
       }
     };
 
-    using wide_order_graph = static_directed_graph<0, 200, null_weight, int>;
+    using graph_of_order_beyond_signed_char = static_directed_graph<0, 200, null_weight, int>;
 
-    static_assert(std::same_as<wide_order_graph::edge_index_type, unsigned char>);
-    static_assert(wide_order_graph::order() > std::numeric_limits<signed char>::max());
+    static_assert(std::same_as<graph_of_order_beyond_signed_char::edge_index_type, unsigned char>);
+    static_assert(graph_of_order_beyond_signed_char::order() > std::numeric_limits<signed char>::max());
   }
 
   [[nodiscard]]
@@ -803,7 +803,7 @@ namespace sequoia::testing
   {
     enum graph_description { ascending_weights = 0, descending_weights };
 
-    using graph_t = wide_order_graph;
+    using graph_t = graph_of_order_beyond_signed_char;
     using transition_graph = transition_checker<graph_t>::transition_graph;
 
     transition_graph trg{
@@ -811,9 +811,13 @@ namespace sequoia::testing
         {  // begin 'graph_description::ascending_weights'
           {
             graph_description::descending_weights,
-            report("Sorting more nodes than a signed char can count"),
+            report("Sorting the nodes of a graph whose order exceeds the greatest signed char"),
             [](graph_t g) -> graph_t {
-              g.sort_nodes(0, graph_t::order(), [&g](auto i, auto j){ return g.cbegin_node_weights()[i] > g.cbegin_node_weights()[j]; });
+              g.sort_nodes(
+                0,
+                graph_t::order(),
+                [&g](auto i, auto j){ return g.cbegin_node_weights()[i] > g.cbegin_node_weights()[j]; }
+              );
               return g;
             }
           }
@@ -821,9 +825,13 @@ namespace sequoia::testing
         {  // begin 'graph_description::descending_weights'
           {
             graph_description::ascending_weights,
-            report("Sorting more nodes than a signed char can count"),
+            report("Sorting the nodes of a graph whose order exceeds the greatest signed char"),
             [](graph_t g) -> graph_t {
-              g.sort_nodes(0, graph_t::order(), [&g](auto i, auto j){ return g.cbegin_node_weights()[i] < g.cbegin_node_weights()[j]; });
+              g.sort_nodes(
+                0,
+                graph_t::order(),
+                [&g](auto i, auto j){ return g.cbegin_node_weights()[i] < g.cbegin_node_weights()[j]; }
+              );
               return g;
             }
           }

@@ -314,7 +314,9 @@ SEQUOIA_GCC_SUPPRESS_BEGIN("-Warray-bounds")
       requires steppable<Iterator>
     {
       if constexpr(integer<Iterator>)
-        m_BaseIterator = unchecked_conversion_to<Iterator>(unchecked_conversion_to<difference_type>(m_BaseIterator) + n);
+        m_BaseIterator = unchecked_conversion_to<Iterator>(
+                           unchecked_conversion_to<difference_type>(m_BaseIterator) + n
+                         );
       else
         m_BaseIterator += n;
 
@@ -356,7 +358,9 @@ SEQUOIA_GCC_SUPPRESS_END
       requires steppable<Iterator>
     {
       if constexpr(integer<Iterator>)
-        m_BaseIterator = unchecked_conversion_to<Iterator>(unchecked_conversion_to<difference_type>(m_BaseIterator) - n);
+        m_BaseIterator = unchecked_conversion_to<Iterator>(
+                           unchecked_conversion_to<difference_type>(m_BaseIterator) - n
+                         );
       else
         m_BaseIterator -= n;
 
@@ -376,7 +380,8 @@ SEQUOIA_GCC_SUPPRESS_END
       requires steppable<Iterator>
     {
       if constexpr(integer<Iterator>)
-        return unchecked_conversion_to<difference_type>(lhs.base_iterator()) - unchecked_conversion_to<difference_type>(rhs.base_iterator());
+        return unchecked_conversion_to<difference_type>(lhs.base_iterator())
+             - unchecked_conversion_to<difference_type>(rhs.base_iterator());
       else
         return lhs.base_iterator() - rhs.base_iterator();
     }
