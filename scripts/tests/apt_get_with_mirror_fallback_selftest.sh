@@ -11,22 +11,25 @@
 # Each control runs the script on a fixture standing in for /etc/apt, with a
 # stand-in for apt-get which records its arguments and exits with a status the
 # control chooses. The fixture's mirror list is the hosted images' (144 bytes
-# on ubuntu-24.04 and ubuntu-26.04, on 2026-10-22). Each control is a claim the
-# script exists to keep:
+# on ubuntu-24.04 and ubuntu-26.04, on 2026-10-22), and its sources name the
+# list twice, as the images' do. Each control is a claim the script exists to
+# keep:
 #   - on the first attempt, apt-get runs with the arguments given, and with
 #     Acquire::Progress::Ignore::ShowErrorText set, and the list is unchanged;
 #   - on a later attempt, every mirror of the smallest priority gets a
 #     priority larger than every other mirror's, and the rest of the list,
 #     comments and other tags included, is unchanged;
 #   - the image's list is kept as <list>.image, and every rewrite starts from
-#     it, so a third attempt, and a later command's, write the same list;
+#     that copy, so a third attempt, and a later command's second, write the
+#     same list;
 #   - a later command's first attempt leaves the rewritten list in place;
-#   - the sources name the list in either format, .sources or .list, and a
-#     commented-out source names nothing;
+#   - the sources name the list in either format, .sources or .list, and
+#     neither a commented-out source nor a comment after a source names a
+#     list;
 #   - apt-get's status is the script's;
 #   - the script refuses with status 2 and an ::error::, running nothing and
-#     changing nothing, on every input from which it cannot tell which mirror
-#     apt prefers, on the first attempt as on a later one.
+#     changing nothing, on each input below from which it cannot tell which
+#     mirror apt prefers, on the first attempt as on a later one.
 
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
@@ -34,7 +37,7 @@ original="$here/../apt_get_with_mirror_fallback.sh"
 tmp=$(mktemp -d "${TMPDIR:-/tmp}/apt_get_with_mirror_fallback_selftest.XXXXXX")
 trap 'rm -rf "$tmp"' EXIT
 
-# The hosted images' list, whose lines are separated from their tags by tabs.
+# The hosted images' list, in which a tab separates each mirror from its tags.
 image_contents=$(printf '%s\t%s\n' \
   http://azure.archive.ubuntu.com/ubuntu/ priority:1 \
   https://archive.ubuntu.com/ubuntu/      priority:2 \
@@ -60,24 +63,27 @@ expect() { # expect <claim> <actual> <expected>
 
 has() { # has <claim> <yes|no> <pattern> <file>
   local got=no
-  grep -E -- "$3" "$4" > /dev/null && got=yes
+  grep -qE -- "$3" "$4" && got=yes
   [ "$got" = "$2" ] || fail "$1 (expected $2, pattern: $3)"
 }
 
-# Makes a fresh fixture: an etc directory whose sources name its list in the
-# deb822 format, and the list given.
+# Makes a fresh fixture: an etc directory whose sources name its list in two
+# stanzas of the deb822 format, and the list given.
 make_fixture() { # make_fixture <contents of the list>
   rm -rf "$tmp/etc" "$tmp/arguments"
   mkdir -p "$tmp/etc/sources.list.d"
   etc=$tmp/etc
-  list=$etc/apt-mirrors.txt
-  printf '%s\n' "$1" > "$list"
-  printf 'Types: deb\nURIs: mirror+file:%s\nSuites: noble\nComponents: main\n' "$list" \
-    > "$etc/sources.list.d/ubuntu.sources"
+  mirror_list=$etc/apt-mirrors.txt
+  printf '%s\n' "$1" > "$mirror_list"
+  local suite
+  for suite in noble noble-security; do
+    printf 'Types: deb\nURIs: mirror+file:%s\nSuites: %s\nComponents: main\n\n' "$mirror_list" "$suite"
+  done > "$etc/sources.list.d/ubuntu.sources"
 }
 
-# Runs the script under test: run_as_attempt <number> <arguments>...
-run_as_attempt() {
+# Runs the script under test, with RETRY_ATTEMPT set to <number>, or unset, and
+# records its output and status: run_at_attempt <number> <arguments>...
+run_at_attempt() {
   local number=$1
   shift
   rm -f "$tmp/arguments"
@@ -95,42 +101,46 @@ expect_refusal() { # expect_refusal <claim> <message>
   expect "$1: refused with status 2" "$status" 2
   has "$1: an error names why" yes "^::error::.*$2" "$tmp/out"
   [ -e "$tmp/arguments" ] && fail "$1: apt-get does not run"
-  [ -e "$list" ] && [ "$(cat "$list")" != "$list_before" ] && fail "$1: the list is unchanged"
+  [ -e "$mirror_list" ] && [ "$(cat "$mirror_list")" != "$mirror_list_before" ] && fail "$1: the list is unchanged"
 }
 
 run_controls() {
   fails=0
 
   make_fixture "$image_contents"
-  run_as_attempt 1 install -y "two words" ""
+  run_at_attempt 1 install -y "two words" ""
   expect "the first attempt runs apt-get, with status 0" "$status" 0
   expect "apt-get gets the error text option, then the arguments intact" "$(cat "$tmp/arguments" 2> /dev/null)" \
     "$(printf '%s\n' -o Acquire::Progress::Ignore::ShowErrorText=true install -y "two words" "")"
-  expect "the first attempt leaves the list unchanged" "$(cat "$list")" "$image_contents"
-  [ -e "$list.image" ] && fail "the first attempt keeps no copy of the list"
+  expect "the first attempt leaves the list unchanged" "$(cat "$mirror_list")" "$image_contents"
+  [ -e "$mirror_list.image" ] && fail "the first attempt keeps no copy of the list"
   has "the first attempt prints nothing" no '.' "$tmp/out"
   has "the first attempt writes nothing on standard error" no '.' "$tmp/err"
 
-  run_as_attempt 2 update -qq
+  run_at_attempt 2 update -qq
   expect "a later attempt runs apt-get, with status 0" "$status" 0
-  expect "a later attempt gives the preferred mirror the largest priority" "$(cat "$list")" "$demoted_contents"
-  expect "a later attempt keeps the image's list" "$(cat "$list.image" 2> /dev/null)" "$image_contents"
+  expect "a later attempt gives the preferred mirror the largest priority" "$(cat "$mirror_list")" "$demoted_contents"
+  expect "a later attempt keeps the image's list" "$(cat "$mirror_list.image" 2> /dev/null)" "$image_contents"
   has "a later attempt says so" yes '^Attempt 2 fetches from the image.s other mirrors first:$' "$tmp/out"
   has "a later attempt prints the list" yes 'azure.archive.ubuntu.com/ubuntu/.priority:4$' "$tmp/out"
   expect "a later attempt passes the arguments" "$(tail -n 1 "$tmp/arguments" 2> /dev/null)" -qq
 
-  run_as_attempt 3 update
-  expect "a third attempt writes the same list" "$(cat "$list")" "$demoted_contents"
-  expect "a third attempt keeps the image's list" "$(cat "$list.image" 2> /dev/null)" "$image_contents"
+  run_at_attempt 3 update
+  expect "a third attempt writes the same list" "$(cat "$mirror_list")" "$demoted_contents"
+  expect "a third attempt keeps the image's list" "$(cat "$mirror_list.image" 2> /dev/null)" "$image_contents"
 
-  run_as_attempt 1 install gdb
-  expect "a later command's first attempt leaves the rewritten list" "$(cat "$list")" "$demoted_contents"
-  expect "a later command's first attempt keeps the image's list" "$(cat "$list.image" 2> /dev/null)" "$image_contents"
+  run_at_attempt 1 install gdb
+  expect "a later command's first attempt leaves the rewritten list" "$(cat "$mirror_list")" "$demoted_contents"
+  expect "a later command's first attempt keeps the image's list" "$(cat "$mirror_list.image" 2> /dev/null)" "$image_contents"
+  run_at_attempt 2 install gdb
+  expect "a later command's second attempt writes the same list" "$(cat "$mirror_list")" "$demoted_contents"
+  expect "a later command's second attempt keeps the image's list" "$(cat "$mirror_list.image" 2> /dev/null)" \
+    "$image_contents"
 
   make_fixture "$image_contents"
-  STANDIN_STATUS=100 run_as_attempt 1 install gdb
+  STANDIN_STATUS=100 run_at_attempt 1 install gdb
   expect "apt-get's failure is the script's" "$status" 100
-  STANDIN_STATUS=100 run_as_attempt 2 install gdb
+  STANDIN_STATUS=100 run_at_attempt 2 install gdb
   expect "apt-get's failure on a later attempt is the script's" "$status" 100
 
   # Two mirrors share the smallest priority; comments, blank lines and other
@@ -141,78 +151,81 @@ run_controls() {
     http://b.example/ priority:5 \
     http://c.example/ priority:9)
   tied_demoted=$(printf '# a comment\n\n%s\t%s\n%s\t%s\n%s\t%s\n' \
-    http://a.example/ "arch:amd64 priority:10 lang:en" \
+    http://a.example/ "arch:amd64  priority:10 lang:en" \
     http://b.example/ priority:10 \
     http://c.example/ priority:9)
   make_fixture "$tied"
-  run_as_attempt 2 update
+  run_at_attempt 2 update
   expect "every mirror of the smallest priority is moved after the rest, and the rest of the list kept" \
-    "$(cat "$list")" "$tied_demoted"
+    "$(cat "$mirror_list")" "$tied_demoted"
 
-  # The sources in the one-line format, with a commented-out second list.
+  # The sources in the one-line format, with a second list commented out, and a
+  # third named in a comment after a source.
   make_fixture "$image_contents"
   rm "$etc/sources.list.d/ubuntu.sources"
-  printf '# deb mirror+file:/elsewhere noble main\ndeb mirror+file:%s noble main\n' "$list" > "$etc/sources.list"
-  run_as_attempt 2 update
-  expect "a list named by a .list source is read, and a commented-out one ignored" "$(cat "$list")" "$demoted_contents"
+  printf '  # deb mirror+file:/elsewhere noble main\ndeb mirror+file:%s noble main # mirror+file:/other\n' \
+    "$mirror_list" > "$etc/sources.list"
+  run_at_attempt 2 update
+  expect "a list named by a .list source is read, and the lists in comments ignored" "$(cat "$mirror_list")" \
+    "$demoted_contents"
   make_fixture "$image_contents"
   mv "$etc/sources.list.d/ubuntu.sources" "$etc/sources.list.d/ubuntu.list"
   sed -i.bak 's/^URIs: /deb /' "$etc/sources.list.d/ubuntu.list"
   rm "$etc/sources.list.d/ubuntu.list.bak"
-  run_as_attempt 2 update
-  expect "a list named in sources.list.d/*.list is read" "$(cat "$list")" "$demoted_contents"
+  run_at_attempt 2 update
+  expect "a list named in sources.list.d/*.list is read" "$(cat "$mirror_list")" "$demoted_contents"
 
   # The refusals, on the first attempt and on a later one.
   local number value
   for value in unset "" 0 02 2x -1; do
     make_fixture "$image_contents"
-    list_before=$(cat "$list")
-    run_as_attempt "$value" update
+    mirror_list_before=$(cat "$mirror_list")
+    run_at_attempt "$value" update
     expect_refusal "RETRY_ATTEMPT '$value'" "RETRY_ATTEMPT is"
   done
 
   for number in 1 2; do
     make_fixture "$image_contents"
-    list_before=$(cat "$list")
+    mirror_list_before=$(cat "$mirror_list")
     rm "$etc/sources.list.d/ubuntu.sources"
-    run_as_attempt "$number" update
+    run_at_attempt "$number" update
     expect_refusal "attempt $number with no sources" "name no mirror list"
 
     make_fixture "$image_contents"
-    list_before=$(cat "$list")
+    mirror_list_before=$(cat "$mirror_list")
     sed -i.bak 's/^URIs:/# URIs:/' "$etc/sources.list.d/ubuntu.sources"
-    run_as_attempt "$number" update
+    run_at_attempt "$number" update
     expect_refusal "attempt $number with the source commented out" "name no mirror list"
 
     make_fixture "$image_contents"
-    list_before=$(cat "$list")
+    mirror_list_before=$(cat "$mirror_list")
     printf 'deb mirror+file:%s/other noble main\n' "$etc" > "$etc/sources.list"
-    run_as_attempt "$number" update
+    run_at_attempt "$number" update
     expect_refusal "attempt $number with two lists" "more than one mirror list"
 
     make_fixture "$image_contents"
-    list_before=""
-    rm "$list"
-    run_as_attempt "$number" update
+    mirror_list_before=""
+    rm "$mirror_list"
+    run_at_attempt "$number" update
     expect_refusal "attempt $number with no list" "is not a file"
 
     local bad
     for bad in "http://a.example/" "http://a.example/	arch:amd64" \
                "http://a.example/	priority:1 priority:3" "http://a.example/	priority:high"; do
       make_fixture "$(printf '%s\t%s\n%s\n' http://z.example/ priority:2 "$bad")"
-      list_before=$(cat "$list")
-      run_as_attempt "$number" update
+      mirror_list_before=$(cat "$mirror_list")
+      run_at_attempt "$number" update
       expect_refusal "attempt $number with '$bad'" "line 2 gives its mirror no priority"
     done
 
     make_fixture "$(printf '%s\t%s\n%s\t%s\n' http://a.example/ priority:1 http://b.example/ priority:1)"
-    list_before=$(cat "$list")
-    run_as_attempt "$number" update
+    mirror_list_before=$(cat "$mirror_list")
+    run_at_attempt "$number" update
     expect_refusal "attempt $number with one priority for every mirror" "every mirror has the same priority"
 
     make_fixture "# nothing but a comment"
-    list_before=$(cat "$list")
-    run_as_attempt "$number" update
+    mirror_list_before=$(cat "$mirror_list")
+    run_at_attempt "$number" update
     expect_refusal "attempt $number with no mirror in the list" "it names no mirror"
   done
   return "$fails"
@@ -224,25 +237,27 @@ mutants=(
   'a leading zero accepted'        '^[1-9][0-9]*$'  '^[0-9]+$'
   'never demoted'                  'if ((n in priority) && priority[n] == least) {'  'if (0) {'
   'rewritten on the first attempt' 'if [ "$RETRY_ATTEMPT" -gt 1 ]; then'  'if true; then'
-  'the list not rewritten'         '"$demoted_contents" > "$list"'  '"$demoted_contents" > /dev/null'
-  'the image not kept'             '[ -e "$list.image" ] || cp -p "$list" "$list.image"'  ':'
-  'rewritten from the list'        '[ -e "$image_list" ] || image_list=$list'  'image_list=$list'
+  'the list not rewritten'         '"$demoted_contents" > "$mirror_list"'  '"$demoted_contents" > /dev/null'
+  'the image not kept'             '[ -e "$mirror_list.image" ] || cp -p "$mirror_list" "$mirror_list.image"'  ':'
+  'rewritten from the list'        '[ -e "$image_mirror_list" ] || image_mirror_list=$mirror_list'  'image_mirror_list=$mirror_list'
   'one tied mirror demoted'        'priority[n] == least) {'  'priority[n] == least && !done++) {'
-  'demoted to the largest'         'tags[i] = "priority:" (most + 1)'  'tags[i] = "priority:" most'
+  'demoted to the largest'         '"priority:" (most + 1)'  '"priority:" most'
   'the largest demoted'            'priority[NR] < least) least'  'priority[NR] > least) least'
-  'other tags dropped'             '          if (tags[i] ~ /^priority:/) tags[i]'
-                                   '          if (tags[i] !~ /^priority:/) continue
-          tags[i]'
+  'the tags before dropped'        'substr(tag_text, 2, RSTART - 1)'  '""'
+  'the tags after dropped'         'substr(tag_text, RSTART + RLENGTH)'  '""'
+  'a priority tag first missed'    'tag_text = " " substr'  'tag_text = substr'
   'ties accepted'                  'least == most) problem'  'least == most && 0) problem'
-  'no priority accepted'           'priority_tags != 1 ||'  'priority_tags > 1 ||'
-  'two priorities accepted'        'priority_tags != 1 ||'  'priority_tags == 0 ||'
+  'no priority accepted'           'priority_tag_count != 1 ||'  'priority_tag_count > 1 ||'
+  'two priorities accepted'        'priority_tag_count != 1 ||'  'priority_tag_count == 0 ||'
   'a word accepted as a priority'  'value !~ /^[0-9]+$/'  '0'
-  'an empty list accepted'         'mirrors == 0) problem'  '0) problem'
+  'an empty list accepted'         'mirror_count == 0) problem'  '0) problem'
   'comments read as mirrors'       '/^#/ || $0 == ""'  '$0 == ""'
-  'commented sources read'         "grep -v '^[[:space:]]*#'"  'cat'
+  'commented sources read'         "sed 's/#.*//'"  'cat'
+  'only whole comment lines'       "sed 's/#.*//'"  "grep -v '^#'"
+  'one list named twice refused'   ' | sort -u)'  ')'
   'no list accepted'               '  0) refuse'  '  0) ;; 00) refuse'
   'two lists accepted'             '  *) refuse'  '  *) ;; 00) refuse'
-  'a missing list accepted'        '[ -f "$image_list" ] || refuse'  'true || refuse'
+  'a missing list accepted'        '[ -f "$image_mirror_list" ] || refuse'  'true || refuse'
   '.sources not read'              ' "$etc"/sources.list.d/*.sources'  ''
   '.list not read'                 ' "$etc"/sources.list.d/*.list'  ''
   'sources.list not read'          ' "$etc"/sources.list "$etc"'  ' "$etc"'
@@ -258,7 +273,7 @@ mutations() {
   script=$original
   run_controls > "$tmp/controls.log" 2>&1
   echo "unmutated: $(grep -c '^FAIL' "$tmp/controls.log") controls fail"
-  grep '^FAIL' "$tmp/controls.log" > /dev/null && { cat "$tmp/controls.log"; survivors=1; }
+  grep -q '^FAIL' "$tmp/controls.log" && { cat "$tmp/controls.log"; survivors=1; }
   for ((i = 0; i < ${#mutants[@]}; i += 3)); do
     content=$(cat "$original"; echo x)
     content=${content%x}
