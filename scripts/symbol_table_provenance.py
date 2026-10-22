@@ -15,8 +15,9 @@ A distribution's archive can rebuild a compiler without changing what
 where the record's version may not. The package is the one dpkg says owns
 the executable which the record's path resolves to, which is the file the
 build ran, rather than the package the job asked apt for. Where the path is
-a symlink, the two can differ: on Ubuntu, g++-15 owns /usr/bin/g++-15, a
-symlink to x86_64-linux-gnu-g++-15, which g++-15-x86-64-linux-gnu owns.
+a symlink, the package owning the symlink can differ from the package owning
+the executable: on ubuntu-26.04, g++-15 owns /usr/bin/g++-15, and
+g++-15-x86-64-linux-gnu owns the executable /usr/bin/g++-15 resolves to.
 
 The run is read from the variables GitHub Actions sets in every job:
 GITHUB_SERVER_URL, GITHUB_REPOSITORY, GITHUB_RUN_ID and GITHUB_RUN_ATTEMPT.
