@@ -201,14 +201,14 @@ jobs:
           # takes 22-126 s, so the limits leave room for every retry within the
           # job.
           #
-          # The command retried is scripts/apt_get_with_mirror_fallback.sh. It
-          # runs apt-get, and from the second attempt on, apt fetches from the
-          # image's other mirrors before azure.archive.ubuntu.com, the mirror
-          # the image prefers. On 2026-10-22 that mirror stalled until an
-          # attempt's limit, and the retry stalled on it again (run
-          # 39767016365, its docs job). Within one attempt of another run, apt
-          # turned to archive.ubuntu.com itself, which served 95 MB in 6 s
-          # (run 39772556372, attempt 2, its docs job).
+          # The command retried is scripts/apt_get_with_mirror_fallback.sh, so
+          # that a later attempt fetches from another mirror first. On
+          # 2026-10-22, azure.archive.ubuntu.com, the mirror the image prefers,
+          # stalled until an attempt's limit, and the retry stalled on it again
+          # (run 39767016365, its docs job). In another run, apt turned to
+          # archive.ubuntu.com within one attempt, of its own accord, and
+          # fetched 95 MB from it in 6 s (run 39772556372, attempt 2, its docs
+          # job).
           #
           # Only the download is retried. The install then runs once, from the
           # downloaded packages, with no download. An attempt stopped while
@@ -230,7 +230,8 @@ jobs:
             grep -qFx -- "$pkg" <<< "$names" \
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
-          sudo scripts/retry.sh 3 300 -- scripts/apt_get_with_mirror_fallback.sh install -y --download-only "${packages[@]}"
+          sudo scripts/retry.sh 3 300 -- scripts/apt_get_with_mirror_fallback.sh \
+            install -y --download-only "${packages[@]}"
           sudo apt-get install -y --no-download "${packages[@]}"
           echo "CC=${{ matrix.cc }}"   >> "$GITHUB_ENV"
           echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"

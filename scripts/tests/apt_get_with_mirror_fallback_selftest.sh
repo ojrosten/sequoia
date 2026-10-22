@@ -35,11 +35,11 @@ tmp=$(mktemp -d "${TMPDIR:-/tmp}/apt_get_with_mirror_fallback_selftest.XXXXXX")
 trap 'rm -rf "$tmp"' EXIT
 
 # The hosted images' list, whose lines are separated from their tags by tabs.
-image_list=$(printf '%s\t%s\n' \
+image_contents=$(printf '%s\t%s\n' \
   http://azure.archive.ubuntu.com/ubuntu/ priority:1 \
   https://archive.ubuntu.com/ubuntu/      priority:2 \
   https://security.ubuntu.com/ubuntu/     priority:3)
-demoted_list=$(printf '%s\t%s\n' \
+demoted_contents=$(printf '%s\t%s\n' \
   http://azure.archive.ubuntu.com/ubuntu/ priority:4 \
   https://archive.ubuntu.com/ubuntu/      priority:2 \
   https://security.ubuntu.com/ubuntu/     priority:3)
@@ -66,7 +66,7 @@ has() { # has <claim> <yes|no> <pattern> <file>
 
 # Makes a fresh fixture: an etc directory whose sources name its list in the
 # deb822 format, and the list given.
-fixture() { # fixture <list>
+make_fixture() { # make_fixture <contents of the list>
   rm -rf "$tmp/etc" "$tmp/arguments"
   mkdir -p "$tmp/etc/sources.list.d"
   etc=$tmp/etc
@@ -76,8 +76,8 @@ fixture() { # fixture <list>
     > "$etc/sources.list.d/ubuntu.sources"
 }
 
-# Runs the script under test: attempt <number> <arguments>...
-attempt() {
+# Runs the script under test: run_as_attempt <number> <arguments>...
+run_as_attempt() {
   local number=$1
   shift
   rm -f "$tmp/arguments"
@@ -91,46 +91,46 @@ attempt() {
 
 # A refusal: status 2, an ::error:: containing <message>, apt-get not run, and
 # the list as it was.
-refused() { # refused <claim> <message>
+expect_refusal() { # expect_refusal <claim> <message>
   expect "$1: refused with status 2" "$status" 2
   has "$1: an error names why" yes "^::error::.*$2" "$tmp/out"
   [ -e "$tmp/arguments" ] && fail "$1: apt-get does not run"
-  [ -e "$list" ] && [ "$(cat "$list")" != "$listed" ] && fail "$1: the list is unchanged"
+  [ -e "$list" ] && [ "$(cat "$list")" != "$list_before" ] && fail "$1: the list is unchanged"
 }
 
 run_controls() {
   fails=0
 
-  fixture "$image_list"
-  attempt 1 install -y "two words" ""
+  make_fixture "$image_contents"
+  run_as_attempt 1 install -y "two words" ""
   expect "the first attempt runs apt-get, with status 0" "$status" 0
   expect "apt-get gets the error text option, then the arguments intact" "$(cat "$tmp/arguments" 2> /dev/null)" \
     "$(printf '%s\n' -o Acquire::Progress::Ignore::ShowErrorText=true install -y "two words" "")"
-  expect "the first attempt leaves the list unchanged" "$(cat "$list")" "$image_list"
+  expect "the first attempt leaves the list unchanged" "$(cat "$list")" "$image_contents"
   [ -e "$list.image" ] && fail "the first attempt keeps no copy of the list"
   has "the first attempt prints nothing" no '.' "$tmp/out"
   has "the first attempt writes nothing on standard error" no '.' "$tmp/err"
 
-  attempt 2 update -qq
+  run_as_attempt 2 update -qq
   expect "a later attempt runs apt-get, with status 0" "$status" 0
-  expect "a later attempt gives the preferred mirror the largest priority" "$(cat "$list")" "$demoted_list"
-  expect "a later attempt keeps the image's list" "$(cat "$list.image" 2> /dev/null)" "$image_list"
+  expect "a later attempt gives the preferred mirror the largest priority" "$(cat "$list")" "$demoted_contents"
+  expect "a later attempt keeps the image's list" "$(cat "$list.image" 2> /dev/null)" "$image_contents"
   has "a later attempt says so" yes '^Attempt 2 fetches from the image.s other mirrors first:$' "$tmp/out"
   has "a later attempt prints the list" yes 'azure.archive.ubuntu.com/ubuntu/.priority:4$' "$tmp/out"
   expect "a later attempt passes the arguments" "$(tail -n 1 "$tmp/arguments" 2> /dev/null)" -qq
 
-  attempt 3 update
-  expect "a third attempt writes the same list" "$(cat "$list")" "$demoted_list"
-  expect "a third attempt keeps the image's list" "$(cat "$list.image" 2> /dev/null)" "$image_list"
+  run_as_attempt 3 update
+  expect "a third attempt writes the same list" "$(cat "$list")" "$demoted_contents"
+  expect "a third attempt keeps the image's list" "$(cat "$list.image" 2> /dev/null)" "$image_contents"
 
-  attempt 1 install gdb
-  expect "a later command's first attempt leaves the rewritten list" "$(cat "$list")" "$demoted_list"
-  expect "a later command's first attempt keeps the image's list" "$(cat "$list.image" 2> /dev/null)" "$image_list"
+  run_as_attempt 1 install gdb
+  expect "a later command's first attempt leaves the rewritten list" "$(cat "$list")" "$demoted_contents"
+  expect "a later command's first attempt keeps the image's list" "$(cat "$list.image" 2> /dev/null)" "$image_contents"
 
-  fixture "$image_list"
-  STANDIN_STATUS=100 attempt 1 install gdb
+  make_fixture "$image_contents"
+  STANDIN_STATUS=100 run_as_attempt 1 install gdb
   expect "apt-get's failure is the script's" "$status" 100
-  STANDIN_STATUS=100 attempt 2 install gdb
+  STANDIN_STATUS=100 run_as_attempt 2 install gdb
   expect "apt-get's failure on a later attempt is the script's" "$status" 100
 
   # Two mirrors share the smallest priority; comments, blank lines and other
@@ -144,76 +144,76 @@ run_controls() {
     http://a.example/ "arch:amd64 priority:10 lang:en" \
     http://b.example/ priority:10 \
     http://c.example/ priority:9)
-  fixture "$tied"
-  attempt 2 update
+  make_fixture "$tied"
+  run_as_attempt 2 update
   expect "every mirror of the smallest priority is moved after the rest, and the rest of the list kept" \
     "$(cat "$list")" "$tied_demoted"
 
   # The sources in the one-line format, with a commented-out second list.
-  fixture "$image_list"
+  make_fixture "$image_contents"
   rm "$etc/sources.list.d/ubuntu.sources"
   printf '# deb mirror+file:/elsewhere noble main\ndeb mirror+file:%s noble main\n' "$list" > "$etc/sources.list"
-  attempt 2 update
-  expect "a list named by a .list source is read, and a commented-out one ignored" "$(cat "$list")" "$demoted_list"
-  fixture "$image_list"
+  run_as_attempt 2 update
+  expect "a list named by a .list source is read, and a commented-out one ignored" "$(cat "$list")" "$demoted_contents"
+  make_fixture "$image_contents"
   mv "$etc/sources.list.d/ubuntu.sources" "$etc/sources.list.d/ubuntu.list"
   sed -i.bak 's/^URIs: /deb /' "$etc/sources.list.d/ubuntu.list"
   rm "$etc/sources.list.d/ubuntu.list.bak"
-  attempt 2 update
-  expect "a list named in sources.list.d/*.list is read" "$(cat "$list")" "$demoted_list"
+  run_as_attempt 2 update
+  expect "a list named in sources.list.d/*.list is read" "$(cat "$list")" "$demoted_contents"
 
   # The refusals, on the first attempt and on a later one.
   local number value
   for value in unset "" 0 02 2x -1; do
-    fixture "$image_list"
-    listed=$(cat "$list")
-    attempt "$value" update
-    refused "RETRY_ATTEMPT '$value'" "RETRY_ATTEMPT is"
+    make_fixture "$image_contents"
+    list_before=$(cat "$list")
+    run_as_attempt "$value" update
+    expect_refusal "RETRY_ATTEMPT '$value'" "RETRY_ATTEMPT is"
   done
 
   for number in 1 2; do
-    fixture "$image_list"
-    listed=$(cat "$list")
+    make_fixture "$image_contents"
+    list_before=$(cat "$list")
     rm "$etc/sources.list.d/ubuntu.sources"
-    attempt "$number" update
-    refused "attempt $number with no sources" "name no mirror list"
+    run_as_attempt "$number" update
+    expect_refusal "attempt $number with no sources" "name no mirror list"
 
-    fixture "$image_list"
-    listed=$(cat "$list")
+    make_fixture "$image_contents"
+    list_before=$(cat "$list")
     sed -i.bak 's/^URIs:/# URIs:/' "$etc/sources.list.d/ubuntu.sources"
-    attempt "$number" update
-    refused "attempt $number with the source commented out" "name no mirror list"
+    run_as_attempt "$number" update
+    expect_refusal "attempt $number with the source commented out" "name no mirror list"
 
-    fixture "$image_list"
-    listed=$(cat "$list")
+    make_fixture "$image_contents"
+    list_before=$(cat "$list")
     printf 'deb mirror+file:%s/other noble main\n' "$etc" > "$etc/sources.list"
-    attempt "$number" update
-    refused "attempt $number with two lists" "more than one mirror list"
+    run_as_attempt "$number" update
+    expect_refusal "attempt $number with two lists" "more than one mirror list"
 
-    fixture "$image_list"
-    listed=""
+    make_fixture "$image_contents"
+    list_before=""
     rm "$list"
-    attempt "$number" update
-    refused "attempt $number with no list" "is not a file"
+    run_as_attempt "$number" update
+    expect_refusal "attempt $number with no list" "is not a file"
 
     local bad
     for bad in "http://a.example/" "http://a.example/	arch:amd64" \
                "http://a.example/	priority:1 priority:3" "http://a.example/	priority:high"; do
-      fixture "$(printf '%s\t%s\n%s\n' http://z.example/ priority:2 "$bad")"
-      listed=$(cat "$list")
-      attempt "$number" update
-      refused "attempt $number with '$bad'" "line 2 gives its mirror no priority"
+      make_fixture "$(printf '%s\t%s\n%s\n' http://z.example/ priority:2 "$bad")"
+      list_before=$(cat "$list")
+      run_as_attempt "$number" update
+      expect_refusal "attempt $number with '$bad'" "line 2 gives its mirror no priority"
     done
 
-    fixture "$(printf '%s\t%s\n%s\t%s\n' http://a.example/ priority:1 http://b.example/ priority:1)"
-    listed=$(cat "$list")
-    attempt "$number" update
-    refused "attempt $number with one priority for every mirror" "every mirror has the same priority"
+    make_fixture "$(printf '%s\t%s\n%s\t%s\n' http://a.example/ priority:1 http://b.example/ priority:1)"
+    list_before=$(cat "$list")
+    run_as_attempt "$number" update
+    expect_refusal "attempt $number with one priority for every mirror" "every mirror has the same priority"
 
-    fixture "# nothing but a comment"
-    listed=$(cat "$list")
-    attempt "$number" update
-    refused "attempt $number with no mirror in the list" "it names no mirror"
+    make_fixture "# nothing but a comment"
+    list_before=$(cat "$list")
+    run_as_attempt "$number" update
+    expect_refusal "attempt $number with no mirror in the list" "it names no mirror"
   done
   return "$fails"
 }
@@ -224,24 +224,25 @@ mutants=(
   'a leading zero accepted'        '^[1-9][0-9]*$'  '^[0-9]+$'
   'never demoted'                  'if ((n in priority) && priority[n] == least) {'  'if (0) {'
   'rewritten on the first attempt' 'if [ "$RETRY_ATTEMPT" -gt 1 ]; then'  'if true; then'
-  'the list not rewritten'         'printf '"'"'%s\n'"'"' "$rewritten" > "$list"'  'printf '"'"'%s\n'"'"' "$rewritten" > /dev/null'
+  'the list not rewritten'         '"$demoted_contents" > "$list"'  '"$demoted_contents" > /dev/null'
   'the image not kept'             '[ -e "$list.image" ] || cp -p "$list" "$list.image"'  ':'
-  'rewritten from the list'        '[ -e "$image" ] || image=$list'  'image=$list'
+  'rewritten from the list'        '[ -e "$image_list" ] || image_list=$list'  'image_list=$list'
   'one tied mirror demoted'        'priority[n] == least) {'  'priority[n] == least && !done++) {'
   'demoted to the largest'         'tags[i] = "priority:" (most + 1)'  'tags[i] = "priority:" most'
   'the largest demoted'            'priority[NR] < least) least'  'priority[NR] > least) least'
-  'other tags dropped'             '          if (tags[i] ~ /^priority:/) tags[i]'  '          if (tags[i] !~ /^priority:/) continue
+  'other tags dropped'             '          if (tags[i] ~ /^priority:/) tags[i]'
+                                   '          if (tags[i] !~ /^priority:/) continue
           tags[i]'
   'ties accepted'                  'least == most) problem'  'least == most && 0) problem'
-  'no priority accepted'           'priorities != 1 ||'  'priorities > 1 ||'
-  'two priorities accepted'        'priorities != 1 ||'  'priorities == 0 ||'
+  'no priority accepted'           'priority_tags != 1 ||'  'priority_tags > 1 ||'
+  'two priorities accepted'        'priority_tags != 1 ||'  'priority_tags == 0 ||'
   'a word accepted as a priority'  'value !~ /^[0-9]+$/'  '0'
   'an empty list accepted'         'mirrors == 0) problem'  '0) problem'
   'comments read as mirrors'       '/^#/ || $0 == ""'  '$0 == ""'
   'commented sources read'         "grep -v '^[[:space:]]*#'"  'cat'
   'no list accepted'               '  0) refuse'  '  0) ;; 00) refuse'
   'two lists accepted'             '  *) refuse'  '  *) ;; 00) refuse'
-  'a missing list accepted'        '[ -f "$image" ] || refuse'  'true || refuse'
+  'a missing list accepted'        '[ -f "$image_list" ] || refuse'  'true || refuse'
   '.sources not read'              ' "$etc"/sources.list.d/*.sources'  ''
   '.list not read'                 ' "$etc"/sources.list.d/*.list'  ''
   'sources.list not read'          ' "$etc"/sources.list "$etc"'  ' "$etc"'

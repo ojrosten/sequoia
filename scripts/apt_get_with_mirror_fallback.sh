@@ -1,9 +1,9 @@
 #!/bin/bash
 # Usage: apt_get_with_mirror_fallback.sh <apt-get arguments>...
 #
-# Runs apt-get with the arguments given, as the command scripts/retry.sh
-# retries. From the second attempt on, apt fetches from the image's other
-# mirrors before the mirror the image prefers.
+# Runs apt-get with the arguments given. From the second attempt on, apt
+# fetches from the image's other mirrors before the mirror the image prefers.
+# RETRY_ATTEMPT holds the attempt's number, as set by scripts/retry.sh.
 #
 # The hosted images' apt sources name a list of mirrors with mirror+file:.
 # Each mirror in the list has a priority, and apt fetches every file from the
@@ -14,9 +14,10 @@
 #
 # So when RETRY_ATTEMPT is 2 or more, the script first rewrites the list,
 # giving the mirrors of the smallest priority a priority larger than every
-# other mirror's. The list stays rewritten for the rest of the job, so every
-# later apt command fetches from another mirror first too. The image's list is
-# kept beside the list, as <list>.image, and every rewrite starts from it.
+# other mirror's. The rewritten list stays in place after the script ends, so
+# every later apt command fetches from another mirror first too. The image's
+# list is kept beside the list, as <list>.image, and every rewrite starts from
+# that copy.
 #
 # The script refuses with status 2, before apt-get runs, when it cannot tell
 # which mirror apt prefers, or there is no other mirror:
@@ -25,12 +26,12 @@
 #   - a mirror in the list has no priority, or more than one, or one which is
 #     not a whole number;
 #   - every mirror in the list has the same priority.
-# It checks the list on the first attempt too, so that an image whose list no
-# longer suits it fails the first run, not the next stall.
+# The script checks the list on the first attempt too, so that a change to the
+# image's list fails the first run after the change, not the next stall.
 #
 # apt reports a file it will fetch again with a line beginning Ign:, and says
-# why only when Acquire::Progress::Ignore::ShowErrorText is set; apt-get runs
-# with it set.
+# why only when Acquire::Progress::Ignore::ShowErrorText is set. The script
+# sets that option.
 #
 # APT_ETC replaces /etc/apt, and APT_GET replaces apt-get, for the selftest.
 
@@ -58,23 +59,27 @@ case $(grep -c . <<< "$lists") in
 esac
 
 list=$lists
-image=$list.image
-[ -e "$image" ] || image=$list
-[ -f "$image" ] || refuse "the mirror list $image is not a file"
+image_list=$list.image
+[ -e "$image_list" ] || image_list=$list
+[ -f "$image_list" ] || refuse "the mirror list $image_list is not a file"
 
-# Prints the list with the preferred mirrors' priorities replaced, or names
-# the first line which stops it telling which mirror apt prefers, and fails. A
-# mirror's tags follow its first tab, separated by white space, as apt reads
-# them.
-rewritten=$(awk '
+# Prints the image's list with the preferred mirrors' priorities replaced. If
+# the list does not show which mirror apt prefers, the program prints the
+# reason instead, and fails. A mirror's tags follow its first tab, separated by
+# white space, as read by apt.
+demoted_contents=$(awk '
   /^#/ || $0 == "" { line[NR] = $0; next }
   {
     tab = index($0, "\t")
     count = split(tab ? substr($0, tab + 1) : "", tags, /[[:space:]]+/)
-    priorities = 0
+    priority_tags = 0
     for (i = 1; i <= count; ++i)
-      if (tags[i] ~ /^priority:/) { ++priorities; value = substr(tags[i], 10) }
-    if (priorities != 1 || value !~ /^[0-9]+$/) {
+      if (tags[i] ~ /^priority:/) {
+        ++priority_tags
+        value = tags[i]
+        sub(/^priority:/, "", value)
+      }
+    if (priority_tags != 1 || value !~ /^[0-9]+$/) {
       problem = "line " NR " gives its mirror no priority, or more than one, or one which is not a whole number"
       exit 1
     }
@@ -104,11 +109,11 @@ rewritten=$(awk '
       }
       print line[n]
     }
-  }' "$image") || refuse "the mirror list $image cannot be used: $rewritten"
+  }' "$image_list") || refuse "the mirror list $image_list cannot be used: $demoted_contents"
 
 if [ "$RETRY_ATTEMPT" -gt 1 ]; then
   [ -e "$list.image" ] || cp -p "$list" "$list.image" || refuse "the image's mirror list cannot be kept as $list.image"
-  printf '%s\n' "$rewritten" > "$list" || refuse "the mirror list $list cannot be rewritten"
+  printf '%s\n' "$demoted_contents" > "$list" || refuse "the mirror list $list cannot be rewritten"
   echo "Attempt $RETRY_ATTEMPT fetches from the image's other mirrors first:"
   sed 's/^/  /' "$list"
 fi
