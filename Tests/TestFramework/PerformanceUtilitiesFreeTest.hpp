@@ -36,6 +36,8 @@ namespace sequoia::testing
 
     void test_overlap_multipliers();
 
+    void test_overlap_multiplier_of_each_attempt();
+
     void test_judgement_with_baselines();
 
     void test_shuffled_baselined_task_orders();
