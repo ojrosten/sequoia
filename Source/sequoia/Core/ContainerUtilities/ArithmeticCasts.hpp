@@ -41,8 +41,8 @@ namespace sequoia::utilities
 
   /** \brief Converts `val` to `To`.
 
-      An index offsetting an iterator is a client: any offset valid for the iterator fits its
-      `difference_type`, so for an in-contract call the conversion cannot lose a value.
+      For an index offsetting an iterator, any offset valid for the iterator fits its
+      `difference_type`, so the conversion cannot lose a value in an in-contract call.
 
       \pre `std::in_range<To>(val)`
    */

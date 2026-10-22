@@ -112,6 +112,11 @@ namespace sequoia::testing
     check(equality, "Unchecked: greatest value, widened",                    unchecked_conversion_to<std::int64_t >(std::numeric_limits<std::int32_t> ::   max()      ), std::numeric_limits<std::int64_t >::   max() >> 32);
     check(equality, "Unchecked: greatest value of a narrower unsigned type", unchecked_conversion_to<std::uint32_t>(std::numeric_limits<std::uint64_t>::   max() >> 32), std::numeric_limits<std::uint32_t>::   max()      );
     check(equality, "Unchecked: greatest signed value, from unsigned",       unchecked_conversion_to<std:: int32_t>(std::numeric_limits<std::uint32_t>::   max()  /  2), std::numeric_limits<std::int32_t >::   max()      );
-    check(equality, "Unchecked: greatest ptrdiff_t, from size_t",            unchecked_conversion_to<std::ptrdiff_t>(static_cast<std::size_t>(std::numeric_limits<std::ptrdiff_t>::max())), std::numeric_limits<std::ptrdiff_t>::max());
+    constexpr auto maxDifference{std::numeric_limits<std::ptrdiff_t>::max()};
+
+    check(equality,
+          "Unchecked: greatest ptrdiff_t, from size_t",
+          unchecked_conversion_to<std::ptrdiff_t>(static_cast<std::size_t>(maxDifference)),
+          maxDifference);
   }
 }
