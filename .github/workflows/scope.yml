@@ -82,10 +82,9 @@ jobs:
           # What each check does not read, as git globs. The suite reads nothing
           # under docs/ or coverage_reports/. The script selftests read what the
           # suite reads, and docs/dashboard, whose script one of them controls.
-          # The coverage job reads what the
-          # suite reads, and the baseline of its gate,
-          # coverage_reports/uncalled_functions.txt; the published reports lie
-          # in coverage_reports/'s subdirectories. Doxygen reads Source/ and
+          # The coverage job reads what the suite reads, and the baseline of its
+          # gate, coverage_reports/uncalled_functions.txt; the published reports
+          # lie in coverage_reports/'s subdirectories. Doxygen reads Source/ and
           # Tests/, named by the Doxyfile's INPUT and EXAMPLE_PATH, and
           # docs/config, which holds the Doxyfile and what it includes; its
           # output is docs/html. Should the Doxyfile ever read from docs/html,
