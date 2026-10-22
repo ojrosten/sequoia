@@ -42,8 +42,8 @@ def run(command):
     return r.stdout
 
 
-def owning_package(path):
-    """Returns the one package dpkg says owns `path`."""
+def owner_of(path):
+    """Returns the name of the one package dpkg says owns `path`."""
     # Each line is "<packages>: <path>", the packages separated by ", ". A
     # package's name may carry its architecture after a colon, so the line is
     # split at the path it ends with, not at its first colon. A line
@@ -60,22 +60,22 @@ def owning_package(path):
 
 def package_of(path):
     """Returns the name and version of the package owning `path`."""
-    name = owning_package(path)
+    name = owner_of(path)
     version = run(["dpkg-query", "--show", "--showformat=${Version}", name]).strip()
     if not version:
         sys.exit(f"dpkg-query gives no version for {name}")
     return {"name": name, "version": version}
 
 
-def variable(name):
+def environment_value(name):
     value = os.environ.get(name, "")
     if not value:
         sys.exit(f"{name} is unset or empty: the run is read from GitHub Actions' variables")
     return value
 
 
-def number(name):
-    value = variable(name)
+def environment_number(name):
+    value = environment_value(name)
     if not value.isdecimal():
         sys.exit(f"{name} is {value!r}, not a number")
     return int(value)
@@ -83,8 +83,9 @@ def number(name):
 
 def this_run():
     """Returns the id, the attempt and the attempt's URL of this run."""
-    run_id, attempt = number("GITHUB_RUN_ID"), number("GITHUB_RUN_ATTEMPT")
-    url = f"{variable('GITHUB_SERVER_URL')}/{variable('GITHUB_REPOSITORY')}/actions/runs/{run_id}/attempts/{attempt}"
+    run_id, attempt = environment_number("GITHUB_RUN_ID"), environment_number("GITHUB_RUN_ATTEMPT")
+    repository = f"{environment_value('GITHUB_SERVER_URL')}/{environment_value('GITHUB_REPOSITORY')}"
+    url = f"{repository}/actions/runs/{run_id}/attempts/{attempt}"
     return {"id": run_id, "attempt": attempt, "url": url}
 
 

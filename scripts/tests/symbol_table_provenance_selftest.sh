@@ -45,8 +45,10 @@ mkdir -p "$tmp/bin"
 cat > "$tmp/bin/dpkg-query" <<'EOF'
 #!/bin/bash
 case "$1 ${2-}" in
-  "--search "*)                       cat "$DPKG/search$2" 2> /dev/null || { echo "no path found matching $2" >&2; exit 1; } ;;
-  '--show --showformat=${Version}')   cat "$DPKG/version/$3" 2> /dev/null || { echo "no packages found matching $3" >&2; exit 1; } ;;
+  "--search "*)
+    cat "$DPKG/search$2" 2> /dev/null || { echo "no path found matching $2" >&2; exit 1; } ;;
+  '--show --showformat=${Version}')
+    cat "$DPKG/version/$3" 2> /dev/null || { echo "no packages found matching $3" >&2; exit 1; } ;;
   *) echo "the stand-in for dpkg-query was given: $*" >&2; exit 2 ;;
 esac
 EOF
@@ -123,7 +125,8 @@ record_controls() {
   fixture
   run
   exits "a record is written" 0
-  field "the compiler's package"  'd["toolchain"]["compiler"]["package"]' "{'name': 'g++-15', 'version': '15.2.0-16ubuntu1'}"
+  field "the compiler's package" \
+        'd["toolchain"]["compiler"]["package"]' "{'name': 'g++-15', 'version': '15.2.0-16ubuntu1'}"
   field "the linker's package is its path's owner, not its name" \
         'd["toolchain"]["linker"]["package"]' "{'name': 'binutils-x86-64-linux-gnu', 'version': '2.46-1ubuntu2'}"
   field "nm's package is named with its architecture, and past the diversion" \
@@ -136,7 +139,9 @@ for tool in d["toolchain"].values():
     if isinstance(tool, dict): tool.pop("package")
 print(d == json.load(open(sys.argv[2])))' "$out" "$work/record.json" > "$work/unchanged" 2>&1
   total=$((total+1))
-  if [[ $(cat "$work/unchanged") != True ]]; then fail "nothing else in the record changes ($(cat "$work/unchanged"))"; fi
+  if [[ $(cat "$work/unchanged") != True ]]; then
+    fail "nothing else in the record changes ($(cat "$work/unchanged"))"
+  fi
 }
 
 dpkg_controls() {
@@ -243,7 +248,7 @@ mutant 'split at the first colon'       'line[:-len(suffix)].split(", ")]' 'line
 mutant 'the owners not split'           'line[:-len(suffix)].split(", ")]' '[line[:-len(suffix)]]]'
 mutant 'the first of several owners'    'if len(owners) != 1:' 'if not owners:'
 mutant 'an empty version accepted'      'if not version:' 'if False:'
-mutant 'the package named by the path'  'name = owning_package(path)' 'name = owning_package(path) and os.path.basename(path)'
+mutant 'the package named by the path'  'name = owner_of(path)' 'name = owner_of(path) and os.path.basename(path)'
 mutant 'an empty variable accepted'     'if not value:' 'if value is None:'
 mutant 'any id accepted'                'if not value.isdecimal():' 'if False:'
 mutant 'the attempt left out of the URL' '/actions/runs/{run_id}/attempts/{attempt}"' '/actions/runs/{run_id}"'
@@ -274,7 +279,8 @@ mutations() {
       survivors=$((survivors+1))
       continue
     fi
-    printf '%s' "${content%%"${mutant_text[i]}"*}${mutant_replacement[i]}${content#*"${mutant_text[i]}"}" > "$tmp/mutant.py"
+    printf '%s' "${content%%"${mutant_text[i]}"*}${mutant_replacement[i]}${content#*"${mutant_text[i]}"}" \
+      > "$tmp/mutant.py"
     run_controls "$tmp/mutant.py"
     if ((fails)); then
       echo "${mutant_description[i]}: $fails of $total controls fail"

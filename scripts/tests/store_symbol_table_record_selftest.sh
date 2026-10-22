@@ -74,8 +74,8 @@ B=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 # record <file> <commit> <symbols> <run id> [<clean>]: a record, laid out
 # unlike jq's output, so that a stored copy which jq has rewritten differs
 record() {
-  printf '{"run": {"id": %s, "url": "https://example.invalid/runs/%s"},\n "commit": "%s", "clean": %s,\n "executable": {"symbols": %s}}\n' \
-    "$4" "$4" "$2" "${5:-true}" "$3" > "$1"
+  printf '{"run": {"id": %s, "url": "https://example.invalid/runs/%s"},\n' "$4" "$4" > "$1"
+  printf ' "commit": "%s", "clean": %s,\n "executable": {"symbols": %s}}\n' "$2" "${5:-true}" "$3" >> "$1"
 }
 
 # fixture: a bare remote, the clone the script runs in with one commit of its
@@ -278,12 +278,14 @@ mutant 'the run compared too'          "without_run() { jq -S 'del(.run)'" "with
 mutant 'a differing record accepted'   'if [ "$held" = "$offered" ]; then' 'if true; then'
 mutant 'a differing record overwritten' $'>&2\n    exit 1\n  fi' $'>&2\n  fi'
 mutant 'the tip forgotten'             '${tip:+-p "$tip"}' ''
-mutant 'the tip'"'"'s tree forgotten'  'if [ -n "$tip" ]; then GIT_INDEX_FILE=$index git read-tree' 'if false; then GIT_INDEX_FILE=$index git read-tree'
+mutant 'the tip'"'"'s tree forgotten'  'if [ -n "$tip" ]; then GIT_INDEX_FILE=$index git read-tree' \
+                                       'if false; then GIT_INDEX_FILE=$index git read-tree'
 mutant 'the clone'"'"'s index used'    'GIT_INDEX_FILE=$index git update-index' 'git update-index'
 mutant 'the record rewritten'          'git hash-object -w -- "$record"' 'jq . "$record" | git hash-object -w --stdin'
 mutant 'the push forced'               'git push --quiet "$remote"' 'git push --quiet --force "$remote"'
 mutant 'no retry'                      'attempts=5' 'attempts=1'
-mutant 'the tip read once'             'tip=$(git rev-parse --verify FETCH_HEAD)' 'tip=${fetched:=$(git rev-parse --verify FETCH_HEAD)}'
+mutant 'the tip read once'             'tip=$(git rev-parse --verify FETCH_HEAD)' \
+                                       'tip=${fetched:=$(git rev-parse --verify FETCH_HEAD)}'
 
 mutations() {
   local i content stripped occurrences survivors=0
@@ -301,7 +303,8 @@ mutations() {
       survivors=$((survivors+1))
       continue
     fi
-    printf '%s' "${content%%"${mutant_text[i]}"*}${mutant_replacement[i]}${content#*"${mutant_text[i]}"}" > "$tmp/mutant.sh"
+    printf '%s' "${content%%"${mutant_text[i]}"*}${mutant_replacement[i]}${content#*"${mutant_text[i]}"}" \
+      > "$tmp/mutant.sh"
     run_controls "$tmp/mutant.sh"
     if ((fails)); then
       echo "${mutant_description[i]}: $fails of $total controls fail"

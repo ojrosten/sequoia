@@ -45,16 +45,16 @@ commit=$(jq -r '.commit' "$record") || die "$record cannot be read as JSON"
 path="$directory/$commit.json"
 
 work=$(mktemp -d); trap 'rm -rf "$work"' EXIT
-index="$work/index" stored="$work/stored"
+index="$work/index" held_file="$work/held"
 
-# without_run <file>: the record in <file>, its keys sorted and its run left out
+# without_run <file>: the record in <file>, its keys sorted, without its run
 without_run() { jq -S 'del(.run)' "$1" || die "$1 cannot be read as JSON"; }
 
 # store_once: 0 if the record is stored or already held, 1 if the push was
 # refused; any other failure exits. The function is called as a condition, so
 # set -e does not reach into it, and each command's failure is handled here.
 store_once() {
-  local status=0 tip='' held offered blob tree new
+  local status=0 tip='' held offered blob tree new_tip
   git ls-remote --exit-code --heads "$remote" "refs/heads/$branch" > /dev/null || status=$?
   case $status in
     0) git fetch --quiet --no-tags "$remote" "refs/heads/$branch" || die "git fetch $remote $branch failed"
@@ -64,11 +64,11 @@ store_once() {
   esac
 
   if [ -n "$tip" ] && git cat-file -e "$tip:$path" 2> /dev/null; then
-    git show "$tip:$path" > "$stored" || die "git show $tip:$path failed"
-    held=$(without_run "$stored") || exit 1
+    git show "$tip:$path" > "$held_file" || die "git show $tip:$path failed"
+    held=$(without_run "$held_file") || exit 1
     offered=$(without_run "$record") || exit 1
     if [ "$held" = "$offered" ]; then
-      echo "$branch already holds $path, the same but for its run: $(jq -r '.run.url' "$stored")"
+      echo "$branch already holds $path, the same but for its run: $(jq -r '.run.url' "$held_file")"
       return 0
     fi
     echo "$branch already holds $path, and it differs from $record other than in its run:" >&2
@@ -81,10 +81,10 @@ store_once() {
   blob=$(git hash-object -w -- "$record") || die "git hash-object $record failed"
   GIT_INDEX_FILE=$index git update-index --add --cacheinfo "100644,$blob,$path" || die "git update-index failed"
   tree=$(GIT_INDEX_FILE=$index git write-tree) || die "git write-tree failed"
-  new=$(git -c user.name="sequoia CI" -c user.email=ci@example.invalid commit-tree "$tree" ${tip:+-p "$tip"} \
+  new_tip=$(git -c user.name="sequoia CI" -c user.email=ci@example.invalid commit-tree "$tree" ${tip:+-p "$tip"} \
           -m "$path" -m "Recorded by $(jq -r '.run.url // "no run"' "$record")") || die "git commit-tree failed"
-  if git push --quiet "$remote" "$new:refs/heads/$branch"; then
-    echo "Stored $path on $branch as $new"
+  if git push --quiet "$remote" "$new_tip:refs/heads/$branch"; then
+    echo "Stored $path on $branch as $new_tip"
     return 0
   fi
   return 1

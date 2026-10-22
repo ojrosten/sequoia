@@ -107,12 +107,13 @@ jobs:
       # broken rather than untidy. The gates refuse warnings outright.
       warnings_as_errors: false
       exec_args: '--check-versioned-output'
-      # The Linux column records its symbol table: removing SEQUOIA_FORCE_INLINE
-      # from erased_target's constructor added 12,982 symbols (+1.91%) to its
-      # TestAll on 2026-10-21, so this column sees a regression of that size.
+      # The Linux column records its symbol table. Removing
+      # SEQUOIA_FORCE_INLINE from erased_target's constructor added 12,982
+      # symbols (+1.91%) to its TestAll on 2026-10-21, so this column sees a
+      # regression of that size.
       columns: >-
         [
-          {"name": "Linux · GCC · Debug",   "os": "ubuntu-26.04",   "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15", "symbol_table": "linux-gcc-debug"},
+          {"name": "Linux · GCC · Debug",   "os": "ubuntu-26.04",   "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15", "records_symbol_table_as": "linux-gcc-debug"},
           {"name": "macOS · Clang · Debug", "os": "macos-latest",   "configure": "llvm-env", "build": "llvm-env", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc-ninja", "build": "msvc-ninja", "exec_args": "--check-versioned-output"}
         ]
@@ -136,12 +137,13 @@ jobs:
       needs_testing: ${{ needs.scope.outputs.suite }}
 
   # The symbol-table records of a run on staging, stored on the data branch
-  # `metrics`, one file per column and commit:
-  # symbol-table/<the column's symbol_table>/<commit>.json. The branch holds
-  # the history of each column's symbol table, which no artifact could, since
-  # artifacts expire. scripts/store_symbol_table_record.sh says what is done
-  # when the branch already holds a record for the commit, and how a push
-  # which another run beat is retried.
+  # `metrics`, one file per column and commit, at
+  # symbol-table/<the column's records_symbol_table_as>/<commit>.json.
+  # The branch holds the history of each column's symbol table, which no
+  # artifact could, since artifacts expire.
+  # scripts/store_symbol_table_record.sh says what is done when the branch
+  # already holds a record for the commit, and how a push which another run
+  # beat is retried.
   #
   # The job runs on every branch, so that the audit can require its success
   # everywhere; on a branch other than staging, it stores nothing. It runs
@@ -149,8 +151,9 @@ jobs:
   # a failing suite does not change. A run on staging which finds no record
   # fails, since the column which should have made one did not.
   #
-  # The job alone may write to the repository's contents, to push to the data
-  # branch.
+  # The job asks for `contents: write`, which pushing to the data branch
+  # needs, so that it keeps working if the repository's default token becomes
+  # read-only.
   symbol-table:
     name: Store the symbol-table records
     needs: coarse
@@ -160,27 +163,27 @@ jobs:
     permissions:
       contents: write
     env:
-      STORE: ${{ github.ref == 'refs/heads/staging' }}
+      STORES_RECORDS: ${{ github.ref == 'refs/heads/staging' }}
       DATA_BRANCH: metrics
     steps:
       - name: Nothing to store
-        if: env.STORE != 'true'
+        if: env.STORES_RECORDS != 'true'
         run: echo "Only a run on staging stores its records; this run is on $GITHUB_REF."
 
       - uses: actions/checkout@v7
-        if: env.STORE == 'true'
+        if: env.STORES_RECORDS == 'true'
         with:
           fetch-depth: 1
           sparse-checkout: scripts
 
       - uses: actions/download-artifact@v7
-        if: env.STORE == 'true'
+        if: env.STORES_RECORDS == 'true'
         with:
           pattern: symbol-table-*
           path: ${{ runner.temp }}/records
 
       - name: Store each record on the data branch
-        if: env.STORE == 'true'
+        if: env.STORES_RECORDS == 'true'
         run: |
           shopt -s nullglob
           records=("$RUNNER_TEMP"/records/symbol-table-*/record.json)
@@ -188,8 +191,8 @@ jobs:
             echo "::error::This run made no symbol-table record"; exit 1
           fi
           for record in "${records[@]}"; do
-            column=$(basename "$(dirname "$record")")
-            scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" "symbol-table/${column#symbol-table-}" "$record"
+            artifact=$(basename "$(dirname "$record")")
+            scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" "symbol-table/${artifact#symbol-table-}" "$record"
           done
 
   # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
