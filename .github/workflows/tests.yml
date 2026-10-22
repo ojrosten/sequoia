@@ -13,7 +13,7 @@ on:
   workflow_call:
     inputs:
       columns:
-        description: 'A JSON array of matrix entries. Each has name, os, configure and build. It has cc and cxx where the preset reads the compiler from the environment, and pkg where the apt package holding the compiler is named differently from the binary, as clang holds clang++. exec_args, repeat_args and advisory are optional, and a comment at the step that reads each describes it.'
+        description: 'A JSON array of matrix entries. Each has name, os, configure and build. It has cc and cxx where the preset reads the compiler from the environment, and pkg where the apt package holding the compiler is named differently from the binary, as clang holds clang++. exec_args, repeat_args, advisory and symbol_table are optional, and a comment at the step that reads each describes it.'
         required: true
         type: string
       exec_args:
@@ -495,6 +495,34 @@ jobs:
         if: inputs.needs_testing == 'true'
         working-directory: TestAll
         run: cmake --build --preset ${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/build.log"
+
+      # A column naming `symbol_table` records the symbol table of the TestAll
+      # it has just built, as a JSON record kept in an artifact. coarse.yml
+      # stores the record of each run on staging; a run elsewhere keeps the
+      # artifact alone, as the record of a pull request's head.
+      #
+      # The record is made before the suite runs, while the tree is the
+      # commit's: a run can write files into the tree, and the record would
+      # then call the tree unclean. A failure here is the column's, since a
+      # build the script cannot read is itself a defect. The step takes about
+      # 12 s on the Linux column.
+      - name: Record the symbol table
+        if: inputs.needs_testing == 'true' && matrix.symbol_table
+        run: |
+          mkdir "$RUNNER_TEMP/symbol-table"
+          python3 -B scripts/symbol_table_report.py "build/TestAll/${{ matrix.configure }}" TestAll \
+            > "$RUNNER_TEMP/report.json"
+          python3 -B scripts/symbol_table_provenance.py "$RUNNER_TEMP/report.json" \
+            > "$RUNNER_TEMP/symbol-table/record.json"
+          jq -c '{commit, clean, executable, toolchain}' "$RUNNER_TEMP/symbol-table/record.json"
+
+      - name: Upload the symbol table's record
+        if: inputs.needs_testing == 'true' && matrix.symbol_table
+        uses: actions/upload-artifact@v7
+        with:
+          name: symbol-table-${{ matrix.symbol_table }}
+          path: ${{ runner.temp }}/symbol-table/record.json
+          if-no-files-found: error
 
       # macOS writes a crash report itself, and reads the executable's debug
       # information to name each frame's source line. "Report any crash" waits

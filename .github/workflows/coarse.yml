@@ -13,6 +13,9 @@ name: coarse
 # stays: a merge into it can produce a tree nothing has tested, since "require
 # branches up to date" is deliberately off.
 #
+# Nor metrics, which holds the symbol-table records the symbol-table job
+# stores, and no source.
+#
 # Windows is here rather than only in the gates because clang and gcc agreeing is
 # weak evidence about MSVC. macOS joined on 2026-09-11, when work started arriving
 # from a Windows machine as well as the Mac: "we develop on the Mac" had been the
@@ -68,14 +71,22 @@ on:
   push:
     branches-ignore:
       - main
+      - metrics
   workflow_dispatch:
 
 # A push to a branch that already has a run in flight cancels that run: it
 # answers a question nobody is asking any more, and Windows runners are scarce.
 # Runs on different branches never share a group; a dispatch on a branch shares
 # the branch's group, and tests the same head.
+#
+# A run on staging is the exception: each gets a group of its own, so nothing
+# cancels it. Each run on staging stores its commit's symbol-table record (the
+# symbol-table job), and a cancelled run stores none. Before the exception, 27
+# of the 100 pushes to staging from 2026-10-06 to 2026-10-22 had their run
+# cancelled. In 8 of the 11 such runs checked, the Linux column had not yet
+# finished.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/staging' && github.run_id || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -96,9 +107,12 @@ jobs:
       # broken rather than untidy. The gates refuse warnings outright.
       warnings_as_errors: false
       exec_args: '--check-versioned-output'
+      # The Linux column records its symbol table: removing SEQUOIA_FORCE_INLINE
+      # from erased_target's constructor added 12,982 symbols (+1.91%) to its
+      # TestAll on 2026-10-21, so this column sees a regression of that size.
       columns: >-
         [
-          {"name": "Linux · GCC · Debug",   "os": "ubuntu-26.04",   "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Linux · GCC · Debug",   "os": "ubuntu-26.04",   "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15", "symbol_table": "linux-gcc-debug"},
           {"name": "macOS · Clang · Debug", "os": "macos-latest",   "configure": "llvm-env", "build": "llvm-env", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc-ninja", "build": "msvc-ninja", "exec_args": "--check-versioned-output"}
         ]
@@ -121,6 +135,63 @@ jobs:
     with:
       needs_testing: ${{ needs.scope.outputs.suite }}
 
+  # The symbol-table records of a run on staging, stored on the data branch
+  # `metrics`, one file per column and commit:
+  # symbol-table/<the column's symbol_table>/<commit>.json. The branch holds
+  # the history of each column's symbol table, which no artifact could, since
+  # artifacts expire. scripts/store_symbol_table_record.sh says what is done
+  # when the branch already holds a record for the commit, and how a push
+  # which another run beat is retried.
+  #
+  # The job runs on every branch, so that the audit can require its success
+  # everywhere; on a branch other than staging, it stores nothing. It runs
+  # whatever the columns' outcome, since a record describes the build, which
+  # a failing suite does not change. A run on staging which finds no record
+  # fails, since the column which should have made one did not.
+  #
+  # The job alone may write to the repository's contents, to push to the data
+  # branch.
+  symbol-table:
+    name: Store the symbol-table records
+    needs: coarse
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      STORE: ${{ github.ref == 'refs/heads/staging' }}
+      DATA_BRANCH: metrics
+    steps:
+      - name: Nothing to store
+        if: env.STORE != 'true'
+        run: echo "Only a run on staging stores its records; this run is on $GITHUB_REF."
+
+      - uses: actions/checkout@v7
+        if: env.STORE == 'true'
+        with:
+          fetch-depth: 1
+          sparse-checkout: scripts
+
+      - uses: actions/download-artifact@v7
+        if: env.STORE == 'true'
+        with:
+          pattern: symbol-table-*
+          path: ${{ runner.temp }}/records
+
+      - name: Store each record on the data branch
+        if: env.STORE == 'true'
+        run: |
+          shopt -s nullglob
+          records=("$RUNNER_TEMP"/records/symbol-table-*/record.json)
+          if [ ${#records[@]} -eq 0 ]; then
+            echo "::error::This run made no symbol-table record"; exit 1
+          fi
+          for record in "${records[@]}"; do
+            column=$(basename "$(dirname "$record")")
+            scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" "symbol-table/${column#symbol-table-}" "$record"
+          done
+
   # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
   # as one that passed; `needs` reports `skipped` where the tick shows green.
   # Staging requires this job and none of the others, so a job missing from this
@@ -132,7 +203,7 @@ jobs:
   # an earlier step fails, so each reports independently.
   audit:
     name: Every job ran
-    needs: [scope, coarse, docs, selftests]
+    needs: [scope, coarse, docs, selftests, symbol-table]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
