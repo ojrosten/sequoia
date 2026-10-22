@@ -14,11 +14,6 @@
 
 namespace sequoia::testing
 {
-  namespace
-  {
-    constexpr std::chrono::milliseconds unit_duration{2};
-  }
-
   [[nodiscard]]
   std::filesystem::path performance_exceptions_test::source_file()
   {
@@ -155,17 +150,23 @@ namespace sequoia::testing
 
   void performance_exceptions_test::test_throwing_task()
   {
+    using namespace std::chrono_literals;
+
     scripted_clock clock{};
 
-    // The tasks which do not throw advance the clock, so that a trial which
-    // reached its judgement would find every timed duration positive, and
-    // would not throw std::runtime_error itself.
-    auto advancingTask{[&clock]() { clock.advance(unit_duration); }};
+    // Every task advances the clock, the throwing ones before they throw. So
+    // were a task's exception lost, no task would time as zero, and the
+    // framework would throw no std::runtime_error of its own for these checks
+    // to mistake for the task's.
+    auto advancingTask{[&clock]() { clock.advance(2ms); }};
 
     auto checkWithThrowingFastTask{
       [this, &clock, advancingTask]() {
         return check_relative_performance("Relative performance with a throwing task",
-                                          []() { throw std::runtime_error{"Fast task failure"}; },
+                                          [&clock]() {
+                                            clock.advance(2ms);
+                                            throw std::runtime_error{"Fast task failure"};
+                                          },
                                           advancingTask,
                                           {.prediction{.lower{2.0}, .upper{3.0}}},
                                           clock);
@@ -179,8 +180,11 @@ namespace sequoia::testing
         return check_relative_performance(
           "Relative performance with a throwing baseline",
           task_with_baseline{.task = advancingTask, .baseline = advancingTask},
-          task_with_baseline{.task = advancingTask,
-                             .baseline = []() { throw std::runtime_error{"Slow baseline failure"}; }},
+          task_with_baseline{.task     = advancingTask,
+                             .baseline = [&clock]() {
+                                           clock.advance(2ms);
+                                           throw std::runtime_error{"Slow baseline failure"};
+                                         }},
           {.prediction{.lower{2.0}, .upper{3.0}}},
           clock
         );
