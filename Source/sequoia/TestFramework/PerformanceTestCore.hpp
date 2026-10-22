@@ -656,13 +656,11 @@ namespace sequoia::testing
 
       \returns
       -# `referenceOutput`, if `text_with_zeroed_measurements` gives the same
-         result for it as for `testOutput`, each given `attemptCountStability`;
+         result for it as for `testOutput`;
       -# `testOutput`, otherwise.
    */
   [[nodiscard]]
-  std::string_view postprocess(std::string_view testOutput,
-                               std::string_view referenceOutput,
-                               attempt_count_stability attemptCountStability);
+  std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);
 
   /**\brief class template from which all concrete tests should derive */
 

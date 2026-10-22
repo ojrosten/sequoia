@@ -20,9 +20,7 @@ namespace sequoia::testing
              to zero.
 
       Measurements and summary lines are as defined by
-      `text_with_zeroed_measurements`. The number of trials and the attempt
-      are among the values set to zero, since they can differ from run to
-      run.
+      `text_with_zeroed_measurements`.
    */
   [[nodiscard]]
   std::string instability_projection(std::string_view message);
