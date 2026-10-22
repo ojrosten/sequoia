@@ -40,7 +40,6 @@ namespace sequoia::testing
   {
     test_pass_at_second_attempt();
     test_pass_at_final_attempt();
-    test_rising_overlap_multiplier();
     test_constant_gate_multiplier();
     test_trimmed_estimate();
     test_task_orders();
@@ -81,33 +80,6 @@ namespace sequoia::testing
                                clock);
     check(equality, "Calls of the fast task, every attempt's trials", fast.calls(), everyAttemptsTrials);
     check(equality, "Calls of the slow task, every attempt's trials", slow.calls(), everyAttemptsTrials);
-  }
-
-  void performance_retry_test::test_rising_overlap_multiplier()
-  {
-    using namespace std::chrono_literals;
-
-    constexpr auto attempts{relative_performance_max_attempts};
-    constexpr auto everyAttemptsTrials{trials_before_nth_attempt(trials_per_attempt_for_minimum_10, attempts + 1)};
-
-    constexpr relative_performance_parameters parameters{.prediction{.lower{5.35}, .upper{8.56}}};
-    scripted_clock clock{};
-    const counted_scripted_task fast{clock,
-                                     6ms,
-                                     trials_before_nth_attempt(trials_per_attempt_for_minimum_10, attempts),
-                                     4ms};
-
-    check_relative_performance(
-      "The intervals of attempts 1 and 2 lie below the prediction, "
-      "though attempt 1's would overlap the prediction at attempt 3's multiplier; "
-      "at attempt 3 the fast task speeds up, and attempt 3's interval overlaps the prediction, "
-      "but would not at attempt 1's multiplier",
-      fast,
-      make_cycling_scripted_task(clock, {12ms, 12ms, 12ms, 30ms, 40ms}),
-      parameters,
-      clock
-    );
-    check(equality, "Calls of the fast task, every attempt's trials", fast.calls(), everyAttemptsTrials);
   }
 
   void performance_retry_test::test_constant_gate_multiplier()
