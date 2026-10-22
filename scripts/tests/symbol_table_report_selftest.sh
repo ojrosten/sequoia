@@ -37,7 +37,10 @@
 #     for which nm lists nothing, are each an error;
 #   - so are an empty selection of objects, an object ninja's compilation
 #     database does not know, a source outside the repository, two objects
-#     from one source, and a failure of ninja, nm or git.
+#     from one source, and a failure of ninja, nm or git;
+#   - an entry of CMakeCache.txt is a line NAME:TYPE=VALUE, and an entry of
+#     a compiler record is an unindented line set(NAME "VALUE"). A value is
+#     read whole, and no other line is an entry.
 #
 # A control which checks that something is absent also checks that the run
 # succeeded, and that something beside it is present.
@@ -480,6 +483,14 @@ EOF
   sed -i.bak "s|^CMAKE_NM:FILEPATH=.*|CMAKE_NM:FILEPATH=$work/silent-nm|" "$build/CMakeCache.txt"
   run "$build" TestAll
   refuses "an nm which prints no version" 'prints no version'
+  cat > "$work/silent-nm" <<EOF
+#!/bin/sh
+[ "\$1" = --version ] && { printf 'nm\302\262\nnm 9.9\n'; exit 0; }
+exec $nm_path "\$@"
+EOF
+  run "$build" TestAll
+  exits "a record is written from an nm whose first line holds a superscript" 0
+  field "a superscript is no digit of a version" 'd["toolchain"]["nm"]["version"]' 'nm 9.9'
 
   # An nm which lists one more name, holding a form feed. Python's
   # splitlines would split the name there; nm ends a name only at a newline.
@@ -501,6 +512,80 @@ EOF
   rm -rf "$repo/.git"
   GIT_CEILING_DIRECTORIES=$work run "$build" TestAll
   refuses "a source directory outside a repository" 'git -C .* rev-parse --show-toplevel failed'
+}
+
+# The entries -----------------------------------------------------------------
+
+# module_value <name> <expression> <expected>: the python <expression>, over
+# subject, the script imported as a module, prints <expected>
+module_value() {
+  local got
+  total=$((total+1))
+  got=$(python3 -B -c 'import importlib.util, sys
+spec = importlib.util.spec_from_file_location("subject", sys.argv[1])
+subject = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(subject)
+print(eval(sys.argv[2]))' "$subject" "$2" 2>&1)
+  if [[ $got != "$3" ]]; then fail "$1 (expected $3, got $got)"; fi
+}
+
+# These controls read the entries directly, whatever their names. Every name
+# the script looks up starts with a letter, so a line such as
+# 9PROBE:STRING=digit would change no record if it were taken for an entry.
+entry_controls() {
+  mkdir -p "$work/cache"
+  cat > "$work/cache/CMakeCache.txt" <<'EOF'
+# PROBE_HASH:STRING=comment
+//PROBE_SLASH:STRING=comment
+
+ PROBE_INDENTED:STRING=indented
+9PROBE:STRING=digit
+PROBE_LOWER:string=lower-case type
+PROBE_NO_TYPE:=no type
+PROBE_NO_VALUE:STRING
+PROBE_COLONS:IN:STRING=colon in the name
+PROBE_FLAGS:STRING=-DA=1 -DB:2 -C=
+PROBE_EMPTY:STRING=
+PROBE_COMPILER-ADVANCED:INTERNAL=1
+_PROBE_UNDERSCORE:BOOL=ON
+ÉPROBE:STRING=accented initial
+PROBE_GREEK:ΑΒΓ=Greek type
+EOF
+  module_value "a cache's entries, values whole" "sorted(subject.read_cache('$work/cache').items())" \
+    "[('PROBE_COMPILER-ADVANCED', '1'), ('PROBE_EMPTY', ''), ('PROBE_FLAGS', '-DA=1 -DB:2 -C='), \
+('_PROBE_UNDERSCORE', 'ON')]"
+
+  repo="$work/repo"; mkdir -p "$repo/Tests" "$repo/TestAll"
+  { compiler_record; cat <<'EOF'
+set(PROBE_KEPT "a b;c")
+set(PROBE_EMPTY "")
+set(_PROBE_PAREN "a)")
+set(PROBE_UNQUOTED 1)
+set(9PROBE "digit")
+set(PROBE-DASH "dash")
+set(PROBE SPACE "space")
+set(PROBE_QUOTE "a"b")
+set(PROBE_TWO "a" "b")
+set(PROBE_UNCLOSED "a
+PROBE_NO_SET "a")
+SET(PROBE_UPPER "a")
+  set(PROBE_INDENTED "a")
+# set(PROBE_COMMENTED "a")
+set(PROBE_TRAILING "a") # comment
+set(PROBE_LINES "a
+b")
+set(PROBE_NO_SPACE")
+set(PROBE_UNCLOSED_QUOTE "a b)
+set( "empty name")
+set(ÉPROBE "accented initial")
+set(PROBE_É "accented")
+EOF
+  printf 'set(PROBE_FORM_FEED "a\fb")\n'
+  } > "$work/record.cmake"
+  module_value "a compiler record's entries, unindented lines whole" \
+    "sorted(e for e in subject.read_compiler_record('$work/record.cmake').items() if 'PROBE' in e[0])" \
+    "[('PROBE_EMPTY', ''), ('PROBE_FORM_FEED', 'a\x0cb'), ('PROBE_KEPT', 'a b;c'), ('PROBE_É', 'accented'), \
+('_PROBE_PAREN', 'a)')]"
 }
 
 # The checkout's path ---------------------------------------------------------
@@ -538,7 +623,8 @@ checkout_path_controls() {
 run_controls() { # run_controls <script>: sets fails, and total, the controls run
   subject=$1 fails=0 total=0
   local control
-  for control in record_controls checkout_path_controls record_selection_controls object_controls tool_controls; do
+  for control in record_controls checkout_path_controls record_selection_controls object_controls tool_controls \
+                 entry_controls; do
     work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
     "$control"
   done
@@ -611,7 +697,40 @@ MUTATIONS = [
     ('debugging symbols listed',         'listed = symbols(nm, executable)', 'listed = symbols(nm, executable, "-a")'),
     ('the defined names alone summed',   'for name in listed)},',
                                          'for name in symbols(nm, executable, "--defined-only"))},'),
-    ('the nm version from the first line', 'if re.search(r"\\d", line)]', 'if line]'),
+    ('the nm version from the first line', 'if any(c.isdecimal() for c in line)]', 'if line]'),
+    ('a superscript taken for a digit',  'c.isdecimal()', 'c.isdigit()'),
+    ('a cache name cut at its last colon', 'line.partition(":")', 'line.rpartition(":")'),
+    ('a cache value cut at its last equals sign', 'rest.partition("=")', 'rest.rpartition("=")'),
+    ('a cache line without an equals sign', 'in NAME_INITIAL_CHARACTERS and equals_sign\n',
+                                         'in NAME_INITIAL_CHARACTERS\n'),
+    ('a cache entry of any type',        ' and all(c in string.ascii_uppercase for c in entry_type)', ''),
+    ('a cache type of any script',       'all(c in string.ascii_uppercase for c in entry_type)',
+                                         'entry_type.isupper()'),
+    ('a cache name starting anyhow',     'if (name and name[0] in NAME_INITIAL_CHARACTERS and equals_sign',
+                                         'if (name and equals_sign'),
+    ('a cache name starting with a letter of any script',
+                                         'name[0] in NAME_INITIAL_CHARACTERS and equals_sign',
+                                         '(name[0].isalpha() or name[0] == "_") and equals_sign'),
+    ('a record line not starting set(',  'if not (line.startswith("set(") and line.endswith(\'")\')):',
+                                         'if not line.endswith(\'")\'):'),
+    ('a record line not ending ")',      'if not (line.startswith("set(") and line.endswith(\'")\')):',
+                                         'if not line.startswith("set("):'),
+    ('a record line ending in any )',    'line.endswith(\'")\')):', 'line.endswith(\')\')):'),
+    ('a record line without its separator', 'if (separator and name and', 'if (name and'),
+    ('an empty record name',             'separator and name and name[0]', 'separator and name[0]'),
+    ('a record name starting anyhow',    'if (separator and name and name[0] in NAME_INITIAL_CHARACTERS\n',
+                                         'if (separator and name\n'),
+    ('a record name starting with a letter of any script',
+                                         'name and name[0] in NAME_INITIAL_CHARACTERS\n',
+                                         'name and (name[0].isalpha() or name[0] == "_")\n'),
+    ('a record name of any characters',  'and all(c.isalnum() or c == "_" for c in name) and', 'and'),
+    ('a record name of ASCII characters', 'c.isalnum() or c == "_"', 'c.isascii() and c.isalnum() or c == "_"'),
+    ('a quote within a record value',    ' and \'"\' not in value):', '):'),
+    ('a record split at every line separator', 'text.split("\\n")', 'text.splitlines()'),
+    ('a record searched as the regex did',
+                                         'dict(filter(None, map(entry_of_record_line, text.split("\\n"))))',
+                                         '{m["name"]: m["value"] for m in __import__("re").finditer('
+                                         'r\'set\\((?P<name>[A-Za-z_]\\w*) "(?P<value>[^"]*)"\\)\', text)}'),
     ('no nm version accepted',           'if not lines:\n        sys.exit(f"{nm} --version',
                                          'if False:\n        sys.exit(f"{nm} --version'),
     ('a dirty tree called clean',        '"clean": run(["git", "-C", root, "status", "--porcelain", '

@@ -59,13 +59,11 @@ The script refuses, rather than write a record which may be wrong, if
     named relative to the repository.
 Windows executables are not supported.
 """
-import argparse, concurrent.futures, json, os, re, subprocess, sys
+import argparse, concurrent.futures, json, os, string, subprocess, sys
 
-# An entry of CMakeCache.txt: NAME:TYPE=VALUE.
-CACHE_ENTRY = re.compile(r"(?P<name>[A-Za-z_][^:]*):(?P<type>[A-Z]+)=(?P<value>.*)")
-
-# An entry of a compiler record: set(NAME "VALUE").
-RECORD_ENTRY = re.compile(r'set\((?P<name>[A-Za-z_]\w*) "(?P<value>[^"]*)"\)')
+# The characters which may start the name of an entry of CMakeCache.txt or
+# of a compiler record.
+NAME_INITIAL_CHARACTERS = string.ascii_letters + "_"
 
 # The C++ standard libraries, keyed by their names in a compiler record's
 # CMAKE_CXX_IMPLICIT_LINK_LIBRARIES.
@@ -95,6 +93,40 @@ def run(command):
     return r.stdout
 
 
+def entry_of_cache_line(line):
+    """Returns the name and value of `line`, an entry of CMakeCache.txt.
+
+    An entry is NAME:TYPE=VALUE. The name runs to the first colon, and
+    starts with an ASCII letter or an underscore. The type runs from that
+    colon to the next equals sign, and is ASCII upper-case letters. The
+    value is the rest of the line. For any other line, returns None.
+    """
+    name, _, rest = line.partition(":")
+    entry_type, equals_sign, value = rest.partition("=")
+    if (name and name[0] in NAME_INITIAL_CHARACTERS and equals_sign
+            and entry_type and all(c in string.ascii_uppercase for c in entry_type)):
+        return name, value
+    return None
+
+
+def entry_of_record_line(line):
+    """Returns the name and value of `line`, an entry of a compiler record.
+
+    An entry is set(NAME "VALUE"), alone on its line and unindented: an
+    indented one lies within a condition. The name starts with an ASCII
+    letter or an underscore, which letters, digits and underscores of any
+    script follow. The value holds no quote. For any other line, returns
+    None.
+    """
+    if not (line.startswith("set(") and line.endswith('")')):
+        return None
+    name, separator, value = line.removeprefix("set(").removesuffix('")').partition(' "')
+    if (separator and name and name[0] in NAME_INITIAL_CHARACTERS
+            and all(c.isalnum() or c == "_" for c in name) and '"' not in value):
+        return name, value
+    return None
+
+
 def read_cache(build_dir):
     """Returns the entries of the build directory's CMakeCache.txt, by name."""
     path = os.path.join(build_dir, "CMakeCache.txt")
@@ -103,7 +135,7 @@ def read_cache(build_dir):
             lines = f.read().splitlines()
     except (OSError, UnicodeDecodeError) as e:
         sys.exit(f"{path} cannot be read: {e}")
-    return {m["name"]: m["value"] for m in map(CACHE_ENTRY.fullmatch, lines) if m}
+    return dict(filter(None, map(entry_of_cache_line, lines)))
 
 
 def entry(entries, name, file_name):
@@ -147,7 +179,7 @@ def read_compiler_record(path):
             text = f.read()
     except (OSError, UnicodeDecodeError) as e:
         sys.exit(f"{path} cannot be read: {e}")
-    record = {m["name"]: m["value"] for m in RECORD_ENTRY.finditer(text)}
+    record = dict(filter(None, map(entry_of_record_line, text.split("\n"))))
     for name in ("CMAKE_CXX_COMPILER", "CMAKE_CXX_COMPILER_ID", "CMAKE_CXX_COMPILER_VERSION",
                  "CMAKE_CXX_COMPILER_LINKER", "CMAKE_CXX_COMPILER_LINKER_ID",
                  "CMAKE_CXX_COMPILER_LINKER_VERSION", "CMAKE_CXX_IMPLICIT_LINK_LIBRARIES",
@@ -192,7 +224,8 @@ def nm_version(nm):
     llvm-nm's first line is "llvm-nm, compatible with GNU nm", and its
     version follows on a later line.
     """
-    lines = [line for line in run([nm, "--version"]).splitlines() if re.search(r"\d", line)]
+    lines = [line for line in run([nm, "--version"]).splitlines()
+             if any(c.isdecimal() for c in line)]
     if not lines:
         sys.exit(f"{nm} --version prints no version")
     return lines[0].strip()

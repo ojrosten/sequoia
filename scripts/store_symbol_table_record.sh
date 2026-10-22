@@ -25,8 +25,9 @@
 # the script fetches the branch again and builds its commit afresh on the
 # new tip, a bounded number of times.
 #
-# The script refuses a record which cannot be read, which names no commit, or
-# whose tree was not clean, since its counts would then not be the commit's.
+# The script refuses a record which cannot be read, or which names no commit
+# of the clone by its full name. It also refuses a record whose tree was not
+# clean, since the record's counts are then not the commit's.
 
 set -euo pipefail
 
@@ -39,7 +40,12 @@ remote=$1 branch=$2 directory=$3 record=$4
 attempts=5
 
 commit=$(jq -r '.commit' "$record") || die "$record cannot be read as JSON"
-[[ $commit =~ ^[0-9a-f]{40}$ ]] || die "$record names no commit: its commit is '$commit'"
+# The script stores the record under its commit as given, so the commit must
+# be the full name of a commit in the clone. rev-parse fails unless the name
+# resolves to a commit, and otherwise prints the commit's full name, so the
+# check refuses a branch's name or an abbreviated one.
+full_name=$(git rev-parse --verify --quiet "$commit^{commit}") && [ "$full_name" = "$commit" ] \
+  || die "$record names no commit of this clone by its full name: its commit is '$commit'"
 [ "$(jq '.clean' "$record")" = true ] \
   || die "$record was made from a tree which was not clean, so its counts are not $commit's"
 path="$directory/$commit.json"
