@@ -23,9 +23,9 @@ name: scope
 #   - A pull request: its head against its merge-base with the base, which is
 #     the change the pull request makes.
 #   - A push to staging: always tested. Merges land there, and a merge can make a
-#     tree nothing has tested. Nor is a push's own diff enough: if the run of
-#     the push before it did not finish, the earlier push's commits would be
-#     left untested.
+#     tree nothing has tested. Nor is a push's own diff enough: when a push
+#     cancels the run of the push before it, the earlier push's commits are left
+#     untested.
 #   - Any other push: the head against its merge-base with staging, which is the
 #     pull request's comparison for the usual PR into staging. Should the branch
 #     reach staging before this job runs, the merge-base is the head and the
