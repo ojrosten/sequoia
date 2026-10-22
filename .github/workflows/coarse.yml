@@ -176,23 +176,28 @@ jobs:
           fetch-depth: 1
           sparse-checkout: scripts
 
+      # Each record is named after its column, and the artifacts are merged
+      # into one directory. Unmerged, download-artifact puts each artifact in
+      # a directory of its own only when the pattern matches more than one:
+      # run 39743823021 found its one artifact's record at the top.
       - uses: actions/download-artifact@v7
         if: env.STORES_RECORDS == 'true'
         with:
           pattern: symbol-table-*
+          merge-multiple: true
           path: ${{ runner.temp }}/records
 
       - name: Store each record on the data branch
         if: env.STORES_RECORDS == 'true'
         run: |
           shopt -s nullglob
-          records=("$RUNNER_TEMP"/records/symbol-table-*/record.json)
+          records=("$RUNNER_TEMP"/records/*.json)
           if [ ${#records[@]} -eq 0 ]; then
             echo "::error::This run made no symbol-table record"; exit 1
           fi
           for record in "${records[@]}"; do
-            artifact=$(basename "$(dirname "$record")")
-            scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" "symbol-table/${artifact#symbol-table-}" "$record"
+            column=$(basename "$record" .json)
+            scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" "symbol-table/$column" "$record"
           done
 
   # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same

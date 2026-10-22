@@ -497,8 +497,8 @@ jobs:
         run: cmake --build --preset ${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/build.log"
 
       # A column naming `records_symbol_table_as` records the symbol table of
-      # the TestAll it has just built, as a JSON record in the artifact
-      # symbol-table-<the name>.
+      # the TestAll it has just built, as a JSON record, <the name>.json, in the
+      # artifact symbol-table-<the name>.
       #
       # The record is made before the suite runs, while the tree is the
       # commit's: a run can write files into the tree, and the record would
@@ -509,18 +509,18 @@ jobs:
         if: inputs.needs_testing == 'true' && matrix.records_symbol_table_as
         run: |
           mkdir "$RUNNER_TEMP/symbol-table"
+          record="$RUNNER_TEMP/symbol-table/${{ matrix.records_symbol_table_as }}.json"
           python3 -B scripts/symbol_table_report.py "build/TestAll/${{ matrix.configure }}" TestAll \
             > "$RUNNER_TEMP/report.json"
-          python3 -B scripts/symbol_table_provenance.py "$RUNNER_TEMP/report.json" \
-            > "$RUNNER_TEMP/symbol-table/record.json"
-          jq -c '{commit, clean, executable, toolchain}' "$RUNNER_TEMP/symbol-table/record.json"
+          python3 -B scripts/symbol_table_provenance.py "$RUNNER_TEMP/report.json" > "$record"
+          jq -c '{commit, clean, executable, toolchain}' "$record"
 
       - name: Upload the symbol table's record
         if: inputs.needs_testing == 'true' && matrix.records_symbol_table_as
         uses: actions/upload-artifact@v7
         with:
           name: symbol-table-${{ matrix.records_symbol_table_as }}
-          path: ${{ runner.temp }}/symbol-table/record.json
+          path: ${{ runner.temp }}/symbol-table/${{ matrix.records_symbol_table_as }}.json
           if-no-files-found: error
 
       # macOS writes a crash report itself, and reads the executable's debug
