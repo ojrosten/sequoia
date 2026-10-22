@@ -36,7 +36,7 @@ namespace sequoia::testing
 
     void test_overlap_multipliers();
 
-    void test_overlap_multiplier_of_each_attempt();
+    void test_multiplier_given_to_each_attempt();
 
     void test_judgement_with_baselines();
 

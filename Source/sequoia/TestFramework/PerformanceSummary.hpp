@@ -34,9 +34,6 @@ namespace sequoia::testing
   struct relative_performance_interval
   {
     double lower, upper;
-
-    friend bool operator==(const relative_performance_interval&,
-                           const relative_performance_interval&) noexcept = default;
   };
 
   /** \brief A measured speed-up, and the interval around it. */
@@ -44,9 +41,6 @@ namespace sequoia::testing
   {
     double                        speedup{};
     relative_performance_interval interval{};
-
-    friend bool operator==(const relative_performance_estimate&,
-                           const relative_performance_estimate&) noexcept = default;
   };
 
   /** \brief The number of attempts made, and the number allowed. */
@@ -59,9 +53,6 @@ namespace sequoia::testing
   struct relative_performance_durations
   {
     std::chrono::duration<double> fast{}, slow{};
-
-    friend bool operator==(const relative_performance_durations&,
-                           const relative_performance_durations&) noexcept = default;
   };
 
   /** \brief Returns a line stating why an attempt failed. */

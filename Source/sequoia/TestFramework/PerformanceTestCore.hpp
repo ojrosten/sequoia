@@ -87,9 +87,6 @@ namespace sequoia::testing
                  the tasks had baselines.
        */
       std::optional<relative_performance_durations> baseline_durations{};
-
-      friend bool operator==(const relative_performance_judgement&,
-                             const relative_performance_judgement&) noexcept = default;
     };
 
     /** \brief The durations of a task and of its baseline. */
