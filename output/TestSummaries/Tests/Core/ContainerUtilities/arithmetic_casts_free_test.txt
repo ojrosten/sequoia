@@ -1,2 +1,2 @@
 arithmetic_casts_free_test
-Standard Top Level Checks:                29;  Failures:  0  [Deep checks: 29]
+Standard Top Level Checks:                48;  Failures:  0  [Deep checks: 48]
