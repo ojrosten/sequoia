@@ -42,9 +42,15 @@ on:
   # fine-on-retarget.yml dispatches this workflow on the head branch of a pull
   # request retargeted to staging, because the retarget starts no pull_request
   # run here. The dispatched run tests the head merged into staging, as the pull
-  # request's own run would, and reports on the head commit, where staging's rule
-  # looks for this workflow's audit.
+  # request's own run would. fine-on-retarget.yml sets `report_as_status`, and
+  # the audit's last step says why.
   workflow_dispatch:
+    inputs:
+      report_as_status:
+        description: 'Post the audit''s outcome as a commit status on the head, where a pull request into staging counts it. fine-on-retarget.yml sets it; a dispatch by hand need not.'
+        required: false
+        type: boolean
+        default: false
 
 # A push to a PR that already has a run in flight cancels that run: a superseded
 # run gates nothing, and Windows runners are scarce. The group is per PR, so runs
@@ -100,13 +106,18 @@ jobs:
   # the rule, shows as a red check rather than only as a PR that waits on a name
   # nothing reports, or merges ungated. The second and third steps run even when
   # an earlier step fails, so each reports independently. Same shape as
-  # rigorous's audit, without the modes.
+  # rigorous's audit, without the modes. A dispatched run may also post the
+  # job's outcome as a commit status, in a fourth step, which says why.
   audit:
     name: Every job ran and every job gates
     needs: [scope, fine, coverage]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read
+      checks: read
+      statuses: write
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
@@ -159,3 +170,48 @@ jobs:
             exit 1
           fi
           echo "staging requires this job, pinned to the app that reports it"
+
+      # GitHub does not count a dispatched run's checks towards a pull
+      # request's required checks. GitHub's page "Troubleshooting required
+      # status checks" says so under "Checks from some workflow jobs are not
+      # evaluated", naming workflow_dispatch. So, when `report_as_status` is
+      # set, this step posts the job's status as a commit status named as this
+      # job. The status goes on the head commit, which the run merged with
+      # staging and tested. A cancel during this job posts failure; a cancel
+      # before it posts nothing, and the pull request waits.
+      #
+      # Scratch PR #345 measured on 2026-10-21 that staging's rule accepts such
+      # a status, posted by GitHub Actions, the app the rule pins. A retarget
+      # to staging by hand fired the same `edited` event, with `changes.base`,
+      # as GitHub's automatic retarget. The dispatched audit passed on the
+      # head, but the pull request stayed BLOCKED, and the audit was missing
+      # from its checks. A commit status of this name, posted from a dispatched
+      # run, took the pull request to CLEAN.
+      #
+      # The same page says that when a check and a commit status share a
+      # required name, both must pass. So a green status cannot pass a red
+      # audit check on the same commit. A check run created through the Checks
+      # API would have no such protection. On #345 GitHub filed one under
+      # coarse's push suite, where it counted. As the latest check of its name,
+      # it would replace a red audit.
+      #
+      # A green status does stand in for an audit check that does not exist
+      # yet, as on a head whose own pull_request run is still in flight. A red
+      # status holds a pull request whose own run passed. Hence the input:
+      # only fine-on-retarget.yml sets it, for a head that has no pull_request
+      # run of fine, and a dispatch by hand posts nothing.
+      #
+      # Should GitHub begin to count a dispatched run's checks, this step would
+      # merely repeat the check.
+      - name: Post this job's status as a commit status on the head
+        if: ${{ always() && inputs.report_as_status }}
+        env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+          JOB_STATUS: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ "$JOB_STATUS" = success ]; then state=success; else state=failure; fi
+          context=$(gh api "repos/$GH_REPO/check-runs/$CHECK_RUN_ID" --jq .name)
+          gh api -X POST "repos/$GH_REPO/statuses/$GITHUB_SHA" -f state="$state" -f context="$context" \
+            -f description="dispatched run: $JOB_STATUS" -f target_url="$RUN_URL" > /dev/null
+          echo "posted '$context' as $state on $GITHUB_SHA"
