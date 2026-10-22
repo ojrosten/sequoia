@@ -40,5 +40,8 @@ namespace sequoia::testing
 
     void test_const_scaling_iterator();
     void test_const_reverse_scaling_iterator();
+
+    template<std::unsigned_integral Index>
+    void test_index_iterator();
   };
 }

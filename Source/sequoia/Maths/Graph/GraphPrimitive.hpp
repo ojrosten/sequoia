@@ -32,7 +32,7 @@ namespace sequoia
       public:
         using graph_type      = graph_primitive<Connectivity, Nodes>;
         using index_type      = graph_type::edge_index_type;
-        using difference_type = std::make_signed_t<index_type>;
+        using difference_type = std::ptrdiff_t;
         using value_type      = index_type;
         using reference       = index_type;
 

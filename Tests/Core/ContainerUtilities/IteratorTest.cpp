@@ -50,6 +50,28 @@ namespace sequoia::testing
       value_type m_Scale{1};
     };
 
+    template<std::unsigned_integral Index>
+    class index_dereference_policy
+    {
+    public:
+      using difference_type = std::ptrdiff_t;
+      using value_type      = Index;
+      using reference       = Index;
+
+      [[nodiscard]]
+      constexpr static reference get(Index i) noexcept { return i; }
+    protected:
+      constexpr index_dereference_policy() = default;
+
+      constexpr index_dereference_policy(const index_dereference_policy&)     = default;
+      constexpr index_dereference_policy(index_dereference_policy&&) noexcept = default;
+
+      ~index_dereference_policy() = default;
+
+      constexpr index_dereference_policy& operator=(const index_dereference_policy&)     = default;
+      constexpr index_dereference_policy& operator=(index_dereference_policy&&) noexcept = default;
+    };
+
     template<class Iterator, class DerefPolicy>
     concept scaling_iterator = sequoia::utilities::dereference_policy_for<DerefPolicy, Iterator>
       && requires(DerefPolicy & d) { d.scale(); };
@@ -75,6 +97,11 @@ namespace sequoia::testing
 
     test_const_scaling_iterator();
     test_const_reverse_scaling_iterator();
+
+    test_index_iterator<unsigned char>();
+    test_index_iterator<unsigned short>();
+    test_index_iterator<unsigned int>();
+    test_index_iterator<std::size_t>();
   }
 
   void iterator_test::test_iterator()
@@ -253,6 +280,23 @@ namespace sequoia::testing
 
     custom_criter_t i{a.crend(), 1}, j{a.crend(), 2};
     check("Custom reverse iterators should compare equal if they point to the same thing, irrespective of any other state", i == j);
+  }
+
+  template<std::unsigned_integral Index>
+  void iterator_test::test_index_iterator()
+  {
+    using namespace utilities;
+
+    using index_iter_t = iterator<Index, index_dereference_policy<Index>>;
+
+    STATIC_CHECK(std::random_access_iterator<index_iter_t>);
+
+    const index_iter_t i{Index{2}}, j{Index{3}};
+
+    check(equality, "Difference of a later index and an earlier one", j - i, std::ptrdiff_t{1});
+    check(equality, "Difference of an earlier index and a later one", i - j, std::ptrdiff_t{-1});
+    check(equality, "Advancing by a negative offset", *(j + std::ptrdiff_t{-1}), Index{2});
+    check(equality, "Retreating by a negative offset", *(i - std::ptrdiff_t{-1}), Index{3});
   }
 
   template<

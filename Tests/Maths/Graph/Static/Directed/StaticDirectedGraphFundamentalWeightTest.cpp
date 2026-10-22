@@ -11,6 +11,9 @@
 #include "sequoia/Maths/Graph/StaticGraph.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
+#include <limits>
+#include <numeric>
+
 namespace sequoia::testing
 {
   using namespace maths;
@@ -31,6 +34,11 @@ namespace sequoia::testing
         if(host != target) m_Test.check_semantics(description, prediction, parent);
       }
     };
+
+    using wide_order_graph = static_directed_graph<0, 200, null_weight, int>;
+
+    static_assert(std::same_as<wide_order_graph::edge_index_type, unsigned char>);
+    static_assert(wide_order_graph::order() > std::numeric_limits<signed char>::max());
   }
 
   [[nodiscard]]
@@ -56,6 +64,8 @@ namespace sequoia::testing
     test_node_1_node();
     test_node_1_node_0();
     test_node_1_node_2_node_0();
+
+    test_order_beyond_signed_char();
   }
 
   template<class EdgeWeight, class NodeWeight>
@@ -783,6 +793,56 @@ namespace sequoia::testing
 
            return g;
          }
+      }
+    };
+
+    transition_checker<graph_t>::check(report(""), trg, compare{*this});
+  }
+
+  void static_directed_graph_fundamental_weight_test::test_order_beyond_signed_char()
+  {
+    enum graph_description { ascending_weights = 0, descending_weights };
+
+    using graph_t = wide_order_graph;
+    using transition_graph = transition_checker<graph_t>::transition_graph;
+
+    transition_graph trg{
+      {
+        {  // begin 'graph_description::ascending_weights'
+          {
+            graph_description::descending_weights,
+            report("Sorting more nodes than a signed char can count"),
+            [](graph_t g) -> graph_t {
+              g.sort_nodes(0, graph_t::order(), [&g](auto i, auto j){ return g.cbegin_node_weights()[i] > g.cbegin_node_weights()[j]; });
+              return g;
+            }
+          }
+        }, // end 'graph_description::ascending_weights'
+        {  // begin 'graph_description::descending_weights'
+          {
+            graph_description::ascending_weights,
+            report("Sorting more nodes than a signed char can count"),
+            [](graph_t g) -> graph_t {
+              g.sort_nodes(0, graph_t::order(), [&g](auto i, auto j){ return g.cbegin_node_weights()[i] < g.cbegin_node_weights()[j]; });
+              return g;
+            }
+          }
+        }  // end 'graph_description::descending_weights'
+      },
+      {
+        // 'graph_description::ascending_weights'
+        []() -> graph_t {
+          graph_t g{};
+          std::ranges::iota(g.node_weights(), 0);
+          return g;
+        },
+
+        // 'graph_description::descending_weights'
+        []() -> graph_t {
+          graph_t g{};
+          std::ranges::iota(g.node_weights() | std::views::reverse, 0);
+          return g;
+        }
       }
     };
 
