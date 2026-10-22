@@ -13,6 +13,7 @@
 
 #include "sequoia/Core/DataStructures/PartitionedDataDetails.hpp"
 #include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
+#include "sequoia/Core/ContainerUtilities/IndexCasts.hpp"
 #include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 #include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
@@ -206,7 +207,7 @@ namespace sequoia
       {
         if(pos < num_partitions())
         {
-          auto iter{m_Buckets.begin() + pos};
+          auto iter{m_Buckets.begin() + utilities::to_difference(pos)};
           m_Buckets.emplace(iter);
         }
         else
@@ -219,7 +220,7 @@ namespace sequoia
       {
         if(n < m_Buckets.size())
         {
-          m_Buckets.erase(m_Buckets.begin() + n);
+          m_Buckets.erase(m_Buckets.begin() + utilities::to_difference(n));
         }
       }
 
@@ -293,7 +294,9 @@ namespace sequoia
       constexpr partition_iterator insert_to_partition(const size_type index, const size_type pos, Args&&... args)
       {
         check_range("insert_to_partition", index, pos);
-        const auto insertionPoint{std::ranges::next(cbegin_partition(index), pos, cend_partition(index))};
+        const auto insertionPoint{
+          std::ranges::next(cbegin_partition(index), utilities::to_difference(pos), cend_partition(index))
+        };
         return insert_to_partition_unchecked(insertionPoint, std::forward<Args>(args)...);
       }
 
@@ -337,7 +340,9 @@ namespace sequoia
 
       constexpr partition_iterator erase_from_partition(const size_type index, const size_type pos)
       {
-        return erase_from_partition(std::ranges::next(cbegin_partition(index), pos, cend_partition(index)));
+        return erase_from_partition(
+                 std::ranges::next(cbegin_partition(index), utilities::to_difference(pos), cend_partition(index))
+               );
       }
 
       [[nodiscard]]
@@ -672,8 +677,8 @@ namespace sequoia
             if(len_i != len_j)
             {
               m_Partitions.mutate(maths::unsafe_t{},
-                                  m_Partitions.begin() + i,
-                                  m_Partitions.begin() + j,
+                                  m_Partitions.begin() + utilities::to_difference(i),
+                                  m_Partitions.begin() + utilities::to_difference(j),
                                   [len_i, len_j](const index_type index) -> index_type { return static_cast<index_type>(index + len_j - len_i);});
             }
           }
@@ -769,7 +774,7 @@ namespace sequoia
       {
         if(pos < num_partitions())
         {
-          auto iter{m_Partitions.begin() + pos};
+          auto iter{m_Partitions.begin() + utilities::to_difference(pos)};
           const index_type newPartitionBound{(pos == 0) ? index_type{} : m_Partitions[pos - 1]};
           m_Partitions.insert(iter, newPartitionBound);
         }
@@ -788,10 +793,14 @@ namespace sequoia
           if(m_Partitions[n] > 0)
           {
             erased = m_Partitions[n] - offset;
-            m_Data.erase(m_Data.begin() + offset, m_Data.begin() + m_Partitions[n]);
+            m_Data.erase(m_Data.begin() + utilities::to_difference(offset),
+                         m_Data.begin() + utilities::to_difference(m_Partitions[n]));
           }
-          m_Partitions.erase(m_Partitions.begin() + n);
-          m_Partitions.mutate(maths::unsafe_t{}, m_Partitions.begin() + n, m_Partitions.end(), [erased](const auto index){ return index - erased; });
+          m_Partitions.erase(m_Partitions.begin() + utilities::to_difference(n));
+          m_Partitions.mutate(maths::unsafe_t{},
+                              m_Partitions.begin() + utilities::to_difference(n),
+                              m_Partitions.end(),
+                              [erased](const auto index){ return index - erased; });
         }
       }
 
@@ -842,7 +851,8 @@ namespace sequoia
         }
         else
         {
-          iter = m_Data.emplace(m_Data.begin() + m_Partitions[index], std::forward<Args>(args)...);
+          iter = m_Data.emplace(m_Data.begin() + utilities::to_difference(m_Partitions[index]),
+                                std::forward<Args>(args)...);
         }
 
         increment_partition_indices(index);
@@ -859,7 +869,9 @@ namespace sequoia
       constexpr partition_iterator insert_to_partition(const size_type index, const size_type pos, Args&&... args)
       {
         check_range("insert_to_partition", index, pos);
-        const auto insertionPoint{std::ranges::next(cbegin_partition(index), pos, cend_partition(index))};
+        const auto insertionPoint{
+          std::ranges::next(cbegin_partition(index), utilities::to_difference(pos), cend_partition(index))
+        };
         return insert_to_partition_unchecked(insertionPoint, std::forward<Args>(args)...);
       }
 
@@ -907,7 +919,9 @@ namespace sequoia
 
       constexpr partition_iterator erase_from_partition(const index_type index, const size_type pos)
       {
-        return erase_from_partition(std::ranges::next(cbegin_partition(index), pos, cend_partition(index)));
+        return erase_from_partition(
+                 std::ranges::next(cbegin_partition(index), utilities::to_difference(pos), cend_partition(index))
+               );
       }
     private:
       constexpr static index_type npos{partition_iterator::npos};
@@ -953,7 +967,9 @@ namespace sequoia
       constexpr void increment_partition_indices(const size_type first) noexcept
       {
         m_Partitions.mutate(maths::unsafe_t{},
-                            std::ranges::next(m_Partitions.begin(), first, m_Partitions.end()),
+                            std::ranges::next(m_Partitions.begin(),
+                                              utilities::to_difference(first),
+                                              m_Partitions.end()),
                             m_Partitions.end(),
                             [](index_type index){ return ++index; });
       }
@@ -961,8 +977,12 @@ namespace sequoia
       constexpr void decrement_partition_indices(const size_type first, const size_type last, const index_type num) noexcept
       {
         m_Partitions.mutate(maths::unsafe_t{},
-                            std::ranges::next(m_Partitions.begin(), first, m_Partitions.end()),
-                            std::ranges::next(m_Partitions.begin(), last, m_Partitions.end()),
+                            std::ranges::next(m_Partitions.begin(),
+                                              utilities::to_difference(first),
+                                              m_Partitions.end()),
+                            std::ranges::next(m_Partitions.begin(),
+                                              utilities::to_difference(last),
+                                              m_Partitions.end()),
                             [num](index_type index){ return index -= num; });
       }
 
@@ -1035,8 +1055,9 @@ namespace sequoia
                                                                      const index_type partitionIndex,
                                                                      const index_type offset) noexcept
       {
-        return PartitionIterator::reversed() ? PartitionIterator{iter, partitionIndex} - offset
-                                             : PartitionIterator{iter, partitionIndex} + offset;
+        return PartitionIterator::reversed()
+             ? PartitionIterator{iter, partitionIndex} - utilities::to_difference(offset)
+             : PartitionIterator{iter, partitionIndex} + utilities::to_difference(offset);
       }
     };
 

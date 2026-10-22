@@ -9,6 +9,7 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/PathCheckers.hpp"
 
+#include "sequoia/Core/ContainerUtilities/IndexCasts.hpp"
 #include "sequoia/Maths/Statistics/StatisticalAlgorithms.hpp"
 
 #include <algorithm>
@@ -75,7 +76,8 @@ namespace sequoia::testing
         maths::winsorized_sample_variance(data, numTrimmed).variance
       };
 
-      const std::ranges::subrange kept{data.cbegin() + numTrimmed, data.cend() - numTrimmed};
+      const std::ranges::subrange kept{data.cbegin() + utilities::to_difference(numTrimmed),
+                                       data.cend()   - utilities::to_difference(numTrimmed)};
       const double fractionKept{1.0 - 2.0 * numTrimmed / n};
 
       return {

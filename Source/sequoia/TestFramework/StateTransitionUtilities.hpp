@@ -11,6 +11,7 @@
     \brief Facility to define tests via a graph comprising states of an object and transitions between them.
  */
 
+#include "sequoia/Core/ContainerUtilities/IndexCasts.hpp"
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Functional/ErasedFunction.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
@@ -93,7 +94,7 @@ namespace sequoia::testing
       const auto& w{i->weight()};
       fn(message,
          w.fn(parentGenerator()),
-         g.cbegin_node_weights()[target](),
+         g.cbegin_node_weights()[utilities::to_difference(target)](),
          std::move(args)...);
     }
 
@@ -104,7 +105,7 @@ namespace sequoia::testing
       const auto& w{i->weight()};
       fn(message,
          [&w,pg{parentGenerator}]() { return w.fn(pg()); },
-         g.cbegin_node_weights()[target],
+         g.cbegin_node_weights()[utilities::to_difference(target)],
          parentGenerator,
          std::move(args)...);
     }
@@ -209,7 +210,7 @@ namespace sequoia::testing
       return {append_lines(description,
                            std::string{"Transition from node "}.append(std::to_string(parent)).append(" to ").append(std::to_string(target)),
                            w.description),
-              g.cbegin_node_weights()[parent],
+              g.cbegin_node_weights()[utilities::to_difference(parent)],
               target};
     }
   };

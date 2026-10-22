@@ -9,6 +9,7 @@
 #include "sequoia/TestFramework/BuildArtefacts.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
+#include "sequoia/Core/ContainerUtilities/IndexCasts.hpp"
 #include "sequoia/Maths/Arithmetic/ArithmeticCasts.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
@@ -308,7 +309,7 @@ namespace sequoia::testing
       static const file_info& node_of(const graph_type& g, node_index i)
       {
         maths::graph_errors::check_node_index_range("dependency_graph::node", g.order(), i);
-        return g.cbegin_node_weights()[i];
+        return g.cbegin_node_weights()[utilities::to_difference(i)];
       }
 
       /** The modification time of a file the build read, checked against the
@@ -498,7 +499,7 @@ namespace sequoia::testing
           const auto& source{resolvedPaths[record.input_indices.front()]};
           auto setSource{[&source](file_info& info){ info.source = source; }};
 
-          g.mutate_node_weight(g.cbegin_node_weights() + objectNode, setSource);
+          g.mutate_node_weight(g.cbegin_node_weights() + utilities::to_difference(objectNode), setSource);
           for(const auto inputIndex : record.input_indices | std::views::filter(isProjectFile))
           {
             g.join(objectNode, nodeOf(inputIndex));

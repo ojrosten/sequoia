@@ -18,6 +18,7 @@
     by the `operation`s invoked.
 */
 
+#include "sequoia/Core/ContainerUtilities/IndexCasts.hpp"
 #include "sequoia/Core/Meta/Concepts.hpp"
 
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
@@ -186,11 +187,11 @@ namespace sequoia::parsing::commandline
                 operTree,
                 ignore_disconnected_t{},
                 [&operTree](const auto node) {
-                   const operation& oper{operTree.cbegin_node_weights()[node]};
+                   const operation& oper{operTree.cbegin_node_weights()[utilities::to_difference(node)]};
                    if(oper.early) oper.early(oper.arguments);
                 },
                 [&operTree](const auto node) {
-                   const operation& oper{operTree.cbegin_node_weights()[node]};
+                   const operation& oper{operTree.cbegin_node_weights()[utilities::to_difference(node)]};
                    if(oper.late) oper.late(oper.arguments);
                 });
       }

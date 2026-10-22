@@ -29,6 +29,7 @@
 #include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 #include "sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp"
+#include "sequoia/Core/ContainerUtilities/IndexCasts.hpp"
 #include "sequoia/Core/Object/HandlerTraits.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
@@ -88,7 +89,7 @@ namespace sequoia
           else
           {
             const auto partnerPartitionBegin{m_Storage.cbegin_partition(found->node_index)};
-            const auto& partner{partnerPartitionBegin[found->edge_index]};
+            const auto& partner{partnerPartitionBegin[utilities::to_difference(found->edge_index)]};
             if constexpr(std::is_empty_v<edge_meta_data_type>)
               m_Storage.push_back_to_partition(node, i->target_node(), partner);
             else
@@ -407,7 +408,8 @@ namespace sequoia
       {
         graph_errors::check_edge_swap_indices(node, i, j, static_cast<std::size_t>(std::ranges::distance(cedges(node))));
 
-        std::ranges::iter_swap(begin_edges(node) + i, begin_edges(node) + j);
+        std::ranges::iter_swap(begin_edges(node) + utilities::to_difference(i),
+                               begin_edges(node) + utilities::to_difference(j));
       }
 
       // TO DO: change semantics to non-throwing?
@@ -700,7 +702,7 @@ namespace sequoia
           return insert_join(citer1, dist2, std::forward<Args>(args)...);
 
         citer1 = insert_to_partition(citer1, node2, dist2, std::forward<Args>(args)...);
-        return insert_reciprocal_join(citer1, cbegin_edges(node2) + dist2);
+        return insert_reciprocal_join(citer1, cbegin_edges(node2) + utilities::to_difference(dist2));
       }
 
       template<class... Args>
@@ -716,7 +718,7 @@ namespace sequoia
           return insert_join(citer1, dist2, std::move(meta1), std::move(meta2), std::forward<Args>(args)...);
 
         citer1 = insert_to_partition(citer1, node2, dist2, std::move(meta1), std::forward<Args>(args)...);
-        return insert_reciprocal_join(citer1, cbegin_edges(node2) + dist2, std::move(meta2));
+        return insert_reciprocal_join(citer1, cbegin_edges(node2) + utilities::to_difference(dist2), std::move(meta2));
       }
 
       template<class... Args>
@@ -809,7 +811,9 @@ namespace sequoia
             {
               const auto compIndex{citer->complementary_index()};
               const auto pos{std::ranges::distance(cbegin_edges(source), citer)};
-              const auto separation{std::ranges::distance(citer, cbegin_edges(source) + compIndex)};
+              const auto separation{
+                std::ranges::distance(citer, cbegin_edges(source) + utilities::to_difference(compIndex))
+              };
               if((separation == 1) || (separation == -1))
               {
                 const auto delta{separation == 1 ? 0 : -1};
@@ -823,7 +827,9 @@ namespace sequoia
 
                 auto erase{
                   [this, source](auto index){
-                    auto i{m_Edges.erase_from_partition(m_Edges.begin_partition(source) + index)};
+                    auto i{
+                      m_Edges.erase_from_partition(m_Edges.begin_partition(source) + utilities::to_difference(index))
+                    };
                     decrement_comp_indices(i, m_Edges.end_partition(source), 1);
                   }
                 };
@@ -1169,7 +1175,8 @@ namespace sequoia
               storage.push_back_to_partition(
                 host,
                 (compIndex == npos) ? edge_type{hostRange.front()}
-                                    : edge_type{target, storage.cbegin_partition(target)[compIndex]}
+                                    : edge_type{target,
+                                                storage.cbegin_partition(target)[utilities::to_difference(compIndex)]}
               );
           }
         };
@@ -1303,7 +1310,7 @@ namespace sequoia
               }
               else
               {
-                const auto& partner{*(storage.cbegin_partition(i->target_node()) + compI)};
+                const auto& partner{*(storage.cbegin_partition(i->target_node()) + utilities::to_difference(compI))};
                 if constexpr(std::is_empty_v<edge_meta_data_type>)
                   storage.push_back_to_partition(node, i->target_node(), compI, partner);
                 else
@@ -1376,7 +1383,7 @@ namespace sequoia
         if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
         {
           const auto comp{citer->complementary_index()};
-          return setter(m_Edges.begin_partition(partner) + comp);
+          return setter(m_Edges.begin_partition(partner) + utilities::to_difference(comp));
         }
         else
         {
@@ -1505,19 +1512,23 @@ namespace sequoia
         const auto dist1{static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(node), citer1))};
         join_sentinel sentinel{*this, node, dist1};
 
-        auto citer2{m_Edges.insert_to_partition(cbegin_edges(node) + pos2, node, pos1, std::move(args)..., *citer1)};
+        auto citer2{m_Edges.insert_to_partition(cbegin_edges(node) + utilities::to_difference(pos2),
+                                                node,
+                                                pos1,
+                                                std::move(args)...,
+                                                *citer1)};
         if(pos2 > pos1)
         {
           increment_comp_indices(++to_edge_iterator(citer2), end_edges(node), 1);
         }
         else
         {
-          auto iter1{begin_edges(node) + pos1};
+          auto iter1{begin_edges(node) + utilities::to_difference(pos1)};
           increment_comp_indices(++to_edge_iterator(citer2), iter1, 1);
           increment_comp_indices(iter1 + 1, end_edges(node), 1);
         }
 
-        citer1 = cbegin_edges(node) + pos1;
+        citer1 = cbegin_edges(node) + utilities::to_difference(pos1);
         return {citer1, citer2};
       }
 
@@ -1534,7 +1545,7 @@ namespace sequoia
         citer2 = m_Edges.insert_to_partition(citer2, node1, dist1, std::move(md)..., *citer1);
         increment_comp_indices(++to_edge_iterator(citer2), end_edges(node2), 1);
 
-        citer1 = cbegin_edges(node1) + dist1;
+        citer1 = cbegin_edges(node1) + utilities::to_difference(dist1);
         return {citer1, citer2};
       }
 
@@ -1574,7 +1585,7 @@ namespace sequoia
 
           auto setPartnerCompIndex{
             [this, other, fn](edge_index_type cmpIndex){
-              const auto edgeIter{m_Edges.begin_partition(other) + cmpIndex};
+              const auto edgeIter{m_Edges.begin_partition(other) + utilities::to_difference(cmpIndex)};
               edgeIter->complementary_index(fn(edgeIter->complementary_index()));
             }
           };

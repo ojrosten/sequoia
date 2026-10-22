@@ -12,6 +12,7 @@
 
  */
 
+#include "sequoia/Core/ContainerUtilities/IndexCasts.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 
 namespace sequoia::maths
@@ -25,7 +26,7 @@ namespace sequoia::maths
     std::size_t pos{};
     while(pos < subGraph.order())
     {
-      if(!nodePred(*(subGraph.cbegin_node_weights() + pos)))
+      if(!nodePred(*(subGraph.cbegin_node_weights() + utilities::to_difference(pos))))
       {
         subGraph.erase_node(pos);
       }

@@ -11,6 +11,7 @@
     \brief Restriction of Dynamic Graphs to Trees 
 */
 
+#include "sequoia/Core/ContainerUtilities/IndexCasts.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphErrors.hpp"
 
@@ -294,7 +295,7 @@ namespace sequoia::maths
     const auto& tree{adaptor.tree()};
     graph_errors::check_node_index_range("root_weight_iter", tree.order(), adaptor.node());
 
-    return tree.cbegin_node_weights() + adaptor.node();
+    return tree.cbegin_node_weights() + utilities::to_difference(adaptor.node());
   }
 
   /** \throws std::out_of_range if `adaptor` is at a node its tree lacks. */
