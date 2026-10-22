@@ -39,16 +39,16 @@ name: coarse
 # committed vcxproj prediction is checked by any Visual Studio column, this
 # column's absence from that generator leaves none of them unverified.
 #
-# The macOS column runs with `--exclude-performance`. On the hosted macOS
-# runner, sleeps are coarse: the runner warns that 5 ms sleeps last 21 ms or
-# more, and the tests which time sleeps fail on that alone. Run 37950206807
-# (2026-10-09) ran the performance tests alone, 30 times in one process, on
-# every configuration then excluding them. TestRunnerPerformanceTest failed in
-# all 30 trials on every macOS configuration, and
-# ConcurrencyModelsPerformanceTest in 26 to 30. The same 30 trials passed in
-# full on every Linux and Windows configuration, so those columns run the
-# performance tests, in every gate. Run them here too once macOS's sleeps are
-# understood, or once no test's outcome depends on them.
+# Every column runs the performance tests. The macOS column has run them
+# since 2026-10-22. Several performance tests time sleeps. On the hosted macOS
+# runner, a 5 ms sleep may end about 2 ms late, and concurrent sleeps tend to
+# be late together. Statistical run 39668453004 (2026-10-21) ran the whole
+# suite 60 times on each of macOS Release, Debug and ASan+UBSan, performance
+# tests included. No trial failed. The Release trials ran on an Apple M2 Pro
+# host. The Debug and ASan+UBSan trials ran on an Apple M1 host. Exclude the
+# performance tests from a macOS column again if a statistical sample finds
+# that column failing in more than one trial in 60. rigorous.yml says why
+# macOS TSan excludes the performance tests.
 #
 # Every column checks the versioned output, since 2026-09-22. The check is a
 # comparison of files the run has just written, and costs nothing this tier's
@@ -99,7 +99,7 @@ jobs:
       columns: >-
         [
           {"name": "Linux · GCC · Debug",   "os": "ubuntu-26.04",   "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "macOS · Clang · Debug", "os": "macos-latest",   "configure": "llvm-env", "build": "llvm-env", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "macOS · Clang · Debug", "os": "macos-latest",   "configure": "llvm-env", "build": "llvm-env", "exec_args": "--check-versioned-output"},
           {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc-ninja", "build": "msvc-ninja", "exec_args": "--check-versioned-output"}
         ]
 

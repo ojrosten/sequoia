@@ -14,9 +14,9 @@ name: fine
 # ASan and UBSan share one build. TSan cannot join them, being mutually exclusive
 # with ASan, so it is a column of its own in rigorous.
 #
-# The macOS column runs with `--exclude-performance`, for the reason, and on
-# the measurement, that coarse.yml gives. The Linux and Windows columns run the
-# performance tests.
+# Every column runs the performance tests. coarse.yml gives the measurement on
+# which the macOS column runs them, and the failure rate at which to exclude
+# them again.
 #
 # Every column also carries `--check-versioned-output`, spelt out per column
 # because a column's `exec_args` REPLACES the tier's rather than adding to it.
@@ -77,7 +77,7 @@ jobs:
       columns: >-
         [
           {"name": "Linux · GCC · ASan+UBSan",   "os": "ubuntu-26.04",   "configure": "gcc-env-asan-ubsan",  "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output"},
-          {"name": "macOS · Clang · ASan+UBSan", "os": "macos-latest",   "configure": "llvm-env-asan-ubsan", "build": "llvm-env-asan-ubsan", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "macOS · Clang · ASan+UBSan", "os": "macos-latest",   "configure": "llvm-env-asan-ubsan", "build": "llvm-env-asan-ubsan", "exec_args": "--check-versioned-output"},
           {"name": "Windows · MSVC · ASan",      "os": "windows-latest", "configure": "msvc-asan",           "build": "msvc-asan", "exec_args": "--check-versioned-output"}
         ]
 
