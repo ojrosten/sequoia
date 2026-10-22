@@ -170,7 +170,7 @@ def version_of(tool):
     bracketed groups, and with its whitespace collapsed.
 
     Distributions put a package revision in parentheses, as in
-    `g++-15 (Ubuntu 15.2.0-14ubuntu1~24~ppa1) 15.2.0`, so a new revision of
+    `g++-15 (Ubuntu 15.2.0-16ubuntu1) 15.2.0`, so a new revision of
     one release, which may carry fixes from the release branch, records as
     that release: `g++-15 15.2.0`. A prerelease's date and an `-rc` suffix lie
     outside the groups, and are kept. The vendor in a group is lost, so

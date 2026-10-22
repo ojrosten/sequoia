@@ -9,22 +9,19 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "PerformanceTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class performance_false_negative_diagnostics final : public performance_false_negative_test
+  class performance_false_negative_diagnostics final : public scripted_clock_false_negative_test
   {
   public:
-    using performance_false_negative_test::performance_false_negative_test;
+    using scripted_clock_false_negative_test::scripted_clock_false_negative_test;
 
     [[nodiscard]]
     static std::filesystem::path source_file();
 
     void run_tests();
-
-    [[nodiscard]]
-    log_summary summarize(duration delta) const;
   private:
 
     void test_relative_performance();
@@ -44,25 +41,20 @@ namespace sequoia::testing
     void test_fail_at_second_attempt_with_baselines();
   };
 
-  class performance_false_positive_diagnostics final : public performance_false_positive_test
+  class performance_false_positive_diagnostics final : public scripted_clock_false_positive_test
   {
   public:
-    using performance_false_positive_test::performance_false_positive_test;
+    using scripted_clock_false_positive_test::scripted_clock_false_positive_test;
 
     [[nodiscard]]
     static std::filesystem::path source_file();
 
     void run_tests();
-
-    [[nodiscard]]
-    log_summary summarize(duration delta) const;
   private:
 
     void test_relative_performance();
 
     void test_confidence_multiplier();
-
-    void test_computations_not_optimized_away();
 
     void test_relative_performance_with_baselines();
 

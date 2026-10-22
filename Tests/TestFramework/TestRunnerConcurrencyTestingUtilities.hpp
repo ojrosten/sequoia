@@ -179,5 +179,11 @@ namespace sequoia::testing
     return runner;
   }
 
-  inline constexpr std::chrono::milliseconds sleep_duration_for_overlap_checks{10};
+  /** The sleep of each test whose overlap the runner tests measure. On the
+      hosted macOS runner, the tests of a parallel run start up to tens of
+      milliseconds apart; at 10 ms, that run's peak overlap fell below its
+      floor in about one trial in 40 there. The macOS CI columns run the
+      performance tests on the strength of a sample taken at 40 ms.
+   */
+  inline constexpr std::chrono::milliseconds sleep_duration_for_overlap_checks{40};
 }

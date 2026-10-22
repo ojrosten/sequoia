@@ -545,13 +545,10 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view postprocess(std::string_view testOutput,
-                               std::string_view referenceOutput,
-                               attempt_count_stability attemptCountStability)
+  std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput)
   {
     const bool differOnlyInMeasurements{
-         text_with_zeroed_measurements(testOutput,      attemptCountStability)
-      == text_with_zeroed_measurements(referenceOutput, attemptCountStability)
+      text_with_zeroed_measurements(testOutput) == text_with_zeroed_measurements(referenceOutput)
     };
 
     return differOnlyInMeasurements ? referenceOutput : testOutput;
@@ -562,37 +559,32 @@ namespace sequoia::testing
   log_summary basic_performance_test<Mode>::summarize(duration delta) const
   {
     if constexpr(Mode == test_mode::standard)
+    {
       return base_type::summarize(delta);
+    }
     else
-      return summarize(delta, attempt_count_stability::fluctuating);
-  }
+    {
+      auto summary{base_type::summarize(delta)};
 
-  template<test_mode Mode>
-  [[nodiscard]]
-  log_summary basic_performance_test<Mode>::summarize(duration delta,
-                                                      attempt_count_stability attemptCountStability) const
-    requires (Mode != test_mode::standard)
-  {
-    auto summary{base_type::summarize(delta)};
+      const auto referenceOutput{
+        [filename{this->diagnostics_file_paths().false_positive_or_negative_file_path()}]() -> std::string {
+          if(std::filesystem::exists(filename))
+          {
+            if(auto contents{read_to_string(filename, std::ios_base::in | std::ios_base::binary)})
+              return std::move(*contents);
 
-    const auto referenceOutput{
-      [filename{this->diagnostics_file_paths().false_positive_or_negative_file_path()}]() -> std::string {
-        if(std::filesystem::exists(filename))
-        {
-          if(auto contents{read_to_string(filename, std::ios_base::in | std::ios_base::binary)})
-            return std::move(*contents);
+            throw std::runtime_error{report_failed_read(filename)};
+          }
 
-          throw std::runtime_error{report_failed_read(filename)};
-        }
+          return "";
+        }()
+      };
 
-        return "";
-      }()
-    };
+      std::string outputToUse{postprocess(summary.diagnostics_output(), referenceOutput)};
+      summary.diagnostics_output(std::move(outputToUse));
 
-    std::string outputToUse{postprocess(summary.diagnostics_output(), referenceOutput, attemptCountStability)};
-    summary.diagnostics_output(std::move(outputToUse));
-
-    return summary;
+      return summary;
+    }
   }
 
   template class basic_performance_test<test_mode::standard>;
