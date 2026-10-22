@@ -106,6 +106,21 @@ jobs:
           [ "$head" = "$COMMIT" ] \
             || { echo "::error::The commit asked for is '$COMMIT', and the tree checked out is $head"; exit 1; }
 
+      # A record stays on the data branch once stored, since the branch is
+      # never rewritten. So the job refuses a commit outside the history of
+      # the run's commit before building it.
+      - name: Check that the commit is in the history of the run's commit
+        env:
+          COMMIT: ${{ matrix.commit }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          status=$(gh api "repos/$GITHUB_REPOSITORY/compare/$COMMIT...$GITHUB_SHA" --jq .status)
+          case $status in
+            ahead|identical) ;;
+            *) echo "::error::$COMMIT is not in the history of $GITHUB_SHA: the comparison's status is '$status'"
+               exit 1;;
+          esac
+
       # tests.yml is the tiers' one recipe for building and running the
       # suite. This job runs no suite, so it copies the steps it needs from
       # tests.yml's "Install the toolchain (Linux)", "Configure" and "Build",
