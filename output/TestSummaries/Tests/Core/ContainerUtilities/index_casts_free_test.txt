@@ -1,2 +1,0 @@
-index_casts_free_test
-Standard Top Level Checks:                20;  Failures:  0  [Deep checks: 20]

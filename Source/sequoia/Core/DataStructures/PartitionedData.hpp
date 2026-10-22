@@ -12,8 +12,8 @@
  */
 
 #include "sequoia/Core/DataStructures/PartitionedDataDetails.hpp"
+#include "sequoia/Core/ContainerUtilities/ArithmeticCasts.hpp"
 #include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
-#include "sequoia/Core/ContainerUtilities/IndexCasts.hpp"
 #include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 #include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
@@ -207,7 +207,7 @@ namespace sequoia
       {
         if(pos < num_partitions())
         {
-          auto iter{m_Buckets.begin() + utilities::to_difference(pos)};
+          auto iter{m_Buckets.begin() + utilities::unchecked_conversion_to<std::ptrdiff_t>(pos)};
           m_Buckets.emplace(iter);
         }
         else
@@ -220,7 +220,7 @@ namespace sequoia
       {
         if(n < m_Buckets.size())
         {
-          m_Buckets.erase(m_Buckets.begin() + utilities::to_difference(n));
+          m_Buckets.erase(m_Buckets.begin() + utilities::unchecked_conversion_to<std::ptrdiff_t>(n));
         }
       }
 
@@ -295,7 +295,9 @@ namespace sequoia
       {
         check_range("insert_to_partition", index, pos);
         const auto insertionPoint{
-          std::ranges::next(cbegin_partition(index), utilities::to_difference(pos), cend_partition(index))
+          std::ranges::next(cbegin_partition(index),
+                            utilities::unchecked_conversion_to<std::ptrdiff_t>(pos),
+                            cend_partition(index))
         };
         return insert_to_partition_unchecked(insertionPoint, std::forward<Args>(args)...);
       }
@@ -341,7 +343,9 @@ namespace sequoia
       constexpr partition_iterator erase_from_partition(const size_type index, const size_type pos)
       {
         return erase_from_partition(
-                 std::ranges::next(cbegin_partition(index), utilities::to_difference(pos), cend_partition(index))
+                 std::ranges::next(cbegin_partition(index),
+                                   utilities::unchecked_conversion_to<std::ptrdiff_t>(pos),
+                                   cend_partition(index))
                );
       }
 
@@ -677,8 +681,8 @@ namespace sequoia
             if(len_i != len_j)
             {
               m_Partitions.mutate(maths::unsafe_t{},
-                                  m_Partitions.begin() + utilities::to_difference(i),
-                                  m_Partitions.begin() + utilities::to_difference(j),
+                                  m_Partitions.begin() + utilities::unchecked_conversion_to<std::ptrdiff_t>(i),
+                                  m_Partitions.begin() + utilities::unchecked_conversion_to<std::ptrdiff_t>(j),
                                   [len_i, len_j](const index_type index) -> index_type { return static_cast<index_type>(index + len_j - len_i);});
             }
           }
@@ -774,7 +778,7 @@ namespace sequoia
       {
         if(pos < num_partitions())
         {
-          auto iter{m_Partitions.begin() + utilities::to_difference(pos)};
+          auto iter{m_Partitions.begin() + utilities::unchecked_conversion_to<std::ptrdiff_t>(pos)};
           const index_type newPartitionBound{(pos == 0) ? index_type{} : m_Partitions[pos - 1]};
           m_Partitions.insert(iter, newPartitionBound);
         }
@@ -793,12 +797,12 @@ namespace sequoia
           if(m_Partitions[n] > 0)
           {
             erased = m_Partitions[n] - offset;
-            m_Data.erase(m_Data.begin() + utilities::to_difference(offset),
-                         m_Data.begin() + utilities::to_difference(m_Partitions[n]));
+            m_Data.erase(m_Data.begin() + utilities::unchecked_conversion_to<std::ptrdiff_t>(offset),
+                         m_Data.begin() + utilities::unchecked_conversion_to<std::ptrdiff_t>(m_Partitions[n]));
           }
-          m_Partitions.erase(m_Partitions.begin() + utilities::to_difference(n));
+          m_Partitions.erase(m_Partitions.begin() + utilities::unchecked_conversion_to<std::ptrdiff_t>(n));
           m_Partitions.mutate(maths::unsafe_t{},
-                              m_Partitions.begin() + utilities::to_difference(n),
+                              m_Partitions.begin() + utilities::unchecked_conversion_to<std::ptrdiff_t>(n),
                               m_Partitions.end(),
                               [erased](const auto index){ return index - erased; });
         }
@@ -851,7 +855,8 @@ namespace sequoia
         }
         else
         {
-          iter = m_Data.emplace(m_Data.begin() + utilities::to_difference(m_Partitions[index]),
+          iter = m_Data.emplace(m_Data.begin()
+                                  + utilities::unchecked_conversion_to<std::ptrdiff_t>(m_Partitions[index]),
                                 std::forward<Args>(args)...);
         }
 
@@ -870,7 +875,9 @@ namespace sequoia
       {
         check_range("insert_to_partition", index, pos);
         const auto insertionPoint{
-          std::ranges::next(cbegin_partition(index), utilities::to_difference(pos), cend_partition(index))
+          std::ranges::next(cbegin_partition(index),
+                            utilities::unchecked_conversion_to<std::ptrdiff_t>(pos),
+                            cend_partition(index))
         };
         return insert_to_partition_unchecked(insertionPoint, std::forward<Args>(args)...);
       }
@@ -920,7 +927,9 @@ namespace sequoia
       constexpr partition_iterator erase_from_partition(const index_type index, const size_type pos)
       {
         return erase_from_partition(
-                 std::ranges::next(cbegin_partition(index), utilities::to_difference(pos), cend_partition(index))
+                 std::ranges::next(cbegin_partition(index),
+                                   utilities::unchecked_conversion_to<std::ptrdiff_t>(pos),
+                                   cend_partition(index))
                );
       }
     private:
@@ -968,7 +977,7 @@ namespace sequoia
       {
         m_Partitions.mutate(maths::unsafe_t{},
                             std::ranges::next(m_Partitions.begin(),
-                                              utilities::to_difference(first),
+                                              utilities::unchecked_conversion_to<std::ptrdiff_t>(first),
                                               m_Partitions.end()),
                             m_Partitions.end(),
                             [](index_type index){ return ++index; });
@@ -978,10 +987,10 @@ namespace sequoia
       {
         m_Partitions.mutate(maths::unsafe_t{},
                             std::ranges::next(m_Partitions.begin(),
-                                              utilities::to_difference(first),
+                                              utilities::unchecked_conversion_to<std::ptrdiff_t>(first),
                                               m_Partitions.end()),
                             std::ranges::next(m_Partitions.begin(),
-                                              utilities::to_difference(last),
+                                              utilities::unchecked_conversion_to<std::ptrdiff_t>(last),
                                               m_Partitions.end()),
                             [num](index_type index){ return index -= num; });
       }
@@ -1056,8 +1065,8 @@ namespace sequoia
                                                                      const index_type offset) noexcept
       {
         return PartitionIterator::reversed()
-             ? PartitionIterator{iter, partitionIndex} - utilities::to_difference(offset)
-             : PartitionIterator{iter, partitionIndex} + utilities::to_difference(offset);
+             ? PartitionIterator{iter, partitionIndex} - utilities::unchecked_conversion_to<std::ptrdiff_t>(offset)
+             : PartitionIterator{iter, partitionIndex} + utilities::unchecked_conversion_to<std::ptrdiff_t>(offset);
       }
     };
 

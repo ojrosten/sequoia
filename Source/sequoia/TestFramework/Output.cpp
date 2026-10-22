@@ -7,7 +7,7 @@
 
 #include "sequoia/TestFramework/Output.hpp"
 
-#include "sequoia/Core/ContainerUtilities/IndexCasts.hpp"
+#include "sequoia/Core/ContainerUtilities/ArithmeticCasts.hpp"
 #include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
@@ -420,7 +420,9 @@ namespace sequoia::testing
         if(continuesIdentifier)
         {
           const auto identifierEnd{
-            std::ranges::find_if(name.begin() + utilities::to_difference(pos), name.end(), is_identifier_delimiter)
+            std::ranges::find_if(name.begin() + utilities::unchecked_conversion_to<std::ptrdiff_t>(pos),
+                                 name.end(),
+                                 is_identifier_delimiter)
           };
           pos = std::ranges::distance(name.begin(), identifierEnd);
           continue;
@@ -434,7 +436,9 @@ namespace sequoia::testing
         if(pos + 1 < name.size())
         {
           const auto digitsEnd{
-            std::ranges::find_if_not(name.begin() + utilities::to_difference(pos + 1), name.end(), ascii::is_digit)
+            std::ranges::find_if_not(name.begin() + utilities::unchecked_conversion_to<std::ptrdiff_t>(pos + 1),
+                                     name.end(),
+                                     ascii::is_digit)
           };
           pos = std::ranges::distance(name.begin(), digitsEnd);
         }

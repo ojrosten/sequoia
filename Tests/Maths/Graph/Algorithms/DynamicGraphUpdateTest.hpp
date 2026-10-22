@@ -11,7 +11,7 @@
 
 #include "GraphTraversalTestingUtilities.hpp"
 
-#include "sequoia/Core/ContainerUtilities/IndexCasts.hpp"
+#include "sequoia/Core/ContainerUtilities/ArithmeticCasts.hpp"
 #include "sequoia/Maths/Graph/DynamicGraphTraversals.hpp"
 
 namespace sequoia::testing
@@ -84,7 +84,7 @@ namespace sequoia::testing
 
     void firstNodeTraversal(const std::size_t index)
     {
-      auto iter = m_Graph.cbegin_node_weights() + utilities::to_difference(index);
+      auto iter = m_Graph.cbegin_node_weights() + utilities::unchecked_conversion_to<std::ptrdiff_t>(index);
       const auto newWeight = (2 + m_NodeTraversalIndex) * *iter;
       m_Graph.set_node_weight(iter, newWeight);
 
@@ -94,7 +94,7 @@ namespace sequoia::testing
     void secondNodeTraversal(const std::size_t index)
     {
       --m_NodeTraversalIndex;
-      auto iter = m_Graph.cbegin_node_weights() + utilities::to_difference(index);
+      auto iter = m_Graph.cbegin_node_weights() + utilities::unchecked_conversion_to<std::ptrdiff_t>(index);
       const auto newWeight =  *iter / (5 - m_NodeTraversalIndex);
       m_Graph.set_node_weight(iter, newWeight);
     }
