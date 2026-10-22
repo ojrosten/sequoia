@@ -49,8 +49,10 @@ name: coarse
 # milliseconds apart; a shorter sleep would bring that back. The Release trials
 # ran on an Apple M2 Pro host, where those starts were closer together than on
 # the usual M1, so that column's sample was the easier one. If a performance
-# check turns a macOS gate column red, sample it rather than re-run it. On a
-# scratch branch off the commit that went red, make that column the only one in
+# check alone turns a macOS gate column red, re-running the failed job to
+# unblock the pull request is fine, but a green re-run says nothing about the
+# column's failure rate, so sample the column as well. On a scratch
+# branch off the commit that went red, make that column the only one in
 # statistical.yml, both in `columns` and in the summary job's list. Give it the
 # gate column's presets but not its `exec_args`, which would replace
 # statistical.yml's. Drop `--exclude-performance` from statistical.yml's
