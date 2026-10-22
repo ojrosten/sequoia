@@ -16,10 +16,13 @@
 #     one owning the file it resolves to, not the one owning the symlink; the
 #     record gains the run's id, attempt and URL; and nothing else in the
 #     record changes;
+#   - a path is resolved through a chain of symlinks, not one link;
 #   - a package whose name carries its architecture is named in full, and a
-#     line of dpkg's reporting a diversion names no owner;
-#   - a path with no owner, or with two, a package with no version, and a
-#     failure of dpkg-query are each refused;
+#     line of dpkg's naming another path names no owner;
+#   - a path with no owner, or with two, a diversion of the path by a package
+#     or a local one, a package with no version, and a failure of dpkg-query
+#     are each refused;
+#   - dpkg-query runs in the C locale, whatever the caller's;
 #   - so are a record which is not a JSON object, has no toolchain, has a
 #     tool with no path, or already has a package or a run; and a variable
 #     of the run which is unset or empty, or an id or attempt which is not a
@@ -46,10 +49,13 @@ fail() {
 
 # The stand-in for dpkg-query: --search <path> prints $DPKG/search/<path>,
 # and --show --showformat=${Version} <package> prints $DPKG/version/<package>.
-# Either fails, as dpkg-query does, when it has no answer.
+# Either fails, as dpkg-query does, when it has no answer. It refuses to run
+# outside the C locale, since a translated answer is not what the script
+# reads.
 mkdir -p "$tmp/bin"
 cat > "$tmp/bin/dpkg-query" <<'EOF'
 #!/bin/bash
+if [ "${LC_ALL-}" != C ]; then echo "the stand-in for dpkg-query was run with LC_ALL=${LC_ALL-}" >&2; exit 2; fi
 case "$1 ${2-}" in
   "--search "*)
     cat "$DPKG/search$2" 2> /dev/null || { echo "no path found matching $2" >&2; exit 1; } ;;
@@ -61,20 +67,24 @@ EOF
 chmod +x "$tmp/bin/dpkg-query"
 
 # fixture: a record, its three tools, and dpkg's answers for them. The
-# compiler's path is a symlink to $compiler_executable, and one package owns
-# the symlink, another the file it resolves to.
+# compiler's path is a symlink to $compiler_file, and one package owns the
+# symlink, another the file it resolves to. The linker's path is a chain of
+# two symlinks, ending at $linker_file, and dpkg has no answer for the link
+# between.
 fixture() {
   local bin="$work/usr/bin"
-  compiler_executable="$bin/x86_64-linux-gnu-g++-15"
+  compiler_file="$bin/x86_64-linux-gnu-g++-15"
+  linker_file="$bin/x86_64-linux-gnu-ld.bfd"
   export DPKG="$work/dpkg"
   mkdir -p "$bin" "$DPKG/search$bin" "$DPKG/version"
-  touch "$compiler_executable" "$bin/ld" "$bin/nm"
+  touch "$compiler_file" "$linker_file" "$bin/nm"
   ln -sf x86_64-linux-gnu-g++-15 "$bin/g++-15"
-  echo "g++-15: $bin/g++-15"                                   > "$DPKG/search$bin/g++-15"
-  echo "g++-15-x86-64-linux-gnu: $compiler_executable"         > "$DPKG/search$compiler_executable"
-  echo "binutils-x86-64-linux-gnu: $bin/ld"                    > "$DPKG/search$bin/ld"
-  printf '%s\n' "diversion by nm-wrapper from: $bin/nm" "diversion by nm-wrapper to: $bin/nm.real" \
-                "binutils:amd64: $bin/nm"                      > "$DPKG/search$bin/nm"
+  ln -sf x86_64-linux-gnu-ld.bfd "$bin/x86_64-linux-gnu-ld"
+  ln -sf x86_64-linux-gnu-ld "$bin/ld"
+  echo "g++-15: $bin/g++-15"                             > "$DPKG/search$bin/g++-15"
+  echo "g++-15-x86-64-linux-gnu: $compiler_file"         > "$DPKG/search$compiler_file"
+  echo "binutils-x86-64-linux-gnu: $linker_file"         > "$DPKG/search$linker_file"
+  printf '%s\n' "binutils-doc: $bin/nm.1" "binutils:amd64: $bin/nm" > "$DPKG/search$bin/nm"
   echo -n '15.2.0-16ubuntu0' > "$DPKG/version/g++-15"
   echo -n '15.2.0-16ubuntu1' > "$DPKG/version/g++-15-x86-64-linux-gnu"
   echo -n '2.46-1ubuntu2'    > "$DPKG/version/binutils-x86-64-linux-gnu"
@@ -90,12 +100,13 @@ EOF
 }
 
 # run [<option of env>...]: the subject's output in $out, its errors in $err,
-# and its exit status in $rc. The run's variables are set as GitHub Actions
-# sets them, and then changed by the options given, such as -u <name>.
+# and its exit status in $rc. GitHub Actions' variables are set as it sets
+# them, and LC_ALL to a locale other than C; then the options given, such as
+# -u <name>, change them.
 python=$(command -v python3)
 run() {
   env PATH="$tmp/bin:$PATH" GITHUB_SERVER_URL=https://github.com GITHUB_REPOSITORY=owner/repo \
-      GITHUB_RUN_ID=39655485487 GITHUB_RUN_ATTEMPT=2 \
+      GITHUB_RUN_ID=39655485487 GITHUB_RUN_ATTEMPT=2 LC_ALL=de_DE.UTF-8 \
     env "$@" "$python" -B "$subject" "$work/record.json" > "$out" 2> "$err"
   rc=$?
 }
@@ -143,7 +154,7 @@ record_controls() {
         'd["toolchain"]["compiler"]["package"]' "{'name': 'g++-15-x86-64-linux-gnu', 'version': '15.2.0-16ubuntu1'}"
   field "the linker's package is its path's owner, not its name" \
         'd["toolchain"]["linker"]["package"]' "{'name': 'binutils-x86-64-linux-gnu', 'version': '2.46-1ubuntu2'}"
-  field "nm's package is named with its architecture, and past the diversion" \
+  field "nm's package is named with its architecture, past a line for another path" \
         'd["toolchain"]["nm"]["package"]' "{'name': 'binutils:amd64', 'version': '2.46-1ubuntu3'}"
   field "the run" 'd["run"]' \
         "{'attempt': 2, 'id': 39655485487, 'url': 'https://github.com/owner/repo/actions/runs/39655485487/attempts/2'}"
@@ -160,19 +171,31 @@ print(d == json.load(open(sys.argv[2])))' "$out" "$work/record.json" > "$work/un
 
 dpkg_controls() {
   fixture
-  echo "g++-15-x86-64-linux-gnu, g++-15-multilib: $compiler_executable" > "$DPKG/search$compiler_executable"
+  echo "g++-15-x86-64-linux-gnu, g++-15-multilib: $compiler_file" > "$DPKG/search$compiler_file"
   run
   refuses "a path with two owners" 'names 2 packages owning .*/usr/bin/x86_64-linux-gnu-g\+\+-15'
 
   fixture
-  echo "diversion by other from: $compiler_executable" > "$DPKG/search$compiler_executable"
+  echo "binutils-doc: $compiler_file.1" > "$DPKG/search$compiler_file"
   run
-  refuses "a path whose only line is a diversion" 'names 0 packages owning .*/usr/bin/x86_64-linux-gnu-g\+\+-15'
+  refuses "a path whose only line names another path" 'names 0 packages owning .*/usr/bin/x86_64-linux-gnu-g\+\+-15'
 
   fixture
-  rm "$DPKG/search$work/usr/bin/ld"
+  printf '%s\n' "diversion by nm-wrapper from: $work/usr/bin/nm" "diversion by nm-wrapper to: $work/usr/bin/nm.real" \
+                "binutils:amd64: $work/usr/bin/nm" > "$DPKG/search$work/usr/bin/nm"
   run
-  refuses "a path dpkg-query does not know" 'dpkg-query --search .*/usr/bin/ld failed'
+  refuses "a path diverted by a package" 'reports a diversion of .*/usr/bin/nm'
+
+  fixture
+  printf '%s\n' "local diversion from: $work/usr/bin/nm" "local diversion to: $work/usr/bin/nm.distrib" \
+                "binutils:amd64: $work/usr/bin/nm" > "$DPKG/search$work/usr/bin/nm"
+  run
+  refuses "a path diverted locally" 'reports a diversion of .*/usr/bin/nm'
+
+  fixture
+  rm "$DPKG/search$linker_file"
+  run
+  refuses "a path dpkg-query does not know" 'dpkg-query --search .*/usr/bin/x86_64-linux-gnu-ld.bfd failed'
 
   fixture
   : > "$DPKG/version/g++-15-x86-64-linux-gnu"
@@ -256,8 +279,11 @@ mutant 'a failed command read'          'if r.returncode:' 'if False:'
 mutant 'a command not started crashes'  'except OSError as e:
         sys.exit(f"{command[0]}' 'except ValueError as e:
         sys.exit(f"{command[0]}'
-mutant 'any line read as an owner'      'if line.endswith(suffix) and not line.startswith("diversion ")' 'if True'
-mutant 'a diversion read as an owner'   ' and not line.startswith("diversion ")' ''
+mutant 'any line read as an owner'      'if line.endswith(suffix)' 'if True'
+mutant "the caller's locale kept"       ', env={**os.environ, "LC_ALL": "C"}' ''
+mutant 'a diversion accepted'           'if diversions:' 'if False:'
+mutant 'a local diversion accepted'     '("diversion by ", "local diversion ")' '("diversion by ",)'
+mutant "a package's diversion accepted" '("diversion by ", "local diversion ")' '("local diversion ",)'
 mutant 'split at the first colon'       'line[:-len(suffix)].split(", ")]' 'line.split(":")[0].split(", ")]'
 mutant 'the owners not split'           'line[:-len(suffix)].split(", ")]' '[line[:-len(suffix)]]]'
 mutant 'the first of several owners'    'if len(owners) != 1:' 'if not owners:'
@@ -265,7 +291,9 @@ mutant 'an empty version accepted'      'if not version:' 'if False:'
 mutant 'the package named by the path'  'name = owner_of(os.path.realpath(path))' \
                                         'name = owner_of(os.path.realpath(path)) and os.path.basename(path)'
 mutant "the symlink's owner named"      'owner_of(os.path.realpath(path))' 'owner_of(path)'
-mutant 'the path made absolute only'    'owner_of(os.path.realpath(path))' 'owner_of(os.path.abspath(path))'
+mutant 'one link followed'              'owner_of(os.path.realpath(path))' \
+                                        'owner_of(os.path.join(os.path.dirname(path), os.readlink(path))'\
+'                                         if os.path.islink(path) else path)'
 mutant 'an empty variable accepted'     'if not value:' 'if value is None:'
 mutant 'any id accepted'                'if not value.isdecimal():' 'if False:'
 mutant 'the attempt left out of the URL' '/actions/runs/{run_id}/attempts/{attempt}"' '/actions/runs/{run_id}"'
@@ -278,7 +306,7 @@ mutant 'a tool with no path skipped'    'if "path" not in tool:
             continue
             sys.exit'
 mutant 'a package overwritten'          'if "package" in tool:' 'if False:'
-mutant 'the first tool alone'           'tools = [tool for' 'tools = [tool for tool in [] for'
+mutant 'no tool read'                   'tools = [tool for' 'tools = [tool for tool in [] for'
 
 mutations() {
   local i content stripped occurrences survivors=0

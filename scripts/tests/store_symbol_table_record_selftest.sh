@@ -121,8 +121,11 @@ held() { git --git-dir="$remote" show "refs/heads/metrics:symbol-table/linux/$1.
 # rival <body>: a stand-in for git, ahead of it on the script's PATH, which
 # runs <body> before each push, and a second clone whose commit $rival the
 # body can push by calling rival. The stand-in pushes before the script's
-# push reads the remote, as another run's push would: a pre-push hook would
-# push only after, too late for a forced push to overwrite it.
+# push reads the remote, as another run's push would, so that a forced push
+# overwrites the rival's commit and a control sees the rival's record lost.
+# A rival pushed from a pre-push hook lands after the script's push has read
+# the remote, and receive-pack then refuses even a forced push, so a mutant
+# forcing its push would survive.
 rival() {
   local tip_now blob tree
   git clone --quiet "$remote" "$work/rival" 2> /dev/null
@@ -191,7 +194,7 @@ same_commit_controls() {
   unchanged_clone "a record for a commit held"
 }
 
-# A clone without blobs, as CI's sparse checkout makes, must fetch a held
+# A clone without blobs, as a backfill might make, must fetch a held
 # record's blob to read it. GIT_NO_LAZY_FETCH stands in for that fetch
 # failing.
 blobless_controls() {

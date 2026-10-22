@@ -26,8 +26,9 @@ The script refuses, rather than write a record which may be wrong, if
   - the record cannot be read as a JSON object, or has no toolchain, or a
     tool of its toolchain has no path, or already has a package, or the
     record already has a run;
-  - dpkg-query cannot be run, or names no package owning a tool's path, or
-    more than one, or gives no version for the package;
+  - dpkg-query cannot be run, or reports a diversion of the path a tool's
+    path resolves to, or names no package owning that path, or more than
+    one, or gives no version for the package;
   - one of the variables is unset or empty, or the id or the attempt is not
     a number.
 """
@@ -35,9 +36,11 @@ import argparse, json, os, subprocess, sys
 
 
 def run(command):
-    """Returns the standard output of `command`, exiting if it fails."""
+    """Returns the standard output of `command`, run in the C locale, exiting
+    if it fails."""
+    # The C locale, so that the lines owner_of reads are not translated.
     try:
-        r = subprocess.run(command, capture_output=True, text=True)
+        r = subprocess.run(command, capture_output=True, text=True, env={**os.environ, "LC_ALL": "C"})
     except OSError as e:
         sys.exit(f"{command[0]} could not be run: {e}")
     if r.returncode:
@@ -49,12 +52,20 @@ def owner_of(path):
     """Returns the name of the one package dpkg says owns `path`."""
     # Each line is "<packages>: <path>", the packages separated by ", ". A
     # package's name may carry its architecture after a colon, so the line is
-    # split at the path it ends with, not at its first colon. A line
-    # reporting a diversion ends with the path too, and names no owner.
+    # split at the path it ends with, not at its first colon.
+    #
+    # Under a diversion, the file at `path` belongs to the diverting package
+    # or to no package, while the owner line names the package whose file
+    # was moved away. dpkg reports a diversion as "diversion by <package>
+    # from: <path>" or "local diversion from: <path>".
     suffix = f": {path}"
+    lines = run(["dpkg-query", "--search", path]).splitlines()
+    diversions = [line for line in lines if line.startswith(("diversion by ", "local diversion "))]
+    if diversions:
+        sys.exit(f"dpkg-query reports a diversion of {path}, so its owner is not the file's: {diversions}")
     owners = [package
-              for line in run(["dpkg-query", "--search", path]).splitlines()
-              if line.endswith(suffix) and not line.startswith("diversion ")
+              for line in lines
+              if line.endswith(suffix)
               for package in line[:-len(suffix)].split(", ")]
     if len(owners) != 1:
         sys.exit(f"dpkg-query names {len(owners)} packages owning {path}, not one: {owners}")

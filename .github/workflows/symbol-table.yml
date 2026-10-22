@@ -1,17 +1,17 @@
 name: symbol-table
 
-# Records the symbol table of each commit pushed to staging, and stores the
-# record on the data branch `metrics`, at
+# Records the symbol table of the commit at the head of each push to staging,
+# and stores the record on the data branch `metrics`, at
 # symbol-table/linux-gcc-debug/<commit>.json. The branch holds the history of
 # TestAll's symbol table, which no artifact could, since artifacts expire.
 # scripts/symbol_table_report.py says what a record holds, and
 # scripts/symbol_table_provenance.py what it adds to it.
 #
 # The workflow builds TestAll and does not run the suite. The workflow is
-# apart from the tiers, so that a failure to measure cannot stop a column
-# testing, and cancelling a superseded run of a tier loses no record.
+# apart from the tiers, so that a failure to measure cannot fail a test
+# column, and cancelling a superseded run of a tier loses no record.
 #
-# Every run keeps its record as an artifact. A run dispatched on a branch
+# Every run uploads its record as an artifact. A run dispatched on a branch
 # other than staging stores nothing.
 on:
   push:
@@ -28,24 +28,32 @@ on:
 
 jobs:
   symbol-table:
-    name: Record the symbol table · Linux · GCC · Debug
-    # The configuration of coarse's Linux column, so that the records compare
-    # with that column's builds. Removing SEQUOIA_FORCE_INLINE from
-    # erased_target's constructor added 12,982 symbols (+1.91%) to this
-    # configuration's TestAll on 2026-10-21, so the records show regressions
-    # of that size. This job names its own toolchain, so a change to coarse's
-    # column does not change it. Each record names its toolchain, so a change
-    # of toolchain shows as a step in the history.
+    name: Symbol table · Linux · GCC · Debug
+    # The configuration of coarse's Linux column, so that a move in the
+    # records is a move in a build which coarse tests. On 2026-10-21, removing
+    # SEQUOIA_FORCE_INLINE from erased_target's constructor added 12,982
+    # symbols (+1.91%) to this configuration's TestAll: the regression the
+    # records exist to show.
+    #
+    # The runner, the compiler and the packages are named here, as they stood
+    # in coarse's column on 2026-10-22, and do not follow a later change to
+    # it. The presets are shared, so a change to them reaches both. Each record
+    # names its toolchain, so a change of toolchain shows as a break in the
+    # history.
     runs-on: ubuntu-26.04
     timeout-minutes: 45
-    # The store pushes to the data branch, so the job keeps working if the
+    # "Store the record on the data branch" pushes, which needs
+    # `contents: write`. The job asks for it, so that it keeps working if the
     # repository's default token becomes read-only.
     permissions:
       contents: write
+    # As in tests.yml, so that a failure within a pipe fails its step.
+    defaults:
+      run:
+        shell: bash
     env:
       CC: gcc-15
       CXX: g++-15
-      STORES_RECORD: ${{ github.ref == 'refs/heads/staging' }}
       DATA_BRANCH: metrics
     steps:
       - uses: actions/checkout@v7
@@ -55,9 +63,13 @@ jobs:
       # tests.yml is the tiers' one recipe for building and running the
       # suite. This job runs no suite, so it copies the steps it needs from
       # tests.yml's "Install the toolchain (Linux)", "Configure" and "Build",
-      # which say why each part exists. The copy leaves out gdb, which reads a
-      # failed suite's stacks, and the configure step's EXEC_ARGS, which only
-      # the `run` target reads.
+      # which say why each part exists. A change to how tests.yml installs
+      # (the retries, the repositories removed) belongs here too; a change of
+      # toolchain does not, as above.
+      #
+      # The copy leaves out gdb, which reads a failed suite's stacks. It
+      # configures without EXEC_ARGS, which only the `run` target reads, and
+      # without WARNINGS_AS_ERRORS, whose default is coarse's value, OFF.
       - name: Install the toolchain
         run: |
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
@@ -85,23 +97,25 @@ jobs:
       - name: Record the symbol table
         run: |
           mkdir "$RUNNER_TEMP/symbol-table"
-          record_file="$RUNNER_TEMP/symbol-table/linux-gcc-debug.json"
+          symbol_table_record="$RUNNER_TEMP/symbol-table/linux-gcc-debug.json"
           python3 -B scripts/symbol_table_report.py build/TestAll/gcc-env TestAll > "$RUNNER_TEMP/report.json"
-          python3 -B scripts/symbol_table_provenance.py "$RUNNER_TEMP/report.json" > "$record_file"
-          jq -c '{commit, clean, executable, toolchain}' "$record_file"
-          echo "RECORD_FILE=$record_file" >> "$GITHUB_ENV"
+          python3 -B scripts/symbol_table_provenance.py "$RUNNER_TEMP/report.json" > "$symbol_table_record"
+          jq -c '{commit, clean, executable, toolchain}' "$symbol_table_record"
+          echo "SYMBOL_TABLE_RECORD=$symbol_table_record" >> "$GITHUB_ENV"
 
       - name: Upload the record
         uses: actions/upload-artifact@v7
         with:
           name: symbol-table-linux-gcc-debug
-          path: ${{ env.RECORD_FILE }}
+          path: ${{ env.SYMBOL_TABLE_RECORD }}
           if-no-files-found: error
 
       - name: Store the record on the data branch
-        if: env.STORES_RECORD == 'true'
-        run: scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" symbol-table/linux-gcc-debug "$RECORD_FILE"
+        if: github.ref == 'refs/heads/staging'
+        run: |
+          scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" symbol-table/linux-gcc-debug \
+            "$SYMBOL_TABLE_RECORD"
 
-      - name: Nothing to store
-        if: env.STORES_RECORD != 'true'
+      - name: Store nothing off staging
+        if: github.ref != 'refs/heads/staging'
         run: echo "Only a run on staging stores its record; this run is on $GITHUB_REF."
