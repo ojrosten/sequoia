@@ -5,8 +5,9 @@ name: symbol-table
 # symbol-table/linux-gcc-debug/<commit>.json. The branch holds the history of
 # TestAll's symbol table, which no artifact could, since artifacts expire.
 # A dispatch with a list of commits records each commit in the list, in a job
-# of its own. A backfill dispatches it so to record commits older than the
-# workflow.
+# of its own. A backfill records commits older than the workflow this way.
+# A commit whose presets lack `gcc-env`, as every commit before 2026-09-06
+# does, cannot be recorded: its job fails at "Configure".
 # scripts/symbol_table_report.py says what a record holds, and
 # scripts/symbol_table_provenance.py what it adds to it.
 #
@@ -24,8 +25,9 @@ on:
     inputs:
       commits:
         description: >-
-          The commits to record, as a JSON array of full hashes. If empty, the
-          commit the run is dispatched on.
+          The commits to record, as a JSON array of full lowercase hashes, each
+          on the first-parent history of the commit the run is dispatched on.
+          If empty, that commit.
         type: string
         default: ''
 
@@ -39,14 +41,15 @@ on:
 jobs:
   symbol-table:
     name: Symbol table · Linux · GCC · Debug
-    # Each job measures one commit's tree with the scripts and the setup of
-    # the commit the run is on, so that a list of old commits is measured
-    # as a push to staging today would measure it.
+    # Each job builds one commit with that commit's presets. It installs the
+    # toolchain, measures and stores with the steps and the scripts of the
+    # commit the run is on, so that an old commit is measured as a push to
+    # staging would measure it today.
     strategy:
       fail-fast: false
-      # Without a cap, a backfill of some fifty commits would take every
-      # runner the repository is given at once, and the tiers' jobs would
-      # queue behind it.
+      # Without a cap, a backfill of more commits than the account may run
+      # jobs at once would take every runner, and the tiers' jobs would queue
+      # behind it.
       max-parallel: 5
       matrix:
         commit: ${{ fromJSON(inputs.commits || format('["{0}"]', github.sha)) }}
@@ -58,7 +61,8 @@ jobs:
     #
     # The runner, the compiler and the packages are named here, as they stood
     # in coarse's column on 2026-10-22, and do not follow a later change to
-    # it. The presets are shared, so a change to them reaches both. Each record
+    # it. The presets are shared, so at every commit the record and coarse's
+    # column build with the same presets. Each record
     # names its toolchain, so a change of toolchain shows as a break in the
     # history.
     runs-on: ubuntu-26.04
@@ -78,15 +82,20 @@ jobs:
       DATA_BRANCH: metrics
     steps:
       # Two checkouts, side by side: `tooling`, the commit the run is on,
-      # whose scripts measure; and `tree`, the commit measured. The build
-      # writes only to tree/build, which the tree's .gitignore lists, so
-      # the tree stays clean, as the store requires. On a push both are
-      # github.sha.
+      # whose steps install the toolchain, measure and store; and `tree`, the
+      # commit measured. The build writes only to tree/build, which the
+      # tree's .gitignore lists, so the tree stays clean, as the store
+      # requires. On a push both are github.sha.
+      #
+      # `tooling` holds the run's commit's whole history, without trees or
+      # blobs, so that the history can be checked below. git fetches a tree
+      # or a blob from the remote when a command needs it.
       - name: Check out the tooling
         uses: actions/checkout@v7
         with:
           path: tooling
-          fetch-depth: 1
+          fetch-depth: 0
+          filter: tree:0
 
       - name: Check out the commit to record
         uses: actions/checkout@v7
@@ -94,32 +103,27 @@ jobs:
           path: tree
           ref: ${{ matrix.commit }}
           fetch-depth: 1
-          persist-credentials: false
 
       # actions/checkout takes a ref which is not a full hash as a branch or
-      # a tag, so the tree could be another commit's than the one asked for.
-      - name: Check that the tree is the commit asked for
+      # a tag, so the commit checked out could differ from the one asked for.
+      - name: Check that the commit checked out is the commit asked for
         env:
           COMMIT: ${{ matrix.commit }}
         run: |
-          head=$(git -C tree rev-parse HEAD)
-          [ "$head" = "$COMMIT" ] \
-            || { echo "::error::The commit asked for is '$COMMIT', and the tree checked out is $head"; exit 1; }
+          checked_out=$(git -C tree rev-parse HEAD)
+          [ "$checked_out" = "$COMMIT" ] \
+            || { echo "::error::The commit checked out is $checked_out, not '$COMMIT'"; exit 1; }
 
-      # A record stays on the data branch once stored, since the branch is
-      # never rewritten. So the job refuses a commit outside the history of
-      # the run's commit before building it.
-      - name: Check that the commit is in the history of the run's commit
-        env:
-          COMMIT: ${{ matrix.commit }}
-          GH_TOKEN: ${{ github.token }}
+      # A record stays on the data branch once stored, since nothing rewrites
+      # the branch. So the job refuses, before building, a commit off the
+      # first-parent history of the run's commit: a commit of a merged topic
+      # branch, as well as a commit of a branch never merged. grep reads the
+      # whole list, so that rev-list never meets a closed pipe.
+      - name: Check that the commit checked out is on the run's first-parent history
         run: |
-          status=$(gh api "repos/$GITHUB_REPOSITORY/compare/$COMMIT...$GITHUB_SHA" --jq .status)
-          case $status in
-            ahead|identical) ;;
-            *) echo "::error::$COMMIT is not in the history of $GITHUB_SHA: the comparison's status is '$status'"
-               exit 1;;
-          esac
+          checked_out=$(git -C tree rev-parse HEAD)
+          git -C tooling rev-list --first-parent HEAD | grep -xF "$checked_out" > /dev/null \
+            || { echo "::error::$checked_out is not on the first-parent history of $GITHUB_SHA"; exit 1; }
 
       # tests.yml is the tiers' one recipe for building and running the
       # suite. This job runs no suite, so it copies the steps it needs from
