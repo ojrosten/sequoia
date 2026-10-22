@@ -8,11 +8,12 @@
 #pragma once
 
 /** \file
-    \brief Conversion between integer types which throws where a static_cast would silently wrap.
+    \brief Conversion between integer types, checked by throwing or by a precondition, where a static_cast would silently wrap.
  */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
+#include <cassert>
 #include <format>
 #include <limits>
 #include <stdexcept>
@@ -34,6 +35,22 @@ namespace sequoia::utilities
         throw std::domain_error{std::format("Value {} is outside the range [{}, {}] of the target type", val, lowestVal, maxVal)};
       }
     }
+
+    return static_cast<To>(val);
+  }
+
+  /** \brief Converts `val` to `To`.
+
+      An index offsetting an iterator is a client: any offset valid for the iterator fits its
+      `difference_type`, so for an in-contract call the conversion cannot lose a value.
+
+      \pre `std::in_range<To>(val)`
+   */
+  template<integer To, integer From>
+  [[nodiscard]]
+  constexpr To unchecked_conversion_to(From val)
+  {
+    assert(std::in_range<To>(val));
 
     return static_cast<To>(val);
   }
