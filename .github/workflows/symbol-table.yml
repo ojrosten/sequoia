@@ -1,0 +1,121 @@
+name: symbol-table
+
+# Records the symbol table of the commit at the head of each push to staging,
+# and stores the record on the data branch `metrics`, at
+# symbol-table/linux-gcc-debug/<commit>.json. The branch holds the history of
+# TestAll's symbol table, which no artifact could, since artifacts expire.
+# scripts/symbol_table_report.py says what a record holds, and
+# scripts/symbol_table_provenance.py what it adds to it.
+#
+# The workflow builds TestAll and does not run the suite. The workflow is
+# apart from the tiers, so that a failure to measure cannot fail a test
+# column, and cancelling a superseded run of a tier loses no record.
+#
+# Every run uploads its record as an artifact. A run dispatched on a branch
+# other than staging stores nothing.
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+
+# The workflow has no concurrency group, since each push to staging stores
+# its own commit's record. A group cancels runs even without
+# cancel-in-progress: GitHub keeps one pending run per group, and cancels it
+# when a newer run joins the group. Two runs may store at once: each record is
+# a file of its own, and scripts/store_symbol_table_record.sh retries a push
+# which another run beat.
+
+jobs:
+  symbol-table:
+    name: Symbol table · Linux · GCC · Debug
+    # The configuration of coarse's Linux column, so that a move in the
+    # records is a move in a build which coarse tests. On 2026-10-21, removing
+    # SEQUOIA_FORCE_INLINE from erased_target's constructor added 12,982
+    # symbols (+1.91%) to this configuration's TestAll: the regression the
+    # records exist to show.
+    #
+    # The runner, the compiler and the packages are named here, as they stood
+    # in coarse's column on 2026-10-22, and do not follow a later change to
+    # it. The presets are shared, so a change to them reaches both. Each record
+    # names its toolchain, so a change of toolchain shows as a break in the
+    # history.
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+    # "Store the record on the data branch" pushes, which needs
+    # `contents: write`. The job asks for it, so that it keeps working if the
+    # repository's default token becomes read-only.
+    permissions:
+      contents: write
+    # As in tests.yml, so that a failure within a pipe fails its step.
+    defaults:
+      run:
+        shell: bash
+    env:
+      CC: gcc-15
+      CXX: g++-15
+      DATA_BRANCH: metrics
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      # tests.yml is the tiers' one recipe for building and running the
+      # suite. This job runs no suite, so it copies the steps it needs from
+      # tests.yml's "Install the toolchain (Linux)", "Configure" and "Build",
+      # which say why each part exists. A change to how tests.yml installs
+      # (the retries, the repositories removed) belongs here too; a change of
+      # toolchain does not, as above.
+      #
+      # The copy leaves out gdb, which reads a failed suite's stacks. It
+      # configures without EXEC_ARGS, which only the `run` target reads, and
+      # without WARNINGS_AS_ERRORS, whose default is coarse's value, OFF.
+      - name: Install the toolchain
+        run: |
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
+                     /etc/apt/sources.list.d/microsoft-prod.list
+          sudo scripts/retry.sh 3 180 -- apt-get update -qq --error-on=any \
+            || { echo "::error::The apt indexes could not be fetched: each attempt above says why"; exit 1; }
+          packages=("$CXX" ninja-build libtbb-dev)
+          names=$(apt-cache pkgnames)
+          for pkg in "${packages[@]}"; do
+            grep -qFx -- "$pkg" <<< "$names" \
+              || { echo "::error::$pkg is not available on this image"; exit 1; }
+          done
+          sudo scripts/retry.sh 3 300 -- apt-get install -y "${packages[@]}"
+          "$CXX" --version
+          cmake --version
+
+      - name: Configure
+        working-directory: TestAll
+        run: cmake --preset gcc-env
+
+      - name: Build
+        working-directory: TestAll
+        run: cmake --build --preset gcc-env
+
+      - name: Record the symbol table
+        run: |
+          mkdir "$RUNNER_TEMP/symbol-table"
+          symbol_table_record="$RUNNER_TEMP/symbol-table/linux-gcc-debug.json"
+          python3 -B scripts/symbol_table_report.py build/TestAll/gcc-env TestAll > "$RUNNER_TEMP/report.json"
+          python3 -B scripts/symbol_table_provenance.py "$RUNNER_TEMP/report.json" > "$symbol_table_record"
+          jq -c '{commit, clean, executable, toolchain}' "$symbol_table_record"
+          echo "SYMBOL_TABLE_RECORD=$symbol_table_record" >> "$GITHUB_ENV"
+
+      - name: Upload the record
+        uses: actions/upload-artifact@v7
+        with:
+          name: symbol-table-linux-gcc-debug
+          path: ${{ env.SYMBOL_TABLE_RECORD }}
+          if-no-files-found: error
+
+      - name: Store the record on the data branch
+        if: github.ref == 'refs/heads/staging'
+        run: |
+          scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" symbol-table/linux-gcc-debug \
+            "$SYMBOL_TABLE_RECORD"
+
+      - name: Store nothing off staging
+        if: github.ref != 'refs/heads/staging'
+        run: echo "Only a run on staging stores its record; this run is on $GITHUB_REF."
