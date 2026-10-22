@@ -50,7 +50,7 @@ namespace sequoia::testing
       value_type m_Scale{1};
     };
 
-    template<std::unsigned_integral Index>
+    template<integer Index>
     class index_dereference_policy
     {
     public:
@@ -282,7 +282,7 @@ namespace sequoia::testing
     check("Custom reverse iterators should compare equal if they point to the same thing, irrespective of any other state", i == j);
   }
 
-  template<std::unsigned_integral Index>
+  template<integer Index>
   void iterator_test::test_index_iterator()
   {
     using namespace utilities;

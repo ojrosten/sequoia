@@ -13,6 +13,7 @@
 
 #include <limits>
 #include <numeric>
+#include <ranges>
 
 namespace sequoia::testing
 {
@@ -811,7 +812,7 @@ namespace sequoia::testing
         {  // begin 'graph_description::ascending_weights'
           {
             graph_description::descending_weights,
-            report("Sorting the nodes of a graph whose order exceeds the greatest signed char"),
+            report("Sorting the nodes of a graph whose order exceeds the greatest signed char into descending weights"),
             [](graph_t g) -> graph_t {
               g.sort_nodes(
                 0,
@@ -825,7 +826,7 @@ namespace sequoia::testing
         {  // begin 'graph_description::descending_weights'
           {
             graph_description::ascending_weights,
-            report("Sorting the nodes of a graph whose order exceeds the greatest signed char"),
+            report("Sorting the nodes of a graph whose order exceeds the greatest signed char into ascending weights"),
             [](graph_t g) -> graph_t {
               g.sort_nodes(
                 0,
