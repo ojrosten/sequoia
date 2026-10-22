@@ -49,9 +49,12 @@ name: coarse
 # milliseconds apart; a shorter sleep would bring that back. The Release trials
 # ran on an Apple M2 Pro host, where those starts were closer together than on
 # the usual M1, so that column's sample was the easier one. If a performance
-# check turns a macOS gate red, sample that column the same way rather than
-# re-run it, and exclude the performance tests from it again if more than one
-# trial in 60 fails.
+# check turns a macOS gate red, sample that column rather than re-run it. On a
+# scratch branch, give statistical.yml a column with the gate column's presets,
+# and drop `--exclude-performance` from statistical.yml's `exec_args`. Then
+# dispatch statistical.yml on that branch with `trials` set to 60. Exclude the
+# performance tests from the gate column again if more than one trial in 60
+# fails.
 #
 # Every column checks the versioned output, since 2026-09-22. The check is a
 # comparison of files the run has just written, and costs nothing this tier's
