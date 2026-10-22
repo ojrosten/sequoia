@@ -103,8 +103,8 @@ name: rigorous
 # sample did not include TSan. In run 38311738311 (2026-10-12), 10 of 30 TSan
 # trials of the performance tests failed, mostly with speed-ups above the
 # predicted range. That tree predates the 40 ms overlap sleep, and the scripted
-# clock of the retry and diagnostics tests. Lift the flag here when a TSan
-# sample meets coarse.yml's bar.
+# clock of the retry and diagnostics tests. Lift the flag here when a 60-trial
+# TSan sample, taken as coarse.yml describes, fails in at most one trial.
 #
 # The Windows ASan column runs the performance tests, but its repeated runs
 # exclude them: those runs repeat the suite to find the sharing violation
