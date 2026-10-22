@@ -6,7 +6,6 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "PerformanceExceptionsTest.hpp"
-#include "PerformanceTestingUtilities.hpp"
 
 #include <array>
 #include <chrono>
@@ -15,6 +14,11 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    constexpr std::chrono::milliseconds unit_duration{2};
+  }
+
   [[nodiscard]]
   std::filesystem::path performance_exceptions_test::source_file()
   {
@@ -38,13 +42,16 @@ namespace sequoia::testing
     constexpr double      nan{std::numeric_limits<double>::quiet_NaN()};
     constexpr std::size_t tooFewTrials{relative_performance_minimum_trials_floor - 1};
 
+    scripted_clock clock{};
+
     auto relativePerformanceCheck{
-      [this](const relative_performance_parameters& parameters) {
-        return [this, parameters]() {
+      [this, &clock](const relative_performance_parameters& parameters) {
+        return [this, &clock, parameters]() {
           return check_relative_performance("Relative performance with invalid arguments",
                                             []() {},
                                             []() {},
-                                            parameters);
+                                            parameters,
+                                            clock);
         };
       }
     };
@@ -62,12 +69,13 @@ namespace sequoia::testing
                                                                             .minimum_trials{tooFewTrials}}));
 
     auto relativePerformanceCheckWithBaselines{
-      [this](const relative_performance_parameters& parameters) {
-        return [this, parameters]() {
+      [this, &clock](const relative_performance_parameters& parameters) {
+        return [this, &clock, parameters]() {
           return check_relative_performance("Relative performance with baselines and invalid arguments",
                                             task_with_baseline{.task = []() {}, .baseline = []() {}},
                                             task_with_baseline{.task = []() {}, .baseline = []() {}},
-                                            parameters);
+                                            parameters,
+                                            clock);
         };
       }
     };
@@ -97,14 +105,16 @@ namespace sequoia::testing
   void performance_exceptions_test::test_checks_made_by_a_task()
   {
     const relative_performance_parameters parameters{.prediction{.lower{2.0}, .upper{3.0}}};
+    scripted_clock clock{};
 
     auto checkWithTasks{
-      [this, &parameters](auto fast, auto slow) {
-        return [this, &parameters, fast, slow]() {
+      [this, &parameters, &clock](auto fast, auto slow) {
+        return [this, &parameters, &clock, fast, slow]() {
           return check_relative_performance("Relative performance with a task which performs a check",
                                             fast,
                                             slow,
-                                            parameters);
+                                            parameters,
+                                            clock);
         };
       }
     };
@@ -118,8 +128,12 @@ namespace sequoia::testing
       "Slow task performs a performance check",
       checkWithTasks(
         []() {},
-        [this, &parameters]() {
-          check_relative_performance("A performance check within a performance check", []() {}, []() {}, parameters);
+        [this, &parameters, &clock]() {
+          check_relative_performance("A performance check within a performance check",
+                                     []() {},
+                                     []() {},
+                                     parameters,
+                                     clock);
         }
       )
     );
@@ -141,24 +155,34 @@ namespace sequoia::testing
 
   void performance_exceptions_test::test_throwing_task()
   {
+    scripted_clock clock{};
+
+    // The tasks which do not throw advance the clock, so that a trial which
+    // reached its judgement would find every timed duration positive, and
+    // would not throw std::runtime_error itself.
+    auto advancingTask{[&clock]() { clock.advance(unit_duration); }};
+
     auto checkWithThrowingFastTask{
-      [this]() {
+      [this, &clock, advancingTask]() {
         return check_relative_performance("Relative performance with a throwing task",
                                           []() { throw std::runtime_error{"Fast task failure"}; },
-                                          []() {},
-                                          {.prediction{.lower{2.0}, .upper{3.0}}});
+                                          advancingTask,
+                                          {.prediction{.lower{2.0}, .upper{3.0}}},
+                                          clock);
       }
     };
 
     check_exception_thrown<std::runtime_error>("Fast task throws", checkWithThrowingFastTask);
 
     auto checkWithThrowingSlowBaseline{
-      [this]() {
+      [this, &clock, advancingTask]() {
         return check_relative_performance(
           "Relative performance with a throwing baseline",
-          task_with_baseline{.task = []() {}, .baseline = []() {}},
-          task_with_baseline{.task = []() {}, .baseline = []() { throw std::runtime_error{"Slow baseline failure"}; }},
-          {.prediction{.lower{2.0}, .upper{3.0}}}
+          task_with_baseline{.task = advancingTask, .baseline = advancingTask},
+          task_with_baseline{.task = advancingTask,
+                             .baseline = []() { throw std::runtime_error{"Slow baseline failure"}; }},
+          {.prediction{.lower{2.0}, .upper{3.0}}},
+          clock
         );
       }
     };
