@@ -281,7 +281,9 @@ namespace sequoia::utilities
       requires steppable<Iterator>
     {
       if constexpr(integer<Iterator>)
-        return DereferencePolicy::get(unchecked_conversion_to<Iterator>(unchecked_conversion_to<difference_type>(m_BaseIterator) + n));
+        return DereferencePolicy::get(unchecked_conversion_to<Iterator>(
+                                        unchecked_conversion_to<difference_type>(m_BaseIterator) + n
+                                      ));
       else
         return DereferencePolicy::get(m_BaseIterator + n);
     }
