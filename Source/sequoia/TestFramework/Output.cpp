@@ -427,7 +427,7 @@ namespace sequoia::testing
 
         pos = respell_hex_float(name, pos);
 
-        pos = name.find_first_not_of("0123456789", pos + 1);
+        pos = name.find_first_not_of(ascii::digits, pos + 1);
 
         pos = erase_literal_suffix(name, pos);
       }

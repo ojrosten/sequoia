@@ -39,8 +39,10 @@ namespace sequoia
 
   namespace ascii
   {
+    inline constexpr std::string_view digits{"0123456789"};
+
     inline constexpr auto is_digit{
-      [](character auto c){ return (c >= '0') && (c <= '9'); }
+      [](character auto c){ return std::ranges::contains(digits, c); }
     };
 
     inline constexpr auto is_uppercase{
