@@ -23,6 +23,7 @@
 #include <cstddef>
 #include <format>
 #include <functional>
+#include <iterator>
 #include <limits>
 #include <string>
 #include <numeric>
@@ -943,12 +944,12 @@ namespace sequoia
       {
         partitions_type partitions(partitionsAllocator);
         partitions.reserve(list.size());
-        typename container_type::size_type bound{};
-        for(const auto& partitionElements : list)
-        {
-          bound += partitionElements.size();
-          partitions.push_back(bound);
-        }
+        std::transform_inclusive_scan(list.begin(),
+                                      list.end(),
+                                      std::back_inserter(partitions),
+                                      std::plus{},
+                                      std::ranges::size,
+                                      typename container_type::size_type{});
 
         return partitions;
       }
