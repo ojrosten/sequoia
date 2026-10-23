@@ -17,8 +17,8 @@
 
  */
 
-#include "sequoia/Core/ContainerUtilities/ArithmeticCasts.hpp"
 #include "sequoia/Core/ContainerUtilities/Iterator.hpp"
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
 
 #include <algorithm>
@@ -130,7 +130,7 @@ namespace sequoia::maths
     {
       if(pos == cend_node_weights()) throw std::out_of_range("node_storage::set_node_weight - index out of range!\n");
 
-      const auto index{utilities::unchecked_conversion_to<size_type>(std::ranges::distance(cbegin_node_weights(), pos))};
+      const auto index{numeric::unchecked_conversion_to<size_type>(std::ranges::distance(cbegin_node_weights(), pos))};
       m_NodeWeights[index] = std::move(w);
     }
 
@@ -144,7 +144,7 @@ namespace sequoia::maths
     {
       if(pos == cend_node_weights()) throw std::out_of_range("node_storage::mutate_node_weight - index out of range!\n");
 
-      const auto index{utilities::unchecked_conversion_to<size_type>(std::ranges::distance(cbegin_node_weights(), pos))};
+      const auto index{numeric::unchecked_conversion_to<size_type>(std::ranges::distance(cbegin_node_weights(), pos))};
       return std::invoke(fn, m_NodeWeights[index]);
     }
 

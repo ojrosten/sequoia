@@ -9,7 +9,7 @@
 
 /** \file */
 
-#include "sequoia/Core/ContainerUtilities/ArithmeticCasts.hpp"
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
@@ -41,7 +41,7 @@ namespace sequoia::testing
         for(;i_prediction != prediction.end(); ++i_prediction, ++i, ++ci_prediction, ++ci, ++ri_prediction, ++ri, ++cri_prediction, ++cri)
         {
           const auto d{std::ranges::distance(prediction.begin(), i_prediction)};
-          const auto idx{utilities::unchecked_conversion_to<typename T::size_type>(d)};
+          const auto idx{numeric::unchecked_conversion_to<typename T::size_type>(d)};
           const auto mess{std::format(" for index {}", d)};
 
           check(equality, std::string{"Dereferenced iterator wrong"}.append(mess), logger, *i, *i_prediction);

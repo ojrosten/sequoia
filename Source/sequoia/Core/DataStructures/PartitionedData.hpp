@@ -913,7 +913,7 @@ namespace sequoia
           if(const auto numErased{std::ranges::distance(first, last)}; numErased > 0)
           {
             const auto next{m_Data.erase(first.base_iterator(), last.base_iterator())};
-            decrement_partition_indices(firstPartition, num_partitions(), utilities::unchecked_conversion_to<index_type>(numErased));
+            decrement_partition_indices(firstPartition, num_partitions(), numeric::unchecked_conversion_to<index_type>(numErased));
 
             return {next, firstPartition};
           }

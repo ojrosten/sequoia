@@ -815,7 +815,7 @@ namespace sequoia
             if constexpr (edge_type::flavour == edge_flavour::partial_embedded)
             {
               const auto compIndex{citer->complementary_index()};
-              const auto compPos{utilities::unchecked_conversion_to<std::ptrdiff_t>(compIndex)};
+              const auto compPos{numeric::unchecked_conversion_to<std::ptrdiff_t>(compIndex)};
               const auto pos{std::ranges::distance(cbegin_edges(source), citer)};
               const auto separation{
                 std::ranges::distance(
@@ -1508,7 +1508,7 @@ namespace sequoia
         }
         else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
         {
-          const auto compIndex{utilities::unchecked_conversion_to<edge_index_type>(std::ranges::size(cedges(node1)) - 1)};
+          const auto compIndex{numeric::unchecked_conversion_to<edge_index_type>(std::ranges::size(cedges(node1)) - 1)};
           m_Edges.push_back_to_partition(node2, node1, compIndex, std::move(md)..., *crbegin_edges(node1));
         }
       }
@@ -1575,7 +1575,7 @@ namespace sequoia
         }
         else if constexpr (edge_type::flavour == edge_flavour::partial_embedded)
         {
-          const auto dist{utilities::unchecked_conversion_to<edge_index_type>(std::ranges::size(cedges(node2)))};
+          const auto dist{numeric::unchecked_conversion_to<edge_index_type>(std::ranges::size(cedges(node2)))};
           const edge_index_type i{ node1 == node2 ? dist + 1 : dist };
           m_Edges.push_back_to_partition(node1, node2, i, std::forward<Args>(args)...);
         }

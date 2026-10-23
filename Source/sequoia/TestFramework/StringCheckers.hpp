@@ -14,7 +14,7 @@
     header pulling in every specialization at once.
  */
 
-#include "sequoia/Core/ContainerUtilities/ArithmeticCasts.hpp"
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/TestFramework/FreeCheckers.hpp"
 
 #include <format>
@@ -145,7 +145,7 @@ namespace sequoia::testing
 
       if((iters.in1 != obtained.end()) && (iters.in2 != prediction.end()))
       {
-        const auto dist{utilities::unchecked_conversion_to<size_type>(std::ranges::distance(obtained.begin(), iters.in1))};
+        const auto dist{numeric::unchecked_conversion_to<size_type>(std::ranges::distance(obtained.begin(), iters.in1))};
         auto adv{make_advisor("", obtained, prediction, dist, advisor)};
 
         const auto numLines{std::count(prediction.begin(), iters.in2, '\n')};
@@ -161,7 +161,7 @@ namespace sequoia::testing
       {
         auto checker{
           [&logger, obtained, prediction](auto begin, auto iter, std::string_view state, std::string_view adjective){
-            const auto dist{utilities::unchecked_conversion_to<size_type>(std::ranges::distance(begin, iter))};
+            const auto dist{numeric::unchecked_conversion_to<size_type>(std::ranges::distance(begin, iter))};
             const auto info{std::format("First {} character: {}", state, display_character(*iter))};
             auto adv{make_preliminary_advisor(info, obtained, prediction, dist)};
 
