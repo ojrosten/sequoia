@@ -1,0 +1,37 @@
+////////////////////////////////////////////////////////////////////
+//                Copyright Oliver J. Rosten 2026.                //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+#pragma once
+
+/** \file
+    \brief Element types for testing containers.
+ */
+
+namespace sequoia::testing
+{
+  /** \brief An element type implicitly constructible from any type, as `std::any` is.
+
+      Braced construction of a container of this element type, from a container or an allocator, selects the
+      initializer-list constructor: each argument becomes an element.
+   */
+  struct constructible_from_anything
+  {
+    int value{};
+
+    constexpr constructible_from_anything() = default;
+
+    constexpr constructible_from_anything(const int initialValue)
+      : value{initialValue}
+    {}
+
+    template<class U>
+    constexpr constructible_from_anything(const U&) {}
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const constructible_from_anything&, const constructible_from_anything&) noexcept = default;
+  };
+}

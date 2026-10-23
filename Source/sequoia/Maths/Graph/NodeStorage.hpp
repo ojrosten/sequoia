@@ -161,11 +161,11 @@ namespace sequoia::maths
 
     template<std::size_t N>
     constexpr node_storage_base(const std::array<weight_type, N>& weights)
-      : m_NodeWeights{weights}
+      : m_NodeWeights(weights)
     {}
 
     constexpr node_storage_base(std::initializer_list<weight_type> weights)
-      : m_NodeWeights{weights}
+      : m_NodeWeights(weights)
     {}
 
     template<alloc Allocator>
@@ -180,7 +180,7 @@ namespace sequoia::maths
 
     template<alloc Allocator>
     constexpr node_storage_base(std::initializer_list<weight_type> weights, const Allocator& allocator)
-      : m_NodeWeights{weights, allocator}
+      : m_NodeWeights(weights, allocator)
     {}
 
     constexpr node_storage_base(const node_storage_base&)
@@ -189,14 +189,14 @@ namespace sequoia::maths
     template<alloc Allocator>
       requires is_deep_copy_constructible_v<node_weight_container_type>
     constexpr node_storage_base(const node_storage_base& other, const Allocator& allocator)
-      : m_NodeWeights{other.m_NodeWeights, allocator}
+      : m_NodeWeights(other.m_NodeWeights, allocator)
     {}
 
     constexpr node_storage_base(node_storage_base&&) noexcept = default;
 
     template<alloc Allocator>
     constexpr node_storage_base(node_storage_base&& s, const Allocator& allocator) noexcept
-      : m_NodeWeights{std::move(s.m_NodeWeights), allocator}
+      : m_NodeWeights(std::move(s.m_NodeWeights), allocator)
     {}
 
     ~node_storage_base() = default;
@@ -300,7 +300,7 @@ namespace sequoia::maths
 
     template<alloc Allocator>
     constexpr node_storage(node_storage&& s, const Allocator& allocator) noexcept
-      : base_type{std::move(s), allocator}
+      : base_type(std::move(s), allocator)
     {}
   };
 

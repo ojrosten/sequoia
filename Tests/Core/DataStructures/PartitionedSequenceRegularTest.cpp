@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "PartitionedSequenceRegularTest.hpp"
+#include "ElementTestingTypes.hpp"
 #include "PartitionedDataGenericTests.hpp"
 
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
@@ -42,26 +43,6 @@ namespace sequoia::testing
       assign_only_element(const assign_only_element&) = delete;
 
       assign_only_element& operator=(const assign_only_element&) = default;
-    };
-
-    // Implicitly constructible from any type, as std::any is. Braces around a
-    // container or an allocator therefore make a container of this element
-    // type hold each argument as an element.
-    struct constructible_from_anything
-    {
-      int value{};
-
-      constexpr constructible_from_anything() = default;
-
-      constexpr constructible_from_anything(const int val)
-        : value{val}
-      {}
-
-      template<class U>
-      constexpr constructible_from_anything(const U&) {}
-
-      [[nodiscard]]
-      friend constexpr bool operator==(const constructible_from_anything&, const constructible_from_anything&) noexcept = default;
     };
 
     template<class T>
@@ -240,12 +221,11 @@ namespace sequoia::testing
   {
     using sequence = data_structures::partitioned_sequence<constructible_from_anything>;
 
-    // The allocator-extended move keeps the moved sequence's elements
     STATIC_CHECK(
       [](){
-        sequence s{{1, 2}, {3}};
-        const sequence t{std::move(s), sequence::allocator_type{}, sequence::partitions_allocator_type{}};
-        return t == sequence{{1, 2}, {3}};
+        sequence source{{1, 2}, {3}};
+        const sequence moved{std::move(source), sequence::allocator_type{}, sequence::partitions_allocator_type{}};
+        return moved == sequence{{1, 2}, {3}};
       }()
     );
   }
@@ -259,12 +239,11 @@ namespace sequoia::testing
                                                                                      std::ranges::greater,
                                                                                      std::vector<std::size_t, copy_propagating_allocator<std::size_t>>>>;
 
-    // Resetting leaves the sequence empty
     STATIC_CHECK(
       [](){
-        sequence s{{1, 2}, {3}};
-        s.reset(sequence::allocator_type{}, sequence::partitions_allocator_type{});
-        return s == sequence{};
+        sequence toReset{{1, 2}, {3}};
+        toReset.reset(sequence::allocator_type{}, sequence::partitions_allocator_type{});
+        return toReset == sequence{};
       }()
     );
   }
