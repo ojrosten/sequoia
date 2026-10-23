@@ -82,6 +82,7 @@ FUNCTION(sequoia_set_compile_options target)
         # confined to the configurations that can raise it; unoptimized builds cannot.
         target_compile_options(${target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/wd4702>)
     else()
+        # gcc's -Wconversion does not imply -Wsign-conversion
         target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion)
     endif()
 
