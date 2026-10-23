@@ -95,10 +95,19 @@ name: rigorous
 # the flag when gcc is fixed, or sooner, to find out whether this column was
 # ever affected.
 #
-# Every Linux and Windows column runs the performance tests. The macOS
-# columns carry `--exclude-performance`, for the reason, and on the
-# measurement, that coarse.yml gives. The Windows ASan column's repeated runs
-# keep excluding them: those repeat the suite to find the sharing violation
+# Every column but macOS TSan runs the performance tests. coarse.yml gives the
+# sample on whose strength the macOS Release column runs them, and when to
+# exclude them again.
+#
+# The TSan column excludes the performance tests in both passes. coarse.yml's
+# sample did not include TSan. In run 38311738311 (2026-10-12), 10 of 30 TSan
+# trials of the performance tests failed, mostly with speed-ups above the
+# predicted range. That tree predates the 40 ms overlap sleep, and the scripted
+# clock of the retry and diagnostics tests. Lift the flag here when a 60-trial
+# TSan sample, taken as coarse.yml describes, fails in at most one trial.
+#
+# The Windows ASan column runs the performance tests, but its repeated runs
+# exclude them: those runs repeat the suite to find the sharing violation
 # below, which the performance tests have no part in.
 #
 # Both MSVC columns run TestRunnerTest, as every MSVC column in every tier
@@ -186,7 +195,7 @@ jobs:
           {"name": "Linux · GCC · Release",    "os": "ubuntu-26.04",   "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15", "exec_args": ""},
           {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance", "repeat_args": "locate;20;--check-versioned-output;--exclude-performance;exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
           {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output"},
-          {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output;--exclude-performance"}
+          {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output"}
         ]
 
   docs:

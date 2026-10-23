@@ -1,12 +1,21 @@
 name: selftests
 
 # The scripts' selftests. Each job names the selftests to run on its platform:
-# those of the scripts CI runs there, and compile_time_report's, whose script
-# runs on developers' machines. The macOS job also runs
-# generate_coverage_report's: developers run that script on their Macs, though
-# CI runs it only on Linux. A selftest is named rather than found, since
-# report_crashes' selftest passes on Linux having run nothing. The inventory
-# job checks that every selftest runs somewhere.
+# those of the scripts CI runs there, together with compile_time_report's and
+# symbol_table_report's, whose scripts run on developers' machines. The macOS
+# job also runs generate_coverage_report's: developers run that script on
+# their Macs, though CI runs it only on Linux. A selftest is named rather than
+# found, since report_crashes' selftest passes on Linux having run nothing.
+# The inventory job checks that every selftest runs somewhere.
+#
+# symbol_dashboard's selftest runs on Linux alone. Its subject is the
+# dashboard's script, which runs in a browser, so the platform's only part is
+# the node that stands in for the browser; the image ships one.
+#
+# symbol_table_report's selftest links its fixture in the platform's own
+# format, and reads it with the platform's nm. So the Linux job controls the
+# script with GNU nm on ELF executables, and the macOS job controls it with
+# llvm-nm on Mach-O executables.
 #
 # No job runs on Windows. snapshot_at_deadline runs on every Windows column,
 # but its selftest compiles a POSIX stand-in, so nothing controls its Windows
@@ -18,7 +27,7 @@ on:
   workflow_call:
     inputs:
       needs_testing:
-        description: 'Whether the change touches anything the suite reads, scripts included: `true` or `false`, from scope.yml. Anything else fails every job.'
+        description: 'Whether the change touches anything the selftests read: `true` or `false`, from scope.yml. Anything else fails every job.'
         required: true
         type: string
 
@@ -43,6 +52,7 @@ jobs:
             packages: gdb
             selftests: compile_time_report cron_expression_at generate_coverage_report
               propose_tightened_baseline read_settled_jobs rerun_unacquired_job retry snapshot_at_deadline
+              store_symbol_table_record symbol_dashboard symbol_table_provenance symbol_table_report
           # report_crashes' selftest runs on macOS alone. The system there writes
           # the crash reports its macOS controls read, and its Linux and Windows
           # controls run through stand-ins for uname, file and gdb. One of those
@@ -51,7 +61,7 @@ jobs:
             os: macos-latest
             packages: ''
             selftests: compile_time_report generate_coverage_report
-              propose_tightened_baseline report_crashes snapshot_at_deadline
+              propose_tightened_baseline report_crashes snapshot_at_deadline symbol_table_report
     steps:
       - uses: actions/checkout@v7
         with:
@@ -73,7 +83,9 @@ jobs:
       # Each package is checked by exact name first, as in tests.yml's "Install
       # the toolchain (Linux)", since apt-get takes a name as a pattern. Each
       # apt command runs through scripts/retry.sh, as there, with limits that
-      # leave room for every retry within the job.
+      # leave room for every retry within the job. Recommendations are left
+      # out: gdb's include libc6-dbg, most of the download, which no
+      # selftest needs.
       - name: Install the packages the selftests need
         if: inputs.needs_testing == 'true' && matrix.packages != ''
         env:
@@ -85,7 +97,7 @@ jobs:
             grep -qFx -- "$package" <<< "$names" \
               || { echo "::error::$package is not available on this image"; exit 1; }
           done
-          sudo scripts/retry.sh 2 180 -- apt-get install -y $PACKAGES
+          sudo scripts/retry.sh 2 180 -- apt-get install -y --no-install-recommends $PACKAGES
 
       # Every selftest runs, whichever fail, and the step names each that failed.
       # A selftest passes when it exits 0 and its last line says its controls

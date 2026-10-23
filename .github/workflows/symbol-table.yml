@@ -1,0 +1,190 @@
+name: symbol-table
+
+# Records the symbol table of the commit at the head of each push to staging,
+# and stores the record on the data branch `metrics`, at
+# symbol-table/linux-gcc-debug/<commit>.json. The branch holds the history of
+# TestAll's symbol table, which no artifact could, since artifacts expire.
+# A dispatch with a list of commits records each commit in the list, in a job
+# of its own. A backfill records commits older than the workflow this way.
+# A commit whose presets lack `gcc-env`, as every commit before 2026-09-06
+# does, cannot be recorded: its job fails at "Configure".
+# scripts/symbol_table_report.py says what a record holds, and
+# scripts/symbol_table_provenance.py what it adds to it.
+#
+# The workflow builds TestAll and does not run the suite. The workflow is
+# apart from the tiers, so that a failure to measure cannot fail a test
+# column, and cancelling a superseded run of a tier loses no record.
+#
+# Every job uploads its record as an artifact. A run dispatched on a branch
+# other than staging stores nothing.
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+    inputs:
+      commits:
+        description: >-
+          The commits to record, as a JSON array of full lowercase hashes, each
+          on the first-parent history of the commit the run is dispatched on.
+          If empty, that commit.
+        type: string
+        default: ''
+
+# The workflow has no concurrency group, since each push to staging stores
+# its own commit's record. A group cancels runs even without
+# cancel-in-progress: GitHub keeps one pending run per group, and cancels it
+# when a newer run joins the group. Two runs may store at once: each record is
+# a file of its own, and scripts/store_symbol_table_record.sh retries a push
+# which another run beat.
+
+jobs:
+  symbol-table:
+    name: Symbol table · Linux · GCC · Debug
+    # Each job builds one commit with that commit's presets. It installs the
+    # toolchain, measures and stores with the steps and the scripts of the
+    # commit the run is on, so that an old commit is measured as a push to
+    # staging would measure it today.
+    strategy:
+      fail-fast: false
+      # Without a cap, a backfill of more commits than the account may run
+      # jobs at once would take every runner, and the tiers' jobs would queue
+      # behind it.
+      max-parallel: 5
+      matrix:
+        commit: ${{ fromJSON(inputs.commits || format('["{0}"]', github.sha)) }}
+    # The configuration of coarse's Linux column, so that a move in the
+    # records is a move in a build which coarse tests. On 2026-10-21, removing
+    # SEQUOIA_FORCE_INLINE from erased_target's constructor added 12,982
+    # symbols (+1.91%) to this configuration's TestAll: the regression the
+    # records exist to show.
+    #
+    # The runner, the compiler and the packages are named here, as they stood
+    # in coarse's column on 2026-10-22, and do not follow a later change to
+    # it. The presets are shared, so at every commit the record and coarse's
+    # column build with the same presets. Each record
+    # names its toolchain, so a change of toolchain shows as a break in the
+    # history.
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+    # "Store the record on the data branch" pushes, which needs
+    # `contents: write`. The job asks for it, so that it keeps working if the
+    # repository's default token becomes read-only.
+    permissions:
+      contents: write
+    # As in tests.yml, so that a failure within a pipe fails its step.
+    defaults:
+      run:
+        shell: bash
+    env:
+      CC: gcc-15
+      CXX: g++-15
+      DATA_BRANCH: metrics
+    steps:
+      # Two checkouts, side by side: `tooling`, the commit the run is on,
+      # whose steps install the toolchain, measure and store; and `tree`, the
+      # commit measured. The build writes only to tree/build, which the
+      # tree's .gitignore lists, so the tree stays clean, as the store
+      # requires. On a push both are github.sha.
+      #
+      # `tooling` holds the run's commit's whole history, without trees or
+      # blobs, so that the history can be checked below. git fetches a tree
+      # or a blob from the remote when a command needs it.
+      - name: Check out the tooling
+        uses: actions/checkout@v7
+        with:
+          path: tooling
+          fetch-depth: 0
+          filter: tree:0
+
+      - name: Check out the commit to record
+        uses: actions/checkout@v7
+        with:
+          path: tree
+          ref: ${{ matrix.commit }}
+          fetch-depth: 1
+
+      # actions/checkout takes a ref which is not a full hash as a branch or
+      # a tag, so the commit checked out could differ from the one asked for.
+      - name: Check that the commit checked out is the commit asked for
+        env:
+          COMMIT: ${{ matrix.commit }}
+        run: |
+          checked_out=$(git -C tree rev-parse HEAD)
+          [ "$checked_out" = "$COMMIT" ] \
+            || { echo "::error::The commit checked out is $checked_out, not '$COMMIT'"; exit 1; }
+
+      # A record stays on the data branch once stored, since nothing rewrites
+      # the branch. So the job refuses, before building, a commit off the
+      # first-parent history of the run's commit: a commit of a merged topic
+      # branch, as well as a commit of a branch never merged. grep reads the
+      # whole list, so that rev-list never meets a closed pipe.
+      - name: Check that the commit checked out is on the run's first-parent history
+        run: |
+          checked_out=$(git -C tree rev-parse HEAD)
+          git -C tooling rev-list --first-parent HEAD | grep -xF "$checked_out" > /dev/null \
+            || { echo "::error::$checked_out is not on the first-parent history of $GITHUB_SHA"; exit 1; }
+
+      # tests.yml is the tiers' one recipe for building and running the
+      # suite. This job runs no suite, so it copies the steps it needs from
+      # tests.yml's "Install the toolchain (Linux)", "Configure" and "Build",
+      # which say why each part exists. A change to how tests.yml installs
+      # (the retries, the repositories removed) belongs here too; a change of
+      # toolchain does not, as above.
+      #
+      # The copy leaves out gdb, which reads a failed suite's stacks. It
+      # configures without EXEC_ARGS, which only the `run` target reads, and
+      # without WARNINGS_AS_ERRORS, whose default is coarse's value, OFF.
+      - name: Install the toolchain
+        working-directory: tooling
+        run: |
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
+                     /etc/apt/sources.list.d/microsoft-prod.list
+          sudo scripts/retry.sh 3 180 -- apt-get update -qq --error-on=any \
+            || { echo "::error::The apt indexes could not be fetched: each attempt above says why"; exit 1; }
+          packages=("$CXX" ninja-build libtbb-dev)
+          names=$(apt-cache pkgnames)
+          for pkg in "${packages[@]}"; do
+            grep -qFx -- "$pkg" <<< "$names" \
+              || { echo "::error::$pkg is not available on this image"; exit 1; }
+          done
+          sudo scripts/retry.sh 3 300 -- apt-get install -y "${packages[@]}"
+          "$CXX" --version
+          cmake --version
+
+      - name: Configure
+        working-directory: tree/TestAll
+        run: cmake --preset gcc-env
+
+      - name: Build
+        working-directory: tree/TestAll
+        run: cmake --build --preset gcc-env
+
+      - name: Record the symbol table
+        run: |
+          mkdir "$RUNNER_TEMP/symbol-table"
+          symbol_table_record="$RUNNER_TEMP/symbol-table/linux-gcc-debug.json"
+          python3 -B tooling/scripts/symbol_table_report.py tree/build/TestAll/gcc-env TestAll \
+            > "$RUNNER_TEMP/report.json"
+          python3 -B tooling/scripts/symbol_table_provenance.py "$RUNNER_TEMP/report.json" \
+            > "$symbol_table_record"
+          jq -c '{commit, clean, executable, toolchain}' "$symbol_table_record"
+          echo "SYMBOL_TABLE_RECORD=$symbol_table_record" >> "$GITHUB_ENV"
+
+      - name: Upload the record
+        uses: actions/upload-artifact@v7
+        with:
+          name: symbol-table-linux-gcc-debug-${{ matrix.commit }}
+          path: ${{ env.SYMBOL_TABLE_RECORD }}
+          if-no-files-found: error
+
+      - name: Store the record on the data branch
+        if: github.ref == 'refs/heads/staging'
+        working-directory: tooling
+        run: |
+          scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" symbol-table/linux-gcc-debug \
+            "$SYMBOL_TABLE_RECORD"
+
+      - name: Store nothing off staging
+        if: github.ref != 'refs/heads/staging'
+        run: echo "Only a run on staging stores its record; this run is on $GITHUB_REF."

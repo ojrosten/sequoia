@@ -1,0 +1,58 @@
+[
+  {
+    "sha": "df6451817a6dd749a9187c7a277dc8b45290cb5b",
+    "parents": [
+      {
+        "sha": "42bb757493728752cd9717784df9767ec67a2faf"
+      }
+    ],
+    "commit": {
+      "committer": {
+        "date": "2026-10-19T12:00:00Z"
+      },
+      "message": "Merge pull request #7 from ojrosten/seven\n\nThe body of the message."
+    }
+  },
+  {
+    "sha": "42bb757493728752cd9717784df9767ec67a2faf",
+    "parents": [
+      {
+        "sha": "4e12898486c1307225e017a1b562ec93b54f28ef"
+      }
+    ],
+    "commit": {
+      "committer": {
+        "date": "2026-10-18T12:00:00Z"
+      },
+      "message": "Merge pull request #6 from ojrosten/restore: SEQUOIA_FORCE_INLINE restored\n\nThe body of the message."
+    }
+  },
+  {
+    "sha": "4e12898486c1307225e017a1b562ec93b54f28ef",
+    "parents": [
+      {
+        "sha": "8072fccffa4c9dbd5ffe7ee50b0a2ed8aa036dba"
+      }
+    ],
+    "commit": {
+      "committer": {
+        "date": "2026-10-17T12:00:00Z"
+      },
+      "message": "Merge pull request #5 from ojrosten/inline: SEQUOIA_FORCE_INLINE removed from erased_target\n\nThe body of the message."
+    }
+  },
+  {
+    "sha": "8072fccffa4c9dbd5ffe7ee50b0a2ed8aa036dba",
+    "parents": [
+      {
+        "sha": "00a9d02bda0162b540fbcf1d00b5ece04dd8d1ab"
+      }
+    ],
+    "commit": {
+      "committer": {
+        "date": "2026-10-16T12:00:00Z"
+      },
+      "message": "Merge pull request #4 from ojrosten/four\n\nThe body of the message."
+    }
+  }
+]
