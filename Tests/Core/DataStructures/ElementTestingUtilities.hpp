@@ -32,6 +32,6 @@ namespace sequoia::testing
     constexpr constructible_from_anything(const U&) {}
 
     [[nodiscard]]
-    friend constexpr bool operator==(const constructible_from_anything&, const constructible_from_anything&) noexcept = default;
+    constexpr bool operator==(const constructible_from_anything&) const noexcept = default;
   };
 }
