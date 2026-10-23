@@ -240,7 +240,7 @@ namespace sequoia::parsing::commandline
       for(const auto& tree : options)
       {
         maths::traverse(maths::depth_first, tree, maths::ignore_disconnected_t{}, [&tree](const auto node) {
-          const option& opt{tree.cbegin_node_weights()[utilities::unchecked_conversion_to<std::ptrdiff_t>(node)]};
+          const option& opt{tree.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(node)]};
           auto isSpeltAsHelpRequest{[](const proper_string& s){ return is_help_request(s); }};
           if(isSpeltAsHelpRequest(opt.name) || std::ranges::any_of(opt.aliases, isSpeltAsHelpRequest))
           {

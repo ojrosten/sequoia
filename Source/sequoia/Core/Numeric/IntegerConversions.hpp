@@ -19,7 +19,7 @@
 #include <stdexcept>
 #include <utility>
 
-namespace sequoia::utilities
+namespace sequoia::numeric
 {
   /** \brief Converts `val` to `To` if it is in range, and throws `std::domain_error` otherwise. */
   template<integer To, integer From>

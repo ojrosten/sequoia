@@ -5,12 +5,12 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "ArithmeticCastsFreeTest.hpp"
-#include "sequoia/Core/ContainerUtilities/ArithmeticCasts.hpp"
+#include "IntegerConversionsFreeTest.hpp"
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 
 namespace sequoia::testing
 {
-  using namespace utilities;
+  using namespace numeric;
 
   namespace
   {
@@ -26,12 +26,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path arithmetic_casts_free_test::source_file()
+  std::filesystem::path integer_conversions_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }
 
-  void arithmetic_casts_free_test::run_tests()
+  void integer_conversions_free_test::run_tests()
   {
     // Integer types, not integral ones: the line std::in_range draws
     STATIC_CHECK( has_checked_conversion_v<int,          int>);

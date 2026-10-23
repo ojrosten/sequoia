@@ -15,7 +15,6 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Algorithms/AlgorithmsTest.cpp
                ${TestDir}/Core/Concurrency/ConcurrencyModelsPerformanceTest.cpp
                ${TestDir}/Core/Concurrency/ConcurrencyModelsTest.cpp
-               ${TestDir}/Core/ContainerUtilities/ArithmeticCastsFreeTest.cpp
                ${TestDir}/Core/ContainerUtilities/ArrayUtilitiesTest.cpp
                ${TestDir}/Core/ContainerUtilities/IteratorTest.cpp
                ${TestDir}/Core/DataStructures/BucketedSequenceAllocationTest.cpp
@@ -45,6 +44,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Meta/TypeNameFreeTest.cpp
                ${TestDir}/Core/Meta/TypeTraitsTest.cpp
                ${TestDir}/Core/Meta/UtilitiesTest.cpp
+               ${TestDir}/Core/Numeric/IntegerConversionsFreeTest.cpp
                ${TestDir}/Core/Object/CreatorFreeTest.cpp               
                ${TestDir}/Core/Object/FactoryTest.cpp
                ${TestDir}/Core/Object/FactoryTestingDiagnostics.cpp

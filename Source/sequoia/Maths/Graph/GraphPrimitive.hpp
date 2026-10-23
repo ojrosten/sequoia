@@ -14,7 +14,7 @@
 #include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Maths/Graph/Connectivity.hpp"
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
-#include "sequoia/Core/ContainerUtilities/ArithmeticCasts.hpp"
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp"
 
 namespace sequoia
@@ -485,7 +485,7 @@ namespace sequoia
       {
         Connectivity::erase_node(node);
         if constexpr (!std::is_empty_v<node_weight_type>)
-          Nodes::erase_node(this->cbegin_node_weights() + utilities::unchecked_conversion_to<std::ptrdiff_t>(node));
+          Nodes::erase_node(this->cbegin_node_weights() + numeric::unchecked_conversion_to<std::ptrdiff_t>(node));
       }
 
       void clear() noexcept
@@ -593,7 +593,7 @@ namespace sequoia
       {
         if constexpr (!std::is_empty_v<node_weight_type>)
         {
-          Nodes::insert_node(this->cbegin_node_weights() + utilities::unchecked_conversion_to<std::ptrdiff_t>(node),
+          Nodes::insert_node(this->cbegin_node_weights() + numeric::unchecked_conversion_to<std::ptrdiff_t>(node),
                              std::forward<Args>(args)...);
         }
       }
@@ -602,7 +602,7 @@ namespace sequoia
       {
         if(!std::is_empty_v<node_weight_type>)
         {
-          Nodes::erase_node(this->cbegin_node_weights() + utilities::unchecked_conversion_to<std::ptrdiff_t>(index));
+          Nodes::erase_node(this->cbegin_node_weights() + numeric::unchecked_conversion_to<std::ptrdiff_t>(index));
         }
       }
     };
