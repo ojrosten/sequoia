@@ -9,6 +9,7 @@
 #include "Maths/Graph/GraphTestingUtilities.hpp"
 #include "Maths/Graph/Dynamic/DynamicGraphTestingUtilities.hpp"
 
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Core/Meta/TypeName.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 
@@ -533,7 +534,7 @@ namespace sequoia::testing
     // A loop for every step the mutation takes, so a step beyond the prediction is checked by a loop of its own
     const auto fallibleStepsTaken{
       [&trg, host, &mutation]() {
-        Graph g{trg.cbegin_node_weights()[host]()};
+        Graph g{trg.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(host)]()};
         const fallible_step_monitor monitor{std::nullopt};
         mutation(g);
         return monitor.steps_taken();

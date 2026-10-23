@@ -19,11 +19,13 @@ namespace sequoia::testing
     if(localEdgeIndex >= static_cast<std::size_t>(distance(begin, end)))
       throw std::out_of_range("graph_utilities::nth_connection_indices - localEdgeIndex out of range");
 
-    auto& edge = *(begin + localEdgeIndex);
+    auto& edge = *(begin + numeric::unchecked_conversion_to<std::ptrdiff_t>(localEdgeIndex));
     const std::size_t targ = edge.target_node();
     std::size_t nthConnection{};
 
-    for(auto citer = begin; citer != begin + localEdgeIndex; ++citer)
+    for(auto citer = begin;
+        citer != begin + numeric::unchecked_conversion_to<std::ptrdiff_t>(localEdgeIndex);
+        ++citer)
       {
         auto& currentEdge = (*citer);
         if(targ == currentEdge.target_node()) ++nthConnection;
@@ -709,13 +711,19 @@ namespace sequoia::testing
     }
 
     using namespace maths;
-    auto nodeFn1 = [&graph](const std::size_t index) { graph.set_node_weight(graph.cbegin_node_weights() + index, std::vector<int>{static_cast<int>(index)}); };
+    auto nodeFn1 = [&graph](const std::size_t index) {
+      graph.set_node_weight(graph.cbegin_node_weights() + numeric::unchecked_conversion_to<std::ptrdiff_t>(index),
+                            std::vector<int>{static_cast<int>(index)});
+    };
     traverse(breadth_first, graph, find_disconnected_t{}, nodeFn1);
 
     std::vector<std::vector<int>> expectedNodeWeights{{0}, {1}, {2}};
     check(equality, "", graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
-    auto nodeFn2 = [&graph](const std::size_t index) { graph.set_node_weight(graph.cbegin_node_weights() + index, std::vector<int>{3 - static_cast<int>(index)}); };
+    auto nodeFn2 = [&graph](const std::size_t index) {
+      graph.set_node_weight(graph.cbegin_node_weights() + numeric::unchecked_conversion_to<std::ptrdiff_t>(index),
+                            std::vector<int>{3 - static_cast<int>(index)});
+    };
     maths::traverse(breadth_first, graph, find_disconnected_t{}, null_func_obj{}, nodeFn2);
 
     expectedNodeWeights = std::vector<std::vector<int>>{{3}, {2}, {1}};
