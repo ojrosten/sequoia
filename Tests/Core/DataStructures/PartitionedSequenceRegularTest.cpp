@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "PartitionedSequenceRegularTest.hpp"
-#include "ElementTestingTypes.hpp"
+#include "ElementTestingUtilities.hpp"
 #include "PartitionedDataGenericTests.hpp"
 
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"

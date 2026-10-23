@@ -1,2 +1,2 @@
 node_storage_test
-Standard Top Level Checks:                26;  Failures:  0  [Deep checks: 229]
+Standard Top Level Checks:                27;  Failures:  0  [Deep checks: 230]

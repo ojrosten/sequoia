@@ -8,15 +8,15 @@
 #pragma once
 
 /** \file
-    \brief Element types for testing containers.
+    \brief An element type for testing how containers construct their elements.
  */
 
 namespace sequoia::testing
 {
-  /** \brief An element type implicitly constructible from any type, as `std::any` is.
+  /** \brief An element type implicitly constructible from any type.
 
-      Braced construction of a container of this element type, from a container or an allocator, selects the
-      initializer-list constructor: each argument becomes an element.
+      Braced construction of a container of this element type, from a container, an initializer list or an allocator,
+      selects the initializer-list constructor: each argument becomes an element.
    */
   struct constructible_from_anything
   {
