@@ -24,6 +24,7 @@
 #include <limits>
 #include <string>
 #include <numeric>
+#include <ranges>
 #include <stdexcept>
 #include <utility>
 
@@ -98,42 +99,16 @@ namespace sequoia
 
       constexpr bucketed_sequence(std::initializer_list<std::initializer_list<T>> list,
                                   const allocator_type& allocator = allocator_type{})
-        : m_Buckets(allocator)
-      {
-        m_Buckets.reserve(list.size());
-        std::size_t partitionIndex{};
-        for(const auto& bucket : list)
-        {
-          add_slot();
-          m_Buckets[partitionIndex].reserve(bucket.size());
-          for(const auto& element : bucket)
-          {
-            push_back_to_partition(partitionIndex, element);
-          }
-          ++partitionIndex;
-        }
-      }
+        : m_Buckets(make_buckets(list, allocator))
+      {}
 
       constexpr bucketed_sequence(const bucketed_sequence&)
         requires is_deep_copy_constructible_v<container_type> = default;
 
       constexpr bucketed_sequence(const bucketed_sequence& other, const allocator_type& allocator)
         requires is_deep_copy_constructible_v<container_type>
-       : m_Buckets(std::allocator_traits<allocator_type>::select_on_container_copy_construction(allocator))
-      {
-        m_Buckets.reserve(other.m_Buckets.size());
-
-        for(auto i{other.m_Buckets.cbegin()}; i != other.m_Buckets.cend(); ++i)
-        {
-          const auto& bucket{*i};
-          add_slot();
-          m_Buckets.back().reserve(bucket.size());
-          for(const auto& elt : bucket)
-          {
-            m_Buckets.back().push_back(elt);
-          }
-        }
-      }
+       : m_Buckets(make_buckets(other.m_Buckets, std::allocator_traits<allocator_type>::select_on_container_copy_construction(allocator)))
+      {}
 
       constexpr bucketed_sequence(bucketed_sequence&&) noexcept = default;
 
@@ -479,6 +454,26 @@ namespace sequoia
         {
           throw std::out_of_range{std::format("bucketed_sequence::{}: pos {} out of range", method, pos)};
         }
+      }
+
+      template<std::ranges::sized_range Buckets>
+        requires std::ranges::sized_range<std::ranges::range_reference_t<const Buckets>>
+      [[nodiscard]]
+      constexpr static container_type make_buckets(const Buckets& buckets, const allocator_type& allocator)
+      {
+        container_type container(allocator);
+        container.reserve(std::ranges::size(buckets));
+        for(const auto& bucket : buckets)
+        {
+          container.emplace_back();
+          container.back().reserve(std::ranges::size(bucket));
+          for(const auto& element : bucket)
+          {
+            container.back().push_back(element);
+          }
+        }
+
+        return container;
       }
 
       template<class... Args>
@@ -949,15 +944,14 @@ namespace sequoia
       {
         m_Partitions.reserve(list.size());
         m_Data.reserve(std::accumulate(list.begin(), list.end(), std::size_t{}, [](std::size_t n, auto l) { return n += l.size(); }));
-        std::size_t partitionIndex{};
         for(const auto& bucket : list)
         {
-          add_slot();
           for(const auto& element : bucket)
           {
-            push_back_to_partition(partitionIndex, element);
+            m_Data.push_back(element);
           }
-          ++partitionIndex;
+
+          add_slot();
         }
       }
 
@@ -968,9 +962,9 @@ namespace sequoia
         container_type container(std::allocator_traits<Allocator>::select_on_container_copy_construction(a));
 
         container.reserve(other.size());
-        for(const auto& elt : other)
+        for(const auto& element : other)
         {
-          container.push_back(elt);
+          container.push_back(element);
         }
 
         return container;
