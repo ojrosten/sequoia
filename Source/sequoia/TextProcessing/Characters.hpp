@@ -13,7 +13,7 @@
 
     `is_ascii` says whether a code unit, read as unsigned, is below 0x80. Such a code unit is its ASCII character in
     UTF-8, UTF-16 and UTF-32 alike.
-    The helpers in the namespace `ascii` answer for ASCII alone. No other code unit is a letter, a digit, whitespace
+    The helpers in the namespace `ascii` answer for ASCII alone, and `ascii::digits` spells the decimal digits. No other code unit is a letter, a digit, whitespace
     or an identifier character, and a conversion leaves it as it is. `ascii::is_identifier_character` accepts `_` as
     well as the ASCII letters and digits. The whitespace characters are those of the C locale: space, horizontal tab,
     line feed, vertical tab, form feed and carriage return. A comparison ignoring case compares the lowercase forms.
@@ -39,10 +39,14 @@ namespace sequoia
 
   namespace ascii
   {
+    /// The decimal digits, in order
     inline constexpr std::string_view digits{"0123456789"};
 
     inline constexpr auto is_digit{
-      [](character auto c){ return std::ranges::contains(digits, c); }
+      [](character auto c){
+        using char_type = decltype(c);
+        return (c >= static_cast<char_type>(digits.front())) && (c <= static_cast<char_type>(digits.back()));
+      }
     };
 
     inline constexpr auto is_uppercase{
