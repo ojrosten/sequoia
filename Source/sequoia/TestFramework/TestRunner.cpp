@@ -34,6 +34,7 @@
 #include <array>
 #include <bit>
 #include <concepts>
+#include <cstddef>
 #include <set>
 #include <ranges>
 #include <span>

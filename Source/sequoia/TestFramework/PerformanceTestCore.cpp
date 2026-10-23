@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
 #include <format>
 #include <functional>
 #include <ranges>

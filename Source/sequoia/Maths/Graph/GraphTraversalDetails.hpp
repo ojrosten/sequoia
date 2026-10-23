@@ -17,6 +17,7 @@
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 #include "sequoia/Core/Numeric/IntegerConversions.hpp"
 
+#include <cstddef>
 #include <vector>
 
 namespace sequoia::maths

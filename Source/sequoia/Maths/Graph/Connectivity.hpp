@@ -34,6 +34,7 @@
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
 
+#include <cstddef>
 #include <functional>
 #include <limits>
 #include <stdexcept>

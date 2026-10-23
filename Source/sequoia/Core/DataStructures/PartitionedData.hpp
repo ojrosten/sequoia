@@ -19,6 +19,7 @@
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
+#include <cstddef>
 #include <format>
 #include <limits>
 #include <string>

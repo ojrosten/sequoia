@@ -15,6 +15,8 @@
 #include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 
+#include <cstddef>
+
 namespace sequoia::maths
 {
   template<class G, class Pred>

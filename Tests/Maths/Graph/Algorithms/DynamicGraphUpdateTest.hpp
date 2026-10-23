@@ -14,6 +14,8 @@
 #include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Maths/Graph/DynamicGraphTraversals.hpp"
 
+#include <cstddef>
+
 namespace sequoia::testing
 {
   class test_graph_update final : public free_test

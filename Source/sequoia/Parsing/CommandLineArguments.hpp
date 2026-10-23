@@ -24,6 +24,7 @@
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 
+#include <cstddef>
 #include <vector>
 #include <string>
 #include <functional>

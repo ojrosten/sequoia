@@ -17,6 +17,7 @@
 #include <array>
 #include <bit>
 #include <charconv>
+#include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <format>

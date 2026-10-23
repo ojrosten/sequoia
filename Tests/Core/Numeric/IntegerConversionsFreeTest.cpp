@@ -8,6 +8,8 @@
 #include "IntegerConversionsFreeTest.hpp"
 #include "sequoia/Core/Numeric/IntegerConversions.hpp"
 
+#include <cstddef>
+
 namespace sequoia::testing
 {
   using namespace numeric;

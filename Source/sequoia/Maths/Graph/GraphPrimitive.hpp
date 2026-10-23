@@ -17,6 +17,8 @@
 #include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp"
 
+#include <cstddef>
+
 namespace sequoia
 {
   namespace maths
