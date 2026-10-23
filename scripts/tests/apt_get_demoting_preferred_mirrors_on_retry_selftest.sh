@@ -1,8 +1,8 @@
 #!/bin/bash
-# Controls for apt_get_with_mirror_fallback.sh, and a mutation check of the
-# controls.
+# Controls for apt_get_demoting_preferred_mirrors_on_retry.sh, and a mutation
+# check of the controls.
 #
-#   apt_get_with_mirror_fallback_selftest.sh [--mutations]
+#   apt_get_demoting_preferred_mirrors_on_retry_selftest.sh [--mutations]
 #
 # Without --mutations, the selftest runs the controls against the script. With
 # it, the selftest runs them against the script and against each mutant of the
@@ -33,8 +33,8 @@
 
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
-original="$here/../apt_get_with_mirror_fallback.sh"
-tmp=$(mktemp -d "${TMPDIR:-/tmp}/apt_get_with_mirror_fallback_selftest.XXXXXX")
+original="$here/../apt_get_demoting_preferred_mirrors_on_retry.sh"
+tmp=$(mktemp -d "${TMPDIR:-/tmp}/apt_get_demoting_preferred_mirrors_on_retry_selftest.XXXXXX")
 trap 'rm -rf "$tmp"' EXIT
 
 # The hosted images' list, in which a tab separates each mirror from its tags.
@@ -306,4 +306,4 @@ esac
 
 script=$original
 run_controls
-if [ "$fails" -eq 0 ]; then echo "apt_get_with_mirror_fallback: all controls pass"; else exit 1; fi
+if [ "$fails" -eq 0 ]; then echo "apt_get_demoting_preferred_mirrors_on_retry: all controls pass"; else exit 1; fi
