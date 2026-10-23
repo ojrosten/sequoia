@@ -301,6 +301,8 @@ namespace sequoia::testing
     check(equality, "Difference of an earlier index and a later one", i - j, std::ptrdiff_t{-1});
     check(equality, "Advancing by a negative offset", *(j + std::ptrdiff_t{-1}), Index{2});
     check(equality, "Retreating by a negative offset", *(i - std::ptrdiff_t{-1}), Index{3});
+    // Instantiates operator[] for every index type, so the conversion warnings reach it
+    check(equality, "Subscripting by a negative offset", j[std::ptrdiff_t{-1}], Index{2});
 
     if constexpr(std::cmp_greater(std::numeric_limits<Index>::max(), std::numeric_limits<std::ptrdiff_t>::max()))
     {
@@ -314,6 +316,7 @@ namespace sequoia::testing
       STATIC_CHECK(*(index_iter_t{firstBeyondDifference} - std::ptrdiff_t{1}) == lastWithinDifference);
       STATIC_CHECK(index_iter_t{firstBeyondDifference} - index_iter_t{lastWithinDifference} == std::ptrdiff_t{1});
       STATIC_CHECK(index_iter_t{lastWithinDifference} - index_iter_t{firstBeyondDifference} == std::ptrdiff_t{-1});
+      STATIC_CHECK(index_iter_t{lastWithinDifference}[std::ptrdiff_t{1}] == firstBeyondDifference);
     }
   }
 
