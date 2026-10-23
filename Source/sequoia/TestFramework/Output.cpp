@@ -417,7 +417,7 @@ namespace sequoia::testing
         if(pos == npos)
           break;
 
-        // The next search, for `<`, space or `{`, finds none in the identifier
+        // Continuing from inside the identifier is safe: the next search, for `<`, space or `{`, finds none of them in it
         const bool continuesIdentifier{!is_identifier_delimiter(name[pos - 1])};
         if(continuesIdentifier)
           continue;

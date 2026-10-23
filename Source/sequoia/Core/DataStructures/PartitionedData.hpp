@@ -959,7 +959,7 @@ namespace sequoia
       constexpr static container_type make_data(std::initializer_list<std::initializer_list<T>> list, const Allocator& allocator)
       {
         container_type data(allocator);
-        data.reserve(std::ranges::fold_left(list | std::views::transform(std::ranges::size), std::size_t{}, std::plus{}));
+        data.reserve(std::ranges::fold_left(list | std::views::transform(std::ranges::size), typename container_type::size_type{}, std::plus{}));
         for(const auto& element : list | std::views::join)
         {
           data.push_back(element);
