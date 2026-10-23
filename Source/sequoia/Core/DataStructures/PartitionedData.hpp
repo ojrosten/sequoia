@@ -107,7 +107,9 @@ namespace sequoia
 
       constexpr bucketed_sequence(const bucketed_sequence& other, const allocator_type& allocator)
         requires is_deep_copy_constructible_v<container_type>
-       : m_Buckets(make_buckets(other.m_Buckets, std::allocator_traits<allocator_type>::select_on_container_copy_construction(allocator)))
+       : m_Buckets(
+           make_buckets(other.m_Buckets, std::allocator_traits<allocator_type>::select_on_container_copy_construction(allocator))
+         )
       {}
 
       constexpr bucketed_sequence(bucketed_sequence&&) noexcept = default;
@@ -456,8 +458,8 @@ namespace sequoia
         }
       }
 
-      template<std::ranges::sized_range Buckets>
-        requires std::ranges::sized_range<std::ranges::range_reference_t<const Buckets>>
+      template<class Buckets>
+        requires partition_impl::nested_sized_range_of_v<Buckets, T>
       [[nodiscard]]
       constexpr static container_type make_buckets(const Buckets& buckets, const allocator_type& allocator)
       {
@@ -747,11 +749,9 @@ namespace sequoia
 
       template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(std::initializer_list<std::initializer_list<T>> list, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
-        : m_Partitions(partitionsAllocator)
-        , m_Data(allocator)
-      {
-        init(list);
-      }
+        : m_Partitions(make_partitions(list, partitionsAllocator))
+        , m_Data(make_data(list, allocator))
+      {}
 
       template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(const partitioned_sequence_base& other, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
@@ -935,24 +935,34 @@ namespace sequoia
       SEQUOIA_NO_UNIQUE_ADDRESS partitions_type m_Partitions;
       container_type m_Data;
 
-      constexpr partitioned_sequence_base(std::initializer_list<std::initializer_list<T>> list)
+      template<alloc PartitionsAllocator>
+      [[nodiscard]]
+      constexpr static partitions_type make_partitions(std::initializer_list<std::initializer_list<T>> list, const PartitionsAllocator& partitionsAllocator)
       {
-        init(list);
+        partitions_type partitions(partitionsAllocator);
+        partitions.reserve(list.size());
+        index_type bound{};
+        for(const auto& partitionElements : list)
+        {
+          bound += partitionElements.size();
+          partitions.push_back(bound);
+        }
+
+        return partitions;
       }
 
-      constexpr void init(std::initializer_list<std::initializer_list<T>> list)
+      template<alloc Allocator>
+      [[nodiscard]]
+      constexpr static container_type make_data(std::initializer_list<std::initializer_list<T>> list, const Allocator& allocator)
       {
-        m_Partitions.reserve(list.size());
-        m_Data.reserve(std::accumulate(list.begin(), list.end(), std::size_t{}, [](std::size_t n, auto l) { return n += l.size(); }));
-        for(const auto& bucket : list)
+        container_type data(allocator);
+        data.reserve(std::accumulate(list.begin(), list.end(), std::size_t{}, [](std::size_t n, auto l) { return n += l.size(); }));
+        for(const auto& element : list | std::views::join)
         {
-          for(const auto& element : bucket)
-          {
-            m_Data.push_back(element);
-          }
-
-          add_slot();
+          data.push_back(element);
         }
+
+        return data;
       }
 
       template<alloc Allocator>

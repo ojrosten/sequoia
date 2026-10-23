@@ -8,6 +8,7 @@
 #include "BucketedSequenceRegularTest.hpp"
 #include "PartitionedDataGenericTests.hpp"
 
+#include <forward_list>
 #include <map>
 
 namespace sequoia::testing
@@ -144,6 +145,7 @@ namespace sequoia::testing
   {
     using namespace data_structures;
     test_copyability();
+    test_nested_sized_range_of();
     bucketed_operations<bucketed_sequence<int>>::execute(*this);
   }
 
@@ -182,5 +184,18 @@ namespace sequoia::testing
     STATIC_CHECK( std::is_copy_constructible_v<bucketed_sequence<std::vector<int>>>);
     STATIC_CHECK( std::is_copy_assignable_v<bucketed_sequence<std::vector<int>>>);
     STATIC_CHECK( std::is_copy_assignable_v<bucketed_sequence<std::map<int, int>>>);
+  }
+
+  void bucketed_sequence_regular_test::test_nested_sized_range_of()
+  {
+    using namespace data_structures::partition_impl;
+
+    STATIC_CHECK( nested_sized_range_of_v<std::initializer_list<std::initializer_list<int>>, int>);
+    STATIC_CHECK( nested_sized_range_of_v<std::vector<std::vector<int>>, int>);
+
+    STATIC_CHECK(!nested_sized_range_of_v<int, int>);
+    STATIC_CHECK(!nested_sized_range_of_v<std::forward_list<std::vector<int>>, int>);
+    STATIC_CHECK(!nested_sized_range_of_v<std::vector<std::forward_list<int>>, int>);
+    STATIC_CHECK(!nested_sized_range_of_v<std::vector<std::vector<long>>, int>);
   }
 }
