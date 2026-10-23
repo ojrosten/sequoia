@@ -39,5 +39,7 @@ namespace sequoia::testing
 
     template<maths::dynamic_network Graph>
     void bucketed_memory();
+
+    void test_node_weights_constructible_from_anything();
   };
 }

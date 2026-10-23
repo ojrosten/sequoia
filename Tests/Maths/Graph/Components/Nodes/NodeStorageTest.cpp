@@ -126,7 +126,7 @@ namespace sequoia:: testing
     check(equality, "Allocator-extended copy", storage(weights, allocator{}).size(), 3uz);
     check(equality, "Allocator-extended move", storage(storage{1, 2, 3}, allocator{}).size(), 3uz);
 
-    const static_node_storage_tester<constructible_from_anything, 3> staticWeights{1, 2, 3};
+    constexpr static_node_storage_tester<constructible_from_anything, 3> staticWeights{1, 2, 3};
     check(equality, "Static, from a list", staticWeights.cbegin_node_weights()[2].value, 3);
   }
 }

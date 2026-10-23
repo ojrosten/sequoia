@@ -22,7 +22,5 @@ namespace sequoia::testing
     static std::filesystem::path source_file();
 
     void run_tests();
-  private:
-    void test_node_weights_constructible_from_anything();
   };
 }
