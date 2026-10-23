@@ -11,6 +11,8 @@
     \brief An element type for testing how containers construct their elements.
  */
 
+#include <vector>
+
 namespace sequoia::testing
 {
   /** \brief An element type implicitly constructible from any type.
@@ -34,4 +36,13 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr bool operator==(const constructible_from_anything&) const noexcept = default;
   };
+
+  template<class T, class U>
+  inline constexpr bool equality_expression_valid_v{
+    requires(const T& t, const U& u) { t == u; }
+  };
+
+  // A hidden-friend operator== would be found by ADL for any type naming this one, and with the converting
+  // constructor would make, for example, an iterator comparable with an int
+  static_assert(!equality_expression_valid_v<std::vector<constructible_from_anything>::iterator, int>);
 }

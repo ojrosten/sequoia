@@ -11,6 +11,8 @@
 #include "Core/DataStructures/ElementTestingUtilities.hpp"
 
 #include <complex>
+#include <ranges>
+#include <vector>
 
 namespace sequoia::testing
 {
