@@ -1,5 +1,5 @@
 #!/bin/bash
-# Usage: apt_get_with_mirror_fallback.sh <apt-get arguments>...
+# Usage: apt_get_demoting_preferred_mirrors_on_retry.sh <apt-get arguments>...
 #
 # Runs apt-get with the arguments given. RETRY_ATTEMPT holds the attempt's
 # number, as set by scripts/retry.sh. From the second attempt on, apt fetches

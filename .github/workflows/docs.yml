@@ -69,14 +69,14 @@ jobs:
           # (Linux)", which says why:
           #   - `--error-on=any` turns a failed index into an error;
           #   - scripts/retry.sh retries each apt command that fetches, through
-          #     scripts/apt_get_with_mirror_fallback.sh, with limits that leave
-          #     room for every retry within this step;
+          #     scripts/apt_get_demoting_preferred_mirrors_on_retry.sh, with
+          #     limits that leave room for every retry within this step;
           #   - the install then runs once, from the downloaded packages.
-          sudo scripts/retry.sh 3 180 -- scripts/apt_get_with_mirror_fallback.sh update -q --error-on=any
+          sudo scripts/retry.sh 3 180 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh update -q --error-on=any
           # Formulas need latex, dvips, gs and amssymb; these packages provide
           # them without their recommendations.
           packages=(texlive-latex-base texlive-latex-extra ghostscript)
-          sudo scripts/retry.sh 3 300 -- scripts/apt_get_with_mirror_fallback.sh \
+          sudo scripts/retry.sh 3 300 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh \
             install -y --no-install-recommends --download-only "${packages[@]}"
           sudo apt-get install -y --no-install-recommends --no-download "${packages[@]}"
           # doxygen itself comes from its release, not apt. noble's 1.9.8
