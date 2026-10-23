@@ -115,18 +115,12 @@ namespace sequoia:: testing
 
   void node_storage_test::test_weights_constructible_from_anything()
   {
-    using storage   = node_storage_tester<constructible_from_anything>;
-    using allocator = storage::allocator_type;
-
-    const storage weights{1, 2, 3};
-    check(equality, "From a list", weights.size(), 3uz);
-    check(equality, "From a list and an allocator", storage({1, 2, 3}, allocator{}).size(), 3uz);
-
-    // Parentheses: braces would select the initializer-list constructor
-    check(equality, "Allocator-extended copy", storage(weights, allocator{}).size(), 3uz);
-    check(equality, "Allocator-extended move", storage(storage{1, 2, 3}, allocator{}).size(), 3uz);
+    check(equivalence,
+          "From a list",
+          node_storage_tester<constructible_from_anything>{1, 2, 3},
+          std::initializer_list<constructible_from_anything>{1, 2, 3});
 
     constexpr static_node_storage_tester<constructible_from_anything, 3> staticWeights{1, 2, 3};
-    check(equality, "Static, from a list", staticWeights.cbegin_node_weights()[2].value, 3);
+    check(equivalence, "Static, from a list", staticWeights, std::initializer_list<constructible_from_anything>{1, 2, 3});
   }
 }

@@ -11,6 +11,9 @@
     \brief An element type for testing how containers construct their elements.
  */
 
+#include "sequoia/TestFramework/CoreInfrastructure.hpp"
+
+#include <string>
 #include <vector>
 
 namespace sequoia::testing
@@ -37,6 +40,13 @@ namespace sequoia::testing
     constexpr bool operator==(const constructible_from_anything&) const noexcept = default;
   };
 
+  template<>
+  struct serializer<constructible_from_anything>
+  {
+    [[nodiscard]]
+    static std::string make(const constructible_from_anything& x) { return std::to_string(x.value); }
+  };
+
   template<class T, class U>
   inline constexpr bool equality_expression_valid_v{
     requires(const T& t, const U& u) { t == u; }
@@ -45,4 +55,7 @@ namespace sequoia::testing
   // A hidden-friend operator== would be found by ADL for any type naming this one, and with the converting
   // constructor would make, for example, an iterator comparable with an int
   static_assert(!equality_expression_valid_v<std::vector<constructible_from_anything>::iterator, int>);
+
+  // Likewise a hidden-friend operator<<, which would make a vector of this type serializable as a single element
+  static_assert(!serializable<std::vector<constructible_from_anything>>);
 }

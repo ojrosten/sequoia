@@ -68,14 +68,14 @@ namespace sequoia::testing::impl
     if(!check_prerequisites(logger, actions, x, y, args...))
       return false;
 
-    T z{x};
+    T z(x);
     const bool consistentCopy{check(equality, "Inconsistent copy constructor (x)", logger, z, x)};
 
     if constexpr(has_post_copy_action<Actions, test_logger<Mode>, T, T, Args...>)
     {
       if(consistentCopy)
       {
-        actions.post_copy_action(logger, z, T{y}, args...);
+        actions.post_copy_action(logger, z, T(y), args...);
       }
     }
 
@@ -90,19 +90,19 @@ namespace sequoia::testing::impl
     if(!consistentCopy)
       return false;
 
-    T w{x};
-    check_move_assign(logger, actions, w, T{y}, y, movedFromPostAssignment, yMutator, args...);
+    T w(x);
+    check_move_assign(logger, actions, w, T(y), y, movedFromPostAssignment, yMutator, args...);
 
     if constexpr (do_swap<Args...>::value)
     {
-      check_swap(logger, actions, T{x}, T{y}, x, y, yMutator, args...);
+      check_swap(logger, actions, T(x), T(y), x, y, yMutator, args...);
     }
 
     if constexpr(!std::is_same_v<std::remove_cvref_t<Mutator>, null_mutator>)
     {
       if(consistentCopy && consistentCopyAssign)
       {
-        T v{y};
+        T v(y);
         yMutator(v);
 
         if(check(
@@ -126,7 +126,7 @@ namespace sequoia::testing::impl
 
     if constexpr (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
     {
-      check_serialization(logger, actions, T{x}, y, args...);
+      check_serialization(logger, actions, T(x), y, args...);
     }
 
     return !sentry.failure_detected();

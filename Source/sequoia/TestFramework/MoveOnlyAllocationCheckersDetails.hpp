@@ -53,7 +53,7 @@ namespace sequoia::testing::impl
       return{};
     }
 
-    T v{std::move(z), info.make_allocator()...};
+    T v(std::move(z), info.make_allocator()...);
 
     using ctag = container_tag_constant<tag>;
     check_para_move_allocation(logger, ctag{}, v, std::tuple_cat(make_allocation_checkers(info)...));
@@ -138,8 +138,8 @@ namespace sequoia::testing::impl
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
 
-    auto x{xFn()};
-    auto y{yFn()};
+    auto x(xFn());
+    auto y(yFn());
 
     impl::check_initialization_allocations(logger, x, y, info...);
     check_semantics("", logger, actions, xFn(), yFn(), x, y, movedFromPostConstruction, movedFromPostAssignment, std::move(m), info...);
