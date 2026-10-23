@@ -9,6 +9,8 @@
 #include "IteratorTestingUtilities.hpp"
 
 #include <array>
+#include <cstddef>
+#include <cstdint>
 #include <limits>
 #include <utility>
 
@@ -329,7 +331,7 @@ namespace sequoia::testing
     using value_t = std::iterator_traits<Iter>::value_type;
     using deref_pol = CustomIter::dereference_policy_type;
 
-    if(!check(equality, append_lines(message, "Contract violated"), distance(begin, end), ptrdiff_t{3}))
+    if(!check(equality, append_lines(message, "Contract violated"), distance(begin, end), std::ptrdiff_t{3}))
       return;
 
     CustomIter i{begin, args...};
@@ -394,6 +396,6 @@ namespace sequoia::testing
     check(equality, message, *j, begin[1] * scale);
 
     check(message, i == j);
-    check<int64_t>(equality, append_lines(message, "Check for distance of zero"), distance(i, j), 0);
+    check<std::int64_t>(equality, append_lines(message, "Check for distance of zero"), distance(i, j), 0);
   }
 }
