@@ -400,9 +400,9 @@ SEQUOIA_GCC_SUPPRESS_END
       requires integer<Iterator> && integer<difference_type>
     {
       // The common type is at least as wide as Iterator and difference_type,
-      // and an unsigned type wraps where a signed one would overflow, which is
-      // undefined behaviour. So a result cast back to a type that can hold it
-      // comes out exact.
+      // and an unsigned type wraps where a signed one would overflow.
+      // The returned value, cast back to a type that can hold `val`, equals
+      // `val`.
       return static_cast<std::make_unsigned_t<std::common_type_t<Iterator, difference_type>>>(val);
     }
   };
