@@ -13,6 +13,7 @@
 #include "sequoia/Core/Meta/TypeName.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 
+#include <cstddef>
 #include <format>
 #include <optional>
 #include <ranges>

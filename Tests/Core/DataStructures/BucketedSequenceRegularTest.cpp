@@ -8,7 +8,9 @@
 #include "BucketedSequenceRegularTest.hpp"
 #include "PartitionedDataGenericTests.hpp"
 
+#include <forward_list>
 #include <map>
+#include <span>
 
 namespace sequoia::testing
 {
@@ -39,6 +41,18 @@ namespace sequoia::testing
       assign_only_element(const assign_only_element&) = delete;
 
       assign_only_element& operator=(const assign_only_element&) = default;
+    };
+
+    template<class MutableRange, class ConstRange>
+    struct constness_dependent_range
+    {
+      MutableRange mutableRange;
+      ConstRange   constRange;
+
+      auto begin()       { return mutableRange.begin(); }
+      auto end()         { return mutableRange.end(); }
+      auto begin() const { return constRange.begin(); }
+      auto end()   const { return constRange.end(); }
     };
 
     using namespace partitioned_data;
@@ -144,6 +158,7 @@ namespace sequoia::testing
   {
     using namespace data_structures;
     test_copyability();
+    test_nested_sized_range_of();
     bucketed_operations<bucketed_sequence<int>>::execute(*this);
   }
 
@@ -182,5 +197,24 @@ namespace sequoia::testing
     STATIC_CHECK( std::is_copy_constructible_v<bucketed_sequence<std::vector<int>>>);
     STATIC_CHECK( std::is_copy_assignable_v<bucketed_sequence<std::vector<int>>>);
     STATIC_CHECK( std::is_copy_assignable_v<bucketed_sequence<std::map<int, int>>>);
+  }
+
+  void bucketed_sequence_regular_test::test_nested_sized_range_of()
+  {
+    using namespace data_structures::partition_impl;
+
+    STATIC_CHECK( nested_sized_range_of_v<std::initializer_list<std::initializer_list<int>>, int>);
+    STATIC_CHECK( nested_sized_range_of_v<std::vector<std::vector<int>>, int>);
+
+    STATIC_CHECK(!nested_sized_range_of_v<int, int>);
+    STATIC_CHECK(!nested_sized_range_of_v<std::forward_list<std::vector<int>>, int>);
+    STATIC_CHECK(!nested_sized_range_of_v<std::vector<std::forward_list<int>>, int>);
+    STATIC_CHECK(!nested_sized_range_of_v<std::vector<std::vector<long>>, int>);
+    STATIC_CHECK(!nested_sized_range_of_v<std::vector<std::vector<int>>, long>);
+    STATIC_CHECK(!nested_sized_range_of_v<constness_dependent_range<std::vector<std::vector<int>>, std::forward_list<std::vector<int>>>, int>);
+
+    // A const std::span yields non-const references, so its elements are reached as mutable
+    STATIC_CHECK(!nested_sized_range_of_v<std::span<constness_dependent_range<std::vector<int>, std::forward_list<int>>>, int>);
+    STATIC_CHECK(!nested_sized_range_of_v<std::span<constness_dependent_range<std::vector<int>, std::vector<long>>>, int>);
   }
 }

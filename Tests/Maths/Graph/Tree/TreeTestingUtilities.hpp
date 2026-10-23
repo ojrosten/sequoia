@@ -15,6 +15,7 @@
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 
+#include <cstddef>
 #include <format>
 
 namespace sequoia::testing

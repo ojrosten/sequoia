@@ -18,6 +18,8 @@
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
+#include <cstddef>
+
 namespace sequoia::testing
 {
   enum class check_ordering : bool {no, yes};

@@ -15,6 +15,7 @@
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphErrors.hpp"
 
+#include <cstddef>
 #include <ranges>
 
 namespace sequoia::maths

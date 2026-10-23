@@ -139,7 +139,7 @@ SEQUOIA_GCC_SUPPRESS_END
 
     template<alloc Allocator>
     constexpr monotonic_sequence_base(std::initializer_list<T> list, const Allocator& allocator)
-      : m_Sequence{list, allocator}
+      : m_Sequence(list, allocator)
     {
       check();
     }
@@ -148,12 +148,12 @@ SEQUOIA_GCC_SUPPRESS_END
 
     template<alloc Allocator>
     constexpr monotonic_sequence_base(const monotonic_sequence_base& s, const Allocator& allocator)
-      : m_Sequence{s.m_Sequence, allocator}
+      : m_Sequence(s.m_Sequence, allocator)
     {}
 
     template<alloc Allocator>
     constexpr monotonic_sequence_base(monotonic_sequence_base&& s, const Allocator& allocator)
-      : m_Sequence{std::move(s.m_Sequence), allocator}
+      : m_Sequence(std::move(s.m_Sequence), allocator)
     {}
 
     constexpr ~monotonic_sequence_base() = default;

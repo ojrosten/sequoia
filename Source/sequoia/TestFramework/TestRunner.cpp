@@ -34,6 +34,7 @@
 #include <array>
 #include <bit>
 #include <concepts>
+#include <cstddef>
 #include <set>
 #include <ranges>
 #include <span>
@@ -1397,7 +1398,7 @@ namespace sequoia::testing
                         throw std::runtime_error{error("Number of repetitions, must be >= 2")};
 
                       m_InstabilityMode = instability_mode::single_instance;
-                      m_NumReps = i;
+                      m_NumReps = numeric::unchecked_conversion_to<std::size_t>(i);
                     },
                     {},
                     "Run the tests repeatedly, reporting the checks whose outcome varies"},
@@ -1409,7 +1410,7 @@ namespace sequoia::testing
                         "Run each repetition in a process of its own"}},
                       {{"--runner-id", {}, {"id"},
                         [this](const arg_list& args) {
-                          m_RunnerID = std::stoi(args.front());
+                          m_RunnerID = numeric::checked_conversion_to<std::size_t>(std::stoi(args.front()));
                           m_InstabilityMode = instability_mode::sandbox;
                         },
                         {},
@@ -1478,7 +1479,7 @@ namespace sequoia::testing
                       if(const auto num{std::stoi(args.front())}; num > 0)
                       {
                         m_ConcurrencyMode = concurrency_mode::fixed;
-                        m_PoolSize = num;
+                        m_PoolSize = numeric::unchecked_conversion_to<std::size_t>(num);
                       }
                       else
                       {

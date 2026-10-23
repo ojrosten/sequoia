@@ -19,10 +19,15 @@
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
+#include <algorithm>
+#include <cstddef>
 #include <format>
+#include <functional>
+#include <iterator>
 #include <limits>
 #include <string>
 #include <numeric>
+#include <ranges>
 #include <stdexcept>
 #include <utility>
 
@@ -97,42 +102,18 @@ namespace sequoia
 
       constexpr bucketed_sequence(std::initializer_list<std::initializer_list<T>> list,
                                   const allocator_type& allocator = allocator_type{})
-        : m_Buckets(allocator)
-      {
-        m_Buckets.reserve(list.size());
-        for(auto iter{list.begin()}; iter != list.end(); ++iter)
-        {
-          add_slot();
-          const auto dist{std::ranges::distance(list.begin(), iter)};
-          m_Buckets[dist].reserve(iter->size());
-          for(const auto& element : (*iter))
-          {
-            push_back_to_partition(dist, element);
-          }
-        }
-      }
+        : m_Buckets(make_buckets(list, allocator))
+      {}
 
       constexpr bucketed_sequence(const bucketed_sequence&)
         requires is_deep_copy_constructible_v<container_type> = default;
 
       constexpr bucketed_sequence(const bucketed_sequence& other, const allocator_type& allocator)
         requires is_deep_copy_constructible_v<container_type>
-       : m_Buckets(std::allocator_traits<allocator_type>::select_on_container_copy_construction(allocator))
-      {
-        m_Buckets.reserve(other.m_Buckets.size());
-
-        for(auto i{other.m_Buckets.cbegin()}; i != other.m_Buckets.cend(); ++i)
-        {
-          const auto& bucket{*i};
-          const auto dist{std::ranges::distance(other.m_Buckets.cbegin(), i)};
-          add_slot();
-          m_Buckets.back().reserve(other.m_Buckets[dist].size());
-          for(const auto& elt : bucket)
-          {
-            m_Buckets.back().push_back(elt);
-          }
-        }
-      }
+        : m_Buckets(
+            make_buckets(other.m_Buckets, std::allocator_traits<allocator_type>::select_on_container_copy_construction(allocator))
+          )
+      {}
 
       constexpr bucketed_sequence(bucketed_sequence&&) noexcept = default;
 
@@ -480,6 +461,26 @@ namespace sequoia
         }
       }
 
+      template<class Buckets>
+        requires partition_impl::nested_sized_range_of_v<Buckets, T>
+      [[nodiscard]]
+      constexpr static container_type make_buckets(const Buckets& buckets, const allocator_type& allocator)
+      {
+        container_type container(allocator);
+        container.reserve(std::ranges::size(buckets));
+        for(const auto& bucket : buckets)
+        {
+          container.emplace_back();
+          container.back().reserve(std::ranges::size(bucket));
+          for(const auto& element : bucket)
+          {
+            container.back().push_back(element);
+          }
+        }
+
+        return container;
+      }
+
       template<class... Args>
       constexpr partition_iterator insert_to_partition_unchecked(const_partition_iterator pos, Args&&... args)
       {
@@ -680,10 +681,11 @@ namespace sequoia
 
             if(len_i != len_j)
             {
+              const auto delta{len_j - len_i};
               m_Partitions.mutate(maths::unsafe_t{},
                                   m_Partitions.begin() + numeric::unchecked_conversion_to<std::ptrdiff_t>(i),
                                   m_Partitions.begin() + numeric::unchecked_conversion_to<std::ptrdiff_t>(j),
-                                  [len_i, len_j](const index_type index) -> index_type { return static_cast<index_type>(index + len_j - len_i);});
+                                  [delta](const index_type index) -> index_type { return static_cast<index_type>(numeric::unchecked_conversion_to<std::ptrdiff_t>(index) + delta);});
             }
           }
         }
@@ -697,7 +699,7 @@ namespace sequoia
         const partitions_type partitions(partitionsAllocator);
         m_Partitions = partitions;
 
-        const container_type container{allocator};
+        const container_type container(allocator);
         m_Data = container;
       }
 
@@ -705,8 +707,8 @@ namespace sequoia
       friend constexpr bool operator==(const partitioned_sequence_base&, const partitioned_sequence_base&) noexcept = default;
     protected:
       explicit constexpr partitioned_sequence_base(const std::pair<partitions_type, container_type>& data)
-        : m_Partitions{data.first}
-        , m_Data{data.second}
+        : m_Partitions(data.first)
+        , m_Data(data.second)
       {}
 
       constexpr partitioned_sequence_base(partitioned_sequence_base&&) noexcept = default;
@@ -750,23 +752,21 @@ namespace sequoia
 
       template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(std::initializer_list<std::initializer_list<T>> list, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
-        : m_Partitions(partitionsAllocator)
-        , m_Data(allocator)
-      {
-        init(list);
-      }
+        : m_Partitions(make_partitions(list, partitionsAllocator))
+        , m_Data(make_data(list, allocator))
+      {}
 
       template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(const partitioned_sequence_base& other, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
         requires is_deep_copy_constructible_v<container_type>
-        : m_Partitions{other.m_Partitions, partitionsAllocator}
+        : m_Partitions(other.m_Partitions, partitionsAllocator)
         , m_Data(copy(other.m_Data, allocator))
       {}
 
       template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(partitioned_sequence_base&& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
-        : m_Partitions{std::move(in.m_Partitions), partitionsAllocator}
-        , m_Data{std::move(in.m_Data), allocator}
+        : m_Partitions(std::move(in.m_Partitions), partitionsAllocator)
+        , m_Data(std::move(in.m_Data), allocator)
       {}
 
       constexpr void add_slot()
@@ -912,7 +912,7 @@ namespace sequoia
           if(const auto numErased{std::ranges::distance(first, last)}; numErased > 0)
           {
             const auto next{m_Data.erase(first.base_iterator(), last.base_iterator())};
-            decrement_partition_indices(firstPartition, num_partitions(), numErased);
+            decrement_partition_indices(firstPartition, num_partitions(), numeric::unchecked_conversion_to<index_type>(numErased));
 
             return {next, firstPartition};
           }
@@ -938,24 +938,34 @@ namespace sequoia
       SEQUOIA_NO_UNIQUE_ADDRESS partitions_type m_Partitions;
       container_type m_Data;
 
-      constexpr partitioned_sequence_base(std::initializer_list<std::initializer_list<T>> list)
+      template<alloc PartitionsAllocator>
+      [[nodiscard]]
+      constexpr static partitions_type make_partitions(std::initializer_list<std::initializer_list<T>> list, const PartitionsAllocator& partitionsAllocator)
       {
-        init(list);
+        partitions_type partitions(partitionsAllocator);
+        partitions.reserve(list.size());
+        std::transform_inclusive_scan(list.begin(),
+                                      list.end(),
+                                      std::back_inserter(partitions),
+                                      std::plus{},
+                                      std::ranges::size,
+                                      typename container_type::size_type{});
+
+        return partitions;
       }
 
-      constexpr void init(std::initializer_list<std::initializer_list<T>> list)
+      template<alloc Allocator>
+      [[nodiscard]]
+      constexpr static container_type make_data(std::initializer_list<std::initializer_list<T>> list, const Allocator& allocator)
       {
-        m_Partitions.reserve(list.size());
-        m_Data.reserve(std::accumulate(list.begin(), list.end(), std::size_t{}, [](std::size_t n, auto l) { return n += l.size(); }));
-        for(auto iter{list.begin()}; iter != list.end(); ++iter)
+        container_type data(allocator);
+        data.reserve(std::ranges::fold_left(list | std::views::transform(std::ranges::size), typename container_type::size_type{}, std::plus{}));
+        for(const auto& element : list | std::views::join)
         {
-          add_slot();
-          const auto dist{std::ranges::distance(list.begin(), iter)};
-          for(const auto& element : (*iter))
-          {
-            push_back_to_partition(dist, element);
-          }
+          data.push_back(element);
         }
+
+        return data;
       }
 
       template<alloc Allocator>
@@ -965,9 +975,9 @@ namespace sequoia
         container_type container(std::allocator_traits<Allocator>::select_on_container_copy_construction(a));
 
         container.reserve(other.size());
-        for(const auto& elt : other)
+        for(const auto& element : other)
         {
-          container.push_back(elt);
+          container.push_back(element);
         }
 
         return container;

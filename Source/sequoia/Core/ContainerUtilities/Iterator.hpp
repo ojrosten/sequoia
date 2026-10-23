@@ -280,7 +280,16 @@ namespace sequoia::utilities
     constexpr reference operator[](const difference_type n) const
       requires steppable<Iterator>
     {
-      return DereferencePolicy::get(m_BaseIterator + n);
+      if constexpr(integer<Iterator>)
+      {
+        const auto steppedBase{
+          static_cast<Iterator>(to_unsigned_common_type(m_BaseIterator) + to_unsigned_common_type(n))
+        };
+
+        return DereferencePolicy::get(steppedBase);
+      }
+      else
+        return DereferencePolicy::get(m_BaseIterator + n);
     }
 
     constexpr pointer operator->() const

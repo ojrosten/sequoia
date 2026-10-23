@@ -9,6 +9,7 @@
 
 /** \file */
 
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
@@ -40,12 +41,13 @@ namespace sequoia::testing
         for(;i_prediction != prediction.end(); ++i_prediction, ++i, ++ci_prediction, ++ci, ++ri_prediction, ++ri, ++cri_prediction, ++cri)
         {
           const auto d{std::ranges::distance(prediction.begin(), i_prediction)};
+          const auto idx{numeric::unchecked_conversion_to<typename T::size_type>(d)};
           const auto mess{std::format(" for index {}", d)};
 
           check(equality, std::string{"Dereferenced iterator wrong"}.append(mess), logger, *i, *i_prediction);
           check(equality, std::string{"Dereferenced citerator wrong"}.append(mess), logger, *ci, *ci_prediction);
 
-          check(equality, std::string{"operator[] wrong"}.append(mess), logger, sequence[d], prediction[d]);
+          check(equality, std::string{"operator[] wrong"}.append(mess), logger, sequence[idx], prediction[idx]);
 
           const auto shift{static_cast<int64_t>(prediction.size()) - d - 1};
           check(equality, std::string{"Dereferenced riterator wrong"}.append(mess), logger, *(ri + shift), *(ri_prediction + shift));

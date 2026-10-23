@@ -124,10 +124,10 @@ namespace sequoia
       STATIC_CHECK(sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t e0{0};
-      check(equivalence, "Construction", e0, 0);
+      check(equivalence, "Construction", e0, 0uz);
 
       edge_t e1{1};
-      check(equivalence, "Construction", e1, 1);
+      check(equivalence, "Construction", e1, 1uz);
 
       check_semantics("Standard semantics", e0, e1);
 
@@ -135,7 +135,7 @@ namespace sequoia
       check(equality, "Changing target node", e0, e1);
 
       edge_t e2{3};
-      check(equivalence, "", e2, 3);
+      check(equivalence, "", e2, 3uz);
 
       check_semantics("Standard semantics", e2, e1);
     }
