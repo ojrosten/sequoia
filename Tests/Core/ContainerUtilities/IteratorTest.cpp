@@ -9,6 +9,8 @@
 #include "IteratorTestingUtilities.hpp"
 
 #include <array>
+#include <limits>
+#include <utility>
 
 namespace sequoia::testing
 {
@@ -297,6 +299,20 @@ namespace sequoia::testing
     check(equality, "Difference of an earlier index and a later one", i - j, std::ptrdiff_t{-1});
     check(equality, "Advancing by a negative offset", *(j + std::ptrdiff_t{-1}), Index{2});
     check(equality, "Retreating by a negative offset", *(i - std::ptrdiff_t{-1}), Index{3});
+
+    if constexpr(std::cmp_greater(std::numeric_limits<Index>::max(), std::numeric_limits<std::ptrdiff_t>::max()))
+    {
+      // Each check crosses the greatest value of difference_type. Constant
+      // evaluation refuses signed overflow, so each fails to compile if the
+      // arithmetic is done in difference_type, with or without assertions.
+      constexpr Index lastWithinDifference{std::numeric_limits<std::ptrdiff_t>::max()},
+                      firstBeyondDifference{lastWithinDifference + 1};
+
+      STATIC_CHECK(*(index_iter_t{lastWithinDifference} + std::ptrdiff_t{1}) == firstBeyondDifference);
+      STATIC_CHECK(*(index_iter_t{firstBeyondDifference} - std::ptrdiff_t{1}) == lastWithinDifference);
+      STATIC_CHECK(index_iter_t{firstBeyondDifference} - index_iter_t{lastWithinDifference} == std::ptrdiff_t{1});
+      STATIC_CHECK(index_iter_t{lastWithinDifference} - index_iter_t{firstBeyondDifference} == std::ptrdiff_t{-1});
+    }
   }
 
   template<

@@ -8,7 +8,6 @@
 #pragma once
 
 #include "sequoia/Core/Meta/Concepts.hpp"
-#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
 #include <iterator>
@@ -314,9 +313,7 @@ SEQUOIA_GCC_SUPPRESS_BEGIN("-Warray-bounds")
       requires steppable<Iterator>
     {
       if constexpr(integer<Iterator>)
-        m_BaseIterator = numeric::unchecked_conversion_to<Iterator>(
-                           numeric::unchecked_conversion_to<difference_type>(m_BaseIterator) + n
-                         );
+        m_BaseIterator = static_cast<Iterator>(to_unsigned_common_type(m_BaseIterator) + to_unsigned_common_type(n));
       else
         m_BaseIterator += n;
 
@@ -358,9 +355,7 @@ SEQUOIA_GCC_SUPPRESS_END
       requires steppable<Iterator>
     {
       if constexpr(integer<Iterator>)
-        m_BaseIterator = numeric::unchecked_conversion_to<Iterator>(
-                           numeric::unchecked_conversion_to<difference_type>(m_BaseIterator) - n
-                         );
+        m_BaseIterator = static_cast<Iterator>(to_unsigned_common_type(m_BaseIterator) - to_unsigned_common_type(n));
       else
         m_BaseIterator -= n;
 
@@ -380,8 +375,8 @@ SEQUOIA_GCC_SUPPRESS_END
       requires steppable<Iterator>
     {
       if constexpr(integer<Iterator>)
-        return numeric::unchecked_conversion_to<difference_type>(lhs.base_iterator())
-             - numeric::unchecked_conversion_to<difference_type>(rhs.base_iterator());
+        return static_cast<difference_type>(  to_unsigned_common_type(lhs.base_iterator())
+                                            - to_unsigned_common_type(rhs.base_iterator()));
       else
         return lhs.base_iterator() - rhs.base_iterator();
     }
@@ -399,5 +394,16 @@ SEQUOIA_GCC_SUPPRESS_END
     }
   private:
     Iterator m_BaseIterator{};
+
+    [[nodiscard]]
+    constexpr static auto to_unsigned_common_type(const integer auto val) noexcept
+      requires integer<Iterator> && integer<difference_type>
+    {
+      // The common type is at least as wide as Iterator and difference_type,
+      // and an unsigned type wraps where a signed one would overflow, which is
+      // undefined behaviour. So a result cast back to a type that can hold it
+      // comes out exact.
+      return static_cast<std::make_unsigned_t<std::common_type_t<Iterator, difference_type>>>(val);
+    }
   };
 }
