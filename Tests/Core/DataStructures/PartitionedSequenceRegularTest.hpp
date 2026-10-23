@@ -26,5 +26,9 @@ namespace sequoia::testing
     void test_copyability();
 
     void test_index_type_constraint();
+
+    void test_allocator_extended_move();
+
+    void test_reset();
   };
 }
