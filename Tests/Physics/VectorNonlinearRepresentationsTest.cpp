@@ -46,7 +46,7 @@ namespace sequoia::testing
       [[nodiscard]]
       constexpr static std::array<T, 2> from_underlying(std::span<const T, 2> cartesian)
       {
-        angle<T> theta{(cartesian[0] == T{} && cartesian[1] == T{})
+        angle<T> theta{((cartesian[0] == T{}) && (cartesian[1] == T{}))
                          ? angle<T>{}
                          : angle<T>{std::atan2(cartesian[1], cartesian[0]), si::units::radian}};
         if(theta < angle<T>{})

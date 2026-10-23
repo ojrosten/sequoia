@@ -2938,7 +2938,7 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr static std::array<T, 2> from_underlying(std::span<const T, 2> cartesian)
     {
-      T theta{(cartesian[0] == T{} && cartesian[1] == T{}) ? T{} : std::atan2(cartesian[1], cartesian[0])};
+      T theta{((cartesian[0] == T{}) && (cartesian[1] == T{})) ? T{} : std::atan2(cartesian[1], cartesian[0])};
       if(theta < 0) theta += T{2} * std::numbers::pi_v<T>;
         
       return {std::sqrt(cartesian[0] * cartesian[0] + cartesian[1] * cartesian[1]), theta};
