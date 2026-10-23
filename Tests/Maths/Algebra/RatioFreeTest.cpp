@@ -130,7 +130,7 @@ namespace sequoia::testing
     else
     {
       STATIC_CHECK(std::same_as<ratio_multiply<ratio<max,  T(1)>, ratio<max,  T(1)>, allow_ratio_fp_conversion::yes>,
-                   ratio<static_cast<long double>(max) * max,  T(1)>>);
+                   ratio<static_cast<long double>(max) * static_cast<long double>(max),  T(1)>>);
     }
   }
 

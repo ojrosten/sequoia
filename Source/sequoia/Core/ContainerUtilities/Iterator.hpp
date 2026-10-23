@@ -312,7 +312,11 @@ SEQUOIA_GCC_SUPPRESS_BEGIN("-Warray-bounds")
     constexpr iterator& operator+=(const difference_type n)
       requires steppable<Iterator>
     {
-      m_BaseIterator += n;
+      if constexpr(integer<Iterator>)
+        m_BaseIterator = static_cast<Iterator>(to_unsigned_common_type(m_BaseIterator) + to_unsigned_common_type(n));
+      else
+        m_BaseIterator += n;
+
       return *this;
     }
 
@@ -350,7 +354,11 @@ SEQUOIA_GCC_SUPPRESS_END
     constexpr iterator& operator-=(const difference_type n)
       requires steppable<Iterator>
     {
-      m_BaseIterator -= n;
+      if constexpr(integer<Iterator>)
+        m_BaseIterator = static_cast<Iterator>(to_unsigned_common_type(m_BaseIterator) - to_unsigned_common_type(n));
+      else
+        m_BaseIterator -= n;
+
       return *this;
     }
 
@@ -366,7 +374,11 @@ SEQUOIA_GCC_SUPPRESS_END
     friend constexpr difference_type operator-(const iterator& lhs, const iterator& rhs)
       requires steppable<Iterator>
     {
-      return lhs.base_iterator() - rhs.base_iterator();
+      if constexpr(integer<Iterator>)
+        return static_cast<difference_type>(  to_unsigned_common_type(lhs.base_iterator())
+                                            - to_unsigned_common_type(rhs.base_iterator()));
+      else
+        return lhs.base_iterator() - rhs.base_iterator();
     }
 
     [[nodiscard]]
@@ -382,5 +394,16 @@ SEQUOIA_GCC_SUPPRESS_END
     }
   private:
     Iterator m_BaseIterator{};
+
+    [[nodiscard]]
+    constexpr static auto to_unsigned_common_type(const integer auto val) noexcept
+      requires integer<Iterator> && integer<difference_type>
+    {
+      // The common type is at least as wide as Iterator and difference_type,
+      // and an unsigned type wraps where a signed one would overflow.
+      // The returned value, cast back to a type that can hold `val`, equals
+      // `val`.
+      return static_cast<std::make_unsigned_t<std::common_type_t<Iterator, difference_type>>>(val);
+    }
   };
 }
