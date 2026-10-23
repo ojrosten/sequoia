@@ -71,9 +71,9 @@ ENDFUNCTION()
 
 FUNCTION(sequoia_set_compile_options target)
     if (MSVC)
-        target_compile_options(${target} PUBLIC /W4)
-        target_compile_options(${target} PUBLIC /bigobj)
-        target_compile_options(${target} PUBLIC /MP)
+        target_compile_options(${target} PRIVATE /W4)
+        target_compile_options(${target} PRIVATE /bigobj)
+        target_compile_options(${target} PRIVATE /MP)
 
         # C4702 fires on template code where a specialization makes a branch dead - a
         # container of compile-time length zero, say - and the optimizer attributes it to
@@ -82,12 +82,7 @@ FUNCTION(sequoia_set_compile_options target)
         # confined to the configurations that can raise it; unoptimized builds cannot.
         target_compile_options(${target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/wd4702>)
     else()
-        target_compile_options(${target} PUBLIC -Wall -Wextra -Wpedantic -Wshadow)
-
-        # PRIVATE, unlike the above: sequoia_finalize_library and sequoia_finalize_tests apply these
-        # options to a generated project's own targets, so those get the warnings without sequoia
-        # imposing them on every consumer. gcc's -Wconversion does not imply -Wsign-conversion.
-        target_compile_options(${target} PRIVATE -Wconversion -Wsign-conversion)
+        target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion)
     endif()
 
     target_compile_options(${target} PRIVATE ${WARNING_SUPPRESSIONS})
@@ -96,9 +91,9 @@ FUNCTION(sequoia_set_compile_options target)
     # error, or WARNING_SUPPRESSIONS would silently stop meaning anything.
     if(WARNINGS_AS_ERRORS)
         if(MSVC)
-            target_compile_options(${target} PUBLIC /WX)
+            target_compile_options(${target} PRIVATE /WX)
         else()
-            target_compile_options(${target} PUBLIC -Werror)
+            target_compile_options(${target} PRIVATE -Werror)
         endif()
     endif()
 ENDFUNCTION()
