@@ -24,7 +24,7 @@ jobs:
   doxygen:
     name: Docs · Doxygen
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v7
         with:
@@ -57,7 +57,7 @@ jobs:
       # minute.
       - name: Install doxygen
         if: inputs.needs_testing == 'true'
-        timeout-minutes: 25
+        timeout-minutes: 30
         run: |
           # The hosted image ships Chrome's and Microsoft's apt repositories,
           # which nothing here installs from. A bad index from either fails
@@ -65,13 +65,20 @@ jobs:
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
           # Quiet rather than silent, so that a slow index shows which
-          # repository it is. scripts/retry.sh retries an apt command that
-          # fails or hangs, as in tests.yml's "Install the toolchain (Linux)",
-          # with limits that leave room for every retry within this step.
-          sudo scripts/retry.sh 3 180 -- apt-get update -q
+          # repository it is. As in tests.yml's "Install the toolchain
+          # (Linux)", which says why:
+          #   - `--error-on=any` turns a failed index into an error;
+          #   - scripts/retry.sh retries each apt command that fetches, through
+          #     scripts/apt_get_with_mirror_fallback.sh, with limits that leave
+          #     room for every retry within this step;
+          #   - the install then runs once, from the downloaded packages.
+          sudo scripts/retry.sh 3 180 -- scripts/apt_get_with_mirror_fallback.sh update -q --error-on=any
           # Formulas need latex, dvips, gs and amssymb; these packages provide
           # them without their recommendations.
-          sudo scripts/retry.sh 2 420 -- apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-extra ghostscript
+          packages=(texlive-latex-base texlive-latex-extra ghostscript)
+          sudo scripts/retry.sh 3 300 -- scripts/apt_get_with_mirror_fallback.sh \
+            install -y --no-install-recommends --download-only "${packages[@]}"
+          sudo apt-get install -y --no-install-recommends --no-download "${packages[@]}"
           # doxygen itself comes from its release, not apt. noble's 1.9.8
           # cannot write a C++20 module's page under CREATE_SUBDIRS: it
           # prefixes `module_` to a path that already carries the hash

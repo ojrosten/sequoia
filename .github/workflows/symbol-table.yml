@@ -140,15 +140,17 @@ jobs:
         run: |
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
-          sudo scripts/retry.sh 3 180 -- apt-get update -qq --error-on=any \
-            || { echo "::error::The apt indexes could not be fetched: each attempt above says why"; exit 1; }
+          sudo scripts/retry.sh 3 180 -- scripts/apt_get_with_mirror_fallback.sh update -qq --error-on=any \
+            || { echo "::error::apt-get update failed: each attempt above says why"; exit 1; }
           packages=("$CXX" ninja-build libtbb-dev)
           names=$(apt-cache pkgnames)
           for pkg in "${packages[@]}"; do
             grep -qFx -- "$pkg" <<< "$names" \
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
-          sudo scripts/retry.sh 3 300 -- apt-get install -y "${packages[@]}"
+          sudo scripts/retry.sh 3 300 -- scripts/apt_get_with_mirror_fallback.sh \
+            install -y --download-only "${packages[@]}"
+          sudo apt-get install -y --no-download "${packages[@]}"
           "$CXX" --version
           cmake --version
 
