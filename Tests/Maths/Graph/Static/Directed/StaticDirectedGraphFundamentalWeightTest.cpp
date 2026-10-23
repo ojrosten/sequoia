@@ -816,7 +816,7 @@ namespace sequoia::testing
             [](graph_t g) -> graph_t {
               g.sort_nodes(
                 0,
-                graph_t::order(),
+                numeric::unchecked_conversion_to<graph_t::edge_index_type>(graph_t::order()),
                 [&g](auto i, auto j){ return g.cbegin_node_weights()[i] > g.cbegin_node_weights()[j]; }
               );
               return g;
@@ -828,11 +828,7 @@ namespace sequoia::testing
             graph_description::ascending_weights,
             report("Sorting the nodes of a graph whose order exceeds the greatest signed char into ascending weights"),
             [](graph_t g) -> graph_t {
-              g.sort_nodes(
-                0,
-                graph_t::order(),
-                [&g](auto i, auto j){ return g.cbegin_node_weights()[i] < g.cbegin_node_weights()[j]; }
-              );
+              g.sort_nodes([&g](auto i, auto j){ return g.cbegin_node_weights()[i] < g.cbegin_node_weights()[j]; });
               return g;
             }
           }

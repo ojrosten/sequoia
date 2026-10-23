@@ -186,7 +186,9 @@ namespace sequoia
       template<class Compare>
       constexpr void sort_nodes(Compare c)
       {
-        sort_nodes(edge_index_type{}, Connectivity::order(), std::move(c));
+        sort_nodes(edge_index_type{},
+                   numeric::unchecked_conversion_to<edge_index_type>(Connectivity::order()),
+                   std::move(c));
       }
 
       template<class Compare>
