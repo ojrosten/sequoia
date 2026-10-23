@@ -10,6 +10,7 @@
 
 #include <forward_list>
 #include <map>
+#include <span>
 
 namespace sequoia::testing
 {
@@ -40,6 +41,18 @@ namespace sequoia::testing
       assign_only_element(const assign_only_element&) = delete;
 
       assign_only_element& operator=(const assign_only_element&) = default;
+    };
+
+    template<class MutableElements, class ConstElements>
+    struct constness_dependent_range
+    {
+      MutableElements mutableElements;
+      ConstElements   constElements;
+
+      auto begin()       { return mutableElements.begin(); }
+      auto end()         { return mutableElements.end(); }
+      auto begin() const { return constElements.begin(); }
+      auto end()   const { return constElements.end(); }
     };
 
     using namespace partitioned_data;
@@ -197,5 +210,8 @@ namespace sequoia::testing
     STATIC_CHECK(!nested_sized_range_of_v<std::forward_list<std::vector<int>>, int>);
     STATIC_CHECK(!nested_sized_range_of_v<std::vector<std::forward_list<int>>, int>);
     STATIC_CHECK(!nested_sized_range_of_v<std::vector<std::vector<long>>, int>);
+    STATIC_CHECK(!nested_sized_range_of_v<std::vector<std::vector<int>>, long>);
+    STATIC_CHECK(!nested_sized_range_of_v<constness_dependent_range<std::vector<std::vector<int>>, std::forward_list<std::vector<int>>>, int>);
+    STATIC_CHECK(!nested_sized_range_of_v<std::span<constness_dependent_range<std::vector<int>, std::forward_list<int>>>, int>);
   }
 }

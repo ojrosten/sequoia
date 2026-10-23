@@ -15,6 +15,7 @@
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
 #include <concepts>
+#include <limits>
 #include <memory>
 #include <ranges>
 
@@ -81,7 +82,7 @@ namespace sequoia::data_structures::partition_impl
   inline constexpr bool nested_sized_range_of_v{
     requires {
       requires std::ranges::sized_range<const Range>;
-      requires std::ranges::sized_range<std::ranges::range_reference_t<const Range>>;
+      requires std::ranges::sized_range<const std::remove_reference_t<std::ranges::range_reference_t<const Range>>>;
       requires std::same_as<std::ranges::range_value_t<std::ranges::range_reference_t<const Range>>, T>;
     }
   };
