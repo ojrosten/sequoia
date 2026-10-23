@@ -78,12 +78,15 @@ namespace sequoia::data_structures::partition_impl
 
   //============================= Helper for construction from nested ranges ===================================//
 
+  template<class Range>
+  using const_inner_range_t = const std::remove_reference_t<std::ranges::range_reference_t<const Range>>;
+
   template<class Range, class T>
   inline constexpr bool nested_sized_range_of_v{
     requires {
       requires std::ranges::sized_range<const Range>;
-      requires std::ranges::sized_range<const std::remove_reference_t<std::ranges::range_reference_t<const Range>>>;
-      requires std::same_as<std::ranges::range_value_t<std::ranges::range_reference_t<const Range>>, T>;
+      requires std::ranges::sized_range<const_inner_range_t<Range>>;
+      requires std::same_as<std::ranges::range_value_t<const_inner_range_t<Range>>, T>;
     }
   };
 }

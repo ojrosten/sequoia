@@ -698,7 +698,7 @@ namespace sequoia
         const partitions_type partitions(partitionsAllocator);
         m_Partitions = partitions;
 
-        const container_type container{allocator};
+        const container_type container(allocator);
         m_Data = container;
       }
 
@@ -706,8 +706,8 @@ namespace sequoia
       friend constexpr bool operator==(const partitioned_sequence_base&, const partitioned_sequence_base&) noexcept = default;
     protected:
       explicit constexpr partitioned_sequence_base(const std::pair<partitions_type, container_type>& data)
-        : m_Partitions{data.first}
-        , m_Data{data.second}
+        : m_Partitions(data.first)
+        , m_Data(data.second)
       {}
 
       constexpr partitioned_sequence_base(partitioned_sequence_base&&) noexcept = default;

@@ -43,16 +43,16 @@ namespace sequoia::testing
       assign_only_element& operator=(const assign_only_element&) = default;
     };
 
-    template<class MutableElements, class ConstElements>
+    template<class MutableRange, class ConstRange>
     struct constness_dependent_range
     {
-      MutableElements mutableElements;
-      ConstElements   constElements;
+      MutableRange mutableRange;
+      ConstRange   constRange;
 
-      auto begin()       { return mutableElements.begin(); }
-      auto end()         { return mutableElements.end(); }
-      auto begin() const { return constElements.begin(); }
-      auto end()   const { return constElements.end(); }
+      auto begin()       { return mutableRange.begin(); }
+      auto end()         { return mutableRange.end(); }
+      auto begin() const { return constRange.begin(); }
+      auto end()   const { return constRange.end(); }
     };
 
     using namespace partitioned_data;
@@ -212,6 +212,9 @@ namespace sequoia::testing
     STATIC_CHECK(!nested_sized_range_of_v<std::vector<std::vector<long>>, int>);
     STATIC_CHECK(!nested_sized_range_of_v<std::vector<std::vector<int>>, long>);
     STATIC_CHECK(!nested_sized_range_of_v<constness_dependent_range<std::vector<std::vector<int>>, std::forward_list<std::vector<int>>>, int>);
+
+    // A const std::span yields non-const references, so its elements are reached as mutable
     STATIC_CHECK(!nested_sized_range_of_v<std::span<constness_dependent_range<std::vector<int>, std::forward_list<int>>>, int>);
+    STATIC_CHECK(!nested_sized_range_of_v<std::span<constness_dependent_range<std::vector<int>, std::vector<long>>>, int>);
   }
 }
