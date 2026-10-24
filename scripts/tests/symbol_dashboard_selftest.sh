@@ -339,6 +339,80 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.ok(counts.includes(777));
   });
 
+  const treeWith = (...commits) => ({...read('tree.json'), tree: read('tree.json').tree.concat(commits.map(commit =>
+    ({path: `uncalled-functions/linux-gcc/${commit}.json`, type: 'blob'})))});
+  // The fixture's own records have problems of their own, which these controls leave aside
+  const uncalledProblems = column => column.problems.filter(entry => entry.path.startsWith('uncalled-functions/'));
+  const uncalledRecord = (name, count, tools = ['g++-15 15.2.0']) =>
+    ({commit: c[name], clean: true, uncalled_functions: count, toolchain: {demanglers: ['c++filt 2.46'], tools}});
+
+  await control('a record of uncalled functions without a problem has none, and with one has it named', () => {
+    assert.deepStrictEqual(dashboard.problemsWithUncalled(uncalledRecord('F5', 0), c.F5), []);
+    assert.deepStrictEqual(dashboard.problemsWithUncalled(uncalledRecord('F5', 5), c.F4), [`it names commit ${c.F5}`]);
+  });
+
+  for (const [name, change, problem] of [
+    ['a tree not clean',         r => { r.clean = false; },                     'it was not measured on a clean tree'],
+    ['no count',                 r => { delete r.uncalled_functions; },         'it has no count of uncalled functions'],
+    ['a fractional count',       r => { r.uncalled_functions = 1.5; },          'it has no count of uncalled functions'],
+    ['a text count',             r => { r.uncalled_functions = '5'; },          'it has no count of uncalled functions'],
+    ['a negative count',         r => { r.uncalled_functions = -1; },           'it has no count of uncalled functions'],
+    ['no toolchain',             r => { delete r.toolchain; },                  'it has no toolchain of demanglers and tools'],
+    ['tools of numbers',         r => { r.toolchain.tools = [1]; },             'it has no toolchain of demanglers and tools'],
+    ['no demanglers',            r => { delete r.toolchain.demanglers; },       'it has no toolchain of demanglers and tools']
+  ]) {
+    await control(`a record of uncalled functions with ${name} is a problem`, () => {
+      const record = uncalledRecord('F5', 5);
+      change(record);
+      assert.ok(dashboard.problemsWithUncalled(record, c.F5).includes(problem));
+    });
+  }
+
+  await control('the nightly counts join the points of their commits, with their own toolchain runs', async () => {
+    const records = new Map([[c.F2, uncalledRecord('F2', 7)], [c.F4, uncalledRecord('F4', 6)],
+                             [c.F6, uncalledRecord('F6', 6, ['g++-16 16.1.0'])]]);
+    const source = fixtureSource({
+      tree: treeWith(...records.keys()),
+      record: recordPath => {
+        const found = [...records].find(([commit]) => recordPath === `uncalled-functions/linux-gcc/${commit}.json`);
+        return found ? found[1] : read(recordPath);
+      }
+    });
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.deepStrictEqual(uncalledProblems(column), []);
+    assert.deepStrictEqual(column.points.map(point => dashboard.uncalledCount(point.record)),
+                           column.points.map(point => records.has(point.commit) ? records.get(point.commit).uncalled_functions : null));
+    const [first, second, third] = column.points.filter(point => records.has(point.commit)).map(point => point.record.uncalled);
+    assert.deepStrictEqual([first.toolchainChange, second.toolchainChange, first.run, second.run, third.run],
+                           [null, null, 0, 0, 1]);
+    assert.deepStrictEqual(third.toolchainChange.map(change => change.path), ['tools']);
+  });
+
+  await control('a record of uncalled functions with a problem is listed, and the others load', async () => {
+    const source = fixtureSource({
+      tree: treeWith(c.F2),
+      record: recordPath => recordPath.startsWith('uncalled-functions/') ? {...uncalledRecord('F2', 1), clean: false} : read(recordPath)
+    });
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.deepStrictEqual(uncalledProblems(column).map(entry => entry.path), [`uncalled-functions/linux-gcc/${c.F2}.json`]);
+    assert.strictEqual(column.points.filter(point => dashboard.uncalledCount(point.record) !== null).length, 0);
+  });
+
+  await control('a record is null as a count where no measurement is, never zero', () => {
+    assert.strictEqual(dashboard.uncalledCount(recordOf('F5')), null);
+  });
+
+  await control('a record of uncalled functions at no plotted commit is listed', async () => {
+    const absent = '0'.repeat(40);
+    const source = fixtureSource({
+      tree: treeWith(absent),
+      record: recordPath => recordPath.startsWith('uncalled-functions/') ? {...uncalledRecord('F2', 1), commit: absent} : read(recordPath)
+    });
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.strictEqual(uncalledProblems(column).length, 1);
+    assert.ok(uncalledProblems(column)[0].problems.length >= 1);
+  });
+
   await control('a record which cannot be fetched is a problem, and the others load', async () => {
     const source = fixtureSource({record: recordPath => {
       if (recordPath.includes(c.F6)) throw new Error('404 for the record');
@@ -414,7 +488,7 @@ MUTATIONS = [
                                           'new Set(Object.keys(countsAfter))'),
     ('unmoved objects kept',              '.filter(mover => mover.delta !== 0)', ''),
     ('the commit not checked',            "if (record.commit !== commit) problems.push", "if (false) problems.push"),
-    ('a record not an object read',       "Array.isArray(record)) return ['it is not a JSON object'];", "false) return [];"),
+    ('a record not an object read',       "if (!isObject(record)) return ['it is not a JSON object'];", "if (false) return [];"),
     ('a dirty tree accepted',             "if (record.clean !== true) problems.push", "if (false) problems.push"),
     ('prototype keys counted',            'Object.hasOwn(countsBefore, object)', 'object in countsBefore'),
     ('any toolchain accepted',            "if (record.toolchain === null || typeof record.toolchain !== 'object')", 'if (false)'),
@@ -428,6 +502,11 @@ MUTATIONS = [
     ('the analysis not checked',          "if (Object.hasOwn(record, 'prune_analysis')) {", 'if (false) {'),
     ('the count not checked',             '|| !isCount(analysis.instructions)', ''),
     ('the invocation not checked',        "|| typeof analysis.invocation !== 'string'", ''),
+    ('a missing uncalled count plotted as zero',    "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : null", "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : 0"),
+    ('the uncalled count not checked',      '|| record.uncalled_functions < 0', '|| false'),
+    ('the uncalled toolchain not checked',  '|| !isNames(toolchain.tools)', ''),
+    ('the toolchain change dropped',       'toolchainChange: found.toolchainChange}', 'toolchainChange: null}'),
+    ('the run of the symbol table used',   'run: found.run,', 'run: point.run,'),
     ('an empty branch loaded',            "if (listing.size === 0) return {state: 'empty'};", ''),
 ]
 with open(script, encoding='utf-8') as f:

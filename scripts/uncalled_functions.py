@@ -12,6 +12,7 @@
                                  --demangler <tool>...
                                  --recorded-tool <tool>...
                                  --baseline <file>
+  uncalled_functions.py count    --baseline <file>
 
 `baseline` prints, for each file within `<root>/Source`, the keys of the
 file's uncalled functions. `compare` reads a baseline, and counts each key per
@@ -28,6 +29,13 @@ functions is seen. A file with records of lines alone has a record.
 `tighten` prints the baseline with each key of each file counted no more often
 than the file's uncalled functions in the tracefile count it. So `tighten`
 only removes keys, and it drops a file left with none.
+`count` prints, as JSON, the number of keys the baseline lists - each counted
+as often as it appears - and the header's lines, sorted into `demanglers` and
+`tools`, which name the tools that measured them. It reads no tracefile. Since
+the gate fails on an uncalled function the baseline lacks, the count of a
+tightened baseline, made from a run which passed the gate, is the number of
+uncalled functions the run measured. `count` refuses a header line which is
+neither a demangler nor a tool.
 Each mode exits with status 2 if it refuses its input, or if a tool it runs
 fails.
 
@@ -72,7 +80,7 @@ The tracefile's counts must be gcov's. With check_data_consistency on, lcov
 repairs counts whenever it reads a tracefile, and marks an uncalled lambda as
 called if the lambda's first line ran.
 """
-import argparse, pathlib, re, subprocess, sys
+import argparse, json, pathlib, re, subprocess, sys
 from collections import Counter
 from enum import Enum
 
@@ -491,9 +499,24 @@ def main():
         options.add_argument('--recorded-tool', required=True, action='append')
         if mode != 'baseline':
             options.add_argument('--baseline',  required=True)
+    counting = modes.add_parser('count')
+    counting.add_argument('--baseline', required=True)
     arguments = parser.parse_args()
 
     try:
+        if arguments.mode == 'count':
+            baseline_header, baseline = read_baseline(arguments.baseline)
+            toolchain = {'demanglers': [], 'tools': []}
+            for line in baseline_header:
+                if line.startswith('demangler: '):
+                    toolchain['demanglers'].append(line.removeprefix('demangler: '))
+                elif line.startswith('tool: '):
+                    toolchain['tools'].append(line.removeprefix('tool: '))
+                else:
+                    raise Refusal(f'{arguments.baseline}: the header line is neither a demangler nor a tool: {line}')
+            print(json.dumps({'uncalled_functions': sum(sum(keys.values()) for keys in baseline.values()),
+                              'toolchain':          toolchain}, indent=2))
+            return 0
         traced    = read_tracefile(arguments.tracefile, arguments.repository.rstrip('/') + '/Source')
         functions = {file: starts for file, starts in traced.items() if starts}
         if not functions:
