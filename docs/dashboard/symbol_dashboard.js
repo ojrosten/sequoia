@@ -189,7 +189,10 @@
    * A record with no problem is an object holding `commit` as its commit, a
    * clean tree, a toolchain, the executable's symbols and name bytes, and a
    * count of defined symbols for each object. It may also hold
-   * `prune_analysis`, with an invocation and a count of instructions.
+   * `prune_analysis`, with an invocation and a count of instructions, and
+   * `runner_overhead`, with an invocation, the number of tests the run
+   * reported (or null, if it reported none) and a count of system calls for
+   * each of `runnerSyscallCategories`.
    *
    * @param {JsonRecord} record
    * @param {string} commit
@@ -211,11 +214,61 @@
         problems.push('it has a prune_analysis with no invocation, or no count of instructions');
       }
     }
+    if (Object.hasOwn(record, 'runner_overhead')) {
+      const overhead = record.runner_overhead;
+      if (overhead === null || typeof overhead !== 'object' || typeof overhead.invocation !== 'string') {
+        problems.push('it has a runner_overhead with no invocation');
+      } else {
+        if (overhead.tests !== null && !(isCount(overhead.tests) && overhead.tests > 0)) {
+          problems.push('it has a runner_overhead whose number of tests is neither null nor a positive integer');
+        }
+        const syscalls = overhead.syscalls;
+        for (const category of runnerSyscallCategories) {
+          if (syscalls === null || typeof syscalls !== 'object' || !isCount(syscalls[category])) {
+            problems.push(`it has a runner_overhead with no count of ${category}`);
+          }
+        }
+      }
+    }
     const objects = record.defined_symbols_by_object;
     if (objects === null || typeof objects !== 'object' || !Object.values(objects).every(isCount)) {
       problems.push('it has no count of defined symbols for each object');
     }
     return problems;
+  }
+
+  /**
+   * The kinds of system call a record's `runner_overhead` counts: directory
+   * walks (getdents), metadata reads (the stat family), opens, clones
+   * (threads and processes alike) and execs (processes alone).
+   */
+  const runnerSyscallCategories = ['directory_walks', 'metadata_reads', 'opens', 'clones', 'execs'];
+
+  /**
+   * Returns the system calls of each category which the runner made per
+   * test in `record`'s run, or null if the record has no count of its
+   * overhead, or its run reported no number of tests. Such a record is left
+   * out of the series, not plotted as zero.
+   *
+   * @param {JsonRecord} record
+   * @returns {Record<string, number> | null}
+   */
+  function runnerSyscallsPerTest(record) {
+    if (!Object.hasOwn(record, 'runner_overhead') || record.runner_overhead.tests === null) return null;
+    const {tests, syscalls} = record.runner_overhead;
+    return Object.fromEntries(runnerSyscallCategories.map(category => [category, syscalls[category] / tests]));
+  }
+
+  /**
+   * Returns the system calls of every category together which the runner
+   * made per test in `record`'s run, or null as runnerSyscallsPerTest does.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function runnerOverheadPerTest(record) {
+    const perTest = runnerSyscallsPerTest(record);
+    return perTest === null ? null : Object.values(perTest).reduce((sum, count) => sum + count, 0);
   }
 
   /**
@@ -541,6 +594,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, runnerSyscallCategories, runnerSyscallsPerTest, runnerOverheadPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));

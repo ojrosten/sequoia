@@ -339,6 +339,76 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.ok(counts.includes(777));
   });
 
+  const overheadOf = tests => ({invocation: 'x', exit_status: 0, tests,
+                                 syscalls: {directory_walks: 10, metadata_reads: 400, opens: 60, clones: 2, execs: 8}});
+
+  await control('the runner\'s overhead is null in a record without it or without a number of tests, and per test otherwise', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.runnerOverheadPerTest(record), null);
+    assert.strictEqual(dashboard.runnerSyscallsPerTest(record), null);
+    record.runner_overhead = overheadOf(null);
+    assert.strictEqual(dashboard.runnerOverheadPerTest(record), null);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+    record.runner_overhead = overheadOf(4);
+    assert.deepStrictEqual(dashboard.runnerSyscallsPerTest(record),
+                           {directory_walks: 2.5, metadata_reads: 100, opens: 15, clones: 0.5, execs: 2});
+    assert.strictEqual(dashboard.runnerOverheadPerTest(record), 120);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  await control('a count of zero is a count, plotted as zero', () => {
+    const record = recordOf('F5');
+    record.runner_overhead = overheadOf(5);
+    for (const category of dashboard.runnerSyscallCategories) record.runner_overhead.syscalls[category] = 0;
+    assert.strictEqual(dashboard.runnerOverheadPerTest(record), 0);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  await control('the categories are the five the workflow records', () => {
+    assert.deepStrictEqual(dashboard.runnerSyscallCategories,
+                           ['directory_walks', 'metadata_reads', 'opens', 'clones', 'execs']);
+  });
+
+  for (const [name, overhead, problem] of [
+    ['null',            null,                                     'it has a runner_overhead with no invocation'],
+    ['no invocation',   {...overheadOf(4), invocation: 5},        'it has a runner_overhead with no invocation'],
+    ['zero tests',      overheadOf(0),                            'it has a runner_overhead whose number of tests is neither null nor a positive integer'],
+    ['fractional tests', overheadOf(1.5),                         'it has a runner_overhead whose number of tests is neither null nor a positive integer'],
+    ['text tests',      overheadOf('4'),                          'it has a runner_overhead whose number of tests is neither null nor a positive integer'],
+    ['absent tests',    (({tests, ...rest}) => rest)(overheadOf(4)), 'it has a runner_overhead whose number of tests is neither null nor a positive integer'],
+    ['no syscalls',     {...overheadOf(4), syscalls: null},       'it has a runner_overhead with no count of directory_walks']
+  ]) {
+    await control(`a record with a runner_overhead of ${name} is a problem`, () => {
+      const record = recordOf('F5');
+      record.runner_overhead = overhead;
+      assert.ok(dashboard.problemsWith(record, c.F5).includes(problem), dashboard.problemsWith(record, c.F5).join('; '));
+    });
+  }
+
+  for (const category of ['directory_walks', 'metadata_reads', 'opens', 'clones', 'execs']) {
+    for (const [name, value] of [['missing', undefined], ['fractional', 1.5], ['negative', -1], ['text', '3']]) {
+      await control(`a runner_overhead with ${category} ${name} is a problem naming it, and no other`, () => {
+        const record = recordOf('F5');
+        record.runner_overhead = overheadOf(4);
+        if (value === undefined) delete record.runner_overhead.syscalls[category];
+        else record.runner_overhead.syscalls[category] = value;
+        assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), [`it has a runner_overhead with no count of ${category}`]);
+      });
+    }
+  }
+
+  await control('points lacking the runner\'s overhead keep their place, and it is read where present', async () => {
+    const source = fixtureSource({record: recordPath => {
+      const record = read(recordPath);
+      if (recordPath.includes(c.F5)) record.runner_overhead = overheadOf(2);
+      return record;
+    }});
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    const counts = column.points.map(point => dashboard.runnerOverheadPerTest(point.record));
+    assert.deepStrictEqual(counts, column.points.map(point => point.commit === c.F5 ? 240 : null));
+    assert.ok(counts.includes(240));
+  });
+
   const treeWith = (...commits) => ({...read('tree.json'), tree: read('tree.json').tree.concat(commits.map(commit =>
     ({path: `uncalled-functions/linux-gcc/${commit}.json`, type: 'blob'})))});
   // The fixture's own records have problems of their own, which these controls leave aside
@@ -550,6 +620,20 @@ MUTATIONS = [
     ('the analysis not checked',          "if (Object.hasOwn(record, 'prune_analysis')) {", 'if (false) {'),
     ('the count not checked',             '|| !isCount(analysis.instructions)', ''),
     ('the invocation not checked',        "|| typeof analysis.invocation !== 'string'", ''),
+    ('a missing overhead plotted as zero',  "if (!Object.hasOwn(record, 'runner_overhead') || record.runner_overhead.tests === null) return null;", "if (!Object.hasOwn(record, 'runner_overhead')) return null;"),
+    ('a missing number of tests divided by', "|| record.runner_overhead.tests === null) return null;", ") return null;"),
+    ('the overhead not checked',            "if (Object.hasOwn(record, 'runner_overhead')) {", 'if (false) {'),
+    ('the overhead\'s invocation not checked', "|| typeof overhead.invocation !== 'string') {", ') {'),
+    ('the number of tests not checked',     "if (overhead.tests !== null && !(isCount(overhead.tests) && overhead.tests > 0)) {", 'if (false) {'),
+    ('zero tests accepted',                 "isCount(overhead.tests) && overhead.tests > 0", 'isCount(overhead.tests)'),
+    ('the directory walks unchecked',       "const runnerSyscallCategories = ['directory_walks', ", "const runnerSyscallCategories = ["),
+    ('the metadata reads unchecked',        "'metadata_reads', 'opens'", "'opens'"),
+    ('the opens unchecked',                 "'opens', 'clones'", "'clones'"),
+    ('the clones unchecked',                "'clones', 'execs']", "'execs']"),
+    ('the execs unchecked',                 "'clones', 'execs']", "'clones']"),
+    ('the counts not checked at all',       "|| !isCount(syscalls[category])", ''),
+    ('totals plotted, not per test',        "syscalls[category] / tests]", "syscalls[category]]"),
+    ('the categories not summed',           "Object.values(perTest).reduce((sum, count) => sum + count, 0)", "Object.values(perTest)[0]"),
     ('a missing uncalled count plotted as zero',    "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : null", "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : 0"),
     ('the uncalled count not checked',      '|| record.uncalled_functions < 0', '|| false'),
     ('the uncalled toolchain not checked',  '|| !isNames(toolchain.tools)', ''),

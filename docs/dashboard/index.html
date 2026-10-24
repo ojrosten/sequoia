@@ -143,6 +143,15 @@
           Points whose record has no count are left out.</p></figcaption>
       <div class="plot" id="analysis-plot"></div>
     </figure>
+    <figure class="card" id="runner-figure">
+      <figcaption><h2>System calls of the runner, per test</h2>
+        <p>The directory walks, metadata reads (<code>stat</code> and its kin), opens, clones and execs
+          <code>strace -f -c</code> counts in one full run of <code>TestAll</code>, divided by the number of tests
+          the run reported. A clone is a thread or a process; an exec is a process. Hover for each kind. The counts
+          are those of the whole run, tests' own file system use included, and the run is concurrent, so they vary a
+          little between runs of one commit. Points whose record has no count are left out.</p></figcaption>
+      <div class="plot" id="runner-plot"></div>
+    </figure>
     <figure class="card" id="uncalled-figure">
       <figcaption><h2>Uncalled functions in Source</h2>
         <p>The functions of <code>Source/</code> which the coverage gate lists as uncalled, instantiations collapsed.
@@ -180,6 +189,7 @@
   const svgNamespace = 'http://www.w3.org/2000/svg';
 
   const integer = new Intl.NumberFormat('en-GB');
+  const oneDecimal = new Intl.NumberFormat('en-GB', {maximumFractionDigits: 1});
   const signed  = value => (value > 0 ? '+' : value < 0 ? '−' : '') + integer.format(Math.abs(value));
   const percent = (delta, base) => {
     if (base === 0) return 'from nothing';
@@ -422,6 +432,7 @@
     {name: 'Symbols',              value: record => record.executable.symbols,           unit: 'symbols'},
     {name: 'Bytes of symbol names', value: record => record.executable.symbol_name_bytes, unit: 'bytes of names'},
     {name: 'Instructions of prune\'s analysis', value: symbolDashboard.pruneInstructions, unit: 'instructions'},
+    {name: 'System calls of the runner, per test', value: symbolDashboard.runnerOverheadPerTest, unit: 'system calls per test'},
     {name: 'Uncalled functions',    value: symbolDashboard.uncalledCount, unit: 'uncalled functions',
      // Measured nightly, so a line joins the points which have a count; the toolchain is that of the measurement
      joinsGaps: true, runOf: point => point.record.uncalled.run,
@@ -450,7 +461,12 @@
       ...(measures[2].value(point.record) === null ? []
           : [element('span', {}, `${integer.format(measures[2].value(point.record))} instructions of prune's analysis`)]),
       ...(measures[3].value(point.record) === null ? []
-          : [element('span', {}, `${integer.format(measures[3].value(point.record))} uncalled functions in Source`)]),
+          : [element('span', {}, `${oneDecimal.format(measures[3].value(point.record))} system calls per test: `
+                                 + Object.entries(symbolDashboard.runnerSyscallsPerTest(point.record) || {})
+                                         .map(([category, count]) => `${oneDecimal.format(count)} ${category.replace('_', ' ')}`)
+                                         .join(', '))]),
+      ...(measures[4].value(point.record) === null ? []
+          : [element('span', {}, `${integer.format(measures[4].value(point.record))} uncalled functions in Source`)]),
       element('span', {}, `${short(point.commit)} · ${longDate(point.date)}`),
       element('span', {}, point.subject));
     if (point.toolchainChange) tooltip.append(element('span', {}, `Toolchain changed: ${describeChange(point.toolchainChange)}`));
@@ -484,9 +500,12 @@
     const hasAnalysis = state.points.some(point => measures[2].value(point.record) !== null);
     document.getElementById('analysis-figure').hidden = !hasAnalysis;
     if (hasAnalysis) state.charts.push(drawChart(document.getElementById('analysis-plot'), measures[2], 180, false));
-    const hasUncalled = state.points.some(point => measures[3].value(point.record) !== null);
+    const hasRunner = state.points.some(point => measures[3].value(point.record) !== null);
+    document.getElementById('runner-figure').hidden = !hasRunner;
+    if (hasRunner) state.charts.push(drawChart(document.getElementById('runner-plot'), measures[3], 180, false));
+    const hasUncalled = state.points.some(point => measures[4].value(point.record) !== null);
     document.getElementById('uncalled-figure').hidden = !hasUncalled;
-    if (hasUncalled) state.charts.push(drawChart(document.getElementById('uncalled-plot'), measures[3], 180, true));
+    if (hasUncalled) state.charts.push(drawChart(document.getElementById('uncalled-plot'), measures[4], 180, true));
     for (const chart of state.charts) chart.markSelected(state.selected);
   }
 
