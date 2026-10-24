@@ -5,8 +5,29 @@
 //
 // A record is the output of scripts/symbol_table_report.py, stored as
 // symbol-table/<column>/<commit>.json on the metrics branch.
+/** @param {Record<string, any>} exports */
 (function (exports) {
   'use strict';
+
+  /**
+   * A record as the metrics branch holds it: JSON read from outside, whose
+   * fields problemsWith and problemsWithUncalled check before any is used.
+   * @typedef {any} JsonRecord
+   */
+  /**
+   * @typedef {{path: string}} TreeEntry
+   * @typedef {{tree: TreeEntry[], truncated?: boolean}} Tree
+   * @typedef {{commit: string, path: string}} Entry
+   * @typedef {{sha: string, parents: {sha: string}[], commit: {committer: {date: string}, message: string}}} ApiCommit
+   * @typedef {{parents: string[], date: string, subject: string}} Summary
+   * @typedef {{commit: string, summary: Summary, record: JsonRecord}} OrderedRecord
+   * @typedef {{path: string, before: any, after: any}} Difference
+   * @typedef {{commit: string, date: string, subject: string, record: JsonRecord, run: number,
+   *            toolchainChange: Difference[] | null}} Point
+   * @typedef {{path: string, problems: string[]}} Unplottable
+   * @typedef {{tree(): Promise<Tree | null>, commits(start: string | null): Promise<ApiCommit[]>,
+   *            record(path: string): Promise<JsonRecord>}} Source
+   */
 
   const recordPathPattern = /^symbol-table\/([^/]+)\/([0-9a-f]{40})\.json$/;
 
@@ -29,6 +50,9 @@
    * column, in the tree's order.
    *
    * Throws if the listing is truncated.
+   *
+   * @param {Tree} tree
+   * @returns {Map<string, Entry[]>}
    */
   function recordsInTree(tree) {
     if (tree.truncated) {
@@ -50,6 +74,9 @@
    * git trees API which recordsInTree has accepted, as {commit, path}.
    * They are the nightly measurements of baseline-tightener.yml, one file
    * per commit measured, beside the symbol table's columns.
+   *
+   * @param {Tree} tree
+   * @returns {Entry[]}
    */
   function uncalledRecordsInTree(tree) {
     return tree.tree.flatMap(entry => {
@@ -61,6 +88,9 @@
   /**
    * Returns the parents, date and subject of `commit`, a commit as the
    * commits API returns it.
+   *
+   * @param {ApiCommit} commit
+   * @returns {Summary}
    */
   function summarise(commit) {
     return {
@@ -77,6 +107,11 @@
    * Returns the commits of `wanted` found, newest first, and `unknown`: the
    * commit at which the walk left `known`, or null if the walk found every
    * wanted commit or reached a commit with no parent.
+   *
+   * @param {Map<string, Summary>} known
+   * @param {string} head
+   * @param {Set<string>} wanted
+   * @returns {{found: string[], unknown: string | null}}
    */
   function walkFirstParents(known, head, wanted) {
     const found = [];
@@ -91,7 +126,11 @@
     return {found, unknown: null};
   }
 
-  /** Returns `value` as JSON, with each object's keys sorted. */
+  /**
+   * Returns `value` as JSON, with each object's keys sorted.
+   * @param {any} value
+   * @returns {string}
+   */
   function canonical(value) {
     if (Array.isArray(value)) return '[' + value.map(canonical).join(',') + ']';
     if (value !== null && typeof value === 'object') {
@@ -104,8 +143,14 @@
    * Lists each leaf of `before` and `after` whose value differs, as a dotted
    * path with both values. A leaf absent from one side has the value
    * undefined there.
+   *
+   * @param {any} before
+   * @param {any} after
+   * @param {string} [prefix]
+   * @returns {Difference[]}
    */
   function differences(before, after, prefix = '') {
+    /** @param {any} value */
     const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
     if (!isObject(before) || !isObject(after)) {
       return canonical(before) === canonical(after) ? [] : [{path: prefix, before, after}];
@@ -114,12 +159,17 @@
     return keys.flatMap(key => differences(before[key], after[key], prefix ? prefix + '.' + key : key));
   }
 
+  /** @param {any} value */
   const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 
   /**
    * Lists what is wrong with `record`, of any column, stored under the name
    * `commit`, in the fields which every record holds: that it is a JSON
    * object, names `commit` as its commit and was measured on a clean tree.
+   *
+   * @param {JsonRecord} record
+   * @param {string} commit
+   * @returns {string[]}
    */
   function commonProblems(record, commit) {
     if (!isObject(record)) return ['it is not a JSON object'];
@@ -136,10 +186,15 @@
    * clean tree, a toolchain, the executable's symbols and name bytes, and a
    * count of defined symbols for each object. It may also hold
    * `prune_analysis`, with an invocation and a count of instructions.
+   *
+   * @param {JsonRecord} record
+   * @param {string} commit
+   * @returns {string[]}
    */
   function problemsWith(record, commit) {
     const problems = commonProblems(record, commit);
     if (!isObject(record)) return problems;
+    /** @param {any} value */
     const isCount = value => Number.isInteger(value) && value >= 0;
     if (record.toolchain === null || typeof record.toolchain !== 'object') problems.push('it has no toolchain');
     const executable = record.executable || {};
@@ -163,6 +218,9 @@
    * Returns the instructions counted in `record`'s run of prune's analysis,
    * or null if the record has none: an old record, or one whose measurement
    * failed. Such a record is left out of the series, not plotted as zero.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
    */
   function pruneInstructions(record) {
     return Object.hasOwn(record, 'prune_analysis') ? record.prune_analysis.instructions : null;
@@ -175,11 +233,16 @@
    * A record with no problem is an object holding `commit` as its commit, a
    * clean tree, the count of uncalled functions, and a toolchain of the
    * demanglers and the tools which measured it, each named by a string.
+   *
+   * @param {JsonRecord} record
+   * @param {string} commit
+   * @returns {string[]}
    */
   function problemsWithUncalled(record, commit) {
     const problems = commonProblems(record, commit);
     if (!isObject(record)) return problems;
     const toolchain = record.toolchain;
+    /** @param {any} value */
     const isNames = value => Array.isArray(value) && value.every(name => typeof name === 'string');
     if (!Number.isInteger(record.uncalled_functions) || record.uncalled_functions < 0) {
       problems.push('it has no count of uncalled functions');
@@ -194,6 +257,9 @@
    * Returns the count of uncalled functions measured at the point whose
    * record is `record`, or null if no measurement is at that commit. Such a
    * point is left out of the series, not plotted as zero.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
    */
   function uncalledCount(record) {
     return Object.hasOwn(record, 'uncalled') ? record.uncalled.count : null;
@@ -205,6 +271,10 @@
    * uncalled functions, holding in its record `uncalled`: the count, the
    * toolchain run of the measurement and the toolchain's change from the
    * measurement before. The two series' toolchains are independent.
+   *
+   * @param {Point[]} points
+   * @param {Point[]} uncalledPoints
+   * @returns {Point[]}
    */
   function withUncalled(points, uncalledPoints) {
     const measured = new Map(uncalledPoints.map(point => [point.commit, point]));
@@ -224,6 +294,9 @@
    * run it belongs to. A run is a maximal sequence of consecutive points
    * whose toolchains are equal. The first point of each run after the
    * first holds the toolchain's differences from the point before it.
+   *
+   * @param {OrderedRecord[]} orderedRecords
+   * @returns {Point[]}
    */
   function pointsOf(orderedRecords) {
     let run = 0;
@@ -244,6 +317,10 @@
    *
    * An object absent from one record has a count of null there, and is
    * taken to define no symbols in it.
+   *
+   * @param {JsonRecord} before
+   * @param {JsonRecord} after
+   * @returns {{object: string, before: number | undefined, after: number | undefined, delta: number}[]}
    */
   function movers(before, after) {
     const countsBefore = before.defined_symbols_by_object;
@@ -264,6 +341,12 @@
    *
    * Returns each call's outcome, in the order of `items`: {value} if it
    * resolved, {error} if it rejected.
+   *
+   * @template T, R
+   * @param {T[]} items
+   * @param {number} width
+   * @param {(item: T) => Promise<R>} task
+   * @returns {Promise<{value?: R, error?: Error}[]>}
    */
   async function settleEach(items, width, task) {
     const outcomes = new Array(items.length);
@@ -289,8 +372,14 @@
    * every commit fetched.
    *
    * Throws if a listing lacks the commit it starts at.
+   *
+   * @param {Source} source
+   * @param {Map<string, Summary>} known
+   * @param {Set<string>} wanted
+   * @returns {Promise<{head: string, pages: number, walk: {found: string[], unknown: string | null}}>}
    */
   async function walkStaging(source, known, wanted) {
+    /** @param {ApiCommit[]} listing */
     const learn = listing => { for (const commit of listing) known.set(commit.sha, summarise(commit)); };
     const first = await source.commits(null);
     if (first.length === 0) throw new Error('GitHub listed no commits on staging');
@@ -326,6 +415,11 @@
    * points and its problems. A record which cannot be fetched, has a
    * problem or is not found on the walk is among the problems, and not
    * among the points.
+   *
+   * @param {Source} source
+   * @param {Map<string, Summary>} known
+   * @returns {Promise<{state: "absent"} | {state: "empty"} | {state: "loaded", head: string, pages: number,
+   *           columns: {name: string, points: Point[], problems: Unplottable[]}[]}>}
    */
   async function loadHistory(source, known) {
     const tree = await source.tree();
@@ -340,16 +434,28 @@
       settleEach(entries, recordFetchWidth, entry => source.record(entry.path))
     ]);
     const fetched = new Map(entries.map((entry, index) => [entry.path, outcomes[index]]));
+    /** @param {Entry} entry */
+    const outcomeOf = entry => fetched.get(entry.path) ?? {error: new Error('it was not fetched')};
+    /** @param {string} commit */
+    const summaryOf = commit => {
+      const summary = known.get(commit);
+      if (!summary) throw new Error(`the walk found ${commit} but holds no summary of it`);
+      return summary;
+    };
     const historyOrder = walk.found.slice().reverse();
     const notFound = walk.unknown
       ? `the walk along staging's first parents stopped after ${pages} pages of history, before reaching it`
       : 'it is not on staging\'s first-parent history';
     // The records of `entries` which have no problem by commit, and those which have, by path
+    /**
+     * @param {Entry[]} entries
+     * @param {(record: JsonRecord, commit: string) => string[]} problemsOf
+     */
     const sorted = (entries, problemsOf) => {
       const problems = [];
       const byCommit = new Map();
       for (const entry of entries) {
-        const outcome = fetched.get(entry.path);
+        const outcome = outcomeOf(entry);
         const entryProblems = outcome.error
           ? [`it could not be fetched: ${outcome.error.message}`]
           : problemsOf(outcome.value, entry.commit);
@@ -362,15 +468,15 @@
     const {problems: uncalledProblems, byCommit: uncalledByCommit} = sorted(uncalledEntries, problemsWithUncalled);
     const uncalledPoints = pointsOf(historyOrder
       .filter(commit => uncalledByCommit.has(commit))
-      .map(commit => ({commit, summary: known.get(commit), record: uncalledByCommit.get(commit)})));
+      .map(commit => ({commit, summary: summaryOf(commit), record: uncalledByCommit.get(commit)})));
     const columns = [...listing].map(([name, columnEntries]) => {
       const {problems, byCommit} = sorted(columnEntries, problemsWith);
       const ordered = historyOrder
         .filter(commit => byCommit.has(commit))
-        .map(commit => ({commit, summary: known.get(commit), record: byCommit.get(commit)}));
+        .map(commit => ({commit, summary: summaryOf(commit), record: byCommit.get(commit)}));
       const points = withUncalled(pointsOf(ordered), uncalledPoints);
       const unplotted = uncalledPoints.filter(point => !points.some(plotted => plotted.commit === point.commit))
-        .map(point => ({path: uncalledEntries.find(entry => entry.commit === point.commit).path,
+        .map(point => ({path: uncalledEntries.find(entry => entry.commit === point.commit)?.path ?? '',
                         problems: ['it is not at a commit with a plotted symbol table']}));
       return {name, points, problems: problems.concat(uncalledProblems, unplotted)};
     });
