@@ -342,25 +342,32 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
   const overheadOf = tests => ({invocation: 'x', exit_status: 0, tests,
                                  syscalls: {directory_walks: 10, metadata_reads: 400, opens: 60, clones: 2, execs: 8}});
 
-  await control('the runner\'s overhead is null in a record without it or without a number of tests, and per test otherwise', () => {
+  const perTest = {directory_walks: 2.5, metadata_reads: 100, opens: 15, clones: 0.5, execs: 2};
+
+  await control('each category is null in a record without the runner\'s overhead or without a number of tests, and per test otherwise', () => {
     const record = recordOf('F5');
-    assert.strictEqual(dashboard.runnerOverheadPerTest(record), null);
-    assert.strictEqual(dashboard.runnerSyscallsPerTest(record), null);
+    for (const category of dashboard.runnerSyscallCategories) {
+      assert.strictEqual(dashboard.runnerSyscallPerTest(record, category), null);
+    }
     record.runner_overhead = overheadOf(null);
-    assert.strictEqual(dashboard.runnerOverheadPerTest(record), null);
+    for (const category of dashboard.runnerSyscallCategories) {
+      assert.strictEqual(dashboard.runnerSyscallPerTest(record, category), null);
+    }
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
     record.runner_overhead = overheadOf(4);
-    assert.deepStrictEqual(dashboard.runnerSyscallsPerTest(record),
-                           {directory_walks: 2.5, metadata_reads: 100, opens: 15, clones: 0.5, execs: 2});
-    assert.strictEqual(dashboard.runnerOverheadPerTest(record), 120);
+    for (const [category, count] of Object.entries(perTest)) {
+      assert.strictEqual(dashboard.runnerSyscallPerTest(record, category), count, category);
+    }
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
   });
 
   await control('a count of zero is a count, plotted as zero', () => {
     const record = recordOf('F5');
     record.runner_overhead = overheadOf(5);
-    for (const category of dashboard.runnerSyscallCategories) record.runner_overhead.syscalls[category] = 0;
-    assert.strictEqual(dashboard.runnerOverheadPerTest(record), 0);
+    for (const category of dashboard.runnerSyscallCategories) {
+      record.runner_overhead.syscalls[category] = 0;
+      assert.strictEqual(dashboard.runnerSyscallPerTest(record, category), 0);
+    }
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
   });
 
@@ -404,9 +411,9 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
       return record;
     }});
     const column = (await dashboard.loadHistory(source, new Map())).columns[0];
-    const counts = column.points.map(point => dashboard.runnerOverheadPerTest(point.record));
-    assert.deepStrictEqual(counts, column.points.map(point => point.commit === c.F5 ? 240 : null));
-    assert.ok(counts.includes(240));
+    const counts = column.points.map(point => dashboard.runnerSyscallPerTest(point.record, 'metadata_reads'));
+    assert.deepStrictEqual(counts, column.points.map(point => point.commit === c.F5 ? 200 : null));
+    assert.ok(counts.includes(200));
   });
 
   const treeWith = (...commits) => ({...read('tree.json'), tree: read('tree.json').tree.concat(commits.map(commit =>
@@ -632,8 +639,8 @@ MUTATIONS = [
     ('the clones unchecked',                "'clones', 'execs']", "'execs']"),
     ('the execs unchecked',                 "'clones', 'execs']", "'clones']"),
     ('the counts not checked at all',       "|| !isCount(syscalls[category])", ''),
-    ('totals plotted, not per test',        "syscalls[category] / tests]", "syscalls[category]]"),
-    ('the categories not summed',           "Object.values(perTest).reduce((sum, count) => sum + count, 0)", "Object.values(perTest)[0]"),
+    ('totals plotted, not per test',        "return syscalls[category] / tests;", "return syscalls[category];"),
+    ('the wrong category read',             "return syscalls[category] / tests;", "return syscalls.opens / tests;"),
     ('a missing uncalled count plotted as zero',    "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : null", "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : 0"),
     ('the uncalled count not checked',      '|| record.uncalled_functions < 0', '|| false'),
     ('the uncalled toolchain not checked',  '|| !isNames(toolchain.tools)', ''),

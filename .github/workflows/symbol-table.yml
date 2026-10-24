@@ -17,10 +17,11 @@ name: symbol-table
 # apart from the tiers, so that a failure to measure cannot fail a test
 # column, and cancelling a superseded run of a tier loses no record.
 #
-# That one run is under `strace -f -c`, which counts the system calls of the
-# runner and of everything it starts: a record carries the counts as
-# `runner_overhead`, with the number of tests the run reported. The counts are
-# totals for the run, so a move shows in the dashboard's per-test line.
+# A second run of the suite, after prune's measurement, is under
+# `strace -f -c`, which counts the system calls of the runner and of everything
+# it starts: a record carries the counts as `runner_overhead`, with the number
+# of tests the run reported. The counts are totals for the run, so a move shows
+# in the dashboard's per-test lines.
 #
 # A commit already recorded can be recorded again, to add the field
 # `prune_analysis`: the job rebuilds TestAll, which the count needs, and the
@@ -215,46 +216,67 @@ jobs:
           git config --global user.email "ci@example.invalid"
           git config --global init.defaultBranch trunk
 
+      - name: Leave prune a stamp, with one run of the suite
+        continue-on-error: true
+        timeout-minutes: 30
+        working-directory: tree/build/TestAll/gcc-env
+        run: ./TestAll || echo "The suite failed, which this step ignores."
+
+      - name: Count the instructions of prune's analysis
+        continue-on-error: true
+        timeout-minutes: 30
+        working-directory: tree/build/TestAll/gcc-env
+        run: |
+          # The job's shell sets pipefail, so a failing run reaches the || through tee.
+          valgrind --tool=cachegrind --cache-sim=no --cachegrind-out-file="$RUNNER_TEMP/cachegrind.out" \
+            ./TestAll prune --serial 2>&1 | tee "$RUNNER_TEMP/measured.txt" \
+            || echo "The measured run failed, which this step ignores; its count stands."
+          # The count stands only if the analysis ran and selected from the stamp. An
+          # older commit's runner may not have left a stamp, or may not take the
+          # arguments, and then prune runs every test, or nothing, under cachegrind.
+          if ! grep -qF 'Analyzing dependencies' "$RUNNER_TEMP/measured.txt" \
+             || grep -qE 'unable to prune|prune is ignored' "$RUNNER_TEMP/measured.txt"; then
+            echo "::warning::prune did not analyse from a stamp, so the record has no prune_analysis"
+            exit 0
+          fi
+          # The file's summary line is "summary: <Ir>"
+          instructions=$(awk '$1 == "summary:" {print $2}' "$RUNNER_TEMP/cachegrind.out")
+          jq -n --argjson instructions "$instructions" \
+            '{invocation: "TestAll prune --serial, after a full run, under cachegrind", instructions: $instructions}' \
+            > "$RUNNER_TEMP/prune_analysis.json"
+
+      # The runner's overhead, as system calls. The suite runs once more, under
+      # strace, after the measurement of prune: the second run rewrites the
+      # stamp, and strace slows the run, neither of which may touch prune's
+      # count. `-f` follows every process and thread the runner starts; `-c`
+      # prints strace's own table of counts, in strace's format, which
+      # "Count the runner's system calls" reads. --seccomp-bpf stops the tracee
+      # only at the system calls named. Only a verbose run prints a report of
+      # "[Runner Overhead: ...]" under each test's name (and under a suite's
+      # name, if the run is serial), so the run is verbose, and its output is
+      # kept to count those reports. The run's outcome is ignored. If strace
+      # cannot trace, as in a container which forbids ptrace, it leaves no
+      # table and the record has no runner_overhead.
       - name: Install strace
         continue-on-error: true
         run: sudo apt-get install -y strace
 
-      # The same one run of the suite, under strace, which counts the system
-      # calls of the runner and of every process and thread it starts (-f).
-      # `-c` prints strace's own table of counts, in strace's format, which
-      # "Count the runner's system calls" reads. --seccomp-bpf stops the
-      # tracee only at the system calls named, which keeps the cost of
-      # tracing to those. If strace cannot trace, as in a container which
-      # forbids ptrace, it says so and does not run the suite, so the step
-      # runs the suite plainly: the stamp is what this step is for.
-      #
-      # The table is of the whole run. Only a verbose run prints a report of
-      # "[Runner Overhead: ...]" under each test's name (and under a suite's
-      # name, if the run is serial), so the run is verbose, and its output is
-      # kept to count those reports. Verbosity changes the output alone.
-      - name: Leave prune a stamp, with one run of the suite
+      - name: Run the suite under strace
         continue-on-error: true
         timeout-minutes: 30
         working-directory: tree/build/TestAll/gcc-env
         run: |
           traced=(getdents64 getdents newfstatat statx fstat lstat stat openat open openat2 clone clone3 fork vfork execve execveat)
           status=0
-          if command -v strace > /dev/null; then
-            strace -f -qq --seccomp-bpf -c -e trace="$(IFS=,; echo "${traced[*]}")" -o "$RUNNER_TEMP/strace.txt" \
-              ./TestAll --verbose > "$RUNNER_TEMP/suite.txt" 2>&1 || status=$?
-            cat "$RUNNER_TEMP/suite.txt"
-          fi
+          strace -f -qq --seccomp-bpf -c -e trace="$(IFS=,; echo "${traced[*]}")" -o "$RUNNER_TEMP/strace.txt" \
+            ./TestAll --verbose > "$RUNNER_TEMP/suite.txt" 2>&1 || status=$?
+          cat "$RUNNER_TEMP/suite.txt"
           echo "$status" > "$RUNNER_TEMP/suite_exit_status.txt"
-          if ! grep -qE '^% +time +seconds +usecs/call +calls' "$RUNNER_TEMP/strace.txt" 2> /dev/null; then
-            echo "::warning::strace left no table of counts, so the suite is run again without it"
-            rm -f "$RUNNER_TEMP/strace.txt" "$RUNNER_TEMP/suite_exit_status.txt"
-            ./TestAll --verbose || echo "The suite failed, which this step ignores."
-          fi
 
       - name: Count the runner's system calls
         continue-on-error: true
         run: |
-          # The suite step leaves no table when strace could not trace.
+          # The strace step leaves no table when strace could not trace.
           if [ ! -s "$RUNNER_TEMP/strace.txt" ] || [ ! -s "$RUNNER_TEMP/suite_exit_status.txt" ]; then
             echo "::warning::there is no table of counts, so the record has no runner_overhead"
             exit 0
@@ -287,29 +309,6 @@ jobs:
                           execs:           total(["execve", "execveat"])}}' \
             < "$RUNNER_TEMP/syscall_counts.txt" > "$RUNNER_TEMP/runner_overhead.json"
           cat "$RUNNER_TEMP/runner_overhead.json"
-
-      - name: Count the instructions of prune's analysis
-        continue-on-error: true
-        timeout-minutes: 30
-        working-directory: tree/build/TestAll/gcc-env
-        run: |
-          # The job's shell sets pipefail, so a failing run reaches the || through tee.
-          valgrind --tool=cachegrind --cache-sim=no --cachegrind-out-file="$RUNNER_TEMP/cachegrind.out" \
-            ./TestAll prune --serial 2>&1 | tee "$RUNNER_TEMP/measured.txt" \
-            || echo "The measured run failed, which this step ignores; its count stands."
-          # The count stands only if the analysis ran and selected from the stamp. An
-          # older commit's runner may not have left a stamp, or may not take the
-          # arguments, and then prune runs every test, or nothing, under cachegrind.
-          if ! grep -qF 'Analyzing dependencies' "$RUNNER_TEMP/measured.txt" \
-             || grep -qE 'unable to prune|prune is ignored' "$RUNNER_TEMP/measured.txt"; then
-            echo "::warning::prune did not analyse from a stamp, so the record has no prune_analysis"
-            exit 0
-          fi
-          # The file's summary line is "summary: <Ir>"
-          instructions=$(awk '$1 == "summary:" {print $2}' "$RUNNER_TEMP/cachegrind.out")
-          jq -n --argjson instructions "$instructions" \
-            '{invocation: "TestAll prune --serial, after a full run, under cachegrind", instructions: $instructions}' \
-            > "$RUNNER_TEMP/prune_analysis.json"
 
       - name: Add the count to the record
         run: |

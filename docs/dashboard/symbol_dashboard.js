@@ -245,30 +245,19 @@
   const runnerSyscallCategories = ['directory_walks', 'metadata_reads', 'opens', 'clones', 'execs'];
 
   /**
-   * Returns the system calls of each category which the runner made per
-   * test in `record`'s run, or null if the record has no count of its
-   * overhead, or its run reported no number of tests. Such a record is left
-   * out of the series, not plotted as zero.
+   * Returns the system calls of `category` which the runner made per test in
+   * `record`'s run, or null if the record has no count of its overhead, or its
+   * run reported no number of tests. Such a record is left out of the series,
+   * not plotted as zero.
    *
    * @param {JsonRecord} record
-   * @returns {Record<string, number> | null}
-   */
-  function runnerSyscallsPerTest(record) {
-    if (!Object.hasOwn(record, 'runner_overhead') || record.runner_overhead.tests === null) return null;
-    const {tests, syscalls} = record.runner_overhead;
-    return Object.fromEntries(runnerSyscallCategories.map(category => [category, syscalls[category] / tests]));
-  }
-
-  /**
-   * Returns the system calls of every category together which the runner
-   * made per test in `record`'s run, or null as runnerSyscallsPerTest does.
-   *
-   * @param {JsonRecord} record
+   * @param {string} category one of `runnerSyscallCategories`
    * @returns {number | null}
    */
-  function runnerOverheadPerTest(record) {
-    const perTest = runnerSyscallsPerTest(record);
-    return perTest === null ? null : Object.values(perTest).reduce((sum, count) => sum + count, 0);
+  function runnerSyscallPerTest(record, category) {
+    if (!Object.hasOwn(record, 'runner_overhead') || record.runner_overhead.tests === null) return null;
+    const {tests, syscalls} = record.runner_overhead;
+    return syscalls[category] / tests;
   }
 
   /**
@@ -594,6 +583,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, runnerSyscallCategories, runnerSyscallsPerTest, runnerOverheadPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, runnerSyscallCategories, runnerSyscallPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));
