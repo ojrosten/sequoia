@@ -228,10 +228,10 @@ jobs:
       # forbids ptrace, it says so and does not run the suite, so the step
       # runs the suite plainly: the stamp is what this step is for.
       #
-      # The table is of the whole run. The runner prints a report of
-      # "[Runner Overhead: ...]" under each test's name, and none under a
-      # suite's name unless the run is serial; the suite's output is kept to
-      # count those.
+      # The table is of the whole run. Only a verbose run prints a report of
+      # "[Runner Overhead: ...]" under each test's name (and under a suite's
+      # name, if the run is serial), so the run is verbose, and its output is
+      # kept to count those reports. Verbosity changes the output alone.
       - name: Leave prune a stamp, with one run of the suite
         continue-on-error: true
         timeout-minutes: 30
@@ -241,19 +241,24 @@ jobs:
           status=0
           if command -v strace > /dev/null; then
             strace -f -qq --seccomp-bpf -c -e trace="$(IFS=,; echo "${traced[*]}")" -o "$RUNNER_TEMP/strace.txt" \
-              ./TestAll > "$RUNNER_TEMP/suite.txt" 2>&1 || status=$?
+              ./TestAll --verbose > "$RUNNER_TEMP/suite.txt" 2>&1 || status=$?
             cat "$RUNNER_TEMP/suite.txt"
           fi
           echo "$status" > "$RUNNER_TEMP/suite_exit_status.txt"
           if ! grep -qE '^% +time +seconds +usecs/call +calls' "$RUNNER_TEMP/strace.txt" 2> /dev/null; then
             echo "::warning::strace left no table of counts, so the suite is run again without it"
             rm -f "$RUNNER_TEMP/strace.txt" "$RUNNER_TEMP/suite_exit_status.txt"
-            ./TestAll || echo "The suite failed, which this step ignores."
+            ./TestAll --verbose || echo "The suite failed, which this step ignores."
           fi
 
       - name: Count the runner's system calls
         continue-on-error: true
         run: |
+          # The suite step leaves no table when strace could not trace.
+          if [ ! -s "$RUNNER_TEMP/strace.txt" ] || [ ! -s "$RUNNER_TEMP/suite_exit_status.txt" ]; then
+            echo "::warning::there is no table of counts, so the record has no runner_overhead"
+            exit 0
+          fi
           # strace -c prints "% time seconds usecs/call calls errors syscall" and a row
           # for each system call: the calls are the fourth field, the name the last, and
           # the errors are blank when there are none. The totals row is named "total".
