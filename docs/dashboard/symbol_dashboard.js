@@ -503,7 +503,7 @@
     const first = Math.floor(Math.min(...times) / millisecondsPerDay);
     const last  = Math.floor(Math.max(...times) / millisecondsPerDay);
     const days  = last - first + 1;
-    const x     = time => left + (time / millisecondsPerDay - first) / days * (right - left);
+    const x     = (/** @type {number} */ time) => left + (time / millisecondsPerDay - first) / days * (right - left);
     const step  = dayStepsToTry.find(candidate => candidate * (right - left) / days >= minGap) ?? dayStepsToTry[dayStepsToTry.length - 1];
     const ticks = [];
     for (let day = first; day <= last; day += step) ticks.push({x: x(day * millisecondsPerDay), time: day * millisecondsPerDay});
