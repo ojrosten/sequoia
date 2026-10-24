@@ -12,13 +12,22 @@
 # it adds to, and leaves the clone's branches, index and working tree as
 # they were.
 #
-# A record for a commit which the branch already holds is not stored again.
-# If the two are the same but for their runs - the field "run" - the script
-# says so and succeeds: a run repeated at one commit has nothing new to say.
-# If they differ elsewhere, it prints the difference and fails, since the
-# branch holds a record made first, and a second record which disagrees is
-# either a change of toolchain or a build which is not deterministic, which
-# a person should judge. Nothing is ever overwritten.
+# A record for a commit which the branch already holds is stored again only
+# to add fields. Ignoring the field "run":
+#   - if the two are the same, the script says so and succeeds: a run
+#     repeated at one commit has nothing new to say;
+#   - if the new record keeps every field of the held one, unchanged, and has
+#     others besides, it replaces the held one, which it adds to: a backfill
+#     measures a commit which was recorded before the measurement existed.
+#     The new record's run replaces the held one's, since it made the fields
+#     added;
+#   - if the held record keeps every field of the new one, unchanged, and has
+#     others besides, the script says so and succeeds: a repeated
+#     measurement which failed has nothing to add;
+#   - otherwise it prints the difference and fails, since a field which
+#     changed is either a change of toolchain or a build which is not
+#     deterministic, which a person should judge.
+# Bar run, a field is never changed, nor removed.
 #
 # A branch which does not exist is created, with no history. The push is
 # never forced. When it fails - as it does when another run pushed first -
@@ -56,6 +65,17 @@ index="$work/index" held_file="$work/held"
 # without_run <file>: the record in <file>, its keys sorted, without its run
 without_run() { jq -S 'del(.run)' "$1" || die "$1 cannot be read as JSON"; }
 
+# keeps_every_field <whole> <part>: <whole> has every field of <part>, with
+# the same value, and so <part> is no larger; both are records as JSON
+keeps_every_field() {
+  jq -e --argjson part "$2" '. as $whole | $part | to_entries
+                             | all(.key as $key | ($whole | has($key)) and .value == $whole[$key])' \
+     <<< "$1" > /dev/null
+}
+
+# added_fields <held> <offered>: the names of the fields of <offered> which <held> lacks
+added_fields() { jq -rn --argjson held "$1" --argjson offered "$2" '$offered | keys - ($held | keys) | join(", ")'; }
+
 # store_once: 0 if the record is stored or already held, 1 if the push
 # failed; any other failure exits. The function is called as a condition, so
 # set -e does not reach into it, and each command's failure is handled here.
@@ -79,10 +99,16 @@ store_once() {
     if [ "$held" = "$offered" ]; then
       echo "$branch already holds $path, the same but for its run: $(jq -r '.run.url' "$held_file")"
       return 0
+    elif keeps_every_field "$offered" "$held"; then
+      echo "$branch holds $path, which $record adds to: $(added_fields "$held" "$offered")"
+    elif keeps_every_field "$held" "$offered"; then
+      echo "$branch already holds $path, with every field of $record and more: $(jq -r '.run.url' "$held_file")"
+      return 0
+    else
+      echo "$branch already holds $path, and it differs from $record other than in its run, or in fields only one has:" >&2
+      diff <(echo "$held") <(echo "$offered") >&2
+      exit 1
     fi
-    echo "$branch already holds $path, and it differs from $record other than in its run:" >&2
-    diff <(echo "$held") <(echo "$offered") >&2
-    exit 1
   fi
 
   rm -f "$index"

@@ -17,6 +17,12 @@ name: symbol-table
 # apart from the tiers, so that a failure to measure cannot fail a test
 # column, and cancelling a superseded run of a tier loses no record.
 #
+# A commit already recorded can be recorded again, to add the field
+# `prune_analysis`: the job rebuilds TestAll, which the count needs, and the
+# store replaces the held record with one which keeps its every field and
+# adds fields (scripts/store_symbol_table_record.sh). A commit whose runner
+# leaves prune no stamp is recorded without the field, and its job succeeds.
+#
 # Every job uploads its record as an artifact. A run dispatched on a branch
 # other than staging stores nothing.
 on:
@@ -215,8 +221,18 @@ jobs:
         timeout-minutes: 30
         working-directory: tree/build/TestAll/gcc-env
         run: |
+          # The job's shell sets pipefail, so a failing run reaches the || through tee.
           valgrind --tool=cachegrind --cache-sim=no --cachegrind-out-file="$RUNNER_TEMP/cachegrind.out" \
-            ./TestAll prune --serial || echo "The measured run failed, which this step ignores; its count stands."
+            ./TestAll prune --serial 2>&1 | tee "$RUNNER_TEMP/measured.txt" \
+            || echo "The measured run failed, which this step ignores; its count stands."
+          # The count stands only if the analysis ran and selected from the stamp. An
+          # older commit's runner may not have left a stamp, or may not take the
+          # arguments, and then prune runs every test, or nothing, under cachegrind.
+          if ! grep -qF 'Analyzing dependencies' "$RUNNER_TEMP/measured.txt" \
+             || grep -qE 'unable to prune|prune is ignored' "$RUNNER_TEMP/measured.txt"; then
+            echo "::warning::prune did not analyse from a stamp, so the record has no prune_analysis"
+            exit 0
+          fi
           # The file's summary line is "summary: <Ir>"
           instructions=$(awk '$1 == "summary:" {print $2}' "$RUNNER_TEMP/cachegrind.out")
           jq -n --argjson instructions "$instructions" \
