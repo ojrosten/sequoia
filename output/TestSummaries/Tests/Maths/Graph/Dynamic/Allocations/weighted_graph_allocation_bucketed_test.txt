@@ -1,2 +1,2 @@
 weighted_graph_allocation_bucketed_test
-Standard Top Level Checks:               108;  Failures:  0  [Deep checks: 4006]
+Standard Top Level Checks:               112;  Failures:  0  [Deep checks: 4026]

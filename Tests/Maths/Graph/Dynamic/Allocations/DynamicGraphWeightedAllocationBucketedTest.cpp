@@ -8,7 +8,11 @@
 #include "DynamicGraphWeightedAllocationBucketedTest.hpp"
 #include "DynamicGraphAllocationTestingUtilities.hpp"
 
+#include "Core/DataStructures/ElementTestingUtilities.hpp"
+
 #include <complex>
+#include <ranges>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -47,6 +51,8 @@ namespace sequoia::testing
 
       helper.run_tests<bucket_edge_config, nstorage>();
     }
+
+    test_node_weights_constructible_from_anything();
   }
 
   template
@@ -164,5 +170,41 @@ namespace sequoia::testing
                       },
                       allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
     }
+  }
+
+  void weighted_graph_allocation_bucketed_test::test_node_weights_constructible_from_anything()
+  {
+    using graph_t        = maths::directed_graph<maths::null_weight,
+                                                 constructible_from_anything,
+                                                 custom_allocator_bucketed_edge_storage_config,
+                                                 node_storage_generator_t<constructible_from_anything>>;
+    using edge_allocator = graph_t::edge_allocator_type;
+    using node_allocator = graph_t::node_weight_allocator_type;
+    using edge_init      = graph_t::edge_init_type;
+
+    const graph_t::edges_initializer edges{{edge_init{1}}, {edge_init{2}}, {edge_init{0}}};
+    const std::initializer_list<constructible_from_anything> weights{1, 2, 3};
+    const std::vector<int> prediction{1, 2, 3};
+
+    auto weightValues{
+      [](const graph_t& graph) {
+        return graph.cnode_weights()
+             | std::views::transform([](const constructible_from_anything& weight) { return weight.value; })
+             | std::ranges::to<std::vector>();
+      }
+    };
+
+    const graph_t g(edges, weights);
+    check(equality, "From edges and node weights", weightValues(g), prediction);
+
+    const graph_t fromAllocators(edges, edge_allocator{}, weights, node_allocator{});
+    check(equality, "From edges, node weights and allocators", weightValues(fromAllocators), prediction);
+
+    const graph_t copied(g, edge_allocator{}, node_allocator{});
+    check(equality, "Allocator-extended copy", weightValues(copied), prediction);
+
+    graph_t toMove(edges, weights);
+    const graph_t moved(std::move(toMove), edge_allocator{}, node_allocator{});
+    check(equality, "Allocator-extended move", weightValues(moved), prediction);
   }
 }

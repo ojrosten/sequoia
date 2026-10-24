@@ -325,10 +325,10 @@ namespace sequoia::runtime
     // Windows path with a doubled separator names the same file.
     auto isBackslash{[](char c) { return c == '\\'; }};
     const auto trailingBackslashes{
-      std::ranges::distance(word | std::views::reverse | std::views::take_while(isBackslash))
+      std::ranges::to<std::string>(word | std::views::reverse | std::views::take_while(isBackslash))
     };
 
-    return std::format("\"{}{}\"", word, std::string(trailingBackslashes, '\\'));
+    return std::format("\"{}{}\"", word, trailingBackslashes);
   }
 
   [[nodiscard]]

@@ -18,11 +18,13 @@
     by the `operation`s invoked.
 */
 
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Core/Meta/Concepts.hpp"
 
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 
+#include <cstddef>
 #include <vector>
 #include <string>
 #include <functional>
@@ -186,11 +188,15 @@ namespace sequoia::parsing::commandline
                 operTree,
                 ignore_disconnected_t{},
                 [&operTree](const auto node) {
-                   const operation& oper{operTree.cbegin_node_weights()[node]};
+                   const operation& oper{
+                     operTree.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(node)]
+                   };
                    if(oper.early) oper.early(oper.arguments);
                 },
                 [&operTree](const auto node) {
-                   const operation& oper{operTree.cbegin_node_weights()[node]};
+                   const operation& oper{
+                     operTree.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(node)]
+                   };
                    if(oper.late) oper.late(oper.arguments);
                 });
       }

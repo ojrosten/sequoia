@@ -10,13 +10,16 @@
 #
 # An attempt runs in a process group of its own. To stop it, the script sends
 # SIGTERM to the group, and SIGKILL 10 s later if any of the group is still
-# running, so that what the command started stops with it. A signal reaches
-# only the processes the script's user may signal. So for a command that runs
-# as root, run this script as root, with sudo, rather than the command: a
-# signal from an ordinary user stops sudo, and sudo relays SIGTERM to its own
-# child alone, never to what that child started.
+# running, so that what the command started stops with it. A process which
+# starts a session of its own, as dpkg does under apt-get, leaves the group,
+# and so is not stopped. A signal reaches only the processes the script's user
+# may signal. So for a command that runs as root, run this script as root, with
+# sudo, rather than the command: a signal from an ordinary user stops sudo, and
+# sudo relays SIGTERM to its own child alone, never to what that child started.
 #
-# The command's standard input is /dev/null.
+# The command's standard input is /dev/null. RETRY_ATTEMPT, in its
+# environment, holds the number of its attempt, from 1, so that a later attempt
+# may differ from the first.
 #
 # <attempts> and <seconds> are positive whole numbers with no leading zero.
 # Arguments of any other form are refused with status 2, before anything runs.
@@ -49,7 +52,7 @@ for ((attempt = 1; attempt <= attempts; attempt++)); do
   # while the command starts, since it also reports, in words that read like
   # errors, a job that ends on a signal.
   set -m
-  "$@" < /dev/null &
+  RETRY_ATTEMPT=$attempt "$@" < /dev/null &
   command=$!
   set +m
   # The watcher marks the attempt as stopped before signalling it, so that

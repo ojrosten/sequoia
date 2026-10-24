@@ -19,6 +19,7 @@
 #include "sequoia/TestFramework/TimingUtilities.hpp"
 
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/Parsing/CommandLineMessages.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
@@ -33,6 +34,7 @@
 #include <array>
 #include <bit>
 #include <concepts>
+#include <cstddef>
 #include <set>
 #include <ranges>
 #include <span>
@@ -1396,7 +1398,7 @@ namespace sequoia::testing
                         throw std::runtime_error{error("Number of repetitions, must be >= 2")};
 
                       m_InstabilityMode = instability_mode::single_instance;
-                      m_NumReps = i;
+                      m_NumReps = numeric::unchecked_conversion_to<std::size_t>(i);
                     },
                     {},
                     "Run the tests repeatedly, reporting the checks whose outcome varies"},
@@ -1408,7 +1410,7 @@ namespace sequoia::testing
                         "Run each repetition in a process of its own"}},
                       {{"--runner-id", {}, {"id"},
                         [this](const arg_list& args) {
-                          m_RunnerID = std::stoi(args.front());
+                          m_RunnerID = numeric::checked_conversion_to<std::size_t>(std::stoi(args.front()));
                           m_InstabilityMode = instability_mode::sandbox;
                         },
                         {},
@@ -1477,7 +1479,7 @@ namespace sequoia::testing
                       if(const auto num{std::stoi(args.front())}; num > 0)
                       {
                         m_ConcurrencyMode = concurrency_mode::fixed;
-                        m_PoolSize = num;
+                        m_PoolSize = numeric::unchecked_conversion_to<std::size_t>(num);
                       }
                       else
                       {
@@ -1811,8 +1813,8 @@ namespace sequoia::testing
   {
     // TO DO: replace this with a stable_sort
     m_Suites.sort_nodes(1, m_Suites.order(), [&s = m_Suites](auto i, auto j) {
-      auto& lhs{s.cbegin_node_weights()[i]};
-      auto& rhs{s.cbegin_node_weights()[j]};
+      auto& lhs{s.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(i)]};
+      auto& rhs{s.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(j)]};
 
       if(!lhs.optTest && !rhs.optTest) return i < j;
 
@@ -1842,10 +1844,13 @@ namespace sequoia::testing
     auto summarizeAndTrack{
       [this,&tracker](auto n) {
         m_Suites.mutate_node_weight(
-          std::ranges::next(m_Suites.cbegin_node_weights(), n),
+          std::ranges::next(m_Suites.cbegin_node_weights(), numeric::unchecked_conversion_to<std::ptrdiff_t>(n)),
           [this, &tracker,n](suite_node& wt) {
             for(const auto& edge : m_Suites.cedges(n))
-              wt.summary += std::ranges::next(m_Suites.cbegin_node_weights(), edge.target_node())->summary;
+              wt.summary += std::ranges::next(
+                              m_Suites.cbegin_node_weights(),
+                              numeric::unchecked_conversion_to<std::ptrdiff_t>(edge.target_node())
+                            )->summary;
 
             if(wt.optTest)
             {
@@ -1963,7 +1968,7 @@ namespace sequoia::testing
     using namespace maths;
     auto execute{
       [&s = m_Suites, id, &remover](auto n) {
-        auto& wt{s.begin_node_weights()[n]};
+        auto& wt{s.begin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(n)]};
         if(wt.optTest)
           wt.summary = wt.optTest->execute(id, remover);
       }
@@ -1998,7 +2003,7 @@ namespace sequoia::testing
         [&s = m_Suites, &suiteIndent, &step, &stream = stream(), serial{!concurrent_execution()}](auto n) {
           if(n)
           {
-            const auto& wt{s.cbegin_node_weights()[n]};
+            const auto& wt{s.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(n)]};
             if(wt.optTest)
             {
               stream << summarize(wt.summary,
@@ -2036,7 +2041,7 @@ namespace sequoia::testing
       // whichever order the concurrency sort left them.
       auto printTest{
         [&s = m_Suites, detail, &stream = stream()](auto n) {
-          if(const auto& wt{s.cbegin_node_weights()[n]}; wt.optTest)
+          if(const auto& wt{s.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(n)]}; wt.optTest)
             stream << summarize(wt.summary, ":", detail, no_indent, tab);
         }
       };
@@ -2095,7 +2100,8 @@ namespace sequoia::testing
 
     auto resetFn{
       [&,this](auto n){
-        m_Suites.mutate_node_weight(std::ranges::next(m_Suites.cbegin_node_weights(), n),
+        m_Suites.mutate_node_weight(std::ranges::next(m_Suites.cbegin_node_weights(),
+                                                      numeric::unchecked_conversion_to<std::ptrdiff_t>(n)),
           [&,this](auto& wt){
             if(wt.optTest)
             {
@@ -2349,7 +2355,11 @@ namespace sequoia::testing
         const auto existing{
           std::ranges::find_if(children,
                                [this, &suiteName](const auto& edge) {
-                                 const auto& weight{m_Suites.cbegin_node_weights()[edge.target_node()]};
+                                 const auto& weight{
+                                   m_Suites.cbegin_node_weights()[
+                                     numeric::unchecked_conversion_to<std::ptrdiff_t>(edge.target_node())
+                                   ]
+                                 };
                                  return !weight.optTest && (weight.summary.name() == suiteName);
                                })
         };

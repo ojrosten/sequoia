@@ -9,10 +9,12 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/PathCheckers.hpp"
 
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Maths/Statistics/StatisticalAlgorithms.hpp"
 
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
 #include <format>
 #include <functional>
 #include <ranges>
@@ -75,8 +77,9 @@ namespace sequoia::testing
         maths::winsorized_sample_variance(data, numTrimmed).variance
       };
 
-      const std::ranges::subrange kept{data.cbegin() + numTrimmed, data.cend() - numTrimmed};
-      const double fractionKept{1.0 - 2.0 * numTrimmed / n};
+      const std::ranges::subrange kept{data.cbegin() + numeric::unchecked_conversion_to<std::ptrdiff_t>(numTrimmed),
+                                       data.cend()   - numeric::unchecked_conversion_to<std::ptrdiff_t>(numTrimmed)};
+      const double fractionKept{1.0 - 2.0 * static_cast<double>(numTrimmed) / static_cast<double>(n)};
 
       return {
         .mean{maths::mean(kept).value()},

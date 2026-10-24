@@ -200,7 +200,7 @@ namespace sequoia::testing
       }
     };
 
-    template<std::size_t N>
+    template<int N>
     struct periodic
     {
       periodic() { x = (x+1) % N;}
@@ -1087,6 +1087,14 @@ namespace sequoia::testing
 
   void test_runner_test::test_exceptions()
   {
+    check_exception_thrown<std::domain_error>(
+      reporter{"A negative runner id"},
+      [this]() {
+        std::stringstream outputStream{};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials(), "locate", "2", "--runner-id", "-1")};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
+      });
+
     check_exception_thrown<std::runtime_error>(
       reporter{"Test Main has empty path"},
       [this]() {

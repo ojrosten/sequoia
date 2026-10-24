@@ -9,6 +9,10 @@
 #include "IteratorTestingUtilities.hpp"
 
 #include <array>
+#include <cstddef>
+#include <cstdint>
+#include <limits>
+#include <utility>
 
 namespace sequoia::testing
 {
@@ -50,6 +54,28 @@ namespace sequoia::testing
       value_type m_Scale{1};
     };
 
+    template<integer Index>
+    class index_dereference_policy
+    {
+    public:
+      using difference_type = std::ptrdiff_t;
+      using value_type      = Index;
+      using reference       = Index;
+
+      [[nodiscard]]
+      constexpr static reference get(Index i) noexcept { return i; }
+    protected:
+      constexpr index_dereference_policy() = default;
+
+      constexpr index_dereference_policy(const index_dereference_policy&)     = default;
+      constexpr index_dereference_policy(index_dereference_policy&&) noexcept = default;
+
+      ~index_dereference_policy() = default;
+
+      constexpr index_dereference_policy& operator=(const index_dereference_policy&)     = default;
+      constexpr index_dereference_policy& operator=(index_dereference_policy&&) noexcept = default;
+    };
+
     template<class Iterator, class DerefPolicy>
     concept scaling_iterator = sequoia::utilities::dereference_policy_for<DerefPolicy, Iterator>
       && requires(DerefPolicy & d) { d.scale(); };
@@ -75,6 +101,11 @@ namespace sequoia::testing
 
     test_const_scaling_iterator();
     test_const_reverse_scaling_iterator();
+
+    test_index_iterator<unsigned char>();
+    test_index_iterator<unsigned short>();
+    test_index_iterator<unsigned int>();
+    test_index_iterator<std::size_t>();
   }
 
   void iterator_test::test_iterator()
@@ -255,6 +286,39 @@ namespace sequoia::testing
     check("Custom reverse iterators should compare equal if they point to the same thing, irrespective of any other state", i == j);
   }
 
+  template<integer Index>
+  void iterator_test::test_index_iterator()
+  {
+    using namespace utilities;
+
+    using index_iter_t = iterator<Index, index_dereference_policy<Index>>;
+
+    STATIC_CHECK(std::random_access_iterator<index_iter_t>);
+
+    const index_iter_t i{Index{2}}, j{Index{3}};
+
+    check(equality, "Difference of a later index and an earlier one", j - i, std::ptrdiff_t{1});
+    check(equality, "Difference of an earlier index and a later one", i - j, std::ptrdiff_t{-1});
+    check(equality, "Advancing by a negative offset", *(j + std::ptrdiff_t{-1}), Index{2});
+    check(equality, "Retreating by a negative offset", *(i - std::ptrdiff_t{-1}), Index{3});
+    check(equality, "Subscripting by a negative offset", j[std::ptrdiff_t{-1}], Index{2});
+
+    if constexpr(std::cmp_greater(std::numeric_limits<Index>::max(), std::numeric_limits<std::ptrdiff_t>::max()))
+    {
+      // Each check crosses the greatest value of difference_type. Constant
+      // evaluation refuses signed overflow, so each fails to compile if the
+      // arithmetic is done in difference_type, with or without assertions.
+      constexpr Index lastWithinDifference{std::numeric_limits<std::ptrdiff_t>::max()},
+                      firstBeyondDifference{lastWithinDifference + 1};
+
+      STATIC_CHECK(*(index_iter_t{lastWithinDifference} + std::ptrdiff_t{1}) == firstBeyondDifference);
+      STATIC_CHECK(*(index_iter_t{firstBeyondDifference} - std::ptrdiff_t{1}) == lastWithinDifference);
+      STATIC_CHECK(index_iter_t{firstBeyondDifference} - index_iter_t{lastWithinDifference} == std::ptrdiff_t{1});
+      STATIC_CHECK(index_iter_t{lastWithinDifference} - index_iter_t{firstBeyondDifference} == std::ptrdiff_t{-1});
+      STATIC_CHECK(index_iter_t{lastWithinDifference}[std::ptrdiff_t{1}] == firstBeyondDifference);
+    }
+  }
+
   template<
     std::input_or_output_iterator CustomIter,
     std::input_or_output_iterator Iter,
@@ -269,7 +333,7 @@ namespace sequoia::testing
     using value_t = std::iterator_traits<Iter>::value_type;
     using deref_pol = CustomIter::dereference_policy_type;
 
-    if(!check(equality, append_lines(message, "Contract violated"), distance(begin, end), ptrdiff_t{3}))
+    if(!check(equality, append_lines(message, "Contract violated"), distance(begin, end), std::ptrdiff_t{3}))
       return;
 
     CustomIter i{begin, args...};
@@ -334,6 +398,6 @@ namespace sequoia::testing
     check(equality, message, *j, begin[1] * scale);
 
     check(message, i == j);
-    check<int64_t>(equality, append_lines(message, "Check for distance of zero"), distance(i, j), 0);
+    check<std::int64_t>(equality, append_lines(message, "Check for distance of zero"), distance(i, j), 0);
   }
 }
