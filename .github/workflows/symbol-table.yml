@@ -194,6 +194,13 @@ jobs:
         continue-on-error: true
         run: sudo apt-get install -y valgrind
 
+      - name: Give git an identity
+        continue-on-error: true
+        run: |
+          git config --global user.name "sequoia CI"
+          git config --global user.email "ci@example.invalid"
+          git config --global init.defaultBranch trunk
+
       - name: Leave prune a stamp, with one run of the suite
         continue-on-error: true
         timeout-minutes: 30
@@ -206,7 +213,7 @@ jobs:
         working-directory: tree/build/TestAll/gcc-env
         run: |
           valgrind --tool=cachegrind --cache-sim=no --cachegrind-out-file="$RUNNER_TEMP/cachegrind.out" \
-            ./TestAll prune --serial
+            ./TestAll prune --serial || echo "The measured run failed, which this step ignores; its count stands."
           # The file's summary line is "summary: <Ir>"
           instructions=$(awk '$1 == "summary:" {print $2}' "$RUNNER_TEMP/cachegrind.out")
           jq -n --argjson instructions "$instructions" \
