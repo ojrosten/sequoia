@@ -184,7 +184,10 @@ jobs:
       # `TestAll prune` runs the tests which are stale, and runs every test
       # when the previous run has left no stamp. So one full run of the suite,
       # whose outcome is ignored, leaves the stamp, and the measured run then
-      # selects only what that run failed, or left out. The measured run
+      # selects only what that run failed, or left out: nothing, when the
+      # suite passes, which is why git is given an identity first. A failing
+      # measured run still yields the count, so its outcome is ignored too.
+      # The measured run
       # covers startup, the runner's reading of the build's records
       # (build.ninja, .ninja_deps) and its walk of the sources for changes,
       # and the file system reads of both; it does not cover the compiler.
