@@ -17,6 +17,12 @@ name: symbol-table
 # apart from the tiers, so that a failure to measure cannot fail a test
 # column, and cancelling a superseded run of a tier loses no record.
 #
+# A second run of the suite, after prune's measurement, is under
+# `strace -f -c`, which counts the system calls of the runner and of everything
+# it starts: a record carries the counts as `runner_overhead`, with the number
+# of tests the run reported. The counts are totals for the run, so a move shows
+# in the dashboard's per-test lines.
+#
 # A commit already recorded can be recorded again, to add the field
 # `prune_analysis`: the job rebuilds TestAll, which the count needs, and the
 # store replaces the held record with one which keeps its every field and
@@ -239,6 +245,71 @@ jobs:
             '{invocation: "TestAll prune --serial, after a full run, under cachegrind", instructions: $instructions}' \
             > "$RUNNER_TEMP/prune_analysis.json"
 
+      # The runner's overhead, as system calls. The suite runs once more, under
+      # strace, after the measurement of prune: the second run rewrites the
+      # stamp, and strace slows the run, neither of which may touch prune's
+      # count. `-f` follows every process and thread the runner starts; `-c`
+      # prints strace's own table of counts, in strace's format, which
+      # "Count the runner's system calls" reads. --seccomp-bpf stops the tracee
+      # only at the system calls named. Only a verbose run prints a report of
+      # "[Runner Overhead: ...]" under each test's name (and under a suite's
+      # name, if the run is serial), so the run is verbose, and its output is
+      # kept to count those reports. The run's outcome is ignored. If strace
+      # cannot trace, as in a container which forbids ptrace, it leaves no
+      # table and the record has no runner_overhead.
+      - name: Install strace
+        continue-on-error: true
+        run: sudo apt-get install -y strace
+
+      - name: Run the suite under strace
+        continue-on-error: true
+        timeout-minutes: 30
+        working-directory: tree/build/TestAll/gcc-env
+        run: |
+          traced=(getdents64 getdents newfstatat statx fstat lstat stat openat open openat2 clone clone3 fork vfork execve execveat)
+          status=0
+          strace -f -qq --seccomp-bpf -c -e trace="$(IFS=,; echo "${traced[*]}")" -o "$RUNNER_TEMP/strace.txt" \
+            ./TestAll --verbose > "$RUNNER_TEMP/suite.txt" 2>&1 || status=$?
+          cat "$RUNNER_TEMP/suite.txt"
+          echo "$status" > "$RUNNER_TEMP/suite_exit_status.txt"
+
+      - name: Count the runner's system calls
+        continue-on-error: true
+        run: |
+          # The strace step leaves no table when strace could not trace.
+          if [ ! -s "$RUNNER_TEMP/strace.txt" ] || [ ! -s "$RUNNER_TEMP/suite_exit_status.txt" ]; then
+            echo "::warning::there is no table of counts, so the record has no runner_overhead"
+            exit 0
+          fi
+          # strace -c prints "% time seconds usecs/call calls errors syscall" and a row
+          # for each system call: the calls are the fourth field, the name the last, and
+          # the errors are blank when there are none. The totals row is named "total".
+          awk '$1 == "%" && $2 == "time" { ok = ($5 == "calls" && $NF == "syscall"); next }
+               ok && $1 ~ /^[0-9]+[.][0-9]+$/ && $NF != "total" { print $NF, $4 }' \
+            "$RUNNER_TEMP/strace.txt" > "$RUNNER_TEMP/syscall_counts.txt"
+          [ -s "$RUNNER_TEMP/syscall_counts.txt" ] \
+            || { echo "::warning::strace's table held no counts, so the record has no runner_overhead"; exit 0; }
+          # The runner reports the overhead of each test, in the lines of its output
+          # between the start and "Grand Totals", where a line holds only the report.
+          # No count is taken of a run which did not reach its totals.
+          tests=$(awk '/^-+Grand Totals-+$/ { reached = 1; exit }
+                       /^[ \t]+\[Runner Overhead: [0-9.]+[a-z]+\]$/ { ++n }
+                       END { if (reached && n > 0) print n }' "$RUNNER_TEMP/suite.txt")
+          [ -n "$tests" ] || echo "::warning::the suite's output reports no tests, so runner_overhead has no count of them"
+          jq -n -R --argjson tests "${tests:-null}" --argjson exit_status "$(cat "$RUNNER_TEMP/suite_exit_status.txt")" '
+            [inputs | split(" ") | {key: .[0], value: (.[1] | tonumber)}] | from_entries as $calls
+            | def total(names): [names[] as $name | $calls[$name] // 0] | add;
+              {invocation: "TestAll, after a full run, under strace -f -c",
+               exit_status: $exit_status,
+               tests: $tests,
+               syscalls: {directory_walks: total(["getdents64", "getdents"]),
+                          metadata_reads:  total(["newfstatat", "statx", "fstat", "lstat", "stat"]),
+                          opens:           total(["openat", "open", "openat2"]),
+                          clones:          total(["clone", "clone3", "fork", "vfork"]),
+                          execs:           total(["execve", "execveat"])}}' \
+            < "$RUNNER_TEMP/syscall_counts.txt" > "$RUNNER_TEMP/runner_overhead.json"
+          cat "$RUNNER_TEMP/runner_overhead.json"
+
       - name: Add the count to the record
         run: |
           if [ -s "$RUNNER_TEMP/prune_analysis.json" ]; then
@@ -247,6 +318,17 @@ jobs:
             mv "$RUNNER_TEMP/with_analysis.json" "$SYMBOL_TABLE_RECORD"
           else
             echo "::warning::prune's analysis was not measured, so the record has no prune_analysis"
+          fi
+
+      - name: Add the runner's overhead to the record
+        continue-on-error: true
+        run: |
+          if [ -s "$RUNNER_TEMP/runner_overhead.json" ]; then
+            jq -S --slurpfile overhead "$RUNNER_TEMP/runner_overhead.json" '. + {runner_overhead: $overhead[0]}' \
+              "$SYMBOL_TABLE_RECORD" > "$RUNNER_TEMP/with_overhead.json"
+            mv "$RUNNER_TEMP/with_overhead.json" "$SYMBOL_TABLE_RECORD"
+          else
+            echo "::warning::the runner's system calls were not counted, so the record has no runner_overhead"
           fi
 
       - name: Upload the record
