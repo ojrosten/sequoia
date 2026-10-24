@@ -302,6 +302,43 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     });
   }
 
+  await control('prune\'s instructions are null in a record without them, and the count in one with them', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.pruneInstructions(record), null);
+    record.prune_analysis = {invocation: 'x', instructions: 0};
+    assert.strictEqual(dashboard.pruneInstructions(record), 0);
+    record.prune_analysis.instructions = 123;
+    assert.strictEqual(dashboard.pruneInstructions(record), 123);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  for (const [name, analysis] of [
+    ['no count',           {invocation: 'x'}],
+    ['a fractional count', {invocation: 'x', instructions: 1.5}],
+    ['a text count',       {invocation: 'x', instructions: '5'}],
+    ['no invocation',      {instructions: 5}],
+    ['null',               null]
+  ]) {
+    await control(`a record with a prune_analysis of ${name} is a problem`, () => {
+      const record = recordOf('F5');
+      record.prune_analysis = analysis;
+      assert.deepStrictEqual(dashboard.problemsWith(record, c.F5),
+                             ['it has a prune_analysis with no invocation, or no count of instructions']);
+    });
+  }
+
+  await control('points lacking the count keep their place, and the count is read where present', async () => {
+    const source = fixtureSource({record: recordPath => {
+      const record = read(recordPath);
+      if (recordPath.includes(c.F5)) record.prune_analysis = {invocation: 'x', instructions: 777};
+      return record;
+    }});
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    const counts = column.points.map(point => dashboard.pruneInstructions(point.record));
+    assert.deepStrictEqual(counts, column.points.map(point => point.commit === c.F5 ? 777 : null));
+    assert.ok(counts.includes(777));
+  });
+
   await control('a record which cannot be fetched is a problem, and the others load', async () => {
     const source = fixtureSource({record: recordPath => {
       if (recordPath.includes(c.F6)) throw new Error('404 for the record');
@@ -387,6 +424,10 @@ MUTATIONS = [
     ('objects not checked',               '!Object.values(objects).every(isCount)', 'false'),
     ('a failed fetch fails the load',     'catch (error) { outcomes[index] = {error}; }', 'catch (error) { throw error; }'),
     ('an absent branch read as empty',    "if (tree === null) return {state: 'absent'};", "if (tree === null) return {state: 'empty'};"),
+    ('a missing count plotted as zero',  "hasOwn(record, 'prune_analysis') ? record.prune_analysis.instructions : null", "hasOwn(record, 'prune_analysis') ? record.prune_analysis.instructions : 0"),
+    ('the analysis not checked',          "if (Object.hasOwn(record, 'prune_analysis')) {", 'if (false) {'),
+    ('the count not checked',             '|| !isCount(analysis.instructions)', ''),
+    ('the invocation not checked',        "|| typeof analysis.invocation !== 'string'", ''),
     ('an empty branch loaded',            "if (listing.size === 0) return {state: 'empty'};", ''),
 ]
 with open(script, encoding='utf-8') as f:

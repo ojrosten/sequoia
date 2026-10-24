@@ -104,7 +104,8 @@
    *
    * A record with no problem is an object holding `commit` as its commit, a
    * clean tree, a toolchain, the executable's symbols and name bytes, and a
-   * count of defined symbols for each object.
+   * count of defined symbols for each object. It may also hold
+   * `prune_analysis`, with an invocation and a count of instructions.
    */
   function problemsWith(record, commit) {
     if (record === null || typeof record !== 'object' || Array.isArray(record)) return ['it is not a JSON object'];
@@ -116,11 +117,27 @@
     const executable = record.executable || {};
     if (!isCount(executable.symbols)) problems.push('it has no count of the executable\'s symbols');
     if (!isCount(executable.symbol_name_bytes)) problems.push('it has no count of the executable\'s name bytes');
+    if (Object.hasOwn(record, 'prune_analysis')) {
+      const analysis = record.prune_analysis;
+      if (analysis === null || typeof analysis !== 'object' || !isCount(analysis.instructions)
+          || typeof analysis.invocation !== 'string') {
+        problems.push('it has a prune_analysis with no invocation, or no count of instructions');
+      }
+    }
     const objects = record.defined_symbols_by_object;
     if (objects === null || typeof objects !== 'object' || !Object.values(objects).every(isCount)) {
       problems.push('it has no count of defined symbols for each object');
     }
     return problems;
+  }
+
+  /**
+   * Returns the instructions counted in `record`'s run of prune's analysis,
+   * or null if the record has none: an old record, or one whose measurement
+   * failed. Such a record is left out of the series, not plotted as zero.
+   */
+  function pruneInstructions(record) {
+    return Object.hasOwn(record, 'prune_analysis') ? record.prune_analysis.instructions : null;
   }
 
   /**
@@ -272,6 +289,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, pruneInstructions, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));
