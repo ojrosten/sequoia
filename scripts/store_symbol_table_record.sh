@@ -27,7 +27,7 @@
 #   - otherwise it prints the difference and fails, since a field which
 #     changed is either a change of toolchain or a build which is not
 #     deterministic, which a person should judge.
-# A field is never changed, nor removed.
+# Bar run, a field is never changed, nor removed.
 #
 # A branch which does not exist is created, with no history. The push is
 # never forced. When it fails - as it does when another run pushed first -
