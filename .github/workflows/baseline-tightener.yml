@@ -129,3 +129,45 @@ jobs:
         run: |
           scripts/propose_tightened_baseline.sh "$GITHUB_REF_NAME" "$RUNNER_TEMP/tightened/uncalled_functions.txt" \
             "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+
+  # The count of uncalled functions of the commit measured, as a record on the
+  # data branch `metrics`, which docs/dashboard plots. The tightened baseline
+  # lists the functions the run found uncalled: the gate passed, so none is
+  # unlisted, and tightening dropped every listed function that was called.
+  # So its count is the run's, and its header names the tools that measured.
+  # The record is a file of its own beside the symbol table's, since the
+  # store never changes a record it holds. A run measures only the nights
+  # staging has moved, so the series is sparser than the symbol table's.
+  #
+  # The job is apart from `propose`, and tolerated to fail: a failure to
+  # record must not fail the measurement, whose proposal is the workflow's
+  # work. A dispatch on a branch other than staging stores nothing.
+  record:
+    name: Record the count of uncalled functions
+    needs: coverage
+    if: github.ref == 'refs/heads/staging'
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      DATA_BRANCH: metrics
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: uncalled-functions-tightened
+          path: ${{ runner.temp }}/tightened
+
+      - name: Store the record on the data branch
+        run: |
+          record="$RUNNER_TEMP/uncalled-functions.json"
+          python3 -B scripts/uncalled_functions.py count --baseline "$RUNNER_TEMP/tightened/uncalled_functions.txt" \
+            | jq -S --arg commit "$(git rev-parse HEAD)" --arg url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT" \
+                 '. + {commit: $commit, clean: true, run: {url: $url}}' > "$record"
+          jq -c . "$record"
+          scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" uncalled-functions/linux-gcc "$record"

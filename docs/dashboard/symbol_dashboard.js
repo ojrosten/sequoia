@@ -10,6 +10,8 @@
 
   const recordPathPattern = /^symbol-table\/([^/]+)\/([0-9a-f]{40})\.json$/;
 
+  const uncalledPathPattern = /^uncalled-functions\/[^/]+\/([0-9a-f]{40})\.json$/;
+
   // The commits API's largest page, as the number of commits it lists.
   const commitsPerPage = 100;
 
@@ -41,6 +43,19 @@
       columns.get(column).push({commit, path: entry.path});
     }
     return columns;
+  }
+
+  /**
+   * Lists the records of uncalled functions in `tree`, a response of GitHub's
+   * git trees API which recordsInTree has accepted, as {commit, path}.
+   * They are the nightly measurements of baseline-tightener.yml, one file
+   * per commit measured, beside the symbol table's columns.
+   */
+  function uncalledRecordsInTree(tree) {
+    return tree.tree.flatMap(entry => {
+      const match = uncalledPathPattern.exec(entry.path);
+      return match ? [{commit: match[1], path: entry.path}] : [];
+    });
   }
 
   /**
@@ -99,6 +114,21 @@
     return keys.flatMap(key => differences(before[key], after[key], prefix ? prefix + '.' + key : key));
   }
 
+  const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+
+  /**
+   * Lists what is wrong with `record`, of any column, stored under the name
+   * `commit`, in the fields which every record holds: that it is a JSON
+   * object, names `commit` as its commit and was measured on a clean tree.
+   */
+  function commonProblems(record, commit) {
+    if (!isObject(record)) return ['it is not a JSON object'];
+    const problems = [];
+    if (record.commit !== commit) problems.push(`it names commit ${record.commit}`);
+    if (record.clean !== true) problems.push('it was not measured on a clean tree');
+    return problems;
+  }
+
   /**
    * Lists what is wrong with `record`, stored under the name `commit`.
    *
@@ -108,11 +138,9 @@
    * `prune_analysis`, with an invocation and a count of instructions.
    */
   function problemsWith(record, commit) {
-    if (record === null || typeof record !== 'object' || Array.isArray(record)) return ['it is not a JSON object'];
-    const problems = [];
+    const problems = commonProblems(record, commit);
+    if (!isObject(record)) return problems;
     const isCount = value => Number.isInteger(value) && value >= 0;
-    if (record.commit !== commit) problems.push(`it names commit ${record.commit}`);
-    if (record.clean !== true) problems.push('it was not measured on a clean tree');
     if (record.toolchain === null || typeof record.toolchain !== 'object') problems.push('it has no toolchain');
     const executable = record.executable || {};
     if (!isCount(executable.symbols)) problems.push('it has no count of the executable\'s symbols');
@@ -138,6 +166,54 @@
    */
   function pruneInstructions(record) {
     return Object.hasOwn(record, 'prune_analysis') ? record.prune_analysis.instructions : null;
+  }
+
+  /**
+   * Lists what is wrong with `record`, a record of uncalled functions stored
+   * under the name `commit`.
+   *
+   * A record with no problem is an object holding `commit` as its commit, a
+   * clean tree, the count of uncalled functions, and a toolchain of the
+   * demanglers and the tools which measured it, each named by a string.
+   */
+  function problemsWithUncalled(record, commit) {
+    const problems = commonProblems(record, commit);
+    if (!isObject(record)) return problems;
+    const toolchain = record.toolchain;
+    const isNames = value => Array.isArray(value) && value.every(name => typeof name === 'string');
+    if (!Number.isInteger(record.uncalled_functions) || record.uncalled_functions < 0) {
+      problems.push('it has no count of uncalled functions');
+    }
+    if (toolchain === null || typeof toolchain !== 'object' || !isNames(toolchain.demanglers) || !isNames(toolchain.tools)) {
+      problems.push('it has no toolchain of demanglers and tools');
+    }
+    return problems;
+  }
+
+  /**
+   * Returns the count of uncalled functions measured at the point whose
+   * record is `record`, or null if no measurement is at that commit. Such a
+   * point is left out of the series, not plotted as zero.
+   */
+  function uncalledCount(record) {
+    return Object.hasOwn(record, 'uncalled') ? record.uncalled.count : null;
+  }
+
+  /**
+   * Returns `points`, those of a column, with each point whose commit has a
+   * record in `uncalledPoints`, built by pointsOf from the records of
+   * uncalled functions, holding in its record `uncalled`: the count, the
+   * toolchain run of the measurement and the toolchain's change from the
+   * measurement before. The two series' toolchains are independent.
+   */
+  function withUncalled(points, uncalledPoints) {
+    const measured = new Map(uncalledPoints.map(point => [point.commit, point]));
+    return points.map(point => {
+      const found = measured.get(point.commit);
+      if (!found) return point;
+      const uncalled = {count: found.record.uncalled_functions, run: found.run, toolchainChange: found.toolchainChange};
+      return {...point, record: {...point.record, uncalled}};
+    });
   }
 
   /**
@@ -256,7 +332,8 @@
     if (tree === null) return {state: 'absent'};
     const listing = recordsInTree(tree);
     if (listing.size === 0) return {state: 'empty'};
-    const entries = [...listing.values()].flat();
+    const uncalledEntries = uncalledRecordsInTree(tree);
+    const entries = [...listing.values()].flat().concat(uncalledEntries);
     const wanted  = new Set(entries.map(entry => entry.commit));
     const [{head, pages, walk}, outcomes] = await Promise.all([
       walkStaging(source, known, wanted),
@@ -267,28 +344,41 @@
     const notFound = walk.unknown
       ? `the walk along staging's first parents stopped after ${pages} pages of history, before reaching it`
       : 'it is not on staging\'s first-parent history';
-    const columns = [...listing].map(([name, columnEntries]) => {
+    // The records of `entries` which have no problem by commit, and those which have, by path
+    const sorted = (entries, problemsOf) => {
       const problems = [];
       const byCommit = new Map();
-      for (const entry of columnEntries) {
+      for (const entry of entries) {
         const outcome = fetched.get(entry.path);
         const entryProblems = outcome.error
           ? [`it could not be fetched: ${outcome.error.message}`]
-          : problemsWith(outcome.value, entry.commit);
+          : problemsOf(outcome.value, entry.commit);
         if (!walk.found.includes(entry.commit)) entryProblems.push(notFound);
         if (entryProblems.length) problems.push({path: entry.path, problems: entryProblems});
         else byCommit.set(entry.commit, outcome.value);
       }
+      return {problems, byCommit};
+    };
+    const {problems: uncalledProblems, byCommit: uncalledByCommit} = sorted(uncalledEntries, problemsWithUncalled);
+    const uncalledPoints = pointsOf(historyOrder
+      .filter(commit => uncalledByCommit.has(commit))
+      .map(commit => ({commit, summary: known.get(commit), record: uncalledByCommit.get(commit)})));
+    const columns = [...listing].map(([name, columnEntries]) => {
+      const {problems, byCommit} = sorted(columnEntries, problemsWith);
       const ordered = historyOrder
         .filter(commit => byCommit.has(commit))
         .map(commit => ({commit, summary: known.get(commit), record: byCommit.get(commit)}));
-      return {name, points: pointsOf(ordered), problems};
+      const points = withUncalled(pointsOf(ordered), uncalledPoints);
+      const unplotted = uncalledPoints.filter(point => !points.some(plotted => plotted.commit === point.commit))
+        .map(point => ({path: uncalledEntries.find(entry => entry.commit === point.commit).path,
+                        problems: ['it is not at a commit with a plotted symbol table']}));
+      return {name, points, problems: problems.concat(uncalledProblems, unplotted)};
     });
     return {state: 'loaded', head, pages, columns};
   }
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, pruneInstructions, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));

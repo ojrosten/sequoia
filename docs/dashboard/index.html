@@ -143,6 +143,14 @@
           Points whose record has no count are left out.</p></figcaption>
       <div class="plot" id="analysis-plot"></div>
     </figure>
+    <figure class="card" id="uncalled-figure">
+      <figcaption><h2>Uncalled functions in Source</h2>
+        <p>The functions of <code>Source/</code> which the coverage gate lists as uncalled, instantiations collapsed.
+          The nightly measurement of the coverage gate counts them, on the commit staging is at, so only some
+          points have a count, and the line joins them. A vertical line marks a change of the tools which measured
+          it, which is independent of the symbol table's toolchain.</p></figcaption>
+      <div class="plot" id="uncalled-plot"></div>
+    </figure>
     <div class="tooltip" id="tooltip" hidden></div>
     <section class="card" id="movers" aria-live="polite"></section>
     <section class="card">
@@ -331,7 +339,7 @@
     svg.append(axis);
 
     points.forEach((point, index) => {
-      if (!point.toolchainChange) return;
+      if (!(measure.changeOf ? measure.changeOf(point) : point.toolchainChange)) return;
       const at = (x(index - 1) + x(index)) / 2;
       svg.append(element('svg:line', {x1: at, x2: at, y1: labelBreaks ? 16 : margin.top, y2: margin.top + plotHeight,
                                       stroke: 'var(--text-muted)', 'stroke-width': 1}));
@@ -340,10 +348,15 @@
 
     // A line runs through consecutive points which have the measure, within one toolchain
     const runs = [];
+    const runOf = point => measure.runOf ? measure.runOf(point) : point.run;
+    let joined = null;
     points.forEach((point, index) => {
-      if (values[index] === null) return;
-      const previous = points[index - 1];
-      if (!previous || values[index - 1] === null || previous.run !== point.run) runs.push([]);
+      if (values[index] === null) {
+        if (!measure.joinsGaps) joined = null;
+        return;
+      }
+      if (joined === null || runOf(joined) !== runOf(point)) runs.push([]);
+      joined = point;
       runs[runs.length - 1].push(`${x(index).toFixed(1)},${y(values[index]).toFixed(1)}`);
     });
     for (const run of runs) {
@@ -410,7 +423,11 @@
   const measures = [
     {name: 'Symbols',              value: record => record.executable.symbols,           unit: 'symbols'},
     {name: 'Bytes of symbol names', value: record => record.executable.symbol_name_bytes, unit: 'bytes of names'},
-    {name: 'Instructions of prune\'s analysis', value: symbolDashboard.pruneInstructions, unit: 'instructions'}
+    {name: 'Instructions of prune\'s analysis', value: symbolDashboard.pruneInstructions, unit: 'instructions'},
+    {name: 'Uncalled functions',    value: symbolDashboard.uncalledCount, unit: 'uncalled functions',
+     // Measured nightly, so a line joins the points which have a count; the toolchain is that of the measurement
+     joinsGaps: true, runOf: point => point.record.uncalled.run,
+     changeOf: point => point.record.uncalled ? point.record.uncalled.toolchainChange : null}
   ];
 
   function changeOn(index, measure) {
@@ -434,6 +451,8 @@
       element('span', {}, `${integer.format(point.record.executable.symbol_name_bytes)} bytes of names`),
       ...(measures[2].value(point.record) === null ? []
           : [element('span', {}, `${integer.format(measures[2].value(point.record))} instructions of prune's analysis`)]),
+      ...(measures[3].value(point.record) === null ? []
+          : [element('span', {}, `${integer.format(measures[3].value(point.record))} uncalled functions in Source`)]),
       element('span', {}, `${short(point.commit)} · ${longDate(point.date)}`),
       element('span', {}, point.subject));
     if (point.toolchainChange) tooltip.append(element('span', {}, `Toolchain changed: ${describeChange(point.toolchainChange)}`));
@@ -467,6 +486,9 @@
     const hasAnalysis = state.points.some(point => measures[2].value(point.record) !== null);
     document.getElementById('analysis-figure').hidden = !hasAnalysis;
     if (hasAnalysis) state.charts.push(drawChart(document.getElementById('analysis-plot'), measures[2], 180, false));
+    const hasUncalled = state.points.some(point => measures[3].value(point.record) !== null);
+    document.getElementById('uncalled-figure').hidden = !hasUncalled;
+    if (hasUncalled) state.charts.push(drawChart(document.getElementById('uncalled-plot'), measures[3], 180, true));
     for (const chart of state.charts) chart.markSelected(state.selected);
   }
 
