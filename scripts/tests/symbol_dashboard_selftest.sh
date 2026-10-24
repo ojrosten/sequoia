@@ -424,6 +424,54 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
                            ['it could not be fetched: 404 for the record']);
   });
 
+  const day = 24 * 60 * 60 * 1000, t0 = Date.parse('2026-10-20T00:00:00Z');
+  await control('points of one day are close, and days without a point leave a gap', () => {
+    const {xs} = dashboard.timeAxis([t0, t0 + 3600e3, t0 + 6 * day], 0, 700, 80);
+    assert.ok(xs[1] - xs[0] < 10);
+    assert.ok(Math.abs((xs[2] - xs[1]) - 6 * 100) < 10);
+    assert.ok(xs[0] >= 0 && xs[2] <= 700);
+  });
+
+  await control('a date is ticked once, at a midnight, with ticks at least the gap apart', () => {
+    for (const span of [0, 1, 5, 40, 400]) {
+      const times = [t0, t0 + 17 * 3600e3, t0 + span * day];
+      const {ticks} = dashboard.timeAxis(times, 0, 600, 80);
+      const labels = ticks.map(tick => new Date(tick.time).toISOString().slice(0, 10));
+      assert.strictEqual(new Set(labels).size, labels.length);
+      assert.ok(ticks.every(tick => tick.time % day === 0));
+      assert.ok(ticks.every((tick, i) => i === 0 || tick.x - ticks[i - 1].x >= 80 - 1e-9));
+    }
+  });
+
+  await control('points all on one day are spread over the axis in time order', () => {
+    const {xs} = dashboard.timeAxis([t0 + 12 * 3600e3, t0 + 6 * 3600e3, t0 + 18 * 3600e3], 0, 600, 80);
+    assert.deepStrictEqual(xs.map(Math.round), [300, 150, 450]);
+  });
+
+  await control('the smallest gap is that of neighbours in x, whatever the order of the points', () => {
+    assert.strictEqual(dashboard.smallestGap([30, 0, 10, 100]), 10);
+    assert.strictEqual(dashboard.smallestGap([5, 5]), 0);
+    assert.strictEqual(dashboard.smallestGap([5]), Infinity);
+  });
+
+  await control('a commit with a date which is not a date is refused', () => {
+    const commit = date => ({sha: c.F1, parents: [], commit: {committer: {date}, message: 'm'}});
+    assert.strictEqual(dashboard.summarise(commit('2026-10-17T12:00:00Z')).date, '2026-10-17T12:00:00Z');
+    assert.throws(() => dashboard.summarise(commit('yesterday')), /not a date/);
+  });
+
+  await control('a single point is placed on the axis', () => {
+    const {xs, ticks} = dashboard.timeAxis([t0 + 5 * 3600e3], 0, 600, 80);
+    assert.deepStrictEqual([xs.length, ticks.length], [1, 1]);
+    assert.ok(Number.isFinite(xs[0]));
+  });
+
+  await control('hover picks the point nearest in x, the earliest of equals', () => {
+    const xs = [10, 12, 100];
+    assert.deepStrictEqual([0, 10, 11.5, 50, 60, 1000].map(offset => dashboard.nearestPoint(xs, offset)), [0, 0, 1, 1, 2, 2]);
+    assert.strictEqual(dashboard.nearestPoint([5, 5], 5), 0);
+  });
+
   await control('a missing metrics branch is reported as absent', async () => {
     const source = fixtureSource({tree: null});
     assert.deepStrictEqual(await dashboard.loadHistory(source, new Map()), {state: 'absent'});
@@ -507,6 +555,13 @@ MUTATIONS = [
     ('the uncalled toolchain not checked',  '|| !isNames(toolchain.tools)', ''),
     ('the toolchain change dropped',       'toolchainChange: found.toolchainChange}', 'toolchainChange: null}'),
     ('the run of the symbol table used',   'run: found.run,', 'run: point.run,'),
+    ('x by index, not time',             'return {xs: times.map(x), ticks};', 'return {xs: times.map((time, i) => left + (i + 0.5) * (right - left) / times.length), ticks};'),
+    ('the last nearest point taken',     'if (Math.abs(x - offset) < Math.abs(xs[nearest] - offset))', 'if (Math.abs(x - offset) <= Math.abs(xs[nearest] - offset))'),
+    ('the farthest point taken',         'if (Math.abs(x - offset) < Math.abs(xs[nearest] - offset))', 'if (Math.abs(x - offset) > Math.abs(xs[nearest] - offset))'),
+    ('ticks at every day',               'candidate * (right - left) / days >= minGap) ??', 'true) ??'),
+    ('ticks at a fixed step in points',  'for (let day = first; day <= last; day += step)', 'for (let day = first; day <= last; day += 1)'),
+    ('the smallest gap taken unsorted',  'const sorted = xs.slice().sort((a, b) => a - b);', 'const sorted = xs.slice();'),
+    ('an unreadable date accepted',      'if (!Number.isFinite(Date.parse(commit.commit.committer.date))) {', 'if (false) {'),
     ('an empty branch loaded',            "if (listing.size === 0) return {state: 'empty'};", ''),
 ]
 with open(script, encoding='utf-8') as f:

@@ -254,7 +254,7 @@
     if (fixtures) return new Map();
     const isSummary = summary => summary !== null && typeof summary === 'object' && Array.isArray(summary.parents)
                               && summary.parents.every(parent => typeof parent === 'string')
-                              && typeof summary.date === 'string' && typeof summary.subject === 'string';
+                              && typeof summary.date === 'string' && Number.isFinite(Date.parse(summary.date)) && typeof summary.subject === 'string';
     try { return new Map(Object.entries(JSON.parse(localStorage.getItem(cacheKey) || '{}')).filter(([, summary]) => isSummary(summary))); }
     catch (error) { return new Map(); }
   }
@@ -316,8 +316,9 @@
     const values = points.map(point => measure.value(point.record));
     // A point may lack the measure, and is then left out of the scale and the line
     const scale  = scaleOf(values.filter(value => value !== null));
-    const pitch  = plotWidth / points.length;
-    const x = index => margin.left + (index + 0.5) * pitch;
+    // Time runs along x, so points of one day are close and days with no point leave a gap
+    const axisOfTime = symbolDashboard.timeAxis(points.map(point => Date.parse(point.date)), margin.left, width - margin.right, 80);
+    const x = index => axisOfTime.xs[index];
     const y = value => margin.top + plotHeight * (scale.high - value) / (scale.high - scale.low);
 
     const svg = element('svg:svg', {viewBox: `0 0 ${width} ${height}`, height, tabindex: 0, role: 'application',
@@ -330,12 +331,10 @@
       axis.append(element('svg:text', {x: margin.left - 8, y: y(tick) + 4, 'text-anchor': 'end'},
                           compact(tick, scale.step, scale.high)));
     }
-    const labels = Math.max(1, Math.min(points.length, Math.floor(plotWidth / 80)));
-    const labelled = new Set(Array.from({length: labels}, (_, i) =>
-      labels === 1 ? points.length - 1 : Math.round(i * (points.length - 1) / (labels - 1))));
-    for (const index of labelled) {
-      axis.append(element('svg:text', {x: x(index), y: height - 6, 'text-anchor': 'middle'}, shortDate(points[index].date)));
-    }
+    axisOfTime.ticks.forEach((tick, i) => {
+      axis.append(element('svg:text', {x: tick.x, y: height - 6, 'text-anchor': i === 0 ? 'start' : 'middle'},
+                          shortDate(new Date(tick.time).toISOString())));
+    });
     svg.append(axis);
 
     points.forEach((point, index) => {
@@ -367,7 +366,7 @@
       svg.append(element('svg:polyline', {points: run.join(' '), fill: 'none', stroke: 'var(--series)', 'stroke-width': 2,
                                           'stroke-linejoin': 'round', 'stroke-linecap': 'round'}));
     }
-    if (pitch >= 14) {
+    if (symbolDashboard.smallestGap(axisOfTime.xs) >= 14) {
       points.forEach((point, index) => {
         if (values[index] === null) return;
         svg.append(element('svg:circle', {cx: x(index), cy: y(values[index]), r: 4,
@@ -384,8 +383,7 @@
     const overlay = element('svg:rect', {x: margin.left, y: 0, width: plotWidth, height, fill: 'transparent'});
     const indexAt = event => {
       const bounds = svg.getBoundingClientRect();
-      const offset = (event.clientX - bounds.left) * width / bounds.width;
-      return Math.max(0, Math.min(points.length - 1, Math.floor((offset - margin.left) / pitch)));
+      return symbolDashboard.nearestPoint(axisOfTime.xs, (event.clientX - bounds.left) * width / bounds.width);
     };
     overlay.addEventListener('pointermove', event => hover(indexAt(event)));
     overlay.addEventListener('pointerleave', () => hover(null));

@@ -91,8 +91,12 @@
    *
    * @param {ApiCommit} commit
    * @returns {Summary}
+   * @throws if the commit's date cannot be read
    */
   function summarise(commit) {
+    if (!Number.isFinite(Date.parse(commit.commit.committer.date))) {
+      throw new Error(`commit ${commit.sha} has a date which is not a date: ${commit.commit.committer.date}`);
+    }
     return {
       parents: commit.parents.map(parent => parent.sha),
       date:    commit.commit.committer.date,
@@ -483,8 +487,60 @@
     return {state: 'loaded', head, pages, columns};
   }
 
+  const millisecondsPerDay = 24 * 60 * 60 * 1000;
+  const dayStepsToTry      = [1, 2, 3, 7, 14, 28, 56, 91, 182, 365];
+
+  /**
+   * Returns the horizontal positions of points at the given times, linear in
+   * time over whole UTC days: from the midnight which starts the earliest
+   * day to the one which ends the latest. Also returns the ticks, at
+   * midnights a whole number of days apart, the fewest days for which
+   * neighbouring ticks are at least `minGap` apart, each tick a different day.
+   *
+   * @param {number[]} times  Milliseconds since the epoch, one for each point
+   * @param {number} left     The position of the start of the first day
+   * @param {number} right    The position of the end of the last day
+   * @param {number} minGap
+   * @returns {{xs: number[], ticks: {x: number, time: number}[]}}
+   */
+  function timeAxis(times, left, right, minGap) {
+    const first = Math.floor(Math.min(...times) / millisecondsPerDay);
+    const last  = Math.floor(Math.max(...times) / millisecondsPerDay);
+    const days  = last - first + 1;
+    const x     = (/** @type {number} */ time) => left + (time / millisecondsPerDay - first) / days * (right - left);
+    const step  = dayStepsToTry.find(candidate => candidate * (right - left) / days >= minGap) ?? dayStepsToTry[dayStepsToTry.length - 1];
+    const ticks = [];
+    for (let day = first; day <= last; day += step) ticks.push({x: x(day * millisecondsPerDay), time: day * millisecondsPerDay});
+    return {xs: times.map(x), ticks};
+  }
+
+  /**
+   * Returns the index of the position nearest `offset`, the earliest of equals.
+   *
+   * @param {number[]} xs  Non-empty
+   * @param {number} offset
+   * @returns {number}
+   */
+  function nearestPoint(xs, offset) {
+    let nearest = 0;
+    xs.forEach((x, index) => { if (Math.abs(x - offset) < Math.abs(xs[nearest] - offset)) nearest = index; });
+    return nearest;
+  }
+
+  /**
+   * Returns the least distance between two of the positions, or Infinity
+   * where there are fewer than two.
+   *
+   * @param {number[]} xs
+   * @returns {number}
+   */
+  function smallestGap(xs) {
+    const sorted = xs.slice().sort((a, b) => a - b);
+    return sorted.reduce((gap, x, index) => index === 0 ? gap : Math.min(gap, x - sorted[index - 1]), Infinity);
+  }
+
   Object.assign(exports, {
-    commitsPerPage, maxCommitPages,
+    commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
     recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));
