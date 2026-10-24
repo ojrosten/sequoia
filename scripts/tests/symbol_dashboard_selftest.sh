@@ -439,8 +439,25 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
       const labels = ticks.map(tick => new Date(tick.time).toISOString().slice(0, 10));
       assert.strictEqual(new Set(labels).size, labels.length);
       assert.ok(ticks.every(tick => tick.time % day === 0));
-      assert.ok(ticks.every((tick, i) => i === 0 || tick.x - ticks[i - 1].x >= 80 - 1e-9 || ticks.length === 1 || span >= 365));
+      assert.ok(ticks.every((tick, i) => i === 0 || tick.x - ticks[i - 1].x >= 80 - 1e-9));
     }
+  });
+
+  await control('points all on one day are spread over the axis in time order', () => {
+    const {xs} = dashboard.timeAxis([t0 + 12 * 3600e3, t0 + 6 * 3600e3, t0 + 18 * 3600e3], 0, 600, 80);
+    assert.deepStrictEqual(xs.map(Math.round), [300, 150, 450]);
+  });
+
+  await control('the smallest gap is that of neighbours in x, whatever the order of the points', () => {
+    assert.strictEqual(dashboard.smallestGap([30, 0, 10, 100]), 10);
+    assert.strictEqual(dashboard.smallestGap([5, 5]), 0);
+    assert.strictEqual(dashboard.smallestGap([5]), Infinity);
+  });
+
+  await control('a commit with a date which is not a date is refused', () => {
+    const commit = date => ({sha: c.F1, parents: [], commit: {committer: {date}, message: 'm'}});
+    assert.strictEqual(dashboard.summarise(commit('2026-10-17T12:00:00Z')).date, '2026-10-17T12:00:00Z');
+    assert.throws(() => dashboard.summarise(commit('yesterday')), /not a date/);
   });
 
   await control('a single point is placed on the axis', () => {
@@ -543,6 +560,8 @@ MUTATIONS = [
     ('the farthest point taken',         'if (Math.abs(x - offset) < Math.abs(xs[nearest] - offset))', 'if (Math.abs(x - offset) > Math.abs(xs[nearest] - offset))'),
     ('ticks at every day',               'candidate * (right - left) / days >= minGap) ??', 'true) ??'),
     ('ticks at a fixed step in points',  'for (let day = first; day <= last; day += step)', 'for (let day = first; day <= last; day += 1)'),
+    ('the smallest gap taken unsorted',  'const sorted = xs.slice().sort((a, b) => a - b);', 'const sorted = xs.slice();'),
+    ('an unreadable date accepted',      'if (!Number.isFinite(Date.parse(commit.commit.committer.date))) {', 'if (false) {'),
     ('an empty branch loaded',            "if (listing.size === 0) return {state: 'empty'};", ''),
 ]
 with open(script, encoding='utf-8') as f:

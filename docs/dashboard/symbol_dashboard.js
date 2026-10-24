@@ -91,8 +91,12 @@
    *
    * @param {ApiCommit} commit
    * @returns {Summary}
+   * @throws if the commit's date cannot be read
    */
   function summarise(commit) {
+    if (!Number.isFinite(Date.parse(commit.commit.committer.date))) {
+      throw new Error(`commit ${commit.sha} has a date which is not a date: ${commit.commit.committer.date}`);
+    }
     return {
       parents: commit.parents.map(parent => parent.sha),
       date:    commit.commit.committer.date,
@@ -523,8 +527,20 @@
     return nearest;
   }
 
+  /**
+   * Returns the least distance between two of the positions, or Infinity
+   * where there are fewer than two.
+   *
+   * @param {number[]} xs
+   * @returns {number}
+   */
+  function smallestGap(xs) {
+    const sorted = xs.slice().sort((a, b) => a - b);
+    return sorted.reduce((gap, x, index) => index === 0 ? gap : Math.min(gap, x - sorted[index - 1]), Infinity);
+  }
+
   Object.assign(exports, {
-    commitsPerPage, maxCommitPages, timeAxis, nearestPoint,
+    commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
     recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));
