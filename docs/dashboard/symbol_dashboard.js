@@ -23,7 +23,7 @@
    * @typedef {{commit: string, summary: Summary, record: JsonRecord}} OrderedRecord
    * @typedef {{path: string, before: any, after: any}} Difference
    * @typedef {{commit: string, date: string, subject: string, record: JsonRecord, run: number,
-   *            toolchainChange: Difference[] | null}} Point
+   *            toolchainChange: Difference[] | null, setupRun: number, boundaryChange: boolean}} Point
    * @typedef {{path: string, problems: string[]}} Unplottable
    * @typedef {{tree(): Promise<Tree | null>, commits(start: string | null): Promise<ApiCommit[]>,
    *            record(path: string): Promise<JsonRecord>}} Source
@@ -383,18 +383,31 @@
    * whose toolchains are equal. The first point of each run after the
    * first holds the toolchain's differences from the point before it.
    *
+   * A point also holds `setupRun`, the number of changes of the `boundary`
+   * of its `runner_setup` up to it, among the points which have one, and
+   * `boundaryChange`, whether this point's is the first of a different
+   * boundary: the runner's setup of a different boundary (another
+   * executable, say) is a different series, which the plot breaks the line
+   * at.
+   *
    * @param {OrderedRecord[]} orderedRecords
    * @returns {Point[]}
    */
   function pointsOf(orderedRecords) {
-    let run = 0;
+    let run = 0, setupRun = 0;
+    /** @type {string | null} */
+    let boundary = null;
     return orderedRecords.map(({commit, summary, record}, index) => {
       const previous   = orderedRecords[index - 1];
       const toolchainChange = previous && canonical(previous.record.toolchain) !== canonical(record.toolchain)
         ? differences(previous.record.toolchain, record.toolchain)
         : null;
       if (toolchainChange) ++run;
-      return {commit, date: summary.date, subject: summary.subject, record, run, toolchainChange};
+      const setupBoundary = Object.hasOwn(record, 'runner_setup') ? record.runner_setup.boundary : null;
+      const boundaryChange = typeof setupBoundary === 'string' && boundary !== null && setupBoundary !== boundary;
+      if (boundaryChange) ++setupRun;
+      if (typeof setupBoundary === 'string') boundary = setupBoundary;
+      return {commit, date: summary.date, subject: summary.subject, record, run, toolchainChange, setupRun, boundaryChange};
     });
   }
 

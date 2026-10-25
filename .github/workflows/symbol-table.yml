@@ -301,12 +301,15 @@ jobs:
       # pattern begins with `*`.
       #
       # --collect-systime=yes adds the event sysCount, the number of system
-      # calls. The file's compression of names is off, so that the calls to
-      # execute can be counted from its `cfn=` and `calls=` lines: the count of
-      # tests is callgrind's own, not the runner's printed text. The run is
-      # serial, as collection is switched by the thread which runs the test.
-      # The executable is named in `boundary`, so that a change of it starts a
-      # new series.
+      # calls. The run is serial, as collection is switched by the thread
+      # which runs the test. The tests are not counted from callgrind's calls
+      # into execute: the runner's own tests run runners of their own, whose
+      # calls into execute callgrind counts but does not collect, since it
+      # toggles only on the call at recursion depth 0. They are counted from the
+      # runner's execution records, a file for each test the run executed, so
+      # the directory is emptied first. scripts/runner_setup_record.sh reads
+      # the totals and the records, and says what a pass is. The executable is
+      # named in `boundary`, so that a change of it starts a new series.
       - name: Build TestFrameworkDiagnostics
         continue-on-error: true
         timeout-minutes: 20
@@ -323,41 +326,15 @@ jobs:
           execute='sequoia::testing::test_to_run::execute'
           timed='*sequoia::testing::test_to_run::execution_timer::time_execution*'
           out="$RUNNER_TEMP/setup.callgrind.out"
+          records="$GITHUB_WORKSPACE/tree/output/ExecutionRecords/TestFrameworkDiagnostics/gcc-env"
+          rm -rf "$records"
           status=0
-          valgrind --tool=callgrind --collect-systime=yes --compress-strings=no \
+          valgrind --tool=callgrind --collect-systime=yes \
             --toggle-collect="$execute" --toggle-collect="$execute(*" --toggle-collect="$timed" \
             --callgrind-out-file="$out" ./TestFrameworkDiagnostics --serial > "$RUNNER_TEMP/setup_suite.txt" 2>&1 || status=$?
           tail -n 30 "$RUNNER_TEMP/setup_suite.txt"
-          if [ ! -s "$out" ]; then
-            echo "::warning::callgrind left no output, so the record has no runner_setup"
-            exit 0
-          fi
-          # The `events:` line names the columns of the file's "summary:" and "totals:"
-          # lines, of the events collected inside the functions; the counts stand only
-          # if both lines are there and equal.
-          read -r instructions syscalls < <(awk '
-            $1 == "events:" { for (i = 2; i <= NF; ++i) col[$i] = i - 1 }
-            $1 == "summary:" || $1 == "totals:" { line[$1] = $0; sub(/^[a-z]+:[ \t]*/, "", line[$1]) }
-            END { if (!("summary:" in line) || !("totals:" in line) || line["summary:"] != line["totals:"] \
-                      || !("Ir" in col) || !("sysCount" in col)) exit
-                  split(line["totals:"], f, " ")
-                  print f[col["Ir"]] + 0, f[col["sysCount"]] + 0 }' "$out")
-          # Every call to execute, from whichever caller: the file has a cfn= line
-          # for the callee and then a calls= line, "calls=<count> <position>".
-          tests=$(awk '/^cfn=/ { callee = substr($0, 5) }
-                       /^calls=/ && callee ~ /^sequoia::testing::test_to_run::execute([(]|$)/ { split($1, f, "="); n += f[2] }
-                       END { print n + 0 }' "$out")
-          for count in "$instructions" "$syscalls" "$tests"; do
-            case "$count" in
-              ''|*[!0-9]*|0)
-                echo "::warning::callgrind counted instructions '${instructions}', system calls '${syscalls}' and tests '${tests}' (summary and totals must agree, and a zero or missing count is refused), so the record has no runner_setup"
-                exit 0;;
-            esac
-          done
-          jq -n --argjson instructions "$instructions" --argjson syscalls "$syscalls" --argjson tests "$tests" \
-            --argjson exit_status "$status" \
-            '{boundary: "test_to_run::execute outside execution_timer::time_execution, TestFrameworkDiagnostics --serial",
-              exit_status: $exit_status, tests: $tests, instructions: $instructions, syscalls: $syscalls}' \
+          "$GITHUB_WORKSPACE/tooling/scripts/runner_setup_record.sh" "$out" "$records" "$status" \
+            "test_to_run::execute outside execution_timer::time_execution, TestFrameworkDiagnostics --serial" \
             > "$RUNNER_TEMP/runner_setup.json"
           cat "$RUNNER_TEMP/runner_setup.json"
 

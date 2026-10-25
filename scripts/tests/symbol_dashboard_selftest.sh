@@ -241,6 +241,34 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.deepStrictEqual(points.map(point => point.run), [0, 0]);
   });
 
+  const setupOf = tests => ({boundary: 'x', exit_status: 0, tests, instructions: 4000, syscalls: 40});
+
+  await control('the runner\'s setup breaks the line at a change of its boundary, among the points which have one', () => {
+    const summary = {date: 'd', subject: 's'};
+    const withBoundary = boundary => {
+      const record = recordOf('F4');
+      if (boundary !== null) record.runner_setup = {...setupOf(4), boundary};
+      return {commit: c.F4, summary, record};
+    };
+    const points = dashboard.pointsOf([withBoundary(null), withBoundary('a'), withBoundary('a'), withBoundary(null),
+                                       withBoundary('b'), withBoundary('b'), withBoundary('a')]);
+    assert.deepStrictEqual(points.map(point => point.boundaryChange), [false, false, false, false, true, false, true]);
+    assert.deepStrictEqual(points.map(point => point.setupRun), [0, 0, 0, 0, 1, 1, 2]);
+    assert.deepStrictEqual(points.map(point => point.run), [0, 0, 0, 0, 0, 0, 0]);
+  });
+
+  await control('a record whose boundary is no text neither starts nor ends a series of boundaries', () => {
+    const summary = {date: 'd', subject: 's'};
+    const withSetup = setup => {
+      const record = recordOf('F4');
+      record.runner_setup = setup;
+      return {commit: c.F4, summary, record};
+    };
+    const points = dashboard.pointsOf([withSetup({...setupOf(4), boundary: 'a'}), withSetup({...setupOf(4), boundary: 5}),
+                                       withSetup({...setupOf(4), boundary: 'a'})]);
+    assert.deepStrictEqual(points.map(point => point.boundaryChange), [false, false, false]);
+  });
+
   await control('a leaf absent from one toolchain is a difference', () => {
     assert.deepStrictEqual(dashboard.differences({a: {b: 1}}, {a: {}}), [{path: 'a.b', before: 1, after: undefined}]);
   });
@@ -316,8 +344,6 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
                              ['it has a prune_analysis with no invocation, or no count of instructions']);
     });
   }
-
-  const setupOf = tests => ({boundary: 'x', exit_status: 0, tests, instructions: 4000, syscalls: 40});
 
   const analysisOf = (instructions, stamping_exit_status) =>
     ({function: 'sequoia::testing::test_runner::prune*', instructions, stamping_exit_status});
@@ -684,7 +710,12 @@ MUTATIONS = [
     ('the count not checked',             '|| !isCount(analysis.instructions)\n', '\n'),
     ('the new count not checked',         'typeof analysis !== \'object\' || !isCount(analysis.instructions) ||', 'typeof analysis !== \'object\' ||'),
     ('the invocation not checked',        "|| typeof analysis.invocation !== 'string'", ''),
-    ('a missing setup plotted as zero',    "if (!Object.hasOwn(record, 'runner_setup') ||", "if (false ||"),
+    ('no break at a change of boundary',   "const boundaryChange = typeof setupBoundary === 'string' && boundary !== null && setupBoundary !== boundary;", "const boundaryChange = false;"),
+    ('a first boundary a change',          "typeof setupBoundary === 'string' && boundary !== null &&", "typeof setupBoundary === 'string' &&"),
+    ('the boundary forgotten at a gap',    "if (typeof setupBoundary === 'string') boundary = setupBoundary;", "boundary = typeof setupBoundary === 'string' ? setupBoundary : null;"),
+    ('the series not counted',             "if (boundaryChange) ++setupRun;", ""),
+    ('a boundary which is no text read',   "typeof setupBoundary === 'string' && boundary !== null", "setupBoundary !== null && boundary !== null"),
+    ('a missing setup throws',    "if (!Object.hasOwn(record, 'runner_setup') ||", "if (false ||"),
     ('the setup not checked',              "if (Object.hasOwn(record, 'runner_setup')) {", 'if (false) {'),
     ('the setup\'s boundary not checked',  "|| typeof setup.boundary !== 'string') {", ') {'),
     ('the number of tests not checked',     "if (!(isCount(setup.tests) && setup.tests > 0)) problems.push", 'if (false) problems.push'),

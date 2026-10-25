@@ -153,11 +153,12 @@
           but outside <code>execution_timer::time_execution</code>: the runner's work for each test,
           its preparing of materials, its records and its output, and not the test, nor anything the runner
           does before the first test or after the last. The plots are the instructions (callgrind's Ir) and the system
-          calls (its sysCount) so counted, divided by the number of calls to <code>test_to_run::execute</code>,
-          which is the number of tests; each plot has a scale of its own. Instructions are exact for a fixed
+          calls (its sysCount) so counted, divided by the number of tests the run executed, as the runner's own execution
+          records count them (the runner's tests run runners of their own, whose tests are not counted, nor is their setup
+          collected); each plot has a scale of its own. Instructions are exact for a fixed
           toolchain and commit. Points whose record has no count are left out, as are points whose run failed
-          (any nonzero exit status). A change of the run's <code>boundary</code> (a different executable,
-          say) starts a new series, which the record names.
+          (a run passes when its exit status is 0; any other is a failure). A change of the run's
+          <code>boundary</code> (a different executable, say) breaks the line, with a marker labelled boundary.
           <span id="runner-excluded"></span></p></figcaption>
       <h3>Instructions per test</h3><div class="plot" id="runner-plot-instructions"></div>
       <h3>System calls per test</h3><div class="plot" id="runner-plot-syscalls"></div>
@@ -359,10 +360,11 @@
 
     points.forEach((point, index) => {
       if (!(measure.changeOf ? measure.changeOf(point) : point.toolchainChange)) return;
+      const label = measure.breakLabel ? measure.breakLabel(point) : 'toolchain';
       const at = (x(index - 1) + x(index)) / 2;
       svg.append(element('svg:line', {x1: at, x2: at, y1: labelBreaks ? 16 : margin.top, y2: margin.top + plotHeight,
                                       stroke: 'var(--text-muted)', 'stroke-width': 1}));
-      if (labelBreaks) svg.append(element('svg:text', {x: at, y: 11, 'text-anchor': 'middle', class: 'break-label'}, 'toolchain'));
+      if (labelBreaks) svg.append(element('svg:text', {x: at, y: 11, 'text-anchor': 'middle', class: 'break-label'}, label));
     });
 
     // A line runs through consecutive points which have the measure, within one toolchain
@@ -453,7 +455,12 @@
     event,
     name: `${event} of the runner's setup, per test`,
     value: record => symbolDashboard.runnerSetupPerTest(record, event),
-    unit: `${event} per test`
+    unit: `${event} per test`,
+    // Measured when the suite is, so a line joins the points which have a count; it breaks at a change
+    // of the toolchain, or of the boundary of the measurement
+    joinsGaps: true, runOf: point => `${point.run}/${point.setupRun}`,
+    changeOf: point => point.toolchainChange || point.boundaryChange,
+    breakLabel: point => point.boundaryChange ? 'boundary' : 'toolchain'
   }));
 
   function changeOn(index, measure) {
@@ -525,7 +532,7 @@
     document.getElementById('runner-figure').hidden = !shown.runner;
     if (hasRunner) {
       for (const measure of runnerMeasures) {
-        state.charts.push(drawChart(document.getElementById(`runner-plot-${measure.event}`), measure, 120, false));
+        state.charts.push(drawChart(document.getElementById(`runner-plot-${measure.event}`), measure, 120, true));
       }
     }
     const hasUncalled = state.points.some(point => measures[3].value(point.record) !== null);
