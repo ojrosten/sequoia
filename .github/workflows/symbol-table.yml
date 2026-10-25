@@ -250,13 +250,19 @@ jobs:
             echo "::warning::prune did not analyse from a stamp, so the record has no prune_dependency_analysis"
             exit 0
           fi
-          # The file's summary line is "summary: <Ir>", of the events collected inside the function
+          # The file holds "summary: <Ir>" and "totals: <Ir>", of the events collected
+          # inside the function; the count stands only if both are there and equal.
           instructions=$(awk '$1 == "summary:" {print $2}' "$RUNNER_TEMP/callgrind.out" 2>/dev/null)
+          totals=$(awk '$1 == "totals:" {print $2}' "$RUNNER_TEMP/callgrind.out" 2>/dev/null)
           case "$instructions" in
             ''|*[!0-9]*|0)
               echo "::warning::no instructions were collected inside '$function' (summary '${instructions}'), so the record has no prune_dependency_analysis"
               exit 0;;
           esac
+          if [ "$totals" != "$instructions" ]; then
+            echo "::warning::callgrind's summary ($instructions) and totals ('${totals}') differ or are missing, so the record has no prune_dependency_analysis"
+            exit 0
+          fi
           if [ ! -s "$RUNNER_TEMP/stamping_exit_status.txt" ]; then
             echo "::warning::the stamping run left no exit status, so the record has no prune_dependency_analysis"
             exit 0

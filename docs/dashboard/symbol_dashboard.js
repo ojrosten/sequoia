@@ -258,7 +258,7 @@
   /**
    * Returns the system calls of `category` which the runner made per test in
    * `record`'s run, or null if the record has no count of its overhead, its
-   * run failed tests (a nonzero exit status), or it reported no number of
+   * run failed (a nonzero exit status, whether a failing test, a crash or a signal), or it reported no number of
    * tests. Such a record is left out of the series, not plotted as zero.
    *
    * @param {JsonRecord} record
@@ -275,7 +275,7 @@
   /**
    * Returns the instructions counted inside prune's analysis in `record`'s
    * run, or null if the record has none (an old record, or one whose
-   * measurement failed) or the run which stamped failed tests (a nonzero
+   * measurement failed) or the run which stamped failed (a nonzero
    * `stamping_exit_status`). Such a record is left out of the series, not
    * plotted as zero.
    *
@@ -288,8 +288,24 @@
   }
 
   /**
+   * Says which of the prune and runner panels to show for `points`: one with
+   * a point to plot, or with a point left out for failure, so that a panel
+   * whose every point failed still says why it is empty.
+   *
+   * @param {Point[]} points
+   * @returns {{prune: boolean, runner: boolean}}
+   */
+  function panelsShown(points) {
+    const excluded = excludedForFailures(points);
+    return {
+      prune:  excluded.prune  > 0 || points.some(({record}) => pruneInstructions(record) !== null),
+      runner: excluded.runner > 0 || points.some(({record}) => runnerSyscallPerTest(record, runnerSyscallCategories[0]) !== null)
+    };
+  }
+
+  /**
    * Returns how many of `points` hold a measurement which was left out of its
-   * series because its run failed tests: `prune` counts those with a
+   * series because its run failed (a nonzero exit status): `prune` counts those with a
    * `prune_dependency_analysis` of a nonzero `stamping_exit_status`, `runner`
    * those with a `runner_overhead` of a nonzero `exit_status`.
    *
@@ -613,6 +629,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, excludedForFailures, runnerSyscallCategories, runnerSyscallPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, excludedForFailures, panelsShown, runnerSyscallCategories, runnerSyscallPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));

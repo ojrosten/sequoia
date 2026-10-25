@@ -381,6 +381,19 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
   });
 
+  await control('a panel whose every point failed is still shown, so that it says why it is empty; one with nothing is not', () => {
+    const none = {record: recordOf('F5')};
+    const failedAnalysis = {record: {...recordOf('F5'), prune_dependency_analysis: analysisOf(5, 3)}};
+    const failedOverhead = {record: {...recordOf('F5'), runner_overhead: {...overheadOf(4), exit_status: 139}}};
+    const okAnalysis = {record: {...recordOf('F5'), prune_dependency_analysis: analysisOf(5, 0)}};
+    const okOverhead = {record: {...recordOf('F5'), runner_overhead: overheadOf(4)}};
+    assert.deepStrictEqual(dashboard.panelsShown([none]), {prune: false, runner: false});
+    assert.deepStrictEqual(dashboard.panelsShown([failedAnalysis, failedOverhead]), {prune: true, runner: true});
+    assert.deepStrictEqual(dashboard.panelsShown([okAnalysis, okOverhead]), {prune: true, runner: true});
+    assert.deepStrictEqual(dashboard.panelsShown([failedAnalysis]), {prune: true, runner: false});
+    assert.deepStrictEqual(dashboard.panelsShown([failedOverhead]), {prune: false, runner: true});
+  });
+
   await control('a runner_overhead without an exit status is a problem', () => {
     const record = recordOf('F5');
     record.runner_overhead = overheadOf(4);
@@ -670,6 +683,8 @@ MUTATIONS = [
     ('a failed fetch fails the load',     'catch (error) { outcomes[index] = {error}; }', 'catch (error) { throw error; }'),
     ('an absent branch read as empty',    "if (tree === null) return {state: 'absent'};", "if (tree === null) return {state: 'empty'};"),
     ('a missing analysis plotted as zero', "if (!Object.hasOwn(record, 'prune_dependency_analysis') ||", "if (false ||"),
+    ('a failed prune panel hidden',       "excluded.prune  > 0 || ", ""),
+    ('a failed runner panel hidden',      "excluded.runner > 0 || ", ""),
     ('a failed stamping run plotted',     "|| record.prune_dependency_analysis.stamping_exit_status !== 0) return null;", ") return null;"),
     ('a failed stamping run counted as clean', "record[field][status] !== 0", "false"),
     ('failures counted in the wrong field', "failed('runner_overhead', 'exit_status')", "failed('runner_overhead', 'stamping_exit_status')"),

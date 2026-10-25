@@ -142,7 +142,7 @@
           and the functions it calls, in <code>TestAll prune --serial</code> run after a full run of the suite:
           prune's reading of the build's records and its walk of the sources for changes, and nothing of the
           runner's startup or of any test. It is exact for a fixed toolchain and commit. Points whose record has no
-          count are left out, as are points whose full run failed tests, since prune then selects different work.
+          count are left out, as are points whose full run failed (any nonzero exit status), since prune then selects different work.
           <span id="analysis-excluded"></span></p></figcaption>
       <div class="plot" id="analysis-plot"></div>
     </figure>
@@ -152,7 +152,7 @@
           number of tests the run reported, one plot for each kind and each on a scale of its own. A clone is a
           thread or a process; an exec is a process. The counts are those of the whole run, tests' own file system
           use included, and the run is concurrent, so they vary a little between runs of one commit. Points whose
-          record has no count are left out, as are points whose run failed tests.
+          record has no count are left out, as are points whose run failed (any nonzero exit status).
           <span id="runner-excluded"></span></p></figcaption>
       <h3>Directory walks</h3><div class="plot" id="runner-plot-directory_walks"></div>
       <h3>Metadata reads</h3><div class="plot" id="runner-plot-metadata_reads"></div>
@@ -512,14 +512,15 @@
       drawChart(document.getElementById('bytes-plot'),   measures[1], 180, false)
     ];
     const excluded = symbolDashboard.excludedForFailures(state.points);
-    const excludedText = count => count === 0 ? '' : `${count} point${count === 1 ? '' : 's'} left out for failing tests.`;
+    const excludedText = count => count === 0 ? '' : `${count} point${count === 1 ? '' : 's'} left out for failing runs.`;
     document.getElementById('analysis-excluded').textContent = excludedText(excluded.prune);
     document.getElementById('runner-excluded').textContent  = excludedText(excluded.runner);
+    const shown = symbolDashboard.panelsShown(state.points);
     const hasAnalysis = state.points.some(point => measures[2].value(point.record) !== null);
-    document.getElementById('analysis-figure').hidden = !hasAnalysis;
+    document.getElementById('analysis-figure').hidden = !shown.prune;
     if (hasAnalysis) state.charts.push(drawChart(document.getElementById('analysis-plot'), measures[2], 180, false));
     const hasRunner = state.points.some(point => runnerMeasures[0].value(point.record) !== null);
-    document.getElementById('runner-figure').hidden = !hasRunner;
+    document.getElementById('runner-figure').hidden = !shown.runner;
     if (hasRunner) {
       for (const measure of runnerMeasures) {
         state.charts.push(drawChart(document.getElementById(`runner-plot-${measure.category}`), measure, 120, false));
