@@ -317,8 +317,7 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     });
   }
 
-  const overheadOf = tests => ({invocation: 'x', exit_status: 0, tests,
-                                 syscalls: {directory_walks: 10, metadata_reads: 400, opens: 60, clones: 2, execs: 8}});
+  const setupOf = tests => ({boundary: 'x', exit_status: 0, tests, instructions: 4000, syscalls: 40});
 
   const analysisOf = (instructions, stamping_exit_status) =>
     ({function: 'sequoia::testing::test_runner::prune*', instructions, stamping_exit_status});
@@ -366,27 +365,27 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     const point = (analysis, overhead) => {
       const record = recordOf('F5');
       if (analysis) record.prune_dependency_analysis = analysis;
-      if (overhead) record.runner_overhead = overhead;
+      if (overhead) record.runner_setup = overhead;
       return {record};
     };
-    const failedOverhead = {...overheadOf(4), exit_status: 8};
+    const failedOverhead = {...setupOf(4), exit_status: 8};
     assert.deepStrictEqual(dashboard.excludedForFailures([]), {prune: 0, runner: 0});
-    assert.deepStrictEqual(dashboard.excludedForFailures([point(null, null), point(analysisOf(5, 0), overheadOf(4))]), {prune: 0, runner: 0});
+    assert.deepStrictEqual(dashboard.excludedForFailures([point(null, null), point(analysisOf(5, 0), setupOf(4))]), {prune: 0, runner: 0});
     assert.deepStrictEqual(dashboard.excludedForFailures([point(analysisOf(5, 2), null), point(analysisOf(5, 0), failedOverhead),
                                                           point(analysisOf(5, 1), failedOverhead)]), {prune: 2, runner: 2});
-    assert.deepStrictEqual(dashboard.excludedForFailures([point(analysisOf(5, 2), overheadOf(4))]), {prune: 1, runner: 0});
+    assert.deepStrictEqual(dashboard.excludedForFailures([point(analysisOf(5, 2), setupOf(4))]), {prune: 1, runner: 0});
     assert.deepStrictEqual(dashboard.excludedForFailures([point(analysisOf(5, 0), failedOverhead)]), {prune: 0, runner: 1});
     const record = point(null, failedOverhead).record;
-    for (const category of dashboard.runnerSyscallCategories) assert.strictEqual(dashboard.runnerSyscallPerTest(record, category), null);
+    for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
   });
 
   await control('a panel whose every point failed is still shown, so that it says why it is empty; one with nothing is not', () => {
     const none = {record: recordOf('F5')};
     const failedAnalysis = {record: {...recordOf('F5'), prune_dependency_analysis: analysisOf(5, 3)}};
-    const failedOverhead = {record: {...recordOf('F5'), runner_overhead: {...overheadOf(4), exit_status: 139}}};
+    const failedOverhead = {record: {...recordOf('F5'), runner_setup: {...setupOf(4), exit_status: 139}}};
     const okAnalysis = {record: {...recordOf('F5'), prune_dependency_analysis: analysisOf(5, 0)}};
-    const okOverhead = {record: {...recordOf('F5'), runner_overhead: overheadOf(4)}};
+    const okOverhead = {record: {...recordOf('F5'), runner_setup: setupOf(4)}};
     assert.deepStrictEqual(dashboard.panelsShown([none]), {prune: false, runner: false});
     assert.deepStrictEqual(dashboard.panelsShown([failedAnalysis, failedOverhead]), {prune: true, runner: true});
     assert.deepStrictEqual(dashboard.panelsShown([okAnalysis, okOverhead]), {prune: true, runner: true});
@@ -394,85 +393,72 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.deepStrictEqual(dashboard.panelsShown([failedOverhead]), {prune: false, runner: true});
   });
 
-  await control('a runner_overhead without an exit status is a problem', () => {
+  await control('a runner_setup without an exit status is a problem', () => {
     const record = recordOf('F5');
-    record.runner_overhead = overheadOf(4);
-    delete record.runner_overhead.exit_status;
-    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), ['it has a runner_overhead with no exit status']);
+    record.runner_setup = setupOf(4);
+    delete record.runner_setup.exit_status;
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), ['it has a runner_setup with no exit status']);
   });
 
-  const perTest = {directory_walks: 2.5, metadata_reads: 100, opens: 15, clones: 0.5, execs: 2};
-
-  await control('each category is null in a record without the runner\'s overhead or without a number of tests, and per test otherwise', () => {
+  await control('each event is null in a record without the runner\'s setup, and per test otherwise', () => {
     const record = recordOf('F5');
-    for (const category of dashboard.runnerSyscallCategories) {
-      assert.strictEqual(dashboard.runnerSyscallPerTest(record, category), null);
-    }
-    record.runner_overhead = overheadOf(null);
-    for (const category of dashboard.runnerSyscallCategories) {
-      assert.strictEqual(dashboard.runnerSyscallPerTest(record, category), null);
-    }
-    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
-    record.runner_overhead = overheadOf(4);
-    for (const [category, count] of Object.entries(perTest)) {
-      assert.strictEqual(dashboard.runnerSyscallPerTest(record, category), count, category);
-    }
+    for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
+    record.runner_setup = setupOf(4);
+    assert.strictEqual(dashboard.runnerSetupPerTest(record, 'instructions'), 1000);
+    assert.strictEqual(dashboard.runnerSetupPerTest(record, 'syscalls'), 10);
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
   });
 
-  await control('a count of zero is a count, plotted as zero', () => {
+  await control('the older runner_overhead is neither a problem nor plotted', () => {
     const record = recordOf('F5');
-    record.runner_overhead = overheadOf(5);
-    for (const category of dashboard.runnerSyscallCategories) {
-      record.runner_overhead.syscalls[category] = 0;
-      assert.strictEqual(dashboard.runnerSyscallPerTest(record, category), 0);
-    }
+    record.runner_overhead = {invocation: 'x', exit_status: 0, tests: 4, syscalls: {opens: 60}};
+    for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+    assert.deepStrictEqual(dashboard.excludedForFailures([{record: {...record, runner_overhead: {exit_status: 3}}}]), {prune: 0, runner: 0});
   });
 
-  await control('the categories are the five the workflow records', () => {
-    assert.deepStrictEqual(dashboard.runnerSyscallCategories,
-                           ['directory_walks', 'metadata_reads', 'opens', 'clones', 'execs']);
+  await control('the events are the two the workflow records', () => {
+    assert.deepStrictEqual(dashboard.runnerSetupEvents, ['instructions', 'syscalls']);
   });
 
-  for (const [name, overhead, problem] of [
-    ['null',            null,                                     'it has a runner_overhead with no invocation'],
-    ['no invocation',   {...overheadOf(4), invocation: 5},        'it has a runner_overhead with no invocation'],
-    ['zero tests',      overheadOf(0),                            'it has a runner_overhead whose number of tests is neither null nor a positive integer'],
-    ['fractional tests', overheadOf(1.5),                         'it has a runner_overhead whose number of tests is neither null nor a positive integer'],
-    ['text tests',      overheadOf('4'),                          'it has a runner_overhead whose number of tests is neither null nor a positive integer'],
-    ['absent tests',    (({tests, ...rest}) => rest)(overheadOf(4)), 'it has a runner_overhead whose number of tests is neither null nor a positive integer'],
-    ['no syscalls',     {...overheadOf(4), syscalls: null},       'it has a runner_overhead with no count of directory_walks']
+  for (const [name, setup, problem] of [
+    ['null',             null,                                    'it has a runner_setup with no boundary'],
+    ['no boundary',      {...setupOf(4), boundary: 5},            'it has a runner_setup with no boundary'],
+    ['zero tests',       setupOf(0),                              'it has a runner_setup whose number of tests is not a positive integer'],
+    ['null tests',       setupOf(null),                           'it has a runner_setup whose number of tests is not a positive integer'],
+    ['fractional tests', setupOf(1.5),                            'it has a runner_setup whose number of tests is not a positive integer'],
+    ['text tests',       setupOf('4'),                            'it has a runner_setup whose number of tests is not a positive integer'],
+    ['absent tests',     (({tests, ...rest}) => rest)(setupOf(4)), 'it has a runner_setup whose number of tests is not a positive integer']
   ]) {
-    await control(`a record with a runner_overhead of ${name} is a problem`, () => {
+    await control(`a record with a runner_setup of ${name} is a problem`, () => {
       const record = recordOf('F5');
-      record.runner_overhead = overhead;
+      record.runner_setup = setup;
       assert.ok(dashboard.problemsWith(record, c.F5).includes(problem), dashboard.problemsWith(record, c.F5).join('; '));
     });
   }
 
-  for (const category of ['directory_walks', 'metadata_reads', 'opens', 'clones', 'execs']) {
-    for (const [name, value] of [['missing', undefined], ['fractional', 1.5], ['negative', -1], ['text', '3']]) {
-      await control(`a runner_overhead with ${category} ${name} is a problem naming it, and no other`, () => {
+  for (const event of ['instructions', 'syscalls']) {
+    for (const [name, value] of [['missing', undefined], ['zero', 0], ['fractional', 1.5], ['negative', -1], ['text', '3']]) {
+      await control(`a runner_setup with ${event} ${name} is a problem naming it, and no other`, () => {
         const record = recordOf('F5');
-        record.runner_overhead = overheadOf(4);
-        if (value === undefined) delete record.runner_overhead.syscalls[category];
-        else record.runner_overhead.syscalls[category] = value;
-        assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), [`it has a runner_overhead with no count of ${category}`]);
+        record.runner_setup = setupOf(4);
+        if (value === undefined) delete record.runner_setup[event];
+        else record.runner_setup[event] = value;
+        assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), [`it has a runner_setup with no positive count of ${event}`]);
       });
     }
   }
 
-  await control('points lacking the runner\'s overhead keep their place, and it is read where present', async () => {
+  await control('points lacking the runner\'s setup keep their place, and it is read where present', async () => {
     const source = fixtureSource({record: recordPath => {
       const record = read(recordPath);
-      if (recordPath.includes(c.F5)) record.runner_overhead = overheadOf(2);
+      if (recordPath.includes(c.F5)) record.runner_setup = setupOf(2);
       return record;
     }});
     const column = (await dashboard.loadHistory(source, new Map())).columns[0];
-    const counts = column.points.map(point => dashboard.runnerSyscallPerTest(point.record, 'metadata_reads'));
-    assert.deepStrictEqual(counts, column.points.map(point => point.commit === c.F5 ? 200 : null));
-    assert.ok(counts.includes(200));
+    const counts = column.points.map(point => dashboard.runnerSetupPerTest(point.record, 'syscalls'));
+    assert.deepStrictEqual(counts, column.points.map(point => point.commit === c.F5 ? 20 : null));
+    assert.ok(counts.includes(20));
   });
 
   const treeWith = (...commits) => ({...read('tree.json'), tree: read('tree.json').tree.concat(commits.map(commit =>
@@ -687,9 +673,9 @@ MUTATIONS = [
     ('a failed runner panel hidden',      "excluded.runner > 0 || ", ""),
     ('a failed stamping run plotted',     "|| record.prune_dependency_analysis.stamping_exit_status !== 0) return null;", ") return null;"),
     ('a failed stamping run counted as clean', "record[field][status] !== 0", "false"),
-    ('failures counted in the wrong field', "failed('runner_overhead', 'exit_status')", "failed('runner_overhead', 'stamping_exit_status')"),
-    ('a failed overhead run plotted',      "|| record.runner_overhead.exit_status !== 0\n", "\n"),
-    ('the exit status of the overhead unchecked', "if (!isCount(overhead.exit_status)) problems.push", "if (false) problems.push"),
+    ('failures counted in the wrong field', "failed('runner_setup', 'exit_status')", "failed('runner_setup', 'stamping_exit_status')"),
+    ('a failed setup run plotted',         "|| record.runner_setup.exit_status !== 0) return null;", ") return null;"),
+    ('the exit status of the setup unchecked', "if (!isCount(setup.exit_status)) problems.push", "if (false) problems.push"),
     ('the dependency analysis not checked', "if (Object.hasOwn(record, 'prune_dependency_analysis')) {", 'if (false) {'),
     ('zero instructions accepted',         "|| analysis.instructions === 0\n", "\n"),
     ('the stamping status unchecked',      "|| !isCount(analysis.stamping_exit_status)) {", ") {"),
@@ -698,20 +684,17 @@ MUTATIONS = [
     ('the count not checked',             '|| !isCount(analysis.instructions)\n', '\n'),
     ('the new count not checked',         'typeof analysis !== \'object\' || !isCount(analysis.instructions) ||', 'typeof analysis !== \'object\' ||'),
     ('the invocation not checked',        "|| typeof analysis.invocation !== 'string'", ''),
-    ('a missing overhead plotted as zero',  "if (!Object.hasOwn(record, 'runner_overhead') || record.runner_overhead.exit_status !== 0\n        || record.runner_overhead.tests === null) return null;", "if (!Object.hasOwn(record, 'runner_overhead') || record.runner_overhead.exit_status !== 0) return null;"),
-    ('a missing number of tests divided by', "|| record.runner_overhead.tests === null) return null;", ") return null;"),
-    ('the overhead not checked',            "if (Object.hasOwn(record, 'runner_overhead')) {", 'if (false) {'),
-    ('the overhead\'s invocation not checked', "|| typeof overhead.invocation !== 'string') {", ') {'),
-    ('the number of tests not checked',     "if (overhead.tests !== null && !(isCount(overhead.tests) && overhead.tests > 0)) {", 'if (false) {'),
-    ('zero tests accepted',                 "isCount(overhead.tests) && overhead.tests > 0", 'isCount(overhead.tests)'),
-    ('the directory walks unchecked',       "const runnerSyscallCategories = ['directory_walks', ", "const runnerSyscallCategories = ["),
-    ('the metadata reads unchecked',        "'metadata_reads', 'opens'", "'opens'"),
-    ('the opens unchecked',                 "'opens', 'clones'", "'clones'"),
-    ('the clones unchecked',                "'clones', 'execs']", "'execs']"),
-    ('the execs unchecked',                 "'clones', 'execs']", "'clones']"),
-    ('the counts not checked at all',       "|| !isCount(syscalls[category])", ''),
-    ('totals plotted, not per test',        "return syscalls[category] / tests;", "return syscalls[category];"),
-    ('the wrong category read',             "return syscalls[category] / tests;", "return syscalls.opens / tests;"),
+    ('a missing setup plotted as zero',    "if (!Object.hasOwn(record, 'runner_setup') ||", "if (false ||"),
+    ('the setup not checked',              "if (Object.hasOwn(record, 'runner_setup')) {", 'if (false) {'),
+    ('the setup\'s boundary not checked',  "|| typeof setup.boundary !== 'string') {", ') {'),
+    ('the number of tests not checked',     "if (!(isCount(setup.tests) && setup.tests > 0)) problems.push", 'if (false) problems.push'),
+    ('zero tests accepted',                 "isCount(setup.tests) && setup.tests > 0", 'isCount(setup.tests)'),
+    ('zero counts accepted',                "isCount(setup[event]) && setup[event] > 0", 'isCount(setup[event])'),
+    ('the instructions unchecked',          "const runnerSetupEvents = ['instructions', ", "const runnerSetupEvents = ["),
+    ('the system calls unchecked',          "'instructions', 'syscalls']", "'instructions']"),
+    ('totals plotted, not per test',        "return setup[event] / setup.tests;", "return setup[event];"),
+    ('the wrong event read',                "return setup[event] / setup.tests;", "return setup.instructions / setup.tests;"),
+    ('the older overhead checked',          "if (Object.hasOwn(record, 'runner_setup')) {", "if (Object.hasOwn(record, 'runner_overhead')) { problems.push('x'); }\n    if (Object.hasOwn(record, 'runner_setup')) {"),
     ('a missing uncalled count plotted as zero',    "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : null", "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : 0"),
     ('the uncalled count not checked',      '|| record.uncalled_functions < 0', '|| false'),
     ('the uncalled toolchain not checked',  '|| !isNames(toolchain.tools)', ''),
