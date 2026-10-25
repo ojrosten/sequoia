@@ -331,7 +331,8 @@ jobs:
           status=0
           valgrind --tool=callgrind --dump-instr=no --collect-systime=yes \
             --toggle-collect="$execute" --toggle-collect="$execute(*" --toggle-collect="$timed" \
-            --callgrind-out-file="$out" ./TestFrameworkDiagnostics --serial > "$RUNNER_TEMP/setup_suite.txt" 2>&1 || status=$?
+            --callgrind-out-file="$out" ./TestFrameworkDiagnostics --serial --exclude-performance > "$RUNNER_TEMP/setup_suite.txt" 2>&1 || status=$?
+          echo "TestFrameworkDiagnostics exit status: $status"
           tail -n 30 "$RUNNER_TEMP/setup_suite.txt"
           "$GITHUB_WORKSPACE/tooling/scripts/runner_setup_record.sh" "$out" "$records" "$status" \
             "test_to_run::execute outside execution_timer::time_execution, TestFrameworkDiagnostics --serial" \
