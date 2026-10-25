@@ -29,14 +29,16 @@
 #     deterministic, which a person should judge.
 # Bar run, a field is never changed, nor removed.
 #
-# The exception is a measured count. An instruction count which callgrind made
-# of one commit twice has differed by about 2 parts in a million, so a count
-# which differs from the held one by less than 1 part in 10000 is taken to be
-# the held one. The script prints the difference, and the record is then
-# compared, and stored, with the held count in place of the new: the first
-# measurement stands. A larger difference is refused as any other. The counts
-# are named once, in measured_fields below. A system call count is not among
-# them: it moved by 0.2% between two runs of one commit.
+# The exception is a measured count, which a rerun of one commit moves a
+# little: prune's instruction count by about 2 parts in a million, the runner
+# setup's system calls by 0.2%. Each is named in measured_fields below with
+# its own tolerance, as the denominator of a relative difference. A count which
+# differs from the held one by less than that is taken to be the held one. The
+# script prints the difference, and the record is then compared, and stored,
+# with the held count in place of the new: the first measurement stands. The
+# stored record is jq's output, keys sorted. A larger difference is refused as
+# any other, and so is a field added beneath an object already held, since
+# only a whole field is added to a held record.
 #
 # A branch which does not exist is created, with no history. The push is
 # never forced. When it fails - as it does when another run pushed first -
@@ -74,16 +76,19 @@ index="$work/index" held_file="$work/held"
 # without_run <file>: the record in <file>, its keys sorted, without its run
 without_run() { jq -S 'del(.run)' "$1" || die "$1 cannot be read as JSON"; }
 
-# The paths into a record of the counts which a rerun may move slightly, and
-# the denominator of the relative difference below which a count is taken to
-# be the held one
-measured_fields='[["prune_dependency_analysis", "instructions"], ["runner_setup", "instructions"]]'
-tolerance_denominator=10000
+# The counts which a rerun may move slightly: each one's path into a record,
+# and the denominator of the relative difference below which a count is taken
+# to be the held one
+measured_fields='[
+  {"path": ["prune_dependency_analysis", "instructions"], "denominator": 10000},
+  {"path": ["runner_setup", "instructions"],              "denominator": 200},
+  {"path": ["runner_setup", "syscalls"],                  "denominator": 200}
+]'
 
-# within($held; $offered), in jq: both are numbers, they differ, and they
-# differ by less than $held over the denominator
+# within($held; $offered; $denominator), in jq: both are numbers, they differ,
+# and they differ by less than $held over the denominator
 within_tolerance='
-  def within($held; $offered):
+  def within($held; $offered; $denominator):
     ($held | type) == "number" and ($offered | type) == "number"
     and $held != $offered
     and ((($offered - $held) | fabs) * $denominator < $held);'
@@ -91,19 +96,22 @@ within_tolerance='
 # tolerated <held> <record>: a line for each measured field of <record> which
 # differs from <held>'s by less than the tolerance
 tolerated() {
-  jq -r --argjson held "$1" --argjson paths "$measured_fields" --argjson denominator "$tolerance_denominator" \
+  jq -r --argjson held "$1" --argjson fields "$measured_fields" \
      "$within_tolerance"'
-     . as $offered | $paths[] | . as $path | ($held | getpath($path)) as $h | ($offered | getpath($path)) as $o
-     | select(within($h; $o)) | "\($path | join(".")): held \($h), offered \($o)"' "$2"
+     . as $offered | $fields[] | .path as $path | .denominator as $denominator
+     | ($held | getpath($path)) as $h | ($offered | getpath($path)) as $o
+     | select(within($h; $o; $denominator))
+     | "\($path | join(".")): held \($h), offered \($o), tolerance 1 in \($denominator)"' "$2"
 }
 
 # settled <held> <record>: <record>, its keys sorted, with the held count in
 # each measured field which differs from it by less than the tolerance
 settled() {
-  jq -S --argjson held "$1" --argjson paths "$measured_fields" --argjson denominator "$tolerance_denominator" \
+  jq -S --argjson held "$1" --argjson fields "$measured_fields" \
      "$within_tolerance"'
-     . as $offered | reduce $paths[] as $path (.; if within($held | getpath($path); $offered | getpath($path))
-                                                  then setpath($path; $held | getpath($path)) else . end)' "$2"
+     . as $offered | reduce $fields[] as $field (.; $field.path as $path
+       | if within($held | getpath($path); $offered | getpath($path); $field.denominator)
+         then setpath($path; $held | getpath($path)) else . end)' "$2"
 }
 
 # keeps_every_field <whole> <part>: <whole> has every field of <part>, with
@@ -138,7 +146,7 @@ store_once() {
     held=$(without_run "$held_file") || exit 1
     close=$(tolerated "$held" "$record") || die "$record cannot be read as JSON"
     if [ -n "$close" ]; then
-      echo "$record has measured counts within 1 in $tolerance_denominator of those of $path, which stand:"
+      echo "$record has measured counts within their tolerances of those of $path, which stand:"
       echo "$close"
       stored="$work/settled.json"
       settled "$held" "$record" > "$stored"

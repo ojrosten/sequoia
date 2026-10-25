@@ -25,14 +25,16 @@
 #     which changes the added field, or which lacks a field with a null
 #     value and so does not keep every field, is refused and the held
 #     record kept;
-#   - a measured count (an instruction count of prune_dependency_analysis or
-#     runner_setup) which differs from the held one by less than 1 part in
-#     10000 is taken to be the held one: the record is accepted, the
-#     difference said, and the held count kept, in a record which adds a field
-#     as in one which adds none; a difference of exactly 1 part in 10000, or
-#     more, is refused with the difference shown, as is a difference in a field
-#     which is not measured (the symbols, the system calls) however small, even
-#     beside a measured count within the tolerance;
+#   - a measured count, with the tolerance of its own (prune's instructions 1
+#     part in 10000, the runner setup's instructions and system calls 1 part in
+#     200), which differs from the held one by less than that is taken to be
+#     the held one: the record is accepted, the difference said, and the held
+#     count kept, in a record which adds a field as in one which adds none; a
+#     difference of exactly the tolerance, or more, is refused with the
+#     difference shown, as is a difference in a field which is not measured
+#     (the symbols) however small, even beside a measured count within its
+#     tolerance; a tolerance is the field's own, so a difference which one
+#     field's tolerance accepts is refused by a field with a smaller;
 #   - in a clone without blobs, a held record whose blob cannot be fetched is
 #     a failure, not a record absent;
 #   - a push refused because another push came first is retried on the new
@@ -118,17 +120,19 @@ fixture() {
   record "$work/A-added-changed.json" "$A" 101 6 true ', "prune_analysis": {"instructions": 7}'
   record "$work/A-added-other.json"   "$A" 100 7 true ', "prune_analysis": {"instructions": 8}'
   record "$work/A-null.json"   "$A" 100 8 true ', "note": null'
-  # runner_setup instructions: 1000000000 is held; 99999 away is within 1 in
-  # 10000, 100000 away is not
+  # runner_setup: 1000000000 instructions and 834813 system calls are held,
+  # each with a tolerance of 1 in 200, so 5000000 and 4174.065 are too far;
+  # prune_dependency_analysis has 1 in 10000, so 100000 is too far
   local setup='"runner_setup": {"instructions": %s, "syscalls": %s}'
-  record "$work/S.json"          "$A" 100 11 true ", $(printf "$setup" 1000000000 7)"
-  record "$work/S-near.json"     "$A" 100 12 true ", $(printf "$setup" 1000099999 7)"
-  record "$work/S-near-down.json" "$A" 100 13 true ", $(printf "$setup" 999900001 7)"
-  record "$work/S-boundary.json" "$A" 100 14 true ", $(printf "$setup" 1000100000 7)"
-  record "$work/S-far.json"      "$A" 100 15 true ", $(printf "$setup" 1000200000 7)"
-  record "$work/S-far-down.json" "$A" 100 24 true ", $(printf "$setup" 999800000 7)"
-  record "$work/S-syscalls.json" "$A" 100 16 true ", $(printf "$setup" 1000000000 8)"
-  record "$work/S-near-symbols.json" "$A" 101 17 true ", $(printf "$setup" 1000099999 7)"
+  record "$work/S.json"          "$A" 100 11 true ", $(printf "$setup" 1000000000 834813)"
+  record "$work/S-near.json"     "$A" 100 12 true ", $(printf "$setup" 1004999999 834813)"
+  record "$work/S-near-down.json" "$A" 100 13 true ", $(printf "$setup" 995000001 834813)"
+  record "$work/S-boundary.json" "$A" 100 14 true ", $(printf "$setup" 1005000000 834813)"
+  record "$work/S-far.json"      "$A" 100 15 true ", $(printf "$setup" 1010000000 834813)"
+  record "$work/S-far-down.json" "$A" 100 24 true ", $(printf "$setup" 990000000 834813)"
+  record "$work/S-syscalls.json" "$A" 100 16 true ", $(printf "$setup" 1000000000 837000)"
+  record "$work/S-syscalls-far.json" "$A" 100 25 true ", $(printf "$setup" 1000000000 840000)"
+  record "$work/S-near-symbols.json" "$A" 101 17 true ", $(printf "$setup" 1004999999 834813)"
   record "$work/P.json"          "$A" 100 18 true ', "prune_dependency_analysis": {"instructions": 1000000000}'
   record "$work/P-near.json"     "$A" 100 19 true ', "prune_dependency_analysis": {"instructions": 1000099999}'
   record "$work/P-far.json"      "$A" 100 20 true ', "prune_dependency_analysis": {"instructions": 1000100000}'
@@ -291,8 +295,9 @@ tolerance_controls() {
   store S; first=$(tip)
   store S-near
   exits "a runner_setup count within the tolerance succeeds" 0
-  says "it says the counts are within the tolerance" 'within 1 in 10000 of those of symbol-table/linux/' "$out"
-  says "it shows the difference" 'runner_setup.instructions: held 1000000000, offered 1000099999' "$out"
+  says "it says the counts are within their tolerances" 'within their tolerances of those of symbol-table/linux/' "$out"
+  says "it shows the difference and the tolerance" \
+       'runner_setup.instructions: held 1000000000, offered 1004999999, tolerance 1 in 200' "$out"
   same "it leaves the branch as it was" "$first" "$(tip)"
   same "the held record is the first measurement, byte for byte" "$(cat "$work/S.json")" "$(held "$A")"
 
@@ -301,22 +306,28 @@ tolerance_controls() {
   same "the branch is as it was after a lower count" "$first" "$(tip)"
 
   store S-boundary
-  exits "a count differing by exactly 1 part in 10000" nonzero
-  says "the difference is shown" '"instructions": 1000100000' "$err"
+  exits "a count differing by exactly 1 part in 200" nonzero
+  says "the difference is shown" '"instructions": 1005000000' "$err"
   same "the branch is as it was after the boundary" "$first" "$(tip)"
 
   store S-far
   exits "a count beyond the tolerance" nonzero
-  says "the difference of a count beyond is shown" '"instructions": 1000200000' "$err"
+  says "the difference of a count beyond is shown" '"instructions": 1010000000' "$err"
   same "the held record is kept after a count beyond" "$first" "$(tip)"
 
   store S-far-down
   exits "a count beyond the tolerance below the held one" nonzero
-  says "the difference of a count below is shown" '"instructions": 999800000' "$err"
+  says "the difference of a count below is shown" '"instructions": 990000000' "$err"
 
   store S-syscalls
-  exits "a system call count which differs by a little" nonzero
-  says "the difference of the system calls is shown" '"syscalls": 8' "$err"
+  exits "a system call count within 1 in 200 but beyond 1 in 10000 succeeds" 0
+  says "it shows the system calls" 'runner_setup.syscalls: held 834813, offered 837000, tolerance 1 in 200' "$out"
+  same "the branch is as it was after the system calls" "$first" "$(tip)"
+
+  store S-syscalls-far
+  exits "a system call count beyond 1 in 200" nonzero
+  says "the difference of the system calls is shown" '"syscalls": 840000' "$err"
+  same "the held record is kept after system calls beyond" "$first" "$(tip)"
 
   store S-near-symbols
   exits "a count within the tolerance beside a field which differs" nonzero
@@ -332,7 +343,7 @@ tolerance_controls() {
   says "it shows the difference" 'prune_dependency_analysis.instructions: held 1000000000, offered 1000099999' "$out"
   same "the branch is as it was after the prune count" "$first" "$(tip)"
   store P-far
-  exits "a prune_dependency_analysis count beyond the tolerance" nonzero
+  exits "a prune_dependency_analysis count beyond 1 in 10000, within 1 in 200" nonzero
   same "the branch is as it was after a prune count beyond" "$first" "$(tip)"
 
   # A record which adds a field, and has a count within the tolerance, is
@@ -480,14 +491,33 @@ mutant 'a changed field kept in an addition' 'and .value == $whole[$key])' ')'
 mutant 'a null field taken for kept'   '($whole | has($key)) and ' ''
 mutant 'an addition not named'         '$offered | keys - ($held | keys) | join(", ")' '""'
 mutant 'the run compared too'          "without_run() { jq -S 'del(.run)'" "without_run() { jq -S '.'"
-mutant 'every count measured'          'measured_fields='"'"'[["prune_dependency_analysis", "instructions"], ["runner_setup", "instructions"]]'"'" \
-                                       'measured_fields='"'"'[["prune_dependency_analysis", "instructions"], ["runner_setup", "instructions"], ["runner_setup", "syscalls"], ["other_count", "instructions"]]'"'"
-mutant 'prune counts not measured'     '[["prune_dependency_analysis", "instructions"], ["runner_setup", "instructions"]]' \
-                                       '[["runner_setup", "instructions"]]'
-mutant 'setup counts not measured'     '[["prune_dependency_analysis", "instructions"], ["runner_setup", "instructions"]]' \
-                                       '[["prune_dependency_analysis", "instructions"]]'
-mutant 'the tolerance of 1 in 1000'    'tolerance_denominator=10000' 'tolerance_denominator=1000'
-mutant 'the tolerance of 1 in 100000'  'tolerance_denominator=10000' 'tolerance_denominator=100000'
+mutant 'every count measured'          '  {"path": ["runner_setup", "syscalls"],                  "denominator": 200}' \
+                                       '  {"path": ["runner_setup", "syscalls"],                  "denominator": 200},
+  {"path": ["other_count", "instructions"],               "denominator": 200}'
+mutant 'prune counts not measured'     '  {"path": ["prune_dependency_analysis", "instructions"], "denominator": 10000},
+' ''
+mutant 'setup instructions not measured' '  {"path": ["runner_setup", "instructions"],              "denominator": 200},
+' ''
+mutant 'setup system calls not measured' ',
+  {"path": ["runner_setup", "syscalls"],                  "denominator": 200}' ''
+mutant 'prune with the setup tolerance' '"instructions"], "denominator": 10000}' '"instructions"], "denominator": 200}'
+mutant 'setup instructions with the prune tolerance' \
+       '["runner_setup", "instructions"],              "denominator": 200}' \
+       '["runner_setup", "instructions"],              "denominator": 10000}'
+mutant 'setup system calls with the prune tolerance' \
+       '["runner_setup", "syscalls"],                  "denominator": 200}
+]' '["runner_setup", "syscalls"],                  "denominator": 10000}
+]'
+mutant 'the tolerances of prune and the setup swapped' \
+       '  {"path": ["prune_dependency_analysis", "instructions"], "denominator": 10000},
+  {"path": ["runner_setup", "instructions"],              "denominator": 200},' \
+       '  {"path": ["prune_dependency_analysis", "instructions"], "denominator": 200},
+  {"path": ["runner_setup", "instructions"],              "denominator": 10000},'
+mutant 'the tolerance of the setup 1 in 100' '["runner_setup", "instructions"],              "denominator": 200}' \
+                                       '["runner_setup", "instructions"],              "denominator": 100}'
+mutant 'the tolerance of the setup 1 in 400' '["runner_setup", "syscalls"],                  "denominator": 200}
+]' '["runner_setup", "syscalls"],                  "denominator": 400}
+]'
 mutant 'the boundary accepted'         '* $denominator < $held);' '* $denominator <= $held);'
 mutant 'only a higher count tolerated' '((($offered - $held) | fabs)' '((($offered - $held))'
 mutant 'the new count stored'          'then setpath($path; $held | getpath($path)) else . end)' 'then . else . end)'
