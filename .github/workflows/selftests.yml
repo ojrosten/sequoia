@@ -108,6 +108,15 @@ jobs:
             install -y --no-install-recommends --download-only $PACKAGES
           sudo apt-get install -y --no-install-recommends --no-download $PACKAGES
 
+      # The dashboard's script is checked against its JSDoc types, with the
+      # pinned compiler and no build step: tsc reads docs/dashboard/tsconfig.json,
+      # emits nothing, and fails on a type error. Linux alone, as the selftest.
+      - name: Check the types of the dashboard
+        if: inputs.needs_testing == 'true' && matrix.name == 'Linux'
+        run: |
+          npm install --no-audit --no-fund --prefix "$RUNNER_TEMP/typescript" typescript@5.9.3
+          "$RUNNER_TEMP/typescript/node_modules/.bin/tsc" -p docs/dashboard --noEmit
+
       # Every selftest runs, whichever fail, and the step names each that failed.
       # A selftest passes when it exits 0 and its last line says its controls
       # pass: one that ran nothing exits 0 too.

@@ -302,6 +302,194 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     });
   }
 
+  await control('prune\'s instructions are null in a record without them, and the count in one with them', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.pruneInstructions(record), null);
+    record.prune_analysis = {invocation: 'x', instructions: 0};
+    assert.strictEqual(dashboard.pruneInstructions(record), 0);
+    record.prune_analysis.instructions = 123;
+    assert.strictEqual(dashboard.pruneInstructions(record), 123);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  for (const [name, analysis] of [
+    ['no count',           {invocation: 'x'}],
+    ['a fractional count', {invocation: 'x', instructions: 1.5}],
+    ['a text count',       {invocation: 'x', instructions: '5'}],
+    ['no invocation',      {instructions: 5}],
+    ['null',               null]
+  ]) {
+    await control(`a record with a prune_analysis of ${name} is a problem`, () => {
+      const record = recordOf('F5');
+      record.prune_analysis = analysis;
+      assert.deepStrictEqual(dashboard.problemsWith(record, c.F5),
+                             ['it has a prune_analysis with no invocation, or no count of instructions']);
+    });
+  }
+
+  await control('points lacking the count keep their place, and the count is read where present', async () => {
+    const source = fixtureSource({record: recordPath => {
+      const record = read(recordPath);
+      if (recordPath.includes(c.F5)) record.prune_analysis = {invocation: 'x', instructions: 777};
+      return record;
+    }});
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    const counts = column.points.map(point => dashboard.pruneInstructions(point.record));
+    assert.deepStrictEqual(counts, column.points.map(point => point.commit === c.F5 ? 777 : null));
+    assert.ok(counts.includes(777));
+  });
+
+  const overheadOf = tests => ({invocation: 'x', exit_status: 0, tests,
+                                 syscalls: {directory_walks: 10, metadata_reads: 400, opens: 60, clones: 2, execs: 8}});
+
+  const perTest = {directory_walks: 2.5, metadata_reads: 100, opens: 15, clones: 0.5, execs: 2};
+
+  await control('each category is null in a record without the runner\'s overhead or without a number of tests, and per test otherwise', () => {
+    const record = recordOf('F5');
+    for (const category of dashboard.runnerSyscallCategories) {
+      assert.strictEqual(dashboard.runnerSyscallPerTest(record, category), null);
+    }
+    record.runner_overhead = overheadOf(null);
+    for (const category of dashboard.runnerSyscallCategories) {
+      assert.strictEqual(dashboard.runnerSyscallPerTest(record, category), null);
+    }
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+    record.runner_overhead = overheadOf(4);
+    for (const [category, count] of Object.entries(perTest)) {
+      assert.strictEqual(dashboard.runnerSyscallPerTest(record, category), count, category);
+    }
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  await control('a count of zero is a count, plotted as zero', () => {
+    const record = recordOf('F5');
+    record.runner_overhead = overheadOf(5);
+    for (const category of dashboard.runnerSyscallCategories) {
+      record.runner_overhead.syscalls[category] = 0;
+      assert.strictEqual(dashboard.runnerSyscallPerTest(record, category), 0);
+    }
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  await control('the categories are the five the workflow records', () => {
+    assert.deepStrictEqual(dashboard.runnerSyscallCategories,
+                           ['directory_walks', 'metadata_reads', 'opens', 'clones', 'execs']);
+  });
+
+  for (const [name, overhead, problem] of [
+    ['null',            null,                                     'it has a runner_overhead with no invocation'],
+    ['no invocation',   {...overheadOf(4), invocation: 5},        'it has a runner_overhead with no invocation'],
+    ['zero tests',      overheadOf(0),                            'it has a runner_overhead whose number of tests is neither null nor a positive integer'],
+    ['fractional tests', overheadOf(1.5),                         'it has a runner_overhead whose number of tests is neither null nor a positive integer'],
+    ['text tests',      overheadOf('4'),                          'it has a runner_overhead whose number of tests is neither null nor a positive integer'],
+    ['absent tests',    (({tests, ...rest}) => rest)(overheadOf(4)), 'it has a runner_overhead whose number of tests is neither null nor a positive integer'],
+    ['no syscalls',     {...overheadOf(4), syscalls: null},       'it has a runner_overhead with no count of directory_walks']
+  ]) {
+    await control(`a record with a runner_overhead of ${name} is a problem`, () => {
+      const record = recordOf('F5');
+      record.runner_overhead = overhead;
+      assert.ok(dashboard.problemsWith(record, c.F5).includes(problem), dashboard.problemsWith(record, c.F5).join('; '));
+    });
+  }
+
+  for (const category of ['directory_walks', 'metadata_reads', 'opens', 'clones', 'execs']) {
+    for (const [name, value] of [['missing', undefined], ['fractional', 1.5], ['negative', -1], ['text', '3']]) {
+      await control(`a runner_overhead with ${category} ${name} is a problem naming it, and no other`, () => {
+        const record = recordOf('F5');
+        record.runner_overhead = overheadOf(4);
+        if (value === undefined) delete record.runner_overhead.syscalls[category];
+        else record.runner_overhead.syscalls[category] = value;
+        assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), [`it has a runner_overhead with no count of ${category}`]);
+      });
+    }
+  }
+
+  await control('points lacking the runner\'s overhead keep their place, and it is read where present', async () => {
+    const source = fixtureSource({record: recordPath => {
+      const record = read(recordPath);
+      if (recordPath.includes(c.F5)) record.runner_overhead = overheadOf(2);
+      return record;
+    }});
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    const counts = column.points.map(point => dashboard.runnerSyscallPerTest(point.record, 'metadata_reads'));
+    assert.deepStrictEqual(counts, column.points.map(point => point.commit === c.F5 ? 200 : null));
+    assert.ok(counts.includes(200));
+  });
+
+  const treeWith = (...commits) => ({...read('tree.json'), tree: read('tree.json').tree.concat(commits.map(commit =>
+    ({path: `uncalled-functions/linux-gcc/${commit}.json`, type: 'blob'})))});
+  // The fixture's own records have problems of their own, which these controls leave aside
+  const uncalledProblems = column => column.problems.filter(entry => entry.path.startsWith('uncalled-functions/'));
+  const uncalledRecord = (name, count, tools = ['g++-15 15.2.0']) =>
+    ({commit: c[name], clean: true, uncalled_functions: count, toolchain: {demanglers: ['c++filt 2.46'], tools}});
+
+  await control('a record of uncalled functions without a problem has none, and with one has it named', () => {
+    assert.deepStrictEqual(dashboard.problemsWithUncalled(uncalledRecord('F5', 0), c.F5), []);
+    assert.deepStrictEqual(dashboard.problemsWithUncalled(uncalledRecord('F5', 5), c.F4), [`it names commit ${c.F5}`]);
+  });
+
+  for (const [name, change, problem] of [
+    ['a tree not clean',         r => { r.clean = false; },                     'it was not measured on a clean tree'],
+    ['no count',                 r => { delete r.uncalled_functions; },         'it has no count of uncalled functions'],
+    ['a fractional count',       r => { r.uncalled_functions = 1.5; },          'it has no count of uncalled functions'],
+    ['a text count',             r => { r.uncalled_functions = '5'; },          'it has no count of uncalled functions'],
+    ['a negative count',         r => { r.uncalled_functions = -1; },           'it has no count of uncalled functions'],
+    ['no toolchain',             r => { delete r.toolchain; },                  'it has no toolchain of demanglers and tools'],
+    ['tools of numbers',         r => { r.toolchain.tools = [1]; },             'it has no toolchain of demanglers and tools'],
+    ['no demanglers',            r => { delete r.toolchain.demanglers; },       'it has no toolchain of demanglers and tools']
+  ]) {
+    await control(`a record of uncalled functions with ${name} is a problem`, () => {
+      const record = uncalledRecord('F5', 5);
+      change(record);
+      assert.ok(dashboard.problemsWithUncalled(record, c.F5).includes(problem));
+    });
+  }
+
+  await control('the nightly counts join the points of their commits, with their own toolchain runs', async () => {
+    const records = new Map([[c.F2, uncalledRecord('F2', 7)], [c.F4, uncalledRecord('F4', 6)],
+                             [c.F6, uncalledRecord('F6', 6, ['g++-16 16.1.0'])]]);
+    const source = fixtureSource({
+      tree: treeWith(...records.keys()),
+      record: recordPath => {
+        const found = [...records].find(([commit]) => recordPath === `uncalled-functions/linux-gcc/${commit}.json`);
+        return found ? found[1] : read(recordPath);
+      }
+    });
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.deepStrictEqual(uncalledProblems(column), []);
+    assert.deepStrictEqual(column.points.map(point => dashboard.uncalledCount(point.record)),
+                           column.points.map(point => records.has(point.commit) ? records.get(point.commit).uncalled_functions : null));
+    const [first, second, third] = column.points.filter(point => records.has(point.commit)).map(point => point.record.uncalled);
+    assert.deepStrictEqual([first.toolchainChange, second.toolchainChange, first.run, second.run, third.run],
+                           [null, null, 0, 0, 1]);
+    assert.deepStrictEqual(third.toolchainChange.map(change => change.path), ['tools']);
+  });
+
+  await control('a record of uncalled functions with a problem is listed, and the others load', async () => {
+    const source = fixtureSource({
+      tree: treeWith(c.F2),
+      record: recordPath => recordPath.startsWith('uncalled-functions/') ? {...uncalledRecord('F2', 1), clean: false} : read(recordPath)
+    });
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.deepStrictEqual(uncalledProblems(column).map(entry => entry.path), [`uncalled-functions/linux-gcc/${c.F2}.json`]);
+    assert.strictEqual(column.points.filter(point => dashboard.uncalledCount(point.record) !== null).length, 0);
+  });
+
+  await control('a record is null as a count where no measurement is, never zero', () => {
+    assert.strictEqual(dashboard.uncalledCount(recordOf('F5')), null);
+  });
+
+  await control('a record of uncalled functions at no plotted commit is listed', async () => {
+    const absent = '0'.repeat(40);
+    const source = fixtureSource({
+      tree: treeWith(absent),
+      record: recordPath => recordPath.startsWith('uncalled-functions/') ? {...uncalledRecord('F2', 1), commit: absent} : read(recordPath)
+    });
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.strictEqual(uncalledProblems(column).length, 1);
+    assert.ok(uncalledProblems(column)[0].problems.length >= 1);
+  });
+
   await control('a record which cannot be fetched is a problem, and the others load', async () => {
     const source = fixtureSource({record: recordPath => {
       if (recordPath.includes(c.F6)) throw new Error('404 for the record');
@@ -311,6 +499,54 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.deepStrictEqual(names(column.points.map(point => point.commit)), ['F1', 'F2', 'F4', 'F5', 'F7']);
     assert.deepStrictEqual(column.problems.find(p => p.path.includes(c.F6)).problems,
                            ['it could not be fetched: 404 for the record']);
+  });
+
+  const day = 24 * 60 * 60 * 1000, t0 = Date.parse('2026-10-20T00:00:00Z');
+  await control('points of one day are close, and days without a point leave a gap', () => {
+    const {xs} = dashboard.timeAxis([t0, t0 + 3600e3, t0 + 6 * day], 0, 700, 80);
+    assert.ok(xs[1] - xs[0] < 10);
+    assert.ok(Math.abs((xs[2] - xs[1]) - 6 * 100) < 10);
+    assert.ok(xs[0] >= 0 && xs[2] <= 700);
+  });
+
+  await control('a date is ticked once, at a midnight, with ticks at least the gap apart', () => {
+    for (const span of [0, 1, 5, 40, 400]) {
+      const times = [t0, t0 + 17 * 3600e3, t0 + span * day];
+      const {ticks} = dashboard.timeAxis(times, 0, 600, 80);
+      const labels = ticks.map(tick => new Date(tick.time).toISOString().slice(0, 10));
+      assert.strictEqual(new Set(labels).size, labels.length);
+      assert.ok(ticks.every(tick => tick.time % day === 0));
+      assert.ok(ticks.every((tick, i) => i === 0 || tick.x - ticks[i - 1].x >= 80 - 1e-9));
+    }
+  });
+
+  await control('points all on one day are spread over the axis in time order', () => {
+    const {xs} = dashboard.timeAxis([t0 + 12 * 3600e3, t0 + 6 * 3600e3, t0 + 18 * 3600e3], 0, 600, 80);
+    assert.deepStrictEqual(xs.map(Math.round), [300, 150, 450]);
+  });
+
+  await control('the smallest gap is that of neighbours in x, whatever the order of the points', () => {
+    assert.strictEqual(dashboard.smallestGap([30, 0, 10, 100]), 10);
+    assert.strictEqual(dashboard.smallestGap([5, 5]), 0);
+    assert.strictEqual(dashboard.smallestGap([5]), Infinity);
+  });
+
+  await control('a commit with a date which is not a date is refused', () => {
+    const commit = date => ({sha: c.F1, parents: [], commit: {committer: {date}, message: 'm'}});
+    assert.strictEqual(dashboard.summarise(commit('2026-10-17T12:00:00Z')).date, '2026-10-17T12:00:00Z');
+    assert.throws(() => dashboard.summarise(commit('yesterday')), /not a date/);
+  });
+
+  await control('a single point is placed on the axis', () => {
+    const {xs, ticks} = dashboard.timeAxis([t0 + 5 * 3600e3], 0, 600, 80);
+    assert.deepStrictEqual([xs.length, ticks.length], [1, 1]);
+    assert.ok(Number.isFinite(xs[0]));
+  });
+
+  await control('hover picks the point nearest in x, the earliest of equals', () => {
+    const xs = [10, 12, 100];
+    assert.deepStrictEqual([0, 10, 11.5, 50, 60, 1000].map(offset => dashboard.nearestPoint(xs, offset)), [0, 0, 1, 1, 2, 2]);
+    assert.strictEqual(dashboard.nearestPoint([5, 5], 5), 0);
   });
 
   await control('a missing metrics branch is reported as absent', async () => {
@@ -377,7 +613,7 @@ MUTATIONS = [
                                           'new Set(Object.keys(countsAfter))'),
     ('unmoved objects kept',              '.filter(mover => mover.delta !== 0)', ''),
     ('the commit not checked',            "if (record.commit !== commit) problems.push", "if (false) problems.push"),
-    ('a record not an object read',       "Array.isArray(record)) return ['it is not a JSON object'];", "false) return [];"),
+    ('a record not an object read',       "if (!isObject(record)) return ['it is not a JSON object'];", "if (false) return [];"),
     ('a dirty tree accepted',             "if (record.clean !== true) problems.push", "if (false) problems.push"),
     ('prototype keys counted',            'Object.hasOwn(countsBefore, object)', 'object in countsBefore'),
     ('any toolchain accepted',            "if (record.toolchain === null || typeof record.toolchain !== 'object')", 'if (false)'),
@@ -387,6 +623,36 @@ MUTATIONS = [
     ('objects not checked',               '!Object.values(objects).every(isCount)', 'false'),
     ('a failed fetch fails the load',     'catch (error) { outcomes[index] = {error}; }', 'catch (error) { throw error; }'),
     ('an absent branch read as empty',    "if (tree === null) return {state: 'absent'};", "if (tree === null) return {state: 'empty'};"),
+    ('a missing count plotted as zero',  "hasOwn(record, 'prune_analysis') ? record.prune_analysis.instructions : null", "hasOwn(record, 'prune_analysis') ? record.prune_analysis.instructions : 0"),
+    ('the analysis not checked',          "if (Object.hasOwn(record, 'prune_analysis')) {", 'if (false) {'),
+    ('the count not checked',             '|| !isCount(analysis.instructions)', ''),
+    ('the invocation not checked',        "|| typeof analysis.invocation !== 'string'", ''),
+    ('a missing overhead plotted as zero',  "if (!Object.hasOwn(record, 'runner_overhead') || record.runner_overhead.tests === null) return null;", "if (!Object.hasOwn(record, 'runner_overhead')) return null;"),
+    ('a missing number of tests divided by', "|| record.runner_overhead.tests === null) return null;", ") return null;"),
+    ('the overhead not checked',            "if (Object.hasOwn(record, 'runner_overhead')) {", 'if (false) {'),
+    ('the overhead\'s invocation not checked', "|| typeof overhead.invocation !== 'string') {", ') {'),
+    ('the number of tests not checked',     "if (overhead.tests !== null && !(isCount(overhead.tests) && overhead.tests > 0)) {", 'if (false) {'),
+    ('zero tests accepted',                 "isCount(overhead.tests) && overhead.tests > 0", 'isCount(overhead.tests)'),
+    ('the directory walks unchecked',       "const runnerSyscallCategories = ['directory_walks', ", "const runnerSyscallCategories = ["),
+    ('the metadata reads unchecked',        "'metadata_reads', 'opens'", "'opens'"),
+    ('the opens unchecked',                 "'opens', 'clones'", "'clones'"),
+    ('the clones unchecked',                "'clones', 'execs']", "'execs']"),
+    ('the execs unchecked',                 "'clones', 'execs']", "'clones']"),
+    ('the counts not checked at all',       "|| !isCount(syscalls[category])", ''),
+    ('totals plotted, not per test',        "return syscalls[category] / tests;", "return syscalls[category];"),
+    ('the wrong category read',             "return syscalls[category] / tests;", "return syscalls.opens / tests;"),
+    ('a missing uncalled count plotted as zero',    "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : null", "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : 0"),
+    ('the uncalled count not checked',      '|| record.uncalled_functions < 0', '|| false'),
+    ('the uncalled toolchain not checked',  '|| !isNames(toolchain.tools)', ''),
+    ('the toolchain change dropped',       'toolchainChange: found.toolchainChange}', 'toolchainChange: null}'),
+    ('the run of the symbol table used',   'run: found.run,', 'run: point.run,'),
+    ('x by index, not time',             'return {xs: times.map(x), ticks};', 'return {xs: times.map((time, i) => left + (i + 0.5) * (right - left) / times.length), ticks};'),
+    ('the last nearest point taken',     'if (Math.abs(x - offset) < Math.abs(xs[nearest] - offset))', 'if (Math.abs(x - offset) <= Math.abs(xs[nearest] - offset))'),
+    ('the farthest point taken',         'if (Math.abs(x - offset) < Math.abs(xs[nearest] - offset))', 'if (Math.abs(x - offset) > Math.abs(xs[nearest] - offset))'),
+    ('ticks at every day',               'candidate * (right - left) / days >= minGap) ??', 'true) ??'),
+    ('ticks at a fixed step in points',  'for (let day = first; day <= last; day += step)', 'for (let day = first; day <= last; day += 1)'),
+    ('the smallest gap taken unsorted',  'const sorted = xs.slice().sort((a, b) => a - b);', 'const sorted = xs.slice();'),
+    ('an unreadable date accepted',      'if (!Number.isFinite(Date.parse(commit.commit.committer.date))) {', 'if (false) {'),
     ('an empty branch loaded',            "if (listing.size === 0) return {state: 'empty'};", ''),
 ]
 with open(script, encoding='utf-8') as f:

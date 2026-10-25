@@ -18,6 +18,13 @@
 #     leaves the branch as it was, and says which run made the record held;
 #     one which differs elsewhere is refused, with the difference shown, and
 #     the branch left as it was;
+#   - a record which keeps every field of the one held, unchanged, and adds
+#     a field, replaces it, as a commit on the tip, naming the field added;
+#     the same record again, or one lacking the added field, leaves the
+#     branch as it was; one which adds a field and changes another, or
+#     which changes the added field, or which lacks a field with a null
+#     value and so does not keep every field, is refused and the held
+#     record kept;
 #   - in a clone without blobs, a held record whose blob cannot be fetched is
 #     a failure, not a record absent;
 #   - a push refused because another push came first is retried on the new
@@ -72,11 +79,11 @@ exits() { # exits <name> <status|nonzero>
   elif [[ $rc -ne $2 ]]; then fail "$1 (expected exit $2, got $rc: $(cat "$err"))"; fi
 }
 
-# record <file> <commit> <symbols> <run id> [<clean>]: a record, laid out
+# record <file> <commit> <symbols> <run id> [<clean> [<more fields>]]: a record, laid out
 # unlike jq's output, so that a stored copy which jq has rewritten differs
 record() {
   printf '{"run": {"id": %s, "url": "https://example.invalid/runs/%s"},\n' "$4" "$4" > "$1"
-  printf ' "commit": "%s", "clean": %s,\n "executable": {"symbols": %s}}\n' "$2" "${5:-true}" "$3" >> "$1"
+  printf ' "commit": "%s", "clean": %s,\n "executable": {"symbols": %s}%s}\n' "$2" "${5:-true}" "$3" "${6-}" >> "$1"
 }
 
 # fixture: a bare remote; the clone the script runs in, with two commits, $A
@@ -99,6 +106,10 @@ fixture() {
   record "$work/A-rerun.json"  "$A" 100 2
   record "$work/A-other.json"  "$A" 101 3
   record "$work/B.json"        "$B" 200 4
+  record "$work/A-added.json"  "$A" 100 5 true ', "prune_analysis": {"instructions": 7}'
+  record "$work/A-added-changed.json" "$A" 101 6 true ', "prune_analysis": {"instructions": 7}'
+  record "$work/A-added-other.json"   "$A" 100 7 true ', "prune_analysis": {"instructions": 8}'
+  record "$work/A-null.json"   "$A" 100 8 true ', "note": null'
   clone_state=$(clone_state)
 }
 
@@ -200,6 +211,52 @@ same_commit_controls() {
   unchanged_clone "a record for a commit held"
 }
 
+# A backfill measures commits recorded before the measurement existed, so
+# the record it stores adds a field to the one held.
+adding_controls() {
+  local first added
+  fixture
+  store A; first=$(tip)
+  store A-added
+  exits "a record which adds a field to the one held succeeds" 0
+  says "it names the field added" 'adds to: prune_analysis$' "$out"
+  added=$(tip)
+  same "it is a commit on the tip" "$first" "$(parents "$added")"
+  same "it is beside nothing: the one path" "symbol-table/linux/$A.json " "$(files)"
+  same "the held record is the one with the field, byte for byte" "$(cat "$work/A-added.json")" "$(held "$A")"
+  unchanged_clone "a record added to"
+
+  store A-added
+  exits "the record again" 0
+  says "it is the same but for its run" 'the same but for its run: https://example.invalid/runs/5$' "$out"
+  same "it leaves the branch as it was" "$added" "$(tip)"
+
+  store A
+  exits "a record lacking the field added" 0
+  says "it says the held record has more" 'with every field of .* and more: https://example.invalid/runs/5$' "$out"
+  same "the field is kept" "$added" "$(tip)"
+
+  store A-added-changed
+  exits "a record which adds a field and changes another" nonzero
+  says "the difference is shown" '"symbols": 101' "$err"
+  same "the held record is kept" "$added" "$(tip)"
+
+  store A-added-other
+  exits "a record which changes the field added" nonzero
+  says "the difference is shown" '"instructions": 8' "$err"
+  same "the held record is kept after a changed added field" "$added" "$(tip)"
+  unchanged_clone "a refused addition"
+
+  # A null field absent from the offered record is not kept by it, though
+  # null is what looking it up gives.
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store A-null; first=$(tip)
+  store A-added
+  exits "a record lacking a field of the held record which is null" nonzero
+  same "the held record is kept despite its null field" "$first" "$(tip)"
+}
+
 # A clone without blobs, as a backfill might make, must fetch a held
 # record's blob to read it. GIT_NO_LAZY_FETCH stands in for that fetch
 # failing.
@@ -289,7 +346,7 @@ refusal_controls() {
 run_controls() { # run_controls <script>: sets fails, and total, the controls run
   subject=$1 fails=0 total=0
   local control
-  for control in create_controls beside_controls same_commit_controls blobless_controls rival_controls \
+  for control in create_controls beside_controls same_commit_controls adding_controls blobless_controls rival_controls \
                  refusal_controls; do
     work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
     "$control"
@@ -318,9 +375,15 @@ mutant 'a record held read from its blob' \
        'git cat-file -e "$tip:$path" 2> /dev/null'
 mutant 'stored under one name'         'path="$directory/$commit.json"' 'path="$directory/record.json"'
 mutant 'a failed listing taken for no branch' '    2) echo "$remote has no branch' '    *) echo "$remote has no branch'
+mutant 'an addition refused'           'elif keeps_every_field "$offered" "$held"; then' 'elif false; then'
+mutant 'a record with more refused'    'elif keeps_every_field "$held" "$offered"; then' 'elif false; then'
+mutant 'a record with more replaced'   'elif keeps_every_field "$held" "$offered"; then' 'elif true; then'
+mutant 'a changed field kept in an addition' 'and .value == $whole[$key])' ')'
+mutant 'a null field taken for kept'   '($whole | has($key)) and ' ''
+mutant 'an addition not named'         '$offered | keys - ($held | keys) | join(", ")' '""'
 mutant 'the run compared too'          "without_run() { jq -S 'del(.run)'" "without_run() { jq -S '.'"
 mutant 'a differing record accepted'   'if [ "$held" = "$offered" ]; then' 'if true; then'
-mutant 'a differing record overwritten' $'>&2\n    exit 1\n  fi' $'>&2\n  fi'
+mutant 'a differing record overwritten' $'>&2\n      exit 1\n    fi' $'>&2\n    fi'
 mutant 'the tip forgotten'             '${tip:+-p "$tip"}' ''
 mutant 'the tip'"'"'s tree forgotten'  'if [ -n "$tip" ]; then GIT_INDEX_FILE=$index git read-tree' \
                                        'if false; then GIT_INDEX_FILE=$index git read-tree'

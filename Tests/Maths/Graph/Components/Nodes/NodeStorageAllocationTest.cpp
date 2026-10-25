@@ -8,6 +8,8 @@
 #include "NodeStorageAllocationTest.hpp"
 #include "NodeStorageAllocationTestingUtilities.hpp"
 
+#include "Core/DataStructures/ElementTestingUtilities.hpp"
+
 #include "sequoia/Maths/Graph/GraphDetails.hpp"
 
 namespace sequoia::testing
@@ -27,6 +29,7 @@ namespace sequoia::testing
   void node_storage_allocation_test::test_allocation()
   {
     test_allocation_impl<int, PropagateCopy, PropagateMove, PropagateSwap>();
+    test_allocation_impl<constructible_from_anything, PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<class Weight, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
@@ -43,11 +46,11 @@ namespace sequoia::testing
 
     auto[s,t]{check_semantics("",
                     [](){ return storage(allocator{}); },
-                    [](){ return storage{{1, 1, 0}, allocator{}}; },
+                    [](){ return storage({1, 1, 2}, allocator{}); },
                     mutator,
                     allocation_info{node_storage_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_anp,1_awp}}})};
 
-    check(equivalence, "", s, std::initializer_list<int>{});
-    check(equivalence, "", t, std::initializer_list<int>{1, 1, 0});
+    check(equivalence, "", s, std::initializer_list<Weight>{});
+    check(equivalence, "", t, std::initializer_list<Weight>{1, 1, 2});
   }
 }
