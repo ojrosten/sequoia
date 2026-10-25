@@ -243,7 +243,7 @@ jobs:
         run: |
           function='sequoia::testing::test_runner::prune*'
           # The job's shell sets pipefail, so a failing run reaches the || through tee.
-          valgrind --tool=callgrind --toggle-collect="$function" --callgrind-out-file="$RUNNER_TEMP/callgrind.out" \
+          valgrind --tool=callgrind --dump-instr=no --toggle-collect="$function" --callgrind-out-file="$RUNNER_TEMP/callgrind.out" \
             ./TestAll prune --serial 2>&1 | tee "$RUNNER_TEMP/measured.txt" \
             || echo "The measured run failed, which this step ignores; its count stands."
           # The count stands only if the analysis ran and selected from the stamp. An
@@ -329,7 +329,7 @@ jobs:
           records="$GITHUB_WORKSPACE/tree/output/ExecutionRecords/TestFrameworkDiagnostics/gcc-env"
           rm -rf "$records"
           status=0
-          valgrind --tool=callgrind --collect-systime=yes \
+          valgrind --tool=callgrind --dump-instr=no --collect-systime=yes \
             --toggle-collect="$execute" --toggle-collect="$execute(*" --toggle-collect="$timed" \
             --callgrind-out-file="$out" ./TestFrameworkDiagnostics --serial > "$RUNNER_TEMP/setup_suite.txt" 2>&1 || status=$?
           tail -n 30 "$RUNNER_TEMP/setup_suite.txt"
@@ -365,6 +365,22 @@ jobs:
           name: symbol-table-linux-gcc-debug-${{ matrix.commit }}
           path: ${{ env.SYMBOL_TABLE_RECORD }}
           if-no-files-found: error
+
+      - name: List callgrind's output files
+        if: always()
+        run: ls -l "$RUNNER_TEMP"/callgrind.out* "$RUNNER_TEMP"/setup.callgrind.out* "$RUNNER_TEMP"/measured.txt "$RUNNER_TEMP"/setup_suite.txt || true
+
+      - name: Upload callgrind's output files
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: callgrind-diagnosis-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/callgrind.out*
+            ${{ runner.temp }}/setup.callgrind.out*
+            ${{ runner.temp }}/measured.txt
+            ${{ runner.temp }}/setup_suite.txt
+          if-no-files-found: warn
 
       - name: Store the record on the data branch
         if: github.ref == 'refs/heads/staging'
