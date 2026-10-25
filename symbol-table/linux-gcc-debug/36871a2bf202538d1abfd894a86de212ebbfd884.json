@@ -268,10 +268,22 @@
     "instructions": 1351882800,
     "invocation": "TestAll prune --serial, after a full run, under cachegrind"
   },
+  "prune_dependency_analysis": {
+    "function": "sequoia::testing::test_runner::prune*",
+    "instructions": 1052234624,
+    "stamping_exit_status": 82
+  },
   "run": {
     "attempt": 1,
-    "id": 40105301475,
-    "url": "https://github.com/ojrosten/sequoia/actions/runs/40105301475/attempts/1"
+    "id": 40227274567,
+    "url": "https://github.com/ojrosten/sequoia/actions/runs/40227274567/attempts/1"
+  },
+  "runner_setup": {
+    "boundary": "test_to_run::execute outside execution_timer::time_execution, TestFrameworkDiagnostics --serial --exclude-performance exclude OutputFreeTest.cpp",
+    "exit_status": 82,
+    "instructions": 44336608,
+    "syscalls": 664299,
+    "tests": 88
   },
   "target": "TestAll",
   "toolchain": {
