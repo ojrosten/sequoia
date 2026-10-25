@@ -138,10 +138,12 @@
     </figure>
     <figure class="card" id="analysis-figure">
       <figcaption><h2>Instructions of prune's analysis</h2>
-        <p>The instructions <code>valgrind --tool=cachegrind</code> counts in <code>TestAll prune --serial</code>,
-          run after a full run of the suite. The count includes the runner's startup, its reading of the build's
-          records and its walk of the sources, and not the compiler. It is exact for a fixed toolchain and commit.
-          Points whose record has no count are left out.</p></figcaption>
+        <p>The instructions <code>valgrind --tool=callgrind</code> counts inside <code>test_runner::prune</code>
+          and the functions it calls, in <code>TestAll prune --serial</code> run after a full run of the suite:
+          prune's reading of the build's records and its walk of the sources for changes, and nothing of the
+          runner's startup or of any test. It is exact for a fixed toolchain and commit. Points whose record has no
+          count are left out, as are points whose full run failed tests, since prune then selects different work.
+          <span id="analysis-excluded"></span></p></figcaption>
       <div class="plot" id="analysis-plot"></div>
     </figure>
     <figure class="card" id="runner-figure">
@@ -150,7 +152,8 @@
           number of tests the run reported, one plot for each kind and each on a scale of its own. A clone is a
           thread or a process; an exec is a process. The counts are those of the whole run, tests' own file system
           use included, and the run is concurrent, so they vary a little between runs of one commit. Points whose
-          record has no count are left out.</p></figcaption>
+          record has no count are left out, as are points whose run failed tests.
+          <span id="runner-excluded"></span></p></figcaption>
       <h3>Directory walks</h3><div class="plot" id="runner-plot-directory_walks"></div>
       <h3>Metadata reads</h3><div class="plot" id="runner-plot-metadata_reads"></div>
       <h3>Opens</h3><div class="plot" id="runner-plot-opens"></div>
@@ -508,6 +511,10 @@
       drawChart(document.getElementById('symbols-plot'), measures[0], 260, true),
       drawChart(document.getElementById('bytes-plot'),   measures[1], 180, false)
     ];
+    const excluded = symbolDashboard.excludedForFailures(state.points);
+    const excludedText = count => count === 0 ? '' : `${count} point${count === 1 ? '' : 's'} left out for failing tests.`;
+    document.getElementById('analysis-excluded').textContent = excludedText(excluded.prune);
+    document.getElementById('runner-excluded').textContent  = excludedText(excluded.runner);
     const hasAnalysis = state.points.some(point => measures[2].value(point.record) !== null);
     document.getElementById('analysis-figure').hidden = !hasAnalysis;
     if (hasAnalysis) state.charts.push(drawChart(document.getElementById('analysis-plot'), measures[2], 180, false));
