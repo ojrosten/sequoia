@@ -9,7 +9,15 @@
 # totals are the runner's work for each test, outside the test. The totals are
 # the events Ir (instructions) and sysCount (system calls): the file's
 # "events:" line names the columns of its "summary:" and "totals:" lines, which
-# must both be present and equal.
+# must both be present, and agree on Ir. The system calls are those of the
+# "totals:" line.
+#
+# This reading of callgrind's two lines is inferred from runs 40186679215 and
+# 40186689490 of symbol-table.yml, not taken from callgrind's documentation.
+# With --collect-systime=yes the lines agreed on Ir (311650326) and differed on
+# sysCount (summary 1719515, totals 833201) and on sysTime. The totals are
+# taken to count the collected regions and the summary every system call of the
+# run, so only Ir is compared.
 #
 # The tests are counted from the runner's own execution records: the
 # executable's directory under output/ExecutionRecords holds a file for each
@@ -50,9 +58,10 @@ instructions='' syscalls=''
 read -r instructions syscalls < <(awk '
   $1 == "events:" { for (i = 2; i <= NF; ++i) col[$i] = i - 1 }
   $1 == "summary:" || $1 == "totals:" { line[$1] = $0; sub(/^[a-z]+:[ \t]*/, "", line[$1]) }
-  END { if (!("totals:" in line) || line["summary:"] != line["totals:"] \
-            || !("Ir" in col) || !("sysCount" in col)) exit
+  END { if (!("totals:" in line) || !("summary:" in line) || !("Ir" in col) || !("sysCount" in col)) exit
+        split(line["summary:"], s, " ")
         split(line["totals:"], f, " ")
+        if (s[col["Ir"]] != f[col["Ir"]]) exit
         print f[col["Ir"]] + 0, f[col["sysCount"]] + 0 }' "$out")
 
 tests=$(find "$records" -type f -name '*.txt' -size +0 2> /dev/null | wc -l | tr -d ' ')
@@ -60,7 +69,7 @@ tests=$(find "$records" -type f -name '*.txt' -size +0 2> /dev/null | wc -l | tr
 for count in "$instructions" "$syscalls" "$tests"; do
   case "$count" in
     ''|*[!0-9]*|0)
-      refuse "callgrind counted instructions '${instructions}' and system calls '${syscalls}' (summary and totals must agree), and the records give '${tests}' tests, and a zero or missing count is refused";;
+      refuse "callgrind counted instructions '${instructions}' and system calls '${syscalls}' (summary and totals must agree on instructions), and the records give '${tests}' tests, and a zero or missing count is refused";;
   esac
 done
 
