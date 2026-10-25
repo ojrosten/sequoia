@@ -18,13 +18,16 @@
 #     leaves the branch as it was, and says which run made the record held;
 #     one which differs elsewhere is refused, with the difference shown, and
 #     the branch left as it was;
-#   - a record which keeps every field of the one held, unchanged, and adds
-#     a field, replaces it, as a commit on the tip, naming the field added;
-#     the same record again, or one lacking the added field, leaves the
-#     branch as it was; one which adds a field and changes another, or
-#     which changes the added field, or which lacks a field with a null
-#     value and so does not keep every field, is refused and the held
-#     record kept;
+#   - a record for a commit held is merged with the held one, as a union: a
+#     field only the offered record has is added, as a commit on the tip
+#     naming the field added, with the offered run and the keys sorted; a
+#     field only the held record has is kept, whether the offer adds another
+#     or nothing, a field with a null value included; the same record again
+#     adds nothing and leaves the branch as it was; a field both have and
+#     which differs, whether beside an addition or not, whether the offered
+#     one is new or was itself added, is refused and the held record kept;
+#   - the union is taken at every depth: a sub-field of a held object is
+#     added, and one the offer lacks is kept;
 #   - a measured count, with the tolerance of its own (prune's instructions 1
 #     part in 10000, the runner setup's instructions and system calls 1 part in
 #     200), which differs from the held one by less than that is taken to be
@@ -120,6 +123,15 @@ fixture() {
   record "$work/A-added-changed.json" "$A" 101 6 true ', "prune_analysis": {"instructions": 7}'
   record "$work/A-added-other.json"   "$A" 100 7 true ', "prune_analysis": {"instructions": 8}'
   record "$work/A-null.json"   "$A" 100 8 true ', "note": null'
+  # a held record with an old measurement and a nested object, offers which
+  # drop the old measurement, add a nested sub-field, or lack one
+  record "$work/U.json"        "$A" 100 31 true ', "prune_analysis": {"instructions": 7}, "runner_setup": {"instructions": 1000}'
+  record "$work/U-new.json"    "$A" 100 32 true ', "runner_setup": {"instructions": 1000}, "prune_dependency_analysis": {"instructions": 9}'
+  record "$work/U-sub.json"    "$A" 100 33 true ', "runner_setup": {"instructions": 1000, "syscalls": 5}'
+  record "$work/U-lacking.json" "$A" 100 34 true ', "runner_setup": {"syscalls": 5}, "extra": 1'
+  record "$work/U-nested-differs.json" "$A" 100 35 true ', "runner_setup": {"instructions": 2000, "syscalls": 5}'
+  record "$work/U-only-old.json" "$A" 100 36 true ', "runner_setup": {"instructions": 1000}'
+
   # runner_setup: 1000000000 instructions and 834813 system calls are held,
   # each with a tolerance of 1 in 200, so 5000000 and 4174.065 are too far;
   # prune_dependency_analysis has 1 in 10000, so 100000 is too far
@@ -253,7 +265,7 @@ adding_controls() {
   added=$(tip)
   same "it is a commit on the tip" "$first" "$(parents "$added")"
   same "it is beside nothing: the one path" "symbol-table/linux/$A.json " "$(files)"
-  same "the held record is the one with the field, byte for byte" "$(cat "$work/A-added.json")" "$(held "$A")"
+  same "the held record is the union, keys sorted" "$(jq -S . "$work/A-added.json")" "$(held "$A")"
   unchanged_clone "a record added to"
 
   store A-added
@@ -277,14 +289,63 @@ adding_controls() {
   same "the held record is kept after a changed added field" "$added" "$(tip)"
   unchanged_clone "a refused addition"
 
-  # A null field absent from the offered record is not kept by it, though
-  # null is what looking it up gives.
+  # A null field absent from the offered record is kept, though null is what
+  # looking it up gives.
   work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
   fixture
   store A-null; first=$(tip)
   store A-added
-  exits "a record lacking a field of the held record which is null" nonzero
-  same "the held record is kept despite its null field" "$first" "$(tip)"
+  exits "a record lacking a field of the held record which is null" 0
+  same "the null field is kept in the union" "true" "$(held "$A" | jq 'has("note") and .note == null')"
+  same "the field added is in the union" "7" "$(held "$A" | jq '.prune_analysis.instructions')"
+  same "it is a commit on the tip" "$first" "$(parents "$(tip)")"
+}
+
+# The union of the held record and the offered, at every depth.
+union_controls() {
+  local first added
+  fixture
+  store U; first=$(tip)
+  store U-new
+  exits "an offer lacking a held field and adding another succeeds" 0
+  says "it names the field added" 'adds to: prune_dependency_analysis$' "$out"
+  added=$(tip)
+  same "it is a commit on the tip" "$first" "$(parents "$added")"
+  same "the held field the offer lacks is kept" "7" "$(held "$A" | jq '.prune_analysis.instructions')"
+  same "the field added is there" "9" "$(held "$A" | jq '.prune_dependency_analysis.instructions')"
+  same "the run is the offer's" "32" "$(held "$A" | jq '.run.id')"
+
+  store U
+  exits "the held record again" 0
+  says "it has every field and more" 'with every field of .* and more' "$out"
+  same "the branch is as it was after the held record again" "$added" "$(tip)"
+
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store U; first=$(tip)
+  store U-sub
+  exits "an offer adding a sub-field to a held object succeeds" 0
+  says "it names the path added" 'adds to: runner_setup.syscalls$' "$out"
+  same "the sub-field is added" "5" "$(held "$A" | jq '.runner_setup.syscalls')"
+  same "the held sub-field stands" "1000" "$(held "$A" | jq '.runner_setup.instructions')"
+  added=$(tip)
+
+  store U-lacking
+  exits "an offer lacking a held sub-field and adding a field succeeds" 0
+  same "the held sub-field is kept" "1000" "$(held "$A" | jq '.runner_setup.instructions')"
+  same "the held old measurement is kept" "7" "$(held "$A" | jq '.prune_analysis.instructions')"
+  same "the field added is there" "1" "$(held "$A" | jq '.extra')"
+  added=$(tip)
+
+  store U-nested-differs
+  exits "a sub-field which differs" nonzero
+  says "its path is named" 'in: runner_setup.instructions' "$err"
+  same "the held record is kept after a sub-field differs" "$added" "$(tip)"
+
+  store U-only-old
+  exits "an offer which adds nothing and lacks fields" 0
+  same "no commit is made" "$added" "$(tip)"
+  unchanged_clone "a union"
 }
 
 # A measured count of a rerun may differ slightly from the held one, which
@@ -455,7 +516,7 @@ refusal_controls() {
 run_controls() { # run_controls <script>: sets fails, and total, the controls run
   subject=$1 fails=0 total=0
   local control
-  for control in create_controls beside_controls same_commit_controls adding_controls tolerance_controls blobless_controls rival_controls \
+  for control in create_controls beside_controls same_commit_controls adding_controls union_controls tolerance_controls blobless_controls rival_controls \
                  refusal_controls; do
     work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
     "$control"
@@ -484,12 +545,16 @@ mutant 'a record held read from its blob' \
        'git cat-file -e "$tip:$path" 2> /dev/null'
 mutant 'stored under one name'         'path="$directory/$commit.json"' 'path="$directory/record.json"'
 mutant 'a failed listing taken for no branch' '    2) echo "$remote has no branch' '    *) echo "$remote has no branch'
-mutant 'an addition refused'           'elif keeps_every_field "$offered" "$held"; then' 'elif false; then'
-mutant 'a record with more refused'    'elif keeps_every_field "$held" "$offered"; then' 'elif false; then'
-mutant 'a record with more replaced'   'elif keeps_every_field "$held" "$offered"; then' 'elif true; then'
-mutant 'a changed field kept in an addition' 'and .value == $whole[$key])' ')'
-mutant 'a null field taken for kept'   '($whole | has($key)) and ' ''
-mutant 'an addition not named'         '$offered | keys - ($held | keys) | join(", ")' '""'
+mutant 'held fields dropped'           '.value[$key] = $h[$key] | .kept += [$path + [$key]]' '.kept += [$path + [$key]]'
+mutant 'offered fields not added'      '.value[$key] = $o[$key] | .added += [$path + [$key]] end)' '.added += [$path + [$key]] end)'
+mutant 'a held field not noted as kept' ' | .kept += [$path + [$key]]' ''
+mutant 'sub-fields not merged'         'merge($h[$key]; $o[$key]; $path + [$key]) as $r' '{value: $o[$key]} + none as $r'
+mutant 'the offered value overwrites'  '{value: $h} + none + {conflicts: [$path]}' '{value: $o} + none'
+mutant 'a tolerated count overwritten' '{value: $h} + none + {tolerated:' '{value: $o} + none + {tolerated:'
+mutant 'a conflict not refused'        'if [ "$(jq '"'"'.conflicts | length'"'"' <<< "$merged")" -ne 0 ]; then' 'if false; then'
+mutant 'a no-op committed'             'if [ "$(jq '"'"'.added | length'"'"' <<< "$merged")" -eq 0 ]; then' 'if false; then'
+mutant 'a record with more not said'   'echo "$branch already holds $path, with every field of $record and more' 'echo "$branch already holds $path, the same but for its run'
+mutant 'an addition not named'         '[.added[] | join(".")] | join(", ")' '""'
 mutant 'the run compared too'          "without_run() { jq -S 'del(.run)'" "without_run() { jq -S '.'"
 mutant 'every count measured'          '  {"path": ["runner_setup", "syscalls"],                  "denominator": 200}' \
                                        '  {"path": ["runner_setup", "syscalls"],                  "denominator": 200},
@@ -520,10 +585,8 @@ mutant 'the tolerance of the setup 1 in 400' '["runner_setup", "syscalls"],     
 ]'
 mutant 'the boundary accepted'         '* $denominator < $held);' '* $denominator <= $held);'
 mutant 'only a higher count tolerated' '((($offered - $held) | fabs)' '((($offered - $held))'
-mutant 'the new count stored'          'then setpath($path; $held | getpath($path)) else . end)' 'then . else . end)'
 mutant 'the record stored as given'    'git hash-object -w -- "$stored")' 'git hash-object -w -- "$record")'
-mutant 'a tolerated count not said'    '      echo "$close"' '      :'
-mutant 'a differing record accepted'   'if [ "$held" = "$offered" ]; then' 'if true; then'
+mutant 'a tolerated count not said'    'jq -r '"'"'.tolerated[] |' 'jq -r '"'"'.tolerated[] | empty |'
 mutant 'a differing record overwritten' $'>&2\n      exit 1\n    fi' $'>&2\n    fi'
 mutant 'the tip forgotten'             '${tip:+-p "$tip"}' ''
 mutant 'the tip'"'"'s tree forgotten'  'if [ -n "$tip" ]; then GIT_INDEX_FILE=$index git read-tree' \
