@@ -29,6 +29,15 @@
 #     deterministic, which a person should judge.
 # Bar run, a field is never changed, nor removed.
 #
+# The exception is a measured count. An instruction count which callgrind made
+# of one commit twice has differed by about 2 parts in a million, so a count
+# which differs from the held one by less than 1 part in 10000 is taken to be
+# the held one. The script prints the difference, and the record is then
+# compared, and stored, with the held count in place of the new: the first
+# measurement stands. A larger difference is refused as any other. The counts
+# are named once, in measured_fields below. A system call count is not among
+# them: it moved by 0.2% between two runs of one commit.
+#
 # A branch which does not exist is created, with no history. The push is
 # never forced. When it fails - as it does when another run pushed first -
 # the script fetches the branch again and builds its commit afresh on the
@@ -65,6 +74,38 @@ index="$work/index" held_file="$work/held"
 # without_run <file>: the record in <file>, its keys sorted, without its run
 without_run() { jq -S 'del(.run)' "$1" || die "$1 cannot be read as JSON"; }
 
+# The paths into a record of the counts which a rerun may move slightly, and
+# the denominator of the relative difference below which a count is taken to
+# be the held one
+measured_fields='[["prune_dependency_analysis", "instructions"], ["runner_setup", "instructions"]]'
+tolerance_denominator=10000
+
+# within($held; $offered), in jq: both are numbers, they differ, and they
+# differ by less than $held over the denominator
+within_tolerance='
+  def within($held; $offered):
+    ($held | type) == "number" and ($offered | type) == "number"
+    and $held != $offered
+    and ((($offered - $held) | fabs) * $denominator < $held);'
+
+# tolerated <held> <record>: a line for each measured field of <record> which
+# differs from <held>'s by less than the tolerance
+tolerated() {
+  jq -r --argjson held "$1" --argjson paths "$measured_fields" --argjson denominator "$tolerance_denominator" \
+     "$within_tolerance"'
+     . as $offered | $paths[] | . as $path | ($held | getpath($path)) as $h | ($offered | getpath($path)) as $o
+     | select(within($h; $o)) | "\($path | join(".")): held \($h), offered \($o)"' "$2"
+}
+
+# settled <held> <record>: <record>, its keys sorted, with the held count in
+# each measured field which differs from it by less than the tolerance
+settled() {
+  jq -S --argjson held "$1" --argjson paths "$measured_fields" --argjson denominator "$tolerance_denominator" \
+     "$within_tolerance"'
+     . as $offered | reduce $paths[] as $path (.; if within($held | getpath($path); $offered | getpath($path))
+                                                  then setpath($path; $held | getpath($path)) else . end)' "$2"
+}
+
 # keeps_every_field <whole> <part>: <whole> has every field of <part>, with
 # the same value, and so <part> is no larger; both are records as JSON
 keeps_every_field() {
@@ -80,7 +121,7 @@ added_fields() { jq -rn --argjson held "$1" --argjson offered "$2" '$offered | k
 # failed; any other failure exits. The function is called as a condition, so
 # set -e does not reach into it, and each command's failure is handled here.
 store_once() {
-  local status=0 tip='' held offered blob tree new_tip
+  local status=0 tip='' held offered blob tree new_tip close stored=$record
   git ls-remote --exit-code --heads "$remote" "refs/heads/$branch" > /dev/null || status=$?
   case $status in
     0) git fetch --quiet --no-tags "$remote" "refs/heads/$branch" || die "git fetch $remote $branch failed"
@@ -95,7 +136,14 @@ store_once() {
   if [ -n "$tip" ] && git rev-parse --verify --quiet "$tip:$path" > /dev/null; then
     git show "$tip:$path" > "$held_file" || die "git show $tip:$path failed"
     held=$(without_run "$held_file") || exit 1
-    offered=$(without_run "$record") || exit 1
+    close=$(tolerated "$held" "$record") || die "$record cannot be read as JSON"
+    if [ -n "$close" ]; then
+      echo "$record has measured counts within 1 in $tolerance_denominator of those of $path, which stand:"
+      echo "$close"
+      stored="$work/settled.json"
+      settled "$held" "$record" > "$stored"
+    fi
+    offered=$(without_run "$stored") || exit 1
     if [ "$held" = "$offered" ]; then
       echo "$branch already holds $path, the same but for its run: $(jq -r '.run.url' "$held_file")"
       return 0
@@ -113,7 +161,7 @@ store_once() {
 
   rm -f "$index"
   if [ -n "$tip" ]; then GIT_INDEX_FILE=$index git read-tree "$tip" || die "git read-tree $tip failed"; fi
-  blob=$(git hash-object -w -- "$record") || die "git hash-object $record failed"
+  blob=$(git hash-object -w -- "$stored") || die "git hash-object $record failed"
   GIT_INDEX_FILE=$index git update-index --add --cacheinfo "100644,$blob,$path" || die "git update-index failed"
   tree=$(GIT_INDEX_FILE=$index git write-tree) || die "git write-tree failed"
   new_tip=$(git -c user.name="sequoia CI" -c user.email=ci@example.invalid commit-tree "$tree" ${tip:+-p "$tip"} \

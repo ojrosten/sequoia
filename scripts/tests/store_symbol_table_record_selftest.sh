@@ -25,6 +25,14 @@
 #     which changes the added field, or which lacks a field with a null
 #     value and so does not keep every field, is refused and the held
 #     record kept;
+#   - a measured count (an instruction count of prune_dependency_analysis or
+#     runner_setup) which differs from the held one by less than 1 part in
+#     10000 is taken to be the held one: the record is accepted, the
+#     difference said, and the held count kept, in a record which adds a field
+#     as in one which adds none; a difference of exactly 1 part in 10000, or
+#     more, is refused with the difference shown, as is a difference in a field
+#     which is not measured (the symbols, the system calls) however small, even
+#     beside a measured count within the tolerance;
 #   - in a clone without blobs, a held record whose blob cannot be fetched is
 #     a failure, not a record absent;
 #   - a push refused because another push came first is retried on the new
@@ -110,6 +118,24 @@ fixture() {
   record "$work/A-added-changed.json" "$A" 101 6 true ', "prune_analysis": {"instructions": 7}'
   record "$work/A-added-other.json"   "$A" 100 7 true ', "prune_analysis": {"instructions": 8}'
   record "$work/A-null.json"   "$A" 100 8 true ', "note": null'
+  # runner_setup instructions: 1000000000 is held; 99999 away is within 1 in
+  # 10000, 100000 away is not
+  local setup='"runner_setup": {"instructions": %s, "syscalls": %s}'
+  record "$work/S.json"          "$A" 100 11 true ", $(printf "$setup" 1000000000 7)"
+  record "$work/S-near.json"     "$A" 100 12 true ", $(printf "$setup" 1000099999 7)"
+  record "$work/S-near-down.json" "$A" 100 13 true ", $(printf "$setup" 999900001 7)"
+  record "$work/S-boundary.json" "$A" 100 14 true ", $(printf "$setup" 1000100000 7)"
+  record "$work/S-far.json"      "$A" 100 15 true ", $(printf "$setup" 1000200000 7)"
+  record "$work/S-far-down.json" "$A" 100 24 true ", $(printf "$setup" 999800000 7)"
+  record "$work/S-syscalls.json" "$A" 100 16 true ", $(printf "$setup" 1000000000 8)"
+  record "$work/S-near-symbols.json" "$A" 101 17 true ", $(printf "$setup" 1000099999 7)"
+  record "$work/P.json"          "$A" 100 18 true ', "prune_dependency_analysis": {"instructions": 1000000000}'
+  record "$work/P-near.json"     "$A" 100 19 true ', "prune_dependency_analysis": {"instructions": 1000099999}'
+  record "$work/P-far.json"      "$A" 100 20 true ', "prune_dependency_analysis": {"instructions": 1000100000}'
+  record "$work/P-near-added.json" "$A" 100 21 true \
+         ", \"prune_dependency_analysis\": {\"instructions\": 1000099999}, $(printf "$setup" 5 7)"
+  record "$work/N.json"          "$A" 100 22 true ', "other_count": {"instructions": 1000000000}'
+  record "$work/N-near.json"     "$A" 100 23 true ', "other_count": {"instructions": 1000099999}'
   clone_state=$(clone_state)
 }
 
@@ -257,6 +283,78 @@ adding_controls() {
   same "the held record is kept despite its null field" "$first" "$(tip)"
 }
 
+# A measured count of a rerun may differ slightly from the held one, which
+# stands; any other difference is refused.
+tolerance_controls() {
+  local first
+  fixture
+  store S; first=$(tip)
+  store S-near
+  exits "a runner_setup count within the tolerance succeeds" 0
+  says "it says the counts are within the tolerance" 'within 1 in 10000 of those of symbol-table/linux/' "$out"
+  says "it shows the difference" 'runner_setup.instructions: held 1000000000, offered 1000099999' "$out"
+  same "it leaves the branch as it was" "$first" "$(tip)"
+  same "the held record is the first measurement, byte for byte" "$(cat "$work/S.json")" "$(held "$A")"
+
+  store S-near-down
+  exits "a count within the tolerance below the held one" 0
+  same "the branch is as it was after a lower count" "$first" "$(tip)"
+
+  store S-boundary
+  exits "a count differing by exactly 1 part in 10000" nonzero
+  says "the difference is shown" '"instructions": 1000100000' "$err"
+  same "the branch is as it was after the boundary" "$first" "$(tip)"
+
+  store S-far
+  exits "a count beyond the tolerance" nonzero
+  says "the difference of a count beyond is shown" '"instructions": 1000200000' "$err"
+  same "the held record is kept after a count beyond" "$first" "$(tip)"
+
+  store S-far-down
+  exits "a count beyond the tolerance below the held one" nonzero
+  says "the difference of a count below is shown" '"instructions": 999800000' "$err"
+
+  store S-syscalls
+  exits "a system call count which differs by a little" nonzero
+  says "the difference of the system calls is shown" '"syscalls": 8' "$err"
+
+  store S-near-symbols
+  exits "a count within the tolerance beside a field which differs" nonzero
+  says "the differing field is shown" '"symbols": 101' "$err"
+  same "the held record is kept despite the field" "$first" "$(tip)"
+  unchanged_clone "a tolerance"
+
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store P; first=$(tip)
+  store P-near
+  exits "a prune_dependency_analysis count within the tolerance succeeds" 0
+  says "it shows the difference" 'prune_dependency_analysis.instructions: held 1000000000, offered 1000099999' "$out"
+  same "the branch is as it was after the prune count" "$first" "$(tip)"
+  store P-far
+  exits "a prune_dependency_analysis count beyond the tolerance" nonzero
+  same "the branch is as it was after a prune count beyond" "$first" "$(tip)"
+
+  # A record which adds a field, and has a count within the tolerance, is
+  # stored with the count held.
+  store P-near-added
+  exits "an addition beside a count within the tolerance succeeds" 0
+  says "the field added is named" 'adds to: runner_setup$' "$out"
+  same "the addition is a commit on the tip" "$first" "$(parents "$(tip)")"
+  same "the held count stands in the new record" "1000000000" \
+       "$(held "$A" | jq '.prune_dependency_analysis.instructions')"
+  same "the field added is in it" "5" "$(held "$A" | jq '.runner_setup.instructions')"
+
+  # A count which is not named as measured is refused however small the
+  # difference.
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store N; first=$(tip)
+  store N-near
+  exits "a count which is not measured, differing by a little" nonzero
+  same "the branch is as it was after an unmeasured count" "$first" "$(tip)"
+}
+
 # A clone without blobs, as a backfill might make, must fetch a held
 # record's blob to read it. GIT_NO_LAZY_FETCH stands in for that fetch
 # failing.
@@ -346,7 +444,7 @@ refusal_controls() {
 run_controls() { # run_controls <script>: sets fails, and total, the controls run
   subject=$1 fails=0 total=0
   local control
-  for control in create_controls beside_controls same_commit_controls adding_controls blobless_controls rival_controls \
+  for control in create_controls beside_controls same_commit_controls adding_controls tolerance_controls blobless_controls rival_controls \
                  refusal_controls; do
     work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
     "$control"
@@ -382,13 +480,26 @@ mutant 'a changed field kept in an addition' 'and .value == $whole[$key])' ')'
 mutant 'a null field taken for kept'   '($whole | has($key)) and ' ''
 mutant 'an addition not named'         '$offered | keys - ($held | keys) | join(", ")' '""'
 mutant 'the run compared too'          "without_run() { jq -S 'del(.run)'" "without_run() { jq -S '.'"
+mutant 'every count measured'          'measured_fields='"'"'[["prune_dependency_analysis", "instructions"], ["runner_setup", "instructions"]]'"'" \
+                                       'measured_fields='"'"'[["prune_dependency_analysis", "instructions"], ["runner_setup", "instructions"], ["runner_setup", "syscalls"], ["other_count", "instructions"]]'"'"
+mutant 'prune counts not measured'     '[["prune_dependency_analysis", "instructions"], ["runner_setup", "instructions"]]' \
+                                       '[["runner_setup", "instructions"]]'
+mutant 'setup counts not measured'     '[["prune_dependency_analysis", "instructions"], ["runner_setup", "instructions"]]' \
+                                       '[["prune_dependency_analysis", "instructions"]]'
+mutant 'the tolerance of 1 in 1000'    'tolerance_denominator=10000' 'tolerance_denominator=1000'
+mutant 'the tolerance of 1 in 100000'  'tolerance_denominator=10000' 'tolerance_denominator=100000'
+mutant 'the boundary accepted'         '* $denominator < $held);' '* $denominator <= $held);'
+mutant 'only a higher count tolerated' '((($offered - $held) | fabs)' '((($offered - $held))'
+mutant 'the new count stored'          'then setpath($path; $held | getpath($path)) else . end)' 'then . else . end)'
+mutant 'the record stored as given'    'git hash-object -w -- "$stored")' 'git hash-object -w -- "$record")'
+mutant 'a tolerated count not said'    '      echo "$close"' '      :'
 mutant 'a differing record accepted'   'if [ "$held" = "$offered" ]; then' 'if true; then'
 mutant 'a differing record overwritten' $'>&2\n      exit 1\n    fi' $'>&2\n    fi'
 mutant 'the tip forgotten'             '${tip:+-p "$tip"}' ''
 mutant 'the tip'"'"'s tree forgotten'  'if [ -n "$tip" ]; then GIT_INDEX_FILE=$index git read-tree' \
                                        'if false; then GIT_INDEX_FILE=$index git read-tree'
 mutant 'the clone'"'"'s index used'    'GIT_INDEX_FILE=$index git update-index' 'git update-index'
-mutant 'the record rewritten'          'git hash-object -w -- "$record"' 'jq . "$record" | git hash-object -w --stdin'
+mutant 'the record rewritten'          'git hash-object -w -- "$stored"' 'jq . "$stored" | git hash-object -w --stdin'
 mutant 'the push forced'               'git push --quiet "$remote"' 'git push --quiet --force "$remote"'
 mutant 'no retry'                      'attempts=5' 'attempts=1'
 mutant 'the tip read once'             'tip=$(git rev-parse --verify FETCH_HEAD)' \
