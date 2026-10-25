@@ -1,5 +1,4 @@
 # Handover: callgrind-diagnosis
-Branch callgrind-diagnosis (sequoia repo, off staging 6db2008c7). Workflow uploads callgrind out files + suite text; --dump-instr=no.
-Dispatched twice 2026-10-25: runs 40186679215, 40186689490 (commit 6db2008c7). Waiting.
-Findings so far: none.
-Next: gh run download both; read headers of setup.callgrind.out (problem A); callgrind_annotate both callgrind.out (problem B).
+Runs 40186679215 and 40186689490 (6db2008c7) finished green; both printed "Only a run on staging stores its record".
+A: setup.callgrind.out is one file (pid 8169), events "Ir sysCount sysTime"; summary "311650326 1719515 701965" vs totals "311650326 833201 552889": Ir equal, sysCount/sysTime differ, and runner_setup_record.sh compares whole lines, so awk's END exits and prints nothing -> '' ''.
+B: prune out files 1,207,634,818 vs 1,207,609,049 (-25,769): 92 functions differ in self cost, all malloc/free, memcmp, fs::path compare/_List; call counts of path compare and of the std::map<path,path> in resolved_paths (DependencyAnalyzer.cpp:128) differ (+126, +69): tree shape depends on insertion order = build-record order (ninja deps order from a parallel build). Inferred, not shown directly.
