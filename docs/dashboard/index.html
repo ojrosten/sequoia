@@ -149,7 +149,7 @@
     <figure class="card" id="runner-figure">
       <figcaption><h2>The runner's setup of a test: instructions and system calls, per test</h2>
         <p>What <code>valgrind --tool=callgrind --collect-systime=yes</code> counts in one run of
-          <code>TestFrameworkDiagnostics --serial</code>, the executable which tests the test runner, inside <code>test_to_run::execute</code>
+          <code>TestFrameworkDiagnostics --serial --exclude-performance</code>, the executable which tests the test runner, inside <code>test_to_run::execute</code>
           but outside <code>execution_timer::time_execution</code>: the runner's work for each test,
           its preparing of materials, its records and its output, and not the test, nor anything the runner
           does before the first test or after the last. The plots are the instructions (callgrind's Ir) and the system

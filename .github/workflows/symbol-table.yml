@@ -308,8 +308,15 @@ jobs:
       # toggles only on the call at recursion depth 0. They are counted from the
       # runner's execution records, a file for each test the run executed, so
       # the directory is emptied first. scripts/runner_setup_record.sh reads
-      # the totals and the records, and says what a pass is. The executable is
-      # named in `boundary`, so that a change of it starts a new series.
+      # the totals and the records, and says what a pass is. The executable and
+      # its options are named in `boundary`, so that a change of either starts a
+      # new series.
+      #
+      # --exclude-performance leaves out the performance tests: they are timed
+      # by the clock, so they retry and report according to the speed of the
+      # machine, which moved the count by 0.34% between two runs of one commit
+      # (runs 40186679215 and 40186689490), and callgrind's slowing of the run
+      # can fail them.
       - name: Build TestFrameworkDiagnostics
         continue-on-error: true
         timeout-minutes: 20
@@ -331,10 +338,10 @@ jobs:
           status=0
           valgrind --tool=callgrind --collect-systime=yes \
             --toggle-collect="$execute" --toggle-collect="$execute(*" --toggle-collect="$timed" \
-            --callgrind-out-file="$out" ./TestFrameworkDiagnostics --serial > "$RUNNER_TEMP/setup_suite.txt" 2>&1 || status=$?
+            --callgrind-out-file="$out" ./TestFrameworkDiagnostics --serial --exclude-performance >"$RUNNER_TEMP/setup_suite.txt" 2>&1 || status=$?
           tail -n 30 "$RUNNER_TEMP/setup_suite.txt"
           "$GITHUB_WORKSPACE/tooling/scripts/runner_setup_record.sh" "$out" "$records" "$status" \
-            "test_to_run::execute outside execution_timer::time_execution, TestFrameworkDiagnostics --serial" \
+            "test_to_run::execute outside execution_timer::time_execution, TestFrameworkDiagnostics --serial --exclude-performance" \
             > "$RUNNER_TEMP/runner_setup.json"
           cat "$RUNNER_TEMP/runner_setup.json"
 
