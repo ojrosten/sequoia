@@ -285,8 +285,15 @@
   },
   "run": {
     "attempt": 1,
-    "id": 40181167680,
-    "url": "https://github.com/ojrosten/sequoia/actions/runs/40181167680/attempts/1"
+    "id": 40227274567,
+    "url": "https://github.com/ojrosten/sequoia/actions/runs/40227274567/attempts/1"
+  },
+  "runner_setup": {
+    "boundary": "test_to_run::execute outside execution_timer::time_execution, TestFrameworkDiagnostics --serial --exclude-performance exclude OutputFreeTest.cpp",
+    "exit_status": 0,
+    "instructions": 51307306,
+    "syscalls": 663175,
+    "tests": 97
   },
   "target": "TestAll",
   "toolchain": {
