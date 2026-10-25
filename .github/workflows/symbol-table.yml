@@ -244,7 +244,7 @@ jobs:
             || echo "The measured run failed, which this step ignores; its count stands."
           # The count stands only if the analysis ran and selected from the stamp. An
           # older commit's runner may not have left a stamp, or may not take the
-          # arguments, and then prune runs every test, or nothing, under cachegrind.
+          # arguments, and then prune runs every test, or nothing, under callgrind.
           if ! grep -qF 'Analyzing dependencies' "$RUNNER_TEMP/measured.txt" \
              || grep -qE 'unable to prune|prune is ignored' "$RUNNER_TEMP/measured.txt"; then
             echo "::warning::prune did not analyse from a stamp, so the record has no prune_dependency_analysis"
