@@ -21,8 +21,12 @@
 #     execute do not make three more, so a nested call does not inflate them;
 #   - the exit status of a pass is 0, and a nonzero status is recorded, not
 #     refused, since the dashboard leaves its point out;
-#   - a count which is zero or missing, a summary which differs from its totals,
-#     no output, no records and an exit status which is no number are each
+#   - the system calls are those of the totals, whatever the summary says, since
+#     with --collect-systime the summary counts every system call of the run
+#     (inferred from CI runs, as the script says);
+#   - a count which is zero or missing, a summary whose instructions differ from
+#     its totals', no output, no records and an exit status which is no number
+#     are each
 #     refused, with a ::warning:: on standard error, nothing on standard
 #     output, and success;
 #   - arguments of any other number are refused with status 2.
@@ -63,7 +67,8 @@ mkdir "$tmp/none"
 
 callgrind 'Ir sysCount sysTime' '1000 7 55' '1000 7 55' > "$tmp/ok.out"
 callgrind 'sysTime sysCount Ir' '55 7 1000' '55 7 1000' > "$tmp/reordered.out"
-callgrind 'Ir sysCount sysTime' '1000 7 55' '1000 8 55' > "$tmp/differs.out"
+callgrind 'Ir sysCount sysTime' '1000 7 55' '1001 7 55' > "$tmp/differs.out"
+callgrind 'Ir sysCount sysTime' '1000 19 99' '1000 7 55' > "$tmp/syscalls_differ.out"
 callgrind 'Ir sysCount sysTime' '1000 7 55' '' | grep -v '^totals:' > "$tmp/no_totals.out"
 callgrind 'Ir sysCount sysTime' '0 7 0' '0 7 0' > "$tmp/no_instructions.out"
 callgrind 'Ir sysCount sysTime' '1000 0 0' '1000 0 0' > "$tmp/no_syscalls.out"
@@ -114,7 +119,10 @@ controls() {
   field "the boundary as given"                     "$tmp/ok.out" "$records" 0 'a b' \
         '{"boundary":"a b","exit_status":0,"tests":3,"instructions":1000,"syscalls":7}'
 
-  refused "a summary which differs from its totals" "$tmp/differs.out" "$records" 0 "$boundary"
+  field "system calls from the totals, not the summary" "$tmp/syscalls_differ.out" "$records" 0 "$boundary" \
+        '{"boundary":"B","exit_status":0,"tests":3,"instructions":1000,"syscalls":7}'
+
+  refused "a summary whose instructions differ from its totals'" "$tmp/differs.out" "$records" 0 "$boundary"
   refused "no summary"                              "$tmp/no_summary.out" "$records" 0 "$boundary"
   refused "no totals"                               "$tmp/no_totals.out" "$records" 0 "$boundary"
   refused "no instructions"                         "$tmp/no_instructions.out" "$records" 0 "$boundary"
@@ -140,7 +148,11 @@ mutations=(
                                            'tests=$(awk '"'"'/^calls=/ { split($1, f, "="); n += f[2] } END { print n + 0 }'"'"' "$out")'
   'tests from every file'                  ' -size +0'                          ''
   'tests from the directory alone'         '-type f -name '"'"'*.txt'"'"''      '-name '"'"'*'"'"''
-  'a summary alone read'                   '|| line["summary:"] != line["totals:"] \' '|| 0 \'
+  'the summary instructions unchecked'     'if (s[col["Ir"]] != f[col["Ir"]]) exit' 'if (0) exit'
+  'the system calls from the summary'      'split(line["totals:"], f, " ")
+        if' 'split(line["totals:"], f, " ")
+        split(line["summary:"], f, " ")
+        if'
   'the events read by place'               'print f[col["Ir"]] + 0, f[col["sysCount"]] + 0' 'print f[1] + 0, f[2] + 0'
   'the instructions not checked'           '"$instructions" "$syscalls" "$tests"' '"$syscalls" "$tests"'
   'the system calls not checked'           '"$instructions" "$syscalls" "$tests"' '"$instructions" "$tests"'
