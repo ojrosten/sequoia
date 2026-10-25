@@ -12,33 +12,32 @@
 # it adds to, and leaves the clone's branches, index and working tree as
 # they were.
 #
-# A record for a commit which the branch already holds is stored again only
-# to add fields. Ignoring the field "run":
-#   - if the two are the same, the script says so and succeeds: a run
-#     repeated at one commit has nothing new to say;
-#   - if the new record keeps every field of the held one, unchanged, and has
-#     others besides, it replaces the held one, which it adds to: a backfill
-#     measures a commit which was recorded before the measurement existed.
-#     The new record's run replaces the held one's, since it made the fields
+# A record for a commit which the branch already holds is merged with the
+# held one, at every depth, ignoring the field "run". The merge is the union
+# of the two:
+#   - a field only the held record has is kept: a measurement since dropped
+#     from the records does not lose its history;
+#   - a field only the offered record has is added: a backfill measures a
+#     commit which was recorded before the measurement existed. This holds
+#     beneath an object both have, so a new sub-field of a held object is
 #     added;
-#   - if the held record keeps every field of the new one, unchanged, and has
-#     others besides, the script says so and succeeds: a repeated
-#     measurement which failed has nothing to add;
-#   - otherwise it prints the difference and fails, since a field which
-#     changed is either a change of toolchain or a build which is not
-#     deterministic, which a person should judge.
-# Bar run, a field is never changed, nor removed.
+#   - a field both have must be equal, bar a measured count (below) within
+#     its tolerance, where the held value stands;
+#   - otherwise the script prints the fields which differ and fails, since a
+#     field which changed is either a change of toolchain or a build which is
+#     not deterministic, which a person should judge.
+# A field is never changed, nor removed. If the offered record adds nothing, the
+# script says so and succeeds, and the branch is left as it was: a run repeated
+# at one commit has nothing new to say. If it adds fields, the union is stored,
+# with the offered record's run, since it made the fields added, as jq's output
+# with the keys sorted.
 #
-# The exception is a measured count, which a rerun of one commit moves a
-# little: prune's instruction count by about 2 parts in a million, the runner
-# setup's system calls by 0.2%. Each is named in measured_fields below with
-# its own tolerance, as the denominator of a relative difference. A count which
-# differs from the held one by less than that is taken to be the held one. The
-# script prints the difference, and the record is then compared, and stored,
-# with the held count in place of the new: the first measurement stands. The
-# stored record is jq's output, keys sorted. A larger difference is refused as
-# any other, and so is a field added beneath an object already held, since
-# only a whole field is added to a held record.
+# A measured count is one which a rerun of one commit moves a little: prune's
+# instruction count by about 2 parts in a million, the runner setup's system
+# calls by 0.2%. Each is named in measured_fields below with its own
+# tolerance, as the denominator of a relative difference. A count which
+# differs from the held one by less than that is taken to be the held one; the
+# script prints the difference, and the first measurement stands.
 #
 # A branch which does not exist is created, with no history. The push is
 # never forced. When it fails - as it does when another run pushed first -
@@ -93,43 +92,35 @@ within_tolerance='
     and $held != $offered
     and ((($offered - $held) | fabs) * $denominator < $held);'
 
-# tolerated <held> <record>: a line for each measured field of <record> which
-# differs from <held>'s by less than the tolerance
-tolerated() {
-  jq -r --argjson held "$1" --argjson fields "$measured_fields" \
+# merge <held> <offered>: the union of the two records, as JSON on standard
+# output, by the rule in the header: {value, conflicts, tolerated, added, kept}.
+# The paths in conflicts, added and kept are arrays of keys.
+merge() {
+  jq -n -S --argjson held "$1" --argjson offered "$2" --argjson fields "$measured_fields" \
      "$within_tolerance"'
-     . as $offered | $fields[] | .path as $path | .denominator as $denominator
-     | ($held | getpath($path)) as $h | ($offered | getpath($path)) as $o
-     | select(within($h; $o; $denominator))
-     | "\($path | join(".")): held \($h), offered \($o), tolerance 1 in \($denominator)"' "$2"
+     def tolerance($path): $fields | map(select(.path == $path)) | first | .denominator;
+     def none: {conflicts: [], tolerated: [], added: [], kept: []};
+     def merge($h; $o; $path):
+       tolerance($path) as $denominator | if ($h | type) == "object" and ($o | type) == "object" then
+         reduce (($h | keys) + ($o | keys) | unique)[] as $key ({value: {}} + none;
+           if ($h | has($key)) and ($o | has($key)) then
+             merge($h[$key]; $o[$key]; $path + [$key]) as $r
+             | .value[$key] = $r.value | .conflicts += $r.conflicts | .tolerated += $r.tolerated
+             | .added += $r.added | .kept += $r.kept
+           elif $h | has($key) then .value[$key] = $h[$key] | .kept += [$path + [$key]]
+           else .value[$key] = $o[$key] | .added += [$path + [$key]] end)
+       elif $h == $o then {value: $h} + none
+       elif $denominator != null and within($h; $o; $denominator) then
+         {value: $h} + none + {tolerated: [{path: $path, held: $h, offered: $o, denominator: $denominator}]}
+       else {value: $h} + none + {conflicts: [$path]} end;
+     merge($held; $offered; [])'
 }
-
-# settled <held> <record>: <record>, its keys sorted, with the held count in
-# each measured field which differs from it by less than the tolerance
-settled() {
-  jq -S --argjson held "$1" --argjson fields "$measured_fields" \
-     "$within_tolerance"'
-     . as $offered | reduce $fields[] as $field (.; $field.path as $path
-       | if within($held | getpath($path); $offered | getpath($path); $field.denominator)
-         then setpath($path; $held | getpath($path)) else . end)' "$2"
-}
-
-# keeps_every_field <whole> <part>: <whole> has every field of <part>, with
-# the same value, and so <part> is no larger; both are records as JSON
-keeps_every_field() {
-  jq -e --argjson part "$2" '. as $whole | $part | to_entries
-                             | all(.key as $key | ($whole | has($key)) and .value == $whole[$key])' \
-     <<< "$1" > /dev/null
-}
-
-# added_fields <held> <offered>: the names of the fields of <offered> which <held> lacks
-added_fields() { jq -rn --argjson held "$1" --argjson offered "$2" '$offered | keys - ($held | keys) | join(", ")'; }
 
 # store_once: 0 if the record is stored or already held, 1 if the push
 # failed; any other failure exits. The function is called as a condition, so
 # set -e does not reach into it, and each command's failure is handled here.
 store_once() {
-  local status=0 tip='' held offered blob tree new_tip close stored=$record
+  local status=0 tip='' held offered merged blob tree new_tip stored=$record
   git ls-remote --exit-code --heads "$remote" "refs/heads/$branch" > /dev/null || status=$?
   case $status in
     0) git fetch --quiet --no-tags "$remote" "refs/heads/$branch" || die "git fetch $remote $branch failed"
@@ -144,27 +135,28 @@ store_once() {
   if [ -n "$tip" ] && git rev-parse --verify --quiet "$tip:$path" > /dev/null; then
     git show "$tip:$path" > "$held_file" || die "git show $tip:$path failed"
     held=$(without_run "$held_file") || exit 1
-    close=$(tolerated "$held" "$record") || die "$record cannot be read as JSON"
-    if [ -n "$close" ]; then
-      echo "$record has measured counts within their tolerances of those of $path, which stand:"
-      echo "$close"
-      stored="$work/settled.json"
-      settled "$held" "$record" > "$stored"
-    fi
-    offered=$(without_run "$stored") || exit 1
-    if [ "$held" = "$offered" ]; then
-      echo "$branch already holds $path, the same but for its run: $(jq -r '.run.url' "$held_file")"
-      return 0
-    elif keeps_every_field "$offered" "$held"; then
-      echo "$branch holds $path, which $record adds to: $(added_fields "$held" "$offered")"
-    elif keeps_every_field "$held" "$offered"; then
-      echo "$branch already holds $path, with every field of $record and more: $(jq -r '.run.url' "$held_file")"
-      return 0
-    else
-      echo "$branch already holds $path, and it differs from $record other than in its run, or in fields only one has:" >&2
+    offered=$(without_run "$record") || exit 1
+    merged=$(merge "$held" "$offered") || die "merging $record with $path failed"
+    if [ "$(jq '.conflicts | length' <<< "$merged")" -ne 0 ]; then
+      echo "$branch already holds $path, and it differs from $record other than in its run, in: $(jq -r '[.conflicts[] | join(".")] | join(", ")' <<< "$merged")" >&2
       diff <(echo "$held") <(echo "$offered") >&2
       exit 1
     fi
+    if [ "$(jq '.tolerated | length' <<< "$merged")" -ne 0 ]; then
+      echo "$record has measured counts within their tolerances of those of $path, which stand:"
+      jq -r '.tolerated[] | "\(.path | join(".")): held \(.held), offered \(.offered), tolerance 1 in \(.denominator)"' <<< "$merged"
+    fi
+    if [ "$(jq '.added | length' <<< "$merged")" -eq 0 ]; then
+      if [ "$(jq '.kept | length' <<< "$merged")" -eq 0 ]; then
+        echo "$branch already holds $path, the same but for its run: $(jq -r '.run.url' "$held_file")"
+      else
+        echo "$branch already holds $path, with every field of $record and more: $(jq -r '.run.url' "$held_file")"
+      fi
+      return 0
+    fi
+    echo "$branch holds $path, which $record adds to: $(jq -r '[.added[] | join(".")] | join(", ")' <<< "$merged")"
+    stored="$work/union.json"
+    jq -S --argjson offered "$(cat "$record")" '.value + ($offered | if has("run") then {run} else {} end)' <<< "$merged" > "$stored"
   fi
 
   rm -f "$index"
