@@ -25,7 +25,8 @@
 #     with --collect-systime the summary counts every system call of the run
 #     (inferred from CI runs, as the script says);
 #   - a count which is zero or missing, a summary whose instructions differ from
-#     its totals', no output, no records and an exit status which is no number are each
+#     its totals', no output, no records and an exit status which is no number
+#     are each
 #     refused, with a ::warning:: on standard error, nothing on standard
 #     output, and success;
 #   - arguments of any other number are refused with status 2.
@@ -118,7 +119,7 @@ controls() {
   field "the boundary as given"                     "$tmp/ok.out" "$records" 0 'a b' \
         '{"boundary":"a b","exit_status":0,"tests":3,"instructions":1000,"syscalls":7}'
 
- field "system calls from the totals, not the summary" "$tmp/syscalls_differ.out" "$records" 0 "$boundary" \
+  field "system calls from the totals, not the summary" "$tmp/syscalls_differ.out" "$records" 0 "$boundary" \
         '{"boundary":"B","exit_status":0,"tests":3,"instructions":1000,"syscalls":7}'
 
   refused "a summary whose instructions differ from its totals'" "$tmp/differs.out" "$records" 0 "$boundary"
@@ -147,7 +148,7 @@ mutations=(
                                            'tests=$(awk '"'"'/^calls=/ { split($1, f, "="); n += f[2] } END { print n + 0 }'"'"' "$out")'
   'tests from every file'                  ' -size +0'                          ''
   'tests from the directory alone'         '-type f -name '"'"'*.txt'"'"''      '-name '"'"'*'"'"''
-  'the summary instructions unchecked'     'if (s[col["Ir"]] != f[col["Ir"]]) exit' ':'
+  'the summary instructions unchecked'     'if (s[col["Ir"]] != f[col["Ir"]]) exit' 'if (0) exit'
   'the system calls from the summary'      'split(line["totals:"], f, " ")
         if' 'split(line["totals:"], f, " ")
         split(line["summary:"], f, " ")

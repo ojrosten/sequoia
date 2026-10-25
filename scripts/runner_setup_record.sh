@@ -69,7 +69,7 @@ tests=$(find "$records" -type f -name '*.txt' -size +0 2> /dev/null | wc -l | tr
 for count in "$instructions" "$syscalls" "$tests"; do
   case "$count" in
     ''|*[!0-9]*|0)
-      refuse "callgrind counted instructions '${instructions}' and system calls '${syscalls}' (summary and totals must agree on instructions), and the records give '${tests}' tests, and a zero or missing count is refused";;
+      refuse "callgrind counted instructions '${instructions}' and system calls '${syscalls}' (a summary and a totals line, both present, must agree on instructions), and the records give '${tests}' tests, and a zero or missing count is refused";;
   esac
 done
 
