@@ -147,18 +147,21 @@
       <div class="plot" id="analysis-plot"></div>
     </figure>
     <figure class="card" id="runner-figure">
-      <figcaption><h2>System calls of the runner, per test</h2>
-        <p>The system calls <code>strace -f -c</code> counts in one full run of <code>TestAll</code>, divided by the
-          number of tests the run reported, one plot for each kind and each on a scale of its own. A clone is a
-          thread or a process; an exec is a process. The counts are those of the whole run, tests' own file system
-          use included, and the run is concurrent, so they vary a little between runs of one commit. Points whose
-          record has no count are left out, as are points whose run failed (any nonzero exit status).
+      <figcaption><h2>The runner's setup of a test: instructions and system calls, per test</h2>
+        <p>What <code>valgrind --tool=callgrind --collect-systime=yes</code> counts in one run of
+          <code>TestFrameworkDiagnostics --serial</code>, the executable which tests the test runner, inside <code>test_to_run::execute</code>
+          but outside <code>execution_timer::time_execution</code>: the runner's work for each test,
+          its preparing of materials, its records and its output, and not the test, nor anything the runner
+          does before the first test or after the last. The plots are the instructions (callgrind's Ir) and the system
+          calls (its sysCount) so counted, divided by the number of tests the run executed, as the runner's own execution
+          records count them (the runner's tests run runners of their own, whose tests are not counted, nor is their setup
+          collected); each plot has a scale of its own. Instructions are exact for a fixed
+          toolchain and commit. Points whose record has no count are left out, as are points whose run failed
+          (a run passes when its exit status is 0; any other is a failure). A change of the run's
+          <code>boundary</code> (a different executable, say) breaks the line, with a marker labelled boundary.
           <span id="runner-excluded"></span></p></figcaption>
-      <h3>Directory walks</h3><div class="plot" id="runner-plot-directory_walks"></div>
-      <h3>Metadata reads</h3><div class="plot" id="runner-plot-metadata_reads"></div>
-      <h3>Opens</h3><div class="plot" id="runner-plot-opens"></div>
-      <h3>Execs</h3><div class="plot" id="runner-plot-execs"></div>
-      <h3>Clones</h3><div class="plot" id="runner-plot-clones"></div>
+      <h3>Instructions per test</h3><div class="plot" id="runner-plot-instructions"></div>
+      <h3>System calls per test</h3><div class="plot" id="runner-plot-syscalls"></div>
     </figure>
     <figure class="card" id="uncalled-figure">
       <figcaption><h2>Uncalled functions in Source</h2>
@@ -357,10 +360,11 @@
 
     points.forEach((point, index) => {
       if (!(measure.changeOf ? measure.changeOf(point) : point.toolchainChange)) return;
+      const label = measure.breakLabel ? measure.breakLabel(point) : 'toolchain';
       const at = (x(index - 1) + x(index)) / 2;
       svg.append(element('svg:line', {x1: at, x2: at, y1: labelBreaks ? 16 : margin.top, y2: margin.top + plotHeight,
                                       stroke: 'var(--text-muted)', 'stroke-width': 1}));
-      if (labelBreaks) svg.append(element('svg:text', {x: at, y: 11, 'text-anchor': 'middle', class: 'break-label'}, 'toolchain'));
+      if (labelBreaks) svg.append(element('svg:text', {x: at, y: 11, 'text-anchor': 'middle', class: 'break-label'}, label));
     });
 
     // A line runs through consecutive points which have the measure, within one toolchain
@@ -446,12 +450,17 @@
      changeOf: point => point.record.uncalled ? point.record.uncalled.toolchainChange : null}
   ];
 
-  // One measure for each kind of system call the runner makes, plotted apart
-  const runnerMeasures = symbolDashboard.runnerSyscallCategories.map(category => ({
-    category,
-    name: `${category.replace('_', ' ')} of the runner, per test`,
-    value: record => symbolDashboard.runnerSyscallPerTest(record, category),
-    unit: 'system calls per test'
+  // One measure for each event the runner's setup counts, plotted apart
+  const runnerMeasures = symbolDashboard.runnerSetupEvents.map(event => ({
+    event,
+    name: `${event} of the runner's setup, per test`,
+    value: record => symbolDashboard.runnerSetupPerTest(record, event),
+    unit: `${event} per test`,
+    // Measured when the suite is, so a line joins the points which have a count; it breaks at a change
+    // of the toolchain, or of the boundary of the measurement
+    joinsGaps: true, runOf: point => `${point.run}/${point.setupRun}`,
+    changeOf: point => point.toolchainChange || point.boundaryChange,
+    breakLabel: point => point.boundaryChange ? 'boundary' : 'toolchain'
   }));
 
   function changeOn(index, measure) {
@@ -476,8 +485,8 @@
       ...(measures[2].value(point.record) === null ? []
           : [element('span', {}, `${integer.format(measures[2].value(point.record))} instructions of prune's analysis`)]),
       ...(runnerMeasures[0].value(point.record) === null ? []
-          : [element('span', {}, 'System calls of the runner, per test: '
-                                 + runnerMeasures.map(measure => `${oneDecimal.format(measure.value(point.record))} ${measure.category.replace('_', ' ')}`)
+          : [element('span', {}, 'The runner\'s setup, per test: '
+                                 + runnerMeasures.map(measure => `${oneDecimal.format(measure.value(point.record))} ${measure.event}`)
                                                  .join(', '))]),
       ...(measures[3].value(point.record) === null ? []
           : [element('span', {}, `${integer.format(measures[3].value(point.record))} uncalled functions in Source`)]),
@@ -523,7 +532,7 @@
     document.getElementById('runner-figure').hidden = !shown.runner;
     if (hasRunner) {
       for (const measure of runnerMeasures) {
-        state.charts.push(drawChart(document.getElementById(`runner-plot-${measure.category}`), measure, 120, false));
+        state.charts.push(drawChart(document.getElementById(`runner-plot-${measure.event}`), measure, 120, true));
       }
     }
     const hasUncalled = state.points.some(point => measures[3].value(point.record) !== null);
