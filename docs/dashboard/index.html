@@ -149,15 +149,15 @@
     <figure class="card" id="runner-figure">
       <figcaption><h2>The runner's setup of a test: instructions and system calls, per test</h2>
         <p>What <code>valgrind --tool=callgrind --collect-systime=yes</code> counts in one run of
-          <code>TestAll --serial</code>, of the whole suite, inside <code>test_to_run::execute</code>
+          <code>TestFrameworkDiagnostics --serial</code>, the executable which tests the test runner, inside <code>test_to_run::execute</code>
           but outside <code>execution_timer::time_execution</code>: the runner's work for each test,
           its preparing of materials, its records and its output, and not the test, nor anything the runner
           does before the first test or after the last. The plots are the instructions (callgrind's Ir) and the system
           calls (its sysCount) so counted, divided by the number of calls to <code>test_to_run::execute</code>,
           which is the number of tests; each plot has a scale of its own. Instructions are exact for a fixed
           toolchain and commit. Points whose record has no count are left out, as are points whose run failed
-          (any nonzero exit status). A change of the run's <code>boundary</code> (a restriction to some of the
-          suite, say) starts a new series, which the record names.
+          (any nonzero exit status). A change of the run's <code>boundary</code> (a different executable,
+          say) starts a new series, which the record names.
           <span id="runner-excluded"></span></p></figcaption>
       <h3>Instructions per test</h3><div class="plot" id="runner-plot-instructions"></div>
       <h3>System calls per test</h3><div class="plot" id="runner-plot-syscalls"></div>

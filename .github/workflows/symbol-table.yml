@@ -20,6 +20,7 @@ name: symbol-table
 # column, and cancelling a superseded run of a tier loses no record.
 #
 # A second run of the suite, after prune's measurement, is under callgrind,
+# of TestFrameworkDiagnostics, the executable which tests the test runner,
 # which counts what the runner does while it sets tests up, not what the tests
 # do: a record carries the counts as `runner_setup`, with the number of tests
 # the run executed. The counts are totals for the run, so a move shows in the
@@ -82,10 +83,10 @@ jobs:
     # names its toolchain, so a change of toolchain shows as a break in the
     # history.
     runs-on: ubuntu-26.04
-    # The runner-setup run is the long step: callgrind runs the whole suite at
-    # many times its native time (about 150 s), even while collection is off,
-    # so that step is allowed 120 minutes, and the job the rest besides.
-    timeout-minutes: 180
+    # The build of TestFrameworkDiagnostics, besides TestAll, and the run of it
+    # under callgrind, which is many times slower than a native run, add to
+    # the job.
+    timeout-minutes: 75
     # "Store the record on the data branch" pushes, which needs
     # `contents: write`. The job asks for it, so that it keeps working if the
     # repository's default token becomes read-only.
@@ -276,9 +277,13 @@ jobs:
             > "$RUNNER_TEMP/prune_dependency_analysis.json"
 
       # What the runner does while it sets tests up, as instructions and system
-      # calls. The suite runs once more, after the measurement of prune: the
-      # second run rewrites the stamp, and callgrind slows the run, neither of
-      # which may touch prune's count.
+      # calls. TestFrameworkDiagnostics is a project of its own, which
+      # "Build" does not build, so it is built here, and run under callgrind
+      # after the measurement of prune: its run writes stamps of its own,
+      # and callgrind slows the run, neither of which may touch prune's count.
+      # It is the smaller suite, so the run under callgrind, many times slower
+      # than a native run even while collection is off, is of a length which a
+      # step can allow.
       #
       # The runner's own boundary is test_to_run::execute, which runs once per
       # test and times the test apart from the rest of itself: the test runs
@@ -300,15 +305,20 @@ jobs:
       # execute can be counted from its `cfn=` and `calls=` lines: the count of
       # tests is callgrind's own, not the runner's printed text. The run is
       # serial, as collection is switched by the thread which runs the test.
-      #
-      # The run is slow. If it does not finish in the time allowed, the run
-      # can be restricted to a fixed subset of the suite by `TestAll test
-      # <suite>` or `TestAll select <source file>`, with the selection named
-      # in `boundary`, so that series do not mix.
+      # The executable is named in `boundary`, so that a change of it starts a
+      # new series.
+      - name: Build TestFrameworkDiagnostics
+        continue-on-error: true
+        timeout-minutes: 20
+        working-directory: tree/TestFrameworkDiagnostics
+        run: |
+          cmake --preset gcc-env
+          cmake --build --preset gcc-env
+
       - name: Count the runner's setup, outside the tests
         continue-on-error: true
-        timeout-minutes: 120
-        working-directory: tree/build/TestAll/gcc-env
+        timeout-minutes: 30
+        working-directory: tree/build/TestFrameworkDiagnostics/gcc-env
         run: |
           execute='sequoia::testing::test_to_run::execute'
           timed='*sequoia::testing::test_to_run::execution_timer::time_execution*'
@@ -316,7 +326,7 @@ jobs:
           status=0
           valgrind --tool=callgrind --collect-systime=yes --compress-strings=no \
             --toggle-collect="$execute" --toggle-collect="$execute(*" --toggle-collect="$timed" \
-            --callgrind-out-file="$out" ./TestAll --serial > "$RUNNER_TEMP/setup_suite.txt" 2>&1 || status=$?
+            --callgrind-out-file="$out" ./TestFrameworkDiagnostics --serial > "$RUNNER_TEMP/setup_suite.txt" 2>&1 || status=$?
           tail -n 30 "$RUNNER_TEMP/setup_suite.txt"
           if [ ! -s "$out" ]; then
             echo "::warning::callgrind left no output, so the record has no runner_setup"
@@ -346,7 +356,7 @@ jobs:
           done
           jq -n --argjson instructions "$instructions" --argjson syscalls "$syscalls" --argjson tests "$tests" \
             --argjson exit_status "$status" \
-            '{boundary: "test_to_run::execute outside execution_timer::time_execution, TestAll --serial, whole suite",
+            '{boundary: "test_to_run::execute outside execution_timer::time_execution, TestFrameworkDiagnostics --serial",
               exit_status: $exit_status, tests: $tests, instructions: $instructions, syscalls: $syscalls}' \
             > "$RUNNER_TEMP/runner_setup.json"
           cat "$RUNNER_TEMP/runner_setup.json"
