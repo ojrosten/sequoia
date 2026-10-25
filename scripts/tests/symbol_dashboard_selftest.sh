@@ -302,16 +302,6 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     });
   }
 
-  await control('prune\'s instructions are null in a record without them, and the count in one with them', () => {
-    const record = recordOf('F5');
-    assert.strictEqual(dashboard.pruneInstructions(record), null);
-    record.prune_analysis = {invocation: 'x', instructions: 0};
-    assert.strictEqual(dashboard.pruneInstructions(record), 0);
-    record.prune_analysis.instructions = 123;
-    assert.strictEqual(dashboard.pruneInstructions(record), 123);
-    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
-  });
-
   for (const [name, analysis] of [
     ['no count',           {invocation: 'x'}],
     ['a fractional count', {invocation: 'x', instructions: 1.5}],
@@ -327,10 +317,16 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     });
   }
 
+  const overheadOf = tests => ({invocation: 'x', exit_status: 0, tests,
+                                 syscalls: {directory_walks: 10, metadata_reads: 400, opens: 60, clones: 2, execs: 8}});
+
+  const analysisOf = (instructions, stamping_exit_status) =>
+    ({function: 'sequoia::testing::test_runner::prune*', instructions, stamping_exit_status});
+
   await control('points lacking the count keep their place, and the count is read where present', async () => {
     const source = fixtureSource({record: recordPath => {
       const record = read(recordPath);
-      if (recordPath.includes(c.F5)) record.prune_analysis = {invocation: 'x', instructions: 777};
+      if (recordPath.includes(c.F5)) record.prune_dependency_analysis = analysisOf(777, 0);
       return record;
     }});
     const column = (await dashboard.loadHistory(source, new Map())).columns[0];
@@ -339,8 +335,71 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.ok(counts.includes(777));
   });
 
-  const overheadOf = tests => ({invocation: 'x', exit_status: 0, tests,
-                                 syscalls: {directory_walks: 10, metadata_reads: 400, opens: 60, clones: 2, execs: 8}});
+  await control('prune\'s dependency analysis is plotted from a clean stamping run, and left out when the run failed tests', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.pruneInstructions(record), null);
+    record.prune_dependency_analysis = analysisOf(123, 0);
+    assert.strictEqual(dashboard.pruneInstructions(record), 123);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+    record.prune_dependency_analysis = analysisOf(123, 1);
+    assert.strictEqual(dashboard.pruneInstructions(record), null);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  for (const [name, analysis] of [
+    ['zero instructions', analysisOf(0, 0)],
+    ['no function',       {instructions: 5, stamping_exit_status: 0}],
+    ['no exit status',    {function: 'f', instructions: 5}],
+    ['a text exit status', analysisOf(5, '0')],
+    ['a fractional count', analysisOf(1.5, 0)],
+    ['null',              null]
+  ]) {
+    await control(`a record with a prune_dependency_analysis of ${name} is a problem`, () => {
+      const record = recordOf('F5');
+      record.prune_dependency_analysis = analysis;
+      assert.deepStrictEqual(dashboard.problemsWith(record, c.F5),
+        ['it has a prune_dependency_analysis with no function, no positive count of instructions, or no exit status']);
+    });
+  }
+
+  await control('points are excluded for failures in each panel by its own field, and counted', () => {
+    const point = (analysis, overhead) => {
+      const record = recordOf('F5');
+      if (analysis) record.prune_dependency_analysis = analysis;
+      if (overhead) record.runner_overhead = overhead;
+      return {record};
+    };
+    const failedOverhead = {...overheadOf(4), exit_status: 8};
+    assert.deepStrictEqual(dashboard.excludedForFailures([]), {prune: 0, runner: 0});
+    assert.deepStrictEqual(dashboard.excludedForFailures([point(null, null), point(analysisOf(5, 0), overheadOf(4))]), {prune: 0, runner: 0});
+    assert.deepStrictEqual(dashboard.excludedForFailures([point(analysisOf(5, 2), null), point(analysisOf(5, 0), failedOverhead),
+                                                          point(analysisOf(5, 1), failedOverhead)]), {prune: 2, runner: 2});
+    assert.deepStrictEqual(dashboard.excludedForFailures([point(analysisOf(5, 2), overheadOf(4))]), {prune: 1, runner: 0});
+    assert.deepStrictEqual(dashboard.excludedForFailures([point(analysisOf(5, 0), failedOverhead)]), {prune: 0, runner: 1});
+    const record = point(null, failedOverhead).record;
+    for (const category of dashboard.runnerSyscallCategories) assert.strictEqual(dashboard.runnerSyscallPerTest(record, category), null);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  await control('a panel whose every point failed is still shown, so that it says why it is empty; one with nothing is not', () => {
+    const none = {record: recordOf('F5')};
+    const failedAnalysis = {record: {...recordOf('F5'), prune_dependency_analysis: analysisOf(5, 3)}};
+    const failedOverhead = {record: {...recordOf('F5'), runner_overhead: {...overheadOf(4), exit_status: 139}}};
+    const okAnalysis = {record: {...recordOf('F5'), prune_dependency_analysis: analysisOf(5, 0)}};
+    const okOverhead = {record: {...recordOf('F5'), runner_overhead: overheadOf(4)}};
+    assert.deepStrictEqual(dashboard.panelsShown([none]), {prune: false, runner: false});
+    assert.deepStrictEqual(dashboard.panelsShown([failedAnalysis, failedOverhead]), {prune: true, runner: true});
+    assert.deepStrictEqual(dashboard.panelsShown([okAnalysis, okOverhead]), {prune: true, runner: true});
+    assert.deepStrictEqual(dashboard.panelsShown([failedAnalysis]), {prune: true, runner: false});
+    assert.deepStrictEqual(dashboard.panelsShown([failedOverhead]), {prune: false, runner: true});
+  });
+
+  await control('a runner_overhead without an exit status is a problem', () => {
+    const record = recordOf('F5');
+    record.runner_overhead = overheadOf(4);
+    delete record.runner_overhead.exit_status;
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), ['it has a runner_overhead with no exit status']);
+  });
 
   const perTest = {directory_walks: 2.5, metadata_reads: 100, opens: 15, clones: 0.5, execs: 2};
 
@@ -623,11 +682,23 @@ MUTATIONS = [
     ('objects not checked',               '!Object.values(objects).every(isCount)', 'false'),
     ('a failed fetch fails the load',     'catch (error) { outcomes[index] = {error}; }', 'catch (error) { throw error; }'),
     ('an absent branch read as empty',    "if (tree === null) return {state: 'absent'};", "if (tree === null) return {state: 'empty'};"),
-    ('a missing count plotted as zero',  "hasOwn(record, 'prune_analysis') ? record.prune_analysis.instructions : null", "hasOwn(record, 'prune_analysis') ? record.prune_analysis.instructions : 0"),
+    ('a missing analysis plotted as zero', "if (!Object.hasOwn(record, 'prune_dependency_analysis') ||", "if (false ||"),
+    ('a failed prune panel hidden',       "excluded.prune  > 0 || ", ""),
+    ('a failed runner panel hidden',      "excluded.runner > 0 || ", ""),
+    ('a failed stamping run plotted',     "|| record.prune_dependency_analysis.stamping_exit_status !== 0) return null;", ") return null;"),
+    ('a failed stamping run counted as clean', "record[field][status] !== 0", "false"),
+    ('failures counted in the wrong field', "failed('runner_overhead', 'exit_status')", "failed('runner_overhead', 'stamping_exit_status')"),
+    ('a failed overhead run plotted',      "|| record.runner_overhead.exit_status !== 0\n", "\n"),
+    ('the exit status of the overhead unchecked', "if (!isCount(overhead.exit_status)) problems.push", "if (false) problems.push"),
+    ('the dependency analysis not checked', "if (Object.hasOwn(record, 'prune_dependency_analysis')) {", 'if (false) {'),
+    ('zero instructions accepted',         "|| analysis.instructions === 0\n", "\n"),
+    ('the stamping status unchecked',      "|| !isCount(analysis.stamping_exit_status)) {", ") {"),
+    ('the function unchecked',             "|| typeof analysis.function !== 'string'", ""),
     ('the analysis not checked',          "if (Object.hasOwn(record, 'prune_analysis')) {", 'if (false) {'),
-    ('the count not checked',             '|| !isCount(analysis.instructions)', ''),
+    ('the count not checked',             '|| !isCount(analysis.instructions)\n', '\n'),
+    ('the new count not checked',         'typeof analysis !== \'object\' || !isCount(analysis.instructions) ||', 'typeof analysis !== \'object\' ||'),
     ('the invocation not checked',        "|| typeof analysis.invocation !== 'string'", ''),
-    ('a missing overhead plotted as zero',  "if (!Object.hasOwn(record, 'runner_overhead') || record.runner_overhead.tests === null) return null;", "if (!Object.hasOwn(record, 'runner_overhead')) return null;"),
+    ('a missing overhead plotted as zero',  "if (!Object.hasOwn(record, 'runner_overhead') || record.runner_overhead.exit_status !== 0\n        || record.runner_overhead.tests === null) return null;", "if (!Object.hasOwn(record, 'runner_overhead') || record.runner_overhead.exit_status !== 0) return null;"),
     ('a missing number of tests divided by', "|| record.runner_overhead.tests === null) return null;", ") return null;"),
     ('the overhead not checked',            "if (Object.hasOwn(record, 'runner_overhead')) {", 'if (false) {'),
     ('the overhead\'s invocation not checked', "|| typeof overhead.invocation !== 'string') {", ') {'),

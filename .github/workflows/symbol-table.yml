@@ -13,7 +13,9 @@ name: symbol-table
 #
 # The workflow builds TestAll and runs the suite as a test of nothing: its one
 # run is to leave prune a stamp, for the instruction count of prune's
-# analysis, which a record carries as `prune_analysis`. The workflow is
+# analysis, which a record carries as `prune_dependency_analysis`, with the
+# exit status of that run: a run which failed tests leaves prune different
+# work to select, so the dashboard leaves its point out. The workflow is
 # apart from the tiers, so that a failure to measure cannot fail a test
 # column, and cancelling a superseded run of a tier loses no record.
 #
@@ -24,7 +26,7 @@ name: symbol-table
 # in the dashboard's per-test lines.
 #
 # A commit already recorded can be recorded again, to add the field
-# `prune_analysis`: the job rebuilds TestAll, which the count needs, and the
+# `prune_dependency_analysis`: the job rebuilds TestAll, which the count needs, and the
 # store replaces the held record with one which keeps its every field and
 # adds fields (scripts/store_symbol_table_record.sh). A commit whose runner
 # leaves prune no stamp is recorded without the field, and its job succeeds.
@@ -197,14 +199,18 @@ jobs:
       # when the previous run has left no stamp. So one full run of the suite,
       # whose outcome is ignored, leaves the stamp, and the measured run then
       # selects only what that run failed, or left out: nothing, when the
-      # suite passes, which is why git is given an identity first. A failing
-      # measured run still yields the count, so its outcome is ignored too.
-      # The measured run
-      # covers startup, the runner's reading of the build's records
-      # (build.ninja, .ninja_deps) and its walk of the sources for changes,
-      # and the file system reads of both; it does not cover the compiler.
-      # cachegrind counts the instructions of the executable, and of the
-      # libraries it calls, from the first to the last.
+      # suite passes, which is why git is given an identity first. The
+      # stamping run's exit status goes in the record, since a failure
+      # re-selects the failed tests and may change what the analysis does.
+      #
+      # callgrind, not cachegrind, counts the instructions: only callgrind has
+      # --toggle-collect, which collects while inside test_runner::prune and
+      # the functions it calls, and so counts the analysis alone, not the
+      # runner's startup or any test the measured run executes. The name is
+      # matched, with wildcards, against the demangled name, which may or may
+      # not carry the parameter list, so the pattern ends in `*`. A count of
+      # zero means no function matched, as when prune is renamed, and the
+      # record has no field.
       - name: Install valgrind
         continue-on-error: true
         run: sudo apt-get install -y valgrind
@@ -220,30 +226,51 @@ jobs:
         continue-on-error: true
         timeout-minutes: 30
         working-directory: tree/build/TestAll/gcc-env
-        run: ./TestAll || echo "The suite failed, which this step ignores."
+        run: |
+          status=0
+          ./TestAll || status=$?
+          echo "$status" > "$RUNNER_TEMP/stamping_exit_status.txt"
+          [ "$status" -eq 0 ] || echo "The suite failed (status $status), which this step ignores; the record will say so."
 
       - name: Count the instructions of prune's analysis
         continue-on-error: true
         timeout-minutes: 30
         working-directory: tree/build/TestAll/gcc-env
         run: |
+          function='sequoia::testing::test_runner::prune*'
           # The job's shell sets pipefail, so a failing run reaches the || through tee.
-          valgrind --tool=cachegrind --cache-sim=no --cachegrind-out-file="$RUNNER_TEMP/cachegrind.out" \
+          valgrind --tool=callgrind --toggle-collect="$function" --callgrind-out-file="$RUNNER_TEMP/callgrind.out" \
             ./TestAll prune --serial 2>&1 | tee "$RUNNER_TEMP/measured.txt" \
             || echo "The measured run failed, which this step ignores; its count stands."
           # The count stands only if the analysis ran and selected from the stamp. An
           # older commit's runner may not have left a stamp, or may not take the
-          # arguments, and then prune runs every test, or nothing, under cachegrind.
+          # arguments, and then prune runs every test, or nothing, under callgrind.
           if ! grep -qF 'Analyzing dependencies' "$RUNNER_TEMP/measured.txt" \
              || grep -qE 'unable to prune|prune is ignored' "$RUNNER_TEMP/measured.txt"; then
-            echo "::warning::prune did not analyse from a stamp, so the record has no prune_analysis"
+            echo "::warning::prune did not analyse from a stamp, so the record has no prune_dependency_analysis"
             exit 0
           fi
-          # The file's summary line is "summary: <Ir>"
-          instructions=$(awk '$1 == "summary:" {print $2}' "$RUNNER_TEMP/cachegrind.out")
-          jq -n --argjson instructions "$instructions" \
-            '{invocation: "TestAll prune --serial, after a full run, under cachegrind", instructions: $instructions}' \
-            > "$RUNNER_TEMP/prune_analysis.json"
+          # The file holds "summary: <Ir>" and "totals: <Ir>", of the events collected
+          # inside the function; the count stands only if both are there and equal.
+          instructions=$(awk '$1 == "summary:" {print $2}' "$RUNNER_TEMP/callgrind.out" 2>/dev/null)
+          totals=$(awk '$1 == "totals:" {print $2}' "$RUNNER_TEMP/callgrind.out" 2>/dev/null)
+          case "$instructions" in
+            ''|*[!0-9]*|0)
+              echo "::warning::no instructions were collected inside '$function' (summary '${instructions}'), so the record has no prune_dependency_analysis"
+              exit 0;;
+          esac
+          if [ "$totals" != "$instructions" ]; then
+            echo "::warning::callgrind's summary ($instructions) and totals ('${totals}') differ or are missing, so the record has no prune_dependency_analysis"
+            exit 0
+          fi
+          if [ ! -s "$RUNNER_TEMP/stamping_exit_status.txt" ]; then
+            echo "::warning::the stamping run left no exit status, so the record has no prune_dependency_analysis"
+            exit 0
+          fi
+          jq -n --argjson instructions "$instructions" --arg function "$function" \
+            --argjson stamping_exit_status "$(cat "$RUNNER_TEMP/stamping_exit_status.txt")" \
+            '{function: $function, instructions: $instructions, stamping_exit_status: $stamping_exit_status}' \
+            > "$RUNNER_TEMP/prune_dependency_analysis.json"
 
       # The runner's overhead, as system calls. The suite runs once more, under
       # strace, after the measurement of prune: the second run rewrites the
@@ -312,12 +339,12 @@ jobs:
 
       - name: Add the count to the record
         run: |
-          if [ -s "$RUNNER_TEMP/prune_analysis.json" ]; then
-            jq -S --slurpfile analysis "$RUNNER_TEMP/prune_analysis.json" '. + {prune_analysis: $analysis[0]}' \
+          if [ -s "$RUNNER_TEMP/prune_dependency_analysis.json" ]; then
+            jq -S --slurpfile analysis "$RUNNER_TEMP/prune_dependency_analysis.json" '. + {prune_dependency_analysis: $analysis[0]}' \
               "$SYMBOL_TABLE_RECORD" > "$RUNNER_TEMP/with_analysis.json"
             mv "$RUNNER_TEMP/with_analysis.json" "$SYMBOL_TABLE_RECORD"
           else
-            echo "::warning::prune's analysis was not measured, so the record has no prune_analysis"
+            echo "::warning::prune's analysis was not measured, so the record has no prune_dependency_analysis"
           fi
 
       - name: Add the runner's overhead to the record

@@ -189,8 +189,11 @@
    * A record with no problem is an object holding `commit` as its commit, a
    * clean tree, a toolchain, the executable's symbols and name bytes, and a
    * count of defined symbols for each object. It may also hold
-   * `prune_analysis`, with an invocation and a count of instructions, and
-   * `runner_overhead`, with an invocation, the number of tests the run
+   * `prune_dependency_analysis`, with the name of the function whose
+   * instructions were counted, a positive count of them and the exit status
+   * of the run which stamped, and `prune_analysis` (the older field, kept
+   * and not plotted), with an invocation and a count of instructions, and
+   * `runner_overhead`, with an invocation, the exit status of the run, the number of tests the run
    * reported (or null, if it reported none) and a count of system calls for
    * each of `runnerSyscallCategories`.
    *
@@ -207,6 +210,13 @@
     const executable = record.executable || {};
     if (!isCount(executable.symbols)) problems.push('it has no count of the executable\'s symbols');
     if (!isCount(executable.symbol_name_bytes)) problems.push('it has no count of the executable\'s name bytes');
+    if (Object.hasOwn(record, 'prune_dependency_analysis')) {
+      const analysis = record.prune_dependency_analysis;
+      if (analysis === null || typeof analysis !== 'object' || !isCount(analysis.instructions) || analysis.instructions === 0
+          || typeof analysis.function !== 'string' || !isCount(analysis.stamping_exit_status)) {
+        problems.push('it has a prune_dependency_analysis with no function, no positive count of instructions, or no exit status');
+      }
+    }
     if (Object.hasOwn(record, 'prune_analysis')) {
       const analysis = record.prune_analysis;
       if (analysis === null || typeof analysis !== 'object' || !isCount(analysis.instructions)
@@ -219,6 +229,7 @@
       if (overhead === null || typeof overhead !== 'object' || typeof overhead.invocation !== 'string') {
         problems.push('it has a runner_overhead with no invocation');
       } else {
+        if (!isCount(overhead.exit_status)) problems.push('it has a runner_overhead with no exit status');
         if (overhead.tests !== null && !(isCount(overhead.tests) && overhead.tests > 0)) {
           problems.push('it has a runner_overhead whose number of tests is neither null nor a positive integer');
         }
@@ -246,30 +257,65 @@
 
   /**
    * Returns the system calls of `category` which the runner made per test in
-   * `record`'s run, or null if the record has no count of its overhead, or its
-   * run reported no number of tests. Such a record is left out of the series,
-   * not plotted as zero.
+   * `record`'s run, or null if the record has no count of its overhead, its
+   * run failed (a nonzero exit status, whether a failing test, a crash or a signal), or it reported no number of
+   * tests. Such a record is left out of the series, not plotted as zero.
    *
    * @param {JsonRecord} record
    * @param {string} category one of `runnerSyscallCategories`
    * @returns {number | null}
    */
   function runnerSyscallPerTest(record, category) {
-    if (!Object.hasOwn(record, 'runner_overhead') || record.runner_overhead.tests === null) return null;
+    if (!Object.hasOwn(record, 'runner_overhead') || record.runner_overhead.exit_status !== 0
+        || record.runner_overhead.tests === null) return null;
     const {tests, syscalls} = record.runner_overhead;
     return syscalls[category] / tests;
   }
 
   /**
-   * Returns the instructions counted in `record`'s run of prune's analysis,
-   * or null if the record has none: an old record, or one whose measurement
-   * failed. Such a record is left out of the series, not plotted as zero.
+   * Returns the instructions counted inside prune's analysis in `record`'s
+   * run, or null if the record has none (an old record, or one whose
+   * measurement failed) or the run which stamped failed (a nonzero
+   * `stamping_exit_status`). Such a record is left out of the series, not
+   * plotted as zero.
    *
    * @param {JsonRecord} record
    * @returns {number | null}
    */
   function pruneInstructions(record) {
-    return Object.hasOwn(record, 'prune_analysis') ? record.prune_analysis.instructions : null;
+    if (!Object.hasOwn(record, 'prune_dependency_analysis') || record.prune_dependency_analysis.stamping_exit_status !== 0) return null;
+    return record.prune_dependency_analysis.instructions;
+  }
+
+  /**
+   * Says which of the prune and runner panels to show for `points`: one with
+   * a point to plot, or with a point left out for failure, so that a panel
+   * whose every point failed still says why it is empty.
+   *
+   * @param {Point[]} points
+   * @returns {{prune: boolean, runner: boolean}}
+   */
+  function panelsShown(points) {
+    const excluded = excludedForFailures(points);
+    return {
+      prune:  excluded.prune  > 0 || points.some(({record}) => pruneInstructions(record) !== null),
+      runner: excluded.runner > 0 || points.some(({record}) => runnerSyscallPerTest(record, runnerSyscallCategories[0]) !== null)
+    };
+  }
+
+  /**
+   * Returns how many of `points` hold a measurement which was left out of its
+   * series because its run failed (a nonzero exit status): `prune` counts those with a
+   * `prune_dependency_analysis` of a nonzero `stamping_exit_status`, `runner`
+   * those with a `runner_overhead` of a nonzero `exit_status`.
+   *
+   * @param {Point[]} points
+   * @returns {{prune: number, runner: number}}
+   */
+  function excludedForFailures(points) {
+    const failed = (/** @type {any} */ field, /** @type {string} */ status) =>
+      points.filter(({record}) => Object.hasOwn(record, field) && record[field][status] !== 0).length;
+    return {prune: failed('prune_dependency_analysis', 'stamping_exit_status'), runner: failed('runner_overhead', 'exit_status')};
   }
 
   /**
@@ -583,6 +629,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, runnerSyscallCategories, runnerSyscallPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, excludedForFailures, panelsShown, runnerSyscallCategories, runnerSyscallPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));
