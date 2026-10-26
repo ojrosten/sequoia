@@ -30,9 +30,9 @@ functions is seen. A file with records of lines alone has a record.
 than the file's uncalled functions in the tracefile count it. So `tighten`
 only removes keys, and it drops a file left with none.
 `count` prints, as JSON, `uncalled_functions`, the number of keys the baseline
-lists, a key listed twice counting twice. It also prints `toolchain`, the
-header's lines sorted into `demanglers` and `tools`, which name the tools that
-measured the baseline. It reads no tracefile. The gate fails on an uncalled
+lists, a key listed twice counting twice. It also prints `toolchain`: the
+header's lines, sorted into `demanglers` and `tools`. Together they name the
+tools that measured the baseline. It reads no tracefile. The gate fails on an uncalled
 function the baseline lacks, so a tightened baseline made from a run which
 passed the gate lists as many keys as the run found uncalled functions.
 `count` refuses a header line which is neither a demangler nor a tool.

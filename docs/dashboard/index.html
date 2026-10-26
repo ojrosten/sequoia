@@ -168,7 +168,7 @@
       <figcaption><h2>Uncalled functions in Source</h2>
         <p>The functions of <code>Source/</code> which the coverage gate lists as uncalled, instantiations collapsed.
           The coverage gate's nightly measurement counts them at the commit staging is then at, and only if staging
-          has moved since the last one, so only some points have a count. The line joins them. A vertical line marks a change of the tools which measured
+          has moved since the last one, so only some points have a count. A line joins them. A vertical line marks a change of the tools which measured
           it, which is independent of the symbol table's toolchain.</p></figcaption>
       <div class="plot" id="uncalled-plot"></div>
     </figure>
@@ -388,8 +388,9 @@
       lastDrawnLabelX = at;
     });
 
-    // A line runs through the points which have the measure and share a run. A point without the measure
-    // ends the line, unless the measure joins gaps.
+    // A line runs through the points which have the measure and have the same `runOf`: the toolchain, and for
+    // the runner's measures the boundary too. A point without the measure ends the line, unless the measure
+    // joins gaps.
     const runs = [];
     const runOf = point => measure.runOf ? measure.runOf(point) : point.run;
     let joined = null;

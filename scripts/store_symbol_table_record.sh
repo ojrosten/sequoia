@@ -29,17 +29,20 @@
 # A field is never changed, nor removed. If the offered record adds nothing, the
 # script says so and succeeds, and the branch is left as it was: a run repeated
 # at one commit has nothing new to say. If it adds fields, the union is stored
-# as jq's output with the keys sorted, and with the offered record's run, since
-# that run made the added fields.
+# as jq's output with the keys sorted. It carries the offered record's run,
+# since that run made the added fields.
 #
-# A measured count is one which a rerun of one commit moves a little. Reruns
-# of one commit moved prune's instruction count by 2 and by 49 parts in a
-# million, and the runner setup's instructions by 0.092% and its system calls
-# by 0.014%, with the performance tests excluded. Each count is named in
-# measured_fields below with a tolerance of its own, as the denominator of a
-# relative difference: 10,000 for prune's, 200 for each of the setup's. A count
-# which differs from the held one by less than that is taken to be the held
-# one; the script prints the difference, and the first measurement stands.
+# A rerun of one commit moves the measured counts a little. So a measured
+# count within 1 in `denominator` of the held one, as a fraction of the held
+# count, is taken to be the held one: the held value stands, and the script
+# prints the difference. Each count is named in measured_fields below with a
+# denominator of its own: 1 in 10,000 for prune's, 1 in 200 for each of the
+# setup's.
+#
+# The spread measured, with the performance tests excluded from the setup's
+# runs: prune's analysis moved by 2 and by 49 parts in a million on two pairs
+# of reruns; the setup's instructions by 0.092% and its system calls by
+# 0.014%.
 #
 # A branch which does not exist is created, with no history. The push is
 # never forced. When it fails - as it does when another run pushed first -

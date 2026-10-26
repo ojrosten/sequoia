@@ -3,9 +3,10 @@
 // toolchain changes, and which objects moved between two records. Nothing
 // here touches the page, so the selftest can run it under Node.
 //
-// A record is stored as symbol-table/<column>/<commit>.json on the metrics
-// branch. scripts/symbol_table_report.py says what a record holds, and
-// .github/workflows/symbol-table.yml which fields are added to it.
+// A symbol-table record is stored as symbol-table/<column>/<commit>.json on
+// the metrics branch. scripts/symbol_table_report.py and
+// scripts/symbol_table_provenance.py say what it holds, and symbol-table.yml
+// adds `prune_dependency_analysis` and `runner_setup`.
 /** @param {Record<string, any>} exports */
 (function (exports) {
   'use strict';
@@ -197,7 +198,7 @@
    *    positive number of tests and a positive count for each of
    *    `runnerSetupEvents`;
    *  - `prune_analysis`, a field no longer written, with an invocation and a
-   *    count of instructions, which is checked and not plotted;
+   *    count of instructions. It is checked and not plotted;
    *  - `runner_overhead`, a field no longer written, which is neither checked
    *    nor plotted.
    *
@@ -250,8 +251,8 @@
   /**
    * The events a record's `runner_setup` counts: callgrind's Ir
    * (instructions) and sysCount (system calls). They count the runner's work
-   * in `test_to_run::execute` outside `execution_timer::time_execution`, in
-   * which the test runs.
+   * in `test_to_run::execute` outside `execution_timer::time_execution`, the
+   * function that runs the test.
    */
   const runnerSetupEvents = ['instructions', 'syscalls'];
 

@@ -13,12 +13,10 @@
 # must both be present, and agree on Ir. The system calls are those of the
 # "totals:" line.
 #
-# Callgrind's documentation does not say how its two lines differ. In runs
-# 40186679215 and 40186689490 of symbol-table.yml, with --collect-systime=yes,
-# they agreed on Ir (311650326) and differed on sysCount (summary 1719515,
-# totals 833201) and on sysTime. So the totals are taken to count the
-# collected regions, and the summary every system call of the run: the lines
-# are compared on Ir alone, and sysCount is read from the totals.
+# The two lines are compared on Ir alone, and sysCount is read from the totals,
+# since the lines disagree on sysCount. The summary is taken to count system
+# calls outside the collected regions too; that is an inference from the
+# counts, not something callgrind's documentation states.
 #
 # The tests are counted from the runner's own execution records: the
 # executable's directory under output/ExecutionRecords holds a file for each
@@ -30,10 +28,8 @@
 # empty file, so the tests are the non-empty files. The directory must hold no
 # record of an earlier run, so the caller removes it before the run.
 #
-# The boundary is copied into the field. It names what was counted: the
-# functions, the executable and its options. The caller gives a different
-# boundary when any of them changes, so that a reader can tell that the counts
-# are not of one series.
+# The boundary is copied into the field. The caller must change it whenever the
+# functions counted, the executable or its options change.
 #
 # The exit status is that of the run, as the executable's main gives it:
 # 0 when the run passed, else 80 plus the flags of the run's return_code

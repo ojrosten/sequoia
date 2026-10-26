@@ -304,17 +304,15 @@ jobs:
       # toggles collection only on the call at recursion depth 0. They are
       # counted from the runner's execution records, a file for each test the
       # run executed, so the directory is emptied first.
-      # scripts/runner_setup_record.sh reads the totals and the records, and
-      # says what a pass is. The `boundary` field names the functions, the
-      # executable and its options, so that a change of any starts a new
-      # series.
+      # scripts/runner_setup_record.sh reads the totals and the records. The
+      # `boundary` argument must change whenever the functions counted, the
+      # executable or its options do.
       #
       # --exclude-performance leaves out the performance tests: they are timed
       # by the clock, so they retry and report according to the speed of the
       # machine, which moved the count by 0.34% between two runs of one commit,
-      # and callgrind's slowing of the run can fail them. Without them, reruns
-      # of one commit have moved the instructions by 0.092% and the system
-      # calls by 0.014%.
+      # and callgrind's slowing of the run can fail them. The spread without
+      # them is in scripts/store_symbol_table_record.sh.
       #
       # `exclude OutputFreeTest.cpp` leaves out the one test file with a check
       # which fails under callgrind: "Long double values in a class-type

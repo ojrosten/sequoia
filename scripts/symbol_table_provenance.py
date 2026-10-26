@@ -130,8 +130,8 @@ def read_record(path):
 def with_provenance(record, record_path):
     """Returns `record`, read from `record_path`, with its packages and run.
 
-    Exits if the record has a run already, or no toolchain, or if a tool has
-    no path or a package already.
+    Exits if the record has a run, has no toolchain, has a tool with no path,
+    or has a tool with a package already.
     """
     if "run" in record:
         sys.exit(f"{record_path} already has a run")
