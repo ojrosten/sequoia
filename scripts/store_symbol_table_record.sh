@@ -34,11 +34,12 @@
 # measured. They are named in measuring_run_paths below. They stay with the
 # counts they describe:
 #   - none is ever compared, since another job measuring the commit differs
-#     in each: its CPU, and whether a timing test of its stamping run failed;
+#     in each: its CPU, and whether a timing test in one of its runs failed;
 #   - the held section's stands, with the held counts;
-#   - a held section which lacks one, as every record made before it was
-#     recorded, is not given the offered one, since the held counts were not
-#     measured on that CPU or by that run;
+#   - a held section which lacks one is not given the offered one, since the
+#     held counts were not measured on that CPU or by that run; records made
+#     before the CPU model was recorded lack it, and every section has had its
+#     exit statuses since it was first written;
 #   - a section which only the offered record has is added whole, with its
 #     own;
 #   - if the merge adds a sub-field to a held section, the section's counts
