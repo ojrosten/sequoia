@@ -26,18 +26,30 @@
 #     adds nothing and leaves the branch as it was; a field both have and
 #     which differs, whether beside an addition or not, whether the offered
 #     one is new or was itself added, is refused and the held record kept;
+#   - the model name of the CPU of a measurement, cpu_model in the section of
+#     prune's analysis or of the runner's setup, is never compared: an offer
+#     differing from the held record in it alone, or in it and by a count
+#     within its tolerance, is accepted; the held section keeps its model
+#     name with its counts, whether the offer adds a field or not; a held
+#     section without one is not given the offered one, though a section
+#     which only the offer has is added with its own; a count beyond its
+#     tolerance is still refused beside a differing model name; a sub-field
+#     which the offer adds to a held section leaves it its model name only if
+#     the offered section has the same, and otherwise, or if the held section
+#     has none, leaves it none;
 #   - the union is taken at every depth: a sub-field of a held object is
 #     added, and one the offer lacks is kept;
 #   - a measured count, with the tolerance of its own (prune's instructions 1
-#     part in 10000, the runner setup's instructions and system calls 1 part in
-#     200), which differs from the held one by less than that is taken to be
-#     the held one: the record is accepted, the difference said, and the held
-#     count kept, in a record which adds a field as in one which adds none; a
-#     difference of exactly the tolerance, or more, is refused with the
-#     difference shown, as is a difference in a field which is not measured
-#     (the symbols) however small, even beside a measured count within its
-#     tolerance; a tolerance is the field's own, so a difference which one
-#     field's tolerance accepts is refused by a field with a smaller;
+#     part in 1000, the runner setup's instructions 1 part in 50 and its system
+#     calls 1 part in 200), which differs from the held one by less than that
+#     is taken to be the held one: the record is accepted, the difference
+#     said, and the held count kept, in a record which adds a field as in one
+#     which adds none; a difference of exactly the tolerance, or more, is
+#     refused with the difference shown, as is a difference in a field which
+#     is not measured (the symbols) however small, even beside a measured
+#     count within its tolerance; a tolerance is the field's own, so a
+#     difference which one field's tolerance accepts is refused by a field
+#     with a smaller;
 #   - in a clone without blobs, a held record whose blob cannot be fetched is
 #     a failure, not a record absent;
 #   - a push refused because another push came first is retried on the new
@@ -123,6 +135,17 @@ fixture() {
   record "$work/A-added-changed.json" "$A" 101 6 true ', "prune_analysis": {"instructions": 7}'
   record "$work/A-added-other.json"   "$A" 100 7 true ', "prune_analysis": {"instructions": 8}'
   record "$work/A-null.json"   "$A" 100 8 true ', "note": null'
+  # measurements of both sections on CPUs of different models: the same
+  # counts, counts within their tolerances, and a count beyond its tolerance
+  local both='"prune_dependency_analysis": {"instructions": %s, "cpu_model": "%s"}, "runner_setup": {"instructions": 1000000000, "syscalls": 834813, "cpu_model": "%s"}'
+  local amd='AMD EPYC 7763 64-Core Processor' intel='Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz'
+  record "$work/C-amd.json"          "$A" 100 41 true ", $(printf "$both" 1000000000 "$amd" "$amd")"
+  record "$work/C-intel.json"        "$A" 100 42 true ", $(printf "$both" 1000000000 "$intel" "$intel")"
+  record "$work/C-intel-near.json"   "$A" 100 43 true ", $(printf "$both" 1000999999 "$intel" "$intel")"
+  record "$work/C-intel-far.json"    "$A" 100 44 true ", $(printf "$both" 1001000000 "$intel" "$intel")"
+  record "$work/C-sub-amd.json"      "$A" 100 46 true ", $(printf "$both" 1000000000 "$amd" "$amd" | sed 's/834813,/834813, "other": 5,/')"
+  record "$work/C-sub-intel.json"    "$A" 100 47 true ", $(printf "$both" 1000000000 "$intel" "$intel" | sed 's/834813,/834813, "other": 5,/')"
+  record "$work/C-intel-added.json"  "$A" 100 45 true ", $(printf "$both" 1000000000 "$intel" "$intel"), \"extra\": 1"
   # a held record with an old measurement and a nested object, offers which
   # drop the old measurement, add a nested sub-field, or lack one
   record "$work/U.json"        "$A" 100 31 true ', "prune_analysis": {"instructions": 7}, "runner_setup": {"instructions": 1000}'
@@ -133,25 +156,25 @@ fixture() {
   record "$work/U-only-old.json" "$A" 100 36 true ', "runner_setup": {"instructions": 1000}'
 
   # runner_setup: 1000000000 instructions and 834813 system calls are held,
-  # each with a tolerance of 1 in 200, so 5000000 and 4174.065 are too far;
-  # prune_dependency_analysis has 1 in 10000, so 100000 is too far
+  # with tolerances of 1 in 50 and 1 in 200, so 20000000 and 4174.065 are too
+  # far; prune_dependency_analysis has 1 in 1000, so 1000000 is too far
   local setup='"runner_setup": {"instructions": %s, "syscalls": %s}'
   record "$work/S.json"          "$A" 100 11 true ", $(printf "$setup" 1000000000 834813)"
-  record "$work/S-near.json"     "$A" 100 12 true ", $(printf "$setup" 1004999999 834813)"
-  record "$work/S-near-down.json" "$A" 100 13 true ", $(printf "$setup" 995000001 834813)"
-  record "$work/S-boundary.json" "$A" 100 14 true ", $(printf "$setup" 1005000000 834813)"
-  record "$work/S-far.json"      "$A" 100 15 true ", $(printf "$setup" 1010000000 834813)"
-  record "$work/S-far-down.json" "$A" 100 24 true ", $(printf "$setup" 990000000 834813)"
+  record "$work/S-near.json"     "$A" 100 12 true ", $(printf "$setup" 1019999999 834813)"
+  record "$work/S-near-down.json" "$A" 100 13 true ", $(printf "$setup" 980000001 834813)"
+  record "$work/S-boundary.json" "$A" 100 14 true ", $(printf "$setup" 1020000000 834813)"
+  record "$work/S-far.json"      "$A" 100 15 true ", $(printf "$setup" 1030000000 834813)"
+  record "$work/S-far-down.json" "$A" 100 24 true ", $(printf "$setup" 970000000 834813)"
   record "$work/S-syscalls.json" "$A" 100 16 true ", $(printf "$setup" 1000000000 837000)"
   record "$work/S-syscalls-far.json" "$A" 100 25 true ", $(printf "$setup" 1000000000 840000)"
-  record "$work/S-near-symbols.json" "$A" 101 17 true ", $(printf "$setup" 1004999999 834813)"
+  record "$work/S-near-symbols.json" "$A" 101 17 true ", $(printf "$setup" 1019999999 834813)"
   record "$work/P.json"          "$A" 100 18 true ', "prune_dependency_analysis": {"instructions": 1000000000}'
-  record "$work/P-near.json"     "$A" 100 19 true ', "prune_dependency_analysis": {"instructions": 1000099999}'
-  record "$work/P-far.json"      "$A" 100 20 true ', "prune_dependency_analysis": {"instructions": 1000100000}'
+  record "$work/P-near.json"     "$A" 100 19 true ', "prune_dependency_analysis": {"instructions": 1000999999}'
+  record "$work/P-far.json"      "$A" 100 20 true ', "prune_dependency_analysis": {"instructions": 1001000000}'
   record "$work/P-near-added.json" "$A" 100 21 true \
-         ", \"prune_dependency_analysis\": {\"instructions\": 1000099999}, $(printf "$setup" 5 7)"
+         ", \"prune_dependency_analysis\": {\"instructions\": 1000999999}, $(printf "$setup" 5 7)"
   record "$work/N.json"          "$A" 100 22 true ', "other_count": {"instructions": 1000000000}'
-  record "$work/N-near.json"     "$A" 100 23 true ', "other_count": {"instructions": 1000099999}'
+  record "$work/N-near.json"     "$A" 100 23 true ', "other_count": {"instructions": 1000999999}'
   clone_state=$(clone_state)
 }
 
@@ -251,6 +274,95 @@ same_commit_controls() {
   same "the branch is left as it was" "$first" "$(tip)"
   same "the record held is the first" "$(cat "$work/A.json")" "$(held "$A")"
   unchanged_clone "a record for a commit held"
+}
+
+# The CPU model of a measurement stays with the measurement's counts.
+cpu_controls() {
+  local first amd='AMD EPYC 7763 64-Core Processor' intel='Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz'
+  fixture
+  store C-amd; first=$(tip)
+  store C-intel
+  exits "an offer differing in the CPU models alone succeeds" 0
+  says "it is the same but for its run" 'the same but for its run: https://example.invalid/runs/41$' "$out"
+  same "it leaves the branch as it was" "$first" "$(tip)"
+  same "prune's section keeps its CPU model" "$amd" "$(held "$A" | jq -r '.prune_dependency_analysis.cpu_model')"
+  same "the setup's section keeps its CPU model" "$amd" "$(held "$A" | jq -r '.runner_setup.cpu_model')"
+
+  store C-intel-near
+  exits "an offer differing in the CPU models and by counts within their tolerances succeeds" 0
+  says "the counts are said to be within tolerance" 'prune_dependency_analysis.instructions: held 1000000000, offered 1000999999' "$out"
+  same "the branch is as it was after counts within tolerance" "$first" "$(tip)"
+
+  store C-intel-far
+  exits "an offer differing in the CPU models and by a count beyond its tolerance" nonzero
+  says "the count is shown" '"instructions": 1001000000' "$err"
+  same "the branch is as it was after a count beyond" "$first" "$(tip)"
+
+  store C-intel-added
+  exits "an offer adding a field, with another CPU model, succeeds" 0
+  same "the held CPU model of prune's section stands" "$amd" "$(held "$A" | jq -r '.prune_dependency_analysis.cpu_model')"
+  same "the held CPU model of the setup's section stands" "$amd" "$(held "$A" | jq -r '.runner_setup.cpu_model')"
+  same "the field added is there" "1" "$(held "$A" | jq '.extra')"
+  unchanged_clone "differing CPU models"
+
+  # A sub-field which the offer adds to a held section
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store C-amd; first=$(tip)
+  store C-sub-intel
+  exits "a sub-field added beside another CPU model succeeds" 0
+  same "the sub-field is added" "5" "$(held "$A" | jq '.runner_setup.other')"
+  same "the section has no CPU model" "false" "$(held "$A" | jq '.runner_setup | has("cpu_model")')"
+  same "prune's section, which gained nothing, keeps its CPU model" "$amd" \
+       "$(held "$A" | jq -r '.prune_dependency_analysis.cpu_model')"
+
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store C-amd; first=$(tip)
+  store C-sub-amd
+  exits "a sub-field added beside the same CPU model succeeds" 0
+  same "the sub-field is added to the section" "5" "$(held "$A" | jq '.runner_setup.other')"
+  same "the section keeps its CPU model" "$amd" "$(held "$A" | jq -r '.runner_setup.cpu_model')"
+
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store S; first=$(tip)
+  store C-sub-amd
+  exits "a sub-field added to a held section without a CPU model succeeds" 0
+  same "the sub-field is added" "5" "$(held "$A" | jq '.runner_setup.other')"
+  same "the section has none" "false" "$(held "$A" | jq '.runner_setup | has("cpu_model")')"
+  same "prune's section, added whole, has the offer's" "$amd" "$(held "$A" | jq -r '.prune_dependency_analysis.cpu_model')"
+
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store A; first=$(tip)
+  store C-intel
+  exits "an offer adding both sections succeeds" 0
+  same "prune's section is added with the offer's CPU model" "$intel" "$(held "$A" | jq -r '.prune_dependency_analysis.cpu_model')"
+  same "the setup's section is added with the offer's CPU model" "$intel" "$(held "$A" | jq -r '.runner_setup.cpu_model')"
+
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store S; first=$(tip)
+  store C-amd
+  exits "an offer with CPU models to a held setup without one succeeds" 0
+  says "it adds the section of prune alone" 'adds to: prune_dependency_analysis$' "$out"
+  same "the held setup has no CPU model" "false" "$(held "$A" | jq '.runner_setup | has("cpu_model")')"
+  same "the held setup counts stand" "1000000000" "$(held "$A" | jq '.runner_setup.instructions')"
+  same "prune's section, which the offer added, has its CPU model" "$amd" \
+       "$(held "$A" | jq -r '.prune_dependency_analysis.cpu_model')"
+
+  store C-amd
+  exits "the offer again" 0
+  says "it adds nothing, though the held setup lacks its CPU model" 'the same but for its run' "$out"
+
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store C-amd; first=$(tip)
+  store S
+  exits "an offer without CPU models to a held section with them" 0
+  same "the branch is as it was" "$first" "$(tip)"
+  same "the held CPU model stands" "$amd" "$(held "$A" | jq -r '.runner_setup.cpu_model')"
 }
 
 # A backfill measures commits recorded before the measurement existed, so
@@ -355,10 +467,10 @@ tolerance_controls() {
   fixture
   store S; first=$(tip)
   store S-near
-  exits "a runner_setup count within the tolerance succeeds" 0
+  exits "a runner_setup count within 1 in 50, beyond 1 in 200, succeeds" 0
   says "it says the counts are within their tolerances" 'within their tolerances of those of symbol-table/linux/' "$out"
   says "it shows the difference and the tolerance" \
-       'runner_setup.instructions: held 1000000000, offered 1004999999, tolerance 1 in 200' "$out"
+       'runner_setup.instructions: held 1000000000, offered 1019999999, tolerance 1 in 50' "$out"
   same "it leaves the branch as it was" "$first" "$(tip)"
   same "the held record is the first measurement, byte for byte" "$(cat "$work/S.json")" "$(held "$A")"
 
@@ -367,18 +479,18 @@ tolerance_controls() {
   same "the branch is as it was after a lower count" "$first" "$(tip)"
 
   store S-boundary
-  exits "a count differing by exactly 1 part in 200" nonzero
-  says "the difference is shown" '"instructions": 1005000000' "$err"
+  exits "a count differing by exactly 1 part in 50" nonzero
+  says "the difference is shown" '"instructions": 1020000000' "$err"
   same "the branch is as it was after the boundary" "$first" "$(tip)"
 
   store S-far
   exits "a count beyond the tolerance" nonzero
-  says "the difference of a count beyond is shown" '"instructions": 1010000000' "$err"
+  says "the difference of a count beyond is shown" '"instructions": 1030000000' "$err"
   same "the held record is kept after a count beyond" "$first" "$(tip)"
 
   store S-far-down
   exits "a count beyond the tolerance below the held one" nonzero
-  says "the difference of a count below is shown" '"instructions": 990000000' "$err"
+  says "the difference of a count below is shown" '"instructions": 970000000' "$err"
 
   store S-syscalls
   exits "a system call count within 1 in 200 but beyond 1 in 10000 succeeds" 0
@@ -401,10 +513,10 @@ tolerance_controls() {
   store P; first=$(tip)
   store P-near
   exits "a prune_dependency_analysis count within the tolerance succeeds" 0
-  says "it shows the difference" 'prune_dependency_analysis.instructions: held 1000000000, offered 1000099999' "$out"
+  says "it shows the difference" 'prune_dependency_analysis.instructions: held 1000000000, offered 1000999999' "$out"
   same "the branch is as it was after the prune count" "$first" "$(tip)"
   store P-far
-  exits "a prune_dependency_analysis count beyond 1 in 10000, within 1 in 200" nonzero
+  exits "a prune_dependency_analysis count at exactly 1 in 1000, within 1 in 50" nonzero
   same "the branch is as it was after a prune count beyond" "$first" "$(tip)"
 
   # A record which adds a field, and has a count within the tolerance, is
@@ -516,7 +628,7 @@ refusal_controls() {
 run_controls() { # run_controls <script>: sets fails, and total, the controls run
   subject=$1 fails=0 total=0
   local control
-  for control in create_controls beside_controls same_commit_controls adding_controls union_controls tolerance_controls blobless_controls rival_controls \
+  for control in create_controls beside_controls same_commit_controls cpu_controls adding_controls union_controls tolerance_controls blobless_controls rival_controls \
                  refusal_controls; do
     work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
     "$control"
@@ -555,31 +667,51 @@ mutant 'a conflict not refused'        'if [ "$(jq '"'"'.conflicts | length'"'"'
 mutant 'a no-op committed'             'if [ "$(jq '"'"'.added | length'"'"' <<< "$merged")" -eq 0 ]; then' 'if false; then'
 mutant 'a record with more not said'   'echo "$branch already holds $path, with every field of $record and more' 'echo "$branch already holds $path, the same but for its run'
 mutant 'an addition not named'         '[.added[] | join(".")] | join(", ")' '""'
+mutant 'the CPU model of prune compared' \
+       '  ["prune_dependency_analysis", "cpu_model"],
+' ''
+mutant 'the CPU model of the setup compared' \
+       ',
+  ["runner_setup",              "cpu_model"]' ''
+mutant 'a model kept beside an added sub-field' \
+       'then del(.value.cpu_model) else . end' 'then . else . end'
+mutant 'a model dropped beside an added sub-field of the same CPU' \
+       'and ($h.cpu_model == null or $h.cpu_model != $o.cpu_model)' 'and true'
+mutant 'the offered model adopted beside an added sub-field' \
+       'then del(.value.cpu_model) else . end' 'then .value.cpu_model = $o.cpu_model else . end'
+mutant 'an offered CPU model added to a held section' '           elif is_cpu_model_path($path + [$key]) then .
+' ''
+mutant 'the offered CPU model replaces the held' '{value: $h} + none
+       elif ($h | type) == "object"' '{value: $o} + none
+       elif ($h | type) == "object"'
 mutant 'the run compared too'          "without_run() { jq -S 'del(.run)'" "without_run() { jq -S '.'"
 mutant 'every count measured'          '  {"path": ["runner_setup", "syscalls"],                  "denominator": 200}' \
                                        '  {"path": ["runner_setup", "syscalls"],                  "denominator": 200},
   {"path": ["other_count", "instructions"],               "denominator": 200}'
-mutant 'prune counts not measured'     '  {"path": ["prune_dependency_analysis", "instructions"], "denominator": 10000},
+mutant 'prune counts not measured'     '  {"path": ["prune_dependency_analysis", "instructions"], "denominator": 1000},
 ' ''
-mutant 'setup instructions not measured' '  {"path": ["runner_setup", "instructions"],              "denominator": 200},
+mutant 'setup instructions not measured' '  {"path": ["runner_setup", "instructions"],              "denominator": 50},
 ' ''
 mutant 'setup system calls not measured' ',
   {"path": ["runner_setup", "syscalls"],                  "denominator": 200}' ''
-mutant 'prune with the setup tolerance' '"instructions"], "denominator": 10000}' '"instructions"], "denominator": 200}'
+mutant 'prune with the setup tolerance' '"instructions"], "denominator": 1000}' '"instructions"], "denominator": 50}'
+mutant "prune with its old tolerance"  '"instructions"], "denominator": 1000}' '"instructions"], "denominator": 10000}'
 mutant 'setup instructions with the prune tolerance' \
-       '["runner_setup", "instructions"],              "denominator": 200}' \
+       '["runner_setup", "instructions"],              "denominator": 50}' \
        '["runner_setup", "instructions"],              "denominator": 10000}'
 mutant 'setup system calls with the prune tolerance' \
        '["runner_setup", "syscalls"],                  "denominator": 200}
 ]' '["runner_setup", "syscalls"],                  "denominator": 10000}
 ]'
 mutant 'the tolerances of prune and the setup swapped' \
-       '  {"path": ["prune_dependency_analysis", "instructions"], "denominator": 10000},
-  {"path": ["runner_setup", "instructions"],              "denominator": 200},' \
-       '  {"path": ["prune_dependency_analysis", "instructions"], "denominator": 200},
-  {"path": ["runner_setup", "instructions"],              "denominator": 10000},'
-mutant 'the tolerance of the setup 1 in 100' '["runner_setup", "instructions"],              "denominator": 200}' \
+       '  {"path": ["prune_dependency_analysis", "instructions"], "denominator": 1000},
+  {"path": ["runner_setup", "instructions"],              "denominator": 50},' \
+       '  {"path": ["prune_dependency_analysis", "instructions"], "denominator": 50},
+  {"path": ["runner_setup", "instructions"],              "denominator": 1000},'
+mutant 'the tolerance of the setup 1 in 100' '["runner_setup", "instructions"],              "denominator": 50}' \
                                        '["runner_setup", "instructions"],              "denominator": 100}'
+mutant "setup instructions with their old tolerance" '["runner_setup", "instructions"],              "denominator": 50}' \
+                                       '["runner_setup", "instructions"],              "denominator": 200}'
 mutant 'the tolerance of the setup 1 in 400' '["runner_setup", "syscalls"],                  "denominator": 200}
 ]' '["runner_setup", "syscalls"],                  "denominator": 400}
 ]'

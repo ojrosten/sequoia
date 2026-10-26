@@ -9,7 +9,11 @@ name: symbol-table
 # A commit whose presets lack `gcc-env`, as every commit before 2026-09-06
 # does, cannot be recorded: its job fails at "Configure".
 # scripts/symbol_table_report.py says what a record holds, and
-# scripts/symbol_table_provenance.py what it adds to it.
+# scripts/symbol_table_provenance.py what it adds to it. The step which adds
+# the count of prune's analysis, and the step which adds the runner's setup,
+# each also adds `cpu_model` to its section: the model name of the CPU of the
+# runner which ran the job. scripts/store_symbol_table_record.sh says how the
+# store treats it.
 #
 # The workflow builds TestAll and runs its suite once, only to leave prune a
 # stamp. It then runs `TestAll prune` under callgrind, to count the
@@ -346,10 +350,16 @@ jobs:
             > "$RUNNER_TEMP/runner_setup.json"
           cat "$RUNNER_TEMP/runner_setup.json"
 
+      # The model name is read where the section is added, so that a refusal
+      # to read it costs the section and not the record.
       - name: Add the count of prune's analysis to the record
+        id: add_analysis
+        continue-on-error: true
         run: |
           if [ -s "$RUNNER_TEMP/prune_dependency_analysis.json" ]; then
-            jq -S --slurpfile analysis "$RUNNER_TEMP/prune_dependency_analysis.json" '. + {prune_dependency_analysis: $analysis[0]}' \
+            cpu_model=$(python3 -B tooling/scripts/symbol_table_provenance.py --cpu-model)
+            jq -S --slurpfile analysis "$RUNNER_TEMP/prune_dependency_analysis.json" --arg cpu_model "$cpu_model" \
+              '. + {prune_dependency_analysis: ($analysis[0] + {cpu_model: $cpu_model})}' \
               "$SYMBOL_TABLE_RECORD" > "$RUNNER_TEMP/with_analysis.json"
             mv "$RUNNER_TEMP/with_analysis.json" "$SYMBOL_TABLE_RECORD"
           else
@@ -357,15 +367,26 @@ jobs:
           fi
 
       - name: Add the runner's setup to the record
+        id: add_setup
         continue-on-error: true
         run: |
           if [ -s "$RUNNER_TEMP/runner_setup.json" ]; then
-            jq -S --slurpfile setup "$RUNNER_TEMP/runner_setup.json" '. + {runner_setup: $setup[0]}' \
+            cpu_model=$(python3 -B tooling/scripts/symbol_table_provenance.py --cpu-model)
+            jq -S --slurpfile setup "$RUNNER_TEMP/runner_setup.json" --arg cpu_model "$cpu_model" \
+              '. + {runner_setup: ($setup[0] + {cpu_model: $cpu_model})}' \
               "$SYMBOL_TABLE_RECORD" > "$RUNNER_TEMP/with_setup.json"
             mv "$RUNNER_TEMP/with_setup.json" "$SYMBOL_TABLE_RECORD"
           else
             echo "::warning::the runner's setup was not counted, so the record has no runner_setup"
           fi
+
+      - name: Say that prune's analysis was lost
+        if: steps.add_analysis.outcome == 'failure'
+        run: echo "::warning::adding prune's analysis failed, so the record has no prune_dependency_analysis"
+
+      - name: Say that the runner's setup was lost
+        if: steps.add_setup.outcome == 'failure'
+        run: echo "::warning::adding the runner's setup failed, so the record has no runner_setup"
 
       - name: Upload the record
         uses: actions/upload-artifact@v7
