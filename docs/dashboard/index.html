@@ -402,10 +402,11 @@
       lastDrawnLabelX = at;
     });
 
+    const failedAt = index => measure.exitStatus !== undefined && (measure.exitStatus(points[index].record) ?? 0) !== 0;
+
     // A line runs through the points which have the measure and have the same `runOf`: the toolchain, and for
     // the runner's measures the boundary too. A point without the measure ends the line, unless the measure
     // joins gaps.
-    const failedAt = index => measure.exitStatus !== undefined && (measure.exitStatus(points[index].record) ?? 0) !== 0;
     const runs = [];
     const runStarts = [];
     const runOf = point => measure.runOf ? measure.runOf(point) : point.run;
@@ -419,20 +420,21 @@
       joined = point;
       runs[runs.length - 1].push(`${x(index).toFixed(1)},${y(values[index]).toFixed(1)}`);
     });
-    for (const run of runs) {
+    for (const [runIndex, run] of runs.entries()) {
       if (run.length === 1) {
         const [cx, cy] = run[0].split(',');
-        svg.append(marker(cx, cy, 4, failedAt(runStarts[runs.indexOf(run)])));
+        svg.append(marker(cx, cy, 4, failedAt(runStarts[runIndex])));
       }
       svg.append(element('svg:polyline', {points: run.join(' '), fill: 'none', stroke: 'var(--series)', 'stroke-width': 2,
                                           'stroke-linejoin': 'round', 'stroke-linecap': 'round'}));
     }
-    if (symbolDashboard.smallestGap(axisOfTime.xs) >= 14) {
-      points.forEach((point, index) => {
-        if (values[index] === null) return;
-        svg.append(marker(x(index), y(values[index]), 4, failedAt(index)));
-      });
-    }
+    // Every point is marked where the points are far enough apart; where they are not, only the hollow ones are,
+    // so that a failed run shows on any axis.
+    const marksEveryPoint = symbolDashboard.smallestGap(axisOfTime.xs) >= 14;
+    points.forEach((point, index) => {
+      if (values[index] === null || (!marksEveryPoint && !failedAt(index))) return;
+      svg.append(marker(x(index), y(values[index]), 4, failedAt(index)));
+    });
 
     const crosshair = element('svg:line', {y1: margin.top, y2: margin.top + plotHeight, stroke: 'var(--text-muted)',
                                            'stroke-width': 1, visibility: 'hidden'});

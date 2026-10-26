@@ -294,7 +294,8 @@
    * @returns {number | null}
    */
   function pruneExitStatus(record) {
-    return Object.hasOwn(record, 'prune_dependency_analysis') ? record.prune_dependency_analysis.stamping_exit_status : null;
+    if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;
+    return record.prune_dependency_analysis.stamping_exit_status;
   }
 
   /**
@@ -305,7 +306,8 @@
    * @returns {number | null}
    */
   function runnerSetupExitStatus(record) {
-    return Object.hasOwn(record, 'runner_setup') ? record.runner_setup.exit_status : null;
+    if (!Object.hasOwn(record, 'runner_setup')) return null;
+    return record.runner_setup.exit_status;
   }
 
   /**
@@ -316,7 +318,8 @@
    * @returns {number | null}
    */
   function runnerSetupTests(record) {
-    return Object.hasOwn(record, 'runner_setup') ? record.runner_setup.tests : null;
+    if (!Object.hasOwn(record, 'runner_setup')) return null;
+    return record.runner_setup.tests;
   }
 
   /**
@@ -655,6 +658,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, pruneExitStatus, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneExitStatus, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));
