@@ -1,5 +1,5 @@
 #!/bin/bash
-# Store a record of symbol_table_report.py on a data branch, one file per
+# Stores a record of symbol_table_report.py on a data branch, one file per
 # commit.
 #
 #   store_symbol_table_record.sh <remote> <branch> <directory> <record>
@@ -19,7 +19,7 @@
 #     from the records does not lose its history;
 #   - a field only the offered record has is added: a backfill measures a
 #     commit which was recorded before the measurement existed. This holds
-#     beneath an object both have, so a new sub-field of a held object is
+#     within an object both have, so a new sub-field of a held object is
 #     added;
 #   - a field both have must be equal, bar a measured count (below) within
 #     its tolerance, where the held value stands;
@@ -28,9 +28,9 @@
 #     not deterministic, which a person should judge.
 # A field is never changed, nor removed. If the offered record adds nothing, the
 # script says so and succeeds, and the branch is left as it was: a run repeated
-# at one commit has nothing new to say. If it adds fields, the union is stored,
-# with the offered record's run, since it made the fields added, as jq's output
-# with the keys sorted.
+# at one commit has nothing new to say. If it adds fields, the union is stored
+# as jq's output with the keys sorted, and with the offered record's run, since
+# that run made the added fields.
 #
 # A measured count is one which a rerun of one commit moves a little. Reruns
 # of one commit moved prune's instruction count by 2 and by 49 parts in a
@@ -77,9 +77,9 @@ index="$work/index" held_file="$work/held"
 # without_run <file>: the record in <file>, its keys sorted, without its run
 without_run() { jq -S 'del(.run)' "$1" || die "$1 cannot be read as JSON"; }
 
-# The counts which a rerun may move slightly: each one's path into a record,
-# and the denominator of the relative difference below which a count is taken
-# to be the held one
+# The counts which a rerun of one commit may move: each one's path into a
+# record, and the denominator of the relative difference below which a count is
+# taken to be the held one
 measured_fields='[
   {"path": ["prune_dependency_analysis", "instructions"], "denominator": 10000},
   {"path": ["runner_setup", "instructions"],              "denominator": 200},

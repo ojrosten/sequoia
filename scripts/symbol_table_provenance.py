@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Add to a record of symbol_table_report.py the facts its build directory
+"""Adds to a record of symbol_table_report.py the facts its build directory
 does not hold.
 
   symbol_table_provenance.py <record>
@@ -83,6 +83,10 @@ def package_of(path):
 
 
 def environment_value(name):
+    """Returns the value of the environment variable `name`.
+
+    Exits if it is unset or empty.
+    """
     value = os.environ.get(name, "")
     if not value:
         sys.exit(f"{name} is unset or empty: the run is read from GitHub Actions' variables")
@@ -90,6 +94,10 @@ def environment_value(name):
 
 
 def environment_number(name):
+    """Returns the value of the environment variable `name` as an integer.
+
+    Exits unless it is set to decimal digits.
+    """
     value = environment_value(name)
     if not value.isdecimal():
         sys.exit(f"{name} is {value!r}, not a number")
@@ -105,6 +113,10 @@ def this_run():
 
 
 def read_record(path):
+    """Returns the JSON object in the file at `path`.
+
+    Exits if the file cannot be read, or holds no object.
+    """
     try:
         with open(path, encoding="utf-8") as f:
             record = json.load(f)
@@ -116,7 +128,11 @@ def read_record(path):
 
 
 def with_provenance(record, record_path):
-    """Returns `record`, read from `record_path`, with its packages and run."""
+    """Returns `record`, read from `record_path`, with its packages and run.
+
+    Exits if the record has a run already, or no toolchain, or if a tool has
+    no path or a package already.
+    """
     if "run" in record:
         sys.exit(f"{record_path} already has a run")
     tools = [tool for tool in record.get("toolchain", {}).values() if isinstance(tool, dict)]

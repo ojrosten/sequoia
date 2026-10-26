@@ -20,15 +20,14 @@
 #   - the tests are the records of the tests which ran: the three arcs into
 #     execute do not make three more, so a nested call does not inflate them;
 #   - the exit status of a pass is 0, and a nonzero status is recorded, not
-#     refused, since the dashboard leaves its point out;
+#     refused, since the dashboard plots a point whatever its status;
 #   - the system calls are those of the totals, whatever the summary says, since
 #     with --collect-systime the summary counts every system call of the run
 #     (inferred from CI runs, as the script says);
 #   - a count which is zero or missing, a summary whose instructions differ from
 #     its totals', no output, no records and an exit status which is no number
-#     are each
-#     refused, with a ::warning:: on standard error, nothing on standard
-#     output, and success;
+#     are each refused, with a ::warning:: on standard error, nothing on
+#     standard output, and success;
 #   - arguments of any other number are refused with status 2.
 
 set -u
