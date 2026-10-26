@@ -156,12 +156,12 @@
           materials, its records and its output. It is not the test, nor anything the runner does before the first
           test or after the last. The plot is the instructions (callgrind's Ir) so counted, divided by the number of
           tests the run executed. The runner's own execution records give that number, since the runner's tests run
-          runners of their own, whose tests are not counted and whose setup is not collected. Measurements of code
-          that did not change, in different jobs, have moved by up to about 1%. The records also hold callgrind's
-          count of system calls, which is not plotted: its total stayed flat as the number of tests grew by a fifth,
-          so it does not count the setup alone. Points whose record has no count are left out. A change of the run's
-          <code>boundary</code> (a different executable, say) breaks the line, with a marker labelled boundary. A
-          hollow point is one whose run had a non-zero exit status.</p></figcaption>
+          runners of their own, whose tests are not counted and whose setup is not collected. The instructions of code
+          that did not change, measured in different jobs, have moved by up to about 1%. The records also hold
+          callgrind's count of system calls, which is not plotted: its total stayed flat as the number of tests grew
+          by a fifth, so it does not count the setup alone. Points whose record has no count are left out. A change of
+          the run's <code>boundary</code> (a different executable, say) breaks the line, with a marker labelled
+          boundary. A hollow point is one whose run had a non-zero exit status.</p></figcaption>
       <div class="plot" id="runner-plot-instructions"></div>
     </figure>
     <figure class="card" id="uncalled-figure">
