@@ -1,10 +1,11 @@
 // The data behind the symbol dashboard: which records the metrics branch
 // holds, their order along staging's first-parent history, where the
 // toolchain changes, and which objects moved between two records. Nothing
-// here touches the page, so the selftest runs it under Node.
+// here touches the page, so the selftest can run it under Node.
 //
-// A record is the output of scripts/symbol_table_report.py, stored as
-// symbol-table/<column>/<commit>.json on the metrics branch.
+// A record is stored as symbol-table/<column>/<commit>.json on the metrics
+// branch. scripts/symbol_table_report.py says what a record holds, and
+// .github/workflows/symbol-table.yml which fields are added to it.
 /** @param {Record<string, any>} exports */
 (function (exports) {
   'use strict';
@@ -188,14 +189,17 @@
    *
    * A record with no problem is an object holding `commit` as its commit, a
    * clean tree, a toolchain, the executable's symbols and name bytes, and a
-   * count of defined symbols for each object. It may also hold
-   * `prune_dependency_analysis`, with the name of the function whose
-   * instructions were counted, a positive count of them and the exit status
-   * of the run which stamped, and `prune_analysis` (the older field, kept
-   * and not plotted), with an invocation and a count of instructions, and
-   * `runner_setup`, with a boundary, the exit status of the run, a positive
-   * number of tests and a positive count for each of `runnerSetupEvents`.
-   * The older `runner_overhead` is kept and not checked, nor plotted.
+   * count of defined symbols for each object. It may also hold:
+   *  - `prune_dependency_analysis`, with the name of the function whose
+   *    instructions were counted, a positive count of them and the exit
+   *    status of the run which stamped;
+   *  - `runner_setup`, with a boundary, the exit status of the run, a
+   *    positive number of tests and a positive count for each of
+   *    `runnerSetupEvents`;
+   *  - `prune_analysis`, a field no longer written, with an invocation and a
+   *    count of instructions, which is checked and not plotted;
+   *  - `runner_overhead`, a field no longer written, which is neither checked
+   *    nor plotted.
    *
    * @param {JsonRecord} record
    * @param {string} commit
@@ -244,10 +248,10 @@
   }
 
   /**
-   * The events a record's `runner_setup` counts: the instructions and the
-   * system calls (callgrind's Ir and sysCount) of the runner's setup of each
-   * test, that is, of `test_to_run::execute` outside
-   * `execution_timer::time_execution`, where the test runs.
+   * The events a record's `runner_setup` counts: callgrind's Ir
+   * (instructions) and sysCount (system calls). They count the runner's work
+   * in `test_to_run::execute` outside `execution_timer::time_execution`, in
+   * which the test runs.
    */
   const runnerSetupEvents = ['instructions', 'syscalls'];
 
@@ -323,11 +327,11 @@
   }
 
   /**
-   * Returns `points`, those of a column, with each point whose commit has a
-   * record in `uncalledPoints`, built by pointsOf from the records of
-   * uncalled functions, holding in its record `uncalled`: the count, the
-   * toolchain run of the measurement and the toolchain's change from the
-   * measurement before. The two series' toolchains are independent.
+   * Returns `points`, those of a column, with `uncalled` added to the record
+   * of each point whose commit has a point in `uncalledPoints`, those built
+   * by pointsOf from the records of uncalled functions. `uncalled` holds the
+   * count, the toolchain run of the measurement and the toolchain's change
+   * from the measurement before. The two series' toolchains are independent.
    *
    * @param {Point[]} points
    * @param {Point[]} uncalledPoints
@@ -352,12 +356,12 @@
    * whose toolchains are equal. The first point of each run after the
    * first holds the toolchain's differences from the point before it.
    *
-   * A point also holds `setupRun`, the number of changes of the `boundary`
-   * of its `runner_setup` up to it, among the points which have one, and
-   * `boundaryChange`, whether this point's is the first of a different
-   * boundary: the runner's setup of a different boundary (another
+   * A point also holds `setupRun` and `boundaryChange`. The `boundary` of a
+   * `runner_setup` names what was counted, so a different boundary (another
    * executable, say) is a different series, which the plot breaks the line
-   * at.
+   * at. `setupRun` is the number of changes of boundary up to the point,
+   * among the points which have a `runner_setup`, and `boundaryChange` is
+   * whether the point's boundary is the first of a different one.
    *
    * @param {OrderedRecord[]} orderedRecords
    * @returns {Point[]}
@@ -516,8 +520,11 @@
     const notFound = walk.unknown
       ? `the walk along staging's first parents stopped after ${pages} pages of history, before reaching it`
       : 'it is not on staging\'s first-parent history';
-    // The records of `entries` which have no problem by commit, and those which have, by path
     /**
+     * Splits `entries` into the records which have no problem, by commit, and
+     * the problems of those which have, with their paths. An entry whose
+     * commit the walk did not find has a problem.
+     *
      * @param {Entry[]} entries
      * @param {(record: JsonRecord, commit: string) => string[]} problemsOf
      */
@@ -558,13 +565,17 @@
 
   /**
    * Returns the horizontal positions of points at the given times, linear in
-   * time over whole UTC days: from the midnight which starts the earliest
-   * day to the one which ends the latest. Also returns the ticks, at
-   * midnights a whole number of days apart from the first, up to the one
-   * which ends the latest day, the fewest days for which
-   * neighbouring ticks are at least `minGap` apart, each tick a different day,
-   * and the position of any time, which lies outside `left` to `right` for a
-   * time outside the days of `times`.
+   * time over whole UTC days: `left` is the midnight which starts the
+   * earliest day, and `right` the midnight which ends the latest.
+   *
+   * Also returns the ticks and `x`:
+   *  - the ticks are at midnights, from the one which starts the earliest
+   *    day, a whole number of days apart, up to the one which ends the latest
+   *    day if it falls on the step. The step is the fewest days, among those
+   *    the function tries, for which neighbouring ticks are at least `minGap`
+   *    apart, or the most it tries if none is;
+   *  - `x` gives the position of any time, which lies outside `left` to
+   *    `right` for a time outside the days of `times`.
    *
    * @param {number[]} times  Milliseconds since the epoch, one for each point
    * @param {number} left     The position of the start of the first day
