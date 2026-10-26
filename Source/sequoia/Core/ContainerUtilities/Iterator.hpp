@@ -229,7 +229,7 @@ namespace sequoia::utilities
       indirectly_writable. Therefore, this is forbidden.
    */
 
-  template<class Iterator, dereference_policy_for<Iterator> DereferencePolicy>
+  template<std::input_or_output_iterator Iterator, dereference_policy_for<Iterator> DereferencePolicy>
     requires has_sensible_semantics<Iterator, DereferencePolicy>
   class iterator : public DereferencePolicy
   {
@@ -280,16 +280,7 @@ namespace sequoia::utilities
     constexpr reference operator[](const difference_type n) const
       requires steppable<Iterator>
     {
-      if constexpr(integer<Iterator>)
-      {
-        const auto steppedBase{
-          static_cast<Iterator>(to_unsigned_common_type(m_BaseIterator) + to_unsigned_common_type(n))
-        };
-
-        return DereferencePolicy::get(steppedBase);
-      }
-      else
-        return DereferencePolicy::get(m_BaseIterator + n);
+      return DereferencePolicy::get(m_BaseIterator + n);
     }
 
     constexpr pointer operator->() const
@@ -321,11 +312,7 @@ SEQUOIA_GCC_SUPPRESS_BEGIN("-Warray-bounds")
     constexpr iterator& operator+=(const difference_type n)
       requires steppable<Iterator>
     {
-      if constexpr(integer<Iterator>)
-        m_BaseIterator = static_cast<Iterator>(to_unsigned_common_type(m_BaseIterator) + to_unsigned_common_type(n));
-      else
-        m_BaseIterator += n;
-
+      m_BaseIterator += n;
       return *this;
     }
 
@@ -363,11 +350,7 @@ SEQUOIA_GCC_SUPPRESS_END
     constexpr iterator& operator-=(const difference_type n)
       requires steppable<Iterator>
     {
-      if constexpr(integer<Iterator>)
-        m_BaseIterator = static_cast<Iterator>(to_unsigned_common_type(m_BaseIterator) - to_unsigned_common_type(n));
-      else
-        m_BaseIterator -= n;
-
+      m_BaseIterator -= n;
       return *this;
     }
 
@@ -383,11 +366,7 @@ SEQUOIA_GCC_SUPPRESS_END
     friend constexpr difference_type operator-(const iterator& lhs, const iterator& rhs)
       requires steppable<Iterator>
     {
-      if constexpr(integer<Iterator>)
-        return static_cast<difference_type>(  to_unsigned_common_type(lhs.base_iterator())
-                                            - to_unsigned_common_type(rhs.base_iterator()));
-      else
-        return lhs.base_iterator() - rhs.base_iterator();
+      return lhs.base_iterator() - rhs.base_iterator();
     }
 
     [[nodiscard]]
@@ -403,16 +382,5 @@ SEQUOIA_GCC_SUPPRESS_END
     }
   private:
     Iterator m_BaseIterator{};
-
-    [[nodiscard]]
-    constexpr static auto to_unsigned_common_type(const integer auto val) noexcept
-      requires integer<Iterator> && integer<difference_type>
-    {
-      // The common type is at least as wide as Iterator and difference_type,
-      // and an unsigned type wraps where a signed one would overflow.
-      // The returned value, cast back to a type that can hold `val`, equals
-      // `val`.
-      return static_cast<std::make_unsigned_t<std::common_type_t<Iterator, difference_type>>>(val);
-    }
   };
 }

@@ -30,14 +30,14 @@ namespace sequoia::testing
     template<class Form>
     void make_heap_by_second_element(Form form);
 
-    template<class Stability, class Form>
-    void sort_basic_type(Stability stability, Form form);
+    template<class Form>
+    void stable_sort_basic_type(Form form);
 
-    template<class Stability, class Form>
-    void sort_partial_edge(Stability stability, Form form);
+    template<class Form>
+    void stable_sort_partial_edge(Form form);
 
-    template<class Stability, class Form>
-    void sort_by_second_element(Stability stability, Form form);
+    template<class Form>
+    void stable_sort_by_second_element(Form form);
 
     template<class Form>
     void stable_sort_stability(Form form);

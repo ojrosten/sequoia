@@ -37,32 +37,6 @@ namespace sequoia
     }
   }
 
-  template<class Iter, class Comp=std::ranges::less, class Proj = std::identity>
-  constexpr void bubble_down(Iter begin, Iter current, Iter end, Comp comp = {}, Proj proj = {})
-  {
-    if(std::ranges::distance(begin, end) <= 1) return;
-
-    if(2*(std::ranges::distance(begin, current) + 1) < std::ranges::distance(begin, end))
-    {
-      auto rightChild{begin + 2*(std::ranges::distance(begin, current) + 1)};
-      auto leftChild{rightChild - 1};
-
-      const bool leftDominates{std::invoke(comp, std::invoke(proj, *rightChild), std::invoke(proj, *leftChild))};
-      auto dominantChild{leftDominates ? leftChild : rightChild};
-      if(std::invoke(comp, std::invoke(proj, *current), std::invoke(proj, *dominantChild)))
-      {
-        std::ranges::iter_swap(dominantChild, current);
-        sequoia::bubble_down(begin, dominantChild, end, comp, proj);
-      }
-    }
-    else if(2* std::ranges::distance(begin, current) + 1 < std::ranges::distance(begin, end))
-    {
-      auto leftChild{begin + 2* std::ranges::distance(begin, current) + 1};
-      if(std::invoke(comp, std::invoke(proj, *current), std::invoke(proj, *leftChild)))
-        std::ranges::iter_swap(leftChild, current);
-    }
-  }
-
   /** \brief Whether swapping can order the elements `I` reaches, comparing
              their projections under `Proj` with `Comp`.
 
@@ -101,43 +75,6 @@ namespace sequoia
   constexpr void make_heap(R&& r, Comp comp = {}, Proj proj = {})
   {
     sequoia::make_heap(std::ranges::begin(r), std::ranges::end(r), std::move(comp), std::move(proj));
-  }
-
-  /** \brief Sorts `[first, last)`, not stably, moving elements only through
-             `std::ranges::iter_swap`.
-
-      An `iter_swap` found by argument-dependent lookup therefore customizes
-      how elements move.
-   */
-  template
-  <
-    std::random_access_iterator I,
-    std::sentinel_for<I> S,
-    class Comp = std::ranges::less,
-    class Proj = std::identity
-  >
-    requires heap_sortable<I, Comp, Proj>
-  constexpr void sort(I first, S last, Comp comp = {}, Proj proj = {})
-  {
-    auto unsortedEnd{std::ranges::next(first, last)};
-    if(std::ranges::distance(first, unsortedEnd) <= 1)
-      return;
-
-    sequoia::make_heap(first, unsortedEnd, comp, proj);
-    while(unsortedEnd != first)
-    {
-      std::ranges::iter_swap(first, unsortedEnd-1);
-      sequoia::bubble_down(first, first, unsortedEnd-1, comp, proj);
-      --unsortedEnd;
-    }
-  }
-
-  /** \brief Sorts `r`, as the overload taking a sentinel does. */
-  template<std::ranges::random_access_range R, class Comp = std::ranges::less, class Proj = std::identity>
-    requires heap_sortable<std::ranges::iterator_t<R>, Comp, Proj>
-  constexpr void sort(R&& r, Comp comp = {}, Proj proj = {})
-  {
-    sequoia::sort(std::ranges::begin(r), std::ranges::end(r), std::move(comp), std::move(proj));
   }
 
   namespace impl

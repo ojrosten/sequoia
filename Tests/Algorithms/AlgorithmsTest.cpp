@@ -27,9 +27,6 @@ namespace sequoia::testing
 {
   namespace
   {
-    struct unstable{};
-    struct stable{};
-
     struct range_form{};
     struct iterator_sentinel_form{};
 
@@ -54,36 +51,17 @@ namespace sequoia::testing
     }
 
     template<class T, std::size_t N, class Comp = std::ranges::less, class Proj = std::identity>
-    constexpr std::array<T, N> sort(unstable, range_form, std::array<T, N> a, Comp comp = {}, Proj proj = {})
-    {
-      sequoia::sort(a, comp, proj);
-      return a;
-    }
-
-    template<class T, std::size_t N, class Comp = std::ranges::less, class Proj = std::identity>
-    constexpr std::array<T, N> sort(unstable,
-                                    iterator_sentinel_form,
-                                    std::array<T, N> a,
-                                    Comp comp = {},
-                                    Proj proj = {})
-    {
-      sequoia::sort(counted_iterator_over(a), std::default_sentinel, comp, proj);
-      return a;
-    }
-
-    template<class T, std::size_t N, class Comp = std::ranges::less, class Proj = std::identity>
-    constexpr std::array<T, N> sort(stable, range_form, std::array<T, N> a, Comp comp = {}, Proj proj = {})
+    constexpr std::array<T, N> stably_sorted(range_form, std::array<T, N> a, Comp comp = {}, Proj proj = {})
     {
       sequoia::stable_sort(a, comp, proj);
       return a;
     }
 
     template<class T, std::size_t N, class Comp = std::ranges::less, class Proj = std::identity>
-    constexpr std::array<T, N> sort(stable,
-                                    iterator_sentinel_form,
-                                    std::array<T, N> a,
-                                    Comp comp = {},
-                                    Proj proj = {})
+    constexpr std::array<T, N> stably_sorted(iterator_sentinel_form,
+                                             std::array<T, N> a,
+                                             Comp comp = {},
+                                             Proj proj = {})
     {
       sequoia::stable_sort(counted_iterator_over(a), std::default_sentinel, comp, proj);
       return a;
@@ -129,10 +107,6 @@ namespace sequoia::testing
     template<class... Args>
     concept make_heap_accepts
       =  requires(Args&&... args) { sequoia::make_heap(std::forward<Args>(args)...); };
-
-    template<class... Args>
-    concept sort_accepts
-      =  requires(Args&&... args) { sequoia::sort(std::forward<Args>(args)...); };
 
     template<class... Args>
     concept stable_sort_accepts
@@ -191,20 +165,14 @@ namespace sequoia::testing
     make_heap_by_second_element(range_form{});
     make_heap_by_second_element(iterator_sentinel_form{});
 
-    sort_basic_type(unstable{}, range_form{});
-    sort_basic_type(unstable{}, iterator_sentinel_form{});
-    sort_basic_type(stable{},   range_form{});
-    sort_basic_type(stable{},   iterator_sentinel_form{});
+    stable_sort_basic_type(range_form{});
+    stable_sort_basic_type(iterator_sentinel_form{});
 
-    sort_partial_edge(unstable{}, range_form{});
-    sort_partial_edge(unstable{}, iterator_sentinel_form{});
-    sort_partial_edge(stable{},   range_form{});
-    sort_partial_edge(stable{},   iterator_sentinel_form{});
+    stable_sort_partial_edge(range_form{});
+    stable_sort_partial_edge(iterator_sentinel_form{});
 
-    sort_by_second_element(unstable{}, range_form{});
-    sort_by_second_element(unstable{}, iterator_sentinel_form{});
-    sort_by_second_element(stable{},   range_form{});
-    sort_by_second_element(stable{},   iterator_sentinel_form{});
+    stable_sort_by_second_element(range_form{});
+    stable_sort_by_second_element(iterator_sentinel_form{});
 
     stable_sort_stability(range_form{});
     stable_sort_stability(iterator_sentinel_form{});
@@ -249,19 +217,6 @@ namespace sequoia::testing
     STATIC_CHECK(!make_heap_accepts<   list_iterator_t,    list_iterator_t, less_t>);
     STATIC_CHECK(!make_heap_accepts<              int*,            double*, less_t>);
     STATIC_CHECK(!make_heap_accepts<              int*,               int*,    int>);
-
-    STATIC_CHECK( sort_accepts<       array_t&, less_t>);
-    STATIC_CHECK( sort_accepts<     subrange_t, less_t>);
-    STATIC_CHECK(!sort_accepts< const array_t&, less_t>);
-    STATIC_CHECK(!sort_accepts<        list_t&, less_t>);
-    STATIC_CHECK(!sort_accepts<       array_t&,    int>);
-
-    STATIC_CHECK( sort_accepts<              int*,               int*, less_t>);
-    STATIC_CHECK( sort_accepts<counted_iterator_t, default_sentinel_t, less_t>);
-    STATIC_CHECK(!sort_accepts<        const int*,         const int*, less_t>);
-    STATIC_CHECK(!sort_accepts<   list_iterator_t,    list_iterator_t, less_t>);
-    STATIC_CHECK(!sort_accepts<              int*,            double*, less_t>);
-    STATIC_CHECK(!sort_accepts<              int*,               int*,    int>);
 
     STATIC_CHECK( stable_sort_accepts<       array_t&, less_t>);
     STATIC_CHECK( stable_sort_accepts<     subrange_t, less_t>);
@@ -341,64 +296,63 @@ namespace sequoia::testing
     check("The heap holds the original elements", std::ranges::is_permutation(b, a));
   }
 
-  template<class Stability, class Form>
-  void algorithms_test::sort_basic_type(Stability stability, Form form)
+  template<class Form>
+  void algorithms_test::stable_sort_basic_type(Form form)
   {
     {
       constexpr std::array<int, 0> a{};
-      constexpr auto b = sort(stability, form, a);
+      constexpr auto b = stably_sorted(form, a);
       check(equality, "Sort an empty array", b, a);
     }
 
     {
       constexpr std::array<int, 1> a{1};
-      constexpr auto b = sort(stability, form, a);
+      constexpr auto b = stably_sorted(form, a);
       check(equality, "Sort an array of one element", b, a);
     }
 
     {
       constexpr std::array<int, 2> s{1,2};
-      constexpr auto b = sort(stability, form, s);
+      constexpr auto b = stably_sorted(form, s);
       check(equality, "Sort a sorted array of two elements", b, s);
 
       constexpr std::array<int, 2> u{2,1};
-      constexpr auto c = sort(stability, form, u);
+      constexpr auto c = stably_sorted(form, u);
       check(equality, "Sort an unsorted array of two elements", c, s);
 
       constexpr std::array<int, 2> t{1,1};
-      constexpr auto d = sort(stability, form, t);
+      constexpr auto d = stably_sorted(form, t);
       check(equality, "Sort an array of two identical elements", d, t);
     }
 
     {
       constexpr std::array<int, 10> a{5,4,7,8,6,1,2,0,9,3};
-      constexpr auto b = sort(stability, form, a);
+      constexpr auto b = stably_sorted(form, a);
       check(equality, "Sort digits from 0--9", b, {0,1,2,3,4,5,6,7,8,9});
 
-      constexpr auto c = sort(stability, form, a, std::greater<int>{});
+      constexpr auto c = stably_sorted(form, a, std::greater<int>{});
       check(equality, "Reverse sort digits from 0--9", c, {9,8,7,6,5,4,3,2,1,0});
     }
 
     {
       constexpr std::array<int, 11> a{5,4,7,8,6,1,10,2,0,9,3};
-      constexpr auto b = sort(stability, form, a);
+      constexpr auto b = stably_sorted(form, a);
       check(equality, "Sort digits from 0--10", b, {0,1,2,3,4,5,6,7,8,9,10});
 
-      constexpr auto c = sort(stability, form, a, std::greater<int>{});
+      constexpr auto c = stably_sorted(form, a, std::greater<int>{});
       check(equality, "Reverse sort digits from 0--10", c, {10,9,8,7,6,5,4,3,2,1,0});
     }
   }
 
-  template<class Stability, class Form>
-  void algorithms_test::sort_partial_edge(Stability stability, Form form)
+  template<class Form>
+  void algorithms_test::stable_sort_partial_edge(Form form)
   {
     struct null_type{};
     using edge = maths::partial_edge<object::by_value<null_type>, maths::null_meta_data>;
     constexpr std::array<edge, 3> a{edge{1}, edge{2}, edge{0}}, prediction{edge{0}, edge{1}, edge{2}};
 
     {
-      constexpr auto b = sort(
-                           stability,
+      constexpr auto b = stably_sorted(
                            form,
                            a,
                            [](const edge& lhs, const edge& rhs) { return lhs.target_node() < rhs.target_node(); }
@@ -407,18 +361,18 @@ namespace sequoia::testing
     }
 
     {
-      constexpr auto b = sort(stability, form, a, std::ranges::less{}, [](const edge& e) { return e.target_node(); });
+      constexpr auto b = stably_sorted(form, a, std::ranges::less{}, [](const edge& e) { return e.target_node(); });
       check(equality, "", b, prediction);
     }
   }
 
-  template<class Stability, class Form>
-  void algorithms_test::sort_by_second_element(Stability stability, Form form)
+  template<class Form>
+  void algorithms_test::stable_sort_by_second_element(Form form)
   {
     using pair_t = std::pair<int, int>;
     constexpr std::array<pair_t, 3> a{pair_t{1,2}, {3,0}, {2,1}}, prediction{pair_t{3,0}, {2,1}, {1,2}};
 
-    constexpr auto b = sort(stability, form, a, std::ranges::less{}, &pair_t::second);
+    constexpr auto b = stably_sorted(form, a, std::ranges::less{}, &pair_t::second);
     check(equality, "Sort by a pointer to a data member", b, prediction);
   }
 
@@ -431,8 +385,7 @@ namespace sequoia::testing
       prediction{pair_t{2,0}, {2,-1}, {2,2}, {4,1}, {4,0}, {5,1}, {5,2}, {6, -1}, {6,-2},{6, 0}};
 
     {
-      constexpr auto b = sort(
-                           stable{},
+      constexpr auto b = stably_sorted(
                            form,
                            a,
                            [](const pair_t& lhs, const pair_t& rhs){ return lhs.first < rhs.first; }
@@ -441,7 +394,7 @@ namespace sequoia::testing
     }
 
     {
-      constexpr auto b = sort(stable{}, form, a, std::ranges::less{}, [](const pair_t& p){ return p.first; });
+      constexpr auto b = stably_sorted(form, a, std::ranges::less{}, [](const pair_t& p){ return p.first; });
       check(equality, "Stable sort", b, prediction);
     }
   }

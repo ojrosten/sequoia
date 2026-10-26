@@ -11,7 +11,6 @@
     \brief Underlying class for the various different graph flavour.
  */
 
-#include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Maths/Graph/Connectivity.hpp"
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 #include "sequoia/Core/Numeric/IntegerConversions.hpp"
@@ -26,65 +25,6 @@ namespace sequoia
 {
   namespace maths
   {
-    template<network Connectivity, class Nodes>
-    class SEQUOIA_MSVC_EMPTY_BASE_HACK graph_primitive;
-
-    namespace graph_impl
-    {
-      template<network Connectivity, class Nodes>
-      class graph_dereference_policy
-      {
-      public:
-        using graph_type      = graph_primitive<Connectivity, Nodes>;
-        using index_type      = graph_type::edge_index_type;
-        using difference_type = std::ptrdiff_t;
-        using value_type      = index_type;
-        using reference       = index_type;
-
-        [[nodiscard]]
-        constexpr graph_type& graph() noexcept
-        {
-          return *m_Graph;
-        }
-
-        [[nodiscard]]
-        constexpr const graph_type& graph() const noexcept
-        {
-          return *m_Graph;
-        }
-
-        [[nodiscard]]
-        constexpr static reference get(index_type i) { return i; }
-      protected:
-        constexpr graph_dereference_policy() = default;
-
-        constexpr graph_dereference_policy(graph_type& g) : m_Graph{&g} {}
-
-        constexpr graph_dereference_policy(const graph_dereference_policy&)     = default;
-        constexpr graph_dereference_policy(graph_dereference_policy&&) noexcept = default;
-        
-        ~graph_dereference_policy() = default;
-        
-        constexpr graph_dereference_policy& operator=(const graph_dereference_policy&)     = default;
-        constexpr graph_dereference_policy& operator=(graph_dereference_policy&&) noexcept = default;
-
-      private:
-        graph_type* m_Graph{};
-      };
-
-      /// Designed to swap nodes, when used in conjunction with sequoia::swap,
-      /// courtesy of the overload of iter_swap, below.
-      /// This is a pseudo iterator since it doesn't have reference semantics
-      template<network Connectivity, class Nodes>
-      using pseudo_iterator = utilities::iterator<typename graph_primitive<Connectivity, Nodes>::edge_index_type, graph_dereference_policy<Connectivity, Nodes>>;
-    }
-
-    template<network Connectivity, class Nodes>
-    constexpr void iter_swap(graph_impl::pseudo_iterator<Connectivity, Nodes> a, graph_impl::pseudo_iterator<Connectivity, Nodes> b)
-    {
-      a.graph().swap_nodes(a.base_iterator(), b.base_iterator());
-    }
-
     template<class NodeWeight>
     struct tree_initializer
     {
@@ -126,7 +66,6 @@ namespace sequoia
       using edge_init_type    = Connectivity::edge_init_type;
       using edge_index_type   = Connectivity::edge_index_type;
       using size_type         = std::common_type_t<typename Connectivity::size_type, typename Nodes::size_type>;
-      using pseudo_iterator   = graph_impl::pseudo_iterator<Connectivity, Nodes>;
 
       using edges_initializer = std::initializer_list<std::initializer_list<edge_init_type>>;
 
@@ -638,12 +577,6 @@ namespace sequoia
           build_tree(n, child, tdc);
         }
       }
-
-      [[nodiscard]]
-      pseudo_iterator begin() noexcept { return {edge_index_type{}, *this}; }
-
-      [[nodiscard]]
-      pseudo_iterator end() noexcept { return {Connectivity::order(), *this}; }
 
       template<class... Args>
       void insert_node_weight(const size_type node, Args&&... args)
