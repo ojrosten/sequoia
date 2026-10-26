@@ -287,6 +287,39 @@
   }
 
   /**
+   * Returns the exit status of the stamping run in `record`, or null if the
+   * record has no `prune_dependency_analysis`.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function pruneExitStatus(record) {
+    return Object.hasOwn(record, 'prune_dependency_analysis') ? record.prune_dependency_analysis.stamping_exit_status : null;
+  }
+
+  /**
+   * Returns the exit status of the run which `record`'s `runner_setup`
+   * counts, or null if the record has no `runner_setup`.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function runnerSetupExitStatus(record) {
+    return Object.hasOwn(record, 'runner_setup') ? record.runner_setup.exit_status : null;
+  }
+
+  /**
+   * Returns the number of tests which the run counted by `record`'s
+   * `runner_setup` executed, or null if the record has no `runner_setup`.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function runnerSetupTests(record) {
+    return Object.hasOwn(record, 'runner_setup') ? record.runner_setup.tests : null;
+  }
+
+  /**
    * Lists what is wrong with `record`, a record of uncalled functions stored
    * under the name `commit`.
    *
@@ -622,6 +655,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, runnerSetupEvents, runnerSetupPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, pruneExitStatus, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));
