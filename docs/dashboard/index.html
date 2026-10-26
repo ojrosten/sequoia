@@ -155,7 +155,7 @@
           executable which tests the test runner, inside <code>test_to_run::execute</code> but outside
           <code>execution_timer::time_execution</code>. The first run starts with that directory removed, and the
           second with the entries the first left. The plot is the second run's instructions less the first's, divided
-          by the number of entries the second run started with. Today's code spends a small constant, about 25 to 40
+          by the number of entries the second run started with. Today's code spends a small constant, a few tens of
           instructions per entry. Removing each test's previous temporary tree on the test's own path, before its
           materials were prepared, as the runner did before PR 182, spent about 1,650 per entry. A hollow point is one
           where either run had a non-zero exit status. A dashed rule labelled blind marks a point whose first run left
