@@ -254,16 +254,15 @@
   /**
    * Returns the `event` counted in the runner's setup per test in `record`'s
    * run, or null if the record has no `runner_setup` (an old record, or one
-   * whose measurement failed) or its run failed (a nonzero exit status,
-   * whether a failing test, a crash or a signal). Such a record is left out
-   * of the series, not plotted as zero.
+   * whose measurement failed). Such a record is left out of the series, not
+   * plotted as zero. A record is plotted whatever its run's exit status.
    *
    * @param {JsonRecord} record
    * @param {string} event one of `runnerSetupEvents`
    * @returns {number | null}
    */
   function runnerSetupPerTest(record, event) {
-    if (!Object.hasOwn(record, 'runner_setup') || record.runner_setup.exit_status !== 0) return null;
+    if (!Object.hasOwn(record, 'runner_setup')) return null;
     const setup = record.runner_setup;
     return setup[event] / setup.tests;
   }
@@ -271,47 +270,17 @@
   /**
    * Returns the instructions counted inside prune's analysis in `record`'s
    * run, or null if the record has none (an old record, or one whose
-   * measurement failed) or the run which stamped failed (a nonzero
-   * `stamping_exit_status`). Such a record is left out of the series, not
-   * plotted as zero.
+   * measurement failed). Such a record is left out of the series, not
+   * plotted as zero. A record whose stamping run failed is plotted too: a
+   * failed test is selected again, but the analysis reads the same records and
+   * walks the same sources.
    *
    * @param {JsonRecord} record
    * @returns {number | null}
    */
   function pruneInstructions(record) {
-    if (!Object.hasOwn(record, 'prune_dependency_analysis') || record.prune_dependency_analysis.stamping_exit_status !== 0) return null;
+    if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;
     return record.prune_dependency_analysis.instructions;
-  }
-
-  /**
-   * Says which of the prune and runner panels to show for `points`: one with
-   * a point to plot, or with a point left out for failure, so that a panel
-   * whose every point failed still says why it is empty.
-   *
-   * @param {Point[]} points
-   * @returns {{prune: boolean, runner: boolean}}
-   */
-  function panelsShown(points) {
-    const excluded = excludedForFailures(points);
-    return {
-      prune:  excluded.prune  > 0 || points.some(({record}) => pruneInstructions(record) !== null),
-      runner: excluded.runner > 0 || points.some(({record}) => runnerSetupPerTest(record, runnerSetupEvents[0]) !== null)
-    };
-  }
-
-  /**
-   * Returns how many of `points` hold a measurement which was left out of its
-   * series because its run failed (a nonzero exit status): `prune` counts those with a
-   * `prune_dependency_analysis` of a nonzero `stamping_exit_status`, `runner`
-   * those with a `runner_setup` of a nonzero `exit_status`.
-   *
-   * @param {Point[]} points
-   * @returns {{prune: number, runner: number}}
-   */
-  function excludedForFailures(points) {
-    const failed = (/** @type {any} */ field, /** @type {string} */ status) =>
-      points.filter(({record}) => Object.hasOwn(record, field) && record[field][status] !== 0).length;
-    return {prune: failed('prune_dependency_analysis', 'stamping_exit_status'), runner: failed('runner_setup', 'exit_status')};
   }
 
   /**
@@ -591,14 +560,17 @@
    * Returns the horizontal positions of points at the given times, linear in
    * time over whole UTC days: from the midnight which starts the earliest
    * day to the one which ends the latest. Also returns the ticks, at
-   * midnights a whole number of days apart, the fewest days for which
-   * neighbouring ticks are at least `minGap` apart, each tick a different day.
+   * midnights a whole number of days apart from the first, up to the one
+   * which ends the latest day, the fewest days for which
+   * neighbouring ticks are at least `minGap` apart, each tick a different day,
+   * and the position of any time, which lies outside `left` to `right` for a
+   * time outside the days of `times`.
    *
    * @param {number[]} times  Milliseconds since the epoch, one for each point
    * @param {number} left     The position of the start of the first day
    * @param {number} right    The position of the end of the last day
    * @param {number} minGap
-   * @returns {{xs: number[], ticks: {x: number, time: number}[]}}
+   * @returns {{xs: number[], ticks: {x: number, time: number}[], x: (time: number) => number}}
    */
   function timeAxis(times, left, right, minGap) {
     const first = Math.floor(Math.min(...times) / millisecondsPerDay);
@@ -607,8 +579,10 @@
     const x     = (/** @type {number} */ time) => left + (time / millisecondsPerDay - first) / days * (right - left);
     const step  = dayStepsToTry.find(candidate => candidate * (right - left) / days >= minGap) ?? dayStepsToTry[dayStepsToTry.length - 1];
     const ticks = [];
-    for (let day = first; day <= last; day += step) ticks.push({x: x(day * millisecondsPerDay), time: day * millisecondsPerDay});
-    return {xs: times.map(x), ticks};
+    for (let day = first; day <= last + 1; day += step) {
+      ticks.push({x: x(day * millisecondsPerDay), time: day * millisecondsPerDay});
+    }
+    return {xs: times.map(x), ticks, x};
   }
 
   /**
@@ -638,6 +612,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, excludedForFailures, panelsShown, runnerSetupEvents, runnerSetupPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, runnerSetupEvents, runnerSetupPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));
