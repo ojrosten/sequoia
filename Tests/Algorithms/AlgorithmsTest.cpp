@@ -50,6 +50,35 @@ namespace sequoia::testing
       return a;
     }
 
+    template<class T, std::size_t N>
+    struct heap_removals
+    {
+      std::array<T, N> removed_elements{};
+      bool             heap_after_every_removal{true};
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const heap_removals&, const heap_removals&) noexcept = default;
+    };
+
+    template<class T, std::size_t N, class Comp, class Proj>
+    constexpr heap_removals<T, N> removals_by_bubble_down(std::array<T, N> a, Comp comp, Proj proj)
+    {
+      sequoia::make_heap(a, comp, proj);
+
+      heap_removals<T, N> removals{};
+      auto end{a.end()};
+      for(auto out{removals.removed_elements.begin()}; end != a.begin(); ++out)
+      {
+        *out = *a.begin();
+        std::ranges::iter_swap(a.begin(), end - 1);
+        --end;
+        sequoia::bubble_down(a.begin(), a.begin(), end, comp, proj);
+        removals.heap_after_every_removal = removals.heap_after_every_removal && std::ranges::is_heap(a.begin(), end, comp, proj);
+      }
+
+      return removals;
+    }
+
     template<class T, std::size_t N, class Comp = std::ranges::less, class Proj = std::identity>
     constexpr std::array<T, N> stably_sorted(range_form, std::array<T, N> a, Comp comp = {}, Proj proj = {})
     {
@@ -109,6 +138,14 @@ namespace sequoia::testing
       =  requires(Args&&... args) { sequoia::make_heap(std::forward<Args>(args)...); };
 
     template<class... Args>
+    concept bubble_up_accepts
+      =  requires(Args&&... args) { sequoia::bubble_up(std::forward<Args>(args)...); };
+
+    template<class... Args>
+    concept bubble_down_accepts
+      =  requires(Args&&... args) { sequoia::bubble_down(std::forward<Args>(args)...); };
+
+    template<class... Args>
     concept stable_sort_accepts
       =  requires(Args&&... args) { sequoia::stable_sort(std::forward<Args>(args)...); };
 
@@ -165,6 +202,8 @@ namespace sequoia::testing
     make_heap_by_second_element(range_form{});
     make_heap_by_second_element(iterator_sentinel_form{});
 
+    bubble_down_after_removing_the_top();
+
     stable_sort_basic_type(range_form{});
     stable_sort_basic_type(iterator_sentinel_form{});
 
@@ -217,6 +256,16 @@ namespace sequoia::testing
     STATIC_CHECK(!make_heap_accepts<   list_iterator_t,    list_iterator_t, less_t>);
     STATIC_CHECK(!make_heap_accepts<              int*,            double*, less_t>);
     STATIC_CHECK(!make_heap_accepts<              int*,               int*,    int>);
+
+    STATIC_CHECK( bubble_up_accepts<                int*,                int*, less_t>);
+    STATIC_CHECK(!bubble_up_accepts<          const int*,          const int*, less_t>);
+    STATIC_CHECK(!bubble_up_accepts<     list_iterator_t,     list_iterator_t, less_t>);
+    STATIC_CHECK(!bubble_up_accepts<                int*,                int*,    int>);
+
+    STATIC_CHECK( bubble_down_accepts<              int*,               int*,               int*, less_t>);
+    STATIC_CHECK(!bubble_down_accepts<        const int*,         const int*,         const int*, less_t>);
+    STATIC_CHECK(!bubble_down_accepts<   list_iterator_t,    list_iterator_t,    list_iterator_t, less_t>);
+    STATIC_CHECK(!bubble_down_accepts<              int*,               int*,               int*,    int>);
 
     STATIC_CHECK( stable_sort_accepts<       array_t&, less_t>);
     STATIC_CHECK( stable_sort_accepts<     subrange_t, less_t>);
@@ -294,6 +343,31 @@ namespace sequoia::testing
     constexpr auto b = make_heap(form, a, std::ranges::greater{}, &pair_t::second);
     check("A heap under greater, by second element", std::ranges::is_heap(b, std::ranges::greater{}, &pair_t::second));
     check("The heap holds the original elements", std::ranges::is_permutation(b, a));
+  }
+
+  void algorithms_test::bubble_down_after_removing_the_top()
+  {
+    // Removing from ten elements passes through even sizes, where the last parent has a left child only
+    constexpr std::array<int, 10> a{5, 3, 8, 1, 9, 2, 7, 4, 6, 0};
+    STATIC_CHECK(removals_by_bubble_down(a, std::ranges::less{}, std::identity{})
+                 == heap_removals<int, 10>{{9, 8, 7, 6, 5, 4, 3, 2, 1, 0}, true});
+    STATIC_CHECK(removals_by_bubble_down(a, std::ranges::greater{}, std::identity{})
+                 == heap_removals<int, 10>{{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, true});
+
+    constexpr std::array<int, 7> duplicates{2, 2, 1, 2, 1, 1, 2};
+    STATIC_CHECK(removals_by_bubble_down(duplicates, std::ranges::less{}, std::identity{})
+                 == heap_removals<int, 7>{{2, 2, 2, 2, 1, 1, 1}, true});
+
+    using pair_t = std::pair<int, int>;
+    constexpr std::array<pair_t, 6> pairs{pair_t{0,3}, {1,5}, {2,0}, {3,4}, {4,1}, {5,2}};
+    constexpr auto removals{removals_by_bubble_down(pairs, std::ranges::greater{}, &pair_t::second)};
+    STATIC_CHECK(removals.heap_after_every_removal);
+    STATIC_CHECK(removals.removed_elements == std::array<pair_t, 6>{pair_t{2,0}, {4,1}, {5,2}, {0,3}, {3,4}, {1,5}});
+
+    STATIC_CHECK(removals_by_bubble_down(std::array{1}, std::ranges::less{}, std::identity{})
+                 == heap_removals<int, 1>{{1}, true});
+    STATIC_CHECK(removals_by_bubble_down(std::array<int, 0>{}, std::ranges::less{}, std::identity{})
+                 == heap_removals<int, 0>{});
   }
 
   template<class Form>

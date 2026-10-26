@@ -24,7 +24,8 @@
 
 namespace sequoia
 {
-  template<class Iter, class Comp=std::ranges::less, class Proj = std::identity>
+  template<std::random_access_iterator Iter, class Comp=std::ranges::less, class Proj = std::identity>
+    requires std::sortable<Iter, Comp, Proj>
   constexpr void bubble_up(Iter begin, Iter current, Comp comp = {}, Proj proj = {})
   {
     if(current == begin) return;
@@ -37,17 +38,32 @@ namespace sequoia
     }
   }
 
-  /** \brief Whether swapping can order the elements `I` reaches, comparing
-             their projections under `Proj` with `Comp`.
+  template<std::random_access_iterator Iter, class Comp=std::ranges::less, class Proj = std::identity>
+    requires std::sortable<Iter, Comp, Proj>
+  constexpr void bubble_down(Iter begin, Iter current, Iter end, Comp comp = {}, Proj proj = {})
+  {
+    if(std::ranges::distance(begin, end) <= 1) return;
 
-      Unlike `std::sortable`, `heap_sortable` requires no iterator category,
-      and does not require `std::indirectly_movable_storable`.
-   */
-  template<class I, class Comp, class Proj>
-  inline constexpr bool heap_sortable{
-       std::indirectly_swappable<I>
-    && std::indirect_strict_weak_order<Comp, std::projected<I, Proj>>
-  };
+    if(2*(std::ranges::distance(begin, current) + 1) < std::ranges::distance(begin, end))
+    {
+      auto rightChild{begin + 2*(std::ranges::distance(begin, current) + 1)};
+      auto leftChild{rightChild - 1};
+
+      const bool leftDominates{std::invoke(comp, std::invoke(proj, *rightChild), std::invoke(proj, *leftChild))};
+      auto dominantChild{leftDominates ? leftChild : rightChild};
+      if(std::invoke(comp, std::invoke(proj, *current), std::invoke(proj, *dominantChild)))
+      {
+        std::ranges::iter_swap(dominantChild, current);
+        sequoia::bubble_down(begin, dominantChild, end, comp, proj);
+      }
+    }
+    else if(2* std::ranges::distance(begin, current) + 1 < std::ranges::distance(begin, end))
+    {
+      auto leftChild{begin + 2* std::ranges::distance(begin, current) + 1};
+      if(std::invoke(comp, std::invoke(proj, *current), std::invoke(proj, *leftChild)))
+        std::ranges::iter_swap(leftChild, current);
+    }
+  }
 
   template
   <
@@ -56,7 +72,7 @@ namespace sequoia
     class Comp = std::ranges::less,
     class Proj = std::identity
   >
-    requires heap_sortable<I, Comp, Proj>
+    requires std::sortable<I, Comp, Proj>
   constexpr void make_heap(I first, S last, Comp comp = {}, Proj proj = {})
   {
     if(std::ranges::distance(first, last) <= 1)
@@ -71,7 +87,7 @@ namespace sequoia
   }
 
   template<std::ranges::random_access_range R, class Comp = std::ranges::less, class Proj = std::identity>
-    requires heap_sortable<std::ranges::iterator_t<R>, Comp, Proj>
+    requires std::sortable<std::ranges::iterator_t<R>, Comp, Proj>
   constexpr void make_heap(R&& r, Comp comp = {}, Proj proj = {})
   {
     sequoia::make_heap(std::ranges::begin(r), std::ranges::end(r), std::move(comp), std::move(proj));
