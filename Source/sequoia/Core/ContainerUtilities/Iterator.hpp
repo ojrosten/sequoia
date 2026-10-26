@@ -80,38 +80,21 @@ namespace sequoia::utilities
   template<class Iterator, dereference_policy_for<Iterator> Deref>
   using pointer_type_t = pointer_type<Iterator, Deref>::type;
 
-  /** \brief Detects difference_type */
+  /** \brief The difference type of `Iterator`. */
 
-  template<class T>
-  inline constexpr bool has_difference_type{requires { typename T::difference_type; }};
-
-  template<class Iterator, dereference_policy_for<Iterator> Deref>
-  struct difference_type;
-
-  template<class Iterator, dereference_policy_for<Iterator> Deref>
-    requires has_difference_type<Deref>
-  struct difference_type<Iterator, Deref>
-  {
-    using type = Deref::difference_type;
-  };
-
-  template<class Iterator, dereference_policy_for<Iterator> Deref>
-    requires (!has_difference_type<Deref> && std::input_or_output_iterator<Iterator>)
-  struct difference_type<Iterator, Deref>
+  template<std::input_or_output_iterator Iterator>
+  struct difference_type
   {
     using type = std::iterator_traits<Iterator>::difference_type;
   };
 
-  template<class Iterator, dereference_policy_for<Iterator> Deref>
-  using difference_type_t = difference_type<Iterator, Deref>::type;
+  template<std::input_or_output_iterator Iterator>
+  using difference_type_t = difference_type<Iterator>::type;
 
   /** \brief Detects value_type */
 
   template<class T>
-  struct value_type
-  {
-    using type = void;
-  };
+  struct value_type;
 
   template<class I>
     requires std::input_or_output_iterator<I>
@@ -136,10 +119,7 @@ namespace sequoia::utilities
   inline constexpr bool has_reference_type{requires { typename T::reference; }};
 
   template<class T>
-  struct reference_type
-  {
-    using type = void;
-  };
+  struct reference_type;
 
   template<class I>
     requires std::input_or_output_iterator<I>
@@ -239,7 +219,7 @@ namespace sequoia::utilities
 
     using value_type      = DereferencePolicy::value_type;
     using reference       = DereferencePolicy::reference;
-    using difference_type = difference_type_t<Iterator, DereferencePolicy>;
+    using difference_type = difference_type_t<Iterator>;
     using pointer         = pointer_type_t<Iterator, DereferencePolicy>;
 
     constexpr iterator() = default;
