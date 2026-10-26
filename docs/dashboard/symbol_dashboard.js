@@ -395,7 +395,7 @@
    *
    * @param {JsonRecord} before
    * @param {JsonRecord} after
-   * @returns {{object: string, before: number | undefined, after: number | undefined, delta: number}[]}
+   * @returns {{object: string, before: number | null, after: number | null, delta: number}[]}
    */
   function movers(before, after) {
     const countsBefore = before.defined_symbols_by_object;
