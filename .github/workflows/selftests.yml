@@ -52,7 +52,7 @@ jobs:
             packages: gdb
             selftests: apt_get_demoting_preferred_mirrors_on_retry compile_time_report cron_expression_at
               generate_coverage_report propose_tightened_baseline read_settled_jobs rerun_unacquired_job retry
-              snapshot_at_deadline store_symbol_table_record symbol_dashboard symbol_table_provenance
+              runner_setup_record snapshot_at_deadline store_symbol_table_record symbol_dashboard symbol_table_provenance
               symbol_table_report
           # report_crashes' selftest runs on macOS alone. The system there writes
           # the crash reports its macOS controls read, and its Linux and Windows

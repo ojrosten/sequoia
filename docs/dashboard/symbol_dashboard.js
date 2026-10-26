@@ -23,7 +23,7 @@
    * @typedef {{commit: string, summary: Summary, record: JsonRecord}} OrderedRecord
    * @typedef {{path: string, before: any, after: any}} Difference
    * @typedef {{commit: string, date: string, subject: string, record: JsonRecord, run: number,
-   *            toolchainChange: Difference[] | null}} Point
+   *            toolchainChange: Difference[] | null, setupRun: number, boundaryChange: boolean}} Point
    * @typedef {{path: string, problems: string[]}} Unplottable
    * @typedef {{tree(): Promise<Tree | null>, commits(start: string | null): Promise<ApiCommit[]>,
    *            record(path: string): Promise<JsonRecord>}} Source
@@ -189,10 +189,13 @@
    * A record with no problem is an object holding `commit` as its commit, a
    * clean tree, a toolchain, the executable's symbols and name bytes, and a
    * count of defined symbols for each object. It may also hold
-   * `prune_analysis`, with an invocation and a count of instructions, and
-   * `runner_overhead`, with an invocation, the number of tests the run
-   * reported (or null, if it reported none) and a count of system calls for
-   * each of `runnerSyscallCategories`.
+   * `prune_dependency_analysis`, with the name of the function whose
+   * instructions were counted, a positive count of them and the exit status
+   * of the run which stamped, and `prune_analysis` (the older field, kept
+   * and not plotted), with an invocation and a count of instructions, and
+   * `runner_setup`, with a boundary, the exit status of the run, a positive
+   * number of tests and a positive count for each of `runnerSetupEvents`.
+   * The older `runner_overhead` is kept and not checked, nor plotted.
    *
    * @param {JsonRecord} record
    * @param {string} commit
@@ -207,6 +210,13 @@
     const executable = record.executable || {};
     if (!isCount(executable.symbols)) problems.push('it has no count of the executable\'s symbols');
     if (!isCount(executable.symbol_name_bytes)) problems.push('it has no count of the executable\'s name bytes');
+    if (Object.hasOwn(record, 'prune_dependency_analysis')) {
+      const analysis = record.prune_dependency_analysis;
+      if (analysis === null || typeof analysis !== 'object' || !isCount(analysis.instructions) || analysis.instructions === 0
+          || typeof analysis.function !== 'string' || !isCount(analysis.stamping_exit_status)) {
+        problems.push('it has a prune_dependency_analysis with no function, no positive count of instructions, or no exit status');
+      }
+    }
     if (Object.hasOwn(record, 'prune_analysis')) {
       const analysis = record.prune_analysis;
       if (analysis === null || typeof analysis !== 'object' || !isCount(analysis.instructions)
@@ -214,19 +224,15 @@
         problems.push('it has a prune_analysis with no invocation, or no count of instructions');
       }
     }
-    if (Object.hasOwn(record, 'runner_overhead')) {
-      const overhead = record.runner_overhead;
-      if (overhead === null || typeof overhead !== 'object' || typeof overhead.invocation !== 'string') {
-        problems.push('it has a runner_overhead with no invocation');
+    if (Object.hasOwn(record, 'runner_setup')) {
+      const setup = record.runner_setup;
+      if (setup === null || typeof setup !== 'object' || typeof setup.boundary !== 'string') {
+        problems.push('it has a runner_setup with no boundary');
       } else {
-        if (overhead.tests !== null && !(isCount(overhead.tests) && overhead.tests > 0)) {
-          problems.push('it has a runner_overhead whose number of tests is neither null nor a positive integer');
-        }
-        const syscalls = overhead.syscalls;
-        for (const category of runnerSyscallCategories) {
-          if (syscalls === null || typeof syscalls !== 'object' || !isCount(syscalls[category])) {
-            problems.push(`it has a runner_overhead with no count of ${category}`);
-          }
+        if (!isCount(setup.exit_status)) problems.push('it has a runner_setup with no exit status');
+        if (!(isCount(setup.tests) && setup.tests > 0)) problems.push('it has a runner_setup whose number of tests is not a positive integer');
+        for (const event of runnerSetupEvents) {
+          if (!(isCount(setup[event]) && setup[event] > 0)) problems.push(`it has a runner_setup with no positive count of ${event}`);
         }
       }
     }
@@ -238,38 +244,74 @@
   }
 
   /**
-   * The kinds of system call a record's `runner_overhead` counts: directory
-   * walks (getdents), metadata reads (the stat family), opens, clones
-   * (threads and processes alike) and execs (processes alone).
+   * The events a record's `runner_setup` counts: the instructions and the
+   * system calls (callgrind's Ir and sysCount) of the runner's setup of each
+   * test, that is, of `test_to_run::execute` outside
+   * `execution_timer::time_execution`, where the test runs.
    */
-  const runnerSyscallCategories = ['directory_walks', 'metadata_reads', 'opens', 'clones', 'execs'];
+  const runnerSetupEvents = ['instructions', 'syscalls'];
 
   /**
-   * Returns the system calls of `category` which the runner made per test in
-   * `record`'s run, or null if the record has no count of its overhead, or its
-   * run reported no number of tests. Such a record is left out of the series,
-   * not plotted as zero.
+   * Returns the `event` counted in the runner's setup per test in `record`'s
+   * run, or null if the record has no `runner_setup` (an old record, or one
+   * whose measurement failed) or its run failed (a nonzero exit status,
+   * whether a failing test, a crash or a signal). Such a record is left out
+   * of the series, not plotted as zero.
    *
    * @param {JsonRecord} record
-   * @param {string} category one of `runnerSyscallCategories`
+   * @param {string} event one of `runnerSetupEvents`
    * @returns {number | null}
    */
-  function runnerSyscallPerTest(record, category) {
-    if (!Object.hasOwn(record, 'runner_overhead') || record.runner_overhead.tests === null) return null;
-    const {tests, syscalls} = record.runner_overhead;
-    return syscalls[category] / tests;
+  function runnerSetupPerTest(record, event) {
+    if (!Object.hasOwn(record, 'runner_setup') || record.runner_setup.exit_status !== 0) return null;
+    const setup = record.runner_setup;
+    return setup[event] / setup.tests;
   }
 
   /**
-   * Returns the instructions counted in `record`'s run of prune's analysis,
-   * or null if the record has none: an old record, or one whose measurement
-   * failed. Such a record is left out of the series, not plotted as zero.
+   * Returns the instructions counted inside prune's analysis in `record`'s
+   * run, or null if the record has none (an old record, or one whose
+   * measurement failed) or the run which stamped failed (a nonzero
+   * `stamping_exit_status`). Such a record is left out of the series, not
+   * plotted as zero.
    *
    * @param {JsonRecord} record
    * @returns {number | null}
    */
   function pruneInstructions(record) {
-    return Object.hasOwn(record, 'prune_analysis') ? record.prune_analysis.instructions : null;
+    if (!Object.hasOwn(record, 'prune_dependency_analysis') || record.prune_dependency_analysis.stamping_exit_status !== 0) return null;
+    return record.prune_dependency_analysis.instructions;
+  }
+
+  /**
+   * Says which of the prune and runner panels to show for `points`: one with
+   * a point to plot, or with a point left out for failure, so that a panel
+   * whose every point failed still says why it is empty.
+   *
+   * @param {Point[]} points
+   * @returns {{prune: boolean, runner: boolean}}
+   */
+  function panelsShown(points) {
+    const excluded = excludedForFailures(points);
+    return {
+      prune:  excluded.prune  > 0 || points.some(({record}) => pruneInstructions(record) !== null),
+      runner: excluded.runner > 0 || points.some(({record}) => runnerSetupPerTest(record, runnerSetupEvents[0]) !== null)
+    };
+  }
+
+  /**
+   * Returns how many of `points` hold a measurement which was left out of its
+   * series because its run failed (a nonzero exit status): `prune` counts those with a
+   * `prune_dependency_analysis` of a nonzero `stamping_exit_status`, `runner`
+   * those with a `runner_setup` of a nonzero `exit_status`.
+   *
+   * @param {Point[]} points
+   * @returns {{prune: number, runner: number}}
+   */
+  function excludedForFailures(points) {
+    const failed = (/** @type {any} */ field, /** @type {string} */ status) =>
+      points.filter(({record}) => Object.hasOwn(record, field) && record[field][status] !== 0).length;
+    return {prune: failed('prune_dependency_analysis', 'stamping_exit_status'), runner: failed('runner_setup', 'exit_status')};
   }
 
   /**
@@ -341,18 +383,31 @@
    * whose toolchains are equal. The first point of each run after the
    * first holds the toolchain's differences from the point before it.
    *
+   * A point also holds `setupRun`, the number of changes of the `boundary`
+   * of its `runner_setup` up to it, among the points which have one, and
+   * `boundaryChange`, whether this point's is the first of a different
+   * boundary: the runner's setup of a different boundary (another
+   * executable, say) is a different series, which the plot breaks the line
+   * at.
+   *
    * @param {OrderedRecord[]} orderedRecords
    * @returns {Point[]}
    */
   function pointsOf(orderedRecords) {
-    let run = 0;
+    let run = 0, setupRun = 0;
+    /** @type {string | null} */
+    let boundary = null;
     return orderedRecords.map(({commit, summary, record}, index) => {
       const previous   = orderedRecords[index - 1];
       const toolchainChange = previous && canonical(previous.record.toolchain) !== canonical(record.toolchain)
         ? differences(previous.record.toolchain, record.toolchain)
         : null;
       if (toolchainChange) ++run;
-      return {commit, date: summary.date, subject: summary.subject, record, run, toolchainChange};
+      const setupBoundary = Object.hasOwn(record, 'runner_setup') ? record.runner_setup.boundary : null;
+      const boundaryChange = typeof setupBoundary === 'string' && boundary !== null && setupBoundary !== boundary;
+      if (boundaryChange) ++setupRun;
+      if (typeof setupBoundary === 'string') boundary = setupBoundary;
+      return {commit, date: summary.date, subject: summary.subject, record, run, toolchainChange, setupRun, boundaryChange};
     });
   }
 
@@ -583,6 +638,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, runnerSyscallCategories, runnerSyscallPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, excludedForFailures, panelsShown, runnerSetupEvents, runnerSetupPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));

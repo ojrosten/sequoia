@@ -13,18 +13,21 @@ name: symbol-table
 #
 # The workflow builds TestAll and runs the suite as a test of nothing: its one
 # run is to leave prune a stamp, for the instruction count of prune's
-# analysis, which a record carries as `prune_analysis`. The workflow is
+# analysis, which a record carries as `prune_dependency_analysis`, with the
+# exit status of that run: a run which failed tests leaves prune different
+# work to select, so the dashboard leaves its point out. The workflow is
 # apart from the tiers, so that a failure to measure cannot fail a test
 # column, and cancelling a superseded run of a tier loses no record.
 #
-# A second run of the suite, after prune's measurement, is under
-# `strace -f -c`, which counts the system calls of the runner and of everything
-# it starts: a record carries the counts as `runner_overhead`, with the number
-# of tests the run reported. The counts are totals for the run, so a move shows
-# in the dashboard's per-test lines.
+# A second run of the suite, after prune's measurement, is under callgrind,
+# of TestFrameworkDiagnostics, the executable which tests the test runner,
+# which counts what the runner does while it sets tests up, not what the tests
+# do: a record carries the counts as `runner_setup`, with the number of tests
+# the run executed. The counts are totals for the run, so a move shows in the
+# dashboard's per-test lines.
 #
 # A commit already recorded can be recorded again, to add the field
-# `prune_analysis`: the job rebuilds TestAll, which the count needs, and the
+# `prune_dependency_analysis`: the job rebuilds TestAll, which the count needs, and the
 # store replaces the held record with one which keeps its every field and
 # adds fields (scripts/store_symbol_table_record.sh). A commit whose runner
 # leaves prune no stamp is recorded without the field, and its job succeeds.
@@ -80,7 +83,10 @@ jobs:
     # names its toolchain, so a change of toolchain shows as a break in the
     # history.
     runs-on: ubuntu-26.04
-    timeout-minutes: 45
+    # The build of TestFrameworkDiagnostics, besides TestAll, and the run of it
+    # under callgrind, which is many times slower than a native run, add to
+    # the job.
+    timeout-minutes: 75
     # "Store the record on the data branch" pushes, which needs
     # `contents: write`. The job asks for it, so that it keeps working if the
     # repository's default token becomes read-only.
@@ -197,14 +203,18 @@ jobs:
       # when the previous run has left no stamp. So one full run of the suite,
       # whose outcome is ignored, leaves the stamp, and the measured run then
       # selects only what that run failed, or left out: nothing, when the
-      # suite passes, which is why git is given an identity first. A failing
-      # measured run still yields the count, so its outcome is ignored too.
-      # The measured run
-      # covers startup, the runner's reading of the build's records
-      # (build.ninja, .ninja_deps) and its walk of the sources for changes,
-      # and the file system reads of both; it does not cover the compiler.
-      # cachegrind counts the instructions of the executable, and of the
-      # libraries it calls, from the first to the last.
+      # suite passes, which is why git is given an identity first. The
+      # stamping run's exit status goes in the record, since a failure
+      # re-selects the failed tests and may change what the analysis does.
+      #
+      # callgrind, not cachegrind, counts the instructions: only callgrind has
+      # --toggle-collect, which collects while inside test_runner::prune and
+      # the functions it calls, and so counts the analysis alone, not the
+      # runner's startup or any test the measured run executes. The name is
+      # matched, with wildcards, against the demangled name, which may or may
+      # not carry the parameter list, so the pattern ends in `*`. A count of
+      # zero means no function matched, as when prune is renamed, and the
+      # record has no field.
       - name: Install valgrind
         continue-on-error: true
         run: sudo apt-get install -y valgrind
@@ -220,115 +230,145 @@ jobs:
         continue-on-error: true
         timeout-minutes: 30
         working-directory: tree/build/TestAll/gcc-env
-        run: ./TestAll || echo "The suite failed, which this step ignores."
+        run: |
+          status=0
+          ./TestAll || status=$?
+          echo "$status" > "$RUNNER_TEMP/stamping_exit_status.txt"
+          [ "$status" -eq 0 ] || echo "The suite failed (status $status), which this step ignores; the record will say so."
 
       - name: Count the instructions of prune's analysis
         continue-on-error: true
         timeout-minutes: 30
         working-directory: tree/build/TestAll/gcc-env
         run: |
+          function='sequoia::testing::test_runner::prune*'
           # The job's shell sets pipefail, so a failing run reaches the || through tee.
-          valgrind --tool=cachegrind --cache-sim=no --cachegrind-out-file="$RUNNER_TEMP/cachegrind.out" \
+          valgrind --tool=callgrind --toggle-collect="$function" --callgrind-out-file="$RUNNER_TEMP/callgrind.out" \
             ./TestAll prune --serial 2>&1 | tee "$RUNNER_TEMP/measured.txt" \
             || echo "The measured run failed, which this step ignores; its count stands."
           # The count stands only if the analysis ran and selected from the stamp. An
           # older commit's runner may not have left a stamp, or may not take the
-          # arguments, and then prune runs every test, or nothing, under cachegrind.
+          # arguments, and then prune runs every test, or nothing, under callgrind.
           if ! grep -qF 'Analyzing dependencies' "$RUNNER_TEMP/measured.txt" \
              || grep -qE 'unable to prune|prune is ignored' "$RUNNER_TEMP/measured.txt"; then
-            echo "::warning::prune did not analyse from a stamp, so the record has no prune_analysis"
+            echo "::warning::prune did not analyse from a stamp, so the record has no prune_dependency_analysis"
             exit 0
           fi
-          # The file's summary line is "summary: <Ir>"
-          instructions=$(awk '$1 == "summary:" {print $2}' "$RUNNER_TEMP/cachegrind.out")
-          jq -n --argjson instructions "$instructions" \
-            '{invocation: "TestAll prune --serial, after a full run, under cachegrind", instructions: $instructions}' \
-            > "$RUNNER_TEMP/prune_analysis.json"
+          # The file holds "summary: <Ir>" and "totals: <Ir>", of the events collected
+          # inside the function; the count stands only if both are there and equal.
+          instructions=$(awk '$1 == "summary:" {print $2}' "$RUNNER_TEMP/callgrind.out" 2>/dev/null)
+          totals=$(awk '$1 == "totals:" {print $2}' "$RUNNER_TEMP/callgrind.out" 2>/dev/null)
+          case "$instructions" in
+            ''|*[!0-9]*|0)
+              echo "::warning::no instructions were collected inside '$function' (summary '${instructions}'), so the record has no prune_dependency_analysis"
+              exit 0;;
+          esac
+          if [ "$totals" != "$instructions" ]; then
+            echo "::warning::callgrind's summary ($instructions) and totals ('${totals}') differ or are missing, so the record has no prune_dependency_analysis"
+            exit 0
+          fi
+          if [ ! -s "$RUNNER_TEMP/stamping_exit_status.txt" ]; then
+            echo "::warning::the stamping run left no exit status, so the record has no prune_dependency_analysis"
+            exit 0
+          fi
+          jq -n --argjson instructions "$instructions" --arg function "$function" \
+            --argjson stamping_exit_status "$(cat "$RUNNER_TEMP/stamping_exit_status.txt")" \
+            '{function: $function, instructions: $instructions, stamping_exit_status: $stamping_exit_status}' \
+            > "$RUNNER_TEMP/prune_dependency_analysis.json"
 
-      # The runner's overhead, as system calls. The suite runs once more, under
-      # strace, after the measurement of prune: the second run rewrites the
-      # stamp, and strace slows the run, neither of which may touch prune's
-      # count. `-f` follows every process and thread the runner starts; `-c`
-      # prints strace's own table of counts, in strace's format, which
-      # "Count the runner's system calls" reads. --seccomp-bpf stops the tracee
-      # only at the system calls named. Only a verbose run prints a report of
-      # "[Runner Overhead: ...]" under each test's name (and under a suite's
-      # name, if the run is serial), so the run is verbose, and its output is
-      # kept to count those reports. The run's outcome is ignored. If strace
-      # cannot trace, as in a container which forbids ptrace, it leaves no
-      # table and the record has no runner_overhead.
-      - name: Install strace
+      # What the runner does while it sets tests up, as instructions and system
+      # calls. TestFrameworkDiagnostics is a project of its own, which
+      # "Build" does not build, so it is built here, and run under callgrind
+      # after the measurement of prune: its run writes stamps of its own,
+      # and callgrind slows the run, neither of which may touch prune's count.
+      # It is the smaller suite, so the run under callgrind, many times slower
+      # than a native run even while collection is off, is of a length which a
+      # step can allow.
+      #
+      # The runner's own boundary is test_to_run::execute, which runs once per
+      # test and times the test apart from the rest of itself: the test runs
+      # in execution_timer::time_execution, and the runner's overhead is what
+      # is left of execute. --toggle-collect toggles collection on entry to,
+      # and on exit from, each function it names, and implies that collection
+      # is off at the start. So collection switches on when a test's execute
+      # starts, off inside time_execution, and on again after it, and the
+      # counts are of execute outside the tests. The names are matched, with
+      # wildcards, against the demangled name, which carries the parameter
+      # list, so execute is named both with and without the list; the pattern
+      # `execute*` would also match execute_and_record, whose lambda is the
+      # test and would switch collection on inside it. The return type of a
+      # function template is part of its demangled name, so time_execution's
+      # pattern begins with `*`.
+      #
+      # --collect-systime=yes adds the event sysCount, the number of system
+      # calls. The run is serial, as collection is switched by the thread
+      # which runs the test. The tests are not counted from callgrind's calls
+      # into execute: the runner's own tests run runners of their own, whose
+      # calls into execute callgrind counts but does not collect, since it
+      # toggles only on the call at recursion depth 0. They are counted from the
+      # runner's execution records, a file for each test the run executed, so
+      # the directory is emptied first. scripts/runner_setup_record.sh reads
+      # the totals and the records, and says what a pass is. The executable and
+      # its options are named in `boundary`, so that a change of either starts a
+      # new series.
+      #
+      # --exclude-performance leaves out the performance tests: they are timed
+      # by the clock, so they retry and report according to the speed of the
+      # machine, which moved the count by 0.34% between two runs of one commit
+      # (runs 40186679215 and 40186689490), and callgrind's slowing of the run
+      # can fail them.
+      #
+      # exclude OutputFreeTest.cpp leaves out the one test which fails under
+      # callgrind: its check "Long double values in a class-type template
+      # argument" (OutputFreeTest.cpp:525) fails there, most likely because
+      # valgrind computes x87 80-bit arithmetic at 64-bit precision.
+      - name: Build TestFrameworkDiagnostics
         continue-on-error: true
-        run: sudo apt-get install -y strace
+        timeout-minutes: 20
+        working-directory: tree/TestFrameworkDiagnostics
+        run: |
+          cmake --preset gcc-env
+          cmake --build --preset gcc-env
 
-      - name: Run the suite under strace
+      - name: Count the runner's setup, outside the tests
         continue-on-error: true
         timeout-minutes: 30
-        working-directory: tree/build/TestAll/gcc-env
+        working-directory: tree/build/TestFrameworkDiagnostics/gcc-env
         run: |
-          traced=(getdents64 getdents newfstatat statx fstat lstat stat openat open openat2 clone clone3 fork vfork execve execveat)
+          execute='sequoia::testing::test_to_run::execute'
+          timed='*sequoia::testing::test_to_run::execution_timer::time_execution*'
+          out="$RUNNER_TEMP/setup.callgrind.out"
+          records="$GITHUB_WORKSPACE/tree/output/ExecutionRecords/TestFrameworkDiagnostics/gcc-env"
+          rm -rf "$records"
           status=0
-          strace -f -qq --seccomp-bpf -c -e trace="$(IFS=,; echo "${traced[*]}")" -o "$RUNNER_TEMP/strace.txt" \
-            ./TestAll --verbose > "$RUNNER_TEMP/suite.txt" 2>&1 || status=$?
-          cat "$RUNNER_TEMP/suite.txt"
-          echo "$status" > "$RUNNER_TEMP/suite_exit_status.txt"
-
-      - name: Count the runner's system calls
-        continue-on-error: true
-        run: |
-          # The strace step leaves no table when strace could not trace.
-          if [ ! -s "$RUNNER_TEMP/strace.txt" ] || [ ! -s "$RUNNER_TEMP/suite_exit_status.txt" ]; then
-            echo "::warning::there is no table of counts, so the record has no runner_overhead"
-            exit 0
-          fi
-          # strace -c prints "% time seconds usecs/call calls errors syscall" and a row
-          # for each system call: the calls are the fourth field, the name the last, and
-          # the errors are blank when there are none. The totals row is named "total".
-          awk '$1 == "%" && $2 == "time" { ok = ($5 == "calls" && $NF == "syscall"); next }
-               ok && $1 ~ /^[0-9]+[.][0-9]+$/ && $NF != "total" { print $NF, $4 }' \
-            "$RUNNER_TEMP/strace.txt" > "$RUNNER_TEMP/syscall_counts.txt"
-          [ -s "$RUNNER_TEMP/syscall_counts.txt" ] \
-            || { echo "::warning::strace's table held no counts, so the record has no runner_overhead"; exit 0; }
-          # The runner reports the overhead of each test, in the lines of its output
-          # between the start and "Grand Totals", where a line holds only the report.
-          # No count is taken of a run which did not reach its totals.
-          tests=$(awk '/^-+Grand Totals-+$/ { reached = 1; exit }
-                       /^[ \t]+\[Runner Overhead: [0-9.]+[a-z]+\]$/ { ++n }
-                       END { if (reached && n > 0) print n }' "$RUNNER_TEMP/suite.txt")
-          [ -n "$tests" ] || echo "::warning::the suite's output reports no tests, so runner_overhead has no count of them"
-          jq -n -R --argjson tests "${tests:-null}" --argjson exit_status "$(cat "$RUNNER_TEMP/suite_exit_status.txt")" '
-            [inputs | split(" ") | {key: .[0], value: (.[1] | tonumber)}] | from_entries as $calls
-            | def total(names): [names[] as $name | $calls[$name] // 0] | add;
-              {invocation: "TestAll, after a full run, under strace -f -c",
-               exit_status: $exit_status,
-               tests: $tests,
-               syscalls: {directory_walks: total(["getdents64", "getdents"]),
-                          metadata_reads:  total(["newfstatat", "statx", "fstat", "lstat", "stat"]),
-                          opens:           total(["openat", "open", "openat2"]),
-                          clones:          total(["clone", "clone3", "fork", "vfork"]),
-                          execs:           total(["execve", "execveat"])}}' \
-            < "$RUNNER_TEMP/syscall_counts.txt" > "$RUNNER_TEMP/runner_overhead.json"
-          cat "$RUNNER_TEMP/runner_overhead.json"
+          valgrind --tool=callgrind --collect-systime=yes \
+            --toggle-collect="$execute" --toggle-collect="$execute(*" --toggle-collect="$timed" \
+            --callgrind-out-file="$out" ./TestFrameworkDiagnostics --serial --exclude-performance exclude OutputFreeTest.cpp > "$RUNNER_TEMP/setup_suite.txt" 2>&1 || status=$?
+          tail -n 30 "$RUNNER_TEMP/setup_suite.txt"
+          "$GITHUB_WORKSPACE/tooling/scripts/runner_setup_record.sh" "$out" "$records" "$status" \
+            "test_to_run::execute outside execution_timer::time_execution, TestFrameworkDiagnostics --serial --exclude-performance exclude OutputFreeTest.cpp" \
+            > "$RUNNER_TEMP/runner_setup.json"
+          cat "$RUNNER_TEMP/runner_setup.json"
 
       - name: Add the count to the record
         run: |
-          if [ -s "$RUNNER_TEMP/prune_analysis.json" ]; then
-            jq -S --slurpfile analysis "$RUNNER_TEMP/prune_analysis.json" '. + {prune_analysis: $analysis[0]}' \
+          if [ -s "$RUNNER_TEMP/prune_dependency_analysis.json" ]; then
+            jq -S --slurpfile analysis "$RUNNER_TEMP/prune_dependency_analysis.json" '. + {prune_dependency_analysis: $analysis[0]}' \
               "$SYMBOL_TABLE_RECORD" > "$RUNNER_TEMP/with_analysis.json"
             mv "$RUNNER_TEMP/with_analysis.json" "$SYMBOL_TABLE_RECORD"
           else
-            echo "::warning::prune's analysis was not measured, so the record has no prune_analysis"
+            echo "::warning::prune's analysis was not measured, so the record has no prune_dependency_analysis"
           fi
 
-      - name: Add the runner's overhead to the record
+      - name: Add the runner's setup to the record
         continue-on-error: true
         run: |
-          if [ -s "$RUNNER_TEMP/runner_overhead.json" ]; then
-            jq -S --slurpfile overhead "$RUNNER_TEMP/runner_overhead.json" '. + {runner_overhead: $overhead[0]}' \
-              "$SYMBOL_TABLE_RECORD" > "$RUNNER_TEMP/with_overhead.json"
-            mv "$RUNNER_TEMP/with_overhead.json" "$SYMBOL_TABLE_RECORD"
+          if [ -s "$RUNNER_TEMP/runner_setup.json" ]; then
+            jq -S --slurpfile setup "$RUNNER_TEMP/runner_setup.json" '. + {runner_setup: $setup[0]}' \
+              "$SYMBOL_TABLE_RECORD" > "$RUNNER_TEMP/with_setup.json"
+            mv "$RUNNER_TEMP/with_setup.json" "$SYMBOL_TABLE_RECORD"
           else
-            echo "::warning::the runner's system calls were not counted, so the record has no runner_overhead"
+            echo "::warning::the runner's setup was not counted, so the record has no runner_setup"
           fi
 
       - name: Upload the record
