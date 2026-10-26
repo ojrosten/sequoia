@@ -147,6 +147,22 @@
           test is selected again, but the analysis reads the same records and walks the same sources.</p></figcaption>
       <div class="plot" id="analysis-plot"></div>
     </figure>
+    <figure class="card" id="leftover-figure">
+      <figcaption><h2>The setup cost of leftover materials: instructions per leftover entry</h2>
+        <p>The extra instructions the runner's setup of a test spends for each entry that an earlier run left in
+          <code>output/TestsTemporaryData</code>. <code>valgrind --tool=callgrind</code> counts two runs of
+          <code>TestFrameworkDiagnostics --serial --exclude-performance exclude OutputFreeTest.cpp</code>, the
+          executable which tests the test runner, inside <code>test_to_run::execute</code> but outside
+          <code>execution_timer::time_execution</code>. The first run starts with that directory removed, and the
+          second with the entries the first left. The plot is the second run's instructions less the first's, divided
+          by the number of entries the second run started with. Today's code spends a small constant, about 25 to 40
+          instructions per entry on a scratch branch (CI run 40329340678). The regression this chart was built to catch,
+          a removal of the earlier run's tree on the thread running each test, spent about 1,650. A hollow point is one
+          where either run had a non-zero exit status. A dashed rule labelled blind marks a point whose first run left
+          no entries: the quotient is undefined, so the point has no value, and the measurement could not have seen
+          the regression. A change of the run's <code>boundary</code> or of the toolchain breaks the line.</p></figcaption>
+      <div class="plot" id="leftover-plot"></div>
+    </figure>
     <figure class="card" id="runner-figure">
       <figcaption><h2>The runner's setup of a test: instructions per test</h2>
         <p><code>valgrind --tool=callgrind --collect-systime=yes</code> counts one run of
@@ -161,7 +177,8 @@
           callgrind's count of system calls, which is not plotted: its total stayed flat as the number of tests grew
           by a fifth, so it does not count the setup alone. Points whose record has no count are left out. A change of
           the run's <code>boundary</code> (a different executable, say) breaks the line, with a marker labelled
-          boundary. A hollow point is one whose run had a non-zero exit status.</p></figcaption>
+          boundary. A hollow point is one whose run had a non-zero exit status. The series was last recorded at the merge
+          of PR 390, and the chart above replaces it. This one stays as history.</p></figcaption>
       <div class="plot" id="runner-plot-instructions"></div>
     </figure>
     <figure class="card" id="uncalled-figure">
@@ -354,9 +371,12 @@
     const plotWidth  = width - margin.left - margin.right;
     const plotHeight = height - margin.top - margin.bottom;
     const values = points.map(point => measure.value(point.record));
+    // A blind point has no value, but is on the axis of time, is selected and hovered, and is marked
+    const isBlind = index => measure.isBlind !== undefined && measure.isBlind(points[index].record) === true;
     // A point may lack the measure, and is then left out of the scale, the axis of time and the line
-    const indicesWithCount = points.flatMap((point, index) => values[index] === null ? [] : [index]);
-    const scale  = scaleOf(indicesWithCount.map(index => values[index]));
+    const indicesWithCount = points.flatMap((point, index) => values[index] === null && !isBlind(index) ? [] : [index]);
+    const valued = indicesWithCount.filter(index => values[index] !== null).map(index => values[index]);
+    const scale  = scaleOf(valued.length > 0 ? valued : [0]);
     // Time runs along x, so points of one day are close and days with no point leave a gap
     const timesWithCount = indicesWithCount.map(index => Date.parse(points[index].date));
     const axisOfTime = symbolDashboard.timeAxis(timesWithCount, margin.left, width - margin.right, 80);
@@ -385,33 +405,37 @@
     }
     svg.append(axis);
 
-    // A break beside a point outside the axis's days is not drawn, and a label too close to the last one
-    // drawn is left out
+    // A rule is drawn between a point and the one before it at a break, and through a blind point. A break beside a
+    // point outside the axis's days is not drawn, a blind point outside them is not, and a label too close to the
+    // last one drawn is left out
     let lastDrawnLabelX = -Infinity;
-    points.forEach((point, index) => {
-      const isBreak = index > 0 && (measure.changeOf ? measure.changeOf(point) : point.toolchainChange);
-      if (!isBreak || !isWithinAxis(index - 1) || !isWithinAxis(index)) return;
-      const label = measure.breakLabel ? measure.breakLabel(point) : 'toolchain';
-      const at = (x(index - 1) + x(index)) / 2;
+    const drawRule = (at, label, dashed) => {
       svg.append(element('svg:line', {x1: at, x2: at, y1: labelBreaks ? 16 : margin.top, y2: margin.top + plotHeight,
-                                      stroke: 'var(--text-muted)', 'stroke-width': 1}));
+                                      stroke: 'var(--text-muted)', 'stroke-width': 1, ...(dashed ? {'stroke-dasharray': '3 3'} : {})}));
       if (!labelBreaks || at - lastDrawnLabelX < breakLabelWidth) return;
       svg.append(element('svg:text', {x: at, y: 11, 'text-anchor': 'middle', class: 'break-label'}, label));
       lastDrawnLabelX = at;
+    };
+    points.forEach((point, index) => {
+      const isBreak = index > 0 && (measure.changeOf ? measure.changeOf(point) : point.toolchainChange);
+      if (isBreak && isWithinAxis(index - 1) && isWithinAxis(index)) {
+        drawRule((x(index - 1) + x(index)) / 2, measure.breakLabel ? measure.breakLabel(point) : 'toolchain', false);
+      }
+      if (isBlind(index) && isWithinAxis(index)) drawRule(x(index), 'blind', true);
     });
 
     const hasFailedRun = index => measure.exitStatus !== undefined && (measure.exitStatus(points[index].record) ?? 0) !== 0;
 
     // A line runs through the points which have the measure and have the same `runOf`: the toolchain, and for
     // the runner's measures the boundary too. A point without the measure ends the line, unless the measure
-    // joins gaps.
+    // joins gaps. A blind point ends it whether or not the measure joins gaps.
     const runs = [];
     const runStarts = [];
     const runOf = point => measure.runOf ? measure.runOf(point) : point.run;
     let joined = null;
     points.forEach((point, index) => {
       if (values[index] === null) {
-        if (!measure.joinsGaps) joined = null;
+        if (!measure.joinsGaps || isBlind(index)) joined = null;
         return;
       }
       if (joined === null || runOf(joined) !== runOf(point)) { runs.push([]); runStarts.push(index); }
@@ -512,11 +536,39 @@
     breakLabel: point => point.boundaryChange ? 'boundary' : 'toolchain'
   }));
 
+  // The setup's cost of leftover entries is plotted per entry, so a point with none has no value and is blind. A
+  // record can lack the section, being older than it or its measurement having failed, and the line joins the
+  // points which have it; it breaks at a change of the toolchain, or of the boundary of the measurement.
+  const leftoverMeasure = {
+    name: 'instructions of the runner\'s setup, per leftover entry',
+    value: symbolDashboard.leftoverMaterialsSetupPerEntry,
+    unit: 'instructions per leftover entry',
+    exitStatus: symbolDashboard.leftoverMaterialsSetupExitStatus,
+    isBlind: symbolDashboard.leftoverMaterialsSetupIsBlind,
+    joinsGaps: true, runOf: point => `${point.run}/${point.leftoverRun}`,
+    changeOf: point => point.toolchainChange || point.leftoverBoundaryChange,
+    breakLabel: point => point.leftoverBoundaryChange ? 'boundary' : 'toolchain'
+  };
+
   function changeOn(index, measure) {
     if (index === 0) return null;
     const before = measure.value(state.points[index - 1].record);
     const after  = measure.value(state.points[index].record);
     return {delta: after - before, before};
+  }
+
+  // The tooltip's lines for a record with a `leftover_materials_setup`
+  function leftoverTooltipLines(record) {
+    const perEntry = leftoverMeasure.value(record);
+    const runs = symbolDashboard.leftoverMaterialsSetupRuns(record);
+    const entries = symbolDashboard.leftoverMaterialsSetupEntries(record);
+    return [
+      element('span', {}, perEntry === null ? 'The setup cost of leftover materials: no value, since the first run left no entries'
+                                            : `The setup cost of leftover materials: ${oneDecimal.format(perEntry)} instructions per leftover entry`),
+      element('span', {}, `${integer.format(runs.with_leftovers.instructions)} instructions with ${integer.format(entries)} leftover entries`
+                          + ` and ${integer.format(runs.without_leftovers.instructions)} without; the runs executed`
+                          + ` ${integer.format(runs.with_leftovers.tests)} tests, with exit statuses ${runs.with_leftovers.exit_status}`
+                          + ` with leftovers and ${runs.without_leftovers.exit_status} without`)];
   }
 
   function hover(index, from) {
@@ -540,6 +592,7 @@
                                                  .join(', ')
                                  + `; the run executed ${integer.format(symbolDashboard.runnerSetupTests(point.record))} tests`
                                  + ` and had exit status ${symbolDashboard.runnerSetupExitStatus(point.record)}`)]),
+      ...(symbolDashboard.leftoverMaterialsSetupEntries(point.record) === null ? [] : leftoverTooltipLines(point.record)),
       ...(measures[3].value(point.record) === null ? []
           : [element('span', {}, `${integer.format(measures[3].value(point.record))} uncalled functions in Source`)]),
       element('span', {}, `${short(point.commit)} · ${longDate(point.date)}`),
@@ -582,6 +635,9 @@
         state.charts.push(drawChart(document.getElementById(`runner-plot-${measure.event}`), measure, 120, true));
       }
     }
+    const hasLeftover = state.points.some(point => symbolDashboard.leftoverMaterialsSetupEntries(point.record) !== null);
+    document.getElementById('leftover-figure').hidden = !hasLeftover;
+    if (hasLeftover) state.charts.push(drawChart(document.getElementById('leftover-plot'), leftoverMeasure, 120, true));
     const hasUncalled = state.points.some(point => measures[3].value(point.record) !== null);
     document.getElementById('uncalled-figure').hidden = !hasUncalled;
     if (hasUncalled) state.charts.push(drawChart(document.getElementById('uncalled-plot'), measures[3], 180, true));
