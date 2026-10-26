@@ -255,8 +255,7 @@
    * Returns the `event` counted in the runner's setup per test in `record`'s
    * run, or null if the record has no `runner_setup` (an old record, or one
    * whose measurement failed). Such a record is left out of the series, not
-   * plotted as zero. A record whose run failed has its count, which
-   * `runnerSetupFailed` tells apart.
+   * plotted as zero. A record whose run failed is plotted too.
    *
    * @param {JsonRecord} record
    * @param {string} event one of `runnerSetupEvents`
@@ -272,8 +271,8 @@
    * Returns the instructions counted inside prune's analysis in `record`'s
    * run, or null if the record has none (an old record, or one whose
    * measurement failed). Such a record is left out of the series, not
-   * plotted as zero. A record whose stamping run failed has its count, which
-   * `pruneStampingFailed` tells apart.
+   * plotted as zero. A record whose stamping run failed is plotted too: the
+   * analysis reads the stamps of one run on a fresh runner, whatever its outcome.
    *
    * @param {JsonRecord} record
    * @returns {number | null}
@@ -281,31 +280,6 @@
   function pruneInstructions(record) {
     if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;
     return record.prune_dependency_analysis.instructions;
-  }
-
-  /**
-   * Says whether `record` has a `prune_dependency_analysis` whose stamping
-   * run failed (a nonzero `stamping_exit_status`, whether a failing test, a
-   * crash or a signal): prune then selects different work, so the count is
-   * plotted apart from those of clean runs.
-   *
-   * @param {JsonRecord} record
-   * @returns {boolean}
-   */
-  function pruneStampingFailed(record) {
-    return Object.hasOwn(record, 'prune_dependency_analysis') && record.prune_dependency_analysis.stamping_exit_status !== 0;
-  }
-
-  /**
-   * Says whether `record` has a `runner_setup` whose run failed (a nonzero
-   * `exit_status`), so that its counts are plotted apart from those of
-   * clean runs.
-   *
-   * @param {JsonRecord} record
-   * @returns {boolean}
-   */
-  function runnerSetupFailed(record) {
-    return Object.hasOwn(record, 'runner_setup') && record.runner_setup.exit_status !== 0;
   }
 
   /**
@@ -634,6 +608,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneStampingFailed, runnerSetupFailed, runnerSetupEvents, runnerSetupPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, runnerSetupEvents, runnerSetupPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));

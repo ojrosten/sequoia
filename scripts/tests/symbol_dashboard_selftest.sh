@@ -360,17 +360,14 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.ok(counts.includes(777));
   });
 
-  await control('prune\'s dependency analysis is plotted whatever its stamping run, and a failed run told apart', () => {
+  await control('prune\'s dependency analysis is plotted whatever its stamping run\'s exit status', () => {
     const record = recordOf('F5');
     assert.strictEqual(dashboard.pruneInstructions(record), null);
-    assert.strictEqual(dashboard.pruneStampingFailed(record), false);
     record.prune_dependency_analysis = analysisOf(123, 0);
     assert.strictEqual(dashboard.pruneInstructions(record), 123);
-    assert.strictEqual(dashboard.pruneStampingFailed(record), false);
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
     record.prune_dependency_analysis = analysisOf(123, 1);
     assert.strictEqual(dashboard.pruneInstructions(record), 123);
-    assert.strictEqual(dashboard.pruneStampingFailed(record), true);
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
   });
 
@@ -390,20 +387,9 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     });
   }
 
-  await control('each panel tells a failed run by its own field, and plots its counts', () => {
-    const recordWith = (analysis, setup) => {
-      const record = recordOf('F5');
-      if (analysis) record.prune_dependency_analysis = analysis;
-      if (setup) record.runner_setup = setup;
-      return record;
-    };
-    const failedSetup = {...setupOf(4), exit_status: 8};
-    assert.strictEqual(dashboard.runnerSetupFailed(recordWith(null, null)), false);
-    assert.strictEqual(dashboard.runnerSetupFailed(recordWith(null, setupOf(4))), false);
-    assert.strictEqual(dashboard.runnerSetupFailed(recordWith(analysisOf(5, 2), setupOf(4))), false);
-    assert.strictEqual(dashboard.pruneStampingFailed(recordWith(analysisOf(5, 0), failedSetup)), false);
-    const record = recordWith(null, failedSetup);
-    assert.strictEqual(dashboard.runnerSetupFailed(record), true);
+  await control('the runner\'s setup is plotted whatever its run\'s exit status', () => {
+    const record = recordOf('F5');
+    record.runner_setup = {...setupOf(4), exit_status: 8};
     assert.strictEqual(dashboard.runnerSetupPerTest(record, 'instructions'), 1000);
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
   });
@@ -429,7 +415,6 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     record.runner_overhead = {invocation: 'x', exit_status: 0, tests: 4, syscalls: {opens: 60}};
     for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
-    assert.strictEqual(dashboard.runnerSetupFailed({...record, runner_overhead: {exit_status: 3}}), false);
   });
 
   await control('the events are the two the workflow records', () => {
@@ -692,11 +677,6 @@ MUTATIONS = [
     ('an absent branch read as empty',    "if (tree === null) return {state: 'absent'};", "if (tree === null) return {state: 'empty'};"),
     ('a missing analysis plotted as zero', "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;", "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return 0;"),
     ('a failed stamping run left out',    "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;", "if (!Object.hasOwn(record, 'prune_dependency_analysis') || record.prune_dependency_analysis.stamping_exit_status !== 0) return null;"),
-    ('a failed stamping run read as clean', "&& record.prune_dependency_analysis.stamping_exit_status !== 0;", "&& false;"),
-    ('a missing analysis read as failed', "return Object.hasOwn(record, 'prune_dependency_analysis') &&", "return true ||"),
-    ('a failed setup run read as clean',   "&& record.runner_setup.exit_status !== 0;", "&& false;"),
-    ('a missing setup read as failed',     "return Object.hasOwn(record, 'runner_setup') &&", "return true ||"),
-    ('the stamping status read for the setup', "&& record.runner_setup.exit_status !== 0;", "&& record.runner_setup.stamping_exit_status !== 0;"),
     ('a failed setup run left out',        "if (!Object.hasOwn(record, 'runner_setup')) return null;", "if (!Object.hasOwn(record, 'runner_setup') || record.runner_setup.exit_status !== 0) return null;"),
     ('the exit status of the setup unchecked', "if (!isCount(setup.exit_status)) problems.push", "if (false) problems.push"),
     ('the dependency analysis not checked', "if (Object.hasOwn(record, 'prune_dependency_analysis')) {", 'if (false) {'),
