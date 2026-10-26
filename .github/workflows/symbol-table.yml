@@ -12,10 +12,8 @@ name: symbol-table
 # scripts/symbol_table_provenance.py what it adds to it. The step which adds
 # the count of prune's analysis, and the step which adds the runner's setup,
 # each also adds `cpu_model` to its section: the model name of the CPU of the
-# runner which ran the job. Both sections are measured in one job, so their
-# model names are equal when the record is made. They are kept apart because
-# the store keeps each section's with its counts
-# (scripts/store_symbol_table_record.sh).
+# runner which ran the job. scripts/store_symbol_table_record.sh says how the
+# store treats it.
 #
 # The workflow builds TestAll and runs its suite once, only to leave prune a
 # stamp. It then runs `TestAll prune` under callgrind, to count the
@@ -355,6 +353,7 @@ jobs:
       # The model name is read where the section is added, so that a refusal
       # to read it costs the section and not the record.
       - name: Add the count of prune's analysis to the record
+        id: add_analysis
         continue-on-error: true
         run: |
           if [ -s "$RUNNER_TEMP/prune_dependency_analysis.json" ]; then
@@ -368,6 +367,7 @@ jobs:
           fi
 
       - name: Add the runner's setup to the record
+        id: add_setup
         continue-on-error: true
         run: |
           if [ -s "$RUNNER_TEMP/runner_setup.json" ]; then
@@ -379,6 +379,14 @@ jobs:
           else
             echo "::warning::the runner's setup was not counted, so the record has no runner_setup"
           fi
+
+      - name: Say that prune's analysis was lost
+        if: steps.add_analysis.outcome == 'failure'
+        run: echo "::warning::adding prune's analysis failed, so the record has no prune_dependency_analysis"
+
+      - name: Say that the runner's setup was lost
+        if: steps.add_setup.outcome == 'failure'
+        run: echo "::warning::adding the runner's setup failed, so the record has no runner_setup"
 
       - name: Upload the record
         uses: actions/upload-artifact@v7

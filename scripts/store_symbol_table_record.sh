@@ -30,15 +30,19 @@
 #     not deterministic, which a person should judge.
 # A field is never changed, nor removed. The exception to the union is the
 # model name of the CPU which made a measurement, `cpu_model` in the
-# measurement's section, named in cpu_model_fields below. It describes the
-# machine which made that section's counts, so it stays with them:
+# measurement's section, named in cpu_model_paths below. It describes the
+# machine which made all of that section's counts, so it stays with them:
 #   - it is never compared, since a job on another CPU differs;
 #   - the held section's stands, with the held counts;
 #   - a held section which has none, as every record made before it was
 #     recorded, is not given the offered one, since the held counts were not
 #     measured on that CPU;
 #   - a section which only the offered record has is added whole, with its
-#     own.
+#     own;
+#   - if the merge adds a sub-field to a held section, the section's counts
+#     come from more than one measurement. The section keeps its model name
+#     only if the offered section has the same one. Otherwise, as when the
+#     held section has none, the merged section has none.
 # If the offered record adds nothing, the script says so and succeeds, and the
 # branch is left as it was: a run repeated at one commit has nothing new to
 # say. If it adds fields, the union is stored as jq's output with the keys
@@ -98,7 +102,7 @@ without_run() { jq -S 'del(.run)' "$1" || die "$1 cannot be read as JSON"; }
 
 # The path into a record of each model name of the CPU which made a section's
 # counts
-cpu_model_fields='[
+cpu_model_paths='[
   ["prune_dependency_analysis", "cpu_model"],
   ["runner_setup",              "cpu_model"]
 ]'
@@ -125,13 +129,14 @@ within_tolerance='
 # The paths in conflicts, added and kept are arrays of keys.
 merge() {
   jq -n -S --argjson held "$1" --argjson offered "$2" --argjson fields "$measured_fields" \
-     --argjson cpu_model_fields "$cpu_model_fields" \
+     --argjson cpu_model_paths "$cpu_model_paths" \
      "$within_tolerance"'
      def tolerance($path): $fields | map(select(.path == $path)) | first | .denominator;
-     def cpu_model($path): $cpu_model_fields | any(.[]; . == $path);
+     def is_cpu_model_path($path): $cpu_model_paths | any(.[]; . == $path);
+     def adds_below($added; $path): $added | any(.[]; .[0:($path | length)] == $path);
      def none: {conflicts: [], tolerated: [], added: [], kept: []};
      def merge($h; $o; $path):
-       tolerance($path) as $denominator | if cpu_model($path) then {value: $h} + none
+       tolerance($path) as $denominator | if is_cpu_model_path($path) then {value: $h} + none
        elif ($h | type) == "object" and ($o | type) == "object" then
          reduce (($h | keys) + ($o | keys) | unique)[] as $key ({value: {}} + none;
            if ($h | has($key)) and ($o | has($key)) then
@@ -139,8 +144,11 @@ merge() {
              | .value[$key] = $r.value | .conflicts += $r.conflicts | .tolerated += $r.tolerated
              | .added += $r.added | .kept += $r.kept
            elif $h | has($key) then .value[$key] = $h[$key] | .kept += [$path + [$key]]
-           elif cpu_model($path + [$key]) then .
+           elif is_cpu_model_path($path + [$key]) then .
            else .value[$key] = $o[$key] | .added += [$path + [$key]] end)
+         | if is_cpu_model_path($path + ["cpu_model"]) and adds_below(.added; $path)
+              and ($h.cpu_model == null or $h.cpu_model != $o.cpu_model)
+           then del(.value.cpu_model) else . end
        elif $h == $o then {value: $h} + none
        elif $denominator != null and within($h; $o; $denominator) then
          {value: $h} + none + {tolerated: [{path: $path, held: $h, offered: $o, denominator: $denominator}]}

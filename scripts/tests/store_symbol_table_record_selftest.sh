@@ -33,7 +33,10 @@
 #     name with its counts, whether the offer adds a field or not; a held
 #     section without one is not given the offered one, though a section
 #     which only the offer has is added with its own; a count beyond its
-#     tolerance is still refused beside a differing model name;
+#     tolerance is still refused beside a differing model name; a sub-field
+#     which the offer adds to a held section leaves it its model name only if
+#     the offered section has the same, and otherwise, or if the held section
+#     has none, leaves it none;
 #   - the union is taken at every depth: a sub-field of a held object is
 #     added, and one the offer lacks is kept;
 #   - a measured count, with the tolerance of its own (prune's instructions 1
@@ -41,12 +44,12 @@
 #     calls 1 part in 200), which differs from the held one by less than that
 #     is taken to be the held one: the record is accepted, the difference
 #     said, and the held count kept, in a record which adds a field as in one
-#     which adds none; a
-#     difference of exactly the tolerance, or more, is refused with the
-#     difference shown, as is a difference in a field which is not measured
-#     (the symbols) however small, even beside a measured count within its
-#     tolerance; a tolerance is the field's own, so a difference which one
-#     field's tolerance accepts is refused by a field with a smaller;
+#     which adds none; a difference of exactly the tolerance, or more, is
+#     refused with the difference shown, as is a difference in a field which
+#     is not measured (the symbols) however small, even beside a measured
+#     count within its tolerance; a tolerance is the field's own, so a
+#     difference which one field's tolerance accepts is refused by a field
+#     with a smaller;
 #   - in a clone without blobs, a held record whose blob cannot be fetched is
 #     a failure, not a record absent;
 #   - a push refused because another push came first is retried on the new
@@ -140,6 +143,8 @@ fixture() {
   record "$work/C-intel.json"        "$A" 100 42 true ", $(printf "$both" 1000000000 "$intel" "$intel")"
   record "$work/C-intel-near.json"   "$A" 100 43 true ", $(printf "$both" 1000999999 "$intel" "$intel")"
   record "$work/C-intel-far.json"    "$A" 100 44 true ", $(printf "$both" 1001000000 "$intel" "$intel")"
+  record "$work/C-sub-amd.json"      "$A" 100 46 true ", $(printf "$both" 1000000000 "$amd" "$amd" | sed 's/834813,/834813, "other": 5,/')"
+  record "$work/C-sub-intel.json"    "$A" 100 47 true ", $(printf "$both" 1000000000 "$intel" "$intel" | sed 's/834813,/834813, "other": 5,/')"
   record "$work/C-intel-added.json"  "$A" 100 45 true ", $(printf "$both" 1000000000 "$intel" "$intel"), \"extra\": 1"
   # a held record with an old measurement and a nested object, offers which
   # drop the old measurement, add a nested sub-field, or lack one
@@ -299,6 +304,34 @@ cpu_controls() {
   same "the held CPU model of the setup's section stands" "$amd" "$(held "$A" | jq -r '.runner_setup.cpu_model')"
   same "the field added is there" "1" "$(held "$A" | jq '.extra')"
   unchanged_clone "differing CPU models"
+
+  # A sub-field which the offer adds to a held section
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store C-amd; first=$(tip)
+  store C-sub-intel
+  exits "a sub-field added beside another CPU model succeeds" 0
+  same "the sub-field is added" "5" "$(held "$A" | jq '.runner_setup.other')"
+  same "the section has no CPU model" "false" "$(held "$A" | jq '.runner_setup | has("cpu_model")')"
+  same "prune's section, which gained nothing, keeps its CPU model" "$amd" \
+       "$(held "$A" | jq -r '.prune_dependency_analysis.cpu_model')"
+
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store C-amd; first=$(tip)
+  store C-sub-amd
+  exits "a sub-field added beside the same CPU model succeeds" 0
+  same "the sub-field is added to the section" "5" "$(held "$A" | jq '.runner_setup.other')"
+  same "the section keeps its CPU model" "$amd" "$(held "$A" | jq -r '.runner_setup.cpu_model')"
+
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store S; first=$(tip)
+  store C-sub-amd
+  exits "a sub-field added to a held section without a CPU model succeeds" 0
+  same "the sub-field is added" "5" "$(held "$A" | jq '.runner_setup.other')"
+  same "the section has none" "false" "$(held "$A" | jq '.runner_setup | has("cpu_model")')"
+  same "prune's section, added whole, has the offer's" "$amd" "$(held "$A" | jq -r '.prune_dependency_analysis.cpu_model')"
 
   work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
   fixture
@@ -640,7 +673,13 @@ mutant 'the CPU model of prune compared' \
 mutant 'the CPU model of the setup compared' \
        ',
   ["runner_setup",              "cpu_model"]' ''
-mutant 'an offered CPU model added to a held section' '           elif cpu_model($path + [$key]) then .
+mutant 'a model kept beside an added sub-field' \
+       'then del(.value.cpu_model) else . end' 'then . else . end'
+mutant 'a model dropped beside an added sub-field of the same CPU' \
+       'and ($h.cpu_model == null or $h.cpu_model != $o.cpu_model)' 'and true'
+mutant 'the offered model adopted beside an added sub-field' \
+       'then del(.value.cpu_model) else . end' 'then .value.cpu_model = $o.cpu_model else . end'
+mutant 'an offered CPU model added to a held section' '           elif is_cpu_model_path($path + [$key]) then .
 ' ''
 mutant 'the offered CPU model replaces the held' '{value: $h} + none
        elif ($h | type) == "object"' '{value: $o} + none
