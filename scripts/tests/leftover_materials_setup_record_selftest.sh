@@ -19,10 +19,11 @@
 #   - a run which failed is recorded with its exit status, since the dashboard
 #     plots a point whatever its status;
 #   - 0 previous entries is recorded, not refused;
-#   - a counts file which is absent, empty, not JSON, or lacks the boundary, the
-#     exit status, the tests or the instructions is refused, whichever run it
-#     is, as are two boundaries which differ and a number of entries which is no
-#     number: the script succeeds, warns on standard error, and prints nothing;
+#   - each of these is refused, and the script then succeeds, warns on
+#     standard error, and prints nothing: a counts file which is absent,
+#     empty or not JSON, or lacks the boundary, the exit status, the tests or
+#     the instructions, whichever run it is; two boundaries which differ; and
+#     a number of entries which is no number;
 #   - arguments of any other number are refused with status 2.
 
 set -u

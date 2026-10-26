@@ -314,8 +314,8 @@ jobs:
       # clearing leftover materials adds on the thread running the tests.
       # Collection is per thread, so work on another thread is not counted.
       #
-      # The entries of the tree are counted between the runs. `find` is
-      # wrapped so that an absent tree counts as none, since a failed command
+      # The step counts the entries of the tree between the runs, and wraps
+      # `find` so that an absent tree counts as none, since a failed command
       # in a pipe fails the step. A record whose count is 0 is still written:
       # it says that the second run found nothing to clear, so that the
       # difference measures nothing. The dashboard is to read the count for
