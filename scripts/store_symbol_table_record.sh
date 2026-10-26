@@ -36,13 +36,17 @@
 # count within 1 in `denominator` of the held one, as a fraction of the held
 # count, is taken to be the held one: the held value stands, and the script
 # prints the difference. Each count is named in measured_fields below with a
-# denominator of its own: 1 in 10,000 for prune's, 1 in 200 for each of the
-# setup's.
+# denominator of its own: 1 in 1,000 for prune's, 1 in 50 for the setup's
+# instructions and 1 in 200 for its system calls.
 #
 # The spread measured, with the performance tests excluded from the setup's
-# runs: prune's analysis moved by 2 and by 49 parts in a million on two pairs
-# of reruns; the setup's instructions by 0.092% and its system calls by
-# 0.014%.
+# runs: within one job, prune's analysis moved by 2 and by 49 parts in a
+# million on two pairs of reruns; the setup's instructions by 0.092% and its
+# system calls by 0.014%. Between separate jobs measuring one commit, from
+# the 80th pull request on, prune's analysis moved by up to 722 parts in a
+# million, and the setup's instructions per test by up to 1.04% between
+# commits whose code is identical. The tolerances above are wider than those
+# spreads, so that an honest re-measurement is not refused.
 #
 # A branch which does not exist is created, with no history. The push is
 # never forced. When it fails - as it does when another run pushed first -
@@ -84,8 +88,8 @@ without_run() { jq -S 'del(.run)' "$1" || die "$1 cannot be read as JSON"; }
 # record, and the denominator of the relative difference below which a count is
 # taken to be the held one
 measured_fields='[
-  {"path": ["prune_dependency_analysis", "instructions"], "denominator": 10000},
-  {"path": ["runner_setup", "instructions"],              "denominator": 200},
+  {"path": ["prune_dependency_analysis", "instructions"], "denominator": 1000},
+  {"path": ["runner_setup", "instructions"],              "denominator": 50},
   {"path": ["runner_setup", "syscalls"],                  "denominator": 200}
 ]'
 
