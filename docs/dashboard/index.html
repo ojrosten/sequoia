@@ -118,7 +118,7 @@
     <p class="lede">Each point is a commit on <code>staging</code>'s first-parent history, built by CI and measured
       by <code>scripts/symbol_table_report.py</code>. A gap in a line, and a rule across the charts, mark a change of
       toolchain: the points on either side were built by different compilers, linkers or packages, so the step
-      between them is not a change in sequoia.</p>
+      between them is not a change in sequoia. Each chart's time runs from its first count to its last.</p>
   </header>
   <div class="filters" id="filters" hidden><label>Column<select id="column"></select></label></div>
   <section class="card" id="message" role="status"><p>Loading the records&hellip;</p></section>
@@ -142,8 +142,8 @@
           and the functions it calls, in <code>TestAll prune --serial</code> run after a full run of the suite:
           prune's reading of the build's records and its walk of the sources for changes, and nothing of the
           runner's startup or of any test. It is exact for a fixed toolchain and commit. Points whose record has no
-          count are left out. A point is plotted whether or not its full run passed: the analysis reads the stamps that one run
-          on a fresh runner left, whatever its outcome.</p></figcaption>
+          count are left out. A point is plotted whether or not its full run passed: the analysis reads the stamps
+          that one run on a fresh runner left, whatever its outcome.</p></figcaption>
       <div class="plot" id="analysis-plot"></div>
     </figure>
     <figure class="card" id="runner-figure">
@@ -156,9 +156,9 @@
           calls (its sysCount) so counted, divided by the number of tests the run executed, as the runner's own execution
           records count them (the runner's tests run runners of their own, whose tests are not counted, nor is their setup
           collected); each plot has a scale of its own. Instructions are exact for a fixed
-          toolchain and commit. Points whose record has no count are left out. Each plot starts at its first count. A change of the run's
+          toolchain and commit. Points whose record has no count are left out. A change of the run's
           <code>boundary</code> (a different executable, say) breaks the line, with a marker labelled boundary.
-</p></figcaption>
+        </p></figcaption>
       <h3>Instructions per test</h3><div class="plot" id="runner-plot-instructions"></div>
       <h3>System calls per test</h3><div class="plot" id="runner-plot-syscalls"></div>
     </figure>
@@ -192,6 +192,7 @@
   const topMovers  = 15;
   // Wider than either label of a break at the labels' size, so that labels of neighbouring breaks never overlap
   const breakLabelWidth = 64;
+  const tickMarkLength  = 6;
   const parameters = new URLSearchParams(location.search);
   // A relative path only, so that no link can make the public page show
   // another site's figures.
@@ -328,8 +329,8 @@
 
   // Draws the points' values of one measure into `container`, one line per
   // run, with a rule at each change of toolchain, over the days from its
-  // first count to its last. Returns the chart's
-  // functions to mark the hovered and selected points.
+  // first count to its last. Returns the chart's functions to mark the
+  // hovered and selected points.
   function drawChart(container, measure, height, labelBreaks) {
     const points = state.points;
     const width  = Math.max(280, container.clientWidth);
@@ -338,12 +339,13 @@
     const plotHeight = height - margin.top - margin.bottom;
     const values = points.map(point => measure.value(point.record));
     // A point may lack the measure, and is then left out of the scale, the axis of time and the line
-    const counted = points.flatMap((point, index) => values[index] === null ? [] : [index]);
-    const scale  = scaleOf(counted.map(index => values[index]));
+    const indicesWithCount = points.flatMap((point, index) => values[index] === null ? [] : [index]);
+    const scale  = scaleOf(indicesWithCount.map(index => values[index]));
     // Time runs along x, so points of one day are close and days with no point leave a gap
-    const axisOfTime = symbolDashboard.timeAxis(counted.map(index => Date.parse(points[index].date)), margin.left, width - margin.right, 80);
+    const timesWithCount = indicesWithCount.map(index => Date.parse(points[index].date));
+    const axisOfTime = symbolDashboard.timeAxis(timesWithCount, margin.left, width - margin.right, 80);
     const x = index => axisOfTime.x(Date.parse(points[index].date));
-    const inPlot = index => x(index) >= margin.left && x(index) <= width - margin.right;
+    const isInPlot = index => x(index) >= margin.left && x(index) <= width - margin.right;
     const y = value => margin.top + plotHeight * (scale.high - value) / (scale.high - scale.low);
 
     const svg = element('svg:svg', {viewBox: `0 0 ${width} ${height}`, height, tabindex: 0, role: 'application',
@@ -358,24 +360,27 @@
     }
     // A mark on the axis at each tick, its date centred beneath it, or ending at it at the right edge
     for (const tick of axisOfTime.ticks) {
-      axis.append(element('svg:line', {x1: tick.x, x2: tick.x, y1: margin.top + plotHeight, y2: margin.top + plotHeight + 6,
+      const bottom = margin.top + plotHeight;
+      axis.append(element('svg:line', {x1: tick.x, x2: tick.x, y1: bottom, y2: bottom + tickMarkLength,
                                        stroke: 'var(--text-muted)', 'stroke-width': 1}));
-      axis.append(element('svg:text', {x: tick.x, y: height - 6, 'text-anchor': tick.x >= width - margin.right - 1 ? 'end' : 'middle'},
+      const isAtRightEdge = tick.x >= width - margin.right - 1;
+      axis.append(element('svg:text', {x: tick.x, y: height - 6, 'text-anchor': isAtRightEdge ? 'end' : 'middle'},
                           shortDate(new Date(tick.time).toISOString())));
     }
     svg.append(axis);
 
     // A break outside the plot's days is not drawn, and a label too close to the one before it is left out
-    let labelledAt = -Infinity;
+    let previousLabelX = -Infinity;
     points.forEach((point, index) => {
-      if (!(measure.changeOf ? measure.changeOf(point) : point.toolchainChange) || !inPlot(index - 1) || !inPlot(index)) return;
+      const isBreak = measure.changeOf ? measure.changeOf(point) : point.toolchainChange;
+      if (!isBreak || !isInPlot(index - 1) || !isInPlot(index)) return;
       const label = measure.breakLabel ? measure.breakLabel(point) : 'toolchain';
       const at = (x(index - 1) + x(index)) / 2;
       svg.append(element('svg:line', {x1: at, x2: at, y1: labelBreaks ? 16 : margin.top, y2: margin.top + plotHeight,
                                       stroke: 'var(--text-muted)', 'stroke-width': 1}));
-      if (!labelBreaks || at - labelledAt < breakLabelWidth) return;
+      if (!labelBreaks || at - previousLabelX < breakLabelWidth) return;
       svg.append(element('svg:text', {x: at, y: 11, 'text-anchor': 'middle', class: 'break-label'}, label));
-      labelledAt = at;
+      previousLabelX = at;
     });
 
     // A line runs through consecutive points which have the measure, within one toolchain
@@ -416,7 +421,8 @@
     const overlay = element('svg:rect', {x: margin.left, y: 0, width: plotWidth, height, fill: 'transparent'});
     const indexAt = event => {
       const bounds = svg.getBoundingClientRect();
-      return counted[symbolDashboard.nearestPoint(axisOfTime.xs, (event.clientX - bounds.left) * width / bounds.width)];
+      const offset = (event.clientX - bounds.left) * width / bounds.width;
+      return indicesWithCount[symbolDashboard.nearestPoint(axisOfTime.xs, offset)];
     };
     overlay.addEventListener('pointermove', event => hover(indexAt(event)));
     overlay.addEventListener('pointerleave', () => hover(null));
@@ -436,10 +442,10 @@
     return {
       svg,
       markHover(index) {
-        const shown = index === null || !inPlot(index) ? 'hidden' : 'visible';
+        const shown = index === null || !isInPlot(index) ? 'hidden' : 'visible';
         crosshair.setAttribute('visibility', shown);
         hoverDot.setAttribute('visibility', index === null || values[index] === null ? 'hidden' : 'visible');
-        if (index === null || !inPlot(index)) return;
+        if (index === null || !isInPlot(index)) return;
         crosshair.setAttribute('x1', x(index)); crosshair.setAttribute('x2', x(index));
         if (values[index] !== null) { hoverDot.setAttribute('cx', x(index)); hoverDot.setAttribute('cy', y(values[index])); }
       },

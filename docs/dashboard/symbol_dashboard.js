@@ -255,7 +255,7 @@
    * Returns the `event` counted in the runner's setup per test in `record`'s
    * run, or null if the record has no `runner_setup` (an old record, or one
    * whose measurement failed). Such a record is left out of the series, not
-   * plotted as zero. A record whose run failed is plotted too.
+   * plotted as zero. A record is plotted whatever its run's exit status.
    *
    * @param {JsonRecord} record
    * @param {string} event one of `runnerSetupEvents`
@@ -578,7 +578,9 @@
     const x     = (/** @type {number} */ time) => left + (time / millisecondsPerDay - first) / days * (right - left);
     const step  = dayStepsToTry.find(candidate => candidate * (right - left) / days >= minGap) ?? dayStepsToTry[dayStepsToTry.length - 1];
     const ticks = [];
-    for (let day = first; day <= last + 1; day += step) ticks.push({x: x(day * millisecondsPerDay), time: day * millisecondsPerDay});
+    for (let day = first; day <= last + 1; day += step) {
+      ticks.push({x: x(day * millisecondsPerDay), time: day * millisecondsPerDay});
+    }
     return {xs: times.map(x), ticks, x};
   }
 

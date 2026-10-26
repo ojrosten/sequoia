@@ -14,9 +14,8 @@ name: symbol-table
 # The workflow builds TestAll and runs the suite as a test of nothing: its one
 # run is to leave prune a stamp, for the instruction count of prune's
 # analysis, which a record carries as `prune_dependency_analysis`, with the
-# exit status of that run. The dashboard plots the point whatever that status:
-# the analysis reads the stamps of that one run on a fresh runner, and the
-# counts show no step where failing runs end (2026-10-17 to 10-19). The workflow is
+# exit status of that run. The dashboard plots the point whatever that status,
+# since the analysis reads the stamps of that one run on a fresh runner. The workflow is
 # apart from the tiers, so that a failure to measure cannot fail a test
 # column, and cancelling a superseded run of a tier loses no record.
 #
