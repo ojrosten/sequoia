@@ -46,6 +46,12 @@
 #     a record with the cost of leftover materials and no runner_setup is no
 #     problem;
 #     a point is plotted whatever the exit status of its runs;
+#   - a record's leftover_materials_setup gives the instructions per leftover
+#     entry, or null where the section is absent or has no entries, which
+#     leaves the measurement blind. Its exit status is the first non-zero one
+#     of its two runs. A malformed section is a problem, as is one whose runs
+#     executed different numbers of tests. Its boundary breaks the line
+#     independently of the runner_setup's;
 #   - the counts of uncalled functions join the points of their commits, with
 #     a toolchain of their own; a record of them which has a problem, or lies
 #     at no plotted commit, is listed;
@@ -444,6 +450,130 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
   });
 
+  const leftoverOf = (entries, withoutInstructions = 50000, withInstructions = 54000, tests = 4) => ({
+    boundary: 'x', leftover_entries: entries, cpu_model: 'm',
+    without_leftovers: {instructions: withoutInstructions, tests, exit_status: 0},
+    with_leftovers:    {instructions: withInstructions,    tests, exit_status: 0}
+  });
+
+  await control('the instructions per leftover entry are the difference of the two runs over the entries, and null without a section', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.leftoverMaterialsSetupPerEntry(record), null);
+    record.leftover_materials_setup = leftoverOf(10);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupPerEntry(record), 400);
+    record.leftover_materials_setup = leftoverOf(8, 54000, 50000);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupPerEntry(record), -500);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  await control('a section with no leftover entries is blind: it has no value, and is a problem for none', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.leftoverMaterialsSetupBlindLabel(record), null);
+    record.leftover_materials_setup = leftoverOf(0);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupBlindLabel(record), 'blind');
+    assert.strictEqual(dashboard.leftoverMaterialsSetupPerEntry(record), null);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+    record.leftover_materials_setup = leftoverOf(1);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupBlindLabel(record), null);
+  });
+
+  await control('a blind point is labelled failed if either of its runs exited non-zero', () => {
+    for (const runName of ['without_leftovers', 'with_leftovers']) {
+      const record = recordOf('F5');
+      record.leftover_materials_setup = leftoverOf(0);
+      record.leftover_materials_setup[runName].exit_status = 2;
+      assert.strictEqual(dashboard.leftoverMaterialsSetupBlindLabel(record), 'blind, failed');
+      record.leftover_materials_setup.leftover_entries = 1;
+      assert.strictEqual(dashboard.leftoverMaterialsSetupBlindLabel(record), null);
+    }
+  });
+
+  await control('the entries and runs of a section are read from it, and are null in a record without one', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.leftoverMaterialsSetupEntries(record), null);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupRuns(record), null);
+    record.leftover_materials_setup = leftoverOf(7, 100, 200, 3);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupEntries(record), 7);
+    assert.deepStrictEqual(dashboard.leftoverMaterialsSetupRuns(record), {
+      without_leftovers: {instructions: 100, tests: 3, exit_status: 0},
+      with_leftovers:    {instructions: 200, tests: 3, exit_status: 0}});
+    assert.deepStrictEqual(dashboard.leftoverMaterialsSetupRunNames, ['without_leftovers', 'with_leftovers']);
+  });
+
+  await control('the exit status of a section is the non-zero one of its runs, and is plotted whatever it is', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.leftoverMaterialsSetupFirstFailure(record), null);
+    record.leftover_materials_setup = leftoverOf(10);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupFirstFailure(record), 0);
+    record.leftover_materials_setup.with_leftovers.exit_status = 3;
+    assert.strictEqual(dashboard.leftoverMaterialsSetupFirstFailure(record), 3);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupPerEntry(record), 400);
+    record.leftover_materials_setup.without_leftovers.exit_status = 5;
+    assert.strictEqual(dashboard.leftoverMaterialsSetupFirstFailure(record), 5);
+    record.leftover_materials_setup.with_leftovers.exit_status = 0;
+    assert.strictEqual(dashboard.leftoverMaterialsSetupFirstFailure(record), 5);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupPerEntry(record), 400);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  const leftoverProblem = text => `it has a leftover_materials_setup ${text}`;
+  const without = (object, key) => Object.fromEntries(Object.entries(object).filter(([name]) => name !== key));
+  for (const [name, section, problems] of [
+    ['null',                      null,                                 ['with no boundary']],
+    ['a boundary which is no text', {...leftoverOf(10), boundary: 5},   ['with no boundary']],
+    ['negative entries',          leftoverOf(-1),                       ['whose leftover_entries is not a non-negative integer']],
+    ['fractional entries',        leftoverOf(1.5),                      ['whose leftover_entries is not a non-negative integer']],
+    ['text entries',              leftoverOf('3'),                      ['whose leftover_entries is not a non-negative integer']],
+    ['absent entries',            without(leftoverOf(10), 'leftover_entries'), ['whose leftover_entries is not a non-negative integer']],
+    ['no run without leftovers',  without(leftoverOf(10), 'without_leftovers'), ['with no without_leftovers']],
+    ['a null run with leftovers', {...leftoverOf(10), with_leftovers: null}, ['with no with_leftovers']],
+    ['different numbers of tests', {...leftoverOf(10), with_leftovers: {...leftoverOf(10).with_leftovers, tests: 5}},
+                                                                        ['whose runs executed different numbers of tests']]
+  ]) {
+    await control(`a record with a leftover_materials_setup of ${name} is a problem naming it, and no other`, () => {
+      const record = recordOf('F5');
+      record.leftover_materials_setup = section;
+      assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), problems.map(leftoverProblem));
+    });
+  }
+
+  for (const runName of ['without_leftovers', 'with_leftovers']) {
+    for (const [name, key, value, problem] of [
+      ['no exit status',       'exit_status',  undefined, 'has no exit status'],
+      ['a text exit status',   'exit_status',  '0',       'has no exit status'],
+      ['zero tests',           'tests',        0,         'has a number of tests which is not a positive integer'],
+      ['fractional tests',     'tests',        1.5,       'has a number of tests which is not a positive integer'],
+      ['no tests',             'tests',        undefined, 'has a number of tests which is not a positive integer'],
+      ['zero instructions',    'instructions', 0,         'has no positive count of instructions'],
+      ['negative instructions', 'instructions', -1,       'has no positive count of instructions'],
+      ['text instructions',    'instructions', '5',       'has no positive count of instructions'],
+      ['no instructions',      'instructions', undefined, 'has no positive count of instructions']
+    ]) {
+      await control(`a leftover_materials_setup whose ${runName} has ${name} is a problem naming it, and no other`, () => {
+        const record = recordOf('F5');
+        record.leftover_materials_setup = leftoverOf(10);
+        if (value === undefined) delete record.leftover_materials_setup[runName][key];
+        else record.leftover_materials_setup[runName][key] = value;
+        assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), [leftoverProblem(`whose ${runName} ${problem}`)]);
+      });
+    }
+  }
+
+  await control('the leftover materials\' boundary breaks the line independently of the runner\'s setup\'s', () => {
+    const summary = {date: 'd', subject: 's'};
+    const point = (setupBoundary, leftoverBoundary) => {
+      const record = recordOf('F4');
+      if (setupBoundary !== null) record.runner_setup = {...setupOf(4), boundary: setupBoundary};
+      if (leftoverBoundary !== null) record.leftover_materials_setup = {...leftoverOf(10), boundary: leftoverBoundary};
+      return {commit: c.F4, summary, record};
+    };
+    const points = dashboard.pointsOf([point('a', 'p'), point('b', 'p'), point(null, 'q'), point('b', null), point('b', 'q')]);
+    assert.deepStrictEqual(points.map(p => p.boundaryChange),         [false, true,  false, false, false]);
+    assert.deepStrictEqual(points.map(p => p.setupRun),               [0,     1,     1,     1,     1]);
+    assert.deepStrictEqual(points.map(p => p.leftoverBoundaryChange), [false, false, true,  false, false]);
+    assert.deepStrictEqual(points.map(p => p.leftoverRun),            [0,     0,     1,     1,     1]);
+  });
+
   await control('each event is null in a record without the runner\'s setup, and per test otherwise', () => {
     const record = recordOf('F5');
     for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
@@ -724,9 +854,9 @@ MUTATIONS = [
     ('objects not checked',               '!Object.values(objects).every(isCount)', 'false'),
     ('a failed fetch fails the load',     'catch (error) { outcomes[index] = {error}; }', 'catch (error) { throw error; }'),
     ('an absent branch read as empty',    "if (tree === null) return {state: 'absent'};", "if (tree === null) return {state: 'empty'};"),
-    ('a missing analysis plotted as zero', "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;", "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return 0;"),
-    ('a failed stamping run left out',    "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;", "if (!Object.hasOwn(record, 'prune_dependency_analysis') || record.prune_dependency_analysis.stamping_exit_status !== 0) return null;"),
-    ('a failed setup run left out',        "if (!Object.hasOwn(record, 'runner_setup')) return null;", "if (!Object.hasOwn(record, 'runner_setup') || record.runner_setup.exit_status !== 0) return null;"),
+    ('a missing analysis plotted as zero', "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;\n    return record.prune_dependency_analysis.instructions;", "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return 0;\n    return record.prune_dependency_analysis.instructions;"),
+    ('a failed stamping run left out',    "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;\n    return record.prune_dependency_analysis.instructions;", "if (!Object.hasOwn(record, 'prune_dependency_analysis') || record.prune_dependency_analysis.stamping_exit_status !== 0) return null;\n    return record.prune_dependency_analysis.instructions;"),
+    ('a failed setup run left out',        "if (!Object.hasOwn(record, 'runner_setup')) return null;\n    const setup = record.runner_setup;", "if (!Object.hasOwn(record, 'runner_setup') || record.runner_setup.exit_status !== 0) return null;\n    const setup = record.runner_setup;"),
     ('the exit status of the setup unchecked', "if (!isCount(setup.exit_status)) problems.push", "if (false) problems.push"),
     ('the dependency analysis not checked', "if (Object.hasOwn(record, 'prune_dependency_analysis')) {", 'if (false) {'),
     ('zero instructions accepted',         "|| analysis.instructions === 0\n", "\n"),
@@ -736,12 +866,12 @@ MUTATIONS = [
     ('the count not checked',             '|| !isCount(analysis.instructions)\n', '\n'),
     ('the new count not checked',         'typeof analysis !== \'object\' || !isCount(analysis.instructions) ||', 'typeof analysis !== \'object\' ||'),
     ('the invocation not checked',        "|| typeof analysis.invocation !== 'string'", ''),
-    ('no break at a change of boundary',   "const boundaryChange = typeof setupBoundary === 'string' && boundary !== null && setupBoundary !== boundary;", "const boundaryChange = false;"),
-    ('a first boundary a change',          "typeof setupBoundary === 'string' && boundary !== null &&", "typeof setupBoundary === 'string' &&"),
-    ('the boundary forgotten at a gap',    "if (typeof setupBoundary === 'string') boundary = setupBoundary;", "boundary = typeof setupBoundary === 'string' ? setupBoundary : null;"),
-    ('the series not counted',             "if (boundaryChange) ++setupRun;", ""),
-    ('a boundary which is no text read',   "typeof setupBoundary === 'string' && boundary !== null", "setupBoundary !== null && boundary !== null"),
-    ('a missing setup throws',    "if (!Object.hasOwn(record, 'runner_setup')) return null;", ""),
+    ('no break at a change of boundary',   "const change = typeof boundary === 'string' && previous !== null && boundary !== previous;", "const change = false;"),
+    ('a first boundary a change',          "typeof boundary === 'string' && previous !== null &&", "typeof boundary === 'string' &&"),
+    ('the boundary forgotten at a gap',    "if (typeof boundary === 'string') previous = boundary;", "previous = typeof boundary === 'string' ? boundary : null;"),
+    ('the series not counted',             "if (change) ++run;", ""),
+    ('a boundary which is no text read',   "typeof boundary === 'string' && previous !== null", "boundary !== null && previous !== null"),
+    ('a missing setup throws',    "if (!Object.hasOwn(record, 'runner_setup')) return null;\n    const setup = record.runner_setup;", "const setup = record.runner_setup;"),
     ('the setup not checked',              "if (Object.hasOwn(record, 'runner_setup')) {", 'if (false) {'),
     ('the setup\'s boundary not checked',  "|| typeof setup.boundary !== 'string') {", ') {'),
     ('the number of tests not checked',     "if (!(isCount(setup.tests) && setup.tests > 0)) problems.push", 'if (false) problems.push'),
@@ -753,6 +883,37 @@ MUTATIONS = [
     ('the wrong event read',                "return setup[event] / setup.tests;", "return setup.instructions / setup.tests;"),
     ('a runner_setup required',            "if (Object.hasOwn(record, 'runner_setup')) {", 'if (true) {'),
     ('the cost of leftover materials a problem', "const objects = record.defined_symbols_by_object;", "if (Object.hasOwn(record, 'leftover_materials_setup')) problems.push('x');\n    const objects = record.defined_symbols_by_object;"),
+    ('a blind point plotted',              "if (section.leftover_entries === 0) return null;", "if (section.leftover_entries === 0) return 0;"),
+    ('the runs subtracted the wrong way',  "(section.with_leftovers.instructions - section.without_leftovers.instructions)", "(section.without_leftovers.instructions - section.with_leftovers.instructions)"),
+    ('the total plotted, not per entry',   "section.without_leftovers.instructions) / section.leftover_entries;", "section.without_leftovers.instructions);"),
+    ('a missing section throws in the value', "if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;\n    const section = record.leftover_materials_setup;\n    if (section.leftover_entries === 0)", "const section = record.leftover_materials_setup;\n    if (section.leftover_entries === 0)"),
+    ('blindness never found',              "if (record.leftover_materials_setup.leftover_entries !== 0) return null;", "return null;"),
+    ('a section with entries blind',       "if (record.leftover_materials_setup.leftover_entries !== 0) return null;", ""),
+    ('a failed blind point not labelled',  "=== 0 ? 'blind' : 'blind, failed'", "=== 0 || true ? 'blind' : 'blind, failed'"),
+    ('only one run judged for the label',  "return leftoverMaterialsSetupFirstFailure(record) === 0 ?", "return record.leftover_materials_setup.with_leftovers.exit_status === 0 ?"),
+    ('a missing section blind',            "if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;\n    if (record.leftover_materials_setup.leftover_entries !== 0) return null;", "if (record.leftover_materials_setup.leftover_entries !== 0) return null;"),
+    ('a missing section has entries',       "if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;\n    return record.leftover_materials_setup.leftover_entries;", "if (!Object.hasOwn(record, 'leftover_materials_setup')) return 0;\n    return record.leftover_materials_setup.leftover_entries;"),
+    ('a missing section has runs',          "if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;\n    return Object.fromEntries(", "return Object.fromEntries("),
+    ('the runs named wrongly',              "const leftoverMaterialsSetupRunNames = ['without_leftovers', 'with_leftovers'];", "const leftoverMaterialsSetupRunNames = ['with_leftovers', 'without_leftovers'];"),
+    ('only the run without leftovers judged', "section.without_leftovers.exit_status !== 0 ? section.without_leftovers.exit_status : section.with_leftovers.exit_status", "section.without_leftovers.exit_status"),
+    ('only the run with leftovers judged',  "section.without_leftovers.exit_status !== 0 ? section.without_leftovers.exit_status : section.with_leftovers.exit_status", "section.with_leftovers.exit_status"),
+    ('a failed run left out of the leftover cost', "const section = record.leftover_materials_setup;\n    if (section.leftover_entries === 0) return null;", "const section = record.leftover_materials_setup;\n    if (section.leftover_entries === 0 || leftoverMaterialsSetupFirstFailure(record) !== 0) return null;"),
+    ('a missing section has an exit status', "if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;\n    const section = record.leftover_materials_setup;\n    return section.without", "const section = record.leftover_materials_setup;\n    return section.without"),
+    ('the leftover section not checked',    "if (Object.hasOwn(record, 'leftover_materials_setup')) problems.push(", "if (false) problems.push("),
+    ('the leftover boundary not checked',   "if (!isObject(section) || typeof section.boundary !== 'string') return", "if (!isObject(section)) return"),
+    ('the leftover entries not checked',    "if (!isCount(section.leftover_entries)) problems.push", "if (false) problems.push"),
+    ('fractional leftover entries accepted', "if (!isCount(section.leftover_entries)) problems.push", "if (!(typeof section.leftover_entries === 'number' && section.leftover_entries >= 0)) problems.push"),
+    ('a run absent from the leftover section accepted', "if (!isObject(run)) { problems.push(`${name} with no ${runName}`); return; }", "if (!isObject(run)) return;"),
+    ('the leftover exit status not checked', "if (!isCount(run.exit_status)) problems.push", "if (false) problems.push"),
+    ('the leftover tests not checked',      "if (!(isCount(run.tests) && run.tests > 0)) problems.push", "if (false) problems.push"),
+    ('zero leftover tests accepted',        "if (!(isCount(run.tests) && run.tests > 0)) problems.push", "if (!isCount(run.tests)) problems.push"),
+    ('the leftover instructions not checked', "if (!(isCount(run.instructions) && run.instructions > 0)) problems.push", "if (false) problems.push"),
+    ('zero leftover instructions accepted', "if (!(isCount(run.instructions) && run.instructions > 0)) problems.push", "if (!isCount(run.instructions)) problems.push"),
+    ('only one leftover run checked',       "const leftoverMaterialsSetupRunNames = ['without_leftovers', 'with_leftovers'];", "const leftoverMaterialsSetupRunNames = ['without_leftovers'];"),
+    ('different numbers of tests accepted', "&& runs[0].tests !== runs[1].tests) {", "&& false) {"),
+    ('the leftover boundary read from the runner\'s setup', "leftoverBoundaryCounter(Object.hasOwn(record, 'leftover_materials_setup') ? record.leftover_materials_setup.boundary : null)", "leftoverBoundaryCounter(Object.hasOwn(record, 'runner_setup') ? record.runner_setup.boundary : null)"),
+    ('one count of boundaries for both sections', "const leftoverBoundaryCounter = boundaryCounter();", "const leftoverBoundaryCounter = setupBoundaryCounter;"),
+    ('the leftover series not counted',     "toolchainChange, setupRun, boundaryChange,\n              leftoverRun, leftoverBoundaryChange};", "toolchainChange, setupRun, boundaryChange,\n              leftoverRun: 0, leftoverBoundaryChange};"),
     ('the older overhead checked',          "if (Object.hasOwn(record, 'runner_setup')) {", "if (Object.hasOwn(record, 'runner_overhead')) { problems.push('x'); }\n    if (Object.hasOwn(record, 'runner_setup')) {"),
     ('a missing uncalled count plotted as zero',    "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : null", "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : 0"),
     ('the uncalled count not checked',      '|| record.uncalled_functions < 0', '|| false'),

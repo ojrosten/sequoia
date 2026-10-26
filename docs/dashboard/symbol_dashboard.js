@@ -6,7 +6,7 @@
 // A symbol-table record is stored as symbol-table/<column>/<commit>.json on
 // the metrics branch. scripts/symbol_table_report.py and
 // scripts/symbol_table_provenance.py say what it holds, and symbol-table.yml
-// adds `prune_dependency_analysis` and `runner_setup`.
+// adds `prune_dependency_analysis`, `runner_setup` and `leftover_materials_setup`.
 /** @param {Record<string, any>} exports */
 (function (exports) {
   'use strict';
@@ -25,7 +25,8 @@
    * @typedef {{commit: string, summary: Summary, record: JsonRecord}} OrderedRecord
    * @typedef {{path: string, before: any, after: any}} Difference
    * @typedef {{commit: string, date: string, subject: string, record: JsonRecord, run: number,
-   *            toolchainChange: Difference[] | null, setupRun: number, boundaryChange: boolean}} Point
+   *            toolchainChange: Difference[] | null, setupRun: number, boundaryChange: boolean,
+   *            leftoverRun: number, leftoverBoundaryChange: boolean}} Point
    * @typedef {{path: string, problems: string[]}} Unplottable
    * @typedef {{tree(): Promise<Tree | null>, commits(start: string | null): Promise<ApiCommit[]>,
    *            record(path: string): Promise<JsonRecord>}} Source
@@ -195,6 +196,11 @@
    *  - `runner_setup`, with a boundary, the exit status of the run, a
    *    positive number of tests and a positive count for each of
    *    `runnerSetupEvents`;
+   *  - `leftover_materials_setup`, with a boundary, a non-negative integer
+   *    count of leftover entries, and for each of
+   *    `leftoverMaterialsSetupRunNames` a run with a positive count of
+   *    instructions, a positive number of tests and an exit status. The two
+   *    runs executed the same number of tests;
    *  - `prune_analysis`, a field no longer written, with an invocation and a
    *    count of instructions. It is checked and not plotted;
    *  - `runner_overhead`, a field no longer written, which is neither checked
@@ -207,8 +213,6 @@
   function problemsWith(record, commit) {
     const problems = commonProblems(record, commit);
     if (!isObject(record)) return problems;
-    /** @param {any} value */
-    const isCount = value => Number.isInteger(value) && value >= 0;
     if (record.toolchain === null || typeof record.toolchain !== 'object') problems.push('it has no toolchain');
     const executable = record.executable || {};
     if (!isCount(executable.symbols)) problems.push('it has no count of the executable\'s symbols');
@@ -239,11 +243,125 @@
         }
       }
     }
+    if (Object.hasOwn(record, 'leftover_materials_setup')) problems.push(...leftoverMaterialsSetupProblems(record.leftover_materials_setup));
     const objects = record.defined_symbols_by_object;
     if (objects === null || typeof objects !== 'object' || !Object.values(objects).every(isCount)) {
       problems.push('it has no count of defined symbols for each object');
     }
     return problems;
+  }
+
+  /** @param {any} value */
+  const isCount = value => Number.isInteger(value) && value >= 0;
+
+  /**
+   * The runs a record's `leftover_materials_setup` holds: the run which found
+   * no entries left by a previous run, and the run which found
+   * `leftover_entries` of them.
+   */
+  const leftoverMaterialsSetupRunNames = ['without_leftovers', 'with_leftovers'];
+
+  /**
+   * Lists what is wrong with `section`, a record's `leftover_materials_setup`.
+   *
+   * @param {any} section
+   * @returns {string[]}
+   */
+  function leftoverMaterialsSetupProblems(section) {
+    const name = 'it has a leftover_materials_setup';
+    if (!isObject(section) || typeof section.boundary !== 'string') return [`${name} with no boundary`];
+    const problems = [];
+    if (!isCount(section.leftover_entries)) problems.push(`${name} whose leftover_entries is not a non-negative integer`);
+    const runs = leftoverMaterialsSetupRunNames.map(runName => section[runName]);
+    leftoverMaterialsSetupRunNames.forEach((runName, index) => {
+      const run = runs[index];
+      if (!isObject(run)) { problems.push(`${name} with no ${runName}`); return; }
+      if (!isCount(run.exit_status)) problems.push(`${name} whose ${runName} has no exit status`);
+      if (!(isCount(run.tests) && run.tests > 0)) problems.push(`${name} whose ${runName} has a number of tests which is not a positive integer`);
+      if (!(isCount(run.instructions) && run.instructions > 0)) problems.push(`${name} whose ${runName} has no positive count of instructions`);
+    });
+    if (runs.every(run => isObject(run) && isCount(run.tests) && run.tests > 0) && runs[0].tests !== runs[1].tests) {
+      problems.push(`${name} whose runs executed different numbers of tests`);
+    }
+    return problems;
+  }
+
+  /**
+   * Returns the instructions which the runner's setup of a test spent per
+   * leftover entry in `record`: the instructions of the run with leftovers,
+   * less those of the run without, divided by `leftover_entries`. Returns
+   * null if the record has no `leftover_materials_setup`, or if the section
+   * has no leftover entries, which leaves the quotient undefined and the
+   * measurement blind. Such a record has no value, and is not plotted as
+   * zero; the chart shows it as blind. A record is plotted whatever its
+   * runs' exit statuses.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function leftoverMaterialsSetupPerEntry(record) {
+    if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;
+    const section = record.leftover_materials_setup;
+    if (section.leftover_entries === 0) return null;
+    return (section.with_leftovers.instructions - section.without_leftovers.instructions) / section.leftover_entries;
+  }
+
+  /**
+   * Returns the label of a blind point: 'blind, failed' if `record`'s
+   * `leftover_materials_setup` has no leftover entries and either of its runs
+   * exited with a non-zero status, and 'blind' if it has none and both
+   * exited with zero. Returns null if the section has entries, or the record
+   * has no `leftover_materials_setup`.
+   *
+   * @param {JsonRecord} record
+   * @returns {string | null}
+   */
+  function leftoverMaterialsSetupBlindLabel(record) {
+    if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;
+    if (record.leftover_materials_setup.leftover_entries !== 0) return null;
+    return leftoverMaterialsSetupFirstFailure(record) === 0 ? 'blind' : 'blind, failed';
+  }
+
+  /**
+   * Returns the number of leftover entries which `record`'s
+   * `leftover_materials_setup` found, or null if the record has no
+   * `leftover_materials_setup`.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function leftoverMaterialsSetupEntries(record) {
+    if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;
+    return record.leftover_materials_setup.leftover_entries;
+  }
+
+  /**
+   * Returns the runs of `record`'s `leftover_materials_setup`, each keyed by
+   * its name in `leftoverMaterialsSetupRunNames`, or null if the record has no
+   * `leftover_materials_setup`.
+   *
+   * @param {JsonRecord} record
+   * @returns {Record<string, {instructions: number, tests: number, exit_status: number}> | null}
+   */
+  function leftoverMaterialsSetupRuns(record) {
+    if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;
+    return Object.fromEntries(leftoverMaterialsSetupRunNames.map(runName => [runName, record.leftover_materials_setup[runName]]));
+  }
+
+  /**
+   * Returns the exit status of the run without leftovers if it is not zero,
+   * and otherwise that of the run with leftovers, in `record`'s
+   * `leftover_materials_setup`, or null if the record has no
+   * `leftover_materials_setup`. The result is zero only if both runs exited
+   * with status zero.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function leftoverMaterialsSetupFirstFailure(record) {
+    if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;
+    const section = record.leftover_materials_setup;
+    return section.without_leftovers.exit_status !== 0 ? section.without_leftovers.exit_status : section.with_leftovers.exit_status;
   }
 
   /**
@@ -397,26 +515,49 @@
    * at. `setupRun` is the number of changes of boundary up to the point,
    * among the points which have a `runner_setup`, and `boundaryChange` is
    * whether the point's boundary is the first of a different one.
+   * `leftoverRun` and `leftoverBoundaryChange` are the same for the points
+   * which have a `leftover_materials_setup`.
    *
    * @param {OrderedRecord[]} orderedRecords
    * @returns {Point[]}
    */
   function pointsOf(orderedRecords) {
-    let run = 0, setupRun = 0;
-    /** @type {string | null} */
-    let boundary = null;
+    let run = 0;
+    const setupBoundaryCounter    = boundaryCounter();
+    const leftoverBoundaryCounter = boundaryCounter();
     return orderedRecords.map(({commit, summary, record}, index) => {
       const previous   = orderedRecords[index - 1];
       const toolchainChange = previous && canonical(previous.record.toolchain) !== canonical(record.toolchain)
         ? differences(previous.record.toolchain, record.toolchain)
         : null;
       if (toolchainChange) ++run;
-      const setupBoundary = Object.hasOwn(record, 'runner_setup') ? record.runner_setup.boundary : null;
-      const boundaryChange = typeof setupBoundary === 'string' && boundary !== null && setupBoundary !== boundary;
-      if (boundaryChange) ++setupRun;
-      if (typeof setupBoundary === 'string') boundary = setupBoundary;
-      return {commit, date: summary.date, subject: summary.subject, record, run, toolchainChange, setupRun, boundaryChange};
+      const {run: setupRun, change: boundaryChange} =
+        setupBoundaryCounter(Object.hasOwn(record, 'runner_setup') ? record.runner_setup.boundary : null);
+      const {run: leftoverRun, change: leftoverBoundaryChange} =
+        leftoverBoundaryCounter(Object.hasOwn(record, 'leftover_materials_setup') ? record.leftover_materials_setup.boundary : null);
+      return {commit, date: summary.date, subject: summary.subject, record, run, toolchainChange, setupRun, boundaryChange,
+              leftoverRun, leftoverBoundaryChange};
     });
+  }
+
+  /**
+   * Returns a function to be called with the boundary of each point in turn,
+   * or with null for a point which has none. It returns the number of changes
+   * of boundary so far, and whether this point's boundary is the first of a
+   * different one. A boundary which is no text is no boundary.
+   *
+   * @returns {(boundary: any) => {run: number, change: boolean}}
+   */
+  function boundaryCounter() {
+    let run = 0;
+    /** @type {string | null} */
+    let previous = null;
+    return boundary => {
+      const change = typeof boundary === 'string' && previous !== null && boundary !== previous;
+      if (change) ++run;
+      if (typeof boundary === 'string') previous = boundary;
+      return {run, change};
+    };
   }
 
   /**
@@ -658,6 +799,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneStampingExitStatus, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneStampingExitStatus, leftoverMaterialsSetupRunNames, leftoverMaterialsSetupPerEntry, leftoverMaterialsSetupBlindLabel, leftoverMaterialsSetupEntries, leftoverMaterialsSetupRuns, leftoverMaterialsSetupFirstFailure, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));
