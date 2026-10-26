@@ -360,14 +360,17 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.ok(counts.includes(777));
   });
 
-  await control('prune\'s dependency analysis is plotted from a clean stamping run, and left out when the run failed tests', () => {
+  await control('prune\'s dependency analysis is plotted whatever its stamping run, and a failed run told apart', () => {
     const record = recordOf('F5');
     assert.strictEqual(dashboard.pruneInstructions(record), null);
+    assert.strictEqual(dashboard.pruneStampingFailed(record), false);
     record.prune_dependency_analysis = analysisOf(123, 0);
     assert.strictEqual(dashboard.pruneInstructions(record), 123);
+    assert.strictEqual(dashboard.pruneStampingFailed(record), false);
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
     record.prune_dependency_analysis = analysisOf(123, 1);
-    assert.strictEqual(dashboard.pruneInstructions(record), null);
+    assert.strictEqual(dashboard.pruneInstructions(record), 123);
+    assert.strictEqual(dashboard.pruneStampingFailed(record), true);
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
   });
 
@@ -387,36 +390,22 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     });
   }
 
-  await control('points are excluded for failures in each panel by its own field, and counted', () => {
-    const point = (analysis, overhead) => {
+  await control('each panel tells a failed run by its own field, and plots its counts', () => {
+    const recordWith = (analysis, setup) => {
       const record = recordOf('F5');
       if (analysis) record.prune_dependency_analysis = analysis;
-      if (overhead) record.runner_setup = overhead;
-      return {record};
+      if (setup) record.runner_setup = setup;
+      return record;
     };
-    const failedOverhead = {...setupOf(4), exit_status: 8};
-    assert.deepStrictEqual(dashboard.excludedForFailures([]), {prune: 0, runner: 0});
-    assert.deepStrictEqual(dashboard.excludedForFailures([point(null, null), point(analysisOf(5, 0), setupOf(4))]), {prune: 0, runner: 0});
-    assert.deepStrictEqual(dashboard.excludedForFailures([point(analysisOf(5, 2), null), point(analysisOf(5, 0), failedOverhead),
-                                                          point(analysisOf(5, 1), failedOverhead)]), {prune: 2, runner: 2});
-    assert.deepStrictEqual(dashboard.excludedForFailures([point(analysisOf(5, 2), setupOf(4))]), {prune: 1, runner: 0});
-    assert.deepStrictEqual(dashboard.excludedForFailures([point(analysisOf(5, 0), failedOverhead)]), {prune: 0, runner: 1});
-    const record = point(null, failedOverhead).record;
-    for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
+    const failedSetup = {...setupOf(4), exit_status: 8};
+    assert.strictEqual(dashboard.runnerSetupFailed(recordWith(null, null)), false);
+    assert.strictEqual(dashboard.runnerSetupFailed(recordWith(null, setupOf(4))), false);
+    assert.strictEqual(dashboard.runnerSetupFailed(recordWith(analysisOf(5, 2), setupOf(4))), false);
+    assert.strictEqual(dashboard.pruneStampingFailed(recordWith(analysisOf(5, 0), failedSetup)), false);
+    const record = recordWith(null, failedSetup);
+    assert.strictEqual(dashboard.runnerSetupFailed(record), true);
+    assert.strictEqual(dashboard.runnerSetupPerTest(record, 'instructions'), 1000);
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
-  });
-
-  await control('a panel whose every point failed is still shown, so that it says why it is empty; one with nothing is not', () => {
-    const none = {record: recordOf('F5')};
-    const failedAnalysis = {record: {...recordOf('F5'), prune_dependency_analysis: analysisOf(5, 3)}};
-    const failedOverhead = {record: {...recordOf('F5'), runner_setup: {...setupOf(4), exit_status: 139}}};
-    const okAnalysis = {record: {...recordOf('F5'), prune_dependency_analysis: analysisOf(5, 0)}};
-    const okOverhead = {record: {...recordOf('F5'), runner_setup: setupOf(4)}};
-    assert.deepStrictEqual(dashboard.panelsShown([none]), {prune: false, runner: false});
-    assert.deepStrictEqual(dashboard.panelsShown([failedAnalysis, failedOverhead]), {prune: true, runner: true});
-    assert.deepStrictEqual(dashboard.panelsShown([okAnalysis, okOverhead]), {prune: true, runner: true});
-    assert.deepStrictEqual(dashboard.panelsShown([failedAnalysis]), {prune: true, runner: false});
-    assert.deepStrictEqual(dashboard.panelsShown([failedOverhead]), {prune: false, runner: true});
   });
 
   await control('a runner_setup without an exit status is a problem', () => {
@@ -440,7 +429,7 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     record.runner_overhead = {invocation: 'x', exit_status: 0, tests: 4, syscalls: {opens: 60}};
     for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
-    assert.deepStrictEqual(dashboard.excludedForFailures([{record: {...record, runner_overhead: {exit_status: 3}}}]), {prune: 0, runner: 0});
+    assert.strictEqual(dashboard.runnerSetupFailed({...record, runner_overhead: {exit_status: 3}}), false);
   });
 
   await control('the events are the two the workflow records', () => {
@@ -580,6 +569,13 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.ok(xs[0] >= 0 && xs[2] <= 700);
   });
 
+  await control('a time outside the days of the points lies outside the axis, and one inside within it', () => {
+    const {x} = dashboard.timeAxis([t0 + 2 * day, t0 + 4 * day], 0, 600, 80);
+    assert.ok(x(t0 + day) < 0);
+    assert.ok(x(t0 + 5 * day + 3600e3) > 600);
+    assert.ok(x(t0 + 3 * day) > 0 && x(t0 + 3 * day) < 600);
+  });
+
   await control('a date is ticked once, at a midnight, with ticks at least the gap apart', () => {
     for (const span of [0, 1, 5, 40, 400]) {
       const times = [t0, t0 + 17 * 3600e3, t0 + span * day];
@@ -694,13 +690,14 @@ MUTATIONS = [
     ('objects not checked',               '!Object.values(objects).every(isCount)', 'false'),
     ('a failed fetch fails the load',     'catch (error) { outcomes[index] = {error}; }', 'catch (error) { throw error; }'),
     ('an absent branch read as empty',    "if (tree === null) return {state: 'absent'};", "if (tree === null) return {state: 'empty'};"),
-    ('a missing analysis plotted as zero', "if (!Object.hasOwn(record, 'prune_dependency_analysis') ||", "if (false ||"),
-    ('a failed prune panel hidden',       "excluded.prune  > 0 || ", ""),
-    ('a failed runner panel hidden',      "excluded.runner > 0 || ", ""),
-    ('a failed stamping run plotted',     "|| record.prune_dependency_analysis.stamping_exit_status !== 0) return null;", ") return null;"),
-    ('a failed stamping run counted as clean', "record[field][status] !== 0", "false"),
-    ('failures counted in the wrong field', "failed('runner_setup', 'exit_status')", "failed('runner_setup', 'stamping_exit_status')"),
-    ('a failed setup run plotted',         "|| record.runner_setup.exit_status !== 0) return null;", ") return null;"),
+    ('a missing analysis plotted as zero', "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;", "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return 0;"),
+    ('a failed stamping run left out',    "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;", "if (!Object.hasOwn(record, 'prune_dependency_analysis') || record.prune_dependency_analysis.stamping_exit_status !== 0) return null;"),
+    ('a failed stamping run read as clean', "&& record.prune_dependency_analysis.stamping_exit_status !== 0;", "&& false;"),
+    ('a missing analysis read as failed', "return Object.hasOwn(record, 'prune_dependency_analysis') &&", "return true ||"),
+    ('a failed setup run read as clean',   "&& record.runner_setup.exit_status !== 0;", "&& false;"),
+    ('a missing setup read as failed',     "return Object.hasOwn(record, 'runner_setup') &&", "return true ||"),
+    ('the stamping status read for the setup', "&& record.runner_setup.exit_status !== 0;", "&& record.runner_setup.stamping_exit_status !== 0;"),
+    ('a failed setup run left out',        "if (!Object.hasOwn(record, 'runner_setup')) return null;", "if (!Object.hasOwn(record, 'runner_setup') || record.runner_setup.exit_status !== 0) return null;"),
     ('the exit status of the setup unchecked', "if (!isCount(setup.exit_status)) problems.push", "if (false) problems.push"),
     ('the dependency analysis not checked', "if (Object.hasOwn(record, 'prune_dependency_analysis')) {", 'if (false) {'),
     ('zero instructions accepted',         "|| analysis.instructions === 0\n", "\n"),
@@ -715,7 +712,7 @@ MUTATIONS = [
     ('the boundary forgotten at a gap',    "if (typeof setupBoundary === 'string') boundary = setupBoundary;", "boundary = typeof setupBoundary === 'string' ? setupBoundary : null;"),
     ('the series not counted',             "if (boundaryChange) ++setupRun;", ""),
     ('a boundary which is no text read',   "typeof setupBoundary === 'string' && boundary !== null", "setupBoundary !== null && boundary !== null"),
-    ('a missing setup throws',    "if (!Object.hasOwn(record, 'runner_setup') ||", "if (false ||"),
+    ('a missing setup throws',    "if (!Object.hasOwn(record, 'runner_setup')) return null;", ""),
     ('the setup not checked',              "if (Object.hasOwn(record, 'runner_setup')) {", 'if (false) {'),
     ('the setup\'s boundary not checked',  "|| typeof setup.boundary !== 'string') {", ') {'),
     ('the number of tests not checked',     "if (!(isCount(setup.tests) && setup.tests > 0)) problems.push", 'if (false) problems.push'),
@@ -731,7 +728,8 @@ MUTATIONS = [
     ('the uncalled toolchain not checked',  '|| !isNames(toolchain.tools)', ''),
     ('the toolchain change dropped',       'toolchainChange: found.toolchainChange}', 'toolchainChange: null}'),
     ('the run of the symbol table used',   'run: found.run,', 'run: point.run,'),
-    ('x by index, not time',             'return {xs: times.map(x), ticks};', 'return {xs: times.map((time, i) => left + (i + 0.5) * (right - left) / times.length), ticks};'),
+    ('x by index, not time',             'return {xs: times.map(x), ticks, x};', 'return {xs: times.map((time, i) => left + (i + 0.5) * (right - left) / times.length), ticks, x};'),
+    ('times outside the days clamped',   'return {xs: times.map(x), ticks, x};', 'return {xs: times.map(x), ticks, x: time => Math.min(right, Math.max(left, x(time)))};'),
     ('the last nearest point taken',     'if (Math.abs(x - offset) < Math.abs(xs[nearest] - offset))', 'if (Math.abs(x - offset) <= Math.abs(xs[nearest] - offset))'),
     ('the farthest point taken',         'if (Math.abs(x - offset) < Math.abs(xs[nearest] - offset))', 'if (Math.abs(x - offset) > Math.abs(xs[nearest] - offset))'),
     ('ticks at every day',               'candidate * (right - left) / days >= minGap) ??', 'true) ??'),

@@ -142,8 +142,8 @@
           and the functions it calls, in <code>TestAll prune --serial</code> run after a full run of the suite:
           prune's reading of the build's records and its walk of the sources for changes, and nothing of the
           runner's startup or of any test. It is exact for a fixed toolchain and commit. Points whose record has no
-          count are left out, as are points whose full run failed (any nonzero exit status), since prune then selects different work.
-          <span id="analysis-excluded"></span></p></figcaption>
+          count are left out; a point whose full run failed (any nonzero exit status) is drawn hollow, since prune then selects different work.
+          <span id="analysis-failing"></span></p></figcaption>
       <div class="plot" id="analysis-plot"></div>
     </figure>
     <figure class="card" id="runner-figure">
@@ -156,10 +156,10 @@
           calls (its sysCount) so counted, divided by the number of tests the run executed, as the runner's own execution
           records count them (the runner's tests run runners of their own, whose tests are not counted, nor is their setup
           collected); each plot has a scale of its own. Instructions are exact for a fixed
-          toolchain and commit. Points whose record has no count are left out, as are points whose run failed
-          (a run passes when its exit status is 0; any other is a failure). A change of the run's
+          toolchain and commit. Points whose record has no count are left out; a point whose run failed is drawn hollow
+          (a run passes when its exit status is 0; any other is a failure). Each plot starts at its first count. A change of the run's
           <code>boundary</code> (a different executable, say) breaks the line, with a marker labelled boundary.
-          <span id="runner-excluded"></span></p></figcaption>
+          <span id="runner-failing"></span></p></figcaption>
       <h3>Instructions per test</h3><div class="plot" id="runner-plot-instructions"></div>
       <h3>System calls per test</h3><div class="plot" id="runner-plot-syscalls"></div>
     </figure>
@@ -191,6 +191,8 @@
   const cacheKey   = 'sequoia-symbol-dashboard-commits-1';
   const defaultColumn = 'linux-gcc-debug';
   const topMovers  = 15;
+  // Wider than either label of a break at the labels' size, so that labels of neighbouring breaks never overlap
+  const breakLabelWidth = 64;
   const parameters = new URLSearchParams(location.search);
   // A relative path only, so that no link can make the public page show
   // another site's figures.
@@ -326,7 +328,8 @@
   const state = {points: [], selected: 0, hovered: null, charts: []};
 
   // Draws the points' values of one measure into `container`, one line per
-  // run, with a rule at each change of toolchain. Returns the chart's
+  // run, with a rule at each change of toolchain, over the days from its
+  // first count to its last; a point of a failing run is hollow. Returns the chart's
   // functions to mark the hovered and selected points.
   function drawChart(container, measure, height, labelBreaks) {
     const points = state.points;
@@ -335,11 +338,14 @@
     const plotWidth  = width - margin.left - margin.right;
     const plotHeight = height - margin.top - margin.bottom;
     const values = points.map(point => measure.value(point.record));
-    // A point may lack the measure, and is then left out of the scale and the line
-    const scale  = scaleOf(values.filter(value => value !== null));
+    const failed = points.map(point => measure.failed ? measure.failed(point.record) : false);
+    // A point may lack the measure, and is then left out of the scale, the axis of time and the line
+    const counted = points.flatMap((point, index) => values[index] === null ? [] : [index]);
+    const scale  = scaleOf(counted.map(index => values[index]));
     // Time runs along x, so points of one day are close and days with no point leave a gap
-    const axisOfTime = symbolDashboard.timeAxis(points.map(point => Date.parse(point.date)), margin.left, width - margin.right, 80);
-    const x = index => axisOfTime.xs[index];
+    const axisOfTime = symbolDashboard.timeAxis(counted.map(index => Date.parse(points[index].date)), margin.left, width - margin.right, 80);
+    const x = index => axisOfTime.x(Date.parse(points[index].date));
+    const inPlot = index => x(index) >= margin.left && x(index) <= width - margin.right;
     const y = value => margin.top + plotHeight * (scale.high - value) / (scale.high - scale.low);
 
     const svg = element('svg:svg', {viewBox: `0 0 ${width} ${height}`, height, tabindex: 0, role: 'application',
@@ -358,13 +364,17 @@
     });
     svg.append(axis);
 
+    // A break outside the plot's days is not drawn, and a label too close to the one before it is left out
+    let labelledAt = -Infinity;
     points.forEach((point, index) => {
-      if (!(measure.changeOf ? measure.changeOf(point) : point.toolchainChange)) return;
+      if (!(measure.changeOf ? measure.changeOf(point) : point.toolchainChange) || !inPlot(index - 1) || !inPlot(index)) return;
       const label = measure.breakLabel ? measure.breakLabel(point) : 'toolchain';
       const at = (x(index - 1) + x(index)) / 2;
       svg.append(element('svg:line', {x1: at, x2: at, y1: labelBreaks ? 16 : margin.top, y2: margin.top + plotHeight,
                                       stroke: 'var(--text-muted)', 'stroke-width': 1}));
-      if (labelBreaks) svg.append(element('svg:text', {x: at, y: 11, 'text-anchor': 'middle', class: 'break-label'}, label));
+      if (!labelBreaks || at - labelledAt < breakLabelWidth) return;
+      svg.append(element('svg:text', {x: at, y: 11, 'text-anchor': 'middle', class: 'break-label'}, label));
+      labelledAt = at;
     });
 
     // A line runs through consecutive points which have the measure, within one toolchain
@@ -390,11 +400,16 @@
     }
     if (symbolDashboard.smallestGap(axisOfTime.xs) >= 14) {
       points.forEach((point, index) => {
-        if (values[index] === null) return;
+        if (values[index] === null || failed[index]) return;
         svg.append(element('svg:circle', {cx: x(index), cy: y(values[index]), r: 4,
           fill: 'var(--series)', stroke: 'var(--surface)', 'stroke-width': 2}));
       });
     }
+    points.forEach((point, index) => {
+      if (values[index] === null || !failed[index]) return;
+      svg.append(element('svg:circle', {cx: x(index), cy: y(values[index]), r: 4,
+        fill: 'var(--surface)', stroke: 'var(--series)', 'stroke-width': 2}));
+    });
 
     const crosshair = element('svg:line', {y1: margin.top, y2: margin.top + plotHeight, stroke: 'var(--text-muted)',
                                            'stroke-width': 1, visibility: 'hidden'});
@@ -405,7 +420,7 @@
     const overlay = element('svg:rect', {x: margin.left, y: 0, width: plotWidth, height, fill: 'transparent'});
     const indexAt = event => {
       const bounds = svg.getBoundingClientRect();
-      return symbolDashboard.nearestPoint(axisOfTime.xs, (event.clientX - bounds.left) * width / bounds.width);
+      return counted[symbolDashboard.nearestPoint(axisOfTime.xs, (event.clientX - bounds.left) * width / bounds.width)];
     };
     overlay.addEventListener('pointermove', event => hover(indexAt(event)));
     overlay.addEventListener('pointerleave', () => hover(null));
@@ -425,10 +440,10 @@
     return {
       svg,
       markHover(index) {
-        const shown = index === null ? 'hidden' : 'visible';
+        const shown = index === null || !inPlot(index) ? 'hidden' : 'visible';
         crosshair.setAttribute('visibility', shown);
         hoverDot.setAttribute('visibility', index === null || values[index] === null ? 'hidden' : 'visible');
-        if (index === null) return;
+        if (index === null || !inPlot(index)) return;
         crosshair.setAttribute('x1', x(index)); crosshair.setAttribute('x2', x(index));
         if (values[index] !== null) { hoverDot.setAttribute('cx', x(index)); hoverDot.setAttribute('cy', y(values[index])); }
       },
@@ -443,7 +458,8 @@
   const measures = [
     {name: 'Symbols',              value: record => record.executable.symbols,           unit: 'symbols'},
     {name: 'Bytes of symbol names', value: record => record.executable.symbol_name_bytes, unit: 'bytes of names'},
-    {name: 'Instructions of prune\'s analysis', value: symbolDashboard.pruneInstructions, unit: 'instructions'},
+    {name: 'Instructions of prune\'s analysis', value: symbolDashboard.pruneInstructions, unit: 'instructions',
+     failed: symbolDashboard.pruneStampingFailed},
     {name: 'Uncalled functions',    value: symbolDashboard.uncalledCount, unit: 'uncalled functions',
      // Measured nightly, so a line joins the points which have a count; the toolchain is that of the measurement
      joinsGaps: true, runOf: point => point.record.uncalled.run,
@@ -456,6 +472,7 @@
     name: `${event} of the runner's setup, per test`,
     value: record => symbolDashboard.runnerSetupPerTest(record, event),
     unit: `${event} per test`,
+    failed: symbolDashboard.runnerSetupFailed,
     // Measured when the suite is, so a line joins the points which have a count; it breaks at a change
     // of the toolchain, or of the boundary of the measurement
     joinsGaps: true, runOf: point => `${point.run}/${point.setupRun}`,
@@ -483,11 +500,13 @@
                                   : 'The first point'),
       element('span', {}, `${integer.format(point.record.executable.symbol_name_bytes)} bytes of names`),
       ...(measures[2].value(point.record) === null ? []
-          : [element('span', {}, `${integer.format(measures[2].value(point.record))} instructions of prune's analysis`)]),
+          : [element('span', {}, `${integer.format(measures[2].value(point.record))} instructions of prune's analysis`
+                                 + (measures[2].failed(point.record) ? ', after a failing run' : ''))]),
       ...(runnerMeasures[0].value(point.record) === null ? []
           : [element('span', {}, 'The runner\'s setup, per test: '
                                  + runnerMeasures.map(measure => `${oneDecimal.format(measure.value(point.record))} ${measure.event}`)
-                                                 .join(', '))]),
+                                                 .join(', ')
+                                 + (runnerMeasures[0].failed(point.record) ? ', from a failing run' : ''))]),
       ...(measures[3].value(point.record) === null ? []
           : [element('span', {}, `${integer.format(measures[3].value(point.record))} uncalled functions in Source`)]),
       element('span', {}, `${short(point.commit)} · ${longDate(point.date)}`),
@@ -520,16 +539,17 @@
       drawChart(document.getElementById('symbols-plot'), measures[0], 260, true),
       drawChart(document.getElementById('bytes-plot'),   measures[1], 180, false)
     ];
-    const excluded = symbolDashboard.excludedForFailures(state.points);
-    const excludedText = count => count === 0 ? '' : `${count} point${count === 1 ? '' : 's'} left out for failing runs.`;
-    document.getElementById('analysis-excluded').textContent = excludedText(excluded.prune);
-    document.getElementById('runner-excluded').textContent  = excludedText(excluded.runner);
-    const shown = symbolDashboard.panelsShown(state.points);
+    const failingText = failed => {
+      const count = state.points.filter(point => failed(point.record)).length;
+      return count === 0 ? '' : `${count} point${count === 1 ? '' : 's'} of failing runs, drawn hollow.`;
+    };
+    document.getElementById('analysis-failing').textContent = failingText(symbolDashboard.pruneStampingFailed);
+    document.getElementById('runner-failing').textContent   = failingText(symbolDashboard.runnerSetupFailed);
     const hasAnalysis = state.points.some(point => measures[2].value(point.record) !== null);
-    document.getElementById('analysis-figure').hidden = !shown.prune;
+    document.getElementById('analysis-figure').hidden = !hasAnalysis;
     if (hasAnalysis) state.charts.push(drawChart(document.getElementById('analysis-plot'), measures[2], 180, false));
     const hasRunner = state.points.some(point => runnerMeasures[0].value(point.record) !== null);
-    document.getElementById('runner-figure').hidden = !shown.runner;
+    document.getElementById('runner-figure').hidden = !hasRunner;
     if (hasRunner) {
       for (const measure of runnerMeasures) {
         state.charts.push(drawChart(document.getElementById(`runner-plot-${measure.event}`), measure, 120, true));
