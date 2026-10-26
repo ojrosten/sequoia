@@ -1,7 +1,6 @@
 #!/bin/bash
-# Prints the runner_setup field of a symbol-table record, as JSON on standard
-# output, from a callgrind run of a test executable and the run's execution
-# records:
+# Prints the counts of a callgrind run of a test executable, as JSON on
+# standard output, from the run's output and its execution records:
 #
 #   runner_setup_record.sh <callgrind output> <execution records> <exit status> <boundary>
 #
@@ -48,7 +47,7 @@ fi
 out=$1 records=$2 status=$3 boundary=$4
 
 refuse() {
-  echo "::warning::$1, so the record has no runner_setup" >&2
+  echo "::warning::$1, so the run has no counts" >&2
   exit 0
 }
 

@@ -104,16 +104,19 @@ without_run() { jq -S 'del(.run)' "$1" || die "$1 cannot be read as JSON"; }
 # counts
 cpu_model_paths='[
   ["prune_dependency_analysis", "cpu_model"],
-  ["runner_setup",              "cpu_model"]
+  ["runner_setup",              "cpu_model"],
+  ["leftover_materials_setup",  "cpu_model"]
 ]'
 
 # The counts which a rerun of one commit may move: each one's path into a
 # record, and the denominator of the relative difference below which a count is
 # taken to be the held one
 measured_fields='[
-  {"path": ["prune_dependency_analysis", "instructions"], "denominator": 1000},
-  {"path": ["runner_setup", "instructions"],              "denominator": 50},
-  {"path": ["runner_setup", "syscalls"],                  "denominator": 200}
+  {"path": ["prune_dependency_analysis", "instructions"],                     "denominator": 1000},
+  {"path": ["runner_setup", "instructions"],                                  "denominator": 50},
+  {"path": ["runner_setup", "syscalls"],                                      "denominator": 200},
+  {"path": ["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 50},
+  {"path": ["leftover_materials_setup", "with_leftovers", "instructions"],    "denominator": 50}
 ]'
 
 # within($held; $offered; $denominator), in jq: both are numbers, they differ,

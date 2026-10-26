@@ -43,6 +43,8 @@
 #     none;
 #   - a record's prune_dependency_analysis and runner_setup are read where it
 #     has them, and are null where it has not; a malformed one is a problem;
+#     a record with the cost of leftover materials and no runner_setup is no
+#     problem;
 #     a point is plotted whatever the exit status of its runs;
 #   - the counts of uncalled functions join the points of their commits, with
 #     a toolchain of their own; a record of them which has a problem, or lies
@@ -434,6 +436,14 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), ['it has a runner_setup with no exit status']);
   });
 
+  await control('a record with the cost of leftover materials and no runner_setup is no problem, and has no runner setup to plot', () => {
+    const record = recordOf('F5');
+    const run = {exit_status: 0, tests: 4, instructions: 4000};
+    record.leftover_materials_setup = {boundary: 'x', leftover_entries: 0, without_leftovers: run, with_leftovers: run, cpu_model: 'm'};
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+    for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
+  });
+
   await control('each event is null in a record without the runner\'s setup, and per test otherwise', () => {
     const record = recordOf('F5');
     for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
@@ -741,6 +751,8 @@ MUTATIONS = [
     ('the system calls unchecked',          "'instructions', 'syscalls']", "'instructions']"),
     ('totals plotted, not per test',        "return setup[event] / setup.tests;", "return setup[event];"),
     ('the wrong event read',                "return setup[event] / setup.tests;", "return setup.instructions / setup.tests;"),
+    ('a runner_setup required',            "if (Object.hasOwn(record, 'runner_setup')) {", 'if (true) {'),
+    ('the cost of leftover materials a problem', "const objects = record.defined_symbols_by_object;", "if (Object.hasOwn(record, 'leftover_materials_setup')) problems.push('x');\n    const objects = record.defined_symbols_by_object;"),
     ('the older overhead checked',          "if (Object.hasOwn(record, 'runner_setup')) {", "if (Object.hasOwn(record, 'runner_overhead')) { problems.push('x'); }\n    if (Object.hasOwn(record, 'runner_setup')) {"),
     ('a missing uncalled count plotted as zero',    "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : null", "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : 0"),
     ('the uncalled count not checked',      '|| record.uncalled_functions < 0', '|| false'),

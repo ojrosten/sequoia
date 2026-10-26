@@ -99,7 +99,7 @@ refused() {
   local description=$1
   shift
   run "$@"
-  [ "$status" -eq 0 ] && [ -z "$out" ] && [[ $err == *'::warning::'*'the record has no runner_setup'* ]] \
+  [ "$status" -eq 0 ] && [ -z "$out" ] && [[ $err == *'::warning::'*'the run has no counts'* ]] \
     || fail "$description: status $status, printed '$out', warned '$err'"
 }
 
@@ -161,7 +161,7 @@ mutations=(
 }'                                         '  exit 1
 }'
   'a refusal not warned'                   'echo "::warning::$1, so' 'echo "$1, so'
-  'the warning on standard output'         'the record has no runner_setup" >&2' 'the record has no runner_setup"'
+  'the warning on standard output'         'the run has no counts" >&2' 'the run has no counts"'
   'a failed run refused'                   '[[ $status =~ ^(0|[1-9][0-9]*)$ ]] ||' '[ "$status" -eq 0 ] ||'
   'any exit status accepted'               '[[ $status =~ ^(0|[1-9][0-9]*)$ ]] || refuse "the exit status '"'"'$status'"'"' is not a number"' ':'
   'the boundary not recorded'              '--arg boundary "$boundary"'         '--arg boundary x'
