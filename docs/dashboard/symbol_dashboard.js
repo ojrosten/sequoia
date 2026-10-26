@@ -271,8 +271,9 @@
    * Returns the instructions counted inside prune's analysis in `record`'s
    * run, or null if the record has none (an old record, or one whose
    * measurement failed). Such a record is left out of the series, not
-   * plotted as zero. A record whose stamping run failed is plotted too: the
-   * analysis reads the stamps of one run on a fresh runner, whatever its outcome.
+   * plotted as zero. A record whose stamping run failed is plotted too: a
+   * failed test is selected again, but the analysis reads the same records and
+   * walks the same sources.
    *
    * @param {JsonRecord} record
    * @returns {number | null}
@@ -559,8 +560,8 @@
    * Returns the horizontal positions of points at the given times, linear in
    * time over whole UTC days: from the midnight which starts the earliest
    * day to the one which ends the latest. Also returns the ticks, at
-   * midnights a whole number of days apart from the first, up to and
-   * including the one which ends the latest day, the fewest days for which
+   * midnights a whole number of days apart from the first, up to the one
+   * which ends the latest day, the fewest days for which
    * neighbouring ticks are at least `minGap` apart, each tick a different day,
    * and the position of any time, which lies outside `left` to `right` for a
    * time outside the days of `times`.

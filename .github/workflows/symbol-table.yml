@@ -14,10 +14,11 @@ name: symbol-table
 # The workflow builds TestAll and runs the suite as a test of nothing: its one
 # run is to leave prune a stamp, for the instruction count of prune's
 # analysis, which a record carries as `prune_dependency_analysis`, with the
-# exit status of that run. The dashboard plots the point whatever that status,
-# since the analysis reads the stamps of that one run on a fresh runner. The workflow is
-# apart from the tiers, so that a failure to measure cannot fail a test
-# column, and cancelling a superseded run of a tier loses no record.
+# exit status of that run, which the dashboard does not use: a failed test is
+# selected again, but the analysis reads the same records and walks the same
+# sources. The workflow is apart from the tiers, so that a failure to measure
+# cannot fail a test column, and cancelling a superseded run of a tier loses no
+# record.
 #
 # A second run of the suite, after prune's measurement, is under callgrind,
 # of TestFrameworkDiagnostics, the executable which tests the test runner,
@@ -204,8 +205,8 @@ jobs:
       # whose outcome is ignored, leaves the stamp, and the measured run then
       # selects only what that run failed, or left out: nothing, when the
       # suite passes, which is why git is given an identity first. The
-      # stamping run's exit status goes in the record, since a failure
-      # re-selects the failed tests and may change what the analysis does.
+      # stamping run's exit status goes in the record, so that a failing run
+      # can be told apart if its count ever stands out.
       #
       # callgrind, not cachegrind, counts the instructions: only callgrind has
       # --toggle-collect, which collects while inside test_runner::prune and

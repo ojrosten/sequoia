@@ -118,7 +118,8 @@
     <p class="lede">Each point is a commit on <code>staging</code>'s first-parent history, built by CI and measured
       by <code>scripts/symbol_table_report.py</code>. A gap in a line, and a rule across the charts, mark a change of
       toolchain: the points on either side were built by different compilers, linkers or packages, so the step
-      between them is not a change in sequoia. Each chart's time runs from its first count to its last.</p>
+      between them is not a change in sequoia. Each chart's time axis covers the days from its own first value to its
+      last, so the axes of the charts may differ.</p>
   </header>
   <div class="filters" id="filters" hidden><label>Column<select id="column"></select></label></div>
   <section class="card" id="message" role="status"><p>Loading the records&hellip;</p></section>
@@ -142,8 +143,8 @@
           and the functions it calls, in <code>TestAll prune --serial</code> run after a full run of the suite:
           prune's reading of the build's records and its walk of the sources for changes, and nothing of the
           runner's startup or of any test. It is exact for a fixed toolchain and commit. Points whose record has no
-          count are left out. A point is plotted whether or not its full run passed: the analysis reads the stamps
-          that one run on a fresh runner left, whatever its outcome.</p></figcaption>
+          count are left out. A point is plotted whether or not its full run passed: a failed test is selected again,
+          but the analysis reads the same records and walks the same sources.</p></figcaption>
       <div class="plot" id="analysis-plot"></div>
     </figure>
     <figure class="card" id="runner-figure">
@@ -193,6 +194,8 @@
   // Wider than either label of a break at the labels' size, so that labels of neighbouring breaks never overlap
   const breakLabelWidth = 64;
   const tickMarkLength  = 6;
+  // Half the width of the widest short date, such as "30 Sept", at the axis's size
+  const dateLabelHalfWidth = 24;
   const parameters = new URLSearchParams(location.search);
   // A relative path only, so that no link can make the public page show
   // another site's figures.
@@ -345,7 +348,7 @@
     const timesWithCount = indicesWithCount.map(index => Date.parse(points[index].date));
     const axisOfTime = symbolDashboard.timeAxis(timesWithCount, margin.left, width - margin.right, 80);
     const x = index => axisOfTime.x(Date.parse(points[index].date));
-    const isInPlot = index => x(index) >= margin.left && x(index) <= width - margin.right;
+    const isWithinAxis = index => x(index) >= margin.left && x(index) <= width - margin.right;
     const y = value => margin.top + plotHeight * (scale.high - value) / (scale.high - scale.low);
 
     const svg = element('svg:svg', {viewBox: `0 0 ${width} ${height}`, height, tabindex: 0, role: 'application',
@@ -358,29 +361,30 @@
       axis.append(element('svg:text', {x: margin.left - 8, y: y(tick) + 4, 'text-anchor': 'end'},
                           compact(tick, scale.step, scale.high)));
     }
-    // A mark on the axis at each tick, its date centred beneath it, or ending at it at the right edge
+    // A mark on the axis at each tick, its date centred beneath it, or ending at it where centred would overrun
+    const plotBottom = margin.top + plotHeight;
     for (const tick of axisOfTime.ticks) {
-      const bottom = margin.top + plotHeight;
-      axis.append(element('svg:line', {x1: tick.x, x2: tick.x, y1: bottom, y2: bottom + tickMarkLength,
+      axis.append(element('svg:line', {x1: tick.x, x2: tick.x, y1: plotBottom, y2: plotBottom + tickMarkLength,
                                        stroke: 'var(--text-muted)', 'stroke-width': 1}));
-      const isAtRightEdge = tick.x >= width - margin.right - 1;
-      axis.append(element('svg:text', {x: tick.x, y: height - 6, 'text-anchor': isAtRightEdge ? 'end' : 'middle'},
+      const overrunsRight = tick.x + dateLabelHalfWidth > width;
+      axis.append(element('svg:text', {x: tick.x, y: height - 6, 'text-anchor': overrunsRight ? 'end' : 'middle'},
                           shortDate(new Date(tick.time).toISOString())));
     }
     svg.append(axis);
 
-    // A break outside the plot's days is not drawn, and a label too close to the one before it is left out
-    let previousLabelX = -Infinity;
+    // A break beside a point outside the axis's days is not drawn, and a label too close to the last one
+    // drawn is left out
+    let lastDrawnLabelX = -Infinity;
     points.forEach((point, index) => {
-      const isBreak = measure.changeOf ? measure.changeOf(point) : point.toolchainChange;
-      if (!isBreak || !isInPlot(index - 1) || !isInPlot(index)) return;
+      const isBreak = index > 0 && (measure.changeOf ? measure.changeOf(point) : point.toolchainChange);
+      if (!isBreak || !isWithinAxis(index - 1) || !isWithinAxis(index)) return;
       const label = measure.breakLabel ? measure.breakLabel(point) : 'toolchain';
       const at = (x(index - 1) + x(index)) / 2;
       svg.append(element('svg:line', {x1: at, x2: at, y1: labelBreaks ? 16 : margin.top, y2: margin.top + plotHeight,
                                       stroke: 'var(--text-muted)', 'stroke-width': 1}));
-      if (!labelBreaks || at - previousLabelX < breakLabelWidth) return;
+      if (!labelBreaks || at - lastDrawnLabelX < breakLabelWidth) return;
       svg.append(element('svg:text', {x: at, y: 11, 'text-anchor': 'middle', class: 'break-label'}, label));
-      previousLabelX = at;
+      lastDrawnLabelX = at;
     });
 
     // A line runs through consecutive points which have the measure, within one toolchain
@@ -421,31 +425,35 @@
     const overlay = element('svg:rect', {x: margin.left, y: 0, width: plotWidth, height, fill: 'transparent'});
     const indexAt = event => {
       const bounds = svg.getBoundingClientRect();
-      const offset = (event.clientX - bounds.left) * width / bounds.width;
-      return indicesWithCount[symbolDashboard.nearestPoint(axisOfTime.xs, offset)];
+      const pointerX = (event.clientX - bounds.left) * width / bounds.width;
+      return indicesWithCount[symbolDashboard.nearestPoint(axisOfTime.xs, pointerX)];
     };
     overlay.addEventListener('pointermove', event => hover(indexAt(event)));
     overlay.addEventListener('pointerleave', () => hover(null));
     overlay.addEventListener('click', event => select(indexAt(event)));
     svg.append(overlay);
+    // The keys move among the points this chart draws, as the pointer does
     svg.addEventListener('keydown', event => {
-      const moves = {ArrowLeft: -1, ArrowRight: 1, Home: -Infinity, End: Infinity};
-      if (!(event.key in moves)) return;
+      const before = indicesWithCount.filter(index => index < state.selected);
+      const after  = indicesWithCount.filter(index => index > state.selected);
+      const targets = {ArrowLeft: before[before.length - 1], ArrowRight: after[0],
+                       Home: indicesWithCount[0], End: indicesWithCount[indicesWithCount.length - 1]};
+      if (!(event.key in targets)) return;
       event.preventDefault();
-      select(Math.max(0, Math.min(points.length - 1, state.selected + moves[event.key])));
-      hover(state.selected, svg);
+      if (targets[event.key] !== undefined) select(targets[event.key]);
+      hover(isWithinAxis(state.selected) ? state.selected : null, svg);
     });
-    svg.addEventListener('focus', () => hover(state.selected, svg));
+    svg.addEventListener('focus', () => hover(isWithinAxis(state.selected) ? state.selected : null, svg));
     svg.addEventListener('blur', () => hover(null));
     container.replaceChildren(svg);
 
     return {
       svg,
       markHover(index) {
-        const shown = index === null || !isInPlot(index) ? 'hidden' : 'visible';
+        const shown = index === null || !isWithinAxis(index) ? 'hidden' : 'visible';
         crosshair.setAttribute('visibility', shown);
         hoverDot.setAttribute('visibility', index === null || values[index] === null ? 'hidden' : 'visible');
-        if (index === null || !isInPlot(index)) return;
+        if (index === null || !isWithinAxis(index)) return;
         crosshair.setAttribute('x1', x(index)); crosshair.setAttribute('x2', x(index));
         if (values[index] !== null) { hoverDot.setAttribute('cx', x(index)); hoverDot.setAttribute('cy', y(values[index])); }
       },
