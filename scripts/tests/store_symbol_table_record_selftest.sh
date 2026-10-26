@@ -38,6 +38,13 @@
 #     which the offer adds to a held section leaves it its model name only if
 #     the offered section has the same, and otherwise, or if the held section
 #     has none, leaves it none;
+#   - the exit status of each run a section measured (prune's stamping run, the
+#     runner setup's run, and each of the two runs of the cost of leftover
+#     materials) is a fact of the run, so it is never compared either: an
+#     offer differing in one alone, or in all, is accepted and the held exit
+#     status kept, as is a no-op when it adds nothing; an offer which differs
+#     in them and adds a field or a section stores the union with the held
+#     exit statuses, and a section which only the offer has with its own;
 #   - the union is taken at every depth: a sub-field of a held object is
 #     added, and one the offer lacks is kept;
 #   - a measured count, with the tolerance of its own (prune's instructions 1
@@ -192,6 +199,18 @@ fixture() {
   record "$work/L-sub-amd.json"     "$A" 100 69 true ", $(printf "$leftover" 2713 50000000 97 54000000 97 ', "other": 5' "$amd")"
   record "$work/L-sub-intel.json"   "$A" 100 70 true ", $(printf "$leftover" 2713 50000000 97 54000000 97 ', "other": 5' "$intel")"
   record "$work/L-setup.json"       "$A" 100 71 true ", $(printf "$setup" 1000000000 834813), $(printf "$leftover" 2713 50000000 97 54000000 97 '' "$amd")"
+  # exit statuses of the runs of each section, 0 or 82: the stamping run, the
+  # runner setup's run, and the leftover runs without and with leftovers
+  local exits='"prune_dependency_analysis": {"instructions": 1000000000, "stamping_exit_status": %s}, "runner_setup": {"instructions": 1000000000, "syscalls": 834813, "exit_status": %s}'
+  local leftover_exits='"leftover_materials_setup": {"leftover_entries": 2713, "without_leftovers": {"instructions": 50000000, "tests": 97, "exit_status": %s}, "with_leftovers": {"instructions": 54000000, "tests": 97, "exit_status": %s}}'
+  record "$work/X.json"          "$A" 100 81 true ", $(printf "$exits" 0 0), $(printf "$leftover_exits" 0 0)"
+  record "$work/X-stamping.json" "$A" 100 82 true ", $(printf "$exits" 82 0), $(printf "$leftover_exits" 0 0)"
+  record "$work/X-setup.json"    "$A" 100 83 true ", $(printf "$exits" 0 82), $(printf "$leftover_exits" 0 0)"
+  record "$work/X-without.json"  "$A" 100 84 true ", $(printf "$exits" 0 0), $(printf "$leftover_exits" 82 0)"
+  record "$work/X-with.json"     "$A" 100 85 true ", $(printf "$exits" 0 0), $(printf "$leftover_exits" 0 82)"
+  record "$work/X-all.json"      "$A" 100 86 true ", $(printf "$exits" 82 82), $(printf "$leftover_exits" 82 82)"
+  record "$work/X-all-extra.json" "$A" 100 87 true ", $(printf "$exits" 82 82), $(printf "$leftover_exits" 82 82), \"extra\": 1"
+  record "$work/X-held.json"     "$A" 100 88 true ", $(printf "$exits" 0 0)"
   clone_state=$(clone_state)
 }
 
@@ -462,6 +481,47 @@ leftover_controls() {
   same "the branch is as it was" "$first" "$(tip)"
 }
 
+# The exit status of a run is a fact of the run which measured a section, not
+# of the commit: it is never compared, and the held one stays.
+exit_status_controls() {
+  local first path
+  fixture
+  store X; first=$(tip)
+  for path in stamping setup without with; do
+    store "X-$path"
+    exits "an offer whose $path exit status differs succeeds" 0
+    says "it is the same but for its run" 'the same but for its run: https://example.invalid/runs/81$' "$out"
+    same "it leaves the branch as it was after a differing $path exit status" "$first" "$(tip)"
+  done
+  store X-all
+  exits "an offer differing in every exit status succeeds" 0
+  same "it leaves the branch as it was after every exit status differs" "$first" "$(tip)"
+  same "the held exit statuses stand" "0 0 0 0" \
+       "$(held "$A" | jq -r '[.prune_dependency_analysis.stamping_exit_status, .runner_setup.exit_status, .leftover_materials_setup.without_leftovers.exit_status, .leftover_materials_setup.with_leftovers.exit_status] | join(" ")')"
+
+  store X-all-extra
+  exits "an offer differing in every exit status, and adding a field, succeeds" 0
+  says "the field is named" 'adds to: extra$' "$out"
+  same "the addition is a commit on the tip" "$first" "$(parents "$(tip)")"
+  same "the union holds the added field" "1" "$(held "$A" | jq '.extra')"
+  same "the union holds the held exit statuses" "0 0 0 0" \
+       "$(held "$A" | jq -r '[.prune_dependency_analysis.stamping_exit_status, .runner_setup.exit_status, .leftover_materials_setup.without_leftovers.exit_status, .leftover_materials_setup.with_leftovers.exit_status] | join(" ")')"
+
+  # An offer which adds a section, beside exit statuses which differ
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store X-held; first=$(tip)
+  store X-all
+  exits "an offer adding a section, beside differing exit statuses, succeeds" 0
+  says "the section is named" 'adds to: leftover_materials_setup$' "$out"
+  same "the addition is a commit on the tip" "$first" "$(parents "$(tip)")"
+  same "the held exit statuses stand" "0 0" \
+       "$(held "$A" | jq -r '[.prune_dependency_analysis.stamping_exit_status, .runner_setup.exit_status] | join(" ")')"
+  same "the added section has the offer's exit statuses" "82 82" \
+       "$(held "$A" | jq -r '[.leftover_materials_setup.without_leftovers.exit_status, .leftover_materials_setup.with_leftovers.exit_status] | join(" ")')"
+  unchanged_clone "an exit status"
+}
+
 # A backfill measures commits recorded before the measurement existed, so
 # the record it stores adds a field to the one held.
 adding_controls() {
@@ -725,7 +785,7 @@ refusal_controls() {
 run_controls() { # run_controls <script>: sets fails, and total, the controls run
   subject=$1 fails=0 total=0
   local control
-  for control in create_controls beside_controls same_commit_controls cpu_controls leftover_controls adding_controls union_controls tolerance_controls blobless_controls rival_controls \
+  for control in create_controls beside_controls same_commit_controls cpu_controls exit_status_controls leftover_controls adding_controls union_controls tolerance_controls blobless_controls rival_controls \
                  refusal_controls; do
     work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
     "$control"
@@ -776,7 +836,7 @@ mutant 'a model dropped beside an added sub-field of the same CPU' \
        'and ($h.cpu_model == null or $h.cpu_model != $o.cpu_model)' 'and true'
 mutant 'the offered model adopted beside an added sub-field' \
        'then del(.value.cpu_model) else . end' 'then .value.cpu_model = $o.cpu_model else . end'
-mutant 'an offered CPU model added to a held section' '           elif is_cpu_model_path($path + [$key]) then .
+mutant 'an offered CPU model added to a held section' '           elif is_measuring_run_path($path + [$key]) then .
 ' ''
 mutant 'the offered CPU model replaces the held' '{value: $h} + none
        elif ($h | type) == "object"' '{value: $o} + none
@@ -784,6 +844,18 @@ mutant 'the offered CPU model replaces the held' '{value: $h} + none
 mutant 'the CPU model of the leftover section compared' \
        ',
   ["leftover_materials_setup",  "cpu_model"]' ''
+mutant 'the stamping exit status compared' \
+       '  ["prune_dependency_analysis", "stamping_exit_status"],
+' ''
+mutant 'the exit status of the setup compared' \
+       '  ["runner_setup",              "exit_status"],
+' ''
+mutant 'the exit status of the run without leftovers compared' \
+       ',
+  ["leftover_materials_setup",  "without_leftovers", "exit_status"]' ''
+mutant 'the exit status of the run with leftovers compared' \
+       ',
+  ["leftover_materials_setup",  "with_leftovers",    "exit_status"]' ''
 mutant 'the run compared too'          "without_run() { jq -S 'del(.run)'" "without_run() { jq -S '.'"
 mutant 'every count measured'          '  {"path": ["runner_setup", "syscalls"],                                      "denominator": 200}' \
                                        '  {"path": ["runner_setup", "syscalls"],                                      "denominator": 200},
