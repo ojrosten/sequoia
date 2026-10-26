@@ -20,6 +20,8 @@
 #include <iterator>
 #include <list>
 #include <ranges>
+#include <stdexcept>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -117,6 +119,13 @@ namespace sequoia::testing
       return a;
     }
 
+    template<class T, std::size_t N>
+    constexpr std::array<T, N> permute(std::array<T, N> a, const std::vector<std::size_t>& destinations)
+    {
+      sequoia::permute(a, destinations);
+      return a;
+    }
+
     template<class... Args>
     concept make_heap_accepts
       =  requires(Args&&... args) { sequoia::make_heap(std::forward<Args>(args)...); };
@@ -132,6 +141,10 @@ namespace sequoia::testing
     template<class... Args>
     concept cluster_accepts
       =  requires(Args&&... args) { sequoia::cluster(std::forward<Args>(args)...); };
+
+    template<class... Args>
+    concept permute_accepts
+      =  requires(Args&&... args) { sequoia::permute(std::forward<Args>(args)...); };
 
     struct move_only_equal_to
     {
@@ -173,6 +186,7 @@ namespace sequoia::testing
   void algorithms_test::run_tests()
   {
     algorithm_constraints();
+    permute_basic_type();
 
     make_heap_by_second_element(range_form{});
     make_heap_by_second_element(iterator_sentinel_form{});
@@ -206,6 +220,8 @@ namespace sequoia::testing
 
     cluster_by_first_element(range_form{});
     cluster_by_first_element(iterator_sentinel_form{});
+
+    permute_refuses_non_permutations();
   }
 
   void algorithms_test::algorithm_constraints()
@@ -288,6 +304,30 @@ namespace sequoia::testing
 
     STATIC_CHECK( clusterable<int*, equal_to_t,         std::identity>);
     STATIC_CHECK(!clusterable<int*, move_only_equal_to, std::identity>);
+
+    using destinations_t           = std::vector<std::size_t>;
+    using signed_destinations_t    = std::vector<int>;
+    using boolean_destinations_t   = std::vector<bool>;
+    using character_destinations_t = std::vector<char8_t>;
+
+    STATIC_CHECK( permute_accepts<      array_t&,           destinations_t>);
+    STATIC_CHECK( permute_accepts<    subrange_t,           destinations_t>);
+    STATIC_CHECK( permute_accepts<      array_t&,    signed_destinations_t>);
+    STATIC_CHECK(!permute_accepts<const array_t&,           destinations_t>);
+    STATIC_CHECK(!permute_accepts<       list_t&,           destinations_t>);
+    STATIC_CHECK(!permute_accepts<      array_t&,   boolean_destinations_t>);
+    STATIC_CHECK(!permute_accepts<      array_t&, character_destinations_t>);
+  }
+
+  void algorithms_test::permute_basic_type()
+  {
+    constexpr std::array<int, 4> a{10, 11, 12, 13};
+
+    STATIC_CHECK(permute(std::array<int, 0>{}, {}) == std::array<int, 0>{});
+    STATIC_CHECK(permute(a, {0, 1, 2, 3}) == a);
+    STATIC_CHECK(permute(a, {2, 0, 3, 1}) == std::array{11, 13, 10, 12});
+    STATIC_CHECK(permute(a, {1, 0, 3, 2}) == std::array{11, 10, 13, 12});
+    STATIC_CHECK(permute(a, {3, 2, 1, 0}) == std::array{13, 12, 11, 10});
   }
 
   template<class Form>
@@ -474,5 +514,37 @@ namespace sequoia::testing
       constexpr auto b = cluster(form, a, std::ranges::equal_to{}, &pair_t::first);
       check(equality, "Cluster by a pointer to the first element", b, prediction);
     }
+  }
+
+  void algorithms_test::permute_refuses_non_permutations()
+  {
+    check_exception_thrown<std::invalid_argument>(
+      "Fewer destinations than elements are not a permutation",
+      [](){ return permute(std::array{10, 11, 12}, {1, 0}); }
+    );
+
+    check_exception_thrown<std::invalid_argument>(
+      "More destinations than elements are not a permutation",
+      [](){ return permute(std::array{10, 11}, {1, 0, 2}); }
+    );
+
+    check_exception_thrown<std::invalid_argument>(
+      "A destination shared by two elements is not a permutation",
+      [](){ return permute(std::array{10, 11, 12}, {1, 1, 0}); }
+    );
+
+    check_exception_thrown<std::invalid_argument>(
+      "A destination beyond the range is not a permutation",
+      [](){ return permute(std::array{10, 11, 12}, {1, 3, 0}); }
+    );
+
+    check_exception_thrown<std::invalid_argument>(
+      "A negative destination is not a permutation",
+      [](){
+        std::array a{10, 11, 12};
+        sequoia::permute(a, std::vector{1, -1, 0});
+        return a;
+      }
+    );
   }
 }

@@ -1,0 +1,45 @@
+Tests/Algorithms/AlgorithmsTest.cpp, Line 522
+Fewer destinations than elements are not a permutation
+
+Expected Exception Type:
+[std::invalid_argument]
+sequoia::permute: the destinations are not a permutation of the range's positions
+
+=======================================
+
+Tests/Algorithms/AlgorithmsTest.cpp, Line 527
+More destinations than elements are not a permutation
+
+Expected Exception Type:
+[std::invalid_argument]
+sequoia::permute: the destinations are not a permutation of the range's positions
+
+=======================================
+
+Tests/Algorithms/AlgorithmsTest.cpp, Line 532
+A destination shared by two elements is not a permutation
+
+Expected Exception Type:
+[std::invalid_argument]
+sequoia::permute: the destinations are not a permutation of the range's positions
+
+=======================================
+
+Tests/Algorithms/AlgorithmsTest.cpp, Line 537
+A destination beyond the range is not a permutation
+
+Expected Exception Type:
+[std::invalid_argument]
+sequoia::permute: the destinations are not a permutation of the range's positions
+
+=======================================
+
+Tests/Algorithms/AlgorithmsTest.cpp, Line 542
+A negative destination is not a permutation
+
+Expected Exception Type:
+[std::invalid_argument]
+sequoia::permute: the destinations are not a permutation of the range's positions
+
+=======================================
+

@@ -1502,6 +1502,25 @@ namespace sequoia::testing
               g.swap_nodes(1,2);
               return g;
             }
+          },
+          {
+            graph_description::node_1_node_0_1_node,
+            t.report("Sort nodes 1 and 2 into descending order of index"),
+            [](graph_type g) -> graph_type {
+              g.sort_nodes(1, 3, [](auto i, auto j) { return i > j; });
+              return g;
+            }
+          },
+          {
+            graph_description::node_2_node_node_0_2,
+            t.report(""),
+            [&t](graph_type g) -> graph_type {
+              t.check_exception_thrown<std::out_of_range>(
+                "Sorting a range which ends beyond the last node throws",
+                [g{g}]() mutable { g.sort_nodes(1, 4, [](auto i, auto j) { return i > j; }); }
+              );
+              return g;
+            }
           }
         }, // end 'node_2_node_node_0_2'
         {  // begin 'node_1_1_2_2_node_0_2_0_node_0_1_0'
@@ -1576,6 +1595,27 @@ namespace sequoia::testing
             t.report("Swap {2,1}"),
             [](graph_type g) -> graph_type {
               g.swap_nodes(2,1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_2_2_node_0_2_2_0_node_0_1_1_0,
+            t.report("Sorting the nodes with a comparator that throws leaves the graph unchanged"),
+            [&t](graph_type g) -> graph_type {
+              t.check_exception_thrown<std::runtime_error>(
+                "The comparator's exception escapes the sort",
+                [&g]() {
+                  // Any sort of three nodes compares at least twice
+                  int comparisons{};
+                  g.sort_nodes([&comparisons](auto i, auto j) {
+                    if(++comparisons == 2)
+                      throw std::runtime_error{"The second comparison throws"};
+
+                    return i < j;
+                  });
+                }
+              );
+
               return g;
             }
           }

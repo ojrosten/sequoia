@@ -20,6 +20,7 @@
 #include <forward_list>
 #include <map>
 #include <memory>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -134,6 +135,9 @@ namespace sequoia::testing
     template<class Graph>
     concept joinable = requires(Graph& g) { g.join(0, 1); };
 
+    template<class Graph, class Compare>
+    concept nodes_sortable_by = requires(Graph& g, Compare c) { g.sort_nodes(c); };
+
     template<class Graph>
     concept insert_joinable
       = requires(Graph& g, typename Graph::const_edge_iterator citer) { g.insert_join(citer, citer); };
@@ -187,6 +191,7 @@ namespace sequoia::testing
     test_copyability();
     test_weight_update_constraints();
     test_join_constraints();
+    test_sort_nodes_constraints();
     test_mutator_constraints();
     test_mutation_results<maths::bucketed_edge_storage_config>();
     test_mutation_results<maths::contiguous_edge_storage_config>();
@@ -337,6 +342,20 @@ namespace sequoia::testing
     STATIC_CHECK( joinable<shared_move_only_embedded_graph>);
     STATIC_CHECK( insert_joinable<shared_move_only_embedded_graph>);
     STATIC_CHECK( joinable<directed_move_only_graph>);
+  }
+
+  void graph_constraints_free_test::test_sort_nodes_constraints()
+  {
+    using namespace maths;
+
+    using graph_t               = directed_graph<null_weight, int>;
+    using heterogeneous_graph_t = heterogeneous_directed_graph<0, 2, null_weight, int, double>;
+    using string_comparison_t   = bool(*)(const std::string&, const std::string&);
+
+    STATIC_CHECK( nodes_sortable_by<graph_t,               std::ranges::less>);
+    STATIC_CHECK(!nodes_sortable_by<heterogeneous_graph_t, std::ranges::less>);
+    STATIC_CHECK(!nodes_sortable_by<graph_t,               string_comparison_t>);
+    STATIC_CHECK(!nodes_sortable_by<graph_t,               int>);
   }
 
   void graph_constraints_free_test::test_mutator_constraints()

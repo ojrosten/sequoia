@@ -85,7 +85,7 @@ partitioned_sequence::erase - Invalid range specified by iterators belonging to 
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 1017
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 1025
 Inserting beyond the end of a partition other than the last throws
 
 Expected Exception Type:
@@ -94,12 +94,21 @@ partitioned_sequence::insert_to_partition: pos 2 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 1028
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 1036
 Inserting beyond the end of a partition other than the first throws
 
 Expected Exception Type:
 [std::out_of_range]
 partitioned_sequence::insert_to_partition: pos 2 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 1099
+Permuting two partitions to one destination throws
+
+Expected Exception Type:
+[std::invalid_argument]
+sequoia::permute: the destinations are not a permutation of the range's positions
 
 =======================================
 

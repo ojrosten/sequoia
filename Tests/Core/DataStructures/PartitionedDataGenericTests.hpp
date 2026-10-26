@@ -916,6 +916,14 @@ namespace sequoia::testing
                 d.swap_partitions(0, 1);
                 return d;
               }
+            },
+            {
+              data_description::two_2_3__,
+              t.report(""),
+              [](data_type d) -> data_type {
+                d.permute_partitions(std::vector<std::size_t>{1, 0});
+                return d;
+              }
             }
           }, // end 'two__2_3'
           {  // begin 'two_2__3'
@@ -1064,6 +1072,33 @@ namespace sequoia::testing
               t.report(""),
               [](data_type d) -> data_type {
                 d.swap_partitions(1,2);
+                return d;
+              }
+            },
+            {
+              data_description::three_3____2,
+              t.report(""),
+              [](data_type d) -> data_type {
+                d.permute_partitions(std::vector<std::size_t>{2, 1, 0});
+                return d;
+              }
+            },
+            {
+              data_description::three_2__3__,
+              t.report(""),
+              [](data_type d) -> data_type {
+                d.permute_partitions(std::vector<std::size_t>{0, 2, 1});
+                return d;
+              }
+            },
+            {
+              data_description::three_2____3,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                t.check_exception_thrown<std::invalid_argument>(
+                  "Permuting two partitions to one destination throws",
+                  [d{d}]() mutable { d.permute_partitions(std::vector<std::size_t>{0, 0, 1}); }
+                );
                 return d;
               }
             },

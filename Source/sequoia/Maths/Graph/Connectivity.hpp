@@ -39,6 +39,7 @@
 #include <limits>
 #include <stdexcept>
 #include <ranges>
+#include <vector>
 
 namespace sequoia
 {
@@ -455,6 +456,30 @@ namespace sequoia
         }
 
         m_Edges.swap_partitions(i, j);
+      }
+
+      /** \brief Moves each node `i` to position `destinations[i]`, keeping
+                 the order of its edges, and relabels each edge's target to
+                 match.
+
+          \throws std::invalid_argument if `destinations` is not a
+          permutation of the nodes' indices. The edges may then no longer
+          describe a valid graph.
+       */
+      constexpr void permute_nodes(const std::vector<edge_index_type>& destinations)
+      {
+        m_Edges.permute_partitions(destinations);
+
+        auto allEdges{
+            std::views::iota(edge_index_type{}, numeric::unchecked_conversion_to<edge_index_type>(order()))
+          | std::views::transform([this](const edge_index_type node) { return edges(node); })
+          | std::views::join
+        };
+
+        for(auto& edge : allEdges)
+        {
+          edge.target_node(destinations[edge.target_node()]);
+        }
       }
 
       [[nodiscard]]

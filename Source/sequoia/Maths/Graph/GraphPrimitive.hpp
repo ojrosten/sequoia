@@ -17,7 +17,10 @@
 #include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp"
 
+#include <algorithm>
 #include <cstddef>
+#include <ranges>
+#include <vector>
 
 namespace sequoia
 {
@@ -111,6 +114,12 @@ namespace sequoia
     private:
       using node_weight_type = Nodes::weight_type;
 
+      template<class Compare>
+      constexpr static bool nodes_sortable_by_v{
+           !heterogeneous_nodes<graph_primitive>
+        && std::sortable<std::ranges::iterator_t<std::vector<typename Connectivity::edge_index_type>>, Compare>
+      };
+
     public:
       using connectivity_type = Connectivity;
       using nodes_type        = Nodes;
@@ -185,7 +194,9 @@ namespace sequoia
         Connectivity::swap_nodes(i, j);
       }
 
+      /** \brief Sorts all the nodes, as `sort_nodes(0, order(), c)` does. */
       template<class Compare>
+        requires nodes_sortable_by_v<Compare>
       constexpr void sort_nodes(Compare c)
       {
         sort_nodes(edge_index_type{},
@@ -193,10 +204,52 @@ namespace sequoia
                    std::move(c));
       }
 
+      /** \brief Sorts the nodes `first` to `last - 1` with `c`, which
+                 compares two nodes given their indices.
+
+          Every call of `c` precedes any change to the graph, so `c` reads
+          the graph as it was. Each node keeps its weight and its edges, the
+          edges in their order.
+
+          \throws std::out_of_range if `first < last` and `last` exceeds
+          `order()`. If `c` throws, the graph is unchanged.
+       */
       template<class Compare>
+        requires nodes_sortable_by_v<Compare>
       constexpr void sort_nodes(const edge_index_type first, const edge_index_type last, Compare c)
       {
-        sequoia::sort(pseudo_iterator{first, *this}, pseudo_iterator{last, *this}, std::move(c));
+        if(last <= first)
+          return;
+
+        graph_errors::check_node_index_range("sort_nodes", Connectivity::order(), last - 1uz);
+
+        const auto sortedNodes{
+          [first, last, &c]() {
+            auto nodes{std::views::iota(first, last) | std::ranges::to<std::vector>()};
+            std::ranges::sort(nodes, std::move(c));
+            return nodes;
+          }()
+        };
+
+        auto destinations{
+          [this, first, &sortedNodes]() {
+            const auto nodeCount{numeric::unchecked_conversion_to<edge_index_type>(Connectivity::order())};
+            auto nodeDestinations{std::views::iota(edge_index_type{}, nodeCount) | std::ranges::to<std::vector>()};
+            for(const auto [destination, node] : std::views::zip(std::views::iota(first), sortedNodes))
+            {
+              nodeDestinations[node] = destination;
+            }
+
+            return nodeDestinations;
+          }()
+        };
+
+        Connectivity::permute_nodes(destinations);
+        if constexpr(!std::is_empty_v<node_weight_type>)
+        {
+          // Moved, so that nothing is allocated once the edges have moved
+          Nodes::permute_nodes(std::move(destinations));
+        }
       }
 
       //===============================equality (not isomorphism) operators================================//

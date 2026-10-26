@@ -25,6 +25,8 @@ namespace sequoia::testing
   private:
     void algorithm_constraints();
 
+    void permute_basic_type();
+
     template<class Form>
     void make_heap_by_second_element(Form form);
 
@@ -51,5 +53,7 @@ namespace sequoia::testing
 
     template<class Form>
     void cluster_by_first_element(Form form);
+
+    void permute_refuses_non_permutations();
   };
 }

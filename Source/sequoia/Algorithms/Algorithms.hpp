@@ -18,6 +18,8 @@
 #include <functional>
 #include <iterator>
 #include <ranges>
+#include <stdexcept>
+#include <utility>
 #include <vector>
 
 namespace sequoia
@@ -276,5 +278,62 @@ namespace sequoia
   constexpr void cluster(R&& r, Comp comp = {}, Proj proj = {})
   {
     sequoia::cluster(std::ranges::begin(r), std::ranges::end(r), std::move(comp), std::move(proj));
+  }
+
+  namespace impl
+  {
+    [[nodiscard]]
+    constexpr const char* not_a_permutation_message() noexcept
+    {
+      return "sequoia::permute: the destinations are not a permutation of the range's positions";
+    }
+  }
+
+  /** \brief Moves the element at each position `i` of `r` to position
+             `destinations[i]`.
+
+      \throws std::invalid_argument if `destinations` is not a permutation of
+      `r`'s positions. `r` then holds its elements in an unspecified order.
+   */
+  template<std::ranges::random_access_range R, integer Index>
+    requires (std::ranges::sized_range<R> && std::indirectly_swappable<std::ranges::iterator_t<R>>)
+  constexpr void permute(R&& r, std::vector<Index> destinations)
+  {
+    const auto size{std::ranges::size(r)};
+    if(std::cmp_not_equal(destinations.size(), size))
+      throw std::invalid_argument{impl::not_a_permutation_message()};
+
+    auto iteratorAt{
+      [first{std::ranges::begin(r)}](const std::size_t position) {
+        return first + numeric::unchecked_conversion_to<std::ranges::range_difference_t<R>>(position);
+      }
+    };
+
+    auto isPosition{
+      [size](const Index destination) {
+        return std::cmp_greater_equal(destination, 0) && std::cmp_less(destination, size);
+      }
+    };
+
+    // Each swap leaves the entry at the element's destination equal to that
+    // destination, so the loop ends. Finding such an entry before the swap
+    // means that two elements share the destination. Either that, or a
+    // destination outside the range, shows that the destinations are not a
+    // permutation.
+    for(const auto position : std::views::iota(0uz, destinations.size()))
+    {
+      while(std::cmp_not_equal(destinations[position], position))
+      {
+        if(!isPosition(destinations[position]))
+          throw std::invalid_argument{impl::not_a_permutation_message()};
+
+        const auto destination{numeric::unchecked_conversion_to<std::size_t>(destinations[position])};
+        if(std::cmp_equal(destinations[destination], destination))
+          throw std::invalid_argument{impl::not_a_permutation_message()};
+
+        std::ranges::iter_swap(iteratorAt(position), iteratorAt(destination));
+        std::ranges::swap(destinations[position], destinations[destination]);
+      }
+    }
   }
 }
