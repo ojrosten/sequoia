@@ -54,8 +54,7 @@
 # count, is taken to be the held one: the held value stands, and the script
 # prints the difference. Each count is named in measured_fields below with a
 # denominator of its own: 1 in 1,000 for prune's, 1 in 50 for the setup's
-# instructions and 1 in 200 for its system calls, and 1 in 50 for the
-# instructions of each of the two runs in leftover_materials_setup.
+# instructions and 1 in 200 for its system calls.
 #
 # The spread measured, with the performance tests excluded from the setup's
 # runs: prune's analysis moved by up to 722 parts in a million between jobs
@@ -64,10 +63,6 @@
 # commits whose code is identical. The setup's tests are counted exactly, so
 # the instructions move as they do per test. Each tolerance is wider
 # than its count's spread, so that an honest re-measurement is not refused.
-# The two runs of leftover_materials_setup count the setup's region, so they
-# take the setup's tolerance. Its previous_entries and its runs' tests are
-# compared exactly: two jobs measuring one commit found 2,713 entries and 97
-# tests in each.
 #
 # A branch which does not exist is created, with no history. The push is
 # never forced. When it fails - as it does when another run pushed first -
@@ -117,11 +112,11 @@ cpu_model_paths='[
 # record, and the denominator of the relative difference below which a count is
 # taken to be the held one
 measured_fields='[
-  {"path": ["prune_dependency_analysis", "instructions"],          "denominator": 1000},
-  {"path": ["runner_setup", "instructions"],                       "denominator": 50},
-  {"path": ["runner_setup", "syscalls"],                           "denominator": 200},
-  {"path": ["leftover_materials_setup", "fresh", "instructions"],  "denominator": 50},
-  {"path": ["leftover_materials_setup", "seeded", "instructions"], "denominator": 50}
+  {"path": ["prune_dependency_analysis", "instructions"],                     "denominator": 1000},
+  {"path": ["runner_setup", "instructions"],                                  "denominator": 50},
+  {"path": ["runner_setup", "syscalls"],                                      "denominator": 200},
+  {"path": ["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 50},
+  {"path": ["leftover_materials_setup", "with_leftovers", "instructions"],    "denominator": 50}
 ]'
 
 # within($held; $offered; $denominator), in jq: both are numbers, they differ,

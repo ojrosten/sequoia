@@ -427,7 +427,7 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
   await control('a record with the cost of leftover materials and no runner_setup is no problem, and has no runner setup to plot', () => {
     const record = recordOf('F5');
     const run = {exit_status: 0, tests: 4, instructions: 4000};
-    record.leftover_materials_setup = {boundary: 'x', previous_entries: 0, fresh: run, seeded: run, cpu_model: 'm'};
+    record.leftover_materials_setup = {boundary: 'x', leftover_entries: 0, without_leftovers: run, with_leftovers: run, cpu_model: 'm'};
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
     for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
   });

@@ -13,17 +13,18 @@
 # system calls differ from every other count. Each control is a claim the
 # script exists to keep:
 #   - the field holds the boundary, the entries, and for each run its
-#     instructions, tests and exit status, the fresh run's under "fresh" and
-#     the seeded run's under "seeded";
+#     instructions, tests and exit status, the run without leftovers under
+#     "without_leftovers" and the run with them under "with_leftovers";
 #   - the system calls are left out;
 #   - a run which failed is recorded with its exit status, since the dashboard
-#     plots a point whatever its status;
-#   - 0 previous entries is recorded, not refused;
+#     plots a point whatever its status, and the two exit statuses may differ;
+#   - 0 leftover entries is recorded, not refused;
 #   - each of these is refused, and the script then succeeds, warns on
 #     standard error, and prints nothing: a counts file which is absent,
 #     empty or not JSON, or lacks the boundary, the exit status, the tests or
-#     the instructions, whichever run it is; two boundaries which differ; and
-#     a number of entries which is no number;
+#     the instructions, whichever run it is; two boundaries which differ; two
+#     numbers of tests which differ, in either direction; and a number of
+#     entries which is no number;
 #   - arguments of any other number are refused with status 2.
 
 set -u
@@ -42,22 +43,25 @@ counts() {
   printf '{"boundary":"%s","exit_status":%s,"tests":%s,"instructions":%s,"syscalls":631592}\n' "$5" "$4" "$3" "$2" > "$1"
 }
 
-counts "$tmp/fresh.json"  50083024 97 0  B
-counts "$tmp/seeded.json" 54377059 97 0  B
-counts "$tmp/seeded-failed.json" 54377059 97 82 B
-counts "$tmp/fresh-failed.json"  50083024 97 82 B
-counts "$tmp/other-boundary.json" 54377059 97 0 C
+counts "$tmp/without.json"           50083024 97 0  B
+counts "$tmp/with.json"              54377059 97 0  B
+counts "$tmp/with-failed.json"       54377059 97 82 B
+counts "$tmp/without-failed.json"    50083024 97 82 B
+counts "$tmp/other-boundary.json"    54377059 97 0  C
+counts "$tmp/with-more-tests.json"   54377059 98 0  B
+counts "$tmp/with-fewer-tests.json"  54377059 96 0  B
+counts "$tmp/without-more-tests.json" 50083024 98 0 B
+counts "$tmp/with-no-instructions.json" 0 97 0 B
+counts "$tmp/with-no-tests.json"     54377059 0 0   B
 : > "$tmp/empty.json"
 echo 'not json' > "$tmp/garbage.json"
 for lacking in boundary exit_status tests instructions; do
-  jq "del(.$lacking)" "$tmp/seeded.json" > "$tmp/seeded-without-$lacking.json"
-  jq "del(.$lacking)" "$tmp/fresh.json"  > "$tmp/fresh-without-$lacking.json"
+  jq "del(.$lacking)" "$tmp/with.json"    > "$tmp/with-lacking-$lacking.json"
+  jq "del(.$lacking)" "$tmp/without.json" > "$tmp/without-lacking-$lacking.json"
 done
-counts "$tmp/seeded-no-instructions.json" 0 97 0 B
-counts "$tmp/seeded-no-tests.json" 54377059 0 0 B
-jq '.boundary = 7' "$tmp/seeded.json" > "$tmp/seeded-numeric-boundary.json"
-jq '.boundary = 7' "$tmp/fresh.json" > "$tmp/fresh-numeric-boundary.json"
-jq '.exit_status = "0"' "$tmp/seeded.json" > "$tmp/seeded-text-status.json"
+jq '.boundary = 7' "$tmp/with.json"    > "$tmp/with-numeric-boundary.json"
+jq '.boundary = 7' "$tmp/without.json" > "$tmp/without-numeric-boundary.json"
+jq '.exit_status = "0"' "$tmp/with.json" > "$tmp/with-text-status.json"
 
 fail() { echo "FAIL: $1"; fails=$((fails+1)); }
 
@@ -92,64 +96,71 @@ refused() {
 controls() {
   fails=0
   under_test=$1
+  local without=$tmp/without.json with=$tmp/with.json
 
-  field "each run's counts, under its own name" "$tmp/fresh.json" "$tmp/seeded.json" 2713 \
-        '{"boundary":"B","fresh":{"exit_status":0,"instructions":50083024,"tests":97},"previous_entries":2713,"seeded":{"exit_status":0,"instructions":54377059,"tests":97}}'
-  field "a failed seeded run, recorded as failed" "$tmp/fresh.json" "$tmp/seeded-failed.json" 2708 \
-        '{"boundary":"B","fresh":{"exit_status":0,"instructions":50083024,"tests":97},"previous_entries":2708,"seeded":{"exit_status":82,"instructions":54377059,"tests":97}}'
-  field "a failed fresh run, recorded as failed" "$tmp/fresh-failed.json" "$tmp/seeded.json" 2708 \
-        '{"boundary":"B","fresh":{"exit_status":82,"instructions":50083024,"tests":97},"previous_entries":2708,"seeded":{"exit_status":0,"instructions":54377059,"tests":97}}'
-  field "no previous entries, recorded" "$tmp/fresh.json" "$tmp/seeded.json" 0 \
-        '{"boundary":"B","fresh":{"exit_status":0,"instructions":50083024,"tests":97},"previous_entries":0,"seeded":{"exit_status":0,"instructions":54377059,"tests":97}}'
+  field "each run's counts, under its own name" "$without" "$with" 2713 \
+        '{"boundary":"B","leftover_entries":2713,"with_leftovers":{"exit_status":0,"instructions":54377059,"tests":97},"without_leftovers":{"exit_status":0,"instructions":50083024,"tests":97}}'
+  field "a failed run with leftovers, recorded as failed" "$without" "$tmp/with-failed.json" 2708 \
+        '{"boundary":"B","leftover_entries":2708,"with_leftovers":{"exit_status":82,"instructions":54377059,"tests":97},"without_leftovers":{"exit_status":0,"instructions":50083024,"tests":97}}'
+  field "a failed run without leftovers, recorded as failed" "$tmp/without-failed.json" "$with" 2708 \
+        '{"boundary":"B","leftover_entries":2708,"with_leftovers":{"exit_status":0,"instructions":54377059,"tests":97},"without_leftovers":{"exit_status":82,"instructions":50083024,"tests":97}}'
+  field "exit statuses which differ, recorded" "$tmp/without-failed.json" "$tmp/with-failed.json" 2708 \
+        '{"boundary":"B","leftover_entries":2708,"with_leftovers":{"exit_status":82,"instructions":54377059,"tests":97},"without_leftovers":{"exit_status":82,"instructions":50083024,"tests":97}}'
+  field "no leftover entries, recorded" "$without" "$with" 0 \
+        '{"boundary":"B","leftover_entries":0,"with_leftovers":{"exit_status":0,"instructions":54377059,"tests":97},"without_leftovers":{"exit_status":0,"instructions":50083024,"tests":97}}'
 
-  refused "a number of entries which is no number"   "$tmp/fresh.json" "$tmp/seeded.json" many
-  refused "a negative number of entries"             "$tmp/fresh.json" "$tmp/seeded.json" -1
-  refused "a fractional number of entries"           "$tmp/fresh.json" "$tmp/seeded.json" 1.5
-  refused "an empty number of entries"               "$tmp/fresh.json" "$tmp/seeded.json" ''
-  refused "a number of entries with a leading zero"  "$tmp/fresh.json" "$tmp/seeded.json" 007
-  refused "two boundaries which differ"              "$tmp/fresh.json" "$tmp/other-boundary.json" 2713
-  refused "an empty fresh file"                      "$tmp/empty.json" "$tmp/seeded.json" 2713
-  refused "an empty seeded file"                     "$tmp/fresh.json" "$tmp/empty.json" 2713
-  refused "an absent fresh file"                     "$tmp/absent.json" "$tmp/seeded.json" 2713
-  refused "an absent seeded file"                    "$tmp/fresh.json" "$tmp/absent.json" 2713
-  refused "a fresh file which is no JSON"            "$tmp/garbage.json" "$tmp/seeded.json" 2713
-  refused "a seeded file which is no JSON"           "$tmp/fresh.json" "$tmp/garbage.json" 2713
+  refused "a number of entries which is no number"   "$without" "$with" many
+  refused "a negative number of entries"             "$without" "$with" -1
+  refused "a fractional number of entries"           "$without" "$with" 1.5
+  refused "an empty number of entries"               "$without" "$with" ''
+  refused "a number of entries with a leading zero"  "$without" "$with" 007
+  refused "two boundaries which differ"              "$without" "$tmp/other-boundary.json" 2713
+  refused "more tests with leftovers"                "$without" "$tmp/with-more-tests.json" 2713
+  refused "fewer tests with leftovers"               "$without" "$tmp/with-fewer-tests.json" 2713
+  refused "more tests without leftovers"             "$tmp/without-more-tests.json" "$with" 2713
+  refused "an empty file for the run without leftovers" "$tmp/empty.json" "$with" 2713
+  refused "an empty file for the run with leftovers" "$without" "$tmp/empty.json" 2713
+  refused "an absent file for the run without leftovers" "$tmp/absent.json" "$with" 2713
+  refused "an absent file for the run with leftovers" "$without" "$tmp/absent.json" 2713
+  refused "no JSON for the run without leftovers"    "$tmp/garbage.json" "$with" 2713
+  refused "no JSON for the run with leftovers"       "$without" "$tmp/garbage.json" 2713
   for lacking in boundary exit_status tests instructions; do
-    refused "a fresh file without $lacking"          "$tmp/fresh-without-$lacking.json" "$tmp/seeded.json" 2713
-    refused "a seeded file without $lacking"         "$tmp/fresh.json" "$tmp/seeded-without-$lacking.json" 2713
+    refused "the run without leftovers lacking $lacking" "$tmp/without-lacking-$lacking.json" "$with" 2713
+    refused "the run with leftovers lacking $lacking"    "$without" "$tmp/with-lacking-$lacking.json" 2713
   done
-  refused "a seeded file with no instructions"       "$tmp/fresh.json" "$tmp/seeded-no-instructions.json" 2713
-  refused "a seeded file with no tests"              "$tmp/fresh.json" "$tmp/seeded-no-tests.json" 2713
-  refused "boundaries which are no text, and equal" "$tmp/fresh-numeric-boundary.json" "$tmp/seeded-numeric-boundary.json" 2713
-  refused "a seeded file with an exit status which is no number" "$tmp/fresh.json" "$tmp/seeded-text-status.json" 2713
+  refused "no instructions with leftovers"           "$without" "$tmp/with-no-instructions.json" 2713
+  refused "no tests with leftovers"                  "$without" "$tmp/with-no-tests.json" 2713
+  refused "boundaries which are no text, and equal"  "$tmp/without-numeric-boundary.json" "$tmp/with-numeric-boundary.json" 2713
+  refused "an exit status which is no number"        "$without" "$tmp/with-text-status.json" 2713
 
-  run "$tmp/fresh.json" "$tmp/seeded.json"
+  run "$without" "$with"
   [ "$status" -eq 2 ] && [ -z "$out" ] && [[ $err == Usage:* ]] || fail "two arguments: status $status"
-  run "$tmp/fresh.json" "$tmp/seeded.json" 2713 extra
+  run "$without" "$with" 2713 extra
   [ "$status" -eq 2 ] && [ -z "$out" ] && [[ $err == Usage:* ]] || fail "four arguments: status $status"
 }
 
 # Each mutant breaks one behaviour that the controls claim. Its entry holds a
 # description, the text it replaces, and the replacement.
 mutations=(
-  'the runs swapped'                       'fresh: ($fresh[0] | run), seeded: ($seeded[0] | run)'
-                                           'fresh: ($seeded[0] | run), seeded: ($fresh[0] | run)'
-  'the system calls kept'                  'def run: {instructions, tests, exit_status};' 'def run: {instructions, tests, exit_status, syscalls};'
-  'the instructions left out'              'def run: {instructions, tests, exit_status};' 'def run: {tests, exit_status};'
-  'the tests left out'                     'def run: {instructions, tests, exit_status};' 'def run: {instructions, exit_status};'
-  'the exit status left out'               'def run: {instructions, tests, exit_status};' 'def run: {instructions, tests};'
-  'the entries not recorded'               'previous_entries: $previous,' 'previous_entries: 0,'
-  'the boundary not recorded'              'boundary: $fresh[0].boundary,' 'boundary: "x",'
+  'the runs swapped'                       'without_leftovers: ($without[0] | counts_of_one_run), with_leftovers: ($with[0] | counts_of_one_run)'
+                                           'without_leftovers: ($with[0] | counts_of_one_run), with_leftovers: ($without[0] | counts_of_one_run)'
+  'the system calls kept'                  'def counts_of_one_run: {instructions, tests, exit_status};' 'def counts_of_one_run: {instructions, tests, exit_status, syscalls};'
+  'the instructions left out'              'def counts_of_one_run: {instructions, tests, exit_status};' 'def counts_of_one_run: {tests, exit_status};'
+  'the tests left out'                     'def counts_of_one_run: {instructions, tests, exit_status};' 'def counts_of_one_run: {instructions, exit_status};'
+  'the exit status left out'               'def counts_of_one_run: {instructions, tests, exit_status};' 'def counts_of_one_run: {instructions, tests};'
+  'the entries not recorded'               'leftover_entries: $entries,' 'leftover_entries: 0,'
+  'the boundary not recorded'              'boundary: $without[0].boundary,' 'boundary: "x",'
   'no entries refused'                     '^(0|[1-9][0-9]*)$' '^[1-9][0-9]*$'
-  'any number of entries accepted'         '[[ $previous =~ ^(0|[1-9][0-9]*)$ ]] || refuse "the number of previous entries '"'"'$previous'"'"' is not a number"' ':'
+  'any number of entries accepted'         '[[ $leftover_entries =~ ^(0|[1-9][0-9]*)$ ]] || refuse "the number of leftover entries '"'"'$leftover_entries'"'"' is not a number"' ':'
   'a leading zero accepted'                '^(0|[1-9][0-9]*)$' '^[0-9]+$'
-  'the fresh counts not checked'           'counted "$fresh" ||' ':'
-  'the seeded counts not checked'          'counted "$seeded" ||' ':'
-  'the boundaries not compared'            '[ "$(jq -r '"'"'.boundary'"'"' "$fresh")" = "$(jq -r '"'"'.boundary'"'"' "$seeded")" ] \
-  ||' ':'
+  'the counts without leftovers not checked' 'has_counts "$without_leftovers" ||' ':'
+  'the counts with leftovers not checked'  'has_counts "$with_leftovers" ||' ':'
+  'the boundaries not compared'            'same_in boundary ||' ':'
+  'the tests not compared'                 'same_in tests ||' ':'
+  'differing exit statuses refused'        'same_in tests ||' 'same_in exit_status \&\& same_in tests ||'
   'a boundary of no text accepted'         '(.boundary | type == "string")' '(.boundary != null)'
   'an exit status of no number accepted'   '(.exit_status | type == "number" and . >= 0 and floor == .)' '(.exit_status != null)'
-  'zero tests accepted'                     '[.tests, .instructions] | all(type == "number" and . > 0 and floor == .)' '[.tests, .instructions] | all(type == "number" and . >= 0 and floor == .)'
+  'zero tests accepted'                    '[.tests, .instructions] | all(type == "number" and . > 0 and floor == .)' '[.tests, .instructions] | all(type == "number" and . >= 0 and floor == .)'
   'zero instructions accepted'             '[.tests, .instructions] | all(type == "number" and . > 0 and floor == .)' '[.tests] | all(type == "number" and . > 0 and floor == .)'
   'a refusal an error'                     '  exit 0
 }'                                         '  exit 1

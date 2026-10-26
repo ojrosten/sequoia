@@ -180,13 +180,13 @@ fixture() {
   record "$work/N-near.json"     "$A" 100 23 true ', "other_count": {"instructions": 1000999999}'
   # the cost of leftover materials: the tolerance of 1 in 50 of 50000000 is
   # 1000000, and of 54000000 is 1080000
-  local leftover='"leftover_materials_setup": {"boundary": "B", "previous_entries": %s, "fresh": {"instructions": %s, "tests": %s, "exit_status": 0}, "seeded": {"instructions": %s, "tests": %s, "exit_status": 0}%s, "cpu_model": "%s"}'
+  local leftover='"leftover_materials_setup": {"boundary": "B", "leftover_entries": %s, "without_leftovers": {"instructions": %s, "tests": %s, "exit_status": 0}, "with_leftovers": {"instructions": %s, "tests": %s, "exit_status": 0}%s, "cpu_model": "%s"}'
   record "$work/L.json"             "$A" 100 61 true ", $(printf "$leftover" 2713 50000000 97 54000000 97 '' "$amd")"
   record "$work/L-intel.json"       "$A" 100 62 true ", $(printf "$leftover" 2713 50000000 97 54000000 97 '' "$intel")"
-  record "$work/L-fresh-near.json"  "$A" 100 63 true ", $(printf "$leftover" 2713 50999999 97 54000000 97 '' "$intel")"
-  record "$work/L-fresh-far.json"   "$A" 100 64 true ", $(printf "$leftover" 2713 51000000 97 54000000 97 '' "$intel")"
-  record "$work/L-seeded-near.json" "$A" 100 65 true ", $(printf "$leftover" 2713 50000000 97 55079999 97 '' "$intel")"
-  record "$work/L-seeded-far.json"  "$A" 100 66 true ", $(printf "$leftover" 2713 50000000 97 55080000 97 '' "$intel")"
+  record "$work/L-without-near.json"  "$A" 100 63 true ", $(printf "$leftover" 2713 50999999 97 54000000 97 '' "$intel")"
+  record "$work/L-without-far.json"   "$A" 100 64 true ", $(printf "$leftover" 2713 51000000 97 54000000 97 '' "$intel")"
+  record "$work/L-with-near.json" "$A" 100 65 true ", $(printf "$leftover" 2713 50000000 97 55079999 97 '' "$intel")"
+  record "$work/L-with-far.json"  "$A" 100 66 true ", $(printf "$leftover" 2713 50000000 97 55080000 97 '' "$intel")"
   record "$work/L-entries.json"     "$A" 100 67 true ", $(printf "$leftover" 2714 50000000 97 54000000 97 '' "$amd")"
   record "$work/L-tests.json"       "$A" 100 68 true ", $(printf "$leftover" 2713 50000000 98 54000000 98 '' "$amd")"
   record "$work/L-sub-amd.json"     "$A" 100 69 true ", $(printf "$leftover" 2713 50000000 97 54000000 97 ', "other": 5' "$amd")"
@@ -395,35 +395,35 @@ leftover_controls() {
   same "it leaves the branch as it was" "$first" "$(tip)"
   same "the section keeps its CPU model" "$amd" "$(held "$A" | jq -r '.leftover_materials_setup.cpu_model')"
 
-  store L-fresh-near
-  exits "the fresh run's instructions within 1 in 50, beyond 1 in 100, succeed" 0
+  store L-without-near
+  exits "the run without leftovers' instructions within 1 in 50, beyond 1 in 100, succeed" 0
   says "the difference and the tolerance are shown" \
-       'leftover_materials_setup.fresh.instructions: held 50000000, offered 50999999, tolerance 1 in 50' "$out"
-  same "the branch is as it was after the fresh run's instructions" "$first" "$(tip)"
+       'leftover_materials_setup.without_leftovers.instructions: held 50000000, offered 50999999, tolerance 1 in 50' "$out"
+  same "the branch is as it was after the run without leftovers' instructions" "$first" "$(tip)"
 
-  store L-fresh-far
-  exits "the fresh run's instructions at exactly 1 in 50" nonzero
+  store L-without-far
+  exits "the run without leftovers' instructions at exactly 1 in 50" nonzero
   says "the difference is shown" '"instructions": 51000000' "$err"
-  same "the branch is as it was after the fresh run's far instructions" "$first" "$(tip)"
+  same "the branch is as it was after the run without leftovers' far instructions" "$first" "$(tip)"
 
-  store L-seeded-near
-  exits "the seeded run's instructions within 1 in 50, beyond 1 in 100, succeed" 0
-  says "the difference of the seeded run is shown" \
-       'leftover_materials_setup.seeded.instructions: held 54000000, offered 55079999, tolerance 1 in 50' "$out"
-  same "the branch is as it was after the seeded run's instructions" "$first" "$(tip)"
+  store L-with-near
+  exits "the run with leftovers' instructions within 1 in 50, beyond 1 in 100, succeed" 0
+  says "the difference of the run with leftovers is shown" \
+       'leftover_materials_setup.with_leftovers.instructions: held 54000000, offered 55079999, tolerance 1 in 50' "$out"
+  same "the branch is as it was after the run with leftovers' instructions" "$first" "$(tip)"
 
-  store L-seeded-far
-  exits "the seeded run's instructions at exactly 1 in 50" nonzero
-  says "the difference of the seeded run is shown" '"instructions": 55080000' "$err"
+  store L-with-far
+  exits "the run with leftovers' instructions at exactly 1 in 50" nonzero
+  says "the difference of the run with leftovers is shown" '"instructions": 55080000' "$err"
 
   store L-entries
-  exits "one more previous entry" nonzero
-  says "the entries are named" 'in: leftover_materials_setup.previous_entries$' "$err"
+  exits "one more leftover entry" nonzero
+  says "the entries are named" 'in: leftover_materials_setup.leftover_entries$' "$err"
   same "the branch is as it was after the entries" "$first" "$(tip)"
 
   store L-tests
   exits "one more test in each run" nonzero
-  says "the tests are named" 'in: leftover_materials_setup.fresh.tests, leftover_materials_setup.seeded.tests$' "$err"
+  says "the tests are named" 'in: leftover_materials_setup.with_leftovers.tests, leftover_materials_setup.without_leftovers.tests$' "$err"
   same "the branch is as it was after the tests" "$first" "$(tip)"
   unchanged_clone "the cost of leftover materials"
 
@@ -785,56 +785,56 @@ mutant 'the CPU model of the leftover section compared' \
        ',
   ["leftover_materials_setup",  "cpu_model"]' ''
 mutant 'the run compared too'          "without_run() { jq -S 'del(.run)'" "without_run() { jq -S '.'"
-mutant 'every count measured'          '  {"path": ["runner_setup", "syscalls"],                           "denominator": 200}' \
-                                       '  {"path": ["runner_setup", "syscalls"],                           "denominator": 200},
+mutant 'every count measured'          '  {"path": ["runner_setup", "syscalls"],                                      "denominator": 200}' \
+                                       '  {"path": ["runner_setup", "syscalls"],                                      "denominator": 200},
   {"path": ["other_count", "instructions"],               "denominator": 200}'
-mutant 'prune counts not measured'     '  {"path": ["prune_dependency_analysis", "instructions"],          "denominator": 1000},
+mutant 'prune counts not measured'     '  {"path": ["prune_dependency_analysis", "instructions"],                     "denominator": 1000},
 ' ''
-mutant 'setup instructions not measured' '  {"path": ["runner_setup", "instructions"],                       "denominator": 50},
+mutant 'setup instructions not measured' '  {"path": ["runner_setup", "instructions"],                                  "denominator": 50},
 ' ''
 mutant 'setup system calls not measured' ',
-  {"path": ["runner_setup", "syscalls"],                           "denominator": 200}' ''
-mutant 'prune with the setup tolerance' '["prune_dependency_analysis", "instructions"],          "denominator": 1000}' \
-                                       '["prune_dependency_analysis", "instructions"],          "denominator": 50}'
-mutant "prune with its old tolerance"  '["prune_dependency_analysis", "instructions"],          "denominator": 1000}' \
-                                       '["prune_dependency_analysis", "instructions"],          "denominator": 10000}'
+  {"path": ["runner_setup", "syscalls"],                                      "denominator": 200}' ''
+mutant 'prune with the setup tolerance' '["prune_dependency_analysis", "instructions"],                     "denominator": 1000}' \
+                                       '["prune_dependency_analysis", "instructions"],                     "denominator": 50}'
+mutant "prune with its old tolerance"  '["prune_dependency_analysis", "instructions"],                     "denominator": 1000}' \
+                                       '["prune_dependency_analysis", "instructions"],                     "denominator": 10000}'
 mutant 'setup instructions with the prune tolerance' \
-       '["runner_setup", "instructions"],                       "denominator": 50}' \
-       '["runner_setup", "instructions"],                       "denominator": 10000}'
+       '["runner_setup", "instructions"],                                  "denominator": 50}' \
+       '["runner_setup", "instructions"],                                  "denominator": 10000}'
 mutant 'setup system calls with the prune tolerance' \
-       '["runner_setup", "syscalls"],                           "denominator": 200}' \
-       '["runner_setup", "syscalls"],                           "denominator": 10000}'
+       '["runner_setup", "syscalls"],                                      "denominator": 200}' \
+       '["runner_setup", "syscalls"],                                      "denominator": 10000}'
 mutant 'the tolerances of prune and the setup swapped' \
-       '  {"path": ["prune_dependency_analysis", "instructions"],          "denominator": 1000},
-  {"path": ["runner_setup", "instructions"],                       "denominator": 50},' \
-       '  {"path": ["prune_dependency_analysis", "instructions"],          "denominator": 50},
-  {"path": ["runner_setup", "instructions"],                       "denominator": 1000},'
-mutant 'the tolerance of the setup 1 in 100' '["runner_setup", "instructions"],                       "denominator": 50}' \
-                                       '["runner_setup", "instructions"],                       "denominator": 100}'
-mutant "setup instructions with their old tolerance" '["runner_setup", "instructions"],                       "denominator": 50}' \
-                                       '["runner_setup", "instructions"],                       "denominator": 200}'
-mutant 'the tolerance of the setup 1 in 400' '["runner_setup", "syscalls"],                           "denominator": 200}' \
-                                       '["runner_setup", "syscalls"],                           "denominator": 400}'
-mutant 'the fresh run'"'"'s instructions not measured' \
-       '  {"path": ["leftover_materials_setup", "fresh", "instructions"],  "denominator": 50},
+       '  {"path": ["prune_dependency_analysis", "instructions"],                     "denominator": 1000},
+  {"path": ["runner_setup", "instructions"],                                  "denominator": 50},' \
+       '  {"path": ["prune_dependency_analysis", "instructions"],                     "denominator": 50},
+  {"path": ["runner_setup", "instructions"],                                  "denominator": 1000},'
+mutant 'the tolerance of the setup 1 in 100' '["runner_setup", "instructions"],                                  "denominator": 50}' \
+                                       '["runner_setup", "instructions"],                                  "denominator": 100}'
+mutant "setup instructions with their old tolerance" '["runner_setup", "instructions"],                                  "denominator": 50}' \
+                                       '["runner_setup", "instructions"],                                  "denominator": 200}'
+mutant 'the tolerance of the setup 1 in 400' '["runner_setup", "syscalls"],                                      "denominator": 200}' \
+                                       '["runner_setup", "syscalls"],                                      "denominator": 400}'
+mutant 'the run without leftovers'"'"' instructions not measured' \
+       '  {"path": ["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 50},
 ' ''
-mutant 'the seeded run'"'"'s instructions not measured' \
+mutant 'the run with leftovers'"'"' instructions not measured' \
        ',
-  {"path": ["leftover_materials_setup", "seeded", "instructions"], "denominator": 50}' ''
-mutant 'the fresh run'"'"'s instructions with the prune tolerance' '["leftover_materials_setup", "fresh", "instructions"],  "denominator": 50}' '["leftover_materials_setup", "fresh", "instructions"],  "denominator": 1000}'
-mutant 'the fresh run'"'"'s instructions with 1 in 100' '["leftover_materials_setup", "fresh", "instructions"],  "denominator": 50}' '["leftover_materials_setup", "fresh", "instructions"],  "denominator": 100}'
-mutant 'the fresh run'"'"'s instructions with 1 in 25' '["leftover_materials_setup", "fresh", "instructions"],  "denominator": 50}' '["leftover_materials_setup", "fresh", "instructions"],  "denominator": 25}'
-mutant 'the seeded run'"'"'s instructions with the prune tolerance' '["leftover_materials_setup", "seeded", "instructions"], "denominator": 50}' '["leftover_materials_setup", "seeded", "instructions"], "denominator": 1000}'
-mutant 'the seeded run'"'"'s instructions with 1 in 100' '["leftover_materials_setup", "seeded", "instructions"], "denominator": 50}' '["leftover_materials_setup", "seeded", "instructions"], "denominator": 100}'
-mutant 'the seeded run'"'"'s instructions with 1 in 25' '["leftover_materials_setup", "seeded", "instructions"], "denominator": 50}' '["leftover_materials_setup", "seeded", "instructions"], "denominator": 25}'
-mutant 'the previous entries measured' '  {"path": ["leftover_materials_setup", "fresh", "instructions"],  "denominator": 50},
-' '  {"path": ["leftover_materials_setup", "fresh", "instructions"],  "denominator": 50},
-  {"path": ["leftover_materials_setup", "previous_entries"],       "denominator": 50},
+  {"path": ["leftover_materials_setup", "with_leftovers", "instructions"],    "denominator": 50}' ''
+mutant 'the run without leftovers'"'"' instructions with the prune tolerance' '["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 50}' '["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 1000}'
+mutant 'the run without leftovers'"'"' instructions with 1 in 100' '["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 50}' '["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 100}'
+mutant 'the run without leftovers'"'"' instructions with 1 in 25' '["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 50}' '["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 25}'
+mutant 'the run with leftovers'"'"' instructions with the prune tolerance' '["leftover_materials_setup", "with_leftovers", "instructions"],    "denominator": 50}' '["leftover_materials_setup", "with_leftovers", "instructions"],    "denominator": 1000}'
+mutant 'the run with leftovers'"'"' instructions with 1 in 100' '["leftover_materials_setup", "with_leftovers", "instructions"],    "denominator": 50}' '["leftover_materials_setup", "with_leftovers", "instructions"],    "denominator": 100}'
+mutant 'the run with leftovers'"'"' instructions with 1 in 25' '["leftover_materials_setup", "with_leftovers", "instructions"],    "denominator": 50}' '["leftover_materials_setup", "with_leftovers", "instructions"],    "denominator": 25}'
+mutant 'the leftover entries measured' '  {"path": ["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 50},
+' '  {"path": ["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 50},
+  {"path": ["leftover_materials_setup", "leftover_entries"],                  "denominator": 50},
 '
-mutant 'the tests measured' '  {"path": ["leftover_materials_setup", "fresh", "instructions"],  "denominator": 50},
-' '  {"path": ["leftover_materials_setup", "fresh", "instructions"],  "denominator": 50},
-  {"path": ["leftover_materials_setup", "fresh", "tests"],         "denominator": 50},
-  {"path": ["leftover_materials_setup", "seeded", "tests"],        "denominator": 50},
+mutant 'the tests measured' '  {"path": ["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 50},
+' '  {"path": ["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 50},
+  {"path": ["leftover_materials_setup", "without_leftovers", "tests"],        "denominator": 50},
+  {"path": ["leftover_materials_setup", "with_leftovers", "tests"],           "denominator": 50},
 '
 mutant 'the boundary accepted'         '* $denominator < $held);' '* $denominator <= $held);'
 mutant 'only a higher count tolerated' '((($offered - $held) | fabs)' '((($offered - $held))'

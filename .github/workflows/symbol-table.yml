@@ -31,9 +31,9 @@ name: symbol-table
 # `leftover_materials_setup`, with the number of entries which the second run
 # found left, and for each run its instructions and the number of tests it
 # executed. The second run's instructions less the first run's are what the
-# leftover materials cost the runner's setup. Running callgrind twice adds
-# about 6 minutes to the job. A record made before this step existed may hold
-# `runner_setup`, the counts of one run: no step writes it now.
+# leftover materials cost the runner's setup. A record made before this step
+# existed may hold `runner_setup`, the counts of one run: no step writes it
+# now.
 #
 # A commit already recorded can be recorded again, to add the fields its
 # record lacks, such as `prune_dependency_analysis` or
@@ -314,12 +314,10 @@ jobs:
       # clearing leftover materials adds on the thread running the tests.
       # Collection is per thread, so work on another thread is not counted.
       #
-      # The step counts the entries of the tree between the runs, and wraps
-      # `find` so that an absent tree counts as none, since a failed command
-      # in a pipe fails the step. A record whose count is 0 is still written:
-      # it says that the second run found nothing to clear, so that the
-      # difference measures nothing. The dashboard is to read the count for
-      # that; no code of its reads it yet.
+      # The step counts the entries of the tree between the runs. A tree which
+      # is absent has none, and the record is still written with a count of 0,
+      # which shows that the second run found nothing to clear. Any other
+      # failure of `find` fails the step.
       #
       # --collect-systime=yes adds the event sysCount, which
       # scripts/runner_setup_record.sh requires and the section leaves out.
@@ -361,13 +359,13 @@ jobs:
           execute='sequoia::testing::test_to_run::execute'
           timed='*sequoia::testing::test_to_run::execution_timer::time_execution*'
           records="$GITHUB_WORKSPACE/tree/output/ExecutionRecords/TestFrameworkDiagnostics/gcc-env"
-          materials="$GITHUB_WORKSPACE/tree/output/TestsTemporaryData"
+          temporary_data="$GITHUB_WORKSPACE/tree/output/TestsTemporaryData"
           boundary="test_to_run::execute outside execution_timer::time_execution, TestFrameworkDiagnostics --serial --exclude-performance exclude OutputFreeTest.cpp, a run with no output/TestsTemporaryData and the run after it"
           scripts="$GITHUB_WORKSPACE/tooling/scripts"
 
-          # measure <name>: one run under callgrind, with no execution records
-          # of an earlier run, and its counts in $RUNNER_TEMP/<name>.json
-          measure() {
+          # run_under_callgrind <name>: one run, with no execution records of
+          # an earlier run, and its counts in $RUNNER_TEMP/<name>.json
+          run_under_callgrind() {
             local status=0 out="$RUNNER_TEMP/$1.callgrind.out"
             rm -rf "$records"
             valgrind --tool=callgrind --collect-systime=yes \
@@ -377,11 +375,15 @@ jobs:
             "$scripts/runner_setup_record.sh" "$out" "$records" "$status" "$boundary" > "$RUNNER_TEMP/$1.json"
           }
 
-          rm -rf "$materials"
-          measure fresh
-          previous_entries=$({ find "$materials" -mindepth 1 || true; } | wc -l | tr -d ' ')
-          measure seeded
-          "$scripts/leftover_materials_setup_record.sh" "$RUNNER_TEMP/fresh.json" "$RUNNER_TEMP/seeded.json" "$previous_entries" \
+          rm -rf "$temporary_data"
+          run_under_callgrind without_leftovers
+          if [ -d "$temporary_data" ]; then
+            leftover_entries=$(find "$temporary_data" -mindepth 1 | wc -l | tr -d ' ')
+          else
+            leftover_entries=0
+          fi
+          run_under_callgrind with_leftovers
+          "$scripts/leftover_materials_setup_record.sh" "$RUNNER_TEMP/without_leftovers.json" "$RUNNER_TEMP/with_leftovers.json" "$leftover_entries" \
             > "$RUNNER_TEMP/leftover_materials_setup.json"
           cat "$RUNNER_TEMP/leftover_materials_setup.json"
 
