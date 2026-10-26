@@ -572,6 +572,12 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     }
   });
 
+  await control('the midnight which ends the last day is ticked, at the right edge, when it falls on the step', () => {
+    const {ticks} = dashboard.timeAxis([t0 + 23 * 3600e3, t0 + day + 22 * 3600e3], 0, 600, 80);
+    assert.deepStrictEqual(ticks.map(tick => tick.time), [t0, t0 + day, t0 + 2 * day]);
+    assert.strictEqual(ticks[2].x, 600);
+  });
+
   await control('points all on one day are spread over the axis in time order', () => {
     const {xs} = dashboard.timeAxis([t0 + 12 * 3600e3, t0 + 6 * 3600e3, t0 + 18 * 3600e3], 0, 600, 80);
     assert.deepStrictEqual(xs.map(Math.round), [300, 150, 450]);
@@ -589,9 +595,9 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.throws(() => dashboard.summarise(commit('yesterday')), /not a date/);
   });
 
-  await control('a single point is placed on the axis', () => {
+  await control('a single point is placed on the axis, between the midnights which bound its day', () => {
     const {xs, ticks} = dashboard.timeAxis([t0 + 5 * 3600e3], 0, 600, 80);
-    assert.deepStrictEqual([xs.length, ticks.length], [1, 1]);
+    assert.deepStrictEqual([xs.length, ticks.length], [1, 2]);
     assert.ok(Number.isFinite(xs[0]));
   });
 
@@ -712,8 +718,9 @@ MUTATIONS = [
     ('times outside the days clamped',   'return {xs: times.map(x), ticks, x};', 'return {xs: times.map(x), ticks, x: time => Math.min(right, Math.max(left, x(time)))};'),
     ('the last nearest point taken',     'if (Math.abs(x - offset) < Math.abs(xs[nearest] - offset))', 'if (Math.abs(x - offset) <= Math.abs(xs[nearest] - offset))'),
     ('the farthest point taken',         'if (Math.abs(x - offset) < Math.abs(xs[nearest] - offset))', 'if (Math.abs(x - offset) > Math.abs(xs[nearest] - offset))'),
+    ('the end of the last day unticked', 'day <= last + 1; day += step', 'day <= last; day += step'),
     ('ticks at every day',               'candidate * (right - left) / days >= minGap) ??', 'true) ??'),
-    ('ticks at a fixed step in points',  'for (let day = first; day <= last; day += step)', 'for (let day = first; day <= last; day += 1)'),
+    ('ticks at a fixed step in points',  'for (let day = first; day <= last + 1; day += step)', 'for (let day = first; day <= last + 1; day += 1)'),
     ('the smallest gap taken unsorted',  'const sorted = xs.slice().sort((a, b) => a - b);', 'const sorted = xs.slice();'),
     ('an unreadable date accepted',      'if (!Number.isFinite(Date.parse(commit.commit.committer.date))) {', 'if (false) {'),
     ('an empty branch loaded',            "if (listing.size === 0) return {state: 'empty'};", ''),

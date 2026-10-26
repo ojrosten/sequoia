@@ -559,7 +559,8 @@
    * Returns the horizontal positions of points at the given times, linear in
    * time over whole UTC days: from the midnight which starts the earliest
    * day to the one which ends the latest. Also returns the ticks, at
-   * midnights a whole number of days apart, the fewest days for which
+   * midnights a whole number of days apart from the first, up to and
+   * including the one which ends the latest day, the fewest days for which
    * neighbouring ticks are at least `minGap` apart, each tick a different day,
    * and the position of any time, which lies outside `left` to `right` for a
    * time outside the days of `times`.
@@ -577,7 +578,7 @@
     const x     = (/** @type {number} */ time) => left + (time / millisecondsPerDay - first) / days * (right - left);
     const step  = dayStepsToTry.find(candidate => candidate * (right - left) / days >= minGap) ?? dayStepsToTry[dayStepsToTry.length - 1];
     const ticks = [];
-    for (let day = first; day <= last; day += step) ticks.push({x: x(day * millisecondsPerDay), time: day * millisecondsPerDay});
+    for (let day = first; day <= last + 1; day += step) ticks.push({x: x(day * millisecondsPerDay), time: day * millisecondsPerDay});
     return {xs: times.map(x), ticks, x};
   }
 

@@ -356,10 +356,13 @@
       axis.append(element('svg:text', {x: margin.left - 8, y: y(tick) + 4, 'text-anchor': 'end'},
                           compact(tick, scale.step, scale.high)));
     }
-    axisOfTime.ticks.forEach((tick, i) => {
-      axis.append(element('svg:text', {x: tick.x, y: height - 6, 'text-anchor': i === 0 ? 'start' : 'middle'},
+    // A mark on the axis at each tick, its date centred beneath it, or ending at it at the right edge
+    for (const tick of axisOfTime.ticks) {
+      axis.append(element('svg:line', {x1: tick.x, x2: tick.x, y1: margin.top + plotHeight, y2: margin.top + plotHeight + 4,
+                                       stroke: 'var(--baseline)', 'stroke-width': 1}));
+      axis.append(element('svg:text', {x: tick.x, y: height - 6, 'text-anchor': tick.x >= width - margin.right - 1 ? 'end' : 'middle'},
                           shortDate(new Date(tick.time).toISOString())));
-    });
+    }
     svg.append(axis);
 
     // A break outside the plot's days is not drawn, and a label too close to the one before it is left out
