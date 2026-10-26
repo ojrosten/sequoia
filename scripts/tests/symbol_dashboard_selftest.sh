@@ -39,6 +39,7 @@
 #     an independent reading of the two records finds, in the same order;
 #   - a record which cannot be fetched, names another commit, or lacks a
 #     count is a problem, and the others still load;
+#   - a record is no problem with a CPU model in its run, or with no run;
 #   - a record's prune_dependency_analysis and runner_setup are read where it
 #     has them, and are null where it has not; a malformed one is a problem;
 #     a point is plotted whatever the exit status of its runs;
@@ -320,6 +321,15 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
 
   await control('a stored record has no problem', () => {
     assert.deepStrictEqual(dashboard.problemsWith(recordOf('F5'), c.F5), []);
+  });
+
+  await control('a record has no problem with its run\'s CPU model, or without one', () => {
+    const record = recordOf('F5');
+    assert.ok(!Object.hasOwn(record.run, 'cpu_model'));
+    record.run.cpu_model = 'AMD EPYC 7763 64-Core Processor';
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+    delete record.run;
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
   });
 
   for (const [name, change, problem] of [

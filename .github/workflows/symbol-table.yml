@@ -9,7 +9,10 @@ name: symbol-table
 # A commit whose presets lack `gcc-env`, as every commit before 2026-09-06
 # does, cannot be recorded: its job fails at "Configure".
 # scripts/symbol_table_report.py says what a record holds, and
-# scripts/symbol_table_provenance.py what it adds to it.
+# scripts/symbol_table_provenance.py what it adds to it. Among the additions is
+# the model name of the CPU of the runner which ran the job, in the record's
+# `run`. One job measures both prune and the runner's setup, so that model name
+# covers both.
 #
 # The workflow builds TestAll and runs its suite once, only to leave prune a
 # stamp. It then runs `TestAll prune` under callgrind, to count the

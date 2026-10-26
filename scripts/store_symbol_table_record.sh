@@ -13,8 +13,11 @@
 # they were.
 #
 # A record for a commit which the branch already holds is merged with the
-# held one, at every depth, ignoring the field "run". The merge is the union
-# of the two:
+# held one, at every depth, ignoring the field "run". The run holds what is
+# particular to one measurement: the id, attempt and URL of the job, and the
+# model name of its runner's CPU. Another job measuring the commit differs in
+# each of these, so the merge compares none of them. The merge is the union of
+# the rest:
 #   - a field only the held record has is kept: a measurement since dropped
 #     from the records does not lose its history;
 #   - a field only the offered record has is added: a backfill measures a

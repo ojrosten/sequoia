@@ -26,6 +26,10 @@
 #     adds nothing and leaves the branch as it was; a field both have and
 #     which differs, whether beside an addition or not, whether the offered
 #     one is new or was itself added, is refused and the held record kept;
+#   - a record whose run differs from the held one's in the model name of the
+#     CPU alone is the same but for its run: it is accepted, and the held
+#     record, with its model name, is kept; an offer which adds a field
+#     stores the union with the offered run, and so the offered model name;
 #   - the union is taken at every depth: a sub-field of a held object is
 #     added, and one the offer lacks is kept;
 #   - a measured count, with the tolerance of its own (prune's instructions 1
@@ -123,6 +127,10 @@ fixture() {
   record "$work/A-added-changed.json" "$A" 101 6 true ', "prune_analysis": {"instructions": 7}'
   record "$work/A-added-other.json"   "$A" 100 7 true ', "prune_analysis": {"instructions": 8}'
   record "$work/A-null.json"   "$A" 100 8 true ', "note": null'
+  # the runs of two jobs measuring one commit on CPUs of different models
+  jq '.run.cpu_model = "AMD EPYC 7763 64-Core Processor"' "$work/A.json" > "$work/A-cpu-amd.json"
+  jq '.run.cpu_model = "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz"' "$work/A.json" > "$work/A-cpu-intel.json"
+  jq '.run.cpu_model = "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz"' "$work/A-added.json" > "$work/A-added-cpu-intel.json"
   # a held record with an old measurement and a nested object, offers which
   # drop the old measurement, add a nested sub-field, or lack one
   record "$work/U.json"        "$A" 100 31 true ', "prune_analysis": {"instructions": 7}, "runner_setup": {"instructions": 1000}'
@@ -251,6 +259,25 @@ same_commit_controls() {
   same "the branch is left as it was" "$first" "$(tip)"
   same "the record held is the first" "$(cat "$work/A.json")" "$(held "$A")"
   unchanged_clone "a record for a commit held"
+}
+
+# A measurement's CPU is part of its run, so a re-measurement on another CPU
+# is the same record but for its run.
+cpu_controls() {
+  local first
+  fixture
+  store A-cpu-amd; first=$(tip)
+  store A-cpu-intel
+  exits "a record differing in the CPU model alone succeeds" 0
+  says "it is the same but for its run" 'the same but for its run: https://example.invalid/runs/1$' "$out"
+  same "it leaves the branch as it was" "$first" "$(tip)"
+  same "the held record keeps its CPU model" "AMD EPYC 7763 64-Core Processor" "$(held "$A" | jq -r '.run.cpu_model')"
+
+  store A-added-cpu-intel
+  exits "a record differing in the CPU model, and adding a field, succeeds" 0
+  same "the union carries the offered run's CPU model" "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz" \
+       "$(held "$A" | jq -r '.run.cpu_model')"
+  unchanged_clone "a differing CPU model"
 }
 
 # A backfill measures commits recorded before the measurement existed, so
@@ -516,7 +543,7 @@ refusal_controls() {
 run_controls() { # run_controls <script>: sets fails, and total, the controls run
   subject=$1 fails=0 total=0
   local control
-  for control in create_controls beside_controls same_commit_controls adding_controls union_controls tolerance_controls blobless_controls rival_controls \
+  for control in create_controls beside_controls same_commit_controls cpu_controls adding_controls union_controls tolerance_controls blobless_controls rival_controls \
                  refusal_controls; do
     work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
     "$control"
@@ -555,6 +582,7 @@ mutant 'a conflict not refused'        'if [ "$(jq '"'"'.conflicts | length'"'"'
 mutant 'a no-op committed'             'if [ "$(jq '"'"'.added | length'"'"' <<< "$merged")" -eq 0 ]; then' 'if false; then'
 mutant 'a record with more not said'   'echo "$branch already holds $path, with every field of $record and more' 'echo "$branch already holds $path, the same but for its run'
 mutant 'an addition not named'         '[.added[] | join(".")] | join(", ")' '""'
+mutant 'the CPU model compared'        "without_run() { jq -S 'del(.run)'" "without_run() { jq -S 'del(.run.id, .run.url)'"
 mutant 'the run compared too'          "without_run() { jq -S 'del(.run)'" "without_run() { jq -S '.'"
 mutant 'every count measured'          '  {"path": ["runner_setup", "syscalls"],                  "denominator": 200}' \
                                        '  {"path": ["runner_setup", "syscalls"],                  "denominator": 200},

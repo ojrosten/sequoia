@@ -14,7 +14,9 @@
 #     the package dpkg says owns the tool's executable, which need not be the
 #     path's last component; where the path is a symlink, the package is the
 #     one owning the file it resolves to, not the one owning the symlink; the
-#     record gains the run's id, attempt and URL; and nothing else in the
+#     record gains the run's id, attempt and URL, and the model name of the
+#     CPU, which is the "Model name" line of lscpu, not the "BIOS Model name"
+#     line before it, and the first of several; and nothing else in the
 #     record changes;
 #   - a path is resolved through a chain of symlinks, not one link;
 #   - a package whose name carries its architecture is named in full, and a
@@ -22,14 +24,16 @@
 #   - a path with no owner, or with two, a diversion of the path by a package
 #     or a local one, a package with no version, and a failure of dpkg-query
 #     are each refused;
-#   - dpkg-query runs in the C locale, whatever the caller's;
+#   - dpkg-query and lscpu run in the C locale, whatever the caller's;
+#   - lscpu failing, printing no "Model name" line, or printing one with no
+#     name, is refused;
 #   - so are a record which is not a JSON object, has no toolchain, has a
 #     tool with no path, or already has a package or a run; and a variable
 #     of the run which is unset or empty, or an id or attempt which is not a
 #     number.
 # A refusal writes no record and says why.
 #
-# A stand-in for dpkg-query answers from files in the fixture, so the
+# Stand-ins for dpkg-query and lscpu answer from files in the fixture, so the
 # selftest needs no Debian system. The tools are files in the fixture, so
 # that what a path resolves to is the fixture's, not the system's: Ubuntu's
 # /usr/bin/ld is a symlink.
@@ -66,6 +70,16 @@ esac
 EOF
 chmod +x "$tmp/bin/dpkg-query"
 
+# The stand-in for lscpu prints $LSCPU, a file of the fixture, and fails when
+# it is absent. It refuses to run outside the C locale, as the stand-in for
+# dpkg-query does.
+cat > "$tmp/bin/lscpu" <<'EOF'
+#!/bin/bash
+if [ "${LC_ALL-}" != C ]; then echo "the stand-in for lscpu was run with LC_ALL=${LC_ALL-}" >&2; exit 2; fi
+cat "$LSCPU" 2> /dev/null || { echo "lscpu: cannot be run" >&2; exit 1; }
+EOF
+chmod +x "$tmp/bin/lscpu"
+
 # fixture: a record, its three tools, and dpkg's answers for them. The
 # compiler's path is a symlink to $compiler_file, and one package owns the
 # symlink, another the file it resolves to. The linker's path is a chain of
@@ -75,7 +89,11 @@ fixture() {
   local bin="$work/usr/bin"
   compiler_file="$bin/x86_64-linux-gnu-g++-15"
   linker_file="$bin/x86_64-linux-gnu-ld.bfd"
-  export DPKG="$work/dpkg"
+  export DPKG="$work/dpkg" LSCPU="$work/lscpu"
+  printf '%s\n' 'Architecture:                    x86_64' \
+                'BIOS Model name:                 Virtual CPU (BIOS)' \
+                'Model name:                      AMD EPYC 7763 64-Core Processor' \
+                'CPU family:                      25' > "$LSCPU"
   mkdir -p "$bin" "$DPKG/search$bin" "$DPKG/version"
   touch "$compiler_file" "$linker_file" "$bin/nm"
   ln -sf x86_64-linux-gnu-g++-15 "$bin/g++-15"
@@ -157,7 +175,7 @@ record_controls() {
   field "nm's package is named with its architecture, past a line for another path" \
         'd["toolchain"]["nm"]["package"]' "{'name': 'binutils:amd64', 'version': '2.46-1ubuntu3'}"
   field "the run" 'd["run"]' \
-        "{'attempt': 2, 'id': 39655485487, 'url': 'https://github.com/owner/repo/actions/runs/39655485487/attempts/2'}"
+        "{'attempt': 2, 'cpu_model': 'AMD EPYC 7763 64-Core Processor', 'id': 39655485487, 'url': 'https://github.com/owner/repo/actions/runs/39655485487/attempts/2'}"
   python3 -c 'import json, sys
 d = json.load(open(sys.argv[1])); d.pop("run")
 for tool in d["toolchain"].values():
@@ -212,6 +230,39 @@ dpkg_controls() {
   refuses "a missing dpkg-query" 'dpkg-query could not be run'
 }
 
+cpu_controls() {
+  fixture
+  printf '%s\n' 'Model name:                      Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz' \
+                'Model name:                      Intel(R) Atom(TM)' > "$LSCPU"
+  run
+  field "the first of several model names, with its own punctuation" 'd["run"]["cpu_model"]' \
+        "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz"
+
+  fixture
+  printf '%s\n' 'Model name: AMD: EPYC' > "$LSCPU"
+  run
+  field "a name read past the first colon only" 'd["run"]["cpu_model"]' "AMD: EPYC"
+
+  fixture
+  rm "$LSCPU"
+  run
+  refuses "an lscpu which fails" 'lscpu failed with exit status 1'
+
+  fixture
+  printf '%s\n' 'Architecture: x86_64' 'BIOS Model name: Virtual CPU' > "$LSCPU"
+  run
+  refuses "an lscpu with no Model name line" 'lscpu prints no Model name'
+
+  fixture
+  printf '%s\n' 'Model name:   ' > "$LSCPU"
+  run
+  refuses "an lscpu with a Model name and no name" 'lscpu prints a Model name with no name'
+
+  fixture
+  run PATH=/nonexistent
+  refuses "a missing lscpu" 'could not be run'
+}
+
 record_shape_controls() {
   fixture
   echo '{"commit": ' > "$work/record.json"
@@ -264,7 +315,7 @@ variable_controls() {
 run_controls() { # run_controls <script>: sets fails, and total, the controls run
   subject=$1 fails=0 total=0
   local control
-  for control in record_controls dpkg_controls record_shape_controls variable_controls; do
+  for control in record_controls dpkg_controls cpu_controls record_shape_controls variable_controls; do
     work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
     "$control"
   done
@@ -294,6 +345,12 @@ mutant "the symlink's owner named"      'owner_of(os.path.realpath(path))' 'owne
 mutant 'one link followed'              'owner_of(os.path.realpath(path))' \
                                         'owner_of(os.path.join(os.path.dirname(path), os.readlink(path))'\
 '                                         if os.path.islink(path) else path)'
+mutant 'any line read as the model name' 'if key.strip() == "Model name":' 'if key.strip().endswith("Model name"):'
+mutant 'the first model name skipped'   'return value.strip()' 'continue'
+mutant 'the name cut at a second colon' 'key, _, value = line.partition(":")' 'key, _, value = line.rpartition(":")'
+mutant 'an empty model name accepted'   'if not value.strip():' 'if False:'
+mutant 'no model name recorded'         '"cpu_model": cpu_model(), ' ''
+mutant 'an absent model name accepted'  'sys.exit("lscpu prints no Model name")' 'return ""'
 mutant 'an empty variable accepted'     'if not value:' 'if value is None:'
 mutant 'any id accepted'                'if not value.isdecimal():' 'if False:'
 mutant 'the attempt left out of the URL' '/actions/runs/{run_id}/attempts/{attempt}"' '/actions/runs/{run_id}"'

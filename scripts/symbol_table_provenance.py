@@ -7,8 +7,9 @@ does not hold.
 Writes the record to standard output, with
   - for each tool of the record's toolchain, the Debian package which owns
     the tool's executable, and the package's version; and
-  - the GitHub Actions run which made the record: its id, its attempt, and
-    the attempt's URL.
+  - the GitHub Actions run which made the record: its id, its attempt, the
+    attempt's URL, and the model name of the CPU of the runner which ran
+    the job.
 
 A distribution's archive can rebuild a compiler without changing what
 `--version` prints, so the package's version tells two toolchains apart
@@ -21,6 +22,7 @@ g++-15-x86-64-linux-gnu owns the executable /usr/bin/g++-15 resolves to.
 
 The run is read from the variables GitHub Actions sets in every job:
 GITHUB_SERVER_URL, GITHUB_REPOSITORY, GITHUB_RUN_ID and GITHUB_RUN_ATTEMPT.
+The CPU's model name is the "Model name" line of `lscpu`.
 
 The script refuses, rather than write a record which may be wrong, if
   - the record cannot be read as a JSON object, or has no toolchain, or a
@@ -30,7 +32,8 @@ The script refuses, rather than write a record which may be wrong, if
     path resolves to, or names no package owning that path, or more than
     one, or gives no version for the package;
   - one of the variables is unset or empty, or the id or the attempt is not
-    a number.
+    a number;
+  - lscpu cannot be run, or prints no "Model name" line, or one with no name.
 """
 import argparse, json, os, subprocess, sys
 
@@ -104,12 +107,30 @@ def environment_number(name):
     return int(value)
 
 
+def cpu_model():
+    """Returns the model name of this machine's CPU, as `lscpu` prints it.
+
+    Exits if `lscpu` prints no "Model name" line, or one with no name.
+    """
+    # lscpu prints "Model name:", padding, then the name. A line "BIOS Model
+    # name:" may precede it, and a machine with CPUs of more than one model
+    # may print a line for each, of which the first is returned.
+    for line in run(["lscpu"]).splitlines():
+        key, _, value = line.partition(":")
+        if key.strip() == "Model name":
+            if not value.strip():
+                sys.exit("lscpu prints a Model name with no name")
+            return value.strip()
+    sys.exit("lscpu prints no Model name")
+
+
 def this_run():
-    """Returns the id, the attempt and the attempt's URL of this run."""
+    """Returns the id, the attempt, the attempt's URL and the CPU model of
+    this run."""
     run_id, attempt = environment_number("GITHUB_RUN_ID"), environment_number("GITHUB_RUN_ATTEMPT")
     repository = f"{environment_value('GITHUB_SERVER_URL')}/{environment_value('GITHUB_REPOSITORY')}"
     url = f"{repository}/actions/runs/{run_id}/attempts/{attempt}"
-    return {"id": run_id, "attempt": attempt, "url": url}
+    return {"cpu_model": cpu_model(), "id": run_id, "attempt": attempt, "url": url}
 
 
 def read_record(path):
