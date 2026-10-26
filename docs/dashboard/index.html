@@ -142,32 +142,33 @@
         <p>The instructions <code>valgrind --tool=callgrind</code> counts inside <code>test_runner::prune</code>
           and the functions it calls, in <code>TestAll prune --serial</code> run after a full run of the suite:
           prune's reading of the build's records and its walk of the sources for changes, and nothing of the
-          runner's startup or of any test. It is exact for a fixed toolchain and commit. Points whose record has no
+          runner's startup or of any test. Reruns of one commit have moved it by under 0.01%. Points whose record has no
           count are left out. A point is plotted whether or not its full run passed: a failed test is selected again,
           but the analysis reads the same records and walks the same sources.</p></figcaption>
       <div class="plot" id="analysis-plot"></div>
     </figure>
     <figure class="card" id="runner-figure">
       <figcaption><h2>The runner's setup of a test: instructions and system calls, per test</h2>
-        <p>What <code>valgrind --tool=callgrind --collect-systime=yes</code> counts in one run of
-          <code>TestFrameworkDiagnostics --serial --exclude-performance exclude OutputFreeTest.cpp</code>, the executable which tests the test runner, inside <code>test_to_run::execute</code>
-          but outside <code>execution_timer::time_execution</code>: the runner's work for each test,
-          its preparing of materials, its records and its output, and not the test, nor anything the runner
-          does before the first test or after the last. The plots are the instructions (callgrind's Ir) and the system
-          calls (its sysCount) so counted, divided by the number of tests the run executed, as the runner's own execution
-          records count them (the runner's tests run runners of their own, whose tests are not counted, nor is their setup
-          collected); each plot has a scale of its own. Instructions are exact for a fixed
-          toolchain and commit. Points whose record has no count are left out. A change of the run's
-          <code>boundary</code> (a different executable, say) breaks the line, with a marker labelled boundary.
-        </p></figcaption>
+        <p><code>valgrind --tool=callgrind --collect-systime=yes</code> counts one run of
+          <code>TestFrameworkDiagnostics --serial --exclude-performance exclude OutputFreeTest.cpp</code>, the
+          executable which tests the test runner, inside <code>test_to_run::execute</code> but outside
+          <code>execution_timer::time_execution</code>. That is the runner's work for each test: its preparing of
+          materials, its records and its output. It is not the test, nor anything the runner does before the first
+          test or after the last. The plots are the instructions (callgrind's Ir) and the system calls (its sysCount)
+          so counted, divided by the number of tests the run executed. The runner's own execution records give that
+          number, since the runner's tests run runners of their own, whose tests are not counted and whose setup is
+          not collected. Each plot has a scale of its own. Reruns of one commit have moved the instructions by under
+          0.1% and the system calls by under 0.02%. Points whose record has no count are left out. A change of the
+          run's <code>boundary</code> (a different executable, say) breaks the line, with a marker labelled
+          boundary.</p></figcaption>
       <h3>Instructions per test</h3><div class="plot" id="runner-plot-instructions"></div>
       <h3>System calls per test</h3><div class="plot" id="runner-plot-syscalls"></div>
     </figure>
     <figure class="card" id="uncalled-figure">
       <figcaption><h2>Uncalled functions in Source</h2>
         <p>The functions of <code>Source/</code> which the coverage gate lists as uncalled, instantiations collapsed.
-          The nightly measurement of the coverage gate counts them, on the commit staging is at, so only some
-          points have a count, and the line joins them. A vertical line marks a change of the tools which measured
+          The coverage gate's nightly measurement counts them at the commit staging is then at, and only if staging
+          has moved since the last one, so only some points have a count. A line joins them. A vertical line marks a change of the tools which measured
           it, which is independent of the symbol table's toolchain.</p></figcaption>
       <div class="plot" id="uncalled-plot"></div>
     </figure>
@@ -387,7 +388,9 @@
       lastDrawnLabelX = at;
     });
 
-    // A line runs through consecutive points which have the measure, within one toolchain
+    // A line runs through the points which have the measure and have the same `runOf`: the toolchain, and for
+    // the runner's measures the boundary too. A point without the measure ends the line, unless the measure
+    // joins gaps.
     const runs = [];
     const runOf = point => measure.runOf ? measure.runOf(point) : point.run;
     let joined = null;
@@ -481,8 +484,8 @@
     name: `${event} of the runner's setup, per test`,
     value: record => symbolDashboard.runnerSetupPerTest(record, event),
     unit: `${event} per test`,
-    // Measured when the suite is, so a line joins the points which have a count; it breaks at a change
-    // of the toolchain, or of the boundary of the measurement
+    // A record can lack the count, being older than it or its measurement having failed, and the line joins
+    // the points which have it; it breaks at a change of the toolchain, or of the boundary of the measurement
     joinsGaps: true, runOf: point => `${point.run}/${point.setupRun}`,
     changeOf: point => point.toolchainChange || point.boundaryChange,
     breakLabel: point => point.boundaryChange ? 'boundary' : 'toolchain'

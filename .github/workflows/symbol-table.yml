@@ -11,27 +11,27 @@ name: symbol-table
 # scripts/symbol_table_report.py says what a record holds, and
 # scripts/symbol_table_provenance.py what it adds to it.
 #
-# The workflow builds TestAll and runs the suite as a test of nothing: its one
-# run is to leave prune a stamp, for the instruction count of prune's
-# analysis, which a record carries as `prune_dependency_analysis`, with the
-# exit status of that run, which the dashboard does not use: a failed test is
-# selected again, but the analysis reads the same records and walks the same
-# sources. The workflow is apart from the tiers, so that a failure to measure
-# cannot fail a test column, and cancelling a superseded run of a tier loses no
-# record.
+# The workflow builds TestAll and runs its suite once, only to leave prune a
+# stamp. It then runs `TestAll prune` under callgrind, to count the
+# instructions of prune's analysis. A record carries the count as
+# `prune_dependency_analysis`, with the exit status of the stamping run, which
+# the dashboard does not plot. The workflow is apart from the tiers, so that a
+# failure to measure cannot fail a test column, and cancelling a superseded
+# run of a tier loses no record.
 #
-# A second run of the suite, after prune's measurement, is under callgrind,
-# of TestFrameworkDiagnostics, the executable which tests the test runner,
-# which counts what the runner does while it sets tests up, not what the tests
-# do: a record carries the counts as `runner_setup`, with the number of tests
-# the run executed. The counts are totals for the run, so a move shows in the
-# dashboard's per-test lines.
+# After prune's measurement, the workflow builds TestFrameworkDiagnostics, the
+# executable which tests the test runner, and runs its suite under callgrind.
+# That run counts what the runner does while it sets tests up, not what the
+# tests do. A record carries the counts as `runner_setup`, with the number of
+# tests the run executed. The counts are totals for the run, which the
+# dashboard divides by that number, so a move shows in its per-test lines.
 #
-# A commit already recorded can be recorded again, to add the field
-# `prune_dependency_analysis`: the job rebuilds TestAll, which the count needs, and the
-# store replaces the held record with one which keeps its every field and
-# adds fields (scripts/store_symbol_table_record.sh). A commit whose runner
-# leaves prune no stamp is recorded without the field, and its job succeeds.
+# A commit already recorded can be recorded again, to add the fields its
+# record lacks, such as `prune_dependency_analysis` or `runner_setup`. The job
+# rebuilds what the counts need, and the store replaces the held record with
+# one which keeps every field and adds the new ones
+# (scripts/store_symbol_table_record.sh). A commit whose runner leaves prune no
+# stamp is recorded without the field, and its job succeeds.
 #
 # Every job uploads its record as an artifact. A run dispatched on a branch
 # other than staging stores nothing.
@@ -72,21 +72,17 @@ jobs:
       matrix:
         commit: ${{ fromJSON(inputs.commits || format('["{0}"]', github.sha)) }}
     # The configuration of coarse's Linux column, so that a move in the
-    # records is a move in a build which coarse tests. On 2026-10-21, removing
-    # SEQUOIA_FORCE_INLINE from erased_target's constructor added 12,982
-    # symbols (+1.91%) to this configuration's TestAll: the regression the
-    # records exist to show.
+    # records is a move in a build which coarse tests.
     #
     # The runner, the compiler and the packages are named here, as they stood
     # in coarse's column on 2026-10-22, and do not follow a later change to
     # it. The presets are shared, so at every commit the record and coarse's
-    # column build with the same presets. Each record
-    # names its toolchain, so a change of toolchain shows as a break in the
-    # history.
+    # column build with the same presets. Each record names its toolchain, so
+    # a change of toolchain shows as a break in the history.
     runs-on: ubuntu-26.04
-    # The build of TestFrameworkDiagnostics, besides TestAll, and the run of it
-    # under callgrind, which is many times slower than a native run, add to
-    # the job.
+    # The job also builds TestFrameworkDiagnostics and runs it under
+    # callgrind, which is many times slower than a native run. The timeout
+    # allows for both.
     timeout-minutes: 75
     # "Store the record on the data branch" pushes, which needs
     # `contents: write`. The job asks for it, so that it keeps working if the
@@ -203,19 +199,19 @@ jobs:
       # `TestAll prune` runs the tests which are stale, and runs every test
       # when the previous run has left no stamp. So one full run of the suite,
       # whose outcome is ignored, leaves the stamp, and the measured run then
-      # selects only what that run failed, or left out: nothing, when the
-      # suite passes, which is why git is given an identity first. The
-      # stamping run's exit status goes in the record, so that a failing run
-      # can be told apart if its count ever stands out.
+      # selects only what the stamping run failed or left out: nothing, when
+      # the suite passes. As in tests.yml, git is given an identity before the
+      # suite runs. The stamping run's exit status goes in the record, so that
+      # a failing run can be told apart if its count ever stands out.
       #
-      # callgrind, not cachegrind, counts the instructions: only callgrind has
-      # --toggle-collect, which collects while inside test_runner::prune and
-      # the functions it calls, and so counts the analysis alone, not the
-      # runner's startup or any test the measured run executes. The name is
-      # matched, with wildcards, against the demangled name, which may or may
-      # not carry the parameter list, so the pattern ends in `*`. A count of
-      # zero means no function matched, as when prune is renamed, and the
-      # record has no field.
+      # callgrind counts the instructions, since only callgrind has the option
+      # --toggle-collect. With it, callgrind collects while inside
+      # test_runner::prune and the functions it calls, so the count is of the
+      # analysis alone, not of the runner's startup or of any test the measured
+      # run executes. The name is matched, with wildcards, against the
+      # demangled name, which may or may not carry the parameter list, so the
+      # pattern ends in `*`. A count of zero means no function matched, as when
+      # prune is renamed, and the record has no field.
       - name: Install valgrind
         continue-on-error: true
         run: sudo apt-get install -y valgrind
@@ -277,8 +273,8 @@ jobs:
             '{function: $function, instructions: $instructions, stamping_exit_status: $stamping_exit_status}' \
             > "$RUNNER_TEMP/prune_dependency_analysis.json"
 
-      # What the runner does while it sets tests up, as instructions and system
-      # calls. TestFrameworkDiagnostics is a project of its own, which
+      # Counts what the runner does while it sets tests up, as instructions and
+      # system calls. TestFrameworkDiagnostics is a project of its own, which
       # "Build" does not build, so it is built here, and run under callgrind
       # after the measurement of prune: its run writes stamps of its own,
       # and callgrind slows the run, neither of which may touch prune's count.
@@ -286,43 +282,42 @@ jobs:
       # than a native run even while collection is off, is of a length which a
       # step can allow.
       #
-      # The runner's own boundary is test_to_run::execute, which runs once per
-      # test and times the test apart from the rest of itself: the test runs
-      # in execution_timer::time_execution, and the runner's overhead is what
-      # is left of execute. --toggle-collect toggles collection on entry to,
-      # and on exit from, each function it names, and implies that collection
-      # is off at the start. So collection switches on when a test's execute
-      # starts, off inside time_execution, and on again after it, and the
-      # counts are of execute outside the tests. The names are matched, with
-      # wildcards, against the demangled name, which carries the parameter
-      # list, so execute is named both with and without the list; the pattern
-      # `execute*` would also match execute_and_record, whose lambda is the
-      # test and would switch collection on inside it. The return type of a
-      # function template is part of its demangled name, so time_execution's
-      # pattern begins with `*`.
+      # test_to_run::execute runs once per test. The test runs in
+      # execution_timer::time_execution, which times it, and the runner's work
+      # for the test is what is left of execute. --toggle-collect toggles
+      # collection on entry to, and on exit from, each function it names, and
+      # implies that collection is off at the start. So collection switches on
+      # when a test's execute starts, off inside time_execution, and on again
+      # after it, and the counts are of execute outside the tests. The names
+      # are matched, with wildcards, against the demangled name, which carries
+      # the parameter list, so execute is named both with and without the
+      # list. The pattern `execute*` would also match execute_and_record,
+      # whose lambda is the test and would switch collection on inside it. The
+      # return type of a function template is part of its demangled name, so
+      # time_execution's pattern begins with `*`.
       #
       # --collect-systime=yes adds the event sysCount, the number of system
       # calls. The run is serial, as collection is switched by the thread
       # which runs the test. The tests are not counted from callgrind's calls
       # into execute: the runner's own tests run runners of their own, whose
       # calls into execute callgrind counts but does not collect, since it
-      # toggles only on the call at recursion depth 0. They are counted from the
-      # runner's execution records, a file for each test the run executed, so
-      # the directory is emptied first. scripts/runner_setup_record.sh reads
-      # the totals and the records, and says what a pass is. The executable and
-      # its options are named in `boundary`, so that a change of either starts a
-      # new series.
+      # toggles collection only on the call at recursion depth 0. They are
+      # counted from the runner's execution records, a file for each test the
+      # run executed, so the directory is emptied first.
+      # scripts/runner_setup_record.sh reads the totals and the records. The
+      # `boundary` argument must change whenever the functions counted, the
+      # executable or its options do.
       #
       # --exclude-performance leaves out the performance tests: they are timed
       # by the clock, so they retry and report according to the speed of the
-      # machine, which moved the count by 0.34% between two runs of one commit
-      # (runs 40186679215 and 40186689490), and callgrind's slowing of the run
-      # can fail them.
+      # machine, which moved the count by 0.34% between two runs of one commit,
+      # and callgrind's slowing of the run can fail them. The spread without
+      # them is in scripts/store_symbol_table_record.sh.
       #
-      # exclude OutputFreeTest.cpp leaves out the one test which fails under
-      # callgrind: its check "Long double values in a class-type template
-      # argument" (OutputFreeTest.cpp:525) fails there, most likely because
-      # valgrind computes x87 80-bit arithmetic at 64-bit precision.
+      # `exclude OutputFreeTest.cpp` leaves out the one test file with a check
+      # which fails under callgrind: "Long double values in a class-type
+      # template argument" fails there, most likely because valgrind computes
+      # x87 80-bit arithmetic at 64-bit precision.
       - name: Build TestFrameworkDiagnostics
         continue-on-error: true
         timeout-minutes: 20
@@ -351,7 +346,7 @@ jobs:
             > "$RUNNER_TEMP/runner_setup.json"
           cat "$RUNNER_TEMP/runner_setup.json"
 
-      - name: Add the count to the record
+      - name: Add the count of prune's analysis to the record
         run: |
           if [ -s "$RUNNER_TEMP/prune_dependency_analysis.json" ]; then
             jq -S --slurpfile analysis "$RUNNER_TEMP/prune_dependency_analysis.json" '. + {prune_dependency_analysis: $analysis[0]}' \

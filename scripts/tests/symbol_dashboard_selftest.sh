@@ -39,6 +39,15 @@
 #     an independent reading of the two records finds, in the same order;
 #   - a record which cannot be fetched, names another commit, or lacks a
 #     count is a problem, and the others still load;
+#   - a record's prune_dependency_analysis and runner_setup are read where it
+#     has them, and are null where it has not; a malformed one is a problem;
+#     a point is plotted whatever the exit status of its runs;
+#   - the counts of uncalled functions join the points of their commits, with
+#     a toolchain of their own; a record of them which has a problem, or lies
+#     at no plotted commit, is listed;
+#   - the time axis places points linearly in time over whole UTC days, ticks
+#     each date once, at a midnight, and the point nearest a position is the
+#     earliest of equals;
 #   - a missing metrics branch, and one holding no records, are each
 #     reported as such.
 
