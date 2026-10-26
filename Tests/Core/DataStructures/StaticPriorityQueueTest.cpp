@@ -100,17 +100,17 @@ namespace sequoia::testing
   void test_static_priority_queue::check_pop_order_in_constant_evaluation()
   {
     // Popping ten elements passes through even sizes, where the last parent has a left child only
-    constexpr std::array<int, 10> ten{5, 3, 8, 1, 9, 2, 7, 4, 6, 0};
+    static constexpr std::array<int, 10> ten{5, 3, 8, 1, 9, 2, 7, 4, 6, 0};
     STATIC_CHECK(successive_tops_from(ten, std::ranges::less{})    == std::array{9, 8, 7, 6, 5, 4, 3, 2, 1, 0});
     STATIC_CHECK(successive_tops_from(ten, std::ranges::greater{}) == std::array{0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
 
-    constexpr std::array<int, 7> ascending{0, 1, 2, 3, 4, 5, 6};
+    static constexpr std::array<int, 7> ascending{0, 1, 2, 3, 4, 5, 6};
     STATIC_CHECK(successive_tops_from(ascending, std::ranges::less{}) == std::array{6, 5, 4, 3, 2, 1, 0});
 
-    constexpr std::array<int, 7> duplicates{2, 2, 1, 2, 1, 1, 2};
+    static constexpr std::array<int, 7> duplicates{2, 2, 1, 2, 1, 1, 2};
     STATIC_CHECK(successive_tops_from(duplicates, std::ranges::less{}) == std::array{2, 2, 2, 2, 1, 1, 1});
 
-    constexpr std::array<int, 1> single{4};
+    static constexpr std::array<int, 1> single{4};
     STATIC_CHECK(successive_tops_from(single, std::ranges::less{}) == std::array{4});
   }
 
