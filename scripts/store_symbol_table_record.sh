@@ -43,13 +43,11 @@
 # instructions and 1 in 200 for its system calls.
 #
 # The spread measured, with the performance tests excluded from the setup's
-# runs: within one job, prune's analysis moved by 2 and by 49 parts in a
-# million on two pairs of reruns; the setup's instructions by 0.092% and its
-# system calls by 0.014%. Between separate jobs measuring one commit, from
-# the 80th pull request on, prune's analysis moved by up to 722 parts in a
-# million, and the setup's instructions per test by up to 1.04% between
-# commits whose code is identical. The tolerances above are wider than those
-# spreads, so that an honest re-measurement is not refused.
+# runs: prune's analysis moved by up to 722 parts in a million between jobs
+# measuring one commit, since it began reading .ninja_deps (#80); the
+# setup's instructions per test by up to 1.04%, and its system calls by up to
+# 0.37%, between commits whose code is identical. Each tolerance is wider
+# than its count's spread, so that an honest re-measurement is not refused.
 #
 # A branch which does not exist is created, with no history. The push is
 # never forced. When it fails - as it does when another run pushed first -
