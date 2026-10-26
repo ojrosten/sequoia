@@ -32,12 +32,14 @@
 # with the offered record's run, since it made the fields added, as jq's output
 # with the keys sorted.
 #
-# A measured count is one which a rerun of one commit moves a little: prune's
-# instruction count by about 2 parts in a million, the runner setup's system
-# calls by 0.2%. Each is named in measured_fields below with its own
-# tolerance, as the denominator of a relative difference. A count which
-# differs from the held one by less than that is taken to be the held one; the
-# script prints the difference, and the first measurement stands.
+# A measured count is one which a rerun of one commit moves a little. Reruns
+# of one commit moved prune's instruction count by 2 and by 49 parts in a
+# million, and the runner setup's instructions by 0.092% and its system calls
+# by 0.014%, with the performance tests excluded. Each count is named in
+# measured_fields below with a tolerance of its own, as the denominator of a
+# relative difference: 10,000 for prune's, 200 for each of the setup's. A count
+# which differs from the held one by less than that is taken to be the held
+# one; the script prints the difference, and the first measurement stands.
 #
 # A branch which does not exist is created, with no history. The push is
 # never forced. When it fails - as it does when another run pushed first -
