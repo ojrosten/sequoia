@@ -24,12 +24,21 @@ namespace sequoia::testing
 
   namespace
   {
-    /** \brief The number of nodes in every graph the tests build, and of
+    /** \brief The number of nodes in every graph the sort tests build, and of
                the joins from each node, so that each graph is small and
                sparse.
      */
     constexpr std::size_t nodes_per_graph{64},
                           joins_per_node{4};
+
+    /** \brief The numbers of nodes in the smaller and larger graph of a
+               comparison of build times.
+     */
+    constexpr std::size_t nodes_in_smaller_graph{256},
+                          growth_factor{8},
+                          nodes_in_larger_graph{growth_factor * nodes_in_smaller_graph};
+
+    static_assert(nodes_per_graph > 1 && nodes_in_smaller_graph > 1);
 
     struct nodes_to_join
     {
@@ -46,21 +55,21 @@ namespace sequoia::testing
       return weights;
     }
 
-    /** \brief Returns `joins_per_node` joins from each of `nodes_per_graph`
-               nodes, each to another node chosen at random.
+    /** \brief Returns `joins_per_node` joins from each of `nodeCount` nodes,
+               each to another node chosen at random.
      */
     [[nodiscard]]
-    std::vector<nodes_to_join> random_joins()
+    std::vector<nodes_to_join> random_joins(const std::size_t nodeCount)
     {
       std::mt19937 generator{std::mt19937::default_seed};
       std::vector<nodes_to_join> joins{};
-      joins.reserve(nodes_per_graph * joins_per_node);
-      for(const auto node1 : std::views::iota(0uz, nodes_per_graph))
+      joins.reserve(nodeCount * joins_per_node);
+      for(const auto node1 : std::views::iota(0uz, nodeCount))
       {
         for(std::size_t i{}; i < joins_per_node; ++i)
         {
-          // An offset in [1, nodes_per_graph - 1] joins node1 to another node
-          const auto node2{(node1 + 1 + generator() % (nodes_per_graph - 1)) % nodes_per_graph};
+          // An offset in [1, nodeCount - 1] joins node1 to another node
+          const auto node2{(node1 + 1 + generator() % (nodeCount - 1)) % nodeCount};
           joins.push_back({.node1{node1}, .node2{node2}});
         }
       }
@@ -123,8 +132,27 @@ namespace sequoia::testing
       std::vector<std::size_t> m_ShuffledWeights{shuffled_weights()};
 
       /** \brief The joins, between the nodes of the shuffled graph. */
-      std::vector<nodes_to_join> m_Joins{random_joins()};
+      std::vector<nodes_to_join> m_Joins{random_joins(nodes_per_graph)};
     };
+
+    /** \brief Returns a graph with `nodeCount` nodes and `joins` between them. */
+    template<dynamic_network Graph>
+    [[nodiscard]]
+    Graph graph_with_nodes(const std::size_t nodeCount, const std::vector<nodes_to_join>& joins)
+    {
+      Graph g{};
+      for(const auto weight : std::views::iota(0uz, nodeCount))
+      {
+        g.add_node(weight);
+      }
+
+      for(const auto [node1, node2] : joins)
+      {
+        g.join(node1, node2);
+      }
+
+      return g;
+    }
   }
 
   [[nodiscard]]
@@ -142,6 +170,16 @@ namespace sequoia::testing
     test_sort_nodes<embedded_graph<null_weight, std::size_t, null_meta_data, bucketed_edge_storage_config>>(
       "embedded graph"
     );
+
+    test_build_time_scales_linearly<directed_graph<null_weight, std::size_t, bucketed_edge_storage_config>>(
+      "directed graph"
+    );
+    test_build_time_scales_linearly<
+      undirected_graph<null_weight, std::size_t, null_meta_data, bucketed_edge_storage_config>
+    >("undirected graph");
+    test_build_time_scales_linearly<
+      embedded_graph<null_weight, std::size_t, null_meta_data, bucketed_edge_storage_config>
+    >("embedded graph");
   }
 
   /* Each performance check claims that building a graph shuffled and then
@@ -192,5 +230,36 @@ namespace sequoia::testing
         buildShuffledGraphAndSortNodes,
         {.prediction{.lower{1.01}, .upper{std::sqrt(10.0)}}});
     }
+  }
+
+  /* Each performance check claims that building a graph takes time
+     proportional to its size. The graphs have `joins_per_node` joins from each
+     node, so their numbers of nodes and of joins grow together. Building the
+     graph with `growth_factor` times as many nodes should take about
+     `growth_factor` times as long. If each join cost time proportional to the
+     number of nodes, it would take about `growth_factor` squared times as
+     long. The prediction's ends lie a factor of two either side of
+     `growth_factor`, so the squared time lies outside the prediction. The
+     lower end also exceeds 1, as `check_relative_performance` requires.
+  */
+  template<dynamic_network Graph>
+  void dynamic_graph_performance_test::test_build_time_scales_linearly(std::string_view graphName)
+  {
+    const auto joinsOfSmallerGraph{random_joins(nodes_in_smaller_graph)},
+               joinsOfLargerGraph{random_joins(nodes_in_larger_graph)};
+
+    auto buildSmallerGraph{
+      [&joinsOfSmallerGraph]() { return graph_with_nodes<Graph>(nodes_in_smaller_graph, joinsOfSmallerGraph); }
+    };
+
+    auto buildLargerGraph{
+      [&joinsOfLargerGraph]() { return graph_with_nodes<Graph>(nodes_in_larger_graph, joinsOfLargerGraph); }
+    };
+
+    check_relative_performance(
+      std::format("Building the {} takes time proportional to its size", graphName),
+      buildSmallerGraph,
+      buildLargerGraph,
+      {.prediction{.lower{growth_factor / 2.0}, .upper{growth_factor * 2.0}}});
   }
 }
