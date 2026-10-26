@@ -148,21 +148,21 @@
       <div class="plot" id="analysis-plot"></div>
     </figure>
     <figure class="card" id="runner-figure">
-      <figcaption><h2>The runner's setup of a test: instructions and system calls, per test</h2>
+      <figcaption><h2>The runner's setup of a test: instructions per test</h2>
         <p><code>valgrind --tool=callgrind --collect-systime=yes</code> counts one run of
           <code>TestFrameworkDiagnostics --serial --exclude-performance exclude OutputFreeTest.cpp</code>, the
           executable which tests the test runner, inside <code>test_to_run::execute</code> but outside
           <code>execution_timer::time_execution</code>. That is the runner's work for each test: its preparing of
           materials, its records and its output. It is not the test, nor anything the runner does before the first
-          test or after the last. The plots are the instructions (callgrind's Ir) and the system calls (its sysCount)
-          so counted, divided by the number of tests the run executed. The runner's own execution records give that
-          number, since the runner's tests run runners of their own, whose tests are not counted and whose setup is
-          not collected. Each plot has a scale of its own. Reruns of one commit have moved the instructions by under
-          0.1% and the system calls by under 0.02%. Points whose record has no count are left out. A change of the
-          run's <code>boundary</code> (a different executable, say) breaks the line, with a marker labelled
-          boundary. A hollow point is one whose run had a non-zero exit status.</p></figcaption>
-      <h3>Instructions per test</h3><div class="plot" id="runner-plot-instructions"></div>
-      <h3>System calls per test</h3><div class="plot" id="runner-plot-syscalls"></div>
+          test or after the last. The plot is the instructions (callgrind's Ir) so counted, divided by the number of
+          tests the run executed. The runner's own execution records give that number, since the runner's tests run
+          runners of their own, whose tests are not counted and whose setup is not collected. Measurements of code
+          that did not change, in different jobs, have moved by up to about 1%. The records also hold callgrind's
+          count of system calls, which is not plotted: its total stayed flat as the number of tests grew by a fifth,
+          so it does not count the setup alone. Points whose record has no count are left out. A change of the run's
+          <code>boundary</code> (a different executable, say) breaks the line, with a marker labelled boundary. A
+          hollow point is one whose run had a non-zero exit status.</p></figcaption>
+      <div class="plot" id="runner-plot-instructions"></div>
     </figure>
     <figure class="card" id="uncalled-figure">
       <figcaption><h2>Uncalled functions in Source</h2>
@@ -497,8 +497,9 @@
      changeOf: point => point.record.uncalled ? point.record.uncalled.toolchainChange : null}
   ];
 
-  // One measure for each event the runner's setup counts, plotted apart
-  const runnerMeasures = symbolDashboard.runnerSetupEvents.map(event => ({
+  // One measure for each event of the runner's setup that is plotted. The system calls are not: their total does
+  // not grow with the number of tests, so they are not the setup's alone.
+  const runnerMeasures = ['instructions'].map(event => ({
     event,
     name: `${event} of the runner's setup, per test`,
     value: record => symbolDashboard.runnerSetupPerTest(record, event),
