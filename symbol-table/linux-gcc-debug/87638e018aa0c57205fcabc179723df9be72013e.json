@@ -278,6 +278,21 @@
     "symbol_name_bytes": 250624429,
     "symbols": 690926
   },
+  "leftover_materials_setup": {
+    "boundary": "test_to_run::execute outside execution_timer::time_execution, TestFrameworkDiagnostics --serial --exclude-performance exclude OutputFreeTest.cpp, a run with no output/TestsTemporaryData and the run after it",
+    "cpu_model": "AMD EPYC 7763 64-Core Processor",
+    "leftover_entries": 2715,
+    "with_leftovers": {
+      "exit_status": 0,
+      "instructions": 51237701,
+      "tests": 97
+    },
+    "without_leftovers": {
+      "exit_status": 0,
+      "instructions": 51157208,
+      "tests": 97
+    }
+  },
   "prune_dependency_analysis": {
     "cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
     "function": "sequoia::testing::test_runner::prune*",
@@ -286,8 +301,8 @@
   },
   "run": {
     "attempt": 1,
-    "id": 40360255030,
-    "url": "https://github.com/ojrosten/sequoia/actions/runs/40360255030/attempts/1"
+    "id": 40366148310,
+    "url": "https://github.com/ojrosten/sequoia/actions/runs/40366148310/attempts/1"
   },
   "runner_setup": {
     "boundary": "test_to_run::execute outside execution_timer::time_execution, TestFrameworkDiagnostics --serial --exclude-performance exclude OutputFreeTest.cpp",
