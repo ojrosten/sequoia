@@ -40,5 +40,7 @@ namespace sequoia::testing
 
     void test_const_scaling_iterator();
     void test_const_reverse_scaling_iterator();
+
+    void test_traitless_input_iterator();
   };
 }
