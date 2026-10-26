@@ -156,8 +156,6 @@
    * @returns {Difference[]}
    */
   function differences(before, after, prefix = '') {
-    /** @param {any} value */
-    const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
     if (!isObject(before) || !isObject(after)) {
       return canonical(before) === canonical(after) ? [] : [{path: prefix, before, after}];
     }
@@ -289,6 +287,42 @@
   }
 
   /**
+   * Returns the exit status of the stamping run in `record`, or null if the
+   * record has no `prune_dependency_analysis`.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function pruneStampingExitStatus(record) {
+    if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;
+    return record.prune_dependency_analysis.stamping_exit_status;
+  }
+
+  /**
+   * Returns the exit status of the run which `record`'s `runner_setup`
+   * counts, or null if the record has no `runner_setup`.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function runnerSetupExitStatus(record) {
+    if (!Object.hasOwn(record, 'runner_setup')) return null;
+    return record.runner_setup.exit_status;
+  }
+
+  /**
+   * Returns the number of tests which the run counted by `record`'s
+   * `runner_setup` executed, or null if the record has no `runner_setup`.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function runnerSetupTests(record) {
+    if (!Object.hasOwn(record, 'runner_setup')) return null;
+    return record.runner_setup.tests;
+  }
+
+  /**
    * Lists what is wrong with `record`, a record of uncalled functions stored
    * under the name `commit`.
    *
@@ -395,7 +429,7 @@
    *
    * @param {JsonRecord} before
    * @param {JsonRecord} after
-   * @returns {{object: string, before: number | undefined, after: number | undefined, delta: number}[]}
+   * @returns {{object: string, before: number | null, after: number | null, delta: number}[]}
    */
   function movers(before, after) {
     const countsBefore = before.defined_symbols_by_object;
@@ -624,6 +658,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, runnerSetupEvents, runnerSetupPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneStampingExitStatus, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));

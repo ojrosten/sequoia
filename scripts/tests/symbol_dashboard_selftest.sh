@@ -415,6 +415,18 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
   });
 
+  await control('the exit statuses and the number of tests are null in a record without their measurement, and read from it otherwise', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.pruneStampingExitStatus(record), null);
+    assert.strictEqual(dashboard.runnerSetupExitStatus(record), null);
+    assert.strictEqual(dashboard.runnerSetupTests(record), null);
+    record.prune_dependency_analysis = analysisOf(123, 82);
+    record.runner_setup = {...setupOf(4), exit_status: 8};
+    assert.strictEqual(dashboard.pruneStampingExitStatus(record), 82);
+    assert.strictEqual(dashboard.runnerSetupExitStatus(record), 8);
+    assert.strictEqual(dashboard.runnerSetupTests(record), 4);
+  });
+
   await control('a runner_setup without an exit status is a problem', () => {
     const record = recordOf('F5');
     record.runner_setup = setupOf(4);
