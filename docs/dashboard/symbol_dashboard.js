@@ -156,8 +156,6 @@
    * @returns {Difference[]}
    */
   function differences(before, after, prefix = '') {
-    /** @param {any} value */
-    const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
     if (!isObject(before) || !isObject(after)) {
       return canonical(before) === canonical(after) ? [] : [{path: prefix, before, after}];
     }
