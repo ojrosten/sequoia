@@ -293,7 +293,7 @@
    * @param {JsonRecord} record
    * @returns {number | null}
    */
-  function pruneExitStatus(record) {
+  function pruneStampingExitStatus(record) {
     if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;
     return record.prune_dependency_analysis.stamping_exit_status;
   }
@@ -658,6 +658,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneExitStatus, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneStampingExitStatus, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));

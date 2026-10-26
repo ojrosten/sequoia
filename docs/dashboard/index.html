@@ -143,9 +143,8 @@
           and the functions it calls, in <code>TestAll prune --serial</code> run after a full run of the suite:
           prune's reading of the build's records and its walk of the sources for changes, and nothing of the
           runner's startup or of any test. Reruns of one commit have moved it by under 0.01%. Points whose record has no
-          count are left out. A point is plotted whether or not its full run passed: a failed test is selected again,
-          but the analysis reads the same records and walks the same sources. A hollow point is one whose full run
-          had a non-zero exit status.</p></figcaption>
+          count are left out. A point is plotted whether or not its full run passed, and is hollow if it did not: a failed
+          test is selected again, but the analysis reads the same records and walks the same sources.</p></figcaption>
       <div class="plot" id="analysis-plot"></div>
     </figure>
     <figure class="card" id="runner-figure">
@@ -161,8 +160,7 @@
           not collected. Each plot has a scale of its own. Reruns of one commit have moved the instructions by under
           0.1% and the system calls by under 0.02%. Points whose record has no count are left out. A change of the
           run's <code>boundary</code> (a different executable, say) breaks the line, with a marker labelled
-          boundary. A hollow point is one whose run had a non-zero exit status. The tooltip gives the
-          number of tests the run executed.</p></figcaption>
+          boundary. A hollow point is one whose run had a non-zero exit status.</p></figcaption>
       <h3>Instructions per test</h3><div class="plot" id="runner-plot-instructions"></div>
       <h3>System calls per test</h3><div class="plot" id="runner-plot-syscalls"></div>
     </figure>
@@ -333,15 +331,15 @@
 
   const state = {points: [], selected: 0, hovered: null, charts: []};
 
-  // Fills the marker `circle` solid, or hollow if the run which gave its point failed.
-  function markFailure(circle, failed) {
-    circle.setAttribute('fill', failed ? 'var(--surface)' : 'var(--series)');
-    circle.setAttribute('stroke', failed ? 'var(--series)' : 'var(--surface)');
+  // Fills `circle` in the series' colour, or, if `hollow`, with the surface's inside an outline in the series' colour.
+  function paintMarker(circle, hollow) {
+    circle.setAttribute('fill', hollow ? 'var(--surface)' : 'var(--series)');
+    circle.setAttribute('stroke', hollow ? 'var(--series)' : 'var(--surface)');
   }
 
-  function marker(cx, cy, r, failed) {
+  function marker(cx, cy, r, hollow) {
     const circle = element('svg:circle', {cx, cy, r, 'stroke-width': 2});
-    markFailure(circle, failed);
+    paintMarker(circle, hollow);
     return circle;
   }
 
@@ -402,7 +400,7 @@
       lastDrawnLabelX = at;
     });
 
-    const failedAt = index => measure.exitStatus !== undefined && (measure.exitStatus(points[index].record) ?? 0) !== 0;
+    const hasFailedRun = index => measure.exitStatus !== undefined && (measure.exitStatus(points[index].record) ?? 0) !== 0;
 
     // A line runs through the points which have the measure and have the same `runOf`: the toolchain, and for
     // the runner's measures the boundary too. A point without the measure ends the line, unless the measure
@@ -420,27 +418,26 @@
       joined = point;
       runs[runs.length - 1].push(`${x(index).toFixed(1)},${y(values[index]).toFixed(1)}`);
     });
-    for (const [runIndex, run] of runs.entries()) {
-      if (run.length === 1) {
-        const [cx, cy] = run[0].split(',');
-        svg.append(marker(cx, cy, 4, failedAt(runStarts[runIndex])));
-      }
+    for (const run of runs) {
       svg.append(element('svg:polyline', {points: run.join(' '), fill: 'none', stroke: 'var(--series)', 'stroke-width': 2,
                                           'stroke-linejoin': 'round', 'stroke-linecap': 'round'}));
     }
-    // Every point is marked where the points are far enough apart; where they are not, only the hollow ones are,
-    // so that a failed run shows on any axis.
-    const marksEveryPoint = symbolDashboard.smallestGap(axisOfTime.xs) >= 14;
+    // A point is marked where the points are far enough apart for every one to be, where it is a line of its own,
+    // and where its run failed, so that a failed run shows on any axis.
+    const hasRoomForEveryMarker = symbolDashboard.smallestGap(axisOfTime.xs) >= 14;
+    const loneRunPoints = new Set(runStarts.filter((start, runIndex) => runs[runIndex].length === 1));
     points.forEach((point, index) => {
-      if (values[index] === null || (!marksEveryPoint && !failedAt(index))) return;
-      svg.append(marker(x(index), y(values[index]), 4, failedAt(index)));
+      if (values[index] === null
+          || !(hasRoomForEveryMarker || loneRunPoints.has(index) || hasFailedRun(index))) return;
+      svg.append(marker(x(index), y(values[index]), 4, hasFailedRun(index)));
     });
 
     const crosshair = element('svg:line', {y1: margin.top, y2: margin.top + plotHeight, stroke: 'var(--text-muted)',
                                            'stroke-width': 1, visibility: 'hidden'});
     const hoverDot  = marker(0, 0, 5, false);
     hoverDot.setAttribute('visibility', 'hidden');
-    const selectDot = element('svg:circle', {r: 6, fill: 'var(--surface)', stroke: 'var(--series)', 'stroke-width': 3});
+    // The selection is a ring around the point's marker, so that the marker still shows whether its run failed
+    const selectDot = element('svg:circle', {r: 8, fill: 'none', stroke: 'var(--series)', 'stroke-width': 2});
     svg.append(crosshair, selectDot, hoverDot);
 
     const overlay = element('svg:rect', {x: margin.left, y: 0, width: plotWidth, height, fill: 'transparent'});
@@ -478,7 +475,7 @@
         crosshair.setAttribute('x1', x(index)); crosshair.setAttribute('x2', x(index));
         if (values[index] !== null) {
           hoverDot.setAttribute('cx', x(index)); hoverDot.setAttribute('cy', y(values[index]));
-          markFailure(hoverDot, failedAt(index));
+          paintMarker(hoverDot, hasFailedRun(index));
         }
       },
       markSelected(index) {
@@ -493,7 +490,7 @@
     {name: 'Symbols',              value: record => record.executable.symbols,           unit: 'symbols'},
     {name: 'Bytes of symbol names', value: record => record.executable.symbol_name_bytes, unit: 'bytes of names'},
     {name: 'Instructions of prune\'s analysis', value: symbolDashboard.pruneInstructions, unit: 'instructions',
-     exitStatus: symbolDashboard.pruneExitStatus},
+     exitStatus: symbolDashboard.pruneStampingExitStatus},
     {name: 'Uncalled functions',    value: symbolDashboard.uncalledCount, unit: 'uncalled functions',
      // Measured nightly, so a line joins the points which have a count; the toolchain is that of the measurement
      joinsGaps: true, runOf: point => point.record.uncalled.run,
@@ -535,7 +532,7 @@
       element('span', {}, `${integer.format(point.record.executable.symbol_name_bytes)} bytes of names`),
       ...(measures[2].value(point.record) === null ? []
           : [element('span', {}, `${integer.format(measures[2].value(point.record))} instructions of prune's analysis`
-                                 + `, after a stamping run with exit status ${symbolDashboard.pruneExitStatus(point.record)}`)]),
+                                 + `, after a full run with exit status ${symbolDashboard.pruneStampingExitStatus(point.record)}`)]),
       ...(runnerMeasures[0].value(point.record) === null ? []
           : [element('span', {}, 'The runner\'s setup, per test: '
                                  + runnerMeasures.map(measure => `${oneDecimal.format(measure.value(point.record))} ${measure.event}`)
