@@ -9,8 +9,8 @@ name: selftests
 # The inventory job checks that every selftest runs somewhere.
 #
 # symbol_dashboard's selftest runs on Linux alone. Its subject is the
-# dashboard's script, which runs in a browser, so the platform's only part is
-# the node that stands in for the browser; the image ships one.
+# dashboard's script, which runs in a browser. The platform enters only
+# through the node that stands in for the browser, which the Linux image ships.
 #
 # symbol_table_report's selftest links its fixture in the platform's own
 # format, and reads it with the platform's nm. So the Linux job controls the
@@ -108,9 +108,10 @@ jobs:
             install -y --no-install-recommends --download-only $PACKAGES
           sudo apt-get install -y --no-install-recommends --no-download $PACKAGES
 
-      # The dashboard's script is checked against its JSDoc types, with the
-      # pinned compiler and no build step: tsc reads docs/dashboard/tsconfig.json,
-      # emits nothing, and fails on a type error. Linux alone, as the selftest.
+      # The dashboard's script is checked against its JSDoc types by the
+      # pinned release of tsc, which reads docs/dashboard/tsconfig.json, emits
+      # nothing, and fails on a type error. The check is on Linux alone, as the
+      # dashboard's selftest is.
       - name: Check the types of the dashboard
         if: inputs.needs_testing == 'true' && matrix.name == 'Linux'
         run: |
