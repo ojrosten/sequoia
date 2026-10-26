@@ -14,10 +14,10 @@
 #     the package dpkg says owns the tool's executable, which need not be the
 #     path's last component; where the path is a symlink, the package is the
 #     one owning the file it resolves to, not the one owning the symlink; the
-#     record gains the run's id, attempt and URL, and the model name of the
-#     CPU, which is the "Model name" line of lscpu, not the "BIOS Model name"
-#     line before it, and the first of several; and nothing else in the
-#     record changes;
+#     record gains the run's id, attempt and URL; and nothing else in the
+#     record changes, the CPU model included;
+#   - --cpu-model writes the "Model name" line of lscpu, not the "BIOS Model
+#     name" line before it, and the first of several, and nothing else;
 #   - a path is resolved through a chain of symlinks, not one link;
 #   - a package whose name carries its architecture is named in full, and a
 #     line of dpkg's naming another path names no owner;
@@ -129,6 +129,12 @@ run() {
   rc=$?
 }
 
+# cpu_run [<option of env>...]: as run, with --cpu-model and no record
+cpu_run() {
+  env PATH="$tmp/bin:$PATH" LC_ALL=de_DE.UTF-8 env "$@" "$python" -B "$subject" --cpu-model > "$out" 2> "$err"
+  rc=$?
+}
+
 value() { # value <python expression over the record d>
   python3 -c 'import json, sys
 d = json.load(open(sys.argv[1]))
@@ -140,6 +146,11 @@ field() { # field <name> <python expression over the record d> <expected>
   total=$((total+1))
   got=$(value "$2")
   if [[ $got != "$3" ]]; then fail "$1 (expected '$3', got '$got')"; fi
+}
+
+same_text() { # same_text <name> <expected> <got>
+  total=$((total+1))
+  if [[ $2 != "$3" ]]; then fail "$1 (expected '$2', got '$3')"; fi
 }
 
 exits() { # exits <name> <status|nonzero>
@@ -175,7 +186,7 @@ record_controls() {
   field "nm's package is named with its architecture, past a line for another path" \
         'd["toolchain"]["nm"]["package"]' "{'name': 'binutils:amd64', 'version': '2.46-1ubuntu3'}"
   field "the run" 'd["run"]' \
-        "{'attempt': 2, 'cpu_model': 'AMD EPYC 7763 64-Core Processor', 'id': 39655485487, 'url': 'https://github.com/owner/repo/actions/runs/39655485487/attempts/2'}"
+        "{'attempt': 2, 'id': 39655485487, 'url': 'https://github.com/owner/repo/actions/runs/39655485487/attempts/2'}"
   python3 -c 'import json, sys
 d = json.load(open(sys.argv[1])); d.pop("run")
 for tool in d["toolchain"].values():
@@ -232,35 +243,47 @@ dpkg_controls() {
 
 cpu_controls() {
   fixture
+  cpu_run
+  exits "the CPU model is written" 0
+  same_text "the Model name line, not the BIOS Model name line before it" "AMD EPYC 7763 64-Core Processor" "$(cat "$out")"
+  total=$((total+1))
+  if [[ $(wc -l < "$out") -ne 1 ]]; then fail "the CPU model is the only line written"; fi
+
+  fixture
   printf '%s\n' 'Model name:                      Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz' \
                 'Model name:                      Intel(R) Atom(TM)' > "$LSCPU"
-  run
-  field "the first of several model names, with its own punctuation" 'd["run"]["cpu_model"]' \
-        "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz"
+  cpu_run
+  same_text "the first of several model names, with its own punctuation" \
+            "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz" "$(cat "$out")"
 
   fixture
   printf '%s\n' 'Model name: AMD: EPYC' > "$LSCPU"
-  run
-  field "a name read past the first colon only" 'd["run"]["cpu_model"]' "AMD: EPYC"
+  cpu_run
+  same_text "a name read past the first colon only" "AMD: EPYC" "$(cat "$out")"
 
   fixture
   rm "$LSCPU"
-  run
+  cpu_run
   refuses "an lscpu which fails" 'lscpu failed with exit status 1'
 
   fixture
   printf '%s\n' 'Architecture: x86_64' 'BIOS Model name: Virtual CPU' > "$LSCPU"
-  run
+  cpu_run
   refuses "an lscpu with no Model name line" 'lscpu prints no Model name'
 
   fixture
   printf '%s\n' 'Model name:   ' > "$LSCPU"
-  run
+  cpu_run
   refuses "an lscpu with a Model name and no name" 'lscpu prints a Model name with no name'
 
   fixture
-  run PATH=/nonexistent
+  cpu_run PATH=/nonexistent
   refuses "a missing lscpu" 'could not be run'
+
+  fixture
+  PATH="$tmp/bin:$PATH" LC_ALL=C "$python" -B "$subject" --cpu-model "$work/record.json" > "$out" 2> "$err"
+  rc=$?
+  refuses "a record given with --cpu-model" 'give either a record, or --cpu-model alone'
 }
 
 record_shape_controls() {
@@ -349,7 +372,8 @@ mutant 'any line read as the model name' 'if key.strip() == "Model name":' 'if k
 mutant 'the first model name skipped'   'return value.strip()' 'continue'
 mutant 'the name cut at a second colon' 'key, _, value = line.partition(":")' 'key, _, value = line.rpartition(":")'
 mutant 'an empty model name accepted'   'if not value.strip():' 'if False:'
-mutant 'no model name recorded'         '"cpu_model": cpu_model(), ' ''
+mutant 'no model name written'          'print(cpu_model())' 'print()'
+mutant '--cpu-model beside a record'     'if a.cpu_model != (a.record is None):' 'if False:'
 mutant 'an absent model name accepted'  'sys.exit("lscpu prints no Model name")' 'return ""'
 mutant 'an empty variable accepted'     'if not value:' 'if value is None:'
 mutant 'any id accepted'                'if not value.isdecimal():' 'if False:'

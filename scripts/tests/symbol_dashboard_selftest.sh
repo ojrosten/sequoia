@@ -39,7 +39,8 @@
 #     an independent reading of the two records finds, in the same order;
 #   - a record which cannot be fetched, names another commit, or lacks a
 #     count is a problem, and the others still load;
-#   - a record is no problem with a CPU model in its run, or with no run;
+#   - a record is no problem with a CPU model in a measured section, or with
+#     none;
 #   - a record's prune_dependency_analysis and runner_setup are read where it
 #     has them, and are null where it has not; a malformed one is a problem;
 #     a point is plotted whatever the exit status of its runs;
@@ -323,15 +324,6 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.deepStrictEqual(dashboard.problemsWith(recordOf('F5'), c.F5), []);
   });
 
-  await control('a record has no problem with its run\'s CPU model, or without one', () => {
-    const record = recordOf('F5');
-    assert.ok(!Object.hasOwn(record.run, 'cpu_model'));
-    record.run.cpu_model = 'AMD EPYC 7763 64-Core Processor';
-    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
-    delete record.run;
-    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
-  });
-
   for (const [name, change, problem] of [
     ['no toolchain',              r => { delete r.toolchain; },                       'it has no toolchain'],
     ['a tree not clean',          r => { r.clean = false; },                          'it was not measured on a clean tree'],
@@ -377,6 +369,16 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     const counts = column.points.map(point => dashboard.pruneInstructions(point.record));
     assert.deepStrictEqual(counts, column.points.map(point => point.commit === c.F5 ? 777 : null));
     assert.ok(counts.includes(777));
+  });
+
+  await control('a record has no problem with the CPU model of a measured section, or without one', () => {
+    const record = recordOf('F5');
+    record.prune_dependency_analysis = analysisOf(777, 0);
+    record.runner_setup = setupOf(4);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+    record.prune_dependency_analysis.cpu_model = 'AMD EPYC 7763 64-Core Processor';
+    record.runner_setup.cpu_model = 'Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz';
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
   });
 
   await control('prune\'s dependency analysis is plotted whatever its stamping run\'s exit status', () => {

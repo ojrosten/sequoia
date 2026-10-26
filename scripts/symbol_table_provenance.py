@@ -3,13 +3,16 @@
 does not hold.
 
   symbol_table_provenance.py <record>
+  symbol_table_provenance.py --cpu-model
 
-Writes the record to standard output, with
+The second form writes the model name of this machine's CPU to standard
+output, and nothing else.
+
+In the first form, the script writes the record to standard output, with
   - for each tool of the record's toolchain, the Debian package which owns
     the tool's executable, and the package's version; and
-  - the GitHub Actions run which made the record: its id, its attempt, the
-    attempt's URL, and the model name of the CPU of the runner which ran
-    the job.
+  - the GitHub Actions run which made the record: its id, its attempt, and
+    the attempt's URL.
 
 A distribution's archive can rebuild a compiler without changing what
 `--version` prints, so the package's version tells two toolchains apart
@@ -24,7 +27,7 @@ The run is read from the variables GitHub Actions sets in every job:
 GITHUB_SERVER_URL, GITHUB_REPOSITORY, GITHUB_RUN_ID and GITHUB_RUN_ATTEMPT.
 The CPU's model name is the "Model name" line of `lscpu`.
 
-The script refuses, rather than write a record which may be wrong, if
+The first form refuses, rather than write a record which may be wrong, if
   - the record cannot be read as a JSON object, or has no toolchain, or a
     tool of its toolchain has no path, or already has a package, or the
     record already has a run;
@@ -32,8 +35,9 @@ The script refuses, rather than write a record which may be wrong, if
     path resolves to, or names no package owning that path, or more than
     one, or gives no version for the package;
   - one of the variables is unset or empty, or the id or the attempt is not
-    a number;
-  - lscpu cannot be run, or prints no "Model name" line, or one with no name.
+    a number.
+The second form refuses, and writes nothing, if lscpu cannot be run, or
+prints no "Model name" line, or one with no name.
 """
 import argparse, json, os, subprocess, sys
 
@@ -110,11 +114,14 @@ def environment_number(name):
 def cpu_model():
     """Returns the model name of this machine's CPU, as `lscpu` prints it.
 
+    A machine with CPUs of more than one model may print a "Model name" line
+    for each, and the first is returned, since the model of the CPU which ran
+    a measurement cannot be told from them.
+
     Exits if `lscpu` prints no "Model name" line, or one with no name.
     """
     # lscpu prints "Model name:", padding, then the name. A line "BIOS Model
-    # name:" may precede it, and a machine with CPUs of more than one model
-    # may print a line for each, of which the first is returned.
+    # name:" may precede it.
     for line in run(["lscpu"]).splitlines():
         key, _, value = line.partition(":")
         if key.strip() == "Model name":
@@ -125,12 +132,11 @@ def cpu_model():
 
 
 def this_run():
-    """Returns the id, the attempt, the attempt's URL and the CPU model of
-    this run."""
+    """Returns the id, the attempt and the attempt's URL of this run."""
     run_id, attempt = environment_number("GITHUB_RUN_ID"), environment_number("GITHUB_RUN_ATTEMPT")
     repository = f"{environment_value('GITHUB_SERVER_URL')}/{environment_value('GITHUB_REPOSITORY')}"
     url = f"{repository}/actions/runs/{run_id}/attempts/{attempt}"
-    return {"cpu_model": cpu_model(), "id": run_id, "attempt": attempt, "url": url}
+    return {"id": run_id, "attempt": attempt, "url": url}
 
 
 def read_record(path):
@@ -172,8 +178,14 @@ def with_provenance(record, record_path):
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("record", help="a record written by symbol_table_report.py")
+    ap.add_argument("record", nargs="?", help="a record written by symbol_table_report.py")
+    ap.add_argument("--cpu-model", action="store_true", help="write this machine's CPU model name instead")
     a = ap.parse_args()
+    if a.cpu_model != (a.record is None):
+        ap.error("give either a record, or --cpu-model alone")
+    if a.cpu_model:
+        print(cpu_model())
+        return
     json.dump(with_provenance(read_record(a.record), a.record), sys.stdout, indent=1, sort_keys=True)
     print()
 

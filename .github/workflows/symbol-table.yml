@@ -9,10 +9,13 @@ name: symbol-table
 # A commit whose presets lack `gcc-env`, as every commit before 2026-09-06
 # does, cannot be recorded: its job fails at "Configure".
 # scripts/symbol_table_report.py says what a record holds, and
-# scripts/symbol_table_provenance.py what it adds to it. Among the additions is
-# the model name of the CPU of the runner which ran the job, in the record's
-# `run`. One job measures both prune and the runner's setup, so that model name
-# covers both.
+# scripts/symbol_table_provenance.py what it adds to it. The step which adds
+# the count of prune's analysis, and the step which adds the runner's setup,
+# each also adds `cpu_model` to its section: the model name of the CPU of the
+# runner which ran the job. Both sections are measured in one job, so their
+# model names are equal when the record is made. They are kept apart because
+# the store keeps each section's with its counts
+# (scripts/store_symbol_table_record.sh).
 #
 # The workflow builds TestAll and runs its suite once, only to leave prune a
 # stamp. It then runs `TestAll prune` under callgrind, to count the
@@ -349,10 +352,15 @@ jobs:
             > "$RUNNER_TEMP/runner_setup.json"
           cat "$RUNNER_TEMP/runner_setup.json"
 
+      # The model name is read where the section is added, so that a refusal
+      # to read it costs the section and not the record.
       - name: Add the count of prune's analysis to the record
+        continue-on-error: true
         run: |
           if [ -s "$RUNNER_TEMP/prune_dependency_analysis.json" ]; then
-            jq -S --slurpfile analysis "$RUNNER_TEMP/prune_dependency_analysis.json" '. + {prune_dependency_analysis: $analysis[0]}' \
+            cpu_model=$(python3 -B tooling/scripts/symbol_table_provenance.py --cpu-model)
+            jq -S --slurpfile analysis "$RUNNER_TEMP/prune_dependency_analysis.json" --arg cpu_model "$cpu_model" \
+              '. + {prune_dependency_analysis: ($analysis[0] + {cpu_model: $cpu_model})}' \
               "$SYMBOL_TABLE_RECORD" > "$RUNNER_TEMP/with_analysis.json"
             mv "$RUNNER_TEMP/with_analysis.json" "$SYMBOL_TABLE_RECORD"
           else
@@ -363,7 +371,9 @@ jobs:
         continue-on-error: true
         run: |
           if [ -s "$RUNNER_TEMP/runner_setup.json" ]; then
-            jq -S --slurpfile setup "$RUNNER_TEMP/runner_setup.json" '. + {runner_setup: $setup[0]}' \
+            cpu_model=$(python3 -B tooling/scripts/symbol_table_provenance.py --cpu-model)
+            jq -S --slurpfile setup "$RUNNER_TEMP/runner_setup.json" --arg cpu_model "$cpu_model" \
+              '. + {runner_setup: ($setup[0] + {cpu_model: $cpu_model})}' \
               "$SYMBOL_TABLE_RECORD" > "$RUNNER_TEMP/with_setup.json"
             mv "$RUNNER_TEMP/with_setup.json" "$SYMBOL_TABLE_RECORD"
           else

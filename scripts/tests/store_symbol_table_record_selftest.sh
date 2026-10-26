@@ -26,17 +26,22 @@
 #     adds nothing and leaves the branch as it was; a field both have and
 #     which differs, whether beside an addition or not, whether the offered
 #     one is new or was itself added, is refused and the held record kept;
-#   - a record whose run differs from the held one's in the model name of the
-#     CPU alone is the same but for its run: it is accepted, and the held
-#     record, with its model name, is kept; an offer which adds a field
-#     stores the union with the offered run, and so the offered model name;
+#   - the model name of the CPU of a measurement, cpu_model in the section of
+#     prune's analysis or of the runner's setup, is never compared: an offer
+#     differing from the held record in it alone, or in it and by a count
+#     within its tolerance, is accepted; the held section keeps its model
+#     name with its counts, whether the offer adds a field or not; a held
+#     section without one is not given the offered one, though a section
+#     which only the offer has is added with its own; a count beyond its
+#     tolerance is still refused beside a differing model name;
 #   - the union is taken at every depth: a sub-field of a held object is
 #     added, and one the offer lacks is kept;
 #   - a measured count, with the tolerance of its own (prune's instructions 1
 #     part in 1000, the runner setup's instructions 1 part in 50 and its system
-#     calls 1 part in 200), which differs from the held one by less than that is taken to be
-#     the held one: the record is accepted, the difference said, and the held
-#     count kept, in a record which adds a field as in one which adds none; a
+#     calls 1 part in 200), which differs from the held one by less than that
+#     is taken to be the held one: the record is accepted, the difference
+#     said, and the held count kept, in a record which adds a field as in one
+#     which adds none; a
 #     difference of exactly the tolerance, or more, is refused with the
 #     difference shown, as is a difference in a field which is not measured
 #     (the symbols) however small, even beside a measured count within its
@@ -127,10 +132,15 @@ fixture() {
   record "$work/A-added-changed.json" "$A" 101 6 true ', "prune_analysis": {"instructions": 7}'
   record "$work/A-added-other.json"   "$A" 100 7 true ', "prune_analysis": {"instructions": 8}'
   record "$work/A-null.json"   "$A" 100 8 true ', "note": null'
-  # the runs of two jobs measuring one commit on CPUs of different models
-  jq '.run.cpu_model = "AMD EPYC 7763 64-Core Processor"' "$work/A.json" > "$work/A-cpu-amd.json"
-  jq '.run.cpu_model = "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz"' "$work/A.json" > "$work/A-cpu-intel.json"
-  jq '.run.cpu_model = "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz"' "$work/A-added.json" > "$work/A-added-cpu-intel.json"
+  # measurements of both sections on CPUs of different models: the same
+  # counts, counts within their tolerances, and a count beyond its tolerance
+  local both='"prune_dependency_analysis": {"instructions": %s, "cpu_model": "%s"}, "runner_setup": {"instructions": 1000000000, "syscalls": 834813, "cpu_model": "%s"}'
+  local amd='AMD EPYC 7763 64-Core Processor' intel='Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz'
+  record "$work/C-amd.json"          "$A" 100 41 true ", $(printf "$both" 1000000000 "$amd" "$amd")"
+  record "$work/C-intel.json"        "$A" 100 42 true ", $(printf "$both" 1000000000 "$intel" "$intel")"
+  record "$work/C-intel-near.json"   "$A" 100 43 true ", $(printf "$both" 1000999999 "$intel" "$intel")"
+  record "$work/C-intel-far.json"    "$A" 100 44 true ", $(printf "$both" 1001000000 "$intel" "$intel")"
+  record "$work/C-intel-added.json"  "$A" 100 45 true ", $(printf "$both" 1000000000 "$intel" "$intel"), \"extra\": 1"
   # a held record with an old measurement and a nested object, offers which
   # drop the old measurement, add a nested sub-field, or lack one
   record "$work/U.json"        "$A" 100 31 true ', "prune_analysis": {"instructions": 7}, "runner_setup": {"instructions": 1000}'
@@ -261,23 +271,65 @@ same_commit_controls() {
   unchanged_clone "a record for a commit held"
 }
 
-# A measurement's CPU is part of its run, so a re-measurement on another CPU
-# is the same record but for its run.
+# The CPU model of a measurement stays with the measurement's counts.
 cpu_controls() {
-  local first
+  local first amd='AMD EPYC 7763 64-Core Processor' intel='Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz'
   fixture
-  store A-cpu-amd; first=$(tip)
-  store A-cpu-intel
-  exits "a record differing in the CPU model alone succeeds" 0
-  says "it is the same but for its run" 'the same but for its run: https://example.invalid/runs/1$' "$out"
+  store C-amd; first=$(tip)
+  store C-intel
+  exits "an offer differing in the CPU models alone succeeds" 0
+  says "it is the same but for its run" 'the same but for its run: https://example.invalid/runs/41$' "$out"
   same "it leaves the branch as it was" "$first" "$(tip)"
-  same "the held record keeps its CPU model" "AMD EPYC 7763 64-Core Processor" "$(held "$A" | jq -r '.run.cpu_model')"
+  same "prune's section keeps its CPU model" "$amd" "$(held "$A" | jq -r '.prune_dependency_analysis.cpu_model')"
+  same "the setup's section keeps its CPU model" "$amd" "$(held "$A" | jq -r '.runner_setup.cpu_model')"
 
-  store A-added-cpu-intel
-  exits "a record differing in the CPU model, and adding a field, succeeds" 0
-  same "the union carries the offered run's CPU model" "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz" \
-       "$(held "$A" | jq -r '.run.cpu_model')"
-  unchanged_clone "a differing CPU model"
+  store C-intel-near
+  exits "an offer differing in the CPU models and by counts within their tolerances succeeds" 0
+  says "the counts are said to be within tolerance" 'prune_dependency_analysis.instructions: held 1000000000, offered 1000999999' "$out"
+  same "the branch is as it was after counts within tolerance" "$first" "$(tip)"
+
+  store C-intel-far
+  exits "an offer differing in the CPU models and by a count beyond its tolerance" nonzero
+  says "the count is shown" '"instructions": 1001000000' "$err"
+  same "the branch is as it was after a count beyond" "$first" "$(tip)"
+
+  store C-intel-added
+  exits "an offer adding a field, with another CPU model, succeeds" 0
+  same "the held CPU model of prune's section stands" "$amd" "$(held "$A" | jq -r '.prune_dependency_analysis.cpu_model')"
+  same "the held CPU model of the setup's section stands" "$amd" "$(held "$A" | jq -r '.runner_setup.cpu_model')"
+  same "the field added is there" "1" "$(held "$A" | jq '.extra')"
+  unchanged_clone "differing CPU models"
+
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store A; first=$(tip)
+  store C-intel
+  exits "an offer adding both sections succeeds" 0
+  same "prune's section is added with the offer's CPU model" "$intel" "$(held "$A" | jq -r '.prune_dependency_analysis.cpu_model')"
+  same "the setup's section is added with the offer's CPU model" "$intel" "$(held "$A" | jq -r '.runner_setup.cpu_model')"
+
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store S; first=$(tip)
+  store C-amd
+  exits "an offer with CPU models to a held setup without one succeeds" 0
+  says "it adds the section of prune alone" 'adds to: prune_dependency_analysis$' "$out"
+  same "the held setup has no CPU model" "false" "$(held "$A" | jq '.runner_setup | has("cpu_model")')"
+  same "the held setup counts stand" "1000000000" "$(held "$A" | jq '.runner_setup.instructions')"
+  same "prune's section, which the offer added, has its CPU model" "$amd" \
+       "$(held "$A" | jq -r '.prune_dependency_analysis.cpu_model')"
+
+  store C-amd
+  exits "the offer again" 0
+  says "it adds nothing, though the held setup lacks its CPU model" 'the same but for its run' "$out"
+
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store C-amd; first=$(tip)
+  store S
+  exits "an offer without CPU models to a held section with them" 0
+  same "the branch is as it was" "$first" "$(tip)"
+  same "the held CPU model stands" "$amd" "$(held "$A" | jq -r '.runner_setup.cpu_model')"
 }
 
 # A backfill measures commits recorded before the measurement existed, so
@@ -582,7 +634,17 @@ mutant 'a conflict not refused'        'if [ "$(jq '"'"'.conflicts | length'"'"'
 mutant 'a no-op committed'             'if [ "$(jq '"'"'.added | length'"'"' <<< "$merged")" -eq 0 ]; then' 'if false; then'
 mutant 'a record with more not said'   'echo "$branch already holds $path, with every field of $record and more' 'echo "$branch already holds $path, the same but for its run'
 mutant 'an addition not named'         '[.added[] | join(".")] | join(", ")' '""'
-mutant 'the CPU model compared'        "without_run() { jq -S 'del(.run)'" "without_run() { jq -S 'del(.run.id, .run.url)'"
+mutant 'the CPU model of prune compared' \
+       '  ["prune_dependency_analysis", "cpu_model"],
+' ''
+mutant 'the CPU model of the setup compared' \
+       ',
+  ["runner_setup",              "cpu_model"]' ''
+mutant 'an offered CPU model added to a held section' '           elif cpu_model($path + [$key]) then .
+' ''
+mutant 'the offered CPU model replaces the held' '{value: $h} + none
+       elif ($h | type) == "object"' '{value: $o} + none
+       elif ($h | type) == "object"'
 mutant 'the run compared too'          "without_run() { jq -S 'del(.run)'" "without_run() { jq -S '.'"
 mutant 'every count measured'          '  {"path": ["runner_setup", "syscalls"],                  "denominator": 200}' \
                                        '  {"path": ["runner_setup", "syscalls"],                  "denominator": 200},
