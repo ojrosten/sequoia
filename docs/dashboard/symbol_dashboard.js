@@ -292,8 +292,9 @@
    * less those of the run without, divided by `leftover_entries`. Returns
    * null if the record has no `leftover_materials_setup`, or if the section
    * has no leftover entries, which leaves the quotient undefined and the
-   * measurement blind. Such a record is left out of the series, not plotted
-   * as zero. A record is plotted whatever its runs' exit statuses.
+   * measurement blind. Such a record has no value, and is not plotted as
+   * zero; the chart shows it as blind. A record is plotted whatever its
+   * runs' exit statuses.
    *
    * @param {JsonRecord} record
    * @returns {number | null}
@@ -306,15 +307,19 @@
   }
 
   /**
-   * Returns whether `record`'s `leftover_materials_setup` found no leftover
-   * entries, or null if the record has no `leftover_materials_setup`.
+   * Returns the label of a blind point: 'blind, failed' if `record`'s
+   * `leftover_materials_setup` has no leftover entries and either of its runs
+   * exited with a non-zero status, and 'blind' if it has none and both
+   * exited with zero. Returns null if the section has entries, or the record
+   * has no `leftover_materials_setup`.
    *
    * @param {JsonRecord} record
-   * @returns {boolean | null}
+   * @returns {string | null}
    */
-  function leftoverMaterialsSetupIsBlind(record) {
+  function leftoverMaterialsSetupBlindLabel(record) {
     if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;
-    return record.leftover_materials_setup.leftover_entries === 0;
+    if (record.leftover_materials_setup.leftover_entries !== 0) return null;
+    return leftoverMaterialsSetupFirstFailure(record) === 0 ? 'blind' : 'blind, failed';
   }
 
   /**
@@ -353,7 +358,7 @@
    * @param {JsonRecord} record
    * @returns {number | null}
    */
-  function leftoverMaterialsSetupExitStatus(record) {
+  function leftoverMaterialsSetupFirstFailure(record) {
     if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;
     const section = record.leftover_materials_setup;
     return section.without_leftovers.exit_status !== 0 ? section.without_leftovers.exit_status : section.with_leftovers.exit_status;
@@ -518,8 +523,8 @@
    */
   function pointsOf(orderedRecords) {
     let run = 0;
-    const setupBoundaries    = boundaryCounter();
-    const leftoverBoundaries = boundaryCounter();
+    const setupBoundaryCounter    = boundaryCounter();
+    const leftoverBoundaryCounter = boundaryCounter();
     return orderedRecords.map(({commit, summary, record}, index) => {
       const previous   = orderedRecords[index - 1];
       const toolchainChange = previous && canonical(previous.record.toolchain) !== canonical(record.toolchain)
@@ -527,9 +532,9 @@
         : null;
       if (toolchainChange) ++run;
       const {run: setupRun, change: boundaryChange} =
-        setupBoundaries(Object.hasOwn(record, 'runner_setup') ? record.runner_setup.boundary : null);
+        setupBoundaryCounter(Object.hasOwn(record, 'runner_setup') ? record.runner_setup.boundary : null);
       const {run: leftoverRun, change: leftoverBoundaryChange} =
-        leftoverBoundaries(Object.hasOwn(record, 'leftover_materials_setup') ? record.leftover_materials_setup.boundary : null);
+        leftoverBoundaryCounter(Object.hasOwn(record, 'leftover_materials_setup') ? record.leftover_materials_setup.boundary : null);
       return {commit, date: summary.date, subject: summary.subject, record, run, toolchainChange, setupRun, boundaryChange,
               leftoverRun, leftoverBoundaryChange};
     });
@@ -794,6 +799,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneStampingExitStatus, leftoverMaterialsSetupRunNames, leftoverMaterialsSetupPerEntry, leftoverMaterialsSetupIsBlind, leftoverMaterialsSetupEntries, leftoverMaterialsSetupRuns, leftoverMaterialsSetupExitStatus, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneStampingExitStatus, leftoverMaterialsSetupRunNames, leftoverMaterialsSetupPerEntry, leftoverMaterialsSetupBlindLabel, leftoverMaterialsSetupEntries, leftoverMaterialsSetupRuns, leftoverMaterialsSetupFirstFailure, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));
