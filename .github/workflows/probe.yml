@@ -1,0 +1,28 @@
+name: long-double-valgrind-probe
+on:
+  push:
+    branches: [long-double-valgrind-probe]
+jobs:
+  probe:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - run: sudo apt-get install -y valgrind
+      - run: g++-15 --version | head -1; valgrind --version; lscpu | grep 'Model name'
+      - run: g++-15 -std=c++23 -O0 -g probe.cpp -o probe
+      - name: Native
+        run: ./probe
+      - name: valgrind --tool=none
+        run: valgrind -q --tool=none ./probe
+      - name: valgrind --tool=callgrind
+        run: valgrind -q --tool=callgrind --callgrind-out-file=/dev/null ./probe
+      - name: How libstdc++ classifies a long double for std::format
+        continue-on-error: true
+        run: |
+          lib=$(readlink -f "$(g++-15 -print-file-name=libstdc++.so.6)")
+          echo "$lib"
+          objdump -d --no-show-raw-insn --disassemble=_ZSt8to_charsPcS_eSt12chars_formati "$lib" | head -150
