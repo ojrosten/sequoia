@@ -813,9 +813,9 @@
 
   /**
    * Returns the scale of a plot of the values: its bounds, at multiples of
-   * the step, and its ticks. The bounds enclose the values, and zero as well
-   * if `includesZero`, so that the scale starts at zero unless a value lies
-   * below it; a scale of one value alone is padded.
+   * the step, and its ticks. The bounds enclose the values, and the lower
+   * bound reaches down to zero if `includesZero`, so that the scale starts at
+   * zero unless a value lies below it; a scale of equal values is padded.
    *
    * @param {number[]} values  Non-empty
    * @param {boolean} includesZero

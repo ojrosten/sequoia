@@ -55,7 +55,7 @@
 #   - the counts of uncalled functions join the points of their commits, with
 #     a toolchain of their own; a record of them which has a problem, or lies
 #     at no plotted commit, is listed;
-#   - a scale encloses its values, and zero too where it includes zero, in
+#   - a scale encloses its values, and down to zero where it includes zero, in
 #     steps of 1, 2, 2.5 or 5 times a power of ten;
 #   - the time axis places points linearly in time over whole UTC days, ticks
 #     each date once, at a midnight, and the point nearest a position is the
@@ -776,7 +776,7 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.deepStrictEqual(dashboard.scaleOf([-5, 50], true).ticks, [-20, 0, 20, 40, 60]);
   });
 
-  await control('a scale of one value alone is padded, and that of equal values too', () => {
+  await control('a scale of equal values is padded', () => {
     for (const includesZero of [false, true]) {
       const {low, high} = dashboard.scaleOf([50, 50], includesZero);
       assert.ok(low <= (includesZero ? 0 : 49.9) && high >= 50.05);
