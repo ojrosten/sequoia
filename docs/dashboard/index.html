@@ -161,8 +161,8 @@
           where either run had a non-zero exit status. A dashed rule labelled blind marks a point whose first run left
           no entries: the quotient is undefined, so the point has no value, and the measurement could not have seen such
           a removal. The label is blind, failed if either run had a non-zero exit status. Each point is
-          a marker with no line between them, since the quotient moves with the CPU of the job by more than from one
-          commit to the next, and the scale starts at zero. A change of the run's <code>boundary</code> or of the toolchain
+          a marker, with no line between the markers, since the quotient moves by tens of instructions per entry from
+          one job to the next even at one commit, and the scale starts at zero. A change of the run's <code>boundary</code> or of the toolchain
           is marked by a rule.</p></figcaption>
       <div class="plot" id="leftover-plot"></div>
     </figure>
@@ -528,8 +528,8 @@
 
   // The setup's cost of leftover entries is plotted per entry, so a point with none has no value and is blind. A
   // record can lack the section, being older than it or its measurement having failed. The points are markers
-  // alone: the quotient moves by tens with the CPU of the job, which a line between jobs a moment apart would
-  // draw as a climb, and the scale starts at zero, so that the regression of about 1,650 stands out of that.
+  // alone: the quotient moves by tens between jobs even at one commit, which a line between jobs a moment apart
+  // would draw as a climb, and the scale starts at zero, so that the regression of about 1,650 stands out of that.
   // A rule breaks the series at a change of the toolchain, or of the boundary of the measurement.
   const leftoverMeasure = {
     name: 'instructions of the runner\'s setup, per leftover entry',
