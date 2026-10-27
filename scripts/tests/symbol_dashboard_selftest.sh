@@ -55,6 +55,8 @@
 #   - the counts of uncalled functions join the points of their commits, with
 #     a toolchain of their own; a record of them which has a problem, or lies
 #     at no plotted commit, is listed;
+#   - a scale encloses its values, and zero too where it includes zero, in
+#     steps of 1, 2, 2.5 or 5 times a power of ten;
 #   - the time axis places points linearly in time over whole UTC days, ticks
 #     each date once, at a midnight, and the point nearest a position is the
 #     earliest of equals;
@@ -762,6 +764,25 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.strictEqual(dashboard.smallestGap([5]), Infinity);
   });
 
+  await control('a scale fitted to the values ends at multiples of its step, which enclose them', () => {
+    const {low, high, step, ticks} = dashboard.scaleOf([27, 80], false);
+    assert.deepStrictEqual([low, high, step], [20, 80, 20]);
+    assert.deepStrictEqual(ticks, [20, 40, 60, 80]);
+  });
+
+  await control('a scale which includes zero starts at it, or below a value which lies below it', () => {
+    assert.deepStrictEqual(dashboard.scaleOf([27, 80], true).ticks, [0, 20, 40, 60, 80]);
+    assert.deepStrictEqual(dashboard.scaleOf([1650, 1700], true).ticks, [0, 500, 1000, 1500, 2000]);
+    assert.deepStrictEqual(dashboard.scaleOf([-5, 50], true).ticks, [-20, 0, 20, 40, 60]);
+  });
+
+  await control('a scale of one value alone is padded, and that of equal values too', () => {
+    for (const includesZero of [false, true]) {
+      const {low, high} = dashboard.scaleOf([50, 50], includesZero);
+      assert.ok(low <= (includesZero ? 0 : 49.9) && high >= 50.05);
+    }
+  });
+
   await control('a commit with a date which is not a date is refused', () => {
     const commit = date => ({sha: c.F1, parents: [], commit: {committer: {date}, message: 'm'}});
     assert.strictEqual(dashboard.summarise(commit('2026-10-17T12:00:00Z')).date, '2026-10-17T12:00:00Z');
@@ -930,6 +951,11 @@ MUTATIONS = [
     ('the smallest gap taken unsorted',  'const sorted = xs.slice().sort((a, b) => a - b);', 'const sorted = xs.slice();'),
     ('an unreadable date accepted',      'if (!Number.isFinite(Date.parse(commit.commit.committer.date))) {', 'if (false) {'),
     ('an empty branch loaded',            "if (listing.size === 0) return {state: 'empty'};", ''),
+    ('zero never included in the scale',  'Math.min(...values, ...(includesZero ? [0] : []))', 'Math.min(...values)'),
+    ('zero always included in the scale', 'Math.min(...values, ...(includesZero ? [0] : []))', 'Math.min(...values, 0)'),
+    ('a scale which starts at zero clipped', 'Math.min(...values, ...(includesZero ? [0] : []))', 'includesZero ? 0 : Math.min(...values)'),
+    ('the scale not padded',               'if (low === high) {', 'if (false) {'),
+    ('the scale\'s step not nice',         'return unit * ([1, 2, 2.5, 5, 10].find(m => m * unit >= raw) ?? 10);', 'return raw;'),
 ]
 with open(script, encoding='utf-8') as f:
     source = f.read()

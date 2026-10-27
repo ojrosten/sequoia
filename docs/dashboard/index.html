@@ -160,8 +160,10 @@
           materials were prepared, as the runner did before PR 182, spent about 1,650 per entry. A hollow point is one
           where either run had a non-zero exit status. A dashed rule labelled blind marks a point whose first run left
           no entries: the quotient is undefined, so the point has no value, and the measurement could not have seen such
-          a removal. The label is blind, failed if either run had a non-zero exit status. A change of the run's
-          <code>boundary</code> or of the toolchain breaks the line.</p></figcaption>
+          a removal. The label is blind, failed if either run had a non-zero exit status. Each point is
+          a marker with no line between them, since the quotient moves with the CPU of the job by more than from one
+          commit to the next, and the scale starts at zero. A change of the run's <code>boundary</code> or of the toolchain
+          is marked by a rule.</p></figcaption>
       <div class="plot" id="leftover-plot"></div>
     </figure>
     <figure class="card" id="runner-figure">
@@ -324,21 +326,6 @@
 
   // Ticks ------------------------------------------------------------------
 
-  function niceStep(span, count) {
-    const raw  = span / count;
-    const unit = 10 ** Math.floor(Math.log10(raw));
-    return unit * ([1, 2, 2.5, 5, 10].find(m => m * unit >= raw));
-  }
-  function scaleOf(values) {
-    let low = Math.min(...values), high = Math.max(...values);
-    if (low === high) { const pad = Math.max(1, Math.abs(low) * 0.001); low -= pad; high += pad; }
-    const step = niceStep(high - low, 4);
-    low  = Math.floor(low / step) * step;
-    high = Math.ceil(high / step) * step;
-    const ticks = [];
-    for (let tick = low; tick <= high + step / 2; tick += step) ticks.push(tick);
-    return {low, high, step, ticks};
-  }
   function compact(value, step, high) {
     const [divisor, suffix] = high >= 1e6 ? [1e6, 'M'] : high >= 1e3 ? [1e3, 'K'] : [1, ''];
     const decimals = Math.max(0, Math.ceil(-Math.log10(step / divisor) - 1e-9));
@@ -362,9 +349,9 @@
   }
 
   // Draws the points' values of one measure into `container`, one line per
-  // run, with a rule at each change of toolchain, over the days from its
-  // first count to its last. Returns the chart's functions to mark the
-  // hovered and selected points.
+  // run, or the markers alone if the measure is `markersOnly`, with a rule at
+  // each change of toolchain, over the days from its first count to its last.
+  // Returns the chart's functions to mark the hovered and selected points.
   function drawChart(container, measure, height, labelBreaks) {
     const points = state.points;
     const width  = Math.max(280, container.clientWidth);
@@ -379,7 +366,7 @@
     // A point may lack the measure, and is then left out of the scale, the axis of time and the line
     const indicesWithCount = points.flatMap((point, index) => values[index] === null && !isBlind(index) ? [] : [index]);
     const valuesWithCount = indicesWithCount.filter(index => values[index] !== null).map(index => values[index]);
-    const scale  = scaleOf(valuesWithCount.length > 0 ? valuesWithCount : [0]);
+    const scale  = symbolDashboard.scaleOf(valuesWithCount.length > 0 ? valuesWithCount : [0], measure.includesZero === true);
     // Time runs along x, so points of one day are close and days with no point leave a gap
     const timesWithCount = indicesWithCount.map(index => Date.parse(points[index].date));
     const axisOfTime = symbolDashboard.timeAxis(timesWithCount, margin.left, width - margin.right, 80);
@@ -445,13 +432,13 @@
       joined = point;
       runs[runs.length - 1].push(`${x(index).toFixed(1)},${y(values[index]).toFixed(1)}`);
     });
-    for (const run of runs) {
+    for (const run of measure.markersOnly ? [] : runs) {
       svg.append(element('svg:polyline', {points: run.join(' '), fill: 'none', stroke: 'var(--series)', 'stroke-width': 2,
                                           'stroke-linejoin': 'round', 'stroke-linecap': 'round'}));
     }
     // A point is marked where the points are far enough apart for every one to be, where it is a line of its own,
-    // and where its run failed, so that a failed run shows on any axis.
-    const hasRoomForEveryMarker = symbolDashboard.smallestGap(axisOfTime.xs) >= 14;
+    // and where its run failed, so that a failed run shows on any axis. Where there is no line, every point is.
+    const hasRoomForEveryMarker = measure.markersOnly || symbolDashboard.smallestGap(axisOfTime.xs) >= 14;
     const loneRunPoints = new Set(runStarts.filter((start, runIndex) => runs[runIndex].length === 1));
     points.forEach((point, index) => {
       if (values[index] === null
@@ -540,15 +527,17 @@
   }));
 
   // The setup's cost of leftover entries is plotted per entry, so a point with none has no value and is blind. A
-  // record can lack the section, being older than it or its measurement having failed, and the line joins the
-  // points which have it; it breaks at a change of the toolchain, or of the boundary of the measurement.
+  // record can lack the section, being older than it or its measurement having failed. The points are markers
+  // alone: the quotient moves by tens with the CPU of the job, which a line between jobs a moment apart would
+  // draw as a climb, and the scale starts at zero, so that the regression of about 1,650 stands out of that.
+  // A rule breaks the series at a change of the toolchain, or of the boundary of the measurement.
   const leftoverMeasure = {
     name: 'instructions of the runner\'s setup, per leftover entry',
     value: symbolDashboard.leftoverMaterialsSetupPerEntry,
     unit: 'instructions per leftover entry',
     exitStatus: symbolDashboard.leftoverMaterialsSetupFirstFailure,
     blindLabel: symbolDashboard.leftoverMaterialsSetupBlindLabel,
-    joinsGaps: true, runOf: point => `${point.run}/${point.leftoverRun}`,
+    markersOnly: true, includesZero: true,
     changeOf: point => point.toolchainChange || point.leftoverBoundaryChange,
     breakLabel: point => point.leftoverBoundaryChange ? 'boundary' : 'toolchain'
   };
