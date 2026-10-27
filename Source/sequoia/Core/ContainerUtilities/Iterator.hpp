@@ -18,21 +18,6 @@
 
 namespace sequoia::utilities
 {
-  template<class I>
-  concept decrementable = requires(I i) {
-    { --i } -> std::same_as<I&>;
-    { i-- } -> std::convertible_to<I>;
-  };
-
-  template<class I>
-  concept steppable = requires(I i, const I j, const std::iter_difference_t<I> n) {
-    { i += n } -> std::same_as<I&>;
-    { j + n }  -> std::convertible_to<I>;
-    { n + j }  -> std::convertible_to<I>;
-    { i -= n } -> std::same_as<I&>;
-    { j - n }  -> std::convertible_to<I>;
-  };
-
   namespace impl
   {
     template<class Policy>
@@ -200,7 +185,7 @@ namespace sequoia::utilities
 
     [[nodiscard]]
     constexpr reference operator[](const difference_type n) const
-      requires steppable<Iterator>
+      requires std::random_access_iterator<Iterator>
     {
       return DereferencePolicy::get(m_BaseIterator + n);
     }
@@ -232,7 +217,7 @@ namespace sequoia::utilities
     // nothing here can be at fault.
 SEQUOIA_GCC_SUPPRESS_BEGIN("-Warray-bounds")
     constexpr iterator& operator+=(const difference_type n)
-      requires steppable<Iterator>
+      requires std::random_access_iterator<Iterator>
     {
       m_BaseIterator += n;
       return *this;
@@ -240,7 +225,7 @@ SEQUOIA_GCC_SUPPRESS_BEGIN("-Warray-bounds")
 
     [[nodiscard]]
     friend constexpr iterator operator+(const iterator& it, const difference_type n)
-      requires steppable<Iterator>
+      requires std::random_access_iterator<Iterator>
     {
       iterator tmp{it};
       return tmp += n;
@@ -249,20 +234,20 @@ SEQUOIA_GCC_SUPPRESS_END
 
     [[nodiscard]]
     friend constexpr iterator operator+(const difference_type n, const iterator& it)
-      requires steppable<Iterator>
+      requires std::random_access_iterator<Iterator>
     {
       return it + n;
     }
 
     constexpr iterator& operator--()
-      requires decrementable<Iterator>
+      requires std::bidirectional_iterator<Iterator>
     {
       --m_BaseIterator;
       return *this;
     }
 
     constexpr iterator operator--(int)
-      requires decrementable<Iterator>
+      requires std::bidirectional_iterator<Iterator>
     {
       iterator tmp{*this};
       operator--();
@@ -270,7 +255,7 @@ SEQUOIA_GCC_SUPPRESS_END
     }
 
     constexpr iterator& operator-=(const difference_type n)
-      requires steppable<Iterator>
+      requires std::random_access_iterator<Iterator>
     {
       m_BaseIterator -= n;
       return *this;
@@ -278,7 +263,7 @@ SEQUOIA_GCC_SUPPRESS_END
 
     [[nodiscard]]
     friend constexpr iterator operator-(const iterator& it, const difference_type n)
-      requires steppable<Iterator>
+      requires std::random_access_iterator<Iterator>
     {
       iterator tmp{it};
       return tmp -= n;
@@ -286,7 +271,7 @@ SEQUOIA_GCC_SUPPRESS_END
 
     [[nodiscard]]
     friend constexpr difference_type operator-(const iterator& lhs, const iterator& rhs)
-      requires steppable<Iterator>
+      requires std::sized_sentinel_for<Iterator, Iterator>
     {
       return lhs.base_iterator() - rhs.base_iterator();
     }
@@ -299,6 +284,7 @@ SEQUOIA_GCC_SUPPRESS_END
 
     [[nodiscard]]
     friend constexpr auto operator<=>(const iterator& lhs, const iterator& rhs) noexcept
+      requires std::three_way_comparable<Iterator>
     {
       return lhs.m_BaseIterator <=> rhs.m_BaseIterator;
     }
