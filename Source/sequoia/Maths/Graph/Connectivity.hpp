@@ -466,7 +466,8 @@ namespace sequoia
           permutation of the nodes' indices. The edges may then no longer
           describe a valid graph.
        */
-      constexpr void permute_nodes(const std::vector<edge_index_type>& destinations)
+      template<destination_indices D>
+      constexpr void permute_nodes(const D& destinations)
       {
         m_Edges.permute_partitions(destinations);
 
@@ -476,9 +477,16 @@ namespace sequoia
           | std::views::join
         };
 
+        auto destinationFor{
+          [first{std::ranges::begin(destinations)}](const edge_index_type node) {
+            const std::ranges::range_value_t<const D> destination{first[numeric::unchecked_conversion_to<std::ranges::range_difference_t<const D>>(node)]};
+            return numeric::unchecked_conversion_to<edge_index_type>(destination);
+          }
+        };
+
         for(auto& edge : allEdges)
         {
-          edge.target_node(destinations[edge.target_node()]);
+          edge.target_node(destinationFor(edge.target_node()));
         }
       }
 

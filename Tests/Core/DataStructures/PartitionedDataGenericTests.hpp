@@ -12,6 +12,10 @@
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
+#include <array>
+#include <ranges>
+#include <vector>
+
 namespace sequoia::testing
 {
   namespace partitioned_data
@@ -1077,17 +1081,17 @@ namespace sequoia::testing
             },
             {
               data_description::three_3____2,
-              t.report(""),
+              t.report("Permuting partitions by signed destinations in an array"),
               [](data_type d) -> data_type {
-                d.permute_partitions(std::vector<std::size_t>{2, 1, 0});
+                d.permute_partitions(std::array{2, 1, 0});
                 return d;
               }
             },
             {
               data_description::three_2__3__,
-              t.report(""),
+              t.report("Permuting partitions by destinations in a view which cannot be copied"),
               [](data_type d) -> data_type {
-                d.permute_partitions(std::vector<std::size_t>{0, 2, 1});
+                d.permute_partitions(std::vector{1, 3, 2} | std::views::transform([](int i) { return i - 1; }));
                 return d;
               }
             },

@@ -12,6 +12,7 @@
 #include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Maths/Graph/Edge.hpp"
 #include "sequoia/Core/Object/Handlers.hpp"
+#include "sequoia/TestFramework/AllocationTestUtilities.hpp"
 
 #include <algorithm>
 #include <any>
@@ -20,6 +21,7 @@
 #include <iterator>
 #include <list>
 #include <ranges>
+#include <span>
 #include <stdexcept>
 #include <vector>
 
@@ -127,11 +129,46 @@ namespace sequoia::testing
     }
 
     template<class T, std::size_t N>
-    constexpr std::array<T, N> permute(std::array<T, N> a, const std::vector<std::size_t>& destinations)
+    constexpr std::array<T, N> permute(std::array<T, N> a, std::vector<std::size_t> destinations)
     {
-      sequoia::permute(a, destinations);
+      sequoia::permute(a, std::move(destinations));
       return a;
     }
+
+    struct swap_counter
+    {
+      std::size_t* total{};
+
+      friend constexpr void swap(swap_counter& lhs, swap_counter& rhs) noexcept
+      {
+        ++*lhs.total;
+        std::ranges::swap(lhs.total, rhs.total);
+      }
+    };
+
+    [[nodiscard]]
+    constexpr std::size_t swaps_made_by_permute(std::vector<std::size_t> destinations)
+    {
+      std::size_t swaps{};
+      std::vector<swap_counter> elements(destinations.size(), swap_counter{&swaps});
+      sequoia::permute(elements, std::move(destinations));
+      return swaps;
+    }
+
+    template<class Size>
+    struct range_with_size_type
+    {
+      std::array<int, 3> elements{};
+
+      [[nodiscard]]
+      constexpr int* begin() noexcept { return elements.data(); }
+
+      [[nodiscard]]
+      constexpr int* end() noexcept { return elements.data() + elements.size(); }
+
+      [[nodiscard]]
+      constexpr Size size() const noexcept { return static_cast<Size>(elements.size()); }
+    };
 
     template<class... Args>
     concept make_heap_accepts
@@ -198,6 +235,9 @@ namespace sequoia::testing
   {
     algorithm_constraints();
     permute_basic_type();
+    permute_swap_count();
+    permute_leaves_destinations_unchanged();
+    permute_allocation_count();
 
     make_heap_by_second_element(range_form{});
     make_heap_by_second_element(iterator_sentinel_form{});
@@ -309,18 +349,34 @@ namespace sequoia::testing
     STATIC_CHECK( clusterable<int*, equal_to_t,         std::identity>);
     STATIC_CHECK(!clusterable<int*, move_only_equal_to, std::identity>);
 
-    using destinations_t           = std::vector<std::size_t>;
-    using signed_destinations_t    = std::vector<int>;
-    using boolean_destinations_t   = std::vector<bool>;
-    using character_destinations_t = std::vector<char8_t>;
+    using char_sized_range_t                = range_with_size_type<char>;
 
-    STATIC_CHECK( permute_accepts<      array_t&,           destinations_t>);
-    STATIC_CHECK( permute_accepts<    subrange_t,           destinations_t>);
-    STATIC_CHECK( permute_accepts<      array_t&,    signed_destinations_t>);
-    STATIC_CHECK(!permute_accepts<const array_t&,           destinations_t>);
-    STATIC_CHECK(!permute_accepts<       list_t&,           destinations_t>);
-    STATIC_CHECK(!permute_accepts<      array_t&,   boolean_destinations_t>);
-    STATIC_CHECK(!permute_accepts<      array_t&, character_destinations_t>);
+    using destinations_t                    = std::vector<std::size_t>;
+    using signed_destinations_t             = std::vector<int>;
+    using boolean_destinations_t            = std::vector<bool>;
+    using character_destinations_t          = std::vector<char8_t>;
+
+    using array_destinations_t              = std::array<std::size_t, 3>;
+    using span_destinations_t               = std::span<std::size_t>;
+    using iota_destinations_t               = std::ranges::iota_view<std::size_t, std::size_t>;
+    using list_destinations_t               = std::list<std::size_t>;
+    using non_const_iterable_destinations_t = decltype(iota_destinations_t{} | std::views::transform([offset{0uz}](std::size_t i) mutable { return i + offset; }));
+
+    STATIC_CHECK( permute_accepts<           array_t&,                    destinations_t>);
+    STATIC_CHECK( permute_accepts<           array_t&,                   destinations_t&>);
+    STATIC_CHECK( permute_accepts<           array_t&,             const destinations_t&>);
+    STATIC_CHECK( permute_accepts<           array_t&,             array_destinations_t&>);
+    STATIC_CHECK( permute_accepts<           array_t&,               span_destinations_t>);
+    STATIC_CHECK( permute_accepts<           array_t&,               iota_destinations_t>);
+    STATIC_CHECK( permute_accepts<         subrange_t,                    destinations_t>);
+    STATIC_CHECK( permute_accepts<           array_t&,             signed_destinations_t>);
+    STATIC_CHECK(!permute_accepts<     const array_t&,                    destinations_t>);
+    STATIC_CHECK(!permute_accepts<            list_t&,                    destinations_t>);
+    STATIC_CHECK(!permute_accepts<char_sized_range_t&,                    destinations_t>);
+    STATIC_CHECK(!permute_accepts<           array_t&,               list_destinations_t>);
+    STATIC_CHECK(!permute_accepts<           array_t&, non_const_iterable_destinations_t>);
+    STATIC_CHECK(!permute_accepts<           array_t&,            boolean_destinations_t>);
+    STATIC_CHECK(!permute_accepts<           array_t&,          character_destinations_t>);
   }
 
   void algorithms_test::permute_basic_type()
@@ -332,6 +388,69 @@ namespace sequoia::testing
     STATIC_CHECK(permute(a, {2, 0, 3, 1}) == std::array{11, 13, 10, 12});
     STATIC_CHECK(permute(a, {1, 0, 3, 2}) == std::array{11, 10, 13, 12});
     STATIC_CHECK(permute(a, {3, 2, 1, 0}) == std::array{13, 12, 11, 10});
+
+    STATIC_CHECK(
+      []() {
+        std::vector<std::size_t> v{2, 0, 3, 1};
+        sequoia::permute(v, v);
+        return v == std::vector<std::size_t>{0, 1, 2, 3};
+      }()
+    );
+
+    STATIC_CHECK(
+      []() {
+        range_with_size_type<std::ptrdiff_t> elements{{10, 11, 12}};
+        sequoia::permute(elements, std::vector<std::size_t>{2, 0, 1});
+        return elements.elements == std::array{11, 12, 10};
+      }()
+    );
+  }
+
+  void algorithms_test::permute_swap_count()
+  {
+    STATIC_CHECK(swaps_made_by_permute({})                       == 0);
+    STATIC_CHECK(swaps_made_by_permute({0, 1, 2, 3, 4, 5, 6, 7}) == 0);
+    STATIC_CHECK(swaps_made_by_permute({1, 2, 3, 4, 5, 6, 7, 0}) == 7);
+    STATIC_CHECK(swaps_made_by_permute({7, 0, 1, 2, 3, 4, 5, 6}) == 7);
+    STATIC_CHECK(swaps_made_by_permute({1, 0, 3, 2, 5, 4, 7, 6}) == 4);
+    STATIC_CHECK(swaps_made_by_permute({1, 2, 0, 4, 3, 5, 6, 7}) == 3);
+  }
+
+  void algorithms_test::permute_leaves_destinations_unchanged()
+  {
+    STATIC_CHECK(
+      []() {
+        std::array a{10, 11, 12};
+        std::vector<std::size_t> destinations{2, 0, 1};
+        sequoia::permute(a, destinations);
+        return (a == std::array{11, 12, 10}) && (destinations == std::vector<std::size_t>{2, 0, 1});
+      }()
+    );
+
+    STATIC_CHECK(
+      []() {
+        std::array a{10, 11, 12};
+        std::array<std::size_t, 3> destinations{2, 0, 1};
+        sequoia::permute(a, std::span{destinations});
+        return (a == std::array{11, 12, 10}) && (destinations == std::array<std::size_t, 3>{2, 0, 1});
+      }()
+    );
+  }
+
+  void algorithms_test::permute_allocation_count()
+  {
+    using allocator_t = shared_counting_allocator<std::size_t>;
+
+    allocator_t allocator{};
+    std::vector<std::size_t, allocator_t> destinations({2, 0, 1}, allocator);
+    std::array a{10, 11, 12};
+
+    sequoia::permute(a, destinations);
+    check(equality, "Permuting by named destinations copies them", allocator.allocs(), 2);
+
+    sequoia::permute(a, std::move(destinations));
+    check(equality, "Permuting by moved destinations does not copy them", allocator.allocs(), 2);
+    check(equality, "Moved destinations permute as named ones do", a, std::array{12, 10, 11});
   }
 
   template<class Form>
@@ -558,6 +677,16 @@ namespace sequoia::testing
     check_exception_thrown<std::invalid_argument>(
       "A destination shared by two elements is not a permutation",
       [](){ return permute(std::array{10, 11, 12}, {1, 1, 0}); }
+    );
+
+    check_exception_thrown<std::invalid_argument>(
+      "A destination shared by two elements, found only after a swap, is not a permutation",
+      [](){ return permute(std::array{10, 11, 12}, {1, 2, 2}); }
+    );
+
+    check_exception_thrown<std::invalid_argument>(
+      "A destination shared with an element already in place is not a permutation",
+      [](){ return permute(std::array{10, 11}, {0, 0}); }
     );
 
     check_exception_thrown<std::invalid_argument>(

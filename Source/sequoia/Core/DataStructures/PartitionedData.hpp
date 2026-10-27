@@ -181,8 +181,8 @@ namespace sequoia
           permutation of the partitions' indices. The partitions are then in
           an unspecified order.
        */
-      template<integer Index>
-      constexpr void permute_partitions(const std::vector<Index>& destinations)
+      template<destination_indices D>
+      constexpr void permute_partitions(const D& destinations)
       {
         sequoia::permute(m_Buckets, destinations);
       }
@@ -712,8 +712,8 @@ namespace sequoia
           permutation of the partitions' indices. The partitions are then in
           an unspecified order.
        */
-      template<integer Index>
-      constexpr void permute_partitions(const std::vector<Index>& destinations)
+      template<destination_indices D>
+      constexpr void permute_partitions(const D& destinations)
       {
         const auto partitionIndices{
           std::views::iota(index_type{}, numeric::unchecked_conversion_to<index_type>(num_partitions()))
@@ -742,8 +742,8 @@ namespace sequoia
         };
 
         auto destinationsOfElementsIn{
-          [&](const index_type i) {
-            const auto destination{destinations[i]};
+          [&](const index_type i, const std::ranges::range_value_t<const D> destinationOfPartition) {
+            const auto destination{numeric::unchecked_conversion_to<std::size_t>(destinationOfPartition)};
             const auto firstDestination{permutedBounds[destination] - permutedSizes[destination]};
             return std::views::iota(firstDestination, firstDestination + size_of_partition(i));
           }
@@ -752,8 +752,7 @@ namespace sequoia
         // The partitions need not cover every element of a static sequence
         const auto partitionedSize{permutedBounds.empty() ? size_type{} : permutedBounds.back()};
         sequoia::permute(m_Data | std::views::take(partitionedSize),
-                             partitionIndices
-                           | std::views::transform(destinationsOfElementsIn)
+                             std::views::zip_transform(destinationsOfElementsIn, partitionIndices, std::ranges::ref_view{destinations})
                            | std::views::join
                            | std::ranges::to<std::vector>());
 

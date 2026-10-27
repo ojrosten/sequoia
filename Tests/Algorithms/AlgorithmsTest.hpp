@@ -27,6 +27,12 @@ namespace sequoia::testing
 
     void permute_basic_type();
 
+    void permute_swap_count();
+
+    void permute_leaves_destinations_unchanged();
+
+    void permute_allocation_count();
+
     template<class Form>
     void make_heap_by_second_element(Form form);
 

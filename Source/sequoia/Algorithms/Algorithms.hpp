@@ -19,6 +19,7 @@
 #include <iterator>
 #include <ranges>
 #include <stdexcept>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -242,50 +243,82 @@ namespace sequoia
     }
   }
 
+  /** \brief A range which, when `const`, is a sized random-access range of
+             integers.
+   */
+  template<class D>
+  concept destination_indices
+    =    std::ranges::random_access_range<const std::remove_reference_t<D>>
+      && std::ranges::sized_range<const std::remove_reference_t<D>>
+      && integer<std::ranges::range_value_t<const std::remove_reference_t<D>>>;
+
   /** \brief Moves the element at each position `i` of `r` to position
              `destinations[i]`.
+
+      If `destinations` is a permutation, swaps elements of `r` n - c times,
+      where n is the number of positions and c the number of cycles of the
+      permutation, fixed points included.
+
+      Moves `destinations` if it is a non-const `std::vector` rvalue.
+      Otherwise copies it into a `std::vector`, allocating unless it is empty,
+      and leaves it unchanged.
 
       \throws std::invalid_argument if `destinations` is not a permutation of
       `r`'s positions. `r` then holds its elements in an unspecified order.
    */
-  template<std::ranges::random_access_range R, integer Index>
-    requires (std::ranges::sized_range<R> && std::indirectly_swappable<std::ranges::iterator_t<R>>)
-  constexpr void permute(R&& r, std::vector<Index> destinations)
+  template<std::ranges::random_access_range R, destination_indices D>
+    requires (   std::ranges::sized_range<R>
+              && std::indirectly_swappable<std::ranges::iterator_t<R>>
+              && integer<std::ranges::range_size_t<R>>
+              && integer<std::ranges::range_difference_t<R>>
+              && std::ranges::input_range<D>
+              && integer<std::ranges::range_value_t<D>>)
+  constexpr void permute(R&& r, D&& destinations)
   {
-    const auto size{std::ranges::size(r)};
-    if(std::cmp_not_equal(destinations.size(), size))
+    auto elementDestinations{std::ranges::to<std::vector>(std::forward<D>(destinations))};
+    const auto size{numeric::unchecked_conversion_to<std::size_t>(std::ranges::size(r))};
+    if(elementDestinations.size() != size)
       throw std::invalid_argument{impl::not_a_permutation_message()};
 
-    auto iteratorAt{
+    auto iteratorAtPosition{
       [first{std::ranges::begin(r)}](const std::size_t position) {
         return first + numeric::unchecked_conversion_to<std::ranges::range_difference_t<R>>(position);
       }
     };
 
-    auto isPosition{
-      [size](const Index destination) {
-        return std::cmp_greater_equal(destination, 0) && std::cmp_less(destination, size);
+    auto destinationFor{
+      [&elementDestinations, size](const std::size_t position) {
+        const auto destination{elementDestinations[position]};
+        if(std::cmp_less(destination, 0) || std::cmp_greater_equal(destination, size))
+          throw std::invalid_argument{impl::not_a_permutation_message()};
+
+        return numeric::unchecked_conversion_to<std::size_t>(destination);
       }
     };
 
-    // Each swap leaves the entry at the element's destination equal to that
-    // destination, so the loop ends. Finding such an entry before the swap
-    // means that two elements share the destination. Either that, or a
-    // destination outside the range, shows that the destinations are not a
-    // permutation.
-    for(const auto position : std::views::iota(0uz, destinations.size()))
+    // Swapping `r` and `elementDestinations` together keeps
+    // `elementDestinations[p]` the destination of the element at position p of
+    // `r`. Each step of the inner loop moves the element at `position` to
+    // `destination`, putting it in place. No step moves an element already in
+    // place: the element at `position` is not, since `destination` differs
+    // from `position`, and one in place at `destination` would share its
+    // destination with the element at `position`, so the check before the step
+    // throws instead. Each step therefore puts at least one more element in
+    // place, and the loops, although nested, take at most `size` steps in all;
+    // for a permutation, a cycle of k elements takes k - 1, the last of which
+    // puts two elements in place. Since swapping only rearranges
+    // `elementDestinations`, a value held twice, or one outside [0, size),
+    // shows that the destinations passed are not a permutation. If neither is
+    // found, every element ends in place.
+    for(const auto position : std::views::iota(0uz, size))
     {
-      while(std::cmp_not_equal(destinations[position], position))
+      for(auto destination{destinationFor(position)}; destination != position; destination = destinationFor(position))
       {
-        if(!isPosition(destinations[position]))
+        if(destinationFor(destination) == destination)
           throw std::invalid_argument{impl::not_a_permutation_message()};
 
-        const auto destination{numeric::unchecked_conversion_to<std::size_t>(destinations[position])};
-        if(std::cmp_equal(destinations[destination], destination))
-          throw std::invalid_argument{impl::not_a_permutation_message()};
-
-        std::ranges::iter_swap(iteratorAt(position), iteratorAt(destination));
-        std::ranges::swap(destinations[position], destinations[destination]);
+        std::ranges::iter_swap(iteratorAtPosition(position), iteratorAtPosition(destination));
+        std::ranges::swap(elementDestinations[position], elementDestinations[destination]);
       }
     }
   }
