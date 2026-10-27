@@ -14,7 +14,9 @@
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 #include "sequoia/TestFramework/Output.hpp"
 
+#include <concepts>
 #include <format>
+#include <functional>
 #include <memory>
 
 namespace sequoia::testing
@@ -115,6 +117,18 @@ namespace sequoia::testing
 #endif
 #endif
   };
+
+  /** \brief The number of allocations made, by `allocator` or any allocator
+             sharing its count, while `f` runs.
+   */
+  template<class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap, std::invocable F>
+  [[nodiscard]]
+  int allocations_made_by(const shared_counting_allocator<T, PropagateCopy, PropagateMove, PropagateSwap>& allocator, F f)
+  {
+    const int before{allocator.allocs()};
+    std::invoke(f);
+    return allocator.allocs() - before;
+  }
 
   template<class T>
   struct type_demangler;

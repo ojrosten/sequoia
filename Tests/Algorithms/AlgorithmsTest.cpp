@@ -462,28 +462,22 @@ namespace sequoia::testing
     using destinations_t = std::vector<std::size_t, allocator_t>;
 
     allocator_t allocator{};
-    auto allocationsMadeBy{
-      [&allocator](auto f) {
-        const int before{allocator.allocs()};
-        f();
-        return allocator.allocs() - before;
-      }
-    };
 
-    // Not zero under MSVC's debug build, which gives every vector a container proxy
-    const int emptyVectorAllocations{allocationsMadeBy([&allocator]() { destinations_t empty(allocator); })};
+    // None, except under MSVC's debug build, which gives every vector it
+    // constructs, by move included, a container proxy
+    const int emptyVectorAllocations{allocations_made_by(allocator, [&allocator]() { destinations_t empty(allocator); })};
 
     destinations_t destinations({2, 0, 1}, allocator);
     std::array a{10, 11, 12};
 
     check(equality,
           "Permuting by named destinations copies them",
-          allocationsMadeBy([&]() { sequoia::permute(a, destinations); }),
+          allocations_made_by(allocator, [&]() { sequoia::permute(a, destinations); }),
           emptyVectorAllocations + 1);
 
     check(equality,
           "Permuting by moved destinations does not copy them",
-          allocationsMadeBy([&]() { sequoia::permute(a, std::move(destinations)); }),
+          allocations_made_by(allocator, [&]() { sequoia::permute(a, std::move(destinations)); }),
           emptyVectorAllocations);
 
     check(equality, "Moved destinations permute as named ones do", a, std::array{12, 10, 11});
