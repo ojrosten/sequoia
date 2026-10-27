@@ -243,25 +243,25 @@ namespace sequoia
     }
   }
 
-  /** \brief A range which, when `const`, is a sized random-access range of
-             integers.
+  /** \brief A range `permute` accepts as the destinations of a range's
+             elements.
    */
   template<class D>
   concept destination_indices
-    =    std::ranges::random_access_range<const std::remove_reference_t<D>>
-      && std::ranges::sized_range<const std::remove_reference_t<D>>
-      && integer<std::ranges::range_value_t<const std::remove_reference_t<D>>>;
+    =    std::ranges::input_range<D>
+      && std::ranges::sized_range<D>
+      && integer<std::ranges::range_value_t<D>>;
 
-  /** \brief Moves the element at each position `i` of `r` to position
-             `destinations[i]`.
+  /** \brief Moves the element at each position `i` of `r` to the position
+             held by the `i`th element of `destinations`.
 
       If `destinations` is a permutation, swaps elements of `r` n - c times,
       where n is the number of positions and c the number of cycles of the
       permutation, fixed points included.
 
       Moves `destinations` if it is a non-const `std::vector` rvalue.
-      Otherwise copies it into a `std::vector`, allocating unless it is empty,
-      and leaves it unchanged.
+      Otherwise copies it into a `std::vector` in a single pass, allocating
+      unless it is empty, and does not write to it.
 
       \throws std::invalid_argument if `destinations` is not a permutation of
       `r`'s positions. `r` then holds its elements in an unspecified order.
@@ -270,15 +270,14 @@ namespace sequoia
     requires (   std::ranges::sized_range<R>
               && std::indirectly_swappable<std::ranges::iterator_t<R>>
               && integer<std::ranges::range_size_t<R>>
-              && integer<std::ranges::range_difference_t<R>>
-              && std::ranges::input_range<D>
-              && integer<std::ranges::range_value_t<D>>)
+              && integer<std::ranges::range_difference_t<R>>)
   constexpr void permute(R&& r, D&& destinations)
   {
-    auto elementDestinations{std::ranges::to<std::vector>(std::forward<D>(destinations))};
     const auto size{numeric::unchecked_conversion_to<std::size_t>(std::ranges::size(r))};
-    if(elementDestinations.size() != size)
+    if(std::cmp_not_equal(std::ranges::size(destinations), size))
       throw std::invalid_argument{impl::not_a_permutation_message()};
+
+    auto elementDestinations{std::ranges::to<std::vector>(std::forward<D>(destinations))};
 
     auto iteratorAtPosition{
       [first{std::ranges::begin(r)}](const std::size_t position) {

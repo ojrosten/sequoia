@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <any>
 #include <array>
+#include <forward_list>
 #include <istream>
 #include <iterator>
 #include <list>
@@ -360,23 +361,27 @@ namespace sequoia::testing
     using span_destinations_t               = std::span<std::size_t>;
     using iota_destinations_t               = std::ranges::iota_view<std::size_t, std::size_t>;
     using list_destinations_t               = std::list<std::size_t>;
+    using forward_list_destinations_t       = std::forward_list<std::size_t>;
+    // A mutable lambda, so the view can be iterated only when non-const
     using non_const_iterable_destinations_t = decltype(iota_destinations_t{} | std::views::transform([offset{0uz}](std::size_t i) mutable { return i + offset; }));
 
-    STATIC_CHECK( permute_accepts<           array_t&,                    destinations_t>);
-    STATIC_CHECK( permute_accepts<           array_t&,                   destinations_t&>);
-    STATIC_CHECK( permute_accepts<           array_t&,             const destinations_t&>);
-    STATIC_CHECK( permute_accepts<           array_t&,             array_destinations_t&>);
-    STATIC_CHECK( permute_accepts<           array_t&,               span_destinations_t>);
-    STATIC_CHECK( permute_accepts<           array_t&,               iota_destinations_t>);
-    STATIC_CHECK( permute_accepts<         subrange_t,                    destinations_t>);
-    STATIC_CHECK( permute_accepts<           array_t&,             signed_destinations_t>);
-    STATIC_CHECK(!permute_accepts<     const array_t&,                    destinations_t>);
-    STATIC_CHECK(!permute_accepts<            list_t&,                    destinations_t>);
-    STATIC_CHECK(!permute_accepts<char_sized_range_t&,                    destinations_t>);
-    STATIC_CHECK(!permute_accepts<           array_t&,               list_destinations_t>);
-    STATIC_CHECK(!permute_accepts<           array_t&, non_const_iterable_destinations_t>);
-    STATIC_CHECK(!permute_accepts<           array_t&,            boolean_destinations_t>);
-    STATIC_CHECK(!permute_accepts<           array_t&,          character_destinations_t>);
+    STATIC_CHECK( permute_accepts<           array_t&,                           destinations_t>);
+    STATIC_CHECK( permute_accepts<           array_t&,                          destinations_t&>);
+    STATIC_CHECK( permute_accepts<           array_t&,                    const destinations_t&>);
+    STATIC_CHECK( permute_accepts<           array_t&,                    array_destinations_t&>);
+    STATIC_CHECK( permute_accepts<           array_t&,                      span_destinations_t>);
+    STATIC_CHECK( permute_accepts<           array_t&,                      iota_destinations_t>);
+    STATIC_CHECK( permute_accepts<         subrange_t,                           destinations_t>);
+    STATIC_CHECK( permute_accepts<           array_t&,                    signed_destinations_t>);
+    STATIC_CHECK(!permute_accepts<     const array_t&,                           destinations_t>);
+    STATIC_CHECK(!permute_accepts<            list_t&,                           destinations_t>);
+    STATIC_CHECK(!permute_accepts<char_sized_range_t&,                           destinations_t>);
+    STATIC_CHECK( permute_accepts<           array_t&,                      list_destinations_t>);
+    STATIC_CHECK( permute_accepts<           array_t&,        non_const_iterable_destinations_t>);
+    STATIC_CHECK(!permute_accepts<           array_t&, const non_const_iterable_destinations_t&>);
+    STATIC_CHECK(!permute_accepts<           array_t&,              forward_list_destinations_t>);
+    STATIC_CHECK(!permute_accepts<           array_t&,                   boolean_destinations_t>);
+    STATIC_CHECK(!permute_accepts<           array_t&,                 character_destinations_t>);
   }
 
   void algorithms_test::permute_basic_type()
@@ -404,6 +409,20 @@ namespace sequoia::testing
         return elements.elements == std::array{11, 12, 10};
       }()
     );
+
+    STATIC_CHECK(
+      []() {
+        std::array elements{10, 11, 12};
+        sequoia::permute(elements, std::views::iota(0uz, 3uz) | std::views::transform([offset{2uz}](std::size_t i) mutable { return (i + offset) % 3; }));
+        return elements == std::array{11, 12, 10};
+      }()
+    );
+
+    {
+      std::array elements{10, 11, 12};
+      sequoia::permute(elements, std::list<std::size_t>{2, 0, 1});
+      check(equality, "Permuting by destinations in a list", elements, std::array{11, 12, 10});
+    }
   }
 
   void algorithms_test::permute_swap_count()
@@ -439,17 +458,34 @@ namespace sequoia::testing
 
   void algorithms_test::permute_allocation_count()
   {
-    using allocator_t = shared_counting_allocator<std::size_t>;
+    using allocator_t    = shared_counting_allocator<std::size_t>;
+    using destinations_t = std::vector<std::size_t, allocator_t>;
 
     allocator_t allocator{};
-    std::vector<std::size_t, allocator_t> destinations({2, 0, 1}, allocator);
+    auto allocationsMadeBy{
+      [&allocator](auto f) {
+        const int before{allocator.allocs()};
+        f();
+        return allocator.allocs() - before;
+      }
+    };
+
+    // Not zero under MSVC's debug build, which gives every vector a container proxy
+    const int emptyVectorAllocations{allocationsMadeBy([&allocator]() { destinations_t empty(allocator); })};
+
+    destinations_t destinations({2, 0, 1}, allocator);
     std::array a{10, 11, 12};
 
-    sequoia::permute(a, destinations);
-    check(equality, "Permuting by named destinations copies them", allocator.allocs(), 2);
+    check(equality,
+          "Permuting by named destinations copies them",
+          allocationsMadeBy([&]() { sequoia::permute(a, destinations); }),
+          emptyVectorAllocations + 1);
 
-    sequoia::permute(a, std::move(destinations));
-    check(equality, "Permuting by moved destinations does not copy them", allocator.allocs(), 2);
+    check(equality,
+          "Permuting by moved destinations does not copy them",
+          allocationsMadeBy([&]() { sequoia::permute(a, std::move(destinations)); }),
+          emptyVectorAllocations);
+
     check(equality, "Moved destinations permute as named ones do", a, std::array{12, 10, 11});
   }
 

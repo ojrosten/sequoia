@@ -186,7 +186,8 @@ namespace sequoia
         Connectivity::permute_nodes(destinations);
         if constexpr(!std::is_empty_v<node_weight_type>)
         {
-          // Moved, so that nothing is allocated once the edges have moved
+          // Moved, so that nothing is allocated once the edges have moved,
+          // beyond the container proxy MSVC's debug build gives every vector
           Nodes::permute_nodes(std::move(destinations));
         }
       }

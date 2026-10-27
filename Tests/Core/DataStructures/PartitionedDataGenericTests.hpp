@@ -12,12 +12,34 @@
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
-#include <array>
+#include <iterator>
+#include <list>
 #include <ranges>
 #include <vector>
 
 namespace sequoia::testing
 {
+  template<class Sequence, class D>
+  concept permute_partitions_accepts
+    = requires(Sequence& s, D&& d) { s.permute_partitions(std::forward<D>(d)); };
+
+  // Sized and iterable when const, but readable only once
+  using input_only_destinations_t
+    = std::ranges::subrange<std::counted_iterator<std::istream_iterator<int>>, std::default_sentinel_t>;
+
+  // Its call operator is not const, so a view transformed by it can be
+  // iterated only when non-const
+  struct offsetting_transform
+  {
+    std::size_t offset{};
+
+    [[nodiscard]]
+    constexpr std::size_t operator()(const std::size_t i) noexcept { return i + offset; }
+  };
+
+  using non_const_iterable_destinations_t
+    = std::ranges::transform_view<std::ranges::iota_view<std::size_t, std::size_t>, offsetting_transform>;
+
   namespace partitioned_data
   {
     enum data_description : std::size_t {
@@ -1081,9 +1103,9 @@ namespace sequoia::testing
             },
             {
               data_description::three_3____2,
-              t.report("Permuting partitions by signed destinations in an array"),
+              t.report("Permuting partitions by signed destinations in a list"),
               [](data_type d) -> data_type {
-                d.permute_partitions(std::array{2, 1, 0});
+                d.permute_partitions(std::list{2, 1, 0});
                 return d;
               }
             },

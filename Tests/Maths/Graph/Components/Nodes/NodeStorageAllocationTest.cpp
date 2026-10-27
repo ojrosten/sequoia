@@ -23,21 +23,6 @@ namespace sequoia::testing
   void node_storage_allocation_test::run_tests()
   {
     do_allocation_tests();
-    test_permute_nodes_allocation();
-  }
-
-  void node_storage_allocation_test::test_permute_nodes_allocation()
-  {
-    using storage        = node_storage_tester<int>;
-    using allocator_t    = shared_counting_allocator<std::size_t>;
-    using destinations_t = std::vector<std::size_t, allocator_t>;
-
-    allocator_t allocator{};
-    storage s{{10, 11, 12}};
-    s.permute_nodes(destinations_t({2, 0, 1}, allocator));
-
-    check(equality, "Permuting nodes by moved destinations does not copy them", allocator.allocs(), 1);
-    check(equivalence, "Permuting nodes by moved destinations", s, std::initializer_list<int>{11, 12, 10});
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>

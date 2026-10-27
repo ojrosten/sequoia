@@ -1,2 +1,2 @@
 partitioned_sequence_regular_test
-Standard Top Level Checks:               374;  Failures:  0  [Deep checks: 22018]
+Standard Top Level Checks:               377;  Failures:  0  [Deep checks: 22021]

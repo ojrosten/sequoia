@@ -174,14 +174,15 @@ namespace sequoia
         }
       }
 
-      /** \brief Moves each partition `i` to position `destinations[i]`,
-                 keeping the order of its elements.
+      /** \brief Moves each partition `i`, keeping the order of its elements,
+                 to the position held by the `i`th element of `destinations`.
 
           \throws std::invalid_argument if `destinations` is not a
           permutation of the partitions' indices. The partitions are then in
           an unspecified order.
        */
-      template<destination_indices D>
+      template<class D>
+        requires destination_indices<const D&>
       constexpr void permute_partitions(const D& destinations)
       {
         sequoia::permute(m_Buckets, destinations);
@@ -705,14 +706,15 @@ namespace sequoia
         }
       }
 
-      /** \brief Moves each partition `i` to position `destinations[i]`,
-                 keeping the order of its elements.
+      /** \brief Moves each partition `i`, keeping the order of its elements,
+                 to the position held by the `i`th element of `destinations`.
 
           \throws std::invalid_argument if `destinations` is not a
           permutation of the partitions' indices. The partitions are then in
           an unspecified order.
        */
-      template<destination_indices D>
+      template<class D>
+        requires (destination_indices<const D&> && std::ranges::forward_range<const D&>)
       constexpr void permute_partitions(const D& destinations)
       {
         const auto partitionIndices{

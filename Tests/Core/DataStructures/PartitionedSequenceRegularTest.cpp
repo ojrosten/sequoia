@@ -157,7 +157,17 @@ namespace sequoia::testing
     test_index_type_constraint();
     test_allocator_extended_move();
     test_reset();
+    test_permute_partitions_constraints();
     partitioned_operations<partitioned_sequence<int>>::execute(*this);
+  }
+
+  void partitioned_sequence_regular_test::test_permute_partitions_constraints()
+  {
+    using sequence_t = data_structures::partitioned_sequence<int>;
+
+    STATIC_CHECK( permute_partitions_accepts<sequence_t, std::vector<std::size_t>>);
+    STATIC_CHECK(!permute_partitions_accepts<sequence_t, input_only_destinations_t>);
+    STATIC_CHECK(!permute_partitions_accepts<sequence_t, non_const_iterable_destinations_t>);
   }
 
   void partitioned_sequence_regular_test::test_copyability()

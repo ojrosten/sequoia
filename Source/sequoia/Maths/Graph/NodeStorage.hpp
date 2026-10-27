@@ -224,15 +224,13 @@ namespace sequoia::maths
     /** \brief Moves the weight of each node `i` to position
                `destinations[i]`.
 
-        Allocates exactly when `sequoia::permute` would.
-
         \throws std::invalid_argument if `destinations` is not a permutation
         of the nodes' indices. The weights are then in an unspecified order.
      */
-    template<destination_indices D>
-    constexpr void permute_nodes(D&& destinations)
+    template<integer Index>
+    constexpr void permute_nodes(std::vector<Index> destinations)
     {
-      sequoia::permute(m_NodeWeights, std::forward<D>(destinations));
+      sequoia::permute(m_NodeWeights, std::move(destinations));
     }
 
     auto get_node_allocator() const
