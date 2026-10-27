@@ -340,9 +340,12 @@ jobs:
       # them is in scripts/store_symbol_table_record.sh.
       #
       # `exclude OutputFreeTest.cpp` leaves out the one test file with a check
-      # which fails under callgrind: "Long double values in a class-type
-      # template argument" fails there, most likely because valgrind computes
-      # x87 80-bit arithmetic at 64-bit precision.
+      # which fails under valgrind and passes natively: "Long double values in
+      # a class-type template argument" expects -inf and obtains the finite
+      # -2^16384. Valgrind represents each long double in 64 bits internally,
+      # a limitation its manual states. So LDBL_MAX loads as +inf, and the
+      # magnitude of -inf is not greater than LDBL_MAX. std::isinf(-inf) is
+      # also false under valgrind.
       - name: Build TestFrameworkDiagnostics
         continue-on-error: true
         timeout-minutes: 20
