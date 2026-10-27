@@ -1,0 +1,18 @@
+{
+  "clean": true,
+  "commit": "2d7386171046481e7df309be834d762cc9f2b237",
+  "run": {
+    "url": "https://github.com/ojrosten/sequoia/actions/runs/40430984493/attempts/1"
+  },
+  "toolchain": {
+    "demanglers": [
+      "Ubuntu LLVM version 22.1.2",
+      "GNU c++filt 2.46"
+    ],
+    "tools": [
+      "g++-15 15.2.0",
+      "lcov: LCOV version 2.6-0"
+    ]
+  },
+  "uncalled_functions": 5
+}
