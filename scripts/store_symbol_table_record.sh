@@ -1,5 +1,5 @@
 #!/bin/bash
-# Store a record of symbol_table_report.py on a data branch, one file per
+# Stores a record of symbol_table_report.py on a data branch, one file per
 # commit.
 #
 #   store_symbol_table_record.sh <remote> <branch> <directory> <record>
@@ -13,31 +13,61 @@
 # they were.
 #
 # A record for a commit which the branch already holds is merged with the
-# held one, at every depth, ignoring the field "run". The merge is the union
-# of the two:
+# held one, at every depth, ignoring the field "run". The run holds what is
+# particular to one job: its id, attempt and URL. Another job measuring the
+# commit differs in each, so the merge compares none of them. The merge is the
+# union of the rest:
 #   - a field only the held record has is kept: a measurement since dropped
 #     from the records does not lose its history;
 #   - a field only the offered record has is added: a backfill measures a
 #     commit which was recorded before the measurement existed. This holds
-#     beneath an object both have, so a new sub-field of a held object is
+#     within an object both have, so a new sub-field of a held object is
 #     added;
 #   - a field both have must be equal, bar a measured count (below) within
 #     its tolerance, where the held value stands;
 #   - otherwise the script prints the fields which differ and fails, since a
 #     field which changed is either a change of toolchain or a build which is
 #     not deterministic, which a person should judge.
-# A field is never changed, nor removed. If the offered record adds nothing, the
-# script says so and succeeds, and the branch is left as it was: a run repeated
-# at one commit has nothing new to say. If it adds fields, the union is stored,
-# with the offered record's run, since it made the fields added, as jq's output
-# with the keys sorted.
+# A field is never changed, nor removed. The exception to the union is what
+# describes the run which made a section's counts rather than the commit: the
+# model name of its CPU, `cpu_model`, and the exit status of each run it
+# measured. They are named in measuring_run_paths below. They stay with the
+# counts they describe:
+#   - none is ever compared, since another job measuring the commit differs
+#     in each: its CPU, and whether a timing test in one of its runs failed;
+#   - the held section's stands, with the held counts;
+#   - a held section which lacks one is not given the offered one, since the
+#     held counts were not measured on that CPU or by that run; records made
+#     before the CPU model was recorded lack it, and every section has had its
+#     exit statuses since it was first written;
+#   - a section which only the offered record has is added whole, with its
+#     own;
+#   - if the merge adds a sub-field to a held section, the section's counts
+#     come from more than one measurement. The section keeps its model name
+#     only if the offered section has the same one. Otherwise, as when the
+#     held section has none, the merged section has none. An exit status is
+#     not dropped, since the dashboard requires it: the held one stays and
+#     describes the held counts.
+# If the offered record adds nothing, the script says so and succeeds, and the
+# branch is left as it was: a run repeated at one commit has nothing new to
+# say. If it adds fields, the union is stored as jq's output with the keys
+# sorted. It carries the offered record's run, since that run made the added
+# fields.
 #
-# A measured count is one which a rerun of one commit moves a little: prune's
-# instruction count by about 2 parts in a million, the runner setup's system
-# calls by 0.2%. Each is named in measured_fields below with its own
-# tolerance, as the denominator of a relative difference. A count which
-# differs from the held one by less than that is taken to be the held one; the
-# script prints the difference, and the first measurement stands.
+# A rerun of one commit moves the measured counts a little. So a measured
+# count within 1 in `denominator` of the held one, as a fraction of the held
+# count, is taken to be the held one: the held value stands, and the script
+# prints the difference. Each count is named in measured_fields below with a
+# denominator of its own: 1 in 1,000 for prune's, 1 in 50 for the setup's
+# instructions and 1 in 200 for its system calls.
+#
+# The spread measured, with the performance tests excluded from the setup's
+# runs: prune's analysis moved by up to 722 parts in a million between jobs
+# measuring one commit, since it began reading .ninja_deps; the setup's
+# instructions by up to 1.04%, and its system calls by up to 0.37%, between
+# commits whose code is identical. The setup's tests are counted exactly, so
+# the instructions move as they do per test. Each tolerance is wider
+# than its count's spread, so that an honest re-measurement is not refused.
 #
 # A branch which does not exist is created, with no history. The push is
 # never forced. When it fails - as it does when another run pushed first -
@@ -75,13 +105,27 @@ index="$work/index" held_file="$work/held"
 # without_run <file>: the record in <file>, its keys sorted, without its run
 without_run() { jq -S 'del(.run)' "$1" || die "$1 cannot be read as JSON"; }
 
-# The counts which a rerun may move slightly: each one's path into a record,
-# and the denominator of the relative difference below which a count is taken
-# to be the held one
+# The path into a record of each fact about the run which made a section's
+# counts: the model name of its CPU, and the exit status of each run measured
+measuring_run_paths='[
+  ["prune_dependency_analysis", "cpu_model"],
+  ["prune_dependency_analysis", "stamping_exit_status"],
+  ["runner_setup",              "cpu_model"],
+  ["runner_setup",              "exit_status"],
+  ["leftover_materials_setup",  "cpu_model"],
+  ["leftover_materials_setup",  "without_leftovers", "exit_status"],
+  ["leftover_materials_setup",  "with_leftovers",    "exit_status"]
+]'
+
+# The counts which a rerun of one commit may move: each one's path into a
+# record, and the denominator of the relative difference below which a count is
+# taken to be the held one
 measured_fields='[
-  {"path": ["prune_dependency_analysis", "instructions"], "denominator": 10000},
-  {"path": ["runner_setup", "instructions"],              "denominator": 200},
-  {"path": ["runner_setup", "syscalls"],                  "denominator": 200}
+  {"path": ["prune_dependency_analysis", "instructions"],                     "denominator": 1000},
+  {"path": ["runner_setup", "instructions"],                                  "denominator": 50},
+  {"path": ["runner_setup", "syscalls"],                                      "denominator": 200},
+  {"path": ["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 50},
+  {"path": ["leftover_materials_setup", "with_leftovers", "instructions"],    "denominator": 50}
 ]'
 
 # within($held; $offered; $denominator), in jq: both are numbers, they differ,
@@ -97,18 +141,26 @@ within_tolerance='
 # The paths in conflicts, added and kept are arrays of keys.
 merge() {
   jq -n -S --argjson held "$1" --argjson offered "$2" --argjson fields "$measured_fields" \
+     --argjson measuring_run_paths "$measuring_run_paths" \
      "$within_tolerance"'
      def tolerance($path): $fields | map(select(.path == $path)) | first | .denominator;
+     def is_measuring_run_path($path): $measuring_run_paths | any(.[]; . == $path);
+     def adds_below($added; $path): $added | any(.[]; .[0:($path | length)] == $path);
      def none: {conflicts: [], tolerated: [], added: [], kept: []};
      def merge($h; $o; $path):
-       tolerance($path) as $denominator | if ($h | type) == "object" and ($o | type) == "object" then
+       tolerance($path) as $denominator | if is_measuring_run_path($path) then {value: $h} + none
+       elif ($h | type) == "object" and ($o | type) == "object" then
          reduce (($h | keys) + ($o | keys) | unique)[] as $key ({value: {}} + none;
            if ($h | has($key)) and ($o | has($key)) then
              merge($h[$key]; $o[$key]; $path + [$key]) as $r
              | .value[$key] = $r.value | .conflicts += $r.conflicts | .tolerated += $r.tolerated
              | .added += $r.added | .kept += $r.kept
            elif $h | has($key) then .value[$key] = $h[$key] | .kept += [$path + [$key]]
+           elif is_measuring_run_path($path + [$key]) then .
            else .value[$key] = $o[$key] | .added += [$path + [$key]] end)
+         | if is_measuring_run_path($path + ["cpu_model"]) and adds_below(.added; $path)
+              and ($h.cpu_model == null or $h.cpu_model != $o.cpu_model)
+           then del(.value.cpu_model) else . end
        elif $h == $o then {value: $h} + none
        elif $denominator != null and within($h; $o; $denominator) then
          {value: $h} + none + {tolerated: [{path: $path, held: $h, offered: $o, denominator: $denominator}]}

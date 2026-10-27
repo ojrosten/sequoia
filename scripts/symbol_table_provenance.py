@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Add to a record of symbol_table_report.py the facts its build directory
+"""Adds to a record of symbol_table_report.py the facts its build directory
 does not hold.
 
   symbol_table_provenance.py <record>
+  symbol_table_provenance.py --cpu-model
 
-Writes the record to standard output, with
+The second form writes the model name of this machine's CPU to standard
+output, and nothing else.
+
+In the first form, the script writes the record to standard output, with
   - for each tool of the record's toolchain, the Debian package which owns
     the tool's executable, and the package's version; and
   - the GitHub Actions run which made the record: its id, its attempt, and
@@ -21,8 +25,9 @@ g++-15-x86-64-linux-gnu owns the executable /usr/bin/g++-15 resolves to.
 
 The run is read from the variables GitHub Actions sets in every job:
 GITHUB_SERVER_URL, GITHUB_REPOSITORY, GITHUB_RUN_ID and GITHUB_RUN_ATTEMPT.
+The CPU's model name is the "Model name" line of `lscpu`.
 
-The script refuses, rather than write a record which may be wrong, if
+The first form refuses, rather than write a record which may be wrong, if
   - the record cannot be read as a JSON object, or has no toolchain, or a
     tool of its toolchain has no path, or already has a package, or the
     record already has a run;
@@ -31,6 +36,8 @@ The script refuses, rather than write a record which may be wrong, if
     one, or gives no version for the package;
   - one of the variables is unset or empty, or the id or the attempt is not
     a number.
+The second form refuses, and writes nothing, if lscpu cannot be run, or
+prints no "Model name" line, or one with no name.
 """
 import argparse, json, os, subprocess, sys
 
@@ -83,6 +90,10 @@ def package_of(path):
 
 
 def environment_value(name):
+    """Returns the value of the environment variable `name`.
+
+    Exits if it is unset or empty.
+    """
     value = os.environ.get(name, "")
     if not value:
         sys.exit(f"{name} is unset or empty: the run is read from GitHub Actions' variables")
@@ -90,10 +101,34 @@ def environment_value(name):
 
 
 def environment_number(name):
+    """Returns the value of the environment variable `name` as an integer.
+
+    Exits unless it is set to decimal digits.
+    """
     value = environment_value(name)
     if not value.isdecimal():
         sys.exit(f"{name} is {value!r}, not a number")
     return int(value)
+
+
+def cpu_model():
+    """Returns the model name of this machine's CPU, as `lscpu` prints it.
+
+    A machine with CPUs of more than one model may print a "Model name" line
+    for each, and the first is returned, since the model of the CPU which ran
+    a measurement cannot be told from them.
+
+    Exits if `lscpu` prints no "Model name" line, or one with no name.
+    """
+    # lscpu prints "Model name:", padding, then the name. A line "BIOS Model
+    # name:" may precede it.
+    for line in run(["lscpu"]).splitlines():
+        key, _, value = line.partition(":")
+        if key.strip() == "Model name":
+            if not value.strip():
+                sys.exit("lscpu prints a Model name with no name")
+            return value.strip()
+    sys.exit("lscpu prints no Model name")
 
 
 def this_run():
@@ -105,6 +140,10 @@ def this_run():
 
 
 def read_record(path):
+    """Returns the JSON object in the file at `path`.
+
+    Exits if the file cannot be read, or holds no object.
+    """
     try:
         with open(path, encoding="utf-8") as f:
             record = json.load(f)
@@ -116,7 +155,11 @@ def read_record(path):
 
 
 def with_provenance(record, record_path):
-    """Returns `record`, read from `record_path`, with its packages and run."""
+    """Returns `record`, read from `record_path`, with its packages and run.
+
+    Exits if the record has a run, has no toolchain, has a tool with no path,
+    or has a tool with a package already.
+    """
     if "run" in record:
         sys.exit(f"{record_path} already has a run")
     tools = [tool for tool in record.get("toolchain", {}).values() if isinstance(tool, dict)]
@@ -135,8 +178,14 @@ def with_provenance(record, record_path):
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("record", help="a record written by symbol_table_report.py")
+    ap.add_argument("record", nargs="?", help="a record written by symbol_table_report.py")
+    ap.add_argument("--cpu-model", action="store_true", help="write this machine's CPU model name instead")
     a = ap.parse_args()
+    if a.cpu_model != (a.record is None):
+        ap.error("give either a record, or --cpu-model alone")
+    if a.cpu_model:
+        print(cpu_model())
+        return
     json.dump(with_provenance(read_record(a.record), a.record), sys.stdout, indent=1, sort_keys=True)
     print()
 

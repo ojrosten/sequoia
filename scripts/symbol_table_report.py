@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Record the size of an executable's symbol table, as one JSON record.
+"""Records the size of an executable's symbol table, as one JSON record.
 
   symbol_table_report.py <build-dir> <target>
 

@@ -20,15 +20,14 @@
 #   - the tests are the records of the tests which ran: the three arcs into
 #     execute do not make three more, so a nested call does not inflate them;
 #   - the exit status of a pass is 0, and a nonzero status is recorded, not
-#     refused, since the dashboard leaves its point out;
+#     refused, since the dashboard plots a point whatever its status;
 #   - the system calls are those of the totals, whatever the summary says, since
 #     with --collect-systime the summary counts every system call of the run
 #     (inferred from CI runs, as the script says);
 #   - a count which is zero or missing, a summary whose instructions differ from
 #     its totals', no output, no records and an exit status which is no number
-#     are each
-#     refused, with a ::warning:: on standard error, nothing on standard
-#     output, and success;
+#     are each refused, with a ::warning:: on standard error, nothing on
+#     standard output, and success;
 #   - arguments of any other number are refused with status 2.
 
 set -u
@@ -100,7 +99,7 @@ refused() {
   local description=$1
   shift
   run "$@"
-  [ "$status" -eq 0 ] && [ -z "$out" ] && [[ $err == *'::warning::'*'the record has no runner_setup'* ]] \
+  [ "$status" -eq 0 ] && [ -z "$out" ] && [[ $err == *'::warning::'*'the run has no counts'* ]] \
     || fail "$description: status $status, printed '$out', warned '$err'"
 }
 
@@ -162,7 +161,7 @@ mutations=(
 }'                                         '  exit 1
 }'
   'a refusal not warned'                   'echo "::warning::$1, so' 'echo "$1, so'
-  'the warning on standard output'         'the record has no runner_setup" >&2' 'the record has no runner_setup"'
+  'the warning on standard output'         'the run has no counts" >&2' 'the run has no counts"'
   'a failed run refused'                   '[[ $status =~ ^(0|[1-9][0-9]*)$ ]] ||' '[ "$status" -eq 0 ] ||'
   'any exit status accepted'               '[[ $status =~ ^(0|[1-9][0-9]*)$ ]] || refuse "the exit status '"'"'$status'"'"' is not a number"' ':'
   'the boundary not recorded'              '--arg boundary "$boundary"'         '--arg boundary x'

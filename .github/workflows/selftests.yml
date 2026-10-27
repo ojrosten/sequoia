@@ -9,8 +9,8 @@ name: selftests
 # The inventory job checks that every selftest runs somewhere.
 #
 # symbol_dashboard's selftest runs on Linux alone. Its subject is the
-# dashboard's script, which runs in a browser, so the platform's only part is
-# the node that stands in for the browser; the image ships one.
+# dashboard's script, which runs in a browser. The platform enters only
+# through the node that stands in for the browser, which the Linux image ships.
 #
 # symbol_table_report's selftest links its fixture in the platform's own
 # format, and reads it with the platform's nm. So the Linux job controls the
@@ -51,9 +51,9 @@ jobs:
             os: ubuntu-latest
             packages: gdb
             selftests: apt_get_demoting_preferred_mirrors_on_retry compile_time_report cron_expression_at
-              generate_coverage_report propose_tightened_baseline read_settled_jobs rerun_unacquired_job retry
-              runner_setup_record snapshot_at_deadline store_symbol_table_record symbol_dashboard symbol_table_provenance
-              symbol_table_report
+              generate_coverage_report leftover_materials_setup_record propose_tightened_baseline read_settled_jobs
+              rerun_unacquired_job retry runner_setup_record snapshot_at_deadline store_symbol_table_record
+              symbol_dashboard symbol_table_provenance symbol_table_report
           # report_crashes' selftest runs on macOS alone. The system there writes
           # the crash reports its macOS controls read, and its Linux and Windows
           # controls run through stand-ins for uname, file and gdb. One of those
@@ -108,9 +108,10 @@ jobs:
             install -y --no-install-recommends --download-only $PACKAGES
           sudo apt-get install -y --no-install-recommends --no-download $PACKAGES
 
-      # The dashboard's script is checked against its JSDoc types, with the
-      # pinned compiler and no build step: tsc reads docs/dashboard/tsconfig.json,
-      # emits nothing, and fails on a type error. Linux alone, as the selftest.
+      # The dashboard's script is checked against its JSDoc types by the
+      # pinned release of tsc, which reads docs/dashboard/tsconfig.json, emits
+      # nothing, and fails on a type error. The check is on Linux alone, as the
+      # dashboard's selftest is.
       - name: Check the types of the dashboard
         if: inputs.needs_testing == 'true' && matrix.name == 'Linux'
         run: |

@@ -1,10 +1,12 @@
 // The data behind the symbol dashboard: which records the metrics branch
 // holds, their order along staging's first-parent history, where the
 // toolchain changes, and which objects moved between two records. Nothing
-// here touches the page, so the selftest runs it under Node.
+// here touches the page, so the selftest can run it under Node.
 //
-// A record is the output of scripts/symbol_table_report.py, stored as
-// symbol-table/<column>/<commit>.json on the metrics branch.
+// A symbol-table record is stored as symbol-table/<column>/<commit>.json on
+// the metrics branch. scripts/symbol_table_report.py and
+// scripts/symbol_table_provenance.py say what it holds, and symbol-table.yml
+// adds `prune_dependency_analysis`, `runner_setup` and `leftover_materials_setup`.
 /** @param {Record<string, any>} exports */
 (function (exports) {
   'use strict';
@@ -23,7 +25,8 @@
    * @typedef {{commit: string, summary: Summary, record: JsonRecord}} OrderedRecord
    * @typedef {{path: string, before: any, after: any}} Difference
    * @typedef {{commit: string, date: string, subject: string, record: JsonRecord, run: number,
-   *            toolchainChange: Difference[] | null, setupRun: number, boundaryChange: boolean}} Point
+   *            toolchainChange: Difference[] | null, setupRun: number, boundaryChange: boolean,
+   *            leftoverRun: number, leftoverBoundaryChange: boolean}} Point
    * @typedef {{path: string, problems: string[]}} Unplottable
    * @typedef {{tree(): Promise<Tree | null>, commits(start: string | null): Promise<ApiCommit[]>,
    *            record(path: string): Promise<JsonRecord>}} Source
@@ -154,8 +157,6 @@
    * @returns {Difference[]}
    */
   function differences(before, after, prefix = '') {
-    /** @param {any} value */
-    const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
     if (!isObject(before) || !isObject(after)) {
       return canonical(before) === canonical(after) ? [] : [{path: prefix, before, after}];
     }
@@ -188,14 +189,22 @@
    *
    * A record with no problem is an object holding `commit` as its commit, a
    * clean tree, a toolchain, the executable's symbols and name bytes, and a
-   * count of defined symbols for each object. It may also hold
-   * `prune_dependency_analysis`, with the name of the function whose
-   * instructions were counted, a positive count of them and the exit status
-   * of the run which stamped, and `prune_analysis` (the older field, kept
-   * and not plotted), with an invocation and a count of instructions, and
-   * `runner_setup`, with a boundary, the exit status of the run, a positive
-   * number of tests and a positive count for each of `runnerSetupEvents`.
-   * The older `runner_overhead` is kept and not checked, nor plotted.
+   * count of defined symbols for each object. It may also hold:
+   *  - `prune_dependency_analysis`, with the name of the function whose
+   *    instructions were counted, a positive count of them and the exit
+   *    status of the run which stamped;
+   *  - `runner_setup`, with a boundary, the exit status of the run, a
+   *    positive number of tests and a positive count for each of
+   *    `runnerSetupEvents`;
+   *  - `leftover_materials_setup`, with a boundary, a non-negative integer
+   *    count of leftover entries, and for each of
+   *    `leftoverMaterialsSetupRunNames` a run with a positive count of
+   *    instructions, a positive number of tests and an exit status. The two
+   *    runs executed the same number of tests;
+   *  - `prune_analysis`, a field no longer written, with an invocation and a
+   *    count of instructions. It is checked and not plotted;
+   *  - `runner_overhead`, a field no longer written, which is neither checked
+   *    nor plotted.
    *
    * @param {JsonRecord} record
    * @param {string} commit
@@ -204,8 +213,6 @@
   function problemsWith(record, commit) {
     const problems = commonProblems(record, commit);
     if (!isObject(record)) return problems;
-    /** @param {any} value */
-    const isCount = value => Number.isInteger(value) && value >= 0;
     if (record.toolchain === null || typeof record.toolchain !== 'object') problems.push('it has no toolchain');
     const executable = record.executable || {};
     if (!isCount(executable.symbols)) problems.push('it has no count of the executable\'s symbols');
@@ -236,6 +243,7 @@
         }
       }
     }
+    if (Object.hasOwn(record, 'leftover_materials_setup')) problems.push(...leftoverMaterialsSetupProblems(record.leftover_materials_setup));
     const objects = record.defined_symbols_by_object;
     if (objects === null || typeof objects !== 'object' || !Object.values(objects).every(isCount)) {
       problems.push('it has no count of defined symbols for each object');
@@ -243,27 +251,139 @@
     return problems;
   }
 
+  /** @param {any} value */
+  const isCount = value => Number.isInteger(value) && value >= 0;
+
   /**
-   * The events a record's `runner_setup` counts: the instructions and the
-   * system calls (callgrind's Ir and sysCount) of the runner's setup of each
-   * test, that is, of `test_to_run::execute` outside
-   * `execution_timer::time_execution`, where the test runs.
+   * The runs a record's `leftover_materials_setup` holds: the run which found
+   * no entries left by a previous run, and the run which found
+   * `leftover_entries` of them.
+   */
+  const leftoverMaterialsSetupRunNames = ['without_leftovers', 'with_leftovers'];
+
+  /**
+   * Lists what is wrong with `section`, a record's `leftover_materials_setup`.
+   *
+   * @param {any} section
+   * @returns {string[]}
+   */
+  function leftoverMaterialsSetupProblems(section) {
+    const name = 'it has a leftover_materials_setup';
+    if (!isObject(section) || typeof section.boundary !== 'string') return [`${name} with no boundary`];
+    const problems = [];
+    if (!isCount(section.leftover_entries)) problems.push(`${name} whose leftover_entries is not a non-negative integer`);
+    const runs = leftoverMaterialsSetupRunNames.map(runName => section[runName]);
+    leftoverMaterialsSetupRunNames.forEach((runName, index) => {
+      const run = runs[index];
+      if (!isObject(run)) { problems.push(`${name} with no ${runName}`); return; }
+      if (!isCount(run.exit_status)) problems.push(`${name} whose ${runName} has no exit status`);
+      if (!(isCount(run.tests) && run.tests > 0)) problems.push(`${name} whose ${runName} has a number of tests which is not a positive integer`);
+      if (!(isCount(run.instructions) && run.instructions > 0)) problems.push(`${name} whose ${runName} has no positive count of instructions`);
+    });
+    if (runs.every(run => isObject(run) && isCount(run.tests) && run.tests > 0) && runs[0].tests !== runs[1].tests) {
+      problems.push(`${name} whose runs executed different numbers of tests`);
+    }
+    return problems;
+  }
+
+  /**
+   * Returns the instructions which the runner's setup of a test spent per
+   * leftover entry in `record`: the instructions of the run with leftovers,
+   * less those of the run without, divided by `leftover_entries`. Returns
+   * null if the record has no `leftover_materials_setup`, or if the section
+   * has no leftover entries, which leaves the quotient undefined and the
+   * measurement blind. Such a record has no value, and is not plotted as
+   * zero; the chart shows it as blind. A record is plotted whatever its
+   * runs' exit statuses.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function leftoverMaterialsSetupPerEntry(record) {
+    if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;
+    const section = record.leftover_materials_setup;
+    if (section.leftover_entries === 0) return null;
+    return (section.with_leftovers.instructions - section.without_leftovers.instructions) / section.leftover_entries;
+  }
+
+  /**
+   * Returns the label of a blind point: 'blind, failed' if `record`'s
+   * `leftover_materials_setup` has no leftover entries and either of its runs
+   * exited with a non-zero status, and 'blind' if it has none and both
+   * exited with zero. Returns null if the section has entries, or the record
+   * has no `leftover_materials_setup`.
+   *
+   * @param {JsonRecord} record
+   * @returns {string | null}
+   */
+  function leftoverMaterialsSetupBlindLabel(record) {
+    if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;
+    if (record.leftover_materials_setup.leftover_entries !== 0) return null;
+    return leftoverMaterialsSetupFirstFailure(record) === 0 ? 'blind' : 'blind, failed';
+  }
+
+  /**
+   * Returns the number of leftover entries which `record`'s
+   * `leftover_materials_setup` found, or null if the record has no
+   * `leftover_materials_setup`.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function leftoverMaterialsSetupEntries(record) {
+    if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;
+    return record.leftover_materials_setup.leftover_entries;
+  }
+
+  /**
+   * Returns the runs of `record`'s `leftover_materials_setup`, each keyed by
+   * its name in `leftoverMaterialsSetupRunNames`, or null if the record has no
+   * `leftover_materials_setup`.
+   *
+   * @param {JsonRecord} record
+   * @returns {Record<string, {instructions: number, tests: number, exit_status: number}> | null}
+   */
+  function leftoverMaterialsSetupRuns(record) {
+    if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;
+    return Object.fromEntries(leftoverMaterialsSetupRunNames.map(runName => [runName, record.leftover_materials_setup[runName]]));
+  }
+
+  /**
+   * Returns the exit status of the run without leftovers if it is not zero,
+   * and otherwise that of the run with leftovers, in `record`'s
+   * `leftover_materials_setup`, or null if the record has no
+   * `leftover_materials_setup`. The result is zero only if both runs exited
+   * with status zero.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function leftoverMaterialsSetupFirstFailure(record) {
+    if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;
+    const section = record.leftover_materials_setup;
+    return section.without_leftovers.exit_status !== 0 ? section.without_leftovers.exit_status : section.with_leftovers.exit_status;
+  }
+
+  /**
+   * The events a record's `runner_setup` counts: callgrind's Ir
+   * (instructions) and sysCount (system calls). They count the runner's work
+   * in `test_to_run::execute` outside `execution_timer::time_execution`, the
+   * function that runs the test.
    */
   const runnerSetupEvents = ['instructions', 'syscalls'];
 
   /**
    * Returns the `event` counted in the runner's setup per test in `record`'s
    * run, or null if the record has no `runner_setup` (an old record, or one
-   * whose measurement failed) or its run failed (a nonzero exit status,
-   * whether a failing test, a crash or a signal). Such a record is left out
-   * of the series, not plotted as zero.
+   * whose measurement failed). Such a record is left out of the series, not
+   * plotted as zero. A record is plotted whatever its run's exit status.
    *
    * @param {JsonRecord} record
    * @param {string} event one of `runnerSetupEvents`
    * @returns {number | null}
    */
   function runnerSetupPerTest(record, event) {
-    if (!Object.hasOwn(record, 'runner_setup') || record.runner_setup.exit_status !== 0) return null;
+    if (!Object.hasOwn(record, 'runner_setup')) return null;
     const setup = record.runner_setup;
     return setup[event] / setup.tests;
   }
@@ -271,47 +391,53 @@
   /**
    * Returns the instructions counted inside prune's analysis in `record`'s
    * run, or null if the record has none (an old record, or one whose
-   * measurement failed) or the run which stamped failed (a nonzero
-   * `stamping_exit_status`). Such a record is left out of the series, not
-   * plotted as zero.
+   * measurement failed). Such a record is left out of the series, not
+   * plotted as zero. A record whose stamping run failed is plotted too: a
+   * failed test is selected again, but the analysis reads the same records and
+   * walks the same sources.
    *
    * @param {JsonRecord} record
    * @returns {number | null}
    */
   function pruneInstructions(record) {
-    if (!Object.hasOwn(record, 'prune_dependency_analysis') || record.prune_dependency_analysis.stamping_exit_status !== 0) return null;
+    if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;
     return record.prune_dependency_analysis.instructions;
   }
 
   /**
-   * Says which of the prune and runner panels to show for `points`: one with
-   * a point to plot, or with a point left out for failure, so that a panel
-   * whose every point failed still says why it is empty.
+   * Returns the exit status of the stamping run in `record`, or null if the
+   * record has no `prune_dependency_analysis`.
    *
-   * @param {Point[]} points
-   * @returns {{prune: boolean, runner: boolean}}
+   * @param {JsonRecord} record
+   * @returns {number | null}
    */
-  function panelsShown(points) {
-    const excluded = excludedForFailures(points);
-    return {
-      prune:  excluded.prune  > 0 || points.some(({record}) => pruneInstructions(record) !== null),
-      runner: excluded.runner > 0 || points.some(({record}) => runnerSetupPerTest(record, runnerSetupEvents[0]) !== null)
-    };
+  function pruneStampingExitStatus(record) {
+    if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;
+    return record.prune_dependency_analysis.stamping_exit_status;
   }
 
   /**
-   * Returns how many of `points` hold a measurement which was left out of its
-   * series because its run failed (a nonzero exit status): `prune` counts those with a
-   * `prune_dependency_analysis` of a nonzero `stamping_exit_status`, `runner`
-   * those with a `runner_setup` of a nonzero `exit_status`.
+   * Returns the exit status of the run which `record`'s `runner_setup`
+   * counts, or null if the record has no `runner_setup`.
    *
-   * @param {Point[]} points
-   * @returns {{prune: number, runner: number}}
+   * @param {JsonRecord} record
+   * @returns {number | null}
    */
-  function excludedForFailures(points) {
-    const failed = (/** @type {any} */ field, /** @type {string} */ status) =>
-      points.filter(({record}) => Object.hasOwn(record, field) && record[field][status] !== 0).length;
-    return {prune: failed('prune_dependency_analysis', 'stamping_exit_status'), runner: failed('runner_setup', 'exit_status')};
+  function runnerSetupExitStatus(record) {
+    if (!Object.hasOwn(record, 'runner_setup')) return null;
+    return record.runner_setup.exit_status;
+  }
+
+  /**
+   * Returns the number of tests which the run counted by `record`'s
+   * `runner_setup` executed, or null if the record has no `runner_setup`.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function runnerSetupTests(record) {
+    if (!Object.hasOwn(record, 'runner_setup')) return null;
+    return record.runner_setup.tests;
   }
 
   /**
@@ -354,11 +480,11 @@
   }
 
   /**
-   * Returns `points`, those of a column, with each point whose commit has a
-   * record in `uncalledPoints`, built by pointsOf from the records of
-   * uncalled functions, holding in its record `uncalled`: the count, the
-   * toolchain run of the measurement and the toolchain's change from the
-   * measurement before. The two series' toolchains are independent.
+   * Returns `points`, those of a column, with `uncalled` added to the record
+   * of each point whose commit has a point in `uncalledPoints`, those built
+   * by pointsOf from the records of uncalled functions. `uncalled` holds the
+   * count, the toolchain run of the measurement and the toolchain's change
+   * from the measurement before. The two series' toolchains are independent.
    *
    * @param {Point[]} points
    * @param {Point[]} uncalledPoints
@@ -383,32 +509,55 @@
    * whose toolchains are equal. The first point of each run after the
    * first holds the toolchain's differences from the point before it.
    *
-   * A point also holds `setupRun`, the number of changes of the `boundary`
-   * of its `runner_setup` up to it, among the points which have one, and
-   * `boundaryChange`, whether this point's is the first of a different
-   * boundary: the runner's setup of a different boundary (another
+   * A point also holds `setupRun` and `boundaryChange`. The `boundary` of a
+   * `runner_setup` names what was counted, so a different boundary (another
    * executable, say) is a different series, which the plot breaks the line
-   * at.
+   * at. `setupRun` is the number of changes of boundary up to the point,
+   * among the points which have a `runner_setup`, and `boundaryChange` is
+   * whether the point's boundary is the first of a different one.
+   * `leftoverRun` and `leftoverBoundaryChange` are the same for the points
+   * which have a `leftover_materials_setup`.
    *
    * @param {OrderedRecord[]} orderedRecords
    * @returns {Point[]}
    */
   function pointsOf(orderedRecords) {
-    let run = 0, setupRun = 0;
-    /** @type {string | null} */
-    let boundary = null;
+    let run = 0;
+    const setupBoundaryCounter    = boundaryCounter();
+    const leftoverBoundaryCounter = boundaryCounter();
     return orderedRecords.map(({commit, summary, record}, index) => {
       const previous   = orderedRecords[index - 1];
       const toolchainChange = previous && canonical(previous.record.toolchain) !== canonical(record.toolchain)
         ? differences(previous.record.toolchain, record.toolchain)
         : null;
       if (toolchainChange) ++run;
-      const setupBoundary = Object.hasOwn(record, 'runner_setup') ? record.runner_setup.boundary : null;
-      const boundaryChange = typeof setupBoundary === 'string' && boundary !== null && setupBoundary !== boundary;
-      if (boundaryChange) ++setupRun;
-      if (typeof setupBoundary === 'string') boundary = setupBoundary;
-      return {commit, date: summary.date, subject: summary.subject, record, run, toolchainChange, setupRun, boundaryChange};
+      const {run: setupRun, change: boundaryChange} =
+        setupBoundaryCounter(Object.hasOwn(record, 'runner_setup') ? record.runner_setup.boundary : null);
+      const {run: leftoverRun, change: leftoverBoundaryChange} =
+        leftoverBoundaryCounter(Object.hasOwn(record, 'leftover_materials_setup') ? record.leftover_materials_setup.boundary : null);
+      return {commit, date: summary.date, subject: summary.subject, record, run, toolchainChange, setupRun, boundaryChange,
+              leftoverRun, leftoverBoundaryChange};
     });
+  }
+
+  /**
+   * Returns a function to be called with the boundary of each point in turn,
+   * or with null for a point which has none. It returns the number of changes
+   * of boundary so far, and whether this point's boundary is the first of a
+   * different one. A boundary which is no text is no boundary.
+   *
+   * @returns {(boundary: any) => {run: number, change: boolean}}
+   */
+  function boundaryCounter() {
+    let run = 0;
+    /** @type {string | null} */
+    let previous = null;
+    return boundary => {
+      const change = typeof boundary === 'string' && previous !== null && boundary !== previous;
+      if (change) ++run;
+      if (typeof boundary === 'string') previous = boundary;
+      return {run, change};
+    };
   }
 
   /**
@@ -421,7 +570,7 @@
    *
    * @param {JsonRecord} before
    * @param {JsonRecord} after
-   * @returns {{object: string, before: number | undefined, after: number | undefined, delta: number}[]}
+   * @returns {{object: string, before: number | null, after: number | null, delta: number}[]}
    */
   function movers(before, after) {
     const countsBefore = before.defined_symbols_by_object;
@@ -547,8 +696,11 @@
     const notFound = walk.unknown
       ? `the walk along staging's first parents stopped after ${pages} pages of history, before reaching it`
       : 'it is not on staging\'s first-parent history';
-    // The records of `entries` which have no problem by commit, and those which have, by path
     /**
+     * Splits `entries` into the records which have no problem, by commit, and
+     * the problems of those which have, with their paths. An entry whose
+     * commit the walk did not find has a problem.
+     *
      * @param {Entry[]} entries
      * @param {(record: JsonRecord, commit: string) => string[]} problemsOf
      */
@@ -589,16 +741,23 @@
 
   /**
    * Returns the horizontal positions of points at the given times, linear in
-   * time over whole UTC days: from the midnight which starts the earliest
-   * day to the one which ends the latest. Also returns the ticks, at
-   * midnights a whole number of days apart, the fewest days for which
-   * neighbouring ticks are at least `minGap` apart, each tick a different day.
+   * time over whole UTC days: `left` is the midnight which starts the
+   * earliest day, and `right` the midnight which ends the latest.
+   *
+   * Also returns the ticks and `x`:
+   *  - the ticks are at midnights, from the one which starts the earliest
+   *    day, a whole number of days apart, up to the one which ends the latest
+   *    day if it falls on the step. The step is the fewest days, among those
+   *    the function tries, for which neighbouring ticks are at least `minGap`
+   *    apart, or the most it tries if none is;
+   *  - `x` gives the position of any time, which lies outside `left` to
+   *    `right` for a time outside the days of `times`.
    *
    * @param {number[]} times  Milliseconds since the epoch, one for each point
    * @param {number} left     The position of the start of the first day
    * @param {number} right    The position of the end of the last day
    * @param {number} minGap
-   * @returns {{xs: number[], ticks: {x: number, time: number}[]}}
+   * @returns {{xs: number[], ticks: {x: number, time: number}[], x: (time: number) => number}}
    */
   function timeAxis(times, left, right, minGap) {
     const first = Math.floor(Math.min(...times) / millisecondsPerDay);
@@ -607,8 +766,10 @@
     const x     = (/** @type {number} */ time) => left + (time / millisecondsPerDay - first) / days * (right - left);
     const step  = dayStepsToTry.find(candidate => candidate * (right - left) / days >= minGap) ?? dayStepsToTry[dayStepsToTry.length - 1];
     const ticks = [];
-    for (let day = first; day <= last; day += step) ticks.push({x: x(day * millisecondsPerDay), time: day * millisecondsPerDay});
-    return {xs: times.map(x), ticks};
+    for (let day = first; day <= last + 1; day += step) {
+      ticks.push({x: x(day * millisecondsPerDay), time: day * millisecondsPerDay});
+    }
+    return {xs: times.map(x), ticks, x};
   }
 
   /**
@@ -638,6 +799,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, excludedForFailures, panelsShown, runnerSetupEvents, runnerSetupPerTest, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneStampingExitStatus, leftoverMaterialsSetupRunNames, leftoverMaterialsSetupPerEntry, leftoverMaterialsSetupBlindLabel, leftoverMaterialsSetupEntries, leftoverMaterialsSetupRuns, leftoverMaterialsSetupFirstFailure, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));

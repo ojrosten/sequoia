@@ -1,10 +1,10 @@
 #!/bin/bash
-# The runner_setup field of a symbol-table record, as JSON on standard output,
-# from a callgrind run of a test executable and the run's execution records:
+# Prints the counts of a callgrind run of a test executable, as JSON on
+# standard output, from the run's output and its execution records:
 #
 #   runner_setup_record.sh <callgrind output> <execution records> <exit status> <boundary>
 #
-# The callgrind run is of an executable whose collection was toggled on by
+# The callgrind run is of an executable in which collection is toggled on by
 # test_to_run::execute and off by execution_timer::time_execution, so that its
 # totals are the runner's work for each test, outside the test. The totals are
 # the events Ir (instructions) and sysCount (system calls): the file's
@@ -12,28 +12,28 @@
 # must both be present, and agree on Ir. The system calls are those of the
 # "totals:" line.
 #
-# This reading of callgrind's two lines is inferred from runs 40186679215 and
-# 40186689490 of symbol-table.yml, not taken from callgrind's documentation.
-# With --collect-systime=yes the lines agreed on Ir (311650326) and differed on
-# sysCount (summary 1719515, totals 833201) and on sysTime. The totals are
-# taken to count the collected regions and the summary every system call of the
-# run, so only Ir is compared.
+# The two lines are compared on Ir alone, and sysCount is read from the totals,
+# since the lines disagree on sysCount. The summary is taken to count system
+# calls outside the collected regions too; that is an inference from the
+# counts, not something callgrind's documentation states.
 #
 # The tests are counted from the runner's own execution records: the
 # executable's directory under output/ExecutionRecords holds a file for each
 # test of the run, which the run fills, and none for a nested runner's tests
 # (the runner's own tests run runners of their own, in a sandbox). Callgrind's
-# call counts would count those nested calls of test_to_run::execute, whose
-# setup its toggling does not collect, since it toggles only on the call at
-# recursion depth 0 and on its return. A test which has not run has an empty
-# file, so the tests are the non-empty files. The caller removes the directory
-# before the run, so that no record is of an earlier run.
+# call counts would include the nested calls of test_to_run::execute, whose
+# setup callgrind does not collect: it toggles collection only on the call at
+# recursion depth 0 and on that call's return. A test which has not run has an
+# empty file, so the tests are the non-empty files. The directory must hold no
+# record of an earlier run, so the caller removes it before the run.
+#
+# The boundary is copied into the field. The caller must change it whenever the
+# functions counted, the executable or its options change.
 #
 # The exit status is that of the run, as the executable's main gives it:
 # 0 when the run passed, else 80 plus the flags of the run's return_code
 # (versioned output moved, soft failures, a test threw, an incomplete run,
-# failures after the run); to_exit_code in ReturnCodes.hpp. A pass is exactly
-# status 0.
+# failures after the run); to_exit_code in ReturnCodes.hpp.
 #
 # A count which is zero or missing is refused: the script succeeds, says why
 # in a ::warning:: on standard error, and prints nothing.
@@ -47,7 +47,7 @@ fi
 out=$1 records=$2 status=$3 boundary=$4
 
 refuse() {
-  echo "::warning::$1, so the record has no runner_setup" >&2
+  echo "::warning::$1, so the run has no counts" >&2
   exit 0
 }
 
