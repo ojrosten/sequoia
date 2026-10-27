@@ -41,9 +41,6 @@ namespace sequoia::numeric
 
   /** \brief Converts `val` to `To`.
 
-      For an index offsetting an iterator, any offset valid for the iterator fits its
-      `difference_type`, so the conversion cannot lose a value in an in-contract call.
-
       \pre `std::in_range<To>(val)`
    */
   template<integer To, integer From>
