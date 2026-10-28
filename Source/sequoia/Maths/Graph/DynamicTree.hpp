@@ -77,6 +77,15 @@ namespace sequoia::maths
       : base_type{tree, tree_link_direction_constant<TreeLinkDir>{}}
     {}
 
+    /** \brief Adds a node as a child of `parent`, and returns the new node's
+               index.
+
+        If the tree is empty, the new node becomes the root, and `parent` is
+        ignored.
+
+        \throws std::out_of_range, leaving the tree unchanged, if the tree is
+        not empty and lacks `parent`.
+     */
     template<class... Args>
       requires is_initializable_v<NodeWeight, Args...>
     size_type add_node(const size_type parent, Args&&... args)
@@ -84,8 +93,18 @@ namespace sequoia::maths
       return base_type::add_node_to_tree(tree_link_direction_constant<TreeLinkDir>{}, parent, std::forward<Args>(args)...);
     }
 
-    /** \throws std::out_of_range, leaving the tree unchanged, if `pos` is 0
-        and the tree is not empty, since the root is node 0.
+    /** \brief Inserts a node at `pos` as a child of `parent`, and returns
+               `pos`.
+
+        `parent` is an index into the tree as it is before the insertion. If
+        the tree is empty, the new node becomes the root, and `parent` is
+        ignored.
+
+        \throws std::out_of_range, leaving the tree unchanged, if one of these
+        holds:
+        -# `pos` exceeds `order()`;
+        -# The tree is not empty, and `pos` is 0;
+        -# The tree is not empty, and lacks `parent`.
      */
     template<class... Args>
       requires is_initializable_v<NodeWeight, Args...>
@@ -94,7 +113,11 @@ namespace sequoia::maths
       if((pos == 0) && (this->order() > 0))
         throw std::out_of_range{graph_errors::root_displacement_message("insert_node")};
 
-      return base_type::insert_node_to_tree(tree_link_direction_constant<TreeLinkDir>{}, pos, parent, std::forward<Args>(args)...);
+      return base_type::insert_node_to_tree(tree_link_direction_constant<TreeLinkDir>{},
+                                            "insert_node",
+                                            pos,
+                                            parent,
+                                            std::forward<Args>(args)...);
     }
 
     /** \brief Removes `node` and its descendants.

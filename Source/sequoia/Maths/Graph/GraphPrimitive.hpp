@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <ranges>
+#include <string_view>
 #include <vector>
 
 namespace sequoia
@@ -515,20 +516,30 @@ namespace sequoia
       }
 
       template<tree_link_direction dir, class... Args>
-      size_type insert_node_to_tree(tree_link_direction_constant<dir>, size_type pos, size_type parent, Args&&... args)
+      size_type insert_node_to_tree(tree_link_direction_constant<dir>,
+                                    std::string_view method,
+                                    size_type pos,
+                                    size_type parent,
+                                    Args&&... args)
       {
+        const bool hadRoot{this->order() > 0};
+        if(hadRoot)
+          graph_errors::check_node_index_range(method, this->order(), parent);
+
         const auto n{insert_node(pos, std::forward<Args>(args)...)};
 
-        if(this->order() > 1)
+        if(hadRoot)
         {
+          const auto parentAfterInsertion{parent < pos ? parent : parent + 1};
+
           if constexpr((dir != tree_link_direction::forward) && is_directed(Connectivity::flavour))
           {
-            Connectivity::join(n, parent);
+            Connectivity::join(n, parentAfterInsertion);
           }
 
           if constexpr(dir != tree_link_direction::backward)
           {
-            Connectivity::join(parent, n);
+            Connectivity::join(parentAfterInsertion, n);
           }
         }
 
@@ -538,7 +549,7 @@ namespace sequoia
       template<tree_link_direction dir, class... Args>
       size_type add_node_to_tree(tree_link_direction_constant<dir> tldc, size_type parent, Args&&... args)
       {
-        return insert_node_to_tree(tldc, this->order(), parent, std::forward<Args>(args)...);
+        return insert_node_to_tree(tldc, "add_node", this->order(), parent, std::forward<Args>(args)...);
       }
     private:
       class [[nodiscard]] insertion_sentinel
