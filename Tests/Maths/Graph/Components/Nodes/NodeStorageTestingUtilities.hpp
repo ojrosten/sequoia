@@ -225,6 +225,7 @@ namespace sequoia::testing
     using base_type::erase_nodes;
     using base_type::clear;
     using base_type::get_node_allocator;
+    using base_type::permute_nodes;
   };
 
   template<class Weight, std::size_t N>

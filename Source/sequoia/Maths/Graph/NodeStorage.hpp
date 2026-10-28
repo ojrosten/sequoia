@@ -17,6 +17,7 @@
 
  */
 
+#include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 #include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
@@ -218,6 +219,20 @@ namespace sequoia::maths
         throw std::out_of_range("node_storage::swap - index out of range");
 
       std::ranges::swap(m_NodeWeights[i], m_NodeWeights[j]);
+    }
+
+    /** \brief Moves the weight of each node `i` to position
+               `destinations[i]`.
+
+        Does not copy `destinations`.
+
+        \throws std::invalid_argument if `destinations` is not a permutation
+        of the nodes' indices. The weights are then in an unspecified order.
+     */
+    template<integer Index, alloc IndexAllocator>
+    constexpr void permute_nodes(std::vector<Index, IndexAllocator>&& destinations)
+    {
+      sequoia::permute(m_NodeWeights, std::move(destinations));
     }
 
     auto get_node_allocator() const

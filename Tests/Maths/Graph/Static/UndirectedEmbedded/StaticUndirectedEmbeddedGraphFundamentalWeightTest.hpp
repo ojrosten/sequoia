@@ -23,6 +23,8 @@ namespace sequoia::testing
 
     void run_tests();
 
+    void test_sort_nodes_in_constant_evaluation();
+
     template<class EdgeWeight, class NodeWeight>
     void test_empty();
 

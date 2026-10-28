@@ -16,6 +16,9 @@
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/Algorithms/Algorithms.hpp"
 
+#include <algorithm>
+#include <stdexcept>
+#include <utility>
 #include <vector>
 
 namespace sequoia::maths
@@ -126,6 +129,26 @@ SEQUOIA_GCC_SUPPRESS_BEGIN("-Wstringop-overflow=")
         *pos = op(*pos);
       }
 SEQUOIA_GCC_SUPPRESS_END
+    }
+
+    /** \brief Replaces each element with the corresponding one of `values`.
+
+        \throws std::logic_error if `values` has a different number of
+        elements, or would break the sequence's monotonicity. The sequence is
+        then unchanged.
+     */
+    template<std::ranges::forward_range R>
+      requires (   std::indirectly_copyable<std::ranges::iterator_t<R>, typename C::iterator>
+                && std::indirect_binary_predicate<Compare, std::ranges::iterator_t<R>, std::ranges::iterator_t<R>>)
+    constexpr void overwrite(R&& values)
+    {
+      if(std::cmp_not_equal(std::ranges::distance(values), size()))
+        throw std::logic_error{"monotonic_sequence::overwrite - the number of values differs from the size"};
+
+      if(std::ranges::adjacent_find(values, Compare{}) != std::ranges::end(values))
+        throw std::logic_error{"monotonic_sequence::overwrite - monotonicity violated"};
+
+      std::ranges::copy(values, m_Sequence.begin());
     }
 
     [[nodiscard]]

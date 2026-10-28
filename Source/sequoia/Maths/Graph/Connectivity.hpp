@@ -39,6 +39,7 @@
 #include <limits>
 #include <stdexcept>
 #include <ranges>
+#include <vector>
 
 namespace sequoia
 {
@@ -455,6 +456,30 @@ namespace sequoia
         }
 
         m_Edges.swap_partitions(i, j);
+      }
+
+      /** \brief Moves each node `i` to position `destinations[i]`, keeping
+                 the order of its edges, and relabels each edge's target to
+                 match.
+
+          \throws std::invalid_argument if `destinations` is not a
+          permutation of the nodes' indices. The edges may then no longer
+          describe a valid graph.
+       */
+      constexpr void permute_nodes(const std::vector<edge_index_type>& destinations)
+      {
+        m_Edges.permute_partitions(destinations);
+
+        auto allEdges{
+            std::views::iota(edge_index_type{}, numeric::unchecked_conversion_to<edge_index_type>(order()))
+          | std::views::transform([this](const edge_index_type node) { return edges(node); })
+          | std::views::join
+        };
+
+        for(auto& edge : allEdges)
+        {
+          edge.target_node(destinations[edge.target_node()]);
+        }
       }
 
       [[nodiscard]]
@@ -1463,14 +1488,22 @@ namespace sequoia
         set_source_edge_weight(to_edge_iterator(citer), std::move(sourceWeight));
       }
 
+      /** \brief Erases the first half of a join, at `pos` in the partition of
+                 `node1`, on destruction unless the size of the partition of
+                 `node2` has changed since construction.
+       */
       class [[nodiscard]] join_sentinel
       {
       public:
-        join_sentinel(connectivity_base& connectivity, const edge_index_type node1, const edge_index_type pos)
+        join_sentinel(connectivity_base& connectivity,
+                      const edge_index_type node1,
+                      const edge_index_type pos,
+                      const edge_index_type node2)
           : m_Connectivity{connectivity}
           , m_Node1{node1}
           , m_Pos{pos}
-          , m_InitialSize{connectivity.m_Edges.size()}
+          , m_Node2{node2}
+          , m_InitialPartitionSize{connectivity.m_Edges.size_of_partition(node2)}
         {}
 
         join_sentinel(const join_sentinel&)            = delete;
@@ -1478,15 +1511,15 @@ namespace sequoia
 
         ~join_sentinel()
         {
-          if(m_Connectivity.m_Edges.size() == m_InitialSize)
+          if(m_Connectivity.m_Edges.size_of_partition(m_Node2) == m_InitialPartitionSize)
           {
             m_Connectivity.erase_unreciprocated_partial_edge(m_Node1, m_Pos);
           }
         }
       private:
         connectivity_base& m_Connectivity;
-        edge_index_type m_Node1{}, m_Pos{};
-        std::size_t m_InitialSize{};
+        edge_index_type m_Node1{}, m_Pos{}, m_Node2{};
+        std::size_t m_InitialPartitionSize{};
       };
 
       void erase_unreciprocated_partial_edge(const edge_index_type node, const edge_index_type pos)
@@ -1502,7 +1535,7 @@ namespace sequoia
         requires (std::is_same_v<MetaData, edge_meta_data_type> && ...)
       void reciprocal_join(const edge_index_type node1, const edge_index_type node2, MetaData... md)
       {
-        join_sentinel sentinel{*this, node1, m_Edges.size_of_partition(node1) - 1};
+        join_sentinel sentinel{*this, node1, m_Edges.size_of_partition(node1) - 1, node2};
         if constexpr(edge_type::flavour == edge_flavour::partial)
         {
           m_Edges.push_back_to_partition(node2, node1, std::move(md)..., *crbegin_edges(node1));
@@ -1527,7 +1560,7 @@ namespace sequoia
         if(pos2 <= pos1) ++pos1;
 
         const auto dist1{static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(node), citer1))};
-        join_sentinel sentinel{*this, node, dist1};
+        join_sentinel sentinel{*this, node, dist1, node};
 
         auto citer2{m_Edges.insert_to_partition(cbegin_edges(node)
                                                   + numeric::unchecked_conversion_to<std::ptrdiff_t>(pos2),
@@ -1559,7 +1592,7 @@ namespace sequoia
         const auto node1{citer1.partition_index()}, node2{citer2.partition_index()};
         const auto dist1{static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(node1), citer1))};
 
-        join_sentinel sentinel{*this, node1, dist1};
+        join_sentinel sentinel{*this, node1, dist1, node2};
         citer2 = m_Edges.insert_to_partition(citer2, node1, dist1, std::move(md)..., *citer1);
         increment_comp_indices(++to_edge_iterator(citer2), end_edges(node2), 1);
 

@@ -30,6 +30,7 @@
 #include <ranges>
 #include <stdexcept>
 #include <utility>
+#include <vector>
 
 namespace sequoia
 {
@@ -171,6 +172,20 @@ namespace sequoia
             std::ranges::swap(m_Buckets[i], m_Buckets[j]);
           }
         }
+      }
+
+      /** \brief Moves each partition `i`, keeping the order of its elements,
+                 to the position held by the `i`th element of `destinations`.
+
+          \throws std::invalid_argument if `destinations` is not a
+          permutation of the partitions' indices. The partitions are then in
+          an unspecified order.
+       */
+      template<class D>
+        requires (range_of_integers<const D&> && std::ranges::sized_range<const D&>)
+      constexpr void permute_partitions(const D& destinations)
+      {
+        sequoia::permute(m_Buckets, destinations);
       }
 
       [[nodiscard]]
@@ -689,6 +704,64 @@ namespace sequoia
             }
           }
         }
+      }
+
+      /** \brief Moves each partition `i`, keeping the order of its elements,
+                 to the position held by the `i`th element of `destinations`.
+
+          \throws std::invalid_argument if `destinations` is not a
+          permutation of the partitions' indices. The partitions are then in
+          an unspecified order.
+       */
+      template<class D>
+        requires (   range_of_integers<const D&>
+                  && std::ranges::sized_range<const D&>
+                  && std::ranges::forward_range<const D&>)
+      constexpr void permute_partitions(const D& destinations)
+      {
+        const auto partitionIndices{
+          std::views::iota(index_type{}, numeric::unchecked_conversion_to<index_type>(num_partitions()))
+        };
+
+        const auto permutedSizes{
+          [&]() {
+            auto sizes{
+                partitionIndices
+              | std::views::transform([this](const index_type i){ return size_of_partition(i); })
+              | std::ranges::to<std::vector>()
+            };
+
+            sequoia::permute(sizes, destinations);
+            return sizes;
+          }()
+        };
+
+        const auto permutedBounds{
+          [&permutedSizes]() {
+            std::vector<size_type> bounds{};
+            bounds.reserve(permutedSizes.size());
+            std::inclusive_scan(permutedSizes.cbegin(), permutedSizes.cend(), std::back_inserter(bounds));
+            return bounds;
+          }()
+        };
+
+        auto destinationsOfElementsIn{
+          [&](const index_type i, const std::ranges::range_value_t<const D> destinationOfPartition) {
+            const auto destination{numeric::unchecked_conversion_to<std::size_t>(destinationOfPartition)};
+            const auto firstDestination{permutedBounds[destination] - permutedSizes[destination]};
+            return std::views::iota(firstDestination, firstDestination + size_of_partition(i));
+          }
+        };
+
+        // The partitions need not cover every element of a static sequence
+        const auto partitionedSize{permutedBounds.empty() ? size_type{} : permutedBounds.back()};
+        sequoia::permute(m_Data | std::views::take(partitionedSize),
+                             std::views::zip_transform(destinationsOfElementsIn, partitionIndices, std::ranges::ref_view{destinations})
+                           | std::views::join
+                           | std::ranges::to<std::vector>());
+
+        auto toIndexType{[](const size_type bound) { return numeric::unchecked_conversion_to<index_type>(bound); }};
+        m_Partitions.overwrite(permutedBounds | std::views::transform(toIndexType));
       }
 
       template<alloc Allocator, alloc PartitionsAllocator>

@@ -25,11 +25,14 @@ namespace sequoia::testing
   {
     check_moves_do_not_copy();
     check_top_and_pop_in_constant_evaluation();
+    check_pop_order_in_constant_evaluation();
+    check_pop_comparisons_in_constant_evaluation();
     check_depth_0();
     check_depth_1();
     check_depth_2();
     check_depth_3();
     check_construction_from_list_shorter_than_depth();
+    check_layout_after_pop();
   }
 
   void test_static_priority_queue::check_moves_do_not_copy()
@@ -72,6 +75,113 @@ namespace sequoia::testing
     STATIC_CHECK(!invocation_is_constant_expression_v<[]() { return queue_t{}.top();  }>);
     STATIC_CHECK( invocation_is_constant_expression_v<[]() { queue_t{1}.pop(); }>);
     STATIC_CHECK(!invocation_is_constant_expression_v<[]() { queue_t{}.pop();  }>);
+  }
+
+  template<std::size_t N, class Compare>
+  constexpr auto test_static_priority_queue::successive_tops_from(const std::array<int, N>& elements,
+                                                                const Compare&             compare)
+  {
+    data_structures::static_priority_queue<int, N, Compare> q{compare};
+    for(const int e : elements)
+    {
+      q.push(e);
+    }
+
+    std::array<int, N> tops{};
+    for(int& t : tops)
+    {
+      t = q.top();
+      q.pop();
+    }
+
+    return tops;
+  }
+
+  void test_static_priority_queue::check_pop_order_in_constant_evaluation()
+  {
+    // Popping ten elements passes through even sizes, where the last parent has a left child only
+    static constexpr std::array<int, 10> ten{5, 3, 8, 1, 9, 2, 7, 4, 6, 0};
+    STATIC_CHECK(successive_tops_from(ten, std::ranges::less{})    == std::array{9, 8, 7, 6, 5, 4, 3, 2, 1, 0});
+    STATIC_CHECK(successive_tops_from(ten, std::ranges::greater{}) == std::array{0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+
+    static constexpr std::array<int, 7> ascending{0, 1, 2, 3, 4, 5, 6};
+    STATIC_CHECK(successive_tops_from(ascending, std::ranges::less{}) == std::array{6, 5, 4, 3, 2, 1, 0});
+
+    static constexpr std::array<int, 7> duplicates{2, 2, 1, 2, 1, 1, 2};
+    STATIC_CHECK(successive_tops_from(duplicates, std::ranges::less{}) == std::array{2, 2, 2, 2, 1, 1, 1});
+
+    static constexpr std::array<int, 1> single{4};
+    STATIC_CHECK(successive_tops_from(single, std::ranges::less{}) == std::array{4});
+  }
+
+  /** Compares by value, counting each comparison through a pointer: the
+      queue copies its comparator, so the copies share the count.
+   */
+  struct test_static_priority_queue::counting_less
+  {
+    int* count{};
+
+    [[nodiscard]]
+    constexpr bool operator()(const int lhs, const int rhs) const
+    {
+      ++*count;
+      return lhs < rhs;
+    }
+  };
+
+  constexpr int test_static_priority_queue::comparisons_in_one_pop()
+  {
+    int count{};
+    data_structures::static_priority_queue<int, 15, counting_less> q{counting_less{&count}};
+    for(int i{}; i < 15; ++i)
+    {
+      q.push((i * 7) % 15);
+    }
+
+    count = 0;
+    q.pop();
+
+    return count;
+  }
+
+  /** A pop sifts down from the root, comparing at most twice at each of the
+      three levels below it. Rebuilding the heap compares at least once for
+      each of the other thirteen elements.
+   */
+  void test_static_priority_queue::check_pop_comparisons_in_constant_evaluation()
+  {
+    constexpr int comparisons{comparisons_in_one_pop()};
+
+    STATIC_CHECK(comparisons <= 6);
+  }
+
+  /** The layout after a pop is the implementation's choice: sifting down from
+      the root can leave a layout different from the one built from the same
+      elements, and so a queue compares unequal to the queue built from them.
+      The same holds for which of two equal children is swapped.
+   */
+  void test_static_priority_queue::check_layout_after_pop()
+  {
+    using queue_t = data_structures::static_priority_queue<int, 4>;
+
+    queue_t q{};
+    q.push(0);
+    q.push(2);
+    q.push(3);
+    q.push(1);
+    q.pop();
+
+    check(equality, "Sifting down leaves the larger child in front", q, queue_t{2, 1, 0});
+    check("Equality compares the layout, not the elements", q != queue_t{0, 1, 2});
+
+    queue_t ties{};
+    ties.push(1);
+    ties.push(1);
+    ties.push(1);
+    ties.push(0);
+    ties.pop();
+
+    check(equality, "Sifting down swaps with the right child when the children are equal", ties, queue_t{1, 1, 0});
   }
 
   void test_static_priority_queue::check_depth_0()
