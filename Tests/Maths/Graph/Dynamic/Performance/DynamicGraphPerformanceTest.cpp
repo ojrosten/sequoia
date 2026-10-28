@@ -28,7 +28,7 @@ namespace sequoia::testing
     /** \brief The number of nodes in each graph which `test_sort_nodes`
                builds, so that each such graph is small.
      */
-    constexpr std::size_t nodes_per_sort_versus_build_graph{64};
+    constexpr std::size_t nodes_in_unscaled_graph{64};
 
     /** \brief The number of joins from each node of every graph.
 
@@ -59,7 +59,7 @@ namespace sequoia::testing
                                             prediction_of_sort_check{.lower{growth_factor_of_sort_check / 2.0},
                                                                      .upper{growth_factor_of_sort_check * 2.0}};
 
-    static_assert((nodes_per_sort_versus_build_graph > 1) && (nodes_in_smaller_graph > 1));
+    static_assert((nodes_in_unscaled_graph > 1) && (nodes_in_smaller_graph > 1));
 
     // `check_relative_performance` refuses a prediction whose lower end does
     // not exceed 1
@@ -183,6 +183,23 @@ namespace sequoia::testing
       g.sort_nodes([weightOf](std::size_t i, std::size_t j) { return weightOf(i) < weightOf(j); });
     }
 
+    /** \brief Returns a task which sorts by weight the nodes of a shuffled
+               graph with `nodeCount` nodes.
+
+        The task holds its graph by value. So each trial of
+        `check_relative_performance`, which copies the task untimed, sorts a
+        fresh copy.
+     */
+    template<dynamic_network Graph>
+    [[nodiscard]]
+    auto node_sorting_task(const std::size_t nodeCount)
+    {
+      return [g{graph_blueprint{nodeCount}.shuffled_graph<Graph>()}]() mutable {
+        sort_nodes_by_weight(g);
+        do_not_optimize_away(g);
+      };
+    }
+
     /** \brief Returns a graph with `nodeCount` nodes and `joins` between them. */
     template<dynamic_network Graph>
     [[nodiscard]]
@@ -200,6 +217,16 @@ namespace sequoia::testing
       }
 
       return g;
+    }
+
+    /** \brief Returns a task which builds a graph with `nodeCount` nodes and
+               `random_joins(nodeCount)` between them.
+     */
+    template<dynamic_network Graph>
+    [[nodiscard]]
+    auto graph_building_task(const std::size_t nodeCount)
+    {
+      return [nodeCount, joins{random_joins(nodeCount)}]() { return graph_with_nodes<Graph>(nodeCount, joins); };
     }
   }
 
@@ -256,7 +283,7 @@ namespace sequoia::testing
   template<dynamic_network Graph>
   void dynamic_graph_performance_test::test_sort_nodes(std::string_view graphName)
   {
-    const graph_blueprint blueprint{nodes_per_sort_versus_build_graph};
+    const graph_blueprint blueprint{nodes_in_unscaled_graph};
 
     auto buildSortedGraph{[&blueprint]() { return blueprint.sorted_graph<Graph>(); }};
 
@@ -297,28 +324,15 @@ namespace sequoia::testing
   {
     constexpr auto nodesInLargerGraph{growth_factor_of_build_check * nodes_in_smaller_graph};
 
-    const auto joinsOfSmallerGraph{random_joins(nodes_in_smaller_graph)},
-               joinsOfLargerGraph{random_joins(nodesInLargerGraph)};
-
-    auto buildSmallerGraph{
-      [&joinsOfSmallerGraph]() { return graph_with_nodes<Graph>(nodes_in_smaller_graph, joinsOfSmallerGraph); }
-    };
-
-    auto buildLargerGraph{
-      [&joinsOfLargerGraph]() { return graph_with_nodes<Graph>(nodesInLargerGraph, joinsOfLargerGraph); }
-    };
-
     check_relative_performance(
       std::format("Building the {} takes time proportional to its size", graphName),
-      buildSmallerGraph,
-      buildLargerGraph,
+      graph_building_task<Graph>(nodes_in_smaller_graph),
+      graph_building_task<Graph>(nodesInLargerGraph),
       {.prediction{prediction_of_build_check}});
   }
 
   /* Each performance check claims that sorting the nodes of a graph takes
-     time proportional to its size, up to a logarithmic factor. Each task
-     holds its shuffled graph by value, so each trial sorts a fresh copy,
-     made untimed.
+     time proportional to its size, up to a logarithmic factor.
 
      Each check bounds the growth of the time from above. For a graph with
      `growth_factor_of_sort_check` times as many nodes, time proportional to
@@ -350,25 +364,11 @@ namespace sequoia::testing
   {
     constexpr auto nodesInLargerGraph{growth_factor_of_sort_check * nodes_in_smaller_graph};
 
-    auto sortSmallerGraph{
-      [g{graph_blueprint{nodes_in_smaller_graph}.shuffled_graph<Graph>()}]() mutable {
-        sort_nodes_by_weight(g);
-        do_not_optimize_away(g);
-      }
-    };
-
-    auto sortLargerGraph{
-      [g{graph_blueprint{nodesInLargerGraph}.shuffled_graph<Graph>()}]() mutable {
-        sort_nodes_by_weight(g);
-        do_not_optimize_away(g);
-      }
-    };
-
     check_relative_performance(
       std::format("Sorting the nodes of the {} takes time proportional to its size, up to a logarithmic factor",
                   graphName),
-      sortSmallerGraph,
-      sortLargerGraph,
+      node_sorting_task<Graph>(nodes_in_smaller_graph),
+      node_sorting_task<Graph>(nodesInLargerGraph),
       {.prediction{prediction_of_sort_check}});
   }
 }
