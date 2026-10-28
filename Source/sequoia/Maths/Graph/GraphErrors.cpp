@@ -63,7 +63,7 @@ namespace sequoia::maths::graph_errors
   [[nodiscard]]
   std::string root_displacement_message(std::string_view method)
   {
-    return std::format("{}a symmetric tree's root is node 0, and may not move", error_prefix(method));
+    return std::format("{}a tree's root is node 0, and may not move", error_prefix(method));
   }
 
   [[nodiscard]]

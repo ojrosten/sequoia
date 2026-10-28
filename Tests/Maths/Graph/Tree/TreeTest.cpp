@@ -23,6 +23,19 @@ namespace sequoia::testing
       requires(const Tree& tree) { forest_beneath(tree, 0); }
     };
 
+    /// Orders node 0 first, and the other nodes by descending index
+    inline constexpr auto root_first_then_descending_index{
+      [](std::size_t i, std::size_t j) { return (i == 0) ? (j != 0) : ((j != 0) && (i > j)); }
+    };
+
+    inline constexpr auto by_ascending_target{
+      [](const auto& l, const auto& r) { return l.target_node() < r.target_node(); }
+    };
+
+    inline constexpr auto by_descending_target{
+      [](const auto& l, const auto& r) { return l.target_node() > r.target_node(); }
+    };
+
     template<class Tree>
     inline constexpr bool sort_all_nodes_callable_v{
       requires(Tree& tree) { tree.sort_nodes(std::ranges::less{}); }
@@ -47,11 +60,13 @@ namespace sequoia::testing
     test_tree_unweighted_nodes<directed_tree<tree_link_direction::symmetric, null_weight, null_weight>>();
     test_tree_unweighted_nodes<undirected_tree<tree_link_direction::symmetric, null_weight, null_weight>>();
 
+    test_root_fixed_at_zero<directed_tree<tree_link_direction::forward, null_weight, int>>();
+    test_root_fixed_at_zero<directed_tree<tree_link_direction::backward, null_weight, int>>();
     test_root_fixed_at_zero<directed_tree<tree_link_direction::symmetric, null_weight, int>>();
     test_root_fixed_at_zero<undirected_tree<tree_link_direction::symmetric, null_weight, int>>();
 
-    test_root_movable<directed_tree<tree_link_direction::forward, null_weight, int>>();
-    test_root_movable<directed_tree<tree_link_direction::backward, null_weight, int>>();
+    test_sort_all_nodes<directed_tree<tree_link_direction::forward, null_weight, int>>();
+    test_sort_all_nodes<directed_tree<tree_link_direction::backward, null_weight, int>>();
 
     test_prune_of_absent_node<directed_tree<tree_link_direction::forward, null_weight, int>>();
     test_prune_of_absent_node<directed_tree<tree_link_direction::backward, null_weight, int>>();
@@ -97,13 +112,13 @@ namespace sequoia::testing
         {
           edge_t{4, report("Insert node"), [](tree_t t) -> tree_t {
               t.insert_node(1, 0, -7);
-              t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), [](const auto& l, const auto& r) { return l.target_node() < r.target_node(); });
+              t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), by_ascending_target);
               return t;
             }
           },
           edge_t{4, report("Insert node"), [](tree_t t) -> tree_t {
               t.insert_node(1, 0, -7);
-              t.stable_sort_edges(t.cbegin_edges(0), t.cend_edges(0), [](const auto& l, const auto& r) { return l.target_node() < r.target_node(); });
+              t.stable_sort_edges(t.cbegin_edges(0), t.cend_edges(0), by_ascending_target);
               return t;
             }
           }
@@ -124,8 +139,7 @@ namespace sequoia::testing
             }
           },
           edge_t{2, report("Prune a branch whose first edge goes to its leaf"), [](tree_t t) {
-              auto byDescendingTarget{[](const auto& l, const auto& r) { return l.target_node() > r.target_node(); }};
-              t.sort_edges(t.cbegin_edges(2), t.cend_edges(2), byDescendingTarget);
+              t.sort_edges(t.cbegin_edges(2), t.cend_edges(2), by_descending_target);
               t.prune(2);
               return t;
             }
@@ -240,7 +254,6 @@ namespace sequoia::testing
   }
 
   template<maths::dynamic_tree Tree>
-    requires (Tree::link_dir == maths::tree_link_direction::symmetric)
   void tree_test::test_root_fixed_at_zero()
   {
     using tree_t      = Tree;
@@ -261,6 +274,11 @@ namespace sequoia::testing
         {
           edge_t{1, report("Insert the first node at 0"), [](tree_t t) {
               t.insert_node(0, tree_t::npos, 42);
+              return t;
+            }
+          },
+          edge_t{0, report("Sort an empty range of an empty tree"), [](tree_t t) {
+              t.sort_nodes(0, 0, std::ranges::greater{});
               return t;
             }
           }
@@ -288,18 +306,34 @@ namespace sequoia::testing
             }
           },
           edge_t{2, report("Swap the root with itself"), [](tree_t t) { t.swap_nodes(0, 0); return t; }},
-          edge_t{2, report("Sort a range of nodes starting at the root"), [this](tree_t t) {
-              check_exception_thrown<std::out_of_range>("Sort a range of nodes starting at the root",
-                                                        [&t](){ t.sort_nodes(0, 2, std::ranges::greater{}); });
-              return t;
-            }
-          },
           edge_t{2, report("Sort a range holding only the root"), [](tree_t t) {
               t.sort_nodes(0, 1, std::ranges::greater{});
               return t;
             }
+          },
+          edge_t{3, report("Insert a node at 2"), [](tree_t t) { t.insert_node(2, 0, 6); return t; }}
+        }, // end node 2 edges
+        {
+          edge_t{3, report("Sort a range of nodes so as to move the root"), [this](tree_t t) {
+              check_exception_thrown<std::out_of_range>("Sort a range of nodes so as to move the root",
+                                                        [&t](){ t.sort_nodes(0, 3, std::ranges::greater{}); });
+              return t;
+            }
+          },
+          edge_t{3, report("Sort a range whose end precedes its start"), [](tree_t t) {
+              t.sort_nodes(2, 1, std::ranges::greater{});
+              return t;
+            }
+          },
+          edge_t{4, report("Sort a range of nodes from the root, keeping it first"), [](tree_t t) {
+              t.sort_nodes(0, 3, root_first_then_descending_index);
+              t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), by_ascending_target);
+              return t;
+            }
           }
-        } // end node 2 edges
+        }, // end node 3 edges
+        {
+        } // end node 4 edges
       }, // end edges
       {
         // empty
@@ -309,7 +343,15 @@ namespace sequoia::testing
         // -7
         //  \
         //   42
-        {report(""), initCheckFn, initializer{42, {{-7}}}}
+        {report(""), initCheckFn, initializer{42, {{-7}}}},
+        // -7  6
+        //  \ /
+        //   42
+        {report(""), initCheckFn, initializer{42, {{-7}, {6}}}},
+        //  6  -7
+        //  \ /
+        //   42
+        {report(""), initCheckFn, initializer{42, {{6}, {-7}}}}
       } // end nodes
     };
 
@@ -324,7 +366,7 @@ namespace sequoia::testing
 
   template<maths::dynamic_tree Tree>
     requires (Tree::link_dir != maths::tree_link_direction::symmetric)
-  void tree_test::test_root_movable()
+  void tree_test::test_sort_all_nodes()
   {
     using tree_t      = Tree;
     using initializer = tree_initializer<int>;
@@ -339,51 +381,34 @@ namespace sequoia::testing
     using tree_state_graph     = transition_checker_t::transition_graph;
     using edge_t               = transition_checker_t::edge;
 
-    // 42 with child -7, the child at node 0 and the root at node 1
-    const tree_t rootAtOne{
-      [](){
-        tree_t t{{42}};
-        t.insert_node(0, 1, -7);
-        return t;
-      }()
-    };
-
     tree_state_graph g{
       {
         {
-          edge_t{1, report("Swap the root with another node"), [](tree_t t) { t.swap_nodes(0, 1); return t; }},
-          edge_t{1, report("Sort all the nodes in reverse"), [](tree_t t) {
-              t.sort_nodes(std::ranges::greater{});
+          edge_t{0, report("Sort all the nodes so as to move the root"), [this](tree_t t) {
+              check_exception_thrown<std::out_of_range>("Sort all the nodes so as to move the root",
+                                                        [&t](){ t.sort_nodes(std::ranges::greater{}); });
               return t;
             }
           },
-          edge_t{1, report("Sort a range of nodes starting at the root in reverse"), [](tree_t t) {
-              t.sort_nodes(0, t.order(), std::ranges::greater{});
+          edge_t{1, report("Sort all the nodes, keeping the root first"), [](tree_t t) {
+              t.sort_nodes(root_first_then_descending_index);
+              t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), by_ascending_target);
               return t;
             }
           }
         }, // end node 0 edges
         {
-          edge_t{0, report("Swap another node with the root"), [](tree_t t) { t.swap_nodes(1, 0); return t; }},
-          edge_t{2, report("Prune the leaf at node 0"),        [](tree_t t) { t.prune(0); return t; }},
-          edge_t{3, report("Prune the root at node 1"),        [](tree_t t) { t.prune(1); return t; }}
-        }, // end node 1 edges
-        {
-          edge_t{1, report("Insert a node at 0 beneath the root"), [](tree_t t) { t.insert_node(0, 1, -7); return t; }}
-        }, // end node 2 edges
-        {
-        } // end node 3 edges
+        } // end node 1 edges
       }, // end edges
       {
-        // -7
-        //  \
+        // -7  6
+        //  \ /
         //   42
-        {report(""), initCheckFn, initializer{42, {{-7}}}},
-        rootAtOne,
-        // 42
-        {report(""), initCheckFn, initializer{42}},
-        // empty
-        tree_t{}
+        {report(""), initCheckFn, initializer{42, {{-7}, {6}}}},
+        //  6  -7
+        //  \ /
+        //   42
+        {report(""), initCheckFn, initializer{42, {{6}, {-7}}}}
       } // end nodes
     };
 
