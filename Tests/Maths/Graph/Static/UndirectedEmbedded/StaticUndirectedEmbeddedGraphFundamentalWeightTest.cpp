@@ -7,6 +7,7 @@
 
 #include "StaticUndirectedEmbeddedGraphFundamentalWeightTest.hpp"
 #include "Maths/Graph/GraphTestingUtilities.hpp"
+#include "Maths/Graph/GraphSortStabilityTestingUtilities.hpp"
 
 #include "sequoia/Maths/Graph/StaticGraph.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
@@ -59,6 +60,8 @@ namespace sequoia::testing
     test_node_1_node_0();
     test_node_1_1_node_0_0();
     test_node_1_1_node_0_0interleaved();
+
+    check_sort_nodes_is_stable<static_embedded_graph<0, stability_check_node_count, null_weight, std::size_t>>(*this);
   }
 
   void static_undirected_embedded_graph_fundamental_weight_test::test_sort_nodes_in_constant_evaluation()
