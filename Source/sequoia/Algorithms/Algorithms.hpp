@@ -243,15 +243,6 @@ namespace sequoia
     }
   }
 
-  /** \brief A range `permute` accepts as the destinations of a range's
-             elements.
-   */
-  template<class D>
-  concept destination_indices
-    =    std::ranges::input_range<D>
-      && std::ranges::sized_range<D>
-      && integer<std::ranges::range_value_t<D>>;
-
   /** \brief Moves the element at each position `i` of `r` to the position
              held by the `i`th element of `destinations`.
 
@@ -266,8 +257,9 @@ namespace sequoia
       \throws std::invalid_argument if `destinations` is not a permutation of
       `r`'s positions. `r` then holds its elements in an unspecified order.
    */
-  template<std::ranges::random_access_range R, destination_indices D>
+  template<std::ranges::random_access_range R, range_of_integers D>
     requires (   std::ranges::sized_range<R>
+              && std::ranges::sized_range<D>
               && std::indirectly_swappable<std::ranges::iterator_t<R>>
               && integer<std::ranges::range_size_t<R>>
               && integer<std::ranges::range_difference_t<R>>)

@@ -182,7 +182,7 @@ namespace sequoia
           an unspecified order.
        */
       template<class D>
-        requires destination_indices<const D&>
+        requires (range_of_integers<const D&> && std::ranges::sized_range<const D&>)
       constexpr void permute_partitions(const D& destinations)
       {
         sequoia::permute(m_Buckets, destinations);
@@ -714,7 +714,9 @@ namespace sequoia
           an unspecified order.
        */
       template<class D>
-        requires (destination_indices<const D&> && std::ranges::forward_range<const D&>)
+        requires (   range_of_integers<const D&>
+                  && std::ranges::sized_range<const D&>
+                  && std::ranges::forward_range<const D&>)
       constexpr void permute_partitions(const D& destinations)
       {
         const auto partitionIndices{
