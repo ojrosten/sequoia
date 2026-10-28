@@ -150,6 +150,9 @@ namespace sequoia
           the graph as it was. Each node keeps its weight and its edges, the
           edges in their order.
 
+          \pre `c` is a strict weak ordering on the indices `first` to `last - 1`,
+               and does not modify the graph.
+
           \throws std::out_of_range if `first < last` and `last` exceeds
           `order()`. If `c` throws, the graph is unchanged.
        */
@@ -186,8 +189,6 @@ namespace sequoia
         Connectivity::permute_nodes(destinations);
         if constexpr(!std::is_empty_v<node_weight_type>)
         {
-          // Moved, so that nothing is allocated once the edges have moved,
-          // beyond the container proxy MSVC's debug build gives every vector
           Nodes::permute_nodes(std::move(destinations));
         }
       }

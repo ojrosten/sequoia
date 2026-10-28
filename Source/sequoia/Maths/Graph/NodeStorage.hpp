@@ -224,7 +224,7 @@ namespace sequoia::maths
     /** \brief Moves the weight of each node `i` to position
                `destinations[i]`.
 
-        Takes over `destinations` rather than copying it.
+        Does not copy `destinations`.
 
         \throws std::invalid_argument if `destinations` is not a permutation
         of the nodes' indices. The weights are then in an unspecified order.
