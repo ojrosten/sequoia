@@ -53,7 +53,7 @@ namespace sequoia
     {
     private:
       using node_weight_type = Nodes::weight_type;
-
+    protected:
       template<class Compare>
       constexpr static bool nodes_sortable_by_v{
            !heterogeneous_nodes<graph_primitive>

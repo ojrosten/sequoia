@@ -13,6 +13,7 @@
 
 #include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
+#include "sequoia/Maths/Graph/DynamicGraphTraversals.hpp"
 #include "sequoia/Maths/Graph/GraphErrors.hpp"
 
 #include <cstddef>
@@ -20,6 +21,14 @@
 
 namespace sequoia::maths
 {
+  /** \brief The base of `directed_tree` and `undirected_tree`.
+
+      A symmetric tree's root is node 0, since its edges do not identify the
+      root. Each node operation which could move the root throws
+      std::out_of_range instead.
+
+      A forward or backward tree's root may be at any node.
+   */
   template
   <
     graph_flavour Flavour,
@@ -52,8 +61,12 @@ namespace sequoia::maths
           EdgeStorageConfig,
           NodeWeightStorage
         >;
+
+      template<class Compare>
+      constexpr static bool nodes_sortable_by_v{base_type::template nodes_sortable_by_v<Compare>};
   public:
-    using size_type = base_type::size_type;
+    using size_type       = base_type::size_type;
+    using edge_index_type = base_type::edge_index_type;
 
     constexpr static tree_link_direction link_dir{TreeLinkDir};
 
@@ -74,86 +87,160 @@ namespace sequoia::maths
       return base_type::add_node_to_tree(tree_link_direction_constant<TreeLinkDir>{}, parent, std::forward<Args>(args)...);
     }
 
+    /** \throws std::out_of_range, for a symmetric tree, before any change, if
+        `pos` is 0 and the tree is not empty, since its root is node 0.
+     */
     template<class... Args>
       requires is_initializable_v<NodeWeight, Args...>
     size_type insert_node(const size_type pos, const size_type parent, Args&&... args)
     {
+      if constexpr(link_dir == tree_link_direction::symmetric)
+      {
+        if((pos == 0) && (this->order() > 0))
+          throw std::out_of_range{graph_errors::root_displacement_message("insert_node")};
+      }
+
       return base_type::insert_node_to_tree(tree_link_direction_constant<TreeLinkDir>{}, pos, parent, std::forward<Args>(args)...);
     }
 
+    /** \brief Removes `node` and its descendants.
+
+        \throws std::out_of_range if the tree lacks `node`.
+     */
     void prune(const size_type node)
     {
-      prune(node, tree_link_direction_constant<link_dir>{});
+      graph_errors::check_node_index_range("prune", this->order(), node);
+
+      const auto isInSubtree{subtree_membership(node, tree_link_direction_constant<link_dir>{})};
+
+      // Highest index first: erasing a node shifts every higher index down
+      for(const auto i : std::views::iota(size_type{}, this->order()) | std::views::reverse)
+      {
+        if(isInSubtree[i])
+          this->erase_node(i);
+      }
+    }
+
+    /** \throws std::out_of_range, for a symmetric tree, before any change, if
+        `i` and `j` differ and either is 0, since its root is node 0.
+     */
+    constexpr void swap_nodes(const edge_index_type i, const edge_index_type j)
+    {
+      if constexpr(link_dir == tree_link_direction::symmetric)
+      {
+        if((i != j) && ((i == 0) || (j == 0)))
+          throw std::out_of_range{graph_errors::root_displacement_message("swap_nodes")};
+      }
+
+      base_type::swap_nodes(i, j);
+    }
+
+    /** \brief Sorts all the nodes, as `sort_nodes(0, order(), c)` does.
+
+        A symmetric tree does not have this overload, since its root is node 0.
+     */
+    template<class Compare>
+      requires (link_dir != tree_link_direction::symmetric) && nodes_sortable_by_v<Compare>
+    constexpr void sort_nodes(Compare c)
+    {
+      base_type::sort_nodes(std::move(c));
+    }
+
+    /** \brief Sorts the nodes `first` to `last - 1`, as
+               `graph_primitive::sort_nodes` does.
+
+        \throws std::out_of_range, for a symmetric tree, before any change, if
+        `first` is 0 and `last` exceeds 1, since its root is node 0.
+     */
+    template<class Compare>
+      requires nodes_sortable_by_v<Compare>
+    constexpr void sort_nodes(const edge_index_type first, const edge_index_type last, Compare c)
+    {
+      if constexpr(link_dir == tree_link_direction::symmetric)
+      {
+        if((first == 0) && (last > 1))
+          throw std::out_of_range{graph_errors::root_displacement_message("sort_nodes")};
+      }
+
+      base_type::sort_nodes(first, last, std::move(c));
     }
 
     using base_type::swap_edges;
     using base_type::sort_edges;
     using base_type::stable_sort_edges;
-    using base_type::swap_nodes;
-    using base_type::sort_nodes;
   protected:
     ~tree_base() = default;
 
     tree_base(tree_base&&) noexcept = default;
     tree_base& operator=(tree_base&&) noexcept = default;
   private:
-    void prune(const size_type node, forward_tree_type ftt)
+    /** \brief Returns, for each node, whether it is `node` or a descendant of
+               it, in the tree rooted at `searchStart`.
+     */
+    [[nodiscard]]
+    std::vector<bool> subtree_membership_by_search(const size_type node, const size_type searchStart) const
     {
-      while(std::ranges::distance(this->crbegin_edges(node), this->crend_edges(node)))
-      {
-        const auto target{this->crbegin_edges(node)->target_node()};
-        prune(target, ftt);
-      }
+      std::vector<bool> isInSubtree(this->order(), false);
+      bool withinSubtree{};
 
-      this->erase_node(node);
+      traverse(depth_first,
+               *this,
+               ignore_disconnected_t{searchStart},
+               [node, &isInSubtree, &withinSubtree](const auto n) {
+                 if(n == node)
+                   withinSubtree = true;
+
+                 isInSubtree[n] = withinSubtree;
+               },
+               [node, &withinSubtree](const auto n) {
+                 if(n == node)
+                   withinSubtree = false;
+               });
+
+      return isInSubtree;
     }
 
-    void prune(const size_type node, symmetric_tree_type stt)
+    [[nodiscard]]
+    std::vector<bool> subtree_membership(const size_type node, forward_tree_type) const
     {
-      const std::ptrdiff_t offset{node == 0 ? 0 : 1};
-
-      while(std::ranges::distance(this->crbegin_edges(node), this->crend_edges(node)) > offset)
-      {
-        const auto target{this->crbegin_edges(node)->target_node()};
-        prune(target, stt);
-      }
-
-      this->erase_node(node);
+      return subtree_membership_by_search(node, node);
     }
 
-    void prune(const size_type node, backward_tree_type btt)
+    [[nodiscard]]
+    std::vector<bool> subtree_membership(const size_type node, symmetric_tree_type) const
     {
-      if(node >= this->order()) return;
+      return subtree_membership_by_search(node, size_type{});
+    }
 
-      std::vector<bool> toDelete(this->order(), false);
-      toDelete[node] = true;
+    [[nodiscard]]
+    std::vector<bool> subtree_membership(const size_type node, backward_tree_type) const
+    {
+      std::vector<bool> isInSubtree(this->order(), false);
+      isInSubtree[node] = true;
 
       for(size_type i{}; i < this->order(); ++i)
       {
-        if(!toDelete[i]) prune(i, toDelete, btt);
+        if(!isInSubtree[i])
+          mark_if_descendant(i, isInSubtree);
       }
 
-      for(size_type i{}; i < toDelete.size(); ++i)
-      {
-        // Erase nodes with the highest indicies first
-        const auto j{toDelete.size() - 1 - i};
-        if(toDelete[j]) this->erase_node(j);
-      }
+      return isInSubtree;
     }
 
-    void prune(const size_type node, std::vector<bool>& toDelete, backward_tree_type btt)
+    void mark_if_descendant(const size_type node, std::vector<bool>& isInSubtree) const
     {
       if(auto begin{this->cbegin_edges(node)};  begin != this->cend_edges(node))
       {
         const auto target{begin->target_node()};
-        if(toDelete[target])
+        if(isInSubtree[target])
         {
-          toDelete[node] = true;
+          isInSubtree[node] = true;
         }
         else
         {
-          prune(target, toDelete, btt);
-          if(toDelete[target]) toDelete[node] = true;
+          mark_if_descendant(target, isInSubtree);
+          if(isInSubtree[target])
+            isInSubtree[node] = true;
         }
       }
     }

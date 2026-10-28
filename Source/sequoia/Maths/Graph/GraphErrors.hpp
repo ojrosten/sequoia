@@ -40,6 +40,9 @@ namespace sequoia::maths::graph_errors
   std::string node_insertion_index_message(std::string_view method, std::size_t order, std::size_t pos);
 
   [[nodiscard]]
+  std::string root_displacement_message(std::string_view method);
+
+  [[nodiscard]]
   std::string edge_index_range_message(std::string_view method, edge_indices edgeIndices, std::string_view indexName, std::size_t size, std::size_t index);
 
   [[nodiscard]]
