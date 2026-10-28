@@ -54,7 +54,7 @@ namespace sequoia
     {
     private:
       using node_weight_type = Nodes::weight_type;
-    protected:
+    public:
       template<class Compare>
       constexpr static bool nodes_sortable_by_v{
            !heterogeneous_nodes<graph_primitive>
@@ -63,7 +63,6 @@ namespace sequoia
                           std::identity>
       };
 
-    public:
       using connectivity_type = Connectivity;
       using nodes_type        = Nodes;
       using edge_init_type    = Connectivity::edge_init_type;
