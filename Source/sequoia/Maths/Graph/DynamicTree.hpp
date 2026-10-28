@@ -23,11 +23,8 @@ namespace sequoia::maths
 {
   /** \brief The base of `directed_tree` and `undirected_tree`.
 
-      A symmetric tree's root is node 0, since its edges do not identify the
-      root. Each node operation which could move the root throws
-      std::out_of_range instead.
-
-      A forward or backward tree's root may be at any node.
+      A tree's root is node 0. A node operation which would move the root
+      throws std::out_of_range instead.
    */
   template
   <
@@ -87,18 +84,15 @@ namespace sequoia::maths
       return base_type::add_node_to_tree(tree_link_direction_constant<TreeLinkDir>{}, parent, std::forward<Args>(args)...);
     }
 
-    /** \throws std::out_of_range, for a symmetric tree, before any change, if
-        `pos` is 0 and the tree is not empty, since its root is node 0.
+    /** \throws std::out_of_range, leaving the tree unchanged, if `pos` is 0
+        and the tree is not empty, since the root is node 0.
      */
     template<class... Args>
       requires is_initializable_v<NodeWeight, Args...>
     size_type insert_node(const size_type pos, const size_type parent, Args&&... args)
     {
-      if constexpr(link_dir == tree_link_direction::symmetric)
-      {
-        if((pos == 0) && (this->order() > 0))
-          throw std::out_of_range{graph_errors::root_displacement_message("insert_node")};
-      }
+      if((pos == 0) && (this->order() > 0))
+        throw std::out_of_range{graph_errors::root_displacement_message("insert_node")};
 
       return base_type::insert_node_to_tree(tree_link_direction_constant<TreeLinkDir>{}, pos, parent, std::forward<Args>(args)...);
     }
@@ -121,48 +115,48 @@ namespace sequoia::maths
       }
     }
 
-    /** \throws std::out_of_range, for a symmetric tree, before any change, if
-        `i` and `j` differ and either is 0, since its root is node 0.
+    /** \throws std::out_of_range, leaving the tree unchanged, if `i` and `j`
+        differ and either is 0, since the root is node 0.
      */
     constexpr void swap_nodes(const edge_index_type i, const edge_index_type j)
     {
-      if constexpr(link_dir == tree_link_direction::symmetric)
-      {
-        if((i != j) && ((i == 0) || (j == 0)))
-          throw std::out_of_range{graph_errors::root_displacement_message("swap_nodes")};
-      }
+      if((i != j) && ((i == 0) || (j == 0)))
+        throw std::out_of_range{graph_errors::root_displacement_message("swap_nodes")};
 
       base_type::swap_nodes(i, j);
     }
 
     /** \brief Sorts all the nodes, as `sort_nodes(0, order(), c)` does.
 
-        A symmetric tree does not have this overload, since its root is node 0.
+        A symmetric tree does not have this overload.
      */
     template<class Compare>
       requires (link_dir != tree_link_direction::symmetric) && nodes_sortable_by_v<Compare>
     constexpr void sort_nodes(Compare c)
     {
-      base_type::sort_nodes(std::move(c));
+      sort_nodes(edge_index_type{}, numeric::unchecked_conversion_to<edge_index_type>(this->order()), std::move(c));
     }
 
     /** \brief Sorts the nodes `first` to `last - 1`, as
                `graph_primitive::sort_nodes` does.
 
-        \throws std::out_of_range, for a symmetric tree, before any change, if
-        `first` is 0 and `last` exceeds 1, since its root is node 0.
+        \throws std::out_of_range, leaving the tree unchanged, if the sort
+        would move node 0, the root, as it does whenever `c` orders a node in
+        the range before node 0. If `c` orders none before node 0 but treats
+        one as equivalent to it, whether the sort throws is unspecified.
      */
     template<class Compare>
       requires nodes_sortable_by_v<Compare>
     constexpr void sort_nodes(const edge_index_type first, const edge_index_type last, Compare c)
     {
-      if constexpr(link_dir == tree_link_direction::symmetric)
-      {
-        if((first == 0) && (last > 1))
-          throw std::out_of_range{graph_errors::root_displacement_message("sort_nodes")};
-      }
+      if(last <= first)
+        return;
 
-      base_type::sort_nodes(first, last, std::move(c));
+      auto destinations{base_type::node_sort_destinations(first, last, std::move(c))};
+      if(destinations[0] != 0)
+        throw std::out_of_range{graph_errors::root_displacement_message("sort_nodes")};
+
+      base_type::permute_nodes(std::move(destinations));
     }
 
     using base_type::swap_edges;
