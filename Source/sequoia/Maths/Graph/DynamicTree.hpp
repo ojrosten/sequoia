@@ -140,10 +140,8 @@ namespace sequoia::maths
     /** \brief Sorts the nodes `first` to `last - 1`, as
                `graph_primitive::sort_nodes` does.
 
-        \throws std::out_of_range, leaving the tree unchanged, if the sort
-        would move node 0, the root, as it does whenever `c` orders a node in
-        the range before node 0. If `c` orders none before node 0 but treats
-        one as equivalent to it, whether the sort throws is unspecified.
+        \throws std::out_of_range, leaving the tree unchanged, if node 0, the
+        root, is in the range and `c` orders some node of the range before it.
      */
     template<class Compare>
       requires nodes_sortable_by_v<Compare>

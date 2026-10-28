@@ -11,6 +11,7 @@
     \brief Underlying class for the various different graph flavour.
  */
 
+#include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Maths/Graph/Connectivity.hpp"
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 #include "sequoia/Core/Numeric/IntegerConversions.hpp"
@@ -57,7 +58,9 @@ namespace sequoia
       template<class Compare>
       constexpr static bool nodes_sortable_by_v{
            !heterogeneous_nodes<graph_primitive>
-        && std::sortable<std::ranges::iterator_t<std::vector<typename Connectivity::edge_index_type>>, Compare>
+        && merge_sortable<std::ranges::iterator_t<std::vector<typename Connectivity::edge_index_type>>,
+                          Compare,
+                          std::identity>
       };
 
     public:
@@ -147,8 +150,9 @@ namespace sequoia
                  compares two nodes given their indices.
 
           Every call of `c` precedes any change to the graph, so `c` reads
-          the graph as it was. Each node keeps its weight and its edges, the
-          edges in their order.
+          the graph as it was. Nodes which `c` treats as equivalent keep their
+          relative order. Each node keeps its weight and its edges, the edges
+          in their order.
 
           \pre `c` is a strict weak ordering on the indices `first` to `last - 1`,
                and does not modify the graph.
@@ -425,8 +429,8 @@ namespace sequoia
         }
       }
 
-      /** \brief Returns the index each node would have if the nodes `first`
-                 to `last - 1` were sorted with `c`.
+      /** \brief Returns the index at which `sort_nodes(first, last, c)` would
+                 place each node.
 
           \pre `first < last`, and `c` is as `sort_nodes` requires.
 
@@ -444,7 +448,7 @@ namespace sequoia
         const auto sortedNodes{
           [first, last, &c]() {
             auto nodes{std::views::iota(first, last) | std::ranges::to<std::vector>()};
-            std::ranges::sort(nodes, std::move(c));
+            sequoia::stable_sort(nodes, std::move(c));
             return nodes;
           }()
         };
