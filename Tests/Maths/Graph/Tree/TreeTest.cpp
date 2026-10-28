@@ -84,6 +84,15 @@ namespace sequoia::testing
       return weights;
     }
 
+    /** \brief Returns `tree` with nodes `i` and `j` swapped. */
+    template<maths::dynamic_tree Tree>
+    [[nodiscard]]
+    Tree with_nodes_swapped(Tree tree, const typename Tree::edge_index_type i, const typename Tree::edge_index_type j)
+    {
+      tree.swap_nodes(i, j);
+      return tree;
+    }
+
     inline constexpr auto by_ascending_target{
       [](const auto& l, const auto& r) { return l.target_node() < r.target_node(); }
     };
@@ -125,6 +134,11 @@ namespace sequoia::testing
     test_root_fixed_at_zero<directed_tree<tree_link_direction::backward, null_weight, int>>();
     test_root_fixed_at_zero<directed_tree<tree_link_direction::symmetric, null_weight, int>>();
     test_root_fixed_at_zero<undirected_tree<tree_link_direction::symmetric, null_weight, int>>();
+
+    test_insertion_parent<directed_tree<tree_link_direction::forward, null_weight, int>>();
+    test_insertion_parent<directed_tree<tree_link_direction::backward, null_weight, int>>();
+    test_insertion_parent<directed_tree<tree_link_direction::symmetric, null_weight, int>>();
+    test_insertion_parent<undirected_tree<tree_link_direction::symmetric, null_weight, int>>();
 
     test_prune_of_absent_node<directed_tree<tree_link_direction::forward, null_weight, int>>();
     test_prune_of_absent_node<directed_tree<tree_link_direction::backward, null_weight, int>>();
@@ -457,6 +471,138 @@ namespace sequoia::testing
     transition_checker_t::check(report(""), g, checkerFn);
   }
 
+  template<maths::dynamic_tree Tree>
+  void tree_test::test_insertion_parent()
+  {
+    using tree_t      = Tree;
+    using initializer = tree_initializer<int>;
+
+    auto initCheckFn{
+      [this](std::string_view message, const tree_t& t, initializer i) {
+        check(equivalence, message, t, i);
+      }
+    };
+
+    using transition_checker_t = transition_checker<tree_t>;
+    using tree_state_graph     = transition_checker_t::transition_graph;
+    using edge_t               = transition_checker_t::edge;
+
+    tree_state_graph g{
+      {
+        {
+          edge_t{1, report("Insert a node at 1 as a child of the node it displaces"), [this](tree_t t) {
+              check(equality, "Index of inserted node is 1", t.insert_node(1, 1, 5), 1uz);
+              return t;
+            }
+          },
+          edge_t{3, report("Add a node as a child of the node at 1"), [this](tree_t t) {
+              check(equality, "Index of added node is 2", t.add_node(1, 5), 2uz);
+              return t;
+            }
+          },
+          edge_t{0, report("Insert a node beyond the end of a non-empty tree"), [this](tree_t t) {
+              check_exception_thrown<std::out_of_range>("Insert a node beyond the end of a non-empty tree",
+                                                        [&t](){ t.insert_node(3, 0, 5); });
+              return t;
+            }
+          },
+          edge_t{0, report("Insert a node as a child of a node the tree lacks"), [this](tree_t t) {
+              check_exception_thrown<std::out_of_range>("Insert a node as a child of a node the tree lacks",
+                                                        [&t](){ t.insert_node(1, 2, 5); });
+              return t;
+            }
+          },
+          edge_t{0, report("Insert a node into a non-empty tree as a child of npos"), [this](tree_t t) {
+              check_exception_thrown<std::out_of_range>("Insert a node into a non-empty tree as a child of npos",
+                                                        [&t](){ t.insert_node(1, tree_t::npos, 5); });
+              return t;
+            }
+          },
+          edge_t{0, report("Add a node as a child of a node the tree lacks"), [this](tree_t t) {
+              check_exception_thrown<std::out_of_range>("Add a node as a child of a node the tree lacks",
+                                                        [&t](){ t.add_node(2, 5); });
+              return t;
+            }
+          },
+          edge_t{0, report("Add a node to a non-empty tree as a child of npos"), [this](tree_t t) {
+              check_exception_thrown<std::out_of_range>("Add a node to a non-empty tree as a child of npos",
+                                                        [&t](){ t.add_node(tree_t::npos, 5); });
+              return t;
+            }
+          }
+        }, // end node 0 edges
+        {
+          edge_t{2, report("Insert a node at 1 as a child of a node at a higher index"), [](tree_t t) {
+              t.insert_node(1, 2, 3);
+              return t;
+            }
+          }
+        }, // end node 1 edges
+        {
+        }, // end node 2 edges
+        {
+        }, // end node 3 edges
+        {
+          edge_t{5, report("Add a node to an empty tree, ignoring parent 3"), [](tree_t t) {
+              t.add_node(3, 42);
+              return t;
+            }
+          },
+          edge_t{5, report("Insert a node into an empty tree, ignoring parent 3"), [](tree_t t) {
+              t.insert_node(0, 3, 42);
+              return t;
+            }
+          },
+          edge_t{4, report("Insert a node beyond the end of an empty tree"), [this](tree_t t) {
+              check_exception_thrown<std::out_of_range>("Insert a node beyond the end of an empty tree",
+                                                        [&t](){ t.insert_node(1, 0, 42); });
+              return t;
+            }
+          }
+        }, // end node 4 edges
+        {
+        } // end node 5 edges
+      }, // end edges
+      {
+        // -7
+        //  \
+        //   42
+        {report(""), initCheckFn, initializer{42, {{-7}}}},
+        // 5
+        //  \
+        //   -7
+        //    \
+        //     42
+        // with 5 at node 1 and -7 at node 2
+        with_nodes_swapped(tree_t{{42, {{-7, {{5}}}}}}, 1, 2),
+        // 5   3
+        //  \ /
+        //   -7
+        //    \
+        //     42
+        // with 3 at node 1, 5 at node 2 and -7 at node 3
+        with_nodes_swapped(tree_t{{42, {{-7, {{5}, {3}}}}}}, 1, 3),
+        // 5
+        //  \
+        //   -7
+        //    \
+        //     42
+        {report(""), initCheckFn, initializer{42, {{-7, {{5}}}}}},
+        // empty
+        tree_t{},
+        // 42
+        {report(""), initCheckFn, initializer{42}}
+      } // end nodes
+    };
+
+    auto checkerFn{
+        [this](std::string_view description, const tree_t& obtained, const tree_t& prediction) {
+          check(equality, description, obtained, prediction);
+        }
+    };
+
+    transition_checker_t::check(report(""), g, checkerFn);
+  }
 
   template<maths::dynamic_tree Tree>
   void tree_test::test_prune_of_absent_node()
