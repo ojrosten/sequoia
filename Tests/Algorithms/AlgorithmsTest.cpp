@@ -463,9 +463,7 @@ namespace sequoia::testing
 
     allocator_t allocator{};
 
-    // None, except under MSVC's debug build, which gives every vector it
-    // constructs, by move included, a container proxy
-    const int emptyVectorAllocations{allocations_made_by(allocator, [&allocator]() { destinations_t empty(allocator); })};
+    const int emptyVectorAllocations{allocations_made_by_empty_construction<destinations_t>(allocator)};
 
     destinations_t destinations({2, 0, 1}, allocator);
     std::array a{10, 11, 12};

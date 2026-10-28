@@ -34,14 +34,12 @@ namespace sequoia::testing
 
     allocator_t allocator{};
 
-    // None, except under MSVC's debug build, which gives every vector it
-    // constructs, by move included, a container proxy
-    const int emptyVectorAllocations{allocations_made_by(allocator, [&allocator]() { destinations_t empty(allocator); })};
+    const int emptyVectorAllocations{allocations_made_by_empty_construction<destinations_t>(allocator)};
 
     destinations_t destinations({2, 0, 1}, allocator);
     storage s{{10, 11, 12}};
 
-    // Of the vectors, only permute's working copy is constructed, by move
+    // Of the vectors, only permute's working vector is constructed, by move
     check(equality,
           "Permuting nodes by moved destinations does not copy them",
           allocations_made_by(allocator, [&]() { s.permute_nodes(std::move(destinations)); }),
