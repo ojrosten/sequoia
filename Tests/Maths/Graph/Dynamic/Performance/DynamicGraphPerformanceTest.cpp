@@ -16,6 +16,7 @@
 #include <format>
 #include <random>
 #include <ranges>
+#include <stdexcept>
 #include <vector>
 
 namespace sequoia::testing
@@ -25,33 +26,44 @@ namespace sequoia::testing
   namespace
   {
     /** \brief The number of nodes in each graph which `test_sort_nodes`
-               builds, and the number of joins from each node of every
-               graph.
-
-        Each graph which `test_sort_nodes` builds is small, and every graph
-        is sparse.
+               builds, so that each such graph is small.
      */
-    constexpr std::size_t nodes_per_graph{64},
-                          joins_per_node{4};
+    constexpr std::size_t nodes_per_sort_versus_build_graph{64};
 
-    /** \brief The numbers of nodes in the smaller and larger graph of each
-               comparison of graphs of two sizes.
+    /** \brief The number of joins from each node of every graph.
+
+        So every graph is sparse. The numbers of nodes and of joins of a
+        graph grow together.
      */
-    constexpr std::size_t nodes_in_smaller_graph{256},
-                          growth_factor{8},
-                          nodes_in_larger_graph{growth_factor * nodes_in_smaller_graph};
+    constexpr std::size_t joins_per_node{4};
 
-    /** \brief The interval of speed-ups predicted by each comparison of
-               graphs of two sizes.
-
-        Each speed-up is the time taken for the larger graph divided by the
-        time taken for the smaller. The interval's ends lie a factor of two
-        either side of `growth_factor`.
+    /** \brief The number of nodes in the smaller graph of each scaling
+               check.
      */
-    constexpr relative_performance_interval growth_prediction{.lower{growth_factor / 2.0},
-                                                              .upper{growth_factor * 2.0}};
+    constexpr std::size_t nodes_in_smaller_graph{256};
 
-    static_assert(nodes_per_graph > 1 && nodes_in_smaller_graph > 1);
+    /** \brief The factors by which the larger graph of each scaling check
+               has more nodes than the smaller.
+     */
+    constexpr std::size_t growth_factor_of_build_check{8},
+                          growth_factor_of_sort_check{16};
+
+    /** \brief The intervals of speed-ups predicted for the scaling checks of
+               building and of sorting.
+
+        A speed-up is the duration of the larger graph's task over the
+        smaller's.
+     */
+    constexpr relative_performance_interval prediction_of_build_check{.lower{growth_factor_of_build_check / 2.0},
+                                                                      .upper{growth_factor_of_build_check * 2.0}},
+                                            prediction_of_sort_check{.lower{growth_factor_of_sort_check / 2.0},
+                                                                     .upper{growth_factor_of_sort_check * 2.0}};
+
+    static_assert((nodes_per_sort_versus_build_graph > 1) && (nodes_in_smaller_graph > 1));
+
+    // `check_relative_performance` refuses a prediction whose lower end does
+    // not exceed 1
+    static_assert((prediction_of_build_check.lower > 1) && (prediction_of_sort_check.lower > 1));
 
     struct nodes_to_join
     {
@@ -70,10 +82,15 @@ namespace sequoia::testing
 
     /** \brief Returns `joins_per_node` joins from each of `nodeCount` nodes,
                each to another node chosen at random.
+
+        \throws std::invalid_argument if `nodeCount` is less than 2.
      */
     [[nodiscard]]
     std::vector<nodes_to_join> random_joins(const std::size_t nodeCount)
     {
+      if(nodeCount < 2)
+        throw std::invalid_argument{std::format("Random joins require at least 2 nodes, not {}", nodeCount)};
+
       std::mt19937 generator{std::mt19937::default_seed};
       std::vector<nodes_to_join> joins{};
       joins.reserve(nodeCount * joins_per_node);
@@ -153,7 +170,7 @@ namespace sequoia::testing
       std::vector<nodes_to_join> m_Joins{};
     };
 
-    /** \brief Sorts the nodes of `g` by weight. */
+    /** \brief Sorts the nodes of `g` into ascending order of weight. */
     template<dynamic_network Graph>
     void sort_nodes_by_weight(Graph& g)
     {
@@ -239,7 +256,7 @@ namespace sequoia::testing
   template<dynamic_network Graph>
   void dynamic_graph_performance_test::test_sort_nodes(std::string_view graphName)
   {
-    const graph_blueprint blueprint{nodes_per_graph};
+    const graph_blueprint blueprint{nodes_per_sort_versus_build_graph};
 
     auto buildSortedGraph{[&blueprint]() { return blueprint.sorted_graph<Graph>(); }};
 
@@ -268,76 +285,90 @@ namespace sequoia::testing
   }
 
   /* Each performance check claims that building a graph takes time
-     proportional to its size. The graphs have `joins_per_node` joins from each
-     node, so their numbers of nodes and of joins grow together. Building the
-     graph with `growth_factor` times as many nodes should take about
-     `growth_factor` times as long. If each join cost time proportional to the
-     number of nodes, it would take about `growth_factor` squared times as
-     long. `growth_prediction` excludes such a time, and its lower end exceeds
-     1, as `check_relative_performance` requires.
+     proportional to its size. Building the graph with
+     `growth_factor_of_build_check` times as many nodes should take about
+     `growth_factor_of_build_check` times as long. If each join cost time
+     proportional to the number of nodes, it would take about
+     `growth_factor_of_build_check` squared times as long.
+     `prediction_of_build_check` excludes such a time.
   */
   template<dynamic_network Graph>
   void dynamic_graph_performance_test::test_build_time_scales_linearly(std::string_view graphName)
   {
+    constexpr auto nodesInLargerGraph{growth_factor_of_build_check * nodes_in_smaller_graph};
+
     const auto joinsOfSmallerGraph{random_joins(nodes_in_smaller_graph)},
-               joinsOfLargerGraph{random_joins(nodes_in_larger_graph)};
+               joinsOfLargerGraph{random_joins(nodesInLargerGraph)};
 
     auto buildSmallerGraph{
       [&joinsOfSmallerGraph]() { return graph_with_nodes<Graph>(nodes_in_smaller_graph, joinsOfSmallerGraph); }
     };
 
     auto buildLargerGraph{
-      [&joinsOfLargerGraph]() { return graph_with_nodes<Graph>(nodes_in_larger_graph, joinsOfLargerGraph); }
+      [&joinsOfLargerGraph]() { return graph_with_nodes<Graph>(nodesInLargerGraph, joinsOfLargerGraph); }
     };
 
     check_relative_performance(
       std::format("Building the {} takes time proportional to its size", graphName),
       buildSmallerGraph,
       buildLargerGraph,
-      {.prediction{growth_prediction}});
+      {.prediction{prediction_of_build_check}});
   }
 
-  /* Each performance check claims that sorting the nodes of a graph with n
-     nodes takes time proportional to n log n. The sort's comparisons take
-     that long. Moving the nodes and their edges takes time proportional to
-     the size of the graph. The graphs have `joins_per_node` joins from each
-     node, so their numbers of nodes and of joins grow together.
-     `check_relative_performance` copies each task before timing it, so each
-     trial sorts a fresh copy of a shuffled graph, and the copy is not
-     timed.
+  /* Each performance check claims that sorting the nodes of a graph takes
+     time proportional to its size, up to a logarithmic factor. Each task
+     holds its shuffled graph by value, so each trial sorts a fresh copy,
+     made untimed.
 
-     Sorting the graph with `growth_factor` times as many nodes should take a
-     little more than `growth_factor` times as long. If each swap of two
-     nodes visited the edges of every node, sorting would take time
-     proportional to n squared times log n, and so more than `growth_factor`
-     squared times as long. `growth_prediction` excludes such a time.
+     Each check bounds the growth of the time from above. For a graph with
+     `growth_factor_of_sort_check` times as many nodes, time proportional to
+     the number of nodes predicts `growth_factor_of_sort_check` times as
+     long. Time proportional to n log n, for n nodes, predicts somewhat
+     longer. Both lie inside `prediction_of_sort_check`, so no check tells
+     them apart.
+
+     Each check guards in particular against a step taking time
+     proportional to n squared. Finding the destination of each node by a
+     linear search through the sorted nodes is such a step. With that
+     search, sorting the larger graph took about 100 to 110 times as long
+     as sorting the smaller in a release build, and about 60 times as long
+     in debug and ASan builds. `prediction_of_sort_check` excludes each of
+     these.
 
      A directed graph holds each edge only at the node the edge leaves. So a
      swap of two nodes which relabels the edges pointing at them must visit
-     the edges of every node. The check fails a sort made of such swaps. An
-     undirected or embedded graph holds each edge at both of its nodes. So
-     such a swap need visit only the edges of the two nodes and of their
-     neighbours. The average number of those edges does not grow with the
-     graph, so the check passes the sort. `test_sort_nodes` bounds the cost
-     of such a sort instead.
+     the edges of every node. A sort made of such swaps takes time
+     proportional to n squared times log n, and each check fails such a sort
+     of a directed graph. An undirected or embedded graph holds each edge at
+     both of its nodes. So such a swap need visit only the edges of the two
+     nodes and of their neighbours, whose average number does not grow with
+     the graph. Each check passes a sort made of such swaps of an undirected
+     or embedded graph. `test_sort_nodes` fails such a sort.
   */
   template<dynamic_network Graph>
   void dynamic_graph_performance_test::test_sort_time_scales_as_n_log_n(std::string_view graphName)
   {
-    auto nodeSortingTask{
-      [](const std::size_t nodeCount) {
-        return [g{graph_blueprint{nodeCount}.shuffled_graph<Graph>()}]() mutable {
-          sort_nodes_by_weight(g);
-          do_not_optimize_away(g);
-        };
+    constexpr auto nodesInLargerGraph{growth_factor_of_sort_check * nodes_in_smaller_graph};
+
+    auto sortSmallerGraph{
+      [g{graph_blueprint{nodes_in_smaller_graph}.shuffled_graph<Graph>()}]() mutable {
+        sort_nodes_by_weight(g);
+        do_not_optimize_away(g);
+      }
+    };
+
+    auto sortLargerGraph{
+      [g{graph_blueprint{nodesInLargerGraph}.shuffled_graph<Graph>()}]() mutable {
+        sort_nodes_by_weight(g);
+        do_not_optimize_away(g);
       }
     };
 
     check_relative_performance(
       std::format("Sorting the nodes of the {} takes time proportional to its size, up to a logarithmic factor",
                   graphName),
-      nodeSortingTask(nodes_in_smaller_graph),
-      nodeSortingTask(nodes_in_larger_graph),
-      {.prediction{growth_prediction}});
+      sortSmallerGraph,
+      sortLargerGraph,
+      {.prediction{prediction_of_sort_check}});
   }
 }
