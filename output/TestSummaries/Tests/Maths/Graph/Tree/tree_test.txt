@@ -1,2 +1,2 @@
 tree_test
-Standard Top Level Checks:               242;  Failures:  0  [Deep checks: 12072]
+Standard Top Level Checks:               386;  Failures:  0  [Deep checks: 17151]

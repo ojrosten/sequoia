@@ -7,6 +7,7 @@
 
 #include "DynamicUndirectedGraphFundamentalWeightTest.hpp"
 #include "DynamicUndirectedGraphWeightedTestingUtilities.hpp"
+#include "Maths/Graph/GraphSortStabilityTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
@@ -20,5 +21,7 @@ namespace sequoia::testing
   {
     using namespace maths;
     dynamic_undirected_graph_weighted_operations<double, double, independent_bucketed_edge_storage_config, node_storage<double>>::execute_operations(*this);
+
+    check_sort_nodes_is_stable<maths::undirected_graph<maths::null_weight, std::size_t>>(*this);
   }
 }
