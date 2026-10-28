@@ -128,10 +128,11 @@ namespace sequoia::maths
 
     /** \brief Sorts all the nodes, as `sort_nodes(0, order(), c)` does.
 
-        A symmetric tree does not have this overload.
+        \throws std::out_of_range, leaving the tree unchanged, if `c` orders
+        some node before node 0, the root.
      */
     template<class Compare>
-      requires (link_dir != tree_link_direction::symmetric) && nodes_sortable_by_v<Compare>
+      requires nodes_sortable_by_v<Compare>
     constexpr void sort_nodes(Compare c)
     {
       sort_nodes(edge_index_type{}, numeric::unchecked_conversion_to<edge_index_type>(this->order()), std::move(c));

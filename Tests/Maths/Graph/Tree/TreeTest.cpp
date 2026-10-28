@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <ranges>
+#include <string>
 #include <vector>
 
 namespace sequoia::testing
@@ -91,9 +92,14 @@ namespace sequoia::testing
       [](const auto& l, const auto& r) { return l.target_node() > r.target_node(); }
     };
 
-    template<class Tree>
+    template<class Tree, class Compare>
     inline constexpr bool sort_all_nodes_callable_v{
-      requires(Tree& tree) { tree.sort_nodes(std::ranges::less{}); }
+      requires(Tree& tree, Compare c) { tree.sort_nodes(c); }
+    };
+
+    template<class Tree, class Compare>
+    inline constexpr bool sort_range_of_nodes_callable_v{
+      requires(Tree& tree, Compare c) { tree.sort_nodes(0, 1, c); }
     };
   }
 
@@ -120,16 +126,16 @@ namespace sequoia::testing
     test_root_fixed_at_zero<directed_tree<tree_link_direction::symmetric, null_weight, int>>();
     test_root_fixed_at_zero<undirected_tree<tree_link_direction::symmetric, null_weight, int>>();
 
-    test_sort_all_nodes<directed_tree<tree_link_direction::forward, null_weight, int>>();
-    test_sort_all_nodes<directed_tree<tree_link_direction::backward, null_weight, int>>();
-
     test_prune_of_absent_node<directed_tree<tree_link_direction::forward, null_weight, int>>();
     test_prune_of_absent_node<directed_tree<tree_link_direction::backward, null_weight, int>>();
     test_prune_of_absent_node<directed_tree<tree_link_direction::symmetric, null_weight, int>>();
     test_prune_of_absent_node<undirected_tree<tree_link_direction::symmetric, null_weight, int>>();
 
     test_forest_ranges();
-    test_sort_nodes_constraints();
+    test_sort_nodes_constraints<directed_tree<tree_link_direction::forward, null_weight, int>>();
+    test_sort_nodes_constraints<directed_tree<tree_link_direction::backward, null_weight, int>>();
+    test_sort_nodes_constraints<directed_tree<tree_link_direction::symmetric, null_weight, int>>();
+    test_sort_nodes_constraints<undirected_tree<tree_link_direction::symmetric, null_weight, int>>();
     test_forest_beneath_constraints();
     test_adaptors_at_absent_nodes();
   }
@@ -375,6 +381,12 @@ namespace sequoia::testing
               return t;
             }
           },
+          edge_t{3, report("Sort all the nodes so as to move the root"), [this](tree_t t) {
+              check_exception_thrown<std::out_of_range>("Sort all the nodes so as to move the root",
+                                                        [&t](){ t.sort_nodes(std::ranges::greater{}); });
+              return t;
+            }
+          },
           edge_t{3, report("Sort a range whose end precedes its start"), [](tree_t t) {
               t.sort_nodes(2, 1, std::ranges::greater{});
               return t;
@@ -385,13 +397,25 @@ namespace sequoia::testing
               t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), by_ascending_target);
               return t;
             }
+          },
+          edge_t{4, report("Sort all the nodes, keeping the root first"), [](tree_t t) {
+              t.sort_nodes(root_first_then_descending_index);
+              t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), by_ascending_target);
+              return t;
+            }
           }
         }, // end node 3 edges
         {
         }, // end node 4 edges
         {
-          edge_t{6, report("Sort with some nodes equivalent to the root"), [](tree_t t) {
+          edge_t{6, report("Sort a range with some nodes equivalent to the root"), [](tree_t t) {
               t.sort_nodes(0, t.order(), root_and_odd_nodes_first);
+              t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), by_ascending_target);
+              return t;
+            }
+          },
+          edge_t{6, report("Sort all the nodes with some equivalent to the root"), [](tree_t t) {
+              t.sort_nodes(root_and_odd_nodes_first);
               t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), by_ascending_target);
               return t;
             }
@@ -433,62 +457,6 @@ namespace sequoia::testing
     transition_checker_t::check(report(""), g, checkerFn);
   }
 
-  template<maths::dynamic_tree Tree>
-    requires (Tree::link_dir != maths::tree_link_direction::symmetric)
-  void tree_test::test_sort_all_nodes()
-  {
-    using tree_t      = Tree;
-    using initializer = tree_initializer<int>;
-
-    auto initCheckFn{
-      [this](std::string_view message, const tree_t& t, initializer i) {
-        check(equivalence, message, t, i);
-      }
-    };
-
-    using transition_checker_t = transition_checker<tree_t>;
-    using tree_state_graph     = transition_checker_t::transition_graph;
-    using edge_t               = transition_checker_t::edge;
-
-    tree_state_graph g{
-      {
-        {
-          edge_t{0, report("Sort all the nodes so as to move the root"), [this](tree_t t) {
-              check_exception_thrown<std::out_of_range>("Sort all the nodes so as to move the root",
-                                                        [&t](){ t.sort_nodes(std::ranges::greater{}); });
-              return t;
-            }
-          },
-          edge_t{1, report("Sort all the nodes, keeping the root first"), [](tree_t t) {
-              t.sort_nodes(root_first_then_descending_index);
-              t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), by_ascending_target);
-              return t;
-            }
-          }
-        }, // end node 0 edges
-        {
-        } // end node 1 edges
-      }, // end edges
-      {
-        // -7  6
-        //  \ /
-        //   42
-        {report(""), initCheckFn, initializer{42, {{-7}, {6}}}},
-        //  6  -7
-        //  \ /
-        //   42
-        {report(""), initCheckFn, initializer{42, {{6}, {-7}}}}
-      } // end nodes
-    };
-
-    auto checkerFn{
-        [this](std::string_view description, const tree_t& obtained, const tree_t& prediction) {
-          check(equality, description, obtained, prediction);
-        }
-    };
-
-    transition_checker_t::check(report(""), g, checkerFn);
-  }
 
   template<maths::dynamic_tree Tree>
   void tree_test::test_prune_of_absent_node()
@@ -522,12 +490,17 @@ namespace sequoia::testing
     check(equality, "A forest's trees, each at its root", rootWeights(forest_of(forest)), std::vector<int>{42, -1});
   }
 
+  template<maths::dynamic_tree Tree>
   void tree_test::test_sort_nodes_constraints()
   {
-    STATIC_CHECK( sort_all_nodes_callable_v<directed_tree<tree_link_direction::forward,     null_weight, int>>);
-    STATIC_CHECK( sort_all_nodes_callable_v<directed_tree<tree_link_direction::backward,    null_weight, int>>);
-    STATIC_CHECK(!sort_all_nodes_callable_v<directed_tree<tree_link_direction::symmetric,   null_weight, int>>);
-    STATIC_CHECK(!sort_all_nodes_callable_v<undirected_tree<tree_link_direction::symmetric, null_weight, int>>);
+    using string_comparison_t = bool(*)(const std::string&, const std::string&);
+
+    STATIC_CHECK( sort_all_nodes_callable_v<Tree,      std::ranges::less>);
+    STATIC_CHECK(!sort_all_nodes_callable_v<Tree,      string_comparison_t>);
+    STATIC_CHECK(!sort_all_nodes_callable_v<Tree,      int>);
+    STATIC_CHECK( sort_range_of_nodes_callable_v<Tree, std::ranges::less>);
+    STATIC_CHECK(!sort_range_of_nodes_callable_v<Tree, string_comparison_t>);
+    STATIC_CHECK(!sort_range_of_nodes_callable_v<Tree, int>);
   }
 
   void tree_test::test_forest_beneath_constraints()
