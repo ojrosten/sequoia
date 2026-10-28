@@ -58,10 +58,10 @@ namespace sequoia::maths
           EdgeStorageConfig,
           NodeWeightStorage
         >;
-
-      template<class Compare>
-      constexpr static bool nodes_sortable_by_v{base_type::template nodes_sortable_by_v<Compare>};
   public:
+    template<class Compare>
+    constexpr static bool nodes_sortable_by_v{base_type::template nodes_sortable_by_v<Compare>};
+
     using size_type       = base_type::size_type;
     using edge_index_type = base_type::edge_index_type;
 
