@@ -28,6 +28,9 @@ namespace sequoia::testing
     void test_sort_nodes(std::string_view graphName);
 
     template<maths::dynamic_network Graph>
+    void test_sort_nodes_is_stable(std::string_view graphName);
+
+    template<maths::dynamic_network Graph>
     void test_build_time_scales_linearly(std::string_view graphName);
   };
 }

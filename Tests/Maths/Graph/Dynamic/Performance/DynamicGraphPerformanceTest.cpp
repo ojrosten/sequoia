@@ -38,6 +38,12 @@ namespace sequoia::testing
                           growth_factor{8},
                           nodes_in_larger_graph{growth_factor * nodes_in_smaller_graph};
 
+    /** \brief The number of nodes in each graph whose sort is checked for
+               stability: enough that std::ranges::sort, which is not stable,
+               reorders some equivalent nodes under libc++ and libstdc++.
+     */
+    constexpr std::size_t nodes_in_stability_check{64};
+
     static_assert(nodes_per_graph > 1 && nodes_in_smaller_graph > 1);
 
     struct nodes_to_join
@@ -171,6 +177,16 @@ namespace sequoia::testing
       "embedded graph"
     );
 
+    test_sort_nodes_is_stable<directed_graph<null_weight, std::size_t, bucketed_edge_storage_config>>(
+      "directed graph"
+    );
+    test_sort_nodes_is_stable<undirected_graph<null_weight, std::size_t, null_meta_data, bucketed_edge_storage_config>>(
+      "undirected graph"
+    );
+    test_sort_nodes_is_stable<embedded_graph<null_weight, std::size_t, null_meta_data, bucketed_edge_storage_config>>(
+      "embedded graph"
+    );
+
     test_build_time_scales_linearly<directed_graph<null_weight, std::size_t, bucketed_edge_storage_config>>(
       "directed graph"
     );
@@ -230,6 +246,34 @@ namespace sequoia::testing
         buildShuffledGraphAndSortNodes,
         {.prediction{.lower{1.01}, .upper{std::sqrt(10.0)}}});
     }
+  }
+
+  /* Sorting by the remainder of each weight on division by
+     `equivalence_class_count` treats as equivalent the nodes whose weights
+     share a remainder.
+  */
+  template<dynamic_network Graph>
+  void dynamic_graph_performance_test::test_sort_nodes_is_stable(std::string_view graphName)
+  {
+    constexpr std::size_t equivalence_class_count{4};
+    auto byRemainder{
+      [](std::size_t lhs, std::size_t rhs) { return (lhs % equivalence_class_count) < (rhs % equivalence_class_count); }
+    };
+
+    auto g{graph_with_nodes<Graph>(nodes_in_stability_check, {})};
+    std::vector<std::size_t> stablySortedWeights(g.cbegin_node_weights(), g.cend_node_weights());
+    std::ranges::stable_sort(stablySortedWeights, byRemainder);
+
+    g.sort_nodes([&g, byRemainder](std::size_t i, std::size_t j) {
+      return byRemainder(g.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(i)],
+                         g.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(j)]);
+    });
+
+    check(equality,
+          std::format("Sorting the nodes of the {} keeps the order of nodes the comparator treats as equivalent",
+                      graphName),
+          std::vector<std::size_t>(g.cbegin_node_weights(), g.cend_node_weights()),
+          stablySortedWeights);
   }
 
   /* Each performance check claims that building a graph takes time

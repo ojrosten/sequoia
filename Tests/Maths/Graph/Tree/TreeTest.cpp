@@ -10,7 +10,9 @@
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
+#include <algorithm>
 #include <ranges>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -23,10 +25,63 @@ namespace sequoia::testing
       requires(const Tree& tree) { forest_beneath(tree, 0); }
     };
 
-    /// Orders node 0 first, and the other nodes by descending index
+    /** \brief Orders node 0 first, and the other nodes by descending index. */
     inline constexpr auto root_first_then_descending_index{
       [](std::size_t i, std::size_t j) { return (i == 0) ? (j != 0) : ((j != 0) && (i > j)); }
     };
+
+    /** \brief Enough nodes that an unstable sort may reorder nodes it treats
+               as equivalent.
+     */
+    constexpr int nodes_in_star{64};
+
+    /** \brief Orders node 0 and the odd nodes, as equivalent, before the
+               other even nodes.
+     */
+    inline constexpr auto root_and_odd_nodes_first{
+      [](auto i, auto j) {
+        auto isOtherEven{[](auto n) { return (n != 0) && (n % 2 == 0); }};
+        return !isOtherEven(i) && isOtherEven(j);
+      }
+    };
+
+    /** \brief Returns a tree whose root has the first of `weights`, with a
+               child for each of the rest, in order.
+
+        \pre `weights` is not empty.
+     */
+    template<maths::dynamic_tree Tree>
+    [[nodiscard]]
+    Tree star_tree(const std::vector<int>& weights)
+    {
+      Tree tree{{weights.front()}};
+      for(const auto weight : weights | std::views::drop(1))
+      {
+        tree.add_node(0, weight);
+      }
+
+      return tree;
+    }
+
+    /** \brief Returns the weights `0` to `nodes_in_star - 1`, each the index
+               of its node in the tree `star_tree` builds from them.
+     */
+    [[nodiscard]]
+    std::vector<int> star_weights()
+    {
+      return std::views::iota(0, nodes_in_star) | std::ranges::to<std::vector>();
+    }
+
+    /** \brief Returns `star_weights()`, stably sorted by
+               `root_and_odd_nodes_first`.
+     */
+    [[nodiscard]]
+    std::vector<int> stably_sorted_star_weights()
+    {
+      auto weights{star_weights()};
+      std::ranges::stable_sort(weights, root_and_odd_nodes_first);
+      return weights;
+    }
 
     inline constexpr auto by_ascending_target{
       [](const auto& l, const auto& r) { return l.target_node() < r.target_node(); }
@@ -333,7 +388,17 @@ namespace sequoia::testing
           }
         }, // end node 3 edges
         {
-        } // end node 4 edges
+        }, // end node 4 edges
+        {
+          edge_t{6, report("Sort with some nodes equivalent to the root"), [](tree_t t) {
+              t.sort_nodes(0, t.order(), root_and_odd_nodes_first);
+              t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), by_ascending_target);
+              return t;
+            }
+          }
+        }, // end node 5 edges
+        {
+        } // end node 6 edges
       }, // end edges
       {
         // empty
@@ -351,7 +416,11 @@ namespace sequoia::testing
         //  6  -7
         //  \ /
         //   42
-        {report(""), initCheckFn, initializer{42, {{6}, {-7}}}}
+        {report(""), initCheckFn, initializer{42, {{6}, {-7}}}},
+        // 0 with children 1 to nodes_in_star - 1: an input, so not checked
+        star_tree<tree_t>(star_weights()),
+        // 0 with its odd children before its even ones
+        star_tree<tree_t>(stably_sorted_star_weights())
       } // end nodes
     };
 
