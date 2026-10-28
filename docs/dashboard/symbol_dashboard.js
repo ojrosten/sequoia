@@ -797,8 +797,43 @@
     return sorted.reduce((gap, x, index) => index === 0 ? gap : Math.min(gap, x - sorted[index - 1]), Infinity);
   }
 
+  /**
+   * Returns the step, of the form 1, 2, 2.5 or 5 times a power of ten, which
+   * divides `span` into about `count` parts.
+   *
+   * @param {number} span
+   * @param {number} count
+   * @returns {number}
+   */
+  function niceStep(span, count) {
+    const raw  = span / count;
+    const unit = 10 ** Math.floor(Math.log10(raw));
+    return unit * ([1, 2, 2.5, 5, 10].find(m => m * unit >= raw) ?? 10);
+  }
+
+  /**
+   * Returns the scale of a plot of the values: its bounds, at multiples of
+   * the step, and its ticks. The bounds enclose the values, and the lower
+   * bound reaches down to zero if `includesZero`, so that the scale starts at
+   * zero unless a value lies below it; a scale of equal values is padded.
+   *
+   * @param {number[]} values  Non-empty
+   * @param {boolean} includesZero
+   * @returns {{low: number, high: number, step: number, ticks: number[]}}
+   */
+  function scaleOf(values, includesZero) {
+    let low = Math.min(...values, ...(includesZero ? [0] : [])), high = Math.max(...values);
+    if (low === high) { const pad = Math.max(1, Math.abs(low) * 0.001); low -= pad; high += pad; }
+    const step = niceStep(high - low, 4);
+    low  = Math.floor(low / step) * step;
+    high = Math.ceil(high / step) * step;
+    const ticks = [];
+    for (let tick = low; tick <= high + step / 2; tick += step) ticks.push(tick);
+    return {low, high, step, ticks};
+  }
+
   Object.assign(exports, {
-    commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap,
+    commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap, scaleOf,
     recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneStampingExitStatus, leftoverMaterialsSetupRunNames, leftoverMaterialsSetupPerEntry, leftoverMaterialsSetupBlindLabel, leftoverMaterialsSetupEntries, leftoverMaterialsSetupRuns, leftoverMaterialsSetupFirstFailure, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));
