@@ -25,15 +25,15 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp
                ${TestDir}/Core/DataStructures/PartitionedSequenceAllocationTest.cpp
                ${TestDir}/Core/DataStructures/PartitionedSequenceRegularTest.cpp
+               ${TestDir}/Core/DataStructures/PriorityQueueRegularTest.cpp
+               ${TestDir}/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp
+               ${TestDir}/Core/DataStructures/QueueRegularTest.cpp
+               ${TestDir}/Core/DataStructures/QueueTestingDiagnostics.cpp
+               ${TestDir}/Core/DataStructures/StackRegularTest.cpp
+               ${TestDir}/Core/DataStructures/StackTestingDiagnostics.cpp
                ${TestDir}/Core/DataStructures/StaticLinearlyPartitionedSequenceTest.cpp
                ${TestDir}/Core/DataStructures/StaticLinearlyPartitionedSequenceTestingDiagnostics.cpp
                ${TestDir}/Core/DataStructures/StaticPartitionedSequenceTest.cpp
-               ${TestDir}/Core/DataStructures/StaticPriorityQueueTest.cpp
-               ${TestDir}/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp
-               ${TestDir}/Core/DataStructures/StaticQueueTest.cpp
-               ${TestDir}/Core/DataStructures/StaticQueueTestingDiagnostics.cpp
-               ${TestDir}/Core/DataStructures/StaticStackTest.cpp
-               ${TestDir}/Core/DataStructures/StaticStackTestingDiagnostics.cpp
                ${TestDir}/Core/Functional/ErasedFunctionRegularTest.cpp
                ${TestDir}/Core/Functional/ErasedFunctionTestingDiagnostics.cpp
                ${TestDir}/Core/Logic/BitmaskFreeTest.cpp

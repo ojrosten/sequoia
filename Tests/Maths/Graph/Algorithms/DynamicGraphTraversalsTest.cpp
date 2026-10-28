@@ -12,6 +12,7 @@
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 
 #include <format>
+#include <queue>
 
 namespace sequoia::testing
 {

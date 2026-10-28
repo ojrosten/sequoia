@@ -1,0 +1,27 @@
+Tests/Core/DataStructures/QueueRegularTest.cpp, Line 85
+Popping the empty queue
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to pop an empty queue
+
+=======================================
+
+Tests/Core/DataStructures/QueueRegularTest.cpp, Line 91
+Accessing the front of the empty queue
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to access the front of an empty queue
+
+=======================================
+
+Tests/Core/DataStructures/QueueRegularTest.cpp, Line 98
+Accessing the back of the empty queue
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to access the back of an empty queue
+
+=======================================
+

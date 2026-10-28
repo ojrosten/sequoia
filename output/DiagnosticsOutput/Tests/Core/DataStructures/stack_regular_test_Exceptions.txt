@@ -1,0 +1,18 @@
+Tests/Core/DataStructures/StackRegularTest.cpp, Line 70
+Popping the empty stack
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to pop an empty stack
+
+=======================================
+
+Tests/Core/DataStructures/StackRegularTest.cpp, Line 76
+Accessing the top of the empty stack
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to access the top of an empty stack
+
+=======================================
+

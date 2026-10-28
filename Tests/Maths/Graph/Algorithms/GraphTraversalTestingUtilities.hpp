@@ -10,7 +10,7 @@
 /** \file */
 
 #include "Maths/Graph/GraphTestingUtilities.hpp"
-#include "sequoia/Maths/Graph/DynamicGraphTraversals.hpp"
+#include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 
 namespace sequoia::testing
 {

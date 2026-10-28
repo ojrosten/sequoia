@@ -141,12 +141,12 @@ int main(int argc, char** argv)
     runner.register_test<partitioned_sequence_allocation_test>();
     runner.register_test<static_partitioned_sequence_test>();
     runner.register_test<static_linearly_partitioned_sequence_test>();
-    runner.register_test<test_static_stack_false_negatives>();
-    runner.register_test<test_static_stack>();
-    runner.register_test<test_static_queue_false_negatives>();
-    runner.register_test<test_static_queue>();
-    runner.register_test<test_static_priority_queue_false_negatives>();
-    runner.register_test<test_static_priority_queue>();
+    runner.register_test<stack_false_negative_test>();
+    runner.register_test<stack_regular_test>();
+    runner.register_test<queue_false_negative_test>();
+    runner.register_test<queue_regular_test>();
+    runner.register_test<priority_queue_false_negative_test>();
+    runner.register_test<priority_queue_regular_test>();
     runner.register_test<test_graph_false_negatives>();
     runner.register_test<test_graph_meta>();
     runner.register_test<test_edge_false_negatives>();
