@@ -30,7 +30,20 @@ namespace sequoia::testing
     template<maths::dynamic_tree Tree>
     void test_tree_unweighted_nodes();
 
+    template<maths::dynamic_tree Tree>
+      requires (Tree::link_dir == maths::tree_link_direction::symmetric)
+    void test_root_fixed_at_zero();
+
+    template<maths::dynamic_tree Tree>
+      requires (Tree::link_dir != maths::tree_link_direction::symmetric)
+    void test_root_movable();
+
+    template<maths::dynamic_tree Tree>
+    void test_prune_of_absent_node();
+
     void test_forest_ranges();
+
+    void test_sort_nodes_constraints();
 
     void test_forest_beneath_constraints();
 
