@@ -14,6 +14,7 @@
 #include "sequoia/Core/DataStructures/PriorityQueue.hpp"
 
 #include <functional>
+#include <utility>
 #include <vector>
 
 namespace sequoia::testing
@@ -25,13 +26,35 @@ namespace sequoia::testing
       equal.
    */
   template<class T, class Compare = std::ranges::less>
-  struct observed_priority_queue : data_structures::priority_queue<T, std::vector<T>, Compare>
+  class observed_priority_queue
   {
+  public:
+    using priority_queue_type = data_structures::priority_queue<T, std::vector<T>, Compare>;
+    using value_type          = T;
+    using size_type           = priority_queue_type::size_type;
+
+    constexpr void push(const T& value) { m_Queue.push(value); }
+
+    constexpr void push(T&& value) { m_Queue.push(std::move(value)); }
+
+    constexpr void pop() { m_Queue.pop(); }
+
+    [[nodiscard]]
+    constexpr const T& top() const { return m_Queue.top(); }
+
+    [[nodiscard]]
+    constexpr bool empty() const { return m_Queue.empty(); }
+
+    [[nodiscard]]
+    constexpr size_type size() const { return m_Queue.size(); }
+
     [[nodiscard]]
     friend constexpr bool operator==(const observed_priority_queue& lhs, const observed_priority_queue& rhs)
     {
       return elements_in_pop_order(lhs) == elements_in_pop_order(rhs);
     }
+  private:
+    priority_queue_type m_Queue{};
   };
 
   template<class T, class Compare>
