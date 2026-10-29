@@ -209,10 +209,7 @@ namespace sequoia::maths::graph_errors
                                                   std::size_t numNodes,
                                                   std::size_t edgePartitions)
   {
-    return std::format("{}Error initializing graph\n"
-                       "Number of node weights:    {}\n"
-                       "Number of edge paritions:  {}\n"
-                       "Please ensure these numbers are the same",
+    return std::format("{}{} node weight(s), but {} edge partition(s)",
                        error_prefix(method),
                        numNodes,
                        edgePartitions);

@@ -75,10 +75,7 @@ Mismatched edge/node initialization
 
 Expected Exception Type:
 [std::logic_error]
-check_initialization: Error initializing graph
-Number of node weights:    1
-Number of edge paritions:  0
-Please ensure these numbers are the same
+check_initialization: 1 node weight(s), but 0 edge partition(s)
 
 =======================================
 
@@ -87,10 +84,7 @@ Mismatched edge/node initialization
 
 Expected Exception Type:
 [std::logic_error]
-check_initialization: Error initializing graph
-Number of node weights:    2
-Number of edge paritions:  1
-Please ensure these numbers are the same
+check_initialization: 2 node weight(s), but 1 edge partition(s)
 
 =======================================
 
@@ -99,10 +93,7 @@ Mismatched edge/node initialization
 
 Expected Exception Type:
 [std::logic_error]
-check_initialization: Error initializing graph
-Number of node weights:    2
-Number of edge paritions:  1
-Please ensure these numbers are the same
+check_initialization: 2 node weight(s), but 1 edge partition(s)
 
 =======================================
 
@@ -111,10 +102,7 @@ Mismatched edge/node initialization
 
 Expected Exception Type:
 [std::logic_error]
-check_initialization: Error initializing graph
-Number of node weights:    1
-Number of edge paritions:  2
-Please ensure these numbers are the same
+check_initialization: 1 node weight(s), but 2 edge partition(s)
 
 =======================================
 
@@ -123,10 +111,7 @@ Mismatched edge/node initialization
 
 Expected Exception Type:
 [std::logic_error]
-check_initialization: Error initializing graph
-Number of node weights:    1
-Number of edge paritions:  2
-Please ensure these numbers are the same
+check_initialization: 1 node weight(s), but 2 edge partition(s)
 
 =======================================
 
