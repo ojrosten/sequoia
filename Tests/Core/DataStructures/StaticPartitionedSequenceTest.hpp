@@ -25,7 +25,7 @@ namespace sequoia::testing
   private:
     void test_index_type_constraint();
 
-    void test_uint64_index_type();
+    void test_64_bit_index_types();
 
     void test_swap_partitions_constraint();
 

@@ -27,7 +27,7 @@ namespace sequoia::testing
 
     void test_index_type_constraint();
 
-    void test_partitions_translation_constraint();
+    void test_partitions_constraint();
 
     void test_allocator_extended_move();
 

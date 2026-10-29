@@ -23,6 +23,16 @@ namespace sequoia::testing
   concept permute_partitions_accepts
     = requires(Sequence& s, D&& d) { s.permute_partitions(std::forward<D>(d)); };
 
+  template<class Sequence>
+  concept swap_partitions_accepts = requires(Sequence& s) { s.swap_partitions(0, 1); };
+
+  /// A comparison of the last decimal digits, which translation does not preserve
+  struct last_digit_greater
+  {
+    [[nodiscard]]
+    constexpr bool operator()(const std::size_t a, const std::size_t b) const noexcept { return a % 10 > b % 10; }
+  };
+
   // Sized and iterable when const, but readable only once
   using input_only_destinations_t
     = std::ranges::subrange<std::counted_iterator<std::istream_iterator<int>>, std::default_sentinel_t>;
