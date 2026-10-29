@@ -146,6 +146,8 @@ namespace sequoia::testing
 
   void factory_test::run_tests()
   {
+    test_names_iterator_concepts();
+
     {
       using prediction_t = std::array<std::pair<std::string, std::variant<int, double>>, 2>;
 
@@ -223,6 +225,12 @@ namespace sequoia::testing
     }
 
     test_erasing_factory();
+  }
+
+  void factory_test::test_names_iterator_concepts()
+  {
+    STATIC_CHECK(std::input_iterator<factory<int, double>::names_iterator>);
+    STATIC_CHECK(std::input_iterator<erasing_factory<std::variant<int, double>>::names_iterator>);
   }
 
   void factory_test::test_erasing_factory()
