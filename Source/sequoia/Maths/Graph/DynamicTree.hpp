@@ -329,7 +329,7 @@ namespace sequoia::maths
     constexpr forest_from_tree_dereference_policy(const forest_from_tree_dereference_policy&) = default;
 
     [[nodiscard]]
-    constexpr proxy get(Iterator i) const
+    constexpr proxy get(const Iterator& i) const
     {
       return {*m_pTree, i->target_node()};
     }
@@ -365,7 +365,7 @@ namespace sequoia::maths
     constexpr forest_dereference_policy(const forest_dereference_policy&) = default;
 
     [[nodiscard]]
-    constexpr static proxy get(Iterator i)
+    constexpr static proxy get(const Iterator& i)
     {
       return {*i, 0};
     }

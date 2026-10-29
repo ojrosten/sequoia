@@ -34,8 +34,8 @@ namespace sequoia::object
   class factory_dereference_policy
   {
   public:
-    using value_type      = std::iterator_traits<Iterator>::value_type;
-    using reference       = std::string;
+    using value_type = std::string;
+    using reference  = value_type;
 
     constexpr factory_dereference_policy() = default;
     constexpr factory_dereference_policy(const factory_dereference_policy&) = default;
@@ -44,7 +44,7 @@ namespace sequoia::object
     friend constexpr bool operator==(const factory_dereference_policy&, const factory_dereference_policy&) noexcept = default;
 
     [[nodiscard]]
-    constexpr static reference get(Iterator i)
+    constexpr static reference get(const Iterator& i)
     {
       return i->first;
     }

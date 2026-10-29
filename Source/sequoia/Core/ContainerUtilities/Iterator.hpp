@@ -11,6 +11,7 @@
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
 #include <iterator>
+#include <type_traits>
 
 /** \file
     \brief Implementation for an iterator with policies controlling dereferencing and auxiliary data.
@@ -90,9 +91,9 @@ namespace sequoia::utilities
     using base_iterator_type    = Iterator;
     using auxiliary_data_policy = AuxiliaryDataPolicy;
 
-    using value_type = std::iterator_traits<Iterator>::value_type;
-    using reference  = std::iterator_traits<Iterator>::reference;
-    using pointer    = std::iterator_traits<Iterator>::pointer;
+    using value_type = std::iter_value_t<Iterator>;
+    using reference  = std::iter_reference_t<Iterator>;
+    using pointer    = std::conditional_t<std::is_lvalue_reference_v<reference>, std::add_pointer_t<reference>, void>;
 
     template<class... Args>
       requires (!resolve_to_copy_v<identity_dereference_policy, Args...>)
@@ -103,10 +104,14 @@ namespace sequoia::utilities
     constexpr identity_dereference_policy(const identity_dereference_policy&) = default;
 
     [[nodiscard]]
-    constexpr static reference get(Iterator i) { return *i; }
+    constexpr static reference get(const Iterator& i) { return *i; }
 
     [[nodiscard]]
-    constexpr static pointer get_ptr(Iterator i) { return &*i; }
+    constexpr static pointer get_ptr(const Iterator& i)
+      requires (!std::is_void_v<pointer>)
+    {
+      return &*i;
+    }
 
     [[nodiscard]]
     friend constexpr bool operator==(const identity_dereference_policy&, const identity_dereference_policy&) noexcept = default;
@@ -278,6 +283,7 @@ SEQUOIA_GCC_SUPPRESS_END
 
     [[nodiscard]]
     friend constexpr bool operator==(const iterator& lhs, const iterator& rhs) noexcept
+      requires std::equality_comparable<Iterator>
     {
       return lhs.m_BaseIterator == rhs.m_BaseIterator;
     }
@@ -288,6 +294,21 @@ SEQUOIA_GCC_SUPPRESS_END
     {
       return lhs.m_BaseIterator <=> rhs.m_BaseIterator;
     }
+
+    // Without these deletions, a comparison that the base iterator lacks
+    // would resolve to a comparison declared by the dereference policy, or by
+    // a class from which the policy derives, through the conversion to a
+    // public base class. Such a comparison ignores the base iterators.
+    // TO DO: make these non-templates, taking const iterator&, once MSVC
+    // accepts a trailing requires-clause on a deleted non-template friend
+    // (it reports C7599).
+    template<std::same_as<iterator> Other>
+    friend bool operator==(const Other&, const Other&)
+      requires (!std::equality_comparable<Iterator>) = delete;
+
+    template<std::same_as<iterator> Other>
+    friend auto operator<=>(const Other&, const Other&)
+      requires (!std::three_way_comparable<Iterator>) = delete;
   private:
     Iterator m_BaseIterator{};
   };
