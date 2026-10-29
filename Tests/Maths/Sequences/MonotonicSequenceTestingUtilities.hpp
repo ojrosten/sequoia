@@ -42,22 +42,22 @@ namespace sequoia::testing
           }
 
           check(equality,
-                "iterator",
+                "iterator range wrong",
                 logger,
                 sequence.begin(), sequence.end(),
                 prediction.begin(), prediction.end());
           check(equality,
-                "citerator",
+                "citerator range wrong",
                 logger,
                 sequence.cbegin(), sequence.cend(),
                 prediction.cbegin(), prediction.cend());
           check(equality,
-                "riterator",
+                "riterator range wrong",
                 logger,
                 sequence.rbegin(), sequence.rend(),
                 prediction.rbegin(), prediction.rend());
           check(equality,
-                "criterator",
+                "criterator range wrong",
                 logger,
                 sequence.crbegin(), sequence.crend(),
                 prediction.crbegin(), prediction.crend());
@@ -70,7 +70,7 @@ namespace sequoia::testing
           };
 
           check(equality,
-                "operator[]",
+                "operator[] wrong",
                 logger,
                 elementsBySubscript.begin(), elementsBySubscript.end(),
                 prediction.begin(), prediction.end());
