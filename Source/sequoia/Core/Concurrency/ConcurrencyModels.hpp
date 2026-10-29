@@ -199,9 +199,10 @@ namespace sequoia::concurrency
       for each thread. With a pipeline for each thread, a thread may take a
       task from another thread's pipeline (task stealing).
 
-      Several threads may call `push` concurrently. A task pushed after
-      `join` never runs, and destroying the pool stores a
-      `std::future_error` in the task's future.
+      Several threads may call `push` concurrently. Once `join` has returned,
+      a task pushed to the pool never runs: its future becomes ready only when
+      the pool is destroyed, and then holds a `std::future_error` whose code is
+      `std::future_errc::broken_promise`.
 
       \throws std::invalid_argument if constructed with zero threads.
    */
