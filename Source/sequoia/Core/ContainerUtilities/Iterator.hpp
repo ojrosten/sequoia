@@ -283,6 +283,7 @@ SEQUOIA_GCC_SUPPRESS_END
 
     [[nodiscard]]
     friend constexpr bool operator==(const iterator& lhs, const iterator& rhs) noexcept
+      requires std::equality_comparable<Iterator>
     {
       return lhs.m_BaseIterator == rhs.m_BaseIterator;
     }
@@ -293,6 +294,16 @@ SEQUOIA_GCC_SUPPRESS_END
     {
       return lhs.m_BaseIterator <=> rhs.m_BaseIterator;
     }
+
+    // Without these deletions, a comparison that the base iterator lacks
+    // would resolve to a comparison declared by the dereference policy, or by
+    // a class from which the policy derives, through the conversion to a
+    // public base class. Such a comparison ignores the base iterators.
+    friend bool operator==(const iterator&, const iterator&)
+      requires (!std::equality_comparable<Iterator>) = delete;
+
+    friend auto operator<=>(const iterator&, const iterator&)
+      requires (!std::three_way_comparable<Iterator>) = delete;
   private:
     Iterator m_BaseIterator{};
   };

@@ -34,6 +34,7 @@ namespace sequoia::testing
     void basic_checks(Iter begin, Sentinel end, Pointer pBegin, std::string_view message, Args... args);
 
     void test_nested_bidirectional_iterator();
+    void test_comparisons_the_base_iterator_lacks();
 
     void test_iterator();
     void test_const_iterator();

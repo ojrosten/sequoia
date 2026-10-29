@@ -93,6 +93,39 @@ namespace sequoia::testing
       requires { typename std::iterator_traits<I>::difference_type; }
     };
 
+    class counting_input_iterator_without_equality
+    {
+    public:
+      using value_type      = int;
+      using difference_type = std::ptrdiff_t;
+
+      [[nodiscard]]
+      constexpr value_type operator*() const noexcept { return m_Count; }
+
+      constexpr counting_input_iterator_without_equality& operator++() noexcept
+      {
+        ++m_Count;
+        return *this;
+      }
+
+      constexpr void operator++(int) noexcept { ++m_Count; }
+    private:
+      value_type m_Count{};
+    };
+
+    // An auxiliary data policy with == and <=>, so that a wrapper over a base
+    // iterator lacking either has a policy's comparison to fall back to.
+    struct comparable_data_policy
+    {
+      [[nodiscard]]
+      friend constexpr auto operator<=>(const comparable_data_policy&,
+                                        const comparable_data_policy&) noexcept = default;
+    };
+
+    template<std::input_iterator Iterator>
+    using iterator_with_comparable_data_policy
+      = utilities::iterator<Iterator, utilities::identity_dereference_policy<Iterator, comparable_data_policy>>;
+
     template<class I>
     constexpr bool has_arrow_operator_v{
       requires (I i) { i.operator->(); }
@@ -108,6 +141,7 @@ namespace sequoia::testing
   void iterator_test::run_tests()
   {
     test_nested_bidirectional_iterator();
+    test_comparisons_the_base_iterator_lacks();
 
     test_iterator();
     test_const_iterator();
@@ -130,6 +164,19 @@ namespace sequoia::testing
 
     STATIC_CHECK( std::bidirectional_iterator<nested_iter_t>);
     STATIC_CHECK(!std::random_access_iterator<nested_iter_t>);
+  }
+
+  void iterator_test::test_comparisons_the_base_iterator_lacks()
+  {
+    using iter_without_equality_t = iterator_with_comparable_data_policy<counting_input_iterator_without_equality>;
+
+    STATIC_CHECK( std::input_iterator<iter_without_equality_t>);
+    STATIC_CHECK(!std::equality_comparable<iter_without_equality_t>);
+
+    using iter_without_ordering_t = iterator_with_comparable_data_policy<counting_input_iterator>;
+
+    STATIC_CHECK( std::equality_comparable<iter_without_ordering_t>);
+    STATIC_CHECK(!std::three_way_comparable<iter_without_ordering_t>);
   }
 
   void iterator_test::test_traitless_input_iterator()
