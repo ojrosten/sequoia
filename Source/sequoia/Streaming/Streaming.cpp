@@ -121,6 +121,13 @@ namespace sequoia
       return ofile.fail() ? write_outcome::write_failed : write_outcome::written;
     }
 
+    /** \brief The flags which select `mode` when a file is opened. */
+    [[nodiscard]]
+    std::ios_base::openmode binary_flag_for(write_mode mode) noexcept
+    {
+      return mode == write_mode::binary ? std::ios_base::binary : std::ios_base::openmode{};
+    }
+
     /** \brief Renames `from` over `to`.
 
         \returns `to` if the rename failed, and `std::nullopt` otherwise.
@@ -168,6 +175,13 @@ namespace sequoia
       throw std::runtime_error{report_failed_write(file)};
   }
 
+  void write_to_file_if_different(const std::filesystem::path& file, std::string_view text, write_mode mode)
+  {
+    const auto binary{binary_flag_for(mode)};
+    if(read_to_string(file, std::ios_base::in | binary) != text)
+      write_to_file(file, text, std::ios_base::out | binary);
+  }
+
   void replace_contents(const std::filesystem::path& file, std::string_view text, write_mode mode)
   {
     if(const auto failurePath{replace_contents_quietly(file, text, mode)})
@@ -178,7 +192,7 @@ namespace sequoia
     replace_contents_quietly(const std::filesystem::path& file, std::string_view text, write_mode mode)
   {
     const auto partial{unused_partial_path(file)};
-    const auto binary{mode == write_mode::binary ? std::ios_base::binary : std::ios_base::openmode{}};
+    const auto binary{binary_flag_for(mode)};
 
     // Another process may create partial between the search and this open.
     // With noreplace the open then fails, rather than overwriting that file.
