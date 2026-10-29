@@ -3,7 +3,7 @@ Zeroth partial index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - max index is 1
+process_edges [node: 0, edge: 0]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -12,7 +12,7 @@ First partial index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::process_edges [node: 0, edge: 1]: target index 1 out of range - max index is 1
+process_edges [node: 0, edge: 1]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -21,7 +21,7 @@ First partial index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::process_edges [node: 0, edge: 1]: target index 2 out of range - max index is 2
+process_edges [node: 0, edge: 1]: target index 2 out of range - max index is 2
 
 =======================================
 
@@ -30,7 +30,7 @@ Zeroth partial index of node 1's edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::process_edges [node: 1, edge: 0]: target index 2 out of range - max index is 2
+process_edges [node: 1, edge: 0]: target index 2 out of range - max index is 2
 
 =======================================
 
@@ -39,7 +39,7 @@ Zeroth partial index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - max index is 1
+process_edges [node: 0, edge: 0]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -48,7 +48,7 @@ First partial index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::process_edges [node: 0, edge: 1]: target index 1 out of range - max index is 1
+process_edges [node: 0, edge: 1]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -57,7 +57,7 @@ First partial index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::process_edges [node: 0, edge: 1]: target index 2 out of range - max index is 2
+process_edges [node: 0, edge: 1]: target index 2 out of range - max index is 2
 
 =======================================
 
@@ -66,7 +66,7 @@ Zeroth partial index of node 1's edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::process_edges [node: 1, edge: 0]: target index 2 out of range - max index is 2
+process_edges [node: 1, edge: 0]: target index 2 out of range - max index is 2
 
 =======================================
 
@@ -135,7 +135,7 @@ cbegin_edges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cbegin_edges: node index 0 out of range - graph order is 0
+cbegin_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
@@ -144,7 +144,7 @@ cend_edges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cend_edges: node index 0 out of range - graph order is 0
+cend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
@@ -153,7 +153,7 @@ crbegin_edges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::crbegin_edges: node index 0 out of range - graph order is 0
+crbegin_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
@@ -162,7 +162,7 @@ crend_edges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::crend_edges: node index 0 out of range - graph order is 0
+crend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
@@ -171,7 +171,7 @@ cedges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cedges: node index 0 out of range - graph order is 0
+cedges: node index 0 out of range - graph order is 0
 
 =======================================
 
@@ -189,7 +189,7 @@ swapping edges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cedges: node index 0 out of range - graph order is 0
+cedges: node index 0 out of range - graph order is 0
 
 =======================================
 
@@ -198,7 +198,7 @@ joining nodes throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::join: at least one node index [0, 0] out of range - graph order is 0
+join: at least one node index [0, 0] out of range - graph order is 0
 
 =======================================
 
@@ -225,7 +225,7 @@ cbegin_edges throws when index is out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cbegin_edges: node index 1 out of range - graph order is 1
+cbegin_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
@@ -234,7 +234,7 @@ cend_edges throws when index is out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cend_edges: node index 1 out of range - graph order is 1
+cend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
@@ -243,7 +243,7 @@ crbegin_edges throws when index is out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::crbegin_edges: node index 1 out of range - graph order is 1
+crbegin_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
@@ -252,7 +252,7 @@ crend_edges throws when index is out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::crend_edges: node index 1 out of range - graph order is 1
+crend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
@@ -261,7 +261,7 @@ cedges throws when index is out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cedges: node index 1 out of range - graph order is 1
+cedges: node index 1 out of range - graph order is 1
 
 =======================================
 
@@ -288,7 +288,7 @@ joining nodes throws if first index out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::join: at least one node index [1, 0] out of range - graph order is 1
+join: at least one node index [1, 0] out of range - graph order is 1
 
 =======================================
 
@@ -297,7 +297,7 @@ joining nodes throws if second index out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::join: at least one node index [0, 1] out of range - graph order is 1
+join: at least one node index [0, 1] out of range - graph order is 1
 
 =======================================
 
@@ -342,7 +342,7 @@ swapping edges throws for node index out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cedges: node index 1 out of range - graph order is 1
+cedges: node index 1 out of range - graph order is 1
 
 =======================================
 

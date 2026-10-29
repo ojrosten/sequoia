@@ -3,7 +3,7 @@ Target index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::process_complementary_edges [node: 0, edge: 0]: target index 1 out of range - max index is 1
+process_complementary_edges [node: 0, edge: 0]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -12,7 +12,7 @@ Complimentary index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - max index is 1
+process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - max index is 1
 
 =======================================
 
@@ -21,7 +21,7 @@ Self-referential complimentary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
+process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 =======================================
 
@@ -30,7 +30,7 @@ Mismatched complimentary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
+process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 =======================================
 
@@ -39,7 +39,7 @@ Mismatched complimentary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 2 does not match 0
+process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 2 does not match 0
 
 =======================================
 
@@ -48,7 +48,7 @@ Mismatched complimentary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
+process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 =======================================
 
@@ -57,7 +57,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
+process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 =======================================
 
@@ -66,7 +66,7 @@ IMismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
+process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 =======================================
 
@@ -135,7 +135,7 @@ cbegin_edges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cbegin_edges: node index 0 out of range - graph order is 0
+cbegin_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
@@ -144,7 +144,7 @@ cend_edges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cend_edges: node index 0 out of range - graph order is 0
+cend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
@@ -153,7 +153,7 @@ crbegin_edges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::crbegin_edges: node index 0 out of range - graph order is 0
+crbegin_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
@@ -162,7 +162,7 @@ crend_edges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::crend_edges: node index 0 out of range - graph order is 0
+crend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
@@ -171,7 +171,7 @@ cedges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cedges: node index 0 out of range - graph order is 0
+cedges: node index 0 out of range - graph order is 0
 
 =======================================
 
@@ -189,7 +189,7 @@ joining nodes throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::join: at least one node index [0, 0] out of range - graph order is 0
+join: at least one node index [0, 0] out of range - graph order is 0
 
 =======================================
 
@@ -216,7 +216,7 @@ cbegin_edges throws when index is out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cbegin_edges: node index 1 out of range - graph order is 1
+cbegin_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
@@ -225,7 +225,7 @@ cend_edges throws when index is out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cend_edges: node index 1 out of range - graph order is 1
+cend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
@@ -234,7 +234,7 @@ crbegin_edges throws when index is out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::crbegin_edges: node index 1 out of range - graph order is 1
+crbegin_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
@@ -243,7 +243,7 @@ crend_edges throws when index is out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::crend_edges: node index 1 out of range - graph order is 1
+crend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
@@ -252,7 +252,7 @@ cedges throws when index is out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cedges: node index 1 out of range - graph order is 1
+cedges: node index 1 out of range - graph order is 1
 
 =======================================
 
@@ -279,7 +279,7 @@ joining nodes throws if first index out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::join: at least one node index [1, 0] out of range - graph order is 1
+join: at least one node index [1, 0] out of range - graph order is 1
 
 =======================================
 
@@ -288,7 +288,7 @@ joining nodes throws if second index out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::join: at least one node index [0, 1] out of range - graph order is 1
+join: at least one node index [0, 1] out of range - graph order is 1
 
 =======================================
 
@@ -297,7 +297,7 @@ inserting join throws if second index out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::insert_join: insertion position 2 out of range for node 0 - max index is 1
+insert_join: insertion position 2 out of range for node 0 - max index is 1
 
 =======================================
 
@@ -324,7 +324,7 @@ Sorting a range which ends beyond the last node throws
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::sort_nodes: node index 3 out of range - graph order is 3
+sort_nodes: node index 3 out of range - graph order is 3
 
 =======================================
 

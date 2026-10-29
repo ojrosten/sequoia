@@ -775,7 +775,7 @@ Insert node beyond the end
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::insert_node: insertion position 3 out of range - graph order is 2
+insert_node: insertion position 3 out of range - graph order is 2
 
 =======================================
 

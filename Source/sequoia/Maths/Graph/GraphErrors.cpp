@@ -20,21 +20,15 @@ namespace sequoia::maths::graph_errors
     }
 
     [[nodiscard]]
-    std::string prefix(std::string_view method)
-    {
-      return std::string{"connectivity::"}.append(method);
-    }
-
-    [[nodiscard]]
     std::string error_prefix(std::string_view method)
     {
-      return prefix(method).append(": ");
+      return std::format("{}: ", method);
     }
 
     [[nodiscard]]
     std::string error_prefix(std::string_view method, const edge_indices indices)
     {
-      return std::format("{} {}: ", prefix(method), to_string(indices));
+      return std::format("{} {}: ", method, to_string(indices));
     }
   }
 
