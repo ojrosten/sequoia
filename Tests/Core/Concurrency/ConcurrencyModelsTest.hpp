@@ -36,6 +36,9 @@ namespace sequoia::testing
 
     void test_thread_pools_refuse_zero_threads();
 
+    template<class ThreadPool>
+    void test_pushes_from_several_threads(std::string_view message);
+
     template<class ThreadModel, class... Args>
     void test_exceptions(std::string_view message, Args&&... args);
 
