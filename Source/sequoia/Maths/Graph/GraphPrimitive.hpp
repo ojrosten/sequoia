@@ -50,6 +50,15 @@ namespace sequoia
     using forward_tree_type   = tree_link_direction_constant<tree_link_direction::forward>;
     using backward_tree_type  = tree_link_direction_constant<tree_link_direction::backward>;
 
+    /** \brief The base of every graph, holding its edges and its node weights.
+
+        No public member of `graph_primitive` adds, removes or reorders nodes
+        or edges. The same holds for the public members of the connectivity
+        and the node storage that sequoia's graphs give it as bases. Some of
+        those change node weights, edge weights or edge meta-data. A class
+        derived from `graph_primitive` offers a member that adds, removes or
+        reorders nodes or edges only by declaring one public.
+     */
     template<network Connectivity, class Nodes>
     class SEQUOIA_MSVC_EMPTY_BASE_HACK graph_primitive : public Connectivity, public Nodes
     {
@@ -126,6 +135,11 @@ namespace sequoia
         return connectivity_type::size();
       }
 
+      //===============================equality (not isomorphism) operators================================//
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const graph_primitive&, const graph_primitive&) noexcept = default;
+    protected:
       constexpr void swap_nodes(edge_index_type i, edge_index_type j)
       {
         if constexpr(!std::is_empty_v<node_weight_type>)
@@ -170,11 +184,6 @@ namespace sequoia
         permute_nodes(node_sort_destinations(first, last, std::move(c)));
       }
 
-      //===============================equality (not isomorphism) operators================================//
-
-      [[nodiscard]]
-      friend constexpr bool operator==(const graph_primitive&, const graph_primitive&) noexcept = default;
-    protected:
       // Constructors with allocators
 
       template<class N>

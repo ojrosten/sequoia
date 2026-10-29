@@ -25,6 +25,10 @@ namespace sequoia::maths
 
       A tree's root is node 0. A node operation which would move the root
       throws std::out_of_range instead.
+
+      Every base of `tree_base` is public. No public member of those bases
+      adds, removes or reorders the tree's nodes or edges, except `clear`,
+      which leaves an empty tree.
    */
   template
   <
@@ -184,6 +188,11 @@ namespace sequoia::maths
     using base_type::swap_edges;
     using base_type::sort_edges;
     using base_type::stable_sort_edges;
+
+    void swap(tree_base& other) noexcept(noexcept(this->base_type::swap(other)))
+    {
+      base_type::swap(other);
+    }
   protected:
     ~tree_base() = default;
 

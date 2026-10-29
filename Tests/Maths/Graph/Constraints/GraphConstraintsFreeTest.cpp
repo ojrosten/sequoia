@@ -126,6 +126,17 @@ namespace sequoia::testing
     using shared_move_only_embedded_graph = maths::embedded_graph<move_only_weight, maths::null_weight>;
     using directed_move_only_graph        = maths::directed_graph<move_only_weight, maths::null_weight>;
 
+    using directed_int_node_graph             = maths::directed_graph<maths::null_weight, int>;
+    using directed_unweighted_graph           = maths::directed_graph<maths::null_weight, maths::null_weight>;
+    using undirected_int_node_graph           = maths::undirected_graph<maths::null_weight, int>;
+    using undirected_int_node_meta_data_graph = maths::undirected_graph<maths::null_weight, int, copyable_weight>;
+    using embedded_int_node_graph             = maths::embedded_graph<maths::null_weight, int>;
+    using static_directed_int_node_graph      = maths::static_directed_graph<1, 2, maths::null_weight, int>;
+    using static_undirected_int_node_graph    = maths::static_undirected_graph<1, 2, maths::null_weight, int>;
+    using static_embedded_int_node_graph      = maths::static_embedded_graph<1, 2, maths::null_weight, int>;
+    using heterogeneous_directed_int_double_graph
+      = maths::heterogeneous_directed_graph<0, 2, maths::null_weight, int, double>;
+
     template<class Graph, class EdgeIterator = Graph::const_edge_iterator>
     concept edge_weight_settable
       = requires(Graph& g, EdgeIterator citer, typename Graph::edge_weight_type w) {
@@ -178,6 +189,13 @@ namespace sequoia::testing
       = requires(Graph& g, EdgeIterator citer, Result(*fn)(typename Graph::edge_weight_type&)) {
           g.mutate_edge_weight(citer, fn);
         };
+
+    template<class Graph>
+    inline constexpr bool nodes_reorderable_v{
+         swap_nodes_callable_through_v<Graph, Graph>
+      && sort_all_nodes_callable_through_v<Graph, Graph>
+      && sort_range_of_nodes_callable_through_v<Graph, Graph>
+    };
   }
 
   [[nodiscard]]
@@ -193,12 +211,25 @@ namespace sequoia::testing
     test_join_constraints();
     test_sort_nodes_constraints();
     test_mutator_constraints();
+    test_node_reordering_and_swap_constraints();
+    test_base_subobject_constraints<directed_int_node_graph>();
+    test_base_subobject_constraints<directed_unweighted_graph>();
+    test_base_subobject_constraints<maths::directed_graph<double, int>>();
+    test_base_subobject_constraints<undirected_int_node_graph>();
+    test_base_subobject_constraints<undirected_int_node_meta_data_graph>();
+    test_base_subobject_constraints<embedded_int_node_graph>();
+    test_base_subobject_constraints<static_directed_int_node_graph>();
+    test_base_subobject_constraints<maths::static_directed_graph<1, 2, maths::null_weight, maths::null_weight>>();
+    test_base_subobject_constraints<static_undirected_int_node_graph>();
+    test_base_subobject_constraints<static_embedded_int_node_graph>();
+    test_base_subobject_constraints<heterogeneous_directed_int_double_graph>();
     test_mutation_results<maths::bucketed_edge_storage_config>();
     test_mutation_results<maths::contiguous_edge_storage_config>();
     test_shared_move_only_weights();
     test_move_only_meta_data();
     test_shared_weight_copies();
     test_mutation_by_member_functions();
+    test_member_swaps();
   }
 
   void graph_constraints_free_test::test_copyability()
@@ -348,14 +379,12 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    using graph_t               = directed_graph<null_weight, int>;
-    using heterogeneous_graph_t = heterogeneous_directed_graph<0, 2, null_weight, int, double>;
-    using string_comparison_t   = bool(*)(const std::string&, const std::string&);
+    using string_comparison_t = bool(*)(const std::string&, const std::string&);
 
-    STATIC_CHECK( nodes_sortable_by<graph_t,               std::ranges::less>);
-    STATIC_CHECK(!nodes_sortable_by<heterogeneous_graph_t, std::ranges::less>);
-    STATIC_CHECK(!nodes_sortable_by<graph_t,               string_comparison_t>);
-    STATIC_CHECK(!nodes_sortable_by<graph_t,               int>);
+    STATIC_CHECK( nodes_sortable_by<directed_int_node_graph,                 std::ranges::less>);
+    STATIC_CHECK(!nodes_sortable_by<heterogeneous_directed_int_double_graph, std::ranges::less>);
+    STATIC_CHECK(!nodes_sortable_by<directed_int_node_graph,                 string_comparison_t>);
+    STATIC_CHECK(!nodes_sortable_by<directed_int_node_graph,                 int>);
   }
 
   void graph_constraints_free_test::test_mutator_constraints()
@@ -398,6 +427,50 @@ namespace sequoia::testing
 
     STATIC_CHECK(!root_weight_mutable_by<tree, rvalue_only>);
     STATIC_CHECK( root_weight_mutable_by<tree, member_function>);
+  }
+
+  void graph_constraints_free_test::test_node_reordering_and_swap_constraints()
+  {
+    STATIC_CHECK(nodes_reorderable_v<directed_int_node_graph>);
+    STATIC_CHECK(nodes_reorderable_v<directed_unweighted_graph>);
+    STATIC_CHECK(nodes_reorderable_v<undirected_int_node_graph>);
+    STATIC_CHECK(nodes_reorderable_v<undirected_int_node_meta_data_graph>);
+    STATIC_CHECK(nodes_reorderable_v<embedded_int_node_graph>);
+    STATIC_CHECK(nodes_reorderable_v<static_directed_int_node_graph>);
+    STATIC_CHECK(nodes_reorderable_v<static_undirected_int_node_graph>);
+    STATIC_CHECK(nodes_reorderable_v<static_embedded_int_node_graph>);
+
+    STATIC_CHECK(member_swap_callable_v<directed_int_node_graph,             directed_int_node_graph>);
+    STATIC_CHECK(member_swap_callable_v<directed_unweighted_graph,           directed_unweighted_graph>);
+    STATIC_CHECK(member_swap_callable_v<undirected_int_node_graph,           undirected_int_node_graph>);
+    STATIC_CHECK(member_swap_callable_v<undirected_int_node_meta_data_graph, undirected_int_node_meta_data_graph>);
+    STATIC_CHECK(member_swap_callable_v<embedded_int_node_graph,             embedded_int_node_graph>);
+
+    // Heterogeneous node weights may differ in type, so swap_nodes is withheld
+    STATIC_CHECK(!swap_nodes_callable_through_v<heterogeneous_directed_int_double_graph,
+                                                heterogeneous_directed_int_double_graph>);
+  }
+
+  template<class Graph>
+  void graph_constraints_free_test::test_base_subobject_constraints()
+  {
+    using connectivity_type = Graph::connectivity_type;
+    using nodes_type        = Graph::nodes_type;
+
+    STATIC_CHECK(std::is_convertible_v<Graph&, connectivity_type&>);
+    STATIC_CHECK(std::is_convertible_v<Graph&, nodes_type&>);
+    STATIC_CHECK(copy_assignable_through_v<Graph, Graph, Graph>);
+    STATIC_CHECK(move_assignable_through_v<Graph, Graph, Graph>);
+    STATIC_CHECK(move_constructible_through_v<Graph, Graph>);
+
+    // A caller can neither assign the edges or the node weights alone, nor
+    // move the edges out alone. In a dynamic graph with node weights, either
+    // could leave the two disagreeing on the graph's order.
+    STATIC_CHECK(!copy_assignable_through_v<Graph, connectivity_type, Graph>);
+    STATIC_CHECK(!move_assignable_through_v<Graph, connectivity_type, Graph>);
+    STATIC_CHECK(!move_constructible_through_v<Graph, connectivity_type>);
+    STATIC_CHECK(!copy_assignable_through_v<Graph, nodes_type, Graph>);
+    STATIC_CHECK(!move_assignable_through_v<Graph, nodes_type, Graph>);
   }
 
   template<class EdgeStorageConfig>
@@ -620,5 +693,29 @@ namespace sequoia::testing
             tree.cbegin_node_weights()->value,
             5);
     }
+  }
+
+  void graph_constraints_free_test::test_member_swaps()
+  {
+    auto checkSwap{
+      [this]<class Graph>(std::string_view description, const Graph& graph) {
+        Graph first{graph},
+              second{};
+        first.swap(second);
+        check(equality, std::format("{}: the first is empty", description), first, Graph{});
+        check(equality, std::format("{}: the second holds the first's value", description), second, graph);
+      }
+    };
+
+    using directed_edges   = directed_int_node_graph::edges_initializer;
+    using undirected_edges = undirected_int_node_graph::edges_initializer;
+    using meta_data_edges  = undirected_int_node_meta_data_graph::edges_initializer;
+    using embedded_edges   = embedded_int_node_graph::edges_initializer;
+
+    checkSwap("A directed graph",                   directed_int_node_graph{directed_edges{{}, {}}, {1, 2}});
+    checkSwap("A directed graph without weights",   directed_unweighted_graph{directed_edges{{}, {}}});
+    checkSwap("An undirected graph",                undirected_int_node_graph{undirected_edges{{}, {}}, {1, 2}});
+    checkSwap("An undirected graph with meta-data", undirected_int_node_meta_data_graph{meta_data_edges{{}, {}}, {1, 2}});
+    checkSwap("An embedded graph",                  embedded_int_node_graph{embedded_edges{{}, {}}, {1, 2}});
   }
 }

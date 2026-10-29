@@ -134,11 +134,6 @@ namespace sequoia::maths
       : primitive_type{std::move(in), edgeAllocator, edgePartitionsAllocator}
     {}
 
-    graph_base& operator=(const graph_base&) = default;
-
-    graph_base& operator=(graph_base&&) noexcept = default;
-
-    using primitive_type::swap;
     using primitive_type::clear;
 
     using primitive_type::get_edge_allocator;
@@ -151,6 +146,10 @@ namespace sequoia::maths
     constexpr static graph_flavour flavour{GraphFlavour};
   protected:
     ~graph_base() = default;
+
+    graph_base& operator=(const graph_base&) = default;
+
+    graph_base& operator=(graph_base&&) noexcept = default;
   };
 
   template
@@ -277,9 +276,6 @@ namespace sequoia::maths
     constexpr graph_base(const graph_base&)     = default;
     constexpr graph_base(graph_base&&) noexcept = default;
 
-    graph_base& operator=(const graph_base&)     = default;
-    graph_base& operator=(graph_base&&) noexcept = default;
-
     constexpr static graph_flavour flavour{GraphFlavour};
 
     using primitive_type::clear;
@@ -292,15 +288,11 @@ namespace sequoia::maths
     using primitive_type::shrink_to_fit;
 
     using primitive_type::get_node_allocator;
-
-    using primitive_type::swap;
-
-    friend void swap(graph_base& lhs, graph_base& rhs) noexcept(noexcept(lhs.swap(rhs)))
-    {
-      lhs.swap(rhs);
-    }
   protected:
     ~graph_base() = default;
+
+    graph_base& operator=(const graph_base&)     = default;
+    graph_base& operator=(graph_base&&) noexcept = default;
   };
 
   template
@@ -347,6 +339,7 @@ namespace sequoia::maths
       >;
 
     using base_type::swap_nodes;
+    using base_type::sort_nodes;
     using base_type::add_node;
     using base_type::insert_node;
     using base_type::erase_node;
@@ -357,6 +350,11 @@ namespace sequoia::maths
     using base_type::sort_edges;
     using base_type::stable_sort_edges;
     using base_type::swap_edges;
+
+    void swap(directed_graph& other) noexcept(noexcept(this->base_type::swap(other)))
+    {
+      base_type::swap(other);
+    }
   };
 
   template
@@ -404,6 +402,7 @@ namespace sequoia::maths
       >;
 
     using base_type::swap_nodes;
+    using base_type::sort_nodes;
     using base_type::add_node;
     using base_type::insert_node;
     using base_type::erase_node;
@@ -414,6 +413,11 @@ namespace sequoia::maths
     using base_type::sort_edges;
     using base_type::stable_sort_edges;
     using base_type::swap_edges;
+
+    void swap(undirected_graph& other) noexcept(noexcept(this->base_type::swap(other)))
+    {
+      base_type::swap(other);
+    }
   };
 
   template
@@ -462,6 +466,7 @@ namespace sequoia::maths
       >;
 
     using base_type::swap_nodes;
+    using base_type::sort_nodes;
     using base_type::add_node;
     using base_type::insert_node;
     using base_type::erase_node;
@@ -470,6 +475,11 @@ namespace sequoia::maths
 
     // TO DO: reinstate this, but implementation needs to be changed
     // using base_type::erase_edge;
+
+    void swap(undirected_graph& other) noexcept(noexcept(this->base_type::swap(other)))
+    {
+      base_type::swap(other);
+    }
   };
 
   template
@@ -517,6 +527,7 @@ namespace sequoia::maths
       >;
 
     using base_type::swap_nodes;
+    using base_type::sort_nodes;
     using base_type::add_node;
     using base_type::insert_node;
     using base_type::erase_node;
@@ -525,5 +536,10 @@ namespace sequoia::maths
     using base_type::erase_edge;
 
     using base_type::primitive_type::insert_join;
+
+    void swap(embedded_graph& other) noexcept(noexcept(this->base_type::swap(other)))
+    {
+      base_type::swap(other);
+    }
   };
 }

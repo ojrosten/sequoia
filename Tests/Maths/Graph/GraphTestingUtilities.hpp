@@ -17,9 +17,45 @@
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 
 #include <format>
+#include <functional>
 
 namespace sequoia::testing
 {
+  template<class Graph, class Base>
+  inline constexpr bool swap_nodes_callable_through_v{
+    requires(Graph& g) { static_cast<Base&>(g).swap_nodes(0, 1); }
+  };
+
+  template<class Graph, class Base>
+  inline constexpr bool sort_all_nodes_callable_through_v{
+    requires(Graph& g) { static_cast<Base&>(g).sort_nodes(std::ranges::less{}); }
+  };
+
+  template<class Graph, class Base>
+  inline constexpr bool sort_range_of_nodes_callable_through_v{
+    requires(Graph& g) { static_cast<Base&>(g).sort_nodes(0, 1, std::ranges::less{}); }
+  };
+
+  template<class T, class U>
+  inline constexpr bool member_swap_callable_v{
+    requires(T& t, U& u) { t.swap(u); }
+  };
+
+  template<class T, class Base, class Source>
+  inline constexpr bool copy_assignable_through_v{
+    requires(T& t, const Source& s) { static_cast<Base&>(t) = static_cast<const Base&>(s); }
+  };
+
+  template<class T, class Base, class Source>
+  inline constexpr bool move_assignable_through_v{
+    requires(T& t, Source& s) { static_cast<Base&>(t) = static_cast<Base&&>(s); }
+  };
+
+  template<class T, class Base>
+  inline constexpr bool move_constructible_through_v{
+    requires(T& t) { Base{static_cast<Base&&>(t)}; }
+  };
+
   template<maths::graph_flavour Flavour, class EdgeStorage>
   struct value_tester<maths::connectivity<Flavour, EdgeStorage>>
   {

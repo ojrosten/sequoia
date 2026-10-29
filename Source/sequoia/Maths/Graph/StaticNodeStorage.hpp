@@ -40,9 +40,9 @@ namespace sequoia::maths
     {}
 
     constexpr static_node_storage(const static_node_storage&)                = default;
-    constexpr static_node_storage& operator=(const static_node_storage&)     = default;
   protected:
     constexpr static_node_storage(static_node_storage&&) noexcept            = default;
+    constexpr static_node_storage& operator=(const static_node_storage&)     = default;
     constexpr static_node_storage& operator=(static_node_storage&&) noexcept = default;
 
     ~static_node_storage() = default;
@@ -66,9 +66,9 @@ namespace sequoia::maths
     constexpr static std::size_t size() noexcept { return N; }
 
     constexpr static_node_storage(const static_node_storage&)                = default;
-    constexpr static_node_storage& operator=(const static_node_storage&)     = default;
   protected:
     constexpr static_node_storage(static_node_storage&&) noexcept            = default;
+    constexpr static_node_storage& operator=(const static_node_storage&)     = default;
     constexpr static_node_storage& operator=(static_node_storage&&) noexcept = default;
 
     ~static_node_storage() = default;

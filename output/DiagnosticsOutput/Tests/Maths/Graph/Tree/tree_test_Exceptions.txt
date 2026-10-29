@@ -1,4 +1,4 @@
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 363
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 400
 Insert a node at 0 of a non-empty tree
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ connectivity::insert_node: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 372
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 409
 Swap the root with another node
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ connectivity::swap_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 378
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 415
 Swap another node with the root
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ connectivity::swap_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 393
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 430
 Sort a range of nodes so as to move the root
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ connectivity::sort_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 399
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 436
 Sort all the nodes so as to move the root
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ connectivity::sort_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 363
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 400
 Insert a node at 0 of a non-empty tree
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ connectivity::insert_node: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 372
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 409
 Swap the root with another node
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ connectivity::swap_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 378
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 415
 Swap another node with the root
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ connectivity::swap_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 393
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 430
 Sort a range of nodes so as to move the root
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ connectivity::sort_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 399
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 436
 Sort all the nodes so as to move the root
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ connectivity::sort_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 363
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 400
 Insert a node at 0 of a non-empty tree
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ connectivity::insert_node: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 372
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 409
 Swap the root with another node
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ connectivity::swap_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 378
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 415
 Swap another node with the root
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ connectivity::swap_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 393
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 430
 Sort a range of nodes so as to move the root
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ connectivity::sort_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 399
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 436
 Sort all the nodes so as to move the root
 
 Expected Exception Type:
@@ -133,7 +133,7 @@ connectivity::sort_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 363
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 400
 Insert a node at 0 of a non-empty tree
 
 Expected Exception Type:
@@ -142,7 +142,7 @@ connectivity::insert_node: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 372
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 409
 Swap the root with another node
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ connectivity::swap_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 378
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 415
 Swap another node with the root
 
 Expected Exception Type:
@@ -160,7 +160,7 @@ connectivity::swap_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 393
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 430
 Sort a range of nodes so as to move the root
 
 Expected Exception Type:
@@ -169,7 +169,7 @@ connectivity::sort_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 399
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 436
 Sort all the nodes so as to move the root
 
 Expected Exception Type:
@@ -178,7 +178,7 @@ connectivity::sort_nodes: a tree's root is node 0, and may not move
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 504
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 541
 Insert a node beyond the end of a non-empty tree
 
 Expected Exception Type:
@@ -187,7 +187,7 @@ connectivity::insert_node: insertion position 3 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 510
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 547
 Insert a node as a child of a node the tree lacks
 
 Expected Exception Type:
@@ -196,7 +196,7 @@ connectivity::insert_node: node index 2 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 516
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 553
 Insert a node into a non-empty tree as a child of npos
 
 Expected Exception Type:
@@ -205,7 +205,7 @@ connectivity::insert_node: node index 18446744073709551615 out of range - graph 
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 522
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 559
 Add a node as a child of a node the tree lacks
 
 Expected Exception Type:
@@ -214,7 +214,7 @@ connectivity::add_node: node index 2 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 528
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 565
 Add a node to a non-empty tree as a child of npos
 
 Expected Exception Type:
@@ -223,7 +223,7 @@ connectivity::add_node: node index 18446744073709551615 out of range - graph ord
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 557
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 594
 Insert a node beyond the end of an empty tree
 
 Expected Exception Type:
@@ -232,7 +232,7 @@ connectivity::insert_node: insertion position 1 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 504
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 541
 Insert a node beyond the end of a non-empty tree
 
 Expected Exception Type:
@@ -241,7 +241,7 @@ connectivity::insert_node: insertion position 3 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 510
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 547
 Insert a node as a child of a node the tree lacks
 
 Expected Exception Type:
@@ -250,7 +250,7 @@ connectivity::insert_node: node index 2 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 516
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 553
 Insert a node into a non-empty tree as a child of npos
 
 Expected Exception Type:
@@ -259,7 +259,7 @@ connectivity::insert_node: node index 18446744073709551615 out of range - graph 
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 522
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 559
 Add a node as a child of a node the tree lacks
 
 Expected Exception Type:
@@ -268,7 +268,7 @@ connectivity::add_node: node index 2 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 528
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 565
 Add a node to a non-empty tree as a child of npos
 
 Expected Exception Type:
@@ -277,7 +277,7 @@ connectivity::add_node: node index 18446744073709551615 out of range - graph ord
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 557
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 594
 Insert a node beyond the end of an empty tree
 
 Expected Exception Type:
@@ -286,7 +286,7 @@ connectivity::insert_node: insertion position 1 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 504
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 541
 Insert a node beyond the end of a non-empty tree
 
 Expected Exception Type:
@@ -295,7 +295,7 @@ connectivity::insert_node: insertion position 3 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 510
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 547
 Insert a node as a child of a node the tree lacks
 
 Expected Exception Type:
@@ -304,7 +304,7 @@ connectivity::insert_node: node index 2 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 516
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 553
 Insert a node into a non-empty tree as a child of npos
 
 Expected Exception Type:
@@ -313,7 +313,7 @@ connectivity::insert_node: node index 18446744073709551615 out of range - graph 
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 522
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 559
 Add a node as a child of a node the tree lacks
 
 Expected Exception Type:
@@ -322,7 +322,7 @@ connectivity::add_node: node index 2 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 528
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 565
 Add a node to a non-empty tree as a child of npos
 
 Expected Exception Type:
@@ -331,7 +331,7 @@ connectivity::add_node: node index 18446744073709551615 out of range - graph ord
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 557
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 594
 Insert a node beyond the end of an empty tree
 
 Expected Exception Type:
@@ -340,7 +340,7 @@ connectivity::insert_node: insertion position 1 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 504
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 541
 Insert a node beyond the end of a non-empty tree
 
 Expected Exception Type:
@@ -349,7 +349,7 @@ connectivity::insert_node: insertion position 3 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 510
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 547
 Insert a node as a child of a node the tree lacks
 
 Expected Exception Type:
@@ -358,7 +358,7 @@ connectivity::insert_node: node index 2 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 516
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 553
 Insert a node into a non-empty tree as a child of npos
 
 Expected Exception Type:
@@ -367,7 +367,7 @@ connectivity::insert_node: node index 18446744073709551615 out of range - graph 
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 522
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 559
 Add a node as a child of a node the tree lacks
 
 Expected Exception Type:
@@ -376,7 +376,7 @@ connectivity::add_node: node index 2 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 528
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 565
 Add a node to a non-empty tree as a child of npos
 
 Expected Exception Type:
@@ -385,7 +385,7 @@ connectivity::add_node: node index 18446744073709551615 out of range - graph ord
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 557
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 594
 Insert a node beyond the end of an empty tree
 
 Expected Exception Type:
@@ -394,7 +394,7 @@ connectivity::insert_node: insertion position 1 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 613
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 650
 Prune a node the tree lacks
 
 Expected Exception Type:
@@ -403,7 +403,7 @@ connectivity::prune: node index 2 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 613
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 650
 Prune a node the tree lacks
 
 Expected Exception Type:
@@ -412,7 +412,7 @@ connectivity::prune: node index 2 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 613
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 650
 Prune a node the tree lacks
 
 Expected Exception Type:
@@ -421,7 +421,7 @@ connectivity::prune: node index 2 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 613
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 650
 Prune a node the tree lacks
 
 Expected Exception Type:
@@ -430,7 +430,7 @@ connectivity::prune: node index 2 out of range - graph order is 2
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 632
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 682
 Subtrees beneath a node the tree lacks
 
 Expected Exception Type:
@@ -439,7 +439,7 @@ connectivity::cedges: node index 4 out of range - graph order is 4
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 668
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 775
 root_weight of an empty tree's adaptor
 
 Expected Exception Type:
@@ -448,7 +448,7 @@ connectivity::root_weight_iter: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 670
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 777
 root_weight_iter of an empty tree's adaptor
 
 Expected Exception Type:
@@ -457,7 +457,7 @@ connectivity::root_weight_iter: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 679
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 786
 root_weight of an adaptor at a node its tree has lost
 
 Expected Exception Type:
@@ -466,7 +466,7 @@ connectivity::root_weight_iter: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTest.cpp, Line 683
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 790
 mutate_root_weight of an adaptor beyond the end of its tree
 
 Expected Exception Type:
