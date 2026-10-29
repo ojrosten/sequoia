@@ -8,12 +8,15 @@
 #include "ConcurrencyModelsTest.hpp"
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
+#include <algorithm>
 #include <future>
+#include <latch>
 #include <queue>
 #include <semaphore>
 #include <stdexcept>
 #include <thread>
 #include <utility>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -22,6 +25,13 @@ namespace sequoia::testing
   namespace
   {
     using int_task = std::packaged_task<int()>;
+
+    /** \brief Waits for each future, and returns the sum of their values. */
+    [[nodiscard]]
+    int sum_results(std::vector<std::future<int>>& futures)
+    {
+      return std::ranges::fold_left(futures, 0, [](int sum, std::future<int>& f){ return sum + f.get(); });
+    }
 
     /** \brief A queue whose first push stalls until `release_stall` is called.
 
@@ -168,6 +178,11 @@ namespace sequoia::testing
     test_try_lock_failures();
     test_pushes_wake_a_waiting_pop();
     test_thread_pools_refuse_zero_threads();
+
+    test_pushes_from_several_threads<thread_pool<int>>(
+      "Each of 4 threads pushes 100 tasks at once to a 2-thread pool with a pipeline for each thread; every task runs");
+    test_pushes_from_several_threads<thread_pool<int, false>>(
+      "Each of 4 threads pushes 100 tasks at once to a 2-thread pool with a single pipeline; every task runs");
 
     test_exceptions<thread_pool<void>>("pool_2M", 2u);
     test_exceptions<thread_pool<void, false>>("pool_2", 2u);
@@ -338,6 +353,30 @@ namespace sequoia::testing
 
     check_exception_thrown<std::invalid_argument>("A thread pool with a single pipeline refuses zero threads",
                                                   [](){ thread_pool<int, false>{0u}; });
+  }
+
+  template<class ThreadPool>
+  void threading_models_test::test_pushes_from_several_threads(std::string_view message)
+  {
+    constexpr int numPushers{4}, pushesPerPusher{100};
+
+    ThreadPool pool{2u};
+    std::latch start{numPushers};
+
+    // Each pusher waits for its own tasks, so the pushers share no result
+    auto pushTasks{
+      [&pool, &start](){
+        std::vector<std::future<int>> futures(pushesPerPusher);
+        start.arrive_and_wait();
+        std::ranges::generate(futures, [&pool](){ return pool.push([](){ return 1; }); });
+        return sum_results(futures);
+      }
+    };
+
+    std::vector<std::future<int>> pushers(numPushers);
+    std::ranges::generate(pushers, [&pushTasks](){ return std::async(std::launch::async, pushTasks); });
+
+    check(equality, message, sum_results(pushers), numPushers * pushesPerPusher);
   }
 
   template<class ThreadModel, class... Args>

@@ -18,6 +18,7 @@
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
+#include <atomic>
 #include <queue>
 #include <thread>
 #include <mutex>
@@ -192,6 +193,8 @@ namespace sequoia::concurrency
   /** \brief Supports either a single pipeline or a pipeline for each thread, together with task
       stealing.
 
+      Several threads may call `push` concurrently.
+
       \throws std::invalid_argument if constructed with zero threads.
    */
 
@@ -236,7 +239,7 @@ namespace sequoia::concurrency
 
       if constexpr(MultiPipeline)
       {
-        const auto qIndex{m_QueueIndex++};
+        const auto qIndex{m_QueueIndex.fetch_add(1, std::memory_order_relaxed)};
         const auto N{m_Threads.size()};
 
         if(qIndex >= N)
@@ -282,7 +285,7 @@ namespace sequoia::concurrency
     std::vector<std::thread> m_Threads;
     bool joined{};
 
-    std::size_t m_QueueIndex{};
+    std::atomic<std::size_t> m_QueueIndex{};
 
     void make_pool(const std::size_t numThreads)
     {
