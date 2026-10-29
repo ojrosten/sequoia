@@ -11,6 +11,7 @@
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
 #include <iterator>
+#include <memory>
 #include <type_traits>
 
 /** \file
@@ -110,7 +111,7 @@ namespace sequoia::utilities
     constexpr static pointer get_ptr(const Iterator& i)
       requires (!std::is_void_v<pointer>)
     {
-      return &*i;
+      return std::addressof(*i);
     }
 
     [[nodiscard]]

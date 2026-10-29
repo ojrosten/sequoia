@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <list>
+#include <memory>
 
 namespace sequoia::testing
 {
@@ -135,6 +136,11 @@ namespace sequoia::testing
     using iterator_with_comparable_data_policy
       = utilities::iterator<Iterator, utilities::identity_dereference_policy<Iterator, comparable_data_policy>>;
 
+    struct overloaded_address_of
+    {
+      constexpr std::nullptr_t operator&() const noexcept { return nullptr; }
+    };
+
     template<class I>
     constexpr bool has_arrow_operator_v{
       requires (I i) { i.operator->(); }
@@ -163,6 +169,7 @@ namespace sequoia::testing
     test_comparisons_the_base_iterator_lacks();
     test_comparisons_with_a_const_iterator();
     test_stashing_input_iterator();
+    test_arrow_operator_with_overloaded_address_of();
 
     test_iterator();
     test_const_iterator();
@@ -258,6 +265,20 @@ namespace sequoia::testing
     STATIC_CHECK([](){
       const iter_t i{stashing_input_iterator{3}};
       return (*i == 3) && (*i.operator->() == 3);
+    }());
+  }
+
+  void iterator_test::test_arrow_operator_with_overloaded_address_of()
+  {
+    using namespace utilities;
+
+    using i_t    = std::array<overloaded_address_of, 2>::iterator;
+    using iter_t = iterator<i_t, identity_dereference_policy<i_t>>;
+
+    STATIC_CHECK([](){
+      std::array<overloaded_address_of, 2> a{};
+      const iter_t i{a.begin() + 1};
+      return i.operator->() == std::addressof(a[1]);
     }());
   }
 
