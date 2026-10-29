@@ -89,6 +89,10 @@ namespace sequoia::testing
       return "The fast task is faster than the slow one, but by less than predicted";
     case relative_performance_failure::suspiciously_fast:
       return "The fast task is suspiciously fast: faster than predicted";
+    case relative_performance_failure::speedup_less_than_predicted:
+      return "The speed-up is less than predicted";
+    case relative_performance_failure::speedup_greater_than_predicted:
+      return "The speed-up is greater than predicted";
     }
 
     throw std::logic_error{"Unrecognized case for relative_performance_failure"};

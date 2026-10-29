@@ -432,8 +432,14 @@ namespace sequoia::testing
       sentinel<Mode> sentry{logger, std::string{description}};
       sentry.log_performance_check();
 
-      if(!(parameters.prediction.lower > 1) || !(parameters.prediction.upper > 1))
-        throw std::invalid_argument{"Relative performance test requires speed-up factors > 1"};
+      if(!(parameters.prediction.lower >= 0))
+        throw std::invalid_argument{"Relative performance test requires prediction.lower >= 0"};
+
+      // Only a prediction lying wholly above 1 has a gate against tasks of
+      // equal speed, which would too often pass a prediction lying wholly
+      // below 1.
+      if(!(parameters.prediction.upper >= 1))
+        throw std::invalid_argument{"Relative performance test requires prediction.upper >= 1"};
 
       if(parameters.prediction.lower > parameters.prediction.upper)
         throw std::invalid_argument{"prediction.upper must be >= prediction.lower"};
@@ -470,7 +476,7 @@ namespace sequoia::testing
 
        \param description The description reported with the check
        \param logger      The logger to which the result is reported
-       \param fast        The task predicted to be the faster of the two
+       \param fast        The task whose speed-up over `slow` is predicted
        \param slow        The task against which fast is compared
        \param parameters  The predicted interval of speed-ups, and the fewest
                           trials allowed in any attempt
@@ -496,8 +502,16 @@ namespace sequoia::testing
        Each attempt estimates the speed-up: the slow task's duration divided
        by the fast task's, which is less than 1 if the fast task is in fact
        the slower. It does so from each trial's durations, and puts an
-       interval around the estimate. The attempt passes if both the fast task
-       is distinguishably faster and the interval overlaps the predicted one.
+       interval around the estimate. The attempt passes if the interval
+       overlaps the predicted one. A predicted interval lying wholly above 1
+       claims that the fast task is faster. An attempt against such a
+       prediction passes only if the fast task is also distinguishably faster.
+
+       A predicted interval may include 1. For example, [0.9, 1.1] predicts
+       that the tasks take about the same time. A predicted interval whose
+       lower end is 0 places no lower bound on the speed-up. A predicted
+       interval whose upper end is `std::numeric_limits<double>::infinity()`
+       places no upper bound on the speed-up.
 
        The check passes if any attempt passes, and stops at the first that
        does. In false-negative mode the polarity is reversed: the check passes
@@ -512,10 +526,10 @@ namespace sequoia::testing
 
        Any exception thrown by `fast` or `slow` propagates.
 
-       \throws std::invalid_argument if either end of `parameters.prediction`
-       is not greater than 1, if its lower end exceeds its upper end, or if
-       `parameters.minimum_trials` is less than
-       `relative_performance_minimum_trials_floor`.
+       \throws std::invalid_argument if `parameters.prediction.lower` is not
+       at least 0, if `parameters.prediction.upper` is not at least 1, if the
+       lower end exceeds the upper end, or if `parameters.minimum_trials` is
+       less than `relative_performance_minimum_trials_floor`.
 
        \throws std::runtime_error if a trial times either task as zero.
 
@@ -540,8 +554,8 @@ namespace sequoia::testing
 
        \param description The description reported with the check
        \param logger      The logger to which the result is reported
-       \param fast        The task predicted to be the faster of the two, and
-                          its baseline
+       \param fast        The task whose speed-up over `slow.task` is
+                          predicted, and its baseline
        \param slow        The task against which fast is compared, and its
                           baseline
        \param parameters  The predicted interval of speed-ups, and the fewest
@@ -570,10 +584,10 @@ namespace sequoia::testing
           summary gives no speed-up if the last attempt failed for too many
           extremes.
 
-       \throws std::invalid_argument if either end of `parameters.prediction`
-       is not greater than 1, if its lower end exceeds its upper end, or if
-       `parameters.minimum_trials` is less than
-       `relative_performance_minimum_trials_floor`.
+       \throws std::invalid_argument if `parameters.prediction.lower` is not
+       at least 0, if `parameters.prediction.upper` is not at least 1, if the
+       lower end exceeds the upper end, or if `parameters.minimum_trials` is
+       less than `relative_performance_minimum_trials_floor`.
 
        \throws std::runtime_error if a trial times `fast.task` or `slow.task`
        as zero.

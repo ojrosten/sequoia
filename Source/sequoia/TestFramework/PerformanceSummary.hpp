@@ -27,7 +27,9 @@ namespace sequoia::testing
     not_distinguishably_faster,
     slower,
     faster_but_less_than_predicted,
-    suspiciously_fast
+    suspiciously_fast,
+    speedup_less_than_predicted,
+    speedup_greater_than_predicted
   };
 
   /** \brief A closed interval of speed-ups. */

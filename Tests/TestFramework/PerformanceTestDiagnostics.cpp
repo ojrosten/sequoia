@@ -8,9 +8,15 @@
 #include "PerformanceTestDiagnostics.hpp"
 
 #include <chrono>
+#include <limits>
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    constexpr double infinity{std::numeric_limits<double>::infinity()};
+  }
+
   [[nodiscard]]
   std::filesystem::path performance_false_negative_diagnostics::source_file()
   {
@@ -20,6 +26,8 @@ namespace sequoia::testing
   void performance_false_negative_diagnostics::run_tests()
   {
     test_relative_performance();
+    test_same_speed_predictions();
+    test_one_sided_predictions();
     test_confidence_multiplier();
     test_significance_gate();
     test_fail_at_second_attempt();
@@ -57,6 +65,50 @@ namespace sequoia::testing
                                [&clock]() { clock.advance(1ms); },
                                [&clock]() { clock.advance(4ms); },
                                {.prediction{.lower{2.0}, .upper{2.5}}},
+                               clock);
+  }
+
+  void performance_false_negative_diagnostics::test_same_speed_predictions()
+  {
+    using namespace std::chrono_literals;
+
+    scripted_clock clock{};
+
+    check_relative_performance("Speed-up of 2, predicted [0.9, 1.1]",
+                               [&clock]() { clock.advance(1ms); },
+                               [&clock]() { clock.advance(2ms); },
+                               {.prediction{.lower{0.9}, .upper{1.1}}},
+                               clock);
+
+    check_relative_performance("Speed-up of 0.5, predicted [0.9, 1.1]",
+                               [&clock]() { clock.advance(2ms); },
+                               [&clock]() { clock.advance(1ms); },
+                               {.prediction{.lower{0.9}, .upper{1.1}}},
+                               clock);
+  }
+
+  void performance_false_negative_diagnostics::test_one_sided_predictions()
+  {
+    using namespace std::chrono_literals;
+
+    scripted_clock clock{};
+
+    check_relative_performance("Speed-up of 4, predicted [0, 3]",
+                               [&clock]() { clock.advance(1ms); },
+                               [&clock]() { clock.advance(4ms); },
+                               {.prediction{.lower{0.0}, .upper{3.0}}},
+                               clock);
+
+    check_relative_performance("Speed-up of 1, predicted [2, infinity]",
+                               [&clock]() { clock.advance(1ms); },
+                               [&clock]() { clock.advance(1ms); },
+                               {.prediction{.lower{2.0}, .upper{infinity}}},
+                               clock);
+
+    check_relative_performance("Speed-up of 1.5, predicted [2, infinity]",
+                               [&clock]() { clock.advance(2ms); },
+                               [&clock]() { clock.advance(3ms); },
+                               {.prediction{.lower{2.0}, .upper{infinity}}},
                                clock);
   }
 
@@ -101,6 +153,12 @@ namespace sequoia::testing
                                [&clock]() { clock.advance(2ms); },
                                make_cycling_scripted_task(clock, {2ms, 2ms, 3ms, 4ms, 9ms}),
                                {.prediction{.lower{1.4}, .upper{1.8}}},
+                               clock);
+
+    check_relative_performance("Speed-up of 0.5, predicted [1, 3], which includes 1 and so has no gate",
+                               [&clock]() { clock.advance(2ms); },
+                               [&clock]() { clock.advance(1ms); },
+                               {.prediction{.lower{1.0}, .upper{3.0}}},
                                clock);
   }
 
@@ -261,6 +319,8 @@ namespace sequoia::testing
   void performance_false_positive_diagnostics::run_tests()
   {
     test_relative_performance();
+    test_same_speed_predictions();
+    test_one_sided_predictions();
     test_confidence_multiplier();
     test_relative_performance_with_baselines();
     test_tasks_no_longer_than_baselines();
@@ -289,6 +349,44 @@ namespace sequoia::testing
                                make_cycling_scripted_task(clock, {1ms,  5ms, 1ms,  5ms, 1ms}),
                                make_cycling_scripted_task(clock, {2ms, 10ms, 2ms, 10ms, 2ms}),
                                {.prediction{.lower{1.8}, .upper{2.2}}},
+                               clock);
+  }
+
+  void performance_false_positive_diagnostics::test_same_speed_predictions()
+  {
+    using namespace std::chrono_literals;
+
+    scripted_clock clock{};
+
+    check_relative_performance("Speed-up of 1, predicted [0.9, 1.1]",
+                               [&clock]() { clock.advance(1ms); },
+                               [&clock]() { clock.advance(1ms); },
+                               {.prediction{.lower{0.9}, .upper{1.1}}},
+                               clock);
+
+    check_relative_performance("Speed-up of 1, predicted [1, 1]",
+                               [&clock]() { clock.advance(1ms); },
+                               [&clock]() { clock.advance(1ms); },
+                               {.prediction{.lower{1.0}, .upper{1.0}}},
+                               clock);
+  }
+
+  void performance_false_positive_diagnostics::test_one_sided_predictions()
+  {
+    using namespace std::chrono_literals;
+
+    scripted_clock clock{};
+
+    check_relative_performance("Speed-up of 1, predicted [0, 3]",
+                               [&clock]() { clock.advance(1ms); },
+                               [&clock]() { clock.advance(1ms); },
+                               {.prediction{.lower{0.0}, .upper{3.0}}},
+                               clock);
+
+    check_relative_performance("Speed-up of 4, predicted [2, infinity]",
+                               [&clock]() { clock.advance(1ms); },
+                               [&clock]() { clock.advance(4ms); },
+                               {.prediction{.lower{2.0}, .upper{infinity}}},
                                clock);
   }
 
