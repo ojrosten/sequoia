@@ -55,13 +55,29 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string edge_index_range_message(std::string_view method, const edge_indices edgeIndices, std::string_view indexName, const std::size_t size, const std::size_t index)
+  std::string edge_target_index_range_message(std::string_view method,
+                                              const edge_indices edgeIndices,
+                                              const std::size_t order,
+                                              const std::size_t target)
   {
-    return std::format("{}{} index {} out of range - max index is {}",
+    return std::format("{}target index {} out of range - graph order is {}",
                        error_prefix(method, edgeIndices),
-                       indexName,
+                       target,
+                       order);
+  }
+
+  [[nodiscard]]
+  std::string edge_complementary_index_range_message(std::string_view method,
+                                                     const edge_indices edgeIndices,
+                                                     const std::size_t node,
+                                                     const std::size_t numEdges,
+                                                     const std::size_t index)
+  {
+    return std::format("{}complementary index {} out of range for node {}, which has {} edge(s)",
+                       error_prefix(method, edgeIndices),
                        index,
-                       size);
+                       node,
+                       numEdges);
   }
 
   [[nodiscard]]

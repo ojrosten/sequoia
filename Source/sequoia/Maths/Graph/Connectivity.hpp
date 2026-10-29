@@ -1042,20 +1042,14 @@ namespace sequoia
               static_cast<std::size_t>(edgeIndex)
             };
             const auto target{edge.target_node()};
-            graph_errors::check_edge_index_range(
-              "validate",
-              edgeIndices,
-              "target",
-              edges.size(),
-              target
-            );
+            graph_errors::check_edge_target_index_range("validate", edgeIndices, edges.size(), target);
 
             const auto compIndex{edge.complementary_index()};
             const auto& targetEdges{edges.begin()[target]};
-            graph_errors::check_edge_index_range(
+            graph_errors::check_edge_complementary_index_range(
               "validate",
               edgeIndices,
-              "complementary",
+              target,
               targetEdges.size(),
               compIndex
             );
@@ -1116,7 +1110,7 @@ namespace sequoia
               static_cast<std::size_t>(edgeIndex)
             };
             const auto target{edge.target_node()};
-            graph_errors::check_edge_index_range("validate", edgeIndices, "target", edges.size(), target);
+            graph_errors::check_edge_target_index_range("validate", edgeIndices, edges.size(), target);
           }
         }
 
@@ -1299,10 +1293,9 @@ namespace sequoia
             }
             else
             {
-              graph_errors::check_edge_index_range(
+              graph_errors::check_edge_target_index_range(
                 "validate",
                 {i, static_cast<std::size_t>(std::ranges::distance(orderedEdges.cbegin_partition(i), lowerIter))},
-                "target",
                 orderedEdges.num_partitions(),
                 lowerIter->target_node()
               );

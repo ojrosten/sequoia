@@ -3,7 +3,7 @@ Target index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-validate [node: 0, edge: 0]: target index 1 out of range - max index is 1
+validate [node: 0, edge: 0]: target index 1 out of range - graph order is 1
 
 =======================================
 
@@ -12,7 +12,7 @@ Complimentary index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-validate [node: 0, edge: 0]: complementary index 1 out of range - max index is 1
+validate [node: 0, edge: 0]: complementary index 1 out of range for node 0, which has 1 edge(s)
 
 =======================================
 
@@ -57,7 +57,7 @@ Target index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-validate [node: 0, edge: 0]: target index 1 out of range - max index is 1
+validate [node: 0, edge: 0]: target index 1 out of range - graph order is 1
 
 =======================================
 
@@ -66,7 +66,7 @@ Complimentary index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-validate [node: 0, edge: 0]: complementary index 1 out of range - max index is 1
+validate [node: 0, edge: 0]: complementary index 1 out of range for node 0, which has 1 edge(s)
 
 =======================================
 

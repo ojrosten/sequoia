@@ -10,7 +10,7 @@ Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphUnweigh
 
 Expected Exception Type:
 [std::logic_error]
-validate [node: 0, edge: 0]: complementary index 1 out of range - max index is 1
+validate [node: 0, edge: 0]: complementary index 1 out of range for node 0, which has 1 edge(s)
 
 =======================================
 

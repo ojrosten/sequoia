@@ -26,7 +26,7 @@ Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphFundame
 
 Expected Exception Type:
 [std::logic_error]
-validate [node: 0, edge: 0]: complementary index 1 out of range - max index is 1
+validate [node: 0, edge: 0]: complementary index 1 out of range for node 0, which has 1 edge(s)
 
 =======================================
 
@@ -34,7 +34,7 @@ Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphFundame
 
 Expected Exception Type:
 [std::logic_error]
-validate [node: 0, edge: 0]: complementary index 1 out of range - max index is 1
+validate [node: 0, edge: 0]: complementary index 1 out of range for node 0, which has 1 edge(s)
 
 =======================================
 
@@ -42,7 +42,7 @@ Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphFundame
 
 Expected Exception Type:
 [std::logic_error]
-validate [node: 0, edge: 0]: complementary index 2 out of range - max index is 2
+validate [node: 0, edge: 0]: complementary index 2 out of range for node 0, which has 2 edge(s)
 
 =======================================
 
@@ -66,7 +66,7 @@ Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphFundame
 
 Expected Exception Type:
 [std::logic_error]
-validate [node: 0, edge: 0]: complementary index 2 out of range - max index is 2
+validate [node: 0, edge: 0]: complementary index 2 out of range for node 0, which has 2 edge(s)
 
 =======================================
 
