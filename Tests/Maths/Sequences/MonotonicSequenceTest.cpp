@@ -131,6 +131,10 @@ namespace sequoia::testing
 
     check(equivalence, "Translating every element by -4", t, std::initializer_list<int>{4, 0, -1});
 
+    check_exception_thrown<std::invalid_argument>("Translating 0, -1 by 5 throws, since 5 exceeds the 4 before it",
+                                                  [&t](){ t.translate(t.begin() + 1, t.end(), 5); });
+    check(equivalence, "A refused translation leaves the sequence unchanged", t, std::initializer_list<int>{4, 0, -1});
+
     t.translate(t.begin() + 1, t.end(), 4);
     // -; 4, 4, 3
 
@@ -237,17 +241,24 @@ namespace sequoia::testing
     constexpr auto int64Max{std::numeric_limits<std::int64_t>::max()},
                    int64Min{std::numeric_limits<std::int64_t>::lowest()};
     constexpr auto uint64Max{std::numeric_limits<std::uint64_t>::max()},
-                   twoToThe63{static_cast<std::uint64_t>(deltaMax) + 1};
+                   twoToThe63{std::uint64_t{1} << 63};
 
-    checkTranslation("The maximum of std::int64_t plus the minimum delta is -1", int64Max, deltaMin, std::int64_t{-1});
-    checkTranslation("0 plus the minimum delta is the minimum of std::int64_t", std::int64_t{}, deltaMin, int64Min);
-    checkRefusal("-1 plus the minimum delta is below the minimum of std::int64_t", std::int64_t{-1}, deltaMin);
+    checkTranslation("The maximum of std::int64_t plus the minimum of std::ptrdiff_t is -1",
+                     int64Max, deltaMin, std::int64_t{-1});
+    checkTranslation("0 plus the minimum of std::ptrdiff_t is the minimum of std::int64_t",
+                     std::int64_t{}, deltaMin, int64Min);
+    checkRefusal("-1 plus the minimum of std::ptrdiff_t is below the minimum of std::int64_t",
+                 std::int64_t{-1}, deltaMin);
+    checkTranslation("0 plus the maximum of std::ptrdiff_t is the maximum of std::int64_t",
+                     std::int64_t{}, deltaMax, int64Max);
+    checkRefusal("1 plus the maximum of std::ptrdiff_t exceeds the maximum of std::int64_t", std::int64_t{1}, deltaMax);
 
-    checkTranslation("2^63 plus the minimum delta is 0", twoToThe63, deltaMin, std::uint64_t{});
-    checkRefusal("2^63 - 1 plus the minimum delta is below 0", twoToThe63 - 1, deltaMin);
-    checkTranslation("2^64 - 1 - (2^63 - 1) plus the maximum delta is the maximum of std::uint64_t",
-                     uint64Max - static_cast<std::uint64_t>(deltaMax), deltaMax, uint64Max);
-    checkRefusal("2^63 + 1 plus the maximum delta exceeds the maximum of std::uint64_t", twoToThe63 + 1, deltaMax);
+    checkTranslation("2^63 plus the minimum of std::ptrdiff_t is 0", twoToThe63, deltaMin, std::uint64_t{});
+    checkRefusal("2^63 - 1 plus the minimum of std::ptrdiff_t is below 0", twoToThe63 - 1, deltaMin);
+    checkTranslation("2^63 plus the maximum of std::ptrdiff_t is the maximum of std::uint64_t",
+                     twoToThe63, deltaMax, uint64Max);
+    checkRefusal("2^63 + 1 plus the maximum of std::ptrdiff_t exceeds the maximum of std::uint64_t",
+                 twoToThe63 + 1, deltaMax);
 
     static_monotonic_sequence<std::uint8_t, 2, std::ranges::greater> s{254, 255};
     check_exception_thrown<std::invalid_argument>("Translating 254, 255 by 2 throws, though wrapped 0, 1 is monotonic",

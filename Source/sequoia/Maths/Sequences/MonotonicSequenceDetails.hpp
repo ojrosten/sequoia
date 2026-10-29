@@ -45,11 +45,11 @@ namespace sequoia::maths::impl
   template<class C>
   inline constexpr bool swap_is_noexcept_v{swap_is_noexcept<C>::value};
 
-  /** \brief Whether adding a constant to two integers, without overflow,
-             preserves how `Compare` orders them.
+  /** \brief True only for comparisons known to preserve how they order two
+             integers when a constant is added to both, without overflow.
 
-      The trait is false for every comparison but `std::ranges::less` and
-      `std::ranges::greater`, including some that have the property.
+      No compile-time test can establish the property, so the trait is false
+      for some comparisons that have it.
    */
   template<class Compare>
   inline constexpr bool translation_invariant_order_v{
@@ -57,12 +57,13 @@ namespace sequoia::maths::impl
   };
 
   /** \brief Whether `T` can represent `x + delta`. */
-  template<integer T, std::signed_integral Delta>
+  template<integer T, integer Delta>
+    requires std::signed_integral<Delta>
   [[nodiscard]]
   constexpr bool sum_is_representable(const T x, const Delta delta) noexcept
   {
     // The distances from x to T's bounds are exact in T's unsigned type, once
-    // cast back to it after any promotion to int
+    // cast back to it after any promotion to int.
     using unsigned_t = std::make_unsigned_t<T>;
     constexpr auto maxValue{static_cast<unsigned_t>(std::numeric_limits<T>::max())},
                    lowestValue{static_cast<unsigned_t>(std::numeric_limits<T>::lowest())};
@@ -71,7 +72,7 @@ namespace sequoia::maths::impl
                roomBelow{static_cast<unsigned_t>(unsignedX - lowestValue)};
 
     // For a negative delta, -(delta + 1) < roomBelow is -delta <= roomBelow,
-    // without negating the lowest value of Delta
+    // without negating the lowest value of Delta.
     return delta >= 0 ? std::cmp_less_equal(delta, roomAbove) : std::cmp_less(-(delta + 1), roomBelow);
   }
 
@@ -80,7 +81,8 @@ namespace sequoia::maths::impl
       The returned value is `x + delta` itself if
       `sum_is_representable(x, delta)`.
    */
-  template<integer T, std::signed_integral Delta>
+  template<integer T, integer Delta>
+    requires std::signed_integral<Delta>
   [[nodiscard]]
   constexpr T wrapping_sum(const T x, const Delta delta) noexcept
   {
