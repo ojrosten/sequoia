@@ -13,7 +13,6 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <iterator>
 #include <ranges>
 #include <stdexcept>
 #include <utility>
@@ -102,13 +101,12 @@ namespace sequoia::data_structures
     [[nodiscard]]
     constexpr static std::vector<T> reversed(std::vector<T>& elements)
     {
-      std::vector<T> result{};
-      result.reserve(elements.size());
-      std::ranges::transform(elements | std::views::reverse,
-                             std::back_inserter(result),
-                             [](T& element) -> decltype(auto) { return std::move_if_noexcept(element); });
+      const auto moveIfNoexcept{[](T& element) -> decltype(auto) { return std::move_if_noexcept(element); }};
 
-      return result;
+      return   elements
+             | std::views::reverse
+             | std::views::transform(moveIfNoexcept)
+             | std::ranges::to<std::vector>();
     }
 
     /// Returns the element `i` places behind the front
