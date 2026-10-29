@@ -95,12 +95,12 @@ namespace sequoia::data_structures
       return (lhs.size() == rhs.size()) && std::ranges::all_of(std::views::iota(size_type{}, lhs.size()), sameElementAt);
     }
   private:
-    // The queue holds m_Outgoing reversed, followed by m_Incoming. Pushes go
-    // to the back of m_Incoming and pops come from the back of m_Outgoing, so
+    // The queue holds m_Outgoing reversed, followed by m_Incoming. Pops come
+    // from the back of m_Outgoing and pushes go to the back of m_Incoming, so
     // both cost amortised O(1) and a pop immediately destroys the element it
     // removes
-    std::vector<T> m_Incoming{},
-                   m_Outgoing{};
+    std::vector<T> m_Outgoing{},
+                   m_Incoming{};
 
     /// Returns the element `i` places behind the front
     [[nodiscard]]
