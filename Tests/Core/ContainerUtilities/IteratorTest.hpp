@@ -33,6 +33,8 @@ namespace sequoia::testing
     >
     void basic_checks(Iter begin, Sentinel end, Pointer pBegin, std::string_view message, Args... args);
 
+    void test_nested_bidirectional_iterator();
+
     void test_iterator();
     void test_const_iterator();
     void test_reverse_iterator();
@@ -42,7 +44,5 @@ namespace sequoia::testing
     void test_const_reverse_scaling_iterator();
 
     void test_traitless_input_iterator();
-
-    void test_nested_bidirectional_iterator();
   };
 }

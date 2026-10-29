@@ -125,6 +125,8 @@ namespace sequoia::testing
 
   void iterator_test::run_tests()
   {
+    test_nested_bidirectional_iterator();
+
     test_iterator();
     test_const_iterator();
     test_reverse_iterator();
@@ -134,8 +136,18 @@ namespace sequoia::testing
     test_const_reverse_scaling_iterator();
 
     test_traitless_input_iterator();
+  }
 
-    test_nested_bidirectional_iterator();
+  void iterator_test::test_nested_bidirectional_iterator()
+  {
+    using namespace utilities;
+
+    using base_iter_t   = std::list<int>::iterator;
+    using iter_t        = iterator<base_iter_t, identity_dereference_policy<base_iter_t>>;
+    using nested_iter_t = iterator<iter_t, identity_dereference_policy<iter_t>>;
+
+    STATIC_CHECK( std::bidirectional_iterator<nested_iter_t>);
+    STATIC_CHECK(!std::random_access_iterator<nested_iter_t>);
   }
 
   void iterator_test::test_traitless_input_iterator()
@@ -157,18 +169,6 @@ namespace sequoia::testing
 
     check(equality, "Post-incrementing an iterator over an input iterator without iterator traits", *i++, 8);
     check(equality, "Post-increment advances an iterator over an input iterator without iterator traits", *i, 10);
-  }
-
-  void iterator_test::test_nested_bidirectional_iterator()
-  {
-    using namespace utilities;
-
-    using base_iter_t   = std::list<int>::iterator;
-    using iter_t        = iterator<base_iter_t, identity_dereference_policy<base_iter_t>>;
-    using nested_iter_t = iterator<iter_t, identity_dereference_policy<iter_t>>;
-
-    STATIC_CHECK( std::bidirectional_iterator<nested_iter_t>);
-    STATIC_CHECK(!std::random_access_iterator<nested_iter_t>);
   }
 
   void iterator_test::test_iterator()
