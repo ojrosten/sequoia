@@ -55,6 +55,14 @@ namespace sequoia
    */
   enum class write_mode { text, binary };
 
+  /** \brief Writes `text` to `file`, in `mode`, unless `file` already holds
+             `text`, as read in `mode`.
+
+      \throws std::runtime_error naming `file`, if the open, the write or the
+              close fails
+   */
+  void write_to_file_if_different(const std::filesystem::path& file, std::string_view text, write_mode mode);
+
   /** \brief Replaces the contents of `file` with `text`, written in `mode`.
 
       Writes `text` to a temporary file, which it creates beside `file`

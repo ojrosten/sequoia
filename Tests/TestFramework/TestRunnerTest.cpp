@@ -991,7 +991,7 @@ namespace sequoia::testing
     test_recording_of_successive_runs();
     test_summary_collision_with_an_unselected_test();
     test_discriminated_summary();
-    test_summary_written_only_if_file_differs();
+    test_output_written_only_if_file_differs();
     test_filtered_suites();
     test_suites_not_found();
     test_selections_not_found();
@@ -1736,52 +1736,84 @@ namespace sequoia::testing
           !fs::exists(undiscriminatedSummary.file_path()));
   }
 
-  /** A run leaves a summary file which already holds the test's summary as
-      it is, and rewrites one which holds anything else. The summary file is
-      removed first, so that only this test's runs can have written it. Before
-      the second run, the file's modification time is set an hour back, so
-      that a write, which sets the time to the present, would change it.
+  /** A run rewrites a summary or caught-exceptions file if, and only if, the
+      file holds something other than what the run writes. The files are
+      removed first, so that only this test's runs can have written them. Before the second run, each file's modification time
+      is set an hour back, so that a write, which sets the time to the
+      present, would change it.
    */
-  void test_runner_test::test_summary_written_only_if_file_differs()
+  void test_runner_test::test_output_written_only_if_file_differs()
   {
     commandline_arguments args{fake_project_commandline(auxiliary_materials())};
 
-    const auto summaryPath{
-      [&args]() {
+    struct output_files
+    {
+      fs::path summary,
+               exceptions;
+    };
+
+    const auto files{
+      [&args]() -> output_files {
         std::stringstream outputStream{};
         const auto runner{make_fake_project_runner(args, outputStream)};
-        return test_summary_path{passing_test::source_file(),
-                                 test_name<passing_test>(),
-                                 runner.proj_paths(),
-                                 null_discriminator}.file_path();
+        const auto& projPaths{runner.proj_paths()};
+        const auto source{throwing_test::source_file()};
+        constexpr auto name{test_name<throwing_test>()};
+
+        return {
+          .summary{test_summary_path{source, name, projPaths, null_discriminator}.file_path()},
+          .exceptions{individual_diagnostics_paths{projPaths, name, source, test_mode::standard, std::nullopt}
+                        .caught_exceptions_file_path()}
+        };
       }()
     };
 
-    auto runPassingTest{
+    auto runThrowingTest{
       [this, &args](std::string_view description) {
         std::stringstream outputStream{};
         auto runner{make_fake_project_runner(args, outputStream)};
-        runner.register_test<passing_test>();
+        runner.register_test<throwing_test>();
         check(equality, description, runner.execute(), return_code::success);
       }
     };
 
-    fs::remove(summaryPath);
-    runPassingTest("Return code of a run which writes the summary file");
-    const auto summary{read_to_string(summaryPath, std::ios_base::binary).value_or("")};
+    auto contentsOf{
+      [](const fs::path& file) { return read_to_string(file, std::ios_base::binary).value_or(""); }
+    };
 
-    fs::last_write_time(summaryPath, fs::last_write_time(summaryPath) - std::chrono::hours{1});
-    const auto backdatedTime{fs::last_write_time(summaryPath)};
-    runPassingTest("Return code of a run whose summary is unchanged");
+    auto backdate{
+      [](const fs::path& file) {
+        fs::last_write_time(file, fs::last_write_time(file) - std::chrono::hours{1});
+        return fs::last_write_time(file);
+      }
+    };
+
+    fs::remove(files.summary);
+    fs::remove(files.exceptions);
+    runThrowingTest("Return code of a run which writes the files");
+    const auto summary{contentsOf(files.summary)},
+               exceptions{contentsOf(files.exceptions)};
+    check("The run writes the caught exceptions", !exceptions.empty());
+
+    const auto summaryTime{backdate(files.summary)},
+               exceptionsTime{backdate(files.exceptions)};
+    runThrowingTest("Return code of a run whose output is unchanged");
     check("A run leaves a summary file which already holds the summary as it is",
-          fs::last_write_time(summaryPath) == backdatedTime);
+          fs::last_write_time(files.summary) == summaryTime);
+    check("A run leaves an exceptions file which already holds the exceptions as it is",
+          fs::last_write_time(files.exceptions) == exceptionsTime);
 
-    write_to_file(summaryPath, "A stale summary", std::ios_base::out | std::ios_base::binary);
-    runPassingTest("Return code of a run whose summary file is stale");
+    write_to_file(files.summary, "A stale summary", std::ios_base::out | std::ios_base::binary);
+    write_to_file(files.exceptions, "Stale exceptions", std::ios_base::out | std::ios_base::binary);
+    runThrowingTest("Return code of a run whose output files are stale");
     check(equality,
           "A run rewrites a summary file which holds anything else",
-          read_to_string(summaryPath, std::ios_base::binary).value_or(""),
+          contentsOf(files.summary),
           summary);
+    check(equality,
+          "A run rewrites an exceptions file which holds anything else",
+          contentsOf(files.exceptions),
+          exceptions);
   }
 
   void test_runner_test::test_filtered_suites()

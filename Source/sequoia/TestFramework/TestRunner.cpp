@@ -778,18 +778,11 @@ namespace sequoia::testing
         const auto& filename{summaryFile.file_path()};
         if(filename.empty()) return;
 
-        const auto summaryText{summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent)};
+        fs::create_directories(filename.parent_path());
 
-        // Under ext4's default auto_da_alloc, closing a file which was
-        // truncated starts writing the file back. With that option, on some
-        // hosts, the truncating open or the close can wait for hundreds of
-        // milliseconds. So the summary is written only if the file does not
-        // already hold it.
-        if(read_to_string(filename, std::ios_base::binary) != summaryText)
-        {
-          fs::create_directories(filename.parent_path());
-          write_to_file(filename, summaryText, std::ios_base::out | std::ios_base::binary);
-        }
+        write_to_file_if_different(filename,
+                                   summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent),
+                                   write_mode::binary);
       }
 
       void record_materials_update_failure(const fs::path& testFile, std::string_view what)
@@ -953,7 +946,7 @@ namespace sequoia::testing
       // An empty directory cannot be committed, so this one is made only when a file goes into it.
       fs::create_directories(file.parent_path());
 
-      write_to_file(file, text, std::ios_base::out | std::ios_base::binary);
+      write_to_file_if_different(file, text, write_mode::binary);
     }
   }
 

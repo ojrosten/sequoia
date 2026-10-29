@@ -70,7 +70,7 @@ namespace sequoia::testing
 
     void test_discriminated_summary();
 
-    void test_summary_written_only_if_file_differs();
+    void test_output_written_only_if_file_differs();
 
     void test_prune_basic_output();
 
