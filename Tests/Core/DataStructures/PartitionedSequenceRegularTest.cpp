@@ -94,6 +94,26 @@ namespace sequoia::testing
       void translate(const_iterator, const_iterator, std::ptrdiff_t) = delete;
     };
 
+    struct equal_bound_refusing_partitions : fake_partitions<std::size_t, std::size_t>
+    {
+      using compare_type = std::ranges::greater_equal;
+    };
+
+    struct rising_bound_refusing_partitions : fake_partitions<std::size_t, std::size_t>
+    {
+      using compare_type = std::ranges::less;
+    };
+
+    struct runtime_comparison
+    {
+      bool operator()(std::size_t a, std::size_t b) const { return a > b; }
+    };
+
+    struct runtime_compared_partitions : fake_partitions<std::size_t, std::size_t>
+    {
+      using compare_type = runtime_comparison;
+    };
+
     template<class Container, class Partitions>
     concept sequence_admits = requires { typename data_structures::partitioned_sequence<int, Container, Partitions>; };
 
@@ -247,7 +267,9 @@ namespace sequoia::testing
     STATIC_CHECK( sequence_admits<fake_container<std::size_t>, fake_partitions<std::size_t, std::size_t>>);
     STATIC_CHECK(!sequence_admits<fake_container<std::size_t>, untranslatable_partitions>);
     STATIC_CHECK(!sequence_admits<std::vector<int>, maths::monotonic_sequence<std::size_t, last_digit_greater>>);
-    STATIC_CHECK(!sequence_admits<std::vector<int>, maths::monotonic_sequence<std::size_t, std::ranges::less>>);
+    STATIC_CHECK(!sequence_admits<fake_container<std::size_t>, equal_bound_refusing_partitions>);
+    STATIC_CHECK(!sequence_admits<fake_container<std::size_t>, rising_bound_refusing_partitions>);
+    STATIC_CHECK(!sequence_admits<fake_container<std::size_t>, runtime_compared_partitions>);
   }
 
   void partitioned_sequence_regular_test::test_allocator_extended_move()

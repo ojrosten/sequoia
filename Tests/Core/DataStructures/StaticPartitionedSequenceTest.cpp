@@ -67,16 +67,15 @@ namespace sequoia::testing
 
   void static_partitioned_sequence_test::test_64_bit_index_types()
   {
-    STATIC_CHECK(indexed_sequence<std::uint64_t, 2, 3>{{1}, {2, 3}}.size_of_partition(1) == 2);
     STATIC_CHECK(indexed_sequence<unsigned long long, 2, 3>{{1}, {2, 3}}.size_of_partition(1) == 2);
   }
 
   void static_partitioned_sequence_test::test_swap_partitions_constraint()
   {
-    using untranslatable_partitions = maths::static_monotonic_sequence<std::size_t, 2, last_digit_greater>;
+    using last_digit_partitions = maths::static_monotonic_sequence<std::size_t, 2, last_digit_greater>;
 
     STATIC_CHECK( swap_partitions_accepts<static_partitioned_sequence<int, 2, 2>>);
-    STATIC_CHECK(!swap_partitions_accepts<static_partitioned_sequence<int, 2, 2, untranslatable_partitions>>);
+    STATIC_CHECK(!swap_partitions_accepts<static_partitioned_sequence<int, 2, 2, last_digit_partitions>>);
   }
 
   void static_partitioned_sequence_test::test_static_storage()

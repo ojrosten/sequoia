@@ -711,7 +711,7 @@ namespace sequoia
         requires (   range_of_integers<const D&>
                   && std::ranges::sized_range<const D&>
                   && std::ranges::forward_range<const D&>
-                  && partition_impl::overwritable_bounds_v<partitions_type>)
+                  && partition_impl::overwritable_bounds_v<partitions_type, size_type>)
       constexpr void permute_partitions(const D& destinations)
       {
         const auto partitionIndices{
@@ -755,8 +755,7 @@ namespace sequoia
                            | std::views::join
                            | std::ranges::to<std::vector>());
 
-        auto toIndexType{[](const size_type bound) { return numeric::unchecked_conversion_to<index_type>(bound); }};
-        m_Partitions.overwrite(permutedBounds | std::views::transform(toIndexType));
+        m_Partitions.overwrite(permutedBounds | std::views::transform(partition_impl::bound_to_index<index_type>{}));
       }
 
       template<alloc Allocator, alloc PartitionsAllocator>
