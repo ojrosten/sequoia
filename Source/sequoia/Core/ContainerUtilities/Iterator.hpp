@@ -34,6 +34,19 @@ namespace sequoia::utilities
         return Policy::get(i);
       }
     };
+
+    /** \brief Whether a class deriving from `Policy` can initialize its
+        `Policy` subobject from `Args`, as one of:
+        -# A copy of the `Policy` subobject of the one argument;
+        -# A `Policy`, or an `aggregator<Policy>`, initialized from `Args`.
+     */
+    template<class Policy, class... Args>
+    inline constexpr bool base_initializable_from_v{
+         ((sizeof...(Args) == 1) && (std::derived_from<std::remove_cvref_t<Args>, Policy> && ...))
+      || initializable_from<Policy, Args...>
+      // Admits a Policy whose destructor is protected
+      || initializable_from<aggregator<Policy>, Args...>
+    };
   }
 
   template<class Policy, class Iterator>
@@ -98,6 +111,7 @@ namespace sequoia::utilities
 
     template<class... Args>
       requires (!resolve_to_copy_v<identity_dereference_policy, Args...>)
+            && impl::base_initializable_from_v<AuxiliaryDataPolicy, Args...>
     constexpr explicit(sizeof...(Args) == 1) identity_dereference_policy(Args&&... args)
       : AuxiliaryDataPolicy{std::forward<Args>(args)...}
     {}

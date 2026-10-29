@@ -137,6 +137,15 @@ namespace sequoia::testing
     using iterator_with_comparable_data_policy
       = utilities::iterator<Iterator, utilities::identity_dereference_policy<Iterator, comparable_data_policy>>;
 
+    struct aggregate_data_policy
+    {
+      int datum{};
+    };
+
+    template<std::input_iterator Iterator>
+    using iterator_with_aggregate_data_policy
+      = utilities::iterator<Iterator, utilities::identity_dereference_policy<Iterator, aggregate_data_policy>>;
+
     // A dereference policy other than the identity. Like the policy of
     // iterator_with_comparable_data_policy, it derives from
     // comparable_data_policy.
@@ -183,6 +192,7 @@ namespace sequoia::testing
     test_comparisons_the_base_iterator_lacks();
     test_comparisons_with_a_const_iterator();
     test_comparisons_with_an_unconvertible_iterator();
+    test_conversion_with_an_aggregate_data_policy();
     test_stashing_input_iterator();
     test_arrow_operator_with_overloaded_address_of();
 
@@ -299,6 +309,31 @@ namespace sequoia::testing
     STATIC_CHECK(!has_equality_with_v<negating_citer_t, comparable_data_iter_t>);
     STATIC_CHECK(!has_three_way_comparison_with_v<comparable_data_iter_t, negating_citer_t>);
     STATIC_CHECK(!has_three_way_comparison_with_v<negating_citer_t, comparable_data_iter_t>);
+  }
+
+  void iterator_test::test_conversion_with_an_aggregate_data_policy()
+  {
+    using namespace utilities;
+
+    using i_t  = std::array<int, 3>::iterator;
+    using ci_t = std::array<int, 3>::const_iterator;
+
+    using custom_iter_t          = iterator<i_t, identity_dereference_policy<i_t>>;
+    using aggregate_data_iter_t  = iterator_with_aggregate_data_policy<i_t>;
+    using aggregate_data_citer_t = iterator_with_aggregate_data_policy<ci_t>;
+
+    STATIC_CHECK( std::convertible_to<aggregate_data_iter_t, aggregate_data_citer_t>);
+    STATIC_CHECK(!std::convertible_to<custom_iter_t, aggregate_data_citer_t>);
+    STATIC_CHECK(!std::convertible_to<aggregate_data_citer_t, custom_iter_t>);
+
+    STATIC_CHECK(!has_equality_with_v<custom_iter_t, aggregate_data_citer_t>);
+    STATIC_CHECK(!has_equality_with_v<aggregate_data_citer_t, custom_iter_t>);
+
+    STATIC_CHECK([](){
+      std::array<int, 3> a{};
+      const aggregate_data_citer_t ci{a.cbegin(), 2};
+      return ci.datum == 2;
+    }());
   }
 
   void iterator_test::test_stashing_input_iterator()
