@@ -123,7 +123,6 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/Tree/TreeTest.cpp
                ${TestDir}/Maths/Graph/Tree/TreeTestingDiagnostics.cpp
                ${TestDir}/Maths/Sequences/LinearSequenceTest.cpp
-               ${TestDir}/Maths/Sequences/LinearSequenceTestingDiagnostics.cpp
                ${TestDir}/Maths/Sequences/MonotonicSequenceAllocationTest.cpp
                ${TestDir}/Maths/Sequences/MonotonicSequenceTest.cpp
                ${TestDir}/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp
