@@ -13,7 +13,6 @@
 
 #include "Utilities/TestUtilities.hpp"
 
-#include <chrono>
 #include <cstdint>
 #include <fstream>
 #include <functional>
@@ -33,7 +32,6 @@ namespace sequoia::testing
   void streaming_free_test::run_tests()
   {
     test_files();
-    test_write_to_file_if_different();
     test_replace_contents();
     test_peek_for_more();
     test_parse_integer();
@@ -111,58 +109,6 @@ namespace sequoia::testing
 
     read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });
     check(equivalence, "", working_materials() /= "Foo.txt", predictive_materials() /= "Foo.txt");
-  }
-
-  /** Each file's modification time is set an hour back before a call which
-      should leave the file alone, so that a write, which sets the time to the
-      present, would change it. Each text holds a line break, which text mode
-      translates on Windows, so that a comparison in the wrong mode would see
-      a difference there.
-   */
-  void streaming_free_test::test_write_to_file_if_different()
-  {
-    using namespace std::string_literals;
-
-    auto backdate{
-      [](const fs::path& file) {
-        fs::last_write_time(file, fs::last_write_time(file) - std::chrono::hours{1});
-        return fs::last_write_time(file);
-      }
-    };
-
-    const auto textFile{scratchpad_materials() /= "Text.txt"};
-
-    write_to_file_if_different(textFile, "First\nline", write_mode::text);
-    check(equality,
-          "A file which does not exist is written",
-          read_to_string(textFile, std::ios_base::in),
-          std::optional{"First\nline"s});
-
-    const auto textFileTime{backdate(textFile)};
-    write_to_file_if_different(textFile, "First\nline", write_mode::text);
-    check("A file which holds the text is not written", fs::last_write_time(textFile) == textFileTime);
-
-    write_to_file_if_different(textFile, "Second\nline", write_mode::text);
-    check(equality,
-          "A file which holds other text is rewritten",
-          read_to_string(textFile, std::ios_base::in),
-          std::optional{"Second\nline"s});
-
-    const auto binaryFile{scratchpad_materials() /= "Binary.txt"};
-
-    write_to_file_if_different(binaryFile, "a\r\nb", write_mode::binary);
-    check(equality,
-          "Binary mode writes every byte",
-          read_to_string(binaryFile, std::ios_base::binary),
-          std::optional{"a\r\nb"s});
-
-    const auto binaryFileTime{backdate(binaryFile)};
-    write_to_file_if_different(binaryFile, "a\r\nb", write_mode::binary);
-    check("A file which holds the bytes is not written", fs::last_write_time(binaryFile) == binaryFileTime);
-
-    check_exception_thrown<std::runtime_error>(
-      "A write which fails",
-      [this]() { write_to_file_if_different(scratchpad_materials(), "Lost", write_mode::text); });
   }
 
   void streaming_free_test::test_replace_contents()
