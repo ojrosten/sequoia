@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTest.cpp, Line 1091
+Tests/TestFramework/TestRunnerTest.cpp, Line 1092
 A negative runner id
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Value -1 is outside the range [0, 18446744073709551615] of the target type
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1099
+Tests/TestFramework/TestRunnerTest.cpp, Line 1100
 Test Main has empty path
 
 Expected Exception Type:
@@ -18,7 +18,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1107
+Tests/TestFramework/TestRunnerTest.cpp, Line 1108
 Test Main does not exist
 
 Expected Exception Type:
@@ -29,7 +29,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1115
+Tests/TestFramework/TestRunnerTest.cpp, Line 1116
 Include Target has empty path
 
 Expected Exception Type:
@@ -40,7 +40,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1123
+Tests/TestFramework/TestRunnerTest.cpp, Line 1124
 Include Target does not exist
 
 Expected Exception Type:
@@ -51,7 +51,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1131
+Tests/TestFramework/TestRunnerTest.cpp, Line 1132
 Project root is empty
 
 Expected Exception Type:
@@ -60,7 +60,7 @@ Unable to locate project root as no commandline arguments supplied.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1139
+Tests/TestFramework/TestRunnerTest.cpp, Line 1140
 Project root does not exist
 
 Expected Exception Type:
@@ -69,7 +69,7 @@ canonical - file not found: /output/TestsTemporaryData/TestFramework/TestRunnerT
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1158
+Tests/TestFramework/TestRunnerTest.cpp, Line 1159
 Project root not findable
 
 Expected Exception Type:
@@ -80,7 +80,7 @@ Please ensure that the build directory is a subdirectory of <project>/build.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1167
+Tests/TestFramework/TestRunnerTest.cpp, Line 1168
 The same test registered twice
 
 Expected Exception Type:
@@ -91,7 +91,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1179
+Tests/TestFramework/TestRunnerTest.cpp, Line 1180
 Two tests whose unqualified names coincide
 
 Expected Exception Type:
@@ -102,7 +102,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1191
+Tests/TestFramework/TestRunnerTest.cpp, Line 1192
 A source in the directory sharing another's materials prefix
 
 Expected Exception Type:
@@ -113,7 +113,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1203
+Tests/TestFramework/TestRunnerTest.cpp, Line 1204
 A source whose materials prefix is a directory holding another's source
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1215
+Tests/TestFramework/TestRunnerTest.cpp, Line 1216
 A source in a directory sharing another's materials prefix but for case
 
 Expected Exception Type:
@@ -135,7 +135,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1227
+Tests/TestFramework/TestRunnerTest.cpp, Line 1228
 Two tests whose names differ only in case
 
 Expected Exception Type:
@@ -146,7 +146,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1239
+Tests/TestFramework/TestRunnerTest.cpp, Line 1240
 A source two directories beneath another's materials prefix
 
 Expected Exception Type:
@@ -157,7 +157,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1251
+Tests/TestFramework/TestRunnerTest.cpp, Line 1252
 A source whose materials prefix, but for case, is a directory holding another's source
 
 Expected Exception Type:
@@ -168,7 +168,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1263
+Tests/TestFramework/TestRunnerTest.cpp, Line 1264
 Sources beside a materials prefix and sharing it are admitted; one beneath it then is not
 
 Expected Exception Type:
@@ -179,7 +179,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1277
+Tests/TestFramework/TestRunnerTest.cpp, Line 1278
 A source whose materials prefix contains a non-ASCII byte
 
 Expected Exception Type:
@@ -189,7 +189,7 @@ The path of this source file relative to the tests repository must be ASCII.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1288
+Tests/TestFramework/TestRunnerTest.cpp, Line 1289
 A test whose name contains a non-ASCII letter
 
 Expected Exception Type:
@@ -199,7 +199,7 @@ A test's name is that of its class, and the names of the tests in this source fi
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1299
+Tests/TestFramework/TestRunnerTest.cpp, Line 1300
 A test with no source file
 
 Expected Exception Type:
@@ -209,7 +209,7 @@ Each test's materials are kept beneath the path of its source file relative to t
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1310
+Tests/TestFramework/TestRunnerTest.cpp, Line 1311
 Two tests whose summaries are one file, both selected
 
 Expected Exception Type:
@@ -220,7 +220,7 @@ Rename one, or change its summary discriminator.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1322
+Tests/TestFramework/TestRunnerTest.cpp, Line 1323
 Invalid repetitions for instability analysis
 
 Expected Exception Type:
@@ -229,7 +229,7 @@ locate-instabilities: unable to interpret 'foo' as an integer number of repetiti
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1329
+Tests/TestFramework/TestRunnerTest.cpp, Line 1330
 Insufficient repetitions for instability analysis
 
 Expected Exception Type:
@@ -238,7 +238,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1433
+Tests/TestFramework/TestRunnerTest.cpp, Line 1434
 Registration whose hook throws
 
 Expected Exception Type:
@@ -247,7 +247,7 @@ No output discriminator
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1434
+Tests/TestFramework/TestRunnerTest.cpp, Line 1435
 The same registration again
 
 Expected Exception Type:
@@ -256,7 +256,7 @@ No output discriminator
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1448
+Tests/TestFramework/TestRunnerTest.cpp, Line 1449
 The only registration, whose hook throws
 
 Expected Exception Type:
@@ -265,7 +265,7 @@ No output discriminator
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1682
+Tests/TestFramework/TestRunnerTest.cpp, Line 1683
 An unselected test whose summary file is a selected test's
 
 Expected Exception Type:
@@ -276,7 +276,7 @@ Rename one, or change its summary discriminator.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1694
+Tests/TestFramework/TestRunnerTest.cpp, Line 1695
 A selected test whose summary file is an unselected test's
 
 Expected Exception Type:
@@ -287,7 +287,7 @@ Rename one, or change its summary discriminator.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2309
+Tests/TestFramework/TestRunnerTest.cpp, Line 2353
 Comparison against a dump never kept
 
 Expected Exception Type:
@@ -296,7 +296,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2309
+Tests/TestFramework/TestRunnerTest.cpp, Line 2353
 A dump kept under no name
 
 Expected Exception Type:
@@ -305,7 +305,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2309
+Tests/TestFramework/TestRunnerTest.cpp, Line 2353
 Comparison against no name
 
 Expected Exception Type:
@@ -314,7 +314,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3021
+Tests/TestFramework/TestRunnerTest.cpp, Line 3065
 Exit status 1 is not a runner's
 
 Expected Exception Type:
@@ -324,7 +324,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3021
+Tests/TestFramework/TestRunnerTest.cpp, Line 3065
 Exit status 2 is not a runner's
 
 Expected Exception Type:
@@ -334,7 +334,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3021
+Tests/TestFramework/TestRunnerTest.cpp, Line 3065
 Exit status 23 is not a runner's
 
 Expected Exception Type:
@@ -344,7 +344,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3021
+Tests/TestFramework/TestRunnerTest.cpp, Line 3065
 Exit status 64 is not a runner's
 
 Expected Exception Type:
@@ -354,7 +354,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3021
+Tests/TestFramework/TestRunnerTest.cpp, Line 3065
 Exit status 66 is not a runner's
 
 Expected Exception Type:
@@ -364,7 +364,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3021
+Tests/TestFramework/TestRunnerTest.cpp, Line 3065
 Exit status 77 is not a runner's
 
 Expected Exception Type:
@@ -374,7 +374,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3021
+Tests/TestFramework/TestRunnerTest.cpp, Line 3065
 Exit status 78 is not a runner's
 
 Expected Exception Type:
@@ -384,7 +384,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3021
+Tests/TestFramework/TestRunnerTest.cpp, Line 3065
 Exit status 80 is not a runner's
 
 Expected Exception Type:
@@ -394,7 +394,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3021
+Tests/TestFramework/TestRunnerTest.cpp, Line 3065
 Exit status 112 is not a runner's
 
 Expected Exception Type:
@@ -404,7 +404,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3065
+Tests/TestFramework/TestRunnerTest.cpp, Line 3109
 Bits no flag occupies
 
 Expected Exception Type:
@@ -413,7 +413,7 @@ Unrecognized bits in return_code: 64
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3183
+Tests/TestFramework/TestRunnerTest.cpp, Line 3227
 A wall clock shorter than the critical path's tests
 
 Expected Exception Type:

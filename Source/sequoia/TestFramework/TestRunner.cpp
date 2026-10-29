@@ -778,11 +778,17 @@ namespace sequoia::testing
         const auto& filename{summaryFile.file_path()};
         if(filename.empty()) return;
 
-        fs::create_directories(filename.parent_path());
+        const auto text{summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent)};
 
-        write_to_file(filename,
-                      summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent),
-                      std::ios_base::out | std::ios_base::binary);
+        // An unchanged summary stays as it is. With its default mount options,
+        // ext4 flushes a file when a program truncates the file and writes to
+        // it again. On a busy disk, the truncating open or the close may then
+        // wait for hundreds of milliseconds.
+        if(read_to_string(filename, std::ios_base::in | std::ios_base::binary) != text)
+        {
+          fs::create_directories(filename.parent_path());
+          write_to_file(filename, text, std::ios_base::out | std::ios_base::binary);
+        }
       }
 
       void record_materials_update_failure(const fs::path& testFile, std::string_view what)
