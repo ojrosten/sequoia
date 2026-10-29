@@ -152,14 +152,6 @@ namespace sequoia::testing
       }
     }
 
-    void overwrite_quietly(const fs::path& file, std::string_view text)
-    {
-      std::error_code selectsTheNonThrowingOverload{};
-      fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
-
-      replace_contents_quietly(file, text, write_mode::binary);
-    }
-
     void make_empty_file_quietly(const fs::path& file)
     {
       std::error_code selectsTheNonThrowingOverload{};
@@ -1553,7 +1545,17 @@ namespace sequoia::testing
   void test_runner::write_run_stamp() const
   {
     const run_stamp stamp{.start_time{current_time_to_the_millisecond()}};
-    overwrite_quietly(proj_paths().execution_records().stamp(), to_string(stamp));
+    const auto stampFile{proj_paths().execution_records().stamp()};
+
+    std::error_code selectsTheNonThrowingOverload{};
+    fs::create_directories(stampFile.parent_path(), selectsTheNonThrowingOverload);
+
+    // By default, ext4 starts writing a file back when the file is renamed
+    // over another (auto_da_alloc), and the rename can stall for up to about
+    // 300 ms. A rename to a free name does neither. So a reader may find no
+    // stamp until the rename, or until the next run if the write fails.
+    fs::remove(stampFile, selectsTheNonThrowingOverload);
+    replace_contents_quietly(stampFile, to_string(stamp), write_mode::binary);
   }
 
   void test_runner::check_for_missing_tests()
