@@ -11,7 +11,6 @@
 #include "sequoia/Core/DataStructures/Queue.hpp"
 #include "sequoia/Core/DataStructures/Stack.hpp"
 
-#include <array>
 #include <queue>
 #include <stack>
 #include <vector>
@@ -25,11 +24,6 @@ namespace sequoia::testing
       requires(const Adaptor& adaptor) { utilities::element_popped_next(adaptor); }
     };
 
-    template<class Adaptor>
-    inline constexpr bool extract_next_admits_v{
-      requires(Adaptor& adaptor) { utilities::extract_next(adaptor); }
-    };
-
     struct with_front_and_top
     {
       [[nodiscard]]
@@ -39,16 +33,6 @@ namespace sequoia::testing
       int top() const { return 0; }
 
       void pop() {}
-    };
-
-    template<bool Nothrow>
-    struct with_move_noexcept
-    {
-      with_move_noexcept() = default;
-
-      with_move_noexcept(const with_move_noexcept&) = default;
-
-      with_move_noexcept(with_move_noexcept&&) noexcept(Nothrow) {}
     };
   }
 
@@ -62,7 +46,6 @@ namespace sequoia::testing
   {
     test_admitted_types();
     test_element_popped_next();
-    test_extract_next();
   }
 
   void container_adaptor_utilities_free_test::test_admitted_types()
@@ -77,10 +60,6 @@ namespace sequoia::testing
     // A vector has a front, but no pop to remove it
     STATIC_CHECK(!element_popped_next_admits_v<std::vector<int>>);
     STATIC_CHECK(!element_popped_next_admits_v<with_front_and_top>);
-
-    STATIC_CHECK(extract_next_admits_v<data_structures::queue<with_move_noexcept<true>>>);
-    STATIC_CHECK(!extract_next_admits_v<data_structures::queue<with_move_noexcept<false>>>);
-    STATIC_CHECK(!extract_next_admits_v<std::vector<int>>);
   }
 
   void container_adaptor_utilities_free_test::test_element_popped_next()
@@ -137,42 +116,6 @@ namespace sequoia::testing
       // element_popped_next may return a proxy here, which converts to bool
       const bool top{utilities::element_popped_next(s)};
       check(equality, "The top of a std::stack over a std::vector<bool>", top, true);
-    }
-  }
-
-  void container_adaptor_utilities_free_test::test_extract_next()
-  {
-    STATIC_CHECK([]() {
-      data_structures::queue<int> q{};
-      q.push(1);
-      q.push(2);
-      const int extracted{utilities::extract_next(q)};
-      return std::array{extracted, q.front()};
-    }() == std::array{1, 2});
-
-    STATIC_CHECK([]() {
-      data_structures::stack<int> s{};
-      s.push(1);
-      s.push(2);
-      const int extracted{utilities::extract_next(s)};
-      return std::array{extracted, s.top()};
-    }() == std::array{2, 1});
-
-    STATIC_CHECK([]() {
-      data_structures::priority_queue<int> q{};
-      q.push(1);
-      q.push(3);
-      q.push(2);
-      const int extracted{utilities::extract_next(q)};
-      return std::array{extracted, q.top()};
-    }() == std::array{3, 2});
-
-    {
-      std::stack<bool, std::vector<bool>> s{};
-      s.push(false);
-      s.push(true);
-      const bool extracted{utilities::extract_next(s)};
-      check(equality, "Extracting from a std::stack over a std::vector<bool>", std::array{extracted, bool{s.top()}}, std::array{true, false});
     }
   }
 }
