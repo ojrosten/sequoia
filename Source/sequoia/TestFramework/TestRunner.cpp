@@ -780,10 +780,11 @@ namespace sequoia::testing
 
         const auto summaryText{summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent)};
 
-        // An unchanged summary stays as it is. With its default mount options,
-        // ext4 flushes a file when a program truncates the file and writes to
-        // it again. On a busy disk, the truncating open or the close may then
-        // wait for hundreds of milliseconds.
+        // Under ext4's default auto_da_alloc, closing a file which was
+        // truncated starts writing the file back. With that option, on some
+        // hosts, the truncating open or the close can wait for hundreds of
+        // milliseconds. So the summary is written only if the file does not
+        // already hold it.
         if(read_to_string(filename, std::ios_base::binary) != summaryText)
         {
           fs::create_directories(filename.parent_path());
