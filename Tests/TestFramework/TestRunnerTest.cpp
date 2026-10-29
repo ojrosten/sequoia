@@ -1745,21 +1745,27 @@ namespace sequoia::testing
   {
     commandline_arguments args{fake_project_commandline(auxiliary_materials())};
 
+    const auto summaryFile{
+      [&args]() {
+        std::stringstream outputStream{};
+        const auto runner{make_fake_project_runner(args, outputStream)};
+        return test_summary_path{passing_test::source_file(),
+                                 test_name<passing_test>(),
+                                 runner.proj_paths(),
+                                 null_discriminator}.file_path();
+      }()
+    };
+
     auto runPassingTest{
       [this, &args](std::string_view description) {
         std::stringstream outputStream{};
         auto runner{make_fake_project_runner(args, outputStream)};
         runner.register_test<passing_test>();
         check(equality, description, runner.execute(), return_code::success);
-
-        return test_summary_path{passing_test::source_file(),
-                                 test_name<passing_test>(),
-                                 runner.proj_paths(),
-                                 null_discriminator}.file_path();
       }
     };
 
-    const auto summaryFile{runPassingTest("First run's return code")};
+    runPassingTest("First run's return code");
     const auto summary{read_to_string(summaryFile, std::ios_base::binary).value_or("")};
     const auto anHourEarlier{fs::last_write_time(summaryFile) - std::chrono::hours{1}};
 
