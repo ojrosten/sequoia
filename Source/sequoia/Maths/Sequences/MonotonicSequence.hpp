@@ -31,10 +31,11 @@ namespace sequoia::maths
   template<class T, class C, class Compare> class monotonic_sequence_base
   {
   public:
-    using value_type     = T;
-    using container_type = C;
-    using compare_type   = Compare;
-    using size_type      = C::size_type;
+    using value_type      = T;
+    using container_type  = C;
+    using compare_type    = Compare;
+    using size_type       = C::size_type;
+    using difference_type = C::difference_type;
 
     using const_iterator         = C::const_iterator;
     using const_reverse_iterator = C::const_reverse_iterator;
@@ -98,9 +99,8 @@ namespace sequoia::maths
         `delta`, or if the translation would break the sequence's
         monotonicity. The sequence is then unchanged.
      */
-    template<integer Delta>
-      requires integer<T> && impl::translation_invariant_order_v<Compare, T>
-    constexpr void translate(const_iterator first, const_iterator last, const Delta delta)
+    constexpr void translate(const_iterator first, const_iterator last, const difference_type delta)
+      requires integer<T> && impl::translation_invariant_order_v<Compare>
     {
       if(first == last)
         return;

@@ -15,8 +15,8 @@ namespace sequoia::testing
 {
   namespace
   {
-    template<class Sequence, class Delta>
-    concept translatable_by = requires(Sequence& s, const Delta delta) { s.translate(s.cbegin(), s.cend(), delta); };
+    template<class Sequence>
+    concept translatable = requires(Sequence& s) { s.translate(s.cbegin(), s.cend(), 1); };
 
     /// A comparison that no non-zero translation preserves. It flags each pair
     /// whose second element is 3.
@@ -47,25 +47,13 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    STATIC_CHECK(translatable_by<monotonic_sequence<int>, int>);
-    STATIC_CHECK(translatable_by<static_monotonic_sequence<std::size_t, 2, std::ranges::greater>, std::ptrdiff_t>);
-    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::greater<int>>, int>);
-    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::ranges::less>, int>);
-    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::ranges::less_equal>, int>);
-    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::ranges::greater>, int>);
-    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::ranges::greater_equal>, int>);
-    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::less<int>>, int>);
-    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::less_equal<int>>, int>);
-    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::greater_equal<int>>, int>);
-    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::less<>>, int>);
-    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::less_equal<>>, int>);
-    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::greater<>>, int>);
-    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::greater_equal<>>, int>);
+    STATIC_CHECK(translatable<monotonic_sequence<int>>);
+    STATIC_CHECK(translatable<static_monotonic_sequence<std::size_t, 2, std::ranges::greater>>);
 
-    STATIC_CHECK(!translatable_by<monotonic_sequence<int>, double>);
-    STATIC_CHECK(!translatable_by<static_monotonic_sequence<double, 2>, int>);
-    STATIC_CHECK(!translatable_by<static_monotonic_sequence<int, 2, three_never_follows>, int>);
-    STATIC_CHECK(!translatable_by<static_monotonic_sequence<std::size_t, 2, std::greater<int>>, int>);
+    STATIC_CHECK(!translatable<static_monotonic_sequence<double, 2>>);
+    STATIC_CHECK(!translatable<static_monotonic_sequence<int, 2, std::ranges::less_equal>>);
+    STATIC_CHECK(!translatable<static_monotonic_sequence<int, 2, std::greater<int>>>);
+    STATIC_CHECK(!translatable<static_monotonic_sequence<int, 2, three_never_follows>>);
   }
 
   void monotonic_sequence_test::test_decreasing_sequence()
@@ -150,11 +138,6 @@ namespace sequoia::testing
           "Translating 0, -1 by 4 brings 4 level with the 4 before it",
           t,
           std::initializer_list<int>{4, 4, 3});
-
-    static_monotonic_sequence<int, 3, std::less_equal<>> u{4, 0, -1};
-    check_exception_thrown<std::invalid_argument>("Translating 0, -1 by 4 throws, since 4 may not follow 4",
-                                                  [&u](){ u.translate(u.begin() + 1, u.end(), 4); });
-    check(equivalence, "A refused translation leaves the sequence unchanged", u, std::initializer_list<int>{4, 0, -1});
   }
 
   void monotonic_sequence_test::test_static_decreasing_sequence()
@@ -171,12 +154,12 @@ namespace sequoia::testing
     STATIC_CHECK(maths::impl::swap_is_noexcept_v<std::array<double, 2>>);
   }
 
-  constexpr maths::static_monotonic_sequence<int,6, std::greater<int>>
+  constexpr maths::static_monotonic_sequence<int, 6, std::ranges::greater>
   monotonic_sequence_test::make_sequence()
   {
     using namespace maths;
 
-    static_monotonic_sequence<int, 6, std::greater<int>> s{-1,0,1,1,2,6};
+    static_monotonic_sequence<int, 6, std::ranges::greater> s{-1,0,1,1,2,6};
     s.translate(s.begin(), s.end(), 1);
 
     return s;
@@ -191,9 +174,9 @@ namespace sequoia::testing
           "Translating a static sequence by 1 in a constant expression",
           s,
           std::initializer_list<int>{0,1,2,2,3,7});
-    check(equality, "", s, static_monotonic_sequence<int, 6, std::greater<int>>{0,1,2,2,3,7});
+    check(equality, "", s, static_monotonic_sequence<int, 6, std::ranges::greater>{0,1,2,2,3,7});
 
-    static_monotonic_sequence<int, 6, std::greater<int>> t{2,2,2,3,3,3};
+    static_monotonic_sequence<int, 6, std::ranges::greater> t{2,2,2,3,3,3};
     check_exception_thrown<std::invalid_argument>("Translating 2, 2 by 2 throws, since 4 exceeds the 3 after it",
                                                   [&t](){ t.translate(t.begin()+1, t.begin()+3, 2); });
 
@@ -203,7 +186,7 @@ namespace sequoia::testing
           std::initializer_list<int>{2,2,2,3,3,3});
     check_semantics("", s, t);
 
-    static_monotonic_sequence<int, 6, std::greater<int>> u{2,3,3,4,4,5};
+    static_monotonic_sequence<int, 6, std::ranges::greater> u{2,3,3,4,4,5};
     check_exception_thrown<std::invalid_argument>("Translating 3, 3, 4 by -2 throws, since 1 is below the 2 before it",
                                                   [&u](){ u.translate(u.begin()+1, u.begin()+4, -2); });
 
@@ -218,7 +201,7 @@ namespace sequoia::testing
     using namespace maths;
 
     auto checkTranslation{
-      [this]<integer T>(std::string_view description, const T x, const integer auto delta, const T prediction) {
+      [this]<integer T>(std::string_view description, const T x, const std::ptrdiff_t delta, const T prediction) {
         static_monotonic_sequence<T, 1> s{x};
         s.translate(s.begin(), s.end(), delta);
         check(equivalence, description, s, std::initializer_list<T>{prediction});
@@ -226,7 +209,7 @@ namespace sequoia::testing
     };
 
     auto checkRefusal{
-      [this]<integer T>(std::string_view description, const T x, const integer auto delta) {
+      [this]<integer T>(std::string_view description, const T x, const std::ptrdiff_t delta) {
         static_monotonic_sequence<T, 1> s{x};
         check_exception_thrown<std::invalid_argument>(description,
                                                       [&s, delta](){ s.translate(s.begin(), s.end(), delta); });
@@ -237,16 +220,11 @@ namespace sequoia::testing
       }
     };
 
-    constexpr auto int64Max{std::numeric_limits<std::int64_t>::max()},
-                   int64Min{std::numeric_limits<std::int64_t>::lowest()};
-    constexpr auto uint64Max{std::numeric_limits<std::uint64_t>::max()};
-
     checkTranslation("254 + 1 is the maximum of std::uint8_t", std::uint8_t{254}, 1, std::uint8_t{255});
     checkRefusal("255 + 1 exceeds the maximum of std::uint8_t", std::uint8_t{255}, 1);
-    checkTranslation("1 - 1 is the minimum of std::uint8_t", std::uint8_t{1}, -1, std::uint8_t{});
+    checkTranslation("255 - 255 is the minimum of std::uint8_t", std::uint8_t{255}, -255, std::uint8_t{});
     checkRefusal("0 - 1 is below the minimum of std::uint8_t", std::uint8_t{}, -1);
-    checkRefusal("0 + 256 exceeds the maximum of std::uint8_t, though 256 wraps to 0 in it", std::uint8_t{}, 256);
-    checkRefusal("0 - 1 is below the minimum of std::uint8_t, for a std::int8_t -1", std::uint8_t{}, std::int8_t{-1});
+    checkRefusal("0 + 256 exceeds the maximum of std::uint8_t, though 256 wraps to 0", std::uint8_t{}, 256);
     checkRefusal("255 - 256 is below the minimum of std::uint8_t, though -256 wraps to 0", std::uint8_t{255}, -256);
 
     checkTranslation("-128 + 255 is the maximum of std::int8_t", std::int8_t{-128}, 255, std::int8_t{127});
@@ -254,9 +232,22 @@ namespace sequoia::testing
     checkRefusal("127 + 1 exceeds the maximum of std::int8_t", std::int8_t{127}, 1);
     checkRefusal("-128 - 1 is below the minimum of std::int8_t", std::int8_t{-128}, -1);
 
-    checkTranslation("The maximum of std::int64_t plus its minimum is -1", int64Max, int64Min, std::int64_t{-1});
-    checkRefusal("0 plus the minimum of std::int64_t is below the minimum of std::uint64_t", std::uint64_t{}, int64Min);
-    checkRefusal("1 plus the maximum of std::uint64_t exceeds it", std::uint64_t{1}, uint64Max);
+    constexpr auto deltaMax{std::numeric_limits<std::ptrdiff_t>::max()},
+                   deltaMin{std::numeric_limits<std::ptrdiff_t>::lowest()};
+    constexpr auto int64Max{std::numeric_limits<std::int64_t>::max()},
+                   int64Min{std::numeric_limits<std::int64_t>::lowest()};
+    constexpr auto uint64Max{std::numeric_limits<std::uint64_t>::max()},
+                   twoToThe63{static_cast<std::uint64_t>(deltaMax) + 1};
+
+    checkTranslation("The maximum of std::int64_t plus the minimum delta is -1", int64Max, deltaMin, std::int64_t{-1});
+    checkTranslation("0 plus the minimum delta is the minimum of std::int64_t", std::int64_t{}, deltaMin, int64Min);
+    checkRefusal("-1 plus the minimum delta is below the minimum of std::int64_t", std::int64_t{-1}, deltaMin);
+
+    checkTranslation("2^63 plus the minimum delta is 0", twoToThe63, deltaMin, std::uint64_t{});
+    checkRefusal("2^63 - 1 plus the minimum delta is below 0", twoToThe63 - 1, deltaMin);
+    checkTranslation("2^64 - 1 - (2^63 - 1) plus the maximum delta is the maximum of std::uint64_t",
+                     uint64Max - static_cast<std::uint64_t>(deltaMax), deltaMax, uint64Max);
+    checkRefusal("2^63 + 1 plus the maximum delta exceeds the maximum of std::uint64_t", twoToThe63 + 1, deltaMax);
 
     static_monotonic_sequence<std::uint8_t, 2, std::ranges::greater> s{254, 255};
     check_exception_thrown<std::invalid_argument>("Translating 254, 255 by 2 throws, though wrapped 0, 1 is monotonic",
