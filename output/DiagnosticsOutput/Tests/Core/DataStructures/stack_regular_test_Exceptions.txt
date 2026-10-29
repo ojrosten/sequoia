@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/StackRegularTest.cpp, Line 72
+Tests/Core/DataStructures/StackRegularTest.cpp, Line 73
 Popping the empty stack
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Attempting to pop an empty stack
 
 =======================================
 
-Tests/Core/DataStructures/StackRegularTest.cpp, Line 78
+Tests/Core/DataStructures/StackRegularTest.cpp, Line 79
 Accessing the top of the empty stack
 
 Expected Exception Type:
