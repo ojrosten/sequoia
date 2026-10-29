@@ -1,0 +1,224 @@
+diff --git a/Source/sequoia/TestFramework/ScratchProbe.hpp b/Source/sequoia/TestFramework/ScratchProbe.hpp
+new file mode 100644
+index 000000000..3a939d9d7
+--- /dev/null
++++ b/Source/sequoia/TestFramework/ScratchProbe.hpp
+@@ -0,0 +1,80 @@
++////////////////////////////////////////////////////////////////////
++//                Copyright Oliver J. Rosten 2026.                //
++// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
++//    (See accompanying file LICENSE.md or copy at                //
++//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
++////////////////////////////////////////////////////////////////////
++
++#pragma once
++
++/*! \file
++    \brief Scratch only, never merge: a trace of where a run of the runner
++    spends its time, for roadmap item 418.
++ */
++
++#include <chrono>
++#include <cstdint>
++#include <cstdlib>
++#include <fstream>
++#include <functional>
++#include <mutex>
++#include <string_view>
++#include <thread>
++#include <vector>
++
++namespace sequoia::testing::scratch_probe
++{
++  struct event
++  {
++    std::int64_t steady_ns{};
++    std::size_t  thread{};
++    const char*  label{};
++    std::int64_t value{};
++  };
++
++  inline std::mutex         st_Mutex{};
++  inline std::vector<event> st_Events{};
++
++  inline void mark(const char* label, std::int64_t value)
++  {
++    using namespace std::chrono;
++    const auto now{duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count()};
++    const auto thread{std::hash<std::thread::id>{}(std::this_thread::get_id())};
++    const std::scoped_lock lock{st_Mutex};
++    st_Events.push_back({now, thread, label, value});
++  }
++
++  /** Marks `label` with 0 on construction and 1 on destruction. */
++  class span
++  {
++  public:
++    explicit span(const char* label) : m_Label{label} { mark(m_Label, 0); }
++    ~span() { mark(m_Label, 1); }
++
++    span(const span&)            = delete;
++    span& operator=(const span&) = delete;
++  private:
++    const char* m_Label;
++  };
++
++  /** Appends the events to `$SEQUOIA_PROBE_DIR/trace.txt` under `heading`,
++      with a pair of clock readings to align the steady clock with wall time,
++      and clears them. Does nothing but clear if the variable is unset.
++   */
++  inline void dump(std::string_view heading)
++  {
++    using namespace std::chrono;
++    const std::scoped_lock lock{st_Mutex};
++    if(const char* dir{std::getenv("SEQUOIA_PROBE_DIR")})
++    {
++      std::ofstream out{std::string{dir} + "/trace.txt", std::ios_base::app};
++      out << "# " << heading
++          << " steady_ns " << duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count()
++          << " system_ns " << duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count() << '\n';
++      for(const auto& e : st_Events)
++        out << e.steady_ns << ' ' << e.thread << ' ' << e.label << ' ' << e.value << '\n';
++    }
++
++    st_Events.clear();
++  }
++}
+diff --git a/Source/sequoia/TestFramework/TestRunner.cpp b/Source/sequoia/TestFramework/TestRunner.cpp
+index 3c6de4a56..1856f959b 100644
+--- a/Source/sequoia/TestFramework/TestRunner.cpp
++++ b/Source/sequoia/TestFramework/TestRunner.cpp
+@@ -6,6 +6,7 @@
+ ////////////////////////////////////////////////////////////////////
+ 
+ #include "sequoia/TestFramework/TestRunner.hpp"
++#include "sequoia/TestFramework/ScratchProbe.hpp"
+ 
+ #include "sequoia/TestFramework/CoarseSleeps.hpp"
+ #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+@@ -958,6 +959,7 @@ namespace sequoia::testing
+     , m_ExecutionTimer{executionTimer}
+     , m_Vessel{vessel}
+   {
++    const scratch_probe::span probe{"record_open"};
+     append_quietly(m_File, to_string(m_Record));
+   }
+ 
+@@ -970,12 +972,14 @@ namespace sequoia::testing
+       .performance_check_attempts{attempt_counts_of_finished_checks(m_Vessel.attempts_per_performance_check())}
+     };
+ 
++    const scratch_probe::span probe{"record_close"};
+     append_quietly(m_File, to_string(m_Record));
+   }
+ 
+   [[nodiscard]]
+   log_summary test_to_run::execute(std::optional<std::size_t> index, discarded_materials_remover& remover)
+   {
++    const scratch_probe::span probe{"test"};
+     execution_timer executionTimer{};
+     auto summary{execute_and_record(index, executionTimer, remover)};
+     summary.runner_overhead(executionTimer.runner_overhead());
+@@ -1017,9 +1021,18 @@ namespace sequoia::testing
+     const scoped_terminate_handler terminationReported{report_termination};
+     const scoped_execution_record record{m_ExecutionRecord.file_path(), executionTimer, m_Vessel};
+ 
+-    if(try_prepare_materials(remover))
++    bool prepared{};
++    {
++      const scratch_probe::span probe{"prepare"};
++      prepared = try_prepare_materials(remover);
++    }
++    if(prepared)
++    {
++      const scratch_probe::span probe{"run"};
+       executionTimer.time_execution([this](){ try_run_tests(); });
++    }
+ 
++    const scratch_probe::span probe{"write_output"};
+     return write_output(executionTimer.execution_duration(), index);
+   }
+ 
+@@ -1834,8 +1847,13 @@ namespace sequoia::testing
+     // Without the flush, a run killed while the tests are silent would never show that they had begun
+     stream() << running_tests_message(m_ConcurrencyMode) << std::flush;
+ 
++    scratch_probe::mark("execute_tests", 0);
+     const auto criticalPathDurations{execute_tests(id)};
++    scratch_probe::mark("execute_tests", 1);
++    scratch_probe::mark("removal", 0);
+     const auto removalFailures{extract_discarded_materials_removal_failures()};
++    scratch_probe::mark("removal", 1);
++    scratch_probe::mark("track", 0);
+ 
+     test_tracker tracker{proj_paths(), id, m_Filter.selects() ? is_filtered::yes : is_filtered::no, m_Filter.tests_left_out()};
+ 
+@@ -1870,9 +1888,14 @@ namespace sequoia::testing
+     };
+ 
+     traverse(depth_first, m_Suites, find_disconnected_t{}, null_func_obj{}, summarizeAndTrack, null_func_obj{});
++    scratch_probe::mark("track", 1);
++    scratch_probe::mark("update_materials", 0);
+     tracker.update_materials_and_prune_info();
++    scratch_probe::mark("update_materials", 1);
+ 
++    scratch_probe::mark("report", 0);
+     report_results();
++    scratch_probe::mark("report", 1);
+ 
+     const durations_of_run durationsOfRun{.total_run_time{t.time_elapsed()}, .critical_path{criticalPathDurations}};
+ 
+diff --git a/Tests/TestFramework/TestRunnerPerformanceTest.cpp b/Tests/TestFramework/TestRunnerPerformanceTest.cpp
+index 1a0da219f..465d4f2ee 100644
+--- a/Tests/TestFramework/TestRunnerPerformanceTest.cpp
++++ b/Tests/TestFramework/TestRunnerPerformanceTest.cpp
+@@ -10,8 +10,11 @@
+ #include "TestRunnerConcurrencyTestingUtilities.hpp"
+ 
+ #include "sequoia/Streaming/Streaming.hpp"
++#include "sequoia/TestFramework/ScratchProbe.hpp"
+ 
++#include <algorithm>
+ #include <chrono>
++#include <cstdint>
+ #include <functional>
+ #include <stdexcept>
+ #include <vector>
+@@ -122,9 +125,24 @@ namespace sequoia::testing
+ 
+       void operator()() const
+       {
++        // The tag: sleep in ms, times 10, plus 0 for parallel, 1 for a pool
++        // of 8, 2 for a pool of 2, 3 for serial.
++        const auto modeTag{
++          std::ranges::contains(arguments, std::string{"--serial"}) ? 3
++            : std::ranges::contains(arguments, std::string{"8"}) ? 1
++            : std::ranges::contains(arguments, std::string{"2"}) ? 2
++            : 0
++        };
++        const std::int64_t tag{sleep_duration.count() * 10 + modeTag};
++
+         std::stringstream outputStream{};
++        scratch_probe::mark("construct", tag * 2);
+         auto runner{make_acceleration_family_runner(arguments, outputStream, sleep_duration)};
+-        if(runner.execute() != return_code::success)
++        scratch_probe::mark("construct", tag * 2 + 1);
++        scratch_probe::mark("execute", tag * 2);
++        const auto code{runner.execute()};
++        scratch_probe::mark("execute", tag * 2 + 1);
++        if(code != return_code::success)
+           throw std::runtime_error{"A run of the acceleration family's tests did not succeed"};
+       }
+     };
+@@ -246,9 +264,11 @@ namespace sequoia::testing
+                                                                          const std::vector<std::string>& arguments,
+                                                                          relative_performance_interval prediction)
+   {
++    scratch_probe::dump("begin-ignore");
+     check_relative_performance(description,
+                                make_task_with_baseline(arguments),
+                                make_task_with_baseline(fake_project_commandline(auxiliary_materials(), "--serial")),
+                                {.prediction{prediction}});
++    scratch_probe::dump(description);
+   }
+ }
