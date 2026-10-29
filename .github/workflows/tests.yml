@@ -142,8 +142,9 @@ jobs:
 
       # The step makes two corruptions, because the columns do not share a
       # detector:
-      #   - Every toolchain rewrites the summary file, so a line appended to it
-      #     is drift wherever `--check-versioned-output` is on.
+      #   - Every toolchain rewrites a summary file which differs from the
+      #     test's summary, so a line appended to it is drift wherever
+      #     `--check-versioned-output` is on.
       #   - StreamingFreeTest compares its output against the prediction, so a
       #     rewritten prediction is a soft failure in every column, including
       #     one without the drift check.

@@ -991,6 +991,7 @@ namespace sequoia::testing
     test_recording_of_successive_runs();
     test_summary_collision_with_an_unselected_test();
     test_discriminated_summary();
+    test_output_written_only_if_file_differs();
     test_filtered_suites();
     test_suites_not_found();
     test_selections_not_found();
@@ -1733,6 +1734,97 @@ namespace sequoia::testing
           fs::exists(discriminatedSummary.file_path()));
     check("The runner writes no summary to the undiscriminated file",
           !fs::exists(undiscriminatedSummary.file_path()));
+  }
+
+  /** A run writes a summary or caught-exceptions file if, and only if, the
+      file does not already hold what the run writes. The files are removed
+      first, so that only this test's runs can have written them. Before the
+      second run, each file's modification time is set an hour back, so that
+      a write, which sets the time to the present, would change it. Before the
+      third, the summary file holds the summary followed by another line, as
+      a shrinking output leaves it, and the exceptions file holds the caught
+      exceptions with one character changed, at the same length.
+   */
+  void test_runner_test::test_output_written_only_if_file_differs()
+  {
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
+
+    struct output_files
+    {
+      fs::path summary,
+               exceptions;
+    };
+
+    const auto files{
+      [&args]() -> output_files {
+        std::stringstream outputStream{};
+        const auto runner{make_fake_project_runner(args, outputStream)};
+        const auto& projPaths{runner.proj_paths()};
+        const auto source{throwing_test::source_file()};
+        constexpr auto name{test_name<throwing_test>()};
+
+        return {
+          .summary{test_summary_path{source, name, projPaths, null_discriminator}.file_path()},
+          .exceptions{individual_diagnostics_paths{projPaths, name, source, test_mode::standard, std::nullopt}
+                        .caught_exceptions_file_path()}
+        };
+      }()
+    };
+
+    auto runThrowingTest{
+      [this, &args](std::string_view description) {
+        std::stringstream outputStream{};
+        auto runner{make_fake_project_runner(args, outputStream)};
+        runner.register_test<throwing_test>();
+        check(equality, description, runner.execute(), return_code::success);
+      }
+    };
+
+    auto contentsOf{
+      [](const fs::path& file) { return read_to_string(file, std::ios_base::binary).value_or(""); }
+    };
+
+    auto backdate{
+      [](const fs::path& file) {
+        fs::last_write_time(file, fs::last_write_time(file) - std::chrono::hours{1});
+        return fs::last_write_time(file);
+      }
+    };
+
+    fs::remove(files.summary);
+    fs::remove(files.exceptions);
+    runThrowingTest("Return code of a run which writes the files");
+    const auto summary{contentsOf(files.summary)},
+               exceptions{contentsOf(files.exceptions)};
+    check("The run writes the caught exceptions", !exceptions.empty());
+
+    const auto summaryBackdatedTime{backdate(files.summary)},
+               exceptionsBackdatedTime{backdate(files.exceptions)};
+    runThrowingTest("Return code of a run whose output is unchanged");
+    check("A run leaves a summary file which already holds the summary as it is",
+          fs::last_write_time(files.summary) == summaryBackdatedTime);
+    check("A run leaves an exceptions file which already holds the exceptions as it is",
+          fs::last_write_time(files.exceptions) == exceptionsBackdatedTime);
+
+    const auto staleExceptions{
+      [&exceptions]() {
+        auto text{exceptions};
+        text.front() = (text.front() == '#') ? '%' : '#';
+        return text;
+      }()
+    };
+
+    write_to_file(files.summary, summary + "A stale line\n", std::ios_base::out | std::ios_base::binary);
+    write_to_file(files.exceptions, staleExceptions, std::ios_base::out | std::ios_base::binary);
+    runThrowingTest("Return code of a run whose output files are stale");
+    check(equality,
+          "A run rewrites a summary file which holds anything else",
+          contentsOf(files.summary),
+          summary);
+    check(equality,
+          "A run rewrites an exceptions file which holds anything else",
+          contentsOf(files.exceptions),
+          exceptions);
   }
 
   void test_runner_test::test_filtered_suites()
