@@ -96,13 +96,13 @@ namespace sequoia::data_structures::partition_impl
     }
   };
 
-  /** \brief Whether a run of `Partitions`' bounds can be translated by a
-             `std::ptrdiff_t`.
+  /** \brief Whether a run of `Partitions`' bounds, given by two
+             `const_iterator`s, can be translated by a `std::ptrdiff_t`.
    */
   template<class Partitions>
   inline constexpr bool translatable_bounds_v{
-    requires(Partitions& partitions, const std::ptrdiff_t delta) {
-      partitions.translate(partitions.cbegin(), partitions.cend(), delta);
+    requires(Partitions& partitions, const typename Partitions::const_iterator bound, const std::ptrdiff_t delta) {
+      partitions.translate(bound, bound, delta);
     }
   };
 
