@@ -226,8 +226,10 @@ namespace sequoia
         alloc NodeAllocator
       >
         requires (enable_node_allocation_v<node_weight_type>)
-      constexpr graph_primitive(const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
-        : Connectivity(edgeAlloc, edgeParitionsAlloc)
+      constexpr graph_primitive(const EdgeAllocator& edgeAlloc,
+                                const EdgePartitionsAllocator& edgePartitionsAlloc,
+                                const NodeAllocator& nodeAlloc)
+        : Connectivity(edgeAlloc, edgePartitionsAlloc)
         , Nodes(nodeAlloc)
       {}
 
@@ -243,8 +245,8 @@ namespace sequoia
         alloc EdgePartitionsAllocator
       >
         requires(!enable_node_allocation_v<node_weight_type>)
-      constexpr graph_primitive(const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc)
-        : Connectivity(edgeAlloc, edgeParitionsAlloc)
+      constexpr graph_primitive(const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgePartitionsAlloc)
+        : Connectivity(edgeAlloc, edgePartitionsAlloc)
       {}
 
       template
@@ -265,8 +267,12 @@ namespace sequoia
         alloc NodeAllocator
       >
         requires enable_node_allocation_v<node_weight_type>
-      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, std::initializer_list<node_weight_type> nodeWeights, const NodeAllocator& nodeAlloc)
-        : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}
+      constexpr graph_primitive(edges_initializer edges,
+                                const EdgeAllocator& edgeAlloc,
+                                const EdgePartitionsAllocator& edgePartitionsAlloc,
+                                std::initializer_list<node_weight_type> nodeWeights,
+                                const NodeAllocator& nodeAlloc)
+        : Connectivity{edges, edgeAlloc, edgePartitionsAlloc}
         , Nodes(nodeWeights, nodeAlloc)
       {}
 
@@ -277,8 +283,11 @@ namespace sequoia
         class... NodeWeights
       >
         requires heterogeneous_nodes<graph_primitive>
-      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, NodeWeights&&... nodeWeights)
-        : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}
+      constexpr graph_primitive(edges_initializer edges,
+                                const EdgeAllocator& edgeAlloc,
+                                const EdgePartitionsAllocator& edgePartitionsAlloc,
+                                NodeWeights&&... nodeWeights)
+        : Connectivity{edges, edgeAlloc, edgePartitionsAlloc}
         , Nodes{std::forward<NodeWeights>(nodeWeights)...}
       {}
 
@@ -300,8 +309,11 @@ namespace sequoia
         alloc NodeAllocator
       >
         requires enable_node_allocation_v<node_weight_type>
-      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
-        : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}
+      constexpr graph_primitive(edges_initializer edges,
+                                const EdgeAllocator& edgeAlloc,
+                                const EdgePartitionsAllocator& edgePartitionsAlloc,
+                                const NodeAllocator& nodeAlloc)
+        : Connectivity{edges, edgeAlloc, edgePartitionsAlloc}
         , Nodes(edges.size(), nodeAlloc)
       {}
 
@@ -311,8 +323,10 @@ namespace sequoia
         alloc EdgePartitionsAllocator
       >
         requires (!enable_node_allocation_v<node_weight_type>)
-      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc)
-        : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}
+      constexpr graph_primitive(edges_initializer edges,
+                                const EdgeAllocator& edgeAlloc,
+                                const EdgePartitionsAllocator& edgePartitionsAlloc)
+        : Connectivity{edges, edgeAlloc, edgePartitionsAlloc}
         , Nodes{}
       {}
 
@@ -332,8 +346,11 @@ namespace sequoia
         alloc NodeAllocator
       >
         requires enable_node_allocation_v<node_weight_type>
-      constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
-        : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc, edgeParitionsAlloc}
+      constexpr graph_primitive(const graph_primitive& in,
+                                const EdgeAllocator& edgeAlloc,
+                                const EdgePartitionsAllocator& edgePartitionsAlloc,
+                                const NodeAllocator& nodeAlloc)
+        : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc, edgePartitionsAlloc}
         , Nodes(static_cast<const Nodes&>(in), nodeAlloc)
       {}
 
@@ -354,8 +371,10 @@ namespace sequoia
         alloc EdgePartitionsAllocator
       >
         requires (!enable_node_allocation_v<node_weight_type>)
-      constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc)
-        : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc, edgeParitionsAlloc}
+      constexpr graph_primitive(const graph_primitive& in,
+                                const EdgeAllocator& edgeAlloc,
+                                const EdgePartitionsAllocator& edgePartitionsAlloc)
+        : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc, edgePartitionsAlloc}
         , Nodes(static_cast<const Nodes&>(in))
       {}
 
@@ -377,8 +396,11 @@ namespace sequoia
         alloc NodeAllocator
       >
         requires enable_node_allocation_v<node_weight_type>
-      constexpr graph_primitive(graph_primitive&& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
-        : Connectivity{static_cast<Connectivity&&>(in), edgeAlloc, edgeParitionsAlloc}
+      constexpr graph_primitive(graph_primitive&& in,
+                                const EdgeAllocator& edgeAlloc,
+                                const EdgePartitionsAllocator& edgePartitionsAlloc,
+                                const NodeAllocator& nodeAlloc)
+        : Connectivity{static_cast<Connectivity&&>(in), edgeAlloc, edgePartitionsAlloc}
         , Nodes(static_cast<Nodes&&>(in), nodeAlloc)
       {}
 
@@ -400,8 +422,10 @@ namespace sequoia
         alloc NodeAllocator
       >
         requires (!enable_node_allocation_v<node_weight_type>)
-      constexpr graph_primitive(graph_primitive&& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc)
-        : Connectivity{static_cast<Connectivity&&>(in), edgeAlloc, edgeParitionsAlloc}
+      constexpr graph_primitive(graph_primitive&& in,
+                                const EdgeAllocator& edgeAlloc,
+                                const EdgePartitionsAllocator& edgePartitionsAlloc)
+        : Connectivity{static_cast<Connectivity&&>(in), edgeAlloc, edgePartitionsAlloc}
         , Nodes(static_cast<Nodes&&>(in))
       {}
 
@@ -546,11 +570,13 @@ namespace sequoia
       friend insertion_sentinel;
 
       [[nodiscard]]
-      constexpr static const edges_initializer& check_initialization(const edges_initializer& edges, std::size_t numNodes, std::size_t edgeParitions)
+      constexpr static const edges_initializer& check_initialization(const edges_initializer& edges,
+                                                                     std::size_t numNodes,
+                                                                     std::size_t edgePartitions)
       {
-        if(numNodes != edgeParitions)
+        if(numNodes != edgePartitions)
           throw std::logic_error{
-            graph_errors::inconsistent_initialization_message("check_initialization", numNodes, edgeParitions)
+            graph_errors::inconsistent_initialization_message("check_initialization", numNodes, edgePartitions)
           };
 
         return edges;

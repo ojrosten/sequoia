@@ -62,7 +62,7 @@ namespace sequoia::maths::graph_errors
   [[nodiscard]]
   std::string inconsistent_initialization_message(std::string_view method,
                                                   std::size_t numNodes,
-                                                  std::size_t edgeParitions);
+                                                  std::size_t edgePartitions);
 
   constexpr void check_node_index_range(std::string_view method, const std::size_t order, const std::size_t node)
   {
