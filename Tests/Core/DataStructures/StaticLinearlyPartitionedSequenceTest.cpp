@@ -9,6 +9,12 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    template<class Sequence>
+    concept partitions_swappable = requires(Sequence& s) { s.swap_partitions(0, 1); };
+  }
+
   [[nodiscard]]
   std::filesystem::path static_linearly_partitioned_sequence_test::source_file()
   {
@@ -34,6 +40,7 @@ namespace sequoia::testing
     {
       using sequence = static_linearly_partitioned_sequence<int, 2, 3>;
       STATIC_CHECK(sizeof(sequence) == 6 * sizeof(int));
+      STATIC_CHECK(!partitions_swappable<sequence>);
 
       constexpr sequence a{{1,2,-1}, {3,-2,1}};
       sequence b{};
