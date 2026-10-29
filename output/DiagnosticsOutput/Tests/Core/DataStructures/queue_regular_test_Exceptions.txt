@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/QueueRegularTest.cpp, Line 86
+Tests/Core/DataStructures/QueueRegularTest.cpp, Line 118
 Popping the empty queue
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Attempting to pop an empty queue
 
 =======================================
 
-Tests/Core/DataStructures/QueueRegularTest.cpp, Line 92
+Tests/Core/DataStructures/QueueRegularTest.cpp, Line 124
 Accessing the front of the empty queue
 
 Expected Exception Type:
@@ -16,12 +16,39 @@ Attempting to access the front of an empty queue
 
 =======================================
 
-Tests/Core/DataStructures/QueueRegularTest.cpp, Line 99
+Tests/Core/DataStructures/QueueRegularTest.cpp, Line 131
 Accessing the back of the empty queue
 
 Expected Exception Type:
 [std::logic_error]
 Attempting to access the back of an empty queue
+
+=======================================
+
+Queue of elements with fallible copies
+Transition from node 0 to 0
+Pop 1, leaving 2 and 3: failure at fallible step 0
+Expected Exception Type:
+[sequoia::testing::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+
+Queue of elements with fallible copies
+Transition from node 0 to 0
+Pop 1, leaving 2 and 3: failure at fallible step 1
+Expected Exception Type:
+[sequoia::testing::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Queue of elements with fallible copies
+Transition from node 0 to 0
+Pop 1, leaving 2 and 3: failure at fallible step 2
+Expected Exception Type:
+[sequoia::testing::injected_failure]
+Injected failure at fallible step 2
 
 =======================================
 

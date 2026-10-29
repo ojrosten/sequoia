@@ -6,9 +6,12 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "QueueRegularTest.hpp"
+#include "FallibleStepTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
+#include <string>
+#include <string_view>
 #include <type_traits>
 
 namespace sequoia::testing
@@ -35,7 +38,35 @@ namespace sequoia::testing
       q.pop();
       return q;
     }
+
+    /** \brief An element whose copy is a fallible step, and whose move is
+               not declared `noexcept`.
+     */
+    struct element_with_fallible_copy
+    {
+      int value{};
+      fallible_copy copy{};
+
+      element_with_fallible_copy(const int initialValue)
+        : value{initialValue}
+      {}
+
+      element_with_fallible_copy(const element_with_fallible_copy&)                       = default;
+      element_with_fallible_copy(element_with_fallible_copy&&) noexcept(false)            = default;
+      element_with_fallible_copy& operator=(const element_with_fallible_copy&)            = default;
+      element_with_fallible_copy& operator=(element_with_fallible_copy&&) noexcept(false) = default;
+
+      [[nodiscard]]
+      friend bool operator==(const element_with_fallible_copy&, const element_with_fallible_copy&) = default;
+    };
   }
+
+  template<>
+  struct serializer<element_with_fallible_copy>
+  {
+    [[nodiscard]]
+    static std::string make(const element_with_fallible_copy& x) { return std::to_string(x.value); }
+  };
 
   [[nodiscard]]
   std::filesystem::path queue_regular_test::source_file()
@@ -48,6 +79,7 @@ namespace sequoia::testing
     test_constraints();
     test_constant_evaluation();
     test_transitions();
+    test_exception_safety_of_pop();
   }
 
   void queue_regular_test::test_constraints()
@@ -134,5 +166,30 @@ namespace sequoia::testing
     };
 
     transition_checker_t::check(report("Queue transitions"), g, equality_and_semantics_check_fn<queue_t>(*this));
+  }
+
+  void queue_regular_test::test_exception_safety_of_pop()
+  {
+    using queue_with_fallible_copies_t = data_structures::queue<element_with_fallible_copy>;
+    using transition_checker_t         = transition_checker<queue_with_fallible_copies_t>;
+    using graph_t                      = transition_checker_t::transition_graph;
+
+    enum node { one_two_three, two_three };
+
+    graph_t g{};
+    g.add_node(make_by_pushing<queue_with_fallible_copies_t>({1, 2, 3}));
+    g.add_node(make_by_pushing<queue_with_fallible_copies_t>({2, 3}));
+
+    // The element's move is not noexcept, so the queue refills by copying;
+    // this pop is the first, so it copies all three elements
+    const std::string_view context{"Queue of elements with fallible copies"};
+    add_fallible_transition<queue_with_fallible_copies_t>(
+      *this, g, context, one_two_three, two_three, "Pop 1, leaving 2 and 3", 3,
+      [](queue_with_fallible_copies_t& q) { q.pop(); }
+    );
+
+    transition_checker_t::check(report(context),
+                                g,
+                                equality_and_semantics_check_fn<queue_with_fallible_copies_t>(*this));
   }
 }

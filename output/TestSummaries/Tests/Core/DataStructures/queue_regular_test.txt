@@ -1,2 +1,2 @@
 queue_regular_test
-Standard Top Level Checks:                58;  Failures:  0  [Deep checks: 890]
+Standard Top Level Checks:                67;  Failures:  0  [Deep checks: 1003]

@@ -28,5 +28,7 @@ namespace sequoia::testing
     void test_constant_evaluation();
 
     void test_transitions();
+
+    void test_exception_safety_of_pop();
   };
 }
