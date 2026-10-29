@@ -33,6 +33,11 @@ namespace sequoia::testing
 
     void test_mutator_constraints();
 
+    void test_node_reordering_and_swap_constraints();
+
+    template<class Graph>
+    void test_base_subobject_constraints();
+
     template<class EdgeStorageConfig>
     void test_mutation_results();
 
@@ -43,5 +48,7 @@ namespace sequoia::testing
     void test_shared_weight_copies();
 
     void test_mutation_by_member_functions();
+
+    void test_member_swaps();
   };
 }

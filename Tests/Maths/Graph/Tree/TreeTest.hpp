@@ -39,10 +39,16 @@ namespace sequoia::testing
     template<maths::dynamic_tree Tree>
     void test_prune_of_absent_node();
 
+    template<maths::dynamic_tree Tree>
+    void test_member_swap();
+
     void test_forest_ranges();
 
     template<maths::dynamic_tree Tree>
     void test_sort_nodes_constraints();
+
+    template<maths::dynamic_tree Tree, class Graph>
+    void test_no_structural_mutation_through_bases();
 
     void test_forest_beneath_constraints();
 

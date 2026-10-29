@@ -11,8 +11,10 @@
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
 #include <algorithm>
+#include <functional>
 #include <ranges>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 namespace sequoia::testing
@@ -110,6 +112,26 @@ namespace sequoia::testing
     inline constexpr bool sort_range_of_nodes_callable_v{
       requires(Tree& tree, Compare c) { tree.sort_nodes(0, 1, c); }
     };
+
+    template<class Tree, class Base>
+    inline constexpr bool swap_nodes_qualified_by_v{
+      requires(Tree& tree) { tree.Base::swap_nodes(0, 1); }
+    };
+
+    template<class Tree, class Base>
+    inline constexpr bool sort_all_nodes_qualified_by_v{
+      requires(Tree& tree) { tree.Base::sort_nodes(std::ranges::less{}); }
+    };
+
+    template<class Tree, class Base>
+    inline constexpr bool sort_range_of_nodes_qualified_by_v{
+      requires(Tree& tree) { tree.Base::sort_nodes(0, 1, std::ranges::less{}); }
+    };
+
+    template<class T, class U>
+    inline constexpr bool unqualified_swap_callable_v{
+      requires(T& t, U& u) { swap(t, u); }
+    };
   }
 
   [[nodiscard]]
@@ -145,11 +167,26 @@ namespace sequoia::testing
     test_prune_of_absent_node<directed_tree<tree_link_direction::symmetric, null_weight, int>>();
     test_prune_of_absent_node<undirected_tree<tree_link_direction::symmetric, null_weight, int>>();
 
+    test_member_swap<directed_tree<tree_link_direction::forward, null_weight, int>>();
+    test_member_swap<directed_tree<tree_link_direction::backward, null_weight, int>>();
+    test_member_swap<directed_tree<tree_link_direction::symmetric, null_weight, int>>();
+    test_member_swap<undirected_tree<tree_link_direction::symmetric, null_weight, int>>();
+
     test_forest_ranges();
     test_sort_nodes_constraints<directed_tree<tree_link_direction::forward, null_weight, int>>();
     test_sort_nodes_constraints<directed_tree<tree_link_direction::backward, null_weight, int>>();
     test_sort_nodes_constraints<directed_tree<tree_link_direction::symmetric, null_weight, int>>();
     test_sort_nodes_constraints<undirected_tree<tree_link_direction::symmetric, null_weight, int>>();
+    test_no_structural_mutation_through_bases<directed_tree<tree_link_direction::forward, null_weight, int>,
+                                              directed_graph<null_weight, int>>();
+    test_no_structural_mutation_through_bases<directed_tree<tree_link_direction::backward, null_weight, int>,
+                                              directed_graph<null_weight, int>>();
+    test_no_structural_mutation_through_bases<directed_tree<tree_link_direction::symmetric, null_weight, int>,
+                                              directed_graph<null_weight, int>>();
+    test_no_structural_mutation_through_bases<undirected_tree<tree_link_direction::symmetric, null_weight, int>,
+                                              undirected_graph<null_weight, int>>();
+    test_no_structural_mutation_through_bases<directed_tree<tree_link_direction::forward, null_weight, null_weight>,
+                                              directed_graph<null_weight, null_weight>>();
     test_forest_beneath_constraints();
     test_adaptors_at_absent_nodes();
   }
@@ -613,6 +650,19 @@ namespace sequoia::testing
     check_exception_thrown<std::out_of_range>("Prune a node the tree lacks", [&tree](){ tree.prune(2); });
   }
 
+  template<maths::dynamic_tree Tree>
+  void tree_test::test_member_swap()
+  {
+    // 42 with children -7 and 6
+    const Tree tree{{42, {{-7}, {6}}}};
+    Tree first{tree},
+         second{};
+
+    first.swap(second);
+    check(equality, "After a swap, the first tree is empty", first, Tree{});
+    check(equality, "After a swap, the second tree holds the first's value", second, tree);
+  }
+
   void tree_test::test_forest_ranges()
   {
     using tree_t = directed_tree<tree_link_direction::forward, null_weight, int>;
@@ -647,6 +697,63 @@ namespace sequoia::testing
     STATIC_CHECK( sort_range_of_nodes_callable_v<Tree, std::ranges::less>);
     STATIC_CHECK(!sort_range_of_nodes_callable_v<Tree, string_comparison_t>);
     STATIC_CHECK(!sort_range_of_nodes_callable_v<Tree, int>);
+  }
+
+  template<maths::dynamic_tree Tree, class Graph>
+  void tree_test::test_no_structural_mutation_through_bases()
+  {
+    using primitive_type    = Tree::primitive_type;
+    using graph_base_type   = Graph::base_type;
+    using connectivity_type = Tree::connectivity_type;
+    using nodes_type        = Tree::nodes_type;
+
+    // A tree converts to each base, so each refusal below is one of access
+    STATIC_CHECK(std::is_convertible_v<Tree&, primitive_type&>);
+    STATIC_CHECK(std::is_convertible_v<Tree&, graph_base_type&>);
+    STATIC_CHECK(std::is_convertible_v<Tree&, connectivity_type&>);
+    STATIC_CHECK(std::is_convertible_v<Tree&, nodes_type&>);
+
+    // The tree offers its own node mutators, assignment, and swap with a tree
+    STATIC_CHECK(swap_nodes_qualified_by_v<Tree, Tree>);
+    STATIC_CHECK(sort_all_nodes_qualified_by_v<Tree, Tree>);
+    STATIC_CHECK(sort_range_of_nodes_qualified_by_v<Tree, Tree>);
+    STATIC_CHECK(swap_nodes_callable_through_v<Tree, Tree>);
+    STATIC_CHECK(sort_all_nodes_callable_through_v<Tree, Tree>);
+    STATIC_CHECK(sort_range_of_nodes_callable_through_v<Tree, Tree>);
+    STATIC_CHECK(member_swap_callable_v<Tree, Tree>);
+    STATIC_CHECK(copy_assignable_through_v<Tree, Tree, Tree>);
+    STATIC_CHECK(move_assignable_through_v<Tree, Tree, Tree>);
+    STATIC_CHECK(move_constructible_through_v<Tree, Tree>);
+
+    // No base offers swap_nodes or sort_nodes, which could move the root
+    // unchecked
+    STATIC_CHECK(!swap_nodes_qualified_by_v<Tree, primitive_type>);
+    STATIC_CHECK(!sort_all_nodes_qualified_by_v<Tree, primitive_type>);
+    STATIC_CHECK(!sort_range_of_nodes_qualified_by_v<Tree, primitive_type>);
+    STATIC_CHECK(!swap_nodes_callable_through_v<Tree, primitive_type>);
+    STATIC_CHECK(!sort_all_nodes_callable_through_v<Tree, primitive_type>);
+    STATIC_CHECK(!sort_range_of_nodes_callable_through_v<Tree, primitive_type>);
+    STATIC_CHECK(!swap_nodes_callable_through_v<Tree, graph_base_type>);
+    STATIC_CHECK(!sort_all_nodes_callable_through_v<Tree, graph_base_type>);
+    STATIC_CHECK(!sort_range_of_nodes_callable_through_v<Tree, graph_base_type>);
+
+    // A graph need not be a tree, so a caller can neither swap a graph with
+    // the tree nor assign a graph to the tree
+    STATIC_CHECK(!member_swap_callable_v<Tree, Graph>);
+    STATIC_CHECK(!member_swap_callable_v<Graph, Tree>);
+    STATIC_CHECK(!member_swap_callable_v<graph_base_type, Graph>);
+    STATIC_CHECK(!member_swap_callable_v<graph_base_type, Tree>);
+    STATIC_CHECK(!member_swap_callable_v<Graph, graph_base_type>);
+    STATIC_CHECK(!member_swap_callable_v<Tree, graph_base_type>);
+    STATIC_CHECK(!unqualified_swap_callable_v<Tree, Graph>);
+    STATIC_CHECK(!unqualified_swap_callable_v<Graph, Tree>);
+    STATIC_CHECK(!copy_assignable_through_v<Tree, graph_base_type, Graph>);
+    STATIC_CHECK(!move_assignable_through_v<Tree, graph_base_type, Graph>);
+    STATIC_CHECK(!copy_assignable_through_v<Tree, nodes_type, Graph>);
+    STATIC_CHECK(!move_assignable_through_v<Tree, nodes_type, Graph>);
+    STATIC_CHECK(!copy_assignable_through_v<Tree, connectivity_type, Graph>);
+    STATIC_CHECK(!move_assignable_through_v<Tree, connectivity_type, Graph>);
+    STATIC_CHECK(!move_constructible_through_v<Tree, connectivity_type>);
   }
 
   void tree_test::test_forest_beneath_constraints()

@@ -1723,8 +1723,15 @@ namespace sequoia
     template<graph_flavour Flavour, class EdgeStorage>
     class connectivity : public connectivity_base<Flavour, EdgeStorage>
     {
+    public:
+      constexpr connectivity()                    = default;
+      constexpr connectivity(const connectivity&) = default;
     protected:
       using connectivity_base<Flavour, EdgeStorage>::connectivity_base;
+
+      constexpr connectivity(connectivity&&) noexcept        = default;
+      constexpr connectivity& operator=(const connectivity&) = default;
+      constexpr connectivity& operator=(connectivity&&)      = default;
     };
 
     template<class EdgeStorage>
@@ -1823,8 +1830,15 @@ namespace sequoia
 
       [[nodiscard]]
       constexpr const_edge_weights_range cedge_weights(const edge_index_type node) const { return {begin_edge_weights(node), end_edge_weights(node)}; }
+
+      constexpr connectivity()                    = default;
+      constexpr connectivity(const connectivity&) = default;
     protected:
       using connectivity_base<graph_flavour::directed, EdgeStorage>::connectivity_base;
+
+      constexpr connectivity(connectivity&&) noexcept        = default;
+      constexpr connectivity& operator=(const connectivity&) = default;
+      constexpr connectivity& operator=(connectivity&&)      = default;
     };
   }
 }

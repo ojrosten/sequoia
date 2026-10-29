@@ -304,12 +304,12 @@ namespace sequoia::maths
     using node_storage_base<Weight, Container>::node_storage_base;
 
     node_storage(const node_storage&) = default;
-
-    node_storage& operator=(const node_storage&) noexcept = default;
   protected:
     ~node_storage() = default;
 
     node_storage(node_storage&&) noexcept = default;
+
+    node_storage& operator=(const node_storage&) noexcept = default;
 
     node_storage& operator=(node_storage&&) noexcept = default;
 
@@ -331,14 +331,14 @@ namespace sequoia::maths
 
     constexpr node_storage(const node_storage&) noexcept = default;
 
-    constexpr node_storage& operator=(const node_storage&) noexcept = default;
-
     [[nodiscard]]
     constexpr friend bool operator==(const node_storage&, const node_storage&) noexcept = default;
   protected:
     constexpr node_storage(node_storage&&) noexcept = default;
 
     ~node_storage() = default;
+
+    constexpr node_storage& operator=(const node_storage&) noexcept = default;
 
     constexpr node_storage& operator=(node_storage&&) noexcept = default;
 
