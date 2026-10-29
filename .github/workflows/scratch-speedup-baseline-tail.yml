@@ -17,7 +17,10 @@ name: scratch-speedup-baseline-tail
 # did so in the runner's construction. Round 4 traces that construction, on
 # #407's head (053f20e05): the member initializers, argument processing, the
 # output directories, the run stamp, and each registration's test and record
-# file, beside round 1's trace.
+# file, beside round 1's trace. It found the tail in the run stamp's write:
+# a rename over the old stamp, which auto_da_alloc also flushes. Round 5
+# runs round 4's trace on #407's head with the stamp's fix, the branch
+# run-stamp-renamed-to-free-name (13853c505), picked onto it (c014dad7b).
 #
 # Each measuring job checks out REF, applies probe.patch, builds
 # TestAll as the Linux Debug column does (g++-15, preset gcc-env,
@@ -42,7 +45,7 @@ jobs:
         replicate: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                     21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
     env:
-      REF: 053f20e05c58354062f2c52d57632bd0a79bfc79
+      REF: c014dad7b269003eb8b0385a3b4ca842e777e0cc
       LOCATE: 20
     steps:
       - name: Describe the host
