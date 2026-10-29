@@ -19,6 +19,7 @@
 #include <limits>
 #include <memory>
 #include <ranges>
+#include <vector>
 
 namespace sequoia::data_structures::partition_impl
 {
@@ -83,6 +84,30 @@ namespace sequoia::data_structures::partition_impl
   inline constexpr bool translatable_bounds_v{
     requires(Partitions& partitions, const std::ptrdiff_t delta) {
       partitions.translate(partitions.cbegin(), partitions.cend(), delta);
+    }
+  };
+
+  template<class Partitions>
+  inline constexpr bool overwritable_bounds_v{
+    requires(Partitions& partitions, const std::vector<typename Partitions::value_type>& bounds) {
+      partitions.overwrite(bounds);
+    }
+  };
+
+  /** \brief Whether `Partitions` admits a bound equal to, or above, the one
+             before it.
+
+      A partition's bound is the number of elements up to its end, so a
+      later bound is never below an earlier one.
+   */
+  template<class Partitions>
+  inline constexpr bool admits_non_decreasing_bounds_v{
+    requires {
+      typename Partitions::compare_type;
+      requires (   !typename Partitions::compare_type{}(typename Partitions::value_type{},
+                                                        typename Partitions::value_type{})
+                && !typename Partitions::compare_type{}(typename Partitions::value_type{},
+                                                        typename Partitions::value_type{1}));
     }
   };
 

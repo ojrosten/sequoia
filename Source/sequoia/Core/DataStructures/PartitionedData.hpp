@@ -710,7 +710,8 @@ namespace sequoia
       template<class D>
         requires (   range_of_integers<const D&>
                   && std::ranges::sized_range<const D&>
-                  && std::ranges::forward_range<const D&>)
+                  && std::ranges::forward_range<const D&>
+                  && partition_impl::overwritable_bounds_v<partitions_type>)
       constexpr void permute_partitions(const D& destinations)
       {
         const auto partitionIndices{
@@ -1053,9 +1054,9 @@ namespace sequoia
       {
         auto boundAt{
           [this](const size_type i) {
-            return std::ranges::next(m_Partitions.begin(),
+            return std::ranges::next(m_Partitions.cbegin(),
                                      numeric::unchecked_conversion_to<std::ptrdiff_t>(i),
-                                     m_Partitions.end());
+                                     m_Partitions.cend());
           }
         };
 
@@ -1145,7 +1146,8 @@ namespace sequoia
                                         std::numeric_limits<typename Partitions::value_type>::max())
                 && std::cmp_less_equal(std::numeric_limits<typename Container::size_type>::max(),
                                         std::numeric_limits<typename Partitions::value_type>::max())
-                && partition_impl::translatable_bounds_v<Partitions>)
+                && partition_impl::translatable_bounds_v<Partitions>
+                && partition_impl::admits_non_decreasing_bounds_v<Partitions>)
     class partitioned_sequence : public partitioned_sequence_base<T, Container, Partitions>
     {
     private:

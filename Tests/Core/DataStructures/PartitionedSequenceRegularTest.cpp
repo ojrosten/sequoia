@@ -68,7 +68,7 @@ namespace sequoia::testing
 
     using namespace partitioned_data;
 
-    // A standard container's size type is std::size_t; these carry only the types the constraint reads.
+    // A standard container's size type is std::size_t; these carry only what the constraint reads.
     template<std::integral SizeType>
     struct fake_container
     {
@@ -80,12 +80,18 @@ namespace sequoia::testing
     {
       using value_type     = IndexType;
       using size_type      = SizeType;
+      using compare_type   = std::ranges::greater;
       using const_iterator = const IndexType*;
 
       const_iterator cbegin() const;
       const_iterator cend() const;
 
       void translate(const_iterator, const_iterator, std::ptrdiff_t);
+    };
+
+    struct untranslatable_partitions : fake_partitions<std::size_t, std::size_t>
+    {
+      void translate(const_iterator, const_iterator, std::ptrdiff_t) = delete;
     };
 
     template<class Container, class Partitions>
@@ -162,7 +168,7 @@ namespace sequoia::testing
     using namespace data_structures;
     test_copyability();
     test_index_type_constraint();
-    test_partitions_translation_constraint();
+    test_partitions_constraint();
     test_allocator_extended_move();
     test_reset();
     test_permute_partitions_constraints();
@@ -236,10 +242,12 @@ namespace sequoia::testing
     STATIC_CHECK(!sequence_admits<fake_container<std::int8_t>, fake_partitions<char, std::int8_t>>);
   }
 
-  void partitioned_sequence_regular_test::test_partitions_translation_constraint()
+  void partitioned_sequence_regular_test::test_partitions_constraint()
   {
-    STATIC_CHECK( sequence_admits<std::vector<int>, maths::monotonic_sequence<std::size_t, std::ranges::greater>>);
-    STATIC_CHECK(!sequence_admits<std::vector<int>, maths::monotonic_sequence<std::size_t, std::greater<>>>);
+    STATIC_CHECK( sequence_admits<fake_container<std::size_t>, fake_partitions<std::size_t, std::size_t>>);
+    STATIC_CHECK(!sequence_admits<fake_container<std::size_t>, untranslatable_partitions>);
+    STATIC_CHECK(!sequence_admits<std::vector<int>, maths::monotonic_sequence<std::size_t, last_digit_greater>>);
+    STATIC_CHECK(!sequence_admits<std::vector<int>, maths::monotonic_sequence<std::size_t, std::ranges::less>>);
   }
 
   void partitioned_sequence_regular_test::test_allocator_extended_move()
