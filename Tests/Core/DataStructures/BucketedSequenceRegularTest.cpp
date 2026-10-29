@@ -159,6 +159,7 @@ namespace sequoia::testing
     using namespace data_structures;
     test_copyability();
     test_nested_sized_range_of();
+    test_permute_partitions_constraints();
     bucketed_operations<bucketed_sequence<int>>::execute(*this);
   }
 
@@ -197,6 +198,16 @@ namespace sequoia::testing
     STATIC_CHECK( std::is_copy_constructible_v<bucketed_sequence<std::vector<int>>>);
     STATIC_CHECK( std::is_copy_assignable_v<bucketed_sequence<std::vector<int>>>);
     STATIC_CHECK( std::is_copy_assignable_v<bucketed_sequence<std::map<int, int>>>);
+  }
+
+  void bucketed_sequence_regular_test::test_permute_partitions_constraints()
+  {
+    using sequence_t = data_structures::bucketed_sequence<int>;
+
+    STATIC_CHECK( permute_partitions_accepts<sequence_t, std::vector<std::size_t>>);
+    STATIC_CHECK( permute_partitions_accepts<sequence_t, input_only_destinations_t>);
+    STATIC_CHECK(!permute_partitions_accepts<sequence_t, non_const_iterable_destinations_t>);
+    STATIC_CHECK(!permute_partitions_accepts<sequence_t, std::forward_list<std::size_t>>);
   }
 
   void bucketed_sequence_regular_test::test_nested_sized_range_of()

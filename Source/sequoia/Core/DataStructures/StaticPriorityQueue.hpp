@@ -59,7 +59,7 @@ namespace sequoia::data_structures
 
       m_Q[m_End++] = val;
 
-      bubble_up(m_Q.begin(), m_Q.begin() + m_End - 1, m_Compare);
+      sequoia::bubble_up(m_Q.begin(), m_Q.begin() + m_End - 1, m_Compare);
     }
 
     [[nodiscard]]
@@ -76,9 +76,9 @@ namespace sequoia::data_structures
       if(empty())
         throw std::logic_error("Attempting to pop an empty priority_queue");
 
-      std::ranges::iter_swap(m_Q.begin(), m_Q.begin() + m_End -1);
+      std::ranges::iter_swap(m_Q.begin(), m_Q.begin() + m_End - 1);
       --m_End;
-      sequoia::make_heap(m_Q.begin(), m_Q.begin() + m_End, m_Compare);
+      sequoia::bubble_down(m_Q.begin(), m_Q.begin(), m_Q.begin() + m_End, m_Compare);
     }
 
     [[nodiscard]]

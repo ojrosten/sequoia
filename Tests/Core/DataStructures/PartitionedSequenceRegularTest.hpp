@@ -30,5 +30,7 @@ namespace sequoia::testing
     void test_allocator_extended_move();
 
     void test_reset();
+
+    void test_permute_partitions_constraints();
   };
 }

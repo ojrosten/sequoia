@@ -26,5 +26,7 @@ namespace sequoia::testing
     void test_copyability();
 
     void test_nested_sized_range_of();
+
+    void test_permute_partitions_constraints();
   };
 }

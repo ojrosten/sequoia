@@ -763,6 +763,14 @@ namespace sequoia::testing
               g.sort_nodes(0, 3, [&g](auto i, auto j){ return g.cbegin_node_weights()[i] < g.cbegin_node_weights()[j]; });
               return g;
             }
+          },
+          {
+            graph_description::node_2v_nodex_0u_nodew_1,
+            report(""),
+            [](graph_t g) -> graph_t {
+              g.sort_nodes(0, 3, [](auto i, auto j){ return i > j; });
+              return g;
+            }
           }
         }, // end 'graph_description::nodew_1_nodex_2u_node_0v'
         {  // begin 'graph_description::node_2v_nodex_0u_nodew_1'

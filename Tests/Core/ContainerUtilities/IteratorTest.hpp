@@ -41,7 +41,8 @@ namespace sequoia::testing
     void test_const_scaling_iterator();
     void test_const_reverse_scaling_iterator();
 
-    template<integer Index>
-    void test_index_iterator();
+    void test_traitless_input_iterator();
+
+    void test_nested_bidirectional_iterator();
   };
 }

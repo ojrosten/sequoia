@@ -40,6 +40,8 @@ namespace sequoia::testing
 
     void test_integer();
 
+    void test_range_of_integers();
+
     void test_invocable_r_concepts();
   };
 }

@@ -18,11 +18,15 @@
 #include <functional>
 #include <iterator>
 #include <ranges>
+#include <stdexcept>
+#include <type_traits>
+#include <utility>
 #include <vector>
 
 namespace sequoia
 {
-  template<class Iter, class Comp=std::ranges::less, class Proj = std::identity>
+  template<std::random_access_iterator Iter, class Comp=std::ranges::less, class Proj = std::identity>
+    requires std::sortable<Iter, Comp, Proj>
   constexpr void bubble_up(Iter begin, Iter current, Comp comp = {}, Proj proj = {})
   {
     if(current == begin) return;
@@ -35,7 +39,8 @@ namespace sequoia
     }
   }
 
-  template<class Iter, class Comp=std::ranges::less, class Proj = std::identity>
+  template<std::random_access_iterator Iter, class Comp=std::ranges::less, class Proj = std::identity>
+    requires std::sortable<Iter, Comp, Proj>
   constexpr void bubble_down(Iter begin, Iter current, Iter end, Comp comp = {}, Proj proj = {})
   {
     if(std::ranges::distance(begin, end) <= 1) return;
@@ -61,18 +66,6 @@ namespace sequoia
     }
   }
 
-  /** \brief Whether swapping can order the elements `I` reaches, comparing
-             their projections under `Proj` with `Comp`.
-
-      Unlike `std::sortable`, `heap_sortable` requires no iterator category,
-      and does not require `std::indirectly_movable_storable`.
-   */
-  template<class I, class Comp, class Proj>
-  inline constexpr bool heap_sortable{
-       std::indirectly_swappable<I>
-    && std::indirect_strict_weak_order<Comp, std::projected<I, Proj>>
-  };
-
   template
   <
     std::random_access_iterator I,
@@ -80,7 +73,7 @@ namespace sequoia
     class Comp = std::ranges::less,
     class Proj = std::identity
   >
-    requires heap_sortable<I, Comp, Proj>
+    requires std::sortable<I, Comp, Proj>
   constexpr void make_heap(I first, S last, Comp comp = {}, Proj proj = {})
   {
     if(std::ranges::distance(first, last) <= 1)
@@ -95,47 +88,10 @@ namespace sequoia
   }
 
   template<std::ranges::random_access_range R, class Comp = std::ranges::less, class Proj = std::identity>
-    requires heap_sortable<std::ranges::iterator_t<R>, Comp, Proj>
+    requires std::sortable<std::ranges::iterator_t<R>, Comp, Proj>
   constexpr void make_heap(R&& r, Comp comp = {}, Proj proj = {})
   {
     sequoia::make_heap(std::ranges::begin(r), std::ranges::end(r), std::move(comp), std::move(proj));
-  }
-
-  /** \brief Sorts `[first, last)`, not stably, moving elements only through
-             `std::ranges::iter_swap`.
-
-      An `iter_swap` found by argument-dependent lookup therefore customizes
-      how elements move.
-   */
-  template
-  <
-    std::random_access_iterator I,
-    std::sentinel_for<I> S,
-    class Comp = std::ranges::less,
-    class Proj = std::identity
-  >
-    requires heap_sortable<I, Comp, Proj>
-  constexpr void sort(I first, S last, Comp comp = {}, Proj proj = {})
-  {
-    auto unsortedEnd{std::ranges::next(first, last)};
-    if(std::ranges::distance(first, unsortedEnd) <= 1)
-      return;
-
-    sequoia::make_heap(first, unsortedEnd, comp, proj);
-    while(unsortedEnd != first)
-    {
-      std::ranges::iter_swap(first, unsortedEnd-1);
-      sequoia::bubble_down(first, first, unsortedEnd-1, comp, proj);
-      --unsortedEnd;
-    }
-  }
-
-  /** \brief Sorts `r`, as the overload taking a sentinel does. */
-  template<std::ranges::random_access_range R, class Comp = std::ranges::less, class Proj = std::identity>
-    requires heap_sortable<std::ranges::iterator_t<R>, Comp, Proj>
-  constexpr void sort(R&& r, Comp comp = {}, Proj proj = {})
-  {
-    sequoia::sort(std::ranges::begin(r), std::ranges::end(r), std::move(comp), std::move(proj));
   }
 
   namespace impl
@@ -276,5 +232,85 @@ namespace sequoia
   constexpr void cluster(R&& r, Comp comp = {}, Proj proj = {})
   {
     sequoia::cluster(std::ranges::begin(r), std::ranges::end(r), std::move(comp), std::move(proj));
+  }
+
+  namespace impl
+  {
+    [[nodiscard]]
+    constexpr const char* not_a_permutation_message() noexcept
+    {
+      return "sequoia::permute: the destinations are not a permutation of the range's positions";
+    }
+  }
+
+  /** \brief Moves the element at each position `i` of `r` to the position
+             held by the `i`th element of `destinations`.
+
+      If `destinations` is a permutation, swaps elements of `r` n - c times,
+      where n is the number of positions and c the number of cycles of the
+      permutation, fixed points included.
+
+      Moves `destinations` if it is a non-const `std::vector` rvalue.
+      Otherwise copies it into a `std::vector` in a single pass, allocating
+      unless it is empty, and does not write to it.
+
+      \throws std::invalid_argument if `destinations` is not a permutation of
+      `r`'s positions. `r` then holds its elements in an unspecified order.
+   */
+  template<std::ranges::random_access_range R, range_of_integers D>
+    requires (   std::ranges::sized_range<R>
+              && std::ranges::sized_range<D>
+              && std::indirectly_swappable<std::ranges::iterator_t<R>>
+              && integer<std::ranges::range_size_t<R>>
+              && integer<std::ranges::range_difference_t<R>>)
+  constexpr void permute(R&& r, D&& destinations)
+  {
+    const auto size{numeric::unchecked_conversion_to<std::size_t>(std::ranges::size(r))};
+    if(std::cmp_not_equal(std::ranges::size(destinations), size))
+      throw std::invalid_argument{impl::not_a_permutation_message()};
+
+    auto elementDestinations{std::ranges::to<std::vector>(std::forward<D>(destinations))};
+
+    auto iteratorAtPosition{
+      [first{std::ranges::begin(r)}](const std::size_t position) {
+        return first + numeric::unchecked_conversion_to<std::ranges::range_difference_t<R>>(position);
+      }
+    };
+
+    auto destinationFor{
+      [&elementDestinations, size](const std::size_t position) {
+        const auto destination{elementDestinations[position]};
+        if(std::cmp_less(destination, 0) || std::cmp_greater_equal(destination, size))
+          throw std::invalid_argument{impl::not_a_permutation_message()};
+
+        return numeric::unchecked_conversion_to<std::size_t>(destination);
+      }
+    };
+
+    // Swapping `r` and `elementDestinations` together keeps
+    // `elementDestinations[p]` the destination of the element at position p of
+    // `r`. Each step of the inner loop moves the element at `position` to
+    // `destination`, putting it in place. No step moves an element already in
+    // place: the element at `position` is not, since `destination` differs
+    // from `position`, and one in place at `destination` would share its
+    // destination with the element at `position`, so the check before the step
+    // throws instead. Each step therefore puts at least one more element in
+    // place, and the loops, although nested, take at most `size` steps in all;
+    // for a permutation, a cycle of k elements takes k - 1, the last of which
+    // puts two elements in place. Since swapping only rearranges
+    // `elementDestinations`, a value held twice, or one outside [0, size),
+    // shows that the destinations passed are not a permutation. If neither is
+    // found, every element ends in place.
+    for(const auto position : std::views::iota(0uz, size))
+    {
+      for(auto destination{destinationFor(position)}; destination != position; destination = destinationFor(position))
+      {
+        if(destinationFor(destination) == destination)
+          throw std::invalid_argument{impl::not_a_permutation_message()};
+
+        std::ranges::iter_swap(iteratorAtPosition(position), iteratorAtPosition(destination));
+        std::ranges::swap(elementDestinations[position], elementDestinations[destination]);
+      }
+    }
   }
 }
