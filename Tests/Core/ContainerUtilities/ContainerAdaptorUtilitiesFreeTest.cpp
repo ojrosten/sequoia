@@ -134,7 +134,7 @@ namespace sequoia::testing
       std::stack<bool, std::vector<bool>> s{};
       s.push(false);
       s.push(true);
-      // element_popped_next returns a proxy here, which converts to bool
+      // element_popped_next may return a proxy here, which converts to bool
       const bool top{utilities::element_popped_next(s)};
       check(equality, "The top of a std::stack over a std::vector<bool>", top, true);
     }

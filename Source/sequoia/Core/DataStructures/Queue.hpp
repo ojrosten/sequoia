@@ -44,10 +44,10 @@ namespace sequoia::data_structures
 
       if(m_Outgoing.empty())
       {
-        // Reversing into a new vector leaves the queue unchanged if copying an
-        // element throws
         const auto moveIfNoexcept{[](T& element) -> decltype(auto) { return std::move_if_noexcept(element); }};
 
+        // Reversing into a new vector leaves the queue unchanged if copying an
+        // element throws
         m_Outgoing =   m_Incoming
                      | std::views::reverse
                      | std::views::transform(moveIfNoexcept)
