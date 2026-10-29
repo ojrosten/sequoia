@@ -835,7 +835,7 @@ namespace sequoia
 
               if(found == cend_edges(partner))
                 throw std::logic_error{
-                  graph_errors::erase_edge_message(
+                  graph_errors::absent_partner_message(
                     "erase_edge",
                     partner,
                     {source, static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(source), citer))}
@@ -894,7 +894,7 @@ namespace sequoia
 
               if(found == cend_edges(source))
                 throw std::logic_error{
-                  graph_errors::erase_edge_message(
+                  graph_errors::absent_partner_message(
                     "erase_edge",
                     source,
                     {source, static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(source), citer))}
@@ -1063,14 +1063,14 @@ namespace sequoia
             if((target == edgeIndices.node) && (compIndex == edgeIndices.edge))
             {
               throw std::logic_error{
-                graph_errors::self_referential_message("validate", edgeIndices, target, compIndex)
+                graph_errors::self_referential_indices_message("validate", edgeIndices, target, compIndex)
               };
             }
             else if(const auto& targetEdge{targetEdges.begin()[compIndex]};
                     targetEdge.complementary_index() != edgeIndices.edge)
             {
               throw std::logic_error{
-                graph_errors::reciprocated_error_message(
+                graph_errors::reciprocated_index_message(
                   "validate",
                   edgeIndices,
                   "complementary",

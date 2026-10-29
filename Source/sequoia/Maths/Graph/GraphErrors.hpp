@@ -53,7 +53,7 @@ namespace sequoia::maths::graph_errors
                                         std::size_t numEdges);
 
   [[nodiscard]]
-  std::string reciprocated_error_message(std::string_view method,
+  std::string reciprocated_index_message(std::string_view method,
                                          const edge_indices edgeIndices,
                                          const std::string_view indexName,
                                          const std::size_t reciprocatedIndex,
@@ -118,20 +118,20 @@ namespace sequoia::maths::graph_errors
                                           const std::size_t index)
   {
     if(reciprocatedIndex != index)
-      throw std::logic_error{reciprocated_error_message(method, edgeIndices, indexName, reciprocatedIndex, index)};
+      throw std::logic_error{reciprocated_index_message(method, edgeIndices, indexName, reciprocatedIndex, index)};
   }
 
   [[nodiscard]]
-  std::string erase_edge_message(std::string_view method, std::size_t partner, edge_indices indices);
+  std::string absent_partner_message(std::string_view method, std::size_t partner, edge_indices indices);
 
   [[nodiscard]]
   std::string odd_num_loops_message(std::string_view method, std::size_t nodeIndex);
 
   [[nodiscard]]
-  std::string self_referential_message(std::string_view method,
-                                       edge_indices edgeIndices,
-                                       std::size_t target,
-                                       std::size_t compIndex);
+  std::string self_referential_indices_message(std::string_view method,
+                                               edge_indices edgeIndices,
+                                               std::size_t target,
+                                               std::size_t compIndex);
 
   [[nodiscard]]
   std::string mismatched_weights_message(std::string_view method, edge_indices edgeIndices);
