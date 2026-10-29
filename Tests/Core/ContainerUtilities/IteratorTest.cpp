@@ -122,8 +122,8 @@ namespace sequoia::testing
       value_type m_Count{};
     };
 
-    // An auxiliary data policy with == and <=>, so that a wrapper over a base
-    // iterator lacking either has a policy's comparison to fall back to.
+    // An auxiliary data policy with <=>, so that a wrapper over a base
+    // iterator without <=> has a policy's <=> to fall back to.
     struct comparable_data_policy
     {
       [[nodiscard]]
@@ -178,13 +178,18 @@ namespace sequoia::testing
 
   void iterator_test::test_comparisons_the_base_iterator_lacks()
   {
-    using iter_without_equality_t = iterator_with_comparable_data_policy<counting_input_iterator_without_equality>;
+    using namespace utilities;
 
+    using base_iter_t             = counting_input_iterator_without_equality;
+    using iter_without_equality_t = iterator<base_iter_t, identity_dereference_policy<base_iter_t>>;
+
+    STATIC_CHECK( std::equality_comparable<iter_without_equality_t::dereference_policy_type>);
     STATIC_CHECK( std::input_iterator<iter_without_equality_t>);
     STATIC_CHECK(!std::equality_comparable<iter_without_equality_t>);
 
     using iter_without_ordering_t = iterator_with_comparable_data_policy<counting_input_iterator>;
 
+    STATIC_CHECK( std::three_way_comparable<iter_without_ordering_t::dereference_policy_type>);
     STATIC_CHECK( std::equality_comparable<iter_without_ordering_t>);
     STATIC_CHECK(!std::three_way_comparable<iter_without_ordering_t>);
   }
