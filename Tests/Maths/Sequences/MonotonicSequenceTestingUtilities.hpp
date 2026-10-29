@@ -63,7 +63,7 @@ namespace sequoia::testing
                 prediction.crbegin(), prediction.crend());
 
           auto elementAt{[&sequence](const auto i) { return sequence[i]; }};
-          const auto bySubscript{
+          const auto elementsBySubscript{
               std::views::iota(typename Sequence::size_type{}, sequence.size())
             | std::views::transform(elementAt)
             | std::ranges::to<std::vector>()
@@ -72,7 +72,7 @@ namespace sequoia::testing
           check(equality,
                 "operator[]",
                 logger,
-                bySubscript.begin(), bySubscript.end(),
+                elementsBySubscript.begin(), elementsBySubscript.end(),
                 prediction.begin(), prediction.end());
         }
       }

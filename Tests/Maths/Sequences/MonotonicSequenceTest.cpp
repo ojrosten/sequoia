@@ -8,8 +8,25 @@
 #include "MonotonicSequenceTest.hpp"
 #include "MonotonicSequenceTestingUtilities.hpp"
 
+#include <cstdint>
+#include <limits>
+
 namespace sequoia::testing
 {
+  namespace
+  {
+    template<class Sequence, class Delta>
+    concept translatable_by = requires(Sequence& s, const Delta delta) { s.translate(s.cbegin(), s.cend(), delta); };
+
+    /// A comparison that no non-zero translation preserves. It flags each pair
+    /// whose second element is 3.
+    struct three_never_follows
+    {
+      [[nodiscard]]
+      constexpr bool operator()(const int, const int y) const noexcept { return y == 3; }
+    };
+  }
+
   [[nodiscard]]
   std::filesystem::path monotonic_sequence_test::source_file()
   {
@@ -18,10 +35,37 @@ namespace sequoia::testing
 
   void monotonic_sequence_test::run_tests()
   {
+    test_translation_constraints();
     test_decreasing_sequence();
     test_static_decreasing_sequence();
     test_static_increasing_sequence();
+    test_translation_limits();
     test_overwrite();
+  }
+
+  void monotonic_sequence_test::test_translation_constraints()
+  {
+    using namespace maths;
+
+    STATIC_CHECK(translatable_by<monotonic_sequence<int>, int>);
+    STATIC_CHECK(translatable_by<static_monotonic_sequence<std::size_t, 2, std::ranges::greater>, std::ptrdiff_t>);
+    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::greater<int>>, int>);
+    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::ranges::less>, int>);
+    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::ranges::less_equal>, int>);
+    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::ranges::greater>, int>);
+    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::ranges::greater_equal>, int>);
+    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::less<int>>, int>);
+    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::less_equal<int>>, int>);
+    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::greater_equal<int>>, int>);
+    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::less<>>, int>);
+    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::less_equal<>>, int>);
+    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::greater<>>, int>);
+    STATIC_CHECK(translatable_by<static_monotonic_sequence<int, 2, std::greater_equal<>>, int>);
+
+    STATIC_CHECK(!translatable_by<monotonic_sequence<int>, double>);
+    STATIC_CHECK(!translatable_by<static_monotonic_sequence<double, 2>, int>);
+    STATIC_CHECK(!translatable_by<static_monotonic_sequence<int, 2, three_never_follows>, int>);
+    STATIC_CHECK(!translatable_by<static_monotonic_sequence<std::size_t, 2, std::greater<int>>, int>);
   }
 
   void monotonic_sequence_test::test_decreasing_sequence()
@@ -54,14 +98,14 @@ namespace sequoia::testing
     check_exception_thrown<std::invalid_argument>("Invariant violated by attempted insertion in middle",
                                                   [&t](){ t.insert(t.cbegin() + 1, 2); });
 
-    t.mutate(t.cbegin(), t.cend() - 1, [](int a){ return a *= 2; });
+    t.translate(t.cbegin(), t.cend() - 1, 1);
     // - ; 2,1
 
     check(equivalence, "", t, std::initializer_list<int>{2, 1});
     check(equality, "", t, monotonic_sequence<int>{2,1});
 
-    s.mutate(s.begin(), s.end(), [](int a) { return a+1; });
-    check(equivalence, "", s, std::initializer_list<int>{});
+    s.translate(s.begin(), s.end(), 1);
+    check(equivalence, "Translating an empty sequence leaves it empty", s, std::initializer_list<int>{});
 
     s.push_back(4);
     // 4 ; 2,1
@@ -89,15 +133,28 @@ namespace sequoia::testing
     // - ; 8,4,3
     check(equivalence, "", t, std::initializer_list<int>{8, 4, 3});
 
-    check_exception_thrown<std::invalid_argument>("",
-      [&t](){ t.mutate(t.begin(), t.begin()+2, [](const int i) { return i/2; }); });
+    check_exception_thrown<std::invalid_argument>("Translating 8, 4 by -2 throws, since 2 is less than the 3 after it",
+                                                  [&t](){ t.translate(t.begin(), t.begin()+2, -2); });
 
-    check(equivalence, "", t, std::initializer_list<int>{8, 4, 3});
+    check(equivalence, "A refused translation leaves the sequence unchanged", t, std::initializer_list<int>{8, 4, 3});
 
-    t.mutate(t.begin(), t.end(), [](const int i) { return i/2; });
-    // -; 4, 2, 1
+    t.translate(t.begin(), t.end(), -4);
+    // -; 4, 0, -1
 
-    check(equivalence, "", t, std::initializer_list<int>{4, 2, 1});
+    check(equivalence, "Translating every element by -4", t, std::initializer_list<int>{4, 0, -1});
+
+    t.translate(t.begin() + 1, t.end(), 4);
+    // -; 4, 4, 3
+
+    check(equivalence,
+          "Translating 0, -1 by 4 brings 4 level with the 4 before it",
+          t,
+          std::initializer_list<int>{4, 4, 3});
+
+    static_monotonic_sequence<int, 3, std::less_equal<>> u{4, 0, -1};
+    check_exception_thrown<std::invalid_argument>("Translating 0, -1 by 4 throws, since 4 may not follow 4",
+                                                  [&u](){ u.translate(u.begin() + 1, u.end(), 4); });
+    check(equivalence, "A refused translation leaves the sequence unchanged", u, std::initializer_list<int>{4, 0, -1});
   }
 
   void monotonic_sequence_test::test_static_decreasing_sequence()
@@ -114,22 +171,13 @@ namespace sequoia::testing
     STATIC_CHECK(maths::impl::swap_is_noexcept_v<std::array<double, 2>>);
   }
 
-  template<bool Check>
   constexpr maths::static_monotonic_sequence<int,6, std::greater<int>>
   monotonic_sequence_test::make_sequence()
   {
     using namespace maths;
 
     static_monotonic_sequence<int, 6, std::greater<int>> s{-1,0,1,1,2,6};
-
-    if constexpr(Check)
-    {
-      s.mutate(s.begin(), s.end(), [](const int i) { return i * 2; });
-    }
-    else
-    {
-      s.mutate(unsafe_t{}, s.begin(), s.end(), [](const int i) { return i * 2; });
-    }
+    s.translate(s.begin(), s.end(), 1);
 
     return s;
   }
@@ -138,26 +186,101 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    constexpr auto s{make_sequence<false>()};
-    check(equivalence, "", s, std::initializer_list<int>{-2,0,2,2,4,12});
-
-    constexpr auto s2{make_sequence<true>()};
-    check(equivalence, "", s2, std::initializer_list<int>{-2,0,2,2,4,12});
-
-    check(equality, "", s, static_monotonic_sequence<int, 6, std::greater<int>>{-2,0,2,2,4,12});
+    constexpr auto s{make_sequence()};
+    check(equivalence,
+          "Translating a static sequence by 1 in a constant expression",
+          s,
+          std::initializer_list<int>{0,1,2,2,3,7});
+    check(equality, "", s, static_monotonic_sequence<int, 6, std::greater<int>>{0,1,2,2,3,7});
 
     static_monotonic_sequence<int, 6, std::greater<int>> t{2,2,2,3,3,3};
-    check_exception_thrown<std::invalid_argument>("", [&t](){
-        t.mutate(t.begin()+1, t.begin()+3,[](const int i){ return i*2;});});
+    check_exception_thrown<std::invalid_argument>("Translating 2, 2 by 2 throws, since 4 exceeds the 3 after it",
+                                                  [&t](){ t.translate(t.begin()+1, t.begin()+3, 2); });
 
-    check(equivalence, "", t, std::initializer_list<int>{2,2,2,3,3,3});
+    check(equivalence,
+          "A refused translation leaves the sequence unchanged",
+          t,
+          std::initializer_list<int>{2,2,2,3,3,3});
     check_semantics("", s, t);
 
     static_monotonic_sequence<int, 6, std::greater<int>> u{2,3,3,4,4,5};
-    check_exception_thrown<std::invalid_argument>("", [&u](){
-        u.mutate(u.begin()+1, u.begin()+4,[](const int i){ return i*2;});});
+    check_exception_thrown<std::invalid_argument>("Translating 3, 3, 4 by -2 throws, since 1 is below the 2 before it",
+                                                  [&u](){ u.translate(u.begin()+1, u.begin()+4, -2); });
 
-    check(equivalence, "", u, std::initializer_list<int>{2,3,3,4,4,5});
+    check(equivalence,
+          "A refused translation leaves the sequence unchanged",
+          u,
+          std::initializer_list<int>{2,3,3,4,4,5});
+  }
+
+  void monotonic_sequence_test::test_translation_limits()
+  {
+    using namespace maths;
+
+    auto checkTranslation{
+      [this]<integer T>(std::string_view description, const T x, const integer auto delta, const T prediction) {
+        static_monotonic_sequence<T, 1> s{x};
+        s.translate(s.begin(), s.end(), delta);
+        check(equivalence, description, s, std::initializer_list<T>{prediction});
+      }
+    };
+
+    auto checkRefusal{
+      [this]<integer T>(std::string_view description, const T x, const integer auto delta) {
+        static_monotonic_sequence<T, 1> s{x};
+        check_exception_thrown<std::invalid_argument>(description,
+                                                      [&s, delta](){ s.translate(s.begin(), s.end(), delta); });
+        check(equivalence,
+              std::string{description}.append(", and the sequence is unchanged"),
+              s,
+              std::initializer_list<T>{x});
+      }
+    };
+
+    constexpr auto int64Max{std::numeric_limits<std::int64_t>::max()},
+                   int64Min{std::numeric_limits<std::int64_t>::lowest()};
+    constexpr auto uint64Max{std::numeric_limits<std::uint64_t>::max()};
+
+    checkTranslation("254 + 1 is the maximum of std::uint8_t", std::uint8_t{254}, 1, std::uint8_t{255});
+    checkRefusal("255 + 1 exceeds the maximum of std::uint8_t", std::uint8_t{255}, 1);
+    checkTranslation("1 - 1 is the minimum of std::uint8_t", std::uint8_t{1}, -1, std::uint8_t{});
+    checkRefusal("0 - 1 is below the minimum of std::uint8_t", std::uint8_t{}, -1);
+    checkRefusal("0 + 256 exceeds the maximum of std::uint8_t, though 256 wraps to 0 in it", std::uint8_t{}, 256);
+    checkRefusal("0 - 1 is below the minimum of std::uint8_t, for a std::int8_t -1", std::uint8_t{}, std::int8_t{-1});
+    checkRefusal("255 - 256 is below the minimum of std::uint8_t, though -256 wraps to 0", std::uint8_t{255}, -256);
+
+    checkTranslation("-128 + 255 is the maximum of std::int8_t", std::int8_t{-128}, 255, std::int8_t{127});
+    checkTranslation("127 - 255 is the minimum of std::int8_t", std::int8_t{127}, -255, std::int8_t{-128});
+    checkRefusal("127 + 1 exceeds the maximum of std::int8_t", std::int8_t{127}, 1);
+    checkRefusal("-128 - 1 is below the minimum of std::int8_t", std::int8_t{-128}, -1);
+
+    checkTranslation("The maximum of std::int64_t plus its minimum is -1", int64Max, int64Min, std::int64_t{-1});
+    checkRefusal("0 plus the minimum of std::int64_t is below the minimum of std::uint64_t", std::uint64_t{}, int64Min);
+    checkRefusal("1 plus the maximum of std::uint64_t exceeds it", std::uint64_t{1}, uint64Max);
+
+    static_monotonic_sequence<std::uint8_t, 2, std::ranges::greater> s{254, 255};
+    check_exception_thrown<std::invalid_argument>("Translating 254, 255 by 2 throws, though wrapped 0, 1 is monotonic",
+                                                  [&s](){ s.translate(s.begin(), s.end(), 2); });
+    check(equivalence,
+          "A refused translation leaves the sequence unchanged",
+          s,
+          std::initializer_list<std::uint8_t>{254, 255});
+
+    static_monotonic_sequence<std::uint8_t, 2, std::ranges::greater> t{1, 255};
+    check_exception_thrown<std::invalid_argument>("Translating 1, 255 by 1 throws, since 256 exceeds the maximum",
+                                                  [&t](){ t.translate(t.begin(), t.end(), 1); });
+    check(equivalence,
+          "A refused translation leaves the sequence unchanged",
+          t,
+          std::initializer_list<std::uint8_t>{1, 255});
+
+    static_monotonic_sequence<std::uint8_t, 2> u{255, 1};
+    check_exception_thrown<std::invalid_argument>("Translating 255, 1 by 1 throws, since 256 exceeds the maximum",
+                                                  [&u](){ u.translate(u.begin(), u.end(), 1); });
+    check(equivalence,
+          "A refused translation leaves the sequence unchanged",
+          u,
+          std::initializer_list<std::uint8_t>{255, 1});
   }
 
   void monotonic_sequence_test::test_overwrite()

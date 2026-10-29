@@ -13,7 +13,6 @@
 
 #include "sequoia/Maths/Sequences/MonotonicSequenceDetails.hpp"
 #include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
-#include "sequoia/PlatformSpecific/Macros.hpp"
 
 #include <algorithm>
 #include <ranges>
@@ -23,8 +22,12 @@
 
 namespace sequoia::maths
 {
-  struct unsafe_t {};
+  /** \brief The operations common to a monotonic sequence in any container.
 
+      `Compare{}(x, y)` is false for each element `x` and the element `y`
+      that follows it. Every operation that changes the elements keeps this
+      invariant, and refuses a change that would break it.
+   */
   template<class T, class C, class Compare> class monotonic_sequence_base
   {
   public:
@@ -89,48 +92,36 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr const T& front() const { return *begin(); }
 
-    template<class UnaryOp>
-    constexpr void mutate(const_iterator first, const_iterator last, UnaryOp op)
+    /** \brief Adds `delta` to each element in [`first`, `last`).
+
+        \throws std::invalid_argument if `T` cannot represent an element plus
+        `delta`, or if the translation would break the sequence's
+        monotonicity. The sequence is then unchanged.
+     */
+    template<integer Delta>
+      requires integer<T> && impl::translation_invariant_order_v<Compare, T>
+    constexpr void translate(const_iterator first, const_iterator last, const Delta delta)
     {
-      if(first != last)
+      if(first == last)
+        return;
+
+      // The constraint on Compare puts every element of the run between the
+      // run's ends, so the ends' range bounds every element's. With the ends
+      // in range, translating preserves how Compare orders two elements of
+      // the run, so only the ends need comparing with their neighbours.
+      const auto back{std::ranges::prev(last)};
+      if(!impl::sum_is_representable(*first, delta) || !impl::sum_is_representable(*back, delta))
+        throw std::invalid_argument{"monotonic_sequence::translate - an element would leave the range of its type"};
+
+      const auto translated{[delta](const T x){ return impl::wrapping_sum(x, delta); }};
+      if(   ((first != cbegin()) && Compare{}(*std::ranges::prev(first), translated(*first)))
+         || ((last  != cend())   && Compare{}(translated(*back), *last)))
       {
-        auto tmp{m_Sequence};
-        auto f{tmp.begin() + std::ranges::distance(cbegin(), first)};
-        auto l{tmp.begin() + std::ranges::distance(cbegin(), last)};
-
-        for(auto i{f}; i != l; ++i)
-        {
-          *i = op(*i);
-        }
-
-        if(f != tmp.begin()) --f;
-        if(l != tmp.end()) ++l;
-
-        while((f != l) && (f + 1) != tmp.end())
-        {
-          if(Compare{}(*f, *(f+1)))
-            throw std::invalid_argument("monotonic_sequence::mutate - monotonicity violated");
-
-          ++f;
-        }
-
-        m_Sequence = std::move(tmp);
+        throw std::invalid_argument{"monotonic_sequence::translate - monotonicity violated"};
       }
-    }
 
-    template<class UnaryOp>
-    constexpr void mutate(unsafe_t, const_iterator first, const_iterator last, UnaryOp op)
-    {
-      // gcc's loop vectorizer rewrites this into a form -Wstringop-overflow reads as a write into
-      // a zero-sized region. The bounds hold: swap_partitions, the caller on that path, checks both
-      // indices against num_partitions(), which is m_Partitions.size().
-SEQUOIA_GCC_SUPPRESS_BEGIN("-Wstringop-overflow=")
-      while(first != last)
-      {
-        auto pos{m_Sequence.begin() + std::ranges::distance(cbegin(), first++)};
-        *pos = op(*pos);
-      }
-SEQUOIA_GCC_SUPPRESS_END
+      const auto firstWritable{std::ranges::next(m_Sequence.begin(), std::ranges::distance(cbegin(), first))};
+      std::ranges::transform(first, last, firstWritable, translated);
     }
 
     /** \brief Replaces each element with the corresponding one of `values`.
