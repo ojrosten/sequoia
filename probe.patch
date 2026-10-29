@@ -85,7 +85,7 @@ index 000000000..3a939d9d7
 +  }
 +}
 diff --git a/Source/sequoia/TestFramework/TestRunner.cpp b/Source/sequoia/TestFramework/TestRunner.cpp
-index 3c6de4a56..dcbba573c 100644
+index 3c6de4a56..1856f959b 100644
 --- a/Source/sequoia/TestFramework/TestRunner.cpp
 +++ b/Source/sequoia/TestFramework/TestRunner.cpp
 @@ -6,6 +6,7 @@
@@ -96,55 +96,7 @@ index 3c6de4a56..dcbba573c 100644
  
  #include "sequoia/TestFramework/CoarseSleeps.hpp"
  #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
-@@ -163,9 +164,17 @@ namespace sequoia::testing
-     void make_empty_file_quietly(const fs::path& file)
-     {
-       std::error_code selectsTheNonThrowingOverload{};
--      fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
-+      {
-+        const scratch_probe::span probe{"empty_dirs"};
-+        fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
-+      }
- 
-+      scratch_probe::mark("empty_open", 0);
-       std::ofstream ofile{file, std::ios_base::out | std::ios_base::binary};
-+      scratch_probe::mark("empty_open", 1);
-+      scratch_probe::mark("empty_close", 0);
-+      ofile.close();
-+      scratch_probe::mark("empty_close", 1);
-     }
- 
-     void append_quietly(const fs::path& file, std::string_view text)
-@@ -778,11 +787,24 @@ namespace sequoia::testing
-         const auto& filename{summaryFile.file_path()};
-         if(filename.empty()) return;
- 
--        fs::create_directories(filename.parent_path());
-+        {
-+          const scratch_probe::span probe{"summary_dirs"};
-+          fs::create_directories(filename.parent_path());
-+        }
- 
--        write_to_file(filename,
--                      summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent),
--                      std::ios_base::out | std::ios_base::binary);
-+        const auto text{summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent)};
-+        scratch_probe::mark("summary_open", 0);
-+        std::ofstream ofile{filename, std::ios_base::out | std::ios_base::binary};
-+        scratch_probe::mark("summary_open", 1);
-+        if(!ofile) throw std::runtime_error{"scratch probe: summary file did not open"};
-+        scratch_probe::mark("summary_write", 0);
-+        ofile.write(text.data(), static_cast<std::streamsize>(text.size()));
-+        ofile.flush();
-+        scratch_probe::mark("summary_write", 1);
-+        scratch_probe::mark("summary_close", 0);
-+        ofile.close();
-+        scratch_probe::mark("summary_close", 1);
-+        if(!ofile) throw std::runtime_error{"scratch probe: summary file did not close cleanly"};
-       }
- 
-       void record_materials_update_failure(const fs::path& testFile, std::string_view what)
-@@ -958,6 +980,7 @@ namespace sequoia::testing
+@@ -958,6 +959,7 @@ namespace sequoia::testing
      , m_ExecutionTimer{executionTimer}
      , m_Vessel{vessel}
    {
@@ -152,7 +104,7 @@ index 3c6de4a56..dcbba573c 100644
      append_quietly(m_File, to_string(m_Record));
    }
  
-@@ -970,12 +993,14 @@ namespace sequoia::testing
+@@ -970,12 +972,14 @@ namespace sequoia::testing
        .performance_check_attempts{attempt_counts_of_finished_checks(m_Vessel.attempts_per_performance_check())}
      };
  
@@ -167,7 +119,7 @@ index 3c6de4a56..dcbba573c 100644
      execution_timer executionTimer{};
      auto summary{execute_and_record(index, executionTimer, remover)};
      summary.runner_overhead(executionTimer.runner_overhead());
-@@ -1017,9 +1042,18 @@ namespace sequoia::testing
+@@ -1017,9 +1021,18 @@ namespace sequoia::testing
      const scoped_terminate_handler terminationReported{report_termination};
      const scoped_execution_record record{m_ExecutionRecord.file_path(), executionTimer, m_Vessel};
  
@@ -187,7 +139,7 @@ index 3c6de4a56..dcbba573c 100644
      return write_output(executionTimer.execution_duration(), index);
    }
  
-@@ -1834,8 +1868,13 @@ namespace sequoia::testing
+@@ -1834,8 +1847,13 @@ namespace sequoia::testing
      // Without the flush, a run killed while the tests are silent would never show that they had begun
      stream() << running_tests_message(m_ConcurrencyMode) << std::flush;
  
@@ -201,7 +153,7 @@ index 3c6de4a56..dcbba573c 100644
  
      test_tracker tracker{proj_paths(), id, m_Filter.selects() ? is_filtered::yes : is_filtered::no, m_Filter.tests_left_out()};
  
-@@ -1870,9 +1909,14 @@ namespace sequoia::testing
+@@ -1870,9 +1888,14 @@ namespace sequoia::testing
      };
  
      traverse(depth_first, m_Suites, find_disconnected_t{}, null_func_obj{}, summarizeAndTrack, null_func_obj{});
