@@ -19,12 +19,15 @@
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
 #include <atomic>
+#include <concepts>
+#include <cstddef>
 #include <queue>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
 #include <future>
 #include <stdexcept>
+#include <vector>
 
 namespace sequoia::concurrency
 {
