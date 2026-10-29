@@ -16,6 +16,7 @@
 #include <list>
 #include <string>
 #include <string_view>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -34,6 +35,42 @@ namespace sequoia::testing
         ++*count;
         return lhs < rhs;
       }
+    };
+
+    struct vector_with_nothing_deleted : std::vector<int> {};
+
+    struct vector_without_default_construction : std::vector<int>
+    {
+      vector_without_default_construction() = delete;
+    };
+
+    struct vector_without_copying_push_back : std::vector<int>
+    {
+      using std::vector<int>::push_back;
+
+      void push_back(const int&) = delete;
+    };
+
+    struct vector_without_moving_push_back : std::vector<int>
+    {
+      using std::vector<int>::push_back;
+
+      void push_back(int&&) = delete;
+    };
+
+    struct vector_without_pop_back : std::vector<int>
+    {
+      void pop_back() = delete;
+    };
+
+    struct vector_without_empty : std::vector<int>
+    {
+      bool empty() const = delete;
+    };
+
+    struct vector_without_size : std::vector<int>
+    {
+      size_type size() const = delete;
     };
 
     template<class... Args>
@@ -83,6 +120,7 @@ namespace sequoia::testing
     STATIC_CHECK( priority_queue_admits_v<int>);
     STATIC_CHECK( priority_queue_admits_v<int, std::vector<int>, std::ranges::greater>);
     STATIC_CHECK( priority_queue_admits_v<bool, std::deque<bool>>);
+    STATIC_CHECK( priority_queue_admits_v<int, vector_with_nothing_deleted>);
 
     // The element type differs from the container's
     STATIC_CHECK(!priority_queue_admits_v<int, std::vector<long>>);
@@ -96,6 +134,14 @@ namespace sequoia::testing
 
     // The container returns no reference to its elements
     STATIC_CHECK(!priority_queue_admits_v<bool>);
+
+    // The container lacks a member which priority_queue uses
+    STATIC_CHECK(!priority_queue_admits_v<int, vector_without_default_construction>);
+    STATIC_CHECK(!priority_queue_admits_v<int, vector_without_copying_push_back>);
+    STATIC_CHECK(!priority_queue_admits_v<int, vector_without_moving_push_back>);
+    STATIC_CHECK(!priority_queue_admits_v<int, vector_without_pop_back>);
+    STATIC_CHECK(!priority_queue_admits_v<int, vector_without_empty>);
+    STATIC_CHECK(!priority_queue_admits_v<int, vector_without_size>);
   }
 
   void priority_queue_regular_test::test_constant_evaluation()

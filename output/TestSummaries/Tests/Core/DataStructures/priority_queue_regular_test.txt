@@ -1,2 +1,2 @@
 priority_queue_regular_test
-Standard Top Level Checks:               172;  Failures:  0  [Deep checks: 3482]
+Standard Top Level Checks:               179;  Failures:  0  [Deep checks: 3489]
