@@ -60,8 +60,8 @@ namespace sequoia::testing
     // C++17 input iterator requirements, and std::iterator_traits is empty for
     // it. Wrapping it checks that neither utilities::iterator nor
     // identity_dereference_policy reads std::iterator_traits. Where Reference
-    // is a reference, operator* returns a reference to the iterator's own
-    // count, as std::istream_iterator's operator* does to its own value.
+    // is a reference type, operator* returns a reference to the iterator's
+    // own count, as std::istream_iterator's operator* does to its own value.
     template<class Reference>
     class basic_counting_input_iterator
     {
@@ -196,7 +196,7 @@ namespace sequoia::testing
     using iter_t = iterator<stashing_input_iterator, identity_dereference_policy<stashing_input_iterator>>;
 
     // A constant evaluation, so that a read through a dangling reference
-    // fails to compile
+    // fails to compile.
     STATIC_CHECK([](){
       const iter_t i{stashing_input_iterator{3}};
       return (*i == 3) && (*i.operator->() == 3);
