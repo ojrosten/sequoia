@@ -454,7 +454,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      friend bool operator==(const bucketed_sequence& lhs, const bucketed_sequence& rhs) noexcept = default;
+      friend bool operator==(const bucketed_sequence& lhs, const bucketed_sequence& rhs) = default;
     private:
       container_type m_Buckets;
 
@@ -771,7 +771,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      friend constexpr bool operator==(const partitioned_sequence_base&, const partitioned_sequence_base&) noexcept = default;
+      friend constexpr bool operator==(const partitioned_sequence_base&, const partitioned_sequence_base&) = default;
     protected:
       explicit constexpr partitioned_sequence_base(const std::pair<partitions_type, container_type>& data)
         : m_Partitions(data.first)
