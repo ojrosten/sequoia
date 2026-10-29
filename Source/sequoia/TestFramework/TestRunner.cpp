@@ -152,11 +152,19 @@ namespace sequoia::testing
       }
     }
 
+    /** Replaces the contents of `file` with `text`, byte for byte, and
+        ignores any failure. A reader may briefly find no `file`, but never
+        a partial one.
+     */
     void overwrite_quietly(const fs::path& file, std::string_view text)
     {
       std::error_code selectsTheNonThrowingOverload{};
       fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
 
+      // Under ext4's auto_da_alloc, a rename over an existing file starts
+      // writing the renamed file back, and can stall for hundreds of
+      // milliseconds. A rename to a free name does neither.
+      fs::remove(file, selectsTheNonThrowingOverload);
       replace_contents_quietly(file, text, write_mode::binary);
     }
 
