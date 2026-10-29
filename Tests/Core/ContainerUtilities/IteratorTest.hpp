@@ -36,8 +36,8 @@ namespace sequoia::testing
     void test_nested_bidirectional_iterator();
     void test_comparisons_the_base_iterator_lacks();
     void test_comparisons_with_a_const_iterator();
-    void test_comparisons_with_an_unconvertible_iterator();
-    void test_conversion_with_an_aggregate_data_policy();
+    void test_comparisons_without_a_conversion();
+    void test_aggregate_data_policy();
     void test_stashing_input_iterator();
     void test_arrow_operator_with_overloaded_address_of();
 

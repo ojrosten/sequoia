@@ -38,13 +38,14 @@ namespace sequoia::utilities
     /** \brief Whether a class deriving from `Policy` can initialize its
         `Policy` subobject from `Args`, as one of:
         -# A copy of the `Policy` subobject of the one argument;
-        -# A `Policy`, or an `aggregator<Policy>`, initialized from `Args`.
+        -# A `Policy`, or an `aggregator<Policy>`, initialized from `Args`
+           outside any class deriving from `Policy`.
      */
     template<class Policy, class... Args>
     inline constexpr bool base_initializable_from_v{
          ((sizeof...(Args) == 1) && (std::derived_from<std::remove_cvref_t<Args>, Policy> && ...))
       || initializable_from<Policy, Args...>
-      // Admits a Policy whose destructor is protected
+      // Admits a Policy whose destructor or default constructor is protected
       || initializable_from<aggregator<Policy>, Args...>
     };
   }
@@ -186,7 +187,7 @@ namespace sequoia::utilities
         converts to the other.
      */
     template<class Iter, class DerefPol>
-    constexpr static bool converts_either_way_v{
+    constexpr static bool converts_to_or_from_v{
          converts_from_v<Iter, DerefPol>
       || impl::iterator_converts_v<Iterator, DereferencePolicy, Iter, DerefPol>
     };
@@ -374,16 +375,16 @@ SEQUOIA_GCC_SUPPRESS_END
     friend auto operator<=>(const Other&, const Other&)
       requires (!std::three_way_comparable<Iterator>) = delete;
 
-    // Without these deletions, comparing with an iterator that neither
-    // converts to nor from this one would resolve to a comparison declared
-    // by a public base class that the two dereference policies share. Such a
-    // comparison ignores the base iterators.
+    // Without these deletions, comparing with an iterator for which the
+    // converting comparisons are not viable could resolve to a non-template
+    // comparison declared by a public base class that the two dereference
+    // policies share. Such a comparison ignores the base iterators.
     template<class Iter, class DerefPol>
-      requires (!(converts_either_way_v<Iter, DerefPol> && std::equality_comparable_with<Iterator, Iter>))
+      requires (!(converts_to_or_from_v<Iter, DerefPol> && std::equality_comparable_with<Iterator, Iter>))
     friend bool operator==(const iterator&, const iterator<Iter, DerefPol>&) = delete;
 
     template<class Iter, class DerefPol>
-      requires (!(converts_either_way_v<Iter, DerefPol> && std::three_way_comparable_with<Iterator, Iter>))
+      requires (!(converts_to_or_from_v<Iter, DerefPol> && std::three_way_comparable_with<Iterator, Iter>))
     friend auto operator<=>(const iterator&, const iterator<Iter, DerefPol>&) = delete;
   private:
     Iterator m_BaseIterator{};
