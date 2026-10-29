@@ -15,9 +15,14 @@ namespace sequoia::testing
 {
   namespace
   {
-    struct element_with_overloaded_address_of
+    struct value_with_null_address_of_operator
     {
       constexpr std::nullptr_t operator&() const noexcept { return nullptr; }
+    };
+
+    struct value_with_deleted_address_of_operator
+    {
+      void operator&() const = delete;
     };
   }
 
@@ -29,21 +34,37 @@ namespace sequoia::testing
 
   void handlers_free_test::run_tests()
   {
-    test_by_value_get_ptr_with_overloaded_address_of();
+    test_by_value_get_ptr_bypasses_the_address_of_operator();
   }
 
-  void handlers_free_test::test_by_value_get_ptr_with_overloaded_address_of()
+  void handlers_free_test::test_by_value_get_ptr_bypasses_the_address_of_operator()
   {
-    using handler_t = object::by_value<element_with_overloaded_address_of>;
+    using namespace object;
+
+    using null_handler_t    = by_value<value_with_null_address_of_operator>;
+    using deleted_handler_t = by_value<value_with_deleted_address_of_operator>;
+
+    STATIC_CHECK(handler<null_handler_t>);
+    STATIC_CHECK(handler<deleted_handler_t>);
 
     STATIC_CHECK([](){
-      element_with_overloaded_address_of x{};
-      return handler_t::get_ptr(x) == std::addressof(x);
+      value_with_null_address_of_operator x{};
+      return null_handler_t::get_ptr(x) == std::addressof(x);
     }());
 
     STATIC_CHECK([](){
-      const element_with_overloaded_address_of x{};
-      return handler_t::get_ptr(x) == std::addressof(x);
+      const value_with_null_address_of_operator x{};
+      return null_handler_t::get_ptr(x) == std::addressof(x);
+    }());
+
+    STATIC_CHECK([](){
+      value_with_deleted_address_of_operator x{};
+      return deleted_handler_t::get_ptr(x) == std::addressof(x);
+    }());
+
+    STATIC_CHECK([](){
+      const value_with_deleted_address_of_operator x{};
+      return deleted_handler_t::get_ptr(x) == std::addressof(x);
     }());
   }
 }

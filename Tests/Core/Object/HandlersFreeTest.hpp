@@ -23,6 +23,6 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    void test_by_value_get_ptr_with_overloaded_address_of();
+    void test_by_value_get_ptr_bypasses_the_address_of_operator();
   };
 }
