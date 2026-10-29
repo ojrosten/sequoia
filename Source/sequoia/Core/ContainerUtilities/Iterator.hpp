@@ -104,10 +104,10 @@ namespace sequoia::utilities
     constexpr identity_dereference_policy(const identity_dereference_policy&) = default;
 
     [[nodiscard]]
-    constexpr static reference get(Iterator i) { return *i; }
+    constexpr static reference get(const Iterator& i) { return *i; }
 
     [[nodiscard]]
-    constexpr static pointer get_ptr(Iterator i)
+    constexpr static pointer get_ptr(const Iterator& i)
       requires (!std::is_void_v<pointer>)
     {
       return &*i;

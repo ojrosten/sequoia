@@ -59,21 +59,27 @@ namespace sequoia::testing
     // Post-increment returns void, so this input iterator does not meet the
     // C++17 input iterator requirements, and std::iterator_traits is empty for
     // it. Wrapping it checks that neither utilities::iterator nor
-    // identity_dereference_policy reads std::iterator_traits.
-    class counting_input_iterator
+    // identity_dereference_policy reads std::iterator_traits. Where Reference
+    // is a reference, operator* returns a reference to the iterator's own
+    // count, as std::istream_iterator's operator* does to its own value.
+    template<class Reference>
+    class basic_counting_input_iterator
     {
     public:
       using value_type       = int;
       using difference_type  = std::ptrdiff_t;
       using iterator_concept = std::input_iterator_tag;
 
-      constexpr counting_input_iterator() = default;
-      constexpr explicit counting_input_iterator(const value_type count) : m_Count{count} {}
+      constexpr basic_counting_input_iterator() = default;
+
+      constexpr explicit basic_counting_input_iterator(const value_type count)
+        : m_Count{count}
+      {}
 
       [[nodiscard]]
-      constexpr value_type operator*() const noexcept { return m_Count; }
+      constexpr Reference operator*() const noexcept { return m_Count; }
 
-      constexpr counting_input_iterator& operator++() noexcept
+      constexpr basic_counting_input_iterator& operator++() noexcept
       {
         ++m_Count;
         return *this;
@@ -82,11 +88,14 @@ namespace sequoia::testing
       constexpr void operator++(int) noexcept { ++m_Count; }
 
       [[nodiscard]]
-      friend constexpr bool operator==(const counting_input_iterator&,
-                                       const counting_input_iterator&) noexcept = default;
+      friend constexpr bool operator==(const basic_counting_input_iterator&,
+                                       const basic_counting_input_iterator&) noexcept = default;
     private:
       value_type m_Count{};
     };
+
+    using counting_input_iterator = basic_counting_input_iterator<int>;
+    using stashing_input_iterator = basic_counting_input_iterator<const int&>;
 
     template<class I>
     constexpr bool has_iterator_traits_difference_type_v{
@@ -142,6 +151,7 @@ namespace sequoia::testing
   {
     test_nested_bidirectional_iterator();
     test_comparisons_the_base_iterator_lacks();
+    test_stashing_input_iterator();
 
     test_iterator();
     test_const_iterator();
@@ -177,6 +187,20 @@ namespace sequoia::testing
 
     STATIC_CHECK( std::equality_comparable<iter_without_ordering_t>);
     STATIC_CHECK(!std::three_way_comparable<iter_without_ordering_t>);
+  }
+
+  void iterator_test::test_stashing_input_iterator()
+  {
+    using namespace utilities;
+
+    using iter_t = iterator<stashing_input_iterator, identity_dereference_policy<stashing_input_iterator>>;
+
+    // A constant evaluation, so that a read through a dangling reference
+    // fails to compile
+    STATIC_CHECK([](){
+      const iter_t i{stashing_input_iterator{3}};
+      return (*i == 3) && (*i.operator->() == 3);
+    }());
   }
 
   void iterator_test::test_traitless_input_iterator()
