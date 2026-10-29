@@ -12,10 +12,12 @@ name: scratch-speedup-baseline-tail
 # truncated and rewritten, on the filesystem holding the workspace. Only 9V74
 # hosts measure.
 #
-# Round 3 checks the fix, summary-written-only-if-changed (3c8b2ffa7): the
-# same trace as round 1 (probe.patch, which leaves the summary write alone),
-# with the filesystem as it is, on 9V74 hosts. Round 1 had 12 speed-up
-# failures in 180 runs of the test on such hosts.
+# Round 3 checked the fix, PR #407 (3c8b2ffa7): no speed-up failure in 140
+# runs on 9V74 hosts, and every remaining baseline that outlasted its task
+# did so in the runner's construction. Round 4 traces that construction, on
+# #407's head (053f20e05): the member initializers, argument processing, the
+# output directories, the run stamp, and each registration's test and record
+# file, beside round 1's trace.
 #
 # Each measuring job checks out REF, applies probe.patch, builds
 # TestAll as the Linux Debug column does (g++-15, preset gcc-env,
@@ -40,7 +42,7 @@ jobs:
         replicate: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                     21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
     env:
-      REF: 3c8b2ffa776497caf743363e14973c68cbfdee41
+      REF: 053f20e05c58354062f2c52d57632bd0a79bfc79
       LOCATE: 20
     steps:
       - name: Describe the host
