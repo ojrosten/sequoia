@@ -34,6 +34,20 @@ namespace sequoia::utilities
         return Policy::get(i);
       }
     };
+
+    /** \brief Whether a class deriving from `Policy` can initialize its
+        `Policy` subobject from `Args`, as one of:
+        -# A copy of the `Policy` subobject of the one argument;
+        -# A `Policy`, or an `aggregator<Policy>`, initialized from `Args`
+           outside any class deriving from `Policy`.
+     */
+    template<class Policy, class... Args>
+    inline constexpr bool base_initializable_from_v{
+         ((sizeof...(Args) == 1) && (std::derived_from<std::remove_cvref_t<Args>, Policy> && ...))
+      || initializable_from<Policy, Args...>
+      // Admits a Policy whose destructor or default constructor is protected
+      || initializable_from<aggregator<Policy>, Args...>
+    };
   }
 
   template<class Policy, class Iterator>
@@ -98,6 +112,7 @@ namespace sequoia::utilities
 
     template<class... Args>
       requires (!resolve_to_copy_v<identity_dereference_policy, Args...>)
+            && impl::base_initializable_from_v<AuxiliaryDataPolicy, Args...>
     constexpr explicit(sizeof...(Args) == 1) identity_dereference_policy(Args&&... args)
       : AuxiliaryDataPolicy{std::forward<Args>(args)...}
     {}
@@ -133,6 +148,19 @@ namespace sequoia::utilities
          && !std::indirectly_writable<typename DereferencePolicy::reference, typename DereferencePolicy::value_type>)
   };
 
+  namespace impl
+  {
+    /** \brief Whether an `iterator<FromIter, FromPolicy>` converts to an
+        `iterator<ToIter, ToPolicy>`, through the converting constructor.
+     */
+    template<class FromIter, class FromPolicy, class ToIter, class ToPolicy>
+    inline constexpr bool iterator_converts_v{
+         !std::is_same_v<FromIter, ToIter>
+      && initializable_from<ToIter, FromIter>
+      && consistent_policies_v<ToPolicy, FromPolicy>
+    };
+  }
+
   /** \class iterator
       \brief An iterator with policies controlling dereferencing and auxiliary data.
 
@@ -152,9 +180,16 @@ namespace sequoia::utilities
      */
     template<class Iter, class DerefPol>
     constexpr static bool converts_from_v{
-         !std::is_same_v<Iter, Iterator>
-      && initializable_from<Iterator, Iter>
-      && consistent_policies_v<DereferencePolicy, DerefPol>
+      impl::iterator_converts_v<Iter, DerefPol, Iterator, DereferencePolicy>
+    };
+
+    /** Whether either of this iterator and an `iterator<Iter, DerefPol>`
+        converts to the other.
+     */
+    template<class Iter, class DerefPol>
+    constexpr static bool converts_to_or_from_v{
+         converts_from_v<Iter, DerefPol>
+      || impl::iterator_converts_v<Iterator, DereferencePolicy, Iter, DerefPol>
     };
   public:
     using base_iterator_type      = Iterator;
@@ -339,6 +374,18 @@ SEQUOIA_GCC_SUPPRESS_END
     template<std::same_as<iterator> Other>
     friend auto operator<=>(const Other&, const Other&)
       requires (!std::three_way_comparable<Iterator>) = delete;
+
+    // Without these deletions, comparing with an iterator for which the
+    // converting comparisons are not viable could resolve to a non-template
+    // comparison declared by a public base class that the two dereference
+    // policies share. Such a comparison ignores the base iterators.
+    template<class Iter, class DerefPol>
+      requires (!(converts_to_or_from_v<Iter, DerefPol> && std::equality_comparable_with<Iterator, Iter>))
+    friend bool operator==(const iterator&, const iterator<Iter, DerefPol>&) = delete;
+
+    template<class Iter, class DerefPol>
+      requires (!(converts_to_or_from_v<Iter, DerefPol> && std::three_way_comparable_with<Iterator, Iter>))
+    friend auto operator<=>(const iterator&, const iterator<Iter, DerefPol>&) = delete;
   private:
     Iterator m_BaseIterator{};
   };
