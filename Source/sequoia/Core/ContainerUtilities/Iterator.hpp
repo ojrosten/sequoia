@@ -11,6 +11,7 @@
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
 #include <iterator>
+#include <type_traits>
 
 /** \file
     \brief Implementation for an iterator with policies controlling dereferencing and auxiliary data.
@@ -90,9 +91,9 @@ namespace sequoia::utilities
     using base_iterator_type    = Iterator;
     using auxiliary_data_policy = AuxiliaryDataPolicy;
 
-    using value_type = std::iterator_traits<Iterator>::value_type;
-    using reference  = std::iterator_traits<Iterator>::reference;
-    using pointer    = std::iterator_traits<Iterator>::pointer;
+    using value_type = std::iter_value_t<Iterator>;
+    using reference  = std::iter_reference_t<Iterator>;
+    using pointer    = std::conditional_t<std::is_lvalue_reference_v<reference>, std::add_pointer_t<reference>, void>;
 
     template<class... Args>
       requires (!resolve_to_copy_v<identity_dereference_policy, Args...>)
@@ -106,7 +107,11 @@ namespace sequoia::utilities
     constexpr static reference get(Iterator i) { return *i; }
 
     [[nodiscard]]
-    constexpr static pointer get_ptr(Iterator i) { return &*i; }
+    constexpr static pointer get_ptr(Iterator i)
+      requires (!std::is_void_v<pointer>)
+    {
+      return &*i;
+    }
 
     [[nodiscard]]
     friend constexpr bool operator==(const identity_dereference_policy&, const identity_dereference_policy&) noexcept = default;

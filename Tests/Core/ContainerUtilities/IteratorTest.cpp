@@ -21,8 +21,7 @@ namespace sequoia::testing
     class scaling_dereference_policy
     {
     public:
-      using value_type = std::iterator_traits<Iterator>::value_type;
-      using pointer    = std::iterator_traits<Iterator>::pointer;
+      using value_type = std::iter_value_t<Iterator>;
       using reference  = value_type;
 
       constexpr scaling_dereference_policy() = default;
@@ -59,8 +58,8 @@ namespace sequoia::testing
 
     // Post-increment returns void, so this input iterator does not meet the
     // C++17 input iterator requirements, and std::iterator_traits is empty for
-    // it. Wrapping it checks that utilities::iterator does not read the
-    // difference type from std::iterator_traits.
+    // it. Wrapping it checks that neither utilities::iterator nor
+    // identity_dereference_policy reads std::iterator_traits.
     class counting_input_iterator
     {
     public:
@@ -92,23 +91,6 @@ namespace sequoia::testing
     template<class I>
     constexpr bool has_iterator_traits_difference_type_v{
       requires { typename std::iterator_traits<I>::difference_type; }
-    };
-
-    class doubling_dereference_policy
-    {
-    public:
-      using value_type = int;
-      using reference  = int;
-
-      [[nodiscard]]
-      constexpr static reference get(const counting_input_iterator i) noexcept { return 2 * *i; }
-
-      [[nodiscard]]
-      friend constexpr bool operator==(const doubling_dereference_policy&,
-                                       const doubling_dereference_policy&) noexcept = default;
-    protected:
-      constexpr doubling_dereference_policy() = default;
-      ~doubling_dereference_policy() = default;
     };
 
     template<class I>
@@ -154,21 +136,25 @@ namespace sequoia::testing
   {
     using namespace utilities;
 
-    using iter_t = iterator<counting_input_iterator, doubling_dereference_policy>;
+    using iter_t = iterator<counting_input_iterator, identity_dereference_policy<counting_input_iterator>>;
 
-    STATIC_CHECK(std::input_iterator<counting_input_iterator>);
+    STATIC_CHECK( std::input_iterator<counting_input_iterator>);
     STATIC_CHECK(!has_iterator_traits_difference_type_v<counting_input_iterator>);
-    STATIC_CHECK(std::is_same_v<iter_t::difference_type, std::ptrdiff_t>);
-    STATIC_CHECK(std::input_iterator<iter_t>);
+    STATIC_CHECK( std::is_same_v<iter_t::difference_type, std::ptrdiff_t>);
+    STATIC_CHECK( std::is_same_v<iter_t::value_type, int>);
+    STATIC_CHECK( std::is_same_v<iter_t::reference, int>);
+    STATIC_CHECK( std::is_same_v<iter_t::pointer, void>);
+    STATIC_CHECK(!has_arrow_operator_v<iter_t>);
+    STATIC_CHECK( std::input_iterator<iter_t>);
 
     iter_t i{counting_input_iterator{3}};
-    check(equality, "Dereferencing an iterator over an input iterator without iterator traits", *i, 6);
+    check(equality, "Dereferencing an iterator over an input iterator without iterator traits", *i, 3);
 
     ++i;
-    check(equality, "Pre-incrementing an iterator over an input iterator without iterator traits", *i, 8);
+    check(equality, "Pre-incrementing an iterator over an input iterator without iterator traits", *i, 4);
 
-    check(equality, "Post-incrementing an iterator over an input iterator without iterator traits", *i++, 8);
-    check(equality, "Post-increment advances an iterator over an input iterator without iterator traits", *i, 10);
+    check(equality, "Post-incrementing an iterator over an input iterator without iterator traits", *i++, 4);
+    check(equality, "Post-increment advances an iterator over an input iterator without iterator traits", *i, 5);
   }
 
   void iterator_test::test_iterator()
@@ -314,7 +300,7 @@ namespace sequoia::testing
 
     STATIC_CHECK( std::is_same_v<custom_citer_t::difference_type, std::ptrdiff_t>);
     STATIC_CHECK( std::is_same_v<custom_citer_t::value_type, int>);
-    STATIC_CHECK( std::is_same_v<custom_citer_t::pointer, const int*>);
+    STATIC_CHECK( std::is_same_v<custom_citer_t::pointer, void>);
     STATIC_CHECK( std::random_access_iterator<custom_citer_t>);
     STATIC_CHECK(!std::permutable<custom_citer_t>);
 
@@ -336,7 +322,7 @@ namespace sequoia::testing
 
     STATIC_CHECK( std::is_same_v<custom_criter_t::difference_type, std::ptrdiff_t>);
     STATIC_CHECK( std::is_same_v<custom_criter_t::value_type, int>);
-    STATIC_CHECK( std::is_same_v<custom_criter_t::pointer, const int*>);
+    STATIC_CHECK( std::is_same_v<custom_criter_t::pointer, void>);
     STATIC_CHECK( std::random_access_iterator<custom_criter_t>);
     STATIC_CHECK(!std::permutable<custom_criter_t>);
 
