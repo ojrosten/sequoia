@@ -130,7 +130,7 @@ namespace sequoia::concurrency
 
   namespace impl
   {
-    template<class R, bool MultiChannel> struct queue_details
+    template<class R, bool MultiPipeline> struct queue_details
     {
       using Q_type     = task_queue<R>;
       using task_type  = Q_type::task_type;
