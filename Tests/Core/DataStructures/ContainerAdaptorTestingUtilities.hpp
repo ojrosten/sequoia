@@ -9,9 +9,14 @@
 
 /** \file */
 
+#include "ElementTestingUtilities.hpp"
+
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
+#include <concepts>
+#include <cstddef>
 #include <initializer_list>
+#include <string_view>
 #include <vector>
 
 namespace sequoia::testing
@@ -36,6 +41,17 @@ namespace sequoia::testing
   template<class Adaptor>
   inline constexpr bool has_back_v{requires(const Adaptor& adaptor) { adaptor.back(); }};
 
+  /// Returns the element of `adaptor` which the next pop removes
+  template<class Adaptor>
+  [[nodiscard]]
+  constexpr const typename Adaptor::value_type& element_popped_next(const Adaptor& adaptor)
+  {
+    if constexpr(has_front_v<Adaptor>)
+      return adaptor.front();
+    else
+      return adaptor.top();
+  }
+
   /// Returns the elements of `adaptor`, in the order pops remove them
   template<class Adaptor>
   [[nodiscard]]
@@ -44,15 +60,34 @@ namespace sequoia::testing
     std::vector<typename Adaptor::value_type> elements{};
     while(!adaptor.empty())
     {
-      if constexpr(has_front_v<Adaptor>)
-        elements.push_back(adaptor.front());
-      else
-        elements.push_back(adaptor.top());
-
+      elements.push_back(element_popped_next(adaptor));
       adaptor.pop();
     }
 
     return elements;
+  }
+
+  /** \brief Pops `adaptor`, and checks that the pop neither copies the element
+             it removes nor leaves any object in that element's lineage.
+   */
+  template<class Adaptor>
+    requires std::same_as<typename Adaptor::value_type, element_with_lineage>
+  void pop_and_check_the_element_is_gone(regular_test& test, const reporter& description, Adaptor& adaptor)
+  {
+    const auto observer{element_popped_next(adaptor).lineage.observer()};
+    const auto copies{element_popped_next(adaptor).lineage.copies()};
+    const std::size_t copiesBefore{*copies};
+    adaptor.pop();
+
+    const auto withClaim{
+      [&description](std::string_view claim) {
+        const auto message{append_lines(description.message(), claim)};
+        return description.location() ? reporter{message, *description.location()} : reporter{message, no_source_location};
+      }
+    };
+
+    test.check(equality, withClaim("The pop makes no copy of the element"), *copies, copiesBefore);
+    test.check(withClaim("The pop leaves no object in the element's lineage"), observer.expired());
   }
 
   /** \brief A `value_tester` for a stack, a queue or a priority queue.

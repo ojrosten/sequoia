@@ -9,13 +9,11 @@
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
-#include <memory>
-
 namespace sequoia::testing
 {
   namespace
   {
-    using stack_t = data_structures::stack<int>;
+    using stack_t = data_structures::stack<element_with_lineage>;
   }
 
   [[nodiscard]]
@@ -27,31 +25,12 @@ namespace sequoia::testing
   void stack_regular_test::run_tests()
   {
     test_constant_evaluation();
-    test_semantics();
     test_transitions();
-    test_pop_destroys_the_element();
   }
 
   void stack_regular_test::test_constant_evaluation()
   {
-    STATIC_CHECK(elements_in_pop_order(make_by_pushing<stack_t>({1, 2, 3})) == std::vector{3, 2, 1});
-  }
-
-  void stack_regular_test::test_semantics()
-  {
-    const stack_t empty{};
-    const auto one{make_by_pushing<stack_t>({1})},
-               oneTwo{make_by_pushing<stack_t>({1, 2})},
-               oneTwoThree{make_by_pushing<stack_t>({1, 2, 3})};
-
-    check(equivalence, "Empty", empty, std::vector<int>{});
-    check(equivalence, "One element", one, std::vector<int>{1});
-    check(equivalence, "Two elements, top first", oneTwo, std::vector<int>{2, 1});
-    check(equivalence, "Three elements, top first", oneTwoThree, std::vector<int>{3, 2, 1});
-
-    check_semantics("Empty against one element", empty, one);
-    check_semantics("One element against two", one, oneTwo);
-    check_semantics("Two elements against three", oneTwo, oneTwoThree);
+    STATIC_CHECK(elements_in_pop_order(make_by_pushing<data_structures::stack<int>>({1, 2, 3})) == std::vector{3, 2, 1});
   }
 
   void stack_regular_test::test_transitions()
@@ -79,38 +58,50 @@ namespace sequoia::testing
                  }}
         },
 
-        { edge_t{empty,   "Pop the only element", [](stack_t s) { s.pop(); return s; }},
-          edge_t{one_two, "Push 2 onto 1",        [](stack_t s) { s.push(2); return s; }}
+        { edge_t{empty,
+                 "Pop the only element",
+                 [this](stack_t s) { pop_and_check_the_element_is_gone(*this, "Popping 1, the only element", s); return s; }},
+          edge_t{one_two, "Push 2 onto 1", [](stack_t s) { s.push(2); return s; }}
         },
 
-        { edge_t{one,       "Pop 2, leaving 1",              [](stack_t s) { s.pop(); return s; }},
-          edge_t{one_three, "Pop 2 and push 3 in its place", [](stack_t s) { s.pop(); s.push(3); return s; }},
-          edge_t{empty,     "Pop both",                      [](stack_t s) { s.pop(); s.pop(); return s; }}
+        { edge_t{one,
+                 "Pop 2, leaving 1",
+                 [this](stack_t s) { pop_and_check_the_element_is_gone(*this, "Popping 2 off 1", s); return s; }},
+          edge_t{one_three,
+                 "Pop 2 and push 3 in its place",
+                 [this](stack_t s) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 2 off 1", s);
+                   s.push(3);
+                   return s;
+                 }},
+          edge_t{empty,
+                 "Pop both",
+                 [this](stack_t s) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 2 off 1", s);
+                   pop_and_check_the_element_is_gone(*this, "Popping 1, the only element", s);
+                   return s;
+                 }}
         },
 
-        { edge_t{one, "Pop 3, leaving 1", [](stack_t s) { s.pop(); return s; }} }
+        { edge_t{one,
+                 "Pop 3, leaving 1",
+                 [this](stack_t s) { pop_and_check_the_element_is_gone(*this, "Popping 3 off 1", s); return s; }} }
       },
       {stack_t{}, make_by_pushing<stack_t>({1}), make_by_pushing<stack_t>({1, 2}), make_by_pushing<stack_t>({1, 3})}
     };
 
     auto checkerFn{
-      [this](std::string description, const stack_t& obtained, const stack_t& prediction) {
-        check(equality, description, obtained, prediction);
+      [this](std::string_view description,
+             const stack_t& obtained,
+             const stack_t& prediction,
+             const stack_t& parent,
+             const std::size_t host,
+             const std::size_t target) {
+        check(equality, {description, no_source_location}, obtained, prediction);
+        if(host != target) check_semantics({description, no_source_location}, prediction, parent);
       }
     };
 
     transition_checker_t::check(report("Stack transitions"), g, checkerFn);
-  }
-
-  void stack_regular_test::test_pop_destroys_the_element()
-  {
-    const auto element{std::make_shared<int>(1)};
-
-    data_structures::stack<std::shared_ptr<int>> s{};
-    s.push(std::make_shared<int>(0));
-    s.push(element);
-    s.pop();
-
-    check(equality, "Popping destroys the stack's copy of the element", element.use_count(), 1L);
   }
 }
