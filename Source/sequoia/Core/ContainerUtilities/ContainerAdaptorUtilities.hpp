@@ -11,6 +11,8 @@
     \brief Utilities for container adaptors, such as a queue or a stack.
  */
 
+#include <type_traits>
+
 namespace sequoia::utilities
 {
   template<class Adaptor>
@@ -32,5 +34,22 @@ namespace sequoia::utilities
       return adaptor.front();
     else
       return adaptor.top();
+  }
+
+  /** \brief Pops `adaptor`, and returns a copy of the element the pop removes.
+
+      If copying the element throws, `adaptor` is unchanged.
+   */
+  template<class Adaptor>
+    requires requires(Adaptor& adaptor) { element_popped_next(adaptor); }
+          && std::is_nothrow_move_constructible_v<typename Adaptor::value_type>
+  [[nodiscard]]
+  constexpr typename Adaptor::value_type extract_next(Adaptor& adaptor)
+  {
+    // Not const, so that the return moves `element`: a copy there could throw
+    // after the pop
+    typename Adaptor::value_type element{element_popped_next(adaptor)};
+    adaptor.pop();
+    return element;
   }
 }

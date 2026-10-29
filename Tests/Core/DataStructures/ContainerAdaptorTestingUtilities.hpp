@@ -48,10 +48,7 @@ namespace sequoia::testing
   {
     std::vector<typename Adaptor::value_type> elements{};
     while(!adaptor.empty())
-    {
-      elements.push_back(utilities::element_popped_next(adaptor));
-      adaptor.pop();
-    }
+      elements.push_back(utilities::extract_next(adaptor));
 
     return elements;
   }

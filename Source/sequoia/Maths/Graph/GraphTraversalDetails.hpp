@@ -417,8 +417,7 @@ namespace sequoia::maths::graph_impl
 
           while(!nodeIndexQueue.empty())
           {
-            const auto nodeIndex{utilities::element_popped_next(nodeIndexQueue)};
-            nodeIndexQueue.pop();
+            const auto nodeIndex{utilities::extract_next(nodeIndexQueue)};
 
             auto onDiscovery{[&nodeIndexQueue](const edge_index_type nextNode) { nodeIndexQueue.push(nextNode); }};
 
