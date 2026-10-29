@@ -39,6 +39,9 @@ namespace sequoia::testing
     template<class ThreadPool>
     void test_pushes_from_several_threads(std::string_view message);
 
+    template<class ThreadPool>
+    void test_a_task_pushed_after_join_never_runs(std::string_view message);
+
     template<class ThreadModel, class... Args>
     void test_exceptions(std::string_view message, Args&&... args);
 
