@@ -13,6 +13,9 @@ namespace sequoia::testing
 {
   namespace
   {
+    template<class T>
+    inline constexpr bool stack_admits_v{requires { typename data_structures::stack<T>; }};
+
     using stack_t = data_structures::stack<element_with_lineage>;
   }
 
@@ -24,8 +27,17 @@ namespace sequoia::testing
 
   void stack_regular_test::run_tests()
   {
+    test_constraints();
     test_constant_evaluation();
     test_transitions();
+  }
+
+  void stack_regular_test::test_constraints()
+  {
+    STATIC_CHECK( stack_admits_v<int>);
+
+    // A std::vector<bool> hands out proxies, not references to its elements
+    STATIC_CHECK(!stack_admits_v<bool>);
   }
 
   void stack_regular_test::test_constant_evaluation()

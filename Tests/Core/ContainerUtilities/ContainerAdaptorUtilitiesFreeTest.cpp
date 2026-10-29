@@ -11,6 +11,7 @@
 #include "sequoia/Core/DataStructures/Queue.hpp"
 #include "sequoia/Core/DataStructures/Stack.hpp"
 
+#include <deque>
 #include <queue>
 #include <stack>
 #include <vector>
@@ -60,6 +61,10 @@ namespace sequoia::testing
     // A vector has a front, but no pop to remove it
     STATIC_CHECK(!element_popped_next_admits_v<std::vector<int>>);
     STATIC_CHECK(!element_popped_next_admits_v<with_front_and_top>);
+
+    STATIC_CHECK(utilities::gives_references_to_elements_v<std::vector<int>>);
+    STATIC_CHECK(utilities::gives_references_to_elements_v<std::deque<bool>>);
+    STATIC_CHECK(!utilities::gives_references_to_elements_v<std::vector<bool>>);
   }
 
   void container_adaptor_utilities_free_test::test_element_popped_next()

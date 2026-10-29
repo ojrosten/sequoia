@@ -11,8 +11,19 @@
     \brief Utilities for container adaptors, such as a queue or a stack.
  */
 
+#include <concepts>
+#include <ranges>
+
 namespace sequoia::utilities
 {
+  /** \brief Whether dereferencing an iterator into a const `Container` gives
+             a reference to an element, not a proxy.
+   */
+  template<class Container>
+  inline constexpr bool gives_references_to_elements_v{
+    std::same_as<std::ranges::range_reference_t<const Container>, const std::ranges::range_value_t<Container>&>
+  };
+
   template<class Adaptor>
   inline constexpr bool has_front_v{requires(const Adaptor& adaptor) { adaptor.front(); }};
 

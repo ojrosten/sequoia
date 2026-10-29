@@ -13,6 +13,9 @@ namespace sequoia::testing
 {
   namespace
   {
+    template<class T>
+    inline constexpr bool queue_admits_v{requires { typename data_structures::queue<T>; }};
+
     using queue_t = data_structures::queue<element_with_lineage>;
 
     template<class Queue>
@@ -33,8 +36,17 @@ namespace sequoia::testing
 
   void queue_regular_test::run_tests()
   {
+    test_constraints();
     test_constant_evaluation();
     test_transitions();
+  }
+
+  void queue_regular_test::test_constraints()
+  {
+    STATIC_CHECK( queue_admits_v<int>);
+
+    // A std::vector<bool> hands out proxies, not references to its elements
+    STATIC_CHECK(!queue_admits_v<bool>);
   }
 
   void queue_regular_test::test_constant_evaluation()

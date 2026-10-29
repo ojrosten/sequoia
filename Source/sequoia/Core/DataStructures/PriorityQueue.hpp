@@ -11,6 +11,7 @@
     \brief A priority queue usable in a constant evaluation.
  */
 
+#include "sequoia/Core/ContainerUtilities/ContainerAdaptorUtilities.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <algorithm>
@@ -39,6 +40,7 @@ namespace sequoia::data_structures
     requires std::same_as<T, typename Container::value_type>
           && std::ranges::random_access_range<Container>
           && std::sortable<std::ranges::iterator_t<Container>, Compare>
+          && utilities::gives_references_to_elements_v<Container>
   class priority_queue
   {
   public:

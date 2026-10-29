@@ -11,6 +11,8 @@
     \brief A stack usable in a constant evaluation.
  */
 
+#include "sequoia/Core/ContainerUtilities/ContainerAdaptorUtilities.hpp"
+
 #include <cstddef>
 #include <stdexcept>
 #include <utility>
@@ -23,6 +25,7 @@ namespace sequoia::data_structures
       std::stack is usable in a constant evaluation only from C++26 (P3372).
    */
   template<class T>
+    requires utilities::gives_references_to_elements_v<std::vector<T>>
   class stack
   {
   public:

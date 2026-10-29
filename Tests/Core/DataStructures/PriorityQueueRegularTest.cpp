@@ -10,6 +10,7 @@
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
 #include <concepts>
+#include <deque>
 #include <format>
 #include <functional>
 #include <list>
@@ -91,6 +92,10 @@ namespace sequoia::testing
 
     // The comparator does not compare
     STATIC_CHECK(!priority_queue_admits_v<int, std::vector<int>, int>);
+
+    // The container hands out proxies, not references to its elements
+    STATIC_CHECK(!priority_queue_admits_v<bool>);
+    STATIC_CHECK( priority_queue_admits_v<bool, std::deque<bool>>);
   }
 
   void priority_queue_regular_test::test_constant_evaluation()
