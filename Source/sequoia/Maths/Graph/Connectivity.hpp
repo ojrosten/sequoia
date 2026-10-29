@@ -1707,7 +1707,7 @@ namespace sequoia
       friend constexpr bool operator==(const edge_weight_dereference_policy&, const edge_weight_dereference_policy&) noexcept = default;
 
       [[nodiscard]]
-      static reference get(Iterator i)
+      static reference get(const Iterator& i)
       {
         return i->weight();
       }

@@ -34,7 +34,7 @@ namespace sequoia::testing
       // This must be public (not that there's really a problem with that) due to MSVC bug:
       // https://developercommunity.visualstudio.com/t/Compiler-crash-attempting-to-detect-prot/10361090
       [[nodiscard]]
-      constexpr reference get(Iterator i) const
+      constexpr reference get(const Iterator& i) const
       {
         return (*i) * m_Scale;
       }
