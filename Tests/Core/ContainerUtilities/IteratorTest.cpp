@@ -136,7 +136,7 @@ namespace sequoia::testing
     using iterator_with_comparable_data_policy
       = utilities::iterator<Iterator, utilities::identity_dereference_policy<Iterator, comparable_data_policy>>;
 
-    struct overloaded_address_of
+    struct element_with_overloaded_address_of
     {
       constexpr std::nullptr_t operator&() const noexcept { return nullptr; }
     };
@@ -248,8 +248,10 @@ namespace sequoia::testing
     // The base iterators compare, but neither iterator converts to the other.
     using scaling_citer_t = iterator<ci_t, scaling_dereference_policy<ci_t>>;
 
+    STATIC_CHECK( has_equality_with_v<custom_iter_t, custom_citer_t>);
     STATIC_CHECK(!has_equality_with_v<custom_iter_t, scaling_citer_t>);
     STATIC_CHECK(!has_equality_with_v<scaling_citer_t, custom_iter_t>);
+    STATIC_CHECK( has_three_way_comparison_with_v<custom_iter_t, custom_citer_t>);
     STATIC_CHECK(!has_three_way_comparison_with_v<custom_iter_t, scaling_citer_t>);
     STATIC_CHECK(!has_three_way_comparison_with_v<scaling_citer_t, custom_iter_t>);
   }
@@ -272,11 +274,11 @@ namespace sequoia::testing
   {
     using namespace utilities;
 
-    using i_t    = std::array<overloaded_address_of, 2>::iterator;
+    using i_t    = std::array<element_with_overloaded_address_of, 2>::iterator;
     using iter_t = iterator<i_t, identity_dereference_policy<i_t>>;
 
     STATIC_CHECK([](){
-      std::array<overloaded_address_of, 2> a{};
+      std::array<element_with_overloaded_address_of, 2> a{};
       const iter_t i{a.begin() + 1};
       return i.operator->() == std::addressof(a[1]);
     }());
