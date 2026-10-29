@@ -23,6 +23,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <future>
+#include <stdexcept>
 
 namespace sequoia::concurrency
 {
@@ -190,6 +191,8 @@ namespace sequoia::concurrency
 
   /** \brief Supports either a single pipeline or a pipeline for each thread, together with task
       stealing.
+
+      \throws std::invalid_argument if constructed with zero threads.
    */
 
   template<class R, bool MultiPipeline=true>
@@ -283,6 +286,9 @@ namespace sequoia::concurrency
 
     void make_pool(const std::size_t numThreads)
     {
+      if(!numThreads)
+        throw std::invalid_argument{"A thread pool requires at least one thread"};
+
       m_Threads.reserve(numThreads);
 
       for(std::size_t q{}; q<numThreads; ++q)

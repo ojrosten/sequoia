@@ -1,4 +1,22 @@
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 338
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 336
+A thread pool with a pipeline for each thread refuses zero threads
+
+Expected Exception Type:
+[std::invalid_argument]
+A thread pool requires at least one thread
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 339
+A thread pool with a single pipeline refuses zero threads
+
+Expected Exception Type:
+[std::invalid_argument]
+A thread pool requires at least one thread
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 351
 pool_2M
 
 Expected Exception Type:
@@ -7,7 +25,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 338
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 351
 pool_2
 
 Expected Exception Type:
@@ -16,7 +34,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 338
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 351
 async
 
 Expected Exception Type:
@@ -25,7 +43,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 338
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 351
 pool_2M
 
 Expected Exception Type:
@@ -34,7 +52,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 338
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 351
 pool_2
 
 Expected Exception Type:
@@ -43,7 +61,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 338
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 351
 async
 
 Expected Exception Type:
@@ -52,7 +70,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 362
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 375
 
 Expected Exception Type:
 [std::runtime_error]
@@ -60,7 +78,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 363
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 376
 
 Expected Exception Type:
 [std::runtime_error]

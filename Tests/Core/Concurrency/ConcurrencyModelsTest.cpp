@@ -11,6 +11,7 @@
 #include <future>
 #include <queue>
 #include <semaphore>
+#include <stdexcept>
 #include <thread>
 #include <utility>
 
@@ -166,6 +167,7 @@ namespace sequoia::testing
     test_try_lock_successes();
     test_try_lock_failures();
     test_pushes_wake_a_waiting_pop();
+    test_thread_pools_refuse_zero_threads();
 
     test_exceptions<thread_pool<void>>("pool_2M", 2u);
     test_exceptions<thread_pool<void, false>>("pool_2", 2u);
@@ -175,6 +177,8 @@ namespace sequoia::testing
     test_exceptions<thread_pool<int, false>>("pool_2", 2u);
     test_exceptions<asynchronous<int>>("async");
 
+    test_execution<thread_pool<int>>("pool_1M", 1u);
+    test_execution<thread_pool<int, false>>("pool_1", 1u);
     test_execution<thread_pool<int>>("pool_2M", 2u);
     test_execution<thread_pool<int, false>>("pool_2", 2u);
     test_execution<asynchronous<int>>("async");
@@ -325,6 +329,15 @@ namespace sequoia::testing
       waitingPop.wait_for_task()();
       check(equality, "The waiting pop yields the try-pushed task", tryPushedFuture.get(), 2);
     }
+  }
+
+  void threading_models_test::test_thread_pools_refuse_zero_threads()
+  {
+    check_exception_thrown<std::invalid_argument>("A thread pool with a pipeline for each thread refuses zero threads",
+                                                  [](){ thread_pool<int>{0u}; });
+
+    check_exception_thrown<std::invalid_argument>("A thread pool with a single pipeline refuses zero threads",
+                                                  [](){ thread_pool<int, false>{0u}; });
   }
 
   template<class ThreadModel, class... Args>
