@@ -80,69 +80,26 @@ namespace sequoia::testing
                  }}
         },
 
-        { edge_t{empty,
-                 "Pop the only element",
-                 [this](queue_t q) {
-                   pop_and_check_the_element_is_gone(*this, "Popping 1, the only element", q);
-                   return q;
-                 }},
-          edge_t{one_two, "Push 2 behind 1", [](queue_t q) { q.push(2); return q; }}
+        { edge_t{empty,   "Pop the only element", transition_of_pops<queue_t>(*this, 1)},
+          edge_t{one_two, "Push 2 behind 1",      [](queue_t q) { q.push(2); return q; }}
         },
 
         { edge_t{one_two_three, "Push 3 behind 2", [](queue_t q) { q.push(3); return q; }},
-          edge_t{empty,
-                 "Pop both",
-                 [this](queue_t q) {
-                   pop_and_check_the_element_is_gone(*this, "Popping 1 from in front of 2", q);
-                   pop_and_check_the_element_is_gone(*this, "Popping 2, the only element", q);
-                   return q;
-                 }}
+          edge_t{empty,         "Pop both",        transition_of_pops<queue_t>(*this, 2)}
         },
 
-        { edge_t{two_three,
-                 "Pop 1, leaving 2 and 3",
-                 [this](queue_t q) {
-                   pop_and_check_the_element_is_gone(*this, "Popping 1 from in front of 2 and 3", q);
-                   return q;
-                 }} },
+        { edge_t{two_three, "Pop 1, leaving 2 and 3", transition_of_pops<queue_t>(*this, 1)} },
 
-        { edge_t{two_three_four, "Push 4 behind 3", [](queue_t q) { q.push(4); return q; }},
-          edge_t{three,
-                 "Pop 2, leaving 3",
-                 [this](queue_t q) {
-                   pop_and_check_the_element_is_gone(*this, "Popping 2 from in front of 3", q);
-                   return q;
-                 }},
-          edge_t{empty,
-                 "Pop both",
-                 [this](queue_t q) {
-                   pop_and_check_the_element_is_gone(*this, "Popping 2 from in front of 3", q);
-                   pop_and_check_the_element_is_gone(*this, "Popping 3, the only element", q);
-                   return q;
-                 }}
+        { edge_t{two_three_four, "Push 4 behind 3",  [](queue_t q) { q.push(4); return q; }},
+          edge_t{three,          "Pop 2, leaving 3", transition_of_pops<queue_t>(*this, 1)},
+          edge_t{empty,          "Pop both",         transition_of_pops<queue_t>(*this, 2)}
         },
 
-        { edge_t{three_four,
-                 "Pop 2, leaving 3 and 4",
-                 [this](queue_t q) {
-                   pop_and_check_the_element_is_gone(*this, "Popping 2 from in front of 3 and 4", q);
-                   return q;
-                 }} },
+        { edge_t{three_four, "Pop 2, leaving 3 and 4", transition_of_pops<queue_t>(*this, 1)} },
 
-        { edge_t{empty,
-                 "Pop both",
-                 [this](queue_t q) {
-                   pop_and_check_the_element_is_gone(*this, "Popping 3 from in front of 4", q);
-                   pop_and_check_the_element_is_gone(*this, "Popping 4, the only element", q);
-                   return q;
-                 }} },
+        { edge_t{empty, "Pop both", transition_of_pops<queue_t>(*this, 2)} },
 
-        { edge_t{empty,
-                 "Pop the only element",
-                 [this](queue_t q) {
-                   pop_and_check_the_element_is_gone(*this, "Popping 3, the only element", q);
-                   return q;
-                 }} }
+        { edge_t{empty, "Pop the only element", transition_of_pops<queue_t>(*this, 1)} }
       },
       {queue_t{},
        make_by_pushing<queue_t>({1}),
@@ -154,18 +111,6 @@ namespace sequoia::testing
        make_by_pushing<queue_t>({3})}
     };
 
-    auto checkerFn{
-      [this](std::string_view description,
-             const queue_t& obtained,
-             const queue_t& prediction,
-             const queue_t& parent,
-             const std::size_t host,
-             const std::size_t target) {
-        check(equality, {description, no_source_location}, obtained, prediction);
-        if(host != target) check_semantics({description, no_source_location}, prediction, parent);
-      }
-    };
-
-    transition_checker_t::check(report("Queue transitions"), g, checkerFn);
+    transition_checker_t::check(report("Queue transitions"), g, equality_and_semantics_check_fn<queue_t>(*this));
   }
 }

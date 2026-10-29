@@ -60,59 +60,26 @@ namespace sequoia::testing
                  }}
         },
 
-        { edge_t{empty,
-                 "Pop the only element",
-                 [this](stack_t s) {
-                   pop_and_check_the_element_is_gone(*this, "Popping 1, the only element", s);
-                   return s;
-                 }},
-          edge_t{one_two, "Push 2 onto 1", [](stack_t s) { s.push(2); return s; }}
+        { edge_t{empty,   "Pop the only element", transition_of_pops<stack_t>(*this, 1)},
+          edge_t{one_two, "Push 2 onto 1",        [](stack_t s) { s.push(2); return s; }}
         },
 
-        { edge_t{one,
-                 "Pop 2, leaving 1",
-                 [this](stack_t s) {
-                   pop_and_check_the_element_is_gone(*this, "Popping 2 off 1", s);
-                   return s;
-                 }},
+        { edge_t{one, "Pop 2, leaving 1", transition_of_pops<stack_t>(*this, 1)},
           edge_t{one_three,
                  "Pop 2 and push 3 in its place",
                  [this](stack_t s) {
-                   pop_and_check_the_element_is_gone(*this, "Popping 2 off 1", s);
+                   pop_and_check_the_element_is_gone(*this, s);
                    s.push(3);
                    return s;
                  }},
-          edge_t{empty,
-                 "Pop both",
-                 [this](stack_t s) {
-                   pop_and_check_the_element_is_gone(*this, "Popping 2 off 1", s);
-                   pop_and_check_the_element_is_gone(*this, "Popping 1, the only element", s);
-                   return s;
-                 }}
+          edge_t{empty, "Pop both", transition_of_pops<stack_t>(*this, 2)}
         },
 
-        { edge_t{one,
-                 "Pop 3, leaving 1",
-                 [this](stack_t s) {
-                   pop_and_check_the_element_is_gone(*this, "Popping 3 off 1", s);
-                   return s;
-                 }} }
+        { edge_t{one, "Pop 3, leaving 1", transition_of_pops<stack_t>(*this, 1)} }
       },
       {stack_t{}, make_by_pushing<stack_t>({1}), make_by_pushing<stack_t>({1, 2}), make_by_pushing<stack_t>({1, 3})}
     };
 
-    auto checkerFn{
-      [this](std::string_view description,
-             const stack_t& obtained,
-             const stack_t& prediction,
-             const stack_t& parent,
-             const std::size_t host,
-             const std::size_t target) {
-        check(equality, {description, no_source_location}, obtained, prediction);
-        if(host != target) check_semantics({description, no_source_location}, prediction, parent);
-      }
-    };
-
-    transition_checker_t::check(report("Stack transitions"), g, checkerFn);
+    transition_checker_t::check(report("Stack transitions"), g, equality_and_semantics_check_fn<stack_t>(*this));
   }
 }
