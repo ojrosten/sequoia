@@ -82,6 +82,7 @@ namespace sequoia::testing
   {
     STATIC_CHECK( priority_queue_admits_v<int>);
     STATIC_CHECK( priority_queue_admits_v<int, std::vector<int>, std::ranges::greater>);
+    STATIC_CHECK( priority_queue_admits_v<bool, std::deque<bool>>);
 
     // The element type differs from the container's
     STATIC_CHECK(!priority_queue_admits_v<int, std::vector<long>>);
@@ -93,9 +94,8 @@ namespace sequoia::testing
     // The comparator does not compare
     STATIC_CHECK(!priority_queue_admits_v<int, std::vector<int>, int>);
 
-    // The container hands out proxies, not references to its elements
+    // The container returns no reference to its elements
     STATIC_CHECK(!priority_queue_admits_v<bool>);
-    STATIC_CHECK( priority_queue_admits_v<bool, std::deque<bool>>);
   }
 
   void priority_queue_regular_test::test_constant_evaluation()

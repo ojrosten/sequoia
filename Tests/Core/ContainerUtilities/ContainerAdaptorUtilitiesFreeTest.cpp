@@ -35,6 +35,33 @@ namespace sequoia::testing
 
       void pop() {}
     };
+
+    struct with_const_front_reference
+    {
+      using value_type = int;
+
+      [[nodiscard]]
+      const int& front() const;
+    };
+
+    struct with_front_by_value
+    {
+      using value_type = int;
+
+      [[nodiscard]]
+      int front() const;
+    };
+
+    struct with_front_by_value_when_const
+    {
+      using value_type = int;
+
+      [[nodiscard]]
+      int& front();
+
+      [[nodiscard]]
+      int front() const;
+    };
   }
 
   [[nodiscard]]
@@ -46,6 +73,7 @@ namespace sequoia::testing
   void container_adaptor_utilities_free_test::run_tests()
   {
     test_admitted_types();
+    test_gives_references_to_elements();
     test_element_popped_next();
   }
 
@@ -61,10 +89,18 @@ namespace sequoia::testing
     // A vector has a front, but no pop to remove it
     STATIC_CHECK(!element_popped_next_admits_v<std::vector<int>>);
     STATIC_CHECK(!element_popped_next_admits_v<with_front_and_top>);
+  }
 
-    STATIC_CHECK(utilities::gives_references_to_elements_v<std::vector<int>>);
-    STATIC_CHECK(utilities::gives_references_to_elements_v<std::deque<bool>>);
+  void container_adaptor_utilities_free_test::test_gives_references_to_elements()
+  {
+    STATIC_CHECK( utilities::gives_references_to_elements_v<std::vector<int>>);
+    STATIC_CHECK( utilities::gives_references_to_elements_v<std::deque<bool>>);
+    STATIC_CHECK( utilities::gives_references_to_elements_v<with_const_front_reference>);
+
+    // Each of these, when const, returns no reference to its elements
     STATIC_CHECK(!utilities::gives_references_to_elements_v<std::vector<bool>>);
+    STATIC_CHECK(!utilities::gives_references_to_elements_v<with_front_by_value>);
+    STATIC_CHECK(!utilities::gives_references_to_elements_v<with_front_by_value_when_const>);
   }
 
   void container_adaptor_utilities_free_test::test_element_popped_next()

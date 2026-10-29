@@ -9,12 +9,21 @@
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
+#include <type_traits>
+
 namespace sequoia::testing
 {
   namespace
   {
     template<class T>
     inline constexpr bool stack_admits_v{requires { typename data_structures::stack<T>; }};
+
+    // A std::vector admits an incomplete element type, so a stack must admit
+    // one too
+    struct with_stack_of_itself
+    {
+      data_structures::stack<with_stack_of_itself> nested{};
+    };
 
     using stack_t = data_structures::stack<element_with_lineage>;
   }
@@ -35,8 +44,9 @@ namespace sequoia::testing
   void stack_regular_test::test_constraints()
   {
     STATIC_CHECK( stack_admits_v<int>);
+    STATIC_CHECK(std::is_default_constructible_v<with_stack_of_itself>);
 
-    // A std::vector<bool> hands out proxies, not references to its elements
+    // A const std::vector<bool> returns no reference to its elements
     STATIC_CHECK(!stack_admits_v<bool>);
   }
 

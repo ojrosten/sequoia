@@ -25,6 +25,8 @@ namespace sequoia::testing
   private:
     void test_admitted_types();
 
+    void test_gives_references_to_elements();
+
     void test_element_popped_next();
   };
 }

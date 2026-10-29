@@ -12,16 +12,17 @@
  */
 
 #include <concepts>
-#include <ranges>
 
 namespace sequoia::utilities
 {
-  /** \brief Whether dereferencing an iterator into a const `Container` gives
-             a reference to an element, not a proxy.
+  /** \brief Whether `front()` on a const `Container` returns a const reference
+             to the container's value type.
    */
   template<class Container>
   inline constexpr bool gives_references_to_elements_v{
-    std::same_as<std::ranges::range_reference_t<const Container>, const std::ranges::range_value_t<Container>&>
+    requires(const Container& container) {
+      { container.front() } -> std::same_as<const typename Container::value_type&>;
+    }
   };
 
   template<class Adaptor>

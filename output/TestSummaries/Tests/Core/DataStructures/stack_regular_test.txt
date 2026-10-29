@@ -1,2 +1,2 @@
 stack_regular_test
-Standard Top Level Checks:                33;  Failures:  0  [Deep checks: 455]
+Standard Top Level Checks:                34;  Failures:  0  [Deep checks: 456]
