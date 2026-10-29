@@ -693,11 +693,7 @@ namespace sequoia
 
             if(len_i != len_j)
             {
-              const auto delta{len_j - len_i};
-              m_Partitions.mutate(maths::unsafe_t{},
-                                  m_Partitions.begin() + numeric::unchecked_conversion_to<std::ptrdiff_t>(i),
-                                  m_Partitions.begin() + numeric::unchecked_conversion_to<std::ptrdiff_t>(j),
-                                  [delta](const index_type index) -> index_type { return static_cast<index_type>(numeric::unchecked_conversion_to<std::ptrdiff_t>(index) + delta);});
+              translate_partition_bounds(i, j, len_j - len_i);
             }
           }
         }
@@ -871,10 +867,7 @@ namespace sequoia
                          m_Data.begin() + numeric::unchecked_conversion_to<std::ptrdiff_t>(m_Partitions[n]));
           }
           m_Partitions.erase(m_Partitions.begin() + numeric::unchecked_conversion_to<std::ptrdiff_t>(n));
-          m_Partitions.mutate(maths::unsafe_t{},
-                              m_Partitions.begin() + numeric::unchecked_conversion_to<std::ptrdiff_t>(n),
-                              m_Partitions.end(),
-                              [erased](const auto index){ return index - erased; });
+          translate_partition_bounds(n, num_partitions(), -numeric::unchecked_conversion_to<std::ptrdiff_t>(erased));
         }
       }
 
@@ -930,7 +923,7 @@ namespace sequoia
                                 std::forward<Args>(args)...);
         }
 
-        increment_partition_indices(index);
+        translate_partition_bounds(index, num_partitions(), 1);
       }
 
       template<class... Args>
@@ -965,7 +958,7 @@ namespace sequoia
         }
 
         const auto next{m_Data.erase(iter.base_iterator())};
-        decrement_partition_indices(partition, num_partitions(), 1);
+        translate_partition_bounds(partition, num_partitions(), -1);
 
         return {next, partition};
       }
@@ -982,7 +975,7 @@ namespace sequoia
           if(const auto numErased{std::ranges::distance(first, last)}; numErased > 0)
           {
             const auto next{m_Data.erase(first.base_iterator(), last.base_iterator())};
-            decrement_partition_indices(firstPartition, num_partitions(), numeric::unchecked_conversion_to<index_type>(numErased));
+            translate_partition_bounds(firstPartition, num_partitions(), -numErased);
 
             return {next, firstPartition};
           }
@@ -1053,26 +1046,19 @@ namespace sequoia
         return container;
       }
 
-      constexpr void increment_partition_indices(const size_type first) noexcept
+      constexpr void translate_partition_bounds(const size_type first,
+                                                const size_type last,
+                                                const std::ptrdiff_t delta) noexcept
       {
-        m_Partitions.mutate(maths::unsafe_t{},
-                            std::ranges::next(m_Partitions.begin(),
-                                              numeric::unchecked_conversion_to<std::ptrdiff_t>(first),
-                                              m_Partitions.end()),
-                            m_Partitions.end(),
-                            [](index_type index){ return ++index; });
-      }
+        auto boundAt{
+          [this](const size_type i) {
+            return std::ranges::next(m_Partitions.begin(),
+                                     numeric::unchecked_conversion_to<std::ptrdiff_t>(i),
+                                     m_Partitions.end());
+          }
+        };
 
-      constexpr void decrement_partition_indices(const size_type first, const size_type last, const index_type num) noexcept
-      {
-        m_Partitions.mutate(maths::unsafe_t{},
-                            std::ranges::next(m_Partitions.begin(),
-                                              numeric::unchecked_conversion_to<std::ptrdiff_t>(first),
-                                              m_Partitions.end()),
-                            std::ranges::next(m_Partitions.begin(),
-                                              numeric::unchecked_conversion_to<std::ptrdiff_t>(last),
-                                              m_Partitions.end()),
-                            [num](index_type index){ return index -= num; });
+        m_Partitions.translate(boundAt(first), boundAt(last), delta);
       }
 
       constexpr void check_range(std::string_view method, const size_type index) const
@@ -1098,7 +1084,7 @@ namespace sequoia
       {
         const auto source{pos.partition_index()};
         auto iter{m_Data.emplace(pos.base_iterator(), std::forward<Args>(args)...)};
-        increment_partition_indices(source);
+        translate_partition_bounds(source, num_partitions(), 1);
 
         return partition_iterator{iter, source};
       }
