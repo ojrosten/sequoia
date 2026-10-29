@@ -14,9 +14,9 @@
 #include "sequoia/Maths/Sequences/MonotonicSequenceDetails.hpp"
 #include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
 #include "sequoia/PlatformSpecific/Macros.hpp"
-#include "sequoia/Algorithms/Algorithms.hpp"
 
 #include <algorithm>
+#include <ranges>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -38,8 +38,10 @@ namespace sequoia::maths
 
     constexpr monotonic_sequence_base() = default;
 
-    constexpr monotonic_sequence_base(std::initializer_list<T> list) : monotonic_sequence_base{static_type{}, list}
-    {}
+    constexpr monotonic_sequence_base(std::initializer_list<T> list) : m_Sequence{make_container(list)}
+    {
+      check();
+    }
 
     constexpr monotonic_sequence_base(C c) : m_Sequence{std::move(c)}
     {
@@ -145,14 +147,14 @@ SEQUOIA_GCC_SUPPRESS_END
       if(std::cmp_not_equal(std::ranges::distance(values), size()))
         throw std::invalid_argument{"monotonic_sequence::overwrite - the number of values differs from the size"};
 
-      if(std::ranges::adjacent_find(values, Compare{}) != std::ranges::end(values))
+      if(!is_monotonic(values))
         throw std::invalid_argument{"monotonic_sequence::overwrite - monotonicity violated"};
 
       std::ranges::copy(values, m_Sequence.begin());
     }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) noexcept = default;
+    friend constexpr bool operator==(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) = default;
 
   protected:
     template<alloc Allocator>
@@ -243,31 +245,28 @@ SEQUOIA_GCC_SUPPRESS_END
     }
 
   private:
-    using static_type = impl::static_storage<C>;
-
     C m_Sequence;
 
-    constexpr monotonic_sequence_base(std::false_type, std::initializer_list<T> list) : m_Sequence{list}
+    [[nodiscard]]
+    constexpr static C make_container(std::initializer_list<T> list)
     {
-      check();
+      if constexpr(impl::static_storage<C>::value)
+        return utilities::to_array<T, impl::static_storage<C>::size()>(list);
+      else
+        return C{list};
     }
 
-    constexpr monotonic_sequence_base(std::true_type, std::initializer_list<T> list)
-      : m_Sequence{utilities::to_array<T, static_type::size()>(list)}
+    template<std::ranges::forward_range R>
+    [[nodiscard]]
+    constexpr static bool is_monotonic(R&& r)
     {
-      check();
+      return std::ranges::adjacent_find(r, Compare{}) == std::ranges::end(r);
     }
 
-    constexpr void check()
+    constexpr void check() const
     {
-      if(size() > 1)
-      {
-        for(auto i{begin()+1}; i != end(); ++i)
-        {
-          if(Compare{}(*(i-1), *i))
-            throw std::invalid_argument("monotonic_sequence::monotonic_sequence - monotonicity violated");
-        }
-      }
+      if(!is_monotonic(m_Sequence))
+        throw std::invalid_argument{"monotonic_sequence::monotonic_sequence - monotonicity violated"};
     }
   };
 

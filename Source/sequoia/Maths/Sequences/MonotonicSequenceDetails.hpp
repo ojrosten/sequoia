@@ -13,6 +13,10 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
+#include <array>
+#include <memory>
+#include <type_traits>
+
 namespace sequoia::maths::impl
 {
   template<class C> struct static_storage : std::false_type {};
