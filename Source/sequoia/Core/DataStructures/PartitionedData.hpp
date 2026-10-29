@@ -1290,7 +1290,7 @@ namespace sequoia
         lhs.swap(rhs);
       }
     private:
-      template<size_type... Inds>
+      template<std::size_t... Inds>
       [[nodiscard]]
       constexpr static std::pair<partitions_type, container_type> fill(std::index_sequence<Inds...>, std::initializer_list<std::initializer_list<T>> list)
       {

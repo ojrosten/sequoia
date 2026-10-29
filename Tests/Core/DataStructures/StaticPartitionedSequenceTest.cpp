@@ -42,6 +42,7 @@ namespace sequoia::testing
   void static_partitioned_sequence_test::run_tests()
   {
     test_index_type_constraint();
+    test_uint64_index_type();
     test_static_storage();
     test_index_type_limit();
     test_permute_partitions();
@@ -60,6 +61,11 @@ namespace sequoia::testing
     STATIC_CHECK( indexable_by<std::uint8_t>);
     STATIC_CHECK(!indexable_by<bool>);
     STATIC_CHECK(!indexable_by<char>);
+  }
+
+  void static_partitioned_sequence_test::test_uint64_index_type()
+  {
+    STATIC_CHECK(indexed_sequence<std::uint64_t, 2, 3>{{1}, {2, 3}}.size_of_partition(1) == 2);
   }
 
   void static_partitioned_sequence_test::test_static_storage()
