@@ -665,6 +665,7 @@ namespace sequoia
       constexpr partition_iterator operator[](const index_type i) noexcept { return begin_partition(i); }
 
       constexpr void swap_partitions(index_type i, index_type j)
+        requires partition_impl::translatable_bounds_v<partitions_type>
       {
         if((i < num_partitions()) && (j < num_partitions()))
         {
@@ -1143,7 +1144,8 @@ namespace sequoia
                 && std::cmp_less_equal(std::numeric_limits<typename Partitions::size_type>::max(),
                                         std::numeric_limits<typename Partitions::value_type>::max())
                 && std::cmp_less_equal(std::numeric_limits<typename Container::size_type>::max(),
-                                        std::numeric_limits<typename Partitions::value_type>::max()))
+                                        std::numeric_limits<typename Partitions::value_type>::max())
+                && partition_impl::translatable_bounds_v<Partitions>)
     class partitioned_sequence : public partitioned_sequence_base<T, Container, Partitions>
     {
     private:

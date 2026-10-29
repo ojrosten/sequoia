@@ -31,6 +31,9 @@ namespace sequoia::testing
 
     template<class IndexType>
     concept indexable_by = requires { typename indexed_sequence<IndexType, 1, 1>; };
+
+    template<class Sequence>
+    concept partitions_swappable = requires(Sequence& s) { s.swap_partitions(0, 1); };
   }
 
   [[nodiscard]]
@@ -43,6 +46,7 @@ namespace sequoia::testing
   {
     test_index_type_constraint();
     test_uint64_index_type();
+    test_swap_partitions_constraint();
     test_static_storage();
     test_index_type_limit();
     test_permute_partitions();
@@ -66,6 +70,14 @@ namespace sequoia::testing
   void static_partitioned_sequence_test::test_uint64_index_type()
   {
     STATIC_CHECK(indexed_sequence<std::uint64_t, 2, 3>{{1}, {2, 3}}.size_of_partition(1) == 2);
+  }
+
+  void static_partitioned_sequence_test::test_swap_partitions_constraint()
+  {
+    using greater_partitions = maths::static_monotonic_sequence<std::size_t, 2, std::greater<>>;
+
+    STATIC_CHECK( partitions_swappable<static_partitioned_sequence<int, 2, 2>>);
+    STATIC_CHECK(!partitions_swappable<static_partitioned_sequence<int, 2, 2, greater_partitions>>);
   }
 
   void static_partitioned_sequence_test::test_static_storage()

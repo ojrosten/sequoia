@@ -78,8 +78,14 @@ namespace sequoia::testing
     template<std::integral IndexType, std::integral SizeType>
     struct fake_partitions
     {
-      using value_type = IndexType;
-      using size_type  = SizeType;
+      using value_type     = IndexType;
+      using size_type      = SizeType;
+      using const_iterator = const IndexType*;
+
+      const_iterator cbegin() const;
+      const_iterator cend() const;
+
+      void translate(const_iterator, const_iterator, std::ptrdiff_t);
     };
 
     template<class Container, class Partitions>
@@ -156,6 +162,7 @@ namespace sequoia::testing
     using namespace data_structures;
     test_copyability();
     test_index_type_constraint();
+    test_partitions_translation_constraint();
     test_allocator_extended_move();
     test_reset();
     test_permute_partitions_constraints();
@@ -227,6 +234,12 @@ namespace sequoia::testing
     // Each index type below counts to both size types, so only its being bool or a character type refuses it.
     STATIC_CHECK(!sequence_admits<fake_container<bool>,        fake_partitions<bool, bool>>);
     STATIC_CHECK(!sequence_admits<fake_container<std::int8_t>, fake_partitions<char, std::int8_t>>);
+  }
+
+  void partitioned_sequence_regular_test::test_partitions_translation_constraint()
+  {
+    STATIC_CHECK( sequence_admits<std::vector<int>, maths::monotonic_sequence<std::size_t, std::ranges::greater>>);
+    STATIC_CHECK(!sequence_admits<std::vector<int>, maths::monotonic_sequence<std::size_t, std::greater<>>>);
   }
 
   void partitioned_sequence_regular_test::test_allocator_extended_move()

@@ -15,6 +15,7 @@
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
 #include <concepts>
+#include <cstddef>
 #include <limits>
 #include <memory>
 #include <ranges>
@@ -74,6 +75,15 @@ namespace sequoia::data_structures::partition_impl
          || std::allocator_traits<PartitionAllocator>::is_always_equal::value)
     && (    std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value
          || std::allocator_traits<Allocator>::is_always_equal::value)
+  };
+
+  //============================= Helper for constraining the partitions ===================================//
+
+  template<class Partitions>
+  inline constexpr bool translatable_bounds_v{
+    requires(Partitions& partitions, const std::ptrdiff_t delta) {
+      partitions.translate(partitions.cbegin(), partitions.cend(), delta);
+    }
   };
 
   //============================= Helper for construction from nested ranges ===================================//
