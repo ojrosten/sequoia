@@ -135,7 +135,7 @@ namespace sequoia::testing
 
     struct outcome_of_pop
     {
-      node target{};
+      std::size_t target{};
       std::string_view description{};
     };
 
