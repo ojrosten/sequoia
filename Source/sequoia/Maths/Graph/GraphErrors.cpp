@@ -102,7 +102,7 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string erase_edge_error(std::string_view method, const std::size_t partner, const edge_indices indices)
+  std::string erase_edge_message(std::string_view method, const std::size_t partner, const edge_indices indices)
   {
     return std::format("{}partner in partition {} not found for edge {}",
                        error_prefix(method),
@@ -111,16 +111,16 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string odd_num_loops_error(std::string_view method, std::size_t nodeIndex)
+  std::string odd_num_loops_message(std::string_view method, std::size_t nodeIndex)
   {
     return std::format("{}Odd number of loop edges for node {}", error_prefix(method), nodeIndex);
   }
 
   [[nodiscard]]
-  std::string self_referential_error(std::string_view method,
-                                     const edge_indices edgeIndices,
-                                     const std::size_t target,
-                                     const std::size_t compIndex)
+  std::string self_referential_message(std::string_view method,
+                                       const edge_indices edgeIndices,
+                                       const std::size_t target,
+                                       const std::size_t compIndex)
   {
     return std::format("{}Indices [target: {}, comp: {}] are self-referential",
                        error_prefix(method, edgeIndices),
