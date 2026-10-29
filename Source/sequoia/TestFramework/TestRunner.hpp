@@ -31,6 +31,7 @@
 #include <chrono>
 #include <filesystem>
 #include <format>
+#include <functional>
 #include <future>
 #include <iostream>
 #include <map>
@@ -398,6 +399,12 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    const test_execution_record_path& execution_record_file_path() const noexcept
+    {
+      return m_ExecutionRecord;
+    }
+
+    [[nodiscard]]
     const individual_materials_paths& materials_paths() const noexcept
     {
       return m_Vessel.materials_paths();
@@ -509,6 +516,45 @@ namespace sequoia::testing
     test_execution_record_path m_ExecutionRecord{};
     discarded_materials_remover::future_type m_DiscardedMaterialsRemovalFailureFuture{};
   };
+
+  /** \brief The summary of each test of an execution of tests, each at its
+             test's position, and the durations along the critical path of
+             the execution.
+   */
+  struct execution_of_tests
+  {
+    std::vector<log_summary> summaries{};
+    critical_path_durations  critical_path{};
+  };
+
+  /** \brief Executes `tests`, and measures their execution.
+
+      Each test's `execute` takes `index`: a repetition's index, which names
+      the test's output for that repetition, or `std::nullopt` for a run
+      without repetitions.
+
+      Under `concurrency_mode::serial`, executes the tests one after another,
+      in order. Otherwise, executes the tests which are not parallelizable
+      one after another, in order, and then the rest concurrently:
+      -# under `concurrency_mode::fixed`, on a pool of `poolSize` threads;
+      -# under `concurrency_mode::dynamic`, by the standard library's parallel
+         algorithms, or on a pool of eight threads where the library has
+         none.
+
+      Returns once every removal of a discarded materials root which the
+      tests enqueued has finished. Each test then holds its removal's
+      failure, for `test_to_run::extract_discarded_materials_removal_failure`.
+
+      \throws std::invalid_argument if `mode` is `concurrency_mode::fixed`
+              and `poolSize` is zero
+      \throws std::invalid_argument if two of `tests` share a summary file,
+              naming the file
+   */
+  [[nodiscard]]
+  execution_of_tests execute_tests(std::span<const std::reference_wrapper<test_to_run>> tests,
+                                   concurrency_mode mode,
+                                   std::size_t poolSize,
+                                   std::optional<std::size_t> index);
 
   /** \name discriminator_probes
       \brief Probes for the \ref discriminator_hooks "discriminator hooks" a
@@ -641,6 +687,35 @@ namespace sequoia::testing
              get_discriminator<output_discriminator_probe, T>(cache)};
   }
 
+  /** \brief Returns the path of the summary file of a test of type `T` in
+             the project at `projPaths`, with the summary discriminator read
+             from `cache`.
+   */
+  template<concrete_test T>
+  [[nodiscard]]
+  test_summary_path make_test_summary_path(const project_paths& projPaths, const cmake_cache& cache)
+  {
+    return {T::source_file(), test_name<T>(), projPaths, get_discriminator<summary_discriminator_probe, T>(cache)};
+  }
+
+  /** \brief Makes a test of type `T` to run in the project at `projPaths`,
+             with its summary written to `summaryFile`.
+
+      The result holds a test made by `make_test`, `summaryFile`, and the
+      path of the test's execution records, which it leaves as they are.
+   */
+  template<concrete_test T>
+  [[nodiscard]]
+  test_to_run make_test_to_run(const project_paths& projPaths,
+                               const cmake_cache& cache,
+                               recovery_mode mode,
+                               test_summary_path summaryFile)
+  {
+    return {test_vessel{make_test<T>(projPaths, cache, mode)},
+            std::move(summaryFile),
+            test_execution_record_path{T::source_file(), test_name<T>(), projPaths}};
+  }
+
   /** \brief Consumes command-line arguments and holds all test suites.
 
       If no arguments are specified, all tests are run; run with --help
@@ -677,22 +752,14 @@ namespace sequoia::testing
       throw_if_name_refused(name, source);
       throw_if_materials_unplaceable(source);
 
-      const test_summary_path summaryFile{source,
-                                          name,
-                                          m_ProjPaths,
-                                          get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)};
+      const auto summaryFile{make_test_summary_path<T>(m_ProjPaths, m_CMakeCache)};
       throw_if_summary_collides(name, summaryFile);
-
-      const test_execution_record_path executionRecordFile{source, name, m_ProjPaths};
 
       // Only a run builds the test, so that neither `create`, `init` nor
       // `--help` calls its materials or output hooks.
       const bool toRun{m_Filter(source, enclosing_suites(source), testKind) && in_mode(runner_mode::test)};
       auto testToRun{
-        toRun ? std::optional<test_to_run>{std::in_place,
-                                           test_vessel{make_test<T>(m_ProjPaths, m_CMakeCache, m_RecoveryMode)},
-                                           summaryFile,
-                                           executionRecordFile}
+        toRun ? std::optional{make_test_to_run<T>(m_ProjPaths, m_CMakeCache, m_RecoveryMode, summaryFile)}
               : std::nullopt
       };
 
@@ -701,7 +768,7 @@ namespace sequoia::testing
       if(testToRun)
       {
         if(!in_sandbox())
-          clear_execution_records(executionRecordFile);
+          clear_execution_records(testToRun->execution_record_file_path());
 
         m_Tests.push_back(std::move(*testToRun));
       }
@@ -867,7 +934,6 @@ namespace sequoia::testing
     {
       log_summary summary{};
       std::optional<test_to_run> optTest{};
-      std::thread::id executing_thread_id{};
     };
 
     using suite_type = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, suite_node>;
@@ -918,23 +984,14 @@ namespace sequoia::testing
 
     return_code run_tests(std::optional<std::size_t> id);
 
-    /** \brief Executes each test, returning once every removal of a discarded
-               materials root which the tests enqueued has finished.
+    /** \brief Executes each test, as `execute_tests` does, and stores the
+               summary of each test's execution in its node.
 
         \returns The durations along the critical path of the tests'
         execution.
      */
     [[nodiscard]]
-    critical_path_durations execute_tests(std::optional<std::size_t> id);
-
-    /** \brief Executes the tests which are not parallelizable, then the rest
-               concurrently.
-     */
-    [[nodiscard]]
-    critical_path_durations execute_concurrently(std::optional<std::size_t> id, discarded_materials_remover& remover);
-
-    [[nodiscard]]
-    critical_path_durations execute_serially(std::optional<std::size_t> id, discarded_materials_remover& remover);
+    critical_path_durations execute_suite_tree(std::optional<std::size_t> id);
 
     void report_results();
 

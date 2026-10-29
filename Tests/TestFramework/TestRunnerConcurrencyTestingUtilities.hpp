@@ -76,11 +76,12 @@ namespace sequoia::testing
       executed at once.
 
       The tests of one family share one sleep duration and one set of sleep
-      intervals. So from a call of `make_runner_of_tests_which_sleep` to the
-      last read of `sleep_intervals` after the runner executes, nothing else
-      may prepare a run of the same family or execute another runner of it. The
-      repetitions of a run of tests execute one after another, so a test which
-      makes runners of the family breaks this only in these cases:
+      intervals. So from a call of `make_runner_of_tests_which_sleep`, or of
+      `prepare_run`, to the last read of `sleep_intervals` after the tests
+      execute, nothing else may prepare a run of the same family or execute
+      its tests. The repetitions of a run of tests execute one after another,
+      so a test which makes runners of the family breaks this only in these
+      cases:
       -# Two such tests are parallelizable.
       -# Such a test makes or executes a second runner of the family
          between the making of the first and the last read of its
@@ -177,6 +178,28 @@ namespace sequoia::testing
     (runner.register_test<TestsWhichSleep>(), ...);
 
     return runner;
+  }
+
+  /** Returns each of `TestsWhichSleep`, made to run in the project at
+      `projPaths` with `make_test_to_run`. Unlike
+      `make_runner_of_tests_which_sleep`, it leaves the family's run
+      unprepared: call `prepare_run` before executing the tests.
+   */
+  template<class Family, concrete_test... TestsWhichSleep>
+    requires are_tests_which_sleep_of_v<Family, TestsWhichSleep...>
+  [[nodiscard]]
+  std::vector<test_to_run> make_tests_which_sleep(const project_paths& projPaths)
+  {
+    const cmake_cache cache{projPaths.build()};
+
+    std::vector<test_to_run> tests{};
+    (tests.push_back(make_test_to_run<TestsWhichSleep>(projPaths,
+                                                       cache,
+                                                       recovery_mode::none,
+                                                       make_test_summary_path<TestsWhichSleep>(projPaths, cache))),
+     ...);
+
+    return tests;
   }
 
   /** The sleep of each test whose overlap the runner tests measure. On the

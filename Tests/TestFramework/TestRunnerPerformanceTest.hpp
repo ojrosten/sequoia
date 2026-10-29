@@ -10,6 +10,7 @@
 /** \file */
 
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "sequoia/TestFramework/TestRunner.hpp"
 
 namespace sequoia::testing
 {
@@ -28,9 +29,14 @@ namespace sequoia::testing
 
     void test_thread_pool_acceleration();
 
-    void check_speedup_over_serial_execution(std::string_view description,
-                                             const std::vector<std::string>& arguments,
-                                             relative_performance_interval prediction);
+    void check_run_speedup_over_serial_run(std::string_view description,
+                                           const std::vector<std::string>& arguments,
+                                           relative_performance_interval prediction);
+
+    void check_execution_speedup_over_serial_execution(std::string_view description,
+                                                       concurrency_mode concurrencyMode,
+                                                       std::size_t poolSize,
+                                                       relative_performance_interval prediction);
 
     void write(std::string_view dirName, std::string_view printedOutput) const;
 
