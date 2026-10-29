@@ -189,12 +189,15 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string inconsistent_initialization_message(std::size_t numNodes, std::size_t edgeParitions)
+  std::string inconsistent_initialization_message(std::string_view method,
+                                                  std::size_t numNodes,
+                                                  std::size_t edgeParitions)
   {
-    return std::format("Error initializing graph\n"
+    return std::format("{}Error initializing graph\n"
                        "Number of node weights:    {}\n"
                        "Number of edge paritions:  {}\n"
                        "Please ensure these numbers are the same",
+                       error_prefix(method),
                        numNodes,
                        edgeParitions);
   }

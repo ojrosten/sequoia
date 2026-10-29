@@ -549,7 +549,9 @@ namespace sequoia
       constexpr static const edges_initializer& check_initialization(const edges_initializer& edges, std::size_t numNodes, std::size_t edgeParitions)
       {
         if(numNodes != edgeParitions)
-          throw std::logic_error{graph_errors::inconsistent_initialization_message(numNodes, edgeParitions)};
+          throw std::logic_error{
+            graph_errors::inconsistent_initialization_message("check_initialization", numNodes, edgeParitions)
+          };
 
         return edges;
       }
