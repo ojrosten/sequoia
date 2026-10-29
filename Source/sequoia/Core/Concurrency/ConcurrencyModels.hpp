@@ -12,7 +12,7 @@
            following concurrent execution
 
            The three concurrency models sequoia::concurrency::serial, sequoia::concurrency::asynchronous
-           and sequoia::concurrencythread_pool have a common interface for pushing tasks via the `push`
+           and sequoia::concurrency::thread_pool have a common interface for pushing tasks via the `push`
            method.
  */
 
@@ -193,8 +193,11 @@ namespace sequoia::concurrency
 
   //=======================================Thread Pool========================================//
 
-  /** \brief Supports either a single pipeline or a pipeline for each thread, together with task
-      stealing.
+  /** \brief A pool of threads that runs the tasks pushed to it.
+
+      Tasks reach the threads through either a single pipeline or a pipeline
+      for each thread. With a pipeline for each thread, a thread may take a
+      task from another thread's pipeline (task stealing).
 
       Several threads may call `push` concurrently.
 
