@@ -231,17 +231,17 @@ namespace sequoia::testing
       return (i == ci) && (ci == i) && (i != cj) && (cj != i) && ((i <=> cj) < 0) && ((cj <=> i) > 0);
     }());
 
-    // comparable_data_policy declares <=>, as null_data_policy does not.
-    using comparable_iter_t  = iterator_with_comparable_data_policy<i_t>;
-    using comparable_citer_t = iterator_with_comparable_data_policy<ci_t>;
+    // Unlike null_data_policy, comparable_data_policy declares <=>.
+    using comparable_data_iter_t  = iterator_with_comparable_data_policy<i_t>;
+    using comparable_data_citer_t = iterator_with_comparable_data_policy<ci_t>;
 
-    STATIC_CHECK(std::three_way_comparable_with<comparable_iter_t, comparable_citer_t>);
-    STATIC_CHECK(std::three_way_comparable_with<comparable_citer_t, comparable_iter_t>);
+    STATIC_CHECK(std::three_way_comparable_with<comparable_data_iter_t, comparable_data_citer_t>);
+    STATIC_CHECK(std::three_way_comparable_with<comparable_data_citer_t, comparable_data_iter_t>);
 
     STATIC_CHECK([](){
       std::array<int, 3> a{};
-      const comparable_iter_t  i{a.begin()};
-      const comparable_citer_t cj{a.cbegin() + 1};
+      const comparable_data_iter_t  i{a.begin()};
+      const comparable_data_citer_t cj{a.cbegin() + 1};
       return (i != cj) && (cj != i) && ((i <=> cj) < 0) && ((cj <=> i) > 0);
     }());
 
@@ -249,9 +249,11 @@ namespace sequoia::testing
     using scaling_citer_t = iterator<ci_t, scaling_dereference_policy<ci_t>>;
 
     STATIC_CHECK( has_equality_with_v<custom_iter_t, custom_citer_t>);
+    STATIC_CHECK( has_equality_with_v<custom_citer_t, custom_iter_t>);
     STATIC_CHECK(!has_equality_with_v<custom_iter_t, scaling_citer_t>);
     STATIC_CHECK(!has_equality_with_v<scaling_citer_t, custom_iter_t>);
     STATIC_CHECK( has_three_way_comparison_with_v<custom_iter_t, custom_citer_t>);
+    STATIC_CHECK( has_three_way_comparison_with_v<custom_citer_t, custom_iter_t>);
     STATIC_CHECK(!has_three_way_comparison_with_v<custom_iter_t, scaling_citer_t>);
     STATIC_CHECK(!has_three_way_comparison_with_v<scaling_citer_t, custom_iter_t>);
   }

@@ -147,8 +147,8 @@ namespace sequoia::utilities
   class iterator : public DereferencePolicy
   {
   private:
-    /** Whether the converting constructor admits an
-        `iterator<Iter, DerefPol>`.
+    /** Whether an `iterator<Iter, DerefPol>` converts to this iterator,
+        through the converting constructor.
      */
     template<class Iter, class DerefPol>
     constexpr static bool converts_from_v{
@@ -305,9 +305,10 @@ SEQUOIA_GCC_SUPPRESS_END
     }
 
     // Without these, comparing with an iterator that converts to this one is
-    // ambiguous where both dereference policies derive from a class declaring
-    // the comparison: neither the class's comparison nor the comparison
-    // through the conversion is better.
+    // ambiguous where the two iterators share a public base class declaring
+    // the comparison. This iterator's own comparison then needs the
+    // converting constructor for one operand, and the class's needs a
+    // derived-to-base conversion for both, so neither is better.
     template<class Iter, class DerefPol>
       requires converts_from_v<Iter, DerefPol> && std::equality_comparable_with<Iterator, Iter>
     [[nodiscard]]
