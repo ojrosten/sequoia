@@ -261,15 +261,6 @@ namespace sequoia::testing
       return std::ranges::fold_left(threadDurations, durations_of_tests{}, busierOf);
     }
 
-    constexpr auto execution_info_of{
-      [](const auto& node) {
-        return execution_info{
-          .thread_id{node.executing_thread_id},
-          .durations{node.summary.durations()}
-        };
-      }
-    };
-
     constexpr std::array<std::string_view, 3> materials_kinds{"WorkingCopy", "Prediction", "Auxiliary"};
 
     constexpr auto filename_of{
@@ -1091,6 +1082,112 @@ namespace sequoia::testing
     return summary;
   }
 
+  [[nodiscard]]
+  execution_of_tests execute_tests(std::span<const std::reference_wrapper<test_to_run>> tests,
+                                   const concurrency_mode mode,
+                                   const std::size_t poolSize,
+                                   const std::optional<std::size_t> index)
+  {
+    if((mode == concurrency_mode::fixed) && (poolSize == 0))
+      throw std::invalid_argument{"A pool of threads which executes tests needs at least one thread"};
+
+    const auto summaryFiles{
+      [tests]() {
+        auto summaryFileOf{
+          [](const test_to_run& test) -> const fs::path& { return test.summary_file_path().file_path(); }
+        };
+
+        auto files{tests | std::views::transform(summaryFileOf) | std::ranges::to<std::vector<fs::path>>()};
+        std::ranges::sort(files);
+        return files;
+      }()
+    };
+
+    if(const auto shared{std::ranges::adjacent_find(summaryFiles)}; shared != summaryFiles.end())
+    {
+      throw std::invalid_argument{
+        std::format("Two tests to execute share the summary file {}", shared->generic_string())
+      };
+    }
+
+    const auto allPositions{std::views::iota(0uz, tests.size())};
+    auto isParallelizable{[tests](const std::size_t i) { return tests[i].get().parallelizable(); }};
+    auto positionsWhere{
+      [allPositions](auto predicate) {
+        return allPositions | std::views::filter(predicate) | std::ranges::to<std::vector>();
+      }
+    };
+
+    const bool serialMode{mode == concurrency_mode::serial};
+    const auto sequential{
+      serialMode ? allPositions | std::ranges::to<std::vector>() : positionsWhere(std::not_fn(isParallelizable))
+    };
+
+    const auto concurrent{serialMode ? std::vector<std::size_t>{} : positionsWhere(isParallelizable)};
+
+    struct summary_and_thread
+    {
+      log_summary     summary{};
+      std::thread::id thread_id{};
+    };
+
+    discarded_materials_remover remover{};
+
+    // Each execution writes only the element for its own test
+    std::vector<summary_and_thread> executions(tests.size());
+    auto executeAt{
+      [tests, index, &remover, &executions](const std::size_t i) {
+        executions[i] = {.summary{tests[i].get().execute(index, remover)}, .thread_id{std::this_thread::get_id()}};
+      }
+    };
+
+    const timer executionTimer{};
+    std::ranges::for_each(sequential, executeAt);
+
+    switch(mode)
+    {
+      using enum concurrency_mode;
+    case serial:
+      break;
+    case dynamic:
+      accelerate(sequoia::execution::par, std::span{concurrent}, executeAt);
+      break;
+    case fixed:
+      accelerate(thread_pool_policy{.num{poolSize}}, std::span{concurrent}, executeAt);
+      break;
+    default:
+      throw std::logic_error{"Unexpected concurrency_mode"};
+    }
+
+    const auto wallClock{executionTimer.time_elapsed()};
+
+    auto executionInfosFor{
+      [&executions](std::span<const std::size_t> positions) {
+        auto infoAt{
+          [&executions](const std::size_t i) {
+            return execution_info{.thread_id{executions[i].thread_id}, .durations{executions[i].summary.durations()}};
+          }
+        };
+
+        return positions | std::views::transform(infoAt) | std::ranges::to<std::vector>();
+      }
+    };
+
+    const auto criticalPath{
+      apportion_wall_clock(wallClock, executionInfosFor(sequential), executionInfosFor(concurrent))
+    };
+
+    return {
+      .summaries{
+          executions
+        | std::views::as_rvalue
+        | std::views::transform(&summary_and_thread::summary)
+        | std::ranges::to<std::vector>()
+      },
+      .critical_path{criticalPath}
+    };
+  }
+
   //=========================================== test_runner ===========================================//
 
   //===================================== test_filter =====================================//
@@ -1834,7 +1931,7 @@ namespace sequoia::testing
     // Without the flush, a run killed while the tests are silent would never show that they had begun
     stream() << running_tests_message(m_ConcurrencyMode) << std::flush;
 
-    const auto criticalPathDurations{execute_tests(id)};
+    const auto criticalPathDurations{execute_suite_tree(id)};
     const auto removalFailures{extract_discarded_materials_removal_failures()};
 
     test_tracker tracker{proj_paths(), id, m_Filter.selects() ? is_filtered::yes : is_filtered::no, m_Filter.tests_left_out()};
@@ -1908,83 +2005,48 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  critical_path_durations test_runner::execute_tests(const std::optional<std::size_t> id)
-  {
-    discarded_materials_remover remover{};
-    if(concurrent_execution())
-      return execute_concurrently(id, remover);
-
-    return execute_serially(id, remover);
-  }
-
-  [[nodiscard]]
-  critical_path_durations test_runner::execute_concurrently(const std::optional<std::size_t> id,
-                                                            discarded_materials_remover& remover)
-  {
-    auto first{std::ranges::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
-    auto next{std::ranges::find_if(first, m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest->parallelizable(); })};
-
-    auto executor{
-      [id, &remover](suite_node& wt){
-        wt.summary             = wt.optTest->execute(id, remover);
-        wt.executing_thread_id = std::this_thread::get_id();
-      }
-    };
-
-    std::span nonParallelizable{first, next}, parallelizable{next, m_Suites.end_node_weights()};
-
-    const timer asyncTimer{};
-    std::ranges::for_each(nonParallelizable, executor);
-
-    switch(m_ConcurrencyMode)
-    {
-      using enum concurrency_mode;
-    case dynamic:
-      accelerate(sequoia::execution::par, parallelizable, executor);
-      break;
-    case fixed:
-      accelerate(thread_pool_policy{.num{m_PoolSize}}, parallelizable, executor);
-      break;
-    default:
-      throw std::logic_error{"Unexpected concurrency_mode"};
-    }
-
-    const auto wallClock{asyncTimer.time_elapsed()};
-
-    auto executionInfos{
-      [](std::span<const suite_node> nodes){
-        return nodes | std::views::transform(execution_info_of) | std::ranges::to<std::vector>();
-      }
-    };
-
-    return apportion_wall_clock(wallClock, executionInfos(nonParallelizable), executionInfos(parallelizable));
-  }
-
-  [[nodiscard]]
-  critical_path_durations test_runner::execute_serially(const std::optional<std::size_t> id,
-                                                        discarded_materials_remover& remover)
+  critical_path_durations test_runner::execute_suite_tree(const std::optional<std::size_t> id)
   {
     using namespace maths;
-    auto execute{
-      [&s = m_Suites, id, &remover](auto n) {
-        auto& wt{s.begin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(n)]};
-        if(wt.optTest)
-          wt.summary = wt.optTest->execute(id, remover);
+
+    auto nodesDepthFirst{
+      [this]() {
+        std::vector<suite_node_index> nodes{};
+        traverse(depth_first,
+                 m_Suites,
+                 find_disconnected_t{},
+                 [&nodes](const suite_node_index n) { nodes.push_back(n); },
+                 null_func_obj{},
+                 null_func_obj{});
+
+        return nodes;
       }
     };
 
-    const timer serialTimer{};
-    traverse(depth_first, m_Suites, find_disconnected_t{}, execute, null_func_obj{}, null_func_obj{});
-    const auto wallClock{serialTimer.time_elapsed()};
-
-    const auto executions{
-        m_Suites.node_weights()
-      | std::views::filter(holds_test)
-      | std::views::transform(execution_info_of)
-      | std::ranges::to<std::vector>()
+    auto nodeAt{
+      [this](const suite_node_index n) -> suite_node& {
+        return m_Suites.begin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(n)];
+      }
     };
 
-    return apportion_wall_clock(wallClock, executions, {});
+    auto holdsTestAt{[&nodeAt](const suite_node_index n) { return holds_test(nodeAt(n)); }};
+    auto testAt     {[&nodeAt](const suite_node_index n) { return std::ref(*nodeAt(n).optTest); }};
+
+    const auto nodesInOrderOfExecution{
+      concurrent_execution() ? std::views::iota(suite_node_index{}, m_Suites.order()) | std::ranges::to<std::vector>()
+                             : nodesDepthFirst()
+    };
+
+    const auto testNodes{nodesInOrderOfExecution | std::views::filter(holdsTestAt) | std::ranges::to<std::vector>()};
+    const auto tests    {testNodes               | std::views::transform(testAt)   | std::ranges::to<std::vector>()};
+
+    auto execution{execute_tests(tests, m_ConcurrencyMode, m_PoolSize, id)};
+    for(auto&& [node, summary] : std::views::zip(testNodes, execution.summaries))
+    {
+      nodeAt(node).summary = std::move(summary);
+    }
+
+    return execution.critical_path;
   }
 
   void test_runner::report_results()
