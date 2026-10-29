@@ -44,14 +44,14 @@ namespace sequoia::testing
       vector_without_default_construction() = delete;
     };
 
-    struct vector_without_copying_push_back : std::vector<int>
+    struct vector_without_lvalue_push_back : std::vector<int>
     {
       using std::vector<int>::push_back;
 
       void push_back(const int&) = delete;
     };
 
-    struct vector_without_moving_push_back : std::vector<int>
+    struct vector_without_rvalue_push_back : std::vector<int>
     {
       using std::vector<int>::push_back;
 
@@ -71,6 +71,14 @@ namespace sequoia::testing
     struct vector_without_size : std::vector<int>
     {
       size_type size() const = delete;
+    };
+
+    struct less_without_default_construction
+    {
+      constexpr explicit less_without_default_construction(int) {}
+
+      [[nodiscard]]
+      constexpr bool operator()(const int lhs, const int rhs) const { return lhs < rhs; }
     };
 
     template<class... Args>
@@ -137,11 +145,16 @@ namespace sequoia::testing
 
     // The container lacks a member which priority_queue uses
     STATIC_CHECK(!priority_queue_admits_v<int, vector_without_default_construction>);
-    STATIC_CHECK(!priority_queue_admits_v<int, vector_without_copying_push_back>);
-    STATIC_CHECK(!priority_queue_admits_v<int, vector_without_moving_push_back>);
+    STATIC_CHECK(!priority_queue_admits_v<int, vector_without_lvalue_push_back>);
+    STATIC_CHECK(!priority_queue_admits_v<int, vector_without_rvalue_push_back>);
     STATIC_CHECK(!priority_queue_admits_v<int, vector_without_pop_back>);
     STATIC_CHECK(!priority_queue_admits_v<int, vector_without_empty>);
     STATIC_CHECK(!priority_queue_admits_v<int, vector_without_size>);
+
+    // A caller must supply a comparator which has no default constructor
+    using queue_without_default_comparator_t = data_structures::priority_queue<int, std::vector<int>, less_without_default_construction>;
+    STATIC_CHECK(!std::default_initializable<queue_without_default_comparator_t>);
+    STATIC_CHECK( std::constructible_from<queue_without_default_comparator_t, less_without_default_construction>);
   }
 
   void priority_queue_regular_test::test_constant_evaluation()

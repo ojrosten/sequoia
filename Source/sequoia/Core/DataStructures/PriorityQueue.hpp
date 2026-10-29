@@ -25,23 +25,27 @@
 
 namespace sequoia::data_structures
 {
-  /** \brief Whether `priority_queue` can construct `Container`, push to its
-             back, pop from its back, and query its size.
-   */
-  template<class Container>
-  inline constexpr bool priority_queue_container_v{
-       std::default_initializable<Container>
-    && requires(Container& container,
-                const Container& constContainer,
-                const typename Container::value_type& value,
-                typename Container::value_type&& movedValue) {
-         container.push_back(value);
-         container.push_back(std::move(movedValue));
-         container.pop_back();
-         { constContainer.empty() } -> std::convertible_to<bool>;
-         { constContainer.size() }  -> std::convertible_to<typename Container::size_type>;
-       }
-  };
+  namespace impl
+  {
+    /** \brief Whether `Container` has the members which `priority_queue`
+               calls, beyond those of a range.
+     */
+    template<class Container>
+    inline constexpr bool has_priority_queue_members_v{
+         std::default_initializable<Container>
+      && utilities::gives_references_to_elements_v<Container>
+      && requires(Container& container,
+                  const Container& constContainer,
+                  const typename Container::value_type& value,
+                  typename Container::value_type&& movedValue) {
+           container.push_back(value);
+           container.push_back(std::move(movedValue));
+           container.pop_back();
+           { constContainer.empty() } -> std::convertible_to<bool>;
+           { constContainer.size() }  -> std::convertible_to<typename Container::size_type>;
+         }
+    };
+  }
 
   /** \brief A stand-in for std::priority_queue, usable in a constant
              evaluation.
@@ -58,15 +62,14 @@ namespace sequoia::data_structures
     requires std::same_as<T, typename Container::value_type>
           && std::ranges::random_access_range<Container>
           && std::sortable<std::ranges::iterator_t<Container>, Compare>
-          && utilities::gives_references_to_elements_v<Container>
-          && priority_queue_container_v<Container>
+          && impl::has_priority_queue_members_v<Container>
   class priority_queue
   {
   public:
     using value_type = T;
     using size_type  = Container::size_type;
 
-    constexpr priority_queue() = default;
+    constexpr priority_queue() requires std::default_initializable<Compare> = default;
 
     constexpr explicit priority_queue(const Compare& compare)
       : m_Compare{compare}
