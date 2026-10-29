@@ -10,7 +10,7 @@ Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphUnweigh
 
 Expected Exception Type:
 [std::logic_error]
-process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - max index is 1
+validate [node: 0, edge: 0]: complementary index 1 out of range - max index is 1
 
 =======================================
 
@@ -18,7 +18,7 @@ Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphUnweigh
 
 Expected Exception Type:
 [std::logic_error]
-process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
+validate [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 =======================================
 

@@ -410,7 +410,7 @@ namespace sequoia
       // TO DO: change semantics to non-throwing?
       constexpr void swap_edges(edge_index_type node, edge_index_type i, edge_index_type j)
       {
-        graph_errors::check_edge_swap_indices(node, i, j, static_cast<std::size_t>(std::ranges::distance(cedges(node))));
+        graph_errors::check_edge_swap_indices("swap_edges", node, i, j, static_cast<std::size_t>(std::ranges::distance(cedges(node))));
 
         std::ranges::iter_swap(begin_edges(node) + numeric::unchecked_conversion_to<std::ptrdiff_t>(i),
                                begin_edges(node) + numeric::unchecked_conversion_to<std::ptrdiff_t>(j));
@@ -828,7 +828,7 @@ namespace sequoia
               auto found{std::ranges::find_if(cedges(partner), pred)};
 
               if(found == cend_edges(partner))
-                throw std::logic_error{graph_errors::erase_edge_error(partner, {source, static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(source), citer))})};
+                throw std::logic_error{graph_errors::erase_edge_error("erase_edge", partner, {source, static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(source), citer))})};
 
               const auto partnerDist{std::ranges::distance(cbegin_edges(partner), found)};
 
@@ -881,7 +881,7 @@ namespace sequoia
               if(found == citer) found = std::ranges::find_if(std::ranges::next(citer), cend_edges(source), pred);
 
               if(found == cend_edges(source))
-                throw std::logic_error{graph_errors::erase_edge_error(source, {source, static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(source), citer))})};
+                throw std::logic_error{graph_errors::erase_edge_error("erase_edge", source, {source, static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(source), citer))})};
 
               auto dist{std::ranges::distance(cbegin_edges(source), citer)};
               if(std::ranges::distance(cbegin_edges(source), found) < dist) --dist;
@@ -1025,7 +1025,7 @@ namespace sequoia
             };
             const auto target{edge.target_node()};
             graph_errors::check_edge_index_range(
-              "process_complementary_edges",
+              "validate",
               edgeIndices,
               "target",
               edges.size(),
@@ -1035,7 +1035,7 @@ namespace sequoia
             const auto compIndex{edge.complementary_index()};
             const auto& targetEdges{edges.begin()[target]};
             graph_errors::check_edge_index_range(
-              "process_complementary_edges",
+              "validate",
               edgeIndices,
               "complementary",
               targetEdges.size(),
@@ -1044,13 +1044,14 @@ namespace sequoia
 
             if((target == edgeIndices.node) && (compIndex == edgeIndices.edge))
             {
-              throw std::logic_error{graph_errors::self_referential_error(edgeIndices, target, compIndex)};
+              throw std::logic_error{graph_errors::self_referential_error("validate", edgeIndices, target, compIndex)};
             }
             else if(const auto& targetEdge{targetEdges.begin()[compIndex]};
                     targetEdge.complementary_index() != edgeIndices.edge)
             {
               throw std::logic_error{
                 graph_errors::reciprocated_error_message(
+                  "validate",
                   edgeIndices,
                   "complementary",
                   targetEdge.complementary_index(),
@@ -1060,13 +1061,13 @@ namespace sequoia
             }
             else
             {
-              graph_errors::check_reciprocated_index(edgeIndices, "target", targetEdge.target_node(), edgeIndices.node);
+              graph_errors::check_reciprocated_index("validate", edgeIndices, "target", targetEdge.target_node(), edgeIndices.node);
 
               if constexpr(!std::is_empty_v<edge_weight_type>)
               {
                 if(edge.weight() != targetEdge.weight())
                   throw std::logic_error{
-                    graph_errors::mismatched_weights_message("process_complementary_edges", edgeIndices)
+                    graph_errors::mismatched_weights_message("validate", edgeIndices)
                   };
               }
             }
@@ -1089,7 +1090,7 @@ namespace sequoia
               static_cast<std::size_t>(edgeIndex)
             };
             const auto target{edge.target_node()};
-            graph_errors::check_edge_index_range("process_edges", edgeIndices, "target", edges.size(), target);
+            graph_errors::check_edge_index_range("validate", edgeIndices, "target", edges.size(), target);
           }
         }
 
@@ -1112,7 +1113,7 @@ namespace sequoia
           edges,
           []() {},
           [](edge_index_type i, range_t hostRange) {
-            if(std::ranges::distance(hostRange) % 2) throw std::logic_error{odd_num_loops_error("connectivity_base", i)};
+            if(std::ranges::distance(hostRange) % 2) throw std::logic_error{odd_num_loops_error("validate", i)};
           },
           [](edge_index_type i, edge_index_type target, range_t hostRange, range_t targetRange) {
             const partial_edge_counts counts{
@@ -1128,7 +1129,7 @@ namespace sequoia
                 std::is_empty_v<edge_weight_type> ? edge_weighting::unweighted : edge_weighting::weighted
               };
               throw std::logic_error{
-                absent_reciprocated_partial_edge_message("connectivity_base", counts, edgeWeighting)
+                absent_reciprocated_partial_edge_message("validate", counts, edgeWeighting)
               };
             }
           }
@@ -1272,7 +1273,7 @@ namespace sequoia
             }
             else
             {
-              graph_errors::check_edge_index_range("", {i, static_cast<std::size_t>(std::ranges::distance(orderedEdges.cbegin_partition(i), lowerIter))}, "target", orderedEdges.num_partitions(), lowerIter->target_node());
+              graph_errors::check_edge_index_range("validate", {i, static_cast<std::size_t>(std::ranges::distance(orderedEdges.cbegin_partition(i), lowerIter))}, "target", orderedEdges.num_partitions(), lowerIter->target_node());
 
               const auto comparisonEdge{
                 [lowerIter, i]() {

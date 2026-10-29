@@ -3,7 +3,7 @@ Zeroth partial index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-process_edges [node: 0, edge: 0]: target index 1 out of range - max index is 1
+validate [node: 0, edge: 0]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -12,7 +12,7 @@ First partial index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-process_edges [node: 0, edge: 1]: target index 1 out of range - max index is 1
+validate [node: 0, edge: 1]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -21,7 +21,7 @@ First partial index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-process_edges [node: 0, edge: 1]: target index 2 out of range - max index is 2
+validate [node: 0, edge: 1]: target index 2 out of range - max index is 2
 
 =======================================
 
@@ -30,7 +30,7 @@ Zeroth partial index of node 1's edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-process_edges [node: 1, edge: 0]: target index 2 out of range - max index is 2
+validate [node: 1, edge: 0]: target index 2 out of range - max index is 2
 
 =======================================
 
@@ -39,7 +39,7 @@ Zeroth partial index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-process_edges [node: 0, edge: 0]: target index 1 out of range - max index is 1
+validate [node: 0, edge: 0]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -48,7 +48,7 @@ First partial index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-process_edges [node: 0, edge: 1]: target index 1 out of range - max index is 1
+validate [node: 0, edge: 1]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -57,7 +57,7 @@ First partial index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-process_edges [node: 0, edge: 1]: target index 2 out of range - max index is 2
+validate [node: 0, edge: 1]: target index 2 out of range - max index is 2
 
 =======================================
 
@@ -66,7 +66,7 @@ Zeroth partial index of node 1's edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
-process_edges [node: 1, edge: 0]: target index 2 out of range - max index is 2
+validate [node: 1, edge: 0]: target index 2 out of range - max index is 2
 
 =======================================
 

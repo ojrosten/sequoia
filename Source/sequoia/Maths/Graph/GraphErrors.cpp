@@ -75,29 +75,30 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string edge_swap_indices_message(std::size_t node, std::size_t index, std::size_t numEdges)
+  std::string edge_swap_indices_message(std::string_view method, std::size_t node, std::size_t index, std::size_t numEdges)
   {
-    return std::format("swap_edges: edge index {} out of range for node {}, which has {} edge(s)",
+    return std::format("{}edge index {} out of range for node {}, which has {} edge(s)",
+                       error_prefix(method),
                        index,
                        node,
                        numEdges);
   }
 
   [[nodiscard]]
-  std::string reciprocated_error_message(const edge_indices edgeIndices, const std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index)
+  std::string reciprocated_error_message(std::string_view method, const edge_indices edgeIndices, const std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index)
   {
     return std::format("{}Reciprocated {} index {} does not match {}",
-                       error_prefix("process_complementary_edges", edgeIndices),
+                       error_prefix(method, edgeIndices),
                        indexName,
                        reciprocatedIndex,
                        index);
   }
 
   [[nodiscard]]
-  std::string erase_edge_error(const std::size_t partner, const edge_indices indices)
+  std::string erase_edge_error(std::string_view method, const std::size_t partner, const edge_indices indices)
   {
     return std::format("{}partner in partition {} not found for edge {}",
-                       error_prefix("erase_edge"),
+                       error_prefix(method),
                        partner,
                        to_string(indices));
   }
@@ -109,10 +110,10 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string self_referential_error(const edge_indices edgeIndices, const std::size_t target, const std::size_t compIndex)
+  std::string self_referential_error(std::string_view method, const edge_indices edgeIndices, const std::size_t target, const std::size_t compIndex)
   {
     return std::format("{}Indices [target: {}, comp: {}] are self-referential",
-                       error_prefix("process_complementary_edges", edgeIndices),
+                       error_prefix(method, edgeIndices),
                        target,
                        compIndex);
   }

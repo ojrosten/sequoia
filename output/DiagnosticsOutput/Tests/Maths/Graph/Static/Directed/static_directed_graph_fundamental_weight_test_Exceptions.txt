@@ -74,7 +74,7 @@ Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, 
 
 Expected Exception Type:
 [std::logic_error]
-process_edges [node: 0, edge: 0]: target index 1 out of range - max index is 1
+validate [node: 0, edge: 0]: target index 1 out of range - max index is 1
 
 =======================================
 

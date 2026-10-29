@@ -3,7 +3,7 @@ Target index of edge out of range
 
 Expected Exception Type:
 [std::out_of_range]
- [node: 0, edge: 0]: target index 1 out of range - max index is 1
+validate [node: 0, edge: 0]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -12,7 +12,7 @@ Mismatched loop
 
 Expected Exception Type:
 [std::logic_error]
-connectivity_base: Odd number of loop edges for node 0
+validate: Odd number of loop edges for node 0
 
 =======================================
 
@@ -21,7 +21,7 @@ Mismatched partial edges
 
 Expected Exception Type:
 [std::logic_error]
-connectivity_base: Node 0's edge to node 1 has no reciprocal of equal weight
+validate: Node 0's edge to node 1 has no reciprocal of equal weight
 
 =======================================
 
@@ -30,7 +30,7 @@ Mismatched loop
 
 Expected Exception Type:
 [std::logic_error]
-connectivity_base: Odd number of loop edges for node 1
+validate: Odd number of loop edges for node 1
 
 =======================================
 
@@ -39,7 +39,7 @@ A partial edge with no reciprocal
 
 Expected Exception Type:
 [std::logic_error]
-connectivity_base: Node 0's edge to node 2 has no reciprocal of equal weight
+validate: Node 0's edge to node 2 has no reciprocal of equal weight
 
 =======================================
 
@@ -48,7 +48,7 @@ Parallel partial edges with no reciprocal
 
 Expected Exception Type:
 [std::logic_error]
-connectivity_base: Node 0's 2 edges of equal weight to node 2 have no reciprocal of that weight
+validate: Node 0's 2 edges of equal weight to node 2 have no reciprocal of that weight
 
 =======================================
 
@@ -57,7 +57,7 @@ More partial edges one way than the other
 
 Expected Exception Type:
 [std::logic_error]
-connectivity_base: Node 0 has 2 edges of equal weight to node 2, but node 2 has 1 of that weight to node 0
+validate: Node 0 has 2 edges of equal weight to node 2, but node 2 has 1 of that weight to node 0
 
 =======================================
 
@@ -66,7 +66,7 @@ Fewer partial edges one way than the other
 
 Expected Exception Type:
 [std::logic_error]
-connectivity_base: Node 2 has 2 edges of equal weight to node 1, but node 1 has 1 of that weight to node 2
+validate: Node 2 has 2 edges of equal weight to node 1, but node 1 has 1 of that weight to node 2
 
 =======================================
 
@@ -75,7 +75,7 @@ Mismatched loop weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity_base: Odd number of loop edges for node 0
+validate: Odd number of loop edges for node 0
 
 =======================================
 
@@ -84,7 +84,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity_base: Node 0's edge to node 1 has no reciprocal of equal weight
+validate: Node 0's edge to node 1 has no reciprocal of equal weight
 
 =======================================
 
