@@ -1,2 +1,2 @@
 performance_exceptions_test
-Standard Top Level Checks:                34;  Failures:  0  [Deep checks: 52]
+Standard Top Level Checks:                36;  Failures:  0  [Deep checks: 56]

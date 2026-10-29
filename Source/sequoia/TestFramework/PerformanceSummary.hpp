@@ -26,8 +26,6 @@ namespace sequoia::testing
     slow_task_too_often_no_longer_than_baseline,
     not_distinguishably_faster,
     slower,
-    faster_but_less_than_predicted,
-    suspiciously_fast,
     speedup_less_than_predicted,
     speedup_greater_than_predicted
   };

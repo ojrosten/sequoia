@@ -248,16 +248,10 @@ namespace sequoia::testing
           }
 
           if(interval.upper < prediction.lower)
-          {
-            return predictsFaster ? relative_performance_failure::faster_but_less_than_predicted
-                                  : relative_performance_failure::speedup_less_than_predicted;
-          }
+            return relative_performance_failure::speedup_less_than_predicted;
 
           if(interval.lower > prediction.upper)
-          {
-            return predictsFaster ? relative_performance_failure::suspiciously_fast
-                                  : relative_performance_failure::speedup_greater_than_predicted;
-          }
+            return relative_performance_failure::speedup_greater_than_predicted;
 
           return std::nullopt;
         }()
