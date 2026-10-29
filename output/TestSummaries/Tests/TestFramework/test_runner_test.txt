@@ -1,2 +1,2 @@
 test_runner_test
-Standard Top Level Checks:               310;  Failures:  0  [Deep checks: 1016]
+Standard Top Level Checks:               316;  Failures:  0  [Deep checks: 1022]

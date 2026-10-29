@@ -70,6 +70,8 @@ namespace sequoia::testing
 
     void test_discriminated_summary();
 
+    void test_summary_written_only_if_changed();
+
     void test_prune_basic_output();
 
     void test_prune_with_changed_toolchain();
