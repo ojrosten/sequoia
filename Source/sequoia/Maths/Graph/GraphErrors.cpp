@@ -75,7 +75,10 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string edge_swap_indices_message(std::string_view method, std::size_t node, std::size_t index, std::size_t numEdges)
+  std::string edge_swap_indices_message(std::string_view method,
+                                        std::size_t node,
+                                        std::size_t index,
+                                        std::size_t numEdges)
   {
     return std::format("{}edge index {} out of range for node {}, which has {} edge(s)",
                        error_prefix(method),
@@ -85,7 +88,11 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string reciprocated_error_message(std::string_view method, const edge_indices edgeIndices, const std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index)
+  std::string reciprocated_error_message(std::string_view method,
+                                         const edge_indices edgeIndices,
+                                         const std::string_view indexName,
+                                         const std::size_t reciprocatedIndex,
+                                         const std::size_t index)
   {
     return std::format("{}Reciprocated {} index {} does not match {}",
                        error_prefix(method, edgeIndices),
@@ -110,7 +117,10 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string self_referential_error(std::string_view method, const edge_indices edgeIndices, const std::size_t target, const std::size_t compIndex)
+  std::string self_referential_error(std::string_view method,
+                                     const edge_indices edgeIndices,
+                                     const std::size_t target,
+                                     const std::size_t compIndex)
   {
     return std::format("{}Indices [target: {}, comp: {}] are self-referential",
                        error_prefix(method, edgeIndices),

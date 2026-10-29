@@ -410,7 +410,13 @@ namespace sequoia
       // TO DO: change semantics to non-throwing?
       constexpr void swap_edges(edge_index_type node, edge_index_type i, edge_index_type j)
       {
-        graph_errors::check_edge_swap_indices("swap_edges", node, i, j, static_cast<std::size_t>(std::ranges::distance(cedges(node))));
+        graph_errors::check_edge_swap_indices(
+          "swap_edges",
+          node,
+          i,
+          j,
+          static_cast<std::size_t>(std::ranges::distance(cedges(node)))
+        );
 
         std::ranges::iter_swap(begin_edges(node) + numeric::unchecked_conversion_to<std::ptrdiff_t>(i),
                                begin_edges(node) + numeric::unchecked_conversion_to<std::ptrdiff_t>(j));
@@ -828,7 +834,13 @@ namespace sequoia
               auto found{std::ranges::find_if(cedges(partner), pred)};
 
               if(found == cend_edges(partner))
-                throw std::logic_error{graph_errors::erase_edge_error("erase_edge", partner, {source, static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(source), citer))})};
+                throw std::logic_error{
+                  graph_errors::erase_edge_error(
+                    "erase_edge",
+                    partner,
+                    {source, static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(source), citer))}
+                  )
+                };
 
               const auto partnerDist{std::ranges::distance(cbegin_edges(partner), found)};
 
@@ -881,7 +893,13 @@ namespace sequoia
               if(found == citer) found = std::ranges::find_if(std::ranges::next(citer), cend_edges(source), pred);
 
               if(found == cend_edges(source))
-                throw std::logic_error{graph_errors::erase_edge_error("erase_edge", source, {source, static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(source), citer))})};
+                throw std::logic_error{
+                  graph_errors::erase_edge_error(
+                    "erase_edge",
+                    source,
+                    {source, static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(source), citer))}
+                  )
+                };
 
               auto dist{std::ranges::distance(cbegin_edges(source), citer)};
               if(std::ranges::distance(cbegin_edges(source), found) < dist) --dist;
@@ -1061,7 +1079,13 @@ namespace sequoia
             }
             else
             {
-              graph_errors::check_reciprocated_index("validate", edgeIndices, "target", targetEdge.target_node(), edgeIndices.node);
+              graph_errors::check_reciprocated_index(
+                "validate",
+                edgeIndices,
+                "target",
+                targetEdge.target_node(),
+                edgeIndices.node
+              );
 
               if constexpr(!std::is_empty_v<edge_weight_type>)
               {
@@ -1273,7 +1297,13 @@ namespace sequoia
             }
             else
             {
-              graph_errors::check_edge_index_range("validate", {i, static_cast<std::size_t>(std::ranges::distance(orderedEdges.cbegin_partition(i), lowerIter))}, "target", orderedEdges.num_partitions(), lowerIter->target_node());
+              graph_errors::check_edge_index_range(
+                "validate",
+                {i, static_cast<std::size_t>(std::ranges::distance(orderedEdges.cbegin_partition(i), lowerIter))},
+                "target",
+                orderedEdges.num_partitions(),
+                lowerIter->target_node()
+              );
 
               const auto comparisonEdge{
                 [lowerIter, i]() {
