@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/PriorityQueueRegularTest.cpp, Line 146
+Tests/Core/DataStructures/PriorityQueueRegularTest.cpp, Line 144
 Popping the empty queue
 
 Expected Exception Type:
@@ -7,7 +7,25 @@ Attempting to pop an empty priority_queue
 
 =======================================
 
-Tests/Core/DataStructures/PriorityQueueRegularTest.cpp, Line 152
+Tests/Core/DataStructures/PriorityQueueRegularTest.cpp, Line 150
+Accessing the top of the empty queue
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to access the top of an empty priority_queue
+
+=======================================
+
+Tests/Core/DataStructures/PriorityQueueRegularTest.cpp, Line 144
+Popping the empty queue
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to pop an empty priority_queue
+
+=======================================
+
+Tests/Core/DataStructures/PriorityQueueRegularTest.cpp, Line 150
 Accessing the top of the empty queue
 
 Expected Exception Type:

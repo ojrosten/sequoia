@@ -14,6 +14,7 @@
 
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
 
+#include <compare>
 #include <cstddef>
 #include <memory>
 #include <string>
@@ -72,8 +73,8 @@ namespace sequoia::testing
       -# Destroying an object, or assigning to it, removes the object from its
          lineage.
 
-      Every lineage compares equal to every other: a lineage is no part of a
-      value.
+      Every lineage compares equal to every other, by `==` and by `<=>`: a
+      lineage is no part of a value.
    */
   class observable_lineage
   {
@@ -116,6 +117,12 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const observable_lineage&, const observable_lineage&) noexcept { return true; }
+
+    [[nodiscard]]
+    friend std::strong_ordering operator<=>(const observable_lineage&, const observable_lineage&) noexcept
+    {
+      return std::strong_ordering::equal;
+    }
   private:
     struct record
     {
@@ -139,6 +146,9 @@ namespace sequoia::testing
 
     [[nodiscard]]
     bool operator==(const element_with_lineage&) const noexcept = default;
+
+    [[nodiscard]]
+    std::strong_ordering operator<=>(const element_with_lineage&) const noexcept = default;
   };
 
   template<>

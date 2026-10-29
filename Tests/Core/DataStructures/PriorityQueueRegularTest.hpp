@@ -27,10 +27,7 @@ namespace sequoia::testing
 
     void test_constant_evaluation();
 
-    void test_semantics();
-
+    template<class Compare>
     void test_transitions();
-
-    void test_pop_destroys_the_element();
   };
 }

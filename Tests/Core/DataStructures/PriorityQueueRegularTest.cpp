@@ -9,15 +9,15 @@
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
+#include <concepts>
+#include <format>
+#include <functional>
 #include <list>
-#include <memory>
 
 namespace sequoia::testing
 {
   namespace
   {
-    using queue_t = data_structures::priority_queue<int>;
-
     /** Compares two `int`s with `<`, adding one to `*count` each time, so
         that every copy of the comparator adds to the same count.
      */
@@ -30,15 +30,6 @@ namespace sequoia::testing
       {
         ++*count;
         return lhs < rhs;
-      }
-    };
-
-    struct pointee_less
-    {
-      [[nodiscard]]
-      constexpr bool operator()(const std::shared_ptr<int>& lhs, const std::shared_ptr<int>& rhs) const
-      {
-        return *lhs < *rhs;
       }
     };
 
@@ -60,6 +51,17 @@ namespace sequoia::testing
 
       return count;
     }
+
+    /** \brief Returns `underLess` if `Compare` is `std::ranges::less`, and
+               `underGreater` if `Compare` is `std::ranges::greater`.
+     */
+    template<class Compare, class T>
+      requires std::same_as<Compare, std::ranges::less> || std::same_as<Compare, std::ranges::greater>
+    [[nodiscard]]
+    constexpr T choose_for(const T underLess, const T underGreater)
+    {
+      return std::same_as<Compare, std::ranges::less> ? underLess : underGreater;
+    }
   }
 
   [[nodiscard]]
@@ -72,9 +74,8 @@ namespace sequoia::testing
   {
     test_constraints();
     test_constant_evaluation();
-    test_semantics();
-    test_transitions();
-    test_pop_destroys_the_element();
+    test_transitions<std::ranges::less>();
+    test_transitions<std::ranges::greater>();
   }
 
   void priority_queue_regular_test::test_constraints()
@@ -95,6 +96,7 @@ namespace sequoia::testing
 
   void priority_queue_regular_test::test_constant_evaluation()
   {
+    using queue_t     = data_structures::priority_queue<int>;
     using min_queue_t = data_structures::priority_queue<int, std::vector<int>, std::ranges::greater>;
 
     STATIC_CHECK(elements_in_pop_order(make_by_pushing<queue_t>({5, 3, 8, 1, 9, 2, 7, 4, 6, 0}))
@@ -110,111 +112,194 @@ namespace sequoia::testing
     STATIC_CHECK(comparisons_in_one_pop() <= 7);
   }
 
-  void priority_queue_regular_test::test_semantics()
-  {
-    const observed_priority_queue empty{};
-    const auto one{make_by_pushing<observed_priority_queue>({1})},
-               oneTwo{make_by_pushing<observed_priority_queue>({1, 2})},
-               oneTwoThree{make_by_pushing<observed_priority_queue>({1, 2, 3})},
-               threeTwoOne{make_by_pushing<observed_priority_queue>({3, 2, 1})};
-
-    check(equivalence, "Empty", empty, std::vector<int>{});
-    check(equivalence, "One element", one, std::vector<int>{1});
-    check(equivalence, "Two elements, greatest first", oneTwo, std::vector<int>{2, 1});
-    check(equivalence, "Three elements, greatest first", oneTwoThree, std::vector<int>{3, 2, 1});
-    check(equality, "The order of the pushes is not observable", oneTwoThree, threeTwoOne);
-
-    check_semantics("Empty against one element", empty, one);
-    check_semantics("One element against two", one, oneTwo);
-    check_semantics("Two elements against three", oneTwo, threeTwoOne);
-  }
-
+  template<class Compare>
   void priority_queue_regular_test::test_transitions()
   {
-    using transition_checker_t = transition_checker<observed_priority_queue>;
+    using queue_t              = observed_priority_queue<element_with_lineage, Compare>;
+    using transition_checker_t = transition_checker<queue_t>;
     using graph_t              = transition_checker_t::transition_graph;
     using edge_t               = graph_t::edge_type;
 
-    enum node { empty, one, two, one_two, one_three, two_three, one_two_three, one_two_three_three };
+    enum node {
+      empty,
+      one,
+      two,
+      three,
+      one_two,
+      one_three,
+      two_three,
+      three_three,
+      one_two_three,
+      two_three_three,
+      one_two_three_three
+    };
 
     const graph_t g{
-      { { edge_t{one, "Push 1 onto the empty queue", [](observed_priority_queue q) { q.push(1); return q; }},
-          edge_t{two, "Push 2 onto the empty queue", [](observed_priority_queue q) { q.push(2); return q; }},
+      { { edge_t{one,   "Push 1 onto the empty queue", [](queue_t q) { q.push(1); return q; }},
+          edge_t{two,   "Push 2 onto the empty queue", [](queue_t q) { q.push(2); return q; }},
+          edge_t{three, "Push 3 onto the empty queue", [](queue_t q) { q.push(3); return q; }},
           edge_t{empty,
                  "Popping the empty queue throws, leaving it empty",
-                 [this](observed_priority_queue q) {
+                 [this](queue_t q) {
                    check_exception_thrown<std::logic_error>("Popping the empty queue", [&q]() { q.pop(); });
                    return q;
                  }},
           edge_t{empty,
                  "Accessing the top of the empty queue throws",
-                 [this](observed_priority_queue q) {
+                 [this](queue_t q) {
                    check_exception_thrown<std::logic_error>("Accessing the top of the empty queue",
                                                             [&q]() { return q.top(); });
                    return q;
                  }}
         },
 
-        { edge_t{empty,     "Pop the only element", [](observed_priority_queue q) { q.pop(); return q; }},
-          edge_t{one_two,   "Push 2 onto 1",        [](observed_priority_queue q) { q.push(2); return q; }},
-          edge_t{one_three, "Push 3 onto 1",        [](observed_priority_queue q) { q.push(3); return q; }}
+        { edge_t{empty,
+                 "Pop the only element",
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 1 from {1}", q);
+                   return q;
+                 }},
+          edge_t{one_two,   "Push 2 onto 1", [](queue_t q) { q.push(2); return q; }},
+          edge_t{one_three, "Push 3 onto 1", [](queue_t q) { q.push(3); return q; }}
         },
 
-        { edge_t{empty,     "Pop the only element", [](observed_priority_queue q) { q.pop(); return q; }},
-          edge_t{one_two,   "Push 1 onto 2",        [](observed_priority_queue q) { q.push(1); return q; }},
-          edge_t{two_three, "Push 3 onto 2",        [](observed_priority_queue q) { q.push(3); return q; }}
+        { edge_t{empty,
+                 "Pop the only element",
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 2 from {2}", q);
+                   return q;
+                 }},
+          edge_t{one_two,   "Push 1 onto 2", [](queue_t q) { q.push(1); return q; }},
+          edge_t{two_three, "Push 3 onto 2", [](queue_t q) { q.push(3); return q; }}
         },
 
-        { edge_t{one,           "Pop 2, the greatest", [](observed_priority_queue q) { q.pop(); return q; }},
-          edge_t{one_two_three, "Push 3 onto 1 and 2", [](observed_priority_queue q) { q.push(3); return q; }}
+        { edge_t{empty,
+                 "Pop the only element",
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 3 from {3}", q);
+                   return q;
+                 }},
+          edge_t{one_three,   "Push 1 onto 3",   [](queue_t q) { q.push(1); return q; }},
+          edge_t{two_three,   "Push 2 onto 3",   [](queue_t q) { q.push(2); return q; }},
+          edge_t{three_three, "Push a second 3", [](queue_t q) { q.push(3); return q; }}
         },
 
-        { edge_t{one,           "Pop 3, the greatest", [](observed_priority_queue q) { q.pop(); return q; }},
-          edge_t{one_two_three, "Push 2 onto 1 and 3", [](observed_priority_queue q) { q.push(2); return q; }}
+        { edge_t{choose_for<Compare>(one,                   two),
+                 choose_for<Compare>("Pop 2, the greatest", "Pop 1, the least"),
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this,
+                                                     choose_for<Compare>("Popping 2 from {1, 2}",
+                                                                         "Popping 1 from {1, 2}"),
+                                                     q);
+                   return q;
+                 }},
+          edge_t{one_two_three, "Push 3 onto 1 and 2", [](queue_t q) { q.push(3); return q; }}
         },
 
-        { edge_t{two,           "Pop 3, the greatest", [](observed_priority_queue q) { q.pop(); return q; }},
-          edge_t{one_two_three, "Push 1 onto 2 and 3", [](observed_priority_queue q) { q.push(1); return q; }}
+        { edge_t{choose_for<Compare>(one,                   three),
+                 choose_for<Compare>("Pop 3, the greatest", "Pop 1, the least"),
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this,
+                                                     choose_for<Compare>("Popping 3 from {1, 3}",
+                                                                         "Popping 1 from {1, 3}"),
+                                                     q);
+                   return q;
+                 }},
+          edge_t{one_two_three, "Push 2 onto 1 and 3", [](queue_t q) { q.push(2); return q; }}
         },
 
-        { edge_t{one_two,             "Pop 3, the greatest", [](observed_priority_queue q) { q.pop(); return q; }},
-          edge_t{one_two_three_three, "Push a second 3",     [](observed_priority_queue q) { q.push(3); return q; }}
+        { edge_t{choose_for<Compare>(two,                   three),
+                 choose_for<Compare>("Pop 3, the greatest", "Pop 2, the least"),
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this,
+                                                     choose_for<Compare>("Popping 3 from {2, 3}",
+                                                                         "Popping 2 from {2, 3}"),
+                                                     q);
+                   return q;
+                 }},
+          edge_t{one_two_three,   "Push 1 onto 2 and 3", [](queue_t q) { q.push(1); return q; }},
+          edge_t{two_three_three, "Push a second 3",     [](queue_t q) { q.push(3); return q; }}
         },
 
-        { edge_t{one_two_three, "Pop one of the two 3s", [](observed_priority_queue q) { q.pop(); return q; }},
-          edge_t{one_two,       "Pop both 3s",           [](observed_priority_queue q) { q.pop(); q.pop(); return q; }}
+        { edge_t{three,
+                 "Pop one of the two 3s",
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 3 from {3, 3}", q);
+                   return q;
+                 }} },
+
+        { edge_t{choose_for<Compare>(one_two,               two_three),
+                 choose_for<Compare>("Pop 3, the greatest", "Pop 1, the least"),
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this,
+                                                     choose_for<Compare>("Popping 3 from {1, 2, 3}",
+                                                                         "Popping 1 from {1, 2, 3}"),
+                                                     q);
+                   return q;
+                 }},
+          edge_t{one_two_three_three, "Push a second 3", [](queue_t q) { q.push(3); return q; }}
+        },
+
+        { edge_t{choose_for<Compare>(two_three,               three_three),
+                 choose_for<Compare>("Pop one of the two 3s", "Pop 2, the least"),
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this,
+                                                     choose_for<Compare>("Popping 3 from {2, 3, 3}",
+                                                                         "Popping 2 from {2, 3, 3}"),
+                                                     q);
+                   return q;
+                 }} },
+
+        { edge_t{choose_for<Compare>(one_two_three,           two_three_three),
+                 choose_for<Compare>("Pop one of the two 3s", "Pop 1, the least"),
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this,
+                                                     choose_for<Compare>("Popping 3 from {1, 2, 3, 3}",
+                                                                         "Popping 1 from {1, 2, 3, 3}"),
+                                                     q);
+                   return q;
+                 }},
+          edge_t{choose_for<Compare>(one_two,       three_three),
+                 choose_for<Compare>("Pop both 3s", "Pop 1 and 2"),
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this,
+                                                     choose_for<Compare>("Popping 3 from {1, 2, 3, 3}",
+                                                                         "Popping 1 from {1, 2, 3, 3}"),
+                                                     q);
+                   pop_and_check_the_element_is_gone(*this,
+                                                     choose_for<Compare>("Popping 3 from {1, 2, 3}",
+                                                                         "Popping 2 from {2, 3, 3}"),
+                                                     q);
+                   return q;
+                 }}
         }
       },
-      {observed_priority_queue{},
-       make_by_pushing<observed_priority_queue>({1}),
-       make_by_pushing<observed_priority_queue>({2}),
-       make_by_pushing<observed_priority_queue>({1, 2}),
-       make_by_pushing<observed_priority_queue>({1, 3}),
-       make_by_pushing<observed_priority_queue>({2, 3}),
-       make_by_pushing<observed_priority_queue>({1, 2, 3}),
-       make_by_pushing<observed_priority_queue>({1, 2, 3, 3})}
+      {queue_t{},
+       make_by_pushing<queue_t>({1}),
+       make_by_pushing<queue_t>({2}),
+       make_by_pushing<queue_t>({3}),
+       make_by_pushing<queue_t>({1, 2}),
+       make_by_pushing<queue_t>({1, 3}),
+       make_by_pushing<queue_t>({2, 3}),
+       make_by_pushing<queue_t>({3, 3}),
+       make_by_pushing<queue_t>({1, 2, 3}),
+       make_by_pushing<queue_t>({2, 3, 3}),
+       make_by_pushing<queue_t>({1, 2, 3, 3})}
     };
 
     auto checkerFn{
-      [this](std::string description,
-             const observed_priority_queue& obtained,
-             const observed_priority_queue& prediction) {
-        check(equality, description, obtained, prediction);
+      [this](std::string_view description,
+             const queue_t& obtained,
+             const queue_t& prediction,
+             const queue_t& parent,
+             const std::size_t host,
+             const std::size_t target) {
+        check(equality, {description, no_source_location}, obtained, prediction);
+        if(host != target) check_semantics({description, no_source_location}, prediction, parent);
       }
     };
 
-    transition_checker_t::check(report("Priority queue transitions"), g, checkerFn);
-  }
-
-  void priority_queue_regular_test::test_pop_destroys_the_element()
-  {
-    const auto element{std::make_shared<int>(1)};
-
-    data_structures::priority_queue<std::shared_ptr<int>, std::vector<std::shared_ptr<int>>, pointee_less> q{};
-    q.push(std::make_shared<int>(0));
-    q.push(element);
-    q.pop();
-
-    check(equality, "Popping destroys the priority queue's copy of the element", element.use_count(), 1L);
+    const auto description{std::format("Priority queue transitions, ordered by {}", demangle<Compare>())};
+    transition_checker_t::check(report(description), g, checkerFn);
   }
 }

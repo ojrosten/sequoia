@@ -1,7 +1,7 @@
-Tests/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp, Line 25
+Tests/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp, Line 27
 Empty against one element
 
-[sequoia::testing::observed_priority_queue]
+[sequoia::testing::observed_priority_queue<int, std::ranges::less>]
 operator== returned false
 
   Emptiness incorrect
@@ -28,10 +28,10 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp, Line 26
+Tests/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp, Line 28
 Differing elements
 
-[sequoia::testing::observed_priority_queue]
+[sequoia::testing::observed_priority_queue<int, std::ranges::less>]
 operator== returned false
 
   Elements incorrect, in the order popped
@@ -46,10 +46,10 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp, Line 27
+Tests/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp, Line 29
 Differing sizes, same top
 
-[sequoia::testing::observed_priority_queue]
+[sequoia::testing::observed_priority_queue<int, std::ranges::less>]
 operator== returned false
 
   Size incorrect
@@ -70,10 +70,10 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp, Line 29
+Tests/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp, Line 31
 Differing least element, same top and size
 
-[sequoia::testing::observed_priority_queue]
+[sequoia::testing::observed_priority_queue<int, std::ranges::less>]
 operator== returned false
 
   Elements incorrect, in the order popped
@@ -88,11 +88,11 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp, Line 32
+Tests/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp, Line 34
 Wrong element
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::testing::observed_priority_queue>]
+[sequoia::testing::value_tester<sequoia::testing::observed_priority_queue<int, std::ranges::less> >]
 Checking for equivalence with:
 [std::vector<int, std::allocator<int> >]
 
@@ -108,11 +108,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp, Line 33
+Tests/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp, Line 35
 Wrong size
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::testing::observed_priority_queue>]
+[sequoia::testing::value_tester<sequoia::testing::observed_priority_queue<int, std::ranges::less> >]
 Checking for equivalence with:
 [std::vector<int, std::allocator<int> >]
 
@@ -134,11 +134,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp, Line 34
+Tests/Core/DataStructures/PriorityQueueTestingDiagnostics.cpp, Line 36
 Elements in the order pushed
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::testing::observed_priority_queue>]
+[sequoia::testing::value_tester<sequoia::testing::observed_priority_queue<int, std::ranges::less> >]
 Checking for equivalence with:
 [std::vector<int, std::allocator<int> >]
 
