@@ -285,13 +285,6 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template<network G>
-  [[nodiscard]]
-  constexpr std::vector<bool> make_bitset(const G& g)
-  {
-    return std::vector<bool>(g.order(), false);
-  }
-
   template<network G, class Compare>
   class node_comparer
   {
@@ -403,8 +396,8 @@ namespace sequoia::maths::graph_impl
       results_accumulator resultsAccumulator{taskProcessingModel};
       if(conditions.starting_index() < graph.order())
       {
-        auto discovered{graph_impl::make_bitset(graph)};
-        auto processed{graph_impl::make_bitset(graph)};
+        std::vector<bool> discovered(graph.order()),
+                          processed(graph.order());
 
         auto nodeIndexQueue{traversal_traits<G, F, QArgs...>::make(std::forward<QArgs>(qargs)...)};
 
@@ -468,8 +461,8 @@ namespace sequoia::maths::graph_impl
       results_accumulator resultsAccumulator{taskProcessingModel};
       if(conditions.starting_index() < graph.order())
       {
-        auto discovered{graph_impl::make_bitset(graph)};
-        auto processed{graph_impl::make_bitset(graph)};
+        std::vector<bool> discovered(graph.order()),
+                          processed(graph.order());
 
         do
         {
