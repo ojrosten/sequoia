@@ -17,6 +17,7 @@
 #include <cstddef>
 #include <ranges>
 #include <stdexcept>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -47,15 +48,24 @@ namespace sequoia::data_structures
 
       if(m_Outgoing.empty())
       {
-        const auto moveIfNoexcept{[](T& element) -> decltype(auto) { return std::move_if_noexcept(element); }};
+        if constexpr(std::is_nothrow_swappable_v<T>)
+        {
+          // Reversing in place neither allocates nor throws
+          std::ranges::reverse(m_Incoming);
+          std::ranges::swap(m_Outgoing, m_Incoming);
+        }
+        else
+        {
+          const auto moveIfNoexcept{[](T& element) -> decltype(auto) { return std::move_if_noexcept(element); }};
 
-        // Reversing into a new vector leaves the queue unchanged if copying an
-        // element throws
-        m_Outgoing =   m_Incoming
-                     | std::views::reverse
-                     | std::views::transform(moveIfNoexcept)
-                     | std::ranges::to<std::vector>();
-        m_Incoming.clear();
+          // Reversing into a new vector leaves the queue unchanged if copying
+          // an element throws
+          m_Outgoing =   m_Incoming
+                       | std::views::reverse
+                       | std::views::transform(moveIfNoexcept)
+                       | std::ranges::to<std::vector>();
+          m_Incoming.clear();
+        }
       }
 
       m_Outgoing.pop_back();
