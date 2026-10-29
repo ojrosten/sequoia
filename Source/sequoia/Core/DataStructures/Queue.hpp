@@ -46,7 +46,12 @@ namespace sequoia::data_structures
       {
         // Reversing into a new vector leaves the queue unchanged if copying an
         // element throws
-        m_Outgoing = reversed(m_Incoming);
+        const auto moveIfNoexcept{[](T& element) -> decltype(auto) { return std::move_if_noexcept(element); }};
+
+        m_Outgoing =   m_Incoming
+                     | std::views::reverse
+                     | std::views::transform(moveIfNoexcept)
+                     | std::ranges::to<std::vector>();
         m_Incoming.clear();
       }
 
@@ -93,21 +98,6 @@ namespace sequoia::data_structures
     // removes
     std::vector<T> m_Incoming{},
                    m_Outgoing{};
-
-    /** \brief Returns `elements` in reverse order.
-
-        Moves each element if its move cannot throw, and copies it otherwise.
-     */
-    [[nodiscard]]
-    constexpr static std::vector<T> reversed(std::vector<T>& elements)
-    {
-      const auto moveIfNoexcept{[](T& element) -> decltype(auto) { return std::move_if_noexcept(element); }};
-
-      return   elements
-             | std::views::reverse
-             | std::views::transform(moveIfNoexcept)
-             | std::ranges::to<std::vector>();
-    }
 
     /// Returns the element `i` places behind the front
     [[nodiscard]]
