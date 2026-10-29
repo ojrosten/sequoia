@@ -30,7 +30,9 @@ namespace sequoia::testing
 
   void stack_regular_test::test_constant_evaluation()
   {
-    STATIC_CHECK(elements_in_pop_order(make_by_pushing<data_structures::stack<int>>({1, 2, 3})) == std::vector{3, 2, 1});
+    using int_stack_t = data_structures::stack<int>;
+
+    STATIC_CHECK(elements_in_pop_order(make_by_pushing<int_stack_t>({1, 2, 3})) == std::vector{3, 2, 1});
   }
 
   void stack_regular_test::test_transitions()
@@ -60,13 +62,19 @@ namespace sequoia::testing
 
         { edge_t{empty,
                  "Pop the only element",
-                 [this](stack_t s) { pop_and_check_the_element_is_gone(*this, "Popping 1, the only element", s); return s; }},
+                 [this](stack_t s) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 1, the only element", s);
+                   return s;
+                 }},
           edge_t{one_two, "Push 2 onto 1", [](stack_t s) { s.push(2); return s; }}
         },
 
         { edge_t{one,
                  "Pop 2, leaving 1",
-                 [this](stack_t s) { pop_and_check_the_element_is_gone(*this, "Popping 2 off 1", s); return s; }},
+                 [this](stack_t s) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 2 off 1", s);
+                   return s;
+                 }},
           edge_t{one_three,
                  "Pop 2 and push 3 in its place",
                  [this](stack_t s) {
@@ -85,7 +93,10 @@ namespace sequoia::testing
 
         { edge_t{one,
                  "Pop 3, leaving 1",
-                 [this](stack_t s) { pop_and_check_the_element_is_gone(*this, "Popping 3 off 1", s); return s; }} }
+                 [this](stack_t s) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 3 off 1", s);
+                   return s;
+                 }} }
       },
       {stack_t{}, make_by_pushing<stack_t>({1}), make_by_pushing<stack_t>({1, 2}), make_by_pushing<stack_t>({1, 3})}
     };

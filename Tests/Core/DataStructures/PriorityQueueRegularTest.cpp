@@ -52,9 +52,6 @@ namespace sequoia::testing
       return count;
     }
 
-    /** \brief Returns `underLess` if `Compare` is `std::ranges::less`, and
-               `underGreater` if `Compare` is `std::ranges::greater`.
-     */
     template<class Compare, class T>
       requires std::same_as<Compare, std::ranges::less> || std::same_as<Compare, std::ranges::greater>
     [[nodiscard]]
@@ -96,14 +93,14 @@ namespace sequoia::testing
 
   void priority_queue_regular_test::test_constant_evaluation()
   {
-    using queue_t     = data_structures::priority_queue<int>;
-    using min_queue_t = data_structures::priority_queue<int, std::vector<int>, std::ranges::greater>;
+    using int_queue_t     = data_structures::priority_queue<int>;
+    using int_min_queue_t = data_structures::priority_queue<int, std::vector<int>, std::ranges::greater>;
 
-    STATIC_CHECK(elements_in_pop_order(make_by_pushing<queue_t>({5, 3, 8, 1, 9, 2, 7, 4, 6, 0}))
+    STATIC_CHECK(elements_in_pop_order(make_by_pushing<int_queue_t>({5, 3, 8, 1, 9, 2, 7, 4, 6, 0}))
                    == std::vector{9, 8, 7, 6, 5, 4, 3, 2, 1, 0});
-    STATIC_CHECK(elements_in_pop_order(make_by_pushing<min_queue_t>({5, 3, 8, 1, 9, 2, 7, 4, 6, 0}))
+    STATIC_CHECK(elements_in_pop_order(make_by_pushing<int_min_queue_t>({5, 3, 8, 1, 9, 2, 7, 4, 6, 0}))
                    == std::vector{0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
-    STATIC_CHECK(elements_in_pop_order(make_by_pushing<queue_t>({2, 2, 1, 2, 1, 1, 2}))
+    STATIC_CHECK(elements_in_pop_order(make_by_pushing<int_queue_t>({2, 2, 1, 2, 1, 1, 2}))
                    == std::vector{2, 2, 2, 2, 1, 1, 1});
 
     // std::ranges::pop_heap makes at most 2 log2(15) comparisons on a heap of

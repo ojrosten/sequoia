@@ -73,8 +73,8 @@ namespace sequoia::testing
       -# Destroying an object, or assigning to it, removes the object from its
          lineage.
 
-      Every lineage compares equal to every other, by `==` and by `<=>`: a
-      lineage is no part of a value.
+      Every lineage compares equal to every other: a lineage is no part of a
+      value.
    */
   class observable_lineage
   {
