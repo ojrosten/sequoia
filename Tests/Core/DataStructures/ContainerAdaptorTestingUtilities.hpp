@@ -65,7 +65,8 @@ namespace sequoia::testing
   {
     const auto observer{utilities::element_popped_next(adaptor).lineage.observer()};
 
-    // Listing the elements copies them, so it precedes reading the count of copies
+    // Listing the elements copies them, so it precedes reading the count of
+    // copies
     const auto values{
         elements_in_pop_order(adaptor)
       | std::views::transform(&element_with_lineage::value)
@@ -81,7 +82,7 @@ namespace sequoia::testing
     test.check({append_lines(popping, "The pop leaves no object in the element's lineage"), no_source_location}, observer.expired());
   }
 
-  /** \brief Returns a transition which pops the adaptor it is given `pops`
+  /** \brief Returns a transition which takes an adaptor and pops it `pops`
              times, checking each pop with `pop_and_check_the_element_is_gone`.
    */
   template<class Adaptor>
