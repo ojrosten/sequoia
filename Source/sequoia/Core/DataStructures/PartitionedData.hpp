@@ -680,10 +680,7 @@ namespace sequoia
 
             auto begin_i{begin_partition(i).base_iterator()}, begin_j{begin_partition(j).base_iterator()};
             auto end_i{end_partition(i).base_iterator()}, end_j{end_partition(j).base_iterator()};
-            for(auto iter_i{begin_i}, iter_j{begin_j}; (iter_i != end_i) && (iter_j != end_j); ++iter_i, ++iter_j)
-            {
-              std::ranges::iter_swap(iter_i, iter_j);
-            }
+            std::ranges::swap_ranges(begin_i, end_i, begin_j, end_j);
 
             if(len_i > len_j)
             {
