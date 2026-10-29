@@ -41,6 +41,7 @@
 #include "Core/Object/CreatorFreeTest.hpp"
 #include "Core/Object/FactoryTest.hpp"
 #include "Core/Object/FactoryTestingDiagnostics.hpp"
+#include "Core/Object/HandlersFreeTest.hpp"
 #include "Core/Object/ResetOnMoveRegularTest.hpp"
 #include "Core/Object/ResetOnMoveTestingDiagnostics.hpp"
 #include "Experimental/ExperimentalTest.hpp"

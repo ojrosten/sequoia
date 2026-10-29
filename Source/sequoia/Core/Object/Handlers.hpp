@@ -80,9 +80,9 @@ namespace sequoia::object
     constexpr static const T& get(const T& in) noexcept { return in; }
 
     [[nodiscard]]
-    constexpr static T* get_ptr(T& in) noexcept { return &in; }
+    constexpr static T* get_ptr(T& in) noexcept { return std::addressof(in); }
 
     [[nodiscard]]
-    constexpr static const T* get_ptr(const T& in) noexcept { return &in; }
+    constexpr static const T* get_ptr(const T& in) noexcept { return std::addressof(in); }
   };
 }
