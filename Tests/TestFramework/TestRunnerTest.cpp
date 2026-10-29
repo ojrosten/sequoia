@@ -991,7 +991,7 @@ namespace sequoia::testing
     test_recording_of_successive_runs();
     test_summary_collision_with_an_unselected_test();
     test_discriminated_summary();
-    test_summary_written_only_if_changed();
+    test_summary_written_only_if_file_differs();
     test_filtered_suites();
     test_suites_not_found();
     test_selections_not_found();
@@ -1736,16 +1736,17 @@ namespace sequoia::testing
           !fs::exists(undiscriminatedSummary.file_path()));
   }
 
-  /** A run rewrites a test's summary file only if the file holds something
-      other than the test's summary. Before each of the later runs, the file's
-      modification time is set an hour back, so that only a write can change
-      the time.
+  /** A run leaves a summary file which already holds the test's summary as
+      it is, and rewrites one which holds anything else. The summary file is
+      removed first, so that only this test's runs can have written it. Before
+      the second run, the file's modification time is set an hour back, so
+      that a write, which sets the time to the present, would change it.
    */
-  void test_runner_test::test_summary_written_only_if_changed()
+  void test_runner_test::test_summary_written_only_if_file_differs()
   {
     commandline_arguments args{fake_project_commandline(auxiliary_materials())};
 
-    const auto summaryFile{
+    const auto summaryPath{
       [&args]() {
         std::stringstream outputStream{};
         const auto runner{make_fake_project_runner(args, outputStream)};
@@ -1765,23 +1766,21 @@ namespace sequoia::testing
       }
     };
 
-    runPassingTest("First run's return code");
-    const auto summary{read_to_string(summaryFile, std::ios_base::binary).value_or("")};
-    const auto anHourEarlier{fs::last_write_time(summaryFile) - std::chrono::hours{1}};
+    fs::remove(summaryPath);
+    runPassingTest("Return code of a run which writes the summary file");
+    const auto summary{read_to_string(summaryPath, std::ios_base::binary).value_or("")};
 
-    fs::last_write_time(summaryFile, anHourEarlier);
+    fs::last_write_time(summaryPath, fs::last_write_time(summaryPath) - std::chrono::hours{1});
+    const auto backdatedTime{fs::last_write_time(summaryPath)};
     runPassingTest("Return code of a run whose summary is unchanged");
     check("A run leaves a summary file which already holds the summary as it is",
-          fs::last_write_time(summaryFile) == anHourEarlier);
+          fs::last_write_time(summaryPath) == backdatedTime);
 
-    write_to_file(summaryFile, "A stale summary", std::ios_base::out | std::ios_base::binary);
-    fs::last_write_time(summaryFile, anHourEarlier);
+    write_to_file(summaryPath, "A stale summary", std::ios_base::out | std::ios_base::binary);
     runPassingTest("Return code of a run whose summary file is stale");
-    check("A run rewrites a summary file which holds anything else",
-          fs::last_write_time(summaryFile) != anHourEarlier);
     check(equality,
-          "The rewritten summary",
-          read_to_string(summaryFile, std::ios_base::binary).value_or(""),
+          "A run rewrites a summary file which holds anything else",
+          read_to_string(summaryPath, std::ios_base::binary).value_or(""),
           summary);
   }
 
