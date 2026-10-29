@@ -1736,11 +1736,14 @@ namespace sequoia::testing
           !fs::exists(undiscriminatedSummary.file_path()));
   }
 
-  /** A run rewrites a summary or caught-exceptions file if, and only if, the
-      file holds something other than what the run writes. The files are
-      removed first, so that only this test's runs can have written them. Before the second run, each file's modification time
-      is set an hour back, so that a write, which sets the time to the
-      present, would change it.
+  /** A run writes a summary or caught-exceptions file if, and only if, the
+      file does not already hold what the run writes. The files are removed
+      first, so that only this test's runs can have written them. Before the
+      second run, each file's modification time is set an hour back, so that
+      a write, which sets the time to the present, would change it. Before the
+      third, the summary file holds the summary followed by another line, as
+      a shrinking output leaves it, and the exceptions file holds the caught
+      exceptions with one character changed, at the same length.
    */
   void test_runner_test::test_output_written_only_if_file_differs()
   {
@@ -1795,16 +1798,24 @@ namespace sequoia::testing
                exceptions{contentsOf(files.exceptions)};
     check("The run writes the caught exceptions", !exceptions.empty());
 
-    const auto summaryTime{backdate(files.summary)},
-               exceptionsTime{backdate(files.exceptions)};
+    const auto summaryBackdatedTime{backdate(files.summary)},
+               exceptionsBackdatedTime{backdate(files.exceptions)};
     runThrowingTest("Return code of a run whose output is unchanged");
     check("A run leaves a summary file which already holds the summary as it is",
-          fs::last_write_time(files.summary) == summaryTime);
+          fs::last_write_time(files.summary) == summaryBackdatedTime);
     check("A run leaves an exceptions file which already holds the exceptions as it is",
-          fs::last_write_time(files.exceptions) == exceptionsTime);
+          fs::last_write_time(files.exceptions) == exceptionsBackdatedTime);
 
-    write_to_file(files.summary, "A stale summary", std::ios_base::out | std::ios_base::binary);
-    write_to_file(files.exceptions, "Stale exceptions", std::ios_base::out | std::ios_base::binary);
+    const auto staleExceptions{
+      [&exceptions]() {
+        auto text{exceptions};
+        text.front() = (text.front() == '#') ? '%' : '#';
+        return text;
+      }()
+    };
+
+    write_to_file(files.summary, summary + "A stale line\n", std::ios_base::out | std::ios_base::binary);
+    write_to_file(files.exceptions, staleExceptions, std::ios_base::out | std::ios_base::binary);
     runThrowingTest("Return code of a run whose output files are stale");
     check(equality,
           "A run rewrites a summary file which holds anything else",

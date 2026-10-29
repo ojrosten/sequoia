@@ -174,6 +174,22 @@ namespace sequoia::testing
       ofile.write(text.data(), static_cast<std::streamsize>(text.size()));
     }
 
+    /** Writes `text` to `file`, byte for byte, unless the file already holds
+        exactly `text`, so that a run whose output has not changed writes
+        nothing. Writes nothing for an empty `text` where no file exists.
+     */
+    void versioned_write(const fs::path& file, std::string_view text)
+    {
+      if(!text.empty() || fs::exists(file))
+      {
+        // An empty directory cannot be committed, so this one is made only when a file goes into it.
+        fs::create_directories(file.parent_path());
+
+        if(read_to_string(file, std::ios_base::binary) != text)
+          write_to_file(file, text, std::ios_base::out | std::ios_base::binary);
+      }
+    }
+
     constexpr auto holds_test{[](const auto& node) { return node.optTest.has_value(); }};
 
     [[nodiscard]]
@@ -778,11 +794,7 @@ namespace sequoia::testing
         const auto& filename{summaryFile.file_path()};
         if(filename.empty()) return;
 
-        fs::create_directories(filename.parent_path());
-
-        write_to_file_if_different(filename,
-                                   summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent),
-                                   write_mode::binary);
+        versioned_write(filename, summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent));
       }
 
       void record_materials_update_failure(const fs::path& testFile, std::string_view what)
@@ -937,17 +949,6 @@ namespace sequoia::testing
       return remover.enqueue_removal(discardedRoot);
 
     return ready_future_of(leftoverFailure);
-  }
-
-  void test_to_run::versioned_write(const fs::path& file, std::string_view text)
-  {
-    if(!text.empty() || fs::exists(file))
-    {
-      // An empty directory cannot be committed, so this one is made only when a file goes into it.
-      fs::create_directories(file.parent_path());
-
-      write_to_file_if_different(file, text, write_mode::binary);
-    }
   }
 
   test_to_run::scoped_execution_record::scoped_execution_record(std::filesystem::path file,

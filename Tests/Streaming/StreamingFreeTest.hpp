@@ -24,8 +24,6 @@ namespace sequoia::testing
   private:
     void test_files();
 
-    void test_write_to_file_if_different();
-
     void test_replace_contents();
 
     void test_peek_for_more();

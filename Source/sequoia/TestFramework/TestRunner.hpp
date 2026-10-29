@@ -428,8 +428,6 @@ namespace sequoia::testing
       m_Vessel.reset_results();
     }
   private:
-    static void versioned_write(const std::filesystem::path& file, std::string_view text);
-
     /** \brief Times a test's execution apart from the runner's overhead.
 
         The execution duration is the time spent in the calls to
