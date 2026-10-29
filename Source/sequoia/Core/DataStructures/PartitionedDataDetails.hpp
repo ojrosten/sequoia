@@ -13,12 +13,14 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 
 #include <concepts>
 #include <cstddef>
 #include <limits>
 #include <memory>
 #include <ranges>
+#include <type_traits>
 #include <vector>
 
 namespace sequoia::data_structures::partition_impl
@@ -80,6 +82,23 @@ namespace sequoia::data_structures::partition_impl
 
   //============================= Helper for constraining the partitions ===================================//
 
+  /** \brief Converts a bound computed in a wider type to the partitions'
+             index type.
+   */
+  template<integer IndexType>
+  struct bound_to_index
+  {
+    template<integer Bound>
+    [[nodiscard]]
+    constexpr IndexType operator()(const Bound bound) const
+    {
+      return numeric::unchecked_conversion_to<IndexType>(bound);
+    }
+  };
+
+  /** \brief Whether a run of `Partitions`' bounds can be translated by a
+             `std::ptrdiff_t`.
+   */
   template<class Partitions>
   inline constexpr bool translatable_bounds_v{
     requires(Partitions& partitions, const std::ptrdiff_t delta) {
@@ -87,27 +106,33 @@ namespace sequoia::data_structures::partition_impl
     }
   };
 
-  template<class Partitions>
+  /** \brief Whether `Partitions`' bounds can be overwritten by bounds of type
+             `Bound`, each converted by `bound_to_index`.
+   */
+  template<class Partitions, class Bound>
   inline constexpr bool overwritable_bounds_v{
-    requires(Partitions& partitions, const std::vector<typename Partitions::value_type>& bounds) {
-      partitions.overwrite(bounds);
+    requires(Partitions& partitions, const std::vector<Bound>& bounds) {
+      partitions.overwrite(bounds | std::views::transform(bound_to_index<typename Partitions::value_type>{}));
     }
   };
 
-  /** \brief Whether `Partitions` admits a bound equal to, or above, the one
-             before it.
+  /** \brief Whether `Partitions::compare_type` admits 0 after 0 and 1 after
+             0.
 
       A partition's bound is the number of elements up to its end, so a
-      later bound is never below an earlier one.
+      later bound is never below an earlier one. For a comparison that
+      translation preserves, as translating the bounds requires, the two
+      samples decide every pair.
    */
   template<class Partitions>
   inline constexpr bool admits_non_decreasing_bounds_v{
     requires {
-      typename Partitions::compare_type;
-      requires (   !typename Partitions::compare_type{}(typename Partitions::value_type{},
-                                                        typename Partitions::value_type{})
-                && !typename Partitions::compare_type{}(typename Partitions::value_type{},
-                                                        typename Partitions::value_type{1}));
+      // In a template argument, a comparison that is not constexpr fails
+      // substitution; a nested requirement would make the program ill-formed
+      typename std::enable_if_t<
+           !typename Partitions::compare_type{}(typename Partitions::value_type{}, typename Partitions::value_type{})
+        && !typename Partitions::compare_type{}(typename Partitions::value_type{}, typename Partitions::value_type{1})
+      >;
     }
   };
 
