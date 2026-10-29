@@ -129,8 +129,6 @@ namespace sequoia::testing
 
     void join();
   private:
-    // A single pipeline, since only its `push` is safe to call from several
-    // threads at once
     concurrency::thread_pool<std::optional<removal_failure>, false> m_Pool{1};
   };
 
