@@ -25,10 +25,6 @@ namespace sequoia::testing
   private:
     void test_constant_evaluation();
 
-    void test_semantics();
-
     void test_transitions();
-
-    void test_pop_destroys_the_element();
   };
 }

@@ -9,18 +9,17 @@
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
-#include <memory>
-
 namespace sequoia::testing
 {
   namespace
   {
-    using queue_t = data_structures::queue<int>;
+    using queue_t = data_structures::queue<element_with_lineage>;
 
+    template<class Queue>
     [[nodiscard]]
-    constexpr queue_t make_two_three_by_popping()
+    constexpr Queue make_two_three_by_popping()
     {
-      auto q{make_by_pushing<queue_t>({1, 2, 3})};
+      auto q{make_by_pushing<Queue>({1, 2, 3})};
       q.pop();
       return q;
     }
@@ -35,36 +34,16 @@ namespace sequoia::testing
   void queue_regular_test::run_tests()
   {
     test_constant_evaluation();
-    test_semantics();
     test_transitions();
-    test_pop_destroys_the_element();
   }
 
   void queue_regular_test::test_constant_evaluation()
   {
-    STATIC_CHECK(elements_in_pop_order(make_by_pushing<queue_t>({1, 2, 3})) == std::vector{1, 2, 3});
-    STATIC_CHECK(elements_in_pop_order(make_two_three_by_popping()) == std::vector{2, 3});
-    STATIC_CHECK(make_by_pushing<queue_t>({1, 2}).back() == 2);
-  }
+    using int_queue_t = data_structures::queue<int>;
 
-  void queue_regular_test::test_semantics()
-  {
-    const queue_t empty{};
-    const auto one{make_by_pushing<queue_t>({1})},
-               oneTwo{make_by_pushing<queue_t>({1, 2})},
-               oneTwoThree{make_by_pushing<queue_t>({1, 2, 3})};
-    const auto twoThree{make_two_three_by_popping()};
-
-    check(equivalence, "Empty", empty, std::vector<int>{});
-    check(equivalence, "One element", one, std::vector<int>{1});
-    check(equivalence, "Two elements, front first", oneTwo, std::vector<int>{1, 2});
-    check(equivalence, "Three elements, front first", oneTwoThree, std::vector<int>{1, 2, 3});
-    check(equivalence, "Two elements, reached by popping", twoThree, std::vector<int>{2, 3});
-
-    check_semantics("Empty against one element", empty, one);
-    check_semantics("One element against two", one, oneTwo);
-    check_semantics("Two elements against three", oneTwo, oneTwoThree);
-    check_semantics("Reached by popping against three elements", twoThree, oneTwoThree);
+    STATIC_CHECK(elements_in_pop_order(make_by_pushing<int_queue_t>({1, 2, 3})) == std::vector{1, 2, 3});
+    STATIC_CHECK(elements_in_pop_order(make_two_three_by_popping<int_queue_t>()) == std::vector{2, 3});
+    STATIC_CHECK(make_by_pushing<int_queue_t>({1, 2}).back() == 2);
   }
 
   void queue_regular_test::test_transitions()
@@ -101,56 +80,92 @@ namespace sequoia::testing
                  }}
         },
 
-        { edge_t{empty,   "Pop the only element", [](queue_t q) { q.pop(); return q; }},
-          edge_t{one_two, "Push 2 behind 1",      [](queue_t q) { q.push(2); return q; }}
+        { edge_t{empty,
+                 "Pop the only element",
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 1, the only element", q);
+                   return q;
+                 }},
+          edge_t{one_two, "Push 2 behind 1", [](queue_t q) { q.push(2); return q; }}
         },
 
         { edge_t{one_two_three, "Push 3 behind 2", [](queue_t q) { q.push(3); return q; }},
-          edge_t{empty,         "Pop both",        [](queue_t q) { q.pop(); q.pop(); return q; }}
+          edge_t{empty,
+                 "Pop both",
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 1 from in front of 2", q);
+                   pop_and_check_the_element_is_gone(*this, "Popping 2, the only element", q);
+                   return q;
+                 }}
         },
 
-        { edge_t{two_three, "Pop 1, leaving 2 and 3", [](queue_t q) { q.pop(); return q; }} },
+        { edge_t{two_three,
+                 "Pop 1, leaving 2 and 3",
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 1 from in front of 2 and 3", q);
+                   return q;
+                 }} },
 
         { edge_t{two_three_four, "Push 4 behind 3", [](queue_t q) { q.push(4); return q; }},
-          edge_t{three,          "Pop 2, leaving 3", [](queue_t q) { q.pop(); return q; }},
-          edge_t{empty,          "Pop both",         [](queue_t q) { q.pop(); q.pop(); return q; }}
+          edge_t{three,
+                 "Pop 2, leaving 3",
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 2 from in front of 3", q);
+                   return q;
+                 }},
+          edge_t{empty,
+                 "Pop both",
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 2 from in front of 3", q);
+                   pop_and_check_the_element_is_gone(*this, "Popping 3, the only element", q);
+                   return q;
+                 }}
         },
 
-        { edge_t{three_four, "Pop 2, leaving 3 and 4", [](queue_t q) { q.pop(); return q; }} },
+        { edge_t{three_four,
+                 "Pop 2, leaving 3 and 4",
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 2 from in front of 3 and 4", q);
+                   return q;
+                 }} },
 
-        { edge_t{empty, "Pop both", [](queue_t q) { q.pop(); q.pop(); return q; }} },
+        { edge_t{empty,
+                 "Pop both",
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 3 from in front of 4", q);
+                   pop_and_check_the_element_is_gone(*this, "Popping 4, the only element", q);
+                   return q;
+                 }} },
 
-        { edge_t{empty, "Pop the only element", [](queue_t q) { q.pop(); return q; }} }
+        { edge_t{empty,
+                 "Pop the only element",
+                 [this](queue_t q) {
+                   pop_and_check_the_element_is_gone(*this, "Popping 3, the only element", q);
+                   return q;
+                 }} }
       },
       {queue_t{},
        make_by_pushing<queue_t>({1}),
        make_by_pushing<queue_t>({1, 2}),
        make_by_pushing<queue_t>({1, 2, 3}),
-       make_two_three_by_popping(),
+       make_two_three_by_popping<queue_t>(),
        make_by_pushing<queue_t>({2, 3, 4}),
        make_by_pushing<queue_t>({3, 4}),
        make_by_pushing<queue_t>({3})}
     };
 
     auto checkerFn{
-      [this](std::string description, const queue_t& obtained, const queue_t& prediction) {
-        check(equality, description, obtained, prediction);
+      [this](std::string_view description,
+             const queue_t& obtained,
+             const queue_t& prediction,
+             const queue_t& parent,
+             const std::size_t host,
+             const std::size_t target) {
+        check(equality, {description, no_source_location}, obtained, prediction);
+        if(host != target) check_semantics({description, no_source_location}, prediction, parent);
       }
     };
 
     transition_checker_t::check(report("Queue transitions"), g, checkerFn);
-  }
-
-  void queue_regular_test::test_pop_destroys_the_element()
-  {
-    const auto element{std::make_shared<int>(1)};
-
-    data_structures::queue<std::shared_ptr<int>> q{};
-    q.push(element);
-    q.push(std::make_shared<int>(2));
-    q.push(std::make_shared<int>(3));
-    q.pop();
-
-    check(equality, "Popping destroys the queue's copy of the element", element.use_count(), 1L);
   }
 }
