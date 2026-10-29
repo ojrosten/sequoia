@@ -13,6 +13,7 @@
  */
 
 #include <string>
+#include <string_view>
 #include <stdexcept>
 
 namespace sequoia::maths::graph_errors
