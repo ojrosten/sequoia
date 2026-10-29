@@ -9,92 +9,92 @@
 
 /** \file */
 
-#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
 
-#include <format>
+#include <ranges>
+#include <vector>
 
 namespace sequoia::testing
 {
   namespace impl
   {
-    template<test_mode Mode, class T>
-    void check(test_logger<Mode>& logger, const T& sequence, const T& prediction)
+    template<class Sequence>
+    struct monotonic_sequence_tester
     {
-      check(equality, "Emptiness incorrect", logger, sequence.empty(), prediction.empty());
+      using type = Sequence;
 
-      if(check(equality, "Size incorrect", logger, sequence.size(), prediction.size()))
+      template<test_mode Mode>
+      static void test(equality_check_t,
+                       test_logger<Mode>& logger,
+                       const Sequence& sequence,
+                       const Sequence& prediction)
       {
-        if(!prediction.empty())
+        check(equality, "Emptiness incorrect", logger, sequence.empty(), prediction.empty());
+
+        if(check(equality, "Size incorrect", logger, sequence.size(), prediction.size()))
         {
-          check(equality, "Back element wrong", logger, sequence.back(), prediction.back());
-          check(equality, "Front element wrong", logger, sequence.front(), prediction.front());
+          if(!prediction.empty())
+          {
+            check(equality, "Back element wrong", logger, sequence.back(), prediction.back());
+            check(equality, "Front element wrong", logger, sequence.front(), prediction.front());
+          }
+
+          check(equality,
+                "iterator",
+                logger,
+                sequence.begin(), sequence.end(),
+                prediction.begin(), prediction.end());
+          check(equality,
+                "citerator",
+                logger,
+                sequence.cbegin(), sequence.cend(),
+                prediction.cbegin(), prediction.cend());
+          check(equality,
+                "riterator",
+                logger,
+                sequence.rbegin(), sequence.rend(),
+                prediction.rbegin(), prediction.rend());
+          check(equality,
+                "criterator",
+                logger,
+                sequence.crbegin(), sequence.crend(),
+                prediction.crbegin(), prediction.crend());
+
+          auto elementAt{[&sequence](const auto i) { return sequence[i]; }};
+          const auto bySubscript{
+              std::views::iota(typename Sequence::size_type{}, sequence.size())
+            | std::views::transform(elementAt)
+            | std::ranges::to<std::vector>()
+          };
+
+          check(equality,
+                "operator[]",
+                logger,
+                bySubscript.begin(), bySubscript.end(),
+                prediction.begin(), prediction.end());
         }
-
-        auto i_prediction{prediction.begin()}, i{sequence.begin()};
-        auto ci_prediction{prediction.cbegin()}, ci{sequence.cbegin()};
-        auto ri_prediction{prediction.rbegin()}, ri{sequence.rbegin()};
-        auto cri_prediction{prediction.crbegin()}, cri{sequence.crbegin()};
-
-        for(;i_prediction != prediction.end(); ++i_prediction, ++i, ++ci_prediction, ++ci, ++ri_prediction, ++ri, ++cri_prediction, ++cri)
-        {
-          const auto d{std::ranges::distance(prediction.begin(), i_prediction)};
-          const auto idx{numeric::unchecked_conversion_to<typename T::size_type>(d)};
-          const auto mess{std::format(" for index {}", d)};
-
-          check(equality, std::string{"Dereferenced iterator wrong"}.append(mess), logger, *i, *i_prediction);
-          check(equality, std::string{"Dereferenced citerator wrong"}.append(mess), logger, *ci, *ci_prediction);
-
-          check(equality, std::string{"operator[] wrong"}.append(mess), logger, sequence[idx], prediction[idx]);
-
-          const auto shift{static_cast<int64_t>(prediction.size()) - d - 1};
-          check(equality, std::string{"Dereferenced riterator wrong"}.append(mess), logger, *(ri + shift), *(ri_prediction + shift));
-          check(equality, std::string{"Dereferenced criterator wrong"}.append(mess), logger, *(cri + shift), *(cri_prediction + shift));
-        }
-
-        testing::check("iterator location wrong", logger, i_prediction == prediction.end());
-        testing::check("citerator location wrong", logger, ci_prediction == prediction.cend());
-        testing::check("riterator location wrong", logger, ri_prediction == prediction.rend());
-        testing::check("criterator location wrong", logger, cri_prediction == prediction.crend());
       }
-    }
+
+      template<test_mode Mode>
+      static void test(equivalence_check_t,
+                       test_logger<Mode>& logger,
+                       const Sequence& sequence,
+                       std::initializer_list<typename Sequence::value_type> prediction)
+      {
+        check(equality, "", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());
+      }
+    };
   }
 
-  template<class T, class C, class Compare>
-  struct value_tester<maths::monotonic_sequence<T, C, Compare>>
-  {
-    using type = maths::monotonic_sequence<T, C, Compare>;
-
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& sequence, const type& prediction)
-    {
-      impl::check(logger, sequence, prediction);
-    }
-
-    template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
-    {
-      check(equality, "", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());
-    }
-  };
+  template<class T, class Compare, class C>
+  struct value_tester<maths::monotonic_sequence<T, Compare, C>>
+    : impl::monotonic_sequence_tester<maths::monotonic_sequence<T, Compare, C>>
+  {};
 
   template<class T, std::size_t N, class Compare>
   struct value_tester<maths::static_monotonic_sequence<T, N, Compare>>
-  {
-    using type = maths::static_monotonic_sequence<T, N, Compare>;
-
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& sequence, const type& prediction)
-    {
-      impl::check(logger, sequence, prediction);
-    }
-
-    template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
-    {
-      check(equality, "", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());
-    }
-  };
+    : impl::monotonic_sequence_tester<maths::static_monotonic_sequence<T, N, Compare>>
+  {};
 }

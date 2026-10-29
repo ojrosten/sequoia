@@ -84,35 +84,45 @@ operator== returned false
   Obtained : 2
   Predicted: 1
 
-  Dereferenced iterator wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 1
+  iterator
 
-  Dereferenced citerator wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 1
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 1
 
-  operator[] wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 1
+  citerator
 
-  Dereferenced riterator wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 1
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 1
 
-  Dereferenced criterator wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 1
+  riterator
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 1
+
+  criterator
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 1
+
+  operator[]
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 1
 
 =======================================
 
@@ -148,65 +158,75 @@ operator== returned false
   Obtained : 3
   Predicted: 1
 
-  Dereferenced iterator wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 3
-  Predicted: 1
+  iterator
 
-  Dereferenced citerator wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 3
-  Predicted: 1
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 3
+    Predicted: 1
 
-  operator[] wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 3
-  Predicted: 1
+    Element 1 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 0
 
-  Dereferenced riterator wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 3
-  Predicted: 1
+  citerator
 
-  Dereferenced criterator wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 3
-  Predicted: 1
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 3
+    Predicted: 1
 
-  Dereferenced iterator wrong for index 1
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
+    Element 1 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 0
 
-  Dereferenced citerator wrong for index 1
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
+  riterator
 
-  operator[] wrong for index 1
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 0
 
-  Dereferenced riterator wrong for index 1
-  [int]
-  operator== returned false
-  Obtained : 3
-  Predicted: 1
+    Element 1 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 3
+    Predicted: 1
 
-  Dereferenced criterator wrong for index 1
-  [int]
-  operator== returned false
-  Obtained : 3
-  Predicted: 1
+  criterator
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 0
+
+    Element 1 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 3
+    Predicted: 1
+
+  operator[]
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 3
+    Predicted: 1
+
+    Element 1 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 0
 
 =======================================
 
@@ -222,23 +242,45 @@ operator== returned false
   Obtained : 2
   Predicted: 0
 
-  Dereferenced iterator wrong for index 1
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
+  iterator
 
-  Dereferenced citerator wrong for index 1
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
+    Element 1 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 0
 
-  operator[] wrong for index 1
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
+  citerator
+
+    Element 1 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 0
+
+  riterator
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 0
+
+  criterator
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 0
+
+  operator[]
+
+    Element 1 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 0
 
 =======================================
 
@@ -254,47 +296,45 @@ operator== returned false
   Obtained : 3
   Predicted: 5
 
-  Dereferenced iterator wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 3
-  Predicted: 5
+  iterator
 
-  Dereferenced citerator wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 3
-  Predicted: 5
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 3
+    Predicted: 5
 
-  operator[] wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 3
-  Predicted: 5
+  citerator
 
-  Dereferenced riterator wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 3
-  Predicted: 5
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 3
+    Predicted: 5
 
-  Dereferenced criterator wrong for index 0
-  [int]
-  operator== returned false
-  Obtained : 3
-  Predicted: 5
+  riterator
 
-  Dereferenced riterator wrong for index 1
-  [int]
-  operator== returned false
-  Obtained : 3
-  Predicted: 5
+    Element 1 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 3
+    Predicted: 5
 
-  Dereferenced criterator wrong for index 1
-  [int]
-  operator== returned false
-  Obtained : 3
-  Predicted: 5
+  criterator
+
+    Element 1 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 3
+    Predicted: 5
+
+  operator[]
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 3
+    Predicted: 5
 
 =======================================
 
