@@ -184,6 +184,11 @@ namespace sequoia::testing
     test_pushes_from_several_threads<thread_pool<int, false>>(
       "Each of 4 threads pushes 100 tasks at once to a 2-thread pool with a single pipeline; every task runs");
 
+    test_a_task_pushed_after_join_never_runs<thread_pool<int>>(
+      "A task pushed after join to a pool with a pipeline for each thread never runs");
+    test_a_task_pushed_after_join_never_runs<thread_pool<int, false>>(
+      "A task pushed after join to a pool with a single pipeline never runs");
+
     test_exceptions<thread_pool<void>>("pool_2M", 2u);
     test_exceptions<thread_pool<void, false>>("pool_2", 2u);
     test_exceptions<asynchronous<void>>("async");
@@ -377,6 +382,25 @@ namespace sequoia::testing
     std::ranges::generate(pushers, [&pushTasks](){ return std::async(std::launch::async, pushTasks); });
 
     check(equality, message, sum_results(pushers), numPushers * pushesPerPusher);
+  }
+
+  template<class ThreadPool>
+  void threading_models_test::test_a_task_pushed_after_join_never_runs(std::string_view message)
+  {
+    std::future<int> lateFuture{};
+
+    {
+      ThreadPool pool{2u};
+      pool.join();
+      lateFuture = pool.push([](){ return 1; });
+    }
+
+    // The message of a future_error is the standard library's own, and the libraries spell it differently
+    constexpr auto libraryMessage{
+      [](const project_paths&, std::string) -> std::string { return "<the standard library's message>"; }
+    };
+
+    check_exception_thrown<std::future_error>(message, [&lateFuture](){ return lateFuture.get(); }, libraryMessage);
   }
 
   template<class ThreadModel, class... Args>
