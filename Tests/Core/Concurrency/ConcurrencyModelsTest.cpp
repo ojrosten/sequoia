@@ -373,11 +373,14 @@ namespace sequoia::testing
       [&pool, &start](){
         std::vector<std::future<int>> futures(pushesPerPusher);
         start.arrive_and_wait();
+
+        // An algorithm, not a view, since each push has effects
         std::ranges::generate(futures, [&pool](){ return pool.push([](){ return 1; }); });
         return sum_results(futures);
       }
     };
 
+    // An algorithm, not a view, since each launch starts a thread
     std::vector<std::future<int>> pushers(numPushers);
     std::ranges::generate(pushers, [&pushTasks](){ return std::async(std::launch::async, pushTasks); });
 
@@ -387,13 +390,13 @@ namespace sequoia::testing
   template<class ThreadPool>
   void threading_models_test::test_a_task_pushed_after_join_never_runs(std::string_view message)
   {
-    std::future<int> lateFuture{};
-
-    {
-      ThreadPool pool{2u};
-      pool.join();
-      lateFuture = pool.push([](){ return 1; });
-    }
+    auto lateFuture{
+      [](){
+        ThreadPool pool{2u};
+        pool.join();
+        return pool.push([](){ return 1; });
+      }()
+    };
 
     // The message of a future_error is the standard library's own, and the libraries spell it differently
     constexpr auto libraryMessage{
