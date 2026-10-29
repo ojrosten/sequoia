@@ -8,9 +8,15 @@
 #include "PerformanceTestDiagnostics.hpp"
 
 #include <chrono>
+#include <limits>
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    constexpr double infinity{std::numeric_limits<double>::infinity()};
+  }
+
   [[nodiscard]]
   std::filesystem::path performance_false_negative_diagnostics::source_file()
   {
@@ -91,6 +97,18 @@ namespace sequoia::testing
                                [&clock]() { clock.advance(1ms); },
                                [&clock]() { clock.advance(4ms); },
                                {.prediction{.lower{0.0}, .upper{3.0}}},
+                               clock);
+
+    check_relative_performance("Speed-up of 1, predicted [2, infinity]",
+                               [&clock]() { clock.advance(1ms); },
+                               [&clock]() { clock.advance(1ms); },
+                               {.prediction{.lower{2.0}, .upper{infinity}}},
+                               clock);
+
+    check_relative_performance("Speed-up of 1.5, predicted [2, infinity]",
+                               [&clock]() { clock.advance(2ms); },
+                               [&clock]() { clock.advance(3ms); },
+                               {.prediction{.lower{2.0}, .upper{infinity}}},
                                clock);
   }
 
@@ -363,6 +381,12 @@ namespace sequoia::testing
                                [&clock]() { clock.advance(1ms); },
                                [&clock]() { clock.advance(1ms); },
                                {.prediction{.lower{0.0}, .upper{3.0}}},
+                               clock);
+
+    check_relative_performance("Speed-up of 4, predicted [2, infinity]",
+                               [&clock]() { clock.advance(1ms); },
+                               [&clock]() { clock.advance(4ms); },
+                               {.prediction{.lower{2.0}, .upper{infinity}}},
                                clock);
   }
 

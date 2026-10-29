@@ -34,8 +34,7 @@ namespace sequoia::testing
 
   void performance_exceptions_test::test_invalid_arguments()
   {
-    constexpr double      nan{std::numeric_limits<double>::quiet_NaN()},
-                          infinity{std::numeric_limits<double>::infinity()};
+    constexpr double      nan{std::numeric_limits<double>::quiet_NaN()};
     constexpr std::size_t tooFewTrials{relative_performance_minimum_trials_floor - 1};
 
     scripted_clock clock{};
@@ -60,10 +59,6 @@ namespace sequoia::testing
                                                   relativePerformanceCheck({.prediction{.lower{0.5}, .upper{0.9}}}));
     check_exception_thrown<std::invalid_argument>("Maximum speed-up of NaN",
                                                   relativePerformanceCheck({.prediction{.lower{0.5}, .upper{nan}}}));
-    check_exception_thrown<std::invalid_argument>(
-      "Infinite maximum speed-up",
-      relativePerformanceCheck({.prediction{.lower{0.5}, .upper{infinity}}})
-    );
     check_exception_thrown<std::invalid_argument>("Minimum speed-up exceeding the maximum",
                                                   relativePerformanceCheck({.prediction{.lower{2.5}, .upper{2.0}}}));
     check_exception_thrown<std::invalid_argument>("Too few trials",
@@ -97,10 +92,6 @@ namespace sequoia::testing
     check_exception_thrown<std::invalid_argument>(
       "Maximum speed-up of NaN, with baselines",
       relativePerformanceCheckWithBaselines({.prediction{.lower{0.5}, .upper{nan}}})
-    );
-    check_exception_thrown<std::invalid_argument>(
-      "Infinite maximum speed-up, with baselines",
-      relativePerformanceCheckWithBaselines({.prediction{.lower{0.5}, .upper{infinity}}})
     );
     check_exception_thrown<std::invalid_argument>(
       "Minimum speed-up exceeding the maximum, with baselines",

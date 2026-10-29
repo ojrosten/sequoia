@@ -18,7 +18,6 @@
 
 #include <algorithm>
 #include <chrono>
-#include <cmath>
 #include <concepts>
 #include <format>
 #include <iterator>
@@ -442,11 +441,6 @@ namespace sequoia::testing
       if(!(parameters.prediction.upper >= 1))
         throw std::invalid_argument{"Relative performance test requires prediction.upper >= 1"};
 
-      // An infinite speed-up is not physical, and [0, infinity] could never
-      // fail.
-      if(!std::isfinite(parameters.prediction.upper))
-        throw std::invalid_argument{"Relative performance test requires a finite prediction.upper"};
-
       if(parameters.prediction.lower > parameters.prediction.upper)
         throw std::invalid_argument{"prediction.upper must be >= prediction.lower"};
 
@@ -515,7 +509,9 @@ namespace sequoia::testing
 
        A predicted interval may include 1. For example, [0.9, 1.1] predicts
        that the tasks take about the same time. A predicted interval whose
-       lower end is 0 places no lower bound on the speed-up.
+       lower end is 0 places no lower bound on the speed-up. A predicted
+       interval whose upper end is `std::numeric_limits<double>::infinity()`
+       places no upper bound on the speed-up.
 
        The check passes if any attempt passes, and stops at the first that
        does. In false-negative mode the polarity is reversed: the check passes
@@ -531,10 +527,9 @@ namespace sequoia::testing
        Any exception thrown by `fast` or `slow` propagates.
 
        \throws std::invalid_argument if `parameters.prediction.lower` is not
-       at least 0, if `parameters.prediction.upper` is not at least 1 or is not
-       finite, if the lower end exceeds the upper end, or if
-       `parameters.minimum_trials` is less than
-       `relative_performance_minimum_trials_floor`.
+       at least 0, if `parameters.prediction.upper` is not at least 1, if the
+       lower end exceeds the upper end, or if `parameters.minimum_trials` is
+       less than `relative_performance_minimum_trials_floor`.
 
        \throws std::runtime_error if a trial times either task as zero.
 
@@ -590,10 +585,9 @@ namespace sequoia::testing
           extremes.
 
        \throws std::invalid_argument if `parameters.prediction.lower` is not
-       at least 0, if `parameters.prediction.upper` is not at least 1 or is not
-       finite, if the lower end exceeds the upper end, or if
-       `parameters.minimum_trials` is less than
-       `relative_performance_minimum_trials_floor`.
+       at least 0, if `parameters.prediction.upper` is not at least 1, if the
+       lower end exceeds the upper end, or if `parameters.minimum_trials` is
+       less than `relative_performance_minimum_trials_floor`.
 
        \throws std::runtime_error if a trial times `fast.task` or `slow.task`
        as zero.
