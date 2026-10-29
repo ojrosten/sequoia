@@ -145,6 +145,16 @@ namespace sequoia::utilities
     requires has_sensible_semantics<Iterator, DereferencePolicy>
   class iterator : public DereferencePolicy
   {
+  private:
+    /** Whether the converting constructor admits an
+        `iterator<Iter, DerefPol>`.
+     */
+    template<class Iter, class DerefPol>
+    constexpr static bool converts_from_v{
+         !std::is_same_v<Iter, Iterator>
+      && initializable_from<Iterator, Iter>
+      && consistent_policies_v<DereferencePolicy, DerefPol>
+    };
   public:
     using base_iterator_type      = Iterator;
     using dereference_policy_type = DereferencePolicy;
@@ -164,9 +174,7 @@ namespace sequoia::utilities
     {}
 
     template<class Iter, class DerefPol>
-      requires (   !std::is_same_v<Iter, Iterator>
-                && initializable_from<Iterator, Iter>
-                && consistent_policies_v<DereferencePolicy, DerefPol>)
+      requires converts_from_v<Iter, DerefPol>
     constexpr iterator(iterator<Iter, DerefPol> iter)
       : DereferencePolicy{static_cast<const DerefPol&>(iter)}
       , m_BaseIterator{iter.base_iterator()}
@@ -293,6 +301,26 @@ SEQUOIA_GCC_SUPPRESS_END
       requires std::three_way_comparable<Iterator>
     {
       return lhs.m_BaseIterator <=> rhs.m_BaseIterator;
+    }
+
+    // Without these, comparing with an iterator that converts to this one is
+    // ambiguous where both dereference policies derive from a class declaring
+    // the comparison: neither the class's comparison nor the comparison
+    // through the conversion is better.
+    template<class Iter, class DerefPol>
+      requires converts_from_v<Iter, DerefPol> && std::equality_comparable_with<Iterator, Iter>
+    [[nodiscard]]
+    friend constexpr bool operator==(const iterator& lhs, const iterator<Iter, DerefPol>& rhs) noexcept
+    {
+      return lhs.m_BaseIterator == rhs.base_iterator();
+    }
+
+    template<class Iter, class DerefPol>
+      requires converts_from_v<Iter, DerefPol> && std::three_way_comparable_with<Iterator, Iter>
+    [[nodiscard]]
+    friend constexpr auto operator<=>(const iterator& lhs, const iterator<Iter, DerefPol>& rhs) noexcept
+    {
+      return lhs.m_BaseIterator <=> rhs.base_iterator();
     }
 
     // Without these deletions, a comparison that the base iterator lacks

@@ -139,6 +139,16 @@ namespace sequoia::testing
     constexpr bool has_arrow_operator_v{
       requires (I i) { i.operator->(); }
     };
+
+    template<class I, class J>
+    constexpr bool has_equality_with_v{
+      requires (const I& i, const J& j) { i == j; }
+    };
+
+    template<class I, class J>
+    constexpr bool has_three_way_comparison_with_v{
+      requires (const I& i, const J& j) { i <=> j; }
+    };
   }
 
   [[nodiscard]]
@@ -151,6 +161,7 @@ namespace sequoia::testing
   {
     test_nested_bidirectional_iterator();
     test_comparisons_the_base_iterator_lacks();
+    test_comparisons_with_a_const_iterator();
     test_stashing_input_iterator();
 
     test_iterator();
@@ -187,6 +198,53 @@ namespace sequoia::testing
 
     STATIC_CHECK( std::equality_comparable<iter_without_ordering_t>);
     STATIC_CHECK(!std::three_way_comparable<iter_without_ordering_t>);
+  }
+
+  void iterator_test::test_comparisons_with_a_const_iterator()
+  {
+    using namespace utilities;
+
+    using i_t  = std::array<int, 3>::iterator;
+    using ci_t = std::array<int, 3>::const_iterator;
+
+    using custom_iter_t  = iterator<i_t,  identity_dereference_policy<i_t>>;
+    using custom_citer_t = iterator<ci_t, identity_dereference_policy<ci_t>>;
+
+    STATIC_CHECK(std::equality_comparable_with<custom_iter_t, custom_citer_t>);
+    STATIC_CHECK(std::equality_comparable_with<custom_citer_t, custom_iter_t>);
+    STATIC_CHECK(std::three_way_comparable_with<custom_iter_t, custom_citer_t>);
+    STATIC_CHECK(std::three_way_comparable_with<custom_citer_t, custom_iter_t>);
+    STATIC_CHECK(std::sentinel_for<custom_citer_t, custom_iter_t>);
+    STATIC_CHECK(std::sentinel_for<custom_iter_t, custom_citer_t>);
+
+    STATIC_CHECK([](){
+      std::array<int, 3> a{};
+      const custom_iter_t  i{a.begin()};
+      const custom_citer_t ci{a.cbegin()}, cj{a.cbegin() + 1};
+      return (i == ci) && (ci == i) && (i != cj) && (cj != i) && ((i <=> cj) < 0) && ((cj <=> i) > 0);
+    }());
+
+    // comparable_data_policy declares <=>, as null_data_policy does not.
+    using comparable_iter_t  = iterator_with_comparable_data_policy<i_t>;
+    using comparable_citer_t = iterator_with_comparable_data_policy<ci_t>;
+
+    STATIC_CHECK(std::three_way_comparable_with<comparable_iter_t, comparable_citer_t>);
+    STATIC_CHECK(std::three_way_comparable_with<comparable_citer_t, comparable_iter_t>);
+
+    STATIC_CHECK([](){
+      std::array<int, 3> a{};
+      const comparable_iter_t  i{a.begin()};
+      const comparable_citer_t cj{a.cbegin() + 1};
+      return (i != cj) && (cj != i) && ((i <=> cj) < 0) && ((cj <=> i) > 0);
+    }());
+
+    // The base iterators compare, but neither iterator converts to the other.
+    using scaling_citer_t = iterator<ci_t, scaling_dereference_policy<ci_t>>;
+
+    STATIC_CHECK(!has_equality_with_v<custom_iter_t, scaling_citer_t>);
+    STATIC_CHECK(!has_equality_with_v<scaling_citer_t, custom_iter_t>);
+    STATIC_CHECK(!has_three_way_comparison_with_v<custom_iter_t, scaling_citer_t>);
+    STATIC_CHECK(!has_three_way_comparison_with_v<scaling_citer_t, custom_iter_t>);
   }
 
   void iterator_test::test_stashing_input_iterator()
