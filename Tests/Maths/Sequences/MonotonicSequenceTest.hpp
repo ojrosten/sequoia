@@ -26,7 +26,7 @@ namespace sequoia::testing
     void run_tests();
   private:
 
-    constexpr static maths::static_monotonic_sequence<int, 6, std::greater<int>> make_sequence();
+    constexpr static maths::static_monotonic_sequence<int, 6, std::ranges::greater> make_sequence();
 
     void test_translation_constraints();
 

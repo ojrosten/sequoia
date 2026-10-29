@@ -1,4 +1,4 @@
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 75
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 63
 Invariant violated by initialization
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ monotonic_sequence::monotonic_sequence - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 85
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 73
 
 Expected Exception Type:
 [std::invalid_argument]
@@ -15,7 +15,7 @@ monotonic_sequence::push_back - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 88
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 76
 Invariant violated by attempted insertion at beginning
 
 Expected Exception Type:
@@ -24,7 +24,7 @@ monotonic_sequence::insert - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 98
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 86
 Invariant violated by attempted insertion in middle
 
 Expected Exception Type:
@@ -33,7 +33,7 @@ monotonic_sequence::insert - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 136
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 124
 Translating 8, 4 by -2 throws, since 2 is less than the 3 after it
 
 Expected Exception Type:
@@ -42,16 +42,7 @@ monotonic_sequence::translate - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 155
-Translating 0, -1 by 4 throws, since 4 may not follow 4
-
-Expected Exception Type:
-[std::invalid_argument]
-monotonic_sequence::translate - monotonicity violated
-
-=======================================
-
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 164
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 147
 Invariant violated by initialization
 
 Expected Exception Type:
@@ -60,7 +51,7 @@ monotonic_sequence::monotonic_sequence - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 197
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 180
 Translating 2, 2 by 2 throws, since 4 exceeds the 3 after it
 
 Expected Exception Type:
@@ -69,7 +60,7 @@ monotonic_sequence::translate - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 207
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 190
 Translating 3, 3, 4 by -2 throws, since 1 is below the 2 before it
 
 Expected Exception Type:
@@ -78,7 +69,7 @@ monotonic_sequence::translate - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 231
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 214
 255 + 1 exceeds the maximum of std::uint8_t
 
 Expected Exception Type:
@@ -87,7 +78,7 @@ monotonic_sequence::translate - an element would leave the range of its type
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 231
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 214
 0 - 1 is below the minimum of std::uint8_t
 
 Expected Exception Type:
@@ -96,8 +87,8 @@ monotonic_sequence::translate - an element would leave the range of its type
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 231
-0 + 256 exceeds the maximum of std::uint8_t, though 256 wraps to 0 in it
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 214
+0 + 256 exceeds the maximum of std::uint8_t, though 256 wraps to 0
 
 Expected Exception Type:
 [std::invalid_argument]
@@ -105,16 +96,7 @@ monotonic_sequence::translate - an element would leave the range of its type
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 231
-0 - 1 is below the minimum of std::uint8_t, for a std::int8_t -1
-
-Expected Exception Type:
-[std::invalid_argument]
-monotonic_sequence::translate - an element would leave the range of its type
-
-=======================================
-
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 231
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 214
 255 - 256 is below the minimum of std::uint8_t, though -256 wraps to 0
 
 Expected Exception Type:
@@ -123,7 +105,7 @@ monotonic_sequence::translate - an element would leave the range of its type
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 231
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 214
 127 + 1 exceeds the maximum of std::int8_t
 
 Expected Exception Type:
@@ -132,7 +114,7 @@ monotonic_sequence::translate - an element would leave the range of its type
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 231
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 214
 -128 - 1 is below the minimum of std::int8_t
 
 Expected Exception Type:
@@ -141,8 +123,8 @@ monotonic_sequence::translate - an element would leave the range of its type
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 231
-0 plus the minimum of std::int64_t is below the minimum of std::uint64_t
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 214
+-1 plus the minimum delta is below the minimum of std::int64_t
 
 Expected Exception Type:
 [std::invalid_argument]
@@ -150,8 +132,8 @@ monotonic_sequence::translate - an element would leave the range of its type
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 231
-1 plus the maximum of std::uint64_t exceeds it
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 214
+2^63 - 1 plus the minimum delta is below 0
 
 Expected Exception Type:
 [std::invalid_argument]
@@ -159,7 +141,16 @@ monotonic_sequence::translate - an element would leave the range of its type
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 262
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 214
+2^63 + 1 plus the maximum delta exceeds the maximum of std::uint64_t
+
+Expected Exception Type:
+[std::invalid_argument]
+monotonic_sequence::translate - an element would leave the range of its type
+
+=======================================
+
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 253
 Translating 254, 255 by 2 throws, though wrapped 0, 1 is monotonic
 
 Expected Exception Type:
@@ -168,7 +159,7 @@ monotonic_sequence::translate - an element would leave the range of its type
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 270
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 261
 Translating 1, 255 by 1 throws, since 256 exceeds the maximum
 
 Expected Exception Type:
@@ -177,7 +168,7 @@ monotonic_sequence::translate - an element would leave the range of its type
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 278
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 269
 Translating 255, 1 by 1 throws, since 256 exceeds the maximum
 
 Expected Exception Type:
@@ -186,7 +177,7 @@ monotonic_sequence::translate - an element would leave the range of its type
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 297
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 288
 Overwriting with fewer values throws
 
 Expected Exception Type:
@@ -195,7 +186,7 @@ monotonic_sequence::overwrite - the number of values differs from the size
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 304
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 295
 Overwriting with more values throws
 
 Expected Exception Type:
@@ -204,7 +195,7 @@ monotonic_sequence::overwrite - the number of values differs from the size
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 311
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 302
 Overwriting with values that are not monotonic throws
 
 Expected Exception Type:
