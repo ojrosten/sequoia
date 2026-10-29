@@ -48,6 +48,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Object/CreatorFreeTest.cpp               
                ${TestDir}/Core/Object/FactoryTest.cpp
                ${TestDir}/Core/Object/FactoryTestingDiagnostics.cpp
+               ${TestDir}/Core/Object/HandlersFreeTest.cpp
                ${TestDir}/Core/Object/ResetOnMoveRegularTest.cpp
                ${TestDir}/Core/Object/ResetOnMoveTestingDiagnostics.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
