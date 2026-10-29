@@ -63,6 +63,7 @@ namespace sequoia::testing
     STATIC_CHECK( indexable_by<std::uint8_t>);
     STATIC_CHECK(!indexable_by<bool>);
     STATIC_CHECK(!indexable_by<char>);
+    STATIC_CHECK(!indexable_by<std::int64_t>);
   }
 
   void static_partitioned_sequence_test::test_64_bit_index_types()
@@ -76,6 +77,10 @@ namespace sequoia::testing
 
     STATIC_CHECK( swap_partitions_accepts<static_partitioned_sequence<int, 2, 2>>);
     STATIC_CHECK(!swap_partitions_accepts<static_partitioned_sequence<int, 2, 2, last_digit_partitions>>);
+
+    using lists_t = std::initializer_list<std::initializer_list<int>>;
+    STATIC_CHECK( std::is_constructible_v<static_partitioned_sequence<int, 2, 2>, lists_t>);
+    STATIC_CHECK(!std::is_constructible_v<static_partitioned_sequence<int, 2, 2, last_digit_partitions>, lists_t>);
   }
 
   void static_partitioned_sequence_test::test_static_storage()

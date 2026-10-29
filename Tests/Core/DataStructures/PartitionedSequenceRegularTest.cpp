@@ -14,6 +14,7 @@
 #include <forward_list>
 #include <map>
 #include <memory>
+#include <span>
 
 namespace sequoia::testing
 {
@@ -104,6 +105,14 @@ namespace sequoia::testing
       using compare_type = std::ranges::less;
     };
 
+    // Its end is a sentinel, while translate takes two iterators, as the members pass them
+    struct sentinel_ended_partitions : fake_partitions<std::size_t, std::size_t>
+    {
+      struct sentinel {};
+
+      sentinel cend() const;
+    };
+
     struct runtime_comparison
     {
       bool operator()(std::size_t a, std::size_t b) const { return a > b; }
@@ -112,6 +121,25 @@ namespace sequoia::testing
     struct runtime_compared_partitions : fake_partitions<std::size_t, std::size_t>
     {
       using compare_type = runtime_comparison;
+    };
+
+    using greater_bounds = maths::monotonic_sequence<std::size_t, std::ranges::greater>;
+
+    // Its bounds are reachable only through cbegin and cend
+    struct const_reachable_partitions : greater_bounds
+    {
+      using greater_bounds::greater_bounds;
+
+      const_iterator begin() const = delete;
+      const_iterator end() const = delete;
+    };
+
+    // Overwritable only from a span, to which a view of the bounds does not convert
+    struct span_overwritten_partitions : greater_bounds
+    {
+      using greater_bounds::greater_bounds;
+
+      void overwrite(std::span<const std::size_t> values);
     };
 
     template<class Container, class Partitions>
@@ -256,6 +284,7 @@ namespace sequoia::testing
     STATIC_CHECK(!sequence_admits<fake_container<std::uint8_t>,  fake_partitions<std::int8_t,   std::uint8_t>>);
     STATIC_CHECK(!sequence_admits<fake_container<std::uint16_t>, fake_partitions<std::uint8_t,  std::uint8_t>>);
     STATIC_CHECK(!sequence_admits<fake_container<std::uint8_t>,  fake_partitions<std::uint8_t,  std::uint16_t>>);
+    STATIC_CHECK(!sequence_admits<fake_container<std::uint8_t>,  fake_partitions<std::int16_t,  std::uint8_t>>);
 
     // Each index type below counts to both size types, so only its being bool or a character type refuses it.
     STATIC_CHECK(!sequence_admits<fake_container<bool>,        fake_partitions<bool, bool>>);
@@ -265,11 +294,25 @@ namespace sequoia::testing
   void partitioned_sequence_regular_test::test_partitions_constraint()
   {
     STATIC_CHECK( sequence_admits<fake_container<std::size_t>, fake_partitions<std::size_t, std::size_t>>);
+    STATIC_CHECK( sequence_admits<fake_container<std::size_t>, sentinel_ended_partitions>);
     STATIC_CHECK(!sequence_admits<fake_container<std::size_t>, untranslatable_partitions>);
     STATIC_CHECK(!sequence_admits<std::vector<int>, maths::monotonic_sequence<std::size_t, last_digit_greater>>);
     STATIC_CHECK(!sequence_admits<fake_container<std::size_t>, equal_bound_refusing_partitions>);
     STATIC_CHECK(!sequence_admits<fake_container<std::size_t>, rising_bound_refusing_partitions>);
     STATIC_CHECK(!sequence_admits<fake_container<std::size_t>, runtime_compared_partitions>);
+
+    using span_overwritten_sequence
+      = data_structures::partitioned_sequence<int, std::vector<int>, span_overwritten_partitions>;
+    STATIC_CHECK(!permute_partitions_accepts<span_overwritten_sequence, std::vector<std::size_t>>);
+
+    STATIC_CHECK(
+      [](){
+        data_structures::partitioned_sequence<int, std::vector<int>, const_reachable_partitions> s{};
+        s.add_slot();
+        s.push_back_to_partition(0, 1);
+        return s.size_of_partition(0) == 1;
+      }()
+    );
   }
 
   void partitioned_sequence_regular_test::test_allocator_extended_move()

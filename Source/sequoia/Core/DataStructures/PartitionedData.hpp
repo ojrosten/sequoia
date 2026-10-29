@@ -1141,6 +1141,7 @@ namespace sequoia
 
     template<class T, class Container=std::vector<T>, class Partitions=maths::monotonic_sequence<std::size_t, std::ranges::greater>>
       requires (    integer<typename Partitions::value_type>
+                && std::unsigned_integral<typename Partitions::value_type>
                 && std::cmp_less_equal(std::numeric_limits<typename Partitions::size_type>::max(),
                                         std::numeric_limits<typename Partitions::value_type>::max())
                 && std::cmp_less_equal(std::numeric_limits<typename Container::size_type>::max(),
@@ -1212,7 +1213,14 @@ namespace sequoia
     };
 
     template<class T>
-    struct static_partitions_maker;
+    struct static_partitions_maker {};
+
+    template<class Partitions, class T>
+    inline constexpr bool has_static_partitions_maker_v{
+      requires(std::initializer_list<std::initializer_list<T>> list) {
+        static_partitions_maker<Partitions>::make_partitions(list);
+      }
+    };
 
     template<std::integral IndexType, std::size_t Npartitions>
     struct static_partitions_maker<maths::static_monotonic_sequence<IndexType, Npartitions, std::ranges::greater>>
@@ -1258,6 +1266,7 @@ namespace sequoia
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, class Partitions=maths::static_monotonic_sequence<std::size_t, Npartitions, std::ranges::greater>>
       requires (    integer<typename Partitions::value_type>
+                && std::unsigned_integral<typename Partitions::value_type>
                 && std::cmp_less_equal(Npartitions, std::numeric_limits<typename Partitions::value_type>::max())
                 && std::cmp_less_equal(Nelements,   std::numeric_limits<typename Partitions::value_type>::max()))
     class static_partitioned_sequence :
@@ -1276,6 +1285,7 @@ namespace sequoia
       constexpr static_partitioned_sequence() = default;
 
       constexpr static_partitioned_sequence(std::initializer_list<std::initializer_list<T>> list)
+        requires has_static_partitions_maker_v<Partitions, T>
         : base_type{fill(std::make_index_sequence<num_elements_v>(), list)}
       {}
 
