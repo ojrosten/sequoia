@@ -35,7 +35,9 @@ namespace sequoia::testing
 
     void test_nested_bidirectional_iterator();
     void test_comparisons_the_base_iterator_lacks();
+    void test_comparisons_with_a_const_iterator();
     void test_stashing_input_iterator();
+    void test_arrow_operator_with_overloaded_address_of();
 
     void test_iterator();
     void test_const_iterator();
