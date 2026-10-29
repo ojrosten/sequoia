@@ -41,6 +41,12 @@ namespace sequoia::data_structures
 
     constexpr void push(T&& value) { m_Incoming.push_back(std::move(value)); }
 
+    /** \brief Removes the front element.
+
+        If an exception is thrown, the queue is unchanged, unless the
+        exception comes from the move constructor of a `T` which cannot be
+        copied; then some of its elements may be left moved-from.
+     */
     constexpr void pop()
     {
       if(empty())
