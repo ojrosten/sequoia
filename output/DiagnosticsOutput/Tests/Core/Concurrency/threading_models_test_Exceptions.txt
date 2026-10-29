@@ -16,25 +16,7 @@ A thread pool requires at least one thread
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 406
-A task pushed after join to a pool with a pipeline for each thread never runs
-
-Expected Exception Type:
-[std::future_error]
-<the standard library's message>
-
-=======================================
-
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 406
-A task pushed after join to a pool with a single pipeline never runs
-
-Expected Exception Type:
-[std::future_error]
-<the standard library's message>
-
-=======================================
-
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 417
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 441
 pool_2M
 
 Expected Exception Type:
@@ -43,7 +25,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 417
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 441
 pool_2
 
 Expected Exception Type:
@@ -52,34 +34,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 417
-async
-
-Expected Exception Type:
-[std::runtime_error]
-Error!
-
-=======================================
-
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 417
-pool_2M
-
-Expected Exception Type:
-[std::runtime_error]
-Error!
-
-=======================================
-
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 417
-pool_2
-
-Expected Exception Type:
-[std::runtime_error]
-Error!
-
-=======================================
-
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 417
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 441
 async
 
 Expected Exception Type:
@@ -89,6 +44,7 @@ Error!
 =======================================
 
 Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 441
+pool_2M
 
 Expected Exception Type:
 [std::runtime_error]
@@ -96,7 +52,33 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 442
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 441
+pool_2
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 441
+async
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 465
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 466
 
 Expected Exception Type:
 [std::runtime_error]

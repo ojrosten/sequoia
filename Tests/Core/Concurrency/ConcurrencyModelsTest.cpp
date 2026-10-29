@@ -9,12 +9,16 @@
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
 #include <algorithm>
+#include <chrono>
+#include <format>
 #include <future>
 #include <latch>
 #include <queue>
 #include <semaphore>
 #include <stdexcept>
+#include <system_error>
 #include <thread>
+#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -28,7 +32,7 @@ namespace sequoia::testing
 
     /** \brief Waits for each future, and returns the sum of their values. */
     [[nodiscard]]
-    int sum_results(std::vector<std::future<int>>& futures)
+    int sum_results(std::vector<std::future<int>> futures)
     {
       return std::ranges::fold_left(futures, 0, [](int sum, std::future<int>& f){ return sum + f.get(); });
     }
@@ -179,15 +183,11 @@ namespace sequoia::testing
     test_pushes_wake_a_waiting_pop();
     test_thread_pools_refuse_zero_threads();
 
-    test_pushes_from_several_threads<thread_pool<int>>(
-      "Each of 4 threads pushes 100 tasks at once to a 2-thread pool with a pipeline for each thread; every task runs");
-    test_pushes_from_several_threads<thread_pool<int, false>>(
-      "Each of 4 threads pushes 100 tasks at once to a 2-thread pool with a single pipeline; every task runs");
+    test_every_task_pushed_from_several_threads_runs<thread_pool<int>>("a pipeline for each thread");
+    test_every_task_pushed_from_several_threads_runs<thread_pool<int, false>>("a single pipeline");
 
-    test_a_task_pushed_after_join_never_runs<thread_pool<int>>(
-      "A task pushed after join to a pool with a pipeline for each thread never runs");
-    test_a_task_pushed_after_join_never_runs<thread_pool<int, false>>(
-      "A task pushed after join to a pool with a single pipeline never runs");
+    test_a_task_pushed_after_join_never_runs<thread_pool<int>>("a pipeline for each thread");
+    test_a_task_pushed_after_join_never_runs<thread_pool<int, false>>("a single pipeline");
 
     test_exceptions<thread_pool<void>>("pool_2M", 2u);
     test_exceptions<thread_pool<void, false>>("pool_2", 2u);
@@ -361,49 +361,73 @@ namespace sequoia::testing
   }
 
   template<class ThreadPool>
-  void threading_models_test::test_pushes_from_several_threads(std::string_view message)
+  void threading_models_test::test_every_task_pushed_from_several_threads_runs(std::string_view poolKind)
   {
-    constexpr int numPushers{4}, pushesPerPusher{100};
+    constexpr int numPushers{4}, pushesPerPusher{100}, numThreads{2};
 
-    ThreadPool pool{2u};
-    std::latch start{numPushers};
+    ThreadPool pool{numThreads};
+    std::latch startingGate{numPushers};
 
-    // Each pusher waits for its own tasks, so the pushers share no result
-    auto pushTasks{
-      [&pool, &start](){
+    auto pushAndSum{
+      [&pool, &startingGate](){
         std::vector<std::future<int>> futures(pushesPerPusher);
-        start.arrive_and_wait();
+        startingGate.arrive_and_wait();
 
         // An algorithm, not a view, since each push has effects
         std::ranges::generate(futures, [&pool](){ return pool.push([](){ return 1; }); });
-        return sum_results(futures);
+        return sum_results(std::move(futures));
       }
     };
 
     // An algorithm, not a view, since each launch starts a thread
-    std::vector<std::future<int>> pushers(numPushers);
-    std::ranges::generate(pushers, [&pushTasks](){ return std::async(std::launch::async, pushTasks); });
+    std::vector<std::future<int>> pusherSums(numPushers);
+    std::ranges::generate(pusherSums, [&pushAndSum](){ return std::async(std::launch::async, pushAndSum); });
 
-    check(equality, message, sum_results(pushers), numPushers * pushesPerPusher);
+    // A data race between pushes loses no task, so only ThreadSanitizer sees
+    // it. This check sees a task that a push loses.
+    check(equality,
+          std::format("Each of {} threads pushes {} tasks at once to a {}-thread pool with {}, and every task runs",
+                      numPushers,
+                      pushesPerPusher,
+                      numThreads,
+                      poolKind),
+          sum_results(std::move(pusherSums)),
+          numPushers * pushesPerPusher);
   }
 
   template<class ThreadPool>
-  void threading_models_test::test_a_task_pushed_after_join_never_runs(std::string_view message)
+  void threading_models_test::test_a_task_pushed_after_join_never_runs(std::string_view poolKind)
   {
-    auto lateFuture{
-      [](){
+    auto lateTaskFuture{
+      [this, poolKind](){
         ThreadPool pool{2u};
         pool.join();
-        return pool.push([](){ return 1; });
+        auto future{pool.push([](){ return 1; })};
+
+        check(std::format("A task pushed after join to a pool with {} has not run while the pool lives", poolKind),
+              future.wait_for(std::chrono::seconds{}) == std::future_status::timeout);
+
+        return future;
       }()
     };
 
-    // The message of a future_error is the standard library's own, and the libraries spell it differently
-    constexpr auto libraryMessage{
-      [](const project_paths&, std::string) -> std::string { return "<the standard library's message>"; }
+    const auto errorCode{
+      [&lateTaskFuture]() -> std::error_code {
+        try
+        {
+          std::ignore = lateTaskFuture.get();
+        }
+        catch(const std::future_error& e)
+        {
+          return e.code();
+        }
+
+        return {};
+      }()
     };
 
-    check_exception_thrown<std::future_error>(message, [&lateFuture](){ return lateFuture.get(); }, libraryMessage);
+    check(std::format("Destroying a joined pool with {} breaks the promise of a task pushed after join", poolKind),
+          errorCode == std::future_errc::broken_promise);
   }
 
   template<class ThreadModel, class... Args>
