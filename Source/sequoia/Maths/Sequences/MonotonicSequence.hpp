@@ -107,7 +107,7 @@ namespace sequoia::maths
         while((f != l) && (f + 1) != tmp.end())
         {
           if(Compare{}(*f, *(f+1)))
-            throw std::logic_error("monotonic_sequence::mutate - monotonicity violated");
+            throw std::invalid_argument("monotonic_sequence::mutate - monotonicity violated");
 
           ++f;
         }
@@ -133,7 +133,7 @@ SEQUOIA_GCC_SUPPRESS_END
 
     /** \brief Replaces each element with the corresponding one of `values`.
 
-        \throws std::logic_error if `values` has a different number of
+        \throws std::invalid_argument if `values` has a different number of
         elements, or would break the sequence's monotonicity. The sequence is
         then unchanged.
      */
@@ -143,10 +143,10 @@ SEQUOIA_GCC_SUPPRESS_END
     constexpr void overwrite(R&& values)
     {
       if(std::cmp_not_equal(std::ranges::distance(values), size()))
-        throw std::logic_error{"monotonic_sequence::overwrite - the number of values differs from the size"};
+        throw std::invalid_argument{"monotonic_sequence::overwrite - the number of values differs from the size"};
 
       if(std::ranges::adjacent_find(values, Compare{}) != std::ranges::end(values))
-        throw std::logic_error{"monotonic_sequence::overwrite - monotonicity violated"};
+        throw std::invalid_argument{"monotonic_sequence::overwrite - monotonicity violated"};
 
       std::ranges::copy(values, m_Sequence.begin());
     }
@@ -197,7 +197,7 @@ SEQUOIA_GCC_SUPPRESS_END
     constexpr void push_back(T v)
     {
       if(!m_Sequence.empty() && Compare{}(m_Sequence.back(), v))
-        throw std::logic_error{"monotonic_sequence_base::push_back - monotonicity violated"};
+        throw std::invalid_argument{"monotonic_sequence::push_back - monotonicity violated"};
 
       m_Sequence.push_back(std::move(v));
     }
@@ -206,7 +206,7 @@ SEQUOIA_GCC_SUPPRESS_END
     {
       if(((pos != cend()) && Compare{}(v, *pos)) || ((pos != cbegin()) && Compare{}(*(pos-1), v)))
       {
-        throw std::logic_error{"monotonic_sequence_base::insert - monotonicity violated"};
+        throw std::invalid_argument{"monotonic_sequence::insert - monotonicity violated"};
       }
 
       return m_Sequence.insert(pos, std::move(v));
@@ -265,7 +265,7 @@ SEQUOIA_GCC_SUPPRESS_END
         for(auto i{begin()+1}; i != end(); ++i)
         {
           if(Compare{}(*(i-1), *i))
-            throw std::logic_error("monotonic_sequence_base::monotonic_sequence_base - monotonicity violated");
+            throw std::invalid_argument("monotonic_sequence::monotonic_sequence - monotonicity violated");
         }
       }
     }
