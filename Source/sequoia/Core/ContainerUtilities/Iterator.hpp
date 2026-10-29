@@ -329,10 +329,15 @@ SEQUOIA_GCC_SUPPRESS_END
     // would resolve to a comparison declared by the dereference policy, or by
     // a class from which the policy derives, through the conversion to a
     // public base class. Such a comparison ignores the base iterators.
-    friend bool operator==(const iterator&, const iterator&)
+    // TO DO: make these non-templates, taking const iterator&, once MSVC
+    // accepts a trailing requires-clause on a deleted non-template friend
+    // (it reports C7599).
+    template<std::same_as<iterator> Other>
+    friend bool operator==(const Other&, const Other&)
       requires (!std::equality_comparable<Iterator>) = delete;
 
-    friend auto operator<=>(const iterator&, const iterator&)
+    template<std::same_as<iterator> Other>
+    friend auto operator<=>(const Other&, const Other&)
       requires (!std::three_way_comparable<Iterator>) = delete;
   private:
     Iterator m_BaseIterator{};
