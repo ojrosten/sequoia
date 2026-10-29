@@ -35,7 +35,7 @@ namespace sequoia::object
   {
   public:
     using value_type = std::string;
-    using reference  = value_type;
+    using reference  = const value_type&;
 
     constexpr factory_dereference_policy() = default;
     constexpr factory_dereference_policy(const factory_dereference_policy&) = default;

@@ -42,7 +42,7 @@ Factory product names must be unique!
 
 =======================================
 
-Tests/Core/Object/FactoryTest.cpp, Line 257
+Tests/Core/Object/FactoryTest.cpp, Line 265
 Unknown name
 
 Expected Exception Type:
@@ -51,7 +51,7 @@ Factory unable to make product of name 'plurgh'
 
 =======================================
 
-Tests/Core/Object/FactoryTest.cpp, Line 258
+Tests/Core/Object/FactoryTest.cpp, Line 266
 Empty name
 
 Expected Exception Type:
@@ -60,7 +60,7 @@ Factory product names must not be empty!
 
 =======================================
 
-Tests/Core/Object/FactoryTest.cpp, Line 259
+Tests/Core/Object/FactoryTest.cpp, Line 267
 Duplicated name
 
 Expected Exception Type:
