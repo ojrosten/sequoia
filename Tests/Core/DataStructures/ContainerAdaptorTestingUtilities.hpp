@@ -11,6 +11,7 @@
 
 #include "ElementTestingUtilities.hpp"
 
+#include "sequoia/Core/ContainerUtilities/ContainerAdaptorUtilities.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
 #include <concepts>
@@ -36,21 +37,7 @@ namespace sequoia::testing
   }
 
   template<class Adaptor>
-  inline constexpr bool has_front_v{requires(const Adaptor& adaptor) { adaptor.front(); }};
-
-  template<class Adaptor>
   inline constexpr bool has_back_v{requires(const Adaptor& adaptor) { adaptor.back(); }};
-
-  /// Returns the element of `adaptor` which the next pop removes
-  template<class Adaptor>
-  [[nodiscard]]
-  constexpr const typename Adaptor::value_type& element_popped_next(const Adaptor& adaptor)
-  {
-    if constexpr(has_front_v<Adaptor>)
-      return adaptor.front();
-    else
-      return adaptor.top();
-  }
 
   /// Returns the elements of `adaptor`, in the order pops remove them
   template<class Adaptor>
@@ -60,7 +47,7 @@ namespace sequoia::testing
     std::vector<typename Adaptor::value_type> elements{};
     while(!adaptor.empty())
     {
-      elements.push_back(element_popped_next(adaptor));
+      elements.push_back(utilities::element_popped_next(adaptor));
       adaptor.pop();
     }
 
@@ -74,8 +61,8 @@ namespace sequoia::testing
     requires std::same_as<typename Adaptor::value_type, element_with_lineage>
   void pop_and_check_the_element_is_gone(regular_test& test, const reporter& description, Adaptor& adaptor)
   {
-    const auto observer{element_popped_next(adaptor).lineage.observer()};
-    const auto copies{element_popped_next(adaptor).lineage.copies()};
+    const auto observer{utilities::element_popped_next(adaptor).lineage.observer()};
+    const auto copies{utilities::element_popped_next(adaptor).lineage.copies()};
     const std::size_t copiesBefore{*copies};
     adaptor.pop();
 

@@ -15,6 +15,7 @@
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 #include "sequoia/Maths/Graph/GraphDetails.hpp"
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
+#include "sequoia/Core/ContainerUtilities/ContainerAdaptorUtilities.hpp"
 #include "sequoia/Core/DataStructures/PriorityQueue.hpp"
 #include "sequoia/Core/DataStructures/Queue.hpp"
 #include "sequoia/Core/DataStructures/Stack.hpp"
@@ -239,42 +240,30 @@ namespace sequoia::maths::graph_impl
 
 
   template<network G, traversal_flavour F, class... QArgs>
-  struct traversal_traits_base;
+  struct traversal_queue;
 
   template<network G>
-  struct traversal_traits_base<G, traversal_flavour::breadth_first>
+  struct traversal_queue<G, traversal_flavour::breadth_first>
   {
-    using index_type = G::edge_index_type;
-    using queue_type = data_structures::queue<index_type>;
-
-    [[nodiscard]]
-    constexpr static auto get_container_element(const queue_type& q) { return q.front(); }
+    using type = data_structures::queue<typename G::edge_index_type>;
   };
 
   template<network G>
-  struct traversal_traits_base<G, traversal_flavour::pseudo_depth_first>
+  struct traversal_queue<G, traversal_flavour::pseudo_depth_first>
   {
-    using index_type = G::edge_index_type;
-    using queue_type = data_structures::stack<index_type>;
-
-    [[nodiscard]]
-    constexpr static auto get_container_element(const queue_type& s) { return s.top(); }
+    using type = data_structures::stack<typename G::edge_index_type>;
   };
 
   template<network G, class Compare>
-  struct traversal_traits_base<G, traversal_flavour::priority, Compare>
+  struct traversal_queue<G, traversal_flavour::priority, Compare>
   {
-    using index_type = G::edge_index_type;
-    using queue_type = data_structures::priority_queue<index_type, std::vector<index_type>, Compare>;
-
-    [[nodiscard]]
-    constexpr static auto get_container_element(const queue_type& q) { return q.top(); }
+    using type = data_structures::priority_queue<typename G::edge_index_type, std::vector<typename G::edge_index_type>, Compare>;
   };
 
   template<network G, traversal_flavour F, class... QArgs>
-  struct traversal_traits : traversal_traits_base<G, F, QArgs...>
+  struct traversal_traits
   {
-    using queue_type      = traversal_traits_base<G, F, QArgs...>::queue_type;
+    using queue_type      = traversal_queue<G, F, QArgs...>::type;
     using edge_index_type = G::edge_index_type;
 
     [[nodiscard]]
@@ -428,7 +417,7 @@ namespace sequoia::maths::graph_impl
 
           while(!nodeIndexQueue.empty())
           {
-            const auto nodeIndex{traversal_traits<G, F, QArgs...>::get_container_element(nodeIndexQueue)};
+            const auto nodeIndex{utilities::element_popped_next(nodeIndexQueue)};
             nodeIndexQueue.pop();
 
             auto onDiscovery{[&nodeIndexQueue](const edge_index_type nextNode) { nodeIndexQueue.push(nextNode); }};
