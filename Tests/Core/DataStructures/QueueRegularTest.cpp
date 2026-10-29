@@ -6,8 +6,8 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "QueueRegularTest.hpp"
-#include "FallibleStepTestingUtilities.hpp"
 
+#include "sequoia/TestFramework/ExceptionSafetyTestUtilities.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
 #include <string>

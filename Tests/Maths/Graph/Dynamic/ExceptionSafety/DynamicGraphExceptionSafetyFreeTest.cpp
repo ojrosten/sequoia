@@ -6,12 +6,12 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "DynamicGraphExceptionSafetyFreeTest.hpp"
-#include "Core/DataStructures/FallibleStepTestingUtilities.hpp"
 #include "Maths/Graph/GraphTestingUtilities.hpp"
 #include "Maths/Graph/Dynamic/DynamicGraphTestingUtilities.hpp"
 
 #include "sequoia/Core/Meta/TypeName.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
+#include "sequoia/TestFramework/ExceptionSafetyTestUtilities.hpp"
 
 #include <cstddef>
 #include <format>

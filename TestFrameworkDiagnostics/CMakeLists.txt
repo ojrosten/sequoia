@@ -46,6 +46,8 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp
                ${TestDir}/TestFramework/DumpComparisonFreeTest.cpp
                ${TestDir}/TestFramework/ElementaryFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/ExceptionSafetyTestUtilitiesFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/ExceptionSafetyTestUtilitiesFreeTest.cpp
                ${TestDir}/TestFramework/ExceptionsFreeDiagnostics.cpp
                ${TestDir}/TestFramework/FailureInfoTest.cpp
                ${TestDir}/TestFramework/FailureInfoTestingDiagnostics.cpp

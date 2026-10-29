@@ -51,6 +51,9 @@ int main(int argc, char** argv)
     runner.register_test<elementary_false_positive_free_diagnostics>();
     runner.register_test<exceptions_false_negative_free_diagnostics>();
     runner.register_test<exceptions_false_positive_free_diagnostics>();
+    runner.register_test<exception_safety_test_utilities_free_test>();
+    runner.register_test<exception_safety_test_utilities_false_negative_free_diagnostics>();
+    runner.register_test<exception_safety_test_utilities_false_positive_free_diagnostics>();
     runner.register_test<chrono_false_negative_free_diagnostics>();
     runner.register_test<chrono_false_positive_free_diagnostics>();
     runner.register_test<complex_false_negative_free_diagnostics>();

@@ -169,6 +169,8 @@
 #include "TestFramework/DependencyAnalyzerFreeTest.hpp"
 #include "TestFramework/DumpComparisonFreeTest.hpp"
 #include "TestFramework/ElementaryFreeDiagnostics.hpp"
+#include "TestFramework/ExceptionSafetyTestUtilitiesFreeDiagnostics.hpp"
+#include "TestFramework/ExceptionSafetyTestUtilitiesFreeTest.hpp"
 #include "TestFramework/ExceptionsFreeDiagnostics.hpp"
 #include "TestFramework/FailureInfoTest.hpp"
 #include "TestFramework/FailureInfoTestingDiagnostics.hpp"

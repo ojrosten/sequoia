@@ -8,8 +8,8 @@
 #pragma once
 
 /** \file
-    \brief Utilities for testing what a failure at each fallible step of an
-           operation leaves behind.
+    \brief Utilities for exception-safety testing: an operation run once for
+           each of its fallible steps, with that step made to fail.
  */
 
 #include "sequoia/Core/Numeric/IntegerConversions.hpp"
@@ -27,6 +27,7 @@
 
 namespace sequoia::testing
 {
+  /// The exception which a fallible step throws when it is chosen to fail
   struct injected_failure : std::runtime_error
   {
     using std::runtime_error::runtime_error;
@@ -43,18 +44,23 @@ namespace sequoia::testing
   class [[nodiscard]] fallible_step_monitor
   {
   public:
-    explicit fallible_step_monitor(std::optional<std::size_t> failingStep) noexcept
+    /// \throws std::logic_error if another monitor is alive on this thread
+    explicit fallible_step_monitor(std::optional<std::size_t> failingStep)
+      : m_ThreadMonitoring{current_monitoring()}
     {
-      current_monitoring() = monitoring{.failing_step{failingStep}};
+      if(m_ThreadMonitoring)
+        throw std::logic_error{"A fallible_step_monitor is already alive on this thread"};
+
+      m_ThreadMonitoring = monitoring{.failing_step{failingStep}};
     }
 
-    ~fallible_step_monitor() { current_monitoring().reset(); }
+    ~fallible_step_monitor() { m_ThreadMonitoring.reset(); }
 
     fallible_step_monitor(const fallible_step_monitor&)            = delete;
     fallible_step_monitor& operator=(const fallible_step_monitor&) = delete;
 
     [[nodiscard]]
-    std::size_t steps_taken() const noexcept { return current_monitoring()->steps_taken; }
+    std::size_t steps_taken() const noexcept { return m_ThreadMonitoring->steps_taken; }
 
     static void take_fallible_step()
     {
@@ -62,10 +68,7 @@ namespace sequoia::testing
       {
         const auto step{current->steps_taken++};
         if(step == current->failing_step)
-        {
-          current->failing_step.reset();
           throw injected_failure{std::format("Injected failure at fallible step {}", step)};
-        }
       }
     }
   private:
@@ -74,6 +77,8 @@ namespace sequoia::testing
       std::optional<std::size_t> failing_step;
       std::size_t steps_taken{};
     };
+
+    std::optional<monitoring>& m_ThreadMonitoring;
 
     [[nodiscard]]
     static std::optional<monitoring>& current_monitoring() noexcept
@@ -111,12 +116,14 @@ namespace sequoia::testing
              adds a self-loop at `host` for each step `mutation` takes, on
              which that step throws `injected_failure`.
 
+      A self-loop's prediction is `host`'s state, so a check function which
+      compares states checks that each failure leaves the state unchanged.
       To count the steps, `mutation` runs once on `host`'s state during the
       call.
    */
-  template<class T, class Extender, class Mutation>
+  template<class T, test_mode Mode, class Extender, class Mutation>
     requires std::invocable<const Mutation&, T&>
-  void add_fallible_transition(basic_test<test_mode::standard, Extender>& test,
+  void add_fallible_transition(basic_test<Mode, Extender>& test,
                                typename transition_checker<T>::transition_graph& trg,
                                std::string_view context,
                                std::size_t host,
