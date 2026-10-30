@@ -25,7 +25,7 @@ multi_periodic_free_test:
 [Runner Overhead: 475us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 240
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 242
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -55,7 +55,7 @@ multi_periodic_free_test:
 [Runner Overhead: 441us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 241
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 243
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -85,7 +85,7 @@ multi_periodic_free_test:
 [Runner Overhead: 436us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 240
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 242
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -134,7 +134,7 @@ multi_periodic_free_test:
 [Runner Overhead: 545us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 240
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 242
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -144,7 +144,7 @@ multi_periodic_free_test:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 241
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 243
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -175,7 +175,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 240
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 242
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -187,7 +187,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 240
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 242
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -197,7 +197,7 @@ vs.
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 241
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 243
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -209,7 +209,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 241
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 243
 	Period 3: Pass/Pass/Fail
 
 	[bool]

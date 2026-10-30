@@ -1,4 +1,4 @@
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 24
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 29
 Obtained bound but prediction not
 
 Comparison performed using:
@@ -12,7 +12,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 29
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 34
 Prediction bound but obtained not
 
 Comparison performed using:
@@ -23,24 +23,24 @@ Checking for weak equivalence with:
   [bool]
   Obtained : null
   Predicted: not null
-
-=======================================
-
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 37
-Obtained bound but prediction not
-
-Comparison performed using:
-[sequoia::testing::value_tester<std::function<int ()> >]
-Checking for weak equivalence with:
-[std::function<int ()>]
-
-  [bool]
-  Obtained : not null
-  Predicted: null
 
 =======================================
 
 Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 42
+Obtained bound but prediction not
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::function<int ()> >]
+Checking for weak equivalence with:
+[std::function<int ()>]
+
+  [bool]
+  Obtained : not null
+  Predicted: null
+
+=======================================
+
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 47
 Prediction bound but obtained not
 
 Comparison performed using:
@@ -54,7 +54,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 50
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 55
 Obtained bound but prediction not
 
 Comparison performed using:
@@ -68,7 +68,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 55
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 60
 Prediction bound but obtained not
 
 Comparison performed using:

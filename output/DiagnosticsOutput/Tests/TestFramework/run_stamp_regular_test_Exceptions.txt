@@ -1,4 +1,4 @@
-Tests/TestFramework/RunStampRegularTest.cpp, Line 149
+Tests/TestFramework/RunStampRegularTest.cpp, Line 148
 A first line which does not give the start time
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Expected a start time but found 'begun 2026-10-13T09:15:04.123Z'
 
 =======================================
 
-Tests/TestFramework/RunStampRegularTest.cpp, Line 168
+Tests/TestFramework/RunStampRegularTest.cpp, Line 167
 A file which does not exist
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Unable to read file output/TestsTemporaryData/TestFramework/RunStampRegularTest/
 
 =======================================
 
-Tests/TestFramework/RunStampRegularTest.cpp, Line 172
+Tests/TestFramework/RunStampRegularTest.cpp, Line 171
 An empty file
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ No run stamp in output/TestsTemporaryData/TestFramework/RunStampRegularTest/run_
 
 =======================================
 
-Tests/TestFramework/RunStampRegularTest.cpp, Line 176
+Tests/TestFramework/RunStampRegularTest.cpp, Line 175
 A file with a line after the stamp
 
 Expected Exception Type:

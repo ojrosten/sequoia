@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 60
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 59
 Can't push to null stack
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Attempting to exceed max stack depth
 
 =======================================
 
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 61
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 60
 Can't construct non-null null stack
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ initializer_list of size 1 too big for array: expected at most 0 elements
 
 =======================================
 
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 62
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 61
 Can't access top of null stack
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Attempting to access the top of an empty stack
 
 =======================================
 
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 63
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 62
 Can't pop from null stack
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Attempting to pop an empty stack
 
 =======================================
 
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 77
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 76
 Trying to push two elements to stack of depth 1
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Attempting to exceed max stack depth
 
 =======================================
 
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 78
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 77
 Can't construct stack of depth 1 with 2 elements
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ initializer_list of size 2 too big for array: expected at most 1 elements
 
 =======================================
 
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 83
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 82
 Can't access top of empty stack
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ Attempting to access the top of an empty stack
 
 =======================================
 
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 84
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 83
 Can't pop from empty stack
 
 Expected Exception Type:

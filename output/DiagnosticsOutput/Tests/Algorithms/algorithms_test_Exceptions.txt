@@ -1,4 +1,4 @@
-Tests/Algorithms/AlgorithmsTest.cpp, Line 696
+Tests/Algorithms/AlgorithmsTest.cpp, Line 685
 Fewer destinations than elements are not a permutation
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ sequoia::permute: the destinations are not a permutation of the range's position
 
 =======================================
 
-Tests/Algorithms/AlgorithmsTest.cpp, Line 701
+Tests/Algorithms/AlgorithmsTest.cpp, Line 690
 More destinations than elements are not a permutation
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ sequoia::permute: the destinations are not a permutation of the range's position
 
 =======================================
 
-Tests/Algorithms/AlgorithmsTest.cpp, Line 706
+Tests/Algorithms/AlgorithmsTest.cpp, Line 695
 A destination shared by two elements is not a permutation
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ sequoia::permute: the destinations are not a permutation of the range's position
 
 =======================================
 
-Tests/Algorithms/AlgorithmsTest.cpp, Line 711
+Tests/Algorithms/AlgorithmsTest.cpp, Line 700
 A destination shared by two elements, found only after a swap, is not a permutation
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ sequoia::permute: the destinations are not a permutation of the range's position
 
 =======================================
 
-Tests/Algorithms/AlgorithmsTest.cpp, Line 716
+Tests/Algorithms/AlgorithmsTest.cpp, Line 705
 A destination shared with an element already in place is not a permutation
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ sequoia::permute: the destinations are not a permutation of the range's position
 
 =======================================
 
-Tests/Algorithms/AlgorithmsTest.cpp, Line 721
+Tests/Algorithms/AlgorithmsTest.cpp, Line 710
 A destination beyond the range is not a permutation
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ sequoia::permute: the destinations are not a permutation of the range's position
 
 =======================================
 
-Tests/Algorithms/AlgorithmsTest.cpp, Line 726
+Tests/Algorithms/AlgorithmsTest.cpp, Line 715
 A negative destination is not a permutation
 
 Expected Exception Type:

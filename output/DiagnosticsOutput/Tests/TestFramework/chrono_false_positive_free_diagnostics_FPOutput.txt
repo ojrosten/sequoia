@@ -1,12 +1,12 @@
 False Negative Failure:
-Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 79
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 78
 
 [std::chrono::duration<long long, std::ratio<1, 1> >]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 82
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 81
 Steady time point
 
 [std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<long long, std::ratio<1, 1000000000> > >]
@@ -14,7 +14,7 @@ Steady time point
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 83
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 82
 System time point
 
 [std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<long long, std::ratio<1, 1> > >]
@@ -22,7 +22,7 @@ System time point
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 86
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 85
 Time point which a client streams
 
 [std::chrono::time_point<(anonymous namespace)::streamed_clock, std::chrono::duration<long long, std::ratio<1, 1000> > >]
@@ -30,7 +30,7 @@ Time point which a client streams
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 96
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 95
 A file time's duration prints as its count followed by its units suffix
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]

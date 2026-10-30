@@ -1,4 +1,4 @@
-Tests/TestFramework/CoarseSleepsFreeTest.cpp, Line 141
+Tests/TestFramework/CoarseSleepsFreeTest.cpp, Line 143
 An unobserved outcome without a request
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ An outcome other than not_made, for a platform which makes no timer request
 
 =======================================
 
-Tests/TestFramework/CoarseSleepsFreeTest.cpp, Line 142
+Tests/TestFramework/CoarseSleepsFreeTest.cpp, Line 144
 A failed outcome without a request
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ An outcome other than not_made, for a platform which makes no timer request
 
 =======================================
 
-Tests/TestFramework/CoarseSleepsFreeTest.cpp, Line 143
+Tests/TestFramework/CoarseSleepsFreeTest.cpp, Line 145
 A granted outcome without a request
 
 Expected Exception Type:

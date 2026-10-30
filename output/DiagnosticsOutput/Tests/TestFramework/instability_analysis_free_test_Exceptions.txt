@@ -1,4 +1,4 @@
-Tests/TestFramework/InstabilityAnalysisFreeTest.cpp, Line 39
+Tests/TestFramework/InstabilityAnalysisFreeTest.cpp, Line 43
 A malformed file of failures, named by the instability analysis
 
 Expected Exception Type:

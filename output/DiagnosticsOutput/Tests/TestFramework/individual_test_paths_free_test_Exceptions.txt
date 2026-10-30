@@ -1,4 +1,4 @@
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 188
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 187
 No test: no discarded materials root
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Empty materials root: '.discarded' would resolve against the current directory
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 190
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 189
 No test: no original working copy
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Empty materials root: 'WorkingCopy' would resolve against the current directory
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 192
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 191
 No test: no temporary working copy
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Empty materials root: 'WorkingCopy' would resolve against the current directory
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 194
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 193
 No test: no predictions
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Empty materials root: 'Prediction' would resolve against the current directory
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 196
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 195
 No test: no original auxiliary
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Empty materials root: 'Auxiliary' would resolve against the current directory
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 198
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 197
 No test: no temporary auxiliary
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Empty materials root: 'Auxiliary' would resolve against the current directory
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 35
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 34
 Empty file
 
 Expected Exception Type:
