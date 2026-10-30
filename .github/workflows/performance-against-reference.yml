@@ -1,0 +1,119 @@
+name: performance-against-reference
+
+# Whether a pull request slows the runner down. PerformanceAgainstReference
+# builds one project of tests which do little twice: against the pull
+# request's tree, the candidate, and against the tree of the pull request's
+# base, the reference. The executable's check fails if the candidate's runner
+# takes distinguishably longer than a fixed multiple of the reference's time
+# to run the tests. The two builds' runs interleave, in one job on one
+# machine, so the comparison needs no stored record of any machine's speed.
+#
+# The candidate is GitHub's merge of the pull request into its base, the commit
+# the other tiers test. The reference is that merge's first parent, the tip of
+# the base. So the comparison sees the pull request's change alone. A slowdown
+# spread over many pull requests, each within the bound, passes every one of
+# them.
+#
+# Linux · GCC · Debug. The test's bound, 1.05, rests on measurements of
+# 2026-10-30, on hosted ubuntu-26.04 runners whose CPUs were AMD EPYC 7763,
+# 9V45 and 9V74, and Intel Xeon 6973P-C and Platinum 8573C. The checks ran with
+# a bound of 1.1, and each printed its interval of speed-ups. A check stops at
+# its first attempt that passes, so the outcome at 1.05 of a check that passed
+# at 1.1 follows from its interval only if the interval's upper end lies above
+# 0.952:
+#   - 600 checks compared trees that do not differ in what the runner does: one
+#     commit built twice, and two pairs of neighbouring commits of staging.
+#     None failed. No interval's upper end lay below 0.973, so none would
+#     fail at 1.05 either.
+#   - 180 checks gave the candidate a known regression: prepare_materials
+#     removing the previous run's materials on the test's own thread, the
+#     moved{false} mutant. At 1.1, 160 failed; 18 of the 20 that passed ran on
+#     a Xeon 8573C. At 1.05, from 164 to 178 would fail.
+#   - On hosted macOS runners, up to 3 of 140 checks of one commit built twice
+#     would fail at 1.05, and the regression above failed none of 80 at 1.1.
+#     So the bound is Linux's, and so is this workflow.
+#
+# The workflow runs on every pull request whose change the suite reads, as
+# scope.yml decides. With nothing to test, the job is skipped rather than
+# passed, which wedges a pull request only if the check is made required.
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scope:
+    uses: ./.github/workflows/scope.yml
+
+  compare:
+    name: Linux · GCC · Debug
+    needs: scope
+    if: ${{ needs.scope.outputs.suite == 'true' }}
+    runs-on: ubuntu-26.04
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+    env:
+      CC: gcc-15
+      CXX: g++-15
+    steps:
+      # The merge and both its parents, which is all the job reads of the
+      # history.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+
+      # HEAD^1 is the base's tip only if HEAD is GitHub's merge.
+      - name: Check out the reference, the merge's first parent
+        run: |
+          git rev-parse --verify -q HEAD^2 > /dev/null \
+            || { echo "::error::$(git rev-parse HEAD) is not a merge, so HEAD^1 is not the base's tip"; exit 1; }
+          git worktree add --detach "$RUNNER_TEMP/reference" HEAD^1
+          echo "Candidate $(git rev-parse HEAD), reference $(git rev-parse HEAD^1)"
+
+      # Copied from tests.yml's "Install the toolchain (Linux)", which says why
+      # each part exists; symbol-table.yml holds another copy. A change to how
+      # tests.yml installs belongs here too. gdb is left out, since nothing
+      # here reads a stack.
+      - name: Install the toolchain
+        run: |
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
+                     /etc/apt/sources.list.d/microsoft-prod.list
+          sudo scripts/retry.sh 3 180 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh update -qq --error-on=any \
+            || { echo "::error::apt-get update failed: each attempt above says why"; exit 1; }
+          packages=("$CXX" ninja-build libtbb-dev)
+          names=$(apt-cache pkgnames)
+          for pkg in "${packages[@]}"; do
+            grep -qFx -- "$pkg" <<< "$names" \
+              || { echo "::error::$pkg is not available on this image"; exit 1; }
+          done
+          sudo scripts/retry.sh 3 300 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh \
+            install -y --download-only "${packages[@]}"
+          sudo apt-get install -y --no-download "${packages[@]}"
+          "$CXX" --version
+          cmake --version
+
+      # The comparison's spread depends on the host, so the log names it.
+      - name: Report the runner's hardware
+        timeout-minutes: 1
+        continue-on-error: true
+        run: |
+          echo "CPU: $(grep -m1 '^model name' /proc/cpuinfo | sed 's/^[^:]*: //' || true)"
+          echo "Logical processors: $(getconf _NPROCESSORS_ONLN || true)"
+
+      - name: Configure
+        working-directory: PerformanceAgainstReference
+        run: cmake --preset gcc-env -DSEQUOIA_PERFORMANCE_REFERENCE_ROOT="$RUNNER_TEMP/reference"
+
+      - name: Build
+        working-directory: PerformanceAgainstReference
+        run: cmake --build --preset gcc-env
+
+      # The test builds the workload twice before it times anything, so most
+      # of this step is compilation.
+      - name: Compare the runner's performance with the reference's
+        working-directory: build/PerformanceAgainstReference/gcc-env
+        run: ./PerformanceAgainstReference --check-versioned-output
