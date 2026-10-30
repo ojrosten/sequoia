@@ -221,9 +221,18 @@ jobs:
       # demangled name, which may or may not carry the parameter list, so the
       # pattern ends in `*`. A count of zero means no function matched, as when
       # prune is renamed, and the record has no field.
+      # As in "Install the toolchain", only the download is retried, each
+      # later attempt from another mirror first, and the install then runs
+      # once. Unretried, the step took 562-630 s in three of eight runs from
+      # 2026-10-26 to 10-28: one download of 26.5 MB ran at 46.5 kB/s (run
+      # 40501869274).
       - name: Install valgrind
         continue-on-error: true
-        run: sudo apt-get install -y valgrind
+        working-directory: tooling
+        run: |
+          sudo scripts/retry.sh 3 300 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh \
+            install -y --download-only valgrind
+          sudo apt-get install -y --no-download valgrind
 
       - name: Give git an identity
         continue-on-error: true
