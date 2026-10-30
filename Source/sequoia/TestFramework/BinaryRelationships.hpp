@@ -134,10 +134,10 @@ namespace sequoia::testing
   {
     template<bool IsFinalMessage>
     [[nodiscard]]
-    static std::string reporter(final_message_constant<IsFinalMessage>,
-                                const both_or_neither_hold_a_value& c,
-                                const bool obtainedHoldsValue,
-                                const bool predictedHoldsValue)
+    constexpr static std::string reporter(final_message_constant<IsFinalMessage>,
+                                          const both_or_neither_hold_a_value& c,
+                                          const bool obtainedHoldsValue,
+                                          const bool predictedHoldsValue)
     {
       return default_prediction_message(c.name_of_state(obtainedHoldsValue), c.name_of_state(predictedHoldsValue));
     }
