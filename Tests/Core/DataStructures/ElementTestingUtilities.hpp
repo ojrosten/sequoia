@@ -107,13 +107,13 @@ namespace sequoia::testing
 
     /// Returns an observer which expires when the lineage ends
     [[nodiscard]]
-    std::weak_ptr<const void> observer() const { return m_Record; }
+    std::weak_ptr<const void> observer() const noexcept { return m_Record; }
 
     /** \brief Returns the number of copies made of objects in the lineage, as
                a count which outlives the lineage.
      */
     [[nodiscard]]
-    std::shared_ptr<const std::size_t> copies() const { return m_Record->copies; }
+    std::shared_ptr<const std::size_t> copies() const noexcept { return m_Record->copies; }
 
     [[nodiscard]]
     friend bool operator==(const observable_lineage&, const observable_lineage&) noexcept { return true; }

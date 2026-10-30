@@ -24,7 +24,6 @@
 
 namespace sequoia::testing
 {
-  /// Pushes `elements`, first to last, into an empty `Adaptor`, and returns it
   template<class Adaptor>
   [[nodiscard]]
   constexpr Adaptor make_by_pushing(std::initializer_list<typename Adaptor::value_type> elements)
@@ -41,7 +40,6 @@ namespace sequoia::testing
   template<class Adaptor>
   inline constexpr bool has_back_v{requires(const Adaptor& adaptor) { adaptor.back(); }};
 
-  /// Returns the elements of `adaptor`, in the order pops remove them
   template<class Adaptor>
   [[nodiscard]]
   constexpr std::vector<typename Adaptor::value_type> elements_in_pop_order(Adaptor adaptor)

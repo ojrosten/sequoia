@@ -56,7 +56,6 @@ namespace sequoia::data_structures
       {
         if constexpr(std::is_nothrow_swappable_v<T>)
         {
-          // Reversing in place neither allocates nor throws
           std::ranges::reverse(m_Incoming);
           std::ranges::swap(m_Outgoing, m_Incoming);
         }
@@ -64,8 +63,6 @@ namespace sequoia::data_structures
         {
           const auto moveIfNoexcept{[](T& element) -> decltype(auto) { return std::move_if_noexcept(element); }};
 
-          // Reversing into a new vector leaves the queue unchanged if copying
-          // an element throws
           m_Outgoing =   m_Incoming
                        | std::views::reverse
                        | std::views::transform(moveIfNoexcept)
@@ -96,10 +93,10 @@ namespace sequoia::data_structures
     }
 
     [[nodiscard]]
-    constexpr bool empty() const { return m_Outgoing.empty() && m_Incoming.empty(); }
+    constexpr bool empty() const noexcept { return m_Outgoing.empty() && m_Incoming.empty(); }
 
     [[nodiscard]]
-    constexpr size_type size() const { return m_Outgoing.size() + m_Incoming.size(); }
+    constexpr size_type size() const noexcept { return m_Outgoing.size() + m_Incoming.size(); }
 
     [[nodiscard]]
     friend constexpr bool operator==(const queue& lhs, const queue& rhs)
@@ -118,7 +115,6 @@ namespace sequoia::data_structures
     std::vector<T> m_Outgoing{},
                    m_Incoming{};
 
-    /// Returns the element `i` places behind the front
     [[nodiscard]]
     constexpr const T& element_from_front(const size_type i) const
     {

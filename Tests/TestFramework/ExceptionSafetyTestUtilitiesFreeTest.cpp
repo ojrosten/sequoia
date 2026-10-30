@@ -69,7 +69,6 @@ namespace sequoia::testing
   {
     const fallible_step_monitor monitor{0};
 
-    // An exception on the other thread reaches this test through get
     const auto stepsTakenOnOtherThread{
       std::async(std::launch::async,
                  []() {

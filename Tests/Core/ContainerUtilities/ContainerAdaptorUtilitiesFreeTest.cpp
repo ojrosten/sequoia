@@ -86,7 +86,6 @@ namespace sequoia::testing
     STATIC_CHECK(element_popped_next_admits_v<std::stack<int>>);
     STATIC_CHECK(element_popped_next_admits_v<std::priority_queue<int>>);
 
-    // A vector has a front, but no pop to remove it
     STATIC_CHECK(!element_popped_next_admits_v<std::vector<int>>);
     STATIC_CHECK(!element_popped_next_admits_v<with_front_and_top>);
   }
@@ -97,7 +96,7 @@ namespace sequoia::testing
     STATIC_CHECK( utilities::gives_references_to_elements_v<std::deque<bool>>);
     STATIC_CHECK( utilities::gives_references_to_elements_v<with_const_front_reference>);
 
-    // Each of these, when const, returns no reference to its elements
+    // A const std::vector<bool> returns no reference to its elements
     STATIC_CHECK(!utilities::gives_references_to_elements_v<std::vector<bool>>);
     STATIC_CHECK(!utilities::gives_references_to_elements_v<with_front_by_value>);
     STATIC_CHECK(!utilities::gives_references_to_elements_v<with_front_by_value_when_const>);

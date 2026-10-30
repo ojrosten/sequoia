@@ -7,7 +7,7 @@ Injected failure at fallible step 1
 
 =======================================
 
-Tests/TestFramework/ExceptionSafetyTestUtilitiesFreeTest.cpp, Line 93
+Tests/TestFramework/ExceptionSafetyTestUtilitiesFreeTest.cpp, Line 92
 A second monitor on the same thread
 
 Expected Exception Type:

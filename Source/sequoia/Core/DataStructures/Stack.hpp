@@ -56,10 +56,10 @@ namespace sequoia::data_structures
     }
 
     [[nodiscard]]
-    constexpr bool empty() const { return m_Elements.empty(); }
+    constexpr bool empty() const noexcept { return m_Elements.empty(); }
 
     [[nodiscard]]
-    constexpr size_type size() const { return m_Elements.size(); }
+    constexpr size_type size() const noexcept { return m_Elements.size(); }
 
     [[nodiscard]]
     friend constexpr bool operator==(const stack&, const stack&) = default;

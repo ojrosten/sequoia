@@ -25,6 +25,8 @@ namespace sequoia::testing
   private:
     void test_constraints();
 
+    void test_exception_specifications();
+
     void test_constant_evaluation();
 
     template<class Compare>

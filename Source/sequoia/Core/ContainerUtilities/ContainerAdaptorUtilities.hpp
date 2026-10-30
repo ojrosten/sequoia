@@ -34,7 +34,6 @@ namespace sequoia::utilities
   template<class Adaptor>
   inline constexpr bool has_pop_v{requires(Adaptor& adaptor) { adaptor.pop(); }};
 
-  /// Returns the element of `adaptor` which the next pop removes
   template<class Adaptor>
     requires has_pop_v<Adaptor> && (has_front_v<Adaptor> != has_top_v<Adaptor>)
   [[nodiscard]]

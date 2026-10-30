@@ -16,6 +16,7 @@
 #include <list>
 #include <string>
 #include <string_view>
+#include <type_traits>
 #include <vector>
 
 namespace sequoia::testing
@@ -73,6 +74,42 @@ namespace sequoia::testing
       size_type size() const = delete;
     };
 
+    struct vector_with_potentially_throwing_empty_and_size : std::vector<int>
+    {
+      [[nodiscard]]
+      bool empty() const { return std::vector<int>::empty(); }
+
+      [[nodiscard]]
+      size_type size() const { return std::vector<int>::size(); }
+    };
+
+    struct vector_with_potentially_throwing_default_construction : std::vector<int>
+    {
+      vector_with_potentially_throwing_default_construction() {}
+    };
+
+    struct vector_with_non_bool_empty : std::vector<int>
+    {
+      [[nodiscard]]
+      int empty() const noexcept { return std::vector<int>::empty(); }
+    };
+
+    struct vector_with_non_size_type_size : std::vector<int>
+    {
+      [[nodiscard]]
+      int size() const noexcept { return static_cast<int>(std::vector<int>::size()); }
+    };
+
+    struct less_with_potentially_throwing_copy_construction
+    {
+      less_with_potentially_throwing_copy_construction() = default;
+
+      less_with_potentially_throwing_copy_construction(const less_with_potentially_throwing_copy_construction&) {}
+
+      [[nodiscard]]
+      constexpr bool operator()(const int lhs, const int rhs) const { return lhs < rhs; }
+    };
+
     struct less_without_default_construction
     {
       constexpr explicit less_without_default_construction(int) {}
@@ -83,6 +120,15 @@ namespace sequoia::testing
 
     template<class... Args>
     inline constexpr bool priority_queue_admits_v{requires { typename data_structures::priority_queue<Args...>; }};
+
+    template<class Container, class Compare = std::ranges::less>
+    using int_priority_queue_t = data_structures::priority_queue<int, Container, Compare>;
+
+    template<class Queue>
+    inline constexpr bool has_nothrow_empty_v{requires(const Queue& q) { { q.empty() } noexcept; }};
+
+    template<class Queue>
+    inline constexpr bool has_nothrow_size_v{requires(const Queue& q) { { q.size() } noexcept; }};
 
     [[nodiscard]]
     constexpr int comparisons_in_one_pop()
@@ -118,6 +164,7 @@ namespace sequoia::testing
   void priority_queue_regular_test::run_tests()
   {
     test_constraints();
+    test_exception_specifications();
     test_constant_evaluation();
     test_transitions<std::ranges::less>();
     test_transitions<std::ranges::greater>();
@@ -130,31 +177,46 @@ namespace sequoia::testing
     STATIC_CHECK( priority_queue_admits_v<bool, std::deque<bool>>);
     STATIC_CHECK( priority_queue_admits_v<int, vector_with_nothing_deleted>);
 
-    // The element type differs from the container's
     STATIC_CHECK(!priority_queue_admits_v<int, std::vector<long>>);
     STATIC_CHECK(!priority_queue_admits_v<long, std::vector<int>>);
 
-    // The container is not random access
     STATIC_CHECK(!priority_queue_admits_v<int, std::list<int>>);
 
-    // The comparator does not compare
     STATIC_CHECK(!priority_queue_admits_v<int, std::vector<int>, int>);
 
-    // The container returns no reference to its elements
+    // A const std::vector<bool> returns no reference to its elements
     STATIC_CHECK(!priority_queue_admits_v<bool>);
 
-    // The container lacks a member which priority_queue uses
     STATIC_CHECK(!priority_queue_admits_v<int, vector_without_default_construction>);
     STATIC_CHECK(!priority_queue_admits_v<int, vector_without_lvalue_push_back>);
     STATIC_CHECK(!priority_queue_admits_v<int, vector_without_rvalue_push_back>);
     STATIC_CHECK(!priority_queue_admits_v<int, vector_without_pop_back>);
     STATIC_CHECK(!priority_queue_admits_v<int, vector_without_empty>);
     STATIC_CHECK(!priority_queue_admits_v<int, vector_without_size>);
+    STATIC_CHECK(!priority_queue_admits_v<int, vector_with_non_bool_empty>);
+    STATIC_CHECK(!priority_queue_admits_v<int, vector_with_non_size_type_size>);
 
-    // A caller must supply a comparator which has no default constructor
     using queue_without_default_comparator_t = data_structures::priority_queue<int, std::vector<int>, less_without_default_construction>;
     STATIC_CHECK(!std::default_initializable<queue_without_default_comparator_t>);
     STATIC_CHECK( std::constructible_from<queue_without_default_comparator_t, less_without_default_construction>);
+  }
+
+  void priority_queue_regular_test::test_exception_specifications()
+  {
+    using int_queue_t = data_structures::priority_queue<int>;
+
+    STATIC_CHECK( has_nothrow_empty_v<int_queue_t>);
+    STATIC_CHECK(!has_nothrow_empty_v<int_priority_queue_t<vector_with_potentially_throwing_empty_and_size>>);
+    STATIC_CHECK( has_nothrow_size_v<int_queue_t>);
+    STATIC_CHECK(!has_nothrow_size_v<int_priority_queue_t<vector_with_potentially_throwing_empty_and_size>>);
+
+    STATIC_CHECK( std::is_nothrow_constructible_v<int_queue_t, const std::ranges::less&>);
+    STATIC_CHECK(!std::is_nothrow_constructible_v<
+                   int_priority_queue_t<vector_with_potentially_throwing_default_construction>,
+                   const std::ranges::less&>);
+    STATIC_CHECK(!std::is_nothrow_constructible_v<
+                   int_priority_queue_t<std::vector<int>, less_with_potentially_throwing_copy_construction>,
+                   const less_with_potentially_throwing_copy_construction&>);
   }
 
   void priority_queue_regular_test::test_constant_evaluation()

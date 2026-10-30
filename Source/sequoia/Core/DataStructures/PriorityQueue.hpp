@@ -41,8 +41,8 @@ namespace sequoia::data_structures
            container.push_back(value);
            container.push_back(std::move(movedValue));
            container.pop_back();
-           { constContainer.empty() } -> std::convertible_to<bool>;
-           { constContainer.size() }  -> std::convertible_to<typename Container::size_type>;
+           { constContainer.empty() } -> std::same_as<bool>;
+           { constContainer.size() }  -> std::same_as<typename Container::size_type>;
          }
     };
   }
@@ -72,6 +72,7 @@ namespace sequoia::data_structures
     constexpr priority_queue() requires std::default_initializable<Compare> = default;
 
     constexpr explicit priority_queue(const Compare& compare)
+      noexcept(noexcept(Container{}) && noexcept(Compare{compare}))
       : m_Compare{compare}
     {}
 
@@ -106,10 +107,10 @@ namespace sequoia::data_structures
     }
 
     [[nodiscard]]
-    constexpr bool empty() const { return m_Container.empty(); }
+    constexpr bool empty() const noexcept(noexcept(m_Container.empty())) { return m_Container.empty(); }
 
     [[nodiscard]]
-    constexpr size_type size() const { return m_Container.size(); }
+    constexpr size_type size() const noexcept(noexcept(m_Container.size())) { return m_Container.size(); }
   private:
     Container m_Container{};
 

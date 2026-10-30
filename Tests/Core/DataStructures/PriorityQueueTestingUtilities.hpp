@@ -43,10 +43,10 @@ namespace sequoia::testing
     constexpr const T& top() const { return m_Queue.top(); }
 
     [[nodiscard]]
-    constexpr bool empty() const { return m_Queue.empty(); }
+    constexpr bool empty() const noexcept { return m_Queue.empty(); }
 
     [[nodiscard]]
-    constexpr size_type size() const { return m_Queue.size(); }
+    constexpr size_type size() const noexcept { return m_Queue.size(); }
 
     [[nodiscard]]
     friend constexpr bool operator==(const observed_priority_queue& lhs, const observed_priority_queue& rhs)
