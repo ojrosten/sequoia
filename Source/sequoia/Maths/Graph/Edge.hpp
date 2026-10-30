@@ -345,20 +345,20 @@ namespace sequoia
 
       template<class... Args>
         requires (!resolve_to_copy_v<embedded_partial_edge, Args...>)
-      constexpr embedded_partial_edge(const index_type target, const index_type complimentaryIndex, Args&&... args)
+      constexpr embedded_partial_edge(const index_type target, const index_type complementaryIndex, Args&&... args)
         : decorated_partial_edge_base<WeightHandler, MetaData, IndexType>{target, std::forward<Args>(args)...}
-        , m_ComplementaryIndex{complimentaryIndex}
+        , m_ComplementaryIndex{complementaryIndex}
       {}
 
-      constexpr embedded_partial_edge(const index_type target, const index_type complimentaryIndex, const embedded_partial_edge& other)
+      constexpr embedded_partial_edge(const index_type target, const index_type complementaryIndex, const embedded_partial_edge& other)
         requires std::is_empty_v<meta_data_type>
         : decorated_partial_edge_base<WeightHandler, MetaData, IndexType>{target, other}
-        , m_ComplementaryIndex{complimentaryIndex}
+        , m_ComplementaryIndex{complementaryIndex}
       {}
 
-      constexpr embedded_partial_edge(const index_type target, const index_type complimentaryIndex, meta_data_type m, const embedded_partial_edge& other)
+      constexpr embedded_partial_edge(const index_type target, const index_type complementaryIndex, meta_data_type m, const embedded_partial_edge& other)
         : decorated_partial_edge_base<WeightHandler, MetaData, IndexType>{target, std::move(m), other}
-        , m_ComplementaryIndex{complimentaryIndex}
+        , m_ComplementaryIndex{complementaryIndex}
       {}
 
       template<class OtherHandler>
