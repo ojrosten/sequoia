@@ -37,7 +37,8 @@ namespace sequoia::concurrency
       This class supports both aggressive pushing and popping and also speculative versions which
       do not necessarily acquire the underlying mutex and may therefore fail.
 
-      \throws std::logic_error from either `push` on a finished queue.
+      \throws std::logic_error from a `push` which takes the mutex of a finished
+               queue.
    */
   template<class R, class Task=std::packaged_task<R()>, class Q=std::queue<Task>>
   class task_queue
@@ -68,7 +69,7 @@ namespace sequoia::concurrency
     {
       {
         std::scoped_lock<std::mutex> lock{m_Mutex};
-        refuse_if_finished();
+        throw_if_finished();
         m_Q.push(std::move(task));
       }
 
@@ -80,7 +81,7 @@ namespace sequoia::concurrency
     {
       if(std::unique_lock<std::mutex> lock{m_Mutex, t}; lock)
       {
-        refuse_if_finished();
+        throw_if_finished();
         m_Q.push(std::move(task));
       }
       else
@@ -118,8 +119,9 @@ namespace sequoia::concurrency
     std::condition_variable m_CV;
     bool m_Finished{};
 
-    // The caller holds the mutex, so a push either precedes `finish` or throws
-    void refuse_if_finished() const
+    // Call only with the mutex held, so that `finish` cannot come between
+    // this check and the push
+    void throw_if_finished() const
     {
       if(m_Finished)
         throw std::logic_error{"A task cannot be pushed to a finished task_queue"};
@@ -215,11 +217,13 @@ namespace sequoia::concurrency
       shares, or a queue for each thread. With a queue for each thread, a
       thread may take a task from another thread's queue (task stealing).
 
-      Several threads may call `push` concurrently. Every task that `push`
-      accepts runs before `join`, or the destructor, returns.
+      Several threads may call `push` concurrently, with one another and with
+      `join`. Every task that `push` accepts runs before `join`, or the
+      destructor, returns.
 
       \throws std::invalid_argument if constructed with zero threads.
-      \throws std::logic_error from `push` once `join` has returned.
+      \throws std::logic_error from `push` after `join` has returned, and
+               possibly from a `push` concurrent with `join`.
    */
 
   template<class R, task_queue_arrangement Arrangement=task_queue_arrangement::one_per_thread>
@@ -377,5 +381,5 @@ namespace sequoia::concurrency
 
   /** \brief A `thread_pool` whose threads share one queue. */
   template<class R>
-  using shared_queue_thread_pool = thread_pool<R, task_queue_arrangement::shared>;
+  using thread_pool_with_shared_queue = thread_pool<R, task_queue_arrangement::shared>;
 }

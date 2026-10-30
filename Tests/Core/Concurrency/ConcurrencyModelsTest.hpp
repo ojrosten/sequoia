@@ -42,6 +42,9 @@ namespace sequoia::testing
     void test_every_task_pushed_from_several_threads_runs(std::string_view poolKind);
 
     template<class ThreadPool>
+    void test_every_push_during_join_runs_or_throws(std::string_view poolKind);
+
+    template<class ThreadPool>
     void test_a_push_after_join_throws(std::string_view poolKind);
 
     template<class ThreadModel, class... Args>
