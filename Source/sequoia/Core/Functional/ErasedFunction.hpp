@@ -89,7 +89,6 @@ namespace sequoia
       constexpr erased_target() = default;
 
       template<class Fn, class... FnArgs>
-      SEQUOIA_FORCE_INLINE
       constexpr explicit erased_target(std::in_place_type_t<Fn>, FnArgs&&... fnArgs)
         : m_Pointer{place_or_allocate<Fn>(m_Buffer, std::forward<FnArgs>(fnArgs)...)}
         , m_SpecialMemberManager{special_member_manager_for<Fn>()}
