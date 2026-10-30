@@ -1,2 +1,2 @@
 dynamic_directed_graph_unweighted_contiguous_test
-Standard Top Level Checks:               364;  Failures:  0  [Deep checks: 14241]
+Standard Top Level Checks:               366;  Failures:  0  [Deep checks: 14248]

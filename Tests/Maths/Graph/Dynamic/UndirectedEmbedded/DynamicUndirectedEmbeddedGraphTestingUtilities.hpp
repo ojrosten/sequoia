@@ -252,6 +252,12 @@ namespace sequoia::testing
 
       // Two nodes
       t.check_exception_thrown<std::logic_error>("Mismatched complementary indices", [](){ return graph_type{{{1, 0}, {0, 2}, {0, 1}}, {{0, 1}}}; });
+
+      // Three nodes. Node 0's edge and node 1's edge name each other as partners, but node 1's edge targets node 2
+      t.check_exception_thrown<std::logic_error>(
+        "Mismatched target indices",
+        [](){ return graph_type{{{1, 0}}, {{2, 0}}, {{1, 0}}}; }
+      );
     }
 
     [[nodiscard]]

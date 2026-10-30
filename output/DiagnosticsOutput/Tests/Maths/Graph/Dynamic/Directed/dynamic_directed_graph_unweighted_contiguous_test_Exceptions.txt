@@ -187,7 +187,16 @@ join: at least one node index [0, 1] out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 505
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 384
+erasing node throws if index out of range
+
+Expected Exception Type:
+[std::out_of_range]
+erase_node: node index 1 out of range - graph order is 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 516
 swapping edges throws for first edge index out of range
 
 Expected Exception Type:
@@ -196,7 +205,7 @@ swap_edges: edge index 1 out of range for node 0, which has 1 edge(s)
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 513
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 524
 swapping edges throws for second edge index out of range
 
 Expected Exception Type:
@@ -205,7 +214,7 @@ swap_edges: edge index 1 out of range for node 0, which has 1 edge(s)
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 521
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 532
 swapping edges throws for node index out of range
 
 Expected Exception Type:
