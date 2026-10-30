@@ -5,19 +5,17 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+export module sequoia.parsing:CommandLineMessages;
+
+import std;
+
+export import sequoia.text_processing;
 
 /** \file
     \brief Formatting of error and warning messages.
  */
 
-#include "sequoia/TextProcessing/Indent.hpp"
-
-#include <initializer_list>
-#include <string>
-#include <string_view>
-
-namespace sequoia::parsing::commandline
+export namespace sequoia::parsing::commandline
 {
   [[nodiscard]]
   std::string error(std::string_view message, indentation indent=indentation{"  "});

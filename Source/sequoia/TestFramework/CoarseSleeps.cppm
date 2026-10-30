@@ -5,19 +5,19 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+export module sequoia.test_framework:CoarseSleeps;
+
+import std;
+
+import :FloatingPointDurations;
+export import sequoia.platform_specific;
 
 /** \file
     \brief Detection of sleeps rounded up to a coarse timer tick, and
            warnings about them.
  */
 
-#include "sequoia/PlatformSpecific/TimerRequests.hpp"
-#include "sequoia/TestFramework/FloatingPointDurations.hpp"
-
-#include <string>
-
-namespace sequoia::testing
+export namespace sequoia::testing
 {
   /** \brief Whether `slept`, compared to `target`, indicates sleeps rounded
              up to a coarse timer tick.

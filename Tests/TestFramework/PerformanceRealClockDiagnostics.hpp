@@ -9,7 +9,11 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
+
+import std;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

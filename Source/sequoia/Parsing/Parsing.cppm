@@ -10,3 +10,4 @@
 export module sequoia.parsing;
 
 export import :CommandLineArguments;
+export import :CommandLineMessages;

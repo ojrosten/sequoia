@@ -7,12 +7,8 @@
 
 #include "RunStampRegularTest.hpp"
 
-#include "sequoia/Streaming/Streaming.hpp"
-
-#include <optional>
-#include <sstream>
-#include <stdexcept>
-#include <string>
+import std;
+import sequoia.streaming;
 
 namespace sequoia::testing
 {
@@ -22,6 +18,9 @@ namespace sequoia::testing
     run_stamp stamp()
     {
       using namespace std::chrono;
+      // With libc++'s std module, `using namespace std::chrono` does not
+      // bring in the chrono literals
+      using namespace std::chrono_literals;
       return {.start_time{sys_days{year{2026} / 10 / 13} + 9h + 15min + 4s + 123ms}};
     }
   }

@@ -16,6 +16,7 @@ import :GraphTraits;
 import :GraphTraversalDetails;
 export import sequoia.core.concurrency;
 export import sequoia.core.meta;
+export import sequoia.core.numeric;
 export import sequoia.core.object;
 
 /** \file

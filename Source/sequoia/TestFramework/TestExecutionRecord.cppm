@@ -5,7 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+export module sequoia.test_framework:TestExecutionRecord;
+
+import std;
 
 /** \file
     \brief The record of a test's execution and the stamp of a
@@ -13,14 +15,7 @@
            the functions which write and read them.
  */
 
-#include <chrono>
-#include <filesystem>
-#include <iosfwd>
-#include <optional>
-#include <string>
-#include <vector>
-
-namespace sequoia::testing
+export namespace sequoia::testing
 {
   /** \brief What a test's record gains once the test has finished.
 

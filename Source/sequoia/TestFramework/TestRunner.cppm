@@ -16,6 +16,7 @@ import std;
 
 import :Advice;
 import :BinaryRelationships;
+import :CMakeCache;
 import :CoreInfrastructure;
 import :DependencyAnalyzer;
 import :FailureInfo;

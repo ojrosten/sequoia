@@ -9,10 +9,7 @@
 
 /** \file */
 
-#include <concepts>
-#include <filesystem>
-#include <string>
-#include <vector>
+import std;
 
 namespace sequoia::testing
 {

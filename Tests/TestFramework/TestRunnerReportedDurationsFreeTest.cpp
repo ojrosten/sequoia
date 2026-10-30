@@ -9,18 +9,14 @@
 #include "FakeProjectTestingUtilities.hpp"
 #include "TestRunnerTestingUtilities.hpp"
 
-#include "sequoia/TestFramework/FloatingPointDurations.hpp"
-#include "sequoia/TestFramework/Summary.hpp"
-#include "sequoia/PlatformSpecific/Helpers.hpp"
-#include "sequoia/Streaming/Streaming.hpp"
-#include "sequoia/TextProcessing/Numbers.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <format>
-#include <ranges>
-#include <stdexcept>
+import std;
+import sequoia.platform_specific;
+import sequoia.streaming;
+import sequoia.test_framework;
+import sequoia.text_processing;
 
 namespace sequoia::testing
 {

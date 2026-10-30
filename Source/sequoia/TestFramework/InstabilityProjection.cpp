@@ -5,8 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "sequoia/TestFramework/InstabilityProjection.hpp"
-#include "sequoia/TestFramework/PerformanceSummary.hpp"
+module sequoia.test_framework;
+
+import std;
 
 namespace sequoia::testing
 {

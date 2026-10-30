@@ -7,10 +7,7 @@
 
 #include "PerformanceExceptionsTest.hpp"
 
-#include <array>
-#include <chrono>
-#include <limits>
-#include <stdexcept>
+import std;
 
 namespace sequoia::testing
 {

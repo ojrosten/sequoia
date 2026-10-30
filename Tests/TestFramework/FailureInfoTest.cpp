@@ -7,7 +7,8 @@
 
 #include "FailureInfoTest.hpp"
 
-#include "sequoia/Streaming/Streaming.hpp"
+import std;
+import sequoia.streaming;
 
 namespace sequoia::testing
 {

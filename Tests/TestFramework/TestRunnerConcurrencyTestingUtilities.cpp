@@ -7,12 +7,7 @@
 
 #include "TestRunnerConcurrencyTestingUtilities.hpp"
 
-#include <algorithm>
-#include <array>
-#include <numeric>
-#include <ranges>
-#include <stdexcept>
-#include <utility>
+import std;
 
 namespace sequoia::testing
 {

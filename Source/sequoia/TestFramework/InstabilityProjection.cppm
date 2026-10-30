@@ -5,16 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+export module sequoia.test_framework:InstabilityProjection;
+
+import std;
 
 /** \file
     \brief The form in which a search for instabilities compares failures.
  */
 
-#include <string>
-#include <string_view>
-
-namespace sequoia::testing
+export namespace sequoia::testing
 {
   /** \brief Returns `message` with every measurement in its summary lines set
              to zero.

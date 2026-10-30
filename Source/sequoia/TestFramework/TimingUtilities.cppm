@@ -5,24 +5,19 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+module;
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+export module sequoia.test_framework:TimingUtilities;
+
+import std;
 
 /** \file
     \brief Timing of tasks.
  */
 
-#include "sequoia/PlatformSpecific/Macros.hpp"
-
-#include <chrono>
-#include <concepts>
-#include <type_traits>
-
-#if defined(SEQUOIA_MSVC_COMPILER)
-  #include <atomic>
-  #include <memory>
-#endif
-
-namespace sequoia::testing
+export namespace sequoia::testing
 {
   class [[nodiscard]] timer
   {

@@ -14,10 +14,6 @@ import std;
 import sequoia.maths.graph;
 import sequoia.test_framework;
 
-#include <limits>
-#include <numeric>
-#include <ranges>
-
 namespace sequoia::testing
 {
   using namespace maths;

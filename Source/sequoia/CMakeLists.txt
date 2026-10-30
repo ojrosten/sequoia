@@ -80,6 +80,8 @@ set(ModuleList
     Core/Meta/TypeName.cppm
     Core/Meta/TypeTraits.cppm
     Core/Meta/Utilities.cppm
+    Core/Numeric/IntegerConversions.cppm
+    Core/Numeric/Numeric.cppm
     Core/Object/Creator.cppm
     Core/Object/Factory.cppm
     Core/Object/HandlerTraits.cppm
@@ -126,6 +128,7 @@ set(ModuleList
     Maths/Statistics/StatisticalAlgorithms.cppm
     Maths/Statistics/Statistics.cppm
     Parsing/CommandLineArguments.cppm
+    Parsing/CommandLineMessages.cppm
     Parsing/Parsing.cppm
     Physics/PhysicalValues.cppm
     Physics/PhysicalValuesDetails.cppm
@@ -134,6 +137,7 @@ set(ModuleList
     PlatformSpecific/PlatformDiscriminators.cppm
     PlatformSpecific/PlatformSpecific.cppm
     PlatformSpecific/Preprocessor.cppm
+    PlatformSpecific/TimerRequests.cppm
     Runtime/Runtime.cppm
     Runtime/ShellCommands.cppm
     Streaming/Streaming.cppm
@@ -146,6 +150,7 @@ set(ModuleList
     TestFramework/BinaryRelationships.cppm
     TestFramework/BuildArtefacts.cppm
     TestFramework/CMakeCache.cppm
+    TestFramework/CoarseSleeps.cppm
     TestFramework/Commands.cppm
     TestFramework/ConcreteTypeCheckers.cppm
     TestFramework/CoreInfrastructure.cppm
@@ -155,10 +160,13 @@ set(ModuleList
     TestFramework/FailureReporting.cppm
     TestFramework/FileEditors.cppm
     TestFramework/FileSystemUtilities.cppm
+    TestFramework/FloatingPointDurations.cppm
     TestFramework/FreeCheckers.cppm
     TestFramework/FreeTestCore.cppm
     TestFramework/FunctionCheckers.cppm
     TestFramework/IndividualTestPaths.cppm
+    TestFramework/InstabilityAnalysis.cppm
+    TestFramework/InstabilityProjection.cppm
     TestFramework/MaterialsUpdater.cppm
     TestFramework/MoveOnlyAllocationCheckers.cppm
     TestFramework/MoveOnlyAllocationCheckersDetails.cppm
@@ -168,7 +176,9 @@ set(ModuleList
     TestFramework/MoveOnlyTestCore.cppm
     TestFramework/Output.cppm
     TestFramework/PathCheckers.cppm
+    TestFramework/PerformanceSummary.cppm
     TestFramework/PerformanceTestCore.cppm
+    TestFramework/PerformanceTestTraits.cppm
     TestFramework/PointerCheckers.cppm
     TestFramework/ProductTypeCheckers.cppm
     TestFramework/ProjectCreator.cppm
@@ -179,22 +189,27 @@ set(ModuleList
     TestFramework/RegularCheckers.cppm
     TestFramework/RegularCheckersDetails.cppm
     TestFramework/RegularTestCore.cppm
+    TestFramework/ReturnCodes.cppm
     TestFramework/SemanticsCheckersDetails.cppm
+    TestFramework/SeparatorAfterCheck.cppm
     TestFramework/SmartPointerCheckers.cppm
     TestFramework/StateTransitionUtilities.cppm
     TestFramework/StringCheckers.cppm
     TestFramework/SumTypeCheckers.cppm
     TestFramework/Summary.cppm
     TestFramework/TestCreator.cppm
+    TestFramework/TestExecutionRecord.cppm
     TestFramework/TestFramework.cppm
     TestFramework/TestLogger.cppm
     TestFramework/TestMode.cppm
     TestFramework/TestPreprocessorDefinitions.cppm
     TestFramework/TestRunner.cppm
+    TestFramework/TimingUtilities.cppm
     TestFramework/VersionedOutput.cppm
     TestFramework/TestRunnerUtilities.cppm
     TextProcessing/Characters.cppm
     TextProcessing/Indent.cppm
+    TextProcessing/Numbers.cppm
     TextProcessing/Patterns.cppm
     TextProcessing/Substitutions.cppm
     TextProcessing/TextProcessing.cppm)

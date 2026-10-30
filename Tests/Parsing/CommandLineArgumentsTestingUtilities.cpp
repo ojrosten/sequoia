@@ -7,8 +7,6 @@
 
 #include "CommandLineArgumentsTestingUtilities.hpp"
 
-#include <ranges>
-
 namespace sequoia::testing
 {
   namespace

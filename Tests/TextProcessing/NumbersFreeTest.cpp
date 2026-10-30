@@ -6,11 +6,13 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "NumbersFreeTest.hpp"
-#include "sequoia/TestFramework/SumTypeCheckers.hpp"
-#include "sequoia/TextProcessing/Numbers.hpp"
 
-#include <cmath>
-#include <limits>
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
+
+import std;
+import sequoia.test_framework;
+import sequoia.text_processing;
 
 namespace sequoia::testing
 {

@@ -5,21 +5,22 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+module;
+
+// assert is a macro, so import std does not supply it
+#include <cassert>
+
+export module sequoia.core.numeric:IntegerConversions;
+
+import std;
+
+export import sequoia.core.meta;
 
 /** \file
     \brief Conversion between integer types, checked by throwing or by a precondition, where a static_cast would silently wrap.
  */
 
-#include "sequoia/Core/Meta/Concepts.hpp"
-
-#include <cassert>
-#include <format>
-#include <limits>
-#include <stdexcept>
-#include <utility>
-
-namespace sequoia::numeric
+export namespace sequoia::numeric
 {
   /** \brief Converts `val` to `To` if it is in range, and throws `std::domain_error` otherwise. */
   template<integer To, integer From>

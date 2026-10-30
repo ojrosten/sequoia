@@ -9,19 +9,11 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <format>
-#include <functional>
-#include <initializer_list>
-#include <memory>
-#include <ranges>
-#include <span>
-#include <stdexcept>
-#include <vector>
+import std;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

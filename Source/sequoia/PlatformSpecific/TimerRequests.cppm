@@ -5,13 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+export module sequoia.platform_specific:TimerRequests;
 
 /** \file
     \brief Requests for more precise sleeps, and their outcomes.
  */
 
-namespace sequoia
+export namespace sequoia
 {
   /** \brief The request a platform makes for more precise sleeps, if any. */
   enum class timer_request { none, finest_timer_resolution, precise_timer };

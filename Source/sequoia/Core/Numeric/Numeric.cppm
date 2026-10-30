@@ -5,16 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+/** \file */
 
-/** \file
-    \brief The separator which ends each top-level check in a dump.
- */
+export module sequoia.core.numeric;
 
-#include <string_view>
-
-namespace sequoia::testing
-{
-  /** \brief The separator which ends each top-level check in a dump. */
-  inline constexpr std::string_view separator_after_check{"\n=======================================\n\n"};
-}
+export import :IntegerConversions;

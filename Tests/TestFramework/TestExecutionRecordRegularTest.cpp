@@ -7,15 +7,8 @@
 
 #include "TestExecutionRecordRegularTest.hpp"
 
-#include "sequoia/Streaming/Streaming.hpp"
-
-#include <format>
-#include <optional>
-#include <ranges>
-#include <sstream>
-#include <string>
-#include <utility>
-#include <vector>
+import std;
+import sequoia.streaming;
 
 namespace sequoia::testing
 {
@@ -25,6 +18,9 @@ namespace sequoia::testing
     test_execution_record unfinished_record()
     {
       using namespace std::chrono;
+      // With libc++'s std module, `using namespace std::chrono` does not
+      // bring in the chrono literals
+      using namespace std::chrono_literals;
       return {.start_time{sys_days{year{2026} / 10 / 13} + 9h + 15min + 4s + 123ms}};
     }
 

@@ -11,12 +11,11 @@
 
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
-#include "sequoia/TestFramework/TestExecutionRecord.hpp"
-#include "sequoia/TestFramework/TestRunner.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
 
-#include <format>
-#include <sstream>
-#include <stdexcept>
+import std;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

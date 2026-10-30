@@ -5,13 +5,11 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "sequoia/TestFramework/PerformanceSummary.hpp"
-#include "sequoia/TextProcessing/Numbers.hpp"
+module sequoia.test_framework;
 
-#include <algorithm>
-#include <format>
-#include <ranges>
-#include <stdexcept>
+import std;
+
+import sequoia.text_processing;
 
 namespace sequoia::testing
 {

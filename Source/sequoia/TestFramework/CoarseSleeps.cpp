@@ -5,11 +5,11 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "sequoia/TestFramework/CoarseSleeps.hpp"
-#include "sequoia/Parsing/CommandLineMessages.hpp"
+module sequoia.test_framework;
 
-#include <format>
-#include <stdexcept>
+import std;
+
+import sequoia.parsing;
 
 namespace sequoia::testing
 {

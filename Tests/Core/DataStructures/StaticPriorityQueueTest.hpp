@@ -15,8 +15,6 @@ import sequoia.test_framework;
 
 /** \file */
 
-#include <array>
-
 namespace sequoia::testing
 {
   class test_static_priority_queue final : public regular_test

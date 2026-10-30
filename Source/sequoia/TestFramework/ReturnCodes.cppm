@@ -5,19 +5,21 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+module;
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+export module sequoia.test_framework:ReturnCodes;
+
+import std;
+
+export import sequoia.core.logic;
 
 /** \file
     \brief A test run's outcome, and its encoding as a runner's exit status.
 */
 
-#include "sequoia/Core/Logic/Bitmask.hpp"
-
-#include <format>
-#include <string>
-#include <string_view>
-
-namespace sequoia::testing
+export namespace sequoia::testing
 {
   /** \brief A bitmask to record the outcome of a test run.
 
@@ -59,7 +61,7 @@ namespace sequoia::testing
   return_code child_return_code(int exitStatus, std::string_view childDescription);
 }
 
-NAMESPACE_SEQUOIA_AS_BITMASK
+export NAMESPACE_SEQUOIA_AS_BITMASK
 {
   template<>
   struct as_bitmask<sequoia::testing::return_code> : std::true_type {};

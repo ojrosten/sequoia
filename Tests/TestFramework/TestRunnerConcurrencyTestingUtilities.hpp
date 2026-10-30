@@ -11,16 +11,12 @@
 
 #include "TestRunnerTestingUtilities.hpp"
 
-#include "sequoia/PlatformSpecific/Helpers.hpp"
-#include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
 
-#include <chrono>
-#include <concepts>
-#include <cstddef>
-#include <ostream>
-#include <source_location>
-#include <span>
-#include <vector>
+import std;
+import sequoia.platform_specific;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

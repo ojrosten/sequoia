@@ -6,9 +6,13 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "InstabilityAnalysisFreeTest.hpp"
-#include "sequoia/TestFramework/InstabilityAnalysis.hpp"
-#include "sequoia/TestFramework/InstabilityProjection.hpp"
-#include "sequoia/Streaming/Streaming.hpp"
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
+
+import std;
+import sequoia.streaming;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

@@ -8,21 +8,11 @@
 #include "PerformanceUtilitiesFreeTest.hpp"
 #include "PerformanceTestingUtilities.hpp"
 
-#include "sequoia/TestFramework/FloatingPointDurations.hpp"
-#include "sequoia/TestFramework/SumTypeCheckers.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
 
-#include <array>
-#include <chrono>
-#include <cmath>
-#include <format>
-#include <initializer_list>
-#include <limits>
-#include <memory>
-#include <optional>
-#include <ranges>
-#include <string_view>
-#include <utility>
-#include <vector>
+import std;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

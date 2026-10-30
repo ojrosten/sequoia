@@ -5,18 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "sequoia/TestFramework/InstabilityAnalysis.hpp"
-#include "sequoia/TestFramework/FailureInfo.hpp"
-#include "sequoia/TestFramework/Output.hpp"
-#include "sequoia/Streaming/Streaming.hpp"
+module;
 
-#include <algorithm>
-#include <format>
-#include <fstream>
-#include <iterator>
-#include <ranges>
-#include <span>
-#include <stdexcept>
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+module sequoia.test_framework;
+
+import std;
+
+import sequoia.streaming;
 
 namespace sequoia::testing
 {

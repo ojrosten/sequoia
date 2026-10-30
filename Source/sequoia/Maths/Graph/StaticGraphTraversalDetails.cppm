@@ -23,6 +23,7 @@ export import sequoia.core.concurrency;
 export import sequoia.core.container_utilities;
 export import sequoia.core.data_structures;
 export import sequoia.core.meta;
+export import sequoia.core.numeric;
 export import sequoia.core.object;
 export import sequoia.platform_specific;
 

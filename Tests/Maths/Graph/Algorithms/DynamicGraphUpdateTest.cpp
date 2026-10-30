@@ -8,8 +8,6 @@
 #include "DynamicGraphUpdateTest.hpp"
 #include "Maths/Graph/Dynamic/DynamicGraphTestingUtilities.hpp"
 
-#include <cstddef>
-
 namespace sequoia::testing
 {
   template<class G>

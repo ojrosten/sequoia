@@ -9,7 +9,6 @@ export module sequoia.test_framework:FailureInfo;
 
 import std;
 
-
 /** \file
     \brief Utilities for recording information from test failures.
  */

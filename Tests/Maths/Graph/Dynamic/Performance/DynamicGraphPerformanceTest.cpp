@@ -8,15 +8,11 @@
 #include "DynamicGraphPerformanceTest.hpp"
 #include "Maths/Graph/GraphTestingUtilities.hpp"
 
-#include "sequoia/Core/Numeric/IntegerConversions.hpp"
-#include "sequoia/Maths/Graph/DynamicGraph.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <cmath>
-#include <format>
-#include <random>
-#include <ranges>
-#include <vector>
+import std;
+import sequoia.core.numeric;
+import sequoia.maths.graph;
 
 namespace sequoia::testing
 {

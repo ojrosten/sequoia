@@ -7,12 +7,7 @@
 
 #include "TestExecutionCompletionRegularTest.hpp"
 
-#include <format>
-#include <optional>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <vector>
+import std;
 
 namespace sequoia::testing
 {

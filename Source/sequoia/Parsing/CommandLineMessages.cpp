@@ -5,11 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "sequoia/Parsing/CommandLineMessages.hpp"
+module sequoia.parsing;
 
-#include <algorithm>
-#include <format>
-#include <ranges>
+import std;
 
 namespace sequoia::parsing::commandline
 {

@@ -5,15 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "sequoia/TestFramework/ReturnCodes.hpp"
+module;
 
-#include "sequoia/Runtime/ShellCommands.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <bit>
-#include <stdexcept>
-#include <utility>
+module sequoia.test_framework;
+
+import std;
+
+import sequoia.runtime;
 
 namespace sequoia::testing
 {
@@ -56,7 +56,7 @@ namespace sequoia::testing
         -# 66 and 77, from ThreadSanitizer and MemorySanitizer;
         -# 126 and above, from a shell.
 
-        ReturnCodes.hpp states this value in the contract of `to_exit_code`.
+        ReturnCodes.cppm states this value in the contract of `to_exit_code`.
      */
     constexpr int runner_exit_offset{80};
 

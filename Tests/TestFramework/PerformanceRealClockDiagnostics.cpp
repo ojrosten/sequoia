@@ -7,10 +7,7 @@
 
 #include "PerformanceRealClockDiagnostics.hpp"
 
-#include <algorithm>
-#include <cstdint>
-#include <random>
-#include <ranges>
+import std;
 
 namespace sequoia::testing
 {

@@ -12,3 +12,4 @@ export module sequoia.platform_specific;
 export import :Helpers;
 export import :PlatformDiscriminators;
 export import :Preprocessor;
+export import :TimerRequests;

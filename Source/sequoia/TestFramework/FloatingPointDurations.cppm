@@ -5,15 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+export module sequoia.test_framework:FloatingPointDurations;
+
+import std;
 
 /** \file
     \brief Durations with a floating-point representation.
  */
 
-#include <chrono>
-
-namespace sequoia::testing
+export namespace sequoia::testing
 {
   using double_precision_seconds      = std::chrono::duration<double>;
   using double_precision_milliseconds = std::chrono::duration<double, std::milli>;

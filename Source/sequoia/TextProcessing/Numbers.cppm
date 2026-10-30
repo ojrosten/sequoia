@@ -5,20 +5,17 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+export module sequoia.text_processing:Numbers;
+
+import std;
+
+export import sequoia.core.meta;
 
 /** \file
     \brief Extraction of the numbers in text.
  */
 
-#include "sequoia/Core/Meta/Concepts.hpp"
-
-#include <array>
-#include <charconv>
-#include <optional>
-#include <string_view>
-
-namespace sequoia
+export namespace sequoia
 {
   /** \brief Extracts the numbers in `text`, if there are exactly `N`.
 

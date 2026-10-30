@@ -10,11 +10,8 @@
 #include "PerformanceTestingUtilities.hpp"
 #include "TestRunnerTestingUtilities.hpp"
 
-#include "sequoia/TestFramework/TestExecutionRecord.hpp"
-
-#include <chrono>
-#include <stdexcept>
-#include <vector>
+import std;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

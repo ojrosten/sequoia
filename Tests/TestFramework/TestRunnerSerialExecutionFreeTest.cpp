@@ -9,15 +9,8 @@
 #include "FakeProjectTestingUtilities.hpp"
 #include "TestRunnerConcurrencyTestingUtilities.hpp"
 
-#include "sequoia/Streaming/Streaming.hpp"
-
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <cstddef>
-#include <functional>
-#include <ranges>
-#include <stdexcept>
+import std;
+import sequoia.streaming;
 
 namespace sequoia::testing
 {

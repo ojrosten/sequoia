@@ -5,7 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "sequoia/TestFramework/TimingUtilities.hpp"
+module;
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+module sequoia.test_framework;
+
+import std;
 
 namespace sequoia::testing
 {

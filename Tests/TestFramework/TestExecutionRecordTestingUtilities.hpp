@@ -9,9 +9,11 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
-#include "sequoia/TestFramework/SumTypeCheckers.hpp"
-#include "sequoia/TestFramework/TestExecutionRecord.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
+
+import std;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

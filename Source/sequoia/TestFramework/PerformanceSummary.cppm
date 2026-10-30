@@ -5,19 +5,16 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+export module sequoia.test_framework:PerformanceSummary;
+
+import std;
 
 /** \file
     \brief The text of a relative performance check's summary, and the
            zeroing of the measurements in it.
  */
 
-#include <chrono>
-#include <cstddef>
-#include <string>
-#include <string_view>
-
-namespace sequoia::testing
+export namespace sequoia::testing
 {
   /** \brief Why an attempt of `check_relative_performance` failed. */
   enum class relative_performance_failure

@@ -7,13 +7,7 @@
 
 #include "PerformanceRetryTest.hpp"
 
-#include <algorithm>
-#include <format>
-#include <functional>
-#include <memory>
-#include <ranges>
-#include <span>
-#include <vector>
+import std;
 
 namespace sequoia::testing
 {

@@ -18,6 +18,7 @@ import :PartitionedDataDetails;
 export import sequoia.algorithms;
 export import sequoia.core.container_utilities;
 export import sequoia.core.meta;
+export import sequoia.core.numeric;
 export import sequoia.maths.sequences;
 export import sequoia.platform_specific;
 

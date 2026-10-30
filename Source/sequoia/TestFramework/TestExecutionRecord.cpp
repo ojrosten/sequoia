@@ -5,27 +5,16 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+module sequoia.test_framework;
+
+import std;
+
+import sequoia.streaming;
+import sequoia.text_processing;
+
 /** \file
-    \brief Definitions for TestExecutionRecord.hpp
+    \brief Definitions for TestExecutionRecord.cppm
  */
-
-#include "sequoia/TestFramework/TestExecutionRecord.hpp"
-
-#include "sequoia/Streaming/Streaming.hpp"
-#include "sequoia/TextProcessing/Numbers.hpp"
-
-#include <algorithm>
-#include <concepts>
-#include <cstddef>
-#include <format>
-#include <fstream>
-#include <istream>
-#include <iterator>
-#include <ostream>
-#include <ranges>
-#include <stdexcept>
-#include <type_traits>
-#include <utility>
 
 namespace sequoia::testing
 {

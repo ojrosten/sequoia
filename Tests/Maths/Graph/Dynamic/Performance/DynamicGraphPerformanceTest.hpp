@@ -9,8 +9,12 @@
 
 /** \file */
 
-#include "sequoia/Maths/Graph/GraphTraits.hpp"
-#include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
+
+import std;
+import sequoia.maths.graph;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

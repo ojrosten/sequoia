@@ -6,8 +6,10 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "CoarseSleepsFreeTest.hpp"
-#include "sequoia/TestFramework/CoarseSleeps.hpp"
-#include "sequoia/Streaming/Streaming.hpp"
+
+import std;
+import sequoia.streaming;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

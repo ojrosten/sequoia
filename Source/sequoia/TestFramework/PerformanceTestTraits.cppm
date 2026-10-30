@@ -5,16 +5,16 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+export module sequoia.test_framework:PerformanceTestTraits;
+
+import std;
 
 /** \file
     \brief The trait identifying performance tests, which
-           PerformanceTestCore.hpp specializes.
+           PerformanceTestCore.cppm specializes.
 */
 
-#include <type_traits>
-
-namespace sequoia::testing
+export namespace sequoia::testing
 {
   /** \anchor is_performance_test primary class template */
   template<class T>

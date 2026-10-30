@@ -11,10 +11,8 @@
     \brief An element type for testing how containers construct their elements.
  */
 
-#include "sequoia/TestFramework/CoreInfrastructure.hpp"
-
-#include <string>
-#include <vector>
+import std;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

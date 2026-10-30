@@ -11,8 +11,10 @@ import std;
 
 import :EdgesAndNodesUtilities;
 import :NodeStorage;
+export import sequoia.algorithms;
 export import sequoia.core.container_utilities;
 export import sequoia.core.meta;
+export import sequoia.core.numeric;
 
 /** \file
     \brief Classes for node storage that may be used in a constexpr context.
