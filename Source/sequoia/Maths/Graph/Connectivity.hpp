@@ -977,7 +977,6 @@ namespace sequoia
 
       [[nodiscard]]
       constexpr static const edges_initializer& validate_targets(const edges_initializer& edges)
-        requires (!is_embedded(flavour))
       {
         for(const auto [nodeIndex, nodeEdges] : std::views::enumerate(edges))
         {
@@ -991,13 +990,6 @@ namespace sequoia
           }
         }
 
-        return edges;
-      }
-
-      [[nodiscard]]
-      constexpr static const edges_initializer& validate_targets(const edges_initializer& edges)
-        requires (is_embedded(flavour))
-      {
         return edges;
       }
 
@@ -1068,8 +1060,6 @@ namespace sequoia
               static_cast<std::size_t>(edgeIndex)
             };
             const auto target{edge.target_node()};
-            graph_errors::check_edge_target_index_range("validate", edgeIndices, edges.size(), target);
-
             const auto compIndex{edge.complementary_index()};
             const auto& targetEdges{edges.begin()[target]};
             graph_errors::check_edge_complementary_index_range(
