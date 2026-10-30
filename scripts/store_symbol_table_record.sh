@@ -59,14 +59,19 @@
 # count, is taken to be the held one: the held value stands, and the script
 # prints the difference. Each count is named in measured_fields below with a
 # denominator of its own: 1 in 1,000 for prune's, 1 in 50 for the setup's
-# instructions and 1 in 200 for its system calls.
+# instructions, 1 in 200 for its system calls, and 1 in 100,000 for the
+# instructions of compiling each unit of compile_cost. A null in a path of
+# measured_fields stands for any key, so that one entry names every unit's
+# count.
 #
 # The spread measured, with the performance tests excluded from the setup's
 # runs: prune's analysis moved by up to 722 parts in a million between jobs
 # measuring one commit, since it began reading .ninja_deps; the setup's
 # instructions by up to 1.04%, and its system calls by up to 0.37%, between
 # commits whose code is identical. The setup's tests are counted exactly, so
-# the instructions move as they do per test. Each tolerance is wider
+# the instructions move as they do per test. The instructions of clang's
+# compilation of a unit moved by up to 0.84 parts in a million between four
+# jobs on AMD EPYC 9V45 and 9V74. Each tolerance is wider
 # than its count's spread, so that an honest re-measurement is not refused.
 #
 # A branch which does not exist is created, with no history. The push is
@@ -114,18 +119,20 @@ measuring_run_paths='[
   ["runner_setup",              "exit_status"],
   ["leftover_materials_setup",  "cpu_model"],
   ["leftover_materials_setup",  "without_leftovers", "exit_status"],
-  ["leftover_materials_setup",  "with_leftovers",    "exit_status"]
+  ["leftover_materials_setup",  "with_leftovers",    "exit_status"],
+  ["compile_cost",              "cpu_model"]
 ]'
 
 # The counts which a rerun of one commit may move: each one's path into a
-# record, and the denominator of the relative difference below which a count is
-# taken to be the held one
+# record, a null standing for any key, and the denominator of the relative
+# difference below which a count is taken to be the held one
 measured_fields='[
   {"path": ["prune_dependency_analysis", "instructions"],                     "denominator": 1000},
   {"path": ["runner_setup", "instructions"],                                  "denominator": 50},
   {"path": ["runner_setup", "syscalls"],                                      "denominator": 200},
   {"path": ["leftover_materials_setup", "without_leftovers", "instructions"], "denominator": 50},
-  {"path": ["leftover_materials_setup", "with_leftovers", "instructions"],    "denominator": 50}
+  {"path": ["leftover_materials_setup", "with_leftovers", "instructions"],    "denominator": 50},
+  {"path": ["compile_cost", "units", null],                                   "denominator": 100000}
 ]'
 
 # within($held; $offered; $denominator), in jq: both are numbers, they differ,
@@ -143,7 +150,10 @@ merge() {
   jq -n -S --argjson held "$1" --argjson offered "$2" --argjson fields "$measured_fields" \
      --argjson measuring_run_paths "$measuring_run_paths" \
      "$within_tolerance"'
-     def tolerance($path): $fields | map(select(.path == $path)) | first | .denominator;
+     def pattern_matches($pattern; $path):
+       ($pattern | length) == ($path | length)
+       and ([$pattern, $path] | transpose | all(.[0] == null or .[0] == .[1]));
+     def tolerance($path): $fields | map(select(pattern_matches(.path; $path))) | first | .denominator;
      def is_measuring_run_path($path): $measuring_run_paths | any(.[]; . == $path);
      def adds_below($added; $path): $added | any(.[]; .[0:($path | length)] == $path);
      def none: {conflicts: [], tolerated: [], added: [], kept: []};

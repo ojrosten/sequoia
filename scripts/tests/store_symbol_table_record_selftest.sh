@@ -27,8 +27,8 @@
 #     which differs, whether beside an addition or not, whether the offered
 #     one is new or was itself added, is refused and the held record kept;
 #   - the model name of the CPU of a measurement, cpu_model in the section of
-#     prune's analysis, of the runner's setup or of the cost of leftover
-#     materials, is never compared: an offer
+#     prune's analysis, of the runner's setup, of the cost of leftover
+#     materials or of the cost of compiling, is never compared: an offer
 #     differing from the held record in it alone, or in it and by a count
 #     within its tolerance, is accepted; the held section keeps its model
 #     name with its counts, whether the offer adds a field or not; a held
@@ -51,7 +51,9 @@
 #     part in 1000, the runner setup's instructions 1 part in 50 and its system
 #     calls 1 part in 200, the instructions of each of the two runs of the cost
 #     of leftover materials 1 part in 50, and that section's entries and tests
-#     none, so they are compared exactly), which differs from the held one by less than that
+#     none, so they are compared exactly; the instructions of compiling each
+#     unit 1 part in 100,000, the boundary none), which differs from the
+#     held one by less than that
 #     is taken to be the held one: the record is accepted, the difference
 #     said, and the held count kept, in a record which adds a field as in one
 #     which adds none; a difference of exactly the tolerance, or more, is
@@ -59,7 +61,8 @@
 #     is not measured (the symbols) however small, even beside a measured
 #     count within its tolerance; a tolerance is the field's own, so a
 #     difference which one field's tolerance accepts is refused by a field
-#     with a smaller;
+#     with a smaller; the entry naming every unit's instructions holds for
+#     no count beside the units, nor within a unit;
 #   - in a clone without blobs, a held record whose blob cannot be fetched is
 #     a failure, not a record absent;
 #   - a push refused because another push came first is retried on the new
@@ -211,6 +214,24 @@ fixture() {
   record "$work/X-all.json"      "$A" 100 86 true ", $(printf "$exits" 82 82), $(printf "$leftover_exits" 82 82)"
   record "$work/X-all-extra.json" "$A" 100 87 true ", $(printf "$exits" 82 82), $(printf "$leftover_exits" 82 82), \"extra\": 1"
   record "$work/X-held.json"     "$A" 100 88 true ", $(printf "$exits" 0 0)"
+  # the cost of compiling two units: the tolerance of 1 in 100,000 of
+  # 50000000000 is 500000, and of 30000000000 is 300000
+  local compile='"compile_cost": {"boundary": "%s", "units": {"Tests/A.cpp": %s, "Tests/B.cpp": %s%s}%s, "cpu_model": "%s"}'
+  record "$work/K.json"           "$A" 100 91 true ", $(printf "$compile" B 50000000000 30000000000 '' '' "$amd")"
+  record "$work/K-intel.json"     "$A" 100 92 true ", $(printf "$compile" B 50000000000 30000000000 '' '' "$intel")"
+  record "$work/K-a-near.json"    "$A" 100 93 true ", $(printf "$compile" B 50000499999 30000000000 '' '' "$intel")"
+  record "$work/K-a-far.json"     "$A" 100 94 true ", $(printf "$compile" B 50000500000 30000000000 '' '' "$intel")"
+  record "$work/K-b-near.json"    "$A" 100 95 true ", $(printf "$compile" B 50000000000 30000299999 '' '' "$intel")"
+  record "$work/K-b-far.json"     "$A" 100 96 true ", $(printf "$compile" B 50000000000 30000300000 '' '' "$intel")"
+  record "$work/K-boundary.json"  "$A" 100 97 true ", $(printf "$compile" B2 50000000000 30000000000 '' '' "$amd")"
+  record "$work/K-unit-amd.json"  "$A" 100 98 true ", $(printf "$compile" B 50000000000 30000000000 ', "Tests/C.cpp": 7' '' "$amd")"
+  record "$work/K-unit-intel.json" "$A" 100 99 true ", $(printf "$compile" B 50000000000 30000000000 ', "Tests/C.cpp": 7' '' "$intel")"
+  # counts within the section which no entry names: one beside the units, and
+  # one within a unit, each 1 in 100,000,000 apart
+  record "$work/K-other.json"     "$A" 100 100 true ", $(printf "$compile" B 50000000000 30000000000 '' ', "other": {"x": 100000000}' "$amd")"
+  record "$work/K-other-near.json" "$A" 100 101 true ", $(printf "$compile" B 50000000000 30000000000 '' ', "other": {"x": 100000001}' "$amd")"
+  record "$work/K-nested.json"    "$A" 100 102 true ", $(printf "$compile" B 50000000000 30000000000 ', "Tests/D.cpp": {"n": 100000000}' '' "$amd")"
+  record "$work/K-nested-near.json" "$A" 100 103 true ", $(printf "$compile" B 50000000000 30000000000 ', "Tests/D.cpp": {"n": 100000001}' '' "$amd")"
   clone_state=$(clone_state)
 }
 
@@ -479,6 +500,69 @@ leftover_controls() {
   exits "an offer without runner_setup, beside a record with it" 0
   says "it adds nothing, and the held record has more" 'with every field of .* and more' "$out"
   same "the branch is as it was" "$first" "$(tip)"
+}
+
+# The cost of compiling the units: each unit's instructions are a measured
+# count, matched by the entry whose path ends in a null, with a tolerance of
+# its own; its CPU model stays with its counts.
+compile_cost_controls() {
+  local first amd='AMD EPYC 7763 64-Core Processor' intel='Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz'
+  fixture
+  store K; first=$(tip)
+  store K-intel
+  exits "an offer of the compile cost differing in the CPU model alone succeeds" 0
+  says "the offer is the same but for its run" 'the same but for its run: https://example.invalid/runs/91$' "$out"
+  same "the section keeps its CPU model" "$amd" "$(held "$A" | jq -r '.compile_cost.cpu_model')"
+
+  store K-a-near
+  exits "a unit's instructions within 1 in 100,000, beyond 1 in 200,000, succeed" 0
+  says "the difference and the tolerance are shown" \
+       'compile_cost.units.Tests/A.cpp: held 50000000000, offered 50000499999, tolerance 1 in 100000' "$out"
+  same "the branch is as it was after a unit's instructions" "$first" "$(tip)"
+
+  store K-a-far
+  exits "a unit's instructions at exactly 1 in 100,000" nonzero
+  says "the unit is named" 'in: compile_cost.units.Tests/A.cpp$' "$err"
+
+  store K-b-near
+  exits "another unit's instructions within its own tolerance succeed" 0
+  says "the other unit's difference is shown" \
+       'compile_cost.units.Tests/B.cpp: held 30000000000, offered 30000299999, tolerance 1 in 100000' "$out"
+
+  store K-b-far
+  exits "another unit's instructions at exactly its own tolerance" nonzero
+  says "the other unit is named" 'in: compile_cost.units.Tests/B.cpp$' "$err"
+
+  store K-boundary
+  exits "another boundary" nonzero
+  says "the boundary is named" 'in: compile_cost.boundary$' "$err"
+  same "the branch is as it was after the refusals" "$first" "$(tip)"
+  unchanged_clone "the compile cost"
+
+  store K-unit-amd
+  exits "a unit added beside the same CPU model succeeds" 0
+  says "the unit is named" 'adds to: compile_cost.units.Tests/C.cpp$' "$out"
+  same "the unit is added" "7" "$(held "$A" | jq '.compile_cost.units["Tests/C.cpp"]')"
+  same "the section keeps its CPU model beside the unit added" "$amd" "$(held "$A" | jq -r '.compile_cost.cpu_model')"
+
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store K
+  store K-unit-intel
+  exits "a unit added beside another CPU model succeeds" 0
+  same "the section has no CPU model" "false" "$(held "$A" | jq '.compile_cost | has("cpu_model")')"
+
+  # A null stands for one key, at its own depth, below the keys before it
+  work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
+  fixture
+  store K-other
+  store K-other-near
+  exits "a count beside the units, 1 in 100,000,000 apart" nonzero
+  says "the count beside the units is named" 'in: compile_cost.other.x$' "$err"
+  store K-nested
+  store K-nested-near
+  exits "a count within a unit, 1 in 100,000,000 apart" nonzero
+  says "the count within a unit is named" 'in: compile_cost.units.Tests/D.cpp.n$' "$err"
 }
 
 # The exit status of a run is a fact of the run which measured a section, not
@@ -785,7 +869,7 @@ refusal_controls() {
 run_controls() { # run_controls <script>: sets fails, and total, the controls run
   subject=$1 fails=0 total=0
   local control
-  for control in create_controls beside_controls same_commit_controls cpu_controls exit_status_controls leftover_controls adding_controls union_controls tolerance_controls blobless_controls rival_controls \
+  for control in create_controls beside_controls same_commit_controls cpu_controls exit_status_controls leftover_controls compile_cost_controls adding_controls union_controls tolerance_controls blobless_controls rival_controls \
                  refusal_controls; do
     work=$(mktemp -d "$tmp/controls.XXXXXX"); out="$work/out"; err="$work/err"
     "$control"
@@ -908,6 +992,20 @@ mutant 'the tests measured' '  {"path": ["leftover_materials_setup", "without_le
   {"path": ["leftover_materials_setup", "without_leftovers", "tests"],        "denominator": 50},
   {"path": ["leftover_materials_setup", "with_leftovers", "tests"],           "denominator": 50},
 '
+mutant 'the CPU model of the compile cost compared' \
+       ',
+  ["compile_cost",              "cpu_model"]' ''
+mutant 'compiled units not measured'   ',
+  {"path": ["compile_cost", "units", null],                                   "denominator": 100000}' ''
+mutant 'compiled units with 1 in 10,000' '["compile_cost", "units", null],                                   "denominator": 100000}' \
+                                       '["compile_cost", "units", null],                                   "denominator": 10000}'
+mutant 'compiled units with 1 in 1,000,000' '["compile_cost", "units", null],                                   "denominator": 100000}' \
+                                       '["compile_cost", "units", null],                                   "denominator": 1000000}'
+mutant 'a null matching nothing'       'all(.[0] == null or .[0] == .[1])' 'all(.[0] == .[1])'
+mutant 'every key matching'            'all(.[0] == null or .[0] == .[1])' 'all(true)'
+mutant 'a path longer than its entry matching' \
+       '($pattern | length) == ($path | length)
+       and ' ''
 mutant 'the boundary accepted'         '* $denominator < $held);' '* $denominator <= $held);'
 mutant 'only a higher count tolerated' '((($offered - $held) | fabs)' '((($offered - $held))'
 mutant 'the record stored as given'    'git hash-object -w -- "$stored")' 'git hash-object -w -- "$record")'
