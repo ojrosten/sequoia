@@ -324,7 +324,7 @@ namespace sequoia::testing
       remover.join();
 
       check_exception_thrown<std::logic_error>(
-        "The moved temporary root's removal is enqueued, and the joined remover refuses it",
+        "The joined remover refuses the moved temporary root's removal",
         [&materials, &remover]() { return prepare_materials(materials, remover); });
       check("The temporary root is moved to the discarded root",
             fs::exists(materials.discarded_materials_root() / "Previous.txt"));
@@ -343,7 +343,7 @@ namespace sequoia::testing
       remover.join();
 
       check_exception_thrown<std::logic_error>(
-        "After removing the leftover, the moved temporary root's removal is enqueued, and refused",
+        "After removing the leftover, the joined remover refuses the moved temporary root's removal",
         [&materials, &remover]() { return prepare_materials(materials, remover); });
       check("A leftover discarded root is removed", !fs::exists(materials.discarded_materials_root() / "Leftover.txt"));
       check("The temporary root is then moved", fs::exists(materials.discarded_materials_root() / "Previous.txt"));

@@ -129,7 +129,7 @@ namespace sequoia::testing
 
     void join();
   private:
-    concurrency::shared_queue_thread_pool<std::optional<removal_failure>> m_Pool{1};
+    concurrency::thread_pool_with_shared_queue<std::optional<removal_failure>> m_Pool{1};
   };
 
   /** \brief Replaces a test's temporary materials root with a fresh copy of

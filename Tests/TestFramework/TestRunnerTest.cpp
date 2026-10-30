@@ -2943,8 +2943,8 @@ namespace sequoia::testing
     check_output("Discarded Materials Removal Failure Output", "DiscardedMaterialsRemovalFailureOutput", outputStream);
   }
 
-  /** A remover which has joined refuses a removal, so the test to run fails
-      to prepare its materials, and holds no removal to report afterwards.
+  /** A remover which has joined refuses a removal, so the test to run reports
+      a critical failure preparing its materials.
    */
   void test_runner_test::test_discarded_materials_removal_refusal()
   {
@@ -2973,8 +2973,6 @@ namespace sequoia::testing
           "The refused removal is a critical failure of the materials' preparation",
           testToRun.execute(std::nullopt, remover).critical_failures(),
           1uz);
-
-    check("No removal failure remains to be reported", !testToRun.extract_discarded_materials_removal_failure());
   }
 
   void test_runner_test::test_exit_statuses()

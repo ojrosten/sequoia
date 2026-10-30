@@ -197,7 +197,7 @@ The materials in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeT
 =======================================
 
 Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 327
-The moved temporary root's removal is enqueued, and the joined remover refuses it
+The joined remover refuses the moved temporary root's removal
 
 Expected Exception Type:
 [std::logic_error]
@@ -206,7 +206,7 @@ A task cannot be pushed to a finished task_queue
 =======================================
 
 Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 346
-After removing the leftover, the moved temporary root's removal is enqueued, and refused
+After removing the leftover, the joined remover refuses the moved temporary root's removal
 
 Expected Exception Type:
 [std::logic_error]
