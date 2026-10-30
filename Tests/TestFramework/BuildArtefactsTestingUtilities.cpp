@@ -56,9 +56,9 @@ namespace sequoia::testing
 
   /* The layout the reader understands, re-spelled: the signature line and version word, a path
      record for each path as it is first met - the path NUL-padded to a multiple of four bytes, then
-     the complement of its id - and a deps record per object, its size word carrying the high bit,
-     with a zero time stamp. Should this and the reader disagree, the round trip in
-     build_artefacts_free_test says so, and the reader is held to a log ninja wrote as well.
+     the complement of its id - and a deps record for each of `records`, in order, its size word
+     carrying the high bit, with a zero time stamp. Should this and the reader disagree, the round
+     trip in build_artefacts_free_test says so, and the reader is held to a log ninja wrote as well.
    */
   void write_ninja_deps(const fs::path& log, std::span<const compilation_record> records)
   {

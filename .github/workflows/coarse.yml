@@ -27,9 +27,9 @@ name: coarse
 # Every column is fatal, the Windows one since 2026-09-22. It had been advisory
 # from 2026-09-09 - the suite run and triaged, a failure reported on a green job -
 # because it was red on every push from PR #80 onwards for one cause: the nested
-# test projects' compiler probes overran MAX_PATH, roadmap item 197, fixed by
-# hashing the object paths (build_system/ShortObjectPaths.cmake). A column that
-# nothing can make red is a report rather than a gate; this one gates.
+# test projects' compiler probes overran MAX_PATH, fixed by hashing the object
+# paths (build_system/ShortObjectPaths.cmake). A column that nothing can make
+# red is a report rather than a gate; this one gates.
 #
 # The Windows column builds with Ninja, not msbuild: the same cl.exe, the faster
 # of the two builds, and the generator a client outside the IDE would use, so a
@@ -39,12 +39,26 @@ name: coarse
 # committed vcxproj prediction is checked by any Visual Studio column, this
 # column's absence from that generator leaves none of them unverified.
 #
-# The Windows and macOS columns run with `--exclude-performance`, because
-# TestRunnerPerformanceTest asserts absolute durations - 60ms +- 35 for eight
-# 25ms sleeps run concurrently - which a hosted runner may not hold: as wall-clock
-# times, Windows returned 196ms and then 603ms for the same commit, and macOS
-# 172ms, which is what cost it its column on 2026-09-08. No tolerance spans that and still means
-# anything.
+# Every column runs the performance tests, the macOS one since 2026-10-22.
+# Run 39668453004 (2026-10-21), of a scratch statistical.yml without
+# `--exclude-performance`, ran the whole suite 60 times on each of macOS
+# Release, Debug and ASan+UBSan. No trial failed. The runner tests'
+# peak-overlap checks slept 40 ms (sleep_duration_for_overlap_checks). At
+# 10 ms, the parallel run's peak fell below its floor in about one trial in 40,
+# because on the hosted macOS runner that run's tests start up to tens of
+# milliseconds apart; a shorter sleep would bring that back. The Release trials
+# ran on an Apple M2 Pro host, where those starts were closer together than on
+# the usual M1, so that column's sample was the easier one. If a performance
+# check alone turns a macOS gate column red, re-running the failed job to
+# unblock the pull request is fine, but a green re-run says nothing about the
+# column's failure rate, so sample the column as well. On a scratch
+# branch off the commit that went red, make that column the only one in
+# statistical.yml, both in `columns` and in the summary job's list. Give it the
+# gate column's presets but not its `exec_args`, which would replace
+# statistical.yml's. Drop `--exclude-performance` from statistical.yml's
+# `exec_args`, then dispatch it on that branch with `trials` set to 60. Exclude
+# the performance tests from the gate column again if more than one trial in 60
+# fails.
 #
 # Every column checks the versioned output, since 2026-09-22. The check is a
 # comparison of files the run has just written, and costs nothing this tier's
@@ -94,9 +108,9 @@ jobs:
       exec_args: '--check-versioned-output'
       columns: >-
         [
-          {"name": "Linux · GCC · Debug",   "os": "ubuntu-latest",  "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "macOS · Clang · Debug", "os": "macos-latest",   "configure": "llvm-env", "build": "llvm-env", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc-ninja", "build": "msvc-ninja", "exec_args": "--check-versioned-output;--exclude-performance"}
+          {"name": "Linux · GCC · Debug",   "os": "ubuntu-26.04",   "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "macOS · Clang · Debug", "os": "macos-latest",   "configure": "llvm-env", "build": "llvm-env", "exec_args": "--check-versioned-output"},
+          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc-ninja", "build": "msvc-ninja", "exec_args": "--check-versioned-output"}
         ]
 
   # Also in rigorous. It costs seconds and no compilation, so there is no reason to
@@ -107,6 +121,15 @@ jobs:
     uses: ./.github/workflows/docs.yml
     with:
       needs_testing: ${{ needs.scope.outputs.documentation }}
+
+  # The scripts' selftests. They take about a minute and build nothing of
+  # sequoia's, so a change to a script is tested on the push that makes it.
+  selftests:
+    needs: scope
+    if: ${{ !cancelled() }}
+    uses: ./.github/workflows/selftests.yml
+    with:
+      needs_testing: ${{ needs.scope.outputs.selftests }}
 
   # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
   # as one that passed; `needs` reports `skipped` where the tick shows green.
@@ -119,7 +142,7 @@ jobs:
   # an earlier step fails, so each reports independently.
   audit:
     name: Every job ran
-    needs: [scope, coarse, docs]
+    needs: [scope, coarse, docs, selftests]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5

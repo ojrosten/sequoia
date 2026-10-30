@@ -14,6 +14,10 @@ import std;
 import sequoia.maths.graph;
 import sequoia.test_framework;
 
+#include <limits>
+#include <numeric>
+#include <ranges>
+
 namespace sequoia::testing
 {
   using namespace maths;
@@ -34,6 +38,11 @@ namespace sequoia::testing
         if(host != target) m_Test.check_semantics(description, prediction, parent);
       }
     };
+
+    using graph_of_order_beyond_signed_char = static_directed_graph<0, 200, null_weight, int>;
+
+    static_assert(std::same_as<graph_of_order_beyond_signed_char::edge_index_type, unsigned char>);
+    static_assert(graph_of_order_beyond_signed_char::order() > std::numeric_limits<signed char>::max());
   }
 
   [[nodiscard]]
@@ -59,6 +68,8 @@ namespace sequoia::testing
     test_node_1_node();
     test_node_1_node_0();
     test_node_1_node_2_node_0();
+
+    test_order_beyond_signed_char();
   }
 
   template<class EdgeWeight, class NodeWeight>
@@ -755,6 +766,14 @@ namespace sequoia::testing
               g.sort_nodes(0, 3, [&g](auto i, auto j){ return g.cbegin_node_weights()[i] < g.cbegin_node_weights()[j]; });
               return g;
             }
+          },
+          {
+            graph_description::node_2v_nodex_0u_nodew_1,
+            report(""),
+            [](graph_t g) -> graph_t {
+              g.sort_nodes(0, 3, [](auto i, auto j){ return i > j; });
+              return g;
+            }
           }
         }, // end 'graph_description::nodew_1_nodex_2u_node_0v'
         {  // begin 'graph_description::node_2v_nodex_0u_nodew_1'
@@ -786,6 +805,60 @@ namespace sequoia::testing
 
            return g;
          }
+      }
+    };
+
+    transition_checker<graph_t>::check(report(""), trg, compare{*this});
+  }
+
+  void static_directed_graph_fundamental_weight_test::test_order_beyond_signed_char()
+  {
+    enum graph_description { ascending_weights = 0, descending_weights };
+
+    using graph_t = graph_of_order_beyond_signed_char;
+    using transition_graph = transition_checker<graph_t>::transition_graph;
+
+    transition_graph trg{
+      {
+        {  // begin 'graph_description::ascending_weights'
+          {
+            graph_description::descending_weights,
+            report("Sorting the nodes of a graph whose order exceeds the greatest signed char into descending weights"),
+            [](graph_t g) -> graph_t {
+              g.sort_nodes(
+                0,
+                numeric::unchecked_conversion_to<graph_t::edge_index_type>(graph_t::order()),
+                [&g](auto i, auto j){ return g.cbegin_node_weights()[i] > g.cbegin_node_weights()[j]; }
+              );
+              return g;
+            }
+          }
+        }, // end 'graph_description::ascending_weights'
+        {  // begin 'graph_description::descending_weights'
+          {
+            graph_description::ascending_weights,
+            report("Sorting the nodes of a graph whose order exceeds the greatest signed char into ascending weights"),
+            [](graph_t g) -> graph_t {
+              g.sort_nodes([&g](auto i, auto j){ return g.cbegin_node_weights()[i] < g.cbegin_node_weights()[j]; });
+              return g;
+            }
+          }
+        }  // end 'graph_description::descending_weights'
+      },
+      {
+        // 'graph_description::ascending_weights'
+        []() -> graph_t {
+          graph_t g{};
+          std::ranges::iota(g.node_weights(), 0);
+          return g;
+        },
+
+        // 'graph_description::descending_weights'
+        []() -> graph_t {
+          graph_t g{};
+          std::ranges::iota(g.node_weights() | std::views::reverse, 0);
+          return g;
+        }
       }
     };
 

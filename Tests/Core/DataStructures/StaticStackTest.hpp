@@ -28,6 +28,8 @@ namespace sequoia::testing
     void run_tests();
   private:
 
+    void check_moves_do_not_copy();
+    void check_top_and_pop_in_constant_evaluation();
     void check_depth_0();
     void check_depth_1();
     void check_depth_2();

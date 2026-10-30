@@ -79,8 +79,8 @@ export namespace sequoia::testing
       return m_MaterialsDiscriminator;
     }
 
-    /** \brief The original root: `original_test_root()`, followed by the materials discriminator if one
-        was given.
+    /** \brief Returns `original_test_root()`, followed by the materials
+               discriminator if one was given.
      */
     [[nodiscard]]
     std::filesystem::path original_materials_root() const;
@@ -169,16 +169,7 @@ export namespace sequoia::testing
     std::filesystem::path m_Summary;
   };
 
-  /** \brief Where a test records its last execution: when it started and,
-             once it has finished, its execution duration and the runner's
-             overhead.
-
-      A test's record is the last one the runner managed to write. That is
-      normally the current run's: the start while the test executes, then the
-      whole record once the test has finished. If a write fails, an earlier
-      run's record remains. A record naming a start and no execution duration
-      marks a test which did not finish in the run that wrote the record, or
-      whose finished record could not be written.
+  /** \brief The path to where a test writes the records of its executions.
 
       The path is empty for default project paths.
    */

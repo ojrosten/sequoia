@@ -40,7 +40,7 @@ export namespace sequoia::maths
     {}
 
     constexpr static_node_storage(std::initializer_list<weight_type> weights)
-      : base_type{utilities::to_array<weight_type, N>(weights, std::identity{})}
+      : base_type(utilities::to_array<weight_type, N>(weights, std::identity{}))
     {}
 
     constexpr static_node_storage(const static_node_storage&)                = default;

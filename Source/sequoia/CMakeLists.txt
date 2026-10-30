@@ -7,6 +7,7 @@ sequoia_init()
 set(SourceList
     Maths/Graph/GraphErrors.cpp
     Parsing/CommandLineArguments.cpp
+    Parsing/CommandLineMessages.cpp
     PlatformSpecific/Helpers.cpp
     Runtime/ShellCommands.cpp
     Streaming/Streaming.cpp
@@ -15,6 +16,7 @@ set(SourceList
     TestFramework/AllocationCheckersDetails.cpp
     TestFramework/BuildArtefacts.cpp
     TestFramework/CMakeCache.cpp
+    TestFramework/CoarseSleeps.cpp
     TestFramework/Commands.cpp
     TestFramework/ConcreteTypeCheckers.cpp
     TestFramework/DependencyAnalyzer.cpp
@@ -25,19 +27,25 @@ set(SourceList
     TestFramework/FileSystemUtilities.cpp
     TestFramework/FreeTestCore.cpp
     TestFramework/IndividualTestPaths.cpp
+    TestFramework/InstabilityAnalysis.cpp
+    TestFramework/InstabilityProjection.cpp
     TestFramework/MaterialsUpdater.cpp
     TestFramework/MoveOnlyTestCore.cpp
     TestFramework/Output.cpp
+    TestFramework/PerformanceSummary.cpp
     TestFramework/PerformanceTestCore.cpp
     TestFramework/ProjectCreator.cpp
     TestFramework/ProjectPaths.cpp
     TestFramework/RegularTestCore.cpp
+    TestFramework/ReturnCodes.cpp
     TestFramework/SemanticsCheckersDetails.cpp
     TestFramework/Summary.cpp
     TestFramework/TestCreator.cpp
+    TestFramework/TestExecutionRecord.cpp
     TestFramework/TestLogger.cpp
     TestFramework/TestRunner.cpp
     TestFramework/TestRunnerUtilities.cpp
+    TestFramework/TimingUtilities.cpp
     TestFramework/VersionedOutput.cpp
     TextProcessing/Indent.cpp
     TextProcessing/Patterns.cpp
@@ -83,7 +91,6 @@ set(ModuleList
     Maths/Algebra/Algebra.cppm
     Maths/Algebra/Ratio.cppm
     Maths/Arithmetic/Arithmetic.cppm
-    Maths/Arithmetic/ArithmeticCasts.cppm
     Maths/Arithmetic/SaturatingArithmetic.cppm
     Maths/Geometry/Geometry.cppm
     Maths/Geometry/Spaces.cppm
@@ -138,7 +145,6 @@ set(ModuleList
     TestFramework/AllocationTestUtilities.cppm
     TestFramework/BinaryRelationships.cppm
     TestFramework/BuildArtefacts.cppm
-    TestFramework/ChronoCheckers.cppm
     TestFramework/CMakeCache.cppm
     TestFramework/Commands.cppm
     TestFramework/ConcreteTypeCheckers.cppm

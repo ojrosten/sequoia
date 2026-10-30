@@ -127,12 +127,12 @@ namespace sequoia::testing
     if constexpr(std::same_as<T, int>)
     {
       STATIC_CHECK(std::same_as<ratio_multiply<ratio<max,  T(1)>, ratio<max,  T(1)>, allow_ratio_fp_conversion::yes>,
-                   ratio<static_cast<std::intmax_t>(max) * max,  T(1)>>);
+                   ratio<static_cast<std::intmax_t>(max) * static_cast<std::intmax_t>(max),  T(1)>>);
     }
     else
     {
       STATIC_CHECK(std::same_as<ratio_multiply<ratio<max,  T(1)>, ratio<max,  T(1)>, allow_ratio_fp_conversion::yes>,
-                   ratio<static_cast<long double>(max) * max,  T(1)>>);
+                   ratio<static_cast<long double>(max) * static_cast<long double>(max),  T(1)>>);
     }
   }
 

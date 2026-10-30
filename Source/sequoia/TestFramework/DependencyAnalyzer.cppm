@@ -65,7 +65,9 @@ export namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::file_time_type staleness_threshold(std::filesystem::file_time_type stamp);
 
-  /** \brief The prune records in `file`; none if there is no such file.
+  /** \brief Reads the prune records in `file`.
+
+      Returns no records if `file` cannot be opened.
 
       \throws std::runtime_error if the file does not parse as prune records.
    */
@@ -104,13 +106,18 @@ export namespace sequoia::testing
       \returns One of:
       -# A `prune_fallback_reason`, meaning every test should run, if:
          -# No previous run left a stamp;
-         -# A toolchain header changed after the stamp.
+         -# A file the build read from outside the project's root changed
+            after the stamp.
       -# Otherwise the stale tests together with those the previous run left failing, sorted, each once.
 
-      \throws std::runtime_error if the build's record of dependencies:
-      -# Does not exist, because nothing has been built;
-      -# Is in an unknown format - currently Ninja's and MSBuild's are understood;
-      -# Is corrupted.
+      \throws std::runtime_error if:
+      -# The build's record of dependencies:
+         -# Does not exist, because nothing has been built;
+         -# Is in an unknown format - currently Ninja's and MSBuild's are understood;
+         -# Is corrupted;
+         -# Names nothing under the project's root.
+      -# A file the build read is no older than the executable, or its
+         modification time cannot be read.
    */
   [[nodiscard]]
   std::variant<std::vector<std::filesystem::path>, prune_fallback_reason> tests_to_run(const project_paths& projPaths);

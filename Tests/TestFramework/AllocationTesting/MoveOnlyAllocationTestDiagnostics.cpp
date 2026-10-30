@@ -8,6 +8,8 @@
 #include "MoveOnlyAllocationTestDiagnostics.hpp"
 #include "../MoveOnlyTestDiagnosticsUtilities.hpp"
 
+#include "Core/DataStructures/ElementTestingUtilities.hpp"
+
 import std;
 
 namespace sequoia::testing
@@ -231,6 +233,26 @@ namespace sequoia::testing
 
       check(equality, "check_semantics return value (x)", x, beast{});
       check(equality, "check_semantics return value (y)", y, beast{2});
+    }
+
+    {
+      using element         = constructible_from_anything;
+      using beast           = move_only_beast<element, shared_counting_allocator<element, true, PropagateMove, PropagateSwap>>;
+      using equivalent_type = std::vector<element, typename beast::allocator_type>;
+      auto allocGetter{
+        [](const beast& b){
+          return b.x.get_allocator();
+        }
+      };
+
+      const auto[x,y]{check_semantics("Move-only beast of elements constructible from anything",
+                                      []() { return beast{}; },
+                                      []() { return beast{2}; },
+                                      mutator,
+                                      allocation_info{allocGetter, {0_pm, {1_pm, 1_mu}, {1_manp}}})};
+
+      check(equivalence, "check_semantics return value (x)", x, equivalent_type{});
+      check(equivalence, "check_semantics return value (y)", y, equivalent_type{2});
     }
 
     {

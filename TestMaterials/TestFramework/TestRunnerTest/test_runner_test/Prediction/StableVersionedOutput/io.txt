@@ -8,6 +8,7 @@ passing_test:
 [Total Run Time: 687us]
 [Execution Time: 19.3us]
 [Runner Overhead: 388us]
+[Scheduling Overhead: 3.08us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

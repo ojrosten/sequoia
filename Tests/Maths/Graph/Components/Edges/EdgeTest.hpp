@@ -30,6 +30,7 @@ namespace sequoia
       void run_tests();
     private:
       void test_copyability();
+      void test_index_type_constraint();
 
       void test_plain_partial_edge();
       void test_partial_edge_indep_weight();

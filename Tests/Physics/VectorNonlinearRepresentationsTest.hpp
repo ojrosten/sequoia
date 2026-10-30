@@ -7,14 +7,9 @@
 
 #pragma once
 
-#include "sequoia/PlatformSpecific/Macros.hpp"
-#include "sequoia/TestFramework/Macros.hpp"
-
-import std;
-import sequoia.physics;
-import sequoia.test_framework;
-
 /** \file */
+
+#include "PhysicalValueTestingUtilities.hpp"
 
 namespace sequoia::testing
 {

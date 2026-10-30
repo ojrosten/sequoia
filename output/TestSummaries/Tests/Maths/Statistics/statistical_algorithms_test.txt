@@ -1,2 +1,2 @@
 statistical_algorithms_test
-Standard Top Level Checks:                58;  Failures:  0  [Deep checks: 58]
+Standard Top Level Checks:               135;  Failures:  0  [Deep checks: 162]

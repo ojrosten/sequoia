@@ -2013,10 +2013,10 @@ export namespace sequoia::maths
         if((val == llb) || (val == gub))
           return T{};
 
-        if(val)
+        if(val != T{})
           return T(1) / val;
 
-        return b.upper ? gub : llb;
+        return b.upper != T{} ? gub : llb;
       }
     };
 
@@ -2929,7 +2929,7 @@ export namespace sequoia::maths
     [[nodiscard]]
     constexpr static std::array<T, 2> from_underlying(std::span<const T, 2> cartesian)
     {
-      T theta{(!cartesian[0] && !cartesian[1]) ? T{} : std::atan2(cartesian[1], cartesian[0])};
+      T theta{((cartesian[0] == T{}) && (cartesian[1] == T{})) ? T{} : std::atan2(cartesian[1], cartesian[0])};
       if(theta < 0) theta += T{2} * std::numbers::pi_v<T>;
         
       return {std::sqrt(cartesian[0] * cartesian[0] + cartesian[1] * cartesian[1]), theta};
@@ -2944,7 +2944,7 @@ export namespace sequoia::maths
     [[nodiscard]]
     static constexpr T compute_angle(T theta, T scale)
     {
-      if(!scale)
+      if(scale == T{})
         return T{};
 
       constexpr auto pi{std::numbers::pi_v<T>};
@@ -3381,7 +3381,7 @@ export namespace sequoia::maths
     [[nodiscard]]
     constexpr explicit operator bool() const noexcept requires (D == 1) && std::convertible_to<value_type, bool>
     {
-      return m_Values[0];
+      return static_cast<bool>(m_Values[0]);
     }
 
     [[nodiscard]]

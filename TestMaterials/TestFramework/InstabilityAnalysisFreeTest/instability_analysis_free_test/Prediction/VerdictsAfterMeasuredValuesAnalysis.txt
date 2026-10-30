@@ -1,0 +1,30 @@
+
+Instability detected in file "PerformanceTestDiagnostics.cpp"
+Outcome frequencies:
+[33.3%,66.7%]
+
+	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 96
+	Speed-up of 4, predicted [2.0, 2.5]
+
+	The fast task is not distinguishably faster than the slow one
+	Speed-up: 1.31 in [0.902, 1.9]; predicted [2, 2.5]
+	Trials: 5, attempt 1 of 3
+	Task durations: fast 0.00153s, slow 0.002s
+
+	=======================================
+
+
+vs.
+
+	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 96
+	Speed-up of 4, predicted [2.0, 2.5]
+
+	The fast task is suspiciously fast: faster than predicted
+	Speed-up: 4 in [3.9, 4.1]; predicted [2, 2.5]
+	Trials: 5, attempt 1 of 3
+	Task durations: fast 0.001s, slow 0.004s
+
+	=======================================
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

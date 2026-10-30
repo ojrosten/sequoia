@@ -156,9 +156,8 @@ export namespace sequoia
 
       using special_member_manager_type = void (*)(operation, erased_target&, const erased_target&);
 
-      /** Held by an empty `erased_target` in place of a null pointer, so that no manager is tested for
-          null before it is called: gcc with `-fsanitize=undefined` cannot evaluate such a test in a
-          constant expression (GCC bug 71962).
+      /** Held by an empty `erased_target` in place of a null pointer to a manager, so that no manager
+          is tested for null before it is called.
        */
       constexpr static void manage_empty(operation, erased_target&, const erased_target&) noexcept {}
 

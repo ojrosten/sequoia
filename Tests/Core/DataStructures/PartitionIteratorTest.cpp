@@ -17,6 +17,25 @@ namespace sequoia::testing
   using namespace data_structures;
   using namespace object;
 
+  namespace
+  {
+    template<class IndexType>
+    concept partition_iterator_admits
+      = requires { typename partition_iterator<std::vector<int>, IndexType>; };
+
+    template<class IndexType>
+    concept const_partition_iterator_admits
+      = requires { typename const_partition_iterator<std::vector<int>, IndexType>; };
+
+    template<class IndexType>
+    concept reverse_partition_iterator_admits
+      = requires { typename reverse_partition_iterator<std::vector<int>, IndexType>; };
+
+    template<class IndexType>
+    concept const_reverse_partition_iterator_admits
+      = requires { typename const_reverse_partition_iterator<std::vector<int>, IndexType>; };
+  }
+
   [[nodiscard]]
   std::filesystem::path partition_iterator_test::source_file()
   {
@@ -25,7 +44,27 @@ namespace sequoia::testing
 
   void partition_iterator_test::run_tests()
   {
+    test_index_type_constraint();
     test_iterators();
+  }
+
+  void partition_iterator_test::test_index_type_constraint()
+  {
+    STATIC_CHECK( partition_iterator_admits<unsigned char>);
+    STATIC_CHECK(!partition_iterator_admits<char>);
+    STATIC_CHECK(!partition_iterator_admits<bool>);
+
+    STATIC_CHECK( const_partition_iterator_admits<unsigned char>);
+    STATIC_CHECK(!const_partition_iterator_admits<char>);
+    STATIC_CHECK(!const_partition_iterator_admits<bool>);
+
+    STATIC_CHECK( reverse_partition_iterator_admits<unsigned char>);
+    STATIC_CHECK(!reverse_partition_iterator_admits<char>);
+    STATIC_CHECK(!reverse_partition_iterator_admits<bool>);
+
+    STATIC_CHECK( const_reverse_partition_iterator_admits<unsigned char>);
+    STATIC_CHECK(!const_reverse_partition_iterator_admits<char>);
+    STATIC_CHECK(!const_reverse_partition_iterator_admits<bool>);
   }
 
   void partition_iterator_test::test_iterators()

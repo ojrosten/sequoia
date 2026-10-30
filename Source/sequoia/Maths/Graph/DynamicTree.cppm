@@ -26,6 +26,7 @@ export import sequoia.algorithms;
 export import sequoia.core.container_utilities;
 export import sequoia.core.data_structures;
 export import sequoia.core.meta;
+export import sequoia.core.numeric;
 export import sequoia.core.object;
 export import sequoia.maths.sequences;
 export import sequoia.platform_specific;
@@ -304,20 +305,26 @@ export namespace sequoia::maths
   template<class Tree>
   using const_tree_adaptor = basic_tree_adaptor<const Tree>;
 
+  /** \throws std::out_of_range if `adaptor` is at a node its tree lacks. */
   template<dynamic_tree T>
   [[nodiscard]]
   auto root_weight_iter(const basic_tree_adaptor<T>& adaptor)
   {
-    return adaptor.tree().cbegin_node_weights() + adaptor.node();
+    const auto& tree{adaptor.tree()};
+    graph_errors::check_node_index_range("root_weight_iter", tree.order(), adaptor.node());
+
+    return tree.cbegin_node_weights() + numeric::unchecked_conversion_to<std::ptrdiff_t>(adaptor.node());
   }
 
+  /** \throws std::out_of_range if `adaptor` is at a node its tree lacks. */
   template<dynamic_tree T>
   [[nodiscard]]
   const auto& root_weight(const basic_tree_adaptor<T>& adaptor)
   {
-    return adaptor.tree().cbegin_node_weights()[adaptor.node()];
+    return *root_weight_iter(adaptor);
   }
 
+  /** \throws std::out_of_range if `adaptor` is at a node its tree lacks. */
   template<dynamic_tree T, class Fn>
     requires std::invocable<Fn&, typename T::node_weight_type&>
   std::invoke_result_t<Fn&, typename T::node_weight_type&> mutate_root_weight(basic_tree_adaptor<T>& adaptor, Fn fn)
@@ -393,8 +400,13 @@ export namespace sequoia::maths
   template<std::input_or_output_iterator Iterator, class Adaptor>
   using forest_iterator = utilities::iterator<Iterator, forest_dereference_policy<Iterator, Adaptor>>;
 
-  /** \brief The subtrees beneath a node, one per edge, each as an adaptor of the tree. */
+  /** \brief Returns the subtrees rooted at `node`'s children, as adaptors of
+             `tree`.
+
+      \throws std::out_of_range if `tree` lacks `node`.
+   */
   template<dynamic_tree T>
+    requires (T::link_dir == tree_link_direction::forward)
   [[nodiscard]]
   auto forest_beneath(const T& tree, typename T::size_type node)
   {
@@ -404,7 +416,7 @@ export namespace sequoia::maths
     return std::ranges::subrange{iterator{edges.begin(), tree}, iterator{edges.end(), tree}};
   }
 
-  /** \brief A forest's trees, each as an adaptor. */
+  /** \brief Returns adaptors of `trees`, one per tree, at node 0. */
   template<std::ranges::input_range Trees>
     requires dynamic_tree<std::ranges::range_value_t<Trees>>
   [[nodiscard]]

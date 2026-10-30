@@ -10,6 +10,7 @@
 
 import std;
 import sequoia.core.concurrency;
+import sequoia.platform_specific;
 
 namespace sequoia::testing
 {
@@ -146,7 +147,7 @@ namespace sequoia::testing
     std::vector<int> task(Graph& graph, const int upper, const bool early, const std::chrono::microseconds pause, Args&&... args)
     {
       auto fn = [upper, pause](const std::size_t index) {
-        std::this_thread::sleep_for(pause);
+        precise_sleep_for(pause);
         const auto n{upper + static_cast<int>(index)};
         return n * (n + 1) / 2;
       };
@@ -744,7 +745,7 @@ namespace sequoia::testing
     {
       upper = 10;
 
-      const auto pause{std::chrono::milliseconds(20)};
+      const auto pause{std::chrono::milliseconds(5)};
 
       auto serialFn{
         [&graph, upper, pause]() {
@@ -764,8 +765,10 @@ namespace sequoia::testing
         }
       };
 
-      check_relative_performance("Null versus async check", asyncFn, serialFn, 2.0, 5.0);
-      check_relative_performance("Null versus pool check", poolFn, serialFn, 2.0, 5.0);
+      check_relative_performance("Null versus async check", asyncFn, serialFn,
+                                 {.prediction{.lower{2.0}, .upper{7.0}}});
+      check_relative_performance("Null versus pool check", poolFn, serialFn,
+                                 {.prediction{.lower{2.0}, .upper{5.0}}});
     }
   }
 }

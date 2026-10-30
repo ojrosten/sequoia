@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "FakeProjectTestingUtilities.hpp"
+
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
@@ -59,7 +61,11 @@ namespace sequoia::testing
 
     void test_throwing_tests();
 
-    void test_execution_records();
+    void test_recording_of_executions();
+
+    void test_recording_of_repetitions();
+
+    void test_recording_of_successive_runs();
 
     void test_summary_collision_with_an_unselected_test();
 
@@ -131,6 +137,8 @@ namespace sequoia::testing
 
     void test_return_code_names();
 
+    void test_wall_clock_apportionment();
+
     template<std::invocable<test_runner&> Manipulator, concrete_test... Ts>
     void test_instability_analysis(std::string_view message,
                                    std::string_view outputDirName,
@@ -154,15 +162,6 @@ namespace sequoia::testing
                                    std::string_view numRuns,
                                    return_code expected,
                                    Ts&&... ts);
-
-    [[nodiscard]]
-    std::filesystem::path fake_project() const;
-
-    [[nodiscard]]
-    std::filesystem::path minimal_fake_path() const;
-
-    [[nodiscard]]
-    std::string zeroth_arg() const;
 
     void write(std::string_view dirName, std::stringstream& output) const;
 

@@ -848,6 +848,12 @@ export namespace sequoia::testing
     {
       return m_Logger.results().critical_failures > 0;
     }
+
+    [[nodiscard]]
+    std::span<const std::optional<std::size_t>> attempts_per_performance_check() const noexcept
+    {
+      return m_Logger.results().attempts_per_performance_check;
+    }
   protected:
     explicit checker(active_recovery_files recovery)
       : m_Logger{std::move(recovery)}

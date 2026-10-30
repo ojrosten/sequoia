@@ -16,6 +16,21 @@ import sequoia.test_framework;
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    struct explicit_copy
+    {
+      explicit_copy() = default;
+
+      explicit explicit_copy(const explicit_copy&) = default;
+    };
+
+    template<class T>
+    inline constexpr bool std_any_checkable_against_v{
+      checkable_against<equivalence_check_t, test_mode::false_positive, std::any, T, tutor<null_advisor>>
+    };
+  }
+
   [[nodiscard]]
   std::filesystem::path sum_types_false_negative_free_diagnostics::source_file()
   {
@@ -229,6 +244,12 @@ namespace sequoia::testing
 
   void sum_types_false_positive_free_diagnostics::test_any()
   {
+    STATIC_CHECK( std_any_checkable_against_v<                 int>);
+    STATIC_CHECK(!std_any_checkable_against_v<             char[2]>);
+    STATIC_CHECK(!std_any_checkable_against_v<        volatile int>);
+    STATIC_CHECK(!std_any_checkable_against_v<std::unique_ptr<int>>);
+    STATIC_CHECK(!std_any_checkable_against_v<       explicit_copy>);
+
     check(equivalence, "", std::any{1}, 1);
     check(equivalence, "", std::any{only_equivalence_checkable{1}}, only_equivalence_checkable{1});
     check(equivalence, "", std::any{only_weakly_checkable{1, 1.0}}, only_weakly_checkable{1, 1.0});

@@ -1,4 +1,4 @@
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 52
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
 Incorrect para-move allocs
 
 --Move-only Semantics--
@@ -18,7 +18,7 @@ Incorrect para-move allocs
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 55
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 57
 Incorrect para-move allocs, as unique
 
 --Move-only Semantics--
@@ -38,7 +38,7 @@ Incorrect para-move allocs, as unique
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 58
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 60
 Incorrect mutation allocs
 
 --Move-only Semantics--
@@ -58,7 +58,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 63
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 65
 Incorrect assignment allocs
 
 --Move-only Semantics--
@@ -78,7 +78,7 @@ Incorrect assignment allocs
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 67
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 69
 Move-only beast
 
 --Move-only Semantics--
@@ -110,7 +110,7 @@ Move-only beast
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 73
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 75
 check_semantics return value (x)
 
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
@@ -120,7 +120,7 @@ Predicted: 2
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 74
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 76
 check_semantics return value (y)
 
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
@@ -131,7 +131,7 @@ Predicted:
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 85
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 87
 Broken move
 
 --Move-only Semantics--
@@ -151,7 +151,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 97
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 99
 Broken move assignment
 
 --Move-only Semantics--
@@ -165,7 +165,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 125
 Inefficient move
 
 --Move-only Semantics--
@@ -185,7 +185,7 @@ Inefficient move
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 134
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 137
 Inefficient move assignment
 
 --Move-only Semantics--
@@ -205,7 +205,7 @@ Inefficient move assignment
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 147
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 150
 Invariant violated: x != xClone
 
 --Move-only Semantics--
@@ -220,7 +220,7 @@ Invariant violated: x != xClone
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 150
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 153
 Invariant violated: y != YClone
 
 --Move-only Semantics--
@@ -235,7 +235,7 @@ Invariant violated: y != YClone
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 153
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 156
 Invariant violated: x == y
 
 --Move-only Semantics--
@@ -246,20 +246,6 @@ Invariant violated: x == y
   operator== returned false
   Obtained : false
   Predicted: true
-
-=======================================
-
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 166
-Incorrect moved-from state post construction
-
---Move-only Semantics--
-[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
-
-  Incorrect moved-from value after move construction
-  [sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
-  operator== returned false
-  Obtained : 
-  Predicted: 3
 
 =======================================
 
@@ -278,12 +264,12 @@ Incorrect moved-from state post construction
 =======================================
 
 Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 172
-Incorrect moved-from state post assignment
+Incorrect moved-from state post construction
 
 --Move-only Semantics--
 [sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
-  Incorrect moved-from value after move assignment
+  Incorrect moved-from value after move construction
   [sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
   operator== returned false
   Obtained : 
@@ -305,7 +291,21 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 52
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 178
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
 Incorrect para-move allocs
 
 --Move-only Semantics--
@@ -325,7 +325,7 @@ Incorrect para-move allocs
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 55
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 57
 Incorrect para-move allocs, as unique
 
 --Move-only Semantics--
@@ -345,7 +345,7 @@ Incorrect para-move allocs, as unique
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 58
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 60
 Incorrect mutation allocs
 
 --Move-only Semantics--
@@ -365,7 +365,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 63
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 65
 Incorrect assignment allocs
 
 --Move-only Semantics--
@@ -385,7 +385,7 @@ Incorrect assignment allocs
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 67
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 69
 Move-only beast
 
 --Move-only Semantics--
@@ -417,7 +417,7 @@ Move-only beast
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 73
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 75
 check_semantics return value (x)
 
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
@@ -427,7 +427,7 @@ Predicted: 2
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 74
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 76
 check_semantics return value (y)
 
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
@@ -438,7 +438,7 @@ Predicted:
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 85
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 87
 Broken move
 
 --Move-only Semantics--
@@ -458,7 +458,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 97
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 99
 Broken move assignment
 
 --Move-only Semantics--
@@ -472,7 +472,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 113
 Broken swap
 
 --Move-only Semantics--
@@ -492,7 +492,7 @@ Broken swap
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 125
 Inefficient move
 
 --Move-only Semantics--
@@ -512,7 +512,7 @@ Inefficient move
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 134
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 137
 Inefficient move assignment
 
 --Move-only Semantics--
@@ -532,7 +532,7 @@ Inefficient move assignment
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 147
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 150
 Invariant violated: x != xClone
 
 --Move-only Semantics--
@@ -547,7 +547,7 @@ Invariant violated: x != xClone
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 150
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 153
 Invariant violated: y != YClone
 
 --Move-only Semantics--
@@ -562,7 +562,7 @@ Invariant violated: y != YClone
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 153
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 156
 Invariant violated: x == y
 
 --Move-only Semantics--
@@ -573,20 +573,6 @@ Invariant violated: x == y
   operator== returned false
   Obtained : false
   Predicted: true
-
-=======================================
-
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 166
-Incorrect moved-from state post construction
-
---Move-only Semantics--
-[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
-
-  Incorrect moved-from value after move construction
-  [sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
-  operator== returned false
-  Obtained : 
-  Predicted: 3
 
 =======================================
 
@@ -605,12 +591,12 @@ Incorrect moved-from state post construction
 =======================================
 
 Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 172
-Incorrect moved-from state post assignment
+Incorrect moved-from state post construction
 
 --Move-only Semantics--
 [sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
-  Incorrect moved-from value after move assignment
+  Incorrect moved-from value after move construction
   [sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
   operator== returned false
   Obtained : 
@@ -632,7 +618,21 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 52
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 178
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
 Incorrect para-move allocs
 
 --Move-only Semantics--
@@ -652,7 +652,7 @@ Incorrect para-move allocs
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 55
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 57
 Incorrect para-move allocs, as unique
 
 --Move-only Semantics--
@@ -672,7 +672,7 @@ Incorrect para-move allocs, as unique
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 58
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 60
 Incorrect mutation allocs
 
 --Move-only Semantics--
@@ -692,7 +692,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 67
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 69
 Move-only beast
 
 --Move-only Semantics--
@@ -724,7 +724,7 @@ Move-only beast
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 73
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 75
 check_semantics return value (x)
 
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
@@ -734,7 +734,7 @@ Predicted: 2
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 74
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 76
 check_semantics return value (y)
 
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
@@ -745,7 +745,7 @@ Predicted:
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 85
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 87
 Broken move
 
 --Move-only Semantics--
@@ -765,7 +765,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 97
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 99
 Broken move assignment
 
 --Move-only Semantics--
@@ -779,7 +779,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 125
 Inefficient move
 
 --Move-only Semantics--
@@ -799,7 +799,7 @@ Inefficient move
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 134
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 137
 Inefficient move assignment
 
 --Move-only Semantics--
@@ -819,7 +819,7 @@ Inefficient move assignment
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 147
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 150
 Invariant violated: x != xClone
 
 --Move-only Semantics--
@@ -834,7 +834,7 @@ Invariant violated: x != xClone
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 150
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 153
 Invariant violated: y != YClone
 
 --Move-only Semantics--
@@ -849,7 +849,7 @@ Invariant violated: y != YClone
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 153
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 156
 Invariant violated: x == y
 
 --Move-only Semantics--
@@ -860,20 +860,6 @@ Invariant violated: x == y
   operator== returned false
   Obtained : false
   Predicted: true
-
-=======================================
-
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 166
-Incorrect moved-from state post construction
-
---Move-only Semantics--
-[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
-
-  Incorrect moved-from value after move construction
-  [sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
-  operator== returned false
-  Obtained : 
-  Predicted: 3
 
 =======================================
 
@@ -892,12 +878,12 @@ Incorrect moved-from state post construction
 =======================================
 
 Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 172
-Incorrect moved-from state post assignment
+Incorrect moved-from state post construction
 
 --Move-only Semantics--
 [sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
-  Incorrect moved-from value after move assignment
+  Incorrect moved-from value after move construction
   [sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
   operator== returned false
   Obtained : 
@@ -919,7 +905,21 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 52
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 178
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
 Incorrect para-move allocs
 
 --Move-only Semantics--
@@ -939,7 +939,7 @@ Incorrect para-move allocs
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 55
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 57
 Incorrect para-move allocs, as unique
 
 --Move-only Semantics--
@@ -959,7 +959,7 @@ Incorrect para-move allocs, as unique
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 58
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 60
 Incorrect mutation allocs
 
 --Move-only Semantics--
@@ -979,7 +979,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 67
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 69
 Move-only beast
 
 --Move-only Semantics--
@@ -1011,7 +1011,7 @@ Move-only beast
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 73
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 75
 check_semantics return value (x)
 
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
@@ -1021,7 +1021,7 @@ Predicted: 2
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 74
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 76
 check_semantics return value (y)
 
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
@@ -1032,7 +1032,7 @@ Predicted:
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 85
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 87
 Broken move
 
 --Move-only Semantics--
@@ -1052,7 +1052,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 97
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 99
 Broken move assignment
 
 --Move-only Semantics--
@@ -1066,7 +1066,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 113
 Broken swap
 
 --Move-only Semantics--
@@ -1086,7 +1086,7 @@ Broken swap
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 125
 Inefficient move
 
 --Move-only Semantics--
@@ -1106,7 +1106,7 @@ Inefficient move
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 134
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 137
 Inefficient move assignment
 
 --Move-only Semantics--
@@ -1126,7 +1126,7 @@ Inefficient move assignment
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 147
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 150
 Invariant violated: x != xClone
 
 --Move-only Semantics--
@@ -1141,7 +1141,7 @@ Invariant violated: x != xClone
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 150
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 153
 Invariant violated: y != YClone
 
 --Move-only Semantics--
@@ -1156,7 +1156,7 @@ Invariant violated: y != YClone
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 153
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 156
 Invariant violated: x == y
 
 --Move-only Semantics--
@@ -1167,20 +1167,6 @@ Invariant violated: x == y
   operator== returned false
   Obtained : false
   Predicted: true
-
-=======================================
-
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 166
-Incorrect moved-from state post construction
-
---Move-only Semantics--
-[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
-
-  Incorrect moved-from value after move construction
-  [sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
-  operator== returned false
-  Obtained : 
-  Predicted: 3
 
 =======================================
 
@@ -1199,6 +1185,20 @@ Incorrect moved-from state post construction
 =======================================
 
 Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 172
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 175
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
@@ -1212,7 +1212,7 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 175
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 178
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--

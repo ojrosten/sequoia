@@ -44,6 +44,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Meta/TypeNameFreeTest.cpp
                ${TestDir}/Core/Meta/TypeTraitsTest.cpp
                ${TestDir}/Core/Meta/UtilitiesTest.cpp
+               ${TestDir}/Core/Numeric/IntegerConversionsFreeTest.cpp
                ${TestDir}/Core/Object/CreatorFreeTest.cpp               
                ${TestDir}/Core/Object/FactoryTest.cpp
                ${TestDir}/Core/Object/FactoryTestingDiagnostics.cpp
@@ -55,7 +56,6 @@ target_sources(TestAll PRIVATE
                ${TestDir}/FileSystem/NormalPathTest.cpp
                ${TestDir}/FileSystem/NormalPathTestingDiagnostics.cpp
                ${TestDir}/Maths/Algebra/RatioFreeTest.cpp
-               ${TestDir}/Maths/Arithmetic/ArithmeticCastsFreeTest.cpp
                ${TestDir}/Maths/Arithmetic/SaturatingArithmeticFreeTest.cpp
                ${TestDir}/Maths/Geometry/AbsoluteCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp
@@ -95,6 +95,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphUnweightedContiguousTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Performance/DynamicGraphPerformanceTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphFundamentalWeightContiguousTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphFundamentalWeightTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphMetaDataTest.cpp
@@ -168,9 +169,12 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/BuildArtefactsTestingUtilities.cpp
                ${TestDir}/TestFramework/CMakeCacheFreeTest.cpp
                ${TestDir}/TestFramework/ChronoFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/CoarseSleepsFreeTest.cpp
                ${TestDir}/TestFramework/CommandsFreeTest.cpp
                ${TestDir}/TestFramework/ComplexFreeDiagnostics.cpp
                ${TestDir}/TestFramework/ContainerFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/CriticalPathDurationsRegularTest.cpp
+               ${TestDir}/TestFramework/CriticalPathDurationsTestingDiagnostics.cpp
                ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp
                ${TestDir}/TestFramework/DumpComparisonFreeTest.cpp
                ${TestDir}/TestFramework/ElementaryFreeDiagnostics.cpp
@@ -183,6 +187,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/FreeCheckersMetaFreeTest.cpp
                ${TestDir}/TestFramework/FunctionFreeDiagnostics.cpp
                ${TestDir}/TestFramework/IndividualTestPathsFreeTest.cpp
+               ${TestDir}/TestFramework/InstabilityAnalysisFreeTest.cpp
                ${TestDir}/TestFramework/MaterialsUpdaterFreeTest.cpp
                ${TestDir}/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyTestDiagnostics.cpp
@@ -190,26 +195,40 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/OrderableRegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PathFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/PerformanceExceptionsTest.cpp
+               ${TestDir}/TestFramework/PerformanceRealClockDiagnostics.cpp
+               ${TestDir}/TestFramework/PerformanceRetryTest.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
+               ${TestDir}/TestFramework/PerformanceUtilitiesFreeTest.cpp
                ${TestDir}/TestFramework/ProjectPathsFreeTest.cpp
                ${TestDir}/TestFramework/RegularStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/RegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
+               ${TestDir}/TestFramework/RunStampRegularTest.cpp
+               ${TestDir}/TestFramework/RunStampTestingDiagnostics.cpp
                ${TestDir}/TestFramework/SmartPointerFreeDiagnostics.cpp
                ${TestDir}/TestFramework/StringFreeDiagnostics.cpp
                ${TestDir}/TestFramework/SumTypesFreeDiagnostics.cpp
                ${TestDir}/TestFramework/SummaryFreeTest.cpp
+               ${TestDir}/TestFramework/TestExecutionCompletionRegularTest.cpp
+               ${TestDir}/TestFramework/TestExecutionRecordRegularTest.cpp
+               ${TestDir}/TestFramework/TestExecutionRecordTestingDiagnostics.cpp
+               ${TestDir}/TestFramework/TestRunnerConcurrencyTestingUtilities.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnosticsUtilities.cpp
                ${TestDir}/TestFramework/TestRunnerEndToEndFreeTest.cpp
+               ${TestDir}/TestFramework/TestRunnerPerformanceCheckOutcomesFreeTest.cpp
                ${TestDir}/TestFramework/TestRunnerPerformanceTest.cpp
                ${TestDir}/TestFramework/TestRunnerProjectCreation.cpp
                ${TestDir}/TestFramework/TestRunnerProjectFiles.cpp
+               ${TestDir}/TestFramework/TestRunnerReportedDurationsFreeTest.cpp
+               ${TestDir}/TestFramework/TestRunnerSerialExecutionFreeTest.cpp
                ${TestDir}/TestFramework/TestRunnerTest.cpp
                ${TestDir}/TestFramework/TestRunnerTestCreation.cpp
                ${TestDir}/TestFramework/VersionedOutputFreeTest.cpp
                ${TestDir}/TextProcessing/CharactersFreeTest.cpp
                ${TestDir}/TextProcessing/IndentFreeTest.cpp
+               ${TestDir}/TextProcessing/NumbersFreeTest.cpp
                ${TestDir}/TextProcessing/PatternsFreeTest.cpp
                ${TestDir}/TextProcessing/SubstitutionsFreeTest.cpp)
 

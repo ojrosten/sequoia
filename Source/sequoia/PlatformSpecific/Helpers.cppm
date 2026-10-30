@@ -9,17 +9,47 @@ export module sequoia.platform_specific:Helpers;
 
 import std;
 
+import :TimerRequests;
+
 /** \file
     \brief Platform-dependent utilities
  */
 
 export namespace sequoia
 {
+  /** \brief Sleeps for at least `duration`, as measured by
+             `std::chrono::steady_clock`, and returns the outcome of the
+             sleep's requests for a precise timer.
+
+      On macOS, the kernel may defer the wake-up from a sleep, to coalesce
+      the wake-up with others and so save power. So a
+      `std::this_thread::sleep_for` may overshoot by a quarter of its length
+      or more. On macOS, this function requests a precise timer: one which
+      the kernel is asked not to defer. If a request fails, the rest of the
+      sleep is a `std::this_thread::sleep_for`. Elsewhere the whole sleep is
+      a `std::this_thread::sleep_for`.
+   */
+  timer_request_outcome precise_sleep_for(std::chrono::nanoseconds duration);
+
   /** \brief Sets the timer resolution of the process to the finest that Windows offers, until the process exits.
 
       If Windows refuses, nothing changes. Later calls do nothing. On other platforms, the function does nothing.
+
+      \returns The outcome of the first call's request.
    */
-  void set_finest_windows_timer_resolution();
+  [[nodiscard]]
+  timer_request_outcome set_finest_windows_timer_resolution();
+
+  /** \brief The request this platform makes for more precise sleeps. */
+  inline constexpr timer_request platform_timer_request{
+    #if defined(_WIN32)
+      timer_request::finest_timer_resolution
+    #elif defined(__APPLE__)
+      timer_request::precise_timer
+    #else
+      timer_request::none
+    #endif
+  };
 
   /** \brief An RAII wrapper to redirect the assertion and error reports of MSVC's debug runtime to standard error.
 

@@ -9,9 +9,7 @@ export module sequoia.core.data_structures:StaticQueue;
 
 import std;
 
-export import sequoia.algorithms;
 export import sequoia.core.container_utilities;
-export import sequoia.core.meta;
 
 /** \file
     \brief A constexpr queue.
@@ -36,22 +34,23 @@ export namespace sequoia::data_structures
     {
     }
 
-    constexpr static_queue(const static_queue&)    = default;
-    constexpr static_queue(static_queue&) noexcept = default;
+    constexpr static_queue(const static_queue&)     = default;
+    constexpr static_queue(static_queue&&) noexcept = default;
     ~static_queue() = default;
 
-    constexpr static_queue& operator=(const static_queue&)    = default;
-    constexpr static_queue& operator=(static_queue&) noexcept = default;
+    constexpr static_queue& operator=(const static_queue&)     = default;
+    constexpr static_queue& operator=(static_queue&&) noexcept = default;
 
     constexpr void push(const T& val)
     {
+      if(size() == MaxDepth)
+      {
+        throw std::logic_error("Attempting to exceed maximum queue depth");
+      }
+
       if constexpr(MaxDepth > 0)
       {
-        if(size() == MaxDepth)
-        {
-          throw std::logic_error("Attempting to exceed maximum queue depth");
-        }
-        else if(m_Front == MaxDepth)
+        if(m_Front == MaxDepth)
         {
           m_Front = 0;
           m_Back  = 0;
@@ -63,34 +62,48 @@ export namespace sequoia::data_structures
 
         m_Queue[m_Back] = val;
       }
-      else
-      {
-        throw std::logic_error("Attempting to exceed maximum queue depth");
-      }
     }
 
     [[nodiscard]]
-    constexpr const T& back() const noexcept
+    constexpr const T& back() const
     {
+      if(empty())
+      {
+        throw std::logic_error("Attempting to access the back of an empty queue");
+      }
+
       return m_Queue[m_Back];
     }
 
     [[nodiscard]]
-    constexpr const T& front() const noexcept
+    constexpr const T& front() const
     {
+      if(empty())
+      {
+        throw std::logic_error("Attempting to access the front of an empty queue");
+      }
+
       return m_Queue[m_Front];
     }
 
-    constexpr void pop() noexcept
+    constexpr void pop()
     {
-      if(m_Front == m_Back)
+      if(empty())
       {
-        m_Front = MaxDepth;
-        m_Back = MaxDepth;
+        throw std::logic_error("Attempting to pop an empty queue");
       }
-      else
+
+      if constexpr(MaxDepth > 0)
       {
-        m_Front = (m_Front + 1) % MaxDepth;
+        if(m_Front == m_Back)
+        {
+          m_Front = MaxDepth;
+          m_Back  = MaxDepth;
+        }
+        else
+        {
+          m_Front = (m_Front + 1) % MaxDepth;
+        }
       }
     }
 

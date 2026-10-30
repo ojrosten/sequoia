@@ -1,0 +1,108 @@
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 218
+A first line which does not give the start time
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a start time but found 'begun 2026-10-13T09:15:04.123Z'
+
+=======================================
+
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 222
+A start time in a layout other than the one operator<< writes
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a start time but found 'started 2026-10-13 09:15:04.123Z'
+
+=======================================
+
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 226
+A start time with a month out of range
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a start time but found 'started 2026-13-13T09:15:04.123Z'
+
+=======================================
+
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 230
+A start time without its milliseconds
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a start time but found 'started 2026-10-13T09:15:04Z'
+
+=======================================
+
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 234
+A start time with an hour out of range
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a start time but found 'started 2026-10-13T2147483000:00:00.000Z'
+
+=======================================
+
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 238
+A record which does not say whether the test finished
+
+Expected Exception Type:
+[std::runtime_error]
+Expected whether the test finished but found 'execution duration 1500us'
+
+=======================================
+
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 242
+A blank line where a record says whether the test finished
+
+Expected Exception Type:
+[std::runtime_error]
+Expected whether the test finished but found ''
+
+=======================================
+
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 246
+A record which says the test finished, but has no completion
+
+Expected Exception Type:
+[std::runtime_error]
+Expected an execution duration but there are no more lines
+
+=======================================
+
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 250
+A record whose completion is refused
+
+Expected Exception Type:
+[std::runtime_error]
+Expected an execution duration but found 'execution duration 2ms'
+
+=======================================
+
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 308
+A file which does not exist
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read file output/TestsTemporaryData/TestFramework/TestExecutionRecordRegularTest/test_execution_record_regular_test/WorkingCopy/Missing.txt
+
+=======================================
+
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 312
+A file whose text is not a record
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read the test execution records in output/TestsTemporaryData/TestFramework/TestExecutionRecordRegularTest/test_execution_record_regular_test/WorkingCopy/Malformed.txt: Expected a start time but found 'started yesterday'
+
+=======================================
+
+Tests/TestFramework/TestExecutionRecordRegularTest.cpp, Line 316
+A file with a record followed by a line which begins no record
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read the test execution records in output/TestsTemporaryData/TestFramework/TestExecutionRecordRegularTest/test_execution_record_regular_test/WorkingCopy/Followed.txt: Expected a start time but found 'next line'
+
+=======================================
+

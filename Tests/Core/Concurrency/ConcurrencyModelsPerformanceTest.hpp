@@ -31,16 +31,4 @@ namespace sequoia::testing
     void test_waiting_task(const std::chrono::milliseconds millisecs);
     void test_waiting_task_return(const std::chrono::milliseconds millisecs);
   };
-
-  class wait
-  {
-    std::chrono::milliseconds m_Wait;
-  public:
-    wait(const std::chrono::milliseconds millisecs) : m_Wait{millisecs} {}
-
-    void operator()() const
-    {
-      std::this_thread::sleep_for(m_Wait);
-    }
-  };
 }

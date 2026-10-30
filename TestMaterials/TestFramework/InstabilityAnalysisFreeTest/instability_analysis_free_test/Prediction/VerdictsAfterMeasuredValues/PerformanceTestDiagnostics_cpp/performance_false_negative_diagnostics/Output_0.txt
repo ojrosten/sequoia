@@ -1,0 +1,26 @@
+check: 3
+length: 322
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 91
+Speed-up of 2, predicted [3.0, 3.0]
+
+The fast task is faster than the slow one, but by less than predicted
+Speed-up: 2 in [1.98, 2.02]; predicted [3, 3]
+Trials: 5, attempt 1 of 3
+Task durations: fast 0.001s, slow 0.002s
+
+=======================================
+
+
+check: 5
+length: 310
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 96
+Speed-up of 4, predicted [2.0, 2.5]
+
+The fast task is suspiciously fast: faster than predicted
+Speed-up: 4 in [3.9, 4.1]; predicted [2, 2.5]
+Trials: 5, attempt 1 of 3
+Task durations: fast 0.001s, slow 0.004s
+
+=======================================
+
+

@@ -416,7 +416,7 @@ export namespace sequoia::testing::impl
                                               opt_ref<const V> movedFrom,
                                               const Args&... args)
   {
-    T w{std::move(z)};
+    T w(std::move(z));
     if(!check_against("Inconsistent move construction", logger, w, y))
       return {};
 

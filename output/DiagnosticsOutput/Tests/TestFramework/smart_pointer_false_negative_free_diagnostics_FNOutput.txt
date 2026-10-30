@@ -47,12 +47,9 @@ Comparison performed using:
 Checking for equivalence with:
 [std::unique_ptr<int, std::default_delete<int> >]
 
+  [bool]
   Obtained : null
   Predicted: not null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 
@@ -64,12 +61,9 @@ Comparison performed using:
 Checking for equivalence with:
 [std::unique_ptr<int, std::default_delete<int> >]
 
+  [bool]
   Obtained : not null
   Predicted: null
-  [bool]
-  operator== returned false
-  Obtained : true
-  Predicted: false
 
 =======================================
 
@@ -253,12 +247,9 @@ Comparison performed using:
 Checking for equivalence with:
 [std::shared_ptr<int>]
 
+  [bool]
   Obtained : null
   Predicted: not null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 
@@ -270,12 +261,9 @@ Comparison performed using:
 Checking for equivalence with:
 [std::shared_ptr<int>]
 
+  [bool]
   Obtained : not null
   Predicted: null
-  [bool]
-  operator== returned false
-  Obtained : true
-  Predicted: false
 
 =======================================
 
@@ -421,12 +409,9 @@ Checking for equivalence with:
   Checking for equivalence with:
   [std::shared_ptr<int>]
 
+    [bool]
     Obtained : null
     Predicted: not null
-    [bool]
-    operator== returned false
-    Obtained : false
-    Predicted: true
 
 =======================================
 
@@ -444,12 +429,9 @@ Checking for equivalence with:
   Checking for equivalence with:
   [std::shared_ptr<int>]
 
+    [bool]
     Obtained : not null
     Predicted: null
-    [bool]
-    operator== returned false
-    Obtained : true
-    Predicted: false
 
 =======================================
 

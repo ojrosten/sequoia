@@ -19,7 +19,7 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    inefficient_equality(std::initializer_list<T> list) : x{list} {}
+    inefficient_equality(std::initializer_list<T> list) : x(list) {}
 
     inefficient_equality(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -83,7 +83,7 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    inefficient_inequality(std::initializer_list<T> list) : x{list} {}
+    inefficient_inequality(std::initializer_list<T> list) : x(list) {}
 
     inefficient_inequality(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -147,7 +147,7 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    inefficient_copy(std::initializer_list<T> list) : x{list} {}
+    inefficient_copy(std::initializer_list<T> list) : x(list) {}
 
     inefficient_copy(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -204,7 +204,7 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    inefficient_para_copy(std::initializer_list<T> list) : x{list} {}
+    inefficient_para_copy(std::initializer_list<T> list) : x(list) {}
 
     inefficient_para_copy(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -259,7 +259,7 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    inefficient_move(std::initializer_list<T> list) : x{list} {}
+    inefficient_move(std::initializer_list<T> list) : x(list) {}
 
     inefficient_move(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -312,7 +312,7 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    inefficient_para_move(std::initializer_list<T> list) : x{list} {}
+    inefficient_para_move(std::initializer_list<T> list) : x(list) {}
 
     inefficient_para_move(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -365,9 +365,9 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    inefficient_serialization(std::initializer_list<T> list) : x{list} {}
+    inefficient_serialization(std::initializer_list<T> list) : x(list) {}
 
-    inefficient_serialization(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    inefficient_serialization(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     inefficient_serialization(const allocator_type& a) : x(a) {}
 
@@ -445,9 +445,9 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    broken_copy_assignment_propagation(std::initializer_list<T> list) : x{list} {}
+    broken_copy_assignment_propagation(std::initializer_list<T> list) : x(list) {}
 
-    broken_copy_assignment_propagation(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    broken_copy_assignment_propagation(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     broken_copy_assignment_propagation(const allocator_type& a) : x(a) {}
 

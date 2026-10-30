@@ -1,0 +1,52 @@
+name: rerun-unacquired
+# A hosted job can wait for a runner that never comes. GitHub then gives up on
+# it, and the run fails or is cancelled on the job's absence, though the change
+# is not at fault. Eight runs lost jobs this way from 2026-09-30 to 2026-10-13,
+# five of them in one evening, and each of the seven re-run passed. So when a
+# run of a tier fails or is cancelled, this workflow re-runs a job that never
+# got a runner, together with the jobs that need it.
+# scripts/rerun_unacquired_job.sh says how such a job is recognised, which it
+# re-runs, when a run is left alone, and how many attempts it allows. A job
+# that ran and failed is re-run only if it needs a lost job, so a real failure
+# stays red.
+#
+# A run superseded by a newer push is cancelled too, and the script leaves it
+# alone: a newer run of its workflow exists, and its jobs carry no annotation
+# saying they lacked a runner.
+#
+# GitHub starts a workflow_run workflow from the default branch's copy of the
+# file, and the checkout is of the default branch. So a change here takes
+# effect once promoted to main, and nothing from the run's commit, which a
+# fork's PR could supply, runs with this workflow's token.
+#
+# This workflow's own job can lack a runner too, and then nothing re-runs the
+# run. A re-run that a person has already started may make the script's
+# request fail, and this workflow's run is then red.
+on:
+  workflow_run:
+    workflows: [coarse, fine, fine-on-retarget, rigorous, statistical]
+    types: [completed]
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  rerun:
+    name: Re-run a job that never got a runner
+    if: >-
+      github.event.workflow_run.conclusion == 'failure' ||
+      github.event.workflow_run.conclusion == 'cancelled'
+    runs-on: ubuntu-latest
+    # Long enough for the wait in scripts/read_settled_jobs.sh.
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RUN_ID: ${{ github.event.workflow_run.id }}
+      ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: scripts
+
+      - run: scripts/rerun_unacquired_job.sh "$RUN_ID" "$ATTEMPT"

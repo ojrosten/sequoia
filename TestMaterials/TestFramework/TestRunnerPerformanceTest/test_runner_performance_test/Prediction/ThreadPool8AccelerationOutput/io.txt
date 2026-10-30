@@ -1,27 +1,28 @@
 
 Running tests...
 
-slow_test_0:
+test_which_sleeps_0:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_1:
+test_which_sleeps_1:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_2:
+test_which_sleeps_2:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_3:
+test_which_sleeps_3:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_4:
+test_which_sleeps_4:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_5:
+test_which_sleeps_5:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_6:
+test_which_sleeps_6:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_7:
+test_which_sleeps_7:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
 [Total Run Time: 30.9ms]
 [Execution Time: 30.1ms]
 [Runner Overhead: 1.08ms]
+[Scheduling Overhead: 259us]
 	Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

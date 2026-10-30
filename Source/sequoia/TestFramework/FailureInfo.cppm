@@ -9,7 +9,6 @@ export module sequoia.test_framework:FailureInfo;
 
 import std;
 
-import :ProjectPaths;
 
 /** \file
     \brief Utilities for recording information from test failures.
@@ -41,7 +40,4 @@ export namespace sequoia::testing
   std::ostream& operator<<(std::ostream& s, const failure_output& output);
 
   std::istream& operator>>(std::istream& s, failure_output& output);
-
-  [[nodiscard]]
-  std::string instability_analysis(const std::filesystem::path& root, const std::size_t trials);
 }

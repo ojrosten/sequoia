@@ -15,8 +15,34 @@
 import std;
 import sequoia.test_framework;
 
+#include <iterator>
+#include <list>
+#include <ranges>
+#include <vector>
+
 namespace sequoia::testing
 {
+  template<class Sequence, class D>
+  concept permute_partitions_accepts
+    = requires(Sequence& s, D&& d) { s.permute_partitions(std::forward<D>(d)); };
+
+  // Sized and iterable when const, but readable only once
+  using input_only_destinations_t
+    = std::ranges::subrange<std::counted_iterator<std::istream_iterator<int>>, std::default_sentinel_t>;
+
+  // Its call operator is not const, so a view transformed by it can be
+  // iterated only when non-const
+  struct offsetting_transform
+  {
+    std::size_t offset{};
+
+    [[nodiscard]]
+    constexpr std::size_t operator()(const std::size_t i) noexcept { return i + offset; }
+  };
+
+  using non_const_iterable_destinations_t
+    = std::ranges::transform_view<std::ranges::iota_view<std::size_t, std::size_t>, offsetting_transform>;
+
   namespace partitioned_data
   {
     enum data_description : std::size_t {
@@ -919,6 +945,14 @@ namespace sequoia::testing
                 d.swap_partitions(0, 1);
                 return d;
               }
+            },
+            {
+              data_description::two_2_3__,
+              t.report(""),
+              [](data_type d) -> data_type {
+                d.permute_partitions(std::vector<std::size_t>{1, 0});
+                return d;
+              }
             }
           }, // end 'two__2_3'
           {  // begin 'two_2__3'
@@ -1067,6 +1101,33 @@ namespace sequoia::testing
               t.report(""),
               [](data_type d) -> data_type {
                 d.swap_partitions(1,2);
+                return d;
+              }
+            },
+            {
+              data_description::three_3____2,
+              t.report("Permuting partitions by signed destinations in a list"),
+              [](data_type d) -> data_type {
+                d.permute_partitions(std::list{2, 1, 0});
+                return d;
+              }
+            },
+            {
+              data_description::three_2__3__,
+              t.report("Permuting partitions by destinations in a view which cannot be copied"),
+              [](data_type d) -> data_type {
+                d.permute_partitions(std::vector{1, 3, 2} | std::views::transform([](int i) { return i - 1; }));
+                return d;
+              }
+            },
+            {
+              data_description::three_2____3,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                t.check_exception_thrown<std::invalid_argument>(
+                  "Permuting two partitions to one destination throws",
+                  [d{d}]() mutable { d.permute_partitions(std::vector<std::size_t>{0, 0, 1}); }
+                );
                 return d;
               }
             },

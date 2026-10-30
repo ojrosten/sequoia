@@ -17,6 +17,14 @@ namespace sequoia::testing
 {
   using namespace maths;
 
+  namespace
+  {
+    template<class Tree>
+    inline constexpr bool forest_beneath_callable_v{
+      requires(const Tree& tree) { forest_beneath(tree, 0); }
+    };
+  }
+
   [[nodiscard]]
   std::filesystem::path tree_test::source_file()
   {
@@ -36,6 +44,8 @@ namespace sequoia::testing
     test_tree_unweighted_nodes<undirected_tree<tree_link_direction::symmetric, null_weight, null_weight>>();
 
     test_forest_ranges();
+    test_forest_beneath_constraints();
+    test_adaptors_at_absent_nodes();
   }
 
   template<maths::dynamic_tree Tree>
@@ -216,8 +226,45 @@ namespace sequoia::testing
     check(equality, "Subtrees beneath the root",       rootWeights(forest_beneath(tree, 0)), std::vector<int>{-7, 6});
     check(equality, "Subtrees beneath an inner node",  rootWeights(forest_beneath(tree, 2)), std::vector<int>{3});
     check(equality, "Subtrees beneath a leaf",         rootWeights(forest_beneath(tree, 1)), std::vector<int>{});
+    check_exception_thrown<std::out_of_range>("Subtrees beneath a node the tree lacks",
+                                              [&tree](){ return forest_beneath(tree, 4); });
 
     const std::vector<tree_t> forest{tree, tree_t{{-1}}};
     check(equality, "A forest's trees, each at its root", rootWeights(forest_of(forest)), std::vector<int>{42, -1});
+  }
+
+  void tree_test::test_forest_beneath_constraints()
+  {
+    STATIC_CHECK( forest_beneath_callable_v<directed_tree<tree_link_direction::forward,     null_weight, int>>);
+    STATIC_CHECK(!forest_beneath_callable_v<directed_tree<tree_link_direction::backward,    null_weight, int>>);
+    STATIC_CHECK(!forest_beneath_callable_v<directed_tree<tree_link_direction::symmetric,   null_weight, int>>);
+    STATIC_CHECK(!forest_beneath_callable_v<undirected_tree<tree_link_direction::symmetric, null_weight, int>>);
+  }
+
+  void tree_test::test_adaptors_at_absent_nodes()
+  {
+    using tree_t = directed_tree<tree_link_direction::forward, null_weight, int>;
+
+    const std::vector<tree_t> forest{tree_t{}};
+    const auto adaptorOfEmptyTree{*forest_of(forest).begin()};
+
+    check("An empty tree's adaptor is false", !adaptorOfEmptyTree);
+    check_exception_thrown<std::out_of_range>("root_weight of an empty tree's adaptor",
+                                              [&adaptorOfEmptyTree](){ return root_weight(adaptorOfEmptyTree); });
+    check_exception_thrown<std::out_of_range>("root_weight_iter of an empty tree's adaptor",
+                                              [&adaptorOfEmptyTree](){ return root_weight_iter(adaptorOfEmptyTree); });
+
+    // 42 with children -7 and 6
+    tree_t tree{{42, {{-7}, {6}}}};
+    const tree_adaptor<tree_t> rootAdaptor{tree, 0};
+    tree_adaptor<tree_t> leafAdaptor{tree, 2};
+    tree.prune(0);
+
+    check_exception_thrown<std::out_of_range>("root_weight of an adaptor at a node its tree has lost",
+                                              [&rootAdaptor](){ return root_weight(rootAdaptor); });
+
+    // At node 0, the node storage would refuse the mutation itself
+    check_exception_thrown<std::out_of_range>("mutate_root_weight of an adaptor beyond the end of its tree",
+                                              [&leafAdaptor](){ mutate_root_weight(leafAdaptor, [](int& w){ ++w; }); });
   }
 }

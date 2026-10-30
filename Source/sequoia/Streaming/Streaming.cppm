@@ -24,9 +24,13 @@ export namespace sequoia
   std::string report_failed_write(const std::filesystem::path& file);
 
 
-  /** \brief The contents of a regular file, read in `mode`.
+  /** \brief Reads the contents of `file`, opened in `mode`.
 
-      \returns `std::nullopt` if the file cannot be opened, or its size cannot be read.
+      \returns `std::nullopt` if
+               -# `file` does not resolve to a regular file;
+               -# `file` cannot be opened;
+               -# The size of `file` cannot be determined;
+               -# The standard library reports an error while reading `file`.
    */
   [[nodiscard]]
   std::optional<std::string> read_to_string(const std::filesystem::path& file, std::ios_base::openmode mode);

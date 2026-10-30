@@ -134,6 +134,12 @@ export namespace sequoia
   template<class T>
   concept integer = std::integral<T> && !character<T> && !std::same_as<std::remove_cv_t<T>, bool>;
 
+  /** \brief An input range whose elements are `integer`s. */
+  template<class R>
+  concept range_of_integers
+    =    std::ranges::input_range<R>
+      && integer<std::ranges::range_value_t<R>>;
+
   /** \brief Similar to std::range but excludes the case where dereferencing yields the same type as the range.
   
       This avoids treating std::filesystem::path as a range in circumstances where, to do so, would be inappropriate.

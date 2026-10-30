@@ -114,13 +114,16 @@ export namespace sequoia::testing
 
     void surname(std::string name) { m_Surname = std::move(name); }
 
-    /** \brief The test's full name, if one was given */
+    /** \brief Returns the test's full name, if one was given. */
     [[nodiscard]]
     const std::optional<std::string>& full_name() const noexcept { return m_FullName; }
 
     void full_name(std::string name) { m_FullName = std::move(name); }
 
-    /** \brief The path of the testing utilities, or an empty path if none was given */
+    /** \brief Returns the path of the testing utilities, if one was given.
+
+        Otherwise, returns an empty path.
+     */
     [[nodiscard]]
     const std::filesystem::path& testing_utilities() const noexcept { return m_TestingUtilities; }
 
@@ -188,7 +191,10 @@ export namespace sequoia::testing
                   std::string_view nameStub,
                   FileTransformer transformer);
 
-    /** \brief The full name if one was given, else `name_from_forename_and_surname()` */
+    /** \brief Returns the full name, if one was given.
+
+        Otherwise, returns `name_from_forename_and_surname()`.
+     */
     [[nodiscard]]
     std::string test_name() const;
 
@@ -200,8 +206,10 @@ export namespace sequoia::testing
     [[nodiscard]]
     std::string test_file_stem() const;
 
-    /** \brief The generic form of the path of the testing utilities: relative to `host_dir()` if they lie
-        within `host_dir()`, and otherwise relative to the tests repository.
+    /** \brief Returns the generic form of the path of the testing utilities,
+               relative to `host_dir()` if they lie within it.
+
+        Otherwise, returns its generic form relative to the tests repository.
      */
     [[nodiscard]]
     std::string testing_utilities_include() const;

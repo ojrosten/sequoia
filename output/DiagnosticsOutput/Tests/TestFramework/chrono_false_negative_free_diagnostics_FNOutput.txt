@@ -1,4 +1,4 @@
-Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 29
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 52
 Duration
 
 [std::chrono::duration<long long, std::ratio<1, 1> >]
@@ -8,7 +8,7 @@ Predicted: 1s
 
 =======================================
 
-Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 30
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 53
 Duration with advice
 
 [std::chrono::duration<long long, std::ratio<1, 1> >]
@@ -19,32 +19,44 @@ Advice: Temporal advice
 
 =======================================
 
-Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 33
-Time point
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 56
+Steady time point
 
 [std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<long long, std::ratio<1, 1000000000> > >]
 operator== returned false
-
-  Time since epoch
-  [std::chrono::duration<long long, std::ratio<1, 1000000000> >]
-  operator== returned false
-  Obtained : 0ns
-  Predicted: 1000000000ns
+Obtained : 0ns since epoch
+Predicted: 1000000000ns since epoch
 
 =======================================
 
-Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 34
-Time point
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 58
+Steady time point with advice
 
 [std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<long long, std::ratio<1, 1000000000> > >]
 operator== returned false
+Obtained : 0ns since epoch
+Predicted: 1000000000ns since epoch
+Advice: Advice for time_point
 
-  Time since epoch
-  [std::chrono::duration<long long, std::ratio<1, 1000000000> >]
-  operator== returned false
-  Obtained : 0ns
-  Predicted: 1000000000ns
-  Advice: Advice for time_point needs to be in nanoseconds
+=======================================
+
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 63
+System time point
+
+[std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<long long, std::ratio<1, 1> > >]
+operator== returned false
+Obtained : 1970-01-01 00:00:00
+Predicted: 1970-01-01 00:00:01
+
+=======================================
+
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 66
+Time point which a client streams
+
+[std::chrono::time_point<(anonymous namespace)::streamed_clock, std::chrono::duration<long long, std::ratio<1, 1000> > >]
+operator== returned false
+Obtained : 0 ticks of the streamed clock
+Predicted: 1000 ticks of the streamed clock
 
 =======================================
 

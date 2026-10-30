@@ -23,6 +23,7 @@ export import sequoia.algorithms;
 export import sequoia.core.container_utilities;
 export import sequoia.core.data_structures;
 export import sequoia.core.meta;
+export import sequoia.core.numeric;
 export import sequoia.core.object;
 export import sequoia.maths.sequences;
 export import sequoia.platform_specific;
@@ -35,65 +36,6 @@ export namespace sequoia
 {
   namespace maths
   {
-    template<network Connectivity, class Nodes>
-    class SEQUOIA_MSVC_EMPTY_BASE_HACK graph_primitive;
-
-    namespace graph_impl
-    {
-      template<network Connectivity, class Nodes>
-      class graph_dereference_policy
-      {
-      public:
-        using graph_type      = graph_primitive<Connectivity, Nodes>;
-        using index_type      = graph_type::edge_index_type;
-        using difference_type = std::make_signed_t<index_type>;
-        using value_type      = index_type;
-        using reference       = index_type;
-
-        [[nodiscard]]
-        constexpr graph_type& graph() noexcept
-        {
-          return *m_Graph;
-        }
-
-        [[nodiscard]]
-        constexpr const graph_type& graph() const noexcept
-        {
-          return *m_Graph;
-        }
-
-        [[nodiscard]]
-        constexpr static reference get(index_type i) { return i; }
-      protected:
-        constexpr graph_dereference_policy() = default;
-
-        constexpr graph_dereference_policy(graph_type& g) : m_Graph{&g} {}
-
-        constexpr graph_dereference_policy(const graph_dereference_policy&)     = default;
-        constexpr graph_dereference_policy(graph_dereference_policy&&) noexcept = default;
-        
-        ~graph_dereference_policy() = default;
-        
-        constexpr graph_dereference_policy& operator=(const graph_dereference_policy&)     = default;
-        constexpr graph_dereference_policy& operator=(graph_dereference_policy&&) noexcept = default;
-
-      private:
-        graph_type* m_Graph{};
-      };
-
-      /// Designed to swap nodes, when used in conjunction with sequoia::swap,
-      /// courtesy of the overload of iter_swap, below.
-      /// This is a pseudo iterator since it doesn't have reference semantics
-      template<network Connectivity, class Nodes>
-      using pseudo_iterator = utilities::iterator<typename graph_primitive<Connectivity, Nodes>::edge_index_type, graph_dereference_policy<Connectivity, Nodes>>;
-    }
-
-    template<network Connectivity, class Nodes>
-    constexpr void iter_swap(graph_impl::pseudo_iterator<Connectivity, Nodes> a, graph_impl::pseudo_iterator<Connectivity, Nodes> b)
-    {
-      a.graph().swap_nodes(a.base_iterator(), b.base_iterator());
-    }
-
     template<class NodeWeight>
     struct tree_initializer
     {
@@ -123,13 +65,18 @@ export namespace sequoia
     private:
       using node_weight_type = Nodes::weight_type;
 
+      template<class Compare>
+      constexpr static bool nodes_sortable_by_v{
+           !heterogeneous_nodes<graph_primitive>
+        && std::sortable<std::ranges::iterator_t<std::vector<typename Connectivity::edge_index_type>>, Compare>
+      };
+
     public:
       using connectivity_type = Connectivity;
       using nodes_type        = Nodes;
       using edge_init_type    = Connectivity::edge_init_type;
       using edge_index_type   = Connectivity::edge_index_type;
       using size_type         = std::common_type_t<typename Connectivity::size_type, typename Nodes::size_type>;
-      using pseudo_iterator   = graph_impl::pseudo_iterator<Connectivity, Nodes>;
 
       using edges_initializer = std::initializer_list<std::initializer_list<edge_init_type>>;
 
@@ -150,7 +97,7 @@ export namespace sequoia
       constexpr graph_primitive(edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
         requires (!std::is_empty_v<node_weight_type> && !heterogeneous_nodes<graph_primitive>)
         : Connectivity{check_initialization(edges, nodeWeights.size(), edges.size())}
-        , Nodes{nodeWeights}
+        , Nodes(nodeWeights)
       {}
 
       template<class... NodeWeights>
@@ -197,16 +144,64 @@ export namespace sequoia
         Connectivity::swap_nodes(i, j);
       }
 
+      /** \brief Sorts all the nodes, as `sort_nodes(0, order(), c)` does. */
       template<class Compare>
+        requires nodes_sortable_by_v<Compare>
       constexpr void sort_nodes(Compare c)
       {
-        sort_nodes(edge_index_type{}, Connectivity::order(), std::move(c));
+        sort_nodes(edge_index_type{},
+                   numeric::unchecked_conversion_to<edge_index_type>(Connectivity::order()),
+                   std::move(c));
       }
 
+      /** \brief Sorts the nodes `first` to `last - 1` with `c`, which
+                 compares two nodes given their indices.
+
+          Every call of `c` precedes any change to the graph, so `c` reads
+          the graph as it was. Each node keeps its weight and its edges, the
+          edges in their order.
+
+          \pre `c` is a strict weak ordering on the indices `first` to `last - 1`,
+               and does not modify the graph.
+
+          \throws std::out_of_range if `first < last` and `last` exceeds
+          `order()`. If `c` throws, the graph is unchanged.
+       */
       template<class Compare>
+        requires nodes_sortable_by_v<Compare>
       constexpr void sort_nodes(const edge_index_type first, const edge_index_type last, Compare c)
       {
-        sequoia::sort(pseudo_iterator{first, *this}, pseudo_iterator{last, *this}, std::move(c));
+        if(last <= first)
+          return;
+
+        graph_errors::check_node_index_range("sort_nodes", Connectivity::order(), last - 1uz);
+
+        const auto sortedNodes{
+          [first, last, &c]() {
+            auto nodes{std::views::iota(first, last) | std::ranges::to<std::vector>()};
+            std::ranges::sort(nodes, std::move(c));
+            return nodes;
+          }()
+        };
+
+        auto destinations{
+          [this, first, &sortedNodes]() {
+            const auto nodeCount{numeric::unchecked_conversion_to<edge_index_type>(Connectivity::order())};
+            auto nodeDestinations{std::views::iota(edge_index_type{}, nodeCount) | std::ranges::to<std::vector>()};
+            for(const auto [destination, node] : std::views::zip(std::views::iota(first), sortedNodes))
+            {
+              nodeDestinations[node] = destination;
+            }
+
+            return nodeDestinations;
+          }()
+        };
+
+        Connectivity::permute_nodes(destinations);
+        if constexpr(!std::is_empty_v<node_weight_type>)
+        {
+          Nodes::permute_nodes(std::move(destinations));
+        }
       }
 
       //===============================equality (not isomorphism) operators================================//
@@ -271,7 +266,7 @@ export namespace sequoia
         requires enable_node_allocation_v<node_weight_type>
       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, std::initializer_list<node_weight_type> nodeWeights, const NodeAllocator& nodeAlloc)
         : Connectivity{edges, edgeAlloc}
-        , Nodes{nodeWeights, nodeAlloc}
+        , Nodes(nodeWeights, nodeAlloc)
       {}
 
       template
@@ -283,7 +278,7 @@ export namespace sequoia
         requires enable_node_allocation_v<node_weight_type>
       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, std::initializer_list<node_weight_type> nodeWeights, const NodeAllocator& nodeAlloc)
         : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}
-        , Nodes{nodeWeights, nodeAlloc}
+        , Nodes(nodeWeights, nodeAlloc)
       {}
 
       template
@@ -350,7 +345,7 @@ export namespace sequoia
         requires enable_node_allocation_v<node_weight_type>
       constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
         : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc, edgeParitionsAlloc}
-        , Nodes{static_cast<const Nodes&>(in), nodeAlloc}
+        , Nodes(static_cast<const Nodes&>(in), nodeAlloc)
       {}
 
       template
@@ -361,7 +356,7 @@ export namespace sequoia
         requires enable_node_allocation_v<node_weight_type>
       constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc, const NodeAllocator& nodeAlloc)
         : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc}
-        , Nodes{static_cast<const Nodes&>(in), nodeAlloc}
+        , Nodes(static_cast<const Nodes&>(in), nodeAlloc)
       {}
 
       template
@@ -372,14 +367,14 @@ export namespace sequoia
         requires (!enable_node_allocation_v<node_weight_type>)
       constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc)
         : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc, edgeParitionsAlloc}
-        , Nodes{static_cast<const Nodes&>(in)}
+        , Nodes(static_cast<const Nodes&>(in))
       {}
 
       template<alloc EdgeAllocator>
         requires (!enable_node_allocation_v<node_weight_type>)
       constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc)
         : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc}
-        , Nodes{static_cast<const Nodes&>(in)}
+        , Nodes(static_cast<const Nodes&>(in))
       {}
 
       constexpr graph_primitive(graph_primitive&&) noexcept = default;
@@ -395,7 +390,7 @@ export namespace sequoia
         requires enable_node_allocation_v<node_weight_type>
       constexpr graph_primitive(graph_primitive&& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
         : Connectivity{static_cast<Connectivity&&>(in), edgeAlloc, edgeParitionsAlloc}
-        , Nodes{static_cast<Nodes&&>(in), nodeAlloc}
+        , Nodes(static_cast<Nodes&&>(in), nodeAlloc)
       {}
 
       template
@@ -406,7 +401,7 @@ export namespace sequoia
         requires enable_node_allocation_v<node_weight_type>
       constexpr graph_primitive(graph_primitive&& in, const EdgeAllocator& edgeAlloc, const NodeAllocator& nodeAlloc)
         : Connectivity{static_cast<Connectivity&&>(in), edgeAlloc}
-        , Nodes{static_cast<Nodes&&>(in), nodeAlloc}
+        , Nodes(static_cast<Nodes&&>(in), nodeAlloc)
       {}
 
       template
@@ -418,7 +413,7 @@ export namespace sequoia
         requires (!enable_node_allocation_v<node_weight_type>)
       constexpr graph_primitive(graph_primitive&& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc)
         : Connectivity{static_cast<Connectivity&&>(in), edgeAlloc, edgeParitionsAlloc}
-        , Nodes{static_cast<Nodes&&>(in)}
+        , Nodes(static_cast<Nodes&&>(in))
       {}
 
       template
@@ -429,7 +424,7 @@ export namespace sequoia
         requires (!enable_node_allocation_v<node_weight_type>)
       constexpr graph_primitive(graph_primitive&& in, const EdgeAllocator& edgeAlloc)
         : Connectivity{static_cast<Connectivity&&>(in), edgeAlloc}
-        , Nodes{static_cast<Nodes&&>(in)}
+        , Nodes(static_cast<Nodes&&>(in))
       {}
 
       ~graph_primitive() = default;
@@ -498,7 +493,8 @@ export namespace sequoia
       void erase_node(const size_type node)
       {
         Connectivity::erase_node(node);
-        if constexpr (!std::is_empty_v<node_weight_type>) Nodes::erase_node(this->cbegin_node_weights() + node);
+        if constexpr (!std::is_empty_v<node_weight_type>)
+          Nodes::erase_node(this->cbegin_node_weights() + numeric::unchecked_conversion_to<std::ptrdiff_t>(node));
       }
 
       void clear() noexcept
@@ -595,18 +591,13 @@ export namespace sequoia
         }
       }
 
-      [[nodiscard]]
-      pseudo_iterator begin() noexcept { return {edge_index_type{}, *this}; }
-
-      [[nodiscard]]
-      pseudo_iterator end() noexcept { return {Connectivity::order(), *this}; }
-
       template<class... Args>
       void insert_node_weight(const size_type node, Args&&... args)
       {
         if constexpr (!std::is_empty_v<node_weight_type>)
         {
-          Nodes::insert_node(this->cbegin_node_weights() + node, std::forward<Args>(args)...);
+          Nodes::insert_node(this->cbegin_node_weights() + numeric::unchecked_conversion_to<std::ptrdiff_t>(node),
+                             std::forward<Args>(args)...);
         }
       }
 
@@ -614,7 +605,7 @@ export namespace sequoia
       {
         if(!std::is_empty_v<node_weight_type>)
         {
-          Nodes::erase_node(this->cbegin_node_weights() + index);
+          Nodes::erase_node(this->cbegin_node_weights() + numeric::unchecked_conversion_to<std::ptrdiff_t>(index));
         }
       }
     };

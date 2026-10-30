@@ -24,9 +24,9 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    orderable_regular_beast(std::initializer_list<T> list) : x{list} {}
+    orderable_regular_beast(std::initializer_list<T> list) : x(list) {}
 
-    orderable_regular_beast(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    orderable_regular_beast(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     orderable_regular_beast(const allocator_type& a) : x(a) {}
 
@@ -116,7 +116,7 @@ namespace sequoia::testing
     using     value_type = T;
     using allocator_type = Allocator;
 
-    orderable_specified_moved_from_beast(std::initializer_list<T> list) : x{list} {}
+    orderable_specified_moved_from_beast(std::initializer_list<T> list) : x(list) {}
 
     orderable_specified_moved_from_beast(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -176,9 +176,9 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    regular_broken_less(std::initializer_list<T> list) : x{list} {}
+    regular_broken_less(std::initializer_list<T> list) : x(list) {}
 
-    regular_broken_less(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    regular_broken_less(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     regular_broken_less(const allocator_type& a) : x(a) {}
 
@@ -255,9 +255,9 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    regular_broken_lesseq(std::initializer_list<T> list) : x{list} {}
+    regular_broken_lesseq(std::initializer_list<T> list) : x(list) {}
 
-    regular_broken_lesseq(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    regular_broken_lesseq(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     regular_broken_lesseq(const allocator_type& a) : x(a) {}
 
@@ -334,9 +334,9 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    regular_broken_greater(std::initializer_list<T> list) : x{list} {}
+    regular_broken_greater(std::initializer_list<T> list) : x(list) {}
 
-    regular_broken_greater(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    regular_broken_greater(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     regular_broken_greater(const allocator_type& a) : x(a) {}
 
@@ -416,9 +416,9 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    regular_broken_greatereq(std::initializer_list<T> list) : x{list} {}
+    regular_broken_greatereq(std::initializer_list<T> list) : x(list) {}
 
-    regular_broken_greatereq(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    regular_broken_greatereq(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     regular_broken_greatereq(const allocator_type& a) : x(a) {}
 
@@ -498,9 +498,9 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    regular_inverted_comparisons(std::initializer_list<T> list) : x{list} {}
+    regular_inverted_comparisons(std::initializer_list<T> list) : x(list) {}
 
-    regular_inverted_comparisons(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    regular_inverted_comparisons(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     regular_inverted_comparisons(const allocator_type& a) : x(a) {}
 
@@ -580,9 +580,9 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    regular_broken_spaceship(std::initializer_list<T> list) : x{list} {}
+    regular_broken_spaceship(std::initializer_list<T> list) : x(list) {}
 
-    regular_broken_spaceship(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    regular_broken_spaceship(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     regular_broken_spaceship(const allocator_type& a) : x(a) {}
 
@@ -662,9 +662,9 @@ namespace sequoia::testing
   {
     using allocator_type = Allocator;
 
-    orderable_regular_inefficient_comparisons(std::initializer_list<T> list) : x{list} {}
+    orderable_regular_inefficient_comparisons(std::initializer_list<T> list) : x(list) {}
 
-    orderable_regular_inefficient_comparisons(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    orderable_regular_inefficient_comparisons(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     orderable_regular_inefficient_comparisons(const allocator_type& a) : x(a) {}
 

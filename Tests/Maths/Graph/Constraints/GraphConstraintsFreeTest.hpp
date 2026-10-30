@@ -33,6 +33,8 @@ namespace sequoia::testing
 
     void test_join_constraints();
 
+    void test_sort_nodes_constraints();
+
     void test_mutator_constraints();
 
     template<class EdgeStorageConfig>

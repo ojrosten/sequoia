@@ -1,2 +1,3 @@
 test_runner_performance_test
-Standard Top Level Checks:                26;  Failures:  0  [Deep checks: 80]
+Standard Top Level Checks:                 9;  Failures:  0  [Deep checks: 36]
+Standard Performance Checks:               3;  Failures:  0

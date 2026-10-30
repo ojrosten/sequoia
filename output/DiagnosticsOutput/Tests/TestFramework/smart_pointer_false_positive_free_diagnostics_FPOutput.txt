@@ -1,5 +1,5 @@
 False Negative Failure:
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 136
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 132
 Equality of null pointer with itself
 
 [std::unique_ptr<int, std::default_delete<int> >]
@@ -7,7 +7,18 @@ Equality of null pointer with itself
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 137
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 133
+Equivalence of null pointer with itself
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
+Checking for equivalence with:
+[std::unique_ptr<int, std::default_delete<int> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 134
 Equality of non-null pointer with itself
 
 [std::unique_ptr<int, std::default_delete<int> >]
@@ -15,7 +26,7 @@ Equality of non-null pointer with itself
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 138
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 135
 Different pointers pointing to identical values
 
 Comparison performed using:
@@ -26,7 +37,7 @@ Checking for equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 143
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 140
 Different pointers pointing to identical values
 
 Comparison performed using:
@@ -37,7 +48,7 @@ Checking for equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 150
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 147
 Different pointers pointing to identical values
 
 Comparison performed using:
@@ -48,7 +59,7 @@ Checking for equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 158
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 155
 Different pointers pointing to identical values
 
 Comparison performed using:
@@ -59,7 +70,7 @@ Checking for equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 169
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 166
 Equality of null pointer with itself
 
 [std::shared_ptr<int>]
@@ -67,7 +78,18 @@ Equality of null pointer with itself
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 170
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 167
+Equivalence of null pointer with itself
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::shared_ptr<int> >]
+Checking for equivalence with:
+[std::shared_ptr<int>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 168
 Equality of non-null pointer with itself
 
 [std::shared_ptr<int>]
@@ -75,7 +97,7 @@ Equality of non-null pointer with itself
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 171
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 169
 Different pointers pointing to identical values
 
 Comparison performed using:
@@ -86,7 +108,7 @@ Checking for equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 177
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 175
 Different pointers pointing to identical values
 
 Comparison performed using:
@@ -97,7 +119,7 @@ Checking for equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 188
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 186
 Equality of null pointer with itself
 
 [std::weak_ptr<int>]
@@ -105,7 +127,18 @@ Equality of null pointer with itself
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 193
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 187
+Equivalence of null pointer with itself
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::weak_ptr<int> >]
+Checking for equivalence with:
+[std::weak_ptr<int>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 192
 Different pointers weakly pointing to identical values
 
 Comparison performed using:

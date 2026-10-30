@@ -33,6 +33,7 @@ multi_periodic_free_test:
 [Total Run Time: 1.04ms]
 [Execution Time: 520us]
 [Runner Overhead: 2.51ms]
+[Scheduling Overhead: 12.6us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -96,6 +97,7 @@ multi_periodic_free_test:
 [Total Run Time: 626us]
 [Execution Time: 215us]
 [Runner Overhead: 2.3ms]
+[Scheduling Overhead: 7.21us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -148,6 +150,7 @@ multi_periodic_free_test:
 [Total Run Time: 550us]
 [Execution Time: 177us]
 [Runner Overhead: 2.5ms]
+[Scheduling Overhead: 6.54us]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -211,6 +214,7 @@ multi_periodic_free_test:
 [Total Run Time: 573us]
 [Execution Time: 189us]
 [Runner Overhead: 2.09ms]
+[Scheduling Overhead: 7.63us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -252,6 +256,7 @@ multi_periodic_free_test:
 [Total Run Time: 506us]
 [Execution Time: 159us]
 [Runner Overhead: 1.96ms]
+[Scheduling Overhead: 8.12us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -325,6 +330,7 @@ multi_periodic_free_test:
 [Total Run Time: 593us]
 [Execution Time: 240us]
 [Runner Overhead: 2.35ms]
+[Scheduling Overhead: 6.42us]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

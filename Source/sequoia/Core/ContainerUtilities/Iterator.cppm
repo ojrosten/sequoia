@@ -21,21 +21,6 @@ export import sequoia.core.meta;
 
 export namespace sequoia::utilities
 {
-  template<class I>
-  concept decrementable = requires(I i) {
-    { --i } -> std::same_as<I&>;
-    { i-- } -> std::convertible_to<I>;
-  };
-
-  template<class I>
-  concept steppable = requires(I i, const I j, const std::iter_difference_t<I> n) {
-    { i += n } -> std::same_as<I&>;
-    { j + n }  -> std::convertible_to<I>;
-    { n + j }  -> std::convertible_to<I>;
-    { i -= n } -> std::same_as<I&>;
-    { j - n }  -> std::convertible_to<I>;
-  };
-
   namespace impl
   {
     template<class Policy>
@@ -82,84 +67,6 @@ export namespace sequoia::utilities
 
   template<class Iterator, dereference_policy_for<Iterator> Deref>
   using pointer_type_t = pointer_type<Iterator, Deref>::type;
-
-  /** \brief Detects difference_type */
-
-  template<class T>
-  inline constexpr bool has_difference_type{requires { typename T::difference_type; }};
-
-  template<class Iterator, dereference_policy_for<Iterator> Deref>
-  struct difference_type;
-
-  template<class Iterator, dereference_policy_for<Iterator> Deref>
-    requires has_difference_type<Deref>
-  struct difference_type<Iterator, Deref>
-  {
-    using type = Deref::difference_type;
-  };
-
-  template<class Iterator, dereference_policy_for<Iterator> Deref>
-    requires (!has_difference_type<Deref> && std::input_or_output_iterator<Iterator>)
-  struct difference_type<Iterator, Deref>
-  {
-    using type = std::iterator_traits<Iterator>::difference_type;
-  };
-
-  template<class Iterator, dereference_policy_for<Iterator> Deref>
-  using difference_type_t = difference_type<Iterator, Deref>::type;
-
-  /** \brief Detects value_type */
-
-  template<class T>
-  struct value_type
-  {
-    using type = void;
-  };
-
-  template<class I>
-    requires std::input_or_output_iterator<I>
-  struct value_type<I>
-  {
-    using type = std::iter_value_t<I>;
-  };
-
-  template<class T>
-    requires (!std::input_or_output_iterator<T> && has_value_type_v<T>)
-  struct value_type<T>
-  {
-    using type = T::value_type;
-  };
-
-  template<class T>
-  using value_type_t = value_type<T>::type;
-
-  /** \brief Detects reference_type */
-
-  template<class T>
-  inline constexpr bool has_reference_type{requires { typename T::reference; }};
-
-  template<class T>
-  struct reference_type
-  {
-    using type = void;
-  };
-
-  template<class I>
-    requires std::input_or_output_iterator<I>
-  struct reference_type<I>
-  {
-    using type = std::iter_reference_t<I>;
-  };
-
-  template<class T>
-    requires (!std::input_or_output_iterator<T> && has_reference_type<T>)
-  struct reference_type<T>
-  {
-    using type = T::reference;
-  };
-
-  template<class T>
-  using reference_type_t = reference_type<T>::type;
 
   /** \brief Policy representing absence of additional data carried by the`identity_dereference_policy` */
 
@@ -217,10 +124,10 @@ export namespace sequoia::utilities
 
   template<class Iterator, dereference_policy_for<Iterator> DereferencePolicy>
   inline constexpr bool has_sensible_semantics{
-       (    std::indirectly_writable<reference_type_t<Iterator>, value_type_t<Iterator>>
-         && std::indirectly_writable<reference_type_t<DereferencePolicy>, value_type_t<DereferencePolicy>>)
-    || (    !std::indirectly_writable<reference_type_t<Iterator>, value_type_t<Iterator>>
-         && !std::indirectly_writable<reference_type_t<DereferencePolicy>, value_type_t<DereferencePolicy>>)
+       (    std::indirectly_writable<std::iter_reference_t<Iterator>, std::iter_value_t<Iterator>>
+         && std::indirectly_writable<typename DereferencePolicy::reference, typename DereferencePolicy::value_type>)
+    || (    !std::indirectly_writable<std::iter_reference_t<Iterator>, std::iter_value_t<Iterator>>
+         && !std::indirectly_writable<typename DereferencePolicy::reference, typename DereferencePolicy::value_type>)
   };
 
   /** \class iterator
@@ -232,7 +139,7 @@ export namespace sequoia::utilities
       indirectly_writable. Therefore, this is forbidden.
    */
 
-  template<class Iterator, dereference_policy_for<Iterator> DereferencePolicy>
+  template<std::input_or_output_iterator Iterator, dereference_policy_for<Iterator> DereferencePolicy>
     requires has_sensible_semantics<Iterator, DereferencePolicy>
   class iterator : public DereferencePolicy
   {
@@ -242,7 +149,7 @@ export namespace sequoia::utilities
 
     using value_type      = DereferencePolicy::value_type;
     using reference       = DereferencePolicy::reference;
-    using difference_type = difference_type_t<Iterator, DereferencePolicy>;
+    using difference_type = std::iter_difference_t<Iterator>;
     using pointer         = pointer_type_t<Iterator, DereferencePolicy>;
 
     constexpr iterator() = default;
@@ -281,7 +188,7 @@ export namespace sequoia::utilities
 
     [[nodiscard]]
     constexpr reference operator[](const difference_type n) const
-      requires steppable<Iterator>
+      requires std::random_access_iterator<Iterator>
     {
       return DereferencePolicy::get(m_BaseIterator + n);
     }
@@ -313,7 +220,7 @@ export namespace sequoia::utilities
     // nothing here can be at fault.
 SEQUOIA_GCC_SUPPRESS_BEGIN("-Warray-bounds")
     constexpr iterator& operator+=(const difference_type n)
-      requires steppable<Iterator>
+      requires std::random_access_iterator<Iterator>
     {
       m_BaseIterator += n;
       return *this;
@@ -321,7 +228,7 @@ SEQUOIA_GCC_SUPPRESS_BEGIN("-Warray-bounds")
 
     [[nodiscard]]
     friend constexpr iterator operator+(const iterator& it, const difference_type n)
-      requires steppable<Iterator>
+      requires std::random_access_iterator<Iterator>
     {
       iterator tmp{it};
       return tmp += n;
@@ -330,20 +237,20 @@ SEQUOIA_GCC_SUPPRESS_END
 
     [[nodiscard]]
     friend constexpr iterator operator+(const difference_type n, const iterator& it)
-      requires steppable<Iterator>
+      requires std::random_access_iterator<Iterator>
     {
       return it + n;
     }
 
     constexpr iterator& operator--()
-      requires decrementable<Iterator>
+      requires std::bidirectional_iterator<Iterator>
     {
       --m_BaseIterator;
       return *this;
     }
 
     constexpr iterator operator--(int)
-      requires decrementable<Iterator>
+      requires std::bidirectional_iterator<Iterator>
     {
       iterator tmp{*this};
       operator--();
@@ -351,7 +258,7 @@ SEQUOIA_GCC_SUPPRESS_END
     }
 
     constexpr iterator& operator-=(const difference_type n)
-      requires steppable<Iterator>
+      requires std::random_access_iterator<Iterator>
     {
       m_BaseIterator -= n;
       return *this;
@@ -359,7 +266,7 @@ SEQUOIA_GCC_SUPPRESS_END
 
     [[nodiscard]]
     friend constexpr iterator operator-(const iterator& it, const difference_type n)
-      requires steppable<Iterator>
+      requires std::random_access_iterator<Iterator>
     {
       iterator tmp{it};
       return tmp -= n;
@@ -367,7 +274,7 @@ SEQUOIA_GCC_SUPPRESS_END
 
     [[nodiscard]]
     friend constexpr difference_type operator-(const iterator& lhs, const iterator& rhs)
-      requires steppable<Iterator>
+      requires std::sized_sentinel_for<Iterator, Iterator>
     {
       return lhs.base_iterator() - rhs.base_iterator();
     }
@@ -380,6 +287,7 @@ SEQUOIA_GCC_SUPPRESS_END
 
     [[nodiscard]]
     friend constexpr auto operator<=>(const iterator& lhs, const iterator& rhs) noexcept
+      requires std::three_way_comparable<Iterator>
     {
       return lhs.m_BaseIterator <=> rhs.m_BaseIterator;
     }

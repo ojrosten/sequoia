@@ -134,6 +134,7 @@ namespace sequoia::testing
       using ptr_t = std::unique_ptr<int>;
       ptr_t p{}, q{std::make_unique<int>(42)};
       check(equality, "Equality of null pointer with itself", p, p);
+      check(equivalence, "Equivalence of null pointer with itself", p, p);
       check(equality, "Equality of non-null pointer with itself", q, q);
       check(equivalence, "Different pointers pointing to identical values", std::make_unique<int>(42), std::make_unique<int>(42));
     }
@@ -167,6 +168,7 @@ namespace sequoia::testing
       using ptr_t = std::shared_ptr<int>;
       ptr_t p{}, q{std::make_shared<int>(42)};
       check(equality, "Equality of null pointer with itself", p, p);
+      check(equivalence, "Equivalence of null pointer with itself", p, p);
       check(equality, "Equality of non-null pointer with itself", q, q);
       check(equivalence, "Different pointers pointing to identical values", std::make_shared<int>(42), std::make_shared<int>(42));
     }
@@ -186,6 +188,7 @@ namespace sequoia::testing
       using wptr_t = std::weak_ptr<int>;
       wptr_t wp{};
       check(equality, "Equality of null pointer with itself", wp, wp);
+      check(equivalence, "Equivalence of null pointer with itself", wp, wp);
 
       auto q{std::make_shared<int>(42)}, r{std::make_shared<int>(42)};
       wptr_t wq{q}, wr{r};

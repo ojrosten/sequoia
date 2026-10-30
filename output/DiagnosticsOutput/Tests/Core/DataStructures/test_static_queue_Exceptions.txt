@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 38
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 62
 Can't push to null queue
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Attempting to exceed maximum queue depth
 
 =======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 39
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 63
 Can't construct non-null null queue
 
 Expected Exception Type:
@@ -16,7 +16,34 @@ initializer_list of size 1 too big for array: expected at most 0 elements
 
 =======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 52
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 64
+Can't access front of null queue
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to access the front of an empty queue
+
+=======================================
+
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 65
+Can't access back of null queue
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to access the back of an empty queue
+
+=======================================
+
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 66
+Can't pop from null queue
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to pop an empty queue
+
+=======================================
+
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 79
 Trying to push two elements to queue of depth 1
 
 Expected Exception Type:
@@ -25,7 +52,7 @@ Attempting to exceed maximum queue depth
 
 =======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 53
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 80
 Can't construct queue of depth 1 with 2 elements
 
 Expected Exception Type:
@@ -35,6 +62,33 @@ initializer_list of size 2 too big for array: expected at most 1 elements
 =======================================
 
 Tests/Core/DataStructures/StaticQueueTest.cpp, Line 85
+Can't access front of empty queue
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to access the front of an empty queue
+
+=======================================
+
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 86
+Can't access back of empty queue
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to access the back of an empty queue
+
+=======================================
+
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 87
+Can't pop from empty queue
+
+Expected Exception Type:
+[std::logic_error]
+Attempting to pop an empty queue
+
+=======================================
+
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 119
 Can't construct queue of depth 2 with 3 elements
 
 Expected Exception Type:
@@ -43,7 +97,7 @@ initializer_list of size 3 too big for array: expected at most 2 elements
 
 =======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 94
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 130
 Trying to push 3 elements to a queue of depth 2
 
 Expected Exception Type:
@@ -52,7 +106,7 @@ Attempting to exceed maximum queue depth
 
 =======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 102
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 140
 Trying to push 3 elements to a queue of depth 2
 
 Expected Exception Type:

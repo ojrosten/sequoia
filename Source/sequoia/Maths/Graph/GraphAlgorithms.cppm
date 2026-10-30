@@ -26,6 +26,7 @@ export import sequoia.algorithms;
 export import sequoia.core.container_utilities;
 export import sequoia.core.data_structures;
 export import sequoia.core.meta;
+export import sequoia.core.numeric;
 export import sequoia.core.object;
 export import sequoia.maths.sequences;
 export import sequoia.platform_specific;
@@ -46,7 +47,7 @@ export namespace sequoia::maths
     std::size_t pos{};
     while(pos < subGraph.order())
     {
-      if(!nodePred(*(subGraph.cbegin_node_weights() + pos)))
+      if(!nodePred(*(subGraph.cbegin_node_weights() + numeric::unchecked_conversion_to<std::ptrdiff_t>(pos))))
       {
         subGraph.erase_node(pos);
       }

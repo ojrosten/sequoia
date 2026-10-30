@@ -5,13 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#pragma once
+
+/** \file */
+
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
 import std;
 import sequoia.test_framework;
-
-/** \file */
 
 namespace sequoia::testing
 {
@@ -43,5 +45,7 @@ namespace sequoia::testing
     void test_node_1_node_0();
 
     void test_node_1_node_2_node_0();
+
+    void test_order_beyond_signed_char();
   };
 }

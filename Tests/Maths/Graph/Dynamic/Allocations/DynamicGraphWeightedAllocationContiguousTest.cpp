@@ -8,6 +8,8 @@
 #include "DynamicGraphWeightedAllocationContiguousTest.hpp"
 #include "DynamicGraphAllocationTestingUtilities.hpp"
 
+#include "Core/DataStructures/ElementTestingUtilities.hpp"
+
 import std;
 
 namespace sequoia::testing
@@ -47,6 +49,8 @@ namespace sequoia::testing
 
       helper.run_tests<contig_edge_config, nstorage>();
     }
+
+    test_node_weights_constructible_from_anything();
   }
 
   template
@@ -127,5 +131,37 @@ namespace sequoia::testing
     {
       check_semantics("", g2, Graph{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{edge_alloc_getter<Graph>{}, {0_c, {1_c, 0_mu}, {1_anp, 1_awp}}}, allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}}, allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
     }
+  }
+
+  void weighted_graph_allocation_contiguous_test::test_node_weights_constructible_from_anything()
+  {
+    using graph_t                   = maths::directed_graph<maths::null_weight,
+                                                            constructible_from_anything,
+                                                            custom_allocator_contiguous_edge_storage_config,
+                                                            node_storage_generator_t<constructible_from_anything>>;
+    using edge_allocator            = graph_t::edge_allocator_type;
+    using edge_partitions_allocator = decltype(graph_t{}.get_edge_allocator(maths::partitions_allocator_tag{}));
+    using node_allocator            = graph_t::node_weight_allocator_type;
+    using prediction_t              = std::pair<std::initializer_list<std::initializer_list<graph_t::edge_init_type>>,
+                                                std::initializer_list<constructible_from_anything>>;
+
+    const graph_t::edges_initializer edges{{}};
+    const std::initializer_list<constructible_from_anything> weights{1};
+
+    auto nodeMaker{
+      [](graph_t& graph) { graph.add_node(); }
+    };
+
+    const auto[x,y]{check_semantics("",
+                                    [](){ return graph_t(edge_allocator{}, edge_partitions_allocator{}, node_allocator{}); },
+                                    [&](){ return graph_t(edges, edge_allocator{}, edge_partitions_allocator{}, weights, node_allocator{}); },
+                                    nodeMaker,
+                                    allocation_info{edge_alloc_getter<graph_t>{}, {0_c, {0_c, 0_mu}, {0_anp, 0_awp}}},
+                                    allocation_info{edge_partitions_alloc_getter<graph_t>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}},
+                                    allocation_info{node_alloc_getter<graph_t>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}})};
+
+    check(equivalence, "", x, prediction_t{});
+    check(equivalence, "", y, prediction_t{{{}}, {1}});
+    check(equivalence, "From edges and node weights, without allocators", graph_t(edges, weights), prediction_t{{{}}, {1}});
   }
 }

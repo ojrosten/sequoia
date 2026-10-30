@@ -19,6 +19,7 @@ module sequoia.test_framework;
 
 import std;
 
+import sequoia.core.numeric;
 import sequoia.file_system;
 import sequoia.text_processing;
 
@@ -362,7 +363,7 @@ namespace sequoia::testing
       char* end{};
       const auto first {name.data() + start};
       const auto value {std::strtold(first, &end)};
-      const auto length{std::ranges::distance(first, end)};
+      const auto length{numeric::unchecked_conversion_to<size_type>(std::ranges::distance(first, end))};
       if(length == 0)
         return start;
 
@@ -408,24 +409,17 @@ namespace sequoia::testing
         if(pos == npos)
           break;
 
+        // Continuing inside the identifier is safe: the next search, for `<`, space or `{`, finds none in it
         const bool continuesIdentifier{!is_identifier_delimiter(name[pos - 1])};
         if(continuesIdentifier)
-        {
-          const auto identifierEnd{std::ranges::find_if(name.begin() + pos, name.end(), is_identifier_delimiter)};
-          pos = std::ranges::distance(name.begin(), identifierEnd);
           continue;
-        }
 
         if(name[pos - 1] == '[')
           pos = respell_bit_pattern_literal(name, pos);
 
         pos = respell_hex_float(name, pos);
 
-        if(pos + 1 < name.size())
-        {
-          const auto digitsEnd{std::ranges::find_if_not(name.begin() + pos + 1, name.end(), ascii::is_digit)};
-          pos = std::ranges::distance(name.begin(), digitsEnd);
-        }
+        pos = name.find_first_not_of("0123456789", pos + 1);
 
         pos = erase_literal_suffix(name, pos);
       }
@@ -754,12 +748,6 @@ namespace sequoia::testing
 
       return name;
     }
-
-    [[nodiscard]]
-    std::string nullable_type_message(const bool holdsValue)
-    {
-      return std::string{holdsValue ? "not " : ""}.append("null");
-    }
   }
 
   [[nodiscard]]
@@ -870,8 +858,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string nullable_type_message(const bool obtainedHoldsValue, const bool predictedHoldsValue)
   {
-    return std::string{"Obtained : "}.append(nullable_type_message(obtainedHoldsValue)).append("\n")
-               .append("Predicted: ").append(nullable_type_message(predictedHoldsValue));
+    return default_prediction_message(name_of_nullable_state(obtainedHoldsValue),
+                                      name_of_nullable_state(predictedHoldsValue));
   }
 
   [[nodiscard]]

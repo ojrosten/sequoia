@@ -106,6 +106,60 @@ export namespace sequoia::testing
     }
   };
 
+  /** \brief Function object for checking that two values both hold a value or
+             both do not.
+
+      On failure, each value's state is reported as `nameOfStateWithValue` or
+      `nameOfStateWithoutValue`.
+   */
+  class both_or_neither_hold_a_value
+  {
+    std::string m_NameOfStateWithValue{},
+                m_NameOfStateWithoutValue{};
+  public:
+    constexpr explicit both_or_neither_hold_a_value(std::string nameOfStateWithValue,
+                                                    std::string nameOfStateWithoutValue)
+      : m_NameOfStateWithValue{std::move(nameOfStateWithValue)}
+      , m_NameOfStateWithoutValue{std::move(nameOfStateWithoutValue)}
+    {}
+
+    [[nodiscard]]
+    constexpr std::string_view name_of_state(const bool holdsValue) const noexcept
+    {
+      return holdsValue ? m_NameOfStateWithValue : m_NameOfStateWithoutValue;
+    }
+
+    [[nodiscard]]
+    constexpr bool operator()(const bool obtainedHoldsValue, const bool predictedHoldsValue) const noexcept
+    {
+      return obtainedHoldsValue == predictedHoldsValue;
+    }
+  };
+
+  template<>
+  struct failure_reporter<both_or_neither_hold_a_value>
+  {
+    template<bool IsFinalMessage>
+    [[nodiscard]]
+    static std::string reporter(final_message_constant<IsFinalMessage>,
+                                const both_or_neither_hold_a_value& c,
+                                const bool obtainedHoldsValue,
+                                const bool predictedHoldsValue)
+    {
+      return default_prediction_message(c.name_of_state(obtainedHoldsValue), c.name_of_state(predictedHoldsValue));
+    }
+  };
+
+  /** \brief Returns a `both_or_neither_hold_a_value` which names each state by
+             `name_of_nullable_state`.
+   */
+  [[nodiscard]]
+  constexpr both_or_neither_hold_a_value both_or_neither_null()
+  {
+    return both_or_neither_hold_a_value{std::string{name_of_nullable_state(true)},
+                                        std::string{name_of_nullable_state(false)}};
+  }
+
   template<>
   struct failure_reporter<std::ranges::equal_to>
   {

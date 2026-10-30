@@ -31,6 +31,14 @@ namespace sequoia
 
         move_only_weight& operator=(move_only_weight&&) noexcept = default;
       };
+
+      template<class IndexType>
+      concept partial_edge_admits
+        = requires { typename partial_edge<by_value<int>, null_meta_data, IndexType>; };
+
+      template<class IndexType>
+      concept embedded_partial_edge_admits
+        = requires { typename embedded_partial_edge<by_value<int>, null_meta_data, IndexType>; };
     }
 
     [[nodiscard]]
@@ -42,6 +50,7 @@ namespace sequoia
     void test_edges::run_tests()
     {
       test_copyability();
+      test_index_type_constraint();
 
       test_plain_partial_edge();
       test_partial_edge_indep_weight();
@@ -92,6 +101,17 @@ namespace sequoia
       STATIC_CHECK(std::is_copy_assignable_v<copyable_edge>);
     }
 
+    void test_edges::test_index_type_constraint()
+    {
+      STATIC_CHECK( partial_edge_admits<unsigned char>);
+      STATIC_CHECK(!partial_edge_admits<char>);
+      STATIC_CHECK(!partial_edge_admits<bool>);
+
+      STATIC_CHECK( embedded_partial_edge_admits<unsigned char>);
+      STATIC_CHECK(!embedded_partial_edge_admits<char>);
+      STATIC_CHECK(!embedded_partial_edge_admits<bool>);
+    }
+
     void test_edges::test_plain_partial_edge()
     {
       using edge_t = partial_edge<by_value<null_weight>, null_meta_data>;
@@ -101,10 +121,10 @@ namespace sequoia
       STATIC_CHECK(sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t e0{0};
-      check(equivalence, "Construction", e0, 0);
+      check(equivalence, "Construction", e0, 0uz);
 
       edge_t e1{1};
-      check(equivalence, "Construction", e1, 1);
+      check(equivalence, "Construction", e1, 1uz);
 
       check_semantics("Standard semantics", e0, e1);
 
@@ -112,7 +132,7 @@ namespace sequoia
       check(equality, "Changing target node", e0, e1);
 
       edge_t e2{3};
-      check(equivalence, "", e2, 3);
+      check(equivalence, "", e2, 3uz);
 
       check_semantics("Standard semantics", e2, e1);
     }

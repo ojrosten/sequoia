@@ -54,6 +54,60 @@ namespace sequoia::testing
     concept scaling_iterator = sequoia::utilities::dereference_policy_for<DerefPolicy, Iterator>
       && requires(DerefPolicy & d) { d.scale(); };
 
+    // Post-increment returns void, so this input iterator does not meet the
+    // C++17 input iterator requirements, and std::iterator_traits is empty for
+    // it. Wrapping it checks that utilities::iterator does not read the
+    // difference type from std::iterator_traits.
+    class counting_input_iterator
+    {
+    public:
+      using value_type       = int;
+      using difference_type  = std::ptrdiff_t;
+      using iterator_concept = std::input_iterator_tag;
+
+      constexpr counting_input_iterator() = default;
+      constexpr explicit counting_input_iterator(const value_type count) : m_Count{count} {}
+
+      [[nodiscard]]
+      constexpr value_type operator*() const noexcept { return m_Count; }
+
+      constexpr counting_input_iterator& operator++() noexcept
+      {
+        ++m_Count;
+        return *this;
+      }
+
+      constexpr void operator++(int) noexcept { ++m_Count; }
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const counting_input_iterator&,
+                                       const counting_input_iterator&) noexcept = default;
+    private:
+      value_type m_Count{};
+    };
+
+    template<class I>
+    constexpr bool has_iterator_traits_difference_type_v{
+      requires { typename std::iterator_traits<I>::difference_type; }
+    };
+
+    class doubling_dereference_policy
+    {
+    public:
+      using value_type = int;
+      using reference  = int;
+
+      [[nodiscard]]
+      constexpr static reference get(const counting_input_iterator i) noexcept { return 2 * *i; }
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const doubling_dereference_policy&,
+                                       const doubling_dereference_policy&) noexcept = default;
+    protected:
+      constexpr doubling_dereference_policy() = default;
+      ~doubling_dereference_policy() = default;
+    };
+
     template<class I>
     constexpr bool has_arrow_operator_v{
       requires (I i) { i.operator->(); }
@@ -75,6 +129,43 @@ namespace sequoia::testing
 
     test_const_scaling_iterator();
     test_const_reverse_scaling_iterator();
+
+    test_traitless_input_iterator();
+
+    test_nested_bidirectional_iterator();
+  }
+
+  void iterator_test::test_traitless_input_iterator()
+  {
+    using namespace utilities;
+
+    using iter_t = iterator<counting_input_iterator, doubling_dereference_policy>;
+
+    STATIC_CHECK(std::input_iterator<counting_input_iterator>);
+    STATIC_CHECK(!has_iterator_traits_difference_type_v<counting_input_iterator>);
+    STATIC_CHECK(std::is_same_v<iter_t::difference_type, std::ptrdiff_t>);
+    STATIC_CHECK(std::input_iterator<iter_t>);
+
+    iter_t i{counting_input_iterator{3}};
+    check(equality, "Dereferencing an iterator over an input iterator without iterator traits", *i, 6);
+
+    ++i;
+    check(equality, "Pre-incrementing an iterator over an input iterator without iterator traits", *i, 8);
+
+    check(equality, "Post-incrementing an iterator over an input iterator without iterator traits", *i++, 8);
+    check(equality, "Post-increment advances an iterator over an input iterator without iterator traits", *i, 10);
+  }
+
+  void iterator_test::test_nested_bidirectional_iterator()
+  {
+    using namespace utilities;
+
+    using base_iter_t   = std::list<int>::iterator;
+    using iter_t        = iterator<base_iter_t, identity_dereference_policy<base_iter_t>>;
+    using nested_iter_t = iterator<iter_t, identity_dereference_policy<iter_t>>;
+
+    STATIC_CHECK( std::bidirectional_iterator<nested_iter_t>);
+    STATIC_CHECK(!std::random_access_iterator<nested_iter_t>);
   }
 
   void iterator_test::test_iterator()
@@ -307,6 +398,8 @@ namespace sequoia::testing
     check(message, i <= j);
     check(message, j >= i);
     check(equality, append_lines(message, "Check non-zero distance"), distance(i, j), distance(begin, end));
+    check(equality, append_lines(message, "Check non-zero difference"), j - i, distance(begin, end));
+    check(equality, append_lines(message, "Check negative difference"), i - j, -distance(begin, end));
 
     check(equality, message, *++i, begin[1] * scale);
     check(equality, message, *i++, begin[1] * scale);

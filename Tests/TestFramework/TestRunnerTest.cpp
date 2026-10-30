@@ -7,7 +7,9 @@
 
 #include "TestRunnerTest.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
-#include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "CriticalPathDurationsTestingUtilities.hpp"
+#include "TestExecutionRecordTestingUtilities.hpp"
+#include "TestRunnerTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
 #include "TestFramework/BuildArtefactsTestingUtilities.hpp"
 
@@ -97,7 +99,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"Standard Failure"}, 43, 42);
+        check(equality, "Standard Failure", 43, 42);
       }
     };
 
@@ -154,7 +156,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"False positive failure"}, 42, 42);
+        check(equality, "False positive failure", 42, 42);
       }
     };
 
@@ -171,7 +173,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"False negative failure"}, 43, 42);
+        check(equality, "False negative failure", 43, 42);
       }
     };
 
@@ -195,11 +197,11 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"Flipper"}, flipper{}.x, true);
+        check(equality, "Flipper", flipper{}.x, true);
       }
     };
 
-    template<std::size_t N>
+    template<int N>
     struct periodic
     {
       periodic() { x = (x+1) % N;}
@@ -220,7 +222,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"Period 4"}, periodic<4>{}.x, 1);
+        check(equality, "Period 4", periodic<4>{}.x, 1);
       }
     };
 
@@ -237,8 +239,8 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, {"Period 2: Pass/Fail/Pass"}, periodic<2>{}.x, 1);
-        check({"Period 3: Pass/Pass/Fail"}, periodic<3>{}.x > 0);
+        check(equality, "Period 2: Pass/Fail/Pass", periodic<2>{}.x, 1);
+        check("Period 3: Pass/Pass/Fail", periodic<3>{}.x > 0);
       }
     };
 
@@ -255,9 +257,9 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check({"Always fails"}, false);
+        check("Always fails", false);
 
-        check(equality, {"Flipper"}, flipper{}.x, true);
+        check(equality, "Flipper", flipper{}.x, true);
       }
     };
 
@@ -274,7 +276,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check({"Always fails"}, false);
+        check("Always fails", false);
       }
     };
 
@@ -295,7 +297,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check({"Always passes"}, true);
+        check("Always passes", true);
       }
     };
 
@@ -312,7 +314,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check({"Always passes"}, true);
+        check("Always passes", true);
       }
     };
 
@@ -734,20 +736,9 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
-    [[nodiscard]]
-    test_runner make_fake_runner(commandline_arguments& args, std::stringstream& outputStream)
-    {
-      return test_runner{args.size(),
-                         args.get(),
-                         "Oliver J. Rosten",
-                         "  ",
-                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                         outputStream};
-    }
-
     test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
     {
-      auto runner{make_fake_runner(args, outputStream)};
+      auto runner{make_fake_project_runner(args, outputStream)};
 
       runner.register_test<failing_test>();
       runner.register_test<failing_fp_test>();
@@ -905,46 +896,7 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
-    /// The time a record or the run's stamp names after `started`; the times sort as their text does
-    [[nodiscard]]
-    std::string start_named_by(const fs::path& file)
-    {
-      std::ifstream stream{file};
-      std::string word{}, start{};
-      stream >> word >> start;
-
-      return start;
-    }
-
-    /// The label of each line of a test's execution record: the text before the line's last space
-    [[nodiscard]]
-    std::vector<std::string> execution_record_labels(const fs::path& record)
-    {
-      std::vector<std::string> labels{};
-      std::ifstream file{record};
-      for(std::string line{}; std::getline(file, line);)
-      {
-        labels.push_back(line.substr(0, line.rfind(' ')));
-      }
-
-      return labels;
-    }
-
-    /// The value of the line of a test's execution record labelled `label`, or nothing if there is no such line
-    [[nodiscard]]
-    std::string execution_record_value(const fs::path& record, std::string_view label)
-    {
-      std::ifstream file{record};
-      for(std::string line{}; std::getline(file, line);)
-      {
-        if(line.starts_with(label) && (line.size() > label.size()) && (line[label.size()] == ' '))
-          return line.substr(label.size() + 1);
-      }
-
-      return "";
-    }
-
-    /// Checks its own execution record while it executes
+    /// Checks its own execution records while it executes
     class record_reading_free_test final : public free_test
     {
     public:
@@ -959,13 +911,40 @@ namespace sequoia::testing
       void run_tests()
       {
         const test_execution_record_path record{source_file(), name(), get_project_paths()};
-        check(equality,
-              "While a test executes, its record names its start and no execution duration",
-              execution_record_labels(record.file_path()),
-              std::vector<std::string>{"started"});
+        const auto records{read_test_execution_records(record.file_path())};
+        if(check("While a test executes, it has a record", !records.empty()))
+        {
+          check("While a test executes, its last record has no completion",
+                !records.back().completion.has_value());
+        }
 
         check("While a test executes, the run's stamp already exists",
               fs::exists(get_project_paths().execution_records().stamp()));
+      }
+    };
+
+    [[nodiscard]]
+    std::vector<bool> completion_flags_of(const std::vector<test_execution_record>& records)
+    {
+      auto hasCompletion{[](const test_execution_record& record) { return record.completion.has_value(); }};
+
+      return records | std::views::transform(hasCompletion) | std::ranges::to<std::vector>();
+    }
+
+    /** The return code, execution records and stamp of a run of one test */
+    struct recorded_run
+    {
+      return_code                            code{};
+      test_execution_record::start_time_type moment_before_construction{};
+      std::vector<test_execution_record>     execution_records{};
+      run_stamp                              stamp{};
+
+      [[nodiscard]]
+      bool is_stamp_between_construction_and_test() const noexcept
+      {
+        return !execution_records.empty()
+            && (moment_before_construction <= stamp.start_time)
+            && (stamp.start_time <= execution_records.front().start_time);
       }
     };
 
@@ -1007,7 +986,9 @@ namespace sequoia::testing
     test_verbose_output();
     test_serial_verbose_output();
     test_throwing_tests();
-    test_execution_records();
+    test_recording_of_executions();
+    test_recording_of_repetitions();
+    test_recording_of_successive_runs();
     test_summary_collision_with_an_unselected_test();
     test_discriminated_summary();
     test_filtered_suites();
@@ -1042,6 +1023,7 @@ namespace sequoia::testing
     test_sandboxed_repetition();
     test_exit_statuses();
     test_return_code_names();
+    test_wall_clock_apportionment();
   }
 
   void test_runner_test::test_discriminator_hooks()
@@ -1087,24 +1069,6 @@ namespace sequoia::testing
     STATIC_CHECK(!Probe<overloaded_nullary_hooks_test>::conforming_v);
   }
 
-  [[nodiscard]]
-  fs::path test_runner_test::fake_project() const
-  {
-    return auxiliary_materials() /= "FakeProject";
-  }
-
-  [[nodiscard]]
-  fs::path test_runner_test::minimal_fake_path() const
-  {
-    return fake_project().append("build/CMade/FakeExe.txt");
-  }
-
-  [[nodiscard]]
-  std::string test_runner_test::zeroth_arg() const
-  {
-    return (minimal_fake_path()).generic_string();
-  }
-
   void test_runner_test::write(std::string_view dirName, std::stringstream& output) const
   {
     const auto outputDir{working_materials() /= dirName};
@@ -1123,11 +1087,19 @@ namespace sequoia::testing
 
   void test_runner_test::test_exceptions()
   {
+    check_exception_thrown<std::domain_error>(
+      reporter{"A negative runner id"},
+      [this]() {
+        std::stringstream outputStream{};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials(), "locate", "2", "--runner-id", "-1")};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
+      });
+
     check_exception_thrown<std::runtime_error>(
       reporter{"Test Main has empty path"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{""}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       });
 
@@ -1135,7 +1107,7 @@ namespace sequoia::testing
       reporter{"Test Main does not exist"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"FooMain.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       });
 
@@ -1143,7 +1115,7 @@ namespace sequoia::testing
       reporter{"Include Target has empty path"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{""}}, outputStream};
       });
 
@@ -1151,7 +1123,7 @@ namespace sequoia::testing
       reporter{"Include Target does not exist"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"FooPath.hpp"}}, outputStream};
       });
 
@@ -1167,7 +1139,7 @@ namespace sequoia::testing
       reporter{"Project root does not exist"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{{(fake_project() / "FooRepo").generic_string()}};
+        commandline_arguments args{{(fake_project_root(auxiliary_materials()) / "FooRepo").generic_string()}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       },
       [](const project_paths& projPaths, std::string message){
@@ -1185,7 +1157,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{"Project root not findable"},
       [this]() {
-        const auto zerothArg{fake_project().append("TestShared").generic_string()};
+        const auto zerothArg{fake_project_root(auxiliary_materials()).append("TestShared").generic_string()};
         std::stringstream outputStream{};
         commandline_arguments args{{zerothArg}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
@@ -1194,10 +1166,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       reporter{"The same test registered twice"},
       [this](){
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         std::stringstream outputStream{};
   
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<foo_test>();
         runner.register_test<foo_test>();
@@ -1206,10 +1178,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       reporter{"Two tests whose unqualified names coincide"},
       [this](){
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         std::stringstream outputStream{};
 
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<foo_test>();
         runner.register_test<another_namespace::foo_test>();
@@ -1218,16 +1190,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       reporter{"A source in the directory sharing another's materials prefix"},
       [this](){
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<outer_free_test>();
         runner.register_test<inner_free_test>();
@@ -1236,16 +1202,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       reporter{"A source whose materials prefix is a directory holding another's source"},
       [this](){
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<inner_free_test>();
         runner.register_test<outer_free_test>();
@@ -1254,16 +1214,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       reporter{"A source in a directory sharing another's materials prefix but for case"},
       [this](){
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<outer_free_test>();
         runner.register_test<differently_cased_inner_free_test>();
@@ -1272,16 +1226,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       reporter{"Two tests whose names differ only in case"},
       [this](){
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<foo_test>();
         runner.register_test<Foo_test>();
@@ -1290,16 +1238,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       reporter{"A source two directories beneath another's materials prefix"},
       [this](){
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<outer_free_test>();
         runner.register_test<deeply_inner_free_test>();
@@ -1308,16 +1250,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       reporter{"A source whose materials prefix, but for case, is a directory holding another's source"},
       [this](){
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<differently_cased_inner_free_test>();
         runner.register_test<outer_free_test>();
@@ -1326,16 +1262,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       reporter{"Sources beside a materials prefix and sharing it are admitted; one beneath it then is not"},
       [this](){
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<outer_free_test>();
         runner.register_test<adjacent_free_test>();
@@ -1346,16 +1276,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       reporter{"A source whose materials prefix contains a non-ASCII byte"},
       [this](){
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<non_ascii_free_test>();
       });
@@ -1363,16 +1287,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       reporter{"A test whose name contains a non-ASCII letter"},
       [this](){
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<caf\u00E9_free_test>();
       });
@@ -1380,16 +1298,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       reporter{"A test with no source file"},
       [this](){
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<sourceless_free_test>();
       });
@@ -1397,16 +1309,10 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{"Two tests whose summaries are one file, both selected"},
       [this](){
-        commandline_arguments args{{zeroth_arg()}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<summary_collider_test>();
         runner.register_test<summary_collider_test_twin>();
@@ -1434,9 +1340,9 @@ namespace sequoia::testing
     // This is scoped to ensure destruction of the runner - and therefore loggers -
     // before dumping output to a file. The destructors are not trivial in recovery mode.
     {
-      commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v", "recover", "dump"}};
+      commandline_arguments args{fake_project_commandline(auxiliary_materials(), "-v", "recover", "dump")};
   
-      auto runner{make_fake_runner(args, outputStream)};
+      auto runner{make_fake_project_runner(args, outputStream)};
 
       runner.register_test<bar_free_test>();
       runner.register_test<foo_test>();
@@ -1449,9 +1355,10 @@ namespace sequoia::testing
 
     write_to_file(outputDir / "io.txt", outputStream.str(), std::ios_base::out);
 
-    fs::copy(fake_project() / "output" / "Recovery" / "Recovery.txt", working_materials() /= "RecoveryAndDumpOutput");
-    fs::copy(fake_project() / "output" / "Recovery" / "Dump.txt", working_materials() /= "RecoveryAndDumpOutput");
-    fs::copy(fake_project() / "output" / "TestSummaries",
+    const auto fakeProjectRoot{fake_project_root(auxiliary_materials())};
+    fs::copy(fakeProjectRoot / "output" / "Recovery" / "Recovery.txt", working_materials() /= "RecoveryAndDumpOutput");
+    fs::copy(fakeProjectRoot / "output" / "Recovery" / "Dump.txt", working_materials() /= "RecoveryAndDumpOutput");
+    fs::copy(fakeProjectRoot / "output" / "TestSummaries",
              working_materials() /= "RecoveryAndDumpOutput/TestSummaries",
              fs::copy_options::recursive);
 
@@ -1463,9 +1370,9 @@ namespace sequoia::testing
   void test_runner_test::test_basic_output()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     check(equality, "No tests return code", runner.execute(), return_code::success);
     check_output("No Tests", "NoTests", outputStream);
@@ -1485,9 +1392,9 @@ namespace sequoia::testing
   void test_runner_test::test_tests_registered_between_executions()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<failing_test>();
     check(equality, "First execution return code", runner.execute(), return_code::soft_failures);
@@ -1503,13 +1410,22 @@ namespace sequoia::testing
          not the `std::logic_error` which refuses a duplicate name.
       -# The execution runs the tests registered before and after it.
       -# A runner whose only registration threw has nothing registered.
+      -# The test's file of execution records keeps an earlier run's record.
    */
   void test_runner_test::test_execution_after_a_registration_which_threw()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
+
+    const test_execution_record_path executionRecordPath{throwing_discriminator_test::source_file(),
+                                                         test_name<throwing_discriminator_test>(),
+                                                         runner.proj_paths()};
+
+    const auto earlierRecordText{to_string(test_execution_record{})};
+    fs::create_directories(executionRecordPath.file_path().parent_path());
+    write_to_file(executionRecordPath.file_path(), earlierRecordText, std::ios_base::binary);
 
     runner.register_test<failing_test>();
 
@@ -1517,12 +1433,17 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>("Registration whose hook throws", registerThrowingTest);
     check_exception_thrown<std::runtime_error>("The same registration again", registerThrowingTest);
 
+    check(equality,
+          "A registration whose hook throws leaves the test's execution records as they were",
+          read_to_string(executionRecordPath.file_path(), std::ios_base::binary).value_or(""),
+          earlierRecordText);
+
     runner.register_test<passing_test>();
     check(equality, "Execution return code", runner.execute(), return_code::soft_failures);
     check_output("Execution", "ExecutionAfterARegistrationWhichThrewOutput", outputStream);
 
     std::stringstream nothingRegisteredStream{};
-    auto nothingRegisteredRunner{make_fake_runner(args, nothingRegisteredStream)};
+    auto nothingRegisteredRunner{make_fake_project_runner(args, nothingRegisteredStream)};
     check_exception_thrown<std::runtime_error>(
       "The only registration, whose hook throws",
       [&nothingRegisteredRunner](){ nothingRegisteredRunner.register_test<throwing_discriminator_test>(); }
@@ -1537,10 +1458,10 @@ namespace sequoia::testing
    */
   void test_runner_test::test_registration_outside_a_run()
   {
-    commandline_arguments args{{zeroth_arg(), "--help"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "--help")};
     std::stringstream outputStream{};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<throwing_discriminator_test>();
     check(equality, "Return code", runner.execute(), return_code::success);
@@ -1558,7 +1479,7 @@ namespace sequoia::testing
     // Failing tests are registered so that a run which went ahead would show in the return code
     for(const auto& [commands, dirName] : requests)
     {
-      std::vector<std::string> argList{zeroth_arg()};
+      auto argList{fake_project_commandline(auxiliary_materials())};
       argList.append_range(commands);
       argList.push_back("--help");
 
@@ -1573,7 +1494,7 @@ namespace sequoia::testing
   void test_runner_test::test_verbose_output()
   {
     std::stringstream outputStream{};
-    auto runner{make_failing_suite({{(minimal_fake_path()).generic_string(), "-v"}}, outputStream)};
+    auto runner{make_failing_suite(fake_project_commandline(auxiliary_materials(), "-v"), outputStream)};
 
     check(equality, "Verbose output return code", runner.execute(), return_code::soft_failures);
     check_output("Basic Verbose Output", "BasicVerboseOutput", outputStream);
@@ -1582,7 +1503,7 @@ namespace sequoia::testing
   void test_runner_test::test_serial_verbose_output()
   {
     std::stringstream outputStream{};
-    auto runner{make_failing_suite({{(minimal_fake_path()).generic_string(), "-v", "--serial"}}, outputStream)};
+    auto runner{make_failing_suite(fake_project_commandline(auxiliary_materials(), "-v", "--serial"), outputStream)};
 
     check(equality, "Serial verbose output return code", runner.execute(), return_code::soft_failures);
     check_output("Basic Serial Verbose Output", "BasicSerialVerboseOutput", outputStream);
@@ -1591,9 +1512,9 @@ namespace sequoia::testing
   void test_runner_test::test_throwing_tests()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<throwing_test>();
     runner.register_test<platform_specific_throwing_test>();
@@ -1603,55 +1524,141 @@ namespace sequoia::testing
 
     const fs::path diagnosticsDir{working_materials() /= "ThrowingDiagnostics"};
     fs::create_directory(diagnosticsDir);
-    fs::copy(fake_project() / "output/DiagnosticsOutput/Tests", diagnosticsDir);
+    fs::copy(fake_project_root(auxiliary_materials()) / "output/DiagnosticsOutput/Tests", diagnosticsDir);
 
     check(equivalence, "Exception Output", predictive_materials() / "ThrowingDiagnostics", diagnosticsDir);
   }
 
-  /** The fake tests tell the mechanism from its rivals: `record_reading_free_test` sees its record while it executes,
-      which a start written only at the end would not produce; `escaping_exception_free_test` throws, which an
-      execution duration written only on normal completion would miss. The records directory is removed first, so that
-      only this run can have written the stamp.
+  /** The fake tests tell the mechanism from its rivals.
+      `record_reading_free_test` sees its record while it executes, which a
+      start time written only at the end would not produce.
+      `escaping_exception_free_test` throws, which an execution duration
+      written only on normal completion would miss.
+
+      Each fake test runs alone, so that a run's return code is its test's
+      alone. Each run removes the records directory before constructing its
+      runner, so that only that run can have written the stamp.
    */
-  void test_runner_test::test_execution_records()
+  void test_runner_test::test_recording_of_executions()
+  {
+    auto runAlone{
+      [this]<concrete_test Test>(std::type_identity<Test>) {
+        std::stringstream outputStream{};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials())};
+        const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
+        fs::remove_all(projPaths.execution_records().dir());
+
+        const auto momentBeforeConstruction{
+          std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now())
+        };
+        auto runner{make_fake_project_runner(args, outputStream)};
+        runner.register_test<Test>();
+
+        const auto code{runner.execute()};
+        const test_execution_record_path testRecordPath{Test::source_file(), test_name<Test>(), projPaths};
+
+        return recorded_run{
+          .code{code},
+          .moment_before_construction{momentBeforeConstruction},
+          .execution_records{read_test_execution_records(testRecordPath.file_path())},
+          .stamp{read_run_stamp(projPaths.execution_records().stamp())}
+        };
+      }
+    };
+
+    const auto passing {runAlone(std::type_identity<record_reading_free_test>{})},
+               throwing{runAlone(std::type_identity<escaping_exception_free_test>{})};
+
+    check(equality,
+          "A run of a test which reads its own record succeeds",
+          passing.code,
+          return_code::success);
+
+    check(equality,
+          "A run of a test whose body throws fails critically",
+          throwing.code,
+          return_code::critical_failures);
+
+    check(equality,
+          "A test which passed is recorded as it starts, and again, with a completion, as it finishes",
+          completion_flags_of(passing.execution_records),
+          std::vector{false, true});
+
+    check(equality,
+          "A test whose body threw is recorded as it starts, and again, with a completion, as it finishes",
+          completion_flags_of(throwing.execution_records),
+          std::vector{false, true});
+
+    check("The stamp's start time lies between the runner's construction and the start time of a test which passed",
+          passing.is_stamp_between_construction_and_test());
+
+    check("The stamp's start time lies between the runner's construction and the start time of a test whose body threw",
+          throwing.is_stamp_between_construction_and_test());
+  }
+
+  /** Under `locate-instabilities`, a test's file of execution records keeps
+      the records of every repetition. The records directory is removed
+      first, so that only this run can have written records.
+   */
+  void test_runner_test::test_recording_of_repetitions()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
-
-    const auto& projPaths{runner.proj_paths()};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "locate", "2")};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
     fs::remove_all(projPaths.execution_records().dir());
 
-    runner.register_test<record_reading_free_test>();
-    runner.register_test<escaping_exception_free_test>();
+    auto runner{make_fake_project_runner(args, outputStream)};
+    runner.register_test<passing_test>();
 
-    check(equality, "Execution records return code", runner.execute(), return_code::critical_failures);
+    check(equality, "Two repetitions of a passing test return code", runner.execute(), return_code::success);
 
+    const test_execution_record_path record{passing_test::source_file(), test_name<passing_test>(), projPaths};
+    check(equality,
+          "Each repetition of a test is recorded as it starts, and again, with a completion, as it finishes",
+          completion_flags_of(read_test_execution_records(record.file_path())),
+          std::vector{false, true, false, true});
+  }
+
+  /** For each test it includes, a run replaces the earlier execution records
+      with its own. The run leaves the records of any other test as they
+      were. Both tests' files start with an unfinished record from an
+      earlier run. The run selects `passing_test` alone, so `failing_test` is
+      registered but left out.
+   */
+  void test_runner_test::test_recording_of_successive_runs()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(),
+                                                        "select",
+                                                        passing_test::source_file().generic_string())};
+
+    auto runner{make_fake_project_runner(args, outputStream)};
+    const auto& projPaths{runner.proj_paths()};
     const test_execution_record_path
-      passingRecord{record_reading_free_test::source_file(),     test_name<record_reading_free_test>(),     projPaths},
-      throwingRecord{escaping_exception_free_test::source_file(), test_name<escaping_exception_free_test>(), projPaths};
+      selectedTestRecordPath{passing_test::source_file(), test_name<passing_test>(), projPaths},
+      unselectedTestRecordPath{failing_test::source_file(), test_name<failing_test>(), projPaths};
 
-    const std::vector<std::string> finishedRecordLabels{"started", "execution duration", "runner overhead"};
+    const auto earlierRecordText{to_string(test_execution_record{})};
+    for(const auto& record : {selectedTestRecordPath, unselectedTestRecordPath})
+    {
+      fs::create_directories(record.file_path().parent_path());
+      write_to_file(record.file_path(), earlierRecordText, std::ios_base::binary);
+    }
+
+    runner.register_test<passing_test>();
+    runner.register_test<failing_test>();
+
+    check(equality, "A run of the selected test return code", runner.execute(), return_code::success);
+
     check(equality,
-          "The record of a test which passed names its start, its execution duration and the runner's overhead",
-          execution_record_labels(passingRecord.file_path()),
-          finishedRecordLabels);
+          "A run replaces an earlier run's execution records of a test it runs with its own",
+          completion_flags_of(read_test_execution_records(selectedTestRecordPath.file_path())),
+          std::vector{false, true});
 
     check(equality,
-          "The record of a test whose body threw names its start, its execution duration and the runner's overhead",
-          execution_record_labels(throwingRecord.file_path()),
-          finishedRecordLabels);
-
-    const auto runStart{start_named_by(projPaths.execution_records().stamp())};
-    check("The run's stamp names a start", !runStart.empty());
-    const bool runStartedFirst{   (runStart <= start_named_by(passingRecord.file_path()))
-                               && (runStart <= start_named_by(throwingRecord.file_path()))};
-    check("The run started no later than either test", runStartedFirst);
+          "A run leaves the execution records of a test it does not run as they were",
+          read_to_string(unselectedTestRecordPath.file_path(), std::ios_base::binary).value_or(""),
+          earlierRecordText);
   }
 
   /** `summary_collider_test_twin` is selected and `summary_collider_test` is
@@ -1662,13 +1669,13 @@ namespace sequoia::testing
    */
   void test_runner_test::test_summary_collision_with_an_unselected_test()
   {
-    commandline_arguments args{{(minimal_fake_path()).generic_string(),
-                                "select",
-                                summary_collider_test_twin::source_file().generic_string()}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(),
+                                                        "select",
+                                                        summary_collider_test_twin::source_file().generic_string())};
 
     {
       std::stringstream outputStream{};
-      auto runner{make_fake_runner(args, outputStream)};
+      auto runner{make_fake_project_runner(args, outputStream)};
 
       runner.register_test<summary_collider_test_twin>();
       check_exception_thrown<std::runtime_error>(
@@ -1677,7 +1684,7 @@ namespace sequoia::testing
     }
 
     std::stringstream outputStream{};
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     const auto& projPaths{runner.proj_paths()};
     fs::remove_all(projPaths.output().test_summaries());
@@ -1705,9 +1712,9 @@ namespace sequoia::testing
   void test_runner_test::test_discriminated_summary()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     const auto& projPaths{runner.proj_paths()};
     fs::remove_all(projPaths.output().test_summaries());
@@ -1731,9 +1738,9 @@ namespace sequoia::testing
   void test_runner_test::test_filtered_suites()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "test", "Failing")};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
 
@@ -1749,9 +1756,13 @@ namespace sequoia::testing
   {
     // No suite matches either request. Only the request naming a source file draws a hint to use 'select'.
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Absent", "test", "absent_test.cpp"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(),
+                                                        "test",
+                                                        "Absent",
+                                                        "test",
+                                                        "absent_test.cpp")};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     runner.register_test<failing_test>();
@@ -1766,10 +1777,10 @@ namespace sequoia::testing
     // extension draws a hint to use 'test'.
     std::stringstream outputStream{};
     commandline_arguments args{
-      {(minimal_fake_path()).generic_string(), "select", "Absent", "select", "absent_test.cpp"}
+      fake_project_commandline(auxiliary_materials(), "select", "Absent", "select", "absent_test.cpp")
     };
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     runner.register_test<failing_test>();
@@ -1780,12 +1791,12 @@ namespace sequoia::testing
 
   void test_runner_test::test_prune_basic_output()
   {
-    fs::remove_all(output_paths{fake_project()}.dir());
+    fs::remove_all(output_paths{fake_project_root(auxiliary_materials())}.dir());
 
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "prune")};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     check(equality, "Prune with no stamp return code", runner.execute(), return_code::success);
     check_output("Prune with no stamp", "PruneWithNoStamp", outputStream);
@@ -1794,17 +1805,15 @@ namespace sequoia::testing
     check_output("Prune with no tests", "PruneWithNoTests", outputStream);
 
     // An exclusion does not turn prune off, and one matching nothing is reported under prune
-    fs::remove_all(output_paths{fake_project()}.dir());
+    fs::remove_all(output_paths{fake_project_root(auxiliary_materials())}.dir());
 
     std::stringstream excludingStream{};
-    commandline_arguments excludingArgs{{minimal_fake_path().generic_string(), "prune", "exclude", "Failing/absent_test.cpp"}};
+    commandline_arguments excludingArgs{fake_project_commandline(auxiliary_materials(),
+                                                                 "prune",
+                                                                 "exclude",
+                                                                 "Failing/absent_test.cpp")};
 
-    test_runner excludingRunner{excludingArgs.size(),
-                                excludingArgs.get(),
-                                "Oliver J. Rosten",
-                                "  ",
-                                {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                                excludingStream};
+    auto excludingRunner{make_fake_project_runner(excludingArgs, excludingStream)};
 
     check(equality, "Prune with an exclusion return code", excludingRunner.execute(), return_code::success);
     check_output("Prune with an exclusion", "PruneWithExclusionOutput", excludingStream);
@@ -1813,18 +1822,19 @@ namespace sequoia::testing
   [[nodiscard]]
   test_runner_test::fake_build test_runner_test::write_fake_build()
   {
-    fs::remove_all(output_paths{fake_project()}.dir());
+    const auto fakeProjectRoot{fake_project_root(auxiliary_materials())};
+    fs::remove_all(output_paths{fakeProjectRoot}.dir());
 
-    // A build of one test's source, Tests/ThingTest.cpp, which read one toolchain header
-    const auto buildDir{minimal_fake_path().parent_path()};
-    const fake_build build{.source{fake_project() / "Tests" / "ThingTest.cpp"}, .toolchainHeader{fake_project() / "Toolchain" / "vector"}};
+    // A build of one test's source, Tests/ThingTest.cpp. The compilation
+    // read one toolchain header, which lies outside the fake project.
+    const auto buildDir{fake_project_executable(auxiliary_materials()).parent_path()};
+    const fake_build build{
+      .source{fakeProjectRoot / "Tests" / "ThingTest.cpp"},
+      .toolchainHeader{fakeProjectRoot.parent_path() / "Toolchain" / "include" / "vector"}
+    };
     fs::create_directories(build.toolchainHeader.parent_path());
-    fs::create_directories(buildDir / "CMakeFiles" / "4.1.2");
     write_to_file(build.source, "", std::ios_base::out);
     write_to_file(build.toolchainHeader, "", std::ios_base::out);
-    write_to_file(buildDir / "CMakeFiles" / "4.1.2" / "CMakeCXXCompiler.cmake",
-                  std::format("set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"{}\")\n", build.toolchainHeader.parent_path().generic_string()),
-                  std::ios_base::out);
     write_to_file(buildDir / "build.ninja",
                   std::format("build CMakeFiles/x.dir/ThingTest.cpp.o: CXX_COMPILER {}\n", build.source.generic_string()),
                   std::ios_base::out);
@@ -1839,8 +1849,8 @@ namespace sequoia::testing
     // The toolchain header modified after the previous run's stamp
     const auto build{write_fake_build()};
 
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
-    const project_paths projPaths{args.size(), args.get(), {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "prune")};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
     const auto stamp{projPaths.prune().stamp()};
     fs::create_directories(stamp.parent_path());
     write_to_file(stamp, "", std::ios_base::out);
@@ -1855,7 +1865,7 @@ namespace sequoia::testing
     fs::last_write_time(projPaths.executable(), now);
 
     std::stringstream outputStream{};
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     check(equality, "Prune with changed toolchain return code", runner.execute(), return_code::success);
     check_output("Prune with changed toolchain", "PruneWithChangedToolchain", outputStream);
@@ -1867,12 +1877,8 @@ namespace sequoia::testing
     // ThingTest.cpp, which no test registered here defines, and that is not a selection to report
     const auto build{write_fake_build()};
 
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
-    const project_paths::customizer customization{
-      .main_cpp{"TestSandbox/TestSandbox.cpp"},
-      .common_includes{"TestShared/SharedIncludes.hpp"}
-    };
-    const project_paths projPaths{args.size(), args.get(), customization};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "prune")};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
     const auto stamp{projPaths.prune().stamp()};
     fs::create_directories(stamp.parent_path());
     write_to_file(stamp, "", std::ios_base::out);
@@ -1885,26 +1891,28 @@ namespace sequoia::testing
     fs::last_write_time(projPaths.executable(), now);
 
     std::stringstream outputStream{};
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     check(equality, "Prune selecting an unregistered test return code", runner.execute(), return_code::success);
     check_output("Prune selecting an unregistered test", "PruneSelectsUnregisteredOutput", outputStream);
   }
 
+  /** Every file the build read predates the previous run's prune stamp.
+      The registered test is not in the build, so it runs only if prune's
+      empty selection is taken for a selection of everything.
+
+      The records directory starts with an earlier run's run stamp, and the
+      test's file of execution records with an earlier run's record. The
+      run replaces the run stamp, though it has no test to run, and leaves
+      the record as it was.
+   */
   void test_runner_test::test_prune_with_nothing_stale()
   {
-    // Every file the build read predates the previous run's stamp. The
-    // registered test is not in the build, so it runs only if prune's empty
-    // selection is taken for a selection of everything.
     const auto build{write_fake_build()};
 
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
-    const project_paths::customizer customization{
-      .main_cpp{"TestSandbox/TestSandbox.cpp"},
-      .common_includes{"TestShared/SharedIncludes.hpp"}
-    };
-    const project_paths projPaths{args.size(), args.get(), customization};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "prune")};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
     const auto stamp{projPaths.prune().stamp()};
     fs::create_directories(stamp.parent_path());
     write_to_file(stamp, "", std::ios_base::out);
@@ -1916,20 +1924,39 @@ namespace sequoia::testing
     fs::last_write_time(stamp, now - 1s);
     fs::last_write_time(projPaths.executable(), now);
 
+    const test_execution_record_path
+      executionRecordPath{passing_test::source_file(), test_name<passing_test>(), projPaths};
+
+    const auto earlierRecordText{to_string(test_execution_record{})};
+    fs::create_directories(executionRecordPath.file_path().parent_path());
+    write_to_file(executionRecordPath.file_path(), earlierRecordText, std::ios_base::binary);
+    write_to_file(projPaths.execution_records().stamp(), to_string(run_stamp{}), std::ios_base::binary);
+
+    const auto momentBeforeConstruction{
+      std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now())
+    };
     std::stringstream outputStream{};
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     check(equality, "Prune with nothing stale return code", runner.execute(), return_code::success);
     check_output("Prune with nothing stale", "PruneWithNothingStaleOutput", outputStream);
+
+    check("A run which prune leaves with nothing to do writes its run stamp",
+          momentBeforeConstruction <= read_run_stamp(projPaths.execution_records().stamp()).start_time);
+
+    check(equality,
+          "A run which prune leaves with nothing to do leaves a test's execution records as they were",
+          read_to_string(executionRecordPath.file_path(), std::ios_base::binary).value_or(""),
+          earlierRecordText);
   }
 
   void test_runner_test::test_post_run_failure()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "test", "Failing")};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     runner.register_test<failing_test>();
@@ -1946,9 +1973,9 @@ namespace sequoia::testing
   void test_runner_test::test_materials_update()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "u")};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<stale_predictions_free_test>();
 
@@ -1956,7 +1983,8 @@ namespace sequoia::testing
     check_output("Materials Update Output", "MaterialsUpdateOutput", outputStream);
 
     const auto predictions{
-      fake_project() / "TestMaterials/Updating/StalePredictionsFreeTest" / "stale_predictions_free_test/Prediction"
+      fake_project_root(auxiliary_materials())
+        / "TestMaterials/Updating/StalePredictionsFreeTest" / "stale_predictions_free_test/Prediction"
     };
 
     check(equality,
@@ -1973,9 +2001,9 @@ namespace sequoia::testing
   void test_runner_test::test_no_materials_update_after_critical_failure()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "u")};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<throwing_stale_predictions_free_test>();
 
@@ -1989,7 +2017,8 @@ namespace sequoia::testing
                  outputStream);
 
     const auto predictions{
-      fake_project() / "TestMaterials/Updating/ThrowingStalePredictionsFreeTest" / "throwing_stale_predictions_free_test/Prediction"
+      fake_project_root(auxiliary_materials())
+        / "TestMaterials/Updating/ThrowingStalePredictionsFreeTest" / "throwing_stale_predictions_free_test/Prediction"
     };
 
     check(equality,
@@ -2003,9 +2032,9 @@ namespace sequoia::testing
   void test_runner_test::test_partial_materials_update()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "u")};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<type_swapped_predictions_free_test>();
 
@@ -2023,15 +2052,17 @@ namespace sequoia::testing
   void test_runner_test::test_discriminated_materials_update()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
-    auto runner{make_fake_runner(args, outputStream)};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "u")};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<variant_free_test>();
 
     check(equality, "Discriminated materials update return code", runner.execute(), return_code::soft_failures);
     check_output("Discriminated Materials Update Output", "DiscriminatedMaterialsUpdateOutput", outputStream);
 
-    const auto materials{fake_project() / "TestMaterials/Updating/VariantFreeTest/variant_free_test"};
+    const auto materials{
+      fake_project_root(auxiliary_materials()) / "TestMaterials/Updating/VariantFreeTest/variant_free_test"
+    };
 
     check(equality,
           "Declared discriminator's prediction overwritten",
@@ -2054,12 +2085,14 @@ namespace sequoia::testing
    */
   void test_runner_test::test_materials_update_of_two_tests()
   {
+    const auto fakeProjectRoot{fake_project_root(auxiliary_materials())};
+
     const auto firstTestPredictions{
-      fake_project() / "TestMaterials/Updating/StalePredictionsFreeTest/stale_predictions_free_test/Prediction"
+      fakeProjectRoot / "TestMaterials/Updating/StalePredictionsFreeTest/stale_predictions_free_test/Prediction"
     };
 
     const auto secondTestPredictions{
-      fake_project() / "TestMaterials/Updating/VariantFreeTest/variant_free_test/Platypus/Prediction"
+      fakeProjectRoot / "TestMaterials/Updating/VariantFreeTest/variant_free_test/Platypus/Prediction"
     };
 
     for(const auto& predictions : {firstTestPredictions, secondTestPredictions})
@@ -2069,9 +2102,9 @@ namespace sequoia::testing
     }
 
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "u")};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<stale_predictions_free_test>();
     runner.register_test<variant_free_test>();
@@ -2096,9 +2129,9 @@ namespace sequoia::testing
   void test_runner_test::test_nested_suite()
   {
       std::stringstream outputStream{};
-      commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+      commandline_arguments args{fake_project_commandline(auxiliary_materials())};
 
-      auto runner{make_fake_runner(args, outputStream)};
+      auto runner{make_fake_project_runner(args, outputStream)};
 
       using namespace object;
 
@@ -2113,9 +2146,9 @@ namespace sequoia::testing
   void test_runner_test::test_suite_named_as_a_sibling_test()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "-v")};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<namesake_test>();
     runner.register_test<under_namesake_test>();
@@ -2127,9 +2160,9 @@ namespace sequoia::testing
   void test_runner_test::test_nested_suite_verbose()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "-v")};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     using namespace object;
 
@@ -2147,11 +2180,11 @@ namespace sequoia::testing
       [this](std::string_view description, std::string_view outputDirName, std::initializer_list<std::string_view> extraArgs){
         std::stringstream outputStream{};
 
-        std::vector<std::string> argList{(minimal_fake_path()).generic_string()};
+        auto argList{fake_project_commandline(auxiliary_materials())};
         argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
         commandline_arguments args{argList};
 
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         runner.register_test<fake_performance_test>();
@@ -2172,11 +2205,11 @@ namespace sequoia::testing
       [this](std::string_view description, std::string_view outputDirName, std::initializer_list<std::string> extraArgs, return_code expected){
         std::stringstream outputStream{};
 
-        std::vector<std::string> argList{minimal_fake_path().generic_string()};
+        auto argList{fake_project_commandline(auxiliary_materials())};
         argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
         commandline_arguments args{argList};
 
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         runner.register_test<failing_test>();
@@ -2212,14 +2245,14 @@ namespace sequoia::testing
     // next run, since that test's status is unknown
     auto run{
       [this](std::string_view description, std::initializer_list<std::string> extraArgs, std::vector<fs::path> toRerun) {
-        fs::remove_all(output_paths{fake_project()}.dir());
+        fs::remove_all(output_paths{fake_project_root(auxiliary_materials())}.dir());
 
-        std::vector<std::string> argList{minimal_fake_path().generic_string()};
+        auto argList{fake_project_commandline(auxiliary_materials())};
         argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
         commandline_arguments args{argList};
 
         std::stringstream outputStream{};
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         runner.register_test<fake_performance_test>();
@@ -2252,12 +2285,12 @@ namespace sequoia::testing
              std::initializer_list<std::string> extraArgs,
              registrations registered,
              return_code expected) {
-        std::vector<std::string> argList{minimal_fake_path().generic_string(), "dump"};
+        auto argList{fake_project_commandline(auxiliary_materials(), "dump")};
         argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
         commandline_arguments args{argList};
 
         std::stringstream outputStream{};
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         if(registered != registrations::passing)
@@ -2274,12 +2307,12 @@ namespace sequoia::testing
     auto failing{
       [this](std::string_view description, std::initializer_list<std::string> extraArgs) {
         check_exception_thrown<std::runtime_error>(description, [this, extraArgs](){
-          std::vector<std::string> argList{minimal_fake_path().generic_string(), "dump"};
+          auto argList{fake_project_commandline(auxiliary_materials(), "dump")};
           argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
           commandline_arguments args{argList};
 
           std::stringstream outputStream{};
-          auto runner{make_fake_runner(args, outputStream)};
+          auto runner{make_fake_project_runner(args, outputStream)};
 
           runner.register_test<passing_test>();
           return runner.execute();
@@ -2287,8 +2320,9 @@ namespace sequoia::testing
       }
     };
 
-    fs::remove_all(output_paths{fake_project()}.dir());
-    const auto recovery{output_paths{fake_project()}.recovery()};
+    const auto fakeProjectRoot{fake_project_root(auxiliary_materials())};
+    fs::remove_all(output_paths{fakeProjectRoot}.dir());
+    const auto recovery{output_paths{fakeProjectRoot}.recovery()};
 
     run("A dump kept under a name", "DumpKeptOutput", {"--as", "before"}, registrations::passing_and_failing, return_code::soft_failures);
     check(equality, "The kept dump exists", fs::exists(recovery.kept_dump("before")), true);
@@ -2311,15 +2345,10 @@ namespace sequoia::testing
     failing("Comparison against no name",           {"--against", ""});
 
     // recover, like dump, writes under output/Recovery on a tree which has no output directory yet
-    fs::remove_all(output_paths{fake_project()}.dir());
+    fs::remove_all(output_paths{fake_project_root(auxiliary_materials())}.dir());
     std::stringstream recoveringStream{};
-    commandline_arguments recoveringArgs{{minimal_fake_path().generic_string(), "recover"}};
-    test_runner recoveringRunner{recoveringArgs.size(),
-                                 recoveringArgs.get(),
-                                 "Oliver J. Rosten",
-                                 "  ",
-                                 {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                                 recoveringStream};
+    commandline_arguments recoveringArgs{fake_project_commandline(auxiliary_materials(), "recover")};
+    auto recoveringRunner{make_fake_project_runner(recoveringArgs, recoveringStream)};
 
     recoveringRunner.register_test<passing_test>();
     check(equality, "recover on a fresh tree", recoveringRunner.execute(), return_code::success);
@@ -2327,12 +2356,7 @@ namespace sequoia::testing
 
     // A run which records nothing must not leave the previous run's record looking like the new run's
     std::stringstream emptyRecoveryStream{};
-    test_runner emptyRecoveryRunner{recoveringArgs.size(),
-                                    recoveringArgs.get(),
-                                    "Oliver J. Rosten",
-                                    "  ",
-                                    {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                                    emptyRecoveryStream};
+    auto emptyRecoveryRunner{make_fake_project_runner(recoveringArgs, emptyRecoveryStream)};
 
     check(equality, "recover with no tests", emptyRecoveryRunner.execute(), return_code::success);
     check("A recovery run which ran no check leaves no recovery file", !fs::exists(recovery.recovery_file()));
@@ -2342,10 +2366,12 @@ namespace sequoia::testing
   {
     auto run{
       [this](std::string_view description, std::string_view outputDirName, std::string_view poolSize) {
-        commandline_arguments args{{zeroth_arg(), "--thread-pool", std::string{poolSize}}};
+        commandline_arguments args{fake_project_commandline(auxiliary_materials(),
+                                                            "--thread-pool",
+                                                            std::string{poolSize})};
 
         std::stringstream outputStream{};
-        auto runner{make_fake_runner(args, outputStream)};
+        auto runner{make_fake_project_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         check(equality, append_lines(description, "Return code"), runner.execute(), return_code::success);
@@ -2441,7 +2467,7 @@ namespace sequoia::testing
 
     auto argGenerator{
       [this,&extraArgs, numRuns](){
-         std::vector<std::string> argList{(minimal_fake_path()).generic_string(), "locate-instabilities", std::string{numRuns}};
+         auto argList{fake_project_commandline(auxiliary_materials(), "locate-instabilities", std::string{numRuns})};
          argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
          return argList;
       }
@@ -2449,7 +2475,7 @@ namespace sequoia::testing
 
     commandline_arguments args{argGenerator()};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     (runner.register_test<std::remove_cvref_t<Ts>>(), ...);
 
@@ -2525,6 +2551,10 @@ namespace sequoia::testing
       analysis. The run selects a suite and a source, and excludes a source, each named with a space. The
       shell splits an unquoted word at the space. So if the coordinator does not quote the path, no
       sandbox runs, and if it does not quote a selection, the sandboxes record it as two arguments.
+
+      The selected test's file of execution records starts with an earlier
+      run's record. The script executes no test, so only the coordinator can
+      empty the file.
    */
   void test_runner_test::test_instability_analysis_in_sandboxes_from_a_path_with_a_space()
   {
@@ -2532,7 +2562,7 @@ namespace sequoia::testing
 
     const auto spacedProject{scratchpad_materials() /= "Spaced Fake Project"};
     fs::remove_all(spacedProject);
-    fs::copy(fake_project(), spacedProject, fs::copy_options::recursive);
+    fs::copy(fake_project_root(auxiliary_materials()), spacedProject, fs::copy_options::recursive);
 
     const auto outputDir{working_materials() /= "SandboxesFromAPathWithASpace"};
     fs::create_directory(outputDir);
@@ -2565,7 +2595,15 @@ namespace sequoia::testing
                                 "select", selected_in_spaced_suite_free_test::source_file().generic_string(),
                                 "exclude", excluded_from_spaced_suite_free_test::source_file().generic_string()}};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
+
+    const test_execution_record_path executionRecordPath{selected_in_spaced_suite_free_test::source_file(),
+                                                         test_name<selected_in_spaced_suite_free_test>(),
+                                                         runner.proj_paths()};
+
+    fs::create_directories(executionRecordPath.file_path().parent_path());
+    write_to_file(executionRecordPath.file_path(), to_string(test_execution_record{}), std::ios_base::binary);
+
     runner.register_test<selected_in_spaced_suite_free_test>();
     runner.register_test<excluded_from_spaced_suite_free_test>();
 
@@ -2574,17 +2612,29 @@ namespace sequoia::testing
           "Each sandbox is given the repetitions, its runner id and the selections, each as one argument",
           outputDir,
           predictive_materials() /= "SandboxesFromAPathWithASpace");
+
+    check(equality,
+          "The run which launches the sandboxes empties the file of execution records of each test to be run",
+          read_test_execution_records(executionRecordPath.file_path()),
+          std::vector<test_execution_record>{});
   }
 
   /** A runner given a runner id is one sandbox. The sandbox writes its
-      records under its id. It leaves the other sandboxes' records in
-      place, and leaves the analysis of every sandbox's records to the run
-      which launched them all. The launching side is the subject of
+      instability analysis records under its id. It leaves the other
+      sandboxes' instability analysis records in place, and leaves the
+      analysis of every sandbox's records to the run which launched them
+      all. The launching side is the subject of
       `test_instability_analysis_in_sandboxes_from_a_path_with_a_space`.
+
+      A sandbox appends its test's execution records to those of the
+      sandboxes before it: only the run which launched the sandboxes empties
+      the test's file and writes the stamp. Here, fake records stand for an
+      earlier sandbox's, and a fake stamp for the launching run's. This test
+      function writes both before constructing the sandbox's runner.
    */
   void test_runner_test::test_sandboxed_repetition()
   {
-    const auto projectRoot{fs::canonical(fake_project())};
+    const auto projectRoot{fs::canonical(fake_project_root(auxiliary_materials()))};
     auto recordOf{
       [&projectRoot](std::size_t runnerID) {
         return output_paths::instability_analysis_file(projectRoot,
@@ -2600,9 +2650,24 @@ namespace sequoia::testing
     write_to_file(recordOf(0), anotherRecord, std::ios_base::out);
 
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "locate", "2", "--runner-id", "1"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "locate", "2", "--runner-id", "1")};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    const test_execution_record_path
+      executionRecordPath{passing_test::source_file(), test_name<passing_test>(), projPaths};
+
+    const std::vector<test_execution_record>
+      earlierSandboxRecords{{}, {.completion{test_execution_completion{}}}};
+
+    fs::create_directories(executionRecordPath.file_path().parent_path());
+    write_to_file(executionRecordPath.file_path(),
+                  to_string(earlierSandboxRecords.front()) + to_string(earlierSandboxRecords.back()),
+                  std::ios_base::binary);
+
+    const auto stampTextOfLaunchingRun{to_string(run_stamp{})};
+    write_to_file(projPaths.execution_records().stamp(), stampTextOfLaunchingRun, std::ios_base::binary);
+
+    auto runner{make_fake_project_runner(args, outputStream)};
     runner.register_test<passing_test>();
 
     // The run which launches the sandboxes prepares this folder first
@@ -2610,11 +2675,21 @@ namespace sequoia::testing
 
     check(equality, "Sandboxed repetition return code", runner.execute(), return_code::success);
     check_output("Sandboxed Repetition Output", "SandboxedRepetitionOutput", outputStream);
-    check("The sandbox writes its records under its id", fs::exists(recordOf(1)));
+    check("The sandbox writes its instability analysis records under its id", fs::exists(recordOf(1)));
     check(equality,
-          "The sandbox leaves another sandbox's records in place",
+          "The sandbox leaves another sandbox's instability analysis records in place",
           read_to_string(recordOf(0), std::ios_base::in).value_or(""),
           anotherRecord);
+
+    check(equality,
+          "The sandbox appends its test's execution records to those of an earlier sandbox",
+          completion_flags_of(read_test_execution_records(executionRecordPath.file_path())),
+          std::vector{false, true, false, true});
+
+    check(equality,
+          "The sandbox leaves the stamp of the run which launched it as it was",
+          read_to_string(projPaths.execution_records().stamp(), std::ios_base::binary).value_or(""),
+          stampTextOfLaunchingRun);
   }
 
   namespace
@@ -2661,9 +2736,9 @@ namespace sequoia::testing
   void test_runner_test::test_materials_preparation_failure()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<stray_materials_free_test>();
     runner.register_test<unaffected_free_test>();
@@ -2674,10 +2749,16 @@ namespace sequoia::testing
     const test_execution_record_path
       record{stray_materials_free_test::source_file(), test_name<stray_materials_free_test>(), runner.proj_paths()};
 
-    check(equality,
-          "A test whose materials could not be prepared has an execution duration of zero: preparing them is overhead",
-          execution_record_value(record.file_path(), "execution duration"),
-          std::string{"0us"});
+    const auto records{read_test_execution_records(record.file_path())};
+    if(check("The last record of a test whose materials could not be prepared has a completion",
+             !records.empty() && records.back().completion.has_value()))
+    {
+      check(equality,
+            "A test whose materials could not be prepared has an execution duration of zero: "
+            "preparing them is overhead",
+            records.back().completion->execution_duration,
+            std::chrono::microseconds{});
+    }
   }
 
   namespace
@@ -2724,19 +2805,15 @@ namespace sequoia::testing
   void test_runner_test::test_versioned_output_failure()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<unwritable_output_free_test>();
     runner.register_test<beside_unwritable_output_free_test>();
 
-    fs::create_directories(fake_project() / "output/DiagnosticsOutput/Tests/Output/unwritable_output_free_test_Exceptions.txt");
+    fs::create_directories(fake_project_root(auxiliary_materials())
+                             / "output/DiagnosticsOutput/Tests/Output/unwritable_output_free_test_Exceptions.txt");
 
     check(equality, "Versioned output failure return code", runner.execute(), return_code::critical_failures);
     check_output("Versioned Output Failure Output", "VersionedOutputFailureOutput", outputStream);
@@ -2748,13 +2825,13 @@ namespace sequoia::testing
    */
   void test_runner_test::test_versioned_output_check()
   {
-    fs::remove_all(output_paths{fake_project()}.dir());
+    fs::remove_all(output_paths{fake_project_root(auxiliary_materials())}.dir());
 
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "--check-versioned-output"}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials(), "--check-versioned-output")};
 
     {
       std::stringstream outputStream{};
-      auto runner{make_fake_runner(args, outputStream)};
+      auto runner{make_fake_project_runner(args, outputStream)};
       runner.register_test<passing_test>();
 
       check(equality, "Drifted versioned output return code", runner.execute(), return_code::versioned_output_diffs);
@@ -2764,7 +2841,7 @@ namespace sequoia::testing
 
     {
       std::stringstream outputStream{};
-      auto runner{make_fake_runner(args, outputStream)};
+      auto runner{make_fake_project_runner(args, outputStream)};
       runner.register_test<passing_test>();
 
       check(equality, "Stable versioned output return code", runner.execute(), return_code::success);
@@ -2795,8 +2872,8 @@ namespace sequoia::testing
   }
 
   /** Before the run, the fake test's temporary root holds `PreviousRun.txt`,
-      and its discarded root holds `DeadRun.txt`, as a run which died would
-      leave it. After the run:
+      and its discarded root holds `DeadRun.txt`, as if left by a run which
+      died. After the run:
       -# `DeadRun.txt` is gone. The test's preparation removes it before
          moving the temporary root, which otherwise could not be moved to the
          discarded root, and would be removed in place;
@@ -2808,9 +2885,9 @@ namespace sequoia::testing
   void test_runner_test::test_discarded_materials_removal()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<scratch_writing_free_test>();
 
@@ -2843,9 +2920,9 @@ namespace sequoia::testing
   void test_runner_test::test_discarded_materials_removal_failure()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
 
-    auto runner{make_fake_runner(args, outputStream)};
+    auto runner{make_fake_project_runner(args, outputStream)};
 
     runner.register_test<scratch_writing_free_test>();
 
@@ -2874,9 +2951,9 @@ namespace sequoia::testing
   void test_runner_test::test_discarded_materials_removal_exception()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
 
-    const auto runner{make_fake_runner(args, outputStream)};
+    const auto runner{make_fake_project_runner(args, outputStream)};
     const auto& projPaths{runner.proj_paths()};
 
     const cmake_cache cache{projPaths.build()};
@@ -2987,5 +3064,132 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       "Bits no flag occupies",
       [](){ return to_string(static_cast<return_code>(64)); });
+  }
+
+  /** Each scenario's prediction differs from that of a rival rule:
+      -# Eight threads which ran one test each, one after another: a runner
+         overhead of the wall clock less the execution duration;
+      -# The busiest thread: the thread chosen by its execution duration
+         alone;
+      -# A thread's tests summed: the longest test in place of the busiest
+         thread;
+      -# Sequential tests before the busiest thread: the sequential tests
+         left out;
+      -# Sequential tests alone: the sequential tests grouped by thread.
+   */
+  void test_runner_test::test_wall_clock_apportionment()
+  {
+    using namespace std::chrono_literals;
+
+    // Until a thread is joined, no other thread takes its id, so these ids
+    // stay distinct while `threads` lives
+    const auto threads{
+        std::views::iota(0, 8)
+      | std::views::transform([](int) { return std::jthread{[](){}}; })
+      | std::ranges::to<std::vector>()
+    };
+
+    const auto threadIds{
+        threads
+      | std::views::transform([](const std::jthread& thread) { return thread.get_id(); })
+      | std::ranges::to<std::vector>()
+    };
+
+    {
+      const auto oneExecutionPerThread{
+          threadIds
+        | std::views::transform(
+            [](std::thread::id id) {
+              return execution_info{.thread_id{id}, .durations{.execution_duration{25ms}, .runner_overhead{1ms}}};
+            })
+        | std::ranges::to<std::vector>()
+      };
+
+      check(equality,
+            "Eight threads, which ran one test each, one after another",
+            apportion_wall_clock(210ms, {}, oneExecutionPerThread),
+            critical_path_durations{
+              .spent_in_tests     {.execution_duration{25ms}, .runner_overhead{1ms}},
+              .scheduling_overhead{184ms}
+            });
+    }
+
+    {
+      const std::array concurrent{
+        execution_info{.thread_id{threadIds[0]}, .durations{.execution_duration{30ms}, .runner_overhead{0ms}}},
+        execution_info{.thread_id{threadIds[1]}, .durations{.execution_duration{20ms}, .runner_overhead{20ms}}}
+      };
+
+      check(equality,
+            "The busiest thread is the one with the most execution duration and runner overhead together",
+            apportion_wall_clock(45ms, {}, concurrent),
+            critical_path_durations{
+              .spent_in_tests     {.execution_duration{20ms}, .runner_overhead{20ms}},
+              .scheduling_overhead{5ms}
+            });
+    }
+
+    {
+      const std::array concurrent{
+        execution_info{.thread_id{threadIds[0]}, .durations{.execution_duration{10ms}, .runner_overhead{1ms}}},
+        execution_info{.thread_id{threadIds[1]}, .durations{.execution_duration{15ms}, .runner_overhead{1ms}}},
+        execution_info{.thread_id{threadIds[0]}, .durations{.execution_duration{10ms}, .runner_overhead{1ms}}}
+      };
+
+      check(equality,
+            "A thread's tests are summed",
+            apportion_wall_clock(25ms, {}, concurrent),
+            critical_path_durations{
+              .spent_in_tests     {.execution_duration{20ms}, .runner_overhead{2ms}},
+              .scheduling_overhead{3ms}
+            });
+    }
+
+    {
+      const std::array sequential{
+        execution_info{.thread_id{threadIds[0]}, .durations{.execution_duration{5ms}, .runner_overhead{1ms}}},
+        execution_info{.thread_id{threadIds[1]}, .durations{.execution_duration{5ms}, .runner_overhead{1ms}}}
+      };
+
+      const std::array concurrent{
+        execution_info{.thread_id{threadIds[2]}, .durations{.execution_duration{10ms}, .runner_overhead{2ms}}}
+      };
+
+      check(equality,
+            "Every sequential test lies on the critical path, before the busiest thread",
+            apportion_wall_clock(30ms, sequential, concurrent),
+            critical_path_durations{
+              .spent_in_tests     {.execution_duration{20ms}, .runner_overhead{4ms}},
+              .scheduling_overhead{6ms}
+            });
+
+      check(equality,
+            "Sequential tests alone",
+            apportion_wall_clock(15ms, sequential, {}),
+            critical_path_durations{
+              .spent_in_tests     {.execution_duration{10ms}, .runner_overhead{2ms}},
+              .scheduling_overhead{3ms}
+            });
+
+      check(equality,
+            "A wall clock equal to the tests' durations leaves no scheduling overhead",
+            apportion_wall_clock(12ms, sequential, {}),
+            critical_path_durations{
+              .spent_in_tests     {.execution_duration{10ms}, .runner_overhead{2ms}},
+              .scheduling_overhead{0ms}
+            });
+
+      check_exception_thrown<std::invalid_argument>(
+        "A wall clock shorter than the critical path's tests",
+        [&sequential](){ return apportion_wall_clock(11ms, sequential, {}); });
+    }
+
+    check(equality,
+          "No tests",
+          apportion_wall_clock(2ms, {}, {}),
+          critical_path_durations{
+            .spent_in_tests     {.execution_duration{0ms}, .runner_overhead{0ms}},
+            .scheduling_overhead{2ms}
+          });
   }
 }

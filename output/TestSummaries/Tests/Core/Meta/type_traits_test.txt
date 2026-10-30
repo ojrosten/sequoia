@@ -1,2 +1,2 @@
 type_traits_test
-Standard Top Level Checks:               117;  Failures:  0  [Deep checks: 117]
+Standard Top Level Checks:               124;  Failures:  0  [Deep checks: 124]

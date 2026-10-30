@@ -27,17 +27,17 @@ import :FreeTestCore;
 import :IndividualTestPaths;
 import :Output;
 import :PathCheckers;
-import :PerformanceTestCore;
+import :PerformanceTestTraits;
 import :PointerCheckers;
 import :ProductTypeCheckers;
 import :ProjectPaths;
-import :RegularCheckers;
-import :RegularCheckersDetails;
-import :RegularTestCore;
-import :SemanticsCheckersDetails;
+import :ReturnCodes;
 import :StringCheckers;
+import :Summary;
+import :TestExecutionRecord;
 import :TestLogger;
 import :TestMode;
+import :TimingUtilities;
 import :VersionedOutput;
 export import sequoia.algorithms;
 export import sequoia.core.concurrency;
@@ -45,11 +45,11 @@ export import sequoia.core.container_utilities;
 export import sequoia.core.data_structures;
 export import sequoia.core.logic;
 export import sequoia.core.meta;
+export import sequoia.core.numeric;
 export import sequoia.core.object;
 export import sequoia.file_system;
 export import sequoia.maths.graph;
 export import sequoia.maths.sequences;
-export import sequoia.maths.statistics;
 export import sequoia.streaming;
 export import sequoia.text_processing;
 
@@ -70,23 +70,6 @@ export namespace sequoia::testing
     dynamic,   /// determined implicitly by the stl
     fixed      /// fixed-size thread pool
   };
-
-  /** \brief The outcome of a test run: `success`, or a set of flags, one for each kind of failure.
-
-      The flags occupy consecutive bits, from the lowest. A new flag needs a row in
-      `return_code_names` (TestRunner.cpp). No check catches a missing row for the highest flag.
-   */
-  enum class return_code : unsigned {
-    success                = 0,
-    versioned_output_diffs = 1 << 0,
-    soft_failures          = 1 << 1,
-    critical_failures      = 1 << 2,
-    incomplete_run         = 1 << 3,
-    post_run_failures      = 1 << 4
-  };
-
-  [[nodiscard]]
-  std::string to_string(return_code code);
 }
 
 export NAMESPACE_SEQUOIA_AS_BITMASK
@@ -96,23 +79,6 @@ export NAMESPACE_SEQUOIA_AS_BITMASK
 
   template<>
   struct as_bitmask<sequoia::testing::recovery_mode> : std::true_type {};
-
-  template<>
-  struct as_bitmask<sequoia::testing::return_code> : std::true_type {};
-}
-
-namespace std
-{
-  template<>
-  struct formatter<sequoia::testing::return_code>
-  {
-    constexpr auto parse(auto& ctx) { return ctx.begin(); }
-
-    auto format(sequoia::testing::return_code code, auto& ctx) const -> decltype(ctx.out())
-    {
-      return std::format_to(ctx.out(), "{}", sequoia::testing::to_string(code));
-    }
-  };
 }
 
 export namespace sequoia::testing
@@ -120,26 +86,32 @@ export namespace sequoia::testing
   [[nodiscard]]
   return_code to_return_code(const log_summary& summary) noexcept;
 
-  /** \brief The `return_code` which `exitStatus` carries, as `to_exit_code` encodes it.
+  /** \brief The thread which executed a test, and the test's durations. */
+  struct execution_info
+  {
+    std::thread::id    thread_id{};
+    durations_of_tests durations{};
 
-      On Windows, a tool can exit with a Win32 error code, such as 87, 110 or 111, which `to_exit_code`
-      also returns. This function reads that status as a runner's.
+    [[nodiscard]]
+    friend bool operator==(const execution_info&, const execution_info&) noexcept = default;
+  };
 
-      \throws std::runtime_error if `exitStatus` is not a status which `to_exit_code` returns. The
-              message begins with `childDescription`.
+  /** \brief Divides `wallClock`, the wall clock of an execution of tests,
+             along the execution's critical path.
+
+      `sequential` holds tests which ran one after another, before any test
+      in `concurrent`. The tests in `concurrent` which share a `thread_id`
+      ran one after another. The critical path is `sequential`, followed by
+      the tests of the thread whose tests' execution durations and runner
+      overheads sum to the most.
+
+      \throws std::invalid_argument if `wallClock` is shorter than the
+              durations of the critical path's tests summed.
    */
   [[nodiscard]]
-  return_code child_return_code(int exitStatus, std::string_view childDescription);
-
-  /** \brief Encodes `code` as a runner's exit status.
-
-      \returns
-      -# 0, if `code` is `return_code::success`;
-      -# 80 plus the value of `code`, if every bit of `code` is a flag;
-      -# Otherwise, 80 plus the value of the flags of `code`, with `incomplete_run` set.
-   */
-  [[nodiscard]]
-  int to_exit_code(return_code code) noexcept;
+  critical_path_durations apportion_wall_clock(log_summary::duration wallClock,
+                                               std::span<const execution_info> sequential,
+                                               std::span<const execution_info> concurrent);
 
   /** \brief A directory for which removal failed, and the associated error. */
   struct removal_failure
@@ -194,8 +166,8 @@ export namespace sequoia::testing
       scratchpad.
 
       \returns
-      -# The future of the discarded root's removal, as `enqueue_removal`
-         returns it, if the temporary root was moved;
+      -# The future of the discarded root's removal, as returned by
+         `enqueue_removal`, if the temporary root was moved;
       -# Otherwise, a ready future holding the leftover's failure, if any.
 
       \throws std::logic_error if `materials` names no test
@@ -300,16 +272,23 @@ export namespace sequoia::testing
       m_pTest->write_instability_analysis_output(index);
     }
 
+    [[nodiscard]]
+    std::span<const std::optional<std::size_t>> attempts_per_performance_check() const noexcept
+    {
+      return m_pTest->attempts_per_performance_check();
+    }
+
     struct soul
     {
       virtual ~soul() = default;
 
-      virtual std::string_view name() const noexcept                                      = 0;
-      virtual std::filesystem::path source_file() const                                   = 0;
-      virtual const individual_materials_paths& materials_paths() const noexcept          = 0;
-      virtual const individual_diagnostics_paths& diagnostics_file_paths() const noexcept = 0;
-      virtual log_summary summarize(log_summary::duration delta) const                    = 0;
-      virtual bool has_critical_failures() const noexcept                                 = 0;
+      virtual std::string_view name() const noexcept                                                      = 0;
+      virtual std::filesystem::path source_file() const                                                   = 0;
+      virtual const individual_materials_paths& materials_paths() const noexcept                          = 0;
+      virtual const individual_diagnostics_paths& diagnostics_file_paths() const noexcept                 = 0;
+      virtual log_summary summarize(log_summary::duration delta) const                                    = 0;
+      virtual bool has_critical_failures() const noexcept                                                 = 0;
+      virtual std::span<const std::optional<std::size_t>> attempts_per_performance_check() const noexcept = 0;
 
       virtual void run_tests()                                                               = 0;
       virtual void log_critical_failure(std::string_view tag, std::string_view what)         = 0;
@@ -361,6 +340,12 @@ export namespace sequoia::testing
         return m_Test.has_critical_failures();
       }
 
+      [[nodiscard]]
+      std::span<const std::optional<std::size_t>> attempts_per_performance_check() const noexcept final
+      {
+        return m_Test.attempts_per_performance_check();
+      }
+
       void run_tests() final
       {
         m_Test.run_tests();
@@ -392,7 +377,7 @@ export namespace sequoia::testing
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
-  /** \brief A test to run, with the paths of the files which the runner
+  /** \brief A test to run, and the paths of the files which the runner
              writes for it.
    */
   class test_to_run
@@ -488,18 +473,25 @@ export namespace sequoia::testing
       log_summary::duration m_ExecutionDuration{};
     };
 
-    /** \brief An RAII wrapper to write a test's execution record: when the
-               test started and, on destruction, its execution duration and
-               the runner's overhead so far, as `executionTimer` gives them.
+    /** \brief An RAII wrapper to append a test's execution records to
+               `file`.
 
-        A record which cannot be written is skipped rather than reported. The
-        file then keeps the last record the runner managed to write, which
-        may be an earlier run's. An allocation failure is not caught.
+        On construction, appends a record of the test's start time. On
+        destruction, appends a record with the same start time and a
+        completion. `executionTimer` gives the completion's execution
+        duration and the runner's overhead so far. `vessel` gives the number
+        of attempts each of the test's performance checks made.
+
+        A write which fails is not reported. A write which fails part-way
+        may leave part of a record, and the file cannot then be read. An
+        allocation failure is not caught.
      */
     class [[nodiscard]] scoped_execution_record
     {
     public:
-      scoped_execution_record(std::filesystem::path file, const execution_timer& executionTimer);
+      scoped_execution_record(std::filesystem::path file,
+                              const execution_timer& executionTimer,
+                              const test_vessel& vessel);
 
       scoped_execution_record(const scoped_execution_record&)            = delete;
       scoped_execution_record& operator=(const scoped_execution_record&) = delete;
@@ -507,8 +499,9 @@ export namespace sequoia::testing
       ~scoped_execution_record();
     private:
       std::filesystem::path m_File{};
-      std::chrono::system_clock::time_point m_Start{};
+      test_execution_record m_Record{};
       const execution_timer& m_ExecutionTimer;
+      const test_vessel& m_Vessel;
     };
 
     [[nodiscard]]
@@ -532,6 +525,91 @@ export namespace sequoia::testing
     test_execution_record_path m_ExecutionRecord{};
     discarded_materials_remover::future_type m_DiscardedMaterialsRemovalFailureFuture{};
   };
+
+  /** \name discriminator_probes
+      \brief Probes for the \ref discriminator_hooks "discriminator hooks" a
+             test may declare.
+
+      Each probe is for one hook. For a test `T`, it asks two things:
+      -# `declared_v`: whether the test declares the hook in any form. A data
+         member or member function of that name counts, whether static or
+         not, and whatever its signature. Where the name is overloaded, a
+         member callable through `T&`, either with a `const cmake_cache&` or
+         with no arguments, counts;
+      -# `conforming_v`: whether the hook can be called through the class
+         with a `const cmake_cache&`, and whether that call returns something
+         convertible to `std::string`.
+
+      Each probe's `discriminator` makes that call, and returns the result as
+      a `std::string`.
+
+      A hook which is not public is invisible to every probe.
+   */
+  ///@{
+  template<class T>
+  struct output_discriminator_probe
+  {
+    static constexpr bool declared_v{
+         requires { &T::output_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.output_discriminator(cache); }
+      || requires(T& t){ t.output_discriminator(); }
+    };
+
+    static constexpr bool conforming_v{
+      requires(const cmake_cache& cache){ { T::output_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::output_discriminator(cache);
+    }
+  };
+
+  template<class T>
+  struct summary_discriminator_probe
+  {
+    static constexpr bool declared_v{
+         requires { &T::summary_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.summary_discriminator(cache); }
+      || requires(T& t){ t.summary_discriminator(); }
+    };
+
+    static constexpr bool conforming_v{
+      requires(const cmake_cache& cache){ { T::summary_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::summary_discriminator(cache);
+    }
+  };
+
+  template<class T>
+  struct materials_discriminator_probe
+  {
+    static constexpr bool declared_v{
+         requires { &T::materials_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.materials_discriminator(cache); }
+      || requires(T& t){ t.materials_discriminator(); }
+    };
+
+    static constexpr bool conforming_v{
+      requires(const cmake_cache& cache){ { T::materials_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::materials_discriminator(cache);
+    }
+  };
+
+  ///@}
 
   /** \brief Calls the hook of `T` that `Probe` probes for.
 
@@ -605,12 +683,13 @@ export namespace sequoia::testing
     void register_test()
     {
       constexpr std::string_view name{test_name<T>()};
-      constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
+      constexpr auto testKind{is_performance_test_v<T> ? test_kind::performance : test_kind::functional};
       const auto source{T::source_file()};
 
-      // Every check runs, and every hook returns, before the registration is
-      // recorded. So a registration which throws leaves no record behind,
-      // though the filter may have noted that the test matched a selection.
+      // Every check runs, and every hook returns, before the runner either
+      // notes the registration or empties the test's file of execution
+      // records. So a registration which throws does neither, though the
+      // filter may have noted that the test matched a selection.
       throw_if_name_refused(name, source);
       throw_if_materials_unplaceable(source);
 
@@ -620,21 +699,28 @@ export namespace sequoia::testing
                                           get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)};
       throw_if_summary_collides(name, summaryFile);
 
+      const test_execution_record_path executionRecordFile{source, name, m_ProjPaths};
+
       // Only a run builds the test, so that neither `create`, `init` nor
       // `--help` calls its materials or output hooks.
-      const bool toRun{m_Filter(source, enclosing_suites(source), isPerformanceTest) && in_mode(runner_mode::test)};
+      const bool toRun{m_Filter(source, enclosing_suites(source), testKind) && in_mode(runner_mode::test)};
       auto testToRun{
         toRun ? std::optional<test_to_run>{std::in_place,
                                            test_vessel{make_test<T>(m_ProjPaths, m_CMakeCache, m_RecoveryMode)},
                                            summaryFile,
-                                           test_execution_record_path{source, name, m_ProjPaths}}
+                                           executionRecordFile}
               : std::nullopt
       };
 
       register_checked_test(name, source, summaryFile);
 
       if(testToRun)
+      {
+        if(!in_sandbox())
+          clear_execution_records(executionRecordFile);
+
         m_Tests.push_back(std::move(*testToRun));
+      }
     }
 
     /** \brief Runs the tests, as the command line asked.
@@ -664,7 +750,7 @@ export namespace sequoia::testing
     enum class instability_mode { none = 0, single_instance, coordinator, sandbox };
     enum class versioned_output_mode { unchecked = 0, checked = 1 };
     enum class performance_mode { included = 0, excluded = 1 };
-    enum class is_performance_test : bool { no, yes };
+    enum class test_kind : bool { functional, performance };
 
 
     class path_equivalence
@@ -718,7 +804,7 @@ export namespace sequoia::testing
       [[nodiscard]]
       bool operator()(const normal_path& source,
                       std::span<const std::string> suites,
-                      is_performance_test isPerformanceTest);
+                      test_kind testKind);
 
       [[nodiscard]]
       std::optional<std::ranges::subrange<items_map_type::const_iterator>> selected_items() const noexcept
@@ -837,7 +923,7 @@ export namespace sequoia::testing
 
     void check_for_missing_tests();
 
-    void check_for_coarse_sleeps();
+    void write_run_stamp() const;
 
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }
@@ -848,32 +934,23 @@ export namespace sequoia::testing
 
     return_code run_tests(std::optional<std::size_t> id);
 
-    struct run_durations
-    {
-      log_summary::duration execution_duration{}, runner_overhead{};
-    };
-
     /** \brief Executes each test, returning once every removal of a discarded
                materials root which the tests enqueued has finished.
 
-        \returns The run's durations if the tests ran concurrently; otherwise
-        `std::nullopt`, since a serial run's durations are the sums of its
-        tests'.
+        \returns The durations along the critical path of the tests'
+        execution.
      */
     [[nodiscard]]
-    std::optional<run_durations> execute_tests(std::optional<std::size_t> id);
+    critical_path_durations execute_tests(std::optional<std::size_t> id);
 
     /** \brief Executes the tests which are not parallelizable, then the rest
                concurrently.
-
-        \returns The run's execution duration, the non-parallelizable tests'
-        summed and then the busiest thread's; and its runner overhead, the wall
-        clock less that.
      */
     [[nodiscard]]
-    run_durations execute_concurrently(std::optional<std::size_t> id, discarded_materials_remover& remover);
+    critical_path_durations execute_concurrently(std::optional<std::size_t> id, discarded_materials_remover& remover);
 
-    void execute_serially(std::optional<std::size_t> id, discarded_materials_remover& remover);
+    [[nodiscard]]
+    critical_path_durations execute_serially(std::optional<std::size_t> id, discarded_materials_remover& remover);
 
     void report_results();
 
@@ -925,6 +1002,9 @@ export namespace sequoia::testing
 
     [[nodiscard]]
     bool in_mode(runner_mode m) const noexcept { return (m_RunnerMode & m) == m; }
+
+    [[nodiscard]]
+    bool in_sandbox() const noexcept { return m_InstabilityMode == instability_mode::sandbox; }
 
     void prune();
 
@@ -981,6 +1061,12 @@ export namespace sequoia::testing
     void register_checked_test(std::string_view name,
                                const std::filesystem::path& source,
                                const test_summary_path& summary);
+
+    /** \brief Empties `recordFile`, creating it and its directory if need be.
+
+        A failure is not reported.
+     */
+    static void clear_execution_records(const test_execution_record_path& recordFile);
 
     [[nodiscard]]
     std::string lower_case_materials_prefix(const std::filesystem::path& source) const;

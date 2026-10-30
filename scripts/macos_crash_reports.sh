@@ -1,12 +1,15 @@
-# Sourced, not run. Defines macos_crash_report_directories, which prints, one per line, each
-# directory in which macOS may write a crash report.
+# Sourced, not run. Defines macos_crash_report_directories, which prints each
+# directory in which macOS may write a crash report, one per line.
 #
-# A report usually goes to the user's ~/Library/Logs/DiagnosticReports. It goes to the system's
-# /Library/Logs/DiagnosticReports when the kernel kills the user's ReportCrash, idle and over its
-# memory limit, as the crash arrives: the instance that takes over files the report there. Only
-# the group _analyticsusers can read the system directory.
+# macOS usually writes a crash report to the user's
+# ~/Library/Logs/DiagnosticReports. The kernel sometimes kills the user's
+# ReportCrash as the crash arrives, if ReportCrash is idle and over its memory
+# limit. The instance that takes over then writes the report to the system's
+# /Library/Logs/DiagnosticReports, which only the group _analyticsusers can
+# read.
 #
-# REPORT_CRASHES_MACOS_DIRECTORIES, colon-separated, replaces the list.
+# A REPORT_CRASHES_MACOS_DIRECTORIES that is set and not empty replaces the
+# list with its colon-separated directories.
 
 macos_crash_report_directories() {
   if [ -n "${REPORT_CRASHES_MACOS_DIRECTORIES:-}" ]; then

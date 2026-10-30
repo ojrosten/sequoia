@@ -61,6 +61,10 @@ namespace sequoia::testing
       const int value{};
     };
 
+    constexpr int constant_value() { return 42; }
+
+    int runtime_value() { return 42; }
+
     /** Whether the trait agrees with the standard library's own `noexcept` on `std::exchange`. */
     template<class T, class U>
     constexpr bool agrees_with_library_v{
@@ -88,6 +92,7 @@ namespace sequoia::testing
     test_value_type_of();
     test_is_deep_copy_constructible();
     test_is_deep_copy_assignable();
+    test_invocation_is_constant_expression();
   }
 
   void type_traits_test::test_resolve_to_copy()
@@ -308,5 +313,18 @@ namespace sequoia::testing
     STATIC_CHECK( std::is_copy_assignable_v<std::map<int, std::vector<assign_only>>>);
     STATIC_CHECK(!is_deep_copy_assignable_v<std::map<int, std::vector<assign_only>>>);
     STATIC_CHECK( is_deep_copy_assignable_v<std::set<int>>);
+  }
+
+  void type_traits_test::test_invocation_is_constant_expression()
+  {
+    STATIC_CHECK( invocation_is_constant_expression_v<[]() { return 42; }>);
+    STATIC_CHECK( invocation_is_constant_expression_v<[]() {}>);
+    STATIC_CHECK( invocation_is_constant_expression_v<&constant_value>);
+    STATIC_CHECK(!invocation_is_constant_expression_v<&runtime_value>);
+    STATIC_CHECK(!invocation_is_constant_expression_v<[]() -> int { throw std::logic_error{"Thrown"}; }>);
+    STATIC_CHECK(!invocation_is_constant_expression_v<[]() { int i{std::numeric_limits<int>::max()}; return ++i; }>);
+
+    // A pointer to a member has no object to act on
+    STATIC_CHECK(!invocation_is_constant_expression_v<&foo::x>);
   }
 }

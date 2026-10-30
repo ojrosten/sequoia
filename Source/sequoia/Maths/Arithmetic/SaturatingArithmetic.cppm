@@ -67,29 +67,32 @@ export namespace sequoia::maths
     constexpr auto llb{least_lower_bound<value_t>},
                    gub{greatest_upper_bound<value_t>};
 
+    const value_t commonX{static_cast<value_t>(x)},
+                  commonY{static_cast<value_t>(y)};
+
     if constexpr(std::numeric_limits<value_t>::has_quiet_NaN)
     {
-      if(isnan(x) || isnan(y))
+      if(isnan(commonX) || isnan(commonY))
         return std::numeric_limits<value_t>::quiet_NaN();
     }
 
-    if((x > 0) && (y > 0))
+    if((commonX > 0) && (commonY > 0))
     {
-      if((x == gub) || (y == gub))
+      if((commonX == gub) || (commonY == gub))
         return gub;
 
-      return x > gub - y ? gub : x + y;
+      return commonX > gub - commonY ? gub : commonX + commonY;
     }
 
-    if((x < 0) && (y < 0))
+    if((commonX < 0) && (commonY < 0))
     {
-      if((x == llb) || (y == llb))
+      if((commonX == llb) || (commonY == llb))
         return llb;
 
-      return x < llb - y ? llb : x + y;
+      return commonX < llb - commonY ? llb : commonX + commonY;
     }
 
-    return x + y;
+    return commonX + commonY;
   }
   
   template<arithmetic T, arithmetic U>
@@ -102,42 +105,45 @@ export namespace sequoia::maths
     constexpr auto llb{least_lower_bound<value_t>},
                    gub{greatest_upper_bound<value_t>};
 
+    const value_t commonX{static_cast<value_t>(x)},
+                  commonY{static_cast<value_t>(y)};
+
     if constexpr(std::numeric_limits<value_t>::has_quiet_NaN)
     {
-      if(isnan(x) || isnan(y))
+      if(isnan(commonX) || isnan(commonY))
         return std::numeric_limits<value_t>::quiet_NaN();
     }
 
-    if((x > 0) && (y > 0))
+    if((commonX > 0) && (commonY > 0))
     {
-      if((x == gub) || (y == gub))
+      if((commonX == gub) || (commonY == gub))
         return gub;
 
-      return x > gub / y ? gub : x * y;
+      return commonX > gub / commonY ? gub : commonX * commonY;
     }
    
-    if((x < 0) && (y < 0))
+    if((commonX < 0) && (commonY < 0))
     {
-      if((x == llb) || (y == llb))
+      if((commonX == llb) || (commonY == llb))
         return gub;
 
-      return x < gub / y ? gub : x * y;
+      return commonX < gub / commonY ? gub : commonX * commonY;
     }
    
-    if((x > 0) && (y < 0))
+    if((commonX > 0) && (commonY < 0))
     {
-      if((x == gub) || (y == llb))
+      if((commonX == gub) || (commonY == llb))
         return llb;
 
-      return x > llb / y ? llb : x * y;
+      return commonX > llb / commonY ? llb : commonX * commonY;
     }
    
-    if((x < 0) && (y > 0))
+    if((commonX < 0) && (commonY > 0))
     {
-      if((x == llb) || (y == gub))
+      if((commonX == llb) || (commonY == gub))
         return llb;
 
-      return y > llb / x ? llb : x * y;
+      return commonY > llb / commonX ? llb : commonX * commonY;
     }
    
     return {};

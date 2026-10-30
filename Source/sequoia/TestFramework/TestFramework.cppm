@@ -17,7 +17,6 @@ export import :AllocationCheckersTraits;
 export import :AllocationTestUtilities;
 export import :BinaryRelationships;
 export import :BuildArtefacts;
-export import :ChronoCheckers;
 export import :CMakeCache;
 export import :Commands;
 export import :ConcreteTypeCheckers;

@@ -19,6 +19,7 @@ export import sequoia.core.container_utilities;
 export import sequoia.core.data_structures;
 export import sequoia.core.functional;
 export import sequoia.core.meta;
+export import sequoia.core.numeric;
 export import sequoia.core.object;
 export import sequoia.maths.graph;
 export import sequoia.maths.sequences;
@@ -56,11 +57,11 @@ export namespace sequoia::testing
   public:
     template<class Fn>
       requires std::invocable<const Fn&> && std::convertible_to<std::invoke_result_t<const Fn&>, T>
-    object_generator(Fn f)
+    constexpr object_generator(Fn f)
       : m_Fn{std::move(f)}
     {}
 
-    object_generator(T t)
+    constexpr object_generator(T t)
       requires std::movable<T>
       : m_Fn{[t{std::move(t)}]() -> const T& { return t; }}
     {}
@@ -68,20 +69,20 @@ export namespace sequoia::testing
     template<class... Args>
       requires (initializable_from<T, Args...> &&
                ((sizeof...(Args) != 1) || (!std::is_same_v<T, std::remove_cvref_t<Args>> && ...)))
-    object_generator(Args&&... args)
+    constexpr object_generator(Args&&... args)
       : object_generator{T{std::forward<Args>(args)...}}
     {}
 
     template<class InitCheckFn, class... Args>
       requires (initializable_from<T, Args...> && std::invocable<InitCheckFn, std::string, T, Args...>)
-    object_generator(std::string_view message, InitCheckFn initCheckFn, const Args&... args)
+    constexpr object_generator(std::string_view message, InitCheckFn initCheckFn, const Args&... args)
       : object_generator{T{args...}}
     {
       initCheckFn(message, m_Fn(), args...);
     }
 
     [[nodiscard]]
-    decltype(auto) operator()() const { return m_Fn(); }
+    constexpr decltype(auto) operator()() const { return m_Fn(); }
   private:
     erased_function<T() const> m_Fn;
   };
@@ -105,7 +106,7 @@ export namespace sequoia::testing
       const auto& w{i->weight()};
       fn(message,
          w.fn(parentGenerator()),
-         g.cbegin_node_weights()[target](),
+         g.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(target)](),
          std::move(args)...);
     }
 
@@ -116,7 +117,7 @@ export namespace sequoia::testing
       const auto& w{i->weight()};
       fn(message,
          [&w,pg{parentGenerator}]() { return w.fn(pg()); },
-         g.cbegin_node_weights()[target],
+         g.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(target)],
          parentGenerator,
          std::move(args)...);
     }
@@ -220,7 +221,7 @@ export namespace sequoia::testing
       return {append_lines(description,
                            std::string{"Transition from node "}.append(std::to_string(parent)).append(" to ").append(std::to_string(target)),
                            w.description),
-              g.cbegin_node_weights()[parent],
+              g.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(parent)],
               target};
     }
   };

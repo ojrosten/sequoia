@@ -5,14 +5,16 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#pragma once
+
+/** \file */
+
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
 import std;
 import sequoia.maths.geometry;
 import sequoia.test_framework;
-
-/** \file */
 
 namespace sequoia::testing
 {
