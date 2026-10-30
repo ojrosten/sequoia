@@ -30,6 +30,8 @@
 #     keyed by the source as given;
 #   - each compilation sees PATH, LC_ALL and TMPDIR alone, whatever the
 #     caller's environment;
+#   - a compiler which the compiler record names Clang is given
+#     --no-default-config first, and another compiler nothing;
 #   - each source is compiled once, in the compilation's directory, by its
 #     command with the files of -o and of -MF, where there is one, replaced
 #     by /dev/null, so that the build directory gains no file; valgrind is
@@ -285,7 +287,7 @@ field_controls() {
         "[('CMAKE_BUILD_TYPE', 'Debug'), ('CMAKE_CXX_FLAGS', '-fixture-flag'), ('CMAKE_CXX_FLAGS_DEBUG', '-g')]"
   field "the toolchain, and nothing else" 'sorted(d["toolchain"])' "['build', 'compiler', 'standard_library', 'valgrind']"
   field "the boundary" 'd["compile_cost"]["boundary"]' \
-    "instructions under valgrind --tool=cachegrind --cache-sim=no --trace-children=yes, summed over the processes of the compilation which ninja's compilation database holds, its outputs to /dev/null, in an environment of PATH=/usr/bin:/bin, LC_ALL=C, TMPDIR=/tmp alone"
+    "instructions under valgrind --tool=cachegrind --cache-sim=no --trace-children=yes, summed over the processes of the compilation which ninja's compilation database holds, its outputs to /dev/null, Clang given --no-default-config first, in an environment of PATH=/usr/bin:/bin, LC_ALL=C, TMPDIR=/tmp alone"
   field "the sources, keyed as given" 'sorted(d["compile_cost"]["units"])' "['Tests/A.cpp', 'Tests/B.cpp']"
   field "a compilation's processes, summed" 'd["compile_cost"]["units"]["Tests/A.cpp"]' 7000400021
   field "a compilation of one process" 'd["compile_cost"]["units"]["Tests/B.cpp"]' 800000000
@@ -311,6 +313,16 @@ field_controls() {
   exits "a run with another environment" 0
   check "the caller's environment, its padding, locale and TMPDIR, is not the compilation's" yes \
         '^LC_ALL=C PATH=/usr/bin:/bin TMPDIR=/tmp$' <(compilation_environment)
+
+  # A compiler record naming Clang: clang is given --no-default-config, so that
+  # it reads no configuration file, and the command's own words follow.
+  sed -i.bak 's/^set(CMAKE_CXX_COMPILER_ID "Fixture")$/set(CMAKE_CXX_COMPILER_ID "Clang")/' \
+    "$build/CMakeFiles/4.4.3/CMakeCXXCompiler.cmake"
+  run "$build" Tests/B.cpp
+  exits "a record of Clang's compilation" 0
+  check "clang reads no configuration file" yes "^$build --no-default-config -DY -o /dev/null -c $repo/Tests/B.cpp\$" \
+        "$FIXTURE_LOG/cc"
+  mv "$build/CMakeFiles/4.4.3/CMakeCXXCompiler.cmake.bak" "$build/CMakeFiles/4.4.3/CMakeCXXCompiler.cmake"
 
   run "$build" Tests/B.cpp
   exits "one source" 0
@@ -463,7 +475,11 @@ MUTATIONS = [
     ('the option itself replaced',       'os.devnull if i > 0 and words[i - 1] in OUTPUT_OPTIONS else word',
                                          'os.devnull if word in OUTPUT_OPTIONS else word'),
     ('the word after any option replaced', 'words[i - 1] in OUTPUT_OPTIONS else word', 'words[i - 1].startswith("-") else word'),
-    ('another compiler accepted',        'if not words or words[0] != compiler:', 'if not words:'),
+    ('another compiler accepted',        'if not words or words[0] != compiler["path"]:', 'if not words:'),
+    ('clang\'s configuration read',      'COMPILER_OPTIONS = {"Clang": ["--no-default-config"]}', 'COMPILER_OPTIONS = {}'),
+    ('every compiler given clang\'s options', 'COMPILER_OPTIONS.get(compiler["id"], [])', 'COMPILER_OPTIONS["Clang"]'),
+    ('clang\'s options after the command\'s', 'return [discarded[0], *COMPILER_OPTIONS.get(compiler["id"], []), *discarded[1:]]',
+                                         'return [*discarded, *COMPILER_OPTIONS.get(compiler["id"], [])]'),
     ('a source matched by its name',     'if os.path.realpath(os.path.join(compilation["directory"], '
                                          'compilation["file"])) == path]',
                                          'if os.path.basename(compilation["file"]) == os.path.basename(path)]'),
