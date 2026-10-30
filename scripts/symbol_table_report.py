@@ -207,6 +207,38 @@ def standard_library(record, record_path):
     return named[0]
 
 
+def tool_of(record, name):
+    """Returns the path, id and version of the tool which the compiler
+    record `record` names by the entries `name`, `name`_ID and
+    `name`_VERSION."""
+    return {"path":    record[name],
+            "id":      record[f"{name}_ID"],
+            "version": record[f"{name}_VERSION"]}
+
+
+def repository_root(cache):
+    """Returns the root of the git repository which holds the cache's
+    source directory."""
+    source_dir = entry(cache, "CMAKE_HOME_DIRECTORY", "CMakeCache.txt")
+    return run(["git", "-C", source_dir, "rev-parse", "--show-toplevel"]).strip()
+
+
+def tree_state(root):
+    """Returns the commit at which the repository at `root` stands, and
+    whether its tree is clean, untracked files included."""
+    return {"commit": run(["git", "-C", root, "rev-parse", "HEAD"]).strip(),
+            "clean":  run(["git", "-C", root, "status", "--porcelain", "--untracked-files=all"]) == ""}
+
+
+def build_settings(cache, flag_names):
+    """Returns the cache's build type, and for each of `flag_names` the
+    entry of that name and the entry for the build type, such as
+    CMAKE_CXX_FLAGS_DEBUG for CMAKE_CXX_FLAGS in a Debug build."""
+    build_type = entry(cache, "CMAKE_BUILD_TYPE", "CMakeCache.txt")
+    names = [*flag_names, *(f"{name}_{build_type.upper()}" for name in flag_names if build_type)]
+    return {name: entry(cache, name, "CMakeCache.txt") for name in ["CMAKE_BUILD_TYPE", *names]}
+
+
 def ninja(cache, build_dir, *arguments):
     """Returns the output of the build directory's ninja, run with `arguments`."""
     return run([entry(cache, "CMAKE_MAKE_PROGRAM", "CMakeCache.txt"), "-C", build_dir, *arguments])
@@ -297,33 +329,23 @@ def record_of(build_dir, target):
                  f"say otherwise: they {'do not ' if library == 'libc++' else ''}include libc++'s "
                  "inline namespace")
 
-    source_dir = entry(cache, "CMAKE_HOME_DIRECTORY", "CMakeCache.txt")
-    root = run(["git", "-C", source_dir, "rev-parse", "--show-toplevel"]).strip()
+    root = repository_root(cache)
     objects_by_source = linked_objects_by_source(cache, build_dir, target, root)
     with concurrent.futures.ThreadPoolExecutor(max_workers=os.cpu_count()) as pool:
         counts = dict(zip(objects_by_source, pool.map(
             lambda obj: len(symbols(nm, os.path.join(build_dir, obj), "--defined-only")),
             objects_by_source.values())))
 
-    build_type = entry(cache, "CMAKE_BUILD_TYPE", "CMakeCache.txt")
-    flags = ["CMAKE_CXX_FLAGS", "CMAKE_EXE_LINKER_FLAGS"]
-    if build_type:
-        flags += [f"CMAKE_CXX_FLAGS_{build_type.upper()}", f"CMAKE_EXE_LINKER_FLAGS_{build_type.upper()}"]
     return {
-        "commit": run(["git", "-C", root, "rev-parse", "HEAD"]).strip(),
-        "clean": run(["git", "-C", root, "status", "--porcelain", "--untracked-files=all"]) == "",
+        **tree_state(root),
         "target": target,
         "toolchain": {
-            "compiler": {"path":    record["CMAKE_CXX_COMPILER"],
-                         "id":      record["CMAKE_CXX_COMPILER_ID"],
-                         "version": record["CMAKE_CXX_COMPILER_VERSION"]},
-            "linker":   {"path":    record["CMAKE_CXX_COMPILER_LINKER"],
-                         "id":      record["CMAKE_CXX_COMPILER_LINKER_ID"],
-                         "version": record["CMAKE_CXX_COMPILER_LINKER_VERSION"]},
+            "compiler": tool_of(record, "CMAKE_CXX_COMPILER"),
+            "linker":   tool_of(record, "CMAKE_CXX_COMPILER_LINKER"),
             "standard_library": library,
             "nm": {"path": nm, "version": nm_version(nm)},
         },
-        "cache": {name: entry(cache, name, "CMakeCache.txt") for name in ["CMAKE_BUILD_TYPE", *flags]},
+        "cache": build_settings(cache, ["CMAKE_CXX_FLAGS", "CMAKE_EXE_LINKER_FLAGS"]),
         "executable": {"symbols":           len(listed),
                        "symbol_name_bytes": sum(len(name.encode("utf-8")) for name in listed)},
         "defined_symbols_by_object": counts,
