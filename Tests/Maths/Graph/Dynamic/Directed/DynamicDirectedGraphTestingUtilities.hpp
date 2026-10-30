@@ -377,6 +377,17 @@ namespace sequoia::testing
               }
             },
             {
+              graph_description::node,
+              t.report(""),
+              [&t](const graph_type& g) -> const graph_type& {
+                t.check_exception_thrown<std::out_of_range>(
+                  "erasing node throws if index out of range",
+                  [g{g}]() mutable { g.erase_node(1); }
+                );
+                return g;
+              }
+            },
+            {
               graph_description::empty,
               t.report("Clear graph"),
               [](graph_type g) -> graph_type {
