@@ -33,7 +33,7 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string node_index_range_message (std::string_view method, const std::size_t order, const std::size_t node)
+  std::string node_index_range_message(std::string_view method, const std::size_t order, const std::size_t node)
   {
     return std::format("{}node index {} out of range - graph order is {}", error_prefix(method), node, order);
   }
