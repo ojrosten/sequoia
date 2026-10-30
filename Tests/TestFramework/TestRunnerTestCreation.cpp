@@ -351,7 +351,7 @@ namespace sequoia::testing
         replace_all(thrown,
                     std::format("--preset {}`", runtime::quote_for_shell(preset)),
                     std::format("--preset {}`", runtime::quote_for_shell("<preset>")));
-        return default_exception_message_postprocessor{}(projPaths, std::move(thrown));
+        return relative_to_root(std::move(thrown), projPaths.project_root());
       }
     };
 

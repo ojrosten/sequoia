@@ -235,7 +235,7 @@ namespace sequoia::testing
           },
           [&message](const project_paths& projPaths, std::string thrown) {
             message = thrown;
-            return default_exception_message_postprocessor{}(projPaths, std::move(thrown));
+            return relative_to_root(std::move(thrown), projPaths.project_root());
           }
         );
 

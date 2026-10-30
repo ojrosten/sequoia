@@ -837,6 +837,19 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::string relative_to_root(std::string text, const fs::path& root)
+  {
+    const auto rootName{root.generic_string()};
+    if(rootName.empty())
+      return text;
+
+    // Matching the separator too leaves alone a root which merely begins
+    // another path's name
+    replace_all(text, rootName + '/', "");
+    return text;
+  }
+
+  [[nodiscard]]
   std::string report_line(std::string_view message, const fs::path& repository, const std::source_location loc)
   {
     return append_lines(std::format("{}, Line {}", path_for_reporting(loc.file_name(), repository).generic_string(), loc.line()), message).append("\n");

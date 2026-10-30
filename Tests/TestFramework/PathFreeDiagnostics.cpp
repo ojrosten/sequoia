@@ -31,12 +31,7 @@ namespace sequoia::testing
 
   log_summary& postprocess(log_summary& summary, const fs::path& projectRoot)
   {
-    std::string updatedOutput{summary.diagnostics_output()};
-
-    replace_all(updatedOutput, projectRoot.generic_string() + "/", "");
-
-    summary.diagnostics_output(updatedOutput);
-
+    summary.diagnostics_output(relative_to_root(summary.diagnostics_output(), projectRoot));
     return summary;
   }
 
