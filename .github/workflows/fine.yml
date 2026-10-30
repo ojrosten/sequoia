@@ -6,6 +6,9 @@ name: fine
 #
 # fine also runs coverage.yml, whose gate fails a PR that leaves a function of
 # Source uncalled without listing it in coverage_reports/uncalled_functions.txt.
+# fine also runs metrics-gate.yml. Its gates fail a PR that raises TestAll's
+# symbols, the bytes of their names or the instructions of prune's analysis
+# beyond a threshold, unless the PR's description accepts the rise.
 #
 # These columns do not repeat coarse's plain ones, since a PR into staging must
 # pass coarse as well. ASan is behaviour-neutral on this suite, leaving check
@@ -96,6 +99,16 @@ jobs:
       needs_testing: ${{ needs.scope.outputs.coverage }}
       merge_into: ${{ github.event_name == 'workflow_dispatch' && 'staging' || '' }}
 
+  # The gates on the dashboard's counts; metrics-gate.yml says what the job
+  # does. The measurement reads what the suite reads, so the job takes the
+  # columns' answer.
+  metrics:
+    needs: scope
+    if: ${{ !cancelled() }}
+    uses: ./.github/workflows/metrics-gate.yml
+    with:
+      needs_testing: ${{ needs.scope.outputs.suite }}
+
   # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
   # as one that passed; `needs` reports `skipped` where the tick shows green.
   # Staging requires this job and none of the others, so a job missing from this
@@ -109,7 +122,7 @@ jobs:
   # job's outcome as a commit status, in a fourth step, which says why.
   audit:
     name: Every job ran and every job gates
-    needs: [scope, fine, coverage]
+    needs: [scope, fine, coverage, metrics]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5

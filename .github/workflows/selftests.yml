@@ -51,9 +51,10 @@ jobs:
             os: ubuntu-latest
             packages: gdb
             selftests: apt_get_demoting_preferred_mirrors_on_retry compile_time_report cron_expression_at
-              generate_coverage_report leftover_materials_setup_record propose_tightened_baseline read_settled_jobs
-              rerun_unacquired_job retry runner_setup_record snapshot_at_deadline store_symbol_table_record
-              symbol_dashboard symbol_table_provenance symbol_table_report
+              fetch_first_parent_record generate_coverage_report leftover_materials_setup_record metrics_gate
+              propose_tightened_baseline read_settled_jobs rerun_unacquired_job retry runner_setup_record
+              snapshot_at_deadline store_symbol_table_record symbol_dashboard symbol_table_provenance
+              symbol_table_report
           # report_crashes' selftest runs on macOS alone. The system there writes
           # the crash reports its macOS controls read, and its Linux and Windows
           # controls run through stand-ins for uname, file and gdb. One of those
