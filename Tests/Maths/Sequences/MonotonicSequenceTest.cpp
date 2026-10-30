@@ -16,7 +16,9 @@ namespace sequoia::testing
   namespace
   {
     template<class Sequence>
-    concept translatable = requires(Sequence& s) { s.translate(s.cbegin(), s.cend(), 1); };
+    inline constexpr bool translatable_v{
+      requires(Sequence& s) { s.translate(s.cbegin(), s.cend(), 1); }
+    };
 
     /// A comparison that no non-zero translation preserves. It flags each pair
     /// whose second element is 3.
@@ -47,13 +49,13 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    STATIC_CHECK(translatable<monotonic_sequence<int>>);
-    STATIC_CHECK(translatable<static_monotonic_sequence<std::size_t, 2, std::ranges::greater>>);
+    STATIC_CHECK(translatable_v<monotonic_sequence<int>>);
+    STATIC_CHECK(translatable_v<static_monotonic_sequence<std::size_t, 2, std::ranges::greater>>);
 
-    STATIC_CHECK(!translatable<static_monotonic_sequence<double, 2>>);
-    STATIC_CHECK(!translatable<static_monotonic_sequence<int, 2, std::ranges::less_equal>>);
-    STATIC_CHECK(!translatable<static_monotonic_sequence<int, 2, std::greater<int>>>);
-    STATIC_CHECK(!translatable<static_monotonic_sequence<int, 2, three_never_follows>>);
+    STATIC_CHECK(!translatable_v<static_monotonic_sequence<double, 2>>);
+    STATIC_CHECK(!translatable_v<static_monotonic_sequence<int, 2, std::ranges::less_equal>>);
+    STATIC_CHECK(!translatable_v<static_monotonic_sequence<int, 2, std::greater<int>>>);
+    STATIC_CHECK(!translatable_v<static_monotonic_sequence<int, 2, three_never_follows>>);
   }
 
   void monotonic_sequence_test::test_decreasing_sequence()

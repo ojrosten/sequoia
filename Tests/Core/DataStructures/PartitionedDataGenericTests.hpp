@@ -20,11 +20,14 @@
 namespace sequoia::testing
 {
   template<class Sequence, class D>
-  concept permute_partitions_accepts
-    = requires(Sequence& s, D&& d) { s.permute_partitions(std::forward<D>(d)); };
+  inline constexpr bool permute_partitions_accepts_v{
+    requires(Sequence& s, D&& d) { s.permute_partitions(std::forward<D>(d)); }
+  };
 
   template<class Sequence>
-  concept swap_partitions_accepts = requires(Sequence& s) { s.swap_partitions(0, 1); };
+  inline constexpr bool swap_partitions_accepts_v{
+    requires(Sequence& s) { s.swap_partitions(0, 1); }
+  };
 
   /// A comparison of the last decimal digits, which translation does not preserve
   struct last_digit_greater

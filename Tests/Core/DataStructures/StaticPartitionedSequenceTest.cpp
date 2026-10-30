@@ -28,10 +28,14 @@ namespace sequoia::testing
     using byte_indexed_sequence = indexed_sequence<std::uint8_t, Npartitions, Nelements>;
 
     template<std::size_t Npartitions, std::size_t Nelements>
-    concept byte_indexable = requires { typename byte_indexed_sequence<Npartitions, Nelements>; };
+    inline constexpr bool byte_indexable_v{
+      requires { typename byte_indexed_sequence<Npartitions, Nelements>; }
+    };
 
     template<class IndexType>
-    concept indexable_by = requires { typename indexed_sequence<IndexType, 1, 1>; };
+    inline constexpr bool indexable_by_v{
+      requires { typename indexed_sequence<IndexType, 1, 1>; }
+    };
   }
 
   [[nodiscard]]
@@ -54,16 +58,16 @@ namespace sequoia::testing
   {
     constexpr std::size_t limit{std::numeric_limits<std::uint8_t>::max()};
 
-    STATIC_CHECK( byte_indexable<1, limit>);
-    STATIC_CHECK(!byte_indexable<1, limit + 1>);
+    STATIC_CHECK( byte_indexable_v<1, limit>);
+    STATIC_CHECK(!byte_indexable_v<1, limit + 1>);
 
-    STATIC_CHECK( byte_indexable<limit, 0>);
-    STATIC_CHECK(!byte_indexable<limit + 1, 0>);
+    STATIC_CHECK( byte_indexable_v<limit, 0>);
+    STATIC_CHECK(!byte_indexable_v<limit + 1, 0>);
 
-    STATIC_CHECK( indexable_by<std::uint8_t>);
-    STATIC_CHECK(!indexable_by<bool>);
-    STATIC_CHECK(!indexable_by<char>);
-    STATIC_CHECK(!indexable_by<std::int64_t>);
+    STATIC_CHECK( indexable_by_v<std::uint8_t>);
+    STATIC_CHECK(!indexable_by_v<bool>);
+    STATIC_CHECK(!indexable_by_v<char>);
+    STATIC_CHECK(!indexable_by_v<std::int64_t>);
   }
 
   void static_partitioned_sequence_test::test_64_bit_index_types()
@@ -75,8 +79,8 @@ namespace sequoia::testing
   {
     using last_digit_partitions = maths::static_monotonic_sequence<std::size_t, 2, last_digit_greater>;
 
-    STATIC_CHECK( swap_partitions_accepts<static_partitioned_sequence<int, 2, 2>>);
-    STATIC_CHECK(!swap_partitions_accepts<static_partitioned_sequence<int, 2, 2, last_digit_partitions>>);
+    STATIC_CHECK( swap_partitions_accepts_v<static_partitioned_sequence<int, 2, 2>>);
+    STATIC_CHECK(!swap_partitions_accepts_v<static_partitioned_sequence<int, 2, 2, last_digit_partitions>>);
 
     using lists_t = std::initializer_list<std::initializer_list<int>>;
     STATIC_CHECK( std::is_constructible_v<static_partitioned_sequence<int, 2, 2>, lists_t>);
