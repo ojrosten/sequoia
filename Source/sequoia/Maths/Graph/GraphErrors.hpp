@@ -54,7 +54,10 @@ namespace sequoia::maths::graph_errors
                                                      std::size_t index);
 
   [[nodiscard]]
-  std::string edge_insertion_index_message(std::string_view method, std::size_t node,  std::size_t sizeAfterFirstInsertion, std::size_t index);
+  std::string edge_insertion_index_message(std::string_view method,
+                                           std::size_t node,
+                                           std::size_t sizeAfterFirstInsertion,
+                                           std::size_t index);
 
   [[nodiscard]]
   std::string edge_swap_indices_message(std::string_view method,
