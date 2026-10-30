@@ -41,6 +41,6 @@ namespace sequoia::testing
 
     void test_absolute_reporting_path();
 
-    void test_relative_to_root();
+    void test_with_root_removed();
   };
 }

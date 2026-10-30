@@ -306,7 +306,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string operator()(const project_paths& projPaths, std::string message) const
     {
-      return relative_to_root(std::move(message), projPaths.project_root());
+      return with_root_removed(std::move(message), projPaths.project_root());
     }
   };
 

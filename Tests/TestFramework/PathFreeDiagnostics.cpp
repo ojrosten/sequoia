@@ -31,7 +31,7 @@ namespace sequoia::testing
 
   log_summary& postprocess(log_summary& summary, const fs::path& projectRoot)
   {
-    summary.diagnostics_output(relative_to_root(summary.diagnostics_output(), projectRoot));
+    summary.diagnostics_output(with_root_removed(summary.diagnostics_output(), projectRoot));
     return summary;
   }
 
