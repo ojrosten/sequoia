@@ -1,0 +1,361 @@
+name: coverage
+
+# Measures the coverage of Source and publishes the figures, with no
+# threshold. The job fails on one measurement: "Check for uncalled functions"
+# is a gate on functions of Source that no test calls. The uploaded
+# coverage.info is an lcov tracefile.
+#
+# fine calls this workflow, so the gate holds pull requests into staging.
+# rigorous calls it too, for promotions to main, the nightly run and
+# dispatches. baseline-tightener.yml calls it to measure staging, and proposes
+# the tightened baseline this workflow uploads.
+#
+# The job has toolchain steps of its own rather than calling tests.yml,
+# because coverage runs the suite through ctest, serially, not through the
+# `run` target.
+on:
+  workflow_call:
+    inputs:
+      needs_testing:
+        description: 'Whether the change touches anything the job reads: `true` or `false`, from scope.yml. Anything else fails the job.'
+        required: true
+        type: string
+      merge_into:
+        description: 'A branch which the job merges into the checked-out commit before building, as tests.yml''s input of the same name does. Empty tests the checked-out commit itself.'
+        required: true
+        type: string
+
+jobs:
+  coverage:
+    name: Coverage · Linux · GCC
+    # Pinned, as lcov is below, so that the Ubuntu release changes only in a
+    # PR. ubuntu-26.04's archive carries g++-15, where ubuntu-24.04's stops at
+    # g++-14. GitHub rebuilds the image weekly. A new upstream version of
+    # g++-15, which `apt-get install` takes from the archive, or of
+    # llvm-cxxfilt-22 or c++filt, makes the gate on uncalled functions refuse
+    # every run, until a PR regenerates
+    # coverage_reports/uncalled_functions.txt. The demanglers change with
+    # the image, and c++filt also when `apt-get install` upgrades binutils, as
+    # a g++-15 upgrade can require. A PR that moves the job to another release:
+    #   -# changes the runs-on line;
+    #   -# finds the release's demanglers, with the listing step of 96027fcab,
+    #      and sets LLVM_CXXFILT and GNU_CXXFILT below;
+    #   -# checks that the release provides g++-15;
+    #   -# regenerates coverage_reports/uncalled_functions.txt, whose header
+    #      records the tools' releases.
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    env:
+      CC: gcc-15
+      CXX: g++-15
+      NEEDS_TESTING: ${{ inputs.needs_testing }}
+      # The demanglers of the gate on uncalled functions; see "Test the
+      # uncalled-functions script".
+      LLVM_CXXFILT: /usr/bin/llvm-cxxfilt-22
+      GNU_CXXFILT: /usr/bin/c++filt
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      # Repeated from tests.yml, whose comment on the step says why it exists
+      # and what it refuses; change both.
+      - name: Merge the branch named by merge_into
+        if: inputs.merge_into != ''
+        env:
+          BASE: ${{ inputs.merge_into }}
+        run: |
+          git fetch --quiet --no-tags --filter=blob:none --unshallow origin "+refs/heads/$BASE:refs/remotes/origin/$BASE"
+          tested=$(git rev-parse HEAD)
+          git -c user.name="sequoia CI" -c user.email=ci@example.invalid \
+            merge --no-edit "refs/remotes/origin/$BASE"
+          echo "Testing $(git rev-parse HEAD): $tested merged with $BASE at $(git rev-parse "refs/remotes/origin/$BASE")"
+          if ! git diff --quiet "$tested" HEAD -- .github scripts; then
+            git diff --stat "$tested" HEAD -- .github scripts
+            echo "::error::$BASE has changed .github or scripts since its merge-base with $tested, and this run builds with the old ones: rebase onto $BASE and push"
+            exit 1
+          fi
+
+      # As in tests.yml, the job runs whatever the change, since each caller's
+      # audit insists on its success. Only the steps below depend on the
+      # change, and any answer but `true` or `false` fails the job.
+      - name: Nothing to test
+        if: env.NEEDS_TESTING != 'true'
+        run: |
+          if [ "$NEEDS_TESTING" != false ]; then
+            echo "::error::the scope job's answer is '$NEEDS_TESTING', neither true nor false"
+            exit 1
+          fi
+          echo "Nothing to test; the scope job's summary says why."
+
+      - name: Install the toolchain
+        if: env.NEEDS_TESTING == 'true'
+        run: |
+          # This removal of the Chrome and Microsoft lists, the retry
+          # paragraph, the `apt-get update` and the exact-name package check
+          # below repeat tests.yml's "Install the toolchain (Linux)", which
+          # also says why `--error-on=any` is passed and why packages are
+          # matched by exact name; change both.
+          #
+          # The hosted image ships Chrome's and Microsoft's apt repositories,
+          # which nothing here installs from. A bad index from either fails
+          # `apt-get update`, and with it the job.
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
+                     /etc/apt/sources.list.d/microsoft-prod.list
+          # The archive is a live dependency of this job, and an index refresh
+          # has hung until the job's timeout, before any compiler ran. So
+          # scripts/retry.sh runs each apt command that fetches: an attempt
+          # that fails, or runs past its limit, is retried a bounded number of
+          # times. The script runs as root, so that stopping an attempt reaches
+          # the processes apt starts. A whole install step takes 22-126 s, so
+          # the limits leave room for every retry within the job.
+          #
+          # The command retried is
+          # scripts/apt_get_demoting_preferred_mirrors_on_retry.sh, so
+          # that a later attempt fetches from another mirror first.
+          #
+          # Only the download is retried. The install then runs once, from the
+          # downloaded packages, with no download. apt-get runs dpkg in a
+          # session of its own, so stopping an attempt leaves dpkg running and
+          # holding its lock. Every later attempt then fails at once.
+          sudo scripts/retry.sh 3 180 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh update -qq --error-on=any \
+            || { echo "::error::apt-get update failed: each attempt above says why"; exit 1; }
+          # The Perl packages are for lcov, installed below from its release.
+          # Without Capture::Tiny, DateTime, Date::Parse and
+          # Devel::StackTrace, lcov's tools do not start. geninfo reads gcov's
+          # output with JSON::XS in preference to the core, pure-Perl
+          # JSON::PP.
+          packages=(g++-15 ninja-build libtbb-dev
+                    libcapture-tiny-perl libdatetime-perl libdevel-stacktrace-perl libjson-xs-perl libtimedate-perl)
+          names=$(apt-cache pkgnames)
+          for pkg in "${packages[@]}"; do
+            grep -qFx -- "$pkg" <<< "$names" \
+              || { echo "::error::$pkg is not available on this image"; exit 1; }
+          done
+          sudo scripts/retry.sh 3 300 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh \
+            install -y --download-only "${packages[@]}"
+          sudo apt-get install -y --no-download "${packages[@]}"
+          # lcov comes from its release rather than apt (2.4 on ubuntu-26.04),
+          # at the version Homebrew installs, so that CI and a Mac run the same
+          # lcov. The tarball has no apt signature behind it, so its
+          # checksum is pinned. Each tool prints the version and, after a
+          # hyphen, the release number from the tarball's .version file.
+          lcov_version=2.6
+          lcov_release=0
+          lcov_sha256=67a45db99b8ef0260c3fac9a2e3749fd8fa350a15e235dd3c29b356d97755c75
+          lcov_tarball=$RUNNER_TEMP/lcov.tar.gz
+          lcov_url=https://github.com/linux-test-project/lcov/releases/download/v$lcov_version/lcov-$lcov_version.tar.gz
+          if ! curl -fsSL -o "$lcov_tarball" "$lcov_url"; then echo "::error::lcov $lcov_version could not be fetched from its release page"; exit 1; fi
+          if ! echo "$lcov_sha256  $lcov_tarball" | sha256sum --check --quiet; then echo "::error::The lcov tarball does not match its published checksum"; exit 1; fi
+          tar -xzf "$lcov_tarball" -C "$RUNNER_TEMP"
+          # --old-file=doc stops install rebuilding the documentation the
+          # tarball ships, which needs Sphinx.
+          # sudo drops the job's CXX, from which lcov's Makefile.PL would take
+          # the compiler, so it would build the extension with plain g++;
+          # LCOV_CXX names it on make's command line.
+          sudo make -C "$RUNNER_TEMP/lcov-$lcov_version" --old-file=doc LCOV_CXX=g++-15 install
+          # Each tool must report the pinned release. That is the only proof
+          # the install worked, since lcov's Makefile can exit 0 after a
+          # partial install. It also stops another lcov earlier on PATH from
+          # measuring in this one's place without a word.
+          pinned=$lcov_version-$lcov_release
+          for tool in lcov geninfo genhtml; do
+            reported=$("$tool" --version)
+            echo "$reported"
+            [ "${reported##* }" = "$pinned" ] \
+              || { echo "::error::$tool on PATH reports ${reported##* }, not the pinned $pinned"; exit 1; }
+          done
+          # The install builds an XS extension. When the extension does not
+          # load, lcovutil.pm falls back to pure Perl without a word, and the
+          # run is slower. So the step fails on it. One Perl script checks
+          # both that lcovutil.pm loads and that the extension did. On failure
+          # it prints the reason as an error annotation, encoded for the
+          # annotation. A missing perl fails the step by itself.
+          LCOV_PERL_DIR=/usr/local/lib/lcov perl -e '
+            my $dir = $ENV{LCOV_PERL_DIR};
+            unshift @INC, $dir;
+            my $reason;
+            if (!eval { require lcovutil; 1 }) {
+              $reason = "Perl could not load lcovutil.pm from $dir: $@";
+            } elsif (!$lcovutil::XS_LOADED) {
+              $reason = "lcov XS extension did not load, so lcov would run in pure Perl: "
+                        . ($lcovutil::XS_LOAD_ERROR || "LCOV_PURE_PERL is set");
+            } else {
+              print "lcov XS extension: loaded\n";
+              exit 0;
+            }
+            chomp $reason;
+            $reason =~ s/%/%25/g;
+            $reason =~ s/\r/%0D/g;
+            $reason =~ s/\n/%0A/g;
+            print "::error::$reason\n";
+            exit 1;'
+          g++-15 --version | head -1
+          cmake --version | head -1
+
+      - name: Give git an identity
+        if: env.NEEDS_TESTING == 'true'
+        run: |
+          git config --global user.name "sequoia CI"
+          git config --global user.email "ci@example.invalid"
+          git config --global init.defaultBranch trunk
+
+      # Tests the checks by which the Measure step catches lcov changing the
+      # measurement.
+      - name: Test the tracefile checks
+        if: env.NEEDS_TESTING == 'true'
+        run: scripts/tests/check_tracefile_selftest.sh
+
+      - name: Configure and build
+        if: env.NEEDS_TESTING == 'true'
+        working-directory: TestAll
+        run: |
+          cmake --preset gcc-env-coverage
+          cmake --build --preset gcc-env-coverage
+
+      # The script runs the suite through ctest itself, so there is no separate
+      # run step. Utilities.cmake registers the test with --serial under
+      # CODE_COVERAGE.
+      - name: Measure
+        id: measure
+        if: env.NEEDS_TESTING == 'true'
+        run: ./scripts/generate_coverage_report.sh build/TestAll/gcc-env-coverage
+
+      - name: Report
+        if: ${{ always() && env.NEEDS_TESTING == 'true' }}
+        env:
+          MEASURE_OUTCOME: ${{ steps.measure.outcome }}
+        run: |
+          info=build/TestAll/gcc-env-coverage/coverage.info
+          [ -f "$info" ] || { echo "::error::no tracefile at $info"; exit 1; }
+          # The options are generate_coverage_report.sh's read_options, which
+          # the script explains. A tracefile lcov refuses fails the job, since
+          # the tracefile is what the job publishes.
+          if ! lcov_output=$(lcov --summary "$info" --rc check_data_consistency=0 --rc derive_function_end_line=0 2>&1); then
+            echo "::error::lcov refused $info"
+            echo "$lcov_output"
+            exit 1
+          fi
+          if ! summary=$(grep -E '^ *(lines|functions)\.' <<< "$lcov_output"); then
+            echo "::error::lcov's summary of $info has no lines or functions figure"
+            echo "$lcov_output"
+            exit 1
+          fi
+          echo "$summary"
+          {
+            echo "### Coverage"
+            echo '```'
+            echo "$summary"
+            echo '```'
+            echo "_These figures are reported only; the gate on uncalled functions is a step of its own._"
+            # The step runs even when Measure fails, so the figures say whether
+            # they were checked.
+            if [ "$MEASURE_OUTCOME" != success ]; then
+              echo "**The Measure step failed ($MEASURE_OUTCOME): these figures are unchecked.**"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # The gate on uncalled functions keys each function by its demangled
+      # name, so the script's controls run with the demanglers the gate is to
+      # use. ubuntu-26.04 has llvm-cxxfilt-20 to -22 and no unversioned
+      # llvm-cxxfilt; 22 is the newest (run 39636009062). A demangler absent
+      # from the path given fails this step. The step follows Measure, so that
+      # a failure here does not cost the run its coverage figures.
+      - name: Test the uncalled-functions script
+        if: ${{ always() && env.NEEDS_TESTING == 'true' }}
+        run: scripts/tests/uncalled_functions_selftest.py --demangler "$LLVM_CXXFILT" --demangler "$GNU_CXXFILT"
+
+      # The gate. A function of Source that no test calls fails the job, unless
+      # the baseline, coverage_reports/uncalled_functions.txt, lists it. A .cpp
+      # file of Source missing from the tracefile also fails the job. The
+      # tracefile holds every object the build compiled, whether or not it was
+      # linked. A template never instantiated, and an inline function never
+      # used, are in no object, so the gate does not see them. A listed
+      # function that is now called, or gone, gives a notice, and
+      # baseline-tightener.yml removes its entry. Errors and notices are
+      # annotations on the run as well as lines in its summary.
+      #
+      # The baseline's header names the tools' releases, so a change of
+      # demangler, compiler or lcov release is refused until the baseline is
+      # made again. A failure, a refusal included, prints a baseline made from
+      # this run and how its entries differ from the committed ones, so that a
+      # newly uncalled function is not absorbed unseen with a change of tools.
+      #
+      # A run which passes also writes the baseline tightened by this run: the
+      # committed one without the entries the notices name. Both follow from
+      # the same counts, so the step fails if a notice leaves the baseline
+      # unchanged. It also fails if tightening changes a baseline without a
+      # notice, which happens when the committed baseline is not in the form
+      # the script writes, such as a hand-added entry out of order.
+      # baseline-tightener.yml proposes the tightened baseline.
+      - name: Check for uncalled functions
+        id: gate
+        if: ${{ always() && steps.measure.outcome == 'success' }}
+        run: |
+          baseline=coverage_reports/uncalled_functions.txt
+          options=(--tracefile build/TestAll/gcc-env-coverage/coverage.info --repository "$GITHUB_WORKSPACE"
+                   --demangler "$LLVM_CXXFILT" --demangler "$GNU_CXXFILT"
+                   --recorded-tool g++-15 --recorded-tool lcov)
+          verdict="$RUNNER_TEMP/uncalled_verdict.txt"
+          fresh="$RUNNER_TEMP/uncalled_fresh_baseline.txt"
+          status=0
+          scripts/uncalled_functions.py compare "${options[@]}" --baseline "$baseline" > "$verdict" 2>&1 || status=$?
+          cat "$verdict"
+          sed -n -e 's/^notice: /::notice title=Uncalled functions::/p' \
+                 -e 's/^error: /::error title=Uncalled functions::/p' "$verdict"
+          {
+            echo '### Uncalled functions'
+            if [ "$status" -eq 0 ] && [ ! -s "$verdict" ]; then
+              echo "Every .cpp file of Source is in the tracefile, and every uncalled function it holds is listed in $baseline."
+            else
+              echo '```'; cat "$verdict"; echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$status" -ne 0 ]; then
+            scripts/uncalled_functions.py baseline "${options[@]}" > "$fresh" 2>&1 || true
+            entries=$(diff <(grep -v '^# ' "$baseline") <(grep -v '^# ' "$fresh") || true)
+            echo "A baseline made from this run:"
+            cat "$fresh"
+            echo "Its entries against the committed baseline's (< committed only, > this run only):"
+            echo "$entries"
+            {
+              echo "Entries of $baseline (<) against a baseline made from this run (>):"
+              echo '```'; echo "$entries"; echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit "$status"
+          fi
+          tightened="$RUNNER_TEMP/tightened/uncalled_functions.txt"
+          mkdir -p "${tightened%/*}"
+          if ! scripts/uncalled_functions.py tighten "${options[@]}" --baseline "$baseline" > "$tightened"; then
+            echo "::error title=Uncalled functions::the baseline could not be tightened"
+            exit 1
+          fi
+          if cmp -s "$baseline" "$tightened"; then changed=no; else changed=yes; fi
+          if grep -q '^notice: ' "$verdict"; then noticed=yes; else noticed=no; fi
+          if [ "$changed" = yes ] && [ "$noticed" = no ]; then
+            echo "::error title=Uncalled functions::$baseline is not as written by the script: tightening it with no notice changed it. Make it again as the diff below shows"
+            diff "$baseline" "$tightened" || true
+            exit 1
+          fi
+          if [ "$changed" = no ] && [ "$noticed" = yes ]; then
+            echo "::error title=Uncalled functions::tightening $baseline removed nothing, although the comparison gave a notice"
+            exit 1
+          fi
+
+      - name: Upload the tightened baseline
+        if: ${{ always() && steps.gate.outcome == 'success' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: uncalled-functions-tightened
+          path: ${{ runner.temp }}/tightened/uncalled_functions.txt
+          if-no-files-found: error
+
+      - name: Upload the tracefile and the report
+        if: ${{ always() && env.NEEDS_TESTING == 'true' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage
+          path: |
+            build/TestAll/gcc-env-coverage/coverage.info
+            coverage_reports/
+          if-no-files-found: warn

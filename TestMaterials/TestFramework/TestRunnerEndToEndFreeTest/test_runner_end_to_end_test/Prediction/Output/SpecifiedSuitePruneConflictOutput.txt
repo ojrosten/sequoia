@@ -12,6 +12,7 @@ oldschool_test:
 [Total Run Time: 704us]
 [Execution Time: 116us]
 [Runner Overhead: 1.07ms]
+[Scheduling Overhead: 177us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

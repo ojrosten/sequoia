@@ -22,5 +22,18 @@ namespace sequoia::testing
     static std::filesystem::path source_file();
 
     void run_tests();
+  private:
+
+    void test_winsorized_sample_variance();
+
+    void test_forward_only_view();
+
+    void test_types_admitted();
+
+    void test_narrower_type_requested();
+
+    void test_wider_type_requested();
+
+    void test_custom_estimator();
   };
 }

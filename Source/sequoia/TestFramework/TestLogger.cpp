@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/TestFramework/TestLogger.hpp"
-#include "sequoia/TestFramework/DumpComparison.hpp"
+#include "sequoia/TestFramework/SeparatorAfterCheck.hpp"
 
 #include <fstream>
 
@@ -60,7 +60,7 @@ namespace sequoia::testing
     if(!files.dump_file.empty())
     {
       if(std::ofstream of{files.dump_file, std::ios_base::app})
-        of << dump_format::check_separator;
+        of << separator_after_check;
     }
   }
 
@@ -87,29 +87,32 @@ namespace sequoia::testing
     , m_DiagnosticsOutput{to_reduced_string(logger.results().diagnostics_output)}
     , m_CaughtExceptionMessages{to_reduced_string(logger.results().caught_exception_messages)}
     , m_CriticalFailures{logger.results().critical_failures}
-    , m_ExecutionDuration{delta}
+    , m_Durations{.execution_duration{delta}}
   {
+    const auto performanceChecks{logger.results().top_level_performance_checks},
+               performanceFailures{logger.results().top_level_performance_failures};
+
     switch(mode)
     {
     case test_mode::standard:
-      m_StandardTopLevelFailures    = logger.results().top_level_failures - logger.results().performance_failures;
-      m_StandardDeepFailures        = logger.results().failures - logger.results().performance_failures;
-      m_StandardPerformanceFailures = logger.results().performance_failures;
-      m_StandardTopLevelChecks      = logger.results().top_level_checks - logger.results().performance_checks;
-      m_StandardDeepChecks          = logger.results().deep_checks - logger.results().performance_checks;
-      m_StandardPerformanceChecks   = logger.results().performance_checks;
+      m_StandardTopLevelFailures    = logger.results().top_level_failures - performanceFailures;
+      m_StandardDeepFailures        = logger.results().failures - performanceFailures;
+      m_StandardPerformanceFailures = performanceFailures;
+      m_StandardTopLevelChecks      = logger.results().top_level_checks - performanceChecks;
+      m_StandardDeepChecks          = logger.results().deep_checks - performanceChecks;
+      m_StandardPerformanceChecks   = performanceChecks;
       break;
     case test_mode::false_positive:
-      m_FalsePositiveFailures            = logger.results().top_level_failures - logger.results().performance_failures;
-      m_FalsePositivePerformanceFailures = logger.results().performance_failures;
-      m_FalsePositiveChecks              = logger.results().top_level_checks - logger.results().performance_checks;
-      m_FalsePositivePerformanceChecks   = logger.results().performance_checks;
+      m_FalsePositiveFailures            = logger.results().top_level_failures - performanceFailures;
+      m_FalsePositivePerformanceFailures = performanceFailures;
+      m_FalsePositiveChecks              = logger.results().top_level_checks - performanceChecks;
+      m_FalsePositivePerformanceChecks   = performanceChecks;
       break;
     case test_mode::false_negative:
-      m_FalseNegativePerformanceFailures = logger.results().performance_checks - logger.results().performance_failures;
+      m_FalseNegativePerformanceFailures = performanceChecks - performanceFailures;
       m_FalseNegativeFailures            = logger.results().top_level_failures - m_FalseNegativePerformanceFailures;
-      m_FalseNegativeChecks              = logger.results().top_level_checks - logger.results().performance_checks;
-      m_FalseNegativePerformanceChecks   = logger.results().performance_checks;
+      m_FalseNegativeChecks              = logger.results().top_level_checks - performanceChecks;
+      m_FalseNegativePerformanceChecks   = performanceChecks;
       break;
     }
   }
@@ -153,8 +156,7 @@ namespace sequoia::testing
 
     m_CriticalFailures   += rhs.m_CriticalFailures;
     m_ExceptionsInFlight += rhs.m_ExceptionsInFlight;
-    m_ExecutionDuration  += rhs.m_ExecutionDuration;
-    m_RunnerOverhead     += rhs.m_RunnerOverhead;
+    m_Durations          += rhs.m_Durations;
 
     return *this;
   }

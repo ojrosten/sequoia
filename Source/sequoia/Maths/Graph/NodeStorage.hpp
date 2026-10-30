@@ -17,7 +17,9 @@
 
  */
 
+#include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Core/ContainerUtilities/Iterator.hpp"
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
 
 #include <algorithm>
@@ -129,7 +131,7 @@ namespace sequoia::maths
     {
       if(pos == cend_node_weights()) throw std::out_of_range("node_storage::set_node_weight - index out of range!\n");
 
-      const auto index{std::ranges::distance(cbegin_node_weights(), pos)};
+      const auto index{numeric::unchecked_conversion_to<size_type>(std::ranges::distance(cbegin_node_weights(), pos))};
       m_NodeWeights[index] = std::move(w);
     }
 
@@ -143,7 +145,7 @@ namespace sequoia::maths
     {
       if(pos == cend_node_weights()) throw std::out_of_range("node_storage::mutate_node_weight - index out of range!\n");
 
-      const auto index{std::ranges::distance(cbegin_node_weights(), pos)};
+      const auto index{numeric::unchecked_conversion_to<size_type>(std::ranges::distance(cbegin_node_weights(), pos))};
       return std::invoke(fn, m_NodeWeights[index]);
     }
 
@@ -160,11 +162,11 @@ namespace sequoia::maths
 
     template<std::size_t N>
     constexpr node_storage_base(const std::array<weight_type, N>& weights)
-      : m_NodeWeights{weights}
+      : m_NodeWeights(weights)
     {}
 
     constexpr node_storage_base(std::initializer_list<weight_type> weights)
-      : m_NodeWeights{weights}
+      : m_NodeWeights(weights)
     {}
 
     template<alloc Allocator>
@@ -179,7 +181,7 @@ namespace sequoia::maths
 
     template<alloc Allocator>
     constexpr node_storage_base(std::initializer_list<weight_type> weights, const Allocator& allocator)
-      : m_NodeWeights{weights, allocator}
+      : m_NodeWeights(weights, allocator)
     {}
 
     constexpr node_storage_base(const node_storage_base&)
@@ -188,14 +190,14 @@ namespace sequoia::maths
     template<alloc Allocator>
       requires is_deep_copy_constructible_v<node_weight_container_type>
     constexpr node_storage_base(const node_storage_base& other, const Allocator& allocator)
-      : m_NodeWeights{other.m_NodeWeights, allocator}
+      : m_NodeWeights(other.m_NodeWeights, allocator)
     {}
 
     constexpr node_storage_base(node_storage_base&&) noexcept = default;
 
     template<alloc Allocator>
     constexpr node_storage_base(node_storage_base&& s, const Allocator& allocator) noexcept
-      : m_NodeWeights{std::move(s.m_NodeWeights), allocator}
+      : m_NodeWeights(std::move(s.m_NodeWeights), allocator)
     {}
 
     ~node_storage_base() = default;
@@ -217,6 +219,20 @@ namespace sequoia::maths
         throw std::out_of_range("node_storage::swap - index out of range");
 
       std::ranges::swap(m_NodeWeights[i], m_NodeWeights[j]);
+    }
+
+    /** \brief Moves the weight of each node `i` to position
+               `destinations[i]`.
+
+        Does not copy `destinations`.
+
+        \throws std::invalid_argument if `destinations` is not a permutation
+        of the nodes' indices. The weights are then in an unspecified order.
+     */
+    template<integer Index, alloc IndexAllocator>
+    constexpr void permute_nodes(std::vector<Index, IndexAllocator>&& destinations)
+    {
+      sequoia::permute(m_NodeWeights, std::move(destinations));
     }
 
     auto get_node_allocator() const
@@ -299,7 +315,7 @@ namespace sequoia::maths
 
     template<alloc Allocator>
     constexpr node_storage(node_storage&& s, const Allocator& allocator) noexcept
-      : base_type{std::move(s), allocator}
+      : base_type(std::move(s), allocator)
     {}
   };
 

@@ -43,6 +43,7 @@ failing_test:
 [Total Run Time: 384us]
 [Execution Time: 60.4us]
 [Runner Overhead: 1.44ms]
+[Scheduling Overhead: 95us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     1;  Failures:  1

@@ -7,6 +7,7 @@
 
 #include "sequoia/TestFramework/Output.hpp"
 
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
@@ -16,6 +17,7 @@
 #include <array>
 #include <bit>
 #include <charconv>
+#include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <format>
@@ -369,7 +371,7 @@ namespace sequoia::testing
       char* end{};
       const auto first {name.data() + start};
       const auto value {std::strtold(first, &end)};
-      const auto length{std::ranges::distance(first, end)};
+      const auto length{numeric::unchecked_conversion_to<size_type>(std::ranges::distance(first, end))};
       if(length == 0)
         return start;
 
@@ -415,24 +417,17 @@ namespace sequoia::testing
         if(pos == npos)
           break;
 
+        // Continuing inside the identifier is safe: the next search, for `<`, space or `{`, finds none in it
         const bool continuesIdentifier{!is_identifier_delimiter(name[pos - 1])};
         if(continuesIdentifier)
-        {
-          const auto identifierEnd{std::ranges::find_if(name.begin() + pos, name.end(), is_identifier_delimiter)};
-          pos = std::ranges::distance(name.begin(), identifierEnd);
           continue;
-        }
 
         if(name[pos - 1] == '[')
           pos = respell_bit_pattern_literal(name, pos);
 
         pos = respell_hex_float(name, pos);
 
-        if(pos + 1 < name.size())
-        {
-          const auto digitsEnd{std::ranges::find_if_not(name.begin() + pos + 1, name.end(), ascii::is_digit)};
-          pos = std::ranges::distance(name.begin(), digitsEnd);
-        }
+        pos = name.find_first_not_of("0123456789", pos + 1);
 
         pos = erase_literal_suffix(name, pos);
       }

@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "IndividualTestPathsFreeTest.hpp"
+#include "FakeProjectTestingUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/IndividualTestPaths.hpp"
@@ -20,18 +21,6 @@ namespace sequoia::testing
   fs::path individual_test_paths_free_test::source_file()
   {
     return std::source_location::current().file_name();
-  }
-
-  [[nodiscard]]
-  fs::path individual_test_paths_free_test::fake_project() const
-  {
-    return working_materials() /= "FakeProject";
-  }
-
-  [[nodiscard]]
-  fs::path individual_test_paths_free_test::minimal_fake_path() const
-  {
-    return fake_project().append("build/CMade/FakeExe.txt");
   }
 
   void individual_test_paths_free_test::run_tests()
@@ -58,7 +47,7 @@ namespace sequoia::testing
     check(equality, "Summary with a discriminator",        summaryFileName("xyz"),              "foo_test_xyz.txt"s);
 
     {
-      commandline_arguments args{{minimal_fake_path().generic_string()}};
+      commandline_arguments args{fake_project_commandline(working_materials())};
       const project_paths projPaths{args.size(), args.get(), {}};
       check(
         equality,
@@ -91,7 +80,9 @@ namespace sequoia::testing
 
     {
       // As under a multi-config generator, the executable sits a level below its build tree
-      commandline_arguments args{{fake_project().append("build/Foo/CMade/FakeExe.txt").generic_string()}};
+      commandline_arguments args{
+        {fake_project_root(working_materials()).append("build/Foo/CMade/FakeExe.txt").generic_string()}
+      };
       const project_paths projPaths{args.size(), args.get(), {}};
       check(
         equality,
@@ -158,7 +149,7 @@ namespace sequoia::testing
   }
   void individual_test_paths_free_test::test_materials_paths()
   {
-    commandline_arguments args{{minimal_fake_path().generic_string()}};
+    commandline_arguments args{fake_project_commandline(working_materials())};
     const project_paths projPaths{args.size(), args.get(), {}};
 
     const auto source{projPaths.tests().repo() / "Foo" / "Bar.cpp"};
@@ -210,7 +201,7 @@ namespace sequoia::testing
 
   void individual_test_paths_free_test::test_ancillary_main_cpps()
   {
-    commandline_arguments args{{minimal_fake_path().generic_string()}};
+    commandline_arguments args{fake_project_commandline(working_materials())};
     const project_paths projPaths{
       args.size(),
       args.get(),
@@ -223,6 +214,8 @@ namespace sequoia::testing
       }
     };
 
+    const auto fakeProjectRoot{fake_project_root(working_materials())};
+
     auto fileOf{[](const main_paths& ancillaryMain) { return ancillaryMain.file(); }};
     const auto files{
       projPaths.ancillary_main_cpps() | std::views::transform(fileOf) | std::ranges::to<std::vector>()
@@ -232,8 +225,8 @@ namespace sequoia::testing
       equality,
       "Each ancillary main is located from the project root",
       files,
-      std::vector<fs::path>{fake_project() / "TestChamber/TestChamberMain.cpp",
-                            fake_project() / "TestFrameworkDiagnostics/TestFrameworkDiagnosticsMain.cpp"}
+      std::vector<fs::path>{fakeProjectRoot / "TestChamber/TestChamberMain.cpp",
+                            fakeProjectRoot / "TestFrameworkDiagnostics/TestFrameworkDiagnosticsMain.cpp"}
     );
 
     auto commonIncludesOf{[](const main_paths& ancillaryMain) { return ancillaryMain.common_includes(); }};
@@ -245,7 +238,7 @@ namespace sequoia::testing
       equality,
       "Each ancillary main shares the common includes of the main",
       commonIncludes,
-      std::vector<fs::path>(2, fake_project() / "TestCommon/TestIncludes.hpp")
+      std::vector<fs::path>(2, fakeProjectRoot / "TestCommon/TestIncludes.hpp")
     );
   }
 }

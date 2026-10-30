@@ -1,0 +1,20 @@
+started 2026-10-13T09:15:04.123Z
+finished no
+started 2026-10-13T09:15:04.123Z
+finished yes
+execution duration 1500us
+runner overhead 250us
+entries of performance check attempts 3
+performance check attempts 2
+performance check attempts 1
+performance check attempts 3
+started 2026-10-13T09:15:06.123Z
+finished no
+started 2026-10-13T09:15:06.123Z
+finished yes
+execution duration 1500us
+runner overhead 250us
+entries of performance check attempts 3
+performance check attempts 2
+performance check attempts 1
+performance check attempts 3

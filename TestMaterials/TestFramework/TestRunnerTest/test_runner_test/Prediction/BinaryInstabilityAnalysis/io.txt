@@ -10,6 +10,7 @@ flipper_free_test:
 [Total Run Time: 301us]
 [Execution Time: 135us]
 [Runner Overhead: 548us]
+[Scheduling Overhead: 5.67us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -39,6 +40,7 @@ flipper_free_test:
 [Total Run Time: 210us]
 [Execution Time: 54.3us]
 [Runner Overhead: 519us]
+[Scheduling Overhead: 4.75us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

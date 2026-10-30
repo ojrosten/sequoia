@@ -28,6 +28,7 @@
 #include <exception>
 #include <filesystem>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -62,11 +63,13 @@ namespace sequoia::testing
     std::size_t
       failures{},
       top_level_failures{},
-      performance_failures{},
+      top_level_performance_failures{},
       critical_failures{},
       top_level_checks{},
-      deep_checks{},
-      performance_checks{};
+      top_level_performance_checks{},
+      deep_checks{};
+
+    std::vector<std::optional<std::size_t>> attempts_per_performance_check{};
   };
 
   /** \brief Helper class for safe interaction with test_logger.
@@ -102,7 +105,7 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr std::string_view top_level_message() const noexcept
     {
-      return !m_SentinelDepth.empty() ? std::string_view{m_SentinelDepth.front().message} : "";
+      return !m_SentinelLevels.empty() ? std::string_view{m_SentinelLevels.front().message} : "";
     }
 
     [[nodiscard]]
@@ -120,34 +123,62 @@ namespace sequoia::testing
     constexpr test_logger_base(test_logger_base&&)            noexcept = default;
     constexpr test_logger_base& operator=(test_logger_base&&) noexcept = default;
   private:
-    struct level_message
+    struct sentinel_level
     {
-      constexpr explicit level_message(std::string_view m)
+      constexpr explicit sentinel_level(std::string_view m)
         : message{m}
       {}
 
       std::string message;
-      bool written{};
+      bool written{},
+           is_performance_check{};
     };
 
     enum class is_critical{yes, no};
 
     test_results m_Results;
-    std::vector<level_message> m_SentinelDepth;
+    std::vector<sentinel_level> m_SentinelLevels;
     // Held indirectly: a path is not a literal type, and a logger must be creatable in a constant evaluation
     std::unique_ptr<active_recovery_files> m_Recovery{};
 
     [[nodiscard]]
-    constexpr std::size_t depth() const noexcept { return m_SentinelDepth.size(); }
+    constexpr std::size_t depth() const noexcept { return m_SentinelLevels.size(); }
 
     constexpr void log_check() noexcept { ++m_Results.deep_checks; }
 
     constexpr void log_top_level_check() noexcept { ++m_Results.top_level_checks; }
 
-    constexpr void log_performance_check() noexcept
+    [[nodiscard]]
+    constexpr bool within_performance_check() const noexcept
     {
+      return !m_SentinelLevels.empty() && m_SentinelLevels.back().is_performance_check;
+    }
+
+    [[nodiscard]]
+    constexpr bool top_level_is_performance_check() const noexcept
+    {
+      return !m_SentinelLevels.empty() && m_SentinelLevels.front().is_performance_check;
+    }
+
+    constexpr void log_performance_check()
+    {
+      if(m_SentinelLevels.empty())
+        throw std::logic_error{"Cannot log a performance check outside a sentinel"};
+
+      m_SentinelLevels.back().is_performance_check = true;
+      if(top_level_is_performance_check())
+        ++m_Results.top_level_performance_checks;
+
+      m_Results.attempts_per_performance_check.emplace_back();
       log_check();
-      ++m_Results.performance_checks;
+    }
+
+    constexpr void log_performance_check_attempts(std::size_t attempts)
+    {
+      if(m_Results.attempts_per_performance_check.empty())
+        throw std::logic_error{"Cannot log the attempts of a performance check before the check"};
+
+      m_Results.attempts_per_performance_check.back() = attempts;
     }
 
     constexpr void failure_message(test_mode mode, std::string_view message, const is_critical isCritical)
@@ -168,7 +199,7 @@ namespace sequoia::testing
 
       indentation ind{};
       std::size_t activeLevels{};
-      for(auto& info : m_SentinelDepth)
+      for(auto& info : m_SentinelLevels)
       {
         if(info.message.empty()) continue;
 
@@ -194,7 +225,9 @@ namespace sequoia::testing
 
     constexpr void log_performance_failure(test_mode mode, std::string_view message)
     {
-      ++m_Results.performance_failures;
+      if(top_level_is_performance_check())
+        ++m_Results.top_level_performance_failures;
+
       log_failure(mode, message);
     }
 
@@ -208,11 +241,11 @@ namespace sequoia::testing
 
     constexpr void log_top_level_failure(test_mode mode, std::string message)
     {
-      if(m_SentinelDepth.empty())
+      if(m_SentinelLevels.empty())
         throw std::logic_error{"Cannot log a top-level failure outside a sentinel"};
 
       ++m_Results.top_level_failures;
-      m_SentinelDepth.back().message.append(message);
+      m_SentinelLevels.back().message.append(message);
 
       if(mode == test_mode::false_negative)
       {
@@ -235,23 +268,31 @@ namespace sequoia::testing
 
     constexpr void increment_depth(std::string_view message)
     {
-      m_SentinelDepth.emplace_back(message);
+      m_SentinelLevels.emplace_back(message);
+    }
+
+    constexpr void append_to_level_message(std::size_t level, std::string_view lines)
+    {
+      if(level >= m_SentinelLevels.size())
+        throw std::logic_error{"Cannot append to a message absent from TestLogger's stack"};
+
+      append_lines(m_SentinelLevels[level].message, lines);
     }
 
     constexpr void decrement_depth()
     {
-      if(m_SentinelDepth.empty())
+      if(m_SentinelLevels.empty())
         throw std::logic_error{"Cannot pop from TestLogger's empty stack"};
 
       if(depth() == 1)
       {
         m_Results.last_check_exit_info = top_level_check_exit_info{
                                            .via_exception{uncaught_exceptions() > 0},
-                                           .message{std::move(m_SentinelDepth.front().message)}
+                                           .message{std::move(m_SentinelLevels.front().message)}
                                          };
       }
 
-      m_SentinelDepth.pop_back();
+      m_SentinelLevels.pop_back();
     }
 
     constexpr void end_message(test_mode mode, const is_critical isCritical)
@@ -323,6 +364,8 @@ namespace sequoia::testing
 
     constexpr void log_performance_check() { get().log_performance_check(); }
 
+    constexpr void log_performance_check_attempts(std::size_t attempts) { get().log_performance_check_attempts(attempts); }
+
     constexpr void log_check() { get().log_check(); }
 
     constexpr void log_failure(std::string_view message) { get().log_failure(m_Mode, message); }
@@ -332,6 +375,15 @@ namespace sequoia::testing
     constexpr void log_critical_failure(std::string_view message) { get().log_critical_failure(m_Mode, message); }
 
     constexpr void log_caught_exception_message(std::string_view message) { get().log_caught_exception_message(message); }
+
+    /** \brief Appends `lines` to the message given at construction.
+
+        Only reports made after the call can include them, and a failure report
+        quotes the message only if no earlier failure report has. The recovery
+        and dump files never include `lines`: both are written at construction,
+        and record what identifies a check, not its outcome.
+     */
+    constexpr void append_to_message(std::string_view lines) { get().append_to_level_message(m_Level, lines); }
 
     [[nodiscard]]
     constexpr bool critical_failure_detected() const noexcept { return get().results().critical_failures != m_PriorCriticalFailures; }
@@ -345,22 +397,25 @@ namespace sequoia::testing
     constexpr sentinel_base(test_logger_base& logger, test_mode mode, std::string message)
       : m_pLogger{&logger}
       , m_Mode{mode}
-      , m_Message{std::move(message)}
+      , m_Level{logger.depth()}
       , m_PriorFailures{logger.results().failures}
       , m_PriorCriticalFailures{logger.results().critical_failures}
       , m_PriorDeepChecks{logger.results().deep_checks}
     {
+      if(logger.within_performance_check())
+        throw std::logic_error{"Checks cannot be nested within a performance check"};
+
       if(!logger.depth())
       {
         logger.log_top_level_check();
         if(const auto* files{get().recovery()})
-          record_check_started(*files, m_Message);
+          record_check_started(*files, message);
       }
 
       if(const auto* files{get().recovery()})
-        record_dump_started(*files, m_Message);
+        record_dump_started(*files, message);
 
-      logger.increment_depth(m_Message);
+      logger.increment_depth(message);
     }
 
     constexpr ~sentinel_base()
@@ -427,8 +482,8 @@ namespace sequoia::testing
 
     test_logger_base* m_pLogger;
     test_mode m_Mode;
-    std::string m_Message;
     std::size_t
+      m_Level{},
       m_PriorFailures{},
       m_PriorCriticalFailures{},
       m_PriorDeepChecks{};
@@ -450,7 +505,9 @@ namespace sequoia::testing
       a localized and simple manner. In particular, a given check may actually be
       composed of many sub-checks. For standard checks, we want to count this as a
       single 'top-level' check. For false-positive checks success is counted as a failure
-      of one or more of the sub-checks. The sentinels deal with all of this smoothly
+      of one or more of the sub-checks. Likewise, a performance check counts as a
+      performance check only at the top level; within another check, it is one of
+      that check's sub-checks. The sentinels deal with all of this smoothly
       in a way which clients of the framework can generally ignore.
 
       4. sentinel may be used to help coordinate output.
@@ -474,10 +531,46 @@ namespace sequoia::testing
 
   };
 
+  /** \brief The execution duration and runner overhead of one or more tests.
+
+      The execution duration is the time a test spent in `run_tests()`; the
+      runner overhead is the rest of the time the runner spent executing the
+      test.
+      For several tests, both durations are sums over the tests.
+   */
+  struct durations_of_tests
+  {
+    using duration = std::chrono::steady_clock::duration;
+
+    duration
+      execution_duration{},
+      runner_overhead{};
+
+    [[nodiscard]]
+    constexpr duration total() const noexcept { return execution_duration + runner_overhead; }
+
+    [[nodiscard]]
+    friend constexpr durations_of_tests operator+(const durations_of_tests& lhs, const durations_of_tests& rhs) noexcept
+    {
+      return {
+        .execution_duration{lhs.execution_duration + rhs.execution_duration},
+        .runner_overhead   {lhs.runner_overhead    + rhs.runner_overhead}
+      };
+    }
+
+    constexpr durations_of_tests& operator+=(const durations_of_tests& rhs) noexcept
+    {
+      return *this = (*this + rhs);
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const durations_of_tests&, const durations_of_tests&) noexcept = default;
+  };
+
   class log_summary
   {
   public:
-    using duration = std::chrono::steady_clock::duration;
+    using duration = durations_of_tests::duration;
 
     // `{}` rather than `= default`, to stay identical to `modules-native`, where the
     // defaulted constructor of this class is emitted in no translation unit at all and the
@@ -555,25 +648,10 @@ namespace sequoia::testing
     [[nodiscard]]
     const std::string& caught_exceptions_output() const noexcept { return m_CaughtExceptionMessages; }
 
-    /** \brief How long the tests ran, excluding the runner's overhead.
-
-        For a run whose tests ran concurrently, this is the longest the tests ran one after another: the tests which
-        are not parallelizable, then those of the thread which spent longest executing tests.
-     */
     [[nodiscard]]
-    duration execution_duration() const noexcept { return m_ExecutionDuration; }
+    const durations_of_tests& durations() const noexcept { return m_Durations; }
 
-    void execution_duration(const duration delta) { m_ExecutionDuration = delta; }
-
-    /** \brief How long the runner spent executing the tests, beyond their execution duration.
-
-        For a run whose tests ran concurrently, this is the wall clock less the execution duration, so it includes any
-        time in which a thread was not executing a test.
-     */
-    [[nodiscard]]
-    duration runner_overhead() const noexcept { return m_RunnerOverhead; }
-
-    void runner_overhead(const duration delta) { m_RunnerOverhead = delta; }
+    void runner_overhead(const duration delta) { m_Durations.runner_overhead = delta; }
 
     log_summary& operator+=(const log_summary& rhs);
 
@@ -608,9 +686,7 @@ namespace sequoia::testing
 
     int m_ExceptionsInFlight{};
 
-    duration
-      m_ExecutionDuration{},
-      m_RunnerOverhead{};
+    durations_of_tests m_Durations{};
 
     log_summary(std::string_view name, const test_logger_base& logger, test_mode mode, const duration delta);
   };

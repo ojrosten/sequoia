@@ -1,3 +1,4 @@
+////////////////////////////////////////////////////////////////////
 //                Copyright Oliver J. Rosten 2020.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
@@ -8,14 +9,14 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "PerformanceTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class performance_false_negative_diagnostics final : public performance_false_negative_test
+  class performance_false_negative_diagnostics final : public scripted_clock_false_negative_test
   {
   public:
-    using performance_false_negative_test::performance_false_negative_test;
+    using scripted_clock_false_negative_test::scripted_clock_false_negative_test;
 
     [[nodiscard]]
     static std::filesystem::path source_file();
@@ -24,12 +25,26 @@ namespace sequoia::testing
   private:
 
     void test_relative_performance();
+
+    void test_confidence_multiplier();
+
+    void test_significance_gate();
+
+    void test_fail_at_second_attempt();
+
+    void test_confidence_multiplier_from_first_attempt();
+
+    void test_relative_performance_with_baselines();
+
+    void test_tasks_no_longer_than_baselines();
+
+    void test_fail_at_second_attempt_with_baselines();
   };
 
-  class performance_false_positive_diagnostics final : public performance_false_positive_test
+  class performance_false_positive_diagnostics final : public scripted_clock_false_positive_test
   {
   public:
-    using performance_false_positive_test::performance_false_positive_test;
+    using scripted_clock_false_positive_test::scripted_clock_false_positive_test;
 
     [[nodiscard]]
     static std::filesystem::path source_file();
@@ -38,21 +53,13 @@ namespace sequoia::testing
   private:
 
     void test_relative_performance();
-  };
 
-  class performance_utilities_test final : public free_test
-  {
-  public:
-    using free_test::free_test;
+    void test_confidence_multiplier();
 
-    [[nodiscard]]
-    static std::filesystem::path source_file();
+    void test_relative_performance_with_baselines();
 
-    void run_tests();
-  private:
+    void test_tasks_no_longer_than_baselines();
 
-    void test_postprocessing();
-
-    void test_coarse_sleep();
+    void test_baselines_doing_nothing();
   };
 }

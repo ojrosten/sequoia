@@ -10,6 +10,7 @@ periodic_free_test:
 [Total Run Time: 298us]
 [Execution Time: 111us]
 [Runner Overhead: 720us]
+[Scheduling Overhead: 6.58us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -39,6 +40,7 @@ periodic_free_test:
 [Total Run Time: 210us]
 [Execution Time: 50.3us]
 [Runner Overhead: 524us]
+[Scheduling Overhead: 3.12us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -68,6 +70,7 @@ periodic_free_test:
 [Total Run Time: 217us]
 [Execution Time: 53.9us]
 [Runner Overhead: 551us]
+[Scheduling Overhead: 4.46us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -97,6 +100,7 @@ periodic_free_test:
 [Total Run Time: 202us]
 [Execution Time: 53us]
 [Runner Overhead: 577us]
+[Scheduling Overhead: 3.12us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

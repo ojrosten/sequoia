@@ -14,7 +14,6 @@
 
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Characters.hpp"
-#include "sequoia/TextProcessing/Patterns.hpp"
 
 #include <algorithm>
 #include <bit>
@@ -25,6 +24,7 @@
 #include <fstream>
 #include <functional>
 #include <map>
+#include <numeric>
 #include <optional>
 #include <ranges>
 #include <span>
@@ -55,8 +55,7 @@ namespace sequoia::testing
       }
     };
 
-    /** Numbers files as a reader assembles a `compilations`: the file numbered `i` becomes `files[i]`
-        of the result.
+    /** Numbers files as a reader assembles a `compilations`.
 
         A file is identified by its path exactly as spelled. Two spellings of one file - `C:\a\b.cpp`
         and `C:/a/b.cpp`, a path through a symlink and its target - are two entries, so a reader must
@@ -155,7 +154,7 @@ namespace sequoia::testing
 
   namespace
   {
-    /* The log's layout, as ninja's deps_log.cc writes it:
+    /* The log's layout, as written by ninja's deps_log.cc:
 
        1. The signature line, then a version word. Version 4, which ninja has written since 1.11,
           is supported; earlier versions are not.
@@ -172,8 +171,8 @@ namespace sequoia::testing
        2. If ninja was interrupted while appending, the last record may be incomplete, its size word
           promising more bytes than the file holds. Ninja ignores such a record and truncates the
           file; this reader ignores it too, returning the records before it.
-       3. Paths are as the compiler reported them, so a relative one is relative to the build
-          directory.
+       3. Paths are as reported by the compiler, so a relative one is relative
+          to the build directory.
      */
     constexpr std::string_view signature{"# ninjadeps\n"};
     constexpr std::uint32_t deps_flag{0x80000000u}, max_record_size{(1u << 19) - 1};
@@ -496,8 +495,9 @@ namespace sequoia::testing
              && ascii::same_ignoring_case(spelling.substr(spelling.size() - extension.size()), extension);
     }
 
-    /** The tracker's logs of one kind, decoded: under each source the tracker names, the files that
-        compilation touched, as the tracker spells them.
+    /** The tracker's logs of one kind, decoded: under each source the
+        tracker names, the files that compilation touched, as spelled by the
+        tracker.
 
         The entries are views into the texts the class holds, which must therefore outlive them; the
         texts are read first, all of them, so that no view is taken into a string which a later read
@@ -710,10 +710,12 @@ namespace sequoia::testing
       return ((dot == tracker_path_view::npos) || (dot == 0)) ? filename : filename.substr(0, dot);
     }
 
-    /** The object among the files the compilation of `source` wrote, as the tracker spells it; none, if
-        the compilation wrote no object. Sources compiled by one invocation share their writes; each object
-        bears its source's stem, or the source's whole name where stems collide, whatever the case. Where
-        the build names objects by hash (`CMAKE_INTERMEDIATE_DIR_STRATEGY`) nothing in the log tells them
+    /** The object among the files the compilation of `source` wrote, as
+        spelled by the tracker; none, if the compilation wrote no object.
+        Sources compiled by one invocation share their writes; each object
+        bears its source's stem, or the source's whole name where stems
+        collide, whatever the case. Where the build names objects by hash
+        (`CMAKE_INTERMEDIATE_DIR_STRATEGY`) nothing in the log tells them
         apart, and such an entry is refused rather than guessed at.
      */
     [[nodiscard]]
@@ -754,7 +756,7 @@ namespace sequoia::testing
 
     /** The records of one `.tlog` directory, its files numbered into `files`.
 
-        The tracker's logs, as MSBuild writes them:
+        The tracker's logs, as written by MSBuild:
         -# The read log lists, under each source, every file the compiler read; the write log lists what
            the compiler wrote, which is where the object file is named. `is_tlog` gives their names.
         -# A source is a line beginning `^`. Sources compiled by one invocation share a line, separated
@@ -766,9 +768,11 @@ namespace sequoia::testing
         -# A file is listed in the order the compiler opened it, and more than once where it was opened
            more than once.
 
-        Hence, where sources share their writes, each object file is given to the source whose stem or
-        name the object file bears, compared without regard to ASCII case; what cannot be told apart is
-        refused rather than guessed. Each record lists its inputs as the compiler opened them, each once.
+        Hence, where sources share their writes, each object file is given to
+        the source whose stem or name the object file bears, compared without
+        regard to ASCII case; what cannot be told apart is refused rather than
+        guessed. Each record lists its inputs as opened by the compiler, each
+        once.
 
         The logs name a file once per opening, so each spelling is recovered and numbered on first sight,
         and looked up once per entry thereafter.
@@ -840,17 +844,6 @@ namespace sequoia::testing
 
   namespace
   {
-    /// The value of `set(NAME "value")` in a CMake script
-    [[nodiscard]]
-    std::optional<std::string> cmake_script_value(std::string_view text, std::string_view name)
-    {
-      const auto [first, last]{find_sandwiched_text(text, std::format("set({} \"", name), "\"")};
-      if(first < last)
-        return std::string{text.substr(first, last - first)};
-
-      return std::nullopt;
-    }
-
     /// The generator a CMake cache names
     [[nodiscard]]
     std::string generator_of(const fs::path& cacheFile)
@@ -861,61 +854,14 @@ namespace sequoia::testing
 
       return *generator;
     }
-
-    /** The compiler's built-in include directories, canonical.
-
-        CMake records them as `CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES` in
-        `<buildDirectory>/CMakeFiles/<version>/CMakeCXXCompiler.cmake`; a tree without that file
-        yields none.
-     */
-    [[nodiscard]]
-    std::vector<fs::path> implicit_include_directories_of(const fs::path& buildDirectory)
-    {
-      // Canonical, so that a directory reached through a symlink - macOS's SDK is one - compares equal to the files beneath it
-      auto canonical{
-        [](std::string_view dir) {
-          std::error_code error{};
-          const auto canonicalDir{fs::weakly_canonical(fs::path{dir}, error)};
-          return error ? fs::path{dir}.lexically_normal() : canonicalDir;
-        }
-      };
-
-      auto directoriesIn{
-        [canonical](const fs::path& info) {
-          const auto directories{cmake_script_value(read(info), "CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES").value_or("")};
-          return std::views::split(directories, ';')
-               | std::views::transform([](auto dirRange){ return std::string_view{dirRange}; })
-               | std::views::filter([](std::string_view dir){ return !dir.empty(); })
-               | std::views::transform(canonical)
-               | std::ranges::to<std::vector>();
-        }
-      };
-
-      const auto cmakeFiles{buildDirectory / "CMakeFiles"};
-      if(!fs::is_directory(cmakeFiles))
-        return {};
-
-      auto compilerInfo{[](const fs::directory_entry& entry){ return entry.path() / "CMakeCXXCompiler.cmake"; }};
-
-      return fs::directory_iterator{cmakeFiles}
-           | std::views::filter([](const fs::directory_entry& entry){ return entry.is_directory(); })
-           | std::views::transform(compilerInfo)
-           | std::views::filter([](const fs::path& info){ return fs::exists(info); })
-           | std::views::transform(directoriesIn)
-           | std::views::join
-           | std::ranges::to<std::vector>();
-    }
   }
 
   [[nodiscard]]
   build_tree read_build_tree(const fs::path& cacheFile)
   {
-    const auto buildDirectory{cacheFile.parent_path()};
-
     return build_tree{
-      .build_directory{buildDirectory},
-      .generator{generator_of(cacheFile)},
-      .implicit_include_directories{implicit_include_directories_of(buildDirectory)}
+      .build_directory{cacheFile.parent_path()},
+      .generator{generator_of(cacheFile)}
     };
   }
 
@@ -934,12 +880,71 @@ namespace sequoia::testing
       return configuration;
     }
 
+    /** `compiled` with its files cut to those its records name. */
+    [[nodiscard]]
+    compilations with_named_files_only(compilations compiled)
+    {
+      auto& [files, records]{compiled};
+
+      const auto isNamed{
+        [&files, &records]() {
+          std::vector<bool> named(files.size());
+          for(const auto& [objectIndex, inputIndices] : records)
+          {
+            named[objectIndex] = true;
+            for(const auto inputIndex : inputIndices)
+            {
+              named[inputIndex] = true;
+            }
+          }
+
+          return named;
+        }()
+      };
+
+      // A named file's new index counts the named files preceding it; an
+      // unnamed file's entry is a dummy entry that is never read below.
+      const auto newIndices{
+        [&isNamed]() {
+          std::vector<file_index> indices(isNamed.size());
+          std::exclusive_scan(isNamed.begin(), isNamed.end(), indices.begin(), file_index{});
+          return indices;
+        }()
+      };
+
+      auto newIndexOf{[&newIndices](file_index i) { return newIndices[i]; }};
+      for(auto& [objectIndex, inputIndices] : records)
+      {
+        objectIndex = newIndexOf(objectIndex);
+        std::ranges::transform(inputIndices, inputIndices.begin(), newIndexOf);
+      }
+
+      auto isNamedFile{[](const auto& fileAndIsNamed) { return std::get<1>(fileAndIsNamed); }};
+
+      return compilations{
+        .files{
+            std::views::zip(files, isNamed)
+          | std::views::filter(isNamedFile)
+          | std::views::keys
+          | std::views::as_rvalue
+          | std::ranges::to<std::vector>()
+        },
+        .records{std::move(records)}
+      };
+    }
+
     /** The compilations of a Ninja build, from the log `.ninja_deps` and the statements in `statementsFile`.
 
-        The log gives every compilation ninja has ever recorded, and is trimmed to the object files the
-        build currently has, which the statements name. Each record then has its source put first among
-        the inputs: gcc and clang report the source among a compilation's inputs, MSVC reports the headers
-        alone, and the statement names the source in either case.
+        The log gives the last compilation ninja recorded of every object it has
+        built since it last recompacted the log. Three steps follow:
+        -# The records are trimmed to the object files the build currently has,
+           which the statements name;
+        -# Each record has its source put first among its inputs: gcc and clang
+           report the source among a compilation's inputs, MSVC reports the
+           headers alone, and the statement names the source in either case;
+        -# The files are trimmed to those the remaining records name. The log
+           also holds the files of the records which later ones superseded, and
+           of the objects the build no longer has, which may no longer exist.
 
         \throws std::runtime_error if
         -# There is no log, nothing having been built;
@@ -955,7 +960,7 @@ namespace sequoia::testing
         throw std::runtime_error{std::format("{} has no dependency log; has anything been built?", tree.build_directory.generic_string())};
 
       const auto sourcesByObjectFile{read_ninja_sources(statementsFile)};
-      auto [loggedFiles, loggedRecords]{read_ninja_deps(log)};
+      auto [loggedFiles, records]{read_ninja_deps(log)};
       path_table files{std::move(loggedFiles)};
 
       auto buildHasObjectFile{
@@ -964,38 +969,33 @@ namespace sequoia::testing
         }
       };
 
-      /* A compiler that reports the source has named the source among the inputs, and the source moves to the
-         front; MSVC reports the headers alone, and the source is inserted - into the table, which the log never
-         gave the source, and at the front of the inputs.
-       */
-      auto withSourceFirst{
-        [&](compilations::record& record) {
-          const auto sourceIndex{files.insert(sourcesByObjectFile.at(files[record.object_index].generic_string()))};
-          auto& inputIndices{record.input_indices};
-          if(const auto found{std::ranges::find(inputIndices, sourceIndex)}; found != inputIndices.end())
-            std::ranges::rotate(inputIndices.begin(), found, found + 1);
-          else
-            inputIndices.insert(inputIndices.begin(), sourceIndex);
-
-          return compilations::record{.object_index{record.object_index}, .input_indices{std::move(inputIndices)}};
-        }
-      };
-
-      auto records{
-          loggedRecords
-        | std::views::filter(buildHasObjectFile)
-        | std::views::transform(withSourceFirst)
-        | std::ranges::to<std::vector>()
-      };
-
-      if(records.empty() && !loggedRecords.empty())
+      if(!records.empty() && std::ranges::none_of(records, buildHasObjectFile))
         throw std::runtime_error{
           std::format("None of the objects {} records is named by {}; are the two spelled differently?",
                       log.generic_string(),
                       statementsFile.lexically_relative(tree.build_directory).generic_string())
         };
 
-      return compilations{.files{std::move(files).release_files()}, .records{std::move(records)}};
+      std::erase_if(records, std::not_fn(buildHasObjectFile));
+
+      /* Under gcc and clang the log names the source among the inputs, so
+         `files.insert` returns the source's existing index. Under MSVC the
+         log names the headers alone, so `files.insert` numbers the source.
+       */
+      auto putSourceFirst{
+        [&sourcesByObjectFile, &files](compilations::record& record) {
+          const auto sourceIndex{files.insert(sourcesByObjectFile.at(files[record.object_index].generic_string()))};
+          auto& inputIndices{record.input_indices};
+          if(const auto found{std::ranges::find(inputIndices, sourceIndex)}; found != inputIndices.end())
+            std::ranges::rotate(inputIndices.begin(), found, found + 1);
+          else
+            inputIndices.insert(inputIndices.begin(), sourceIndex);
+        }
+      };
+
+      std::ranges::for_each(records, putSourceFirst);
+
+      return with_named_files_only({.files{std::move(files).release_files()}, .records{std::move(records)}});
     }
 
     /** Every target's tracker-log directory in `configuration`: a `.tlog` directory whose parent is named

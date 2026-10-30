@@ -28,5 +28,7 @@ namespace sequoia::testing
     void test_static_storage();
 
     void test_index_type_limit();
+
+    void test_permute_partitions();
   };
 }

@@ -18,7 +18,6 @@
 
 #include <any>
 #include <expected>
-#include <format>
 #include <optional>
 #include <variant>
 
@@ -79,13 +78,9 @@ namespace sequoia::testing
       }
       else
       {
-        const bool obtainedIsNull{obtained}, predictionIsNull{prediction};
+        const bool obtainedHoldsValue{obtained}, predictedHoldsValue{prediction};
 
-        check(equality,
-              nullable_type_message(obtainedIsNull, predictionIsNull),
-              logger,
-              static_cast<bool>(obtained),
-              static_cast<bool>(prediction));
+        check(both_or_neither_null(), "", logger, obtainedHoldsValue, predictedHoldsValue);
       }
     }
   };
@@ -102,12 +97,9 @@ namespace sequoia::testing
     {
       if(obtained.has_value() != prediction.has_value())
       {
-        auto holds{[](const type& e){ return e.has_value() ? "a value" : "an error"; }};
-        check(equality,
-              std::format("Obtained : {}\nPredicted: {}", holds(obtained), holds(prediction)),
-              logger,
-              obtained.has_value(),
-              prediction.has_value());
+        const bool obtainedHoldsValue{obtained.has_value()}, predictedHoldsValue{prediction.has_value()};
+
+        check(both_or_neither_hold_a_value{"a value", "an error"}, "", logger, obtainedHoldsValue, predictedHoldsValue);
       }
       else if(obtained)
       {
@@ -133,16 +125,16 @@ namespace sequoia::testing
     using type = std::any;
 
     template<test_mode Mode, class T, class Advisor>
+      requires std::copy_constructible<T> && std::same_as<T, std::decay_t<T>>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const T& prediction, const tutor<Advisor>& advisor)
     {
       if(check("Has value", logger, obtained.has_value()))
       {
-        try
+        if(auto pObtained{std::any_cast<T>(&obtained)})
         {
-          const auto& val{std::any_cast<T>(obtained)};
-          check(with_best_available, "Value held by std::any", logger, val, prediction, advisor);
+          check(with_best_available, "Value held by std::any", logger, *pObtained, prediction, advisor);
         }
-        catch(const std::bad_any_cast&)
+        else
         {
           check("std::any does not hold the expected type", logger, false);
         }

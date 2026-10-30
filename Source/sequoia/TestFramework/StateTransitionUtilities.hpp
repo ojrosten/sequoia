@@ -11,12 +11,15 @@
     \brief Facility to define tests via a graph comprising states of an object and transitions between them.
  */
 
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Functional/ErasedFunction.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
+
+#include <cstddef>
 
 namespace sequoia::testing
 {
@@ -94,7 +97,7 @@ namespace sequoia::testing
       const auto& w{i->weight()};
       fn(message,
          w.fn(parentGenerator()),
-         g.cbegin_node_weights()[target](),
+         g.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(target)](),
          std::move(args)...);
     }
 
@@ -105,7 +108,7 @@ namespace sequoia::testing
       const auto& w{i->weight()};
       fn(message,
          [&w,pg{parentGenerator}]() { return w.fn(pg()); },
-         g.cbegin_node_weights()[target],
+         g.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(target)],
          parentGenerator,
          std::move(args)...);
     }
@@ -210,7 +213,7 @@ namespace sequoia::testing
       return {append_lines(description,
                            std::string{"Transition from node "}.append(to_string(parent)).append(" to ").append(to_string(target)),
                            w.description),
-              g.cbegin_node_weights()[parent],
+              g.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(parent)],
               target};
     }
   };

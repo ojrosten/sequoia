@@ -17,6 +17,7 @@ Tests:
 [Total Run Time: 881us]
 [Execution Time: 195us]
 [Runner Overhead: 650us]
+[Scheduling Overhead: 168us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

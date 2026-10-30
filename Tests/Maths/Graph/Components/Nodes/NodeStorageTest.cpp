@@ -9,6 +9,8 @@
 
 #include "NodeStorageTestingUtilities.hpp"
 
+#include "Core/DataStructures/ElementTestingUtilities.hpp"
+
 namespace sequoia:: testing
 {
   [[nodiscard]]
@@ -21,6 +23,7 @@ namespace sequoia:: testing
   {
     test_dynamic_node_storage();
     test_static_node_storage();
+    test_weights_constructible_from_anything();
   }
 
   void node_storage_test::test_dynamic_node_storage()
@@ -108,5 +111,16 @@ namespace sequoia:: testing
 
     check(equivalence, "", store, std::initializer_list<int>{4, 4, 7, 9});
     check_semantics("Regular semantics", store, {4, 4, 9, 7});
+  }
+
+  void node_storage_test::test_weights_constructible_from_anything()
+  {
+    check(equivalence,
+          "From a list",
+          node_storage_tester<constructible_from_anything>{1, 2, 3},
+          std::initializer_list<constructible_from_anything>{1, 2, 3});
+
+    constexpr static_node_storage_tester<constructible_from_anything, 3> staticWeights{1, 2, 3};
+    check(equivalence, "Static, from a list", staticWeights, std::initializer_list<constructible_from_anything>{1, 2, 3});
   }
 }

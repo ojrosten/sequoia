@@ -6,11 +6,14 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "PartitionedSequenceRegularTest.hpp"
+#include "ElementTestingUtilities.hpp"
 #include "PartitionedDataGenericTests.hpp"
 
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
 
+#include <forward_list>
 #include <map>
+#include <memory>
 
 namespace sequoia::testing
 {
@@ -41,6 +44,26 @@ namespace sequoia::testing
       assign_only_element(const assign_only_element&) = delete;
 
       assign_only_element& operator=(const assign_only_element&) = default;
+    };
+
+    template<class T>
+    struct copy_propagating_allocator
+    {
+      using value_type                             = T;
+      using propagate_on_container_copy_assignment = std::true_type;
+
+      constexpr copy_propagating_allocator() = default;
+
+      template<class U>
+      constexpr copy_propagating_allocator(const copy_propagating_allocator<U>&) noexcept {}
+
+      [[nodiscard]]
+      constexpr T* allocate(const std::size_t n) { return std::allocator<T>{}.allocate(n); }
+
+      constexpr void deallocate(T* p, const std::size_t n) { std::allocator<T>{}.deallocate(p, n); }
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const copy_propagating_allocator&, const copy_propagating_allocator&) noexcept = default;
     };
 
     using namespace partitioned_data;
@@ -133,7 +156,20 @@ namespace sequoia::testing
     using namespace data_structures;
     test_copyability();
     test_index_type_constraint();
+    test_allocator_extended_move();
+    test_reset();
+    test_permute_partitions_constraints();
     partitioned_operations<partitioned_sequence<int>>::execute(*this);
+  }
+
+  void partitioned_sequence_regular_test::test_permute_partitions_constraints()
+  {
+    using sequence_t = data_structures::partitioned_sequence<int>;
+
+    STATIC_CHECK( permute_partitions_accepts<sequence_t, std::vector<std::size_t>>);
+    STATIC_CHECK(!permute_partitions_accepts<sequence_t, input_only_destinations_t>);
+    STATIC_CHECK(!permute_partitions_accepts<sequence_t, non_const_iterable_destinations_t>);
+    STATIC_CHECK(!permute_partitions_accepts<sequence_t, std::forward_list<std::size_t>>);
   }
 
   void partitioned_sequence_regular_test::test_copyability()
@@ -191,5 +227,36 @@ namespace sequoia::testing
     // Each index type below counts to both size types, so only its being bool or a character type refuses it.
     STATIC_CHECK(!sequence_admits<fake_container<bool>,        fake_partitions<bool, bool>>);
     STATIC_CHECK(!sequence_admits<fake_container<std::int8_t>, fake_partitions<char, std::int8_t>>);
+  }
+
+  void partitioned_sequence_regular_test::test_allocator_extended_move()
+  {
+    using sequence = data_structures::partitioned_sequence<constructible_from_anything>;
+
+    STATIC_CHECK(
+      [](){
+        sequence source{{1, 2}, {3}};
+        const sequence moved{std::move(source), sequence::allocator_type{}, sequence::partitions_allocator_type{}};
+        return moved == sequence{{1, 2}, {3}};
+      }()
+    );
+  }
+
+  void partitioned_sequence_regular_test::test_reset()
+  {
+    using element  = constructible_from_anything;
+    using sequence = data_structures::partitioned_sequence<element,
+                                                           std::vector<element, copy_propagating_allocator<element>>,
+                                                           maths::monotonic_sequence<std::size_t,
+                                                                                     std::ranges::greater,
+                                                                                     std::vector<std::size_t, copy_propagating_allocator<std::size_t>>>>;
+
+    STATIC_CHECK(
+      [](){
+        sequence toReset{{1, 2}, {3}};
+        toReset.reset(sequence::allocator_type{}, sequence::partitions_allocator_type{});
+        return toReset == sequence{};
+      }()
+    );
   }
 }

@@ -7,6 +7,8 @@
 
 #include "FailureInfoTest.hpp"
 
+#include "sequoia/Streaming/Streaming.hpp"
+
 namespace sequoia::testing
 {
   [[nodiscard]]
@@ -39,10 +41,6 @@ namespace sequoia::testing
                                                readFailureInfo("check: 1\nlength: 5\nabc\n"));
     check_exception_thrown<std::runtime_error>("A message longer than its length",
                                                readFailureInfo("check: 1\nlength: 3\nabcd\n"));
-
-    auto analyseMalformed{[this]() { return instability_analysis(working_materials() / "Malformed", 2); }};
-    check_exception_thrown<std::runtime_error>("A malformed file of failures, named by the instability analysis",
-                                               analyseMalformed);
   }
 
   void failure_info_test::check_failure_info()
@@ -87,7 +85,10 @@ namespace sequoia::testing
 
     failure_output outputReadBack{};
     outputStream >> outputReadBack;
-    check(equality, "A hexadecimal stream does not change a failure_output's text", outputReadBack, failure_output{tenth});
+    check(equality,
+          "A hexadecimal stream does not change a failure_output's text",
+          outputReadBack,
+          failure_output{tenth});
   }
 
   void failure_info_test::check_end_of_stream()
@@ -98,20 +99,6 @@ namespace sequoia::testing
 
     check("A read at the end of a stream fails", s.fail());
     check(equality, "A read at the end of a stream leaves the failure as it was", info, failure_info{1, "foo"});
-  }
-
-  void failure_info_test::check_instability_analysis()
-  {
-    write_to_file(working_materials() / "StableAnalysis.txt",
-                  instability_analysis(working_materials() / "Stable", 2),
-                  std::ios_base::binary);
-
-    check(
-      equivalence,
-      "Outputs which agree, beside a file which is not a .txt file",
-      working_materials() / "StableAnalysis.txt",
-      predictive_materials() / "StableAnalysis.txt"
-    );
   }
 
   void failure_info_test::check_written_format()
@@ -134,7 +121,6 @@ namespace sequoia::testing
     check_failure_info();
     check_round_trip();
     check_end_of_stream();
-    check_instability_analysis();
     check_written_format();
   }
 }

@@ -5,6 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 /** \file */
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
@@ -39,5 +41,7 @@ namespace sequoia::testing
     void test_node_1_node_0();
 
     void test_node_1_node_2_node_0();
+
+    void test_order_beyond_signed_char();
   };
 }

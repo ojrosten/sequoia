@@ -46,10 +46,24 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>("Empty name",      []() { return option{"", {}, {}, fo{}}; });
     check_exception_thrown<std::logic_error>("Empty alias",     []() { return option{"test", {""}, {}, fo{}}; });
     check_exception_thrown<std::logic_error>("Empty parameter", []() { return option{"test", {}, {""}, fo{}}; });
-    check_exception_thrown<std::logic_error>("Top-level option with neither invocable", [](){
+    check_exception_thrown<std::invalid_argument>("Empty tree", [](){
+      return parse({{"foo"}}, {{{"--async", {}, {}, fo{}}},
+                               options_tree{},
+                               options_tree{}});
+    });
+    check_exception_thrown<std::invalid_argument>("Top-level option with neither invocable", [](){
       return parse({{"foo", "--async"}}, {{{"--async", {}, {}}}});
     });
- 
+    check_exception_thrown<std::invalid_argument>("Top-level option with neither invocable, though not encountered",
+      [](){
+        return parse({{"foo", "--async"}}, {{{"--async",   {}, {}, fo{}}},
+                                            {{"--verbose", {}, {}}}});
+      });
+    check_exception_thrown<std::invalid_argument>("Top-level option with neither invocable, and an unknown argument",
+      [](){
+        return parse({{"foo", "--nonsense"}}, {{{"--async", {}, {}}}});
+      });
+
     check(weak_equivalence, "", parsing::commandline::parse(0, nullptr, {}), outcome{});
  
     check(weak_equivalence,
@@ -178,17 +192,6 @@ namespace sequoia::testing
                 {{{"create",  {}, {"class_name", "directory"}, fo{}}},
                  {{"--async", {}, {}, fo{}}}}),
           outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {"class", "dir"}}} }});
-
-
-    {
-      commandline_arguments a{{"foo", "--async", "create", "class", "dir"}};
-
-      check(weak_equivalence,
-            "Two options, invoked with argument_parser",
-            argument_parser{a.size(), a.get(), { {{"create",  {}, {"class_name", "directory"}, fo{}}},
-                                                               {{"--async", {}, {}, fo{}}} }},
-            outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {"class", "dir"}}}}});
-    }
   }
 
   void commandline_arguments_test::test_flat_parsing_help()
@@ -214,16 +217,6 @@ namespace sequoia::testing
                        {{"--async", {}, {}, fo{}}}}),
                outcome{"foo", {}},
                "FlatParsingHelp/MultiOption.txt");
-
-    {
-      commandline_arguments a{{"foo", "--help"}};
-
-      check_help("Multi-option help, with argument_parser",
-                 argument_parser{a.size(), a.get(), { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
-                                                                    {{"--async", {}, {}, fo{}}} }}.get(),
-                 outcome{"foo", {}},
-                 "FlatParsingHelp/MultiOptionArgumentParser.txt");
-    }
 
     check_help("Help requested after an option without parameters or nested options describes that option",
                parse({{"foo", "--async", "--help"}},
@@ -266,11 +259,20 @@ namespace sequoia::testing
                outcome{"foo", {}},
                "FlatParsingHelp/ShortFlagAlone.txt");
 
-    check_exception_thrown<std::logic_error>("An option named as a help request", [](){
+    check_exception_thrown<std::invalid_argument>("An option named as a help request", [](){
       return parse({{"foo"}}, {{{"--help", {}, {}, fo{}}}});
     });
 
-    check_exception_thrown<std::logic_error>("A nested option aliased as a help request", [](){
+    check_exception_thrown<std::invalid_argument>("An option named as a help request, and with neither invocable", [](){
+      return parse({{"foo"}}, {{{"--help", {}, {}}}});
+    });
+
+    check_exception_thrown<std::invalid_argument>("An empty tree, before an option named as a help request", [](){
+      return parse({{"foo"}}, {options_tree{},
+                               {{"--help", {}, {}, fo{}}}});
+    });
+
+    check_exception_thrown<std::invalid_argument>("A nested option aliased as a help request", [](){
       return parse({{"foo"}}, {{{"create", {"c"}, {}, fo{}, {}, "", {{"--header", {"-h"}, {"header"}}}}}});
     });
 

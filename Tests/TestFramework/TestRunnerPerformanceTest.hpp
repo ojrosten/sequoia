@@ -28,20 +28,14 @@ namespace sequoia::testing
 
     void test_thread_pool_acceleration();
 
-    void test_serial_execution();
+    void check_speedup_over_serial_execution(std::string_view description,
+                                             const std::vector<std::string>& arguments,
+                                             relative_performance_interval prediction);
 
-    void test_runner_overhead_reported_apart();
+    void write(std::string_view dirName, std::string_view printedOutput) const;
 
-    void test_execution_duration_of_busiest_thread();
-
-    [[nodiscard]]
-    std::filesystem::path fake_project() const;
-
-    [[nodiscard]]
-    std::filesystem::path minimal_fake_path() const;
-
-    std::filesystem::path write(std::string_view dirName, std::stringstream& output) const;
-
-    std::filesystem::path check_output(std::string_view description, std::string_view dirName, std::stringstream& output);
+    void check_output(std::string_view description,
+                      std::string_view dirName,
+                      const std::stringstream& output);
   };
 }

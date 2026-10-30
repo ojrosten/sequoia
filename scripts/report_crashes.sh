@@ -1,17 +1,28 @@
 #!/bin/bash
 # Usage: report_crashes.sh <dump directory> <since file>
 #
-# Prints the stacks of every crash since <since file> was written, then a last line,
-# "Crashes found: <n>". Where the crashes are found depends on the platform:
-#   - Windows: the minidumps Windows Error Reporting wrote to <dump directory>, read with cdb;
-#   - Linux: the cores the kernel wrote to <dump directory>, each named
-#     core.<process name>.<pid>, read with gdb;
-#   - macOS: the crash reports the system wrote to the directories macos_crash_report_directories
-#     names. A directory that cannot be read is named in a line beginning "Not read:".
+# Reports every crash whose dump is newer than <since file>, with its stacks.
+# A suite that crashes ends with an exit status and nothing else. The stacks
+# say where it stopped.
 #
-# A suite that crashes ends with an exit status and nothing else, and the stacks are what say
-# where it was. A crash whose stacks cannot be read is still counted, and says why, rather than
-# being absent.
+# The dumps depend on the platform:
+#   - Windows: the minidumps that Windows Error Reporting wrote to
+#     <dump directory>, read with cdb;
+#   - Linux: the cores that the kernel wrote to <dump directory>, each named
+#     core.<process name>.<pid>, read with gdb;
+#   - macOS: the crash reports that the system wrote to the directories
+#     macos_crash_report_directories lists. <dump directory> is not read.
+#
+# The output, in order:
+#   - on macOS, a line beginning "Not read:" for each listed directory that
+#     cannot be read;
+#   - for each crash, a line beginning "== Crash:", then its stacks. A crash
+#     whose stacks cannot be read is still reported and counted, and the
+#     report says why;
+#   - "Crashes found: <n>".
+# Errors from the tools the script runs go to standard error, and may fall
+# between any of these lines. The status is 0 if the script reports, and 2 if it refuses its
+# arguments.
 
 set -u
 
@@ -23,7 +34,7 @@ fi
 dumps=$1 since=$2
 
 if [ ! -d "$dumps" ] || [ ! -f "$since" ]; then
-  echo "$0: <dump directory> must be a directory and <since file> a file: '$dumps', '$since'" >&2
+  echo "$0: <dump directory> must be a directory, and <since file> must be a file: '$dumps', '$since'" >&2
   exit 2
 fi
 
@@ -39,8 +50,9 @@ case "$(uname -s)" in
   *)                    platform=linux   ;;
 esac
 
-# The images' symbols come from the paths the linker recorded in them; the system's, from
-# Microsoft's symbol server, cached beside the dumps.
+# cdb reads an executable's symbols from the path the linker recorded in it.
+# It downloads the system libraries' symbols from Microsoft's symbol server,
+# and caches them in <dump directory>/symbols.
 report_windows() {
   local cdb dump
   cdb=$(windows_debugger_path)
@@ -58,8 +70,8 @@ report_windows() {
   done < <(find "$dumps" -maxdepth 1 -type f -newer "$since" -name '*.dmp')
 }
 
-# A core's name carries only the process name the kernel keeps; the executable's path is in the
-# core itself, which `file` reads.
+# A core's name carries the kernel's name for the process, not the executable's
+# path. file reads that path from the core itself.
 report_linux() {
   local core executable
   while IFS= read -r core; do
@@ -78,13 +90,10 @@ report_linux() {
   done < <(find "$dumps" -maxdepth 1 -type f -newer "$since" -name 'core.*')
 }
 
-# An .ips report is JSON: a line of metadata, then the body. Only crashes are counted - bug
-# type 309 - since the directory also collects reports of other kinds. What a reader wants of a
-# crash is the exception and the faulting thread's frames, so those come first; the whole report
-# follows, for everything else. A .crash report, the older form, is not JSON, and is printed whole.
-#
-# The system gives a frame its source file and line, and lists the frames inlined into it, when it
-# can read the executable's debug information.
+# Whether a report in the directories is of a crash. The directories also
+# hold reports of other kinds. An .ips report begins with a line of JSON
+# metadata, whose bug type is 309 for a crash. A .crash report is the older
+# form of a crash report.
 is_crash_report() {
   case "$1" in
     *.crash) return 0 ;;
@@ -92,6 +101,32 @@ is_crash_report() {
   esac
 }
 
+# Prints the exception of an .ips crash report, then the frames of its
+# faulting thread. The system gives a frame its source file and line, and
+# lists the frames inlined into it, when it can read the executable's debug
+# information.
+summarise_ips_report() { # summarise_ips_report <report>
+  python3 - "$1" "$frames_per_thread" <<'SUMMARY'
+import json, sys
+with open(sys.argv[1]) as f:
+    metadata, body = f.readline(), json.loads(f.read())
+exception = body.get("exception", {})
+print(f"{json.loads(metadata).get('name', '?')}: {exception.get('type', '?')} ({exception.get('signal', '?')})")
+images = body.get("usedImages", [])
+faulting = body["threads"][body["faultingThread"]]
+for frame in faulting["frames"][:int(sys.argv[2])]:
+    index = frame.get("imageIndex", -1)
+    image = images[index].get("name", "?") if 0 <= index < len(images) else "?"
+    location = f" ({frame['sourceFile']}:{frame['sourceLine']})" if {"sourceFile", "sourceLine"} <= frame.keys() else ""
+    inlined = " [inlined]" if frame.get("inline") else ""
+    print(f"  {image}: {frame.get('symbol', hex(frame.get('imageOffset', 0)))}{location}{inlined}")
+SUMMARY
+}
+
+# Prints each crash report's path, then a summary of an .ips report, then the
+# whole report. A .crash report is not JSON, and gets no summary. If an .ips
+# report cannot be summarised, the output says so. find names any
+# subdirectory it cannot read, in an error.
 report_macos() {
   local directory report directories=()
   while IFS= read -r directory; do
@@ -109,25 +144,13 @@ report_macos() {
     found=$((found + 1))
     echo "== Crash: $(basename "$report") =="
     echo "Report: $report"
-    python3 - "$report" "$frames_per_thread" <<'SUMMARY' || echo "The report could not be summarised; it follows whole."
-import json, sys
-with open(sys.argv[1]) as f:
-    metadata, body = f.readline(), json.loads(f.read())
-exception = body.get("exception", {})
-print(f"{json.loads(metadata).get('name', '?')}: {exception.get('type', '?')} ({exception.get('signal', '?')})")
-images = body.get("usedImages", [])
-faulting = body["threads"][body["faultingThread"]]
-for frame in faulting["frames"][:int(sys.argv[2])]:
-    index = frame.get("imageIndex", -1)
-    image = images[index].get("name", "?") if 0 <= index < len(images) else "?"
-    location = f" ({frame['sourceFile']}:{frame['sourceLine']})" if {"sourceFile", "sourceLine"} <= frame.keys() else ""
-    inlined = " [inlined]" if frame.get("inline") else ""
-    print(f"  {image}: {frame.get('symbol', hex(frame.get('imageOffset', 0)))}{location}{inlined}")
-SUMMARY
+    case "$report" in
+      *.ips) summarise_ips_report "$report" || echo "The report could not be summarised; it follows whole." ;;
+    esac
     echo "-- The whole report --"
     cat "$report"
     echo
-  done < <(find "${directories[@]}" -type f -newer "$since" \( -name '*.ips' -o -name '*.crash' \) 2> /dev/null)
+  done < <(find "${directories[@]}" -type f -newer "$since" \( -name '*.ips' -o -name '*.crash' \))
 }
 
 report_$platform

@@ -23,17 +23,45 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+    void algorithm_constraints();
 
-    template<class Stability>
-    void sort_basic_type(Stability stability);
+    void permute_basic_type();
 
-    template<class Stability>
-    void sort_partial_edge(Stability stability);
+    void permute_swap_count();
 
-    void stable_sort_stability();
+    void permute_leaves_destinations_unchanged();
 
-    void cluster_basic_type();
+    void permute_allocation_count();
 
-    void cluster_partial_edge();
+    template<class Form>
+    void make_heap_by_second_element(Form form);
+
+    void bubble_down_after_removing_the_top();
+
+    template<class Form>
+    void stable_sort_basic_type(Form form);
+
+    template<class Form>
+    void stable_sort_partial_edge(Form form);
+
+    template<class Form>
+    void stable_sort_by_second_element(Form form);
+
+    template<class Form>
+    void stable_sort_stability(Form form);
+
+    template<class Form>
+    void stable_sort_with_buffer(Form form);
+
+    template<class Form>
+    void cluster_basic_type(Form form);
+
+    template<class Form>
+    void cluster_partial_edge(Form form);
+
+    template<class Form>
+    void cluster_by_first_element(Form form);
+
+    void permute_refuses_non_permutations();
   };
 }

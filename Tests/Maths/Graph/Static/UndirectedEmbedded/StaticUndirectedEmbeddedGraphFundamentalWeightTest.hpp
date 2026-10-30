@@ -5,6 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 /** \file */
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
@@ -20,6 +22,8 @@ namespace sequoia::testing
     static std::filesystem::path source_file();
 
     void run_tests();
+
+    void test_sort_nodes_in_constant_evaluation();
 
     template<class EdgeWeight, class NodeWeight>
     void test_empty();

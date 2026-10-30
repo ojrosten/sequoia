@@ -59,20 +59,26 @@ namespace sequoia::data_structures
 
       m_Q[m_End++] = val;
 
-      bubble_up(m_Q.begin(), m_Q.begin() + m_End - 1, m_Compare);
+      sequoia::bubble_up(m_Q.begin(), m_Q.begin() + m_End - 1, m_Compare);
     }
 
     [[nodiscard]]
-    constexpr const T& top() const noexcept
+    constexpr const T& top() const
     {
+      if(empty())
+        throw std::logic_error("Attempting to access the top of an empty priority_queue");
+
       return *m_Q.begin();
     }
 
-    constexpr void pop() noexcept
+    constexpr void pop()
     {
-      std::ranges::iter_swap(m_Q.begin(), m_Q.begin() + m_End -1);
+      if(empty())
+        throw std::logic_error("Attempting to pop an empty priority_queue");
+
+      std::ranges::iter_swap(m_Q.begin(), m_Q.begin() + m_End - 1);
       --m_End;
-      sequoia::make_heap(m_Q.begin(), m_Q.begin() + m_End, m_Compare);
+      sequoia::bubble_down(m_Q.begin(), m_Q.begin(), m_Q.begin() + m_End, m_Compare);
     }
 
     [[nodiscard]]
@@ -102,7 +108,7 @@ namespace sequoia::data_structures
     constexpr static std::array<T, MaxDepth> make_Q(std::initializer_list<T> l, const Compare& compare)
     {
       auto q{utilities::to_array<T, MaxDepth>(l)};
-      sequoia::make_heap(q.begin(), q.end(), compare);
+      sequoia::make_heap(q.begin(), q.begin() + l.size(), compare);
 
       return q;
     }

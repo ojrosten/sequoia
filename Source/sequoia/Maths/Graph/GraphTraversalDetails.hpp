@@ -15,7 +15,9 @@
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 #include "sequoia/Maths/Graph/GraphDetails.hpp"
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 
+#include <cstddef>
 #include <vector>
 
 namespace sequoia::maths
@@ -275,7 +277,8 @@ namespace sequoia::maths::graph_impl
     [[nodiscard]]
     constexpr bool operator()(const std::size_t index1, const std::size_t index2)
     {
-      return Compare{}(*(m_Graph.cbegin_node_weights() + index1), *(m_Graph.cbegin_node_weights() + index2));
+      return Compare{}(*(m_Graph.cbegin_node_weights() + numeric::unchecked_conversion_to<std::ptrdiff_t>(index1)),
+                       *(m_Graph.cbegin_node_weights() + numeric::unchecked_conversion_to<std::ptrdiff_t>(index2)));
     }
   private:
     const G& m_Graph;

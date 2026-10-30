@@ -241,11 +241,14 @@ namespace sequoia::testing
       return m_CMakeCacheDir;
     }
 
-    /** \brief The name of `executable_dir()` if its parent is `cmake_cache_dir()`; otherwise empty.
+    /** \brief Returns the name of `executable_dir()` if its parent is
+               `cmake_cache_dir()`.
 
-        By default, a multi-config build puts each configuration's executable in a directory named
-        after the configuration, directly within the build tree. For such a build, the name is the
-        executable's configuration.
+        Otherwise, returns an empty string.
+
+        By default, a multi-config build puts each configuration's executable
+        in a directory named after the configuration, directly within the build
+        tree. For such a build, the name is the executable's configuration.
      */
     [[nodiscard]]
     std::string configuration() const;
@@ -419,8 +422,11 @@ namespace sequoia::testing
     std::filesystem::path make_path(std::optional<std::size_t> id, std::string_view extension) const;
   };
 
-  /** \brief Paths of each test's record of its last execution, and of the stamp of the run that last started,
-             under a directory keyed on the executable's directory relative to the build root.
+  /** \brief The directory of the execution records written by one test
+             executable, and the file within it holding the run stamp.
+
+      Each test executable has its own directory, named after the
+      executable's directory relative to the build root.
    */
 
   class execution_record_paths
@@ -438,9 +444,7 @@ namespace sequoia::testing
       return m_Dir;
     }
 
-    /** \brief The file in which each run writes its start; a record whose start precedes the run's is from an
-               earlier run.
-     */
+    /** \brief The file in which each run of tests writes its `run_stamp`. */
     [[nodiscard]]
     std::filesystem::path stamp() const;
 

@@ -37,6 +37,9 @@ int main(int argc, char** argv)
     runner.register_test<commands_free_test>();
     runner.register_test<failure_info_test>();
     runner.register_test<failure_info_false_negative_test>();
+    runner.register_test<test_execution_record_regular_test>();
+    runner.register_test<test_execution_record_false_negative_test>();
+    runner.register_test<test_execution_completion_regular_test>();
     runner.register_test<file_system_utilities_free_test>();
     runner.register_test<output_free_test>();
     runner.register_test<dependency_analyzer_free_test>();
@@ -89,7 +92,8 @@ int main(int argc, char** argv)
     runner.register_test<orderable_regular_allocation_false_negative_diagnostics>();
     runner.register_test<performance_false_negative_diagnostics>();
     runner.register_test<performance_false_positive_diagnostics>();
-    runner.register_test<performance_utilities_test>();
+    runner.register_test<performance_real_clock_false_positive_diagnostics>();
+    runner.register_test<performance_utilities_free_test>();
     runner.register_test<relational_false_negative_diagnostics>();
     runner.register_test<relational_false_positive_diagnostics>();
     runner.register_test<regular_state_transition_false_negative_diagnostics>();
@@ -110,6 +114,17 @@ int main(int argc, char** argv)
     runner.register_test<state_transition_utilities_free_test>();
     runner.register_test<project_paths_free_test>();
     runner.register_test<summary_free_test>();
+    runner.register_test<performance_retry_test>();
+    runner.register_test<performance_exceptions_test>();
+    runner.register_test<run_stamp_regular_test>();
+    runner.register_test<run_stamp_false_negative_test>();
+    runner.register_test<critical_path_durations_false_negative_test>();
+    runner.register_test<critical_path_durations_regular_test>();
+    runner.register_test<instability_analysis_free_test>();
+    runner.register_test<test_runner_reported_durations_free_test>();
+    runner.register_test<coarse_sleeps_free_test>();
+    runner.register_test<test_runner_serial_execution_free_test>();
+    runner.register_test<test_runner_performance_check_outcomes_free_test>();
 
     code = runner.execute();
   }

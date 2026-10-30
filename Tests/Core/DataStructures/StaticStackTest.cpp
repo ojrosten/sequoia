@@ -9,6 +9,9 @@
 #include "StaticStackTestingUtilities.hpp"
 
 #include "sequoia/Core/DataStructures/StaticStack.hpp"
+#include "sequoia/Core/Meta/TypeTraits.hpp"
+
+#include <memory>
 
 namespace sequoia::testing
 {
@@ -20,9 +23,29 @@ namespace sequoia::testing
 
   void test_static_stack::run_tests()
   {
+    check_moves_do_not_copy();
+    check_top_and_pop_in_constant_evaluation();
     check_depth_0();
     check_depth_1();
     check_depth_2();
+  }
+
+  void test_static_stack::check_moves_do_not_copy()
+  {
+    using stack_t = data_structures::static_stack<std::unique_ptr<int>, 1>;
+
+    STATIC_CHECK(std::is_move_constructible_v<stack_t>);
+    STATIC_CHECK(std::is_move_assignable_v<stack_t>);
+  }
+
+  void test_static_stack::check_top_and_pop_in_constant_evaluation()
+  {
+    using stack_t = data_structures::static_stack<int, 1>;
+
+    STATIC_CHECK( invocation_is_constant_expression_v<[]() { return stack_t{1}.top(); }>);
+    STATIC_CHECK(!invocation_is_constant_expression_v<[]() { return stack_t{}.top();  }>);
+    STATIC_CHECK( invocation_is_constant_expression_v<[]() { stack_t{1}.pop(); }>);
+    STATIC_CHECK(!invocation_is_constant_expression_v<[]() { stack_t{}.pop();  }>);
   }
 
   void test_static_stack::check_depth_0()
@@ -32,10 +55,12 @@ namespace sequoia::testing
     constexpr static_stack<int, 0> s{};
     static_stack<int, 0> t{};
 
-    check(equality, "Equality of null queues", t, s);
+    check(equality, "Equality of null stacks", t, s);
 
-    check_exception_thrown<std::logic_error>("Can't push to null stack", [&t]() { t.push(1); });
+    check_exception_thrown<std::logic_error>("Can't push to null stack"           , [&t]() { t.push(1); });
     check_exception_thrown<std::logic_error>("Can't construct non-null null stack", []() { static_stack<int, 0>{1}; });
+    check_exception_thrown<std::logic_error>("Can't access top of null stack"     , [&t]() { return t.top(); });
+    check_exception_thrown<std::logic_error>("Can't pop from null stack"          , [&t]() { t.pop(); });
   }
 
   void test_static_stack::check_depth_1()
@@ -54,6 +79,10 @@ namespace sequoia::testing
 
     t.pop();
     check(equality, "", t, stack_t{});
+
+    check_exception_thrown<std::logic_error>("Can't access top of empty stack", [&t]() { return t.top(); });
+    check_exception_thrown<std::logic_error>("Can't pop from empty stack"     , [&t]() { t.pop(); });
+    check(equality, "A refused pop leaves the stack empty", t, stack_t{});
 
     t.push(1);
     check(equality, "", t, stack_t{1});

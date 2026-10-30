@@ -7,15 +7,21 @@
 
 #include "sequoia/TestFramework/TestRunner.hpp"
 
+#include "sequoia/TestFramework/CoarseSleeps.hpp"
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/DumpComparison.hpp"
+#include "sequoia/TestFramework/InstabilityAnalysis.hpp"
+#include "sequoia/TestFramework/InstabilityProjection.hpp"
 #include "sequoia/TestFramework/MaterialsUpdater.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/TestCreator.hpp"
+#include "sequoia/TestFramework/TimingUtilities.hpp"
 
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/Parsing/CommandLineMessages.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
@@ -28,11 +34,13 @@
 #include <array>
 #include <bit>
 #include <concepts>
+#include <cstddef>
 #include <set>
 #include <ranges>
 #include <span>
 #include <system_error>
 #include <format>
+#include <fstream>
 #include <functional>
 #include <mutex>
 #include <utility>
@@ -47,24 +55,101 @@ namespace sequoia::testing
     const auto entry_time_stamp{std::chrono::file_clock::now()};
 
     [[nodiscard]]
-    std::string started_at(std::chrono::system_clock::time_point start)
+    test_execution_record::start_time_type current_time_to_the_millisecond()
     {
-      return std::format("started {:%FT%TZ}\n", std::chrono::floor<std::chrono::milliseconds>(start));
+      return std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now());
     }
 
-    /** \brief How long a sleep of `target` typically lasts on this machine. */
     [[nodiscard]]
-    std::chrono::duration<double> typical_sleep_duration(std::chrono::milliseconds target)
+    std::vector<std::size_t> attempt_counts_of_finished_checks(std::span<const std::optional<std::size_t>> counts)
     {
-      auto sleepForTarget{[target]() { std::this_thread::sleep_for(target); }};
+      auto isFinished{[](const std::optional<std::size_t>& count) { return count.has_value(); }};
+      auto attemptsMade{[](const std::optional<std::size_t>& count) { return count.value(); }};
 
-      std::array<std::chrono::duration<double>, 3> durations{};
-      std::ranges::generate(durations, [&sleepForTarget]() { return profile(sleepForTarget); });
-      std::ranges::sort(durations);
+      return
+          counts
+        | std::views::filter(isFinished)
+        | std::views::transform(attemptsMade)
+        | std::ranges::to<std::vector>();
+    }
+
+    /** \brief How long a sleep lasted, and the outcome of its requests for
+               precise timers.
+     */
+    struct measured_sleep
+    {
+      std::chrono::duration<double> duration{};
+      timer_request_outcome         precise_timer_outcome{};
+    };
+
+    /** \brief How long sleeps of one length typically last, and the outcome
+               of their requests for precise timers.
+     */
+    struct sleep_assessment
+    {
+      std::chrono::duration<double> typical_duration{};
+      timer_request_outcome         precise_timer_outcome{};
+    };
+
+    /** \brief Sleeps for `target` several times, and assesses the sleeps.
+
+        \returns The median of the sleeps' durations, and the outcomes of
+                 every sleep's requests for precise timers, combined by
+                 `combine_timer_request_outcomes`.
+     */
+    [[nodiscard]]
+    sleep_assessment assess_sleeps(std::chrono::milliseconds target)
+    {
+      auto sleepAndMeasure{
+        [target]() {
+          const timer t{};
+          const auto outcome{precise_sleep_for(target)};
+          return measured_sleep{.duration{t.time_elapsed()}, .precise_timer_outcome{outcome}};
+        }
+      };
+
+      const auto sleeps{
+        [&sleepAndMeasure]() {
+          std::array<measured_sleep, 3> measuredSleeps{};
+          std::ranges::generate(measuredSleeps, sleepAndMeasure);
+          std::ranges::sort(measuredSleeps, std::ranges::less{}, &measured_sleep::duration);
+          return measuredSleeps;
+        }()
+      };
+
+      auto combine{
+        [](timer_request_outcome lhs, timer_request_outcome rhs) { return combine_timer_request_outcomes(lhs, rhs); }
+      };
 
       // The fastest sleep is not typical: the first sleep can end within the timer tick it starts in, even
       // when every later sleep is rounded up to a whole tick.
-      return durations[1];
+      return {
+        .typical_duration{sleeps[1].duration},
+        .precise_timer_outcome{
+          std::ranges::fold_left(
+            sleeps | std::views::transform(&measured_sleep::precise_timer_outcome),
+            timer_request_outcome::not_made,
+            combine
+          )
+        }
+      };
+    }
+
+    /** \brief Writes a warning to `stream` if sleeps on this machine are
+               coarse.
+     */
+    void check_for_coarse_sleeps(std::ostream& stream, timer_request_outcome finestTimerResolutionOutcome)
+    {
+      constexpr std::chrono::milliseconds target{5};
+      if(const auto assessment{assess_sleeps(target)}; is_coarse_sleep(assessment.typical_duration, target))
+      {
+        const auto outcome{
+          combine_timer_request_outcomes(finestTimerResolutionOutcome, assessment.precise_timer_outcome)
+        };
+
+        stream << coarse_sleep_message(assessment.typical_duration, target, platform_timer_request, outcome)
+               << std::flush;
+      }
     }
 
     void overwrite_quietly(const fs::path& file, std::string_view text)
@@ -74,6 +159,22 @@ namespace sequoia::testing
 
       replace_contents_quietly(file, text, write_mode::binary);
     }
+
+    void make_empty_file_quietly(const fs::path& file)
+    {
+      std::error_code selectsTheNonThrowingOverload{};
+      fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
+
+      std::ofstream ofile{file, std::ios_base::out | std::ios_base::binary};
+    }
+
+    void append_quietly(const fs::path& file, std::string_view text)
+    {
+      std::ofstream ofile{file, std::ios_base::app | std::ios_base::binary};
+      ofile.write(text.data(), static_cast<std::streamsize>(text.size()));
+    }
+
+    constexpr auto holds_test{[](const auto& node) { return node.optTest.has_value(); }};
 
     [[nodiscard]]
     std::string running_tests_message(concurrency_mode mode)
@@ -121,25 +222,21 @@ namespace sequoia::testing
       }
     }
 
-    struct execution_info
-    {
-      std::thread::id       thread_id{};
-      log_summary::duration duration{};
-    };
-
     [[nodiscard]]
-    log_summary::duration summed_duration(std::span<const execution_info> executions)
+    durations_of_tests summed_durations(std::span<const execution_info> executions)
     {
       return std::ranges::fold_left(
-               executions | std::views::transform(&execution_info::duration),
-               log_summary::duration{},
+               executions | std::views::transform(&execution_info::durations),
+               durations_of_tests{},
                std::plus{}
              );
     }
 
-    /** Groups the executions by thread, and returns the largest of the groups' summed durations. */
+    /** Returns the summed durations of the thread whose tests' durations sum
+        to the most.
+     */
     [[nodiscard]]
-    log_summary::duration busiest_thread_execution_duration(std::vector<execution_info> executions)
+    durations_of_tests busiest_thread_durations(std::vector<execution_info> executions)
     {
       std::ranges::sort(executions, std::ranges::less{}, &execution_info::thread_id);
 
@@ -149,14 +246,29 @@ namespace sequoia::testing
         }
       };
 
-      auto threadTotals{
+      auto threadDurations{
           executions
         | std::views::chunk_by(sameThread)
-        | std::views::transform(summed_duration)
+        | std::views::transform([](auto threadExecutions) { return summed_durations(threadExecutions); })
       };
 
-      return std::ranges::fold_left(threadTotals, log_summary::duration{}, std::ranges::max);
+      auto busierOf{
+        [](const durations_of_tests& lhs, const durations_of_tests& rhs){
+          return std::ranges::max(lhs, rhs, std::ranges::less{}, &durations_of_tests::total);
+        }
+      };
+
+      return std::ranges::fold_left(threadDurations, durations_of_tests{}, busierOf);
     }
+
+    constexpr auto execution_info_of{
+      [](const auto& node) {
+        return execution_info{
+          .thread_id{node.executing_thread_id},
+          .durations{node.summary.durations()}
+        };
+      }
+    };
 
     constexpr std::array<std::string_view, 3> materials_kinds{"WorkingCopy", "Prediction", "Auxiliary"};
 
@@ -518,56 +630,6 @@ namespace sequoia::testing
       nascent_tests.emplace_back(std::move(nascentTest));
     }
 
-    constexpr auto return_code_names{
-      std::to_array<std::pair<return_code, std::string_view>>({
-        {return_code::versioned_output_diffs, "versioned_output_diffs"},
-        {return_code::soft_failures,          "soft_failures"         },
-        {return_code::critical_failures,      "critical_failures"     },
-        {return_code::incomplete_run,         "incomplete_run"        },
-        {return_code::post_run_failures,      "post_run_failures"     }
-      })
-    };
-
-    constexpr return_code dirty_return_codes{
-      std::ranges::fold_left(
-        return_code_names,
-        return_code::success,
-        [](return_code acc, const auto& entry) { return acc | entry.first; }
-      )
-    };
-
-    static_assert(std::has_single_bit(std::to_underlying(dirty_return_codes) + 1),
-                  "The flags with rows in return_code_names do not occupy consecutive bits from the lowest; "
-                  "give every return_code flag a row, and keep the flags consecutive");
-
-    /** \brief The number a runner adds to its `return_code` to give its exit status, unless the
-               code is success.
-
-        A runner therefore exits either with 0 or with a status from `runner_exit_offset + 1` to
-        `max_runner_exit_status`. That range is clear of these statuses, which a process gives when
-        it fails for reasons of its own:
-        -# 1 and 2, generically;
-        -# 23, from LeakSanitizer;
-        -# 64 to 78, from BSD's sysexits;
-        -# 66 and 77, from ThreadSanitizer and MemorySanitizer;
-        -# 126 and above, from a shell.
-
-        TestRunner.hpp states this value in the contract of `to_exit_code`.
-     */
-    constexpr int runner_exit_offset{80};
-
-    /** \brief The highest exit status a runner gives: the one which carries every flag. */
-    constexpr int max_runner_exit_status{
-      runner_exit_offset + static_cast<int>(std::to_underlying(dirty_return_codes))
-    };
-
-    static_assert(runner_exit_offset > 78, "The runner's exit statuses would overlap BSD's sysexits");
-
-    // A POSIX exit status is 8 bits, and a shell's own statuses begin at 126.
-    static_assert(max_runner_exit_status <= 125,
-                  "The runner's exit statuses no longer fit below the shell's; report the return_code "
-                  "to a parent process through a file it names, rather than in the exit status");
-
     [[nodiscard]]
     std::string to_async_option(concurrency_mode mode, std::size_t threadPoolSize)
     {
@@ -788,52 +850,6 @@ namespace sequoia::testing
     };
   }
 
-  std::string to_string(const return_code code)
-  {
-    if((code & ~dirty_return_codes) != return_code::success)
-      throw std::logic_error{std::format("Unrecognized bits in return_code: {}", std::to_underlying(code))};
-
-    if(code == return_code::success) return "success";
-
-    return std::ranges::fold_left(
-             return_code_names,
-             std::string{},
-             [code](std::string name, const auto& entry) {
-               const auto& [bit, text] {entry};
-
-               if((code & bit) == bit)
-               {
-                 if(!name.empty()) name.append("|");
-                 name.append(text);
-               }
-
-               return name;
-             }
-           );
-  }
-
-  [[nodiscard]]
-  return_code child_return_code(const int exitStatus, std::string_view childDescription)
-  {
-    if(exitStatus == 0)
-      return return_code::success;
-
-    // The range is checked before the offset is subtracted. A Windows status of 0x80000000 or more
-    // is negative, and near INT_MIN the subtraction would overflow.
-    if((exitStatus <= runner_exit_offset) || (exitStatus > max_runner_exit_status))
-      throw std::runtime_error{
-        std::format("{} {}.\nThat is not one of a test runner's exit statuses, which are 0 and {} to {}, so "
-                    "it did not complete a test run: it may not have been built, may be misconfigured, "
-                    "or may have crashed.\n",
-                    childDescription,
-                    runtime::describe_exit_status(exitStatus),
-                    runner_exit_offset + 1,
-                    max_runner_exit_status)
-      };
-
-    return static_cast<return_code>(exitStatus - runner_exit_offset);
-  }
-
   [[nodiscard]]
   return_code to_return_code(const log_summary& summary) noexcept
   {
@@ -846,16 +862,34 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  int to_exit_code(const return_code code) noexcept
+  critical_path_durations apportion_wall_clock(const log_summary::duration wallClock,
+                                               std::span<const execution_info> sequential,
+                                               std::span<const execution_info> concurrent)
   {
-    if(code == return_code::success)
-      return 0;
+    const auto durationsOnCriticalPath{
+      summed_durations(sequential) + busiest_thread_durations(concurrent | std::ranges::to<std::vector>())
+    };
 
-    const auto carried{(code & ~dirty_return_codes) == return_code::success
-                         ? code
-                         : (code & dirty_return_codes) | return_code::incomplete_run};
+    if(wallClock < durationsOnCriticalPath.total())
+    {
+      auto printed{
+        [](const log_summary::duration d) {
+          const auto [time, unit]{stringify_duration(d)};
+          return std::format("{}{}", time, unit);
+        }
+      };
 
-    return runner_exit_offset + static_cast<int>(std::to_underlying(carried));
+      throw std::invalid_argument{
+        std::format("The wall clock, {}, is shorter than the durations of the critical path's tests, {}",
+                    printed(wallClock),
+                    printed(durationsOnCriticalPath.total()))
+      };
+    }
+
+    return {
+      .spent_in_tests     {durationsOnCriticalPath},
+      .scheduling_overhead{wallClock - durationsOnCriticalPath.total()}
+    };
   }
 
   [[nodiscard]]
@@ -917,22 +951,26 @@ namespace sequoia::testing
   }
 
   test_to_run::scoped_execution_record::scoped_execution_record(std::filesystem::path file,
-                                                                const execution_timer& executionTimer)
+                                                                const execution_timer& executionTimer,
+                                                                const test_vessel& vessel)
     : m_File{std::move(file)}
-    , m_Start{std::chrono::system_clock::now()}
+    , m_Record{.start_time{current_time_to_the_millisecond()}}
     , m_ExecutionTimer{executionTimer}
+    , m_Vessel{vessel}
   {
-    overwrite_quietly(m_File, started_at(m_Start));
+    append_quietly(m_File, to_string(m_Record));
   }
 
   test_to_run::scoped_execution_record::~scoped_execution_record()
   {
     using std::chrono::microseconds, std::chrono::duration_cast;
-    overwrite_quietly(m_File,
-                      std::format("{}execution duration {}us\nrunner overhead {}us\n",
-                                  started_at(m_Start),
-                                  duration_cast<microseconds>(m_ExecutionTimer.execution_duration()).count(),
-                                  duration_cast<microseconds>(m_ExecutionTimer.runner_overhead()).count()));
+    m_Record.completion = test_execution_completion{
+      .execution_duration{duration_cast<microseconds>(m_ExecutionTimer.execution_duration())},
+      .runner_overhead{duration_cast<microseconds>(m_ExecutionTimer.runner_overhead())},
+      .performance_check_attempts{attempt_counts_of_finished_checks(m_Vessel.attempts_per_performance_check())}
+    };
+
+    append_quietly(m_File, to_string(m_Record));
   }
 
   [[nodiscard]]
@@ -977,7 +1015,7 @@ namespace sequoia::testing
     // Also installed per test, since under MSVC each thread has its own
     // terminate handler
     const scoped_terminate_handler terminationReported{report_termination};
-    const scoped_execution_record record{m_ExecutionRecord.file_path(), executionTimer};
+    const scoped_execution_record record{m_ExecutionRecord.file_path(), executionTimer, m_Vessel};
 
     if(try_prepare_materials(remover))
       executionTimer.time_execution([this](){ try_run_tests(); });
@@ -1060,7 +1098,7 @@ namespace sequoia::testing
   [[nodiscard]]
   bool test_runner::test_filter::operator()(const normal_path& source,
                                             std::span<const std::string> suites,
-                                            is_performance_test isPerformanceTest)
+                                            test_kind testKind)
   {
     auto sameSource{[this, &source](const normal_path& listed){ return m_Equivalent(listed, source); }};
     auto amongSuites{[suites](const std::string& selected){ return std::ranges::contains(suites, selected); }};
@@ -1069,7 +1107,7 @@ namespace sequoia::testing
     const bool selectedBySource{m_SelectedItems  && mark_found(*m_SelectedItems,  sameSource)};
     const bool selectedBySuite {m_SelectedSuites && mark_found(*m_SelectedSuites, amongSuites)};
 
-    const bool leftOut{excluded || ((isPerformanceTest == is_performance_test::yes) && excludes_performance_tests())};
+    const bool leftOut{excluded || ((testKind == test_kind::performance) && excludes_performance_tests())};
     if(leftOut)
       m_TestsLeftOut.push_back(source.path());
 
@@ -1125,6 +1163,9 @@ namespace sequoia::testing
     fs::create_directory(proj_paths().output().dir());
     fs::create_directory(proj_paths().output().diagnostics());
     fs::create_directory(proj_paths().output().test_summaries());
+
+    if(in_mode(runner_mode::test) && !in_sandbox())
+      write_run_stamp();
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -1357,7 +1398,7 @@ namespace sequoia::testing
                         throw std::runtime_error{error("Number of repetitions, must be >= 2")};
 
                       m_InstabilityMode = instability_mode::single_instance;
-                      m_NumReps = i;
+                      m_NumReps = numeric::unchecked_conversion_to<std::size_t>(i);
                     },
                     {},
                     "Run the tests repeatedly, reporting the checks whose outcome varies"},
@@ -1369,7 +1410,7 @@ namespace sequoia::testing
                         "Run each repetition in a process of its own"}},
                       {{"--runner-id", {}, {"id"},
                         [this](const arg_list& args) {
-                          m_RunnerID = std::stoi(args.front());
+                          m_RunnerID = numeric::checked_conversion_to<std::size_t>(std::stoi(args.front()));
                           m_InstabilityMode = instability_mode::sandbox;
                         },
                         {},
@@ -1438,7 +1479,7 @@ namespace sequoia::testing
                       if(const auto num{std::stoi(args.front())}; num > 0)
                       {
                         m_ConcurrencyMode = concurrency_mode::fixed;
-                        m_PoolSize = num;
+                        m_PoolSize = numeric::unchecked_conversion_to<std::size_t>(num);
                       }
                       else
                       {
@@ -1509,19 +1550,10 @@ namespace sequoia::testing
     }
   }
 
-  void test_runner::check_for_coarse_sleeps()
+  void test_runner::write_run_stamp() const
   {
-    auto warnIfCoarse{
-      [this]() {
-        constexpr std::chrono::milliseconds target{5};
-        if(const auto typicalSleep{typical_sleep_duration(target)}; is_coarse_sleep(typicalSleep, target))
-          stream() << coarse_sleep_message(typicalSleep, target) << std::flush;
-      }
-    };
-
-    // The timer resolution belongs to the process, so the first runner's check serves every later runner in it
-    static std::once_flag checked{};
-    std::call_once(checked, warnIfCoarse);
+    const run_stamp stamp{.start_time{current_time_to_the_millisecond()}};
+    overwrite_quietly(proj_paths().execution_records().stamp(), to_string(stamp));
   }
 
   void test_runner::check_for_missing_tests()
@@ -1569,7 +1601,6 @@ namespace sequoia::testing
     const scoped_terminate_handler terminationReported{report_termination};
     const debug_report_redirector debugReportRedirector{};
     const windows_crash_report_enabler windowsCrashReportEnabler{};
-    set_finest_windows_timer_resolution();
 
     fs::create_directories(proj_paths().prune().dir());
     build_suite_tree();
@@ -1586,12 +1617,22 @@ namespace sequoia::testing
 
   return_code test_runner::run()
   {
-    if(m_InstabilityMode != instability_mode::sandbox)
-    {
+    const auto finestTimerResolutionOutcome{set_finest_windows_timer_resolution()};
+    if(!in_sandbox())
       fs::remove_all(proj_paths().output().instability_analysis());
-      overwrite_quietly(proj_paths().execution_records().stamp(), started_at(std::chrono::system_clock::now()));
-      check_for_coarse_sleeps();
-    }
+
+    auto checkForCoarseSleeps{
+      [this, finestTimerResolutionOutcome]() {
+        if(!in_sandbox())
+          check_for_coarse_sleeps(stream(), finestTimerResolutionOutcome);
+      }
+    };
+
+    // Only the first runner in the process may check. A sandbox's runner makes
+    // no check, since its coordinator has made one. A runner a test creates is
+    // never first, so it writes no warning into the output its test compares.
+    static std::once_flag coarseSleepsChecked{};
+    std::call_once(coarseSleepsChecked, checkForCoarseSleeps);
 
     const auto baseline{versioned_output_baseline()};
     const auto code{  m_InstabilityMode == instability_mode::coordinator
@@ -1602,7 +1643,9 @@ namespace sequoia::testing
        || (m_InstabilityMode == instability_mode::coordinator))
     {
       aggregate_instability_analysis_prune_files(proj_paths(), m_PruneMode, entry_time_stamp, m_NumReps);
-      stream() << instability_analysis(proj_paths().output().instability_analysis(), m_NumReps);
+      auto instabilityProjection{[](std::string_view message) { return instability_projection(message); }};
+
+      stream() << instability_analysis(proj_paths().output().instability_analysis(), m_NumReps, instabilityProjection);
     }
 
     return code | report_versioned_output_changes(baseline);
@@ -1713,7 +1756,7 @@ namespace sequoia::testing
   {
     if(concurrent_execution()) sort_tests();
 
-    if(m_InstabilityMode == instability_mode::sandbox)
+    if(in_sandbox())
       return run_tests(m_RunnerID);
 
     auto code{return_code::success};
@@ -1768,10 +1811,9 @@ namespace sequoia::testing
 
   void test_runner::sort_tests()
   {
-    // TO DO: replace this with a stable_sort
     m_Suites.sort_nodes(1, m_Suites.order(), [&s = m_Suites](auto i, auto j) {
-      auto& lhs{s.cbegin_node_weights()[i]};
-      auto& rhs{s.cbegin_node_weights()[j]};
+      auto& lhs{s.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(i)]};
+      auto& rhs{s.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(j)]};
 
       if(!lhs.optTest && !rhs.optTest) return i < j;
 
@@ -1792,7 +1834,7 @@ namespace sequoia::testing
     // Without the flush, a run killed while the tests are silent would never show that they had begun
     stream() << running_tests_message(m_ConcurrencyMode) << std::flush;
 
-    const auto concurrentDurations{execute_tests(id)};
+    const auto criticalPathDurations{execute_tests(id)};
     const auto removalFailures{extract_discarded_materials_removal_failures()};
 
     test_tracker tracker{proj_paths(), id, m_Filter.selects() ? is_filtered::yes : is_filtered::no, m_Filter.tests_left_out()};
@@ -1801,10 +1843,13 @@ namespace sequoia::testing
     auto summarizeAndTrack{
       [this,&tracker](auto n) {
         m_Suites.mutate_node_weight(
-          std::ranges::next(m_Suites.cbegin_node_weights(), n),
+          std::ranges::next(m_Suites.cbegin_node_weights(), numeric::unchecked_conversion_to<std::ptrdiff_t>(n)),
           [this, &tracker,n](suite_node& wt) {
             for(const auto& edge : m_Suites.cedges(n))
-              wt.summary += std::ranges::next(m_Suites.cbegin_node_weights(), edge.target_node())->summary;
+              wt.summary += std::ranges::next(
+                              m_Suites.cbegin_node_weights(),
+                              numeric::unchecked_conversion_to<std::ptrdiff_t>(edge.target_node())
+                            )->summary;
 
             if(wt.optTest)
             {
@@ -1829,15 +1874,11 @@ namespace sequoia::testing
 
     report_results();
 
-    if(concurrentDurations)
-    {
-      auto& rootSummary{m_Suites.begin_node_weights()->summary};
-      rootSummary.execution_duration(concurrentDurations->execution_duration);
-      rootSummary.runner_overhead(concurrentDurations->runner_overhead);
-    }
+    const durations_of_run durationsOfRun{.total_run_time{t.time_elapsed()}, .critical_path{criticalPathDurations}};
 
     stream() << "\n-----------Grand Totals-----------\n";
-    stream() << summarize(root_summary(), "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+    stream() << durations_report(durationsOfRun);
+    stream() << summarize(root_summary(), "", summary_detail::absent_checks, tab, no_indent);
 
     if(const auto materialsUpdateReport{tracker.materials_update_report()}; !materialsUpdateReport.empty())
     {
@@ -1867,19 +1908,18 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::optional<test_runner::run_durations> test_runner::execute_tests(const std::optional<std::size_t> id)
+  critical_path_durations test_runner::execute_tests(const std::optional<std::size_t> id)
   {
     discarded_materials_remover remover{};
     if(concurrent_execution())
       return execute_concurrently(id, remover);
 
-    execute_serially(id, remover);
-    return std::nullopt;
+    return execute_serially(id, remover);
   }
 
   [[nodiscard]]
-  test_runner::run_durations test_runner::execute_concurrently(const std::optional<std::size_t> id,
-                                                               discarded_materials_remover& remover)
+  critical_path_durations test_runner::execute_concurrently(const std::optional<std::size_t> id,
+                                                            discarded_materials_remover& remover)
   {
     auto first{std::ranges::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
     auto next{std::ranges::find_if(first, m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest->parallelizable(); })};
@@ -1911,41 +1951,40 @@ namespace sequoia::testing
 
     const auto wallClock{asyncTimer.time_elapsed()};
 
-    auto executionInfoOf{
-      [](const suite_node& wt){
-        return execution_info{.thread_id{wt.executing_thread_id}, .duration{wt.summary.execution_duration()}};
-      }
-    };
-
     auto executionInfos{
-      [executionInfoOf](std::span<const suite_node> nodes){
-        return nodes | std::views::transform(executionInfoOf) | std::ranges::to<std::vector>();
+      [](std::span<const suite_node> nodes){
+        return nodes | std::views::transform(execution_info_of) | std::ranges::to<std::vector>();
       }
     };
 
-    // The longest the tests ran one after another: those which are not parallelizable, then the busiest thread's
-    const auto executionDuration{
-        summed_duration(executionInfos(nonParallelizable))
-      + busiest_thread_execution_duration(executionInfos(parallelizable))
-    };
-    return run_durations{
-      .execution_duration{executionDuration},
-      .runner_overhead{wallClock - executionDuration}
-    };
+    return apportion_wall_clock(wallClock, executionInfos(nonParallelizable), executionInfos(parallelizable));
   }
 
-  void test_runner::execute_serially(const std::optional<std::size_t> id, discarded_materials_remover& remover)
+  [[nodiscard]]
+  critical_path_durations test_runner::execute_serially(const std::optional<std::size_t> id,
+                                                        discarded_materials_remover& remover)
   {
     using namespace maths;
     auto execute{
       [&s = m_Suites, id, &remover](auto n) {
-        auto& wt{s.begin_node_weights()[n]};
+        auto& wt{s.begin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(n)]};
         if(wt.optTest)
           wt.summary = wt.optTest->execute(id, remover);
       }
     };
 
+    const timer serialTimer{};
     traverse(depth_first, m_Suites, find_disconnected_t{}, execute, null_func_obj{}, null_func_obj{});
+    const auto wallClock{serialTimer.time_elapsed()};
+
+    const auto executions{
+        m_Suites.node_weights()
+      | std::views::filter(holds_test)
+      | std::views::transform(execution_info_of)
+      | std::ranges::to<std::vector>()
+    };
+
+    return apportion_wall_clock(wallClock, executions, {});
   }
 
   void test_runner::report_results()
@@ -1963,7 +2002,7 @@ namespace sequoia::testing
         [&s = m_Suites, &suiteIndent, &step, &stream = stream(), serial{!concurrent_execution()}](auto n) {
           if(n)
           {
-            const auto& wt{s.cbegin_node_weights()[n]};
+            const auto& wt{s.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(n)]};
             if(wt.optTest)
             {
               stream << summarize(wt.summary,
@@ -1975,7 +2014,7 @@ namespace sequoia::testing
             else
             {
               const auto heading{sequoia::indent(wt.summary.name() + ":", suiteIndent)};
-              stream << (serial ? append_indented(heading, report_time(wt.summary, std::nullopt), suiteIndent)
+              stream << (serial ? append_indented(heading, durations_report(wt.summary.durations()), suiteIndent)
                                 : heading + '\n');
             }
 
@@ -2001,7 +2040,7 @@ namespace sequoia::testing
       // whichever order the concurrency sort left them.
       auto printTest{
         [&s = m_Suites, detail, &stream = stream()](auto n) {
-          if(const auto& wt{s.cbegin_node_weights()[n]}; wt.optTest)
+          if(const auto& wt{s.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(n)]}; wt.optTest)
             stream << summarize(wt.summary, ":", detail, no_indent, tab);
         }
       };
@@ -2013,8 +2052,6 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<removal_failure> test_runner::extract_discarded_materials_removal_failures()
   {
-    auto holdsTest{[](const suite_node& node) { return node.optTest.has_value(); }};
-
     auto failureOf{
       [](suite_node& node) -> std::vector<removal_failure> {
         if(auto failure{node.optTest->extract_discarded_materials_removal_failure()})
@@ -2026,7 +2063,7 @@ namespace sequoia::testing
 
     const auto failures{
         m_Suites.node_weights()
-      | std::views::filter(holdsTest)
+      | std::views::filter(holds_test)
       | std::views::transform(failureOf)
       | std::views::join
       | std::ranges::to<std::vector>()
@@ -2062,7 +2099,8 @@ namespace sequoia::testing
 
     auto resetFn{
       [&,this](auto n){
-        m_Suites.mutate_node_weight(std::ranges::next(m_Suites.cbegin_node_weights(), n),
+        m_Suites.mutate_node_weight(std::ranges::next(m_Suites.cbegin_node_weights(),
+                                                      numeric::unchecked_conversion_to<std::ptrdiff_t>(n)),
           [&,this](auto& wt){
             if(wt.optTest)
             {
@@ -2100,7 +2138,8 @@ namespace sequoia::testing
                             "No action required."});
         break;
       case prune_fallback_reason::toolchain_changed:
-        stream() << warning({"The toolchain has changed since the previous run, so prune is ignored and every test runs.",
+        stream() << warning({"A file the build read from outside the project has changed since the previous run, "
+                             "so prune is ignored and every test runs.",
                             "No action required."});
         break;
       }
@@ -2225,6 +2264,11 @@ namespace sequoia::testing
     m_TestNamesByLowerCaseSummary.try_emplace(ascii::to_lowercase(summary.file_path().generic_string()), name);
   }
 
+  void test_runner::clear_execution_records(const test_execution_record_path& recordFile)
+  {
+    make_empty_file_quietly(recordFile.file_path());
+  }
+
   [[nodiscard]]
   std::string test_runner::lower_case_materials_prefix(const fs::path& source) const
   {
@@ -2310,7 +2354,11 @@ namespace sequoia::testing
         const auto existing{
           std::ranges::find_if(children,
                                [this, &suiteName](const auto& edge) {
-                                 const auto& weight{m_Suites.cbegin_node_weights()[edge.target_node()]};
+                                 const auto& weight{
+                                   m_Suites.cbegin_node_weights()[
+                                     numeric::unchecked_conversion_to<std::ptrdiff_t>(edge.target_node())
+                                   ]
+                                 };
                                  return !weight.optTest && (weight.summary.name() == suiteName);
                                })
         };

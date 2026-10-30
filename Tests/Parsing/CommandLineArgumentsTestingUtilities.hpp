@@ -12,7 +12,7 @@
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
-#include "Maths/Graph/GraphTestingUtilities.hpp"
+#include "Maths/Graph/Tree/TreeTestingUtilities.hpp"
 
 #include <format>
 
@@ -77,29 +77,22 @@ namespace sequoia::testing
     }
   };
 
-  template<>
-  struct value_tester<parsing::commandline::argument_parser>
-  {
-    using type = parsing::commandline::argument_parser;
-    using prediction_type = parsing::commandline::outcome;
-
-    template<test_mode Mode>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const prediction_type& prediction)
-    {
-      check(weak_equivalence, "", logger, obtained.get(), prediction);
-    }
-  };
-
   class commandline_arguments
   {
   public:
+    commandline_arguments(std::vector<std::string> args);
+
+    commandline_arguments(const commandline_arguments&)     = delete;
+    commandline_arguments(commandline_arguments&&) noexcept = default;
+
+    commandline_arguments& operator=(const commandline_arguments&)     = delete;
+    commandline_arguments& operator=(commandline_arguments&&) noexcept = default;
+
     [[nodiscard]]
     int size() const noexcept
     {
       return static_cast<int>(m_Args.size());
     }
-
-    commandline_arguments(std::vector<std::string> args);
 
     [[nodiscard]]
     char** get() noexcept
@@ -107,7 +100,7 @@ namespace sequoia::testing
       return !m_Ptrs.empty() ? &m_Ptrs[0] : nullptr;
     }
   private:
-    std::vector<std::string> m_Args;
-    std::vector<char*> m_Ptrs;
+    std::vector<std::string> m_Args{};
+    std::vector<char*>       m_Ptrs{};
   };
 }

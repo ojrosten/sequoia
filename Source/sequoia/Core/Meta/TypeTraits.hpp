@@ -8,6 +8,7 @@
 #pragma once
 
 #include <array>
+#include <functional>
 #include <iterator>
 #include <type_traits>
 #include <tuple>
@@ -147,6 +148,12 @@ namespace sequoia
   /** \brief Checks for dependent type `element_type` */
   template<class T>
   inline constexpr bool has_element_type_v{requires { typename T::element_type; }};
+
+  /** \brief Checks whether invoking `Operation` is a constant expression */
+  template<auto Operation>
+  inline constexpr bool invocation_is_constant_expression_v{
+    requires { typename std::bool_constant<(std::invoke(Operation), true)>; }
+  };
 
   // Machinery for deep equality checking, which will hopefully one day
   // be obviated if the stl properly constrains operator==

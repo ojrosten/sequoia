@@ -12,6 +12,7 @@ probability_test:
 [Total Run Time: 1.51ms]
 [Execution Time: 474us]
 [Runner Overhead: 483us]
+[Scheduling Overhead: 4.58us]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

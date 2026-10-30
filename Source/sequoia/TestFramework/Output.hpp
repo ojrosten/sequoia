@@ -50,11 +50,14 @@ namespace sequoia::testing
     return line_breaks{static_cast<std::size_t>(n)};
   }
 
-  /** \brief `s` between `--` and `--`; empty if `s` is empty. */
+  /** \brief Returns `s` between `--` and `--`.
+
+      An empty `s` gives an empty string.
+   */
   [[nodiscard]]
   std::string emphasise(std::string_view s);
 
-  /** \brief The code unit `c` as a failure report shows it.
+  /** \brief The code unit `c` as shown in a failure report.
       \returns
       -# For an alert, backspace, form feed, newline, carriage return, tab, vertical tab or NUL: its escape sequence,
          in single quotes;
@@ -138,19 +141,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  constexpr std::string nullable_type_message(const bool holdsValue)
+  constexpr std::string_view name_of_nullable_state(const bool holdsValue) noexcept
   {
-    return std::string{holdsValue ? "not " : ""}.append("null");
-  }
-
-  /** \brief The obtained and predicted states of a nullable value, each `null` or `not null`, laid out as
-             `default_prediction_message` lays out values.
-   */
-  [[nodiscard]]
-  constexpr std::string nullable_type_message(const bool obtainedHoldsValue, const bool predictedHoldsValue)
-  {
-    return std::string{"Obtained : "}.append(nullable_type_message(obtainedHoldsValue)).append("\n")
-               .append("Predicted: ").append(nullable_type_message(predictedHoldsValue));
+    return holdsValue ? "not null" : "null";
   }
 
   [[nodiscard]]
@@ -171,6 +164,19 @@ namespace sequoia::testing
   constexpr std::string default_prediction_message(std::string_view obtained, std::string_view prediction)
   {
     return append_lines(std::string{"Obtained : "}.append(obtained), std::string{"Predicted: "}.append(prediction));
+  }
+
+  /** \brief Returns a message giving the obtained and predicted states of a
+             nullable value.
+
+      The message lays out the states as `default_prediction_message` lays
+      out values. Each state is `null` or `not null`.
+   */
+  [[nodiscard]]
+  constexpr std::string nullable_type_message(const bool obtainedHoldsValue, const bool predictedHoldsValue)
+  {
+    return default_prediction_message(name_of_nullable_state(obtainedHoldsValue),
+                                      name_of_nullable_state(predictedHoldsValue));
   }
 
   [[nodiscard]]
@@ -202,8 +208,10 @@ namespace sequoia::testing
     return default_prediction_message(to_string(obtained), to_string(prediction));
   }
 
-  /** \brief Whether the failure message of a comparison is final, and so shows the obtained and predicted values, or
-             is followed by finer-grained checks that show them.
+  /** \brief Whether the failure message of a comparison is final.
+
+      A final message shows the obtained and predicted values. Otherwise,
+      finer-grained checks follow the message and show those values.
    */
   template<bool IsFinalMessage>
   struct final_message_constant : std::bool_constant<IsFinalMessage> {};
@@ -249,11 +257,14 @@ namespace sequoia::testing
     return "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n";
   }
 
-  /** \brief The file and line of `loc`, the file as `path_for_reporting` gives it, then `message` beneath them. */
+  /** \brief Returns `message` beneath the file and line of `loc`.
+
+      The file is shown as given by `path_for_reporting`.
+   */
   [[nodiscard]]
   std::string report_line(std::string_view message, const std::filesystem::path& repository, const std::source_location loc);
 
-  /** \brief `file` as a report shows it.
+  /** \brief `file` as shown in a report.
       \returns
       -# For a relative `file`: `file` without its leading `..` components;
       -# For an absolute `file` and an absolute `repository`: the name of the directory `repository`, followed by the
@@ -266,8 +277,10 @@ namespace sequoia::testing
   struct no_source_location_t{};
   inline constexpr no_source_location_t no_source_location{};
 
-  /** \brief The description of a check, with the source location of the check; by default, the location of the
-             constructor's call site. A `reporter` made with `no_source_location` has none.
+  /** \brief A check's description and source location.
+
+      By default, the location is the constructor's call site. A `reporter`
+      made with `no_source_location` has no location.
    */
   class reporter
   {
@@ -303,20 +316,25 @@ namespace sequoia::testing
     std::optional<std::source_location> m_Loc{};
   };
 
-  /** \brief Respells a type name, as `demangle(std::string)` returns it when compiled by clang, into the spelling
-             shared by every supported toolchain, so that output which names a type does not depend on the compiler.
-             The overload is chosen by compiler, but its respellings are those libc++'s names need.
+  /** \brief Respells a type name, as returned by `demangle(std::string)` when
+             compiled by clang, into the spelling shared by every supported
+             toolchain, so that output which names a type does not depend on
+             the compiler. The overload is chosen by compiler, but its
+             respellings are those libc++'s names need.
    */
   [[nodiscard]]
   std::string tidy_name(std::string name, clang_type);
 
-  /** \brief Respells a type name, as `demangle(std::string)` returns it when compiled by gcc, into the shared
-             spelling; its respellings are those libstdc++'s names need.
+  /** \brief Respells a type name, as returned by `demangle(std::string)` when
+             compiled by gcc, into the shared spelling; its respellings are
+             those libstdc++'s names need.
    */
   [[nodiscard]]
   std::string tidy_name(std::string name, gcc_type);
 
-  /** \brief Respells a type name as MSVC's `type_info::name` writes it into the shared spelling. */
+  /** \brief Respells a type name, as written by MSVC's `type_info::name`,
+             into the shared spelling.
+   */
   [[nodiscard]]
   std::string tidy_name(std::string name, msvc_type);
 
@@ -383,12 +401,13 @@ namespace sequoia::testing
   };
 
 
-  /** \brief The name `type_demangler` makes for `T`; then, for each of `U...`, a comma and, on a new line, the
-             name `type_demangler` makes for that type.
-   */
   template<class T, class... U>
   struct type_list_demangler
   {
+    /** \brief Joins the names `type_demangler` makes for `T` and `U...`.
+
+        A comma and a new line separate consecutive names.
+     */
     [[nodiscard]]
     constexpr static std::string make()
     {

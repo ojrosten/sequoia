@@ -186,23 +186,23 @@ namespace sequoia::testing
     {}
 
     node_storage_tester(std::initializer_list<weight_type> weights)
-      : base_type{weights}
+      : base_type(weights)
     {}
 
     node_storage_tester(std::initializer_list<weight_type> weights, const allocator_type& allocator)
-      : base_type{weights, allocator}
+      : base_type(weights, allocator)
     {}
 
     node_storage_tester(const node_storage_tester&) = default;
 
     node_storage_tester(const node_storage_tester& s, const allocator_type& allocator)
-      : base_type{s, allocator}
+      : base_type(s, allocator)
     {}
 
     node_storage_tester(node_storage_tester&&) noexcept = default;
 
     node_storage_tester(node_storage_tester&& s, const allocator_type& allocator)
-      : base_type{std::move(s), allocator}
+      : base_type(std::move(s), allocator)
     {}
 
     ~node_storage_tester() = default;
@@ -225,6 +225,7 @@ namespace sequoia::testing
     using base_type::erase_nodes;
     using base_type::clear;
     using base_type::get_node_allocator;
+    using base_type::permute_nodes;
   };
 
   template<class Weight, std::size_t N>

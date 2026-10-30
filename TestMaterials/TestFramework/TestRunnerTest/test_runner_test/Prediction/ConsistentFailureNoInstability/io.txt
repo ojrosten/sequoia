@@ -21,6 +21,7 @@ consistently_failing_free_test:
 [Total Run Time: 384us]
 [Execution Time: 183us]
 [Runner Overhead: 809us]
+[Scheduling Overhead: 7.83us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -50,6 +51,7 @@ consistently_failing_free_test:
 [Total Run Time: 249us]
 [Execution Time: 67.1us]
 [Runner Overhead: 754us]
+[Scheduling Overhead: 4.33us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

@@ -21,6 +21,7 @@ failing_plus_instabilities_free_test:
 [Total Run Time: 379us]
 [Execution Time: 179us]
 [Runner Overhead: 746us]
+[Scheduling Overhead: 7.08us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -60,6 +61,7 @@ failing_plus_instabilities_free_test:
 [Total Run Time: 255us]
 [Execution Time: 70.3us]
 [Runner Overhead: 582us]
+[Scheduling Overhead: 3.62us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
