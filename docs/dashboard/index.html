@@ -167,17 +167,17 @@
       <div class="plot" id="leftover-plot"></div>
     </figure>
     <figure class="card" id="compile-figure">
-      <figcaption><h2>Instructions of compiling three units with clang</h2>
-        <p>The instructions <code>valgrind --tool=cachegrind</code> counts in compiling three of TestAll's translation
-          units with clang, summed. The units are chosen for the machinery each instantiates: the test framework's
-          checks of semantics and of allocations, the graphs, and the concepts of <code>Spaces.hpp</code>. The tooltip
-          names them, gives each unit's count, and names the compiler. Unlike the time a compilation takes, the count
-          moves by at most about a part in a million from one runner to another. The count is clang's, while the rest of
-          the record is GCC's build, since a cost may be one compiler's alone: at the parent of f6d204905, the clause
-          <code>bounds_for</code> made clang 15 times slower to compile one of these units, and its count 19 times
-          larger, while GCC was no slower. Points whose record has no count are left out, and a line joins those which
-          have one. A change of the series (the compiler, the units, or what is counted, the <code>boundary</code>)
-          breaks the line, with a rule.</p></figcaption>
+      <figcaption><h2>Instructions of compiling a few units with clang</h2>
+        <p>The instructions <code>valgrind --tool=cachegrind</code> counts in compiling a few of TestAll's translation
+          units with clang, summed. Each unit is chosen for the machinery it instantiates: the test framework's checks
+          of semantics and of allocations, the graphs, and the concepts of <code>Spaces.hpp</code>. The tooltip names
+          the compiler, and each unit with its count; the panel below says how each unit moved. The count is clang's,
+          while the symbol table is GCC's build, since a cost may be one compiler's alone. f6d204905 removed a
+          clause from <code>representation_for</code>, since it seemed to slow compilation down massively; at its
+          parent, with the clause, clang's count for one of these units was 19 times as large as without it, and
+          g++-15's 0.012% larger. Points whose record has no count are left out, and a line joins those which have one.
+          A rule breaks the line where the count's toolchain changes, or where the units or what is counted, the
+          <code>boundary</code>, change.</p></figcaption>
       <div class="plot" id="compile-plot"></div>
     </figure>
     <figure class="card" id="runner-figure">
@@ -430,9 +430,10 @@
 
     const hasFailedRun = index => measure.exitStatus !== undefined && (measure.exitStatus(points[index].record) ?? 0) !== 0;
 
-    // A line runs through the points which have the measure and have the same `runOf`: the toolchain, and for
-    // the runner's measures the boundary too. A point without the measure ends the line, unless the measure
-    // joins gaps. A blind point ends it whether or not the measure joins gaps.
+    // A line runs through the points which have the measure and have the same `runOf`, by default the
+    // toolchain's run; a measure may name a run of its own, as of its own toolchain or boundary. A point
+    // without the measure ends the line, unless the measure joins gaps. A blind point ends it whether or not
+    // the measure joins gaps.
     const runs = [];
     const runStarts = [];
     const runOf = point => measure.runOf ? measure.runOf(point) : point.run;
@@ -558,17 +559,18 @@
 
   // The instructions of compiling the units are summed. A record can lack
   // them, being older than them or its measurement having failed, and the
-  // line joins the points which have them. The line breaks where the series
-  // changes: the compiler, the units or the boundary of the count. The
-  // record's toolchain is that of the build, not of the count, so a change of
-  // it does not break the line
+  // line joins the points which have them. The line breaks where the
+  // compile-cost record's toolchain changes, or its series: the units or the
+  // boundary of the count. The symbol table's toolchain does not break it.
   const compileCostMeasure = {
     name: 'instructions of compiling the units',
     value: symbolDashboard.compileCostInstructions,
     unit: 'instructions',
-    joinsGaps: true, runOf: point => point.compileCostRun,
-    changeOf: point => point.compileCostSeriesChange,
-    breakLabel: () => 'series'
+    joinsGaps: true, runOf: point => point.record.compileCost.run,
+    changeOf: point => point.record.compileCost
+      ? point.record.compileCost.toolchainChange || point.record.compileCost.seriesChange
+      : null,
+    breakLabel: point => point.record.compileCost.toolchainChange ? 'toolchain' : 'boundary'
   };
 
   function changeOn(index, measure) {
@@ -595,7 +597,7 @@
   // The tooltip's lines for a record with a `compile_cost`
   function compileCostTooltipLines(record) {
     const units = symbolDashboard.compileCostUnits(record);
-    const compiler = record.compile_cost.compiler;
+    const compiler = record.compileCost.compiler;
     return [
       element('span', {}, `${integer.format(compileCostMeasure.value(record))} instructions of compiling the units`
                           + ` with ${compiler.id} ${compiler.version}:`),
@@ -694,6 +696,24 @@
       tile('Points', integer.format(points.length), `${longDate(points[0].date)} to ${longDate(latest.date)}`));
   }
 
+  // The paragraphs which say how each unit's count of instructions moved at the point `index`, against the
+  // point before it with a count, or none if the point has no count or the point before is of another series
+  function compileCostMovers(index) {
+    const units = symbolDashboard.compileCostUnits(state.points[index].record);
+    const before = state.points.slice(0, index).findLast(point => symbolDashboard.compileCostUnits(point.record) !== null);
+    if (units === null || before === undefined) return [];
+    const compileCost = state.points[index].record.compileCost;
+    if (compileCost.toolchainChange || compileCost.seriesChange) {
+      return [element('p', {class: 'note'}, 'The count of compiling the units is of another toolchain or series than at '
+        + `${short(before.commit)}, the point before with a count, so it is not compared.`)];
+    }
+    const previous = symbolDashboard.compileCostUnits(before.record);
+    const moved = Object.entries(units).map(([unit, instructions]) =>
+      `${unit} ${signed(instructions - previous[unit])} (${percent(instructions - previous[unit], previous[unit])})`);
+    return [element('p', {}, 'Against ', link(commitUrl(before.commit), short(before.commit)),
+      `, the point before with a count, the instructions of compiling the units moved: ${moved.join('; ')}.`)];
+  }
+
   function drawMovers() {
     const panel = document.getElementById('movers');
     const index = state.selected;
@@ -716,6 +736,7 @@
       panel.append(element('p', {class: 'note'}, `The toolchain changed between these points, so the movement may be the toolchain's: `
         + describeChange(point.toolchainChange)));
     }
+    panel.append(...compileCostMovers(index));
     if (movers.length === 0) return;
     const table = rows => {
       const body = rows.map(mover => element('tr', {},

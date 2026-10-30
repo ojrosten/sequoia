@@ -52,12 +52,14 @@
 #     of its two runs. A malformed section is a problem, as is one whose runs
 #     executed different numbers of tests. Its boundary breaks the line
 #     independently of the runner_setup's;
-#   - a record's compile_cost gives the instructions of its units, summed,
-#     and each unit's, or null where the section is absent. A section with no
-#     boundary, no compiler, no units, or a unit without a positive count of
-#     instructions is a problem naming each fault. Its series, the boundary,
-#     the compiler and the set of units in whatever order, breaks the line,
-#     independently of the other sections' and of the record's toolchain;
+#   - a record of the cost of compiling is a problem, naming each fault,
+#     where it has no clean tree, no compiler named by path, id and version,
+#     no compile_cost, no boundary, no units, or a unit without a positive
+#     count of instructions; its series, the boundary and the set of units in
+#     whatever order, breaks the line, as its own toolchain does,
+#     independently of the other sections'; its counts join the points of
+#     their commits, summed and unit by unit, and one at no plotted commit,
+#     or with a problem, is listed;
 #   - the counts of uncalled functions join the points of their commits, with
 #     a toolchain of their own; a record of them which has a problem, or lies
 #     at no plotted commit, is listed;
@@ -582,65 +584,144 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.deepStrictEqual(points.map(p => p.leftoverRun),            [0,     0,     1,     1,     1]);
   });
 
-  const compileCostOf = (units, boundary = 'x', version = '23.1.4') =>
-    ({boundary, compiler: {path: '/c', id: 'Clang', version}, units, cpu_model: 'm'});
+  // A record of the cost of compiling, as symbol-table.yml's second job stores it
+  const compileCostRecord = (name, units, {boundary = 'x', version = '23.1.4'} = {}) => ({
+    commit: c[name], clean: true,
+    toolchain: {compiler: {path: '/llvm/bin/clang++', id: 'Clang', version}, standard_library: {name: 'libstdc++'}},
+    compile_cost: {boundary, units, cpu_model: 'm'}
+  });
+  const compileCostProblem = text => `it has a compile_cost ${text}`;
 
-  await control('the instructions of compiling the units are summed, each unit\'s given, and null without a section', () => {
-    const record = recordOf('F5');
-    assert.strictEqual(dashboard.compileCostInstructions(record), null);
-    assert.strictEqual(dashboard.compileCostUnits(record), null);
-    record.compile_cost = compileCostOf({'Tests/A.cpp': 300, 'Tests/B.cpp': 20, 'Tests/C.cpp': 1});
-    assert.strictEqual(dashboard.compileCostInstructions(record), 321);
-    assert.deepStrictEqual(dashboard.compileCostUnits(record), {'Tests/A.cpp': 300, 'Tests/B.cpp': 20, 'Tests/C.cpp': 1});
-    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  await control('a record of the cost of compiling without a problem has none, and with one has it named', () => {
+    assert.deepStrictEqual(dashboard.problemsWithCompileCost(compileCostRecord('F5', {'Tests/A.cpp': 3}), c.F5), []);
+    assert.deepStrictEqual(dashboard.problemsWithCompileCost(compileCostRecord('F5', {'Tests/A.cpp': 3}), c.F4),
+                           [`it names commit ${c.F5}`]);
   });
 
-  const compileCostProblem = text => `it has a compile_cost ${text}`;
-  for (const [name, section, problems] of [
-    ['null',                          null,                                      ['with no boundary']],
-    ['a boundary which is no text',   compileCostOf({'Tests/A.cpp': 3}, 5),       ['with no boundary']],
-    ['no units',                      {...compileCostOf({}), units: undefined},   ['with no units']],
-    ['units which are no object',     compileCostOf('ab'),                        ['with no units']],
-    ['units which are a list',        compileCostOf([3]),                         ['with no units']],
-    ['units which are empty',         compileCostOf({}),                          ['with no units']],
-    ['no compiler',                   {...compileCostOf({'Tests/A.cpp': 3}), compiler: undefined}, ['with no compiler']],
-    ['no compiler and no units',      {boundary: 'x'},                            ['with no compiler', 'with no units']],
-    ['no compiler and a unit of zero instructions', {...compileCostOf({'Tests/A.cpp': 0}), compiler: 'clang'},
-     ['with no compiler', 'whose unit Tests/A.cpp has no positive count of instructions']],
-    ['a unit of zero instructions',   compileCostOf({'Tests/A.cpp': 3, 'Tests/B.cpp': 0}),   ['whose unit Tests/B.cpp has no positive count of instructions']],
-    ['a unit of negative instructions', compileCostOf({'Tests/A.cpp': -1}),       ['whose unit Tests/A.cpp has no positive count of instructions']],
-    ['a unit of fractional instructions', compileCostOf({'Tests/A.cpp': 1.5}),    ['whose unit Tests/A.cpp has no positive count of instructions']],
-    ['a unit of text instructions',   compileCostOf({'Tests/A.cpp': '5'}),        ['whose unit Tests/A.cpp has no positive count of instructions']],
-    ['two units without instructions', compileCostOf({'Tests/A.cpp': null, 'Tests/B.cpp': 4, 'Tests/C.cpp': 0}),
-     ['whose unit Tests/A.cpp has no positive count of instructions', 'whose unit Tests/C.cpp has no positive count of instructions']]
+  const noCompiler = 'it has no toolchain with a compiler named by its path, id and version';
+  for (const [name, change, problems] of [
+    ['a tree not clean',              r => { r.clean = false; },                        ['it was not measured on a clean tree']],
+    ['no toolchain',                  r => { delete r.toolchain; },                     [noCompiler]],
+    ['an empty compiler',             r => { r.toolchain.compiler = {}; },              [noCompiler]],
+    ['a compiler with no version',    r => { delete r.toolchain.compiler.version; },    [noCompiler]],
+    ['a compiler named by a number',  r => { r.toolchain.compiler.id = 5; },            [noCompiler]],
+    ['no compile_cost',               r => { delete r.compile_cost; },                  ['it has no compile_cost']],
+    ['a compile_cost which is a list', r => { r.compile_cost = []; },                   ['it has no compile_cost']],
+    ['a boundary which is no text',   r => { r.compile_cost.boundary = 5; },            [compileCostProblem('with no boundary')]],
+    ['no units',                      r => { delete r.compile_cost.units; },            [compileCostProblem('with no units')]],
+    ['units which are no object',     r => { r.compile_cost.units = 'ab'; },            [compileCostProblem('with no units')]],
+    ['units which are a list',        r => { r.compile_cost.units = [3]; },             [compileCostProblem('with no units')]],
+    ['units which are empty',         r => { r.compile_cost.units = {}; },              [compileCostProblem('with no units')]],
+    ['a unit of zero instructions',   r => { r.compile_cost.units['Tests/B.cpp'] = 0; },
+     [compileCostProblem('whose unit Tests/B.cpp has no positive count of instructions')]],
+    ['a unit of negative instructions', r => { r.compile_cost.units['Tests/A.cpp'] = -1; },
+     [compileCostProblem('whose unit Tests/A.cpp has no positive count of instructions')]],
+    ['a unit of fractional instructions', r => { r.compile_cost.units['Tests/A.cpp'] = 1.5; },
+     [compileCostProblem('whose unit Tests/A.cpp has no positive count of instructions')]],
+    ['a unit of text instructions',   r => { r.compile_cost.units['Tests/A.cpp'] = '5'; },
+     [compileCostProblem('whose unit Tests/A.cpp has no positive count of instructions')]],
+    ['two units without instructions', r => { r.compile_cost.units['Tests/A.cpp'] = null; r.compile_cost.units['Tests/B.cpp'] = 0; },
+     [compileCostProblem('whose unit Tests/A.cpp has no positive count of instructions'),
+      compileCostProblem('whose unit Tests/B.cpp has no positive count of instructions')]],
+    ['no compiler, no boundary and a unit of zero instructions',
+     r => { r.toolchain.compiler = {}; delete r.compile_cost.boundary; r.compile_cost.units['Tests/A.cpp'] = 0; },
+     [noCompiler, compileCostProblem('with no boundary'),
+      compileCostProblem('whose unit Tests/A.cpp has no positive count of instructions')]],
+    ['no boundary and no units',      r => { delete r.compile_cost.boundary; delete r.compile_cost.units; },
+     [compileCostProblem('with no boundary'), compileCostProblem('with no units')]]
   ]) {
-    await control(`a record with a compile_cost of ${name} is a problem naming it, and no other`, () => {
-      const record = recordOf('F5');
-      record.compile_cost = section;
-      assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), problems.map(compileCostProblem));
+    await control(`a record of the cost of compiling with ${name} is a problem naming each fault, and no other`, () => {
+      const record = compileCostRecord('F5', {'Tests/A.cpp': 3, 'Tests/B.cpp': 4});
+      change(record);
+      assert.deepStrictEqual(dashboard.problemsWithCompileCost(record, c.F5), problems);
     });
   }
 
-  await control('the compile cost\'s boundary, compiler and units break the line, whatever their order, independently of the rest', () => {
+  await control('a symbol-table record with no cost of compiling has none, never zero', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.compileCostInstructions(record), null);
+    assert.strictEqual(dashboard.compileCostUnits(record), null);
+  });
+
+  await control('the compile cost\'s boundary and units break its series, whatever their order, independently of the rest', () => {
     const summary = {date: 'd', subject: 's'};
-    const point = (boundary, units, leftoverBoundary, version = '23.1.4', toolchainVersion = '15.2.0') => {
-      const record = recordOf('F4');
-      record.toolchain = {...record.toolchain, compiler: {...record.toolchain.compiler, version: toolchainVersion}};
-      if (boundary !== null) {
-        record.compile_cost = compileCostOf(Object.fromEntries(units.map(unit => [unit, 7])), boundary, version);
-      }
+    const point = (boundary, units, leftoverBoundary, version = '23.1.4') => {
+      const record = boundary === null ? recordOf('F4')
+        : compileCostRecord('F4', Object.fromEntries(units.map(unit => [unit, 7])), {boundary, version});
       if (leftoverBoundary !== null) record.leftover_materials_setup = {...leftoverOf(10), boundary: leftoverBoundary};
       return {commit: c.F4, summary, record};
     };
     const points = dashboard.pointsOf([point('b', ['A', 'B'], 'p'), point('b', ['B', 'A'], 'q'), point(null, [], 'q'),
                                        point('b', ['A', 'B', 'C'], 'q'), point('b2', ['A', 'B', 'C'], 'q'),
-                                       point('b2', ['A', 'B', 'C'], 'q', '23.1.5'),
-                                       point('b2', ['A', 'B', 'C'], 'q', '23.1.5', '15.3.0')]);
-    assert.deepStrictEqual(points.map(p => p.compileCostSeriesChange), [false, false, false, true, true, true, false]);
-    assert.deepStrictEqual(points.map(p => p.compileCostRun),          [0,     0,     0,     1,    2,    3,    3]);
-    assert.deepStrictEqual(points.map(p => p.toolchainChange !== null), [false, false, false, false, false, false, true]);
-    assert.deepStrictEqual(points.map(p => p.leftoverBoundaryChange),  [false, true,  false, false, false, false, false]);
-    assert.deepStrictEqual(points.map(p => p.leftoverRun),             [0,     1,     1,     1,     1,     1,     1]);
+                                       point('b2', ['A', 'B', 'C'], 'q', '23.1.5')]);
+    assert.deepStrictEqual(points.map(p => p.compileCostSeriesChange), [false, false, false, true, true, false]);
+    assert.deepStrictEqual(points.map(p => p.compileCostRun),          [0,     0,     0,     1,    2,    2]);
+    assert.deepStrictEqual(points.map(p => p.leftoverBoundaryChange),  [false, true,  false, false, false, false]);
+    assert.deepStrictEqual(points.at(-1).toolchainChange.map(change => change.path), ['compiler.version']);
+  });
+
+  const compileCostTreeWith = (...commits) => ({...read('tree.json'), tree: read('tree.json').tree.concat(commits.map(commit =>
+    ({path: `compile-cost/linux-clang-debug/${commit}.json`, type: 'blob'})))});
+  const compileCostProblems = column => column.problems.filter(entry => entry.path.startsWith('compile-cost/'));
+
+  await control('the counts of compiling join the points of their commits, summed, with their own toolchain runs and series', async () => {
+    const records = new Map([[c.F2, compileCostRecord('F2', {'Tests/A.cpp': 300, 'Tests/B.cpp': 20})],
+                             [c.F4, compileCostRecord('F4', {'Tests/A.cpp': 301, 'Tests/B.cpp': 20})],
+                             [c.F5, compileCostRecord('F5', {'Tests/A.cpp': 301, 'Tests/B.cpp': 20}, {version: '23.1.5'})],
+                             [c.F7, compileCostRecord('F7', {'Tests/A.cpp': 301, 'Tests/C.cpp': 2}, {version: '23.1.5'})]]);
+    const source = fixtureSource({
+      tree: compileCostTreeWith(...records.keys()),
+      record: recordPath => {
+        const found = [...records].find(([commit]) => recordPath === `compile-cost/linux-clang-debug/${commit}.json`);
+        return found ? found[1] : read(recordPath);
+      }
+    });
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.deepStrictEqual(compileCostProblems(column), []);
+    assert.deepStrictEqual(column.points.map(point => dashboard.compileCostInstructions(point.record)),
+                           column.points.map(point => ({[c.F2]: 320, [c.F4]: 321, [c.F5]: 321, [c.F7]: 303})[point.commit] ?? null));
+    assert.deepStrictEqual(dashboard.compileCostUnits(column.points.find(point => point.commit === c.F2).record),
+                           {'Tests/A.cpp': 300, 'Tests/B.cpp': 20});
+    const joined = column.points.filter(point => records.has(point.commit)).map(point => point.record.compileCost);
+    assert.deepStrictEqual(joined.map(cost => cost.run), ['0/0', '0/0', '1/0', '1/1']);
+    assert.deepStrictEqual(joined.map(cost => cost.toolchainChange === null), [true, true, false, true]);
+    assert.deepStrictEqual(joined.map(cost => cost.seriesChange), [false, false, false, true]);
+    assert.deepStrictEqual(joined.map(cost => cost.compiler.version), ['23.1.4', '23.1.4', '23.1.5', '23.1.5']);
+    assert.deepStrictEqual(joined[2].toolchainChange.map(change => change.path), ['compiler.version']);
+  });
+
+  await control('a record of the cost of compiling with a problem is listed, and the others load', async () => {
+    const source = fixtureSource({
+      tree: compileCostTreeWith(c.F2),
+      record: recordPath => recordPath.startsWith('compile-cost/')
+        ? {...compileCostRecord('F2', {'Tests/A.cpp': 3}), clean: false} : read(recordPath)
+    });
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.deepStrictEqual(compileCostProblems(column).map(entry => entry.path), [`compile-cost/linux-clang-debug/${c.F2}.json`]);
+    assert.strictEqual(column.points.filter(point => dashboard.compileCostInstructions(point.record) !== null).length, 0);
+    assert.ok(column.points.length > 0);
+  });
+
+  await control('a record of the cost of compiling at no plotted commit is listed', async () => {
+    const absent = '0'.repeat(40);
+    const source = fixtureSource({
+      tree: compileCostTreeWith(absent),
+      record: recordPath => recordPath.startsWith('compile-cost/')
+        ? {...compileCostRecord('F2', {'Tests/A.cpp': 3}), commit: absent} : read(recordPath)
+    });
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.strictEqual(compileCostProblems(column).length, 1);
+    assert.ok(compileCostProblems(column)[0].problems.length >= 1);
+  });
+
+  await control('a record of the cost of compiling on staging\'s history, at a commit with no plotted symbol table, is listed', async () => {
+    const source = fixtureSource({
+      tree: compileCostTreeWith(c.R0),
+      record: recordPath => recordPath.startsWith('compile-cost/') ? compileCostRecord('R0', {'Tests/A.cpp': 3}) : read(recordPath)
+    });
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.deepStrictEqual(compileCostProblems(column), [{path: `compile-cost/linux-clang-debug/${c.R0}.json`,
+                                                          problems: ['it is not at a commit with a plotted symbol table']}]);
   });
 
   await control('each event is null in a record without the runner\'s setup, and per test otherwise', () => {
@@ -1002,26 +1083,37 @@ MUTATIONS = [
     ('the leftover boundary read from the runner\'s setup', "leftoverBoundaryCounter(Object.hasOwn(record, 'leftover_materials_setup') ? record.leftover_materials_setup.boundary : null)", "leftoverBoundaryCounter(Object.hasOwn(record, 'runner_setup') ? record.runner_setup.boundary : null)"),
     ('one count of boundaries for both sections', "const leftoverBoundaryCounter = boundaryCounter();", "const leftoverBoundaryCounter = setupBoundaryCounter;"),
     ('the leftover series not counted',     "toolchainChange, setupRun, boundaryChange,\n              leftoverRun, leftoverBoundaryChange,", "toolchainChange, setupRun, boundaryChange,\n              leftoverRun: 0, leftoverBoundaryChange,"),
-    ('the compile cost not checked',        "if (Object.hasOwn(record, 'compile_cost')) problems.push(", "if (false) problems.push("),
-    ('the compile cost\'s boundary not checked', "const name = 'it has a compile_cost';\n    if (!isObject(section) || typeof section.boundary !== 'string') return", "const name = 'it has a compile_cost';\n    if (!isObject(section)) return"),
+    ('a compile-cost record unchecked',     "const problems = commonProblems(record, commit);\n    if (!isObject(record)) return problems;\n    if (!isObject(record.toolchain)", "const problems = [];\n    if (!isObject(record)) return problems;\n    if (!isObject(record.toolchain)"),
+    ('the compiler not checked',            "if (!isObject(record.toolchain) || !isObject(record.toolchain.compiler)\n        || !['path', 'id', 'version'].every(key => typeof record.toolchain.compiler[key] === 'string')) {", "if (!isObject(record.toolchain)) {"),
+    ('an empty compiler accepted',          "|| !['path', 'id', 'version'].every(key => typeof record.toolchain.compiler[key] === 'string')) {", ") {"),
+    ('a compiler without its version accepted', "['path', 'id', 'version'].every(", "['path', 'id'].every("),
+    ('no compile_cost accepted',            "if (!isObject(section)) return [...problems, 'it has no compile_cost'];", "if (!isObject(section)) return problems;"),
+    ('the boundary not checked',            "if (typeof section.boundary !== 'string') problems.push(", "if (false) problems.push("),
     ('no units accepted',                   " || Object.keys(section.units).length === 0) return", ") return"),
     ('units of any kind accepted',          "if (!isObject(section.units) || Object.keys", "if (section.units === undefined || Object.keys"),
     ('zero instructions of a unit accepted', "isCount(instructions) && instructions > 0 ? []", "isCount(instructions) ? []"),
     ('a unit\'s instructions not checked',  "isCount(instructions) && instructions > 0 ? []", "true ? []"),
     ('the first unit\'s fault alone',       "...Object.entries(section.units).flatMap(", "...Object.entries(section.units).slice(0, 1).flatMap("),
-    ('the compiler not checked',            "const compilerProblems = isObject(section.compiler) ? []", "const compilerProblems = true ? []"),
-    ('no compiler unsaid beside no units',  "return [...compilerProblems, `${name} with no units`];", "return [`${name} with no units`];"),
-    ('no compiler unsaid beside a unit\'s fault', "return [...compilerProblems, ...Object.entries", "return [...Object.entries"),
+    ('earlier faults unsaid beside no units', "return [...problems, `${name} with no units`];", "return [`${name} with no units`];"),
+    ('earlier faults unsaid beside a unit\'s fault', "return [...problems, ...Object.entries", "return [...Object.entries"),
     ('the largest unit plotted',            "reduce((sum, instructions) => sum + instructions, 0)", "reduce((sum, instructions) => Math.max(sum, instructions), 0)"),
-    ('a missing compile cost summed',       "if (!Object.hasOwn(record, 'compile_cost')) return null;\n    return Object.values", "return Object.values"),
-    ('a missing compile cost has units',    "if (!Object.hasOwn(record, 'compile_cost')) return null;\n    return record.compile_cost.units;", "if (!Object.hasOwn(record, 'compile_cost')) return {};\n    return record.compile_cost.units;"),
-    ('the units no part of the series',     "canonical([section.boundary, section.compiler, Object.keys(section.units).sort()])", "canonical([section.boundary, section.compiler])"),
+    ('a missing compile cost has units',    "Object.hasOwn(record, 'compileCost') ? record.compileCost.units : null", "Object.hasOwn(record, 'compileCost') ? record.compileCost.units : {}"),
+    ('a missing compile cost summed as zero', "return units === null ? null :", "return units === null ? 0 :"),
+    ('the units no part of the series',     "canonical([section.boundary, Object.keys(section.units).sort()])", "canonical([section.boundary])"),
     ('the units\' order part of the series', "Object.keys(section.units).sort()])", "Object.keys(section.units)])"),
-    ('the boundary no part of the series',  "canonical([section.boundary, section.compiler, Object.keys", "canonical([section.compiler, Object.keys"),
-    ('the compiler no part of the series',  "canonical([section.boundary, section.compiler, Object.keys", "canonical([section.boundary, Object.keys"),
+    ('the boundary no part of the series',  "canonical([section.boundary, Object.keys", "canonical([Object.keys"),
     ('a missing compile cost given a series', "if (!Object.hasOwn(record, 'compile_cost')) return null;\n    const section = record.compile_cost;\n    return canonical", "const section = record.compile_cost;\n    return canonical"),
     ('one count of series for the compile cost and the leftovers', "const compileCostSeriesCounter = boundaryCounter();", "const compileCostSeriesCounter = leftoverBoundaryCounter;"),
     ('the compile cost series not counted', "compileCostRun, compileCostSeriesChange};", "compileCostRun: 0, compileCostSeriesChange};"),
+    ('the compile-cost records not read',   "return entriesMatching(tree, compileCostPathPattern);", "return [];"),
+    ('the uncalled pattern read for the cost of compiling', "return entriesMatching(tree, compileCostPathPattern);", "return entriesMatching(tree, uncalledPathPattern);"),
+    ('a compile-cost record checked as a symbol table', "const compileCost = seriesOf(compileCostEntries, problemsWithCompileCost);", "const compileCost = seriesOf(compileCostEntries, problemsWith);"),
+    ('the counts of compiling not joined',  "const points = withCompileCost(withUncalled(column.points, uncalled.points), compileCost.points);", "const points = withUncalled(column.points, uncalled.points);"),
+    ('an unplotted compile cost unlisted',  ", problemsBeside(compileCost, points))", ", compileCost.problems)"),
+    ('the compile cost\'s toolchain change dropped', "toolchainChange: found.toolchainChange,\n                           seriesChange", "toolchainChange: null,\n                           seriesChange"),
+    ('the compile cost\'s series change dropped', "seriesChange: found.compileCostSeriesChange};", "seriesChange: false};"),
+    ('the compile cost\'s run that of its toolchain alone', "run: `${found.run}/${found.compileCostRun}`,", "run: `${found.run}`,"),
+    ('the compile cost\'s compiler not joined', "compiler: found.record.toolchain.compiler,", "compiler: null,"),
     ('the older overhead checked',          "if (Object.hasOwn(record, 'runner_setup')) {", "if (Object.hasOwn(record, 'runner_overhead')) { problems.push('x'); }\n    if (Object.hasOwn(record, 'runner_setup')) {"),
     ('a missing uncalled count plotted as zero',    "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : null", "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : 0"),
     ('the uncalled count not checked',      '|| record.uncalled_functions < 0', '|| false'),
