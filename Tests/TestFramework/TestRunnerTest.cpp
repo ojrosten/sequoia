@@ -2969,10 +2969,30 @@ namespace sequoia::testing
 
     discarded_materials_remover remover{};
     remover.join();
+
+    const auto refusal{
+      [&remover, &materials]() -> std::string {
+        try
+        {
+          std::ignore = remover.enqueue_removal(materials.discarded_materials_root());
+        }
+        catch(const std::logic_error& e)
+        {
+          return e.what();
+        }
+
+        return {};
+      }()
+    };
+
+    const auto summary{testToRun.execute(std::nullopt, remover)};
     check(equality,
           "The refused removal is a critical failure of the materials' preparation",
-          testToRun.execute(std::nullopt, remover).critical_failures(),
+          summary.critical_failures(),
           1uz);
+
+    check("The critical failure is the joined remover's refusal",
+          !refusal.empty() && summary.failure_messages().contains(refusal));
   }
 
   void test_runner_test::test_exit_statuses()

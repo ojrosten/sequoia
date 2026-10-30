@@ -314,7 +314,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3012
+Tests/TestFramework/TestRunnerTest.cpp, Line 3032
 Exit status 1 is not a runner's
 
 Expected Exception Type:
@@ -324,7 +324,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3012
+Tests/TestFramework/TestRunnerTest.cpp, Line 3032
 Exit status 2 is not a runner's
 
 Expected Exception Type:
@@ -334,7 +334,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3012
+Tests/TestFramework/TestRunnerTest.cpp, Line 3032
 Exit status 23 is not a runner's
 
 Expected Exception Type:
@@ -344,7 +344,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3012
+Tests/TestFramework/TestRunnerTest.cpp, Line 3032
 Exit status 64 is not a runner's
 
 Expected Exception Type:
@@ -354,7 +354,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3012
+Tests/TestFramework/TestRunnerTest.cpp, Line 3032
 Exit status 66 is not a runner's
 
 Expected Exception Type:
@@ -364,7 +364,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3012
+Tests/TestFramework/TestRunnerTest.cpp, Line 3032
 Exit status 77 is not a runner's
 
 Expected Exception Type:
@@ -374,7 +374,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3012
+Tests/TestFramework/TestRunnerTest.cpp, Line 3032
 Exit status 78 is not a runner's
 
 Expected Exception Type:
@@ -384,7 +384,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3012
+Tests/TestFramework/TestRunnerTest.cpp, Line 3032
 Exit status 80 is not a runner's
 
 Expected Exception Type:
@@ -394,7 +394,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3012
+Tests/TestFramework/TestRunnerTest.cpp, Line 3032
 Exit status 112 is not a runner's
 
 Expected Exception Type:
@@ -404,7 +404,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3056
+Tests/TestFramework/TestRunnerTest.cpp, Line 3076
 Bits no flag occupies
 
 Expected Exception Type:
@@ -413,7 +413,7 @@ Unrecognized bits in return_code: 64
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3174
+Tests/TestFramework/TestRunnerTest.cpp, Line 3194
 A wall clock shorter than the critical path's tests
 
 Expected Exception Type:
