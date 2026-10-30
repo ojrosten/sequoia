@@ -52,6 +52,12 @@
 #     of its two runs. A malformed section is a problem, as is one whose runs
 #     executed different numbers of tests. Its boundary breaks the line
 #     independently of the runner_setup's;
+#   - a record's compile_cost gives the instructions of its units, summed,
+#     and each unit's, or null where the section is absent. A section with no
+#     boundary, no compiler, no units, or a unit without a positive count of
+#     instructions is a problem naming each fault. Its series, the boundary,
+#     the compiler and the set of units in whatever order, breaks the line,
+#     independently of the other sections' and of the record's toolchain;
 #   - the counts of uncalled functions join the points of their commits, with
 #     a toolchain of their own; a record of them which has a problem, or lies
 #     at no plotted commit, is listed;
@@ -576,6 +582,67 @@ const names = commits => commits.map(commit => Object.keys(c).find(key => c[key]
     assert.deepStrictEqual(points.map(p => p.leftoverRun),            [0,     0,     1,     1,     1]);
   });
 
+  const compileCostOf = (units, boundary = 'x', version = '23.1.4') =>
+    ({boundary, compiler: {path: '/c', id: 'Clang', version}, units, cpu_model: 'm'});
+
+  await control('the instructions of compiling the units are summed, each unit\'s given, and null without a section', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.compileCostInstructions(record), null);
+    assert.strictEqual(dashboard.compileCostUnits(record), null);
+    record.compile_cost = compileCostOf({'Tests/A.cpp': 300, 'Tests/B.cpp': 20, 'Tests/C.cpp': 1});
+    assert.strictEqual(dashboard.compileCostInstructions(record), 321);
+    assert.deepStrictEqual(dashboard.compileCostUnits(record), {'Tests/A.cpp': 300, 'Tests/B.cpp': 20, 'Tests/C.cpp': 1});
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  const compileCostProblem = text => `it has a compile_cost ${text}`;
+  for (const [name, section, problems] of [
+    ['null',                          null,                                      ['with no boundary']],
+    ['a boundary which is no text',   compileCostOf({'Tests/A.cpp': 3}, 5),       ['with no boundary']],
+    ['no units',                      {...compileCostOf({}), units: undefined},   ['with no units']],
+    ['units which are no object',     compileCostOf('ab'),                        ['with no units']],
+    ['units which are a list',        compileCostOf([3]),                         ['with no units']],
+    ['units which are empty',         compileCostOf({}),                          ['with no units']],
+    ['no compiler',                   {...compileCostOf({'Tests/A.cpp': 3}), compiler: undefined}, ['with no compiler']],
+    ['no compiler and no units',      {boundary: 'x'},                            ['with no compiler', 'with no units']],
+    ['no compiler and a unit of zero instructions', {...compileCostOf({'Tests/A.cpp': 0}), compiler: 'clang'},
+     ['with no compiler', 'whose unit Tests/A.cpp has no positive count of instructions']],
+    ['a unit of zero instructions',   compileCostOf({'Tests/A.cpp': 3, 'Tests/B.cpp': 0}),   ['whose unit Tests/B.cpp has no positive count of instructions']],
+    ['a unit of negative instructions', compileCostOf({'Tests/A.cpp': -1}),       ['whose unit Tests/A.cpp has no positive count of instructions']],
+    ['a unit of fractional instructions', compileCostOf({'Tests/A.cpp': 1.5}),    ['whose unit Tests/A.cpp has no positive count of instructions']],
+    ['a unit of text instructions',   compileCostOf({'Tests/A.cpp': '5'}),        ['whose unit Tests/A.cpp has no positive count of instructions']],
+    ['two units without instructions', compileCostOf({'Tests/A.cpp': null, 'Tests/B.cpp': 4, 'Tests/C.cpp': 0}),
+     ['whose unit Tests/A.cpp has no positive count of instructions', 'whose unit Tests/C.cpp has no positive count of instructions']]
+  ]) {
+    await control(`a record with a compile_cost of ${name} is a problem naming it, and no other`, () => {
+      const record = recordOf('F5');
+      record.compile_cost = section;
+      assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), problems.map(compileCostProblem));
+    });
+  }
+
+  await control('the compile cost\'s boundary, compiler and units break the line, whatever their order, independently of the rest', () => {
+    const summary = {date: 'd', subject: 's'};
+    const point = (boundary, units, leftoverBoundary, version = '23.1.4', toolchainVersion = '15.2.0') => {
+      const record = recordOf('F4');
+      record.toolchain = {...record.toolchain, compiler: {...record.toolchain.compiler, version: toolchainVersion}};
+      if (boundary !== null) {
+        record.compile_cost = compileCostOf(Object.fromEntries(units.map(unit => [unit, 7])), boundary, version);
+      }
+      if (leftoverBoundary !== null) record.leftover_materials_setup = {...leftoverOf(10), boundary: leftoverBoundary};
+      return {commit: c.F4, summary, record};
+    };
+    const points = dashboard.pointsOf([point('b', ['A', 'B'], 'p'), point('b', ['B', 'A'], 'q'), point(null, [], 'q'),
+                                       point('b', ['A', 'B', 'C'], 'q'), point('b2', ['A', 'B', 'C'], 'q'),
+                                       point('b2', ['A', 'B', 'C'], 'q', '23.1.5'),
+                                       point('b2', ['A', 'B', 'C'], 'q', '23.1.5', '15.3.0')]);
+    assert.deepStrictEqual(points.map(p => p.compileCostSeriesChange), [false, false, false, true, true, true, false]);
+    assert.deepStrictEqual(points.map(p => p.compileCostRun),          [0,     0,     0,     1,    2,    3,    3]);
+    assert.deepStrictEqual(points.map(p => p.toolchainChange !== null), [false, false, false, false, false, false, true]);
+    assert.deepStrictEqual(points.map(p => p.leftoverBoundaryChange),  [false, true,  false, false, false, false, false]);
+    assert.deepStrictEqual(points.map(p => p.leftoverRun),             [0,     1,     1,     1,     1,     1,     1]);
+  });
+
   await control('each event is null in a record without the runner\'s setup, and per test otherwise', () => {
     const record = recordOf('F5');
     for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
@@ -921,7 +988,7 @@ MUTATIONS = [
     ('a failed run left out of the leftover cost', "const section = record.leftover_materials_setup;\n    if (section.leftover_entries === 0) return null;", "const section = record.leftover_materials_setup;\n    if (section.leftover_entries === 0 || leftoverMaterialsSetupFirstFailure(record) !== 0) return null;"),
     ('a missing section has an exit status', "if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;\n    const section = record.leftover_materials_setup;\n    return section.without", "const section = record.leftover_materials_setup;\n    return section.without"),
     ('the leftover section not checked',    "if (Object.hasOwn(record, 'leftover_materials_setup')) problems.push(", "if (false) problems.push("),
-    ('the leftover boundary not checked',   "if (!isObject(section) || typeof section.boundary !== 'string') return", "if (!isObject(section)) return"),
+    ('the leftover boundary not checked',   "const name = 'it has a leftover_materials_setup';\n    if (!isObject(section) || typeof section.boundary !== 'string') return", "const name = 'it has a leftover_materials_setup';\n    if (!isObject(section)) return"),
     ('the leftover entries not checked',    "if (!isCount(section.leftover_entries)) problems.push", "if (false) problems.push"),
     ('fractional leftover entries accepted', "if (!isCount(section.leftover_entries)) problems.push", "if (!(typeof section.leftover_entries === 'number' && section.leftover_entries >= 0)) problems.push"),
     ('a run absent from the leftover section accepted', "if (!isObject(run)) { problems.push(`${name} with no ${runName}`); return; }", "if (!isObject(run)) return;"),
@@ -934,7 +1001,27 @@ MUTATIONS = [
     ('different numbers of tests accepted', "&& runs[0].tests !== runs[1].tests) {", "&& false) {"),
     ('the leftover boundary read from the runner\'s setup', "leftoverBoundaryCounter(Object.hasOwn(record, 'leftover_materials_setup') ? record.leftover_materials_setup.boundary : null)", "leftoverBoundaryCounter(Object.hasOwn(record, 'runner_setup') ? record.runner_setup.boundary : null)"),
     ('one count of boundaries for both sections', "const leftoverBoundaryCounter = boundaryCounter();", "const leftoverBoundaryCounter = setupBoundaryCounter;"),
-    ('the leftover series not counted',     "toolchainChange, setupRun, boundaryChange,\n              leftoverRun, leftoverBoundaryChange};", "toolchainChange, setupRun, boundaryChange,\n              leftoverRun: 0, leftoverBoundaryChange};"),
+    ('the leftover series not counted',     "toolchainChange, setupRun, boundaryChange,\n              leftoverRun, leftoverBoundaryChange,", "toolchainChange, setupRun, boundaryChange,\n              leftoverRun: 0, leftoverBoundaryChange,"),
+    ('the compile cost not checked',        "if (Object.hasOwn(record, 'compile_cost')) problems.push(", "if (false) problems.push("),
+    ('the compile cost\'s boundary not checked', "const name = 'it has a compile_cost';\n    if (!isObject(section) || typeof section.boundary !== 'string') return", "const name = 'it has a compile_cost';\n    if (!isObject(section)) return"),
+    ('no units accepted',                   " || Object.keys(section.units).length === 0) return", ") return"),
+    ('units of any kind accepted',          "if (!isObject(section.units) || Object.keys", "if (section.units === undefined || Object.keys"),
+    ('zero instructions of a unit accepted', "isCount(instructions) && instructions > 0 ? []", "isCount(instructions) ? []"),
+    ('a unit\'s instructions not checked',  "isCount(instructions) && instructions > 0 ? []", "true ? []"),
+    ('the first unit\'s fault alone',       "...Object.entries(section.units).flatMap(", "...Object.entries(section.units).slice(0, 1).flatMap("),
+    ('the compiler not checked',            "const compilerProblems = isObject(section.compiler) ? []", "const compilerProblems = true ? []"),
+    ('no compiler unsaid beside no units',  "return [...compilerProblems, `${name} with no units`];", "return [`${name} with no units`];"),
+    ('no compiler unsaid beside a unit\'s fault', "return [...compilerProblems, ...Object.entries", "return [...Object.entries"),
+    ('the largest unit plotted',            "reduce((sum, instructions) => sum + instructions, 0)", "reduce((sum, instructions) => Math.max(sum, instructions), 0)"),
+    ('a missing compile cost summed',       "if (!Object.hasOwn(record, 'compile_cost')) return null;\n    return Object.values", "return Object.values"),
+    ('a missing compile cost has units',    "if (!Object.hasOwn(record, 'compile_cost')) return null;\n    return record.compile_cost.units;", "if (!Object.hasOwn(record, 'compile_cost')) return {};\n    return record.compile_cost.units;"),
+    ('the units no part of the series',     "canonical([section.boundary, section.compiler, Object.keys(section.units).sort()])", "canonical([section.boundary, section.compiler])"),
+    ('the units\' order part of the series', "Object.keys(section.units).sort()])", "Object.keys(section.units)])"),
+    ('the boundary no part of the series',  "canonical([section.boundary, section.compiler, Object.keys", "canonical([section.compiler, Object.keys"),
+    ('the compiler no part of the series',  "canonical([section.boundary, section.compiler, Object.keys", "canonical([section.boundary, Object.keys"),
+    ('a missing compile cost given a series', "if (!Object.hasOwn(record, 'compile_cost')) return null;\n    const section = record.compile_cost;\n    return canonical", "const section = record.compile_cost;\n    return canonical"),
+    ('one count of series for the compile cost and the leftovers', "const compileCostSeriesCounter = boundaryCounter();", "const compileCostSeriesCounter = leftoverBoundaryCounter;"),
+    ('the compile cost series not counted', "compileCostRun, compileCostSeriesChange};", "compileCostRun: 0, compileCostSeriesChange};"),
     ('the older overhead checked',          "if (Object.hasOwn(record, 'runner_setup')) {", "if (Object.hasOwn(record, 'runner_overhead')) { problems.push('x'); }\n    if (Object.hasOwn(record, 'runner_setup')) {"),
     ('a missing uncalled count plotted as zero',    "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : null", "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : 0"),
     ('the uncalled count not checked',      '|| record.uncalled_functions < 0', '|| false'),

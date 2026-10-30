@@ -166,6 +166,20 @@
           is marked by a rule.</p></figcaption>
       <div class="plot" id="leftover-plot"></div>
     </figure>
+    <figure class="card" id="compile-figure">
+      <figcaption><h2>Instructions of compiling three units with clang</h2>
+        <p>The instructions <code>valgrind --tool=cachegrind</code> counts in compiling three of TestAll's translation
+          units with clang, summed. The units are chosen for the machinery each instantiates: the test framework's
+          checks of semantics and of allocations, the graphs, and the concepts of <code>Spaces.hpp</code>. The tooltip
+          names them, gives each unit's count, and names the compiler. Unlike the time a compilation takes, the count
+          moves by at most about a part in a million from one runner to another. The count is clang's, while the rest of
+          the record is GCC's build, since a cost may be one compiler's alone: at the parent of f6d204905, the clause
+          <code>bounds_for</code> made clang 15 times slower to compile one of these units, and its count 19 times
+          larger, while GCC was no slower. Points whose record has no count are left out, and a line joins those which
+          have one. A change of the series (the compiler, the units, or what is counted, the <code>boundary</code>)
+          breaks the line, with a rule.</p></figcaption>
+      <div class="plot" id="compile-plot"></div>
+    </figure>
     <figure class="card" id="runner-figure">
       <figcaption><h2>The runner's setup of a test: instructions per test</h2>
         <p><code>valgrind --tool=callgrind --collect-systime=yes</code> counts one run of
@@ -542,6 +556,21 @@
     breakLabel: point => point.leftoverBoundaryChange ? 'boundary' : 'toolchain'
   };
 
+  // The instructions of compiling the units are summed. A record can lack
+  // them, being older than them or its measurement having failed, and the
+  // line joins the points which have them. The line breaks where the series
+  // changes: the compiler, the units or the boundary of the count. The
+  // record's toolchain is that of the build, not of the count, so a change of
+  // it does not break the line
+  const compileCostMeasure = {
+    name: 'instructions of compiling the units',
+    value: symbolDashboard.compileCostInstructions,
+    unit: 'instructions',
+    joinsGaps: true, runOf: point => point.compileCostRun,
+    changeOf: point => point.compileCostSeriesChange,
+    breakLabel: () => 'series'
+  };
+
   function changeOn(index, measure) {
     if (index === 0) return null;
     const before = measure.value(state.points[index - 1].record);
@@ -561,6 +590,16 @@
                           + ` and ${integer.format(runs.without_leftovers.instructions)} without; the runs executed`
                           + ` ${integer.format(runs.with_leftovers.tests)} tests, with exit statuses ${runs.with_leftovers.exit_status}`
                           + ` with leftovers and ${runs.without_leftovers.exit_status} without`)];
+  }
+
+  // The tooltip's lines for a record with a `compile_cost`
+  function compileCostTooltipLines(record) {
+    const units = symbolDashboard.compileCostUnits(record);
+    const compiler = record.compile_cost.compiler;
+    return [
+      element('span', {}, `${integer.format(compileCostMeasure.value(record))} instructions of compiling the units`
+                          + ` with ${compiler.id} ${compiler.version}:`),
+      ...Object.entries(units).map(([unit, instructions]) => element('span', {}, `${integer.format(instructions)} for ${unit}`))];
   }
 
   function hover(index, from) {
@@ -585,6 +624,7 @@
                                  + `; the run executed ${integer.format(symbolDashboard.runnerSetupTests(point.record))} tests`
                                  + ` and had exit status ${symbolDashboard.runnerSetupExitStatus(point.record)}`)]),
       ...(symbolDashboard.leftoverMaterialsSetupEntries(point.record) === null ? [] : leftoverTooltipLines(point.record)),
+      ...(symbolDashboard.compileCostUnits(point.record) === null ? [] : compileCostTooltipLines(point.record)),
       ...(measures[3].value(point.record) === null ? []
           : [element('span', {}, `${integer.format(measures[3].value(point.record))} uncalled functions in Source`)]),
       element('span', {}, `${short(point.commit)} · ${longDate(point.date)}`),
@@ -630,6 +670,9 @@
     const hasLeftover = state.points.some(point => symbolDashboard.leftoverMaterialsSetupEntries(point.record) !== null);
     document.getElementById('leftover-figure').hidden = !hasLeftover;
     if (hasLeftover) state.charts.push(drawChart(document.getElementById('leftover-plot'), leftoverMeasure, 120, true));
+    const hasCompileCost = state.points.some(point => compileCostMeasure.value(point.record) !== null);
+    document.getElementById('compile-figure').hidden = !hasCompileCost;
+    if (hasCompileCost) state.charts.push(drawChart(document.getElementById('compile-plot'), compileCostMeasure, 180, true));
     const hasUncalled = state.points.some(point => measures[3].value(point.record) !== null);
     document.getElementById('uncalled-figure').hidden = !hasUncalled;
     if (hasUncalled) state.charts.push(drawChart(document.getElementById('uncalled-plot'), measures[3], 180, true));

@@ -6,7 +6,8 @@
 // A symbol-table record is stored as symbol-table/<column>/<commit>.json on
 // the metrics branch. scripts/symbol_table_report.py and
 // scripts/symbol_table_provenance.py say what it holds, and symbol-table.yml
-// adds `prune_dependency_analysis`, `runner_setup` and `leftover_materials_setup`.
+// adds `prune_dependency_analysis`, `runner_setup`, `leftover_materials_setup`
+// and `compile_cost`.
 /** @param {Record<string, any>} exports */
 (function (exports) {
   'use strict';
@@ -26,7 +27,8 @@
    * @typedef {{path: string, before: any, after: any}} Difference
    * @typedef {{commit: string, date: string, subject: string, record: JsonRecord, run: number,
    *            toolchainChange: Difference[] | null, setupRun: number, boundaryChange: boolean,
-   *            leftoverRun: number, leftoverBoundaryChange: boolean}} Point
+   *            leftoverRun: number, leftoverBoundaryChange: boolean, compileCostRun: number,
+   *            compileCostSeriesChange: boolean}} Point
    * @typedef {{path: string, problems: string[]}} Unplottable
    * @typedef {{tree(): Promise<Tree | null>, commits(start: string | null): Promise<ApiCommit[]>,
    *            record(path: string): Promise<JsonRecord>}} Source
@@ -201,6 +203,8 @@
    *    `leftoverMaterialsSetupRunNames` a run with a positive count of
    *    instructions, a positive number of tests and an exit status. The two
    *    runs executed the same number of tests;
+   *  - `compile_cost`, with a boundary, a compiler, and units: one or more,
+   *    each with a positive count of instructions;
    *  - `prune_analysis`, a field no longer written, with an invocation and a
    *    count of instructions. It is checked and not plotted;
    *  - `runner_overhead`, a field no longer written, which is neither checked
@@ -244,6 +248,7 @@
       }
     }
     if (Object.hasOwn(record, 'leftover_materials_setup')) problems.push(...leftoverMaterialsSetupProblems(record.leftover_materials_setup));
+    if (Object.hasOwn(record, 'compile_cost')) problems.push(...compileCostProblems(record.compile_cost));
     const objects = record.defined_symbols_by_object;
     if (objects === null || typeof objects !== 'object' || !Object.values(objects).every(isCount)) {
       problems.push('it has no count of defined symbols for each object');
@@ -362,6 +367,63 @@
     if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;
     const section = record.leftover_materials_setup;
     return section.without_leftovers.exit_status !== 0 ? section.without_leftovers.exit_status : section.with_leftovers.exit_status;
+  }
+
+  /**
+   * Lists what is wrong with `section`, a record's `compile_cost`.
+   *
+   * @param {any} section
+   * @returns {string[]}
+   */
+  function compileCostProblems(section) {
+    const name = 'it has a compile_cost';
+    if (!isObject(section) || typeof section.boundary !== 'string') return [`${name} with no boundary`];
+    const compilerProblems = isObject(section.compiler) ? [] : [`${name} with no compiler`];
+    if (!isObject(section.units) || Object.keys(section.units).length === 0) return [...compilerProblems, `${name} with no units`];
+    return [...compilerProblems, ...Object.entries(section.units).flatMap(([unit, instructions]) =>
+      isCount(instructions) && instructions > 0 ? [] : [`${name} whose unit ${unit} has no positive count of instructions`])];
+  }
+
+  /**
+   * Returns the instructions of compiling the units of `record`'s
+   * `compile_cost`, summed, or null if the record has no `compile_cost` (an
+   * old record, or one whose measurement failed). Such a record is left out
+   * of the series, not plotted as zero.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function compileCostInstructions(record) {
+    if (!Object.hasOwn(record, 'compile_cost')) return null;
+    return Object.values(record.compile_cost.units).reduce((sum, instructions) => sum + instructions, 0);
+  }
+
+  /**
+   * Returns the instructions of compiling each unit of `record`'s
+   * `compile_cost`, keyed by the unit, or null if the record has no
+   * `compile_cost`.
+   *
+   * @param {JsonRecord} record
+   * @returns {Record<string, number> | null}
+   */
+  function compileCostUnits(record) {
+    if (!Object.hasOwn(record, 'compile_cost')) return null;
+    return record.compile_cost.units;
+  }
+
+  /**
+   * Returns the series of `record`'s `compile_cost`: its boundary, its
+   * compiler and the set of its units, as text. Two counts compare only if
+   * their series are equal. Returns null if the record has no
+   * `compile_cost`.
+   *
+   * @param {JsonRecord} record
+   * @returns {string | null}
+   */
+  function compileCostSeries(record) {
+    if (!Object.hasOwn(record, 'compile_cost')) return null;
+    const section = record.compile_cost;
+    return canonical([section.boundary, section.compiler, Object.keys(section.units).sort()]);
   }
 
   /**
@@ -516,7 +578,9 @@
    * among the points which have a `runner_setup`, and `boundaryChange` is
    * whether the point's boundary is the first of a different one.
    * `leftoverRun` and `leftoverBoundaryChange` are the same for the points
-   * which have a `leftover_materials_setup`.
+   * which have a `leftover_materials_setup`, and `compileCostRun` and
+   * `compileCostSeriesChange` for the points which have a `compile_cost`,
+   * whose compileCostSeries stands for the boundary.
    *
    * @param {OrderedRecord[]} orderedRecords
    * @returns {Point[]}
@@ -525,6 +589,7 @@
     let run = 0;
     const setupBoundaryCounter    = boundaryCounter();
     const leftoverBoundaryCounter = boundaryCounter();
+    const compileCostSeriesCounter = boundaryCounter();
     return orderedRecords.map(({commit, summary, record}, index) => {
       const previous   = orderedRecords[index - 1];
       const toolchainChange = previous && canonical(previous.record.toolchain) !== canonical(record.toolchain)
@@ -535,8 +600,9 @@
         setupBoundaryCounter(Object.hasOwn(record, 'runner_setup') ? record.runner_setup.boundary : null);
       const {run: leftoverRun, change: leftoverBoundaryChange} =
         leftoverBoundaryCounter(Object.hasOwn(record, 'leftover_materials_setup') ? record.leftover_materials_setup.boundary : null);
+      const {run: compileCostRun, change: compileCostSeriesChange} = compileCostSeriesCounter(compileCostSeries(record));
       return {commit, date: summary.date, subject: summary.subject, record, run, toolchainChange, setupRun, boundaryChange,
-              leftoverRun, leftoverBoundaryChange};
+              leftoverRun, leftoverBoundaryChange, compileCostRun, compileCostSeriesChange};
     });
   }
 
@@ -834,6 +900,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap, scaleOf,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneStampingExitStatus, leftoverMaterialsSetupRunNames, leftoverMaterialsSetupPerEntry, leftoverMaterialsSetupBlindLabel, leftoverMaterialsSetupEntries, leftoverMaterialsSetupRuns, leftoverMaterialsSetupFirstFailure, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneStampingExitStatus, leftoverMaterialsSetupRunNames, leftoverMaterialsSetupPerEntry, leftoverMaterialsSetupBlindLabel, leftoverMaterialsSetupEntries, leftoverMaterialsSetupRuns, leftoverMaterialsSetupFirstFailure, compileCostInstructions, compileCostUnits, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));
