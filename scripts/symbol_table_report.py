@@ -207,6 +207,14 @@ def standard_library(record, record_path):
     return named[0]
 
 
+def compiler_of(record):
+    """Returns the path, id and version of the C++ compiler which the
+    compiler record `record` names."""
+    return {"path":    record["CMAKE_CXX_COMPILER"],
+            "id":      record["CMAKE_CXX_COMPILER_ID"],
+            "version": record["CMAKE_CXX_COMPILER_VERSION"]}
+
+
 def ninja(cache, build_dir, *arguments):
     """Returns the output of the build directory's ninja, run with `arguments`."""
     return run([entry(cache, "CMAKE_MAKE_PROGRAM", "CMakeCache.txt"), "-C", build_dir, *arguments])
@@ -314,9 +322,7 @@ def record_of(build_dir, target):
         "clean": run(["git", "-C", root, "status", "--porcelain", "--untracked-files=all"]) == "",
         "target": target,
         "toolchain": {
-            "compiler": {"path":    record["CMAKE_CXX_COMPILER"],
-                         "id":      record["CMAKE_CXX_COMPILER_ID"],
-                         "version": record["CMAKE_CXX_COMPILER_VERSION"]},
+            "compiler": compiler_of(record),
             "linker":   {"path":    record["CMAKE_CXX_COMPILER_LINKER"],
                          "id":      record["CMAKE_CXX_COMPILER_LINKER_ID"],
                          "version": record["CMAKE_CXX_COMPILER_LINKER_VERSION"]},
