@@ -52,7 +52,16 @@ validate [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 271
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 259
+Mismatched target indices
+
+Expected Exception Type:
+[std::logic_error]
+validate [node: 0, edge: 0]: Reciprocated target index 2 does not match 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 278
 cbegin_edges throws for empty graph
 
 Expected Exception Type:
@@ -61,7 +70,7 @@ cbegin_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 279
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 286
 cend_edges throws for empty graph
 
 Expected Exception Type:
@@ -70,7 +79,7 @@ cend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 287
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 294
 crbegin_edges throws for empty graph
 
 Expected Exception Type:
@@ -79,7 +88,7 @@ crbegin_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 295
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 302
 crend_edges throws for empty graph
 
 Expected Exception Type:
@@ -88,7 +97,7 @@ crend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 303
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 310
 cedges throws for empty graph
 
 Expected Exception Type:
@@ -97,7 +106,7 @@ cedges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 311
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 318
 swapping nodes throws for empty graph
 
 Expected Exception Type:
@@ -106,7 +115,7 @@ swap_nodes: at least one node index [0, 0] out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 319
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 326
 joining nodes throws for empty graph
 
 Expected Exception Type:
@@ -115,7 +124,7 @@ join: at least one node index [0, 0] out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 353
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 360
 cbegin_edges throws when index is out of range
 
 Expected Exception Type:
@@ -124,7 +133,7 @@ cbegin_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 361
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 368
 cend_edges throws when index is out of range
 
 Expected Exception Type:
@@ -133,7 +142,7 @@ cend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 369
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 376
 crbegin_edges throws when index is out of range
 
 Expected Exception Type:
@@ -142,7 +151,7 @@ crbegin_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 377
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 384
 crend_edges throws when index is out of range
 
 Expected Exception Type:
@@ -151,7 +160,7 @@ crend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 385
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 392
 cedges throws when index is out of range
 
 Expected Exception Type:
@@ -160,7 +169,7 @@ cedges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 393
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 400
 swapping nodes throws if first index out of range
 
 Expected Exception Type:
@@ -169,7 +178,7 @@ swap_nodes: at least one node index [1, 0] out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 401
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 408
 swapping nodes throws if second index out of range
 
 Expected Exception Type:
@@ -178,7 +187,7 @@ swap_nodes: at least one node index [0, 1] out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 409
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 416
 joining nodes throws if first index out of range
 
 Expected Exception Type:
@@ -187,7 +196,7 @@ join: at least one node index [1, 0] out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 417
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 424
 joining nodes throws if second index out of range
 
 Expected Exception Type:
@@ -196,7 +205,7 @@ join: at least one node index [0, 1] out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 425
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 432
 inserting join throws if second index out of range
 
 Expected Exception Type:
@@ -205,7 +214,7 @@ insert_join: insertion position 2 out of range for node 0 - max index is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 1519
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 1526
 Sorting a range which ends beyond the last node throws
 
 Expected Exception Type:
@@ -214,7 +223,7 @@ sort_nodes: node index 3 out of range - graph order is 3
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 1606
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 1613
 The comparator's exception escapes the sort
 
 Expected Exception Type:
