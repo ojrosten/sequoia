@@ -8,6 +8,7 @@
 /** \file */
 
 #include "ErasedFunctionRegularTest.hpp"
+#include "Utilities/TestUtilities.hpp"
 
 #include <algorithm>
 #include <array>
@@ -506,15 +507,10 @@ namespace sequoia::testing
   {
     using function_t = erased_function<int() const>;
 
-    // The message of a bad_function_call is the standard library's own, and the three spell it differently
-    constexpr auto libraryMessage{
-      [](const project_paths&, std::string) -> std::string { return "<the standard library's message>"; }
-    };
-
     check_exception_thrown<std::bad_function_call>(
       "Invoking an empty function",
       []() { return function_t{}(); },
-      libraryMessage
+      elide_standard_library_message
     );
 
     function_t source{[]() { return 1; }};
@@ -522,7 +518,7 @@ namespace sequoia::testing
     check_exception_thrown<std::bad_function_call>(
       "Invoking the source of a move",
       [&source]() { return source(); },
-      libraryMessage
+      elide_standard_library_message
     );
   }
 

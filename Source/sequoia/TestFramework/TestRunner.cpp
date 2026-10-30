@@ -196,10 +196,11 @@ namespace sequoia::testing
       if(const auto num{weights.size()}; num > 1)
       {
         concurrency::thread_pool<void> pool{std::ranges::min(num, p.num)};
-        auto futures{
-              std::views::transform(weights, [&pool, fn](auto& wt){ return pool.push([&wt, fn](){ return fn(wt); }); })
-            | std::ranges::to<std::vector>()
-        };
+        auto enqueueTask{[&pool, fn](auto& wt){ return pool.push([&wt, fn](){ return fn(wt); }); }};
+
+        // An algorithm, not a view, since each push has effects
+        std::vector<std::future<void>> futures(num);
+        std::ranges::transform(weights, futures.begin(), enqueueTask);
 
         for(auto& f : futures) f.get();
       }

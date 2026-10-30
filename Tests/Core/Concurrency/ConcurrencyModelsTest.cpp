@@ -8,11 +8,18 @@
 #include "ConcurrencyModelsTest.hpp"
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
+#include <algorithm>
+#include <atomic>
+#include <format>
 #include <future>
+#include <latch>
 #include <queue>
 #include <semaphore>
+#include <stdexcept>
 #include <thread>
+#include <tuple>
 #include <utility>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -21,6 +28,13 @@ namespace sequoia::testing
   namespace
   {
     using int_task = std::packaged_task<int()>;
+
+    /** \brief Waits for each future, and returns the sum of their values. */
+    [[nodiscard]]
+    int sum_results(std::vector<std::future<int>> futures)
+    {
+      return std::ranges::fold_left(futures, 0, [](int sum, std::future<int>& f){ return sum + f.get(); });
+    }
 
     /** \brief A queue whose first push stalls until `release_stall` is called.
 
@@ -166,17 +180,30 @@ namespace sequoia::testing
     test_try_lock_successes();
     test_try_lock_failures();
     test_pushes_wake_a_waiting_pop();
+    test_pushes_to_a_finished_queue_throw();
+    test_thread_pools_refuse_zero_threads();
+
+    test_every_task_pushed_from_several_threads_runs<thread_pool<int>>("a queue for each thread");
+    test_every_task_pushed_from_several_threads_runs<thread_pool_with_shared_queue<int>>("a shared queue");
+
+    test_every_push_during_join_runs_or_throws<thread_pool<int>>("a queue for each thread");
+    test_every_push_during_join_runs_or_throws<thread_pool_with_shared_queue<int>>("a shared queue");
+
+    test_a_push_after_join_throws<thread_pool<int>>("a queue for each thread");
+    test_a_push_after_join_throws<thread_pool_with_shared_queue<int>>("a shared queue");
 
     test_exceptions<thread_pool<void>>("pool_2M", 2u);
-    test_exceptions<thread_pool<void, false>>("pool_2", 2u);
+    test_exceptions<thread_pool_with_shared_queue<void>>("pool_2", 2u);
     test_exceptions<asynchronous<void>>("async");
 
     test_exceptions<thread_pool<int>>("pool_2M", 2u);
-    test_exceptions<thread_pool<int, false>>("pool_2", 2u);
+    test_exceptions<thread_pool_with_shared_queue<int>>("pool_2", 2u);
     test_exceptions<asynchronous<int>>("async");
 
+    test_execution<thread_pool<int>>("pool_1M", 1u);
+    test_execution<thread_pool_with_shared_queue<int>>("pool_1", 1u);
     test_execution<thread_pool<int>>("pool_2M", 2u);
-    test_execution<thread_pool<int, false>>("pool_2", 2u);
+    test_execution<thread_pool_with_shared_queue<int>>("pool_2", 2u);
     test_execution<asynchronous<int>>("async");
 
     test_serial_exceptions();
@@ -325,6 +352,127 @@ namespace sequoia::testing
       waitingPop.wait_for_task()();
       check(equality, "The waiting pop yields the try-pushed task", tryPushedFuture.get(), 2);
     }
+  }
+
+  void threading_models_test::test_pushes_to_a_finished_queue_throw()
+  {
+    task_queue<int> q{};
+    q.finish();
+
+    check_exception_thrown<std::logic_error>("A push to a finished queue throws",
+                                             [&q](){ q.push(int_task{[](){ return 1; }}); });
+
+    // std::mutex::try_lock may fail spuriously, so the try-push is repeated
+    // until it takes the mutex
+    auto tryPushUntilLocked{[&q](){ while(!q.push(int_task{[](){ return 2; }}, std::try_to_lock)) {} }};
+    check_exception_thrown<std::logic_error>("A try-push to a finished queue throws once it takes the mutex",
+                                             tryPushUntilLocked);
+  }
+
+  void threading_models_test::test_thread_pools_refuse_zero_threads()
+  {
+    check_exception_thrown<std::invalid_argument>("A thread pool with a queue for each thread refuses zero threads",
+                                                  [](){ thread_pool<int>{0u}; });
+
+    check_exception_thrown<std::invalid_argument>("A thread pool with a shared queue refuses zero threads",
+                                                  [](){ thread_pool_with_shared_queue<int>{0u}; });
+  }
+
+  template<class ThreadPool>
+  void threading_models_test::test_every_task_pushed_from_several_threads_runs(std::string_view poolKind)
+  {
+    constexpr int numPushers{4}, pushesPerPusher{100}, numThreads{2};
+
+    ThreadPool pool{numThreads};
+    std::latch startingGate{numPushers};
+
+    auto pushAndSum{
+      [&pool, &startingGate](){
+        std::vector<std::future<int>> futures(pushesPerPusher);
+        startingGate.arrive_and_wait();
+
+        // An algorithm, not a view, since each push has effects
+        std::ranges::generate(futures, [&pool](){ return pool.push([](){ return 1; }); });
+        return sum_results(std::move(futures));
+      }
+    };
+
+    // An algorithm, not a view, since each launch starts a thread
+    std::vector<std::future<int>> pusherSums(numPushers);
+    std::ranges::generate(pusherSums, [&pushAndSum](){ return std::async(std::launch::async, pushAndSum); });
+
+    // A data race between pushes loses no task, so only ThreadSanitizer sees
+    // it. This check sees a task that a push loses.
+    check(equality,
+          std::format("Each of {} threads pushes {} tasks at once to a {}-thread pool with {}, and every task runs",
+                      numPushers,
+                      pushesPerPusher,
+                      numThreads,
+                      poolKind),
+          sum_results(std::move(pusherSums)),
+          numPushers * pushesPerPusher);
+  }
+
+  template<class ThreadPool>
+  void threading_models_test::test_every_push_during_join_runs_or_throws(std::string_view poolKind)
+  {
+    constexpr int numPushers{2}, maxPushesPerPusher{10000}, numThreads{2};
+
+    std::atomic<int> runs{};
+    ThreadPool pool{numThreads};
+    std::latch firstPushesAccepted{numPushers};
+
+    // Each pusher stops at its bound, so a pool which never refuses fails the
+    // check below, rather than hanging
+    auto pushUntilRefused{
+      [&pool, &runs, &firstPushesAccepted]() {
+        int accepted{};
+        try
+        {
+          while(accepted < maxPushesPerPusher)
+          {
+            std::ignore = pool.push([&runs](){ return ++runs; });
+            if(++accepted == 1)
+              firstPushesAccepted.count_down();
+          }
+        }
+        catch(const std::logic_error&)
+        {
+        }
+
+        return accepted;
+      }
+    };
+
+    auto launchPusher{[&pushUntilRefused](){ return std::async(std::launch::async, pushUntilRefused); }};
+
+    // An algorithm, not a view, since each launch starts a thread
+    std::vector<std::future<int>> acceptedCounts(numPushers);
+    std::ranges::generate(acceptedCounts, launchPusher);
+
+    firstPushesAccepted.wait();
+    pool.join();
+
+    // This check sees an accepted task that never runs. A check for a finished
+    // queue made outside the mutex loses a task only rarely, but
+    // ThreadSanitizer reports its race.
+    check(equality,
+          std::format("While {} threads push to a {}-thread pool with {} and it joins, every push it accepts runs",
+                      numPushers,
+                      numThreads,
+                      poolKind),
+          sum_results(std::move(acceptedCounts)),
+          runs.load());
+  }
+
+  template<class ThreadPool>
+  void threading_models_test::test_a_push_after_join_throws(std::string_view poolKind)
+  {
+    ThreadPool pool{2u};
+    pool.join();
+
+    check_exception_thrown<std::logic_error>(std::format("A push after join to a pool with {} throws", poolKind),
+                                             [&pool](){ return pool.push([](){ return 1; }); });
   }
 
   template<class ThreadModel, class... Args>

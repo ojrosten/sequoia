@@ -32,6 +32,13 @@ namespace sequoia::testing
     return message;
   }
 
+  /** \brief Returns a placeholder in place of any message. */
+  [[nodiscard]]
+  inline std::string elide_standard_library_message(const project_paths&, std::string)
+  {
+    return "[Message elided: its wording varies by standard library]";
+  }
+
   /** \brief A file with the given contents, which exists for precisely the lifetime of the object. */
   class transient_file
   {

@@ -108,7 +108,7 @@ namespace sequoia::testing
 
     void test_discarded_materials_removal_failure();
 
-    void test_discarded_materials_removal_exception();
+    void test_discarded_materials_removal_refusal();
 
     void test_nested_suite();
 
