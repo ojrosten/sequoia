@@ -17,7 +17,7 @@ validate: Odd number of loop edges for node 0
 =======================================
 
 Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 175
-Target index out of range of an edge listed before one in range
+Target index of edge out of range, for an edge listed before one in range
 
 Expected Exception Type:
 [std::out_of_range]
