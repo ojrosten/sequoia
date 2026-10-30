@@ -15,7 +15,9 @@ simulation. Cachegrind follows the compiler's driver into each process the
 driver starts, such as the compiler proper and the assembler. A source's
 count is the instructions (cachegrind's Ir) of all these processes, summed.
 The command writes its object, and its file of dependencies if it names one,
-to /dev/null, so the script leaves the build directory as it was. Each
+to /dev/null, so the script leaves the build directory as it was. A compiler
+is given the options COMPILER_OPTIONS names for its id first: clang reads no
+configuration file. Each
 compilation runs in a fixed environment, COMPILATION_ENVIRONMENT, not the
 caller's.
 
@@ -69,27 +71,39 @@ COMPILATION_ENVIRONMENT = {"PATH": "/usr/bin:/bin", "LC_ALL": "C", "TMPDIR": "/t
 # The options which valgrind is given, before the command it runs.
 VALGRIND_OPTIONS = ["--tool=cachegrind", "--cache-sim=no", "--trace-children=yes"]
 
+# The options which each compiler, by its id in the compiler record, is given
+# before the command's own. Clang reads configuration files, such as a
+# clang++.cfg beside its binary, whatever the environment, and they may add
+# options to every compilation; --no-default-config makes it read none.
+COMPILER_OPTIONS = {"Clang": ["--no-default-config"]}
+
 # The description of the count, which the record holds as its boundary. A
 # change to valgrind's options, to the processes whose instructions the
-# script sums, to the outputs of the command or to its environment must
-# change it, so that a reader of two records can tell whether their counts
-# compare.
+# script sums, to the outputs or the options of the command or to its
+# environment must change it, so that a reader of two records can tell
+# whether their counts compare.
 BOUNDARY = (f"instructions under valgrind {' '.join(VALGRIND_OPTIONS)}, summed over the processes of the "
-            "compilation which ninja's compilation database holds, its outputs to /dev/null, in an environment of "
+            "compilation which ninja's compilation database holds, its outputs to /dev/null, "
+            + "".join(f"{compiler_id} given {' '.join(options)} first, "
+                      for compiler_id, options in COMPILER_OPTIONS.items())
+            + "in an environment of "
             + ", ".join(f"{name}={value}" for name, value in COMPILATION_ENVIRONMENT.items()) + " alone")
 
 
-def command_with_outputs_discarded(command, source, compiler):
-    """Returns `command`, split into words, with the word after each of
-    OUTPUT_OPTIONS replaced by /dev/null.
+def measured_command(command, source, compiler):
+    """Returns the words of the command to measure: `command`, split into
+    words, with the options which COMPILER_OPTIONS names for `compiler`'s id
+    after its first word, and the word after each of OUTPUT_OPTIONS replaced
+    by /dev/null.
 
-    Exits unless the command's first word is `compiler`, and the command
-    holds each of OUTPUT_OPTIONS at least as often as OUTPUT_OPTIONS says
-    and at most once, and does not end with one.
+    Exits unless the command's first word is `compiler`'s path, and the
+    command holds each of OUTPUT_OPTIONS at least as often as OUTPUT_OPTIONS
+    says and at most once, and does not end with one.
     """
     words = shlex.split(command)
-    if not words or words[0] != compiler:
-        sys.exit(f"the compilation of {source} does not run the compiler record's compiler, {compiler}: {command}")
+    if not words or words[0] != compiler["path"]:
+        sys.exit(f"the compilation of {source} does not run the compiler record's compiler, {compiler['path']}: "
+                 f"{command}")
     for option, least in OUTPUT_OPTIONS.items():
         count = words.count(option)
         if count < least or count > 1:
@@ -97,7 +111,8 @@ def command_with_outputs_discarded(command, source, compiler):
             sys.exit(f"the compilation of {source} has {count} {option} options, rather than {allowed}: {command}")
         if words[-1] == option:
             sys.exit(f"the compilation of {source} ends with {option}, which names no file: {command}")
-    return [os.devnull if i > 0 and words[i - 1] in OUTPUT_OPTIONS else word for i, word in enumerate(words)]
+    discarded = [os.devnull if i > 0 and words[i - 1] in OUTPUT_OPTIONS else word for i, word in enumerate(words)]
+    return [discarded[0], *COMPILER_OPTIONS.get(compiler["id"], []), *discarded[1:]]
 
 
 def compilation_of(database, root, source):
@@ -147,11 +162,11 @@ def instructions_of_compiling(compilation, source, compiler, valgrind):
     """Returns the instructions of `compilation`, run once under the
     valgrind at the path `valgrind`.
 
-    Exits if the command is refused by command_with_outputs_discarded, if
+    Exits if the command is refused by measured_command, if
     valgrind cannot be run or the compilation fails under it, or if the
     counts are refused by summed_instructions.
     """
-    words = command_with_outputs_discarded(compilation["command"], source, compiler)
+    words = measured_command(compilation["command"], source, compiler)
     with tempfile.TemporaryDirectory() as counts_dir:
         try:
             r = subprocess.run([valgrind, *VALGRIND_OPTIONS, f"--cachegrind-out-file={counts_dir}/%p", *words],
@@ -186,8 +201,7 @@ def compile_cost_of(build_dir, sources):
         database = json.loads(symbol_table_report.ninja(cache, build_dir, "-t", "compdb"))
     except json.JSONDecodeError as e:
         sys.exit(f"ninja's compilation database for {build_dir} cannot be read: {e}")
-    units = {source: instructions_of_compiling(compilation_of(database, root, source), source, compiler["path"],
-                                               valgrind)
+    units = {source: instructions_of_compiling(compilation_of(database, root, source), source, compiler, valgrind)
              for source in sources}
     return {
         **symbol_table_report.tree_state(root),
