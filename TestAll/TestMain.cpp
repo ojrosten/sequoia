@@ -126,7 +126,6 @@ int main(int argc, char** argv)
     runner.register_test<monotonic_sequence_false_negative_test>();
     runner.register_test<monotonic_sequence_test>();
     runner.register_test<monotonic_sequence_allocation_test>();
-    runner.register_test<linear_sequence_false_negative_test>();
     runner.register_test<linear_sequence_test>();
     runner.register_test<array_utilities_test>();
     runner.register_test<iterator_test>();

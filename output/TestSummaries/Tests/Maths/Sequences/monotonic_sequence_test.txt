@@ -1,2 +1,2 @@
 monotonic_sequence_test
-Standard Top Level Checks:                44;  Failures:  0  [Deep checks: 882]
+Standard Top Level Checks:                87;  Failures:  0  [Deep checks: 985]

@@ -1,2 +1,2 @@
 static_partitioned_sequence_test
-Standard Top Level Checks:                24;  Failures:  0  [Deep checks: 1787]
+Standard Top Level Checks:                30;  Failures:  0  [Deep checks: 1793]

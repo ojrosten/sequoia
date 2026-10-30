@@ -13,33 +13,39 @@
 
 #include "sequoia/Maths/Sequences/MonotonicSequenceDetails.hpp"
 #include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
-#include "sequoia/PlatformSpecific/Macros.hpp"
-#include "sequoia/Algorithms/Algorithms.hpp"
 
 #include <algorithm>
+#include <ranges>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
 namespace sequoia::maths
 {
-  struct unsafe_t {};
+  /** \brief The operations common to a monotonic sequence in any container.
 
+      `Compare{}(x, y)` is false for each element `x` and the element `y`
+      that follows it. Every operation that changes the elements keeps this
+      invariant, and refuses a change that would break it.
+   */
   template<class T, class C, class Compare> class monotonic_sequence_base
   {
   public:
-    using value_type     = T;
-    using container_type = C;
-    using compare_type   = Compare;
-    using size_type      = C::size_type;
+    using value_type      = T;
+    using container_type  = C;
+    using compare_type    = Compare;
+    using size_type       = C::size_type;
+    using difference_type = C::difference_type;
 
     using const_iterator         = C::const_iterator;
     using const_reverse_iterator = C::const_reverse_iterator;
 
     constexpr monotonic_sequence_base() = default;
 
-    constexpr monotonic_sequence_base(std::initializer_list<T> list) : monotonic_sequence_base{static_type{}, list}
-    {}
+    constexpr monotonic_sequence_base(std::initializer_list<T> list) : m_Sequence{make_container(list)}
+    {
+      check();
+    }
 
     constexpr monotonic_sequence_base(C c) : m_Sequence{std::move(c)}
     {
@@ -87,53 +93,40 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr const T& front() const { return *begin(); }
 
-    template<class UnaryOp>
-    constexpr void mutate(const_iterator first, const_iterator last, UnaryOp op)
+    /** \brief Adds `delta` to each element in [`first`, `last`).
+
+        \throws std::invalid_argument if `T` cannot represent an element plus
+        `delta`, or if the translation would break the sequence's
+        monotonicity. The sequence is then unchanged.
+     */
+    constexpr void translate(const_iterator first, const_iterator last, const difference_type delta)
+      requires integer<T> && impl::numeric_order_v<Compare>
     {
-      if(first != last)
+      if(first == last)
+        return;
+
+      // The constraint on Compare puts every element of the run between the
+      // run's ends, so the ends' range bounds every element's. With the ends
+      // in range, translating preserves how Compare orders two elements of
+      // the run, so only the ends need comparing with their neighbours.
+      const auto back{std::ranges::prev(last)};
+      if(!impl::sum_is_representable(*first, delta) || !impl::sum_is_representable(*back, delta))
+        throw std::invalid_argument{"monotonic_sequence::translate - an element would leave the range of its type"};
+
+      const auto translated{[delta](const T x){ return impl::wrapping_sum(x, delta); }};
+      if(   ((first != cbegin()) && Compare{}(*std::ranges::prev(first), translated(*first)))
+         || ((last  != cend())   && Compare{}(translated(*back), *last)))
       {
-        auto tmp{m_Sequence};
-        auto f{tmp.begin() + std::ranges::distance(cbegin(), first)};
-        auto l{tmp.begin() + std::ranges::distance(cbegin(), last)};
-
-        for(auto i{f}; i != l; ++i)
-        {
-          *i = op(*i);
-        }
-
-        if(f != tmp.begin()) --f;
-        if(l != tmp.end()) ++l;
-
-        while((f != l) && (f + 1) != tmp.end())
-        {
-          if(Compare{}(*f, *(f+1)))
-            throw std::logic_error("monotonic_sequence::mutate - monotonicity violated");
-
-          ++f;
-        }
-
-        m_Sequence = std::move(tmp);
+        throw std::invalid_argument{"monotonic_sequence::translate - monotonicity violated"};
       }
-    }
 
-    template<class UnaryOp>
-    constexpr void mutate(unsafe_t, const_iterator first, const_iterator last, UnaryOp op)
-    {
-      // gcc's loop vectorizer rewrites this into a form -Wstringop-overflow reads as a write into
-      // a zero-sized region. The bounds hold: swap_partitions, the caller on that path, checks both
-      // indices against num_partitions(), which is m_Partitions.size().
-SEQUOIA_GCC_SUPPRESS_BEGIN("-Wstringop-overflow=")
-      while(first != last)
-      {
-        auto pos{m_Sequence.begin() + std::ranges::distance(cbegin(), first++)};
-        *pos = op(*pos);
-      }
-SEQUOIA_GCC_SUPPRESS_END
+      const auto firstWritable{std::ranges::next(m_Sequence.begin(), std::ranges::distance(cbegin(), first))};
+      std::ranges::transform(first, last, firstWritable, translated);
     }
 
     /** \brief Replaces each element with the corresponding one of `values`.
 
-        \throws std::logic_error if `values` has a different number of
+        \throws std::invalid_argument if `values` has a different number of
         elements, or would break the sequence's monotonicity. The sequence is
         then unchanged.
      */
@@ -143,16 +136,16 @@ SEQUOIA_GCC_SUPPRESS_END
     constexpr void overwrite(R&& values)
     {
       if(std::cmp_not_equal(std::ranges::distance(values), size()))
-        throw std::logic_error{"monotonic_sequence::overwrite - the number of values differs from the size"};
+        throw std::invalid_argument{"monotonic_sequence::overwrite - the number of values differs from the size"};
 
-      if(std::ranges::adjacent_find(values, Compare{}) != std::ranges::end(values))
-        throw std::logic_error{"monotonic_sequence::overwrite - monotonicity violated"};
+      if(!is_monotonic(values))
+        throw std::invalid_argument{"monotonic_sequence::overwrite - monotonicity violated"};
 
       std::ranges::copy(values, m_Sequence.begin());
     }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) noexcept = default;
+    friend constexpr bool operator==(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) = default;
 
   protected:
     template<alloc Allocator>
@@ -197,7 +190,7 @@ SEQUOIA_GCC_SUPPRESS_END
     constexpr void push_back(T v)
     {
       if(!m_Sequence.empty() && Compare{}(m_Sequence.back(), v))
-        throw std::logic_error{"monotonic_sequence_base::push_back - monotonicity violated"};
+        throw std::invalid_argument{"monotonic_sequence::push_back - monotonicity violated"};
 
       m_Sequence.push_back(std::move(v));
     }
@@ -206,7 +199,7 @@ SEQUOIA_GCC_SUPPRESS_END
     {
       if(((pos != cend()) && Compare{}(v, *pos)) || ((pos != cbegin()) && Compare{}(*(pos-1), v)))
       {
-        throw std::logic_error{"monotonic_sequence_base::insert - monotonicity violated"};
+        throw std::invalid_argument{"monotonic_sequence::insert - monotonicity violated"};
       }
 
       return m_Sequence.insert(pos, std::move(v));
@@ -243,31 +236,28 @@ SEQUOIA_GCC_SUPPRESS_END
     }
 
   private:
-    using static_type = impl::static_storage<C>;
-
     C m_Sequence;
 
-    constexpr monotonic_sequence_base(std::false_type, std::initializer_list<T> list) : m_Sequence{list}
+    [[nodiscard]]
+    constexpr static C make_container(std::initializer_list<T> list)
     {
-      check();
+      if constexpr(impl::static_storage<C>::value)
+        return utilities::to_array<T, impl::static_storage<C>::size()>(list);
+      else
+        return C{list};
     }
 
-    constexpr monotonic_sequence_base(std::true_type, std::initializer_list<T> list)
-      : m_Sequence{utilities::to_array<T, static_type::size()>(list)}
+    template<std::ranges::forward_range R>
+    [[nodiscard]]
+    constexpr static bool is_monotonic(R&& r)
     {
-      check();
+      return std::ranges::adjacent_find(r, Compare{}) == std::ranges::end(r);
     }
 
-    constexpr void check()
+    constexpr void check() const
     {
-      if(size() > 1)
-      {
-        for(auto i{begin()+1}; i != end(); ++i)
-        {
-          if(Compare{}(*(i-1), *i))
-            throw std::logic_error("monotonic_sequence_base::monotonic_sequence_base - monotonicity violated");
-        }
-      }
+      if(!is_monotonic(m_Sequence))
+        throw std::invalid_argument{"monotonic_sequence::monotonic_sequence - monotonicity violated"};
     }
   };
 

@@ -115,7 +115,6 @@
 #include "Maths/Graph/Tree/TreeTest.hpp"
 #include "Maths/Graph/Tree/TreeTestingDiagnostics.hpp"
 #include "Maths/Sequences/LinearSequenceTest.hpp"
-#include "Maths/Sequences/LinearSequenceTestingDiagnostics.hpp"
 #include "Maths/Sequences/MonotonicSequenceAllocationTest.hpp"
 #include "Maths/Sequences/MonotonicSequenceTest.hpp"
 #include "Maths/Sequences/MonotonicSequenceTestingDiagnostics.hpp"

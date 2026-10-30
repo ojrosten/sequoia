@@ -26,14 +26,17 @@ namespace sequoia::testing
     void run_tests();
   private:
 
-    template<bool Check>
-    constexpr static maths::static_monotonic_sequence<int, 6, std::greater<int>> make_sequence();
+    constexpr static maths::static_monotonic_sequence<int, 6, std::ranges::greater> make_sequence();
+
+    void test_translation_constraints();
 
     void test_decreasing_sequence();
 
     void test_static_decreasing_sequence();
 
     void test_static_increasing_sequence();
+
+    void test_translation_limits();
 
     void test_overwrite();
   };

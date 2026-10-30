@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "StaticLinearlyPartitionedSequenceTest.hpp"
+#include "PartitionedDataGenericTests.hpp"
 
 namespace sequoia::testing
 {
@@ -34,6 +35,8 @@ namespace sequoia::testing
     {
       using sequence = static_linearly_partitioned_sequence<int, 2, 3>;
       STATIC_CHECK(sizeof(sequence) == 6 * sizeof(int));
+      STATIC_CHECK(!swap_partitions_accepts_v<sequence>);
+      STATIC_CHECK(!permute_partitions_accepts_v<sequence, std::vector<std::size_t>>);
 
       constexpr sequence a{{1,2,-1}, {3,-2,1}};
       sequence b{};

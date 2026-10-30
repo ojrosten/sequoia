@@ -35,7 +35,8 @@ namespace sequoia::utilities
       else
       {
         if(i > l.size())
-          throw std::logic_error("Insuffucient arguments to initialize an array of objects which cannot be default constructed.");
+          throw std::logic_error("Insufficient arguments to initialize an array of objects "
+                                 "which cannot be default constructed.");
 
         return fn(*(l.begin() + i));
       }
