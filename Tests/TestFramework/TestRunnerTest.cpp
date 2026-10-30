@@ -16,6 +16,9 @@
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
 
+#include <stdexcept>
+#include <tuple>
+
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
@@ -2970,7 +2973,7 @@ namespace sequoia::testing
     discarded_materials_remover remover{};
     remover.join();
 
-    const auto refusal{
+    const auto refusalMessage{
       [&remover, &materials]() -> std::string {
         try
         {
@@ -2991,8 +2994,8 @@ namespace sequoia::testing
           summary.critical_failures(),
           1uz);
 
-    check("The critical failure is the joined remover's refusal",
-          !refusal.empty() && summary.failure_messages().contains(refusal));
+    check("The joined remover refuses a removal", !refusalMessage.empty());
+    check("The critical failure is the joined remover's refusal", summary.failure_messages().contains(refusalMessage));
   }
 
   void test_runner_test::test_exit_statuses()
