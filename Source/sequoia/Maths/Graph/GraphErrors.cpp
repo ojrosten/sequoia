@@ -138,7 +138,7 @@ namespace sequoia::maths::graph_errors
                                                const std::size_t target,
                                                const std::size_t compIndex)
   {
-    return std::format("{}Indices [target: {}, comp: {}] are self-referential",
+    return std::format("{}Indices [target: {}, complementary index: {}] are self-referential",
                        error_prefix(method, edgeIndices),
                        target,
                        compIndex);
