@@ -1,0 +1,2 @@
+runner_performance_against_reference_test
+Standard Performance Checks:               1;  Failures:  0
