@@ -100,7 +100,7 @@ namespace sequoia::maths
         monotonicity. The sequence is then unchanged.
      */
     constexpr void translate(const_iterator first, const_iterator last, const difference_type delta)
-      requires integer<T> && impl::translation_invariant_order_v<Compare>
+      requires integer<T> && impl::numeric_order_v<Compare>
     {
       if(first == last)
         return;
