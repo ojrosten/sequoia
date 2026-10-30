@@ -6,8 +6,9 @@
 // A symbol-table record is stored as symbol-table/<column>/<commit>.json on
 // the metrics branch. scripts/symbol_table_report.py and
 // scripts/symbol_table_provenance.py say what it holds, and symbol-table.yml
-// adds `prune_dependency_analysis`, `runner_setup`, `leftover_materials_setup`
-// and `compile_cost`.
+// adds `prune_dependency_analysis`, `runner_setup` and `leftover_materials_setup`.
+// The records of uncalled functions, and of the cost of compiling, are stored
+// beside them, each a file of its own for each commit measured.
 /** @param {Record<string, any>} exports */
 (function (exports) {
   'use strict';
@@ -37,6 +38,8 @@
   const recordPathPattern = /^symbol-table\/([^/]+)\/([0-9a-f]{40})\.json$/;
 
   const uncalledPathPattern = /^uncalled-functions\/[^/]+\/([0-9a-f]{40})\.json$/;
+
+  const compileCostPathPattern = /^compile-cost\/[^/]+\/([0-9a-f]{40})\.json$/;
 
   // The commits API's largest page, as the number of commits it lists.
   const commitsPerPage = 100;
@@ -84,8 +87,33 @@
    * @returns {Entry[]}
    */
   function uncalledRecordsInTree(tree) {
+    return entriesMatching(tree, uncalledPathPattern);
+  }
+
+  /**
+   * Lists the records of the cost of compiling in `tree`, a response of
+   * GitHub's git trees API which recordsInTree has accepted, as {commit,
+   * path}. symbol-table.yml measures them, one file per commit, beside the
+   * symbol table's columns.
+   *
+   * @param {Tree} tree
+   * @returns {Entry[]}
+   */
+  function compileCostRecordsInTree(tree) {
+    return entriesMatching(tree, compileCostPathPattern);
+  }
+
+  /**
+   * Lists the entries of `tree` whose paths `pattern` matches, as {commit,
+   * path}, the commit being the pattern's first group.
+   *
+   * @param {Tree} tree
+   * @param {RegExp} pattern
+   * @returns {Entry[]}
+   */
+  function entriesMatching(tree, pattern) {
     return tree.tree.flatMap(entry => {
-      const match = uncalledPathPattern.exec(entry.path);
+      const match = pattern.exec(entry.path);
       return match ? [{commit: match[1], path: entry.path}] : [];
     });
   }
@@ -203,8 +231,6 @@
    *    `leftoverMaterialsSetupRunNames` a run with a positive count of
    *    instructions, a positive number of tests and an exit status. The two
    *    runs executed the same number of tests;
-   *  - `compile_cost`, with a boundary, a compiler, and units: one or more,
-   *    each with a positive count of instructions;
    *  - `prune_analysis`, a field no longer written, with an invocation and a
    *    count of instructions. It is checked and not plotted;
    *  - `runner_overhead`, a field no longer written, which is neither checked
@@ -248,7 +274,6 @@
       }
     }
     if (Object.hasOwn(record, 'leftover_materials_setup')) problems.push(...leftoverMaterialsSetupProblems(record.leftover_materials_setup));
-    if (Object.hasOwn(record, 'compile_cost')) problems.push(...compileCostProblems(record.compile_cost));
     const objects = record.defined_symbols_by_object;
     if (objects === null || typeof objects !== 'object' || !Object.values(objects).every(isCount)) {
       problems.push('it has no count of defined symbols for each object');
@@ -370,60 +395,98 @@
   }
 
   /**
-   * Lists what is wrong with `section`, a record's `compile_cost`.
+   * Lists what is wrong with `record`, a record of the cost of compiling
+   * stored under the name `commit`.
    *
-   * @param {any} section
+   * A record with no problem is an object holding `commit` as its commit, a
+   * clean tree, a toolchain with a compiler, and a `compile_cost` with a
+   * boundary and units: one or more, each with a positive count of
+   * instructions. Each problem is listed, but the units go unread where the
+   * record has no units object.
+   *
+   * @param {JsonRecord} record
+   * @param {string} commit
    * @returns {string[]}
    */
-  function compileCostProblems(section) {
+  function problemsWithCompileCost(record, commit) {
+    const problems = commonProblems(record, commit);
+    if (!isObject(record)) return problems;
+    if (!isObject(record.toolchain) || !isObject(record.toolchain.compiler)
+        || !['path', 'id', 'version'].every(key => typeof record.toolchain.compiler[key] === 'string')) {
+      problems.push('it has no toolchain with a compiler named by its path, id and version');
+    }
+    const section = record.compile_cost;
     const name = 'it has a compile_cost';
-    if (!isObject(section) || typeof section.boundary !== 'string') return [`${name} with no boundary`];
-    const compilerProblems = isObject(section.compiler) ? [] : [`${name} with no compiler`];
-    if (!isObject(section.units) || Object.keys(section.units).length === 0) return [...compilerProblems, `${name} with no units`];
-    return [...compilerProblems, ...Object.entries(section.units).flatMap(([unit, instructions]) =>
+    if (!isObject(section)) return [...problems, 'it has no compile_cost'];
+    if (typeof section.boundary !== 'string') problems.push(`${name} with no boundary`);
+    if (!isObject(section.units) || Object.keys(section.units).length === 0) return [...problems, `${name} with no units`];
+    return [...problems, ...Object.entries(section.units).flatMap(([unit, instructions]) =>
       isCount(instructions) && instructions > 0 ? [] : [`${name} whose unit ${unit} has no positive count of instructions`])];
   }
 
   /**
-   * Returns the instructions of compiling the units of `record`'s
-   * `compile_cost`, summed, or null if the record has no `compile_cost` (an
-   * old record, or one whose measurement failed). Such a record is left out
-   * of the series, not plotted as zero.
-   *
-   * @param {JsonRecord} record
-   * @returns {number | null}
-   */
-  function compileCostInstructions(record) {
-    if (!Object.hasOwn(record, 'compile_cost')) return null;
-    return Object.values(record.compile_cost.units).reduce((sum, instructions) => sum + instructions, 0);
-  }
-
-  /**
-   * Returns the instructions of compiling each unit of `record`'s
-   * `compile_cost`, keyed by the unit, or null if the record has no
-   * `compile_cost`.
+   * Returns the instructions of compiling each unit at the point whose
+   * record is `record`, keyed by the unit, or null if no measurement is at
+   * that commit.
    *
    * @param {JsonRecord} record
    * @returns {Record<string, number> | null}
    */
   function compileCostUnits(record) {
-    if (!Object.hasOwn(record, 'compile_cost')) return null;
-    return record.compile_cost.units;
+    return Object.hasOwn(record, 'compileCost') ? record.compileCost.units : null;
   }
 
   /**
-   * Returns the series of `record`'s `compile_cost`: its boundary, its
-   * compiler and the set of its units, as text. Two counts compare only if
-   * their series are equal. Returns null if the record has no
+   * Returns the instructions of compiling the units at the point whose
+   * record is `record`, summed, or null if no measurement is at that commit.
+   * Such a point is left out of the series, not plotted as zero.
+   *
+   * @param {JsonRecord} record
+   * @returns {number | null}
+   */
+  function compileCostInstructions(record) {
+    const units = compileCostUnits(record);
+    return units === null ? null : Object.values(units).reduce((sum, instructions) => sum + instructions, 0);
+  }
+
+  /**
+   * Returns the key of the series of `record`'s `compile_cost`: its boundary
+   * and the set of its units, as text. Two counts with the same toolchain
+   * compare only if their keys are equal. Returns null if the record has no
    * `compile_cost`.
    *
    * @param {JsonRecord} record
    * @returns {string | null}
    */
-  function compileCostSeries(record) {
+  function compileCostSeriesKey(record) {
     if (!Object.hasOwn(record, 'compile_cost')) return null;
     const section = record.compile_cost;
-    return canonical([section.boundary, section.compiler, Object.keys(section.units).sort()]);
+    return canonical([section.boundary, Object.keys(section.units).sort()]);
+  }
+
+  /**
+   * Returns `points`, those of a column, with `compileCost` added to the
+   * record of each point whose commit has a point in `compileCostPoints`,
+   * those built by pointsOf from the records of the cost of compiling.
+   * `compileCost` holds the units' counts, the compiler, the run of the
+   * measurement, and its changes from the measurement before: of the
+   * toolchain, and of the series. The two records' toolchains are
+   * independent.
+   *
+   * @param {Point[]} points
+   * @param {Point[]} compileCostPoints
+   * @returns {Point[]}
+   */
+  function withCompileCost(points, compileCostPoints) {
+    const measured = new Map(compileCostPoints.map(point => [point.commit, point]));
+    return points.map(point => {
+      const found = measured.get(point.commit);
+      if (!found) return point;
+      const compileCost = {units: found.record.compile_cost.units, compiler: found.record.toolchain.compiler,
+                           run: `${found.run}/${found.compileCostRun}`, toolchainChange: found.toolchainChange,
+                           seriesChange: found.compileCostSeriesChange};
+      return {...point, record: {...point.record, compileCost}};
+    });
   }
 
   /**
@@ -580,7 +643,7 @@
    * `leftoverRun` and `leftoverBoundaryChange` are the same for the points
    * which have a `leftover_materials_setup`, and `compileCostRun` and
    * `compileCostSeriesChange` for the points which have a `compile_cost`,
-   * whose compileCostSeries stands for the boundary.
+   * with the key compileCostSeriesKey gives in place of the boundary.
    *
    * @param {OrderedRecord[]} orderedRecords
    * @returns {Point[]}
@@ -600,7 +663,7 @@
         setupBoundaryCounter(Object.hasOwn(record, 'runner_setup') ? record.runner_setup.boundary : null);
       const {run: leftoverRun, change: leftoverBoundaryChange} =
         leftoverBoundaryCounter(Object.hasOwn(record, 'leftover_materials_setup') ? record.leftover_materials_setup.boundary : null);
-      const {run: compileCostRun, change: compileCostSeriesChange} = compileCostSeriesCounter(compileCostSeries(record));
+      const {run: compileCostRun, change: compileCostSeriesChange} = compileCostSeriesCounter(compileCostSeriesKey(record));
       return {commit, date: summary.date, subject: summary.subject, record, run, toolchainChange, setupRun, boundaryChange,
               leftoverRun, leftoverBoundaryChange, compileCostRun, compileCostSeriesChange};
     });
@@ -743,7 +806,8 @@
     const listing = recordsInTree(tree);
     if (listing.size === 0) return {state: 'empty'};
     const uncalledEntries = uncalledRecordsInTree(tree);
-    const entries = [...listing.values()].flat().concat(uncalledEntries);
+    const compileCostEntries = compileCostRecordsInTree(tree);
+    const entries = [...listing.values()].flat().concat(uncalledEntries, compileCostEntries);
     const wanted  = new Set(entries.map(entry => entry.commit));
     const [{head, pages, walk}, outcomes] = await Promise.all([
       walkStaging(source, known, wanted),
@@ -784,20 +848,38 @@
       }
       return {problems, byCommit};
     };
-    const {problems: uncalledProblems, byCommit: uncalledByCommit} = sorted(uncalledEntries, problemsWithUncalled);
-    const uncalledPoints = pointsOf(historyOrder
-      .filter(commit => uncalledByCommit.has(commit))
-      .map(commit => ({commit, summary: summaryOf(commit), record: uncalledByCommit.get(commit)})));
-    const columns = [...listing].map(([name, columnEntries]) => {
-      const {problems, byCommit} = sorted(columnEntries, problemsWith);
-      const ordered = historyOrder
+    /**
+     * Returns the points of the records of `seriesEntries` which have no
+     * problem, in history order, and the problems of the others.
+     *
+     * @param {Entry[]} seriesEntries
+     * @param {(record: JsonRecord, commit: string) => string[]} problemsOf
+     */
+    const seriesOf = (seriesEntries, problemsOf) => {
+      const {problems, byCommit} = sorted(seriesEntries, problemsOf);
+      const points = pointsOf(historyOrder
         .filter(commit => byCommit.has(commit))
-        .map(commit => ({commit, summary: summaryOf(commit), record: byCommit.get(commit)}));
-      const points = withUncalled(pointsOf(ordered), uncalledPoints);
-      const unplotted = uncalledPoints.filter(point => !points.some(plotted => plotted.commit === point.commit))
-        .map(point => ({path: uncalledEntries.find(entry => entry.commit === point.commit)?.path ?? '',
-                        problems: ['it is not at a commit with a plotted symbol table']}));
-      return {name, points, problems: problems.concat(uncalledProblems, unplotted)};
+        .map(commit => ({commit, summary: summaryOf(commit), record: byCommit.get(commit)})));
+      return {entries: seriesEntries, problems, points};
+    };
+    /**
+     * Returns the problems of `series`, with its points at no commit among
+     * `points` listed as unplotted.
+     *
+     * @param {{entries: Entry[], problems: Unplottable[], points: Point[]}} series
+     * @param {Point[]} points
+     * @returns {Unplottable[]}
+     */
+    const problemsBeside = (series, points) => series.problems.concat(series.points
+      .filter(point => !points.some(plotted => plotted.commit === point.commit))
+      .map(point => ({path: series.entries.find(entry => entry.commit === point.commit)?.path ?? '',
+                      problems: ['it is not at a commit with a plotted symbol table']})));
+    const uncalled    = seriesOf(uncalledEntries, problemsWithUncalled);
+    const compileCost = seriesOf(compileCostEntries, problemsWithCompileCost);
+    const columns = [...listing].map(([name, columnEntries]) => {
+      const column = seriesOf(columnEntries, problemsWith);
+      const points = withCompileCost(withUncalled(column.points, uncalled.points), compileCost.points);
+      return {name, points, problems: column.problems.concat(problemsBeside(uncalled, points), problemsBeside(compileCost, points))};
     });
     return {state: 'loaded', head, pages, columns};
   }
@@ -900,6 +982,6 @@
 
   Object.assign(exports, {
     commitsPerPage, maxCommitPages, timeAxis, nearestPoint, smallestGap, scaleOf,
-    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneStampingExitStatus, leftoverMaterialsSetupRunNames, leftoverMaterialsSetupPerEntry, leftoverMaterialsSetupBlindLabel, leftoverMaterialsSetupEntries, leftoverMaterialsSetupRuns, leftoverMaterialsSetupFirstFailure, compileCostInstructions, compileCostUnits, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
+    recordsInTree, summarise, walkFirstParents, canonical, differences, problemsWith, problemsWithUncalled, pruneInstructions, pruneStampingExitStatus, leftoverMaterialsSetupRunNames, leftoverMaterialsSetupPerEntry, leftoverMaterialsSetupBlindLabel, leftoverMaterialsSetupEntries, leftoverMaterialsSetupRuns, leftoverMaterialsSetupFirstFailure, compileCostInstructions, compileCostUnits, compileCostRecordsInTree, problemsWithCompileCost, withCompileCost, runnerSetupEvents, runnerSetupPerTest, runnerSetupExitStatus, runnerSetupTests, uncalledCount, uncalledRecordsInTree, withUncalled, pointsOf, movers, loadHistory
   });
 })(typeof module === 'object' && module.exports ? module.exports : (window.symbolDashboard = {}));
