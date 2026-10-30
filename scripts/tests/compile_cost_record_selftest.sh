@@ -9,23 +9,25 @@
 #
 # The controls build their own fixture: a git repository, and within it a
 # build directory whose CMakeCache.txt and compiler record the selftest
-# writes. Stand-ins answer
-# for ninja, for valgrind and for the compiler, so the selftest needs neither
-# CMake, ninja nor valgrind:
+# writes. Stand-ins answer for ninja, for valgrind and for the compiler, so
+# the selftest needs neither CMake, ninja nor valgrind:
 #   - the stand-in ninja answers `-t compdb` from a file of the build
 #     directory;
-#   - the stand-in valgrind records its arguments, runs the command which
-#     follows its options, and leaves the files of counts which the control
-#     put beside the source's name. Each file has the shape of one which
+#   - the stand-in valgrind prints a version, or records its arguments, runs
+#     the command which follows its options, and leaves the files of counts
+#     which the control put beside the source's name. Each file has the shape of one which
 #     cachegrind 3.26 wrote for a compilation by g++-15 (run 41050414618);
 #   - the stand-in compiler records its directory and arguments, writes to
 #     each file which its -o and -MF name, and exits with the status the
 #     control set.
 # The claims:
-#   - the field holds the boundary, the compiler which the build
-#     directory's compiler record names, and for each source the
-#     instructions of the files of counts its compilation left, summed, keyed
-#     by the source as given;
+#   - the record holds the commit and whether the tree is clean; a toolchain
+#     of the compiler and the standard library which the build directory's
+#     compiler record names, the compiler's implicit include directories,
+#     valgrind's path and version, and the cache's build type and C++ flags;
+#     and in compile_cost, the boundary, and for each source the
+#     instructions of the files of counts its compilation left, summed,
+#     keyed by the source as given;
 #   - each compilation sees PATH, LC_ALL and TMPDIR alone, whatever the
 #     caller's environment;
 #   - each source is compiled once, in the compilation's directory, by its
@@ -33,10 +35,11 @@
 #     by /dev/null, so that the build directory gains no file; valgrind is
 #     given the options the boundary names;
 #   - a source is matched to its compilation by the path both resolve to;
-#   - each of these is refused, with a message naming it, and no field: a
-#     source given twice, absent, or outside the repository; no compilation
-#     of a source, or two; a command with no -o, two, or two -MF, or ending
-#     with -o; a compilation which fails; no file of counts, a file with no
+#   - each of these is refused, with a message naming it, and no record: two
+#     sources which resolve to one file, a source absent, or outside the
+#     repository; no compilation of a source, or two; a command which runs
+#     another compiler, or has no -o, two, or two -MF, or ends with -o; a
+#     compilation which fails; no file of counts, a file with no
 #     summary or two, or a summary which is no count; no instructions; no
 #     compiler record of the cache's CMake; a failure of ninja, or a database
 #     which is not JSON; valgrind absent, or unable to start;
@@ -114,6 +117,7 @@ EOF
 # its paths into each stand-in, in place of @LOG@ and @COUNTS@.
 cat > "$tmp/templates/valgrind" <<'EOF'
 #!/bin/bash
+if [[ $* == --version ]]; then echo valgrind-fixture-3.26; exit 0; fi
 options=()
 while [[ $1 == --* ]]; do options+=("$1"); shift; done
 echo "${options[*]}" >> @LOG@/valgrind
@@ -176,7 +180,7 @@ fixture() {
   repo="$work/repo"; build="$repo/build/TestAll/fixture"
   mkdir -p "$repo/TestAll" "$repo/Tests" "$build/ninja" "$build/CMakeFiles/TestAll.dir"
   local source
-  for source in A B Twice NoOutput TwoOutputs TwoDependencyFiles EndsWithOutput Unknown Other/A; do
+  for source in A B Twice NoOutput TwoOutputs TwoDependencyFiles EndsWithOutput OtherCompiler Unknown Other/A; do
     mkdir -p "$(dirname "$repo/Tests/$source.cpp")"
     echo "// $source" > "$repo/Tests/$source.cpp"
   done
@@ -192,6 +196,10 @@ CMAKE_HOME_DIRECTORY:INTERNAL=$repo/TestAll
 CMAKE_CACHE_MAJOR_VERSION:INTERNAL=4
 CMAKE_CACHE_MINOR_VERSION:INTERNAL=4
 CMAKE_CACHE_PATCH_VERSION:INTERNAL=3
+CMAKE_BUILD_TYPE:STRING=Debug
+CMAKE_CXX_FLAGS:STRING=-fixture-flag
+CMAKE_CXX_FLAGS_DEBUG:STRING=-g
+CMAKE_EXE_LINKER_FLAGS:STRING=-not-recorded
 EOF
   mkdir -p "$build/CMakeFiles/4.4.3"
   cat > "$build/CMakeFiles/4.4.3/CMakeCXXCompiler.cmake" <<EOF
@@ -201,7 +209,7 @@ set(CMAKE_CXX_COMPILER_VERSION "23.1.4")
 set(CMAKE_CXX_COMPILER_LINKER "/fixture/ld")
 set(CMAKE_CXX_COMPILER_LINKER_ID "FixtureLD")
 set(CMAKE_CXX_COMPILER_LINKER_VERSION "4.5")
-set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "$repo/Tests")
+set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "$repo/Tests;$repo/TestAll")
 set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "stdc++")
 EOF
   local object=CMakeFiles/TestAll.dir
@@ -226,6 +234,8 @@ EOF
                 "-MF $object/D1.d -MF $object/D2.d -o $object/D.o -c $repo/Tests/TwoDependencyFiles.cpp"
     printf ',\n'
     compilation "$build" "$repo/Tests/EndsWithOutput.cpp" "-c $repo/Tests/EndsWithOutput.cpp -o"
+    printf ',\n{"directory": "%s", "command": "%s -o x.o -c %s", "file": "%s", "output": "x.o"}' \
+      "$build" "$work/bin/fixture-cc-other" "$repo/Tests/OtherCompiler.cpp" "$repo/Tests/OtherCompiler.cpp"
     printf ']\n'
   } > "$build/ninja/compdb"
 
@@ -244,7 +254,7 @@ EOF
   counts "$FIXTURE_COUNTS/A.cpp/103" 21
   counts "$FIXTURE_COUNTS/B.cpp/201" 800000000
   local name
-  for name in Twice NoOutput TwoOutputs TwoDependencyFiles EndsWithOutput; do
+  for name in Twice NoOutput TwoOutputs TwoDependencyFiles EndsWithOutput OtherCompiler; do
     counts "$FIXTURE_COUNTS/$name.cpp/1" 5
   done
 }
@@ -262,15 +272,25 @@ compilation_environment() {
 field_controls() {
   fixture
   run "$build" Tests/A.cpp Tests/B.cpp
-  exits "a field is written" 0
-  field "the boundary" 'd["boundary"]' \
-    "instructions under valgrind --tool=cachegrind --cache-sim=no --trace-children=yes, summed over the processes of the compilation which ninja's compilation database holds, its outputs to /dev/null, in an environment of PATH=/usr/bin:/bin, LC_ALL=C, TMPDIR=/tmp alone"
-  field "the sources, keyed as given" 'sorted(d["units"])' "['Tests/A.cpp', 'Tests/B.cpp']"
-  field "a compilation's processes, summed" 'd["units"]["Tests/A.cpp"]' 7000400021
-  field "a compilation of one process" 'd["units"]["Tests/B.cpp"]' 800000000
-  field "the compiler, from the compiler record" 'sorted(d["compiler"].items())' \
+  exits "a record is written" 0
+  field "the commit" 'd["commit"]' "$(git -C "$repo" rev-parse HEAD)"
+  field "a clean tree" 'd["clean"]' True
+  field "the compiler, from the compiler record" 'sorted(d["toolchain"]["compiler"].items())' \
         "[('id', 'Fixture'), ('path', '$work/bin/fixture-cc'), ('version', '23.1.4')]"
-  field "nothing else" 'sorted(d)' "['boundary', 'compiler', 'units']"
+  field "the standard library, and the implicit include directories" 'd["toolchain"]["standard_library"]' \
+        "{'implicit_include_directories': ['$repo/Tests', '$repo/TestAll'], 'name': 'libstdc++'}"
+  field "valgrind's path and version" 'd["toolchain"]["valgrind"]' \
+        "{'path': '$work/bin/valgrind', 'version': 'valgrind-fixture-3.26'}"
+  field "the build type and C++ flags, and no others" 'sorted(d["toolchain"]["build"].items())' \
+        "[('CMAKE_BUILD_TYPE', 'Debug'), ('CMAKE_CXX_FLAGS', '-fixture-flag'), ('CMAKE_CXX_FLAGS_DEBUG', '-g')]"
+  field "the toolchain, and nothing else" 'sorted(d["toolchain"])' "['build', 'compiler', 'standard_library', 'valgrind']"
+  field "the boundary" 'd["compile_cost"]["boundary"]' \
+    "instructions under valgrind --tool=cachegrind --cache-sim=no --trace-children=yes, summed over the processes of the compilation which ninja's compilation database holds, its outputs to /dev/null, in an environment of PATH=/usr/bin:/bin, LC_ALL=C, TMPDIR=/tmp alone"
+  field "the sources, keyed as given" 'sorted(d["compile_cost"]["units"])' "['Tests/A.cpp', 'Tests/B.cpp']"
+  field "a compilation's processes, summed" 'd["compile_cost"]["units"]["Tests/A.cpp"]' 7000400021
+  field "a compilation of one process" 'd["compile_cost"]["units"]["Tests/B.cpp"]' 800000000
+  field "the cost, and nothing else" 'sorted(d["compile_cost"])' "['boundary', 'units']"
+  field "nothing else" 'sorted(d)' "['clean', 'commit', 'compile_cost', 'toolchain']"
 
   total=$((total+1))
   [[ $(cat "$FIXTURE_LOG/cc" 2> /dev/null | wc -l) -eq 2 ]] || fail "each source compiled once: $(cat "$FIXTURE_LOG/cc" 2> /dev/null)"
@@ -294,13 +314,21 @@ field_controls() {
 
   run "$build" Tests/B.cpp
   exits "one source" 0
-  field "one source, and no other" 'd["units"]' "{'Tests/B.cpp': 800000000}"
+  field "one source, and no other" 'd["compile_cost"]["units"]' "{'Tests/B.cpp': 800000000}"
+
+  echo '// untracked' > "$repo/Tests/Untracked.cpp"
+  run "$build" Tests/B.cpp
+  exits "a record of a tree with an untracked file" 0
+  field "an untracked file makes the tree dirty" 'd["clean"]' False
+  rm "$repo/Tests/Untracked.cpp"
 }
 
 source_controls() {
   fixture
   run "$build" Tests/A.cpp Tests/A.cpp
-  refuses "a source given twice" 'a source is given more than once: Tests/A.cpp Tests/A.cpp'
+  refuses "a source given twice" 'two of the sources resolve to one file: Tests/A.cpp Tests/A.cpp'
+  run "$build" Tests/A.cpp Tests/../Tests/A.cpp
+  refuses "a source given twice, spelt two ways" 'two of the sources resolve to one file: Tests/A.cpp Tests/../Tests/A.cpp'
   run "$build" Tests/Absent.cpp
   refuses "an absent source" 'Tests/Absent\.cpp is not a file within the repository'
   run "$build" Tests
@@ -329,6 +357,8 @@ command_controls() {
   refuses "a command with two -MF" 'TwoDependencyFiles\.cpp has 2 -MF options, rather than none or one:'
   run "$build" Tests/EndsWithOutput.cpp
   refuses "a command ending with -o" 'EndsWithOutput\.cpp ends with -o, which names no file:'
+  run "$build" Tests/OtherCompiler.cpp
+  refuses "a command running another compiler" "OtherCompiler\\.cpp does not run the compiler record's compiler"
   total=$((total+1))
   [[ ! -s $FIXTURE_LOG/cc ]] || fail "a refused command was run: $(cat "$FIXTURE_LOG/cc")"
 
@@ -374,7 +404,7 @@ counts_controls() {
   counts "$FIXTURE_COUNTS/B.cpp/202" 800000000
   run "$build" Tests/B.cpp
   exits "one process of no instructions beside one of some" 0
-  field "the processes' instructions summed" 'd["units"]["Tests/B.cpp"]' 800000000
+  field "the processes' instructions summed" 'd["compile_cost"]["units"]["Tests/B.cpp"]' 800000000
 }
 
 ninja_controls() {
@@ -425,16 +455,15 @@ mutants() { # mutants <dir>: writes <dir>/<n>/compile_cost_record.py, and
   python3 - "$script" "$1" <<'EOF'
 import os, sys
 MUTATIONS = [
-    ('the object written',               'OUTPUT_OPTIONS = {"-o": (1, "one"), "-MF": (0, "none or one")}',
-                                         'OUTPUT_OPTIONS = {"-MF": (0, "none or one")}'),
-    ('the dependency file written',      'OUTPUT_OPTIONS = {"-o": (1, "one"), "-MF": (0, "none or one")}',
-                                         'OUTPUT_OPTIONS = {"-o": (1, "one")}'),
-    ('no -o accepted',                   '{"-o": (1, "one")', '{"-o": (0, "one")'),
+    ('the object written',               'OUTPUT_OPTIONS = {"-o": 1, "-MF": 0}', 'OUTPUT_OPTIONS = {"-MF": 0}'),
+    ('the dependency file written',      'OUTPUT_OPTIONS = {"-o": 1, "-MF": 0}', 'OUTPUT_OPTIONS = {"-o": 1}'),
+    ('no -o accepted',                   'OUTPUT_OPTIONS = {"-o": 1,', 'OUTPUT_OPTIONS = {"-o": 0,'),
     ('two options accepted',             'if count < least or count > 1:', 'if count < least or count > 2:'),
     ('an option at the end accepted',    'if words[-1] == option:', 'if False:'),
     ('the option itself replaced',       'os.devnull if i > 0 and words[i - 1] in OUTPUT_OPTIONS else word',
                                          'os.devnull if word in OUTPUT_OPTIONS else word'),
     ('the word after any option replaced', 'words[i - 1] in OUTPUT_OPTIONS else word', 'words[i - 1].startswith("-") else word'),
+    ('another compiler accepted',        'if not words or words[0] != compiler:', 'if not words:'),
     ('a source matched by its name',     'if os.path.realpath(os.path.join(compilation["directory"], '
                                          'compilation["file"])) == path]',
                                          'if os.path.basename(compilation["file"]) == os.path.basename(path)]'),
@@ -452,7 +481,7 @@ MUTATIONS = [
     ('a zero process refused',           'return int(summaries[0])',
                                          'return int(summaries[0]) or sys.exit("valgrind counted no instructions")'),
     ('the cache simulated',              '"--cache-sim=no", ', ''),
-    ('the children not followed',        '"--cache-sim=no", "--trace-children=yes",', '"--cache-sim=no",'),
+    ('the children not followed',        ', "--trace-children=yes"]', ']'),
     ('callgrind run',                    '"--tool=cachegrind"', '"--tool=callgrind"'),
     ('run in the wrong directory',       'cwd=compilation["directory"], ', ''),
     ('a failure accepted',               'if r.returncode:\n            sys.exit(f"the compilation',
@@ -465,15 +494,22 @@ MUTATIONS = [
     ('valgrind absent unchecked',        'if valgrind is None:', 'if False:'),
     ('valgrind absent crashes',          'except OSError as e:\n            sys.exit(f"valgrind could not be run',
                                          'except ValueError as e:\n            sys.exit(f"valgrind could not be run'),
-    ('a source twice counted once',      'if len(set(sources)) != len(sources):', 'if False:'),
+    ('a source twice counted once',      'if len(set(paths)) != len(paths):', 'if False:'),
+    ('a source twice by its spelling',   'if len(set(paths)) != len(paths):', 'if len(set(sources)) != len(sources):'),
     ('a directory accepted',             ' or not os.path.isfile(path):', ' or not os.path.exists(path):'),
     ('a source outside accepted',        'if os.path.commonpath([path, root]) != root or ', 'if '),
     ('a bad database crashes',           'except json.JSONDecodeError as e:\n        sys.exit(f"ninja',
                                          'except ValueError as e:\n        raise\n        sys.exit(f"ninja'),
-    ('a unit keyed by its path',         '"units": {source: instructions_of_compiling',
-                                         '"units": {os.path.join(root, source): instructions_of_compiling'),
-    ('the boundary not given',           '{"boundary": BOUNDARY,\n            "compiler"', '{"compiler"'),
-    ('the compiler not given',           '"compiler": symbol_table_report.compiler_of(compiler_record),\n', ''),
+    ('a unit keyed by its path',         'units = {source: instructions_of_compiling',
+                                         'units = {os.path.join(root, source): instructions_of_compiling'),
+    ('the boundary not given',           '"compile_cost": {"boundary": BOUNDARY, "units": units}', '"compile_cost": {"units": units}'),
+    ('the compiler not given',           '            "compiler": compiler,\n', ''),
+    ('the linker given as the compiler', 'tool_of(compiler_record, "CMAKE_CXX_COMPILER")', 'tool_of(compiler_record, "CMAKE_CXX_COMPILER_LINKER")'),
+    ('the include directories not given', '                "implicit_include_directories": compiler_record["CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES"].split(";")},',
+                                         '},'),
+    ('valgrind\'s version not given',    '"version": symbol_table_report.run([valgrind, "--version"]).strip()', '"version": ""'),
+    ('the linker\'s flags given too',    'build_settings(cache, ["CMAKE_CXX_FLAGS"])', 'build_settings(cache, ["CMAKE_CXX_FLAGS", "CMAKE_EXE_LINKER_FLAGS"])'),
+    ('the tree called clean',            '**symbol_table_report.tree_state(root),', '"commit": symbol_table_report.tree_state(root)["commit"], "clean": True,'),
 ]
 script, directory = sys.argv[1:]
 with open(script, encoding='utf-8') as f:
