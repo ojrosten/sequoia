@@ -171,6 +171,10 @@ namespace sequoia::testing
       t.check_exception_thrown<std::logic_error>("Mismatched loop", [](){ return graph_type{{edge_init_type{0}}}; });
 
       // Two nodes
+      t.check_exception_thrown<std::out_of_range>(
+        "Target index out of range of an edge listed before one in range",
+        [](){ return graph_type{{edge_init_type{5}, edge_init_type{1}}, {edge_init_type{0}}}; }
+      );
       t.check_exception_thrown<std::logic_error>("Mismatched partial edges", [](){ return graph_type{{edge_init_type{1}}, {edge_init_type{1}}}; });
       t.check_exception_thrown<std::logic_error>("Mismatched loop", [](){ return graph_type{{edge_init_type{1}}, {edge_init_type{0}, edge_init_type{1}}}; });
 
