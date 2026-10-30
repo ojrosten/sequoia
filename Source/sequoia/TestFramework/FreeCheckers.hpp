@@ -64,6 +64,7 @@
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
 #include "sequoia/TestFramework/BinaryRelationships.hpp"
 #include "sequoia/TestFramework/Advice.hpp"
+#include "sequoia/TestFramework/Output.hpp"
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/Core/Meta/Utilities.hpp"
@@ -305,18 +306,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string operator()(const project_paths& projPaths, std::string message) const
     {
-      const auto root{projPaths.project_root().generic_string()};
-      if(root.empty())
-        return message;
-
-      // The separator is matched too, so that a root which merely begins another path's name is left
-      const auto rootDirectory{root + '/'};
-      for(auto pos{message.find(rootDirectory)}; pos != std::string::npos; pos = message.find(rootDirectory, pos))
-      {
-        message.erase(pos, rootDirectory.size());
-      }
-
-      return message;
+      return relative_to_root(std::move(message), projPaths.project_root());
     }
   };
 

@@ -124,6 +124,7 @@ namespace sequoia::testing
     test_array_iterators();
     test_relative_reporting_path();
     test_absolute_reporting_path();
+    test_relative_to_root();
   }
 
   void output_free_test::test_emphasise()
@@ -957,5 +958,20 @@ namespace sequoia::testing
     );
 
     check(equality, "A relative repository leaves the file unchanged", path_for_reporting(file, "Tests"), file);
+  }
+
+  void output_free_test::test_relative_to_root()
+  {
+    check(equality,
+          "Every path within the root is made relative to it",
+          relative_to_root("/proj/Tests/foo.cpp and /proj/Source/bar.cpp", "/proj"),
+          std::string{"Tests/foo.cpp and Source/bar.cpp"});
+
+    check(equality,
+          "A root which only begins another path's name leaves that path",
+          relative_to_root("/project/foo.cpp", "/proj"),
+          std::string{"/project/foo.cpp"});
+
+    check(equality, "An empty root leaves the text unchanged", relative_to_root("a/b", ""), std::string{"a/b"});
   }
 }
