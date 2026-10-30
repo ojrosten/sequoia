@@ -13,6 +13,7 @@
  */
 
 #include <string>
+#include <string_view>
 #include <stdexcept>
 
 namespace sequoia::maths::graph_errors
@@ -40,19 +41,41 @@ namespace sequoia::maths::graph_errors
   std::string node_insertion_index_message(std::string_view method, std::size_t order, std::size_t pos);
 
   [[nodiscard]]
-  std::string edge_index_range_message(std::string_view method, edge_indices edgeIndices, std::string_view indexName, std::size_t size, std::size_t index);
+  std::string edge_target_index_range_message(std::string_view method,
+                                              edge_indices edgeIndices,
+                                              std::size_t order,
+                                              std::size_t target);
 
   [[nodiscard]]
-  std::string edge_insertion_index_message(std::string_view method, std::size_t node,  std::size_t sizeAfterFirstInsertion, std::size_t index);
+  std::string edge_complementary_index_range_message(std::string_view method,
+                                                     edge_indices edgeIndices,
+                                                     std::size_t node,
+                                                     std::size_t numEdges,
+                                                     std::size_t index);
 
   [[nodiscard]]
-  std::string edge_swap_indices_message(std::size_t node, std::size_t index, std::size_t numEdges);
+  std::string edge_insertion_index_message(std::string_view method,
+                                           std::size_t node,
+                                           std::size_t sizeAfterFirstInsertion,
+                                           std::size_t index);
 
   [[nodiscard]]
-  std::string reciprocated_error_message(const edge_indices edgeIndices, const std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index);
+  std::string edge_swap_indices_message(std::string_view method,
+                                        std::size_t node,
+                                        std::size_t index,
+                                        std::size_t numEdges);
 
   [[nodiscard]]
-  std::string inconsistent_initialization_message(std::size_t numNodes, std::size_t edgeParitions);
+  std::string reciprocated_index_message(std::string_view method,
+                                         edge_indices edgeIndices,
+                                         std::string_view indexName,
+                                         std::size_t reciprocatedIndex,
+                                         std::size_t index);
+
+  [[nodiscard]]
+  std::string inconsistent_initialization_message(std::string_view method,
+                                                  std::size_t numNodes,
+                                                  std::size_t edgePartitions);
 
   constexpr void check_node_index_range(std::string_view method, const std::size_t order, const std::size_t node)
   {
@@ -72,10 +95,23 @@ namespace sequoia::maths::graph_errors
       throw std::out_of_range{node_insertion_index_message(method, order, pos)};
   }
 
-  constexpr void check_edge_index_range(std::string_view method, const edge_indices edgeIndices, std::string_view indexName, const std::size_t size, const std::size_t index)
+  constexpr void check_edge_target_index_range(std::string_view method,
+                                               const edge_indices edgeIndices,
+                                               const std::size_t order,
+                                               const std::size_t target)
   {
-    if(index >= size)
-      throw std::out_of_range{edge_index_range_message(method, edgeIndices, indexName, size, index)};
+    if(target >= order)
+      throw std::out_of_range{edge_target_index_range_message(method, edgeIndices, order, target)};
+  }
+
+  constexpr void check_edge_complementary_index_range(std::string_view method,
+                                                      const edge_indices edgeIndices,
+                                                      const std::size_t node,
+                                                      const std::size_t numEdges,
+                                                      const std::size_t index)
+  {
+    if(index >= numEdges)
+      throw std::out_of_range{edge_complementary_index_range_message(method, edgeIndices, node, numEdges, index)};
   }
 
   constexpr void check_edge_insertion_index(std::string_view method, const std::size_t node, const std::size_t sizeAfterFirstInsertion, const std::size_t index)
@@ -84,12 +120,16 @@ namespace sequoia::maths::graph_errors
       throw std::out_of_range{edge_insertion_index_message(method, node, sizeAfterFirstInsertion, index)};
   }
 
-  constexpr void check_edge_swap_indices(std::size_t node, std::size_t i, std::size_t j, std::size_t numEdges)
+  constexpr void check_edge_swap_indices(std::string_view method,
+                                         const std::size_t node,
+                                         const std::size_t i,
+                                         const std::size_t j,
+                                         const std::size_t numEdges)
   {
     auto check{
-      [node, numEdges](std::size_t index){
+      [method, node, numEdges](const std::size_t index){
         if(index >= numEdges)
-          throw std::out_of_range{edge_swap_indices_message(node, index, numEdges)};
+          throw std::out_of_range{edge_swap_indices_message(method, node, index, numEdges)};
       }
     };
 
@@ -97,20 +137,27 @@ namespace sequoia::maths::graph_errors
     check(j);
   }
 
-  constexpr void check_reciprocated_index(const edge_indices edgeIndices, std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index)
+  constexpr void check_reciprocated_index(std::string_view method,
+                                          const edge_indices edgeIndices,
+                                          std::string_view indexName,
+                                          const std::size_t reciprocatedIndex,
+                                          const std::size_t index)
   {
     if(reciprocatedIndex != index)
-      throw std::logic_error{reciprocated_error_message(edgeIndices, indexName, reciprocatedIndex, index)};
+      throw std::logic_error{reciprocated_index_message(method, edgeIndices, indexName, reciprocatedIndex, index)};
   }
 
   [[nodiscard]]
-  std::string erase_edge_error(std::size_t partner, edge_indices indices);
+  std::string absent_partner_message(std::string_view method, std::size_t partner, edge_indices indices);
 
   [[nodiscard]]
-  std::string odd_num_loops_error(std::string_view method, std::size_t nodeIndex);
+  std::string odd_num_loops_message(std::string_view method, std::size_t nodeIndex);
 
   [[nodiscard]]
-  std::string self_referential_error(edge_indices edgeIndices, std::size_t target, std::size_t compIndex);
+  std::string self_referential_indices_message(std::string_view method,
+                                               edge_indices edgeIndices,
+                                               std::size_t target,
+                                               std::size_t compIndex);
 
   [[nodiscard]]
   std::string mismatched_weights_message(std::string_view method, edge_indices edgeIndices);

@@ -20,26 +20,20 @@ namespace sequoia::maths::graph_errors
     }
 
     [[nodiscard]]
-    std::string prefix(std::string_view method)
-    {
-      return std::string{"connectivity::"}.append(method);
-    }
-
-    [[nodiscard]]
     std::string error_prefix(std::string_view method)
     {
-      return prefix(method).append(": ");
+      return std::format("{}: ", method);
     }
 
     [[nodiscard]]
     std::string error_prefix(std::string_view method, const edge_indices indices)
     {
-      return std::format("{} {}: ", prefix(method), to_string(indices));
+      return std::format("{} {}: ", method, to_string(indices));
     }
   }
 
   [[nodiscard]]
-  std::string node_index_range_message (std::string_view method, const std::size_t order, const std::size_t node)
+  std::string node_index_range_message(std::string_view method, const std::size_t order, const std::size_t node)
   {
     return std::format("{}node index {} out of range - graph order is {}", error_prefix(method), node, order);
   }
@@ -61,13 +55,29 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string edge_index_range_message(std::string_view method, const edge_indices edgeIndices, std::string_view indexName, const std::size_t size, const std::size_t index)
+  std::string edge_target_index_range_message(std::string_view method,
+                                              const edge_indices edgeIndices,
+                                              const std::size_t order,
+                                              const std::size_t target)
   {
-    return std::format("{}{} index {} out of range - max index is {}",
+    return std::format("{}target index {} out of range - graph order is {}",
                        error_prefix(method, edgeIndices),
-                       indexName,
+                       target,
+                       order);
+  }
+
+  [[nodiscard]]
+  std::string edge_complementary_index_range_message(std::string_view method,
+                                                     const edge_indices edgeIndices,
+                                                     const std::size_t node,
+                                                     const std::size_t numEdges,
+                                                     const std::size_t index)
+  {
+    return std::format("{}complementary index {} out of range for node {}, which has {} edge(s)",
+                       error_prefix(method, edgeIndices),
                        index,
-                       size);
+                       node,
+                       numEdges);
   }
 
   [[nodiscard]]
@@ -81,50 +91,61 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string edge_swap_indices_message(std::size_t node, std::size_t index, std::size_t numEdges)
+  std::string edge_swap_indices_message(std::string_view method,
+                                        const std::size_t node,
+                                        const std::size_t index,
+                                        const std::size_t numEdges)
   {
-    return std::format("swap_edges: edge index {} out of range for node {}, which has {} edge(s)",
+    return std::format("{}edge index {} out of range for node {}, which has {} edge(s)",
+                       error_prefix(method),
                        index,
                        node,
                        numEdges);
   }
 
   [[nodiscard]]
-  std::string reciprocated_error_message(const edge_indices edgeIndices, const std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index)
+  std::string reciprocated_index_message(std::string_view method,
+                                         const edge_indices edgeIndices,
+                                         std::string_view indexName,
+                                         const std::size_t reciprocatedIndex,
+                                         const std::size_t index)
   {
     return std::format("{}Reciprocated {} index {} does not match {}",
-                       error_prefix("process_complementary_edges", edgeIndices),
+                       error_prefix(method, edgeIndices),
                        indexName,
                        reciprocatedIndex,
                        index);
   }
 
   [[nodiscard]]
-  std::string erase_edge_error(const std::size_t partner, const edge_indices indices)
+  std::string absent_partner_message(std::string_view method, const std::size_t partner, const edge_indices indices)
   {
     return std::format("{}partner in partition {} not found for edge {}",
-                       error_prefix("erase_edge"),
+                       error_prefix(method),
                        partner,
                        to_string(indices));
   }
 
   [[nodiscard]]
-  std::string odd_num_loops_error(std::string_view method, std::size_t nodeIndex)
+  std::string odd_num_loops_message(std::string_view method, const std::size_t nodeIndex)
   {
     return std::format("{}Odd number of loop edges for node {}", error_prefix(method), nodeIndex);
   }
 
   [[nodiscard]]
-  std::string self_referential_error(const edge_indices edgeIndices, const std::size_t target, const std::size_t compIndex)
+  std::string self_referential_indices_message(std::string_view method,
+                                               const edge_indices edgeIndices,
+                                               const std::size_t target,
+                                               const std::size_t compIndex)
   {
-    return std::format("{}Indices [target: {}, comp: {}] are self-referential",
-                       error_prefix("process_complementary_edges", edgeIndices),
+    return std::format("{}Indices [target: {}, complementary index: {}] are self-referential",
+                       error_prefix(method, edgeIndices),
                        target,
                        compIndex);
   }
 
   [[nodiscard]]
-  std::string mismatched_weights_message(std::string_view method, edge_indices edgeIndices)
+  std::string mismatched_weights_message(std::string_view method, const edge_indices edgeIndices)
   {
     return error_prefix(method, edgeIndices).append("Mismatch between weights");
   }
@@ -178,19 +199,19 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string absent_partner_weight_message(std::string_view method, edge_indices edgeIndices)
+  std::string absent_partner_weight_message(std::string_view method, const edge_indices edgeIndices)
   {
     return error_prefix(method, edgeIndices).append("Partner weight not found");
   }
 
   [[nodiscard]]
-  std::string inconsistent_initialization_message(std::size_t numNodes, std::size_t edgeParitions)
+  std::string inconsistent_initialization_message(std::string_view method,
+                                                  const std::size_t numNodes,
+                                                  const std::size_t edgePartitions)
   {
-    return std::format("Error initializing graph\n"
-                       "Number of node weights:    {}\n"
-                       "Number of edge paritions:  {}\n"
-                       "Please ensure these numbers are the same",
+    return std::format("{}{} node weight(s), but {} edge partition(s)",
+                       error_prefix(method),
                        numNodes,
-                       edgeParitions);
+                       edgePartitions);
   }
 }
