@@ -837,15 +837,11 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string relative_to_root(std::string text, const fs::path& root)
+  std::string with_root_removed(std::string text, const fs::path& root)
   {
-    const auto rootName{root.generic_string()};
-    if(rootName.empty())
-      return text;
-
-    // Matching the separator too leaves alone a root which merely begins
-    // another path's name
-    replace_all(text, rootName + '/', "");
+    // The root as a directory, so that a path whose name merely begins with
+    // the root's name is left alone
+    replace_all(text, (root / "").generic_string(), "");
     return text;
   }
 
