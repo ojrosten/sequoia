@@ -280,6 +280,17 @@ namespace sequoia::testing
             },
             {
               graph_description::empty,
+              t.report(""),
+              [&t](const graph_type& g) -> const graph_type& {
+                t.check_exception_thrown<std::out_of_range>(
+                  "erasing node throws for empty graph",
+                  [g{g}]() mutable { g.erase_node(0); }
+                );
+                return g;
+              }
+            },
+            {
+              graph_description::empty,
               t.report("Clear empty graph"),
               [](graph_type g) -> graph_type {
                 g.clear();
