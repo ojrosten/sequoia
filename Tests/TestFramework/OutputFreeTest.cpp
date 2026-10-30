@@ -124,6 +124,7 @@ namespace sequoia::testing
     test_array_iterators();
     test_relative_reporting_path();
     test_absolute_reporting_path();
+    test_with_root_removed();
   }
 
   void output_free_test::test_emphasise()
@@ -957,5 +958,32 @@ namespace sequoia::testing
     );
 
     check(equality, "A relative repository leaves the file unchanged", path_for_reporting(file, "Tests"), file);
+  }
+
+  void output_free_test::test_with_root_removed()
+  {
+    check(equality,
+          "Every occurrence of the root as a directory is removed",
+          with_root_removed("/proj/Tests/foo.cpp and /proj/Source/bar.cpp", "/proj"),
+          std::string{"Tests/foo.cpp and Source/bar.cpp"});
+
+    check(equality,
+          "A root ending in a separator is the same directory",
+          with_root_removed("/proj/Tests/foo.cpp", "/proj/"),
+          std::string{"Tests/foo.cpp"});
+
+    check(equality,
+          "A path whose name merely begins with the root's is left",
+          with_root_removed("/project/foo.cpp", "/proj"),
+          std::string{"/project/foo.cpp"});
+
+    check(equality, "The root without a separator is left", with_root_removed("/proj", "/proj"), std::string{"/proj"});
+
+    check(equality,
+          "An occurrence within a longer path is removed too",
+          with_root_removed("/home/proj/x", "/proj"),
+          std::string{"/homex"});
+
+    check(equality, "An empty root leaves the text unchanged", with_root_removed("a/b", ""), std::string{"a/b"});
   }
 }

@@ -225,6 +225,14 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path path_for_reporting(const std::filesystem::path& file, const std::filesystem::path& repository);
 
+  /** \brief Returns `text` with each occurrence of the directory `root`,
+             written generically and ending in one `/`, removed.
+
+      An empty `root` leaves `text` unchanged.
+   */
+  [[nodiscard]]
+  std::string with_root_removed(std::string text, const std::filesystem::path& root);
+
   struct no_source_location_t{};
   inline constexpr no_source_location_t no_source_location{};
 

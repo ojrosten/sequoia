@@ -837,6 +837,15 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::string with_root_removed(std::string text, const fs::path& root)
+  {
+    // The root as a directory, so that a path whose name merely begins with
+    // the root's name is left alone
+    replace_all(text, (root / "").generic_string(), "");
+    return text;
+  }
+
+  [[nodiscard]]
   std::string report_line(std::string_view message, const fs::path& repository, const std::source_location loc)
   {
     return append_lines(std::format("{}, Line {}", path_for_reporting(loc.file_name(), repository).generic_string(), loc.line()), message).append("\n");
