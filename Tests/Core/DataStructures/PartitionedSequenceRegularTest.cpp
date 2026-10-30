@@ -298,7 +298,7 @@ namespace sequoia::testing
     STATIC_CHECK( sequence_admits_v<fake_container<std::size_t>, fake_partitions<std::size_t, std::size_t>>);
     STATIC_CHECK( sequence_admits_v<fake_container<std::size_t>, sentinel_ended_partitions>);
     STATIC_CHECK(!sequence_admits_v<fake_container<std::size_t>, untranslatable_partitions>);
-    STATIC_CHECK(!sequence_admits_v<std::vector<int>, maths::monotonic_sequence<std::size_t, last_digit_greater>>);
+    STATIC_CHECK(!sequence_admits_v<std::vector<int>,            maths::monotonic_sequence<std::size_t, last_digit_greater>>);
     STATIC_CHECK(!sequence_admits_v<fake_container<std::size_t>, equal_bound_refusing_partitions>);
     STATIC_CHECK(!sequence_admits_v<fake_container<std::size_t>, rising_bound_refusing_partitions>);
     STATIC_CHECK(!sequence_admits_v<fake_container<std::size_t>, runtime_compared_partitions>);

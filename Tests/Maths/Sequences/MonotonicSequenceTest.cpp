@@ -49,8 +49,8 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    STATIC_CHECK(translatable_v<monotonic_sequence<int>>);
-    STATIC_CHECK(translatable_v<static_monotonic_sequence<std::size_t, 2, std::ranges::greater>>);
+    STATIC_CHECK( translatable_v<monotonic_sequence<int>>);
+    STATIC_CHECK( translatable_v<static_monotonic_sequence<std::size_t, 2, std::ranges::greater>>);
 
     STATIC_CHECK(!translatable_v<static_monotonic_sequence<double, 2>>);
     STATIC_CHECK(!translatable_v<static_monotonic_sequence<int, 2, std::ranges::less_equal>>);
