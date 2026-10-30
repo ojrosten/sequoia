@@ -55,7 +55,7 @@ namespace sequoia::maths::impl
       comparisons that do.
    */
   template<class Compare>
-  inline constexpr bool translation_invariant_order_v{
+  inline constexpr bool numeric_order_v{
     std::same_as<Compare, std::ranges::less> || std::same_as<Compare, std::ranges::greater>
   };
 
