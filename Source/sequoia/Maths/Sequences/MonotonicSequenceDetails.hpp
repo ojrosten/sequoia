@@ -45,11 +45,14 @@ namespace sequoia::maths::impl
   template<class C>
   inline constexpr bool swap_is_noexcept_v{swap_is_noexcept<C>::value};
 
-  /** \brief True only for comparisons known to preserve how they order two
-             integers when a constant is added to both, without overflow.
+  /** \brief True only for comparisons known to order integers as `<` or `>`
+             does.
 
-      No compile-time test can establish the property, so the trait is false
-      for some comparisons that have it.
+      Such a comparison puts every element of a run that it orders between
+      the run's ends, and its verdict on two integers is unchanged by adding
+      a constant to both, absent overflow. No test can establish ordering as
+      `<` or `>` does for every integer type, so the trait is false for some
+      comparisons that do.
    */
   template<class Compare>
   inline constexpr bool translation_invariant_order_v{
