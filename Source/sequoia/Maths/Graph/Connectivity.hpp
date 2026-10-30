@@ -972,11 +972,11 @@ namespace sequoia
       [[nodiscard]]
       constexpr static edge_storage_type make_edges(edges_initializer edges, const Allocators&... as)
       {
-        return process_edges(validate(preprocess(validate_targets(edges))), as...);
+        return process_edges(validate(preprocess(validate_target_ranges(edges))), as...);
       }
 
       [[nodiscard]]
-      constexpr static const edges_initializer& validate_targets(const edges_initializer& edges)
+      constexpr static const edges_initializer& validate_target_ranges(const edges_initializer& edges)
       {
         for(const auto [nodeIndex, nodeEdges] : std::views::enumerate(edges))
         {
@@ -1061,6 +1061,7 @@ namespace sequoia
             };
             const auto target{edge.target_node()};
             const auto compIndex{edge.complementary_index()};
+            // In bounds only because make_edges calls validate_target_ranges first
             const auto& targetEdges{edges.begin()[target]};
             graph_errors::check_edge_complementary_index_range(
               "validate",
@@ -1119,7 +1120,6 @@ namespace sequoia
       {
         return edges;
       }
-
 
       template<class Edges>
       using partition_iterator_range = std::ranges::subrange<typename Edges::const_partition_iterator>;
@@ -1304,6 +1304,7 @@ namespace sequoia
                 }()
               };
 
+              // In bounds only because make_edges calls validate_target_ranges first
               auto eqrange{std::ranges::equal_range(orderedEdges.partition(target), comparisonEdge, graph_impl::edge_comparer{})};
 
               if constexpr(clusterEdges)
