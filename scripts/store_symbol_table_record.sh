@@ -62,7 +62,7 @@
 # instructions, 1 in 200 for its system calls, and 1 in 100,000 for the
 # instructions of compiling each unit of compile_cost. A null in a path of
 # measured_fields stands for any key, so that one entry names every unit's
-# count.
+# count. A path takes the denominator of the first entry it matches.
 #
 # The spread measured, with the performance tests excluded from the setup's
 # runs: prune's analysis moved by up to 722 parts in a million between jobs
