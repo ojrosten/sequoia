@@ -3,11 +3,11 @@ name: metrics-gate
 # The gates on the counts which the metrics dashboard plots. fine calls this
 # workflow, so the gates hold pull requests into staging.
 #
-# The run measures the pull request's merge into staging, as GitHub makes it
-# for the pull request, with symbol-table.yml, which records each push to
-# staging the same way. It then compares the record with the baseline: the
-# record which the data branch holds for the merge's first parent, the
-# staging commit on which GitHub made the merge. scripts/metrics_gate.py
+# The run measures GitHub's merge of the pull request into staging with
+# symbol-table.yml, which records each push to staging the same way. The run
+# then compares the record with the baseline: the record which the data
+# branch holds for the merge's first parent, the staging commit on which
+# GitHub made the merge. scripts/metrics_gate.py
 # says which counts the comparison reads, and what fails. No baseline is
 # ever built here.
 #
