@@ -64,10 +64,10 @@ namespace sequoia::maths::graph_errors
 
   [[nodiscard]]
   std::string reciprocated_index_message(std::string_view method,
-                                         const edge_indices edgeIndices,
-                                         const std::string_view indexName,
-                                         const std::size_t reciprocatedIndex,
-                                         const std::size_t index);
+                                         edge_indices edgeIndices,
+                                         std::string_view indexName,
+                                         std::size_t reciprocatedIndex,
+                                         std::size_t index);
 
   [[nodiscard]]
   std::string inconsistent_initialization_message(std::string_view method,
@@ -118,13 +118,13 @@ namespace sequoia::maths::graph_errors
   }
 
   constexpr void check_edge_swap_indices(std::string_view method,
-                                         std::size_t node,
-                                         std::size_t i,
-                                         std::size_t j,
-                                         std::size_t numEdges)
+                                         const std::size_t node,
+                                         const std::size_t i,
+                                         const std::size_t j,
+                                         const std::size_t numEdges)
   {
     auto check{
-      [method, node, numEdges](std::size_t index){
+      [method, node, numEdges](const std::size_t index){
         if(index >= numEdges)
           throw std::out_of_range{edge_swap_indices_message(method, node, index, numEdges)};
       }

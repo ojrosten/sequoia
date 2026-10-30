@@ -92,9 +92,9 @@ namespace sequoia::maths::graph_errors
 
   [[nodiscard]]
   std::string edge_swap_indices_message(std::string_view method,
-                                        std::size_t node,
-                                        std::size_t index,
-                                        std::size_t numEdges)
+                                        const std::size_t node,
+                                        const std::size_t index,
+                                        const std::size_t numEdges)
   {
     return std::format("{}edge index {} out of range for node {}, which has {} edge(s)",
                        error_prefix(method),
@@ -106,7 +106,7 @@ namespace sequoia::maths::graph_errors
   [[nodiscard]]
   std::string reciprocated_index_message(std::string_view method,
                                          const edge_indices edgeIndices,
-                                         const std::string_view indexName,
+                                         std::string_view indexName,
                                          const std::size_t reciprocatedIndex,
                                          const std::size_t index)
   {
@@ -127,7 +127,7 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string odd_num_loops_message(std::string_view method, std::size_t nodeIndex)
+  std::string odd_num_loops_message(std::string_view method, const std::size_t nodeIndex)
   {
     return std::format("{}Odd number of loop edges for node {}", error_prefix(method), nodeIndex);
   }
@@ -145,7 +145,7 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string mismatched_weights_message(std::string_view method, edge_indices edgeIndices)
+  std::string mismatched_weights_message(std::string_view method, const edge_indices edgeIndices)
   {
     return error_prefix(method, edgeIndices).append("Mismatch between weights");
   }
@@ -199,15 +199,15 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string absent_partner_weight_message(std::string_view method, edge_indices edgeIndices)
+  std::string absent_partner_weight_message(std::string_view method, const edge_indices edgeIndices)
   {
     return error_prefix(method, edgeIndices).append("Partner weight not found");
   }
 
   [[nodiscard]]
   std::string inconsistent_initialization_message(std::string_view method,
-                                                  std::size_t numNodes,
-                                                  std::size_t edgePartitions)
+                                                  const std::size_t numNodes,
+                                                  const std::size_t edgePartitions)
   {
     return std::format("{}{} node weight(s), but {} edge partition(s)",
                        error_prefix(method),
