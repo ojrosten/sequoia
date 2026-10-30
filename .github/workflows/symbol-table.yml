@@ -463,7 +463,9 @@ jobs:
   # checkouts and checks. The time a
   # compilation takes varies with the runner: g++-15 took 25 s to 41 s to
   # compile one unit on runners with AMD EPYC 7763, 9V45 and 9V74 CPUs (run
-  # 41050414618). The count varies by about a part in a million (below).
+  # 41050414618). The count of each unit moved by at most 0.99 parts in a
+  # million between nine jobs on AMD EPYC 7763, 9V45 and 9V74 and Intel Xeon
+  # Platinum 8573C (run 41088220210).
   #
   # The count is of clang's compilations, since only clang's sees the
   # regression which motivates it. f6d204905 removed the clause bounds_for
@@ -490,7 +492,9 @@ jobs:
   #   - AffineCoordinatesTestingDiagnostics.cpp: the concepts of
   #     Spaces.hpp, the unit above.
   # The dashboard breaks the series where the units change, since the counts
-  # of different units do not compare.
+  # of different units do not compare. Installing clang took 17 s to 23 s,
+  # and counting the three units 5.6 to 8.7 minutes, over thirteen jobs (runs
+  # 41088220210 and 41090129082).
   compile-cost:
     name: Compile cost · Linux · clang · Debug
     # Another workflow which calls this one, as a gate on a pull request

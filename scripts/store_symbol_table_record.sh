@@ -69,9 +69,10 @@
 # measuring one commit, since it began reading .ninja_deps; the setup's
 # instructions by up to 1.04%, and its system calls by up to 0.37%, between
 # commits whose code is identical. The setup's tests are counted exactly, so
-# the instructions move as they do per test. The instructions of clang's
-# compilation of a unit moved by up to 0.84 parts in a million between four
-# jobs on AMD EPYC 9V45 and 9V74. Each tolerance is wider
+# the instructions move as they do per test. The instructions of clang
+# 23.1.4's compilation of a unit moved by up to 0.99 parts in a million
+# between nine jobs on AMD EPYC 7763, 9V45 and 9V74 and Intel Xeon Platinum
+# 8573C. Each tolerance is wider
 # than its count's spread, so that an honest re-measurement is not refused.
 #
 # A branch which does not exist is created, with no history. The push is
