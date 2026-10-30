@@ -34,13 +34,15 @@ namespace sequoia::testing
 
     void test_pushes_wake_a_waiting_pop();
 
+    void test_pushes_to_a_finished_queue_throw();
+
     void test_thread_pools_refuse_zero_threads();
 
     template<class ThreadPool>
     void test_every_task_pushed_from_several_threads_runs(std::string_view poolKind);
 
     template<class ThreadPool>
-    void test_a_task_pushed_after_join_never_runs(std::string_view poolKind);
+    void test_a_push_after_join_throws(std::string_view poolKind);
 
     template<class ThreadModel, class... Args>
     void test_exceptions(std::string_view message, Args&&... args);

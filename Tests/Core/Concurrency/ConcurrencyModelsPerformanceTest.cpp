@@ -215,10 +215,10 @@ namespace sequoia::testing
   void threading_models_performance_test::test_waiting_task(const std::chrono::milliseconds millisecs)
   {
     {
-      waiting_task_with_baseline<wait, thread_pool<void>>        threadPoolTask{2u, millisecs, 2u};
-      waiting_task_with_baseline<wait, thread_pool<void, false>> threadPoolMonoTask{2u, millisecs, 2u};
-      waiting_task_with_baseline<wait, serial<void>>             nullThreadTask{2u, millisecs};
-      waiting_task_with_baseline<wait, asynchronous<void>>       asyncTask{2u, millisecs};
+      waiting_task_with_baseline<wait, thread_pool<void>>              threadPoolTask{2u, millisecs, 2u};
+      waiting_task_with_baseline<wait, shared_queue_thread_pool<void>> threadPoolMonoTask{2u, millisecs, 2u};
+      waiting_task_with_baseline<wait, serial<void>>                   nullThreadTask{2u, millisecs};
+      waiting_task_with_baseline<wait, asynchronous<void>>             asyncTask{2u, millisecs};
 
       check_relative_performance("Two Waiting tasks; pool_2/null",
                                  threadPoolTask.by_reference(), nullThreadTask.by_reference(),
@@ -232,9 +232,9 @@ namespace sequoia::testing
     }
 
     {
-      waiting_task_with_baseline<wait, thread_pool<void>>        threadPoolTask{4u, millisecs, 2u};
-      waiting_task_with_baseline<wait, thread_pool<void, false>> threadPoolMonoTask{4u, millisecs, 2u};
-      waiting_task_with_baseline<wait, serial<void>>             nullThreadTask{4u, millisecs};
+      waiting_task_with_baseline<wait, thread_pool<void>>              threadPoolTask{4u, millisecs, 2u};
+      waiting_task_with_baseline<wait, shared_queue_thread_pool<void>> threadPoolMonoTask{4u, millisecs, 2u};
+      waiting_task_with_baseline<wait, serial<void>>                   nullThreadTask{4u, millisecs};
 
       check_relative_performance("Four Waiting tasks; pool_2/null",
                                  threadPoolTask.by_reference(), nullThreadTask.by_reference(),
@@ -245,9 +245,9 @@ namespace sequoia::testing
     }
 
     {
-      waiting_task_with_baseline<wait, thread_pool<void>>        threadPoolTask{4u, millisecs, 4u};
-      waiting_task_with_baseline<wait, thread_pool<void, false>> threadPoolMonoTask{4u, millisecs, 4u};
-      waiting_task_with_baseline<wait, serial<void>>             nullThreadTask{4u, millisecs};
+      waiting_task_with_baseline<wait, thread_pool<void>>              threadPoolTask{4u, millisecs, 4u};
+      waiting_task_with_baseline<wait, shared_queue_thread_pool<void>> threadPoolMonoTask{4u, millisecs, 4u};
+      waiting_task_with_baseline<wait, serial<void>>                   nullThreadTask{4u, millisecs};
 
       check_relative_performance("Four Waiting tasks; pool_4/null",
                                  threadPoolTask.by_reference(), nullThreadTask.by_reference(),
@@ -261,10 +261,10 @@ namespace sequoia::testing
   void threading_models_performance_test::test_waiting_task_return(const std::chrono::milliseconds millisecs)
   {
     {
-      waiting_task_with_baseline<wait_and_return, thread_pool<int>>        threadPoolTask{2u, millisecs, 2u};
-      waiting_task_with_baseline<wait_and_return, thread_pool<int, false>> threadPoolMonoTask{2u, millisecs, 2u};
-      waiting_task_with_baseline<wait_and_return, serial<int>>             nullThreadTask{2u, millisecs};
-      waiting_task_with_baseline<wait_and_return, asynchronous<int>>       asyncTask{2u, millisecs};
+      waiting_task_with_baseline<wait_and_return, thread_pool<int>>              threadPoolTask{2u, millisecs, 2u};
+      waiting_task_with_baseline<wait_and_return, shared_queue_thread_pool<int>> threadPoolMonoTask{2u, millisecs, 2u};
+      waiting_task_with_baseline<wait_and_return, serial<int>>                   nullThreadTask{2u, millisecs};
+      waiting_task_with_baseline<wait_and_return, asynchronous<int>>             asyncTask{2u, millisecs};
 
       check_relative_performance("Two Waiting tasks; pool_2/null",
                                  threadPoolTask.by_reference(), nullThreadTask.by_reference(),

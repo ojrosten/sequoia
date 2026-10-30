@@ -1,5 +1,23 @@
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 356
-A thread pool with a pipeline for each thread refuses zero threads
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 357
+A push to a finished queue throws
+
+Expected Exception Type:
+[std::logic_error]
+A task cannot be pushed to a finished task_queue
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 363
+A try-push to a finished queue throws once it takes the mutex
+
+Expected Exception Type:
+[std::logic_error]
+A task cannot be pushed to a finished task_queue
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 369
+A thread pool with a queue for each thread refuses zero threads
 
 Expected Exception Type:
 [std::invalid_argument]
@@ -7,8 +25,8 @@ A thread pool requires at least one thread
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 359
-A thread pool with a single pipeline refuses zero threads
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 372
+A thread pool with a shared queue refuses zero threads
 
 Expected Exception Type:
 [std::invalid_argument]
@@ -16,7 +34,25 @@ A thread pool requires at least one thread
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 441
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 417
+A push after join to a pool with a queue for each thread throws
+
+Expected Exception Type:
+[std::logic_error]
+A task cannot be pushed to a finished task_queue
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 417
+A push after join to a pool with a shared queue throws
+
+Expected Exception Type:
+[std::logic_error]
+A task cannot be pushed to a finished task_queue
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 429
 pool_2M
 
 Expected Exception Type:
@@ -25,7 +61,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 441
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 429
 pool_2
 
 Expected Exception Type:
@@ -34,7 +70,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 441
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 429
 async
 
 Expected Exception Type:
@@ -43,7 +79,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 441
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 429
 pool_2M
 
 Expected Exception Type:
@@ -52,7 +88,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 441
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 429
 pool_2
 
 Expected Exception Type:
@@ -61,7 +97,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 441
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 429
 async
 
 Expected Exception Type:
@@ -70,7 +106,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 465
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 453
 
 Expected Exception Type:
 [std::runtime_error]
@@ -78,7 +114,7 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 466
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 454
 
 Expected Exception Type:
 [std::runtime_error]

@@ -1009,7 +1009,7 @@ namespace sequoia::testing
     test_versioned_output_check();
     test_discarded_materials_removal();
     test_discarded_materials_removal_failure();
-    test_discarded_materials_removal_exception();
+    test_discarded_materials_removal_refusal();
     test_nested_suite();
     test_nested_suite_verbose();
     test_suite_named_as_a_sibling_test();
@@ -2943,12 +2943,10 @@ namespace sequoia::testing
     check_output("Discarded Materials Removal Failure Output", "DiscardedMaterialsRemovalFailureOutput", outputStream);
   }
 
-  /** A removal enqueued after its remover has joined never runs, so once the
-      remover is destroyed, the removal's future holds a `std::future_error`.
-      The test to run reports that as a failure naming the discarded root.
-      The exception's message is the library's, so it is not checked.
+  /** A remover which has joined refuses a removal, so the test to run fails
+      to prepare its materials, and holds no removal to report afterwards.
    */
-  void test_runner_test::test_discarded_materials_removal_exception()
+  void test_runner_test::test_discarded_materials_removal_refusal()
   {
     std::stringstream outputStream{};
     commandline_arguments args{fake_project_commandline(auxiliary_materials())};
@@ -2969,19 +2967,14 @@ namespace sequoia::testing
     fs::remove_all(materials.discarded_materials_root());
     fs::create_directories(materials.temporary_materials_root());
 
-    {
-      discarded_materials_remover remover{};
-      remover.join();
-      check(equality,
-            "Materials prepared, so the removal enqueued",
-            testToRun.execute(std::nullopt, remover).critical_failures(),
-            0uz);
-    }
-
+    discarded_materials_remover remover{};
+    remover.join();
     check(equality,
-          "A removal which threw is a failure naming the discarded root",
-          testToRun.extract_discarded_materials_removal_failure().value_or(removal_failure{}).dir,
-          materials.discarded_materials_root());
+          "The refused removal is a critical failure of the materials' preparation",
+          testToRun.execute(std::nullopt, remover).critical_failures(),
+          1uz);
+
+    check("No removal failure remains to be reported", !testToRun.extract_discarded_materials_removal_failure());
   }
 
   void test_runner_test::test_exit_statuses()

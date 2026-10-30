@@ -36,6 +36,8 @@ namespace sequoia::concurrency
 
       This class supports both aggressive pushing and popping and also speculative versions which
       do not necessarily acquire the underlying mutex and may therefore fail.
+
+      \throws std::logic_error from either `push` on a finished queue.
    */
   template<class R, class Task=std::packaged_task<R()>, class Q=std::queue<Task>>
   class task_queue
@@ -66,6 +68,7 @@ namespace sequoia::concurrency
     {
       {
         std::scoped_lock<std::mutex> lock{m_Mutex};
+        refuse_if_finished();
         m_Q.push(std::move(task));
       }
 
@@ -77,6 +80,7 @@ namespace sequoia::concurrency
     {
       if(std::unique_lock<std::mutex> lock{m_Mutex, t}; lock)
       {
+        refuse_if_finished();
         m_Q.push(std::move(task));
       }
       else
@@ -114,6 +118,13 @@ namespace sequoia::concurrency
     std::condition_variable m_CV;
     bool m_Finished{};
 
+    // The caller holds the mutex, so a push either precedes `finish` or throws
+    void refuse_if_finished() const
+    {
+      if(m_Finished)
+        throw std::logic_error{"A task cannot be pushed to a finished task_queue"};
+    }
+
     [[nodiscard]]
     Task get()
     {
@@ -128,9 +139,14 @@ namespace sequoia::concurrency
     }
   };
 
+  /** \brief The task queues of a `thread_pool`: one queue which every thread
+             shares, or a queue for each thread.
+   */
+  enum class task_queue_arrangement : bool { shared, one_per_thread };
+
   namespace impl
   {
-    template<class R, bool MultiPipeline> struct queue_details
+    template<class R, task_queue_arrangement Arrangement> struct queue_details
     {
       using Q_type     = task_queue<R>;
       using task_type  = Q_type::task_type;
@@ -139,7 +155,7 @@ namespace sequoia::concurrency
       std::size_t push_cycles{};
     };
 
-    template<class R> struct queue_details<R, false>
+    template<class R> struct queue_details<R, task_queue_arrangement::shared>
     {
       using Q_type     = task_queue<R>;
       using task_type  = Q_type::task_type;
@@ -195,33 +211,32 @@ namespace sequoia::concurrency
 
   /** \brief A pool of threads that runs the tasks pushed to it.
 
-      Tasks reach the threads through either a single pipeline or a pipeline
-      for each thread. With a pipeline for each thread, a thread may take a
-      task from another thread's pipeline (task stealing).
+      Tasks reach the threads through either one queue, which every thread
+      shares, or a queue for each thread. With a queue for each thread, a
+      thread may take a task from another thread's queue (task stealing).
 
-      Several threads may call `push` concurrently. Once `join` has returned,
-      a task pushed to the pool never runs: its future becomes ready only when
-      the pool is destroyed, and then holds a `std::future_error` whose code is
-      `std::future_errc::broken_promise`.
+      Several threads may call `push` concurrently. Every task that `push`
+      accepts runs before `join`, or the destructor, returns.
 
       \throws std::invalid_argument if constructed with zero threads.
+      \throws std::logic_error from `push` once `join` has returned.
    */
 
-  template<class R, bool MultiPipeline=true>
-  class thread_pool : private impl::queue_details<R, MultiPipeline>
+  template<class R, task_queue_arrangement Arrangement=task_queue_arrangement::one_per_thread>
+  class thread_pool : private impl::queue_details<R, Arrangement>
   {
   public:
     using return_type = R;
 
     explicit thread_pool(const std::size_t numThreads)
-      requires(!MultiPipeline)
+      requires(Arrangement == task_queue_arrangement::shared)
     {
       make_pool(numThreads);
     }
 
     thread_pool(const std::size_t numThreads, const std::size_t pushCycles = 46)
-      requires MultiPipeline
-      : impl::queue_details<R, MultiPipeline>{pushCycles}
+      requires(Arrangement == task_queue_arrangement::one_per_thread)
+      : impl::queue_details<R, Arrangement>{pushCycles}
       , m_Queues(numThreads)
     {
       make_pool(numThreads);
@@ -246,7 +261,7 @@ namespace sequoia::concurrency
       task_type task{std::move(fn)};
       std::future<R> f{task.get_future()};
 
-      if constexpr(MultiPipeline)
+      if constexpr(Arrangement == task_queue_arrangement::one_per_thread)
       {
         const auto qIndex{m_QueueIndex.fetch_add(1, std::memory_order_relaxed)};
         const auto N{m_Threads.size()};
@@ -287,8 +302,8 @@ namespace sequoia::concurrency
       joined = true;
     }
   private:
-    using task_type   = impl::queue_details<R, MultiPipeline>::task_type;
-    using Queues_type = impl::queue_details<R, MultiPipeline>::queue_type;
+    using task_type   = impl::queue_details<R, Arrangement>::task_type;
+    using Queues_type = impl::queue_details<R, Arrangement>::queue_type;
 
     Queues_type m_Queues;
     std::vector<std::thread> m_Threads;
@@ -306,7 +321,7 @@ namespace sequoia::concurrency
       for(std::size_t q{}; q<numThreads; ++q)
       {
         auto loop{[=,this]() {
-            if constexpr(MultiPipeline)
+            if constexpr(Arrangement == task_queue_arrangement::one_per_thread)
             {
               task_type task{m_Queues[q].pop()};
               if(task.valid())
@@ -319,7 +334,7 @@ namespace sequoia::concurrency
             {
               task_type task{};
 
-              if constexpr(MultiPipeline)
+              if constexpr(Arrangement == task_queue_arrangement::one_per_thread)
               {
                 const auto N{m_Threads.size()};
                 for(std::size_t i{}; i<N; ++i)
@@ -351,7 +366,7 @@ namespace sequoia::concurrency
 
     void join_all()
     {
-      if constexpr(MultiPipeline)
+      if constexpr(Arrangement == task_queue_arrangement::one_per_thread)
         for(auto& q : m_Queues) q.finish();
       else
         m_Queues.finish();
@@ -359,4 +374,8 @@ namespace sequoia::concurrency
       for(auto& t : m_Threads) t.join();
     }
   };
+
+  /** \brief A `thread_pool` whose threads share one queue. */
+  template<class R>
+  using shared_queue_thread_pool = thread_pool<R, task_queue_arrangement::shared>;
 }
