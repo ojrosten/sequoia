@@ -9,11 +9,11 @@ name: symbol-table
 # A commit whose presets lack `gcc-env`, as every commit before 2026-09-06
 # does, cannot be recorded: its job fails at "Configure".
 # scripts/symbol_table_report.py says what a record holds, and
-# scripts/symbol_table_provenance.py what it adds to it. Each of the steps
-# which add the count of prune's analysis, the cost of leftover materials and
-# the cost of compiling also adds `cpu_model` to its section: the model name
-# of the CPU of the runner which ran the job.
-# scripts/store_symbol_table_record.sh says how the store treats it.
+# scripts/symbol_table_provenance.py what it adds to it. The step which adds
+# the count of prune's analysis, and the step which adds the cost of leftover
+# materials, each also adds `cpu_model` to its section: the model name of the
+# CPU of the runner which ran the job. scripts/store_symbol_table_record.sh
+# says how the store treats it.
 #
 # The workflow builds TestAll and runs its suite once, only to leave prune a
 # stamp. It then runs `TestAll prune` under callgrind, to count the
@@ -35,20 +35,20 @@ name: symbol-table
 # existed may hold `runner_setup`, the counts of one run: no step writes it
 # now.
 #
-# Last, the workflow compiles three units of TestAll with clang, under
-# cachegrind, and a record carries the instructions of compiling each as
-# `compile_cost`.
-#
 # A commit already recorded can be recorded again, to add the fields its
-# record lacks, such as `prune_dependency_analysis`,
-# `leftover_materials_setup` or `compile_cost`. The job rebuilds what the
-# counts need, and the
+# record lacks, such as `prune_dependency_analysis` or
+# `leftover_materials_setup`. The job rebuilds what the counts need, and the
 # store replaces the held record with one which keeps every field and adds the
 # new ones (scripts/store_symbol_table_record.sh). A commit whose runner leaves
 # prune no stamp is recorded without the field, and its job succeeds.
 #
 # Every job uploads its record as an artifact. A run dispatched on a branch
 # other than staging stores nothing.
+#
+# A second job, beside the first for each commit, counts the instructions
+# which clang executes to compile a few units of TestAll, and stores them as
+# a record of their own, at compile-cost/linux-clang-debug/<commit>.json. The
+# job says why.
 on:
   push:
     branches:
@@ -77,7 +77,7 @@ jobs:
     # toolchain, measures and stores with the steps and the scripts of the
     # commit the run is on, so that an old commit is measured as a push to
     # staging would measure it today.
-    strategy:
+    strategy: &one-job-per-commit
       fail-fast: false
       # Without a cap, a backfill of more commits than the account may run
       # jobs at once would take every runner, and the tiers' jobs would queue
@@ -95,9 +95,8 @@ jobs:
     # a change of toolchain shows as a break in the history.
     runs-on: ubuntu-26.04
     # The job also builds TestFrameworkDiagnostics and runs it twice under
-    # callgrind, and it compiles three units under cachegrind, with a clang
-    # which it installs. Valgrind makes each run and each compilation many
-    # times slower than a native one. The timeout allows for all of these.
+    # callgrind, which is many times slower than a native run. The timeout
+    # allows for all three.
     timeout-minutes: 75
     # "Store the record on the data branch" pushes, which needs
     # `contents: write`. The job asks for it, so that it keeps working if the
@@ -122,14 +121,16 @@ jobs:
       # `tooling` holds the run's commit's whole history, without trees or
       # blobs, so that the history can be checked below. git fetches a tree
       # or a blob from the remote when a command needs it.
-      - name: Check out the tooling
+      - &check-out-the-tooling
+        name: Check out the tooling
         uses: actions/checkout@v7
         with:
           path: tooling
           fetch-depth: 0
           filter: tree:0
 
-      - name: Check out the commit to record
+      - &check-out-the-commit-to-record
+        name: Check out the commit to record
         uses: actions/checkout@v7
         with:
           path: tree
@@ -138,7 +139,8 @@ jobs:
 
       # actions/checkout takes a ref which is not a full hash as a branch or
       # a tag, so the commit checked out could differ from the one asked for.
-      - name: Check that the commit checked out is the commit asked for
+      - &check-the-commit-checked-out
+        name: Check that the commit checked out is the commit asked for
         env:
           COMMIT: ${{ matrix.commit }}
         run: |
@@ -151,7 +153,8 @@ jobs:
       # first-parent history of the run's commit: a commit of a merged topic
       # branch, as well as a commit of a branch never merged. grep reads the
       # whole list, so that rev-list never meets a closed pipe.
-      - name: Check that the commit checked out is on the run's first-parent history
+      - &check-the-first-parent-history
+        name: Check that the commit checked out is on the run's first-parent history
         run: |
           checked_out=$(git -C tree rev-parse HEAD)
           git -C tooling rev-list --first-parent HEAD | grep -xF "$checked_out" > /dev/null \
@@ -396,83 +399,6 @@ jobs:
             > "$RUNNER_TEMP/leftover_materials_setup.json"
           cat "$RUNNER_TEMP/leftover_materials_setup.json"
 
-      # The instructions which clang executes to compile each of three units of
-      # TestAll, as the field `compile_cost` of the record. The time a
-      # compilation takes varies with the runner: g++-15 took 25 s to 41 s to
-      # compile one unit on runners with AMD EPYC 7763, 9V45 and 9V74 CPUs (run
-      # 41050414618). The count moves by at most a part in a million (below).
-      # Like the counts above, these steps are tolerated to fail, and a record
-      # without the field is a record.
-      #
-      # The rest of the record is of GCC's build, but the count is of clang's
-      # compilations, since only clang's count sees the regression which
-      # motivates it. At f6d204905's parent, the clause bounds_for in
-      # representation_for took clang 23's compilation of
-      # AffineCoordinatesTestingDiagnostics.cpp from 7.9 s to 119 s, and its
-      # instructions from 5.3e10 to 1.03e12 (run 41058970770). GCC 15 took
-      # 3.7 s with the clause and without it, and executed 0.012% more
-      # instructions with it (run 41054421845). Ubuntu's clang, 21.1.8, crashed
-      # compiling two of sequoia's tests, so clang comes from Homebrew, which
-      # installs its latest release. The field names the compiler, and the
-      # dashboard breaks the series where the compiler changes.
-      #
-      # The step configures TestAll with clang, by the preset llvm-env, and
-      # builds nothing. It then compiles each unit by the command in the
-      # compilation database, under valgrind's cachegrind. Cachegrind counts
-      # the instructions of the compiler's driver and of each process the
-      # driver starts. scripts/compile_cost_record.py says how; the script
-      # leaves the build directory as it was, and gives each compilation an
-      # environment of its own, since the count depends on the environment's
-      # size. Unlike the counts above, the step runs cachegrind, not callgrind.
-      # Both count each instruction, but callgrind also records the calls, and
-      # took 2.3 times as long to count one compilation. The count needs no
-      # toggle of collection, which only callgrind has. The count of each unit
-      # moved by at most 0.84 parts in a million between four jobs on AMD EPYC
-      # 9V45 and 9V74 (run 41074258368); g++-15's did not move at all between
-      # jobs on AMD EPYC 7763, 9V45 and Intel Xeon Platinum 8573C (run
-      # 41062998624).
-      #
-      # The step names the units, each for the machinery it instantiates:
-      #   - OrderableRegularAllocationTestDiagnostics.cpp: the test framework's
-      #     checks of semantics and of allocations;
-      #   - DynamicUndirectedGraphUnweightedTest.cpp: the graphs, and the
-      #     framework's tests of them;
-      #   - AffineCoordinatesTestingDiagnostics.cpp: the concepts of
-      #     Spaces.hpp, the unit above.
-      # The three take 6 to 10 minutes under cachegrind, and installing clang
-      # about a minute (runs 41067220058 and 41074258368). The dashboard
-      # breaks the series where the units change, since the counts of
-      # different units do not compare.
-      - name: Install clang
-        continue-on-error: true
-        run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          brew install llvm
-          llvm=$(brew --prefix llvm)
-          "$llvm/bin/clang++" --version
-          echo "COMPILE_COST_CC=$llvm/bin/clang" >> "$GITHUB_ENV"
-          echo "COMPILE_COST_CXX=$llvm/bin/clang++" >> "$GITHUB_ENV"
-
-      # Without clang, the preset would configure with the default compiler,
-      # GCC, and the field would count GCC's compilations.
-      - name: Count the instructions of compiling three units
-        continue-on-error: true
-        timeout-minutes: 30
-        working-directory: tree/TestAll
-        run: |
-          if [ -z "${COMPILE_COST_CXX:-}" ]; then
-            echo "::warning::clang was not installed, so the record has no compile_cost"
-            exit 0
-          fi
-          CC="$COMPILE_COST_CC" CXX="$COMPILE_COST_CXX" cmake --preset llvm-env > /dev/null
-          python3 -B "$GITHUB_WORKSPACE/tooling/scripts/compile_cost_record.py" ../build/TestAll/llvm-env \
-            Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp \
-            Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphUnweightedTest.cpp \
-            Tests/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp \
-            > "$RUNNER_TEMP/compile_cost.partial.json"
-          mv "$RUNNER_TEMP/compile_cost.partial.json" "$RUNNER_TEMP/compile_cost.json"
-          cat "$RUNNER_TEMP/compile_cost.json"
-
       # The model name is read where the section is added, so that a refusal
       # to read it costs the section and not the record.
       - name: Add the count of prune's analysis to the record
@@ -503,20 +429,6 @@ jobs:
             echo "::warning::the setup cost of leftover materials was not counted, so the record has no leftover_materials_setup"
           fi
 
-      - name: Add the cost of compiling three units to the record
-        id: add_compile_cost
-        continue-on-error: true
-        run: |
-          if [ -s "$RUNNER_TEMP/compile_cost.json" ]; then
-            cpu_model=$(python3 -B tooling/scripts/symbol_table_provenance.py --cpu-model)
-            jq -S --slurpfile cost "$RUNNER_TEMP/compile_cost.json" --arg cpu_model "$cpu_model" \
-              '. + {compile_cost: ($cost[0] + {cpu_model: $cpu_model})}' \
-              "$SYMBOL_TABLE_RECORD" > "$RUNNER_TEMP/with_compile_cost.json"
-            mv "$RUNNER_TEMP/with_compile_cost.json" "$SYMBOL_TABLE_RECORD"
-          else
-            echo "::warning::the cost of compiling was not counted, so the record has no compile_cost"
-          fi
-
       - name: Say that prune's analysis was lost
         if: steps.add_analysis.outcome == 'failure'
         run: echo "::warning::adding prune's analysis failed, so the record has no prune_dependency_analysis"
@@ -524,10 +436,6 @@ jobs:
       - name: Say that the setup cost of leftover materials was lost
         if: steps.add_leftover.outcome == 'failure'
         run: echo "::warning::adding the setup cost of leftover materials failed, so the record has no leftover_materials_setup"
-
-      - name: Say that the cost of compiling was lost
-        if: steps.add_compile_cost.outcome == 'failure'
-        run: echo "::warning::adding the cost of compiling failed, so the record has no compile_cost"
 
       - name: Upload the record
         uses: actions/upload-artifact@v7
@@ -542,6 +450,145 @@ jobs:
         run: |
           scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" symbol-table/linux-gcc-debug \
             "$SYMBOL_TABLE_RECORD"
+
+      - name: Store nothing off staging
+        if: github.ref != 'refs/heads/staging'
+        run: echo "Only a run on staging stores its record; this run is on $GITHUB_REF."
+
+  # The instructions which clang executes to compile each of a few units of
+  # TestAll, as a record of its own, stored on the data branch at
+  # compile-cost/linux-clang-debug/<commit>.json.
+  # scripts/compile_cost_record.py says what the record holds. The job runs
+  # beside the symbol table's, one job for each commit, and shares its
+  # checkouts and checks. The time a
+  # compilation takes varies with the runner: g++-15 took 25 s to 41 s to
+  # compile one unit on runners with AMD EPYC 7763, 9V45 and 9V74 CPUs (run
+  # 41050414618). The count varies by about a part in a million (below).
+  #
+  # The count is of clang's compilations, since only clang's sees the
+  # regression which motivates it. f6d204905 removed the clause bounds_for
+  # from representation_for, since it seemed to slow compilation down
+  # massively. At its parent, with the clause, clang 23's compilation of
+  # AffineCoordinatesTestingDiagnostics.cpp took 119 s and 1.03e12
+  # instructions; without the clause, 7.9 s and 5.3e10 (run 41058970770).
+  # g++-15 took 3.7 s both ways, and executed 0.012% more instructions with
+  # the clause (run 41054421845).
+  #
+  # clang is LLVM's own release for Linux x86_64, pinned by its version and
+  # the archive's sha256, so that a push and a backfill compile with the same
+  # compiler. Ubuntu's clang, 21.1.8, crashed compiling two of sequoia's
+  # tests (run 41054421845). The record names the compiler, the standard
+  # library's package, valgrind and the build's flags, so that the dashboard
+  # breaks the series where any of them changes.
+  #
+  # The step which counts names the units, each for the machinery it
+  # instantiates:
+  #   - OrderableRegularAllocationTestDiagnostics.cpp: the test framework's
+  #     checks of semantics and of allocations;
+  #   - DynamicUndirectedGraphUnweightedTest.cpp: the graphs, and the
+  #     framework's tests of them;
+  #   - AffineCoordinatesTestingDiagnostics.cpp: the concepts of
+  #     Spaces.hpp, the unit above.
+  # The dashboard breaks the series where the units change, since the counts
+  # of different units do not compare.
+  compile-cost:
+    name: Compile cost · Linux · clang · Debug
+    # Another workflow which calls this one, as a gate on a pull request
+    # might, measures the symbol table alone. A called workflow sees its
+    # caller's name as github.workflow, so the job runs only when this
+    # workflow runs on its own account.
+    if: github.workflow == 'symbol-table'
+    strategy: *one-job-per-commit
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+    # "Store the record on the data branch" pushes, as the symbol table's
+    # job does.
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: bash
+    env:
+      DATA_BRANCH: metrics
+      LLVM_ARCHIVE: https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.4/LLVM-23.1.4-Linux-X64.tar.zst
+      LLVM_ARCHIVE_SHA256: efdd1dbd089b99bfcfcde7b8eb1236163f2e88df5a981cca4f783ec9cb5e0378
+      # clang compiles against this libstdc++, which g++-15 brings
+      STANDARD_LIBRARY_PACKAGE: libstdc++-15-dev
+    steps:
+      - *check-out-the-tooling
+      - *check-out-the-commit-to-record
+      - *check-the-commit-checked-out
+      - *check-the-first-parent-history
+
+      # As the symbol table's job installs its toolchain. g++-15 brings the
+      # libstdc++ which clang compiles against, and zstd unpacks LLVM's
+      # archive.
+      - name: Install valgrind, libstdc++ and the build's tools
+        working-directory: tooling
+        run: |
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
+                     /etc/apt/sources.list.d/microsoft-prod.list
+          sudo scripts/retry.sh 3 180 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh update -qq --error-on=any \
+            || { echo "::error::apt-get update failed: each attempt above says why"; exit 1; }
+          packages=(g++-15 ninja-build libtbb-dev valgrind zstd)
+          sudo scripts/retry.sh 3 300 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh \
+            install -y --download-only "${packages[@]}"
+          sudo apt-get install -y --no-download "${packages[@]}"
+
+      # The archive is zstd's, with a window wider than zstd's default allows.
+      # Only clang, and its own headers, are unpacked.
+      - name: Install clang
+        run: |
+          curl -fsSL --retry 3 -o "$RUNNER_TEMP/llvm.tar.zst" "$LLVM_ARCHIVE"
+          echo "$LLVM_ARCHIVE_SHA256  $RUNNER_TEMP/llvm.tar.zst" | sha256sum -c
+          mkdir "$RUNNER_TEMP/llvm"
+          tar -I 'zstd -d --long=31' -xf "$RUNNER_TEMP/llvm.tar.zst" -C "$RUNNER_TEMP/llvm" --strip-components=1 \
+            --wildcards '*/bin/clang*' '*/lib/clang/*'
+          rm "$RUNNER_TEMP/llvm.tar.zst"
+          "$RUNNER_TEMP/llvm/bin/clang++" --version
+
+      # CMake reads the compiler from CC and CXX at the first configure, and
+      # the preset llvm-env sets the flags of a clang build. Nothing is built.
+      - name: Configure TestAll with clang
+        working-directory: tree/TestAll
+        run: CC="$RUNNER_TEMP/llvm/bin/clang" CXX="$RUNNER_TEMP/llvm/bin/clang++" cmake --preset llvm-env
+
+      # The record gains what the script cannot read from the build
+      # directory: the archive clang came from, the package of the standard
+      # library, the model name of the runner's CPU, and the run.
+      - name: Count the instructions of compiling the units
+        run: |
+          record="$RUNNER_TEMP/compile-cost.json"
+          python3 -B tooling/scripts/compile_cost_record.py tree/build/TestAll/llvm-env \
+            Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp \
+            Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphUnweightedTest.cpp \
+            Tests/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp \
+            > "$RUNNER_TEMP/counts.json"
+          cpu_model=$(python3 -B tooling/scripts/symbol_table_provenance.py --cpu-model)
+          library_version=$(dpkg-query --show --showformat='${Version}' "$STANDARD_LIBRARY_PACKAGE")
+          jq -S --arg url "$LLVM_ARCHIVE" --arg sha256 "$LLVM_ARCHIVE_SHA256" --arg cpu_model "$cpu_model" \
+                --arg library "$STANDARD_LIBRARY_PACKAGE" --arg library_version "$library_version" \
+                --arg run "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT" \
+            '.toolchain.compiler.archive = {url: $url, sha256: $sha256}
+             | .toolchain.standard_library.package = {name: $library, version: $library_version}
+             | .compile_cost.cpu_model = $cpu_model
+             | .run = {url: $run}' "$RUNNER_TEMP/counts.json" > "$record"
+          jq . "$record"
+          echo "COMPILE_COST_RECORD=$record" >> "$GITHUB_ENV"
+
+      - name: Upload the record
+        uses: actions/upload-artifact@v7
+        with:
+          name: compile-cost-linux-clang-debug-${{ matrix.commit }}
+          path: ${{ env.COMPILE_COST_RECORD }}
+          if-no-files-found: error
+
+      - name: Store the record on the data branch
+        if: github.ref == 'refs/heads/staging'
+        working-directory: tooling
+        run: |
+          scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" compile-cost/linux-clang-debug \
+            "$COMPILE_COST_RECORD"
 
       - name: Store nothing off staging
         if: github.ref != 'refs/heads/staging'
