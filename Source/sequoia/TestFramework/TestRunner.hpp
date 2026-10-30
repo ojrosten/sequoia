@@ -115,9 +115,9 @@ namespace sequoia::testing
 
       `join` returns once the thread has finished with every discarded root
       enqueued before the call. The destructor joins likewise if `join` has not
-      been called. The thread never removes a discarded root enqueued after
-      `join`: its future becomes ready only when the remover is destroyed, and
-      then holds a `std::future_error`.
+      been called.
+
+      \throws std::logic_error from `enqueue_removal` after `join`.
    */
   class discarded_materials_remover
   {
@@ -129,7 +129,7 @@ namespace sequoia::testing
 
     void join();
   private:
-    concurrency::thread_pool<std::optional<removal_failure>, false> m_Pool{1};
+    concurrency::shared_queue_thread_pool<std::optional<removal_failure>> m_Pool{1};
   };
 
   /** \brief Replaces a test's temporary materials root with a fresh copy of
@@ -153,6 +153,8 @@ namespace sequoia::testing
       -# Otherwise, a ready future holding the leftover's failure, if any.
 
       \throws std::logic_error if `materials` names no test
+      \throws std::logic_error if the temporary root was moved and `remover`
+               has joined
       \throws std::filesystem::filesystem_error if the temporary root cannot be
                removed in place; if the leftover could not be removed either,
                a `std::runtime_error` naming both

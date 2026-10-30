@@ -9,16 +9,13 @@
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
 #include <algorithm>
-#include <chrono>
 #include <format>
 #include <future>
 #include <latch>
 #include <queue>
 #include <semaphore>
 #include <stdexcept>
-#include <system_error>
 #include <thread>
-#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -181,26 +178,27 @@ namespace sequoia::testing
     test_try_lock_successes();
     test_try_lock_failures();
     test_pushes_wake_a_waiting_pop();
+    test_pushes_to_a_finished_queue_throw();
     test_thread_pools_refuse_zero_threads();
 
-    test_every_task_pushed_from_several_threads_runs<thread_pool<int>>("a pipeline for each thread");
-    test_every_task_pushed_from_several_threads_runs<thread_pool<int, false>>("a single pipeline");
+    test_every_task_pushed_from_several_threads_runs<thread_pool<int>>("a queue for each thread");
+    test_every_task_pushed_from_several_threads_runs<shared_queue_thread_pool<int>>("a shared queue");
 
-    test_a_task_pushed_after_join_never_runs<thread_pool<int>>("a pipeline for each thread");
-    test_a_task_pushed_after_join_never_runs<thread_pool<int, false>>("a single pipeline");
+    test_a_push_after_join_throws<thread_pool<int>>("a queue for each thread");
+    test_a_push_after_join_throws<shared_queue_thread_pool<int>>("a shared queue");
 
     test_exceptions<thread_pool<void>>("pool_2M", 2u);
-    test_exceptions<thread_pool<void, false>>("pool_2", 2u);
+    test_exceptions<shared_queue_thread_pool<void>>("pool_2", 2u);
     test_exceptions<asynchronous<void>>("async");
 
     test_exceptions<thread_pool<int>>("pool_2M", 2u);
-    test_exceptions<thread_pool<int, false>>("pool_2", 2u);
+    test_exceptions<shared_queue_thread_pool<int>>("pool_2", 2u);
     test_exceptions<asynchronous<int>>("async");
 
     test_execution<thread_pool<int>>("pool_1M", 1u);
-    test_execution<thread_pool<int, false>>("pool_1", 1u);
+    test_execution<shared_queue_thread_pool<int>>("pool_1", 1u);
     test_execution<thread_pool<int>>("pool_2M", 2u);
-    test_execution<thread_pool<int, false>>("pool_2", 2u);
+    test_execution<shared_queue_thread_pool<int>>("pool_2", 2u);
     test_execution<asynchronous<int>>("async");
 
     test_serial_exceptions();
@@ -351,13 +349,28 @@ namespace sequoia::testing
     }
   }
 
+  void threading_models_test::test_pushes_to_a_finished_queue_throw()
+  {
+    task_queue<int> q{};
+    q.finish();
+
+    check_exception_thrown<std::logic_error>("A push to a finished queue throws",
+                                             [&q](){ q.push(int_task{[](){ return 1; }}); });
+
+    // std::mutex::try_lock may fail spuriously, so the try-push is repeated
+    // until it takes the mutex
+    auto tryPushUntilLocked{[&q](){ while(!q.push(int_task{[](){ return 2; }}, std::try_to_lock)) {} }};
+    check_exception_thrown<std::logic_error>("A try-push to a finished queue throws once it takes the mutex",
+                                             tryPushUntilLocked);
+  }
+
   void threading_models_test::test_thread_pools_refuse_zero_threads()
   {
-    check_exception_thrown<std::invalid_argument>("A thread pool with a pipeline for each thread refuses zero threads",
+    check_exception_thrown<std::invalid_argument>("A thread pool with a queue for each thread refuses zero threads",
                                                   [](){ thread_pool<int>{0u}; });
 
-    check_exception_thrown<std::invalid_argument>("A thread pool with a single pipeline refuses zero threads",
-                                                  [](){ thread_pool<int, false>{0u}; });
+    check_exception_thrown<std::invalid_argument>("A thread pool with a shared queue refuses zero threads",
+                                                  [](){ shared_queue_thread_pool<int>{0u}; });
   }
 
   template<class ThreadPool>
@@ -396,38 +409,13 @@ namespace sequoia::testing
   }
 
   template<class ThreadPool>
-  void threading_models_test::test_a_task_pushed_after_join_never_runs(std::string_view poolKind)
+  void threading_models_test::test_a_push_after_join_throws(std::string_view poolKind)
   {
-    auto lateTaskFuture{
-      [this, poolKind](){
-        ThreadPool pool{2u};
-        pool.join();
-        auto future{pool.push([](){ return 1; })};
+    ThreadPool pool{2u};
+    pool.join();
 
-        check(std::format("A task pushed after join to a pool with {} has not run while the pool lives", poolKind),
-              future.wait_for(std::chrono::seconds{}) == std::future_status::timeout);
-
-        return future;
-      }()
-    };
-
-    const auto errorCode{
-      [&lateTaskFuture]() -> std::error_code {
-        try
-        {
-          std::ignore = lateTaskFuture.get();
-        }
-        catch(const std::future_error& e)
-        {
-          return e.code();
-        }
-
-        return {};
-      }()
-    };
-
-    check(std::format("Destroying a joined pool with {} breaks the promise of a task pushed after join", poolKind),
-          errorCode == std::future_errc::broken_promise);
+    check_exception_thrown<std::logic_error>(std::format("A push after join to a pool with {} throws", poolKind),
+                                             [&pool](){ return pool.push([](){ return 1; }); });
   }
 
   template<class ThreadModel, class... Args>

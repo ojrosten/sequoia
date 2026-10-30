@@ -297,7 +297,7 @@ namespace sequoia::testing
 
   /** Each test here has no original materials, and paths of its own, so that
       no other preparation touches them.
-      -# A remover which has been joined removes nothing, so the discarded root
+      -# A remover which has joined refuses the removal, so the discarded root
          keeps the moved temporary root;
       -# `prepare_materials` removes a discarded root which an earlier run left
          behind, then moves the temporary root;
@@ -323,11 +323,9 @@ namespace sequoia::testing
       discarded_materials_remover remover{};
       remover.join();
 
-      const auto removalFailureFuture{prepare_materials(materials, remover)};
-      // The remover has joined, so an enqueued removal never runs, whereas a
-      // ready future would be one which prepare_materials made itself
-      check("The moved temporary root's removal is enqueued",
-            removalFailureFuture.wait_for(std::chrono::seconds{}) == std::future_status::timeout);
+      check_exception_thrown<std::logic_error>(
+        "The moved temporary root's removal is enqueued, and the joined remover refuses it",
+        [&materials, &remover]() { return prepare_materials(materials, remover); });
       check("The temporary root is moved to the discarded root",
             fs::exists(materials.discarded_materials_root() / "Previous.txt"));
       check("The fresh temporary root holds nothing of the moved one",
@@ -344,7 +342,9 @@ namespace sequoia::testing
       discarded_materials_remover remover{};
       remover.join();
 
-      const auto removalFailureFuture{prepare_materials(materials, remover)};
+      check_exception_thrown<std::logic_error>(
+        "After removing the leftover, the moved temporary root's removal is enqueued, and refused",
+        [&materials, &remover]() { return prepare_materials(materials, remover); });
       check("A leftover discarded root is removed", !fs::exists(materials.discarded_materials_root() / "Leftover.txt"));
       check("The temporary root is then moved", fs::exists(materials.discarded_materials_root() / "Previous.txt"));
     }
