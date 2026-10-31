@@ -763,13 +763,14 @@
     showColumn(/** @type {Column} */ (columns.get(chosen)));
     // Only a change of width redraws, since redrawing replaces the focused
     // chart and so ends keyboard navigation.
-    let pending = 0, drawnWidth = /** @type {Element} */ (document.querySelector('main')).clientWidth;
-    new ResizeObserver(([entry]) => {
-      if (entry.contentRect.width === drawnWidth) return;
-      drawnWidth = entry.contentRect.width;
+    const mainElement = /** @type {Element} */ (document.querySelector('main'));
+    let pending = 0, drawnWidth = mainElement.clientWidth;
+    new ResizeObserver(() => {
+      if (mainElement.clientWidth === drawnWidth) return;
+      drawnWidth = mainElement.clientWidth;
       cancelAnimationFrame(pending);
       pending = requestAnimationFrame(() => { if (state.points.length) { drawCharts(); } });
-    }).observe(/** @type {Element} */ (document.querySelector('main')));
+    }).observe(mainElement);
   }
 
   main();
