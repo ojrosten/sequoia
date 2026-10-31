@@ -46,11 +46,11 @@ name: symbol-table
 # other than staging stores nothing.
 #
 # metrics-gate.yml calls this workflow to measure a pull request for the
-# gates on metrics. A called run records the commit which the caller names,
-# and its tooling is that commit too. It stores nothing, and its outputs name
-# the artifact holding its record. It counts the setup cost of leftover
-# materials only when the caller asks; the last step checks that count on
-# each push to staging.
+# gates on metrics. A called run records each commit which the caller names,
+# in a job of its own, with the scripts of the commit which the caller names
+# as `tooling`. A called run stores nothing, and counts the setup cost of
+# leftover materials only when the caller asks. The last step checks that
+# count on each push to staging.
 on:
   push:
     branches:
@@ -66,8 +66,12 @@ on:
         default: ''
   workflow_call:
     inputs:
-      commit:
-        description: 'The commit to record, as a full lowercase hash, which also supplies the tooling.'
+      commits:
+        description: 'The commits to record, as a JSON array of full lowercase hashes, each on the first-parent history of `tooling`.'
+        required: true
+        type: string
+      tooling:
+        description: 'The commit whose scripts the run uses, as a full lowercase hash.'
         required: true
         type: string
       measure_leftover_materials:
@@ -75,15 +79,9 @@ on:
         required: true
         type: boolean
     outputs:
-      record_artifact:
-        description: 'The name of the artifact holding the record, as its only file.'
-        value: ${{ jobs.symbol-table.outputs.record_artifact }}
-      data_branch:
-        description: 'The data branch on which a push stores its record.'
-        value: ${{ jobs.symbol-table.outputs.data_branch }}
-      record_directory:
-        description: 'The directory of the data branch holding the records, one per commit.'
-        value: ${{ jobs.symbol-table.outputs.record_directory }}
+      record_artifact_prefix:
+        description: 'The start of the name of each artifact which holds a record, as its only file. The name ends with the commit recorded.'
+        value: ${{ jobs.symbol-table.outputs.record_artifact_prefix }}
 
 # The workflow has no concurrency group, since each push to staging stores
 # its own commit's record. A group cancels runs even without
@@ -95,10 +93,10 @@ on:
 jobs:
   symbol-table:
     name: Symbol table · Linux · GCC · Debug
-    # Each job builds one commit with that commit's presets. It installs the
-    # toolchain, measures and stores with the steps and the scripts of the
-    # commit the run is on, so that an old commit is measured as a push to
-    # staging would measure it today.
+    # Each job builds one commit with that commit's presets. The job installs
+    # the toolchain, measures and stores with the steps of the commit the run
+    # is on and the scripts of `tooling` (below), so that an old commit is
+    # measured as a push to staging would measure it today.
     strategy:
       fail-fast: false
       # Without a cap, a backfill of more commits than the account may run
@@ -106,7 +104,7 @@ jobs:
       # behind it.
       max-parallel: 5
       matrix:
-        commit: ${{ fromJSON(inputs.commits || format('["{0}"]', inputs.commit || github.sha)) }}
+        commit: ${{ fromJSON(inputs.commits || format('["{0}"]', github.sha)) }}
     # The configuration of coarse's Linux column, so that a move in the
     # records is a move in a build which coarse tests.
     #
@@ -134,27 +132,25 @@ jobs:
       CXX: g++-15
       DATA_BRANCH: metrics
       RECORD_DIRECTORY: symbol-table/linux-gcc-debug
-      RECORD_ARTIFACT: symbol-table-linux-gcc-debug-${{ matrix.commit }}
+      RECORD_ARTIFACT_PREFIX: symbol-table-linux-gcc-debug-
     outputs:
-      record_artifact: ${{ env.RECORD_ARTIFACT }}
-      data_branch: ${{ env.DATA_BRANCH }}
-      record_directory: ${{ env.RECORD_DIRECTORY }}
+      record_artifact_prefix: ${{ env.RECORD_ARTIFACT_PREFIX }}
     steps:
-      # Two checkouts, side by side: `tooling`, the commit the run is on,
-      # whose steps install the toolchain, measure and store; and `tree`, the
-      # commit measured. The build writes only to tree/build, which the
-      # tree's .gitignore lists, so the tree stays clean, as the store
-      # requires. On a push both are github.sha, and on a call both are the
-      # commit the caller names.
+      # Two checkouts, side by side: `tooling`, whose scripts install the
+      # toolchain, measure and store; and `tree`, the commit measured.
+      # `tooling` is the commit the run is on, or the commit a caller names.
+      # The build writes only to tree/build, which the tree's .gitignore
+      # lists, so the tree stays clean, as the store requires. On a push both
+      # are github.sha.
       #
-      # `tooling` holds the run's commit's whole history, without trees or
+      # `tooling` holds its commit's whole history, without trees or
       # blobs, so that the history can be checked below. git fetches a tree
       # or a blob from the remote when a command needs it.
       - name: Check out the tooling
         uses: actions/checkout@v7
         with:
           path: tooling
-          ref: ${{ inputs.commit }}
+          ref: ${{ inputs.tooling }}
           fetch-depth: 0
           filter: tree:0
 
@@ -177,14 +173,14 @@ jobs:
 
       # A record stays on the data branch once stored, since nothing rewrites
       # the branch. So the job refuses, before building, a commit off the
-      # first-parent history of the run's commit: a commit of a merged topic
+      # first-parent history of `tooling`: a commit of a merged topic
       # branch, as well as a commit of a branch never merged. grep reads the
       # whole list, so that rev-list never meets a closed pipe.
-      - name: Check that the commit checked out is on the run's first-parent history
+      - name: Check that the commit checked out is on the tooling's first-parent history
         run: |
           checked_out=$(git -C tree rev-parse HEAD)
           git -C tooling rev-list --first-parent HEAD | grep -xF "$checked_out" > /dev/null \
-            || { echo "::error::$checked_out is not on the first-parent history of $GITHUB_SHA"; exit 1; }
+            || { echo "::error::$checked_out is not on the first-parent history of $(git -C tooling rev-parse HEAD)"; exit 1; }
 
       # tests.yml is the tiers' one recipe for building and running the
       # suite. This job runs no suite, so it copies the steps it needs from
@@ -479,20 +475,20 @@ jobs:
       - name: Upload the record
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ env.RECORD_ARTIFACT }}
+          name: ${{ env.RECORD_ARTIFACT_PREFIX }}${{ matrix.commit }}
           path: ${{ env.SYMBOL_TABLE_RECORD }}
           if-no-files-found: error
 
       # A called run stores nothing even on staging, since its record may
       # lack fields which the caller did not ask for.
       - name: Store the record on the data branch
-        if: github.ref == 'refs/heads/staging' && !inputs.commit
+        if: github.ref == 'refs/heads/staging' && !inputs.tooling
         working-directory: tooling
         run: |
           scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" "$RECORD_DIRECTORY" "$SYMBOL_TABLE_RECORD"
 
       - name: Store nothing off staging, or when called
-        if: github.ref != 'refs/heads/staging' || inputs.commit
+        if: github.ref != 'refs/heads/staging' || inputs.tooling
         run: |
           echo "Only a push or a dispatch on staging stores its record;" \
                "this run is a $GITHUB_EVENT_NAME run on $GITHUB_REF."

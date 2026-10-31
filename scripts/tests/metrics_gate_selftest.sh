@@ -20,8 +20,9 @@
 #     count which is zero, a boolean, a fraction or text;
 #   - records differing in their toolchain, cache or target, or in the
 #     functions which both count in prune's analysis, are a break: the break
-#     fails, naming the field, and no series is compared; the acceptance of a
-#     break passes it; a section which one record lacks is no break;
+#     fails, naming the field, advising a re-run of all the jobs, and no
+#     series is compared; the acceptance of a break passes it; a section
+#     which one record lacks is no break;
 #   - a record made from a tree which was not clean fails, whichever it is;
 #   - an acceptance raises its own series' allowance by its count and no
 #     other series'; the line a failure prints names the whole rise, and,
@@ -240,6 +241,8 @@ controls() {
   [[ $out != *'symbols:'* ]] || fail "a compiler which differs: a series was compared: '$out'"
   grep -qxF "error:   metrics-gate: accept a break in the series" <<< "$out" \
     || fail "a compiler which differs: the line accepting a break is not printed: '$out'"
+  grep -qF "runners differed: re-run all the jobs" <<< "$out" \
+    || fail "a compiler which differs: the re-run is not advised: '$out'"
   fails_with "a cache which differs" "a break in the series: the records differ in cache.CMAKE_BUILD_TYPE," cache
   fails_with "a target which differs" "a break in the series: the records differ in target," target
   fails_with "a toolchain absent" "a break in the series: the records differ in toolchain," toolchain_gone
@@ -368,6 +371,7 @@ mutations=(
   'an acceptance twice accepted'     'elif words[2] in accepted_rises:' 'elif False:'
   'the excess printed, not the rise' 'acceptance_line(name, rise)}' 'acceptance_line(name, rise - held // denominator)}'
   'the break line not printed'       '"then re-run the failed jobs:", f"error:   {BREAK_ACCEPTANCE_LINE}"]' '"then re-run the failed jobs:"]'
+  'no re-run advised on a break'     '"runners differed: re-run all the jobs, rather than accept the break",' '"",'
   'no movers'                        '+ (findings_of_movers(measured, baseline) if symbols_failed else []))' '+ [])'
   'movers on every failure'          'for name, path, _ in SERIES if path[0] == "executable"' 'for name, path, _ in SERIES'
   'movers for the symbols alone'     'for name, path, _ in SERIES if path[0] == "executable"' 'for name, path, _ in SERIES if name == "symbols"'

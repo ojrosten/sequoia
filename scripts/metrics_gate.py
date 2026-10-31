@@ -225,7 +225,12 @@ def findings_of_break(broken, measured, baseline, accepts_break):
             + [f"{kind}:   {'.'.join(path)}: baseline {value_at(baseline, path)!r}, "
                f"measured {value_at(measured, path)!r}" for path in broken]
             + ([] if accepts_break else
-               ["error: to accept the break, add this line to the pull request's description, "
+               # Two records measured in one run with one pull request's
+               # scripts can differ in no other way. A re-run of the failed
+               # jobs alone would compare the same records again.
+               ["error: if the pull request means to change none of these fields, the two records' "
+                "runners differed: re-run all the jobs, rather than accept the break",
+                "error: to accept the break, add this line to the pull request's description, "
                 "then re-run the failed jobs:", f"error:   {BREAK_ACCEPTANCE_LINE}"]))
 
 

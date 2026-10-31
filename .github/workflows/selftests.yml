@@ -51,7 +51,7 @@ jobs:
             os: ubuntu-latest
             packages: gdb
             selftests: apt_get_demoting_preferred_mirrors_on_retry compile_time_report cron_expression_at
-              fetch_first_parent_record generate_coverage_report leftover_materials_setup_record metrics_gate
+              generate_coverage_report leftover_materials_setup_record metrics_gate
               propose_tightened_baseline read_settled_jobs rerun_unacquired_job retry runner_setup_record
               snapshot_at_deadline store_symbol_table_record symbol_dashboard symbol_table_provenance
               symbol_table_report
