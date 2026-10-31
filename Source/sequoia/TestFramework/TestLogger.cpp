@@ -360,13 +360,9 @@ namespace sequoia::testing
 
   log_summary& log_summary::operator+=(const log_summary& rhs)
   {
-    m_FailureMessages.insert(m_FailureMessages.end(),
-                             rhs.m_FailureMessages.begin(),
-                             rhs.m_FailureMessages.end());
-
-    m_DiagnosticsOutput.insert(m_DiagnosticsOutput.end(),
-                              rhs.m_DiagnosticsOutput.begin(),
-                              rhs.m_DiagnosticsOutput.end());
+    m_FailureMessages.append(rhs.m_FailureMessages);
+    m_DiagnosticsOutput.append(rhs.m_DiagnosticsOutput);
+    m_CaughtExceptionMessages.append(rhs.m_CaughtExceptionMessages);
 
     m_Counts           += rhs.m_Counts;
     m_CriticalFailures += rhs.m_CriticalFailures;
