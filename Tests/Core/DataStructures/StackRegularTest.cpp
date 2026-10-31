@@ -19,10 +19,14 @@ namespace sequoia::testing
     inline constexpr bool stack_admits_v{requires { typename data_structures::stack<T>; }};
 
     // A std::vector admits an incomplete element type, so a stack must admit
-    // one too
+    // one too. An element type holding a stack of itself must be able to
+    // default its ==.
     struct with_stack_of_itself
     {
       data_structures::stack<with_stack_of_itself> nested{};
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const with_stack_of_itself&, const with_stack_of_itself&) = default;
     };
 
     using stack_t = data_structures::stack<element_with_lineage>;
@@ -45,6 +49,7 @@ namespace sequoia::testing
   {
     STATIC_CHECK( stack_admits_v<int>);
     STATIC_CHECK(std::is_default_constructible_v<with_stack_of_itself>);
+    STATIC_CHECK(with_stack_of_itself{} == with_stack_of_itself{});
 
     // A const std::vector<bool> returns no reference to its elements
     STATIC_CHECK(!stack_admits_v<bool>);

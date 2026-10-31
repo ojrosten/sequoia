@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/QueueRegularTest.cpp, Line 118
+Tests/Core/DataStructures/QueueRegularTest.cpp, Line 123
 Popping the empty queue
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Attempting to pop an empty queue
 
 =======================================
 
-Tests/Core/DataStructures/QueueRegularTest.cpp, Line 124
+Tests/Core/DataStructures/QueueRegularTest.cpp, Line 129
 Accessing the front of the empty queue
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Attempting to access the front of an empty queue
 
 =======================================
 
-Tests/Core/DataStructures/QueueRegularTest.cpp, Line 131
+Tests/Core/DataStructures/QueueRegularTest.cpp, Line 136
 Accessing the back of the empty queue
 
 Expected Exception Type:

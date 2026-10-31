@@ -22,10 +22,14 @@ namespace sequoia::testing
     inline constexpr bool queue_admits_v{requires { typename data_structures::queue<T>; }};
 
     // A std::vector admits an incomplete element type, so a queue must admit
-    // one too
+    // one too. An element type holding a queue of itself must be able to
+    // default its ==.
     struct with_queue_of_itself
     {
       data_structures::queue<with_queue_of_itself> nested{};
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const with_queue_of_itself&, const with_queue_of_itself&) = default;
     };
 
     using queue_t = data_structures::queue<element_with_lineage>;
@@ -86,6 +90,7 @@ namespace sequoia::testing
   {
     STATIC_CHECK( queue_admits_v<int>);
     STATIC_CHECK(std::is_default_constructible_v<with_queue_of_itself>);
+    STATIC_CHECK(with_queue_of_itself{} == with_queue_of_itself{});
 
     // A const std::vector<bool> returns no reference to its elements
     STATIC_CHECK(!queue_admits_v<bool>);
