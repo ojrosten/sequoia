@@ -3,6 +3,32 @@
 // keys. symbol_dashboard.js holds the data logic.
 'use strict';
 (() => {
+  /**
+   * @typedef {{parents: string[], date: string, subject: string}} Summary
+   * @typedef {{path: string, before: any, after: any}} Difference
+   * @typedef {{commit: string, date: string, subject: string, record: any,
+   *            run: number, toolchainChange: Difference[] | null,
+   *            setupRun: number, boundaryChange: boolean,
+   *            leftoverBoundaryChange: boolean}} Point
+   * @typedef {{path: string, problems: string[]}} Unplottable
+   * @typedef {{name: string, points: Point[], problems: Unplottable[]}} Column
+   * @typedef {{object: string, before: number | null, after: number | null,
+   *            delta: number}} Mover
+   * @typedef {{tree(): Promise<any>, commits(start: string | null): Promise<any>,
+   *            record(path: string): Promise<any>}} Source
+   * @typedef {{name: string, value: (record: any) => number | null,
+   *            unit: string, exitStatus?: (record: any) => number | null,
+   *            includesZero?: boolean,
+   *            blindLabel?: (record: any) => string | null,
+   *            markersOnly?: boolean, joinsGaps?: boolean,
+   *            runOf?: (point: Point) => any, changeOf?: (point: Point) => any,
+   *            breakLabel?: (point: Point) => string,
+   *            event?: string}} Measure
+   * @typedef {{svg: SVGElement, markHover(index: number | null): void,
+   *            markSelected(index: number): void,
+   *            anchor(index: number): {x: number, y: number}}} Chart
+   */
+
   const repository = 'ojrosten/sequoia';
   const api        = `https://api.github.com/repos/${repository}`;
   const raw        = `https://raw.githubusercontent.com/${repository}/metrics/`;
@@ -17,14 +43,18 @@
   const parameters = new URLSearchParams(location.search);
   // A relative path only, so that no link can make the public page show
   // another site's figures.
-  const fixtures   = parameters.has('fixtures') && /^(?![a-z][a-z0-9+.-]*:|\/\/)/i.test(parameters.get('fixtures'))
+  const fixtures   = parameters.has('fixtures') && /^(?![a-z][a-z0-9+.-]*:|\/\/)/i.test(/** @type {string} */ (parameters.get('fixtures')))
                    ? parameters.get('fixtures') : null;
+  /** @type {{calls: number, records: number, remaining: string | null,
+   *           reset: string | null}} */
   const meter      = {calls: 0, records: 0, remaining: null, reset: null};
   const svgNamespace = 'http://www.w3.org/2000/svg';
 
   const integer = new Intl.NumberFormat('en-GB');
   const oneDecimal = new Intl.NumberFormat('en-GB', {maximumFractionDigits: 1});
+  /** @param {number} value */
   const signed  = value => (value > 0 ? '+' : value < 0 ? '−' : '') + integer.format(Math.abs(value));
+  /** @param {number} delta @param {number} base */
   const percent = (delta, base) => {
     if (base === 0) return 'from nothing';
     const fraction  = 100 * delta / base;
@@ -32,28 +62,49 @@
     return (fraction > 0 ? '+' : fraction < 0 ? '−' : '')
          + (magnitude >= 0.1 || magnitude === 0 ? magnitude.toFixed(2) : magnitude.toPrecision(2)) + '%';
   };
+  /** @param {string} iso */
   const shortDate = iso => new Date(iso).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', timeZone: 'UTC'});
+  /** @param {string} iso */
   const longDate  = iso => new Date(iso).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'});
+  /** @param {any} seconds  A header's value, a string, which `*` converts */
   const clock     = seconds => new Date(seconds * 1000).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'});
+  /** @param {string} commit */
   const short     = commit => commit.slice(0, 7);
+  /** @param {string} commit */
   const commitUrl = commit => `https://github.com/${repository}/commit/${commit}`;
 
-  // Builds an element, sets its attributes, and appends its children,
-  // strings as text.
+  /**
+   * Builds an element, sets its attributes, and appends its children,
+   * strings as text.
+   *
+   * @template {string} Name
+   * @param {Name} name  Prefixed `svg:` for an element of the SVG namespace
+   * @param {Record<string, string | number>} [attributes]
+   * @param {...(string | Node)} children
+   * @returns {Name extends `svg:${string}` ? SVGElement : HTMLElement}
+   */
   function element(name, attributes = {}, ...children) {
     const node = name.startsWith('svg:') ? document.createElementNS(svgNamespace, name.slice(4)) : document.createElement(name);
     for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, value);
     for (const child of children) node.append(child);
-    return node;
+    return /** @type {any} */ (node);
   }
+  /** @param {string} href @param {string} text */
   const link = (href, text) => element('a', {href}, text);
 
-  // Fetches JSON from `url`. Returns null on a 404 if `nullOn404`, and
-  // throws on any other failure, naming the url.
+  /**
+   * Fetches JSON from `url`. Returns null on a 404 if `nullOn404`, and
+   * throws on any other failure, naming the url.
+   *
+   * @param {string} url
+   * @param {boolean} nullOn404
+   * @param {(response: Response) => void} [onResponse]
+   * @returns {Promise<any>}
+   */
   async function fetchJson(url, nullOn404, onResponse = () => {}) {
     let response;
     try { response = await fetch(url, {headers: {Accept: 'application/vnd.github+json'}}); }
-    catch (error) { throw new Error(`${url} could not be reached: ${error.message}`); }
+    catch (error) { throw new Error(`${url} could not be reached: ${/** @type {Error} */ (error).message}`); }
     onResponse(response);
     if (response.status === 404 && nullOn404) return null;
     if (!response.ok) {
@@ -65,10 +116,12 @@
       throw new Error(`${url} answered ${response.status}${message ? ': ' + message : ''}`);
     }
     try { return await response.json(); }
-    catch (error) { throw new Error(`${url} did not answer with JSON: ${error.message}`); }
+    catch (error) { throw new Error(`${url} did not answer with JSON: ${/** @type {Error} */ (error).message}`); }
   }
 
+  /** @returns {Source} */
   function githubSource() {
+    /** @param {Response} response */
     const count = response => {
       ++meter.calls;
       meter.remaining = response.headers.get('x-ratelimit-remaining');
@@ -82,6 +135,10 @@
     };
   }
 
+  /**
+   * @param {string} directory
+   * @returns {Source}
+   */
   function fixtureSource(directory) {
     const base = directory.replace(/\/*$/, '/');
     return {
@@ -94,35 +151,46 @@
   // The summaries of commits fetched by earlier views. A commit's parents,
   // date and subject never change, so the cache cannot go stale; losing it
   // costs only API calls.
+  /** @returns {Map<string, Summary>} */
   function knownCommits() {
     if (fixtures) return new Map();
+    /** @param {any} summary */
     const isSummary = summary => summary !== null && typeof summary === 'object' && Array.isArray(summary.parents)
-                              && summary.parents.every(parent => typeof parent === 'string')
+                              && summary.parents.every((/** @type {any} */ parent) => typeof parent === 'string')
                               && typeof summary.date === 'string' && Number.isFinite(Date.parse(summary.date)) && typeof summary.subject === 'string';
     try { return new Map(Object.entries(JSON.parse(localStorage.getItem(cacheKey) || '{}')).filter(([, summary]) => isSummary(summary))); }
     catch (error) { return new Map(); }
   }
+  /** @param {Map<string, Summary>} known */
   function remember(known) {
     if (fixtures) return;
     try { localStorage.setItem(cacheKey, JSON.stringify(Object.fromEntries(known))); }
     catch (error) { /* storage is a convenience: without it, the next view fetches again */ }
   }
 
+  /**
+   * @param {string} title
+   * @param {string} text
+   * @param {boolean} isError
+   */
   function showMessage(title, text, isError) {
-    const message = document.getElementById('message');
+    const message = /** @type {HTMLElement} */ (document.getElementById('message'));
     message.className = 'card' + (isError ? ' alert' : '');
     message.setAttribute('role', isError ? 'alert' : 'status');
     message.replaceChildren(element('h2', {}, title), element('p', {}, text));
     message.hidden = false;
   }
 
+  /** @param {Difference[]} change */
   function describeChange(change) {
+    /** @param {any} value */
     const shown = value => value === undefined ? 'absent' : typeof value === 'string' ? value : symbolDashboard.canonical(value);
     return change.map(({path, before, after}) => `${path}: ${shown(before)} → ${shown(after)}`).join('; ');
   }
 
   // Ticks ------------------------------------------------------------------
 
+  /** @param {number} value @param {number} step @param {number} high */
   function compact(value, step, high) {
     const [divisor, suffix] = high >= 1e6 ? [1e6, 'M'] : high >= 1e3 ? [1e3, 'K'] : [1, ''];
     const decimals = Math.max(0, Math.ceil(-Math.log10(step / divisor) - 1e-9));
@@ -131,24 +199,37 @@
 
   // Charts -----------------------------------------------------------------
 
+  /** @type {{points: Point[], selected: number, hovered: number | null,
+   *           charts: Chart[]}} */
   const state = {points: [], selected: 0, hovered: null, charts: []};
 
   // Fills `circle` in the series' colour, or, if `hollow`, with the surface's inside an outline in the series' colour.
+  /** @param {Element} circle @param {boolean} hollow */
   function paintMarker(circle, hollow) {
     circle.setAttribute('fill', hollow ? 'var(--surface)' : 'var(--series)');
     circle.setAttribute('stroke', hollow ? 'var(--series)' : 'var(--surface)');
   }
 
+  /** @param {number} cx @param {number} cy @param {number} r
+   *  @param {boolean} hollow */
   function marker(cx, cy, r, hollow) {
     const circle = element('svg:circle', {cx, cy, r, 'stroke-width': 2});
     paintMarker(circle, hollow);
     return circle;
   }
 
-  // Draws the points' values of one measure into `container`, one line per
-  // run, or the markers alone if the measure is `markersOnly`, with a rule at
-  // each change of toolchain, over the days from its first count to its last.
-  // Returns the chart's functions to mark the hovered and selected points.
+  /**
+   * Draws the points' values of one measure into `container`, one line per
+   * run, or the markers alone if the measure is `markersOnly`, with a rule at
+   * each change of toolchain, over the days from its first count to its last.
+   * Returns the chart's functions to mark the hovered and selected points.
+   *
+   * @param {HTMLElement} container
+   * @param {Measure} measure
+   * @param {number} height
+   * @param {boolean} labelBreaks
+   * @returns {Chart}
+   */
   function drawChart(container, measure, height, labelBreaks) {
     const points = state.points;
     const width  = Math.max(280, container.clientWidth);
@@ -158,7 +239,9 @@
     const values = points.map(point => measure.value(point.record));
     // A blind point has no value, so it has no marker and no selection ring. It is on the axis of time and is hovered,
     // and its rule, which says whether its run failed, is the cue
+    /** @param {number} index */
     const blindLabel = index => measure.blindLabel === undefined ? null : measure.blindLabel(points[index].record);
+    /** @param {number} index */
     const isBlind = index => blindLabel(index) !== null;
     // A point may lack the measure, and is then left out of the scale, the axis of time and the line
     const indicesWithCount = points.flatMap((point, index) => values[index] === null && !isBlind(index) ? [] : [index]);
@@ -167,8 +250,11 @@
     // Time runs along x, so points of one day are close and days with no point leave a gap
     const timesWithCount = indicesWithCount.map(index => Date.parse(points[index].date));
     const axisOfTime = symbolDashboard.timeAxis(timesWithCount, margin.left, width - margin.right, 80);
+    /** @param {number} index */
     const x = index => axisOfTime.x(Date.parse(points[index].date));
+    /** @param {number} index */
     const isWithinAxis = index => x(index) >= margin.left && x(index) <= width - margin.right;
+    /** @param {number} value */
     const y = value => margin.top + plotHeight * (scale.high - value) / (scale.high - scale.low);
 
     const svg = element('svg:svg', {viewBox: `0 0 ${width} ${height}`, height, tabindex: 0, role: 'application',
@@ -196,6 +282,7 @@
     // point outside the axis's days is not drawn, a blind point outside them is not, and a label too close to the
     // last one drawn is left out
     let lastDrawnLabelX = -Infinity;
+    /** @param {number} at @param {string} label @param {boolean} dashed */
     const drawRule = (at, label, dashed) => {
       svg.append(element('svg:line', {x1: at, x2: at, y1: labelBreaks ? 16 : margin.top, y2: margin.top + plotHeight,
                                       stroke: 'var(--text-muted)', 'stroke-width': 1, ...(dashed ? {'stroke-dasharray': '3 3'} : {})}));
@@ -208,18 +295,23 @@
       if (isBreak && isWithinAxis(index - 1) && isWithinAxis(index)) {
         drawRule((x(index - 1) + x(index)) / 2, measure.breakLabel ? measure.breakLabel(point) : 'toolchain', false);
       }
-      if (isBlind(index) && isWithinAxis(index)) drawRule(x(index), blindLabel(index), true);
+      if (isBlind(index) && isWithinAxis(index)) drawRule(x(index), /** @type {string} */ (blindLabel(index)), true);
     });
 
+    /** @param {number} index */
     const hasFailedRun = index => measure.exitStatus !== undefined && (measure.exitStatus(points[index].record) ?? 0) !== 0;
 
     // A line runs through the points which have the measure and have the same `runOf`, by default the
     // toolchain's run; a measure may name a run of its own, as of its own toolchain or boundary. A point
     // without the measure ends the line, unless the measure joins gaps. A blind point ends it whether or not
     // the measure joins gaps.
+    /** @type {string[][]} */
     const runs = [];
+    /** @type {number[]} */
     const runStarts = [];
+    /** @param {Point} point */
     const runOf = point => measure.runOf ? measure.runOf(point) : point.run;
+    /** @type {Point | null} */
     let joined = null;
     points.forEach((point, index) => {
       if (values[index] === null) {
@@ -253,6 +345,7 @@
     svg.append(crosshair, selectDot, hoverDot);
 
     const overlay = element('svg:rect', {x: margin.left, y: 0, width: plotWidth, height, fill: 'transparent'});
+    /** @param {MouseEvent} event */
     const indexAt = event => {
       const bounds = svg.getBoundingClientRect();
       const pointerX = (event.clientX - bounds.left) * width / bounds.width;
@@ -266,11 +359,12 @@
     svg.addEventListener('keydown', event => {
       const before = indicesWithCount.filter(index => index < state.selected);
       const after  = indicesWithCount.filter(index => index > state.selected);
+      /** @type {Record<string, number | undefined>} */
       const targets = {ArrowLeft: before[before.length - 1], ArrowRight: after[0],
                        Home: indicesWithCount[0], End: indicesWithCount[indicesWithCount.length - 1]};
       if (!(event.key in targets)) return;
       event.preventDefault();
-      if (targets[event.key] !== undefined) select(targets[event.key]);
+      if (targets[event.key] !== undefined) select(/** @type {number} */ (targets[event.key]));
       hover(isWithinAxis(state.selected) ? state.selected : null, svg);
     });
     svg.addEventListener('focus', () => hover(isWithinAxis(state.selected) ? state.selected : null, svg));
@@ -298,6 +392,7 @@
     };
   }
 
+  /** @type {Measure[]} */
   const measures = [
     {name: 'Symbols',              value: record => record.executable.symbols,           unit: 'symbols'},
     {name: 'Bytes of symbol names', value: record => record.executable.symbol_name_bytes, unit: 'bytes of names'},
@@ -311,6 +406,7 @@
 
   // One measure for each event of the runner's setup that is plotted. The system calls are not: their total does
   // not grow with the number of tests, so they are not the setup's alone.
+  /** @type {Measure[]} */
   const runnerMeasures = ['instructions'].map(event => ({
     event,
     name: `${event} of the runner's setup, per test`,
@@ -329,6 +425,7 @@
   // alone: the quotient moves by tens between jobs even at one commit, which a line between jobs a moment apart
   // would draw as a climb, and the scale starts at zero, so that the regression of about 1,650 stands out of that.
   // A rule breaks the series at a change of the toolchain, or of the boundary of the measurement.
+  /** @type {Measure} */
   const leftoverMeasure = {
     name: 'instructions of the runner\'s setup, per leftover entry',
     value: symbolDashboard.leftoverMaterialsSetupPerEntry,
@@ -345,6 +442,7 @@
   // line joins the points which have them. The line breaks where the
   // compile-cost record's toolchain changes, or its series: the units or the
   // boundary of the count. The symbol table's toolchain does not break it.
+  /** @type {Measure} */
   const compileCostMeasure = {
     name: 'instructions of compiling the units',
     value: symbolDashboard.compileCostInstructions,
@@ -356,14 +454,20 @@
     breakLabel: point => point.record.compileCost.toolchainChange ? 'toolchain' : 'boundary'
   };
 
+  /**
+   * @param {number} index
+   * @param {Measure} measure  One whose value every point has
+   * @returns {{delta: number, before: number} | null}
+   */
   function changeOn(index, measure) {
     if (index === 0) return null;
-    const before = measure.value(state.points[index - 1].record);
-    const after  = measure.value(state.points[index].record);
+    const before = /** @type {number} */ (measure.value(state.points[index - 1].record));
+    const after  = /** @type {number} */ (measure.value(state.points[index].record));
     return {delta: after - before, before};
   }
 
   // The tooltip's lines for a record with a `leftover_materials_setup`
+  /** @param {any} record */
   function leftoverTooltipLines(record) {
     const perEntry = leftoverMeasure.value(record);
     const runs = symbolDashboard.leftoverMaterialsSetupRuns(record);
@@ -378,19 +482,24 @@
   }
 
   // The tooltip's lines for a record with a `compile_cost`
+  /** @param {any} record */
   function compileCostTooltipLines(record) {
     const units = symbolDashboard.compileCostUnits(record);
     const compiler = record.compileCost.compiler;
     return [
-      element('span', {}, `${integer.format(compileCostMeasure.value(record))} instructions of compiling the units`
+      element('span', {}, `${integer.format(/** @type {number} */ (compileCostMeasure.value(record)))} instructions of compiling the units`
                           + ` with ${compiler.id} ${compiler.version}:`),
       ...Object.entries(units).map(([unit, instructions]) => element('span', {}, `${integer.format(instructions)} for ${unit}`))];
   }
 
+  /**
+   * @param {number | null} index
+   * @param {Element} [from]
+   */
   function hover(index, from) {
     state.hovered = index;
     for (const chart of state.charts) chart.markHover(index);
-    const tooltip = document.getElementById('tooltip');
+    const tooltip = /** @type {HTMLElement} */ (document.getElementById('tooltip'));
     if (index === null) { tooltip.hidden = true; return; }
     const point = state.points[index];
     const symbols = changeOn(index, measures[0]);
@@ -400,27 +509,27 @@
                                   : 'The first point'),
       element('span', {}, `${integer.format(point.record.executable.symbol_name_bytes)} bytes of names`),
       ...(measures[2].value(point.record) === null ? []
-          : [element('span', {}, `${integer.format(measures[2].value(point.record))} instructions of prune's analysis`
+          : [element('span', {}, `${integer.format(/** @type {number} */ (measures[2].value(point.record)))} instructions of prune's analysis`
                                  + `, after a full run with exit status ${symbolDashboard.pruneStampingExitStatus(point.record)}`)]),
       ...(runnerMeasures[0].value(point.record) === null ? []
           : [element('span', {}, 'The runner\'s setup, per test: '
-                                 + runnerMeasures.map(measure => `${oneDecimal.format(measure.value(point.record))} ${measure.event}`)
+                                 + runnerMeasures.map(measure => `${oneDecimal.format(/** @type {number} */ (measure.value(point.record)))} ${measure.event}`)
                                                  .join(', ')
                                  + `; the run executed ${integer.format(symbolDashboard.runnerSetupTests(point.record))} tests`
                                  + ` and had exit status ${symbolDashboard.runnerSetupExitStatus(point.record)}`)]),
       ...(symbolDashboard.leftoverMaterialsSetupEntries(point.record) === null ? [] : leftoverTooltipLines(point.record)),
       ...(symbolDashboard.compileCostUnits(point.record) === null ? [] : compileCostTooltipLines(point.record)),
       ...(measures[3].value(point.record) === null ? []
-          : [element('span', {}, `${integer.format(measures[3].value(point.record))} uncalled functions in Source`)]),
+          : [element('span', {}, `${integer.format(/** @type {number} */ (measures[3].value(point.record)))} uncalled functions in Source`)]),
       element('span', {}, `${short(point.commit)} · ${longDate(point.date)}`),
       element('span', {}, point.subject));
     if (point.toolchainChange) tooltip.append(element('span', {}, `Toolchain changed: ${describeChange(point.toolchainChange)}`));
     const chart  = state.charts.find(c => c.svg === from) || state.charts.find(c => c.svg.matches(':hover')) || state.charts[0];
-    const figure = chart.svg.closest('figure');
+    const figure = /** @type {HTMLElement} */ (chart.svg.closest('figure'));
     const bounds = chart.svg.getBoundingClientRect();
     const where  = chart.anchor(index);
-    const left   = figure.offsetLeft + chart.svg.parentNode.offsetLeft + where.x * bounds.width;
-    const top    = figure.offsetTop + chart.svg.parentNode.offsetTop + where.y * bounds.height;
+    const left   = figure.offsetLeft + /** @type {HTMLElement} */ (chart.svg.parentNode).offsetLeft + where.x * bounds.width;
+    const top    = figure.offsetTop + /** @type {HTMLElement} */ (chart.svg.parentNode).offsetTop + where.y * bounds.height;
     tooltip.hidden = false;
     const pageWidth = document.documentElement.clientWidth;
     const wanted    = left + 16 + tooltip.offsetWidth > pageWidth ? left - 16 - tooltip.offsetWidth : left + 16;
@@ -428,39 +537,40 @@
     tooltip.style.top  = `${Math.max(0, top - tooltip.offsetHeight - 12)}px`;
   }
 
+  /** @param {number} index */
   function select(index) {
     state.selected = index;
     for (const chart of state.charts) chart.markSelected(index);
     drawMovers();
-    for (const row of document.querySelectorAll('#points tr[data-index]')) {
+    for (const row of /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('#points tr[data-index]'))) {
       row.classList.toggle('selected', Number(row.dataset.index) === index);
     }
   }
 
   function drawCharts() {
     state.charts = [
-      drawChart(document.getElementById('symbols-plot'), measures[0], 260, true),
-      drawChart(document.getElementById('bytes-plot'),   measures[1], 180, false)
+      drawChart(/** @type {HTMLElement} */ (document.getElementById('symbols-plot')), measures[0], 260, true),
+      drawChart(/** @type {HTMLElement} */ (document.getElementById('bytes-plot')),   measures[1], 180, false)
     ];
     const hasAnalysis = state.points.some(point => measures[2].value(point.record) !== null);
-    document.getElementById('analysis-figure').hidden = !hasAnalysis;
-    if (hasAnalysis) state.charts.push(drawChart(document.getElementById('analysis-plot'), measures[2], 180, false));
+    /** @type {HTMLElement} */ (document.getElementById('analysis-figure')).hidden = !hasAnalysis;
+    if (hasAnalysis) state.charts.push(drawChart(/** @type {HTMLElement} */ (document.getElementById('analysis-plot')), measures[2], 180, false));
     const hasRunner = state.points.some(point => runnerMeasures[0].value(point.record) !== null);
-    document.getElementById('runner-figure').hidden = !hasRunner;
+    /** @type {HTMLElement} */ (document.getElementById('runner-figure')).hidden = !hasRunner;
     if (hasRunner) {
       for (const measure of runnerMeasures) {
-        state.charts.push(drawChart(document.getElementById(`runner-plot-${measure.event}`), measure, 120, true));
+        state.charts.push(drawChart(/** @type {HTMLElement} */ (document.getElementById(`runner-plot-${measure.event}`)), measure, 120, true));
       }
     }
     const hasLeftover = state.points.some(point => symbolDashboard.leftoverMaterialsSetupEntries(point.record) !== null);
-    document.getElementById('leftover-figure').hidden = !hasLeftover;
-    if (hasLeftover) state.charts.push(drawChart(document.getElementById('leftover-plot'), leftoverMeasure, 120, true));
+    /** @type {HTMLElement} */ (document.getElementById('leftover-figure')).hidden = !hasLeftover;
+    if (hasLeftover) state.charts.push(drawChart(/** @type {HTMLElement} */ (document.getElementById('leftover-plot')), leftoverMeasure, 120, true));
     const hasCompileCost = state.points.some(point => compileCostMeasure.value(point.record) !== null);
-    document.getElementById('compile-figure').hidden = !hasCompileCost;
-    if (hasCompileCost) state.charts.push(drawChart(document.getElementById('compile-plot'), compileCostMeasure, 180, true));
+    /** @type {HTMLElement} */ (document.getElementById('compile-figure')).hidden = !hasCompileCost;
+    if (hasCompileCost) state.charts.push(drawChart(/** @type {HTMLElement} */ (document.getElementById('compile-plot')), compileCostMeasure, 180, true));
     const hasUncalled = state.points.some(point => measures[3].value(point.record) !== null);
-    document.getElementById('uncalled-figure').hidden = !hasUncalled;
-    if (hasUncalled) state.charts.push(drawChart(document.getElementById('uncalled-plot'), measures[3], 180, true));
+    /** @type {HTMLElement} */ (document.getElementById('uncalled-figure')).hidden = !hasUncalled;
+    if (hasUncalled) state.charts.push(drawChart(/** @type {HTMLElement} */ (document.getElementById('uncalled-plot')), measures[3], 180, true));
     for (const chart of state.charts) chart.markSelected(state.selected);
   }
 
@@ -470,9 +580,10 @@
     const points  = state.points;
     const latest  = points[points.length - 1];
     const change  = changeOn(points.length - 1, measures[0]);
+    /** @param {string} label @param {string} value @param {string} detail */
     const tile = (label, value, detail) => element('div', {class: 'tile'},
       element('div', {class: 'label'}, label), element('div', {class: 'value'}, value), element('div', {class: 'detail'}, detail));
-    document.getElementById('tiles').replaceChildren(
+    /** @type {HTMLElement} */ (document.getElementById('tiles')).replaceChildren(
       tile('Symbols at the latest point', integer.format(latest.record.executable.symbols), `${short(latest.commit)}, ${longDate(latest.date)}`),
       tile('Change on the point before', change ? signed(change.delta) : '—',
            change ? percent(change.delta, change.before) + (latest.toolchainChange ? ', across a toolchain change' : '') : 'There is only one point'),
@@ -481,6 +592,7 @@
 
   // The paragraphs which say how each unit's count of instructions moved at the point `index`, against the
   // point before it with a count, or none if the point has no count or the point before is of another series
+  /** @param {number} index */
   function compileCostMovers(index) {
     const units = symbolDashboard.compileCostUnits(state.points[index].record);
     const before = state.points.slice(0, index).findLast(point => symbolDashboard.compileCostUnits(point.record) !== null);
@@ -498,7 +610,7 @@
   }
 
   function drawMovers() {
-    const panel = document.getElementById('movers');
+    const panel = /** @type {HTMLElement} */ (document.getElementById('movers'));
     const index = state.selected;
     const point = state.points[index];
     panel.replaceChildren(element('h2', {}, 'What moved at ', link(commitUrl(point.commit), short(point.commit))),
@@ -508,7 +620,7 @@
       return;
     }
     const previous = state.points[index - 1];
-    const symbols  = changeOn(index, measures[0]);
+    const symbols  = /** @type {{delta: number, before: number}} */ (changeOn(index, measures[0]));
     const movers   = symbolDashboard.movers(previous.record, point.record);
     const objects  = Object.keys(point.record.defined_symbols_by_object).length;
     panel.append(element('p', {}, 'Against ', link(commitUrl(previous.commit), short(previous.commit)),
@@ -521,6 +633,7 @@
     }
     panel.append(...compileCostMovers(index));
     if (movers.length === 0) return;
+    /** @param {Mover[]} rows */
     const table = rows => {
       const body = rows.map(mover => element('tr', {},
         element('td', {class: 'object'}, mover.object),
@@ -542,6 +655,7 @@
   function drawPointsTable() {
     const header = element('tr', {}, ...['Commit', 'Date', 'Symbols', 'Change', 'Bytes of names', 'Subject'].map((text, i) =>
       element('th', {class: i >= 2 && i <= 4 ? 'number' : ''}, text)));
+    /** @type {HTMLElement[]} */
     const rows = [];
     state.points.forEach((point, index) => {
       if (point.toolchainChange) {
@@ -562,28 +676,30 @@
       });
       rows.push(row);
     });
-    document.getElementById('points').replaceChildren(element('thead', {}, header), element('tbody', {}, ...rows.reverse()));
+    /** @type {HTMLElement} */ (document.getElementById('points')).replaceChildren(element('thead', {}, header), element('tbody', {}, ...rows.reverse()));
   }
 
+  /** @param {Column} column */
   function drawProblems(column) {
-    const panel = document.getElementById('problems');
+    const panel = /** @type {HTMLElement} */ (document.getElementById('problems'));
     panel.hidden = column.problems.length === 0;
     panel.replaceChildren(element('h2', {}, `${column.problems.length} records not plotted`),
       element('ul', {}, ...column.problems.map(({path, problems}) => element('li', {}, element('code', {}, path), `: ${problems.join('; ')}.`))));
   }
 
+  /** @param {Column} column */
   function showColumn(column) {
     state.points = column.points;
     drawProblems(column);
-    const dashboard = document.getElementById('dashboard');
+    const dashboard = /** @type {HTMLElement} */ (document.getElementById('dashboard'));
     dashboard.hidden = false;
     const hasPoints = column.points.length > 0;
-    for (const node of dashboard.children) if (node.id !== 'problems' && node.id !== 'tooltip') node.hidden = !hasPoints;
+    for (const node of /** @type {HTMLCollectionOf<HTMLElement>} */ (dashboard.children)) if (node.id !== 'problems' && node.id !== 'tooltip') node.hidden = !hasPoints;
     if (!hasPoints) {
       showMessage('Nothing to plot', `None of the records of ${column.name} can be plotted; the list below says why.`, true);
       return;
     }
-    document.getElementById('message').hidden = true;
+    /** @type {HTMLElement} */ (document.getElementById('message')).hidden = true;
     const asked = parameters.get('commit');
     const found = asked ? column.points.findIndex(point => point.commit.startsWith(asked)) : -1;
     state.selected = found >= 0 ? found : column.points.length - 1;
@@ -593,8 +709,11 @@
     select(state.selected);
   }
 
+  // `loaded` is the result of symbolDashboard.loadHistory, or null
+  /** @param {any} loaded */
   function describeCalls(loaded) {
-    const footer = document.getElementById('footer');
+    const footer = /** @type {HTMLElement} */ (document.getElementById('footer'));
+    /** @param {number} count @param {string} noun */
     const plural = (count, noun) => `${count} ${noun}${count === 1 ? '' : 's'}`;
     const pages  = loaded && loaded.state === 'loaded' ? loaded.pages : 0;
     const read   = `This view read ${plural(meter.records, 'record')} and ${plural(pages, 'page')} of staging's history`;
@@ -614,7 +733,7 @@
     let loaded;
     try { loaded = await symbolDashboard.loadHistory(source, known); }
     catch (error) {
-      showMessage('The records could not be loaded', error.message, true);
+      showMessage('The records could not be loaded', /** @type {Error} */ (error).message, true);
       describeCalls(null);
       return;
     }
@@ -628,27 +747,28 @@
       showMessage('No records yet', 'The metrics branch holds no records under symbol-table/, so there is nothing to plot.', false);
       return;
     }
-    const columns = new Map(loaded.columns.map(column => [column.name, column]));
+    const columns = new Map(loaded.columns.map((/** @type {Column} */ column) => [column.name, column]));
     const chosen  = parameters.get('column') || (columns.has(defaultColumn) ? defaultColumn : loaded.columns[0].name);
     if (!columns.has(chosen)) {
       showMessage('No such column', `The metrics branch has no column ${chosen}; it has ${[...columns.keys()].join(', ')}.`, true);
       return;
     }
-    const picker = document.getElementById('column');
+    const picker = /** @type {HTMLSelectElement} */ (document.getElementById('column'));
     picker.replaceChildren(...[...columns.keys()].map(name => element('option', {value: name}, name)));
     picker.value = chosen;
-    picker.addEventListener('change', () => showColumn(columns.get(picker.value)));
-    document.getElementById('filters').hidden = columns.size < 2;
-    showColumn(columns.get(chosen));
+    picker.addEventListener('change', () => showColumn(/** @type {Column} */ (columns.get(picker.value))));
+    /** @type {HTMLElement} */ (document.getElementById('filters')).hidden = columns.size < 2;
+    showColumn(/** @type {Column} */ (columns.get(chosen)));
     // Only a change of width redraws, since redrawing replaces the focused
     // chart and so ends keyboard navigation.
-    let pending = null, drawnWidth = document.querySelector('main').clientWidth;
+    /** @type {number | null} */
+    let pending = null, drawnWidth = /** @type {Element} */ (document.querySelector('main')).clientWidth;
     new ResizeObserver(([entry]) => {
       if (entry.contentRect.width === drawnWidth) return;
       drawnWidth = entry.contentRect.width;
-      cancelAnimationFrame(pending);
+      cancelAnimationFrame(/** @type {number} */ (pending));
       pending = requestAnimationFrame(() => { if (state.points.length) { drawCharts(); } });
-    }).observe(document.querySelector('main'));
+    }).observe(/** @type {Element} */ (document.querySelector('main')));
   }
 
   main();
