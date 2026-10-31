@@ -15,6 +15,10 @@
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 #include "sequoia/Maths/Graph/GraphDetails.hpp"
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
+#include "sequoia/Core/ContainerUtilities/ContainerAdaptorUtilities.hpp"
+#include "sequoia/Core/DataStructures/PriorityQueue.hpp"
+#include "sequoia/Core/DataStructures/Queue.hpp"
+#include "sequoia/Core/DataStructures/Stack.hpp"
 #include "sequoia/Core/Numeric/IntegerConversions.hpp"
 
 #include <cstddef>
@@ -236,12 +240,30 @@ namespace sequoia::maths::graph_impl
 
 
   template<network G, traversal_flavour F, class... QArgs>
-  struct traversal_traits_base;
+  struct traversal_queue;
+
+  template<network G>
+  struct traversal_queue<G, traversal_flavour::breadth_first>
+  {
+    using type = data_structures::queue<typename G::edge_index_type>;
+  };
+
+  template<network G>
+  struct traversal_queue<G, traversal_flavour::pseudo_depth_first>
+  {
+    using type = data_structures::stack<typename G::edge_index_type>;
+  };
+
+  template<network G, class Compare>
+  struct traversal_queue<G, traversal_flavour::priority, Compare>
+  {
+    using type = data_structures::priority_queue<typename G::edge_index_type, std::vector<typename G::edge_index_type>, Compare>;
+  };
 
   template<network G, traversal_flavour F, class... QArgs>
-  struct traversal_traits : traversal_traits_base<G, F, QArgs...>
+  struct traversal_traits
   {
-    using queue_type      = traversal_traits_base<G, F, QArgs...>::queue_type;
+    using queue_type      = traversal_queue<G, F, QArgs...>::type;
     using edge_index_type = G::edge_index_type;
 
     [[nodiscard]]
@@ -262,8 +284,6 @@ namespace sequoia::maths::graph_impl
       return iterator_getter<F>::end(graph, nodeIndex);
     }
   };
-
-  template<network G> struct traversal_tracking_traits;
 
   template<network G, class Compare>
   class node_comparer
@@ -376,8 +396,8 @@ namespace sequoia::maths::graph_impl
       results_accumulator resultsAccumulator{taskProcessingModel};
       if(conditions.starting_index() < graph.order())
       {
-        auto discovered{traversal_tracking_traits<G>::make_bitset(graph)};
-        auto processed{traversal_tracking_traits<G>::make_bitset(graph)};
+        std::vector<bool> discovered(graph.order()),
+                          processed(graph.order());
 
         auto nodeIndexQueue{traversal_traits<G, F, QArgs...>::make(std::forward<QArgs>(qargs)...)};
 
@@ -390,7 +410,7 @@ namespace sequoia::maths::graph_impl
 
           while(!nodeIndexQueue.empty())
           {
-            const auto nodeIndex{traversal_traits<G, F, QArgs...>::get_container_element(nodeIndexQueue)};
+            const auto nodeIndex{utilities::element_popped_next(nodeIndexQueue)};
             nodeIndexQueue.pop();
 
             auto onDiscovery{[&nodeIndexQueue](const edge_index_type nextNode) { nodeIndexQueue.push(nextNode); }};
@@ -441,8 +461,8 @@ namespace sequoia::maths::graph_impl
       results_accumulator resultsAccumulator{taskProcessingModel};
       if(conditions.starting_index() < graph.order())
       {
-        auto discovered{traversal_tracking_traits<G>::make_bitset(graph)};
-        auto processed{traversal_tracking_traits<G>::make_bitset(graph)};
+        std::vector<bool> discovered(graph.order()),
+                          processed(graph.order());
 
         do
         {

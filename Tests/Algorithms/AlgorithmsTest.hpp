@@ -34,11 +34,6 @@ namespace sequoia::testing
     void permute_allocation_count();
 
     template<class Form>
-    void make_heap_by_second_element(Form form);
-
-    void bubble_down_after_removing_the_top();
-
-    template<class Form>
     void stable_sort_basic_type(Form form);
 
     template<class Form>

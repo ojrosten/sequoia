@@ -12,7 +12,7 @@
 #include "GraphTraversalTestingUtilities.hpp"
 
 #include "sequoia/Core/Numeric/IntegerConversions.hpp"
-#include "sequoia/Maths/Graph/DynamicGraphTraversals.hpp"
+#include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 
 #include <cstddef>
 

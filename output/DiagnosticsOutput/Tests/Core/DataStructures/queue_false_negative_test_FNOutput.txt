@@ -1,0 +1,216 @@
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 27
+Empty against one element
+
+[sequoia::data_structures::queue<int>]
+operator== returned false
+
+  Emptiness incorrect
+  [bool]
+  operator== returned false
+  Obtained : true
+  Predicted: false
+
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  Elements incorrect, in the order popped
+  [std::vector<int, std::allocator<int> >]
+  operator== returned false
+
+    Container size wrong
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 28
+Differing elements
+
+[sequoia::data_structures::queue<int>]
+operator== returned false
+
+  Elements incorrect, in the order popped
+  [std::vector<int, std::allocator<int> >]
+  operator== returned false
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+  Back element incorrect
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 29
+Differing sizes, same front
+
+[sequoia::data_structures::queue<int>]
+operator== returned false
+
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  Elements incorrect, in the order popped
+  [std::vector<int, std::allocator<int> >]
+  operator== returned false
+
+    Container size wrong
+    [unsigned long long]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+  Back element incorrect
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 31
+Differing middle element, same front, back and size
+
+[sequoia::data_structures::queue<int>]
+operator== returned false
+
+  Elements incorrect, in the order popped
+  [std::vector<int, std::allocator<int> >]
+  operator== returned false
+
+    Element 1 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 5
+
+=======================================
+
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 34
+Wrong element
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::data_structures::queue<int> >]
+Checking for equivalence with:
+[std::vector<int, std::allocator<int> >]
+
+  Elements incorrect, in the order popped
+  [std::vector<int, std::allocator<int> >]
+  operator== returned false
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+  Back element incorrect
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 35
+Wrong size
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::data_structures::queue<int> >]
+Checking for equivalence with:
+[std::vector<int, std::allocator<int> >]
+
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  Elements incorrect, in the order popped
+  [std::vector<int, std::allocator<int> >]
+  operator== returned false
+
+    Container size wrong
+    [unsigned long long]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+  Back element incorrect
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 36
+Elements back first
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::data_structures::queue<int> >]
+Checking for equivalence with:
+[std::vector<int, std::allocator<int> >]
+
+  Elements incorrect, in the order popped
+  [std::vector<int, std::allocator<int> >]
+  operator== returned false
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+    Element 1 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 1
+
+  Back element incorrect
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 41
+A queue reached by popping against one holding the popped element
+
+[sequoia::data_structures::queue<int>]
+operator== returned false
+
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+  Elements incorrect, in the order popped
+  [std::vector<int, std::allocator<int> >]
+  operator== returned false
+
+    Container size wrong
+    [unsigned long long]
+    operator== returned false
+    Obtained : 2
+    Predicted: 3
+
+=======================================
+

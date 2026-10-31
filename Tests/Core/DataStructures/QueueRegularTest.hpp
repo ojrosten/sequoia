@@ -1,0 +1,34 @@
+////////////////////////////////////////////////////////////////////
+//                Copyright Oliver J. Rosten 2026.                //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+#pragma once
+
+/** \file */
+
+#include "QueueTestingUtilities.hpp"
+
+namespace sequoia::testing
+{
+  class queue_regular_test final : public regular_test
+  {
+  public:
+    using regular_test::regular_test;
+
+    [[nodiscard]]
+    static std::filesystem::path source_file();
+
+    void run_tests();
+  private:
+    void test_constraints();
+
+    void test_constant_evaluation();
+
+    void test_transitions();
+
+    void test_exception_safety_of_pop();
+  };
+}

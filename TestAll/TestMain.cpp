@@ -51,6 +51,9 @@ int main(int argc, char** argv)
     runner.register_test<elementary_false_positive_free_diagnostics>();
     runner.register_test<exceptions_false_negative_free_diagnostics>();
     runner.register_test<exceptions_false_positive_free_diagnostics>();
+    runner.register_test<exception_safety_test_utilities_free_test>();
+    runner.register_test<exception_safety_test_utilities_false_negative_free_diagnostics>();
+    runner.register_test<exception_safety_test_utilities_false_positive_free_diagnostics>();
     runner.register_test<chrono_false_negative_free_diagnostics>();
     runner.register_test<chrono_false_positive_free_diagnostics>();
     runner.register_test<complex_false_negative_free_diagnostics>();
@@ -141,12 +144,12 @@ int main(int argc, char** argv)
     runner.register_test<partitioned_sequence_allocation_test>();
     runner.register_test<static_partitioned_sequence_test>();
     runner.register_test<static_linearly_partitioned_sequence_test>();
-    runner.register_test<test_static_stack_false_negatives>();
-    runner.register_test<test_static_stack>();
-    runner.register_test<test_static_queue_false_negatives>();
-    runner.register_test<test_static_queue>();
-    runner.register_test<test_static_priority_queue_false_negatives>();
-    runner.register_test<test_static_priority_queue>();
+    runner.register_test<stack_false_negative_test>();
+    runner.register_test<stack_regular_test>();
+    runner.register_test<queue_false_negative_test>();
+    runner.register_test<queue_regular_test>();
+    runner.register_test<priority_queue_false_negative_test>();
+    runner.register_test<priority_queue_regular_test>();
     runner.register_test<test_graph_false_negatives>();
     runner.register_test<test_graph_meta>();
     runner.register_test<test_edge_false_negatives>();
@@ -262,6 +265,7 @@ int main(int argc, char** argv)
     runner.register_test<test_runner_serial_execution_free_test>();
     runner.register_test<test_runner_performance_check_outcomes_free_test>();
     runner.register_test<dynamic_graph_performance_test>();
+    runner.register_test<container_adaptor_utilities_free_test>();
     code = runner.execute();
   }
   catch(const std::exception& e)
