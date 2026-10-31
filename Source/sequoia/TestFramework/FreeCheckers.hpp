@@ -34,15 +34,15 @@
     element which is causing the difference between the two supposedly equal instances. If the vector holds
     a user-defined type then, so long as this has its own value_tester, the process will continue until a type
     is reached without a value_tester; typically this will be a sufficiently simple type that serialization is
-    the appropriate solution (as is the case for may built-in types).
+    the appropriate solution (as is the case for many built-in types).
 
     Suppose a client wishes to compare instances of `some_container<T>`. If `some_container<T>` has a
     specialization of \ref value_tester_primary "value_tester" then this will be used; if it does
     not then reflection is used to determine if `some_container` overloads `begin` and `end`.
     If so, then it is treated as a range and all that is required is to implement a `value_tester` for `T`
-    (unless serialization is prefered). If `some_container` is user-defined, it is wisest to provide an overload
+    (unless serialization is preferred). If `some_container` is user-defined, it is wisest to provide an overload
     of the \ref value_tester_primary "value_tester". However, if the container is part of std, it is probably
-    safe to assume it works correctly and so instead effort can be directed focused on T.
+    safe to assume it works correctly and so instead effort can be focused on T.
 
     With this in mind, imagine creating a container, `C`. One of the first things one may wish to do is to check
     that it is correctly initialized. It would be a mistake to use `value_tester<C>::test(equality_check_t, ...)`
@@ -50,15 +50,15 @@
     false positives. However, one may instead furnish `value_tester<C>` with methods
     `test(equivalence_check_t, ...)` and/or `test(weak_equivalence_check_t, ...)`.
     
-    We may consider a value for e.g. `std::vector<int>` to be equivalent to an  `initializer_list<int>` in
+    We may consider a value for e.g. `std::vector<int>` to be equivalent to an `initializer_list<int>` in
     the sense that they hold (at the relevant point of the program) the same elements. Thus, an appropriate
     definition of `test(equivalence_check_t, ...)` is supplied. Of course, there is more to a vector than the
     values it holds: there is the entire allocator framework too. In this case, however, it is not part of
     the logical structure and, indeed, the state of the allocator is not considered in `vector<T>::operator==`.
     Thus it is philosophically reasonable to consider equivalence of `vector` and `initializer_list`. However,
-    sometimes is is useful to check the equivalence of the state of an instance of `T` to a proper subset of
+    sometimes it is useful to check the equivalence of the state of an instance of `T` to a proper subset of
     the logical state of an instance of some S. For this purpose, an appropriate definition of
-    `test(weak_equivalence_check_t, ...)`.
+    `test(weak_equivalence_check_t, ...)` is supplied.
 */
 
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
