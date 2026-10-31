@@ -187,12 +187,12 @@ def findings_of_movers(measured, baseline):
 def findings_of_series(name, path, denominator, measured, baseline, accepted):
     """Returns the findings of one series."""
     held, found = count_at(baseline, path), count_at(measured, path)
-    if held is None:
-        return [f"error: {name}: the baseline's record, of {baseline.get('commit')}, has no count, "
-                "so the series cannot be compared. Recording that commit again adds it"]
-    if found is None:
-        return [f"error: {name}: the measured record, of {measured.get('commit')}, has no count: "
-                "its measurement failed"]
+    uncounted = [f"error: {name}: the {role} record, of {record.get('commit')}, has no count: its "
+                 "measurement failed, so re-run all the jobs"
+                 for role, record, count in (("baseline's", baseline, held), ("measured", measured, found))
+                 if count is None]
+    if uncounted:
+        return uncounted
     rise = found - held
     summary = (f"{name}: {held} -> {found}, {rise:+d} ({rise / held:+.2%}), "
                f"allowed +{held // denominator} (1 in {denominator} of the baseline)"
@@ -225,11 +225,12 @@ def findings_of_break(broken, measured, baseline, accepts_break):
             + [f"{kind}:   {'.'.join(path)}: baseline {value_at(baseline, path)!r}, "
                f"measured {value_at(measured, path)!r}" for path in broken]
             + ([] if accepts_break else
-               # Two records measured in one run with one pull request's
-               # scripts can differ in no other way. A re-run of the failed
-               # jobs alone would compare the same records again.
-               ["error: if the pull request means to change none of these fields, the two records' "
-                "runners differed: re-run all the jobs, rather than accept the break",
+               # Records which the same scripts made from trees which agree
+               # in these fields differ only if the two jobs' machines or
+               # packages did. A re-run of the failed jobs alone would
+               # compare the same two records again.
+               ["error: if the pull request changes none of these fields, the two jobs' machines or "
+                "packages differed: re-run all the jobs, rather than accept the break",
                 "error: to accept the break, add this line to the pull request's description, "
                 "then re-run the failed jobs:", f"error:   {BREAK_ACCEPTANCE_LINE}"]))
 
