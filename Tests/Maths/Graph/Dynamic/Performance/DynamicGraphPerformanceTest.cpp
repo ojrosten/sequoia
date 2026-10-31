@@ -185,11 +185,8 @@ namespace sequoia::testing
   /* Each performance check claims that building a graph shuffled and then
      sorting its nodes takes the same order of magnitude of time as building
      the graph sorted. A speed-up is of the same order of magnitude as 1 if
-     its logarithm to base ten rounds to zero. So the speed-up must be less
-     than the square root of ten, the prediction's upper end. The claim
-     bounds the speed-up only from above. `check_relative_performance`
-     requires the prediction's lower end to exceed 1, so it is put just
-     above 1.
+     its logarithm to base ten rounds to zero. So the prediction runs from
+     the reciprocal of the square root of ten to the square root of ten.
 
      With bucketed edge storage, building a graph shuffled takes about as
      long as building it sorted. So the speed-up reflects the cost of sorting
@@ -228,7 +225,7 @@ namespace sequoia::testing
                     graphName),
         buildSortedGraph,
         buildShuffledGraphAndSortNodes,
-        {.prediction{.lower{1.01}, .upper{std::sqrt(10.0)}}});
+        {.prediction{.lower{1 / std::sqrt(10.0)}, .upper{std::sqrt(10.0)}}});
     }
   }
 
