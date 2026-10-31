@@ -328,9 +328,8 @@ namespace sequoia::testing
     case test_mode::standard:
       return {
         .standard{
-          .top_level    {top_level_counts_of(results, results.top_level_performance_failures)},
-          .deep_checks  {results.deep_checks - results.top_level_performance_checks},
-          .deep_failures{results.failures    - results.top_level_performance_failures}
+          .top_level  {top_level_counts_of(results, results.top_level_performance_failures)},
+          .deep_checks{results.deep_checks - results.top_level_performance_checks}
         }
       };
     case test_mode::false_positive:

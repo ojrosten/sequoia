@@ -404,9 +404,6 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::size_t standard_deep_failures() const noexcept { return m_Counts.standard.deep_failures; }
-
-    [[nodiscard]]
     std::size_t standard_top_level_failures() const noexcept { return m_Counts.standard.top_level.failures; }
 
     [[nodiscard]]
@@ -487,17 +484,14 @@ namespace sequoia::testing
     {
       top_level_counts top_level{};
 
-      std::size_t
-        deep_checks{},
-        deep_failures{};
+      std::size_t deep_checks{};
 
       [[nodiscard]]
       friend constexpr standard_counts operator+(const standard_counts& lhs, const standard_counts& rhs) noexcept
       {
         return {
-          .top_level    {lhs.top_level     + rhs.top_level},
-          .deep_checks  {lhs.deep_checks   + rhs.deep_checks},
-          .deep_failures{lhs.deep_failures + rhs.deep_failures}
+          .top_level  {lhs.top_level   + rhs.top_level},
+          .deep_checks{lhs.deep_checks + rhs.deep_checks}
         };
       }
     };
