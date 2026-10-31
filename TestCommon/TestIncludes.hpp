@@ -206,6 +206,7 @@
 #include "TestFramework/TestExecutionCompletionRegularTest.hpp"
 #include "TestFramework/TestExecutionRecordRegularTest.hpp"
 #include "TestFramework/TestExecutionRecordTestingDiagnostics.hpp"
+#include "TestFramework/TestLoggerFreeTest.hpp"
 #include "TestFramework/TestRunnerDiagnostics.hpp"
 #include "TestFramework/TestRunnerEndToEndFreeTest.hpp"
 #include "TestFramework/TestRunnerPerformanceCheckOutcomesFreeTest.hpp"

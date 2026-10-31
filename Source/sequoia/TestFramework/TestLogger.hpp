@@ -364,9 +364,9 @@ namespace sequoia::testing
     // link fails. Fixed upstream in gcc 15.3, on the gcc-15 branch between releases: the
     // 15.2.0 release tarball fails, and a later snapshot of that branch - which still calls
     // itself 15.2.0 - links, so the version string does not settle it. The two spellings
-    // differ in value-initialisation: `{}` is user-provided, so members without initialisers
-    // would not be zero-initialised, but every member below has one, so the object state is
-    // identical.
+    // differ in value-initialization: `{}` is user-provided, so members without initializers
+    // would not be zero-initialized. Every member below either has one or is a `std::string`,
+    // which default-constructs empty, so the object state is identical.
     log_summary() {}
 
     explicit log_summary(std::string_view name);
@@ -377,46 +377,58 @@ namespace sequoia::testing
     {}
 
     [[nodiscard]]
-    std::size_t standard_top_level_checks() const noexcept { return m_StandardTopLevelChecks; }
+    std::size_t standard_top_level_checks() const noexcept { return m_Counts.standard.top_level.checks; }
 
     [[nodiscard]]
-    std::size_t standard_deep_checks() const noexcept { return m_StandardDeepChecks; }
+    std::size_t standard_deep_checks() const noexcept { return m_Counts.standard.deep_checks; }
 
     [[nodiscard]]
-    std::size_t standard_performance_checks() const noexcept { return m_StandardPerformanceChecks; }
+    std::size_t standard_performance_checks() const noexcept { return m_Counts.standard.top_level.performance_checks; }
 
     [[nodiscard]]
-    std::size_t false_positive_checks() const noexcept { return m_FalsePositiveChecks; }
+    std::size_t false_positive_checks() const noexcept { return m_Counts.false_positive.checks; }
 
     [[nodiscard]]
-    std::size_t false_positive_performance_checks() const noexcept { return m_FalsePositivePerformanceChecks; }
+    std::size_t false_positive_performance_checks() const noexcept
+    {
+      return m_Counts.false_positive.performance_checks;
+    }
 
     [[nodiscard]]
-    std::size_t false_negative_checks() const noexcept { return m_FalseNegativeChecks; }
+    std::size_t false_negative_checks() const noexcept { return m_Counts.false_negative.checks; }
 
     [[nodiscard]]
-    std::size_t false_negative_performance_checks() const noexcept { return m_FalseNegativePerformanceChecks; }
+    std::size_t false_negative_performance_checks() const noexcept
+    {
+      return m_Counts.false_negative.performance_checks;
+    }
 
     [[nodiscard]]
-    std::size_t standard_deep_failures() const noexcept { return m_StandardDeepFailures; }
+    std::size_t standard_top_level_failures() const noexcept { return m_Counts.standard.top_level.failures; }
 
     [[nodiscard]]
-    std::size_t standard_top_level_failures() const noexcept { return m_StandardTopLevelFailures; }
+    std::size_t standard_performance_failures() const noexcept
+    {
+      return m_Counts.standard.top_level.performance_failures;
+    }
 
     [[nodiscard]]
-    std::size_t standard_performance_failures() const noexcept { return m_StandardPerformanceFailures; }
+    std::size_t false_positive_failures() const noexcept { return m_Counts.false_positive.failures; }
 
     [[nodiscard]]
-    std::size_t false_positive_failures() const noexcept { return m_FalsePositiveFailures; }
+    std::size_t false_positive_performance_failures() const noexcept
+    {
+      return m_Counts.false_positive.performance_failures;
+    }
 
     [[nodiscard]]
-    std::size_t false_positive_performance_failures() const noexcept { return m_FalsePositivePerformanceFailures; }
+    std::size_t false_negative_failures() const noexcept { return m_Counts.false_negative.failures; }
 
     [[nodiscard]]
-    std::size_t false_negative_failures() const noexcept { return m_FalseNegativeFailures; }
-
-    [[nodiscard]]
-    std::size_t false_negative_performance_failures() const noexcept { return m_FalseNegativePerformanceFailures; }
+    std::size_t false_negative_performance_failures() const noexcept
+    {
+      return m_Counts.false_negative.performance_failures;
+    }
 
     [[nodiscard]]
     std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
@@ -448,33 +460,84 @@ namespace sequoia::testing
     [[nodiscard]]
     const std::string& failure_messages() const noexcept { return m_FailureMessages; }
   private:
+    struct top_level_counts
+    {
+      std::size_t
+        checks{},
+        performance_checks{},
+        failures{},
+        performance_failures{};
+
+      [[nodiscard]]
+      friend constexpr top_level_counts operator+(const top_level_counts& lhs, const top_level_counts& rhs) noexcept
+      {
+        return {
+          .checks              {lhs.checks               + rhs.checks},
+          .performance_checks  {lhs.performance_checks   + rhs.performance_checks},
+          .failures            {lhs.failures             + rhs.failures},
+          .performance_failures{lhs.performance_failures + rhs.performance_failures}
+        };
+      }
+    };
+
+    struct standard_counts
+    {
+      top_level_counts top_level{};
+
+      std::size_t deep_checks{};
+
+      [[nodiscard]]
+      friend constexpr standard_counts operator+(const standard_counts& lhs, const standard_counts& rhs) noexcept
+      {
+        return {
+          .top_level  {lhs.top_level   + rhs.top_level},
+          .deep_checks{lhs.deep_checks + rhs.deep_checks}
+        };
+      }
+    };
+
+    struct counts_by_mode
+    {
+      standard_counts standard{};
+
+      top_level_counts
+        false_positive{},
+        false_negative{};
+
+      [[nodiscard]]
+      friend constexpr counts_by_mode operator+(const counts_by_mode& lhs, const counts_by_mode& rhs) noexcept
+      {
+        return {
+          .standard      {lhs.standard       + rhs.standard},
+          .false_positive{lhs.false_positive + rhs.false_positive},
+          .false_negative{lhs.false_negative + rhs.false_negative}
+        };
+      }
+
+      constexpr counts_by_mode& operator+=(const counts_by_mode& rhs) noexcept
+      {
+        return *this = (*this + rhs);
+      }
+    };
+
     std::string
       m_Name,
       m_FailureMessages,
       m_DiagnosticsOutput,
       m_CaughtExceptionMessages;
 
-    std::size_t
-      m_StandardTopLevelChecks{},
-      m_StandardDeepChecks{},
-      m_StandardPerformanceChecks{},
-      m_FalsePositiveChecks{},
-      m_FalseNegativeChecks{},
-      m_FalsePositivePerformanceChecks{},
-      m_FalseNegativePerformanceChecks{},
-      m_StandardTopLevelFailures{},
-      m_StandardDeepFailures{},
-      m_StandardPerformanceFailures{},
-      m_FalsePositiveFailures{},
-      m_FalseNegativeFailures{},
-      m_FalsePositivePerformanceFailures{},
-      m_FalseNegativePerformanceFailures{},
-      m_CriticalFailures{};
+    counts_by_mode m_Counts{};
 
-    int m_ExceptionsInFlight{};
+    std::size_t m_CriticalFailures{};
 
     durations_of_tests m_Durations{};
 
     log_summary(std::string_view name, const test_logger_base& logger, test_mode mode, const duration delta);
+
+    [[nodiscard]]
+    static top_level_counts top_level_counts_of(const test_results& results, std::size_t performanceFailures) noexcept;
+
+    [[nodiscard]]
+    static counts_by_mode counts_of(const test_results& results, test_mode mode);
   };
 }
