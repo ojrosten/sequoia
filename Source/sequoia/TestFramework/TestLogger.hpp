@@ -364,9 +364,9 @@ namespace sequoia::testing
     // link fails. Fixed upstream in gcc 15.3, on the gcc-15 branch between releases: the
     // 15.2.0 release tarball fails, and a later snapshot of that branch - which still calls
     // itself 15.2.0 - links, so the version string does not settle it. The two spellings
-    // differ in value-initialisation: `{}` is user-provided, so members without initialisers
-    // would not be zero-initialised, but every member below has one, so the object state is
-    // identical.
+    // differ in value-initialization: `{}` is user-provided, so members without initializers
+    // would not be zero-initialized. Every member below either has one or is a `std::string`,
+    // which default-constructs empty, so the object state is identical.
     log_summary() {}
 
     explicit log_summary(std::string_view name);
