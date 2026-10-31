@@ -471,8 +471,6 @@ namespace sequoia::testing
       m_FalseNegativePerformanceFailures{},
       m_CriticalFailures{};
 
-    int m_ExceptionsInFlight{};
-
     durations_of_tests m_Durations{};
 
     log_summary(std::string_view name, const test_logger_base& logger, test_mode mode, const duration delta);

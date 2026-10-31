@@ -371,7 +371,6 @@ namespace sequoia::testing
     m_FalseNegativePerformanceFailures += rhs.m_FalseNegativePerformanceFailures;
 
     m_CriticalFailures   += rhs.m_CriticalFailures;
-    m_ExceptionsInFlight += rhs.m_ExceptionsInFlight;
     m_Durations          += rhs.m_Durations;
 
     return *this;
