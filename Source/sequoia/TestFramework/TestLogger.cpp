@@ -10,6 +10,7 @@
 
 #include <format>
 #include <fstream>
+#include <stdexcept>
 
 namespace sequoia::testing
 {
@@ -302,35 +303,49 @@ namespace sequoia::testing
     , m_FailureMessages{to_reduced_string(logger.results().failure_messages)}
     , m_DiagnosticsOutput{to_reduced_string(logger.results().diagnostics_output)}
     , m_CaughtExceptionMessages{to_reduced_string(logger.results().caught_exception_messages)}
+    , m_Counts{counts_of(logger.results(), mode)}
     , m_CriticalFailures{logger.results().critical_failures}
     , m_Durations{.execution_duration{delta}}
-  {
-    const auto performanceChecks{logger.results().top_level_performance_checks},
-               performanceFailures{logger.results().top_level_performance_failures};
+  {}
 
+  [[nodiscard]]
+  log_summary::top_level_counts log_summary::top_level_counts_of(const test_results& results,
+                                                                 const std::size_t performanceFailures) noexcept
+  {
+    return {
+      .checks              {results.top_level_checks   - results.top_level_performance_checks},
+      .performance_checks  {results.top_level_performance_checks},
+      .failures            {results.top_level_failures - performanceFailures},
+      .performance_failures{performanceFailures}
+    };
+  }
+
+  [[nodiscard]]
+  log_summary::counts_by_mode log_summary::counts_of(const test_results& results, const test_mode mode)
+  {
     switch(mode)
     {
     case test_mode::standard:
-      m_StandardTopLevelFailures    = logger.results().top_level_failures - performanceFailures;
-      m_StandardDeepFailures        = logger.results().failures - performanceFailures;
-      m_StandardPerformanceFailures = performanceFailures;
-      m_StandardTopLevelChecks      = logger.results().top_level_checks - performanceChecks;
-      m_StandardDeepChecks          = logger.results().deep_checks - performanceChecks;
-      m_StandardPerformanceChecks   = performanceChecks;
-      break;
+      return {
+        .standard{
+          .top_level    {top_level_counts_of(results, results.top_level_performance_failures)},
+          .deep_checks  {results.deep_checks - results.top_level_performance_checks},
+          .deep_failures{results.failures    - results.top_level_performance_failures}
+        }
+      };
     case test_mode::false_positive:
-      m_FalsePositiveFailures            = logger.results().top_level_failures - performanceFailures;
-      m_FalsePositivePerformanceFailures = performanceFailures;
-      m_FalsePositiveChecks              = logger.results().top_level_checks - performanceChecks;
-      m_FalsePositivePerformanceChecks   = performanceChecks;
-      break;
+      return {.false_positive{top_level_counts_of(results, results.top_level_performance_failures)}};
     case test_mode::false_negative:
-      m_FalseNegativePerformanceFailures = performanceChecks - performanceFailures;
-      m_FalseNegativeFailures            = logger.results().top_level_failures - m_FalseNegativePerformanceFailures;
-      m_FalseNegativeChecks              = logger.results().top_level_checks - performanceChecks;
-      m_FalseNegativePerformanceChecks   = performanceChecks;
-      break;
+    {
+      const auto falseNegativePerformanceFailures{
+        results.top_level_performance_checks - results.top_level_performance_failures
+      };
+
+      return {.false_negative{top_level_counts_of(results, falseNegativePerformanceFailures)}};
     }
+    }
+
+    throw std::logic_error{"Unrecognized case for test_mode"};
   }
 
   [[nodiscard]]
@@ -354,24 +369,9 @@ namespace sequoia::testing
                               rhs.m_DiagnosticsOutput.begin(),
                               rhs.m_DiagnosticsOutput.end());
 
-    m_StandardTopLevelChecks         += rhs.m_StandardTopLevelChecks;
-    m_StandardDeepChecks             += rhs.m_StandardDeepChecks;
-    m_StandardPerformanceChecks      += rhs.m_StandardPerformanceChecks;
-    m_FalsePositiveChecks            += rhs.m_FalsePositiveChecks;
-    m_FalseNegativeChecks            += rhs.m_FalseNegativeChecks;
-    m_FalsePositivePerformanceChecks += rhs.m_FalsePositivePerformanceChecks;
-    m_FalseNegativePerformanceChecks += rhs.m_FalseNegativePerformanceChecks;
-
-    m_StandardTopLevelFailures         += rhs.m_StandardTopLevelFailures;
-    m_StandardDeepFailures             += rhs.m_StandardDeepFailures;
-    m_StandardPerformanceFailures      += rhs.m_StandardPerformanceFailures;
-    m_FalsePositiveFailures            += rhs.m_FalsePositiveFailures;
-    m_FalseNegativeFailures            += rhs.m_FalseNegativeFailures;
-    m_FalsePositivePerformanceFailures += rhs.m_FalsePositivePerformanceFailures;
-    m_FalseNegativePerformanceFailures += rhs.m_FalseNegativePerformanceFailures;
-
-    m_CriticalFailures   += rhs.m_CriticalFailures;
-    m_Durations          += rhs.m_Durations;
+    m_Counts           += rhs.m_Counts;
+    m_CriticalFailures += rhs.m_CriticalFailures;
+    m_Durations        += rhs.m_Durations;
 
     return *this;
   }
