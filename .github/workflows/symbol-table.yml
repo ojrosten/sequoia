@@ -46,8 +46,8 @@ name: symbol-table
 # other than staging stores nothing.
 #
 # metrics-gate.yml calls this workflow to measure a pull request for the
-# gates on metrics. A called run records each commit which the caller names,
-# in a job of its own, with the scripts of the commit which the caller names
+# gates on metrics. A called run records the commits which the caller names,
+# as a dispatch does, with the scripts of the commit which the caller names
 # as `tooling`. A called run stores nothing, and counts the setup cost of
 # leftover materials only when the caller asks. The last step checks that
 # count on each push to staging.
@@ -138,7 +138,8 @@ jobs:
     steps:
       # Two checkouts, side by side: `tooling`, whose scripts install the
       # toolchain, measure and store; and `tree`, the commit measured.
-      # `tooling` is the commit the run is on, or the commit a caller names.
+      # `tooling` holds the commit the run is on, or the commit which a
+      # caller names as `inputs.tooling`.
       # The build writes only to tree/build, which the tree's .gitignore
       # lists, so the tree stays clean, as the store requires. On a push both
       # are github.sha.

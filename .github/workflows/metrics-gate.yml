@@ -3,10 +3,10 @@ name: metrics-gate
 # The gates on the counts which the metrics dashboard plots. fine calls this
 # workflow, so the gates hold pull requests into staging.
 #
-# The run measures two commits with symbol-table.yml, which records each push
-# to staging the same way: GitHub's merge of the pull request into staging,
-# and the baseline, the merge's first parent. The first parent is the staging
-# commit on which GitHub made the merge. The merge's scripts measure both
+# The run measures two commits with symbol-table.yml: GitHub's merge of the
+# pull request into staging, and the baseline, the merge's first parent. The
+# first parent is the staging commit on which GitHub made the merge. The
+# merge's scripts measure both
 # commits, so a pull request which changes the measurement changes it for
 # both records. The run then compares the two records;
 # scripts/metrics_gate.py says which counts the comparison reads, and what
@@ -38,12 +38,17 @@ jobs:
   # change to the pull request, and says so by giving it a mergeable state,
   # which the step waits for.
   #
+  # After a retarget, GitHub's merge can stay on the old base for minutes,
+  # with a mergeable state. Its first parent is then off staging's
+  # first-parent history, and the step refuses it: the gate would otherwise
+  # compare a tree which no other job tests.
+  #
   # Like `measure`, the job is skipped, rather than run with nothing to do as
   # tests.yml's jobs are, so that symbol-table.yml needs no condition on each
   # step. `compare` always runs, and fails unless both ran exactly when the
   # change needs them.
   subject:
-    name: The merge to measure
+    name: The commits to measure
     if: inputs.needs_testing == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -55,6 +60,14 @@ jobs:
       first_parent: ${{ steps.merge.outputs.first_parent }}
       pull_request: ${{ steps.merge.outputs.pull_request }}
     steps:
+      # staging's history, without trees or blobs, for the check of the
+      # first parent.
+      - uses: actions/checkout@v7
+        with:
+          ref: staging
+          fetch-depth: 0
+          filter: tree:0
+
       - id: merge
         env:
           GH_TOKEN: ${{ github.token }}
@@ -93,6 +106,12 @@ jobs:
           mapfile -t parents <<< "$parents"
           if [ ${#parents[@]} -ne 2 ]; then
             echo "::error title=Metrics gate::$commit has ${#parents[@]} parents, not two, so it is no merge"
+            exit 1
+          fi
+          if ! git rev-list --first-parent HEAD | grep -xF "${parents[0]}" > /dev/null; then
+            echo "::error title=Metrics gate::the merge's first parent, ${parents[0]}, is not on staging's" \
+                 "first-parent history, so GitHub's merge is onto an earlier base: re-run the failed jobs" \
+                 "once GitHub has made the merge again"
             exit 1
           fi
           {
@@ -156,27 +175,31 @@ jobs:
         with:
           ref: ${{ needs.subject.outputs.commit }}
 
-      # Each artifact goes to a directory named for it.
+      # Given a pattern, and no merge-multiple, the action puts each artifact
+      # in a directory named for it.
       - uses: actions/download-artifact@v7
         if: env.NEEDS_TESTING == 'true'
         with:
           pattern: ${{ needs.measure.outputs.record_artifact_prefix }}*
           path: ${{ runner.temp }}/records
 
-      - name: Take the record of each commit
+      - name: Copy the record of each commit
         if: env.NEEDS_TESTING == 'true'
         run: |
-          # take_record <commit> <file>: copies <commit>'s record to <file>
-          take_record() {
+          # copy_record <commit> <file>: copies <commit>'s record to <file>,
+          # and prints the run attempt which made it. The step fails unless
+          # <commit>'s artifact holds one file, a record of <commit>.
+          copy_record() {
             local records=("$RUNNER_TEMP/records/$RECORD_ARTIFACT_PREFIX$1"/*)
             if [ ${#records[@]} -ne 1 ] || [ "$(jq -r .commit "${records[0]}")" != "$1" ]; then
               echo "::error title=Metrics gate::$RECORD_ARTIFACT_PREFIX$1 holds other than one record, of $1"
               exit 1
             fi
             cp "${records[0]}" "$2"
+            jq -c '{commit, run}' "$2"
           }
-          take_record "$COMMIT" "$RUNNER_TEMP/measured.json"
-          take_record "$FIRST_PARENT" "$RUNNER_TEMP/baseline.json"
+          copy_record "$COMMIT" "$RUNNER_TEMP/measured.json"
+          copy_record "$FIRST_PARENT" "$RUNNER_TEMP/baseline.json"
 
       - name: Read the pull request's description
         if: env.NEEDS_TESTING == 'true'

@@ -232,7 +232,7 @@ controls() {
     fails_with "text for $series" "$series: the measured record" "text_$name"
     fails_with "zero for $series" "$series: the measured record" "zero_$name"
     run against-baseline "$tmp/same.json" "$tmp/base_without_$name.json" "$tmp/nothing.txt"
-    [ "$status" -eq 1 ] && grep -qF "error: $series: the baseline's record, of base, has no count" <<< "$out" \
+    [ "$status" -eq 1 ] && grep -qF "error: $series: the baseline's record, of base, has no count: its measurement failed, so re-run all the jobs" <<< "$out" \
       || fail "the baseline without $series: status $status, printed '$out'"
   done
   fails_with "the measured record without prune's section" "prune_dependency_analysis: the measured record" no_analysis
@@ -241,7 +241,7 @@ controls() {
   [[ $out != *'symbols:'* ]] || fail "a compiler which differs: a series was compared: '$out'"
   grep -qxF "error:   metrics-gate: accept a break in the series" <<< "$out" \
     || fail "a compiler which differs: the line accepting a break is not printed: '$out'"
-  grep -qF "runners differed: re-run all the jobs" <<< "$out" \
+  grep -qF "machines or packages differed: re-run all the jobs" <<< "$out" \
     || fail "a compiler which differs: the re-run is not advised: '$out'"
   fails_with "a cache which differs" "a break in the series: the records differ in cache.CMAKE_BUILD_TYPE," cache
   fails_with "a target which differs" "a break in the series: the records differ in target," target
@@ -334,9 +334,8 @@ mutations=(
   'a fall fails'                     'if rise <= held // denominator + accepted:' 'if abs(rise) <= held // denominator + accepted:'
   'an acceptance not applied'        'if rise <= held // denominator + accepted:' 'if rise <= held // denominator:'
   'an acceptance applied to every series' 'acceptances.accepted_rises.get(name, 0))' 'max(acceptances.accepted_rises.values(), default=0))'
-  'an absent baseline count is zero' 'if held is None:' 'if held is None and False:'
-  'an absent measured count passes'  '        return [f"error: {name}: the measured record, of {measured.get('"'"'commit'"'"')}, has no count: "
-                "its measurement failed"]' '        return []'
+  'an absent baseline count passes'  '                 if count is None]' '                 if count is None and role != "baseline'"'"'s"]'
+  'an absent measured count passes'  '                 if count is None]' '                 if count is None and role != "measured"]'
   'a boolean is a count'             'and not isinstance(value, bool) and value > 0' 'and value > 0'
   'a fraction is a count'            'isinstance(value, int) and not isinstance(value, bool)' 'isinstance(value, (int, float)) and not isinstance(value, bool)'
   'zero is a count'                  'and not isinstance(value, bool) and value > 0' 'and not isinstance(value, bool) and value >= 0'
@@ -371,7 +370,8 @@ mutations=(
   'an acceptance twice accepted'     'elif words[2] in accepted_rises:' 'elif False:'
   'the excess printed, not the rise' 'acceptance_line(name, rise)}' 'acceptance_line(name, rise - held // denominator)}'
   'the break line not printed'       '"then re-run the failed jobs:", f"error:   {BREAK_ACCEPTANCE_LINE}"]' '"then re-run the failed jobs:"]'
-  'no re-run advised on a break'     '"runners differed: re-run all the jobs, rather than accept the break",' '"",'
+  'no re-run advised on a break'     '"packages differed: re-run all the jobs, rather than accept the break",' '"",'
+  'no re-run advised on no count'    '"measurement failed, so re-run all the jobs"' '"measurement failed"'
   'no movers'                        '+ (findings_of_movers(measured, baseline) if symbols_failed else []))' '+ [])'
   'movers on every failure'          'for name, path, _ in SERIES if path[0] == "executable"' 'for name, path, _ in SERIES'
   'movers for the symbols alone'     'for name, path, _ in SERIES if path[0] == "executable"' 'for name, path, _ in SERIES if name == "symbols"'
