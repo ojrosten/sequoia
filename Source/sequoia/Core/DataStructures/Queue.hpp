@@ -98,11 +98,6 @@ namespace sequoia::data_structures
     [[nodiscard]]
     constexpr size_type size() const noexcept { return m_Outgoing.size() + m_Incoming.size(); }
 
-    // operator== has no noexcept conditional on T's ==. With one, the
-    // exception specification of a defaulted == in an element type holding a
-    // queue of itself would depend on itself, which clang rejects for some
-    // spellings of the condition ("exception specification of 'operator=='
-    // uses itself")
     [[nodiscard]]
     friend constexpr bool operator==(const queue& lhs, const queue& rhs)
     {
