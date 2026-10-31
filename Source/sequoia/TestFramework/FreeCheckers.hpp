@@ -52,12 +52,12 @@
     
     We may consider a value for e.g. `std::vector<int>` to be equivalent to an  `initializer_list<int>` in
     the sense that they hold (at the relevant point of the program) the same elements. Thus, an appropriate
-    defintion of `test(equivalence_check_t, ...)` is supplied. Of course, there is more to a vector than the
+    definition of `test(equivalence_check_t, ...)` is supplied. Of course, there is more to a vector than the
     values it holds: there is the entire allocator framework too. In this case, however, it is not part of
     the logical structure and, indeed, the state of the allocator is not considered in `vector<T>::operator==`.
     Thus it is philosophically reasonable to consider equivalence of `vector` and `initializer_list`. However,
     sometimes is is useful to check the equivalence of the state of an instance of `T` to a proper subset of
-    the logical state of an instance of some S. For this purpose, an appropriate defintion of
+    the logical state of an instance of some S. For this purpose, an appropriate definition of
     `test(weak_equivalence_check_t, ...)`.
 */
 
@@ -578,11 +578,11 @@ namespace sequoia::testing
       If both of these fail then:
       
       1. A weak equivalence check will attempt to fall back to an equivalence check;
-      2. An equivalence check will attemp to fall back to a equality check.
+      2. An equivalence check will attempt to fall back to an equality check.
 
    */
 
-  /** \brief Condition for applying a generalized equivalance check */
+  /** \brief Condition for applying a generalized equivalence check */
 
   template<class CheckType, test_mode Mode, class T, class U, class Advisor>
   inline constexpr bool supports_generalized_equivalence_check{

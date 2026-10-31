@@ -161,7 +161,7 @@ namespace sequoia::testing
 
       The semantics are such that, of the special member functions, only explicit construction from a
       string_view is publicly available. Destruction and moves are protected; copy
-      contruction / assignment are deleted.
+      construction / assignment are deleted.
 
       \anchor basic_test_primary
    */
@@ -292,7 +292,7 @@ namespace sequoia::testing
       }
   };
 
-  /** \anchor is_parallelizable primary class tempate */
+  /** \anchor is_parallelizable primary class template */
   template<class T>
   struct is_parallelizable;
 

@@ -17,13 +17,13 @@
     headers mean the call
 
     <pre>
-    check(equality, "descripion", logger, x, y);
+    check(equality, "description", logger, x, y);
     </pre>
 
     will automatically call
 
     <pre>
-    check(equality, "automatically enhanced desciption", logger, x.first, y,first)
+    check(equality, "automatically enhanced description", logger, x.first, y.first)
     </pre>
 
     and similarly for the second element. In turn, this nested `check(equality, ...)` will use
@@ -39,7 +39,7 @@
     different then instead clients should use
 
     <pre>
-    check(with_best_available, "descripion", logger, x, y);
+    check(with_best_available, "description", logger, x, y);
     </pre>
 
     This uses static reflection to choose the strongest check available for each of the

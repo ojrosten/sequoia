@@ -8,7 +8,7 @@
 #pragma once
 
 /** \file
-    \brief Meta-prorgamming utilities for traversals of dynamic graphs.
+    \brief Meta-programming utilities for traversals of dynamic graphs.
 
  */
 

@@ -50,7 +50,7 @@
     Therefore when checking the semantics of an allocating type, the skeleton of the function is the same as for
     non-allocating types. However, in the former case extra checks are folded in. This pattern ensures
     consistency: if the scheme is tweaked for non-allocating types, allocating types will automatically benefit.
-    But there is enough flexbility to allow for all the extra allocation checks that allocating types require.
+    But there is enough flexibility to allow for all the extra allocation checks that allocating types require.
 
     As such, the various check_foo functions in this header have overloads in AllocationCheckersDetails.hpp which
     supply the extra argument(s) for the additional actions that comprise allocation checking.

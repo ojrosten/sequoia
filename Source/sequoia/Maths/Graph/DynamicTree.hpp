@@ -135,7 +135,7 @@ namespace sequoia::maths
 
       for(size_type i{}; i < toDelete.size(); ++i)
       {
-        // Erase nodes with the highest indicies first
+        // Erase nodes with the highest indices first
         const auto j{toDelete.size() - 1 - i};
         if(toDelete[j]) this->erase_node(j);
       }

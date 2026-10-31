@@ -46,7 +46,7 @@ namespace sequoia::maths
   // TO DO: refine this, esp for mixed floating-point / integral
   // The current logic is adapted to the fact that the impl uses
   // std::common_type. The common type of int and unsigned is
-  // unsigned - wich is undesriable - whereas that of long and
+  // unsigned - which is undesirable - whereas that of long and
   // unsigned is long - which is desirable. Hence the sizeof
   // conditions
   template<arithmetic T, arithmetic U>

@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  /** \brief Specifies whether tests are run as standard tests or in false postive/negative mode.
+  /** \brief Specifies whether tests are run as standard tests or in false positive/negative mode.
 
       \anchor test_mode_enum
    */
