@@ -1,0 +1,14 @@
+failing_performance_check_test
+Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+Standard Performance Checks:               2;  Failures:  1
+
+Tests/Tests/TestFramework/TestRunnerPerformanceCheckOutcomesFreeTest.cpp, Line 268
+A speed-up of 1
+
+The fast task is not distinguishably faster than the slow one
+Speed-up: 1 in [1, 1]; predicted [2, 40]
+Trials: 20, attempt 3 of 3
+Task durations: fast 0.00025s, slow 0.00025s
+
+=======================================
+

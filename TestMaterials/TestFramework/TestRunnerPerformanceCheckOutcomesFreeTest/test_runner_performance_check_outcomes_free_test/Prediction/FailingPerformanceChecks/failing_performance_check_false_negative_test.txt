@@ -1,0 +1,14 @@
+failing_performance_check_false_negative_test
+False Negative Checks:                     1;  Failures:  0
+False Negative Performance Checks:         2;  Failures:  1
+
+False Negative Failure:
+Tests/Tests/TestFramework/TestRunnerPerformanceCheckOutcomesFreeTest.cpp, Line 343
+A speed-up of 8
+
+Speed-up: 8 in [8, 8]; predicted [2, 40]
+Trials: 20, attempt 3 of 3
+Task durations: fast 0.00025s, slow 0.002s
+
+=======================================
+
