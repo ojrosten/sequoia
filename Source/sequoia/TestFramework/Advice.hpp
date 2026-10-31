@@ -237,10 +237,9 @@ namespace sequoia::testing
     template<class Advisor, class T>
       requires std::is_invocable_r_v<std::string, tutor<Advisor>, T, T>
     advice_data(const tutor<Advisor>& advisor, const T& value, const T& prediction)
-    {
-        m_Advice = advisor(value, prediction);
-        m_Prefix = advisor.prefix();
-    }
+      : m_Advice{advisor(value, prediction)}
+      , m_Prefix{advisor.prefix()}
+    {}
 
     std::string& append_to(std::string& message) const;
   private:
