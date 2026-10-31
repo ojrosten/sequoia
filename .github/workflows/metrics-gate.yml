@@ -1,0 +1,226 @@
+name: metrics-gate
+
+# The gates on the counts which the metrics dashboard plots. fine calls this
+# workflow, so the gates hold pull requests into staging.
+#
+# The run measures two commits with symbol-table.yml: GitHub's merge of the
+# pull request into staging, and the baseline, the merge's first parent. The
+# first parent is the staging commit on which GitHub made the merge. The
+# merge's scripts measure both
+# commits, so a pull request which changes the measurement changes it for
+# both records. The run then compares the two records;
+# scripts/metrics_gate.py says which counts the comparison reads, and what
+# fails.
+#
+# The run measures the baseline itself, and does not read the record which
+# the push of the first parent stored on the data branch. Reading it would
+# save a job of about 15 minutes. But each pull request would wait on that
+# push's run, and a push run which failed would block every pull request
+# whose merge has its commit as the first parent.
+#
+# A line in the pull request's description accepts a rise which the change
+# means to make, and a failure prints the line. The comparison reads the
+# description when it runs, so the line takes effect when the failed jobs of
+# the run are re-run.
+on:
+  workflow_call:
+    inputs:
+      needs_testing:
+        description: 'Whether the change touches anything the suite reads: `true` or `false`, from scope.yml. Anything else fails the job.'
+        required: true
+        type: string
+
+jobs:
+  # The merge to measure, and its first parent. A pull_request run is on the
+  # merge already. A dispatched run, as fine-on-retarget.yml makes, is on the
+  # head of a branch, so the step asks GitHub for the merge of the branch's
+  # one open pull request into staging. GitHub works the merge out after a
+  # change to the pull request, and says so by giving it a mergeable state,
+  # which the step waits for.
+  #
+  # After a retarget, GitHub's merge can stay on the old base for minutes,
+  # with a mergeable state. Its first parent is then off staging's
+  # first-parent history, and the step refuses it: the gate would otherwise
+  # compare a tree which no other job tests.
+  #
+  # Like `measure`, the job is skipped, rather than run with nothing to do as
+  # tests.yml's jobs are, so that symbol-table.yml needs no condition on each
+  # step. `compare` always runs, and fails unless both ran exactly when the
+  # change needs them.
+  subject:
+    name: The commits to measure
+    if: inputs.needs_testing == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      commit: ${{ steps.merge.outputs.commit }}
+      first_parent: ${{ steps.merge.outputs.first_parent }}
+      pull_request: ${{ steps.merge.outputs.pull_request }}
+    steps:
+      # staging's history, without trees or blobs, for the check of the
+      # first parent.
+      - uses: actions/checkout@v7
+        with:
+          ref: staging
+          fetch-depth: 0
+          filter: tree:0
+
+      - id: merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
+            commit=$GITHUB_SHA pull_request=$NUMBER
+          else
+            numbers=$(gh pr list --head "$GITHUB_REF_NAME" --base staging --state open \
+                        --json number,isCrossRepository --jq '.[] | select(.isCrossRepository | not) | .number')
+            if [ "$(wc -w <<< "$numbers")" -ne 1 ]; then
+              echo "::error title=Metrics gate::$GITHUB_REF_NAME has $(wc -w <<< "$numbers") open pull requests" \
+                   "into staging from this repository, not one, so there is no merge to measure"
+              exit 1
+            fi
+            for attempt in $(seq 12); do
+              pr=$(gh api "repos/$GH_REPO/pulls/$numbers")
+              [ "$(jq -r .mergeable <<< "$pr")" = null ] || break
+              sleep 10
+            done
+            head=$(jq -r .head.sha <<< "$pr") mergeable=$(jq -r .mergeable <<< "$pr")
+            if [ "$head" != "$GITHUB_SHA" ]; then
+              echo "::error title=Metrics gate::the head of pull request #$numbers is $head, not this run's" \
+                   "$GITHUB_SHA: the pull request's own run measures it"
+              exit 1
+            fi
+            if [ "$mergeable" != true ]; then
+              echo "::error title=Metrics gate::GitHub gives pull request #$numbers no merge into staging" \
+                   "(mergeable: $mergeable)"
+              exit 1
+            fi
+            commit=$(jq -r .merge_commit_sha <<< "$pr") pull_request=$numbers
+          fi
+          parents=$(gh api "repos/$GH_REPO/commits/$commit" --jq '.parents[].sha')
+          mapfile -t parents <<< "$parents"
+          if [ ${#parents[@]} -ne 2 ]; then
+            echo "::error title=Metrics gate::$commit has ${#parents[@]} parents, not two, so it is no merge"
+            exit 1
+          fi
+          if ! git rev-list --first-parent HEAD | grep -xF "${parents[0]}" > /dev/null; then
+            echo "::error title=Metrics gate::the merge's first parent, ${parents[0]}, is not on staging's" \
+                 "first-parent history, so GitHub's merge is onto an earlier base: re-run the failed jobs" \
+                 "once GitHub has made the merge again"
+            exit 1
+          fi
+          {
+            echo "commit=$commit"
+            echo "first_parent=${parents[0]}"
+            echo "pull_request=$pull_request"
+          } >> "$GITHUB_OUTPUT"
+
+  measure:
+    needs: subject
+    uses: ./.github/workflows/symbol-table.yml
+    with:
+      commits: ${{ format('["{0}","{1}"]', needs.subject.outputs.commit, needs.subject.outputs.first_parent) }}
+      tooling: ${{ needs.subject.outputs.commit }}
+      measure_leftover_materials: false
+
+  compare:
+    name: Metrics against the merge's first parent
+    needs: [subject, measure]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      NEEDS_TESTING: ${{ inputs.needs_testing }}
+      SUBJECT: ${{ needs.subject.result }}
+      MEASURED: ${{ needs.measure.result }}
+      COMMIT: ${{ needs.subject.outputs.commit }}
+      FIRST_PARENT: ${{ needs.subject.outputs.first_parent }}
+      PULL_REQUEST: ${{ needs.subject.outputs.pull_request }}
+      RECORD_ARTIFACT_PREFIX: ${{ needs.measure.outputs.record_artifact_prefix }}
+    steps:
+      - name: Nothing to test
+        if: env.NEEDS_TESTING != 'true'
+        run: |
+          if [ "$NEEDS_TESTING" != false ]; then
+            echo "::error::the scope job's answer is '$NEEDS_TESTING', neither true nor false"
+            exit 1
+          fi
+          if [ "$SUBJECT $MEASURED" != "skipped skipped" ]; then
+            echo "::error::the change needs no measurement, yet the jobs' results are '$SUBJECT' and" \
+                 "'$MEASURED', not skipped"
+            exit 1
+          fi
+          echo "Nothing to test; the scope job's summary says why."
+
+      - name: Insist both commits were measured
+        if: env.NEEDS_TESTING == 'true'
+        run: |
+          if [ "$SUBJECT $MEASURED" != "success success" ]; then
+            echo "::error::the jobs' results are '$SUBJECT' and '$MEASURED', not success"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v7
+        if: env.NEEDS_TESTING == 'true'
+        with:
+          ref: ${{ needs.subject.outputs.commit }}
+
+      # Given a pattern, and no merge-multiple, the action puts each artifact
+      # in a directory named for it.
+      - uses: actions/download-artifact@v7
+        if: env.NEEDS_TESTING == 'true'
+        with:
+          pattern: ${{ needs.measure.outputs.record_artifact_prefix }}*
+          path: ${{ runner.temp }}/records
+
+      - name: Copy the record of each commit
+        if: env.NEEDS_TESTING == 'true'
+        run: |
+          # copy_record <commit> <file>: copies <commit>'s record to <file>,
+          # and prints the run attempt which made it. The step fails unless
+          # <commit>'s artifact holds one file, a record of <commit>.
+          copy_record() {
+            local records=("$RUNNER_TEMP/records/$RECORD_ARTIFACT_PREFIX$1"/*)
+            if [ ${#records[@]} -ne 1 ] || [ "$(jq -r .commit "${records[0]}")" != "$1" ]; then
+              echo "::error title=Metrics gate::$RECORD_ARTIFACT_PREFIX$1 holds other than one record, of $1"
+              exit 1
+            fi
+            cp "${records[0]}" "$2"
+            jq -c '{commit, run}' "$2"
+          }
+          copy_record "$COMMIT" "$RUNNER_TEMP/measured.json"
+          copy_record "$FIRST_PARENT" "$RUNNER_TEMP/baseline.json"
+
+      - name: Read the pull request's description
+        if: env.NEEDS_TESTING == 'true'
+        run: |
+          gh api "repos/$GH_REPO/pulls/$PULL_REQUEST" --jq '.body // ""' > "$RUNNER_TEMP/description.txt"
+          echo "Read the description of pull request #$PULL_REQUEST"
+
+      - name: Compare the record with the baseline
+        if: env.NEEDS_TESTING == 'true'
+        run: |
+          verdict="$RUNNER_TEMP/verdict.txt"
+          status=0
+          python3 -B scripts/metrics_gate.py against-baseline "$RUNNER_TEMP/measured.json" \
+            "$RUNNER_TEMP/baseline.json" "$RUNNER_TEMP/description.txt" > "$verdict" 2>&1 || status=$?
+          cat "$verdict"
+          sed -n 's/^error: /::error title=Metrics gate::/p' "$verdict"
+          if [ "$status" -ne 0 ] && ! grep -q '^error: ' "$verdict"; then
+            echo "::error title=Metrics gate::the comparison exited with status $status; the step's log says why"
+          fi
+          {
+            echo '### Metrics against the merge'"'"'s first parent'
+            echo '```'; cat "$verdict"; echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
