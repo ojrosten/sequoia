@@ -91,6 +91,20 @@
     for (const child of children) node.append(child);
     return /** @type {any} */ (node);
   }
+  /**
+   * Returns the element of the page with the id `id`, an instance of `type`.
+   * Throws if the page has no such element.
+   *
+   * @template {typeof Element} Type
+   * @param {string} id
+   * @param {Type} type
+   * @returns {InstanceType<Type>}
+   */
+  function elementById(id, type) {
+    const found = document.getElementById(id);
+    if (!(found instanceof type)) throw new Error(`the page has no ${type.name} with the id ${id}`);
+    return /** @type {InstanceType<Type>} */ (found);
+  }
   /** @param {string} href @param {string} text */
   const link = (href, text) => element('a', {href}, text);
 
@@ -176,7 +190,7 @@
    * @param {boolean} isError
    */
   function showMessage(title, text, isError) {
-    const message = /** @type {HTMLElement} */ (document.getElementById('message'));
+    const message = elementById('message', HTMLElement);
     message.className = 'card' + (isError ? ' alert' : '');
     message.setAttribute('role', isError ? 'alert' : 'status');
     message.replaceChildren(element('h2', {}, title), element('p', {}, text));
@@ -501,7 +515,7 @@
   function hover(index, from) {
     state.hovered = index;
     for (const chart of state.charts) chart.markHover(index);
-    const tooltip = /** @type {HTMLElement} */ (document.getElementById('tooltip'));
+    const tooltip = elementById('tooltip', HTMLElement);
     if (index === null) { tooltip.hidden = true; return; }
     const point = state.points[index];
     const symbols = changeOn(index, measures[0]);
@@ -551,28 +565,28 @@
 
   function drawCharts() {
     state.charts = [
-      drawChart(/** @type {HTMLElement} */ (document.getElementById('symbols-plot')), measures[0], 260, true),
-      drawChart(/** @type {HTMLElement} */ (document.getElementById('bytes-plot')),   measures[1], 180, false)
+      drawChart(elementById('symbols-plot', HTMLElement), measures[0], 260, true),
+      drawChart(elementById('bytes-plot', HTMLElement),   measures[1], 180, false)
     ];
     const hasAnalysis = state.points.some(point => measures[2].value(point.record) !== null);
-    /** @type {HTMLElement} */ (document.getElementById('analysis-figure')).hidden = !hasAnalysis;
-    if (hasAnalysis) state.charts.push(drawChart(/** @type {HTMLElement} */ (document.getElementById('analysis-plot')), measures[2], 180, false));
+    elementById('analysis-figure', HTMLElement).hidden = !hasAnalysis;
+    if (hasAnalysis) state.charts.push(drawChart(elementById('analysis-plot', HTMLElement), measures[2], 180, false));
     const hasRunner = state.points.some(point => runnerMeasures[0].value(point.record) !== null);
-    /** @type {HTMLElement} */ (document.getElementById('runner-figure')).hidden = !hasRunner;
+    elementById('runner-figure', HTMLElement).hidden = !hasRunner;
     if (hasRunner) {
       for (const measure of runnerMeasures) {
-        state.charts.push(drawChart(/** @type {HTMLElement} */ (document.getElementById(`runner-plot-${measure.event}`)), measure, 120, true));
+        state.charts.push(drawChart(elementById(`runner-plot-${measure.event}`, HTMLElement), measure, 120, true));
       }
     }
     const hasLeftover = state.points.some(point => symbolDashboard.leftoverMaterialsSetupEntries(point.record) !== null);
-    /** @type {HTMLElement} */ (document.getElementById('leftover-figure')).hidden = !hasLeftover;
-    if (hasLeftover) state.charts.push(drawChart(/** @type {HTMLElement} */ (document.getElementById('leftover-plot')), leftoverMeasure, 120, true));
+    elementById('leftover-figure', HTMLElement).hidden = !hasLeftover;
+    if (hasLeftover) state.charts.push(drawChart(elementById('leftover-plot', HTMLElement), leftoverMeasure, 120, true));
     const hasCompileCost = state.points.some(point => compileCostMeasure.value(point.record) !== null);
-    /** @type {HTMLElement} */ (document.getElementById('compile-figure')).hidden = !hasCompileCost;
-    if (hasCompileCost) state.charts.push(drawChart(/** @type {HTMLElement} */ (document.getElementById('compile-plot')), compileCostMeasure, 180, true));
+    elementById('compile-figure', HTMLElement).hidden = !hasCompileCost;
+    if (hasCompileCost) state.charts.push(drawChart(elementById('compile-plot', HTMLElement), compileCostMeasure, 180, true));
     const hasUncalled = state.points.some(point => measures[3].value(point.record) !== null);
-    /** @type {HTMLElement} */ (document.getElementById('uncalled-figure')).hidden = !hasUncalled;
-    if (hasUncalled) state.charts.push(drawChart(/** @type {HTMLElement} */ (document.getElementById('uncalled-plot')), measures[3], 180, true));
+    elementById('uncalled-figure', HTMLElement).hidden = !hasUncalled;
+    if (hasUncalled) state.charts.push(drawChart(elementById('uncalled-plot', HTMLElement), measures[3], 180, true));
     for (const chart of state.charts) chart.markSelected(state.selected);
   }
 
@@ -585,7 +599,7 @@
     /** @param {string} label @param {string} value @param {string} detail */
     const tile = (label, value, detail) => element('div', {class: 'tile'},
       element('div', {class: 'label'}, label), element('div', {class: 'value'}, value), element('div', {class: 'detail'}, detail));
-    /** @type {HTMLElement} */ (document.getElementById('tiles')).replaceChildren(
+    elementById('tiles', HTMLElement).replaceChildren(
       tile('Symbols at the latest point', integer.format(latest.record.executable.symbols), `${short(latest.commit)}, ${longDate(latest.date)}`),
       tile('Change on the point before', change ? signed(change.delta) : '—',
            change ? percent(change.delta, change.before) + (latest.toolchainChange ? ', across a toolchain change' : '') : 'There is only one point'),
@@ -612,7 +626,7 @@
   }
 
   function drawMovers() {
-    const panel = /** @type {HTMLElement} */ (document.getElementById('movers'));
+    const panel = elementById('movers', HTMLElement);
     const index = state.selected;
     const point = state.points[index];
     panel.replaceChildren(element('h2', {}, 'What moved at ', link(commitUrl(point.commit), short(point.commit))),
@@ -678,12 +692,12 @@
       });
       rows.push(row);
     });
-    /** @type {HTMLElement} */ (document.getElementById('points')).replaceChildren(element('thead', {}, header), element('tbody', {}, ...rows.reverse()));
+    elementById('points', HTMLElement).replaceChildren(element('thead', {}, header), element('tbody', {}, ...rows.reverse()));
   }
 
   /** @param {Column} column */
   function drawProblems(column) {
-    const panel = /** @type {HTMLElement} */ (document.getElementById('problems'));
+    const panel = elementById('problems', HTMLElement);
     panel.hidden = column.problems.length === 0;
     panel.replaceChildren(element('h2', {}, `${column.problems.length} records not plotted`),
       element('ul', {}, ...column.problems.map(({path, problems}) => element('li', {}, element('code', {}, path), `: ${problems.join('; ')}.`))));
@@ -693,7 +707,7 @@
   function showColumn(column) {
     state.points = column.points;
     drawProblems(column);
-    const dashboard = /** @type {HTMLElement} */ (document.getElementById('dashboard'));
+    const dashboard = elementById('dashboard', HTMLElement);
     dashboard.hidden = false;
     const hasPoints = column.points.length > 0;
     for (const node of /** @type {HTMLCollectionOf<HTMLElement>} */ (dashboard.children)) if (node.id !== 'problems' && node.id !== 'tooltip') node.hidden = !hasPoints;
@@ -701,7 +715,7 @@
       showMessage('Nothing to plot', `None of the records of ${column.name} can be plotted; the list below says why.`, true);
       return;
     }
-    /** @type {HTMLElement} */ (document.getElementById('message')).hidden = true;
+    elementById('message', HTMLElement).hidden = true;
     const asked = parameters.get('commit');
     const found = asked ? column.points.findIndex(point => point.commit.startsWith(asked)) : -1;
     state.selected = found >= 0 ? found : column.points.length - 1;
@@ -714,7 +728,7 @@
   // `loaded` is the result of symbolDashboard.loadHistory, or null
   /** @param {any} loaded */
   function describeCalls(loaded) {
-    const footer = /** @type {HTMLElement} */ (document.getElementById('footer'));
+    const footer = elementById('footer', HTMLElement);
     /** @param {number} count @param {string} noun */
     const plural = (count, noun) => `${count} ${noun}${count === 1 ? '' : 's'}`;
     const pages  = loaded && loaded.state === 'loaded' ? loaded.pages : 0;
@@ -755,11 +769,11 @@
       showMessage('No such column', `The metrics branch has no column ${chosen}; it has ${[...columns.keys()].join(', ')}.`, true);
       return;
     }
-    const picker = /** @type {HTMLSelectElement} */ (document.getElementById('column'));
+    const picker = elementById('column', HTMLSelectElement);
     picker.replaceChildren(...[...columns.keys()].map(name => element('option', {value: name}, name)));
     picker.value = chosen;
     picker.addEventListener('change', () => showColumn(/** @type {Column} */ (columns.get(picker.value))));
-    /** @type {HTMLElement} */ (document.getElementById('filters')).hidden = columns.size < 2;
+    elementById('filters', HTMLElement).hidden = columns.size < 2;
     showColumn(/** @type {Column} */ (columns.get(chosen)));
     // Only a change of width redraws, since redrawing replaces the focused
     // chart and so ends keyboard navigation.
