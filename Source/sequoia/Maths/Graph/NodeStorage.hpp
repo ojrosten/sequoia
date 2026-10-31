@@ -10,7 +10,7 @@
 /** \file
     \brief Classes to allow homogeneous treatment of graphs with empty/non-empty node weights.
 
-    These classes are designed to be inherited from publically, in order that graphs may aggregate
+    These classes are designed to be inherited from publicly, in order that graphs may aggregate
     the interface of the node storage. For empty node weights, the node storage specialization
     is itself empty, meaning that empty base class optimization will ensure that no space is
     wasted.

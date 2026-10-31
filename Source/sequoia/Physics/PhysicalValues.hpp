@@ -40,7 +40,7 @@ namespace sequoia::physics
 
   struct no_unit_t : identity_isomorphism
   {
-    using is_unit = std::true_type; // TO DO: naming makes this peverse!
+    using is_unit = std::true_type; // TO DO: naming makes this perverse!
   };
   
   inline constexpr no_unit_t no_unit{};
@@ -180,7 +180,7 @@ namespace sequoia::physics
     using type = canonical_representation<value_type, LHBounds * RHBounds>;
   };
 
-  // Representations - TO DO looks superflous
+  // Representations - TO DO looks superfluous
   template<representation R, representation S>
   struct reduction<tensor_product<R, S>>
   {
@@ -659,7 +659,7 @@ namespace sequoia::physics
     using type = impl::to_composite_space_t<reduction_t<tensor_product<default_space_t<Ts, Rep>...>>>;
   };
 
-  // TO DO: a default valiator?
+  // TO DO: a default validator?
   template<class T, physical_unit Unit>
     requires has_default_space_v<Unit, T>
   physical_value(T, Unit)

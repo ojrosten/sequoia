@@ -148,7 +148,7 @@ namespace sequoia
   
       This avoids treating std::filesystem::path as a range in circumstances where, to do so, would be inappropriate.
       The implementation of `faithful_range` is not complete; it deals with the simplest circular case but
-      doesn't take into account more complicated possibilites. A full treatment could almost certainly be
+      doesn't take into account more complicated possibilities. A full treatment could almost certainly be
       readily implemented if/when reflection is properly supported in C++.
    */
   template<class T>

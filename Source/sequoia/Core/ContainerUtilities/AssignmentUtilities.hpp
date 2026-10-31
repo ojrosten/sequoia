@@ -10,10 +10,10 @@
 /** \file
     \brief Helper for dealing with allocator propagation during copy assignment.
 
-    Consider a type which wraps one or containers. If the enclosing type is
-    allocator-aware, getting copy assigment right in situations were it cannot
-    be defaulted is non-trivial. This file defines the class sequoia::assignment_helper
-    to help with this.
+    Consider a type which wraps one or more containers. If the enclosing type
+    is allocator-aware, getting copy assignment right in situations where it
+    cannot be defaulted is non-trivial. This file defines the class
+    sequoia::assignment_helper to help with this.
  */
 
 #include "sequoia/Core/Meta/Sequences.hpp"

@@ -8,7 +8,7 @@
 #pragma once
 
 /** \file StaticPriorityQueue.hpp
-    \brief A constexpr prority queue.
+    \brief A constexpr priority queue.
 
  */
 
