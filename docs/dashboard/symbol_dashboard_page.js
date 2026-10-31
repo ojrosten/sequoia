@@ -14,14 +14,16 @@
    * @typedef {{name: string, points: Point[], problems: Unplottable[]}} Column
    * @typedef {{object: string, before: number | null, after: number | null,
    *            delta: number}} Mover
-   * @typedef {{tree(): Promise<any>, commits(start: string | null): Promise<any>,
+   * @typedef {{tree(): Promise<any>,
+   *            commits(start: string | null): Promise<any>,
    *            record(path: string): Promise<any>}} Source
    * @typedef {{name: string, value: (record: any) => number | null,
    *            unit: string, exitStatus?: (record: any) => number | null,
    *            includesZero?: boolean,
    *            blindLabel?: (record: any) => string | null,
    *            markersOnly?: boolean, joinsGaps?: boolean,
-   *            runOf?: (point: Point) => any, changeOf?: (point: Point) => any,
+   *            runOf?: (point: Point) => any,
+   *            changeOf?: (point: Point) => any,
    *            breakLabel?: (point: Point) => string,
    *            event?: string}} Measure
    * @typedef {{svg: SVGElement, markHover(index: number | null): void,
@@ -66,8 +68,8 @@
   const shortDate = iso => new Date(iso).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', timeZone: 'UTC'});
   /** @param {string} iso */
   const longDate  = iso => new Date(iso).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'});
-  /** @param {any} seconds  A header's value, a string, which `*` converts */
-  const clock     = seconds => new Date(seconds * 1000).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'});
+  /** @param {string | null} seconds  A header's value */
+  const clock     = seconds => new Date(Number(seconds) * 1000).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'});
   /** @param {string} commit */
   const short     = commit => commit.slice(0, 7);
   /** @param {string} commit */
@@ -761,12 +763,11 @@
     showColumn(/** @type {Column} */ (columns.get(chosen)));
     // Only a change of width redraws, since redrawing replaces the focused
     // chart and so ends keyboard navigation.
-    /** @type {number | null} */
-    let pending = null, drawnWidth = /** @type {Element} */ (document.querySelector('main')).clientWidth;
+    let pending = 0, drawnWidth = /** @type {Element} */ (document.querySelector('main')).clientWidth;
     new ResizeObserver(([entry]) => {
       if (entry.contentRect.width === drawnWidth) return;
       drawnWidth = entry.contentRect.width;
-      cancelAnimationFrame(/** @type {number} */ (pending));
+      cancelAnimationFrame(pending);
       pending = requestAnimationFrame(() => { if (state.points.length) { drawCharts(); } });
     }).observe(/** @type {Element} */ (document.querySelector('main')));
   }
