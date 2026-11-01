@@ -191,13 +191,17 @@ namespace sequoia::testing
     candidate.serial_tests_command()();
     reference.serial_tests_command()();
 
+    const relative_performance_parameters boundedSlowdown{
+      .prediction{1 / slowdown_bound, std::numeric_limits<double>::infinity()}
+    };
+
     check_relative_performance(
       std::format("Net of a request for help, the candidate's runner takes at most {} times as long as the "
                   "reference's to run the tests serially",
                   slowdown_bound),
       make_task_with_baseline(candidate),
       make_task_with_baseline(reference),
-      {.prediction{1 / slowdown_bound, std::numeric_limits<double>::infinity()}}
+      boundedSlowdown
     );
 
     // The check above subtracts start-up, so this one times it on its own.
@@ -207,7 +211,7 @@ namespace sequoia::testing
                   slowdown_bound),
       candidate.help_command(),
       reference.help_command(),
-      {.prediction{1 / slowdown_bound, std::numeric_limits<double>::infinity()}}
+      boundedSlowdown
     );
   }
 }
