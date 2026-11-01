@@ -24,8 +24,9 @@ name: performance-against-reference
 # tipped accumulated drift over the bound would be blamed for all of it, and
 # an anchor that stopped building would fail every pull request at once.
 #
-# Linux · GCC · Debug. The test's bound, 1.05, rests on measurements of
-# 2026-10-30, on hosted ubuntu-26.04 runners whose CPUs were AMD EPYC 7763,
+# Linux · GCC · Debug and Windows · MSVC · Debug, the latter since MSVC's
+# debug build is among the slowest a user runs. The test's bound, 1.05, rests
+# on measurements of 2026-10-30, on hosted ubuntu-26.04 runners whose CPUs were AMD EPYC 7763,
 # 9V45 and 9V74, and Intel Xeon 6973P-C and Platinum 8573C. The checks ran with
 # a bound of 1.1, and each printed its interval of speed-ups. A check stops at
 # its first attempt that passes, so the outcome at 1.05 of a check that passed
@@ -39,9 +40,12 @@ name: performance-against-reference
 #     removing the previous run's materials on the test's own thread, the
 #     moved{false} mutant. At 1.1, 160 failed; 18 of the 20 that passed ran on
 #     a Xeon 8573C. At 1.05, from 164 to 178 would fail.
+#   - On hosted Windows runners (MSVC, Ninja, EPYC 7763), none of 60 checks of
+#     one commit built twice would fail at 1.05, and the regression above
+#     failed 19 of 20 at 1.1, and from 19 to 20 would fail at 1.05.
 #   - On hosted macOS runners, up to 3 of 140 checks of one commit built twice
 #     would fail at 1.05, and the regression above failed none of 80 at 1.1.
-#     So the bound is Linux's, and so is this workflow.
+#     So macOS has no column.
 #
 # The workflow runs on every pull request whose change the suite reads, as
 # scope.yml decides. With nothing to test, the job is skipped rather than
@@ -68,17 +72,20 @@ jobs:
   # Against the anchor there is no pull request to scope, so scope is skipped
   # and the comparison runs regardless.
   compare:
-    name: Linux · GCC · Debug
+    name: ${{ matrix.name }}
     needs: scope
     if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.scope.outputs.suite == 'true') }}
-    runs-on: ubuntu-26.04
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {name: 'Linux · GCC · Debug',    os: ubuntu-26.04,   preset: gcc-env}
+          - {name: 'Windows · MSVC · Debug', os: windows-latest, preset: msvc-ninja}
     defaults:
       run:
         shell: bash
-    env:
-      CC: gcc-15
-      CXX: g++-15
     steps:
       # On a pull request, the merge and both its parents. Against the anchor,
       # the whole history, so that the anchor's ancestry can be checked.
@@ -111,8 +118,12 @@ jobs:
       # each part exists; symbol-table.yml holds another copy. A change to how
       # tests.yml installs belongs here too. gdb is left out, since nothing
       # here reads a stack.
-      - name: Install the toolchain
+      - name: Install the toolchain (Linux)
+        if: runner.os == 'Linux'
+        env:
+          CXX: g++-15
         run: |
+          printf 'CC=gcc-15\nCXX=%s\n' "$CXX" >> "$GITHUB_ENV"
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
           sudo scripts/retry.sh 3 180 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh update -qq --error-on=any \
@@ -129,24 +140,57 @@ jobs:
           "$CXX" --version
           cmake --version
 
+      # Shortened from tests.yml's steps of the same names, which say why each
+      # part exists; these are the forms the scratch runs of 2026-10-30 ran.
+      # The workload's nested build paths reach about 236 characters.
+      - name: Let Windows and git see long paths
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          git config --global core.longpaths true
+          New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
+                           -Name LongPathsEnabled -Value 1 -PropertyType DWord -Force | Out-Null
+
+      - name: Enter the MSVC environment (Windows, Ninja)
+        if: runner.os == 'Windows'
+        run: |
+          vswhere="/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
+          root=$("$vswhere" -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath)
+          vcvars="$(cygpath -u "$root")/VC/Auxiliary/Build/vcvars64.bat"
+          [ -f "$vcvars" ] || { echo "::error::$vcvars does not exist"; exit 1; }
+          bat="$RUNNER_TEMP/vcvars_dump.bat"
+          printf '@echo off\r\necho PATH_BEFORE=%%PATH%%\r\ncall "%s" >nul || exit /b 1\r\nset\r\n' "$(cygpath -w "$vcvars")" > "$bat"
+          dump=$(cmd //c "$(cygpath -w "$bat")" | tr -d '\r')
+          printf '%s\n' "$dump" | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINSTALLDIR|VSINSTALLDIR|WindowsSdkDir|WindowsSDKVersion|UCRTVersion|UniversalCRTSdkDir)=' >> "$GITHUB_ENV"
+          before=$(printf '%s\n' "$dump" | grep '^PATH_BEFORE=' | sed 's/^[^=]*=//' | tr ';' '\n')
+          after=$(printf '%s\n' "$dump"  | grep -iE '^PATH='     | sed 's/^[^=]*=//' | tr ';' '\n')
+          added=$(printf '%s\n' "$after" | grep -vxF -f <(printf '%s\n' "$before") | grep -v '^$' | grep -vF 'CommonExtensions\Microsoft\CMake\')
+          printf '%s\n' "$added" >> "$GITHUB_PATH"
+          PATH="$(cygpath -pu "$(printf '%s\n' "$added" | paste -sd ';')"):$PATH" command -v ninja \
+            || choco install ninja -y
+
       # The comparison's spread depends on the host, so the log names it.
       - name: Report the runner's hardware
         timeout-minutes: 1
         continue-on-error: true
         run: |
-          echo "CPU: $(grep -m1 '^model name' /proc/cpuinfo | sed 's/^[^:]*: //' || true)"
+          case "$RUNNER_OS" in
+            Linux)   cpu=$(grep -m1 '^model name' /proc/cpuinfo | sed 's/^[^:]*: //' || true) ;;
+            Windows) cpu=$(powershell -NoProfile -Command '(Get-CimInstance Win32_Processor).Name' || true); cpu=${cpu%$'\r'} ;;
+          esac
+          echo "CPU: $cpu"
           echo "Logical processors: $(getconf _NPROCESSORS_ONLN || true)"
 
       - name: Configure
         working-directory: PerformanceAgainstReference
-        run: cmake --preset gcc-env -DSEQUOIA_PERFORMANCE_REFERENCE_ROOT="$RUNNER_TEMP/reference"
+        run: cmake --preset ${{ matrix.preset }} -DSEQUOIA_PERFORMANCE_REFERENCE_ROOT="$RUNNER_TEMP/reference"
 
       - name: Build
         working-directory: PerformanceAgainstReference
-        run: cmake --build --preset gcc-env
+        run: cmake --build --preset ${{ matrix.preset }}
 
       # The test builds the workload twice before it times anything, so most
       # of this step is compilation.
       - name: Compare the runner's performance with the reference's
-        working-directory: build/PerformanceAgainstReference/gcc-env
+        working-directory: build/PerformanceAgainstReference/${{ matrix.preset }}
         run: ./PerformanceAgainstReference --check-versioned-output
