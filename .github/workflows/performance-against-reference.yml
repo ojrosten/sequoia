@@ -14,8 +14,8 @@ name: performance-against-reference
 # change alone, and a slowdown spread over many pull requests, each within the
 # bound, passes every one of them.
 #
-# So once a week, and on dispatch, the candidate is the branch's tip and the
-# reference is the anchor: the commit .github/performance-anchor names, which
+# Once a week, and on dispatch, the candidate is instead the branch's tip and
+# the reference the anchor: the commit .github/performance-anchor names, which
 # must be an ancestor of the candidate. This sees the slowdown accumulated since
 # the anchor, but not which pull request caused it; the per-pull-request
 # comparison says that. Moving the anchor, by a reviewed commit, accepts the
@@ -63,8 +63,8 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/scope.yml
 
-  # Against the anchor, the job runs whatever changed, so it does not wait on
-  # scope, which is skipped.
+  # Against the anchor there is no pull request to scope, so scope is skipped
+  # and the comparison runs regardless.
   compare:
     name: Linux · GCC · Debug
     needs: scope
