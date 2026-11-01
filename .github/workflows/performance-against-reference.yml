@@ -46,6 +46,14 @@ name: performance-against-reference
 #   - On hosted macOS runners, up to 3 of 140 checks of one commit built twice
 #     would fail at 1.05, and the regression above failed none of 80 at 1.1.
 #     So macOS has no column.
+# A confirmation pass at 1.05 itself, 2026-11-01, each check 20 times per job:
+#   - One commit built twice: none of 80 serial-run and 80 start-up checks
+#     failed on Linux (EPYC 7763 and 9V45, Xeon 8370C and 8573C), and none of
+#     40 and 40 on Windows (EPYC 7763, Xeon 8370C).
+#   - The moved{false} mutant: the serial-run check failed 78 of 80 on Linux,
+#     both passes on a Xeon 8573C, and 38 of 40 on Windows (EPYC 7763 and
+#     9V74). The start-up check, whose work the mutant does not touch, failed
+#     none of 80 and 40.
 #
 # The workflow runs on every pull request whose change the suite reads, as
 # scope.yml decides. With nothing to test, the job is skipped rather than
