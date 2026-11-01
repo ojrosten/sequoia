@@ -8,11 +8,21 @@ name: performance-against-reference
 # to run the tests. The two builds' runs interleave, in one job on one
 # machine, so the comparison needs no stored record of any machine's speed.
 #
-# The candidate is GitHub's merge of the pull request into its base, the commit
-# the other tiers test. The reference is that merge's first parent, the tip of
-# the base. So the comparison sees the pull request's change alone. A slowdown
-# spread over many pull requests, each within the bound, passes every one of
-# them.
+# On a pull request, the candidate is GitHub's merge of the pull request into
+# its base, the commit the other tiers test, and the reference is that merge's
+# first parent, the tip of the base. So the comparison sees the pull request's
+# change alone, and a slowdown spread over many pull requests, each within the
+# bound, passes every one of them.
+#
+# So once a week, and on dispatch, the candidate is the branch's tip and the
+# reference is the anchor: the commit .github/performance-anchor names, which
+# must be an ancestor of the candidate. This sees the slowdown accumulated since
+# the anchor, but not which pull request caused it; the per-pull-request
+# comparison says that. Moving the anchor, by a reviewed commit, accepts the
+# slowdown up to the new anchor. The anchor alone would not do: speed-ups since
+# the anchor would leave room for a regression to pass, a pull request that
+# tipped accumulated drift over the bound would be blamed for all of it, and
+# an anchor that stopped building would fail every pull request at once.
 #
 # Linux · GCC · Debug. The test's bound, 1.05, rests on measurements of
 # 2026-10-30, on hosted ubuntu-26.04 runners whose CPUs were AMD EPYC 7763,
@@ -38,6 +48,11 @@ name: performance-against-reference
 # passed, which wedges a pull request only if the check is made required.
 on:
   pull_request:
+  # Sunday morning, clear of the nightly's tick even when the scheduler is
+  # hours late. The minute is off the hour, as rigorous.yml's is.
+  schedule:
+    - cron: '1 9 * * 0'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -45,12 +60,15 @@ concurrency:
 
 jobs:
   scope:
+    if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/scope.yml
 
+  # Against the anchor, the job runs whatever changed, so it does not wait on
+  # scope, which is skipped.
   compare:
     name: Linux · GCC · Debug
     needs: scope
-    if: ${{ needs.scope.outputs.suite == 'true' }}
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.scope.outputs.suite == 'true') }}
     runs-on: ubuntu-26.04
     timeout-minutes: 60
     defaults:
@@ -60,19 +78,32 @@ jobs:
       CC: gcc-15
       CXX: g++-15
     steps:
-      # The merge and both its parents, which is all the job reads of the
-      # history.
+      # On a pull request, the merge and both its parents. Against the anchor,
+      # the whole history, so that the anchor's ancestry can be checked.
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 2
+          fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 0 }}
 
-      # HEAD^1 is the base's tip only if HEAD is GitHub's merge.
-      - name: Check out the reference, the merge's first parent
+      # HEAD^1 is the base's tip only if HEAD is GitHub's merge. An anchor that
+      # is not an ancestor of HEAD would measure a branch's divergence rather
+      # than the slowdown since the anchor.
+      - name: Check out the reference
+        env:
+          EVENT: ${{ github.event_name }}
         run: |
-          git rev-parse --verify -q HEAD^2 > /dev/null \
-            || { echo "::error::$(git rev-parse HEAD) is not a merge, so HEAD^1 is not the base's tip"; exit 1; }
-          git worktree add --detach "$RUNNER_TEMP/reference" HEAD^1
-          echo "Candidate $(git rev-parse HEAD), reference $(git rev-parse HEAD^1)"
+          if [ "$EVENT" = pull_request ]; then
+            git rev-parse --verify -q HEAD^2 > /dev/null \
+              || { echo "::error::$(git rev-parse HEAD) is not a merge, so HEAD^1 is not the base's tip"; exit 1; }
+            reference=$(git rev-parse HEAD^1)
+          else
+            anchor=$(< .github/performance-anchor)
+            reference=$(git rev-parse --verify -q "$anchor^{commit}") \
+              || { echo "::error::.github/performance-anchor names '$anchor', which is no commit"; exit 1; }
+            git merge-base --is-ancestor "$reference" HEAD \
+              || { echo "::error::the anchor $reference is not an ancestor of $(git rev-parse HEAD)"; exit 1; }
+          fi
+          git worktree add --detach "$RUNNER_TEMP/reference" "$reference"
+          echo "Candidate $(git rev-parse HEAD), reference $reference"
 
       # Copied from tests.yml's "Install the toolchain (Linux)", which says why
       # each part exists; symbol-table.yml holds another copy. A change to how
