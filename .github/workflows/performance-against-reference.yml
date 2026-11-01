@@ -17,9 +17,9 @@ name: performance-against-reference
 # Once a week, and on dispatch, the candidate is instead the branch's tip and
 # the reference the anchor: the commit .github/performance-anchor names, which
 # must be an ancestor of the candidate. That comparison sees the slowdown
-# accumulated since the anchor, but not which pull request caused it; the per-pull-request
-# comparison says that. Moving the anchor, by a reviewed commit, accepts the
-# slowdown up to the new anchor. The anchor alone would not do: speed-ups since
+# accumulated since the anchor, but not which pull request caused it; the
+# per-pull-request comparison says that. Moving the anchor, by a reviewed
+# commit, accepts the slowdown up to the new anchor. The anchor alone would not do: speed-ups since
 # the anchor would leave room for a regression to pass, a pull request that
 # tipped accumulated drift over the bound would be blamed for all of it, and
 # an anchor that stopped building would fail every pull request at once.
