@@ -44,6 +44,13 @@ name: symbol-table
 #
 # Every job uploads its record as an artifact. A run dispatched on a branch
 # other than staging stores nothing.
+#
+# metrics-gate.yml calls this workflow to measure a pull request for the
+# gates on metrics. A called run records the commits which the caller names,
+# as a dispatch does, with the scripts of the commit which the caller names
+# as `tooling`. A called run stores nothing, and counts the setup cost of
+# leftover materials only when the caller asks. The last step checks that
+# count on each push to staging.
 on:
   push:
     branches:
@@ -57,6 +64,24 @@ on:
           If empty, that commit.
         type: string
         default: ''
+  workflow_call:
+    inputs:
+      commits:
+        description: 'The commits to record, as a JSON array of full lowercase hashes, each on the first-parent history of `tooling`.'
+        required: true
+        type: string
+      tooling:
+        description: 'The commit whose scripts the run uses, as a full lowercase hash.'
+        required: true
+        type: string
+      measure_leftover_materials:
+        description: 'Whether to count the setup cost of leftover materials. A push or a dispatch counts it.'
+        required: true
+        type: boolean
+    outputs:
+      record_artifact_prefix:
+        description: 'The start of the name of each artifact which holds a record, as its only file. The name ends with the commit recorded.'
+        value: ${{ jobs.symbol-table.outputs.record_artifact_prefix }}
 
 # The workflow has no concurrency group, since each push to staging stores
 # its own commit's record. A group cancels runs even without
@@ -68,10 +93,10 @@ on:
 jobs:
   symbol-table:
     name: Symbol table · Linux · GCC · Debug
-    # Each job builds one commit with that commit's presets. It installs the
-    # toolchain, measures and stores with the steps and the scripts of the
-    # commit the run is on, so that an old commit is measured as a push to
-    # staging would measure it today.
+    # Each job builds one commit with that commit's presets. The job installs
+    # the toolchain, measures and stores with the steps of the commit the run
+    # is on and the scripts of `tooling` (below), so that an old commit is
+    # measured as a push to staging would measure it today.
     strategy:
       fail-fast: false
       # Without a cap, a backfill of more commits than the account may run
@@ -106,20 +131,27 @@ jobs:
       CC: gcc-15
       CXX: g++-15
       DATA_BRANCH: metrics
+      RECORD_DIRECTORY: symbol-table/linux-gcc-debug
+      RECORD_ARTIFACT_PREFIX: symbol-table-linux-gcc-debug-
+    outputs:
+      record_artifact_prefix: ${{ env.RECORD_ARTIFACT_PREFIX }}
     steps:
-      # Two checkouts, side by side: `tooling`, the commit the run is on,
-      # whose steps install the toolchain, measure and store; and `tree`, the
-      # commit measured. The build writes only to tree/build, which the
-      # tree's .gitignore lists, so the tree stays clean, as the store
-      # requires. On a push both are github.sha.
+      # Two checkouts, side by side: `tooling`, whose scripts install the
+      # toolchain, measure and store; and `tree`, the commit measured.
+      # `tooling` holds the commit the run is on, or the commit which a
+      # caller names as `inputs.tooling`.
+      # The build writes only to tree/build, which the tree's .gitignore
+      # lists, so the tree stays clean, as the store requires. On a push both
+      # are github.sha.
       #
-      # `tooling` holds the run's commit's whole history, without trees or
+      # `tooling` holds its commit's whole history, without trees or
       # blobs, so that the history can be checked below. git fetches a tree
       # or a blob from the remote when a command needs it.
       - name: Check out the tooling
         uses: actions/checkout@v7
         with:
           path: tooling
+          ref: ${{ inputs.tooling }}
           fetch-depth: 0
           filter: tree:0
 
@@ -142,14 +174,14 @@ jobs:
 
       # A record stays on the data branch once stored, since nothing rewrites
       # the branch. So the job refuses, before building, a commit off the
-      # first-parent history of the run's commit: a commit of a merged topic
+      # first-parent history of `tooling`: a commit of a merged topic
       # branch, as well as a commit of a branch never merged. grep reads the
       # whole list, so that rev-list never meets a closed pipe.
-      - name: Check that the commit checked out is on the run's first-parent history
+      - name: Check that the commit checked out is on the tooling's first-parent history
         run: |
           checked_out=$(git -C tree rev-parse HEAD)
           git -C tooling rev-list --first-parent HEAD | grep -xF "$checked_out" > /dev/null \
-            || { echo "::error::$checked_out is not on the first-parent history of $GITHUB_SHA"; exit 1; }
+            || { echo "::error::$checked_out is not on the first-parent history of $(git -C tooling rev-parse HEAD)"; exit 1; }
 
       # tests.yml is the tiers' one recipe for building and running the
       # suite. This job runs no suite, so it copies the steps it needs from
@@ -221,9 +253,19 @@ jobs:
       # demangled name, which may or may not carry the parameter list, so the
       # pattern ends in `*`. A count of zero means no function matched, as when
       # prune is renamed, and the record has no field.
+      #
+      # As in "Install the toolchain", only the download is retried, each
+      # later attempt from another mirror first, and the install then runs
+      # once. Unretried, the step took 562-630 s in three of eight runs from
+      # 2026-10-26 to 10-28: one download of 26.5 MB ran at 46.5 kB/s (run
+      # 40501869274).
       - name: Install valgrind
         continue-on-error: true
-        run: sudo apt-get install -y valgrind
+        working-directory: tooling
+        run: |
+          sudo scripts/retry.sh 3 300 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh \
+            install -y --download-only valgrind
+          sudo apt-get install -y --no-download valgrind
 
       - name: Give git an identity
         continue-on-error: true
@@ -347,6 +389,7 @@ jobs:
       # magnitude of -inf is not greater than LDBL_MAX. std::isinf(-inf) is
       # also false under valgrind.
       - name: Build TestFrameworkDiagnostics
+        if: toJSON(inputs.measure_leftover_materials) != 'false'
         continue-on-error: true
         timeout-minutes: 20
         working-directory: tree/TestFrameworkDiagnostics
@@ -355,6 +398,7 @@ jobs:
           cmake --build --preset gcc-env
 
       - name: Count the setup cost of leftover materials
+        if: toJSON(inputs.measure_leftover_materials) != 'false'
         continue-on-error: true
         timeout-minutes: 45
         working-directory: tree/build/TestFrameworkDiagnostics/gcc-env
@@ -408,6 +452,7 @@ jobs:
 
       - name: Add the setup cost of leftover materials to the record
         id: add_leftover
+        if: toJSON(inputs.measure_leftover_materials) != 'false'
         continue-on-error: true
         run: |
           if [ -s "$RUNNER_TEMP/leftover_materials_setup.json" ]; then
@@ -431,17 +476,38 @@ jobs:
       - name: Upload the record
         uses: actions/upload-artifact@v7
         with:
-          name: symbol-table-linux-gcc-debug-${{ matrix.commit }}
+          name: ${{ env.RECORD_ARTIFACT_PREFIX }}${{ matrix.commit }}
           path: ${{ env.SYMBOL_TABLE_RECORD }}
           if-no-files-found: error
 
+      # A called run stores nothing even on staging, since its record may
+      # lack fields which the caller did not ask for.
       - name: Store the record on the data branch
-        if: github.ref == 'refs/heads/staging'
+        if: github.ref == 'refs/heads/staging' && !inputs.tooling
         working-directory: tooling
         run: |
-          scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" symbol-table/linux-gcc-debug \
-            "$SYMBOL_TABLE_RECORD"
+          scripts/store_symbol_table_record.sh origin "$DATA_BRANCH" "$RECORD_DIRECTORY" "$SYMBOL_TABLE_RECORD"
 
-      - name: Store nothing off staging
-        if: github.ref != 'refs/heads/staging'
-        run: echo "Only a run on staging stores its record; this run is on $GITHUB_REF."
+      - name: Store nothing off staging, or when called
+        if: github.ref != 'refs/heads/staging' || inputs.tooling
+        run: |
+          echo "Only a push or a dispatch on staging stores its record;" \
+               "this run is a $GITHUB_EVENT_NAME run on $GITHUB_REF."
+
+      # The check of the setup cost of leftover materials, on each push to
+      # staging: a failure makes the run red, and gates nothing. It follows
+      # the store, so that a count which fails is still recorded.
+      # scripts/metrics_gate.py says what fails. The check is to catch a
+      # repeat of the mistake which #182 fixed: each test's setup removed
+      # the previous run's materials itself. In an experiment of 2026-10-26,
+      # restoring that removal cost about 1,650 instructions per leftover
+      # entry; the 12 records holding the count cost from -23 to 86. The
+      # limit of 400 is
+      # about five times the dearest record, and a quarter of the mistake.
+      # No pull request is gated on the count, since measuring it adds 9 to
+      # 16 minutes to the job, which would then outlast most of fine's
+      # columns. Nor is a dispatch checked, since a backfill measures older
+      # commits, and those from #115 to #182 carry the mistake.
+      - name: Check the setup cost of leftover materials
+        if: github.event_name == 'push'
+        run: python3 -B tooling/scripts/metrics_gate.py leftover-materials "$SYMBOL_TABLE_RECORD"

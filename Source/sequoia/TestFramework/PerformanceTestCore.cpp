@@ -222,37 +222,42 @@ namespace sequoia::testing
       // The gate takes confidence_multiplier on every attempt, not
       // overlapMultiplier. An early attempt's overlapMultiplier is smaller,
       // and with it tasks of equal speed would too often pass the gate.
-      const double gateLower    {mean - confidence_multiplier * standardError},
-                   gateUpper    {mean + confidence_multiplier * standardError},
-                   intervalLower{mean - overlapMultiplier * standardError},
-                   intervalUpper{mean + overlapMultiplier * standardError};
+      const double gateLower{mean - confidence_multiplier * standardError},
+                   gateUpper{mean + confidence_multiplier * standardError};
+
+      const relative_performance_estimate estimate{
+        .speedup{std::exp(mean)},
+        .interval{
+          .lower{std::exp(mean - overlapMultiplier * standardError)},
+          .upper{std::exp(mean + overlapMultiplier * standardError)}
+        }
+      };
+
+      // The gate keeps tasks of equal speed from passing a prediction lying
+      // wholly above 1. check_speedup refuses a prediction lying wholly below
+      // 1, so any other prediction includes 1, and has no gate.
+      const bool predictsFaster{prediction.lower > 1};
 
       const auto failure{
-        [gateLower, gateUpper, intervalLower, intervalUpper, prediction]()
+        [gateLower, gateUpper, interval{estimate.interval}, prediction, predictsFaster]()
           -> std::optional<relative_performance_failure> {
-          if(!(gateLower > 0))
+          if(predictsFaster && !(gateLower > 0))
           {
             return gateUpper < 0 ? relative_performance_failure::slower
                                  : relative_performance_failure::not_distinguishably_faster;
           }
 
-          if(intervalUpper < std::log(prediction.lower))
-            return relative_performance_failure::faster_but_less_than_predicted;
+          if(interval.upper < prediction.lower)
+            return relative_performance_failure::speedup_less_than_predicted;
 
-          if(intervalLower > std::log(prediction.upper))
-            return relative_performance_failure::suspiciously_fast;
+          if(interval.lower > prediction.upper)
+            return relative_performance_failure::speedup_greater_than_predicted;
 
           return std::nullopt;
         }()
       };
 
-      return {
-        .failure{failure},
-        .estimate{
-          .speedup{std::exp(mean)},
-          .interval{.lower{std::exp(intervalLower)}, .upper{std::exp(intervalUpper)}}
-        }
-      };
+      return {.failure{failure}, .estimate{estimate}};
     }
 
     void throw_if_too_few_trials(std::size_t numTrials)

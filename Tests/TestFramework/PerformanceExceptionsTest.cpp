@@ -51,12 +51,14 @@ namespace sequoia::testing
       }
     };
 
-    check_exception_thrown<std::invalid_argument>("Minimum speed-up of 1",
-                                                  relativePerformanceCheck({.prediction{.lower{1.0}, .upper{2.0}}}));
-    check_exception_thrown<std::invalid_argument>("Maximum speed-up of 1",
-                                                  relativePerformanceCheck({.prediction{.lower{1.5}, .upper{1.0}}}));
+    check_exception_thrown<std::invalid_argument>("Negative minimum speed-up",
+                                                  relativePerformanceCheck({.prediction{.lower{-0.5}, .upper{2.0}}}));
     check_exception_thrown<std::invalid_argument>("Minimum speed-up of NaN",
                                                   relativePerformanceCheck({.prediction{.lower{nan}, .upper{2.0}}}));
+    check_exception_thrown<std::invalid_argument>("Maximum speed-up less than 1",
+                                                  relativePerformanceCheck({.prediction{.lower{0.5}, .upper{0.9}}}));
+    check_exception_thrown<std::invalid_argument>("Maximum speed-up of NaN",
+                                                  relativePerformanceCheck({.prediction{.lower{0.5}, .upper{nan}}}));
     check_exception_thrown<std::invalid_argument>("Minimum speed-up exceeding the maximum",
                                                   relativePerformanceCheck({.prediction{.lower{2.5}, .upper{2.0}}}));
     check_exception_thrown<std::invalid_argument>("Too few trials",
@@ -76,16 +78,20 @@ namespace sequoia::testing
     };
 
     check_exception_thrown<std::invalid_argument>(
-      "Minimum speed-up of 1, with baselines",
-      relativePerformanceCheckWithBaselines({.prediction{.lower{1.0}, .upper{2.0}}})
-    );
-    check_exception_thrown<std::invalid_argument>(
-      "Maximum speed-up of 1, with baselines",
-      relativePerformanceCheckWithBaselines({.prediction{.lower{1.5}, .upper{1.0}}})
+      "Negative minimum speed-up, with baselines",
+      relativePerformanceCheckWithBaselines({.prediction{.lower{-0.5}, .upper{2.0}}})
     );
     check_exception_thrown<std::invalid_argument>(
       "Minimum speed-up of NaN, with baselines",
       relativePerformanceCheckWithBaselines({.prediction{.lower{nan}, .upper{2.0}}})
+    );
+    check_exception_thrown<std::invalid_argument>(
+      "Maximum speed-up less than 1, with baselines",
+      relativePerformanceCheckWithBaselines({.prediction{.lower{0.5}, .upper{0.9}}})
+    );
+    check_exception_thrown<std::invalid_argument>(
+      "Maximum speed-up of NaN, with baselines",
+      relativePerformanceCheckWithBaselines({.prediction{.lower{0.5}, .upper{nan}}})
     );
     check_exception_thrown<std::invalid_argument>(
       "Minimum speed-up exceeding the maximum, with baselines",

@@ -1,0 +1,58 @@
+A mutation swallowing failures, its steps mispredicted
+Transition from node 0 to 1
+Increment each value by copying: fallible steps
+[unsigned long long]
+operator== returned false
+Obtained : 2
+Predicted: 3
+
+=======================================
+
+A mutation swallowing failures, its steps mispredicted
+Transition from node 0 to 0
+Increment each value by copying: failure at fallible step 0
+Expected Exception Type:
+[sequoia::testing::injected_failure]
+No exception thrown
+
+=======================================
+
+Tests/TestFramework/ExceptionSafetyTestUtilitiesFreeDiagnostics.cpp, Line 91
+
+Transition from node 0 to 0
+Increment each value by copying: unchanged by the failure at fallible step 0
+[std::vector<sequoia::testing::(anonymous namespace)::fallible_int, std::allocator<sequoia::testing::(anonymous namespace)::fallible_int> >]
+operator== returned false
+
+  Element 1 of range incorrect
+  [sequoia::testing::(anonymous namespace)::fallible_int]
+  operator== returned false
+  Obtained : 3
+  Predicted: 2
+
+=======================================
+
+A mutation swallowing failures, its steps mispredicted
+Transition from node 0 to 0
+Increment each value by copying: failure at fallible step 1
+Expected Exception Type:
+[sequoia::testing::injected_failure]
+No exception thrown
+
+=======================================
+
+Tests/TestFramework/ExceptionSafetyTestUtilitiesFreeDiagnostics.cpp, Line 91
+
+Transition from node 0 to 0
+Increment each value by copying: unchanged by the failure at fallible step 1
+[std::vector<sequoia::testing::(anonymous namespace)::fallible_int, std::allocator<sequoia::testing::(anonymous namespace)::fallible_int> >]
+operator== returned false
+
+  Element 0 of range incorrect
+  [sequoia::testing::(anonymous namespace)::fallible_int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
+
+=======================================
+

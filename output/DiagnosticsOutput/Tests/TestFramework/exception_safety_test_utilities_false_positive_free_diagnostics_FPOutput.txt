@@ -1,0 +1,35 @@
+False Negative Failure:
+A mutation with the strong guarantee
+Transition from node 0 to 1
+Push a copy of the front: fallible steps
+[unsigned long long]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ExceptionSafetyTestUtilitiesFreeDiagnostics.cpp, Line 123
+
+Transition from node 0 to 1
+Push a copy of the front
+[std::vector<sequoia::testing::(anonymous namespace)::fallible_int, std::allocator<sequoia::testing::(anonymous namespace)::fallible_int> >]
+
+=======================================
+
+False Negative Failure:
+A mutation with the strong guarantee
+Transition from node 0 to 0
+Push a copy of the front: failure at fallible step 0
+Expected Exception Type:
+[sequoia::testing::injected_failure]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ExceptionSafetyTestUtilitiesFreeDiagnostics.cpp, Line 123
+
+Transition from node 0 to 0
+Push a copy of the front: unchanged by the failure at fallible step 0
+[std::vector<sequoia::testing::(anonymous namespace)::fallible_int, std::allocator<sequoia::testing::(anonymous namespace)::fallible_int> >]
+
+=======================================
+

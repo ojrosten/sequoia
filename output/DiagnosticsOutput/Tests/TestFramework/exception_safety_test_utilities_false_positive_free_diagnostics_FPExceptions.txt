@@ -1,0 +1,9 @@
+A mutation with the strong guarantee
+Transition from node 0 to 0
+Push a copy of the front: failure at fallible step 0
+Expected Exception Type:
+[sequoia::testing::injected_failure]
+Injected failure at fallible step 0
+
+=======================================
+

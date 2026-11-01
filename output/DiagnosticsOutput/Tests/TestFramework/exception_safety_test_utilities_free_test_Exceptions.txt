@@ -1,0 +1,18 @@
+Tests/TestFramework/ExceptionSafetyTestUtilitiesFreeTest.cpp, Line 48
+Step 1, chosen to fail
+
+Expected Exception Type:
+[sequoia::testing::injected_failure]
+Injected failure at fallible step 1
+
+=======================================
+
+Tests/TestFramework/ExceptionSafetyTestUtilitiesFreeTest.cpp, Line 92
+A second monitor on the same thread
+
+Expected Exception Type:
+[std::logic_error]
+A fallible_step_monitor is already alive on this thread
+
+=======================================
+

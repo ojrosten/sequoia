@@ -26,6 +26,10 @@ namespace sequoia::testing
 
     void test_relative_performance();
 
+    void test_same_speed_predictions();
+
+    void test_one_sided_predictions();
+
     void test_confidence_multiplier();
 
     void test_significance_gate();
@@ -53,6 +57,10 @@ namespace sequoia::testing
   private:
 
     void test_relative_performance();
+
+    void test_same_speed_predictions();
+
+    void test_one_sided_predictions();
 
     void test_confidence_multiplier();
 
