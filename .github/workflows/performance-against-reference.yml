@@ -48,15 +48,17 @@ name: performance-against-reference
 # passed, which wedges a pull request only if the check is made required.
 on:
   pull_request:
-  # Sunday morning, clear of the nightly's tick even when the scheduler is
-  # hours late. The minute is off the hour, as rigorous.yml's is.
+  # Early Sunday, an hour after the nightly's tick, so the two do not queue
+  # for runners together. The minute is off the hour, as rigorous.yml's is.
   schedule:
-    - cron: '1 9 * * 0'
+    - cron: '1 2 * * 0'
   workflow_dispatch:
 
+# A newer push to a pull request supersedes its run. A dispatch does not
+# supersede the weekly run, so it waits for it.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   scope:
