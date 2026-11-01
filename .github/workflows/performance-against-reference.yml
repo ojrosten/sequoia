@@ -48,9 +48,10 @@ name: performance-against-reference
 #     would fail at 1.05, and the regression above failed none of 80 at 1.1.
 #     So macOS has no column.
 # A confirmation pass at 1.05 itself, 2026-11-01, each check 20 times per job:
-#   - One commit built twice: none of 80 serial-run checks and 80 of a request for help
-#     failed on Linux (EPYC 7763 and 9V45, Xeon 8370C and 8573C), and none of
-#     40 and 40 on Windows (EPYC 7763, Xeon 8370C).
+#   - One commit built twice: none of 80 serial-run checks, and none of 80
+#     checks of a request for help, failed on Linux (EPYC 7763 and 9V45, Xeon
+#     8370C and 8573C), and none of 40 and 40 on Windows (EPYC 7763, Xeon
+#     8370C).
 #   - The moved{false} mutant: the serial-run check failed 78 of 80 on Linux,
 #     both passes on a Xeon 8573C, and 38 of 40 on Windows, both passes on an
 #     EPYC 9V74. The check of a request for help alone, whose work the mutant
