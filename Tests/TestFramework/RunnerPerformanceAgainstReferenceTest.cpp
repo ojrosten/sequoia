@@ -30,13 +30,14 @@ namespace sequoia::testing
 
     /** The largest multiple of the reference's time which the candidate's
         runner may take to run the workload's tests, net of a request for
-        help.
+        help, and to answer a request for help alone.
 
-        The bound suits Linux. On hosted Linux runners, a mutant of
-        `prepare_materials` which removes the previous run's materials on each
-        test's own thread took 1.08 to 1.25 times as long, and a bound of 1.1
-        let it pass on some hosts. On hosted macOS runners, the same mutant
-        passed at 1.1 on every host.
+        On hosted Linux runners, a mutant of `prepare_materials` which removes
+        the previous run's materials on each test's own thread took 1.08 to
+        1.25 times as long, and a bound of 1.1 let it pass on some hosts. On
+        hosted macOS runners, the same mutant passed at 1.1 on every host, so
+        macOS is not gated. No measured regression stands behind the bound for
+        a request for help alone.
      */
     constexpr double slowdown_bound{1.05};
 
@@ -191,7 +192,7 @@ namespace sequoia::testing
     candidate.serial_tests_command()();
     reference.serial_tests_command()();
 
-    const relative_performance_parameters boundedSlowdown{
+    const relative_performance_parameters boundedSlowdownPrediction{
       .prediction{1 / slowdown_bound, std::numeric_limits<double>::infinity()}
     };
 
@@ -201,17 +202,18 @@ namespace sequoia::testing
                   slowdown_bound),
       make_task_with_baseline(candidate),
       make_task_with_baseline(reference),
-      boundedSlowdown
+      boundedSlowdownPrediction
     );
 
-    // The check above subtracts start-up, so this one times it on its own.
+    // The check above is net of a request for help, so this one times a
+    // request for help alone.
     check_relative_performance(
-      std::format("The candidate's runner takes at most {} times as long as the reference's to start, construct "
-                  "a runner and answer a request for help",
+      std::format("The candidate's runner takes at most {} times as long as the reference's to answer a request "
+                  "for help",
                   slowdown_bound),
       candidate.help_command(),
       reference.help_command(),
-      boundedSlowdown
+      boundedSlowdownPrediction
     );
   }
 }

@@ -1,11 +1,11 @@
 name: performance-against-reference
 
-# Whether a pull request slows the runner down. PerformanceAgainstReference
-# builds one project of tests which do little twice: against the pull
-# request's tree, the candidate, and against the tree of the pull request's
-# base, the reference. The executable's check fails if the candidate's runner
-# takes distinguishably longer than a fixed multiple of the reference's time
-# to run the tests. The two builds' runs interleave, in one job on one
+# Whether the runner has slowed down. PerformanceAgainstReference builds one
+# project of tests which do little twice: against the tree under test, the
+# candidate, and against an earlier tree, the reference. Its checks fail if the
+# candidate's runner takes distinguishably longer than a fixed multiple of the
+# reference's time to run the tests, net of a request for help, or to answer a
+# request for help alone. The two builds' runs interleave, in one job on one
 # machine, so the comparison needs no stored record of any machine's speed.
 #
 # On a pull request, the candidate is GitHub's merge of the pull request into
@@ -22,11 +22,11 @@ name: performance-against-reference
 # commit, accepts the slowdown up to the new anchor. The anchor alone would not
 # do: speed-ups since the anchor would leave room for a regression to pass, a
 # pull request that tipped accumulated drift over the bound would be blamed for
-# all of it, and an anchor that stopped building would fail every pull request
-# at once.
+# all of it, and an anchor the current toolchain no longer builds would fail
+# every pull request at once.
 #
-# Linux · GCC · Debug and Windows · MSVC · Debug, the latter since MSVC's debug
-# build is among the slowest a user runs. The test's bound, 1.05, rests on
+# The columns are Linux · GCC · Debug and Windows · MSVC · Debug, the latter
+# since MSVC's debug build is among the slowest a user runs. The test's bound, 1.05, rests on
 # measurements of 2026-10-30, on hosted ubuntu-26.04 runners whose CPUs were AMD
 # EPYC 7763, 9V45 and 9V74, and Intel Xeon 6973P-C and Platinum 8573C. The
 # checks ran with a bound of 1.1, and each printed its interval of speed-ups. A
@@ -52,55 +52,66 @@ name: performance-against-reference
 #     failed on Linux (EPYC 7763 and 9V45, Xeon 8370C and 8573C), and none of
 #     40 and 40 on Windows (EPYC 7763, Xeon 8370C).
 #   - The moved{false} mutant: the serial-run check failed 78 of 80 on Linux,
-#     both passes on a Xeon 8573C, and 38 of 40 on Windows (EPYC 7763 and
-#     9V74). The start-up check, whose work the mutant does not touch, failed
-#     none of 80 and 40.
+#     both passes on a Xeon 8573C, and 38 of 40 on Windows, both passes on an
+#     EPYC 9V74. The check of a request for help alone, whose work the mutant
+#     does not touch, failed none of 80 and 40.
 #
 # The workflow runs on every pull request whose change the suite reads, as
-# scope.yml decides. With nothing to test, the job is skipped rather than
+# scope.yml decides, and on every scheduled or dispatched run. With nothing to test, the job is skipped rather than
 # passed, which wedges a pull request only if the check is made required.
 on:
   pull_request:
-  # Early Sunday, an hour after the nightly's tick, so the two do not queue
-  # for runners together. The minute is off the hour, as rigorous.yml's is.
+  # Early Sunday, an hour after the nightly's tick, to spread the runners'
+  # load. The minute is off the hour, as rigorous.yml's is.
   schedule:
     - cron: '1 2 * * 0'
   workflow_dispatch:
 
-# A newer push to a pull request supersedes its run. A dispatch does not
-# supersede the weekly run, so it waits for it.
+# A push to a pull request cancels that pull request's run in flight.
+# Scheduled and dispatched runs each get a group of their own, so nothing
+# cancels them, as in rigorous.yml.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
   scope:
-    if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/scope.yml
 
-  # Against the anchor there is no pull request to scope, so scope is skipped
-  # and the comparison runs regardless.
   compare:
     name: ${{ matrix.name }}
     needs: scope
-    if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.scope.outputs.suite == 'true') }}
+    if: ${{ needs.scope.outputs.suite == 'true' }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
         include:
-          - {name: 'Linux · GCC · Debug',    os: ubuntu-26.04,   preset: gcc-env}
+          - {name: 'Linux · GCC · Debug',    os: ubuntu-26.04,   preset: gcc-env, cc: gcc-15, cxx: g++-15}
           - {name: 'Windows · MSVC · Debug', os: windows-latest, preset: msvc-ninja}
     defaults:
       run:
         shell: bash
     steps:
       # On a pull request, the merge and both its parents. Against the anchor,
-      # the whole history, so that the anchor's ancestry can be checked.
+      # the whole history, so that the anchor's ancestry can be checked, without
+      # the blobs of commits not checked out, as in watchdog.yml.
       - uses: actions/checkout@v7
         with:
           fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 0 }}
+          filter: ${{ github.event_name != 'pull_request' && 'blob:none' || '' }}
+
+      # Before the reference's worktree, whose paths under RUNNER_TEMP reach 249
+      # characters of Windows' 260, and the workload's nested builds, 236.
+      # Shortened from tests.yml's step of the same name, which says why.
+      - name: Let Windows and git see long paths
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          git config --global core.longpaths true
+          New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
+                           -Name LongPathsEnabled -Value 1 -PropertyType DWord -Force | Out-Null
 
       # HEAD^1 is the base's tip only if HEAD is GitHub's merge. An anchor that
       # is not an ancestor of HEAD would measure a branch's divergence rather
@@ -115,6 +126,9 @@ jobs:
             reference=$(git rev-parse HEAD^1)
           else
             anchor=$(< .github/performance-anchor)
+            # A name such as main would move with the candidate.
+            [[ $anchor =~ ^[0-9a-f]{40}$ ]] \
+              || { echo "::error::.github/performance-anchor holds '$anchor', which is no full commit hash"; exit 1; }
             reference=$(git rev-parse --verify -q "$anchor^{commit}") \
               || { echo "::error::.github/performance-anchor names '$anchor', which is no commit"; exit 1; }
             git merge-base --is-ancestor "$reference" HEAD \
@@ -130,9 +144,10 @@ jobs:
       - name: Install the toolchain (Linux)
         if: runner.os == 'Linux'
         env:
-          CXX: g++-15
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
         run: |
-          printf 'CC=gcc-15\nCXX=%s\n' "$CXX" >> "$GITHUB_ENV"
+          printf 'CC=%s\nCXX=%s\n' "$CC" "$CXX" >> "$GITHUB_ENV"
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
           sudo scripts/retry.sh 3 180 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh update -qq --error-on=any \
@@ -149,22 +164,14 @@ jobs:
           "$CXX" --version
           cmake --version
 
-      # Shortened from tests.yml's steps of the same names, which say why each
-      # part exists; these are the forms the scratch runs of 2026-10-30 ran.
-      # The workload's nested build paths reach about 236 characters.
-      - name: Let Windows and git see long paths
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          git config --global core.longpaths true
-          New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
-                           -Name LongPathsEnabled -Value 1 -PropertyType DWord -Force | Out-Null
-
+      # Shortened from tests.yml's step of the same name, which says why each
+      # part exists, and tests.yml's MSVC step names this copy.
       - name: Enter the MSVC environment (Windows, Ninja)
         if: runner.os == 'Windows'
         run: |
           vswhere="/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
           root=$("$vswhere" -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath)
+          [ -n "$root" ] || { echo "::error::no VC toolset reported by vswhere"; exit 1; }
           vcvars="$(cygpath -u "$root")/VC/Auxiliary/Build/vcvars64.bat"
           [ -f "$vcvars" ] || { echo "::error::$vcvars does not exist"; exit 1; }
           bat="$RUNNER_TEMP/vcvars_dump.bat"
