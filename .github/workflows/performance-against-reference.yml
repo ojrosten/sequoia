@@ -19,19 +19,20 @@ name: performance-against-reference
 # must be an ancestor of the candidate. That comparison sees the slowdown
 # accumulated since the anchor, but not which pull request caused it; the
 # per-pull-request comparison says that. Moving the anchor, by a reviewed
-# commit, accepts the slowdown up to the new anchor. The anchor alone would not do: speed-ups since
-# the anchor would leave room for a regression to pass, a pull request that
-# tipped accumulated drift over the bound would be blamed for all of it, and
-# an anchor that stopped building would fail every pull request at once.
+# commit, accepts the slowdown up to the new anchor. The anchor alone would not
+# do: speed-ups since the anchor would leave room for a regression to pass, a
+# pull request that tipped accumulated drift over the bound would be blamed for
+# all of it, and an anchor that stopped building would fail every pull request
+# at once.
 #
-# Linux · GCC · Debug and Windows · MSVC · Debug, the latter since MSVC's
-# debug build is among the slowest a user runs. The test's bound, 1.05, rests
-# on measurements of 2026-10-30, on hosted ubuntu-26.04 runners whose CPUs were AMD EPYC 7763,
-# 9V45 and 9V74, and Intel Xeon 6973P-C and Platinum 8573C. The checks ran with
-# a bound of 1.1, and each printed its interval of speed-ups. A check stops at
-# its first attempt that passes, so the outcome at 1.05 of a check that passed
-# at 1.1 follows from its interval only if the interval's upper end lies above
-# 0.952:
+# Linux · GCC · Debug and Windows · MSVC · Debug, the latter since MSVC's debug
+# build is among the slowest a user runs. The test's bound, 1.05, rests on
+# measurements of 2026-10-30, on hosted ubuntu-26.04 runners whose CPUs were AMD
+# EPYC 7763, 9V45 and 9V74, and Intel Xeon 6973P-C and Platinum 8573C. The
+# checks ran with a bound of 1.1, and each printed its interval of speed-ups. A
+# check stops at its first attempt that passes, so the outcome at 1.05 of a
+# check that passed at 1.1 follows from its interval only if the interval's
+# upper end lies above 0.952:
 #   - 600 checks compared trees that do not differ in what the runner does: one
 #     commit built twice, and two pairs of neighbouring commits of staging.
 #     None failed. No interval's upper end lay below 0.973, so none would
