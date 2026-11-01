@@ -199,5 +199,15 @@ namespace sequoia::testing
       make_task_with_baseline(reference),
       {.prediction{1 / slowdown_bound, std::numeric_limits<double>::infinity()}}
     );
+
+    // The check above subtracts start-up, so this one times it on its own.
+    check_relative_performance(
+      std::format("The candidate's runner takes at most {} times as long as the reference's to start, construct "
+                  "a runner and answer a request for help",
+                  slowdown_bound),
+      candidate.help_command(),
+      reference.help_command(),
+      {.prediction{1 / slowdown_bound, std::numeric_limits<double>::infinity()}}
+    );
   }
 }
