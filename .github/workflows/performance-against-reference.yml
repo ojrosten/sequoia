@@ -26,13 +26,13 @@ name: performance-against-reference
 # every pull request at once.
 #
 # The columns are Linux · GCC · Debug and Windows · MSVC · Debug, the latter
-# since MSVC's debug build is among the slowest a user runs. The test's bound, 1.05, rests on
-# measurements of 2026-10-30, on hosted ubuntu-26.04 runners whose CPUs were AMD
-# EPYC 7763, 9V45 and 9V74, and Intel Xeon 6973P-C and Platinum 8573C. The
-# checks ran with a bound of 1.1, and each printed its interval of speed-ups. A
-# check stops at its first attempt that passes, so the outcome at 1.05 of a
-# check that passed at 1.1 follows from its interval only if the interval's
-# upper end lies above 0.952:
+# since MSVC's debug build is among the slowest a user runs. The test's bound,
+# 1.05, rests on measurements of 2026-10-30, on hosted ubuntu-26.04 runners
+# whose CPUs were AMD EPYC 7763, 9V45 and 9V74, and Intel Xeon 6973P-C and
+# Platinum 8573C. The checks ran with a bound of 1.1, and each printed its
+# interval of speed-ups. A check stops at its first attempt that passes, so the
+# outcome at 1.05 of a check that passed at 1.1 follows from its interval only
+# if the interval's upper end lies above 0.952:
 #   - 600 checks compared trees that do not differ in what the runner does: one
 #     commit built twice, and two pairs of neighbouring commits of staging.
 #     None failed. No interval's upper end lay below 0.973, so none would
@@ -48,7 +48,7 @@ name: performance-against-reference
 #     would fail at 1.05, and the regression above failed none of 80 at 1.1.
 #     So macOS has no column.
 # A confirmation pass at 1.05 itself, 2026-11-01, each check 20 times per job:
-#   - One commit built twice: none of 80 serial-run and 80 start-up checks
+#   - One commit built twice: none of 80 serial-run checks and 80 of a request for help
 #     failed on Linux (EPYC 7763 and 9V45, Xeon 8370C and 8573C), and none of
 #     40 and 40 on Windows (EPYC 7763, Xeon 8370C).
 #   - The moved{false} mutant: the serial-run check failed 78 of 80 on Linux,
@@ -57,8 +57,9 @@ name: performance-against-reference
 #     does not touch, failed none of 80 and 40.
 #
 # The workflow runs on every pull request whose change the suite reads, as
-# scope.yml decides, and on every scheduled or dispatched run. With nothing to test, the job is skipped rather than
-# passed, which wedges a pull request only if the check is made required.
+# scope.yml decides, and on every scheduled or dispatched run. With nothing to
+# test, the job is skipped rather than passed, which wedges a pull request only
+# if the check is made required.
 on:
   pull_request:
   # Early Sunday, an hour after the nightly's tick, to spread the runners'
