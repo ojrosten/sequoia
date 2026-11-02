@@ -96,12 +96,13 @@ namespace sequoia::testing
            writing it fails; elsewhere, a half-written file is copied.
         -# `.git`, sequoia's own history, which the created project cannot act on: it runs
            `git init` of its own, and it holds its own copy of sequoia rather than referring
-           to one - the project template ships `dependencies/sequoia/.keep`, so that path is
-           tracked before sequoia arrives and git never forms a gitlink for it. In a worktree
-           or a submodule checkout, `.git` is a file naming a git directory, and a copy of it
-           would name that directory from the project's copy of sequoia: a worktree's
-           absolute path would make that copy a working tree of the parent's repository, and
-           a submodule's relative path names a directory the created project does not have.
+           to the parent's - the project template ships `dependencies/sequoia/.keep`, so that
+           path is tracked before sequoia arrives and git never forms a gitlink for it. In a
+           worktree or a submodule checkout, `.git` is a file naming a git directory, and a
+           copy of it would name that directory from the project's copy of sequoia: a
+           worktree's absolute path would make that copy a working tree of the parent's
+           repository, and a submodule's relative path names a directory the created project
+           does not have.
      */
     [[nodiscard]]
     bool excluded_from_created_projects(const fs::path& entry)
