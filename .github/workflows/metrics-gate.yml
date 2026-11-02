@@ -22,6 +22,14 @@ name: metrics-gate
 # means to make, and a failure prints the line. The comparison reads the
 # description when it runs, so the line takes effect when the failed jobs of
 # the run are re-run.
+#
+# A dispatch with `false_negative` is false-negative.yml's control for the
+# gates. The control dispatches it on a branch whose head is a merge, made by
+# the control, of a commit raising every count into the commit the control
+# runs on. The run measures that merge and its first parent, and must fail. No
+# pull request is involved, so the run accepts nothing. A dispatch without
+# `false_negative` measures the branch's pull request, as a dispatch of fine
+# does.
 on:
   workflow_call:
     inputs:
@@ -29,6 +37,17 @@ on:
         description: 'Whether the change touches anything the suite reads: `true` or `false`, from scope.yml. Anything else fails the job.'
         required: true
         type: string
+  workflow_dispatch:
+    inputs:
+      needs_testing:
+        description: 'Whether to measure: `true` or `false`, as for a call.'
+        required: true
+        type: string
+      false_negative:
+        description: 'Measure the head of the branch, a merge that the false-negative control made, rather than the branch''s pull request. See false-negative.yml.'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   # The merge to measure, and its first parent. A pull_request run is on the
@@ -42,6 +61,11 @@ jobs:
   # with a mergeable state. Its first parent is then off staging's
   # first-parent history, and the step refuses it: the gate would otherwise
   # compare a tree which no other job tests.
+  #
+  # In the false-negative control, the step takes the head of the branch, the
+  # control's merge, as a pull_request run takes GitHub's merge. It does not
+  # check the first parent against staging: the control's merge is onto the
+  # commit the control runs on, main's head when it runs on its schedule.
   #
   # Like `measure`, the job is skipped, rather than run with nothing to do as
   # tests.yml's jobs are, so that symbol-table.yml needs no condition on each
@@ -73,8 +97,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           NUMBER: ${{ github.event.pull_request.number }}
+          FALSE_NEGATIVE: ${{ inputs.false_negative == true }}
         run: |
-          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
+          if [ "$GITHUB_EVENT_NAME" = pull_request ] || [ "$FALSE_NEGATIVE" = true ]; then
             commit=$GITHUB_SHA pull_request=$NUMBER
           else
             numbers=$(gh pr list --head "$GITHUB_REF_NAME" --base staging --state open \
@@ -108,7 +133,7 @@ jobs:
             echo "::error title=Metrics gate::$commit has ${#parents[@]} parents, not two, so it is no merge"
             exit 1
           fi
-          if ! git rev-list --first-parent HEAD | grep -xF "${parents[0]}" > /dev/null; then
+          if [ "$FALSE_NEGATIVE" != true ] && ! git rev-list --first-parent HEAD | grep -xF "${parents[0]}" > /dev/null; then
             echo "::error title=Metrics gate::the merge's first parent, ${parents[0]}, is not on staging's" \
                  "first-parent history, so GitHub's merge is onto an earlier base: re-run the failed jobs" \
                  "once GitHub has made the merge again"
@@ -146,6 +171,7 @@ jobs:
       COMMIT: ${{ needs.subject.outputs.commit }}
       FIRST_PARENT: ${{ needs.subject.outputs.first_parent }}
       PULL_REQUEST: ${{ needs.subject.outputs.pull_request }}
+      FALSE_NEGATIVE: ${{ inputs.false_negative == true }}
       RECORD_ARTIFACT_PREFIX: ${{ needs.measure.outputs.record_artifact_prefix }}
     steps:
       - name: Nothing to test
@@ -204,6 +230,11 @@ jobs:
       - name: Read the pull request's description
         if: env.NEEDS_TESTING == 'true'
         run: |
+          if [ "$FALSE_NEGATIVE" = true ]; then
+            : > "$RUNNER_TEMP/description.txt"
+            echo "The false-negative control has no pull request, so its description is empty"
+            exit 0
+          fi
           gh api "repos/$GH_REPO/pulls/$PULL_REQUEST" --jq '.body // ""' > "$RUNNER_TEMP/description.txt"
           echo "Read the description of pull request #$PULL_REQUEST"
 

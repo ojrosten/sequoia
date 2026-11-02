@@ -19,6 +19,11 @@ on:
         description: 'Whether the change touches anything doxygen reads: `true` or `false`, from scope.yml. Anything else fails the job.'
         required: true
         type: string
+      false_negative:
+        description: 'Corrupt the checkout so that the gate on documentation defects must go red. The control for the gate: see false-negative.yml.'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   doxygen:
@@ -46,6 +51,20 @@ jobs:
             exit 1
           fi
           echo "Nothing to document; the scope job's summary says why."
+
+      # The corruption is a documentation comment holding a command doxygen
+      # does not know, which doxygen reports as a warning. The step checks that
+      # the header it adds to exists first: a control that corrupts nothing is
+      # the false negative it exists to catch.
+      - name: Corrupt the tree, so that the gate must go red
+        if: ${{ inputs.false_negative && inputs.needs_testing == 'true' }}
+        run: |
+          header=Source/sequoia/TestFramework/TestRunner.hpp
+          [ -f "$header" ] || { echo "::error::$header is not where the control expects it"; exit 1; }
+          printf '%s\n' '' 'namespace sequoia::testing' '{' \
+            '  /** \brief A declaration whose documentation holds \false_negative_control_unknown_command. */' \
+            '  void false_negative_control_documented();' '}' >> "$header"
+          git diff --stat
 
       # USE_MATHJAX is off, so formulas go through LaTeX and then Ghostscript.
       # Missing either leaves every formula silently wrong, which is the
