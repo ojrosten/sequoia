@@ -12,18 +12,19 @@
            generalizations.
 
     Vector space are ubiquitous in mathematics, physics and very many related
-    disciplines. Supreficially, they are easy to handle in a programming
+    disciplines. Superficially, they are easy to handle in a programming
     language such as C++; however, to do so in a way which reflects the
     mathematical struture as faithfully as possible is surprisingly subtle.
     Moreover, a vector space is just one of a family of mathematical structures 
     which, though not necesarily quite as familiar, are just as prevalent.
-    Affine spaces are like vector spaces without a distinguished origin.
+    Affine spaces are like vector spaces without a distinguished origin; an
+    example being Euclidean space.
     Convex spaces support linear interpolation between pairs of points but,
     unlike affine spaces, may have a boundary. A disc with a slice removed
     can be embedded in a convex or affine space but is neither. In this section
     we will elucidate the various mathematical structures, arriving at something
     sufficiently general to represent the cases of physical interest with
-    which this librarh is primarily concerned.
+    which this library is primarily concerned.
     
     Representing abstract algebraic structures in C++ presents an interesting
     challenge. At root, the fundamental abstraction is a set; indeed, a vector
@@ -158,8 +159,8 @@
     There are several important generalizations. First, there are affine
     spaces, which comprise a set, A, together with a vector space, V, whose
     additive group acts freely and transitively on A. Intuitively, we can start
-    at any point in A and translate to any other point by adding the
-    appropriate vector. \anchor FreeTransitiveAction There are three separate
+    at any point in A and translate to any other point by adding a unique
+    vector. \anchor FreeTransitiveAction There are three separate
     things being asserted:
     -# That V acts at all: adding any vector in V to any point of A gives a
        point of A;
@@ -194,7 +195,14 @@
     affine space concept depends on the vector_space concept, and not
     vice-versa.
 
-    It will be useful for our purposes to generalize affine spaces. To start,
+    Before proceeding, it will be helpful to introduce another mathematical
+    structure intimately related to affine spaces: the torsor. Whereas an
+    affine space comprises a set and a vector space, with properties described
+    above, a torsor generalizes this to a set and a group, where the group
+    action is similarly free and transitive. Thus, an affine space is a torsor
+    over a vector space.
+
+    With this in mind, it will be useful for our purposes to generalize affine spaces. To start,
     consider taking a convex subset, C, of an affine space. We may translate
     from any point in C to any other by adding the appropriate vector from V.
     However, there are elements of V which, when added to a point in C, will
@@ -251,7 +259,9 @@
     commutative rings. Free modules are those which admit a basis.
 
     Combining the two generalizations brings us to the most primitive
-    abstraction with which the code deals: the partial M-torsor. A torsor is a
+    abstraction with which the code deals: the partial M-torsor.
+    ** This may not be the most primitive, or possibly one of several primitive abstractions **
+    A torsor is a
     set upon which a group acts
     \ref FreeTransitiveAction "freely and transitively"; allowing partiality
     gives the structure described above. The 'M' indicates that the group in
@@ -303,12 +313,14 @@
     affine spaces are not, in general, convex spaces: the latter require an
     ordered field, whereas there is nothing untoward about an affine space
     over the complex numbers.
+    **Worth mentioning a real affine space**
 
     The diagram orders the structures by refinement, whereas the order in
     which they must be defined runs the other way: a partial M-torsor is a
-    set together with a free module acting on it, so free modules are prior
-    to everything above them, just as vector spaces are prior to affine
-    spaces.
+    set together with a free module acting on it. Therefore, from a definitional
+    perspective, free module must come before the DAG elements above it.
+    Similarly, as discussed above, a vector space must be defined before
+    an affine space.
     **I don't understand this!**
     There is no circularity: free modules and vector spaces appear as
     nodes at all only because a free module is an M-affine space over itself.
@@ -336,8 +348,8 @@
     one-dimensional interval and the associated free module of translations.
     Perhaps we represent the interval by all the `double`s in the range [0.0,
     1.0]. What happens if we start at the point 0.5 and use `operator+` to
-    perform the translation 0.5 + 1.0? As implementers we must decide, what
-    happens since there is no way for us to stop clients from writing such an
+    perform the translation 0.5 + 1.0? As implementers we must decide what
+    happens, since there is no way for us to stop clients from writing such an
     expression. Broadly speaking, there are four approaches:
     -# Treat this as undefined behaviour;
 
@@ -403,7 +415,8 @@
        some lattice, L. This changes the nature of the space. The action of M
        remains total and transitive but no longer free, since every element of
        L translates every point to itself. What we have is a torsor over the
-       quotient M/L.
+       quotient M/L. **so partial-M-torsor is maybe not the most fundamental
+       abstraction; we want to allow the 'M' to be a quotient**
 
     -# Remap anti-periodically, so that the coordinate reverses direction each
        time it would leave the set. This also changes the space, but more
@@ -413,6 +426,7 @@
        whereas translating once by 0.4 gives 0.7. The interval is best regarded
        as a fundamental domain for this larger group rather than as a set on
        which M acts.
+       **Can we not rephrase this as a twisted torsor over M/L?**
 
     Of the six possibilities elucidated, only the first two - which between them
     leave the mathematics as the partial torsor - keep M acting on the set by
