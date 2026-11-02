@@ -6,18 +6,17 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "RunnerPerformanceAgainstReferenceTest.hpp"
+#include "ReferenceRootTestingUtilities.hpp"
 
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/TestFramework/Commands.hpp"
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 
 #include <algorithm>
 #include <array>
 #include <format>
 #include <limits>
-#include <stdexcept>
 
 namespace sequoia::testing
 {
@@ -38,25 +37,6 @@ namespace sequoia::testing
         a request for help alone.
      */
     constexpr double slowdown_bound{1.05};
-
-    /** \throws std::runtime_error if `projPaths` holds no reference root, or
-        if the reference root holds no regular file
-        `Source/sequoia/CMakeLists.txt`
-     */
-    [[nodiscard]]
-    fs::path reference_sequoia_root(const project_paths& projPaths)
-    {
-      const auto& root{projPaths.reference_root()};
-      if(!root)
-        throw std::runtime_error{
-          "No reference root given: run with --reference-root <path>, the root of a sequoia tree to compare against"
-        };
-
-      throw_unless_regular_file(source_paths{*root, "sequoia"}.cmake_lists(),
-                                "\nThe reference root must be the root of a sequoia tree");
-
-      return *root;
-    }
 
     void copy_sequoia_build_inputs(const fs::path& sequoiaRoot, const fs::path& projectRoot)
     {

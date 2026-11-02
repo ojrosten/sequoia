@@ -2401,6 +2401,10 @@ namespace sequoia::testing
             "Without --reference-root, the project has no reference root",
             runner.proj_paths().reference_root(),
             std::optional<fs::path>{});
+
+      check_exception_thrown<std::runtime_error>(
+        "Without --reference-root, the project has no reference sequoia root",
+        [&runner]() { return reference_sequoia_root(runner.proj_paths()); });
     }
 
     {
@@ -2438,6 +2442,29 @@ namespace sequoia::testing
 
     checkRefusal(reporter{"A reference root which is the project root, spelt otherwise"},
                  fakeProjectRoot / "TestShared" / "..");
+
+    auto referenceSequoiaRoot{
+      [&commandlineWithReferenceRoot](const fs::path& referenceRoot) {
+        commandline_arguments args{commandlineWithReferenceRoot(referenceRoot)};
+        std::stringstream outputStream{};
+
+        return reference_sequoia_root(make_fake_project_runner(args, outputStream).proj_paths());
+      }
+    };
+
+    check_exception_thrown<std::runtime_error>(
+      "A reference root whose Source/sequoia holds no CMakeLists.txt is no reference sequoia root",
+      [this, &referenceSequoiaRoot]() {
+        return referenceSequoiaRoot(auxiliary_materials() / "SequoiaTreeWithoutCMakeLists");
+      });
+
+    {
+      const auto sequoiaTree{auxiliary_materials() / "SequoiaTree"};
+      check(equality,
+            "A reference root which holds Source/sequoia/CMakeLists.txt is the reference sequoia root",
+            referenceSequoiaRoot(sequoiaTree),
+            sequoiaTree);
+    }
   }
 
   void test_runner_test::test_instability_analysis()

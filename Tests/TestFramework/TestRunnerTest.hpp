@@ -10,6 +10,7 @@
 /** \file */
 
 #include "FakeProjectTestingUtilities.hpp"
+#include "ReferenceRootTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
