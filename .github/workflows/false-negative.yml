@@ -333,13 +333,13 @@ jobs:
       # holds 710,693 symbols, 257,187,335 bytes of their names, and
       # 1,224,068,781 instructions of prune's analysis:
       #   - 12,000 functions, each named within a namespace with a name of 363
-      #     characters, add 12,000 symbols, 1.7%, and about 4.7 MB of names,
-      #     1.8%. Each rise is above the 1 in 200 at which its gate fails, and
-      #     below the 1 in 20 at which prune's does, so the gate's verdict
-      #     tells the two thresholds apart.
+      #     characters, add 12,000 symbols, 1.69%, and 4,704,795 bytes of
+      #     names, 1.83% (run 41439574572). Each rise is above the 1 in 200 at
+      #     which its gate fails, and below the 1 in 20 at which prune's does,
+      #     so the gate's verdict tells the two thresholds apart.
       #   - A loop of 25,000,000 iterations over a volatile counter, in
-      #     test_runner::prune, adds about 13% to prune's count, above its
-      #     gate's 1 in 20.
+      #     test_runner::prune, adds 199,939,146 instructions to prune's count,
+      #     16.3%, above its gate's 1 in 20 (the same run).
       #   - `moved{false}` stops the runner moving the previous run's
       #     materials aside for its remover thread, so that each test's setup
       #     removes them itself. In an experiment of 2026-10-26 that cost about
