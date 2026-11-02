@@ -20,8 +20,9 @@ name: selftests
 # No job runs on Windows. snapshot_at_deadline runs on every Windows column,
 # but its selftest compiles a POSIX stand-in, so nothing controls its Windows
 # branch. enter_msvc_environment runs on Windows alone. The script's selftest
-# runs on Linux, whose grep, sed and paste are GNU's, as Git Bash's are, with
-# stand-ins for vswhere, cygpath, cmd and choco.
+# runs on Linux, with stand-ins for vswhere, cygpath, cmd and choco. The other
+# tools the script runs come from Linux, whose cp, grep, paste, sed and tr are
+# GNU's, as Git Bash's are.
 #
 # The coverage job runs the tracefile and uncalled-functions selftests itself,
 # with the lcov release and the demanglers it installs.
@@ -42,7 +43,7 @@ jobs:
     name: Script selftests · ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     # The timeout leaves room for scripts/install_apt_packages.sh's fetches to
-    # give up, and for the selftests, which took under 3 minutes on 2026-10-31.
+    # give up, and for "Run the selftests".
     timeout-minutes: 35
     strategy:
       # Every platform reports, as in tests.yml.
@@ -107,8 +108,12 @@ jobs:
       # Every selftest runs, whichever fail, and the step names each that failed.
       # A selftest passes when it exits 0 and its last line says its controls
       # pass: one that ran nothing exits 0 too.
+      #
+      # The selftests took under 3 minutes on 2026-10-31, so the step's limit
+      # stops a hung selftest long before the job's.
       - name: Run the selftests
         if: inputs.needs_testing == 'true'
+        timeout-minutes: 10
         env:
           SELFTESTS: ${{ matrix.selftests }}
         run: |

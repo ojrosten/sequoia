@@ -16,10 +16,11 @@
 # ninja of this machine's is found. The selftest controls the script's logic,
 # and none of the Windows tools it drives. Each control is a claim the script
 # exists to keep:
-#   - GITHUB_ENV receives exactly the named variables, matched by whole name,
-#     and none of the dump's other variables;
+#   - GITHUB_ENV receives exactly the named variables, matched by whole name
+#     in any case, and none of the dump's other variables;
 #   - GITHUB_PATH receives exactly the PATH entries vcvars added, in vcvars'
-#     order, without Visual Studio's CMake and Ninja;
+#     order, without Visual Studio's CMake and Ninja, and without an empty
+#     entry;
 #   - the batch file prints the PATH before vcvars, calls the vcvars64.bat of
 #     the installation vswhere reports, then prints the environment;
 #   - ninja in a forwarded entry, or on the script's own PATH, is found, and
@@ -33,7 +34,7 @@
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
 original="$here/../enter_msvc_environment.sh"
-tmp=$(cd "$(mktemp -d "${TMPDIR:-/tmp}/enter_msvc_environment_selftest.XXXXXX")" && pwd -P)
+tmp=$(mktemp -d "${TMPDIR:-/tmp}/enter_msvc_environment_selftest.XXXXXX") || exit 2
 readonly here original tmp
 trap 'rm -rf "$tmp"' EXIT
 
@@ -81,7 +82,7 @@ readonly vs_cmake='C:\VS\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin'
 readonly vs_ninja='C:\VS\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja'
 readonly runner_path='C:\Windows;C:\Program Files\Git\bin;C:\Users\runner\AppData\Local\Microsoft\WindowsApps'
 forwarded_variables=$(printf '%s\n' \
-  'INCLUDE=C:\VS\include' 'LIB=C:\VS\lib' 'LIBPATH=C:\VS\libpath' 'UCRTVersion=10.0.26100.0' \
+  'INCLUDE=C:\VS\include' 'LIB=C:\VS\lib' 'LibPath=C:\VS\libpath' 'UCRTVersion=10.0.26100.0' \
   'UniversalCRTSdkDir=C:\Kits\10\' 'VCINSTALLDIR=C:\VS\VC\' 'VCToolsInstallDir=C:\VS\VC\Tools\MSVC\14.44\' \
   'VSINSTALLDIR=C:\VS\' 'WindowsSdkDir=C:\Kits\10\' 'WindowsSDKVersion=10.0.26100.0\')
 readonly forwarded_variables
@@ -94,14 +95,16 @@ write_dump() {
 }
 
 # Makes a fresh fixture: the installation, with its vcvars64.bat, and a dump
-# in which vcvars puts its four entries before the runner's.
+# in which vcvars puts its four entries, and an empty one, before the
+# runner's.
 make_fixture() {
-  rm -rf "$drive" "$tmp/out" "$tmp/bat_seen" "$tmp/choco_calls" "$tmp/env" "$tmp/path"
+  rm -rf "$drive" "$tmp/out" "$tmp/bat_seen" "$tmp/bat_path" "$tmp/vswhere_arguments" "$tmp/choco_calls" \
+         "$tmp/env" "$tmp/path"
   mkdir -p "$drive/VS/VC/Auxiliary/Build" "$drive/runner_temp"
   : > "$drive/VS/VC/Auxiliary/Build/vcvars64.bat"
   : > "$tmp/env"
   : > "$tmp/path"
-  write_dump "$msvc;$vs_cmake;$vs_ninja;$kits;$runner_path"
+  write_dump "$msvc;$vs_cmake;;$vs_ninja;$kits;$runner_path"
 }
 
 # Places an executable ninja in a directory, given in Windows form.
@@ -114,7 +117,7 @@ place_ninja() {
 }
 
 run() {
-  PATH="$bin" VSWHERE="$bin/vswhere" RUNNER_TEMP="$drive/runner_temp" GITHUB_ENV="$tmp/env" \
+  PATH="$bin" ENTER_MSVC_ENVIRONMENT_VSWHERE="$bin/vswhere" RUNNER_TEMP="$drive/runner_temp" GITHUB_ENV="$tmp/env" \
     GITHUB_PATH="$tmp/path" "$BASH" "$script" > "$tmp/out" 2>&1
   status=$?
 }
@@ -203,21 +206,23 @@ run_controls() {
 }
 
 # Each mutant is a description, the text to replace, and its replacement.
-mutants=(
+readonly -a mutants=(
   'every variable forwarded'      "| grep -iE '^(INCLUDE"  "| grep -iE '|^(INCLUDE"
   'a variable matched by prefix'  'UniversalCRTSdkDir)='  'UniversalCRTSdkDir)'
   'a variable matched anywhere'   "grep -iE '^(INCLUDE"  "grep -iE '(INCLUDE"
-  'the whole PATH forwarded'      'grep -vxF -f <(printf '"'"'%s\n'"'"' "$before") | '  ''
-  "Path not read"                 "grep -iE '^PATH='"  "grep -E '^PATH='"
-  "CMake forwarded"               " | grep -vF 'CommonExtensions\\Microsoft\\CMake\\')"  ")"
+  'a variable matched by case'    "grep -iE '^(INCLUDE"  "grep -E '^(INCLUDE"
+  'the whole PATH forwarded'      'grep -vxF -f <(printf '"'"'%s\n'"'"' "$path_before") | '  ''
+  'Path not read'                 'grep -iE "^$1="'  'grep -E "^$1="'
+  'an empty entry forwarded'      " | grep -v '^\$' \\"  ' \\'
+  'CMake forwarded'               " | grep -vF 'CommonExtensions\\Microsoft\\CMake\\')"  ")"
   'nothing forwarded to the env'  'printf '"'"'%s\n'"'"' "$forwarded_variables" >> "$GITHUB_ENV"'  ':'
-  'nothing forwarded to PATH'     'printf '"'"'%s\n'"'"' "$added" >> "$GITHUB_PATH"'  ':'
-  'no installation accepted'      '[ -n "$root" ] ||'  'true ||'
+  'nothing forwarded to PATH'     'printf '"'"'%s\n'"'"' "$forwarded_entries" >> "$GITHUB_PATH"'  ':'
+  'no installation accepted'      '[ -n "$installation" ] ||'  'true ||'
   'no vcvars accepted'            '[ -f "$vcvars" ] ||'  'true ||'
-  'vcvars failure ignored'        ' || { echo "::error::$vcvars failed"; exit 1; }'  ' || true'
+  'vcvars failure ignored'        ' || { echo "::error::running $vcvars failed"; exit 1; }'  ' || true'
   'vcvars not called'             'call "%s" >nul || exit /b 1\r\n'  ''
   'PATH before not printed'       'echo PATH_BEFORE=%%PATH%%\r\n'  ''
-  'forwarded entries not searched' 'PATH="$(cygpath -pu "$(printf '"'"'%s\n'"'"' "$added" | paste -sd '"'"';'"'"' -)"):$PATH" command'  'command'
+  'forwarded entries not searched' 'PATH="$(cygpath -pu "$(printf '"'"'%s\n'"'"' "$forwarded_entries" | paste -sd '"'"';'"'"' -)"):$PATH" command'  'command'
   'ninja never installed'         'choco install ninja -y'  'true'
   'ninja always installed'        'command -v ninja \'  'false \'
   'no variables refused late'     '|| { echo "::error::$vcvars set none'  '|| true || { echo "::error::$vcvars set none'

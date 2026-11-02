@@ -185,9 +185,9 @@ jobs:
 
       # tests.yml is the tiers' one recipe for building and running the
       # suite. This job runs no suite, so it copies the steps it needs from
-      # tests.yml's "Install the toolchain (Linux)", "Configure" and "Build",
-      # which say why each part exists. A change of toolchain there does not
-      # belong here, as above.
+      # tests.yml's "Install the toolchain (Linux)", "Configure" and "Build".
+      # Those steps, and the scripts they call, say why each part exists. A
+      # change of toolchain there does not belong here, as above.
       #
       # The copy leaves out gdb, which reads a failed suite's stacks. It
       # configures without EXEC_ARGS, which only the `run` target reads, and
