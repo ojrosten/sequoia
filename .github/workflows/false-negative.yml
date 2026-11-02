@@ -338,17 +338,16 @@ jobs:
       #     below the 1 in 20 at which prune's does, so the gate's verdict
       #     tells the two thresholds apart.
       #   - A loop of 25,000,000 iterations over a volatile counter, in
-      #     test_runner::prune, adds about 13% to prune's count. That is above
-      #     its gate's 1 in 20, and would be under 1 in 20 of a count which
-      #     took in the runner's start or the tests.
+      #     test_runner::prune, adds about 13% to prune's count, above its
+      #     gate's 1 in 20.
       #   - `moved{false}` stops the runner moving the previous run's
       #     materials aside for its remover thread, so that each test's setup
       #     removes them itself. In an experiment of 2026-10-26 that cost about
       #     1,650 instructions per leftover entry, against the check's limit of
       #     400.
-      # The symbols and the loop add no file to any compilation, so they leave
-      # prune's analysis and the cost of leftover materials alike. The loop
-      # adds no symbol, and nothing they add is called.
+      # The symbols are functions which nothing calls, in a file already
+      # compiled, so the work of prune's analysis and of the tests' setup is
+      # as before. The loop adds no symbol, and runs only in prune's analysis.
       #
       # Each corruption checks that its file holds the text it changes exactly
       # once: a control that corrupts nothing is the false negative it exists
@@ -435,9 +434,10 @@ jobs:
       #   - The comparison failed, every step before it having succeeded.
       #   - In the comparison's log, the measured record of the merge and the
       #     baseline's of the commit this job runs on, and for each series the
-      #     error which its rise gives. A missing count, a break in the series
-      #     or a tree which was not clean gives other errors, and compares no
-      #     series.
+      #     error which its rise gives.
+      #   - No other error in the comparison's log. A missing count, a break in
+      #     the series and a tree which was not clean each give errors of their
+      #     own.
       - name: The gates on metrics failed every series on its rise
         if: ${{ !cancelled() && steps.dispatch.outcome == 'success' }}
         env:
@@ -482,11 +482,18 @@ jobs:
           else
             echo "::error::the comparison's log does not name the merge, $MERGE, as measured and $BASE as the baseline"; failed=1
           fi
-          for series in symbols symbol_name_bytes prune_dependency_analysis; do
-            finding=$(grep -xE "error: $series: [0-9]+ -> [0-9]+, \+[0-9]+ \([^)]*\), allowed \+[0-9]+ \(1 in [0-9]+ of the baseline\)" <<<"$log") \
+          # A rise which fails prints three errors: the rise, and the line
+          # accepting it with the sentence introducing that line.
+          series='(symbols|symbol_name_bytes|prune_dependency_analysis)'
+          rise="error: $series: [0-9]+ -> [0-9]+, \+[0-9]+ \([^)]*\), allowed \+[0-9]+ \(1 in [0-9]+ of the baseline\)"
+          acceptance="error: $series: to accept this rise, .*|error:   metrics-gate: accept $series \+[0-9]+"
+          for name in symbols symbol_name_bytes prune_dependency_analysis; do
+            finding=$(grep -xE "${rise/"$series"/$name}" <<<"$log") \
               && echo "ok    $finding" \
-              || { echo "::error::the comparison's log gives no error for the rise of $series"; failed=1; }
+              || { echo "::error::the comparison's log gives no error for the rise of $name"; failed=1; }
           done
+          others=$(grep -E '^error: ' <<<"$log" | grep -vxE "$rise|$acceptance" || true)
+          [ -z "$others" ] || { echo "::error::the comparison's log gives other errors:"; echo "$others"; failed=1; }
           exit $failed
 
       # The run must show its one job failing at the check, every step making
