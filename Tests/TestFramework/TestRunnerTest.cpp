@@ -1332,42 +1332,6 @@ namespace sequoia::testing
         test_instability_analysis("", "",  "1", return_code::critical_failures, critical_free_test{});
       }
     );
-
-    check_exception_thrown<std::runtime_error>(
-      reporter{"A reference root which is not a directory"},
-      [this](){
-        const auto referenceRoot{auxiliary_materials() / "NoSuchDirectory"};
-        commandline_arguments args{
-          fake_project_commandline(auxiliary_materials(), "--reference-root", referenceRoot.generic_string())
-        };
-        std::stringstream outputStream{};
-
-        auto runner{make_fake_project_runner(args, outputStream)};
-      });
-
-    check_exception_thrown<std::runtime_error>(
-      reporter{"A reference root which is a regular file"},
-      [this](){
-        const auto referenceRoot{fake_project_root(auxiliary_materials()) / "TestShared" / "SharedIncludes.hpp"};
-        commandline_arguments args{
-          fake_project_commandline(auxiliary_materials(), "--reference-root", referenceRoot.generic_string())
-        };
-        std::stringstream outputStream{};
-
-        auto runner{make_fake_project_runner(args, outputStream)};
-      });
-
-    check_exception_thrown<std::runtime_error>(
-      reporter{"A reference root which is the project root, spelt otherwise"},
-      [this](){
-        const auto referenceRoot{fake_project_root(auxiliary_materials()) / "TestShared" / ".."};
-        commandline_arguments args{
-          fake_project_commandline(auxiliary_materials(), "--reference-root", referenceRoot.generic_string())
-        };
-        std::stringstream outputStream{};
-
-        auto runner{make_fake_project_runner(args, outputStream)};
-      });
   }
 
   void test_runner_test::test_critical_errors()
@@ -2446,6 +2410,32 @@ namespace sequoia::testing
             runner.proj_paths().reference_root(),
             std::optional<fs::path>{referenceRoot.generic_string()});
     }
+
+    auto checkRefused{
+      [this](const reporter& description, const fs::path& referenceRoot) {
+        check_exception_thrown<std::runtime_error>(
+          description,
+          [this, &referenceRoot]() {
+            commandline_arguments args{
+              fake_project_commandline(auxiliary_materials(), "--reference-root", referenceRoot.generic_string())
+            };
+            std::stringstream outputStream{};
+
+            auto runner{make_fake_project_runner(args, outputStream)};
+          });
+      }
+    };
+
+    const auto fakeProjectRoot{fake_project_root(auxiliary_materials())};
+
+    checkRefused(reporter{"A reference root which is not a directory"},
+                 auxiliary_materials() / "NoSuchDirectory");
+
+    checkRefused(reporter{"A reference root which is a regular file"},
+                 fakeProjectRoot / "TestShared" / "SharedIncludes.hpp");
+
+    checkRefused(reporter{"A reference root which is the project root, spelt otherwise"},
+                 fakeProjectRoot / "TestShared" / "..");
   }
 
   void test_runner_test::test_instability_analysis()

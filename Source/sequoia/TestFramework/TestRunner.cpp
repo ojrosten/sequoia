@@ -649,10 +649,13 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string to_reference_root_option(const std::optional<fs::path>& referenceRoot)
     {
-      return referenceRoot.transform([](const fs::path& root) {
-                            return std::format(" --reference-root {}", runtime::quote_for_shell(root.generic_string()));
-                          })
-                          .value_or("");
+      auto toOption{
+        [](const fs::path& root) {
+          return std::format(" --reference-root {}", runtime::quote_for_shell(root.generic_string()));
+        }
+      };
+
+      return referenceRoot.transform(toOption).value_or("");
     }
 
     const std::string& convert(const std::string& s) { return s; }
