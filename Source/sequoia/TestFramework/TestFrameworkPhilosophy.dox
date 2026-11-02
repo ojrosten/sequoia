@@ -338,8 +338,8 @@
 	`WorkingCopy`, holding the inputs the test works on; `Prediction`, holding what the test's output
 	is compared with; and `Auxiliary`, holding inputs never intended for comparison. Nothing else may
 	sit beside them, save `.keep` and `.DS_Store`: a test whose materials hold anything more fails, naming it.
-	Two words distinguish the copies: the *original* materials are those in `TestMaterials`, and the
-	*temporary* materials are what each run copies from them, in the same layout, beneath
+	Two words distinguish the copies: the *original* materials are those in `TestMaterials`, and
+	the *temporary* materials are what each run copies from them, in the same layout, beneath
 	`output/TestsTemporaryData`. Before a test runs, its temporary directory is wiped and its
 	`WorkingCopy` and `Auxiliary` are copied into it; if its original materials hold no `WorkingCopy`,
 	an empty `WorkingCopy` is made there instead. Predictions have no temporary copy.
