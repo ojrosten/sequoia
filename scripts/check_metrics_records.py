@@ -2,7 +2,7 @@
 """Checks that the data branch holds a record of each commit named, with each
 field named.
 
-  metrics_records_written.py --data <ref> --directory <directory>
+  check_metrics_records.py --data <ref> --directory <directory>
                              --field <path>... --commit <commit>...
 
 The script runs in a clone of the repository holding <ref>, the data branch

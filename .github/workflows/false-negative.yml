@@ -571,11 +571,11 @@ jobs:
           uncalled=$(measured baseline-tightener.yml workflow_dispatch | sort -u)
 
           failed=0
-          python3 -B scripts/metrics_records_written.py --data origin/metrics --directory symbol-table/linux-gcc-debug \
+          python3 -B scripts/check_metrics_records.py --data origin/metrics --directory symbol-table/linux-gcc-debug \
             --field executable.symbols executable.symbol_name_bytes prune_dependency_analysis.instructions \
                     leftover_materials_setup.leftover_entries leftover_materials_setup.without_leftovers.instructions \
                     leftover_materials_setup.with_leftovers.instructions \
             --commit $symbol_tables || failed=1
-          python3 -B scripts/metrics_records_written.py --data origin/metrics --directory uncalled-functions/linux-gcc \
+          python3 -B scripts/check_metrics_records.py --data origin/metrics --directory uncalled-functions/linux-gcc \
             --field uncalled_functions --commit $uncalled || failed=1
           exit $failed

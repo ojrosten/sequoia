@@ -1,8 +1,8 @@
 #!/bin/bash
-# Controls for metrics_records_written.py, against a data branch built here,
+# Controls for check_metrics_records.py, against a data branch built here,
 # and a mutation check of the controls.
 #
-#   metrics_records_written_selftest.sh [--mutations]
+#   check_metrics_records_selftest.sh [--mutations]
 #
 # Without --mutations, the selftest runs the controls. With it, the selftest
 # runs the controls against the script and against each mutant of the script.
@@ -25,7 +25,7 @@
 
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
-script=$here/../metrics_records_written.py
+script=$here/../check_metrics_records.py
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 
@@ -158,7 +158,7 @@ mutations=(
 
 if [ "$*" != --mutations ]; then
   controls "$script"
-  if [ "$fails" -eq 0 ]; then echo "metrics_records_written: all controls pass"; else exit 1; fi
+  if [ "$fails" -eq 0 ]; then echo "check_metrics_records: all controls pass"; else exit 1; fi
   exit 0
 fi
 
