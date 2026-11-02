@@ -58,10 +58,7 @@ namespace sequoia::testing
       return *root;
     }
 
-    /** Copies the directories of the sequoia at `sequoiaRoot` which a build
-        reads into the project at `projectRoot`, as its dependency.
-     */
-    void copy_sequoia_as_dependency(const fs::path& sequoiaRoot, const fs::path& projectRoot)
+    void copy_sequoia_build_inputs(const fs::path& sequoiaRoot, const fs::path& projectRoot)
     {
       const auto destination{dependencies_paths{projectRoot}.sequoia_root()};
       fs::create_directories(destination);
@@ -76,9 +73,6 @@ namespace sequoia::testing
       std::ranges::for_each(buildInputs, copySubdirectory);
     }
 
-    /** A command which runs the workload's executable, its output going to
-        the file `output`.
-     */
     struct workload_command
     {
       shell_command command;
@@ -111,7 +105,7 @@ namespace sequoia::testing
         : m_Build{make_new_build_paths(projectRoot, parentBuild)}
       {
         fs::copy(workload, projectRoot, fs::copy_options::recursive);
-        copy_sequoia_as_dependency(sequoiaRoot, projectRoot);
+        copy_sequoia_build_inputs(sequoiaRoot, projectRoot);
 
         const auto mainDir{main_paths{projectRoot / main_paths::default_main_cpp_from_root()}.dir()};
         const fs::path configureOutput{"CMakeOutput.txt"},
@@ -159,13 +153,11 @@ namespace sequoia::testing
       }
     };
 
-    /** The task is a serial run of the workload's tests, and the baseline a
-        request for help. So the task's net duration excludes the costs which
-        both share: starting the process, constructing the runner and stopping
-        the process.
+    /** The net duration excludes the costs which both runs share: starting
+        the process, constructing the runner and stopping the process.
      */
     [[nodiscard]]
-    task_with_baseline<workload_command, workload_command> make_task_with_baseline(const workload_build& build)
+    task_with_baseline<workload_command, workload_command> serial_run_net_of_help(const workload_build& build)
     {
       return {.task{build.serial_tests_command()}, .baseline{build.help_command()}};
     }
@@ -200,8 +192,8 @@ namespace sequoia::testing
       std::format("Net of a request for help, the candidate's runner takes at most {} times as long as the "
                   "reference's to run the tests serially",
                   slowdown_bound),
-      make_task_with_baseline(candidate),
-      make_task_with_baseline(reference),
+      serial_run_net_of_help(candidate),
+      serial_run_net_of_help(reference),
       boundedSlowdownPrediction
     );
 
