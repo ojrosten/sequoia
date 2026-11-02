@@ -61,7 +61,7 @@ namespace sequoia::testing
     /** Copies the directories of the sequoia at `sequoiaRoot` which a build
         reads into the project at `projectRoot`, as its dependency.
      */
-    void vendor_sequoia(const fs::path& sequoiaRoot, const fs::path& projectRoot)
+    void copy_sequoia_as_dependency(const fs::path& sequoiaRoot, const fs::path& projectRoot)
     {
       const auto destination{dependencies_paths{projectRoot}.sequoia_root()};
       fs::create_directories(destination);
@@ -111,7 +111,7 @@ namespace sequoia::testing
         : m_Build{make_new_build_paths(projectRoot, parentBuild)}
       {
         fs::copy(workload, projectRoot, fs::copy_options::recursive);
-        vendor_sequoia(sequoiaRoot, projectRoot);
+        copy_sequoia_as_dependency(sequoiaRoot, projectRoot);
 
         const auto mainDir{main_paths{projectRoot / main_paths::default_main_cpp_from_root()}.dir()};
         const fs::path configureOutput{"CMakeOutput.txt"},
