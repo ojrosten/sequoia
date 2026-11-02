@@ -126,6 +126,8 @@ namespace sequoia::testing
 
     void test_thread_pool();
 
+    void test_reference_root();
+
     void test_instability_analysis();
 
     void test_instability_analysis_in_sandboxes_from_a_path_with_a_space();

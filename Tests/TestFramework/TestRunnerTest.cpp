@@ -1018,6 +1018,7 @@ namespace sequoia::testing
     test_excluded_tests_are_rerun();
     test_dump_comparison();
     test_thread_pool();
+    test_reference_root();
     test_instability_analysis();
     test_instability_analysis_in_sandboxes_from_a_path_with_a_space();
     test_sandboxed_repetition();
@@ -1331,6 +1332,42 @@ namespace sequoia::testing
         test_instability_analysis("", "",  "1", return_code::critical_failures, critical_free_test{});
       }
     );
+
+    check_exception_thrown<std::runtime_error>(
+      reporter{"A reference root which is not a directory"},
+      [this](){
+        const auto referenceRoot{auxiliary_materials() / "NoSuchDirectory"};
+        commandline_arguments args{
+          fake_project_commandline(auxiliary_materials(), "--reference-root", referenceRoot.generic_string())
+        };
+        std::stringstream outputStream{};
+
+        auto runner{make_fake_project_runner(args, outputStream)};
+      });
+
+    check_exception_thrown<std::runtime_error>(
+      reporter{"A reference root which is a regular file"},
+      [this](){
+        const auto referenceRoot{fake_project_root(auxiliary_materials()) / "TestShared" / "SharedIncludes.hpp"};
+        commandline_arguments args{
+          fake_project_commandline(auxiliary_materials(), "--reference-root", referenceRoot.generic_string())
+        };
+        std::stringstream outputStream{};
+
+        auto runner{make_fake_project_runner(args, outputStream)};
+      });
+
+    check_exception_thrown<std::runtime_error>(
+      reporter{"A reference root which is the project root, spelt otherwise"},
+      [this](){
+        const auto referenceRoot{fake_project_root(auxiliary_materials()) / "TestShared" / ".."};
+        commandline_arguments args{
+          fake_project_commandline(auxiliary_materials(), "--reference-root", referenceRoot.generic_string())
+        };
+        std::stringstream outputStream{};
+
+        auto runner{make_fake_project_runner(args, outputStream)};
+      });
   }
 
   void test_runner_test::test_critical_errors()
@@ -2383,6 +2420,34 @@ namespace sequoia::testing
     run("A pool of two threads running one test",                  "ThreadPoolForOneTestOutput",  "2");
   }
 
+  void test_runner_test::test_reference_root()
+  {
+    {
+      commandline_arguments args{fake_project_commandline(auxiliary_materials())};
+      std::stringstream outputStream{};
+
+      auto runner{make_fake_project_runner(args, outputStream)};
+      check(equality,
+            "Without --reference-root, the project has no reference root",
+            runner.proj_paths().reference_root(),
+            std::optional<fs::path>{});
+    }
+
+    {
+      const auto referenceRoot{auxiliary_materials()};
+      commandline_arguments args{
+        fake_project_commandline(auxiliary_materials(), "--reference-root", referenceRoot.generic_string())
+      };
+      std::stringstream outputStream{};
+
+      auto runner{make_fake_project_runner(args, outputStream)};
+      check(equality,
+            "--reference-root gives the project the reference root",
+            runner.proj_paths().reference_root(),
+            std::optional<fs::path>{referenceRoot.generic_string()});
+    }
+  }
+
   void test_runner_test::test_instability_analysis()
   {
     test_instability_analysis("Instability comprising pass/failure",
@@ -2564,6 +2629,9 @@ namespace sequoia::testing
     fs::remove_all(spacedProject);
     fs::copy(fake_project_root(auxiliary_materials()), spacedProject, fs::copy_options::recursive);
 
+    const auto spacedReference{scratchpad_materials() /= "Spaced Reference"};
+    fs::create_directories(spacedReference);
+
     const auto outputDir{working_materials() /= "SandboxesFromAPathWithASpace"};
     fs::create_directory(outputDir);
 
@@ -2593,7 +2661,8 @@ namespace sequoia::testing
                                 "locate", "2", "--sandbox",
                                 "test", "Spaced Suite",
                                 "select", selected_in_spaced_suite_free_test::source_file().generic_string(),
-                                "exclude", excluded_from_spaced_suite_free_test::source_file().generic_string()}};
+                                "exclude", excluded_from_spaced_suite_free_test::source_file().generic_string(),
+                                "--reference-root", spacedReference.generic_string()}};
 
     auto runner{make_fake_project_runner(args, outputStream)};
 
@@ -2609,7 +2678,8 @@ namespace sequoia::testing
 
     check(equality, "Both sandboxes run, and the run succeeds", runner.execute(), return_code::success);
     check(equivalence,
-          "Each sandbox is given the repetitions, its runner id and the selections, each as one argument",
+          "Each sandbox is given the repetitions, its runner id, the selections and the reference root, each as "
+          "one argument",
           outputDir,
           predictive_materials() /= "SandboxesFromAPathWithASpace");
 

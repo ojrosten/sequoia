@@ -9,8 +9,8 @@
 
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
-#include "sequoia/TestFramework/CMakeCache.hpp"
 #include "sequoia/TestFramework/Commands.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 
 #include <algorithm>
@@ -26,8 +26,6 @@ namespace sequoia::testing
 
   namespace
   {
-    constexpr std::string_view reference_root_variable{"SEQUOIA_PERFORMANCE_REFERENCE_ROOT"};
-
     /** The largest multiple of the reference's time which the candidate's
         runner may take to run the workload's tests, net of a request for
         help, and to answer a request for help alone.
@@ -41,19 +39,21 @@ namespace sequoia::testing
      */
     constexpr double slowdown_bound{1.05};
 
-    /** \throws std::runtime_error if the cache of `build` has no entry for
-        the reference tree's root
+    /** \throws std::runtime_error if `projPaths` holds no reference root, or
+               if the reference root holds no regular file
+               `Source/sequoia/CMakeLists.txt`
      */
     [[nodiscard]]
-    fs::path reference_root(const build_paths& build)
+    fs::path reference_sequoia_root(const project_paths& projPaths)
     {
-      const auto root{cmake_cache{build}.variable(reference_root_variable)};
+      const auto& root{projPaths.reference_root()};
       if(!root)
         throw std::runtime_error{
-          std::format("{} has no entry for {}",
-                      (build.cmake_cache_dir() / "CMakeCache.txt").generic_string(),
-                      reference_root_variable)
+          "Run the test with --reference-root <path>, the root of a sequoia tree to compare against"
         };
+
+      throw_unless_regular_file(*root / "Source" / "sequoia" / "CMakeLists.txt",
+                                "\nThe reference root must be the root of a sequoia tree");
 
       return *root;
     }
@@ -172,7 +172,7 @@ namespace sequoia::testing
   void runner_performance_against_reference_test::run_tests()
   {
     const auto& build{get_project_paths().build()};
-    const auto referenceRoot{reference_root(build)},
+    const auto referenceRoot{reference_sequoia_root(get_project_paths())},
                workload{auxiliary_materials() / "Workload"},
                scratchpad{scratchpad_materials()};
 

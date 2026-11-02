@@ -20,8 +20,8 @@ namespace sequoia::testing
       the runner built from this tree, the candidate, takes distinguishably
       longer than a fixed multiple of the reference's time to run the tests.
 
-      In the build that runs the test, the cache variable
-      `SEQUOIA_PERFORMANCE_REFERENCE_ROOT` names the reference tree's root.
+      The reference tree is the one whose root the command line gives with
+      `--reference-root`.
    */
   class runner_performance_against_reference_test final : public performance_test
   {
