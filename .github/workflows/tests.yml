@@ -370,8 +370,8 @@ jobs:
           git config --global user.email "ci@example.invalid"
           git config --global init.defaultBranch trunk
 
-      # A generated project vendors a copy of sequoia, and paths in the copy's
-      # TestMaterials tree pass 260 characters. sequoia declares itself
+      # A generated project holds its own copy of sequoia, and paths in the
+      # copy's TestMaterials tree pass 260 characters. sequoia declares itself
       # long-path aware in resources/win/longpaths.manifest. Windows also needs
       # its machine-wide switch, and git its own setting.
       #
