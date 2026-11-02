@@ -1750,7 +1750,7 @@ namespace sequoia::testing
 
     const auto selection{selection_options()},
                async{to_async_option(m_ConcurrencyMode, m_PoolSize)},
-               reference{to_reference_root_option(proj_paths().reference_root())};
+               referenceRootOption{to_reference_root_option(proj_paths().reference_root())};
 
     auto code{return_code::success};
     for(std::size_t i{}; i < m_NumReps; ++i)
@@ -1761,7 +1761,7 @@ namespace sequoia::testing
                                      i,
                                      selection,
                                      async,
-                                     reference)};
+                                     referenceRootOption)};
 
       code |= child_return_code(invoke(runtime::shell_command{command}),
                                 std::format("Sandbox run {}, {},", i, command));

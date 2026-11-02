@@ -647,7 +647,7 @@ namespace sequoia::testing
     }
 
     /** \brief The root of the tree against which to compare this project, if
-               one was set.
+               `set_reference_root` set one.
      */
     [[nodiscard]]
     const std::optional<std::filesystem::path>& reference_root() const noexcept
@@ -656,7 +656,7 @@ namespace sequoia::testing
     }
 
     /** \throws std::runtime_error if `root` is not a directory, or is
-               equivalent to `project_root()`
+        equivalent to `project_root()`
      */
     void set_reference_root(std::filesystem::path root);
 

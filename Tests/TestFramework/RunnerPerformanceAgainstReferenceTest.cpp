@@ -40,8 +40,8 @@ namespace sequoia::testing
     constexpr double slowdown_bound{1.05};
 
     /** \throws std::runtime_error if `projPaths` holds no reference root, or
-               if the reference root holds no regular file
-               `Source/sequoia/CMakeLists.txt`
+        if the reference root holds no regular file
+        `Source/sequoia/CMakeLists.txt`
      */
     [[nodiscard]]
     fs::path reference_sequoia_root(const project_paths& projPaths)
@@ -49,10 +49,10 @@ namespace sequoia::testing
       const auto& root{projPaths.reference_root()};
       if(!root)
         throw std::runtime_error{
-          "Run the test with --reference-root <path>, the root of a sequoia tree to compare against"
+          "No reference root given: run with --reference-root <path>, the root of a sequoia tree to compare against"
         };
 
-      throw_unless_regular_file(*root / "Source" / "sequoia" / "CMakeLists.txt",
+      throw_unless_regular_file(source_paths{*root, "sequoia"}.cmake_lists(),
                                 "\nThe reference root must be the root of a sequoia tree");
 
       return *root;

@@ -412,9 +412,11 @@ namespace sequoia::testing
 
   void project_paths::set_reference_root(fs::path root)
   {
-    throw_unless_directory(root, "\nReference root not found");
+    throw_unless_directory(root, "\nThe reference root must be a directory");
     if(fs::equivalent(root, project_root()))
-      throw std::runtime_error{std::format("Reference root {} is the project root", root.generic_string())};
+      throw std::runtime_error{
+        std::format("Reference root {} is the project root, {}", root.generic_string(), project_root().generic_string())
+      };
 
     m_ReferenceRoot = std::move(root);
   }

@@ -2386,6 +2386,12 @@ namespace sequoia::testing
 
   void test_runner_test::test_reference_root()
   {
+    auto commandlineWithReferenceRoot{
+      [this](const fs::path& referenceRoot) {
+        return fake_project_commandline(auxiliary_materials(), "--reference-root", referenceRoot.generic_string());
+      }
+    };
+
     {
       commandline_arguments args{fake_project_commandline(auxiliary_materials())};
       std::stringstream outputStream{};
@@ -2399,26 +2405,22 @@ namespace sequoia::testing
 
     {
       const auto referenceRoot{auxiliary_materials()};
-      commandline_arguments args{
-        fake_project_commandline(auxiliary_materials(), "--reference-root", referenceRoot.generic_string())
-      };
+      commandline_arguments args{commandlineWithReferenceRoot(referenceRoot)};
       std::stringstream outputStream{};
 
       auto runner{make_fake_project_runner(args, outputStream)};
       check(equality,
-            "--reference-root gives the project the reference root",
+            "--reference-root gives the project the root it names",
             runner.proj_paths().reference_root(),
-            std::optional<fs::path>{referenceRoot.generic_string()});
+            std::optional<fs::path>{referenceRoot});
     }
 
-    auto checkRefused{
-      [this](const reporter& description, const fs::path& referenceRoot) {
+    auto checkRefusal{
+      [this, &commandlineWithReferenceRoot](const reporter& description, const fs::path& referenceRoot) {
         check_exception_thrown<std::runtime_error>(
           description,
-          [this, &referenceRoot]() {
-            commandline_arguments args{
-              fake_project_commandline(auxiliary_materials(), "--reference-root", referenceRoot.generic_string())
-            };
+          [&commandlineWithReferenceRoot, &referenceRoot]() {
+            commandline_arguments args{commandlineWithReferenceRoot(referenceRoot)};
             std::stringstream outputStream{};
 
             auto runner{make_fake_project_runner(args, outputStream)};
@@ -2428,13 +2430,13 @@ namespace sequoia::testing
 
     const auto fakeProjectRoot{fake_project_root(auxiliary_materials())};
 
-    checkRefused(reporter{"A reference root which is not a directory"},
+    checkRefusal(reporter{"A reference root which does not exist"},
                  auxiliary_materials() / "NoSuchDirectory");
 
-    checkRefused(reporter{"A reference root which is a regular file"},
+    checkRefusal(reporter{"A reference root which is a regular file"},
                  fakeProjectRoot / "TestShared" / "SharedIncludes.hpp");
 
-    checkRefused(reporter{"A reference root which is the project root, spelt otherwise"},
+    checkRefusal(reporter{"A reference root which is the project root, spelt otherwise"},
                  fakeProjectRoot / "TestShared" / "..");
   }
 
@@ -2603,9 +2605,10 @@ namespace sequoia::testing
   /** A copy of the fake project lies in a directory whose name holds a space, and so does the name of
       its executable. The executable is a script which stands in for the test runner in each sandbox: it
       records its arguments, one per line, and creates the directory to which a sandboxed run writes its
-      analysis. The run selects a suite and a source, and excludes a source, each named with a space. The
-      shell splits an unquoted word at the space. So if the coordinator does not quote the path, no
-      sandbox runs, and if it does not quote a selection, the sandboxes record it as two arguments.
+      analysis. The run selects a suite and a source, excludes a source, and names a reference root, each
+      named with a space. The shell splits an unquoted word at the space. So if the coordinator does not
+      quote the path, no sandbox runs, and if it does not quote a selection or the reference root, the
+      sandboxes record it as two arguments.
 
       The selected test's file of execution records starts with an earlier
       run's record. The script executes no test, so only the coordinator can
