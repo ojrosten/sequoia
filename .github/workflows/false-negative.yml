@@ -359,6 +359,7 @@ jobs:
           git config user.email ci@example.invalid
           base=$(git rev-parse HEAD)
           source=Source/sequoia/TestFramework/TestRunner.cpp
+          symbols=12000 namespace_padding=340 loop_iterations="25'000'000"
 
           # replace_once <file> <text> <replacement>
           replace_once() {
@@ -376,12 +377,12 @@ jobs:
 
           analysis_banner='stream() << "\nAnalyzing dependencies...\n" << std::flush;'
           replace_once "$source" "$analysis_banner" \
-            "$analysis_banner for(volatile std::size_t i{}; i < 25'000'000; i = i + 1) {}"
-          namespace=false_negative_control_$(printf '%0340d' 0 | tr 0 x)
+            "$analysis_banner for(volatile std::size_t i{}; i < $loop_iterations; i = i + 1) {}"
+          namespace=false_negative_control_$(printf "%0${namespace_padding}d" 0 | tr 0 x)
           { echo
             echo "namespace sequoia::$namespace"
             echo '{'
-            seq 12000 | sed 's/.*/  void symbol_&() {}/'
+            seq "$symbols" | sed 's/.*/  void symbol_&() {}/'
             echo '}'
           } >> "$source"
           git add "$source"
@@ -570,7 +571,8 @@ jobs:
       # adds it to the earlier ones.
       - name: Check each record
         run: |
-          since=$(date -u -d '8 days ago' +%Y-%m-%dT%H:%M:%S+00:00)
+          window='8 days' settling='3 hours'
+          since=$(date -u -d "$window ago" +%Y-%m-%dT%H:%M:%S+00:00)
           # measured <workflow> <event>: the commits which successful runs of
           # <workflow> on staging, made by <event>, measured since $since, or
           # the newest such commit if there are none.
@@ -583,7 +585,7 @@ jobs:
             [ -n "$commits" ] || { echo "::error::no run of $1 on staging, made by $2, has succeeded" >&2; return 1; }
             echo "$commits"
           }
-          newest=$(git rev-list --first-parent -1 --until='3 hours ago' origin/staging)
+          newest=$(git rev-list --first-parent -1 --until="$settling ago" origin/staging)
           symbol_tables=$( { measured symbol-table.yml push; echo "$newest"; } | sort -u)
           uncalled=$(measured baseline-tightener.yml workflow_dispatch | sort -u)
 
