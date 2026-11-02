@@ -374,7 +374,7 @@
     and it is worth being clear about which is which. A partial function is the
     same thing as a total function whose codomain has been enlarged by a single
     extra element, \f$ \bot \f$, signalling that there is no result. To widen
-    the codomain in this sense is not to change the mathematics but to restate
+    the codomain in this sense is not to change the mathematics but to restate  <<--- I don't understand this
     it: the space is untouched, and \f$ \bot \f$ is emphatically not a point of
     it, so nothing can be translated from it. Gratifyingly, C++ can transcribe
     the mathematics exactly, by having `operator+` return `std::expected`;
@@ -397,6 +397,9 @@
     group demands. What makes this a genuine change to the space, rather than a
     way of reporting an error, is that the absorbing state is a value like any
     other: it may be stored, passed on and translated from.
+    **Are we moving towards a position where either the space is-a (possibly twisted)
+    partial possibly-quotient M-torsor to either this or it has-a ... as a subspace
+    of something else which in general violates the group law**
 
     @par Remapping
     Here there are many options, of which we single out three particularly
