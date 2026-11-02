@@ -14,14 +14,14 @@
 #   - a commit with no record fails, naming the commit and the path, and so
 #     does a record in another directory, or on another branch;
 #   - a record lacking a field fails, naming the field, as does a field
-#     holding a boolean, a fraction, text or an object;
+#     holding a negative number, a boolean, a fraction, text or an object;
 #   - a record naming another commit, or with a clean which is not true,
 #     fails;
 #   - a record which is not JSON, or holds no object, fails;
 #   - one commit failing fails the run, whichever of the commits it is, and
 #     the others are still judged;
 #   - a data branch which names no commit is refused with status 2, as are
-#     arguments of any other form.
+#     arguments of any other form, an option's abbreviation among them.
 
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
@@ -49,6 +49,7 @@ record records/good.json        '{"commit": "good", "clean": true, "count": 3, "
 record records/second.json      '{"commit": "second", "clean": true, "count": 7, "section": {"inner": {"count": 1}}}'
 record records/no_count.json    '{"commit": "no_count", "clean": true, "section": {"inner": {"count": 1}}}'
 record records/no_inner.json    '{"commit": "no_inner", "clean": true, "count": 1, "section": {}}'
+record records/negative.json    '{"commit": "negative", "clean": true, "count": -1, "section": {"inner": {"count": 1}}}'
 record records/boolean.json     '{"commit": "boolean", "clean": true, "count": true, "section": {"inner": {"count": 1}}}'
 record records/fraction.json    '{"commit": "fraction", "clean": true, "count": 1.5, "section": {"inner": {"count": 1}}}'
 record records/text.json        '{"commit": "text", "clean": true, "count": "3", "section": {"inner": {"count": 1}}}'
@@ -106,12 +107,13 @@ controls() {
   judge "no record" 1 "error: absent: data holds no records/absent.json" absent
   judge "a record in another directory" 1 "error: elsewhere: data holds no records/elsewhere.json" elsewhere
   judge "a record on another branch" 1 "error: on_other: data holds no records/on_other.json" on_other
-  judge "a field absent" 1 "error: no_count: its record has no whole number at count" no_count
-  judge "a nested field absent" 1 "error: no_inner: its record has no whole number at section.inner.count" no_inner
-  judge "a boolean" 1 "error: boolean: its record has no whole number at count" boolean
-  judge "a fraction" 1 "error: fraction: its record has no whole number at count" fraction
-  judge "text" 1 "error: text: its record has no whole number at count" text
-  judge "an object" 1 "error: object: its record has no whole number at count" object
+  judge "a field absent" 1 "error: no_count: its record has no count at count" no_count
+  judge "a nested field absent" 1 "error: no_inner: its record has no count at section.inner.count" no_inner
+  judge "a negative number" 1 "error: negative: its record has no count at count" negative
+  judge "a boolean" 1 "error: boolean: its record has no count at count" boolean
+  judge "a fraction" 1 "error: fraction: its record has no count at count" fraction
+  judge "text" 1 "error: text: its record has no count at count" text
+  judge "an object" 1 "error: object: its record has no count at count" object
   judge "another commit named" 1 "error: misnamed: its record names the commit 'good'" misnamed
   judge "not clean" 1 "error: unclean: its record has a clean of False, not true" unclean
   judge "a clean of text" 1 "error: clean_text: its record has a clean of 'true', not true" clean_text
@@ -125,6 +127,7 @@ controls() {
   refused "no field" --data data --directory records --commit good
   refused "no directory" --data data --field count --commit good
   refused "no data branch" --directory records --field count --commit good
+  refused "an abbreviated option" --data data --directory records --field count --comm good
 }
 
 # Each mutant breaks one behaviour that the controls claim. Its entry holds a
@@ -132,8 +135,10 @@ controls() {
 mutations=(
   'the commit not compared'       '([] if record.get("commit") == commit' '([] if True'
   'any clean passes'              '([] if record.get("clean") is True' '([] if record.get("clean")'
-  'a boolean is a number'         'return isinstance(value, int) and not isinstance(value, bool)' 'return isinstance(value, int)'
-  'a fraction is a number'        'return isinstance(value, int) and not isinstance(value, bool)' 'return isinstance(value, (int, float)) and not isinstance(value, bool)'
+  'a boolean is a count'          'return isinstance(value, int) and not isinstance(value, bool) and value >= 0' 'return isinstance(value, int) and value >= 0'
+  'a fraction is a count'         'return isinstance(value, int) and not isinstance(value, bool) and value >= 0' 'return isinstance(value, (int, float)) and not isinstance(value, bool) and value >= 0'
+  'a negative number is a count'  'and not isinstance(value, bool) and value >= 0' 'and not isinstance(value, bool)'
+  'abbreviations accepted'        ', allow_abbrev=False)' ')'
   'only the top of a field read'  'value_at(record, field.split("."))' 'value_at(record, field.split(".")[:1])'
   'no field checked'              'for field in fields
             if not' 'for field in fields[:0]

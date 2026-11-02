@@ -11,7 +11,7 @@
 # Each control is a claim the script exists to keep:
 #   - the log asked for is that of the job named, in $GH_REPO, at
 #     $GITHUB_API_URL or else api.github.com, with $GH_TOKEN, following
-#     redirects;
+#     redirects, and retrying a failed read three times;
 #   - each line is written without its time stamp, and with the rest of the
 #     line as GitHub gave it: the spaces after the stamp, and a line of a
 #     step's script starting with its escape sequence;
@@ -85,6 +85,8 @@ controls() {
   grep -qxF 'Authorization: Bearer secret' "$dir/arguments" || fail "no token: '$(cat "$dir/arguments")'"
   grep -qxE -- '-[a-zA-Z]*L[a-zA-Z]*' "$dir/arguments" || fail "redirects not followed: '$(cat "$dir/arguments")'"
   grep -qxE -- '-[a-zA-Z]*f[a-zA-Z]*' "$dir/arguments" || fail "an HTTP error not a failure: '$(cat "$dir/arguments")'"
+  [ "$(grep -xF -A1 -- --retry "$dir/arguments" | tail -1)" = 3 ] && grep -qxF -- --retry-all-errors "$dir/arguments" \
+    || fail "a failed read not retried three times: '$(cat "$dir/arguments")'"
 
   run server "$tmp/log" GITHUB_API_URL=https://ghe.example/api/v3 "$token" "$repo" bash "$subject" 42
   grep -qxF 'https://ghe.example/api/v3/repos/owner/repo/actions/jobs/42/logs' "$dir/arguments" \
@@ -115,6 +117,8 @@ mutations=(
   'a failed read passes'      'set -euo pipefail' 'set -eu'
   'no token'                  '-H "Authorization: Bearer $GH_TOKEN" ' ''
   'redirects not followed'    'curl -fsSL' 'curl -fs'
+  'no retry'                  ' --retry 3 --retry-all-errors' ''
+  'only some errors retried'  ' --retry-all-errors' ''
   'the server fixed'          '${GITHUB_API_URL:-https://api.github.com}' 'https://api.github.com'
   'any arguments'             '[ $# -ne 1 ] || ' ''
   'an empty job id taken'     '[ -z "$1" ] || ' ''

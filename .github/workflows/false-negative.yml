@@ -6,12 +6,12 @@ name: false-negative
 # that fires on nothing. sequoia's own test framework has a false-negative mode
 # for this reason, and CI gets the same treatment.
 #
-# Each of the first two jobs makes a change that its subjects must fail on,
-# dispatches runs of the subjects on the change, waits for them, and reads
-# their jobs back. Each subject must fail at the step its rule names. The
-# subject's log must also hold the finding which its rule prints for the
-# change. A subject red for another reason proves nothing about whether it can
-# see, so the job fails on that too.
+# Each of the first two jobs dispatches runs of its subjects on a change they
+# must fail on, waits for the runs, and reads their jobs back. Each subject
+# must fail at the step its rule names. A subject red for another reason
+# proves nothing about whether it can see, so the job fails on that too. The
+# columns account for their red through their drift step; every other subject
+# through the finding its rule prints, read from the subject's log.
 #
 # `control` dispatches rigorous with `false_negative: true`, which corrupts the
 # checkout before building:
@@ -31,10 +31,9 @@ name: false-negative
 #   - The run's audit, which checks every job's result against the run's mode,
 #     must have passed.
 #
-# `metrics` pushes two commits, each on a branch of its own, and deletes the
-# branches when it is done:
-#   - A merge into the commit the job runs on. The merge adds symbols with long
-#     names, and work to prune's analysis. metrics-gate.yml, dispatched on the
+# `metrics` pushes two branches, and deletes them when it is done:
+#   - A merge into the commit the job runs on, of a commit adding symbols with
+#     long names, and work to prune's analysis. metrics-gate.yml, dispatched on the
 #     merge, must fail each of its three series on its rise: the symbols, the
 #     bytes of their names and prune's instructions.
 #   - The commit the job runs on, with #182's fix undone: each test's setup
@@ -42,17 +41,21 @@ name: false-negative
 #     dispatched on it, must fail its check of the setup cost of leftover
 #     materials on that cost.
 #
-# `records` checks the dashboard's data branch, `metrics`. For each commit
-# which symbol-table.yml and baseline-tightener.yml measured on staging in the
-# last eight days, the branch must hold a record with every series. The steps
-# adding prune's count and the cost of leftover materials to a record are
-# tolerated to fail, as is baseline-tightener.yml's job storing its record. So
-# a lost series turns nothing red but this job.
+# `records` checks the dashboard's data branch, `metrics`. For each commit on
+# staging's first-parent history in the last eight days, the branch must hold a
+# symbol-table record with each count which the gates and the dashboard's
+# charts read. For each commit which baseline-tightener.yml measured, it must
+# hold the count of uncalled functions. The steps adding prune's count and the
+# cost of leftover materials to a record are tolerated to fail, as is
+# baseline-tightener.yml's job storing its record. So a lost count turns
+# nothing red but this job.
 #
 # The workflow runs weekly rather than nightly, since it costs a full rigorous
 # run and three builds of TestAll. It measures the subjects' ability to fail,
 # which changes only when the workflows or scripts do. Run it by hand after any
-# change to them.
+# change to them, on main once the change is promoted: `metrics` cannot push its
+# branches from a commit whose workflows differ from main's, as its step
+# below says.
 #
 # GITHUB_TOKEN may dispatch: the guard that stops a GITHUB_TOKEN push or PR
 # from triggering workflows exempts workflow_dispatch.
@@ -70,7 +73,7 @@ permissions:
 
 jobs:
   control:
-    name: The gate on main can still go red
+    name: The gates on main can still go red
     runs-on: ubuntu-latest
     # The subject run's columns may each take 90 minutes, after however long
     # they queue. The margin beyond that also holds the wait in
@@ -221,8 +224,7 @@ jobs:
           fi
           exit $failed
 
-
-      # Each of the two jobs must show:
+      # The docs job and the coverage job must each show:
       #   - The corruption step having succeeded.
       #   - The step which measures having succeeded: doxygen's run, or the
       #     coverage run of the suite. A job red there proves nothing about
@@ -329,22 +331,22 @@ jobs:
         with:
           fetch-depth: 1
 
-      # The corruptions, each sized against TestAll at 5769a33fe, whose record
-      # holds 710,693 symbols, 257,187,335 bytes of their names, and
-      # 1,224,068,781 instructions of prune's analysis:
+      # The corruptions, each measured in run 41439574572 against its base,
+      # 9683dba2b: 710,693 symbols, 257,187,335 bytes of their names, and
+      # 1,224,136,400 instructions of prune's analysis:
       #   - 12,000 functions, each named within a namespace with a name of 363
       #     characters, add 12,000 symbols, 1.69%, and 4,704,795 bytes of
-      #     names, 1.83% (run 41439574572). Each rise is above the 1 in 200 at
+      #     names, 1.83%. Each rise is above the 1 in 200 at
       #     which its gate fails, and below the 1 in 20 at which prune's does,
       #     so the gate's verdict tells the two thresholds apart.
       #   - A loop of 25,000,000 iterations over a volatile counter, in
       #     test_runner::prune, adds 199,939,146 instructions to prune's count,
-      #     16.3%, above its gate's 1 in 20 (the same run).
+      #     16.3%, above its gate's 1 in 20.
       #   - `moved{false}` stops the runner moving the previous run's
       #     materials aside for its remover thread, so that each test's setup
-      #     removes them itself. In an experiment of 2026-10-26 that cost about
-      #     1,650 instructions per leftover entry, against the check's limit of
-      #     400.
+      #     removes them itself. In run 41439599527 that cost 1,633.0
+      #     instructions per leftover entry, against the check's limit of 400;
+      #     its null twin, run 41439724191, cost 22.3.
       # The symbols are functions which nothing calls, in a file already
       # compiled, so the work of prune's analysis and of the tests' setup is
       # as before. The loop adds no symbol, and runs only in prune's analysis.
@@ -400,13 +402,14 @@ jobs:
           leftover=$(git rev-parse HEAD)
 
           # GitHub refuses to let GITHUB_TOKEN create a branch whose workflows
-          # differ from main's: run 41437875246, from a branch which changed
-          # them, was refused both. A branch of main with a change to Source
-          # was accepted, from that branch (run 41439127441). The branches
-          # here are of the commit this job runs on, main on the schedule.
-          git push -q origin "$merge:refs/heads/$METRICS_BRANCH" "$leftover:refs/heads/$LEFTOVER_BRANCH" \
-            || { echo "::error::the branches were refused: GITHUB_TOKEN may not create a branch whose workflows" \
-                      "differ from main's, so this job runs only on a commit whose workflows are main's"; exit 1; }
+          # differ from main's: run 41437875246, on a branch which changed
+          # them, had both branches refused. Run 41439127441, on another such
+          # branch, pushed a branch of main with a change to Source. The
+          # branches here are of the commit this job runs on, main on the
+          # schedule. The push is atomic, so that a refusal leaves no branch.
+          git push -q --atomic origin "$merge:refs/heads/$METRICS_BRANCH" "$leftover:refs/heads/$LEFTOVER_BRANCH" \
+            || { echo "::error::the push of the branches failed, as above. GitHub refuses GITHUB_TOKEN a branch" \
+                      "whose workflows differ from main's, so this job pushes only from such a commit"; exit 1; }
           echo "pushed=true" >> "$GITHUB_OUTPUT"
           echo "$METRICS_BRANCH: $merge, the merge of $raising into $base"
           echo "$LEFTOVER_BRANCH: $leftover, on $base"
@@ -477,7 +480,8 @@ jobs:
           fi
           echo "ok    the commits were measured, and the comparison failed"
 
-          log=$(scripts/job_log.sh "$(jq -r --arg compare "$compare" '.[] | select(.name == $compare) | .id' jobs.json)")
+          log=$(scripts/job_log.sh "$(jq -r --arg compare "$compare" '.[] | select(.name == $compare) | .id' jobs.json)") \
+            || { echo "::error::the comparison's log could not be read"; exit 1; }
           if grep -qxF "notice: the measured record is of $MERGE, the baseline's of $BASE" <<<"$log"; then
             echo "ok    the comparison read the merge's record, and the baseline's of its first parent"
           else
@@ -527,7 +531,8 @@ jobs:
           [[ $name == *"($LEFTOVER)" ]] || { echo "::error::the job '$name' did not measure $LEFTOVER"; exit 1; }
           echo "ok    $LEFTOVER was measured, and the check failed"
 
-          log=$(scripts/job_log.sh "$(jq -r '.[0].id' jobs.json)")
+          log=$(scripts/job_log.sh "$(jq -r '.[0].id' jobs.json)") \
+            || { echo "::error::the job's log could not be read"; exit 1; }
           finding=$(grep -xE "error: leftover materials cost the runner's setup [0-9]+ instructions for [0-9]+ entries, [0-9.]+ per entry, on .*; the limit is [0-9]+ per entry" <<<"$log") \
             || { echo "::error::the job's log gives no error for the cost of leftover materials"; exit 1; }
           echo "ok    $finding"
@@ -548,53 +553,58 @@ jobs:
         with:
           fetch-depth: 1
 
-      # The data branch's head, and enough of staging's history to find its
-      # newest commit made three hours ago or more.
+      # The data branch's head, and staging's history over the window and a
+      # day beyond it.
       - name: Fetch staging and the data branch
         run: |
           git fetch -q --depth=1 origin +refs/heads/metrics:refs/remotes/origin/metrics
-          git fetch -q --depth=100 origin +refs/heads/staging:refs/remotes/origin/staging
+          git fetch -q --shallow-since="$(date -u -d '9 days ago' +%Y-%m-%d)" origin \
+            +refs/heads/staging:refs/remotes/origin/staging
 
-      # The commits judged are those which symbol-table.yml's push runs and
-      # baseline-tightener.yml's dispatched runs on staging measured in the
-      # last eight days, one more than the schedule's period, and each run
-      # succeeded. A failed run is red already. symbol-table.yml's commits
-      # also include staging's newest commit made three hours ago or more,
-      # longer than a push run takes: no run at all for it says that the
-      # trigger stopped firing. A week in which nothing was measured judges
-      # the newest commit measured, so that no run judges nothing.
+      # The commits judged:
+      #   - For symbol-table.yml's records, each commit on staging's
+      #     first-parent history made in the last eight days, one more than the
+      #     schedule's period, and three hours ago or more, longer than a push
+      #     run takes. The list comes from staging's history rather than from
+      #     the runs, so that a push which started no run is judged too. A week
+      #     in which staging did not move judges its newest commit.
+      #   - For baseline-tightener.yml's, the commit each of its successful
+      #     dispatched runs on staging measured in those eight days, or the
+      #     newest it measured. It measures only on nights when staging has
+      #     moved, so staging's history cannot say which commits it measured.
       #
-      # A symbol-table record must hold every series which the dashboard
-      # plots and the gates read, and its leftover materials' counts. So a
-      # series added to a record is required of every commit judged, and its
-      # check fails until eight days of records hold it, unless a backfill
-      # adds it to the earlier ones.
+      # A symbol-table record must hold each count which the gates and the
+      # dashboard's charts read. So a count added to a record is required of
+      # every commit judged, and its check fails until eight days of records
+      # hold it, unless a backfill adds it to the earlier ones.
       - name: Check each record
         run: |
           window='8 days' settling='3 hours'
           since=$(date -u -d "$window ago" +%Y-%m-%dT%H:%M:%S+00:00)
-          # measured <workflow> <event>: the commits which successful runs of
-          # <workflow> on staging, made by <event>, measured since $since, or
-          # the newest such commit if there are none.
-          measured() {
-            local commits
-            commits=$(gh run list --workflow "$1" --branch staging --event "$2" --status success \
-                        --created ">=$since" --limit 200 --json headSha --jq '.[].headSha')
-            [ -n "$commits" ] || commits=$(gh run list --workflow "$1" --branch staging --event "$2" \
-                                             --status success --limit 1 --json headSha --jq '.[].headSha')
-            [ -n "$commits" ] || { echo "::error::no run of $1 on staging, made by $2, has succeeded" >&2; return 1; }
-            echo "$commits"
-          }
-          newest=$(git rev-list --first-parent -1 --until="$settling ago" origin/staging)
-          symbol_tables=$( { measured symbol-table.yml push; echo "$newest"; } | sort -u)
-          uncalled=$(measured baseline-tightener.yml workflow_dispatch | sort -u)
+
+          symbol_tables=$(git rev-list --first-parent --since="$window ago" --until="$settling ago" origin/staging)
+          [ -n "$symbol_tables" ] || symbol_tables=$(git rev-list --first-parent -1 --until="$settling ago" origin/staging)
+          [ -n "$symbol_tables" ] || { echo "::error::staging has no commit made $settling ago or more"; exit 1; }
+
+          uncalled=$(gh run list --workflow baseline-tightener.yml --branch staging --event workflow_dispatch \
+                       --status success --created ">=$since" --limit 200 --json headSha --jq '.[].headSha')
+          [ -n "$uncalled" ] || uncalled=$(gh run list --workflow baseline-tightener.yml --branch staging \
+                                             --event workflow_dispatch --status success --limit 1 \
+                                             --json headSha --jq '.[].headSha')
+          [ -n "$uncalled" ] || { echo "::error::no measurement of baseline-tightener.yml on staging has succeeded"; exit 1; }
 
           failed=0
           python3 -B scripts/check_metrics_records.py --data origin/metrics --directory symbol-table/linux-gcc-debug \
-            --field executable.symbols executable.symbol_name_bytes prune_dependency_analysis.instructions \
-                    leftover_materials_setup.leftover_entries leftover_materials_setup.without_leftovers.instructions \
+            --field executable.symbols executable.symbol_name_bytes \
+                    prune_dependency_analysis.instructions prune_dependency_analysis.stamping_exit_status \
+                    leftover_materials_setup.leftover_entries \
+                    leftover_materials_setup.without_leftovers.instructions \
+                    leftover_materials_setup.without_leftovers.tests \
+                    leftover_materials_setup.without_leftovers.exit_status \
                     leftover_materials_setup.with_leftovers.instructions \
+                    leftover_materials_setup.with_leftovers.tests \
+                    leftover_materials_setup.with_leftovers.exit_status \
             --commit $symbol_tables || failed=1
           python3 -B scripts/check_metrics_records.py --data origin/metrics --directory uncalled-functions/linux-gcc \
-            --field uncalled_functions --commit $uncalled || failed=1
+            --field uncalled_functions --commit $(sort -u <<<"$uncalled") || failed=1
           exit $failed

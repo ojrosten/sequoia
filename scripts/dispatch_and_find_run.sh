@@ -9,9 +9,9 @@
 #
 # The dispatch returns nothing, and the run appears a few seconds later. The
 # script takes the oldest dispatched run of <workflow file> on <ref> created
-# no earlier than the second before the dispatch, so that a second dispatch
-# made later is not taken in place of this one. A dispatch made in the same
-# second, by another caller, can still be taken. The script looks every 10 s,
+# no earlier than the second, in UTC, in which the dispatch began, so that a
+# dispatch made later is not taken in place of this one. A dispatch made by
+# another caller in the same second can still be taken. The script looks every 10 s,
 # twelve times, and fails with an error if no run has appeared.
 #
 # The caller confirms that the run found is the one it dispatched, by what

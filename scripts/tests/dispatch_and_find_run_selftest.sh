@@ -14,7 +14,7 @@
 #   - the dispatch names the workflow and the ref, and passes the options
 #     after them on whole, in order;
 #   - each list asks for the dispatched runs of that workflow on that ref,
-#     created no earlier than the dispatch;
+#     created no earlier than the time, in UTC, read before the dispatch;
 #   - of the runs listed, the oldest is written to standard output, and
 #     nothing else is;
 #   - an empty list is followed by a pause of 10 s and another list, and the
@@ -62,7 +62,14 @@ cat > "$tmp/bin/sleep" <<'SLEEP'
 #!/bin/bash
 echo "$*" >> "$FAKE/pauses"
 SLEEP
-chmod +x "$tmp/bin/gh" "$tmp/bin/sleep"
+# The fake date appends `date` and its arguments, then `--`, to $FAKE/calls,
+# and prints a fixed time.
+cat > "$tmp/bin/date" <<'DATE'
+#!/bin/bash
+printf '%s\n' date "$@" -- >> "$FAKE/calls"
+echo 2026-11-02T12:34:56+00:00
+DATE
+chmod +x "$tmp/bin/gh" "$tmp/bin/sleep" "$tmp/bin/date"
 
 fail() { echo "FAIL: $1"; fails=$((fails+1)); }
 
@@ -92,29 +99,31 @@ controls() {
 
   run found '[{"databaseId": 3}, {"databaseId": 2}]' -- flow.yml topic -f a=b -f 'c=d e'
   [ "$status" -eq 0 ] && [ "$out" = 2 ] || fail "the oldest run listed: status $status, output '$out'"
-  [ "$(calls 1)" = "$(printf '%s\n' workflow run flow.yml --ref topic -f a=b -f 'c=d e')" ] \
-    || fail "the dispatch: '$(calls 1)'"
-  listed=$(calls 2)
+  [ "$(calls 1)" = "$(printf '%s\n' date -u +%Y-%m-%dT%H:%M:%S+00:00)" ] \
+    || fail "the time read before the dispatch: '$(calls 1)'"
+  [ "$(calls 2)" = "$(printf '%s\n' workflow run flow.yml --ref topic -f a=b -f 'c=d e')" ] \
+    || fail "the dispatch: '$(calls 2)'"
+  listed=$(calls 3)
   [ "$(head -8 <<<"$listed" | tr '\n' ' ')" = 'run list --workflow flow.yml --branch topic --event workflow_dispatch ' ] \
     || fail "the list asked for: '$(tr '\n' ' ' <<<"$listed")'"
-  grep -qxE -- '>=[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:]{8}\+00:00' <<<"$listed" || fail "the list's --created: '$listed'"
+  grep -qxF -- '>=2026-11-02T12:34:56+00:00' <<<"$listed" || fail "the list's --created: '$listed'"
   [ "$(cat "$dir/pauses")" = 10 ] || fail "the pauses before a run is found: '$(cat "$dir/pauses")'"
 
   run later '[]' '[]' '[{"databaseId": 7}]' '[{"databaseId": 8}]' -- flow.yml topic
   [ "$status" -eq 0 ] && [ "$out" = 7 ] || fail "the first list naming a run: status $status, output '$out'"
-  [ "$(count_calls)" -eq 4 ] || fail "the search went on after a run was found: $(count_calls) calls"
+  [ "$(count_calls)" -eq 5 ] || fail "the search went on after a run was found: $(count_calls) calls"
   [ "$(cat "$dir/pauses")" = $'10\n10\n10' ] || fail "a pause of 10 s before each list: '$(cat "$dir/pauses")'"
 
   run never -- flow.yml topic
   [ "$status" -ne 0 ] && [ -z "$out" ] || fail "no run: status $status, output '$out'"
-  [ "$(count_calls)" -eq 13 ] || fail "no run: $(count_calls) calls, not a dispatch and twelve lists"
+  [ "$(count_calls)" -eq 14 ] || fail "no run: $(count_calls) calls, not a time, a dispatch and twelve lists"
   [[ $err == *'::error::'* ]] || fail "no run: no error: '$err'"
 
   dir=$tmp/cases/dispatch_fails; rm -rf "$dir"; mkdir -p "$dir/lists"; touch "$dir/dispatch_fails"; echo '[]' > "$dir/empty"
   echo '[{"databaseId": 1}]' > "$dir/lists/1"
   out=$(cd "$dir" && FAKE=$dir PATH="$tmp/bin:$PATH" GH_REPO=owner/repo bash "$subject" flow.yml topic 2> /dev/null)
   status=$?
-  [ "$status" -ne 0 ] && [ -z "$out" ] && [ "$(count_calls)" -eq 1 ] \
+  [ "$status" -ne 0 ] && [ -z "$out" ] && [ "$(count_calls)" -eq 2 ] \
     || fail "a failed dispatch: status $status, output '$out', $(count_calls) calls"
 
   for arguments in "flow.yml" "'' topic" "flow.yml ''"; do
@@ -143,6 +152,10 @@ mutations=(
   'the dispatch on stdout'       'gh workflow run "$workflow" --ref "$ref" "$@" >&2' 'gh workflow run "$workflow" --ref "$ref" "$@"'
   'an empty argument taken'      '[ -z "$1" ] || [ -z "$2" ] ||' ''
   'GH_REPO not needed'           ' || [ -z "${GH_REPO:-}" ]; then' '; then'
+  'the time read after'          'before=$(date -u +%Y-%m-%dT%H:%M:%S+00:00)
+gh workflow run "$workflow" --ref "$ref" "$@" >&2' 'gh workflow run "$workflow" --ref "$ref" "$@" >&2
+before=$(date -u +%Y-%m-%dT%H:%M:%S+00:00)'
+  'local time'                   'before=$(date -u +' 'before=$(date +'
 )
 
 if [ "$*" != --mutations ]; then

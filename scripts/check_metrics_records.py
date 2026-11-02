@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Checks that the data branch holds a record of each commit named, with each
-field named.
+"""Checks the data branch's record of each commit named, for each field named.
 
   check_metrics_records.py --data <ref> --directory <directory>
                              --field <path>... --commit <commit>...
@@ -14,7 +13,7 @@ For each commit, the record must
   -# exist, and hold a JSON object;
   -# name the commit as its `commit`;
   -# say that its tree was clean, with a `clean` of true;
-  -# hold, at each path, a whole number that is not a boolean.
+  -# hold, at each path, a whole number no less than zero, and not a boolean.
 
 The script prints a line for each commit: `ok: ` or `error: `, then the
 commit, then what was found. It exits with status 1 if any line is an error,
@@ -30,9 +29,9 @@ def git(*arguments):
     return subprocess.run(["git", *arguments], capture_output=True, text=True)
 
 
-def is_whole_number(value):
-    """Whether `value` is a whole number, and not a boolean."""
-    return isinstance(value, int) and not isinstance(value, bool)
+def is_count(value):
+    """Whether `value` is a whole number no less than zero, and not a boolean."""
+    return isinstance(value, int) and not isinstance(value, bool) and value >= 0
 
 
 def faults_of_record(text, commit, fields):
@@ -45,12 +44,12 @@ def faults_of_record(text, commit, fields):
         return ["its record holds no JSON object"]
     return ([] if record.get("commit") == commit else [f"its record names the commit {record.get('commit')!r}"]) \
          + ([] if record.get("clean") is True else [f"its record has a clean of {record.get('clean')!r}, not true"]) \
-         + [f"its record has no whole number at {field}" for field in fields
-            if not is_whole_number(value_at(record, field.split(".")))]
+         + [f"its record has no count at {field}" for field in fields
+            if not is_count(value_at(record, field.split(".")))]
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    parser = argparse.ArgumentParser(description=__doc__.split("\n")[0], allow_abbrev=False)
     parser.add_argument("--data", required=True)
     parser.add_argument("--directory", required=True)
     parser.add_argument("--field", required=True, nargs="+")

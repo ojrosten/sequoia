@@ -215,7 +215,7 @@ jobs:
       #   - a function of Source which nothing calls, an error;
       #   - an entry of the baseline naming a function which does not exist, a
       #     notice, which baseline-tightener.yml acts on.
-      # The step checks that the file it adds to exists first: a control that
+      # The step checks that the source it adds to exists first: a control that
       # corrupts nothing is the false negative it exists to catch.
       - name: Corrupt the tree, so that the gate must go red
         if: ${{ inputs.false_negative && env.NEEDS_TESTING == 'true' }}
