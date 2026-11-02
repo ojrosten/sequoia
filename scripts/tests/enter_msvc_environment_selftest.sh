@@ -33,12 +33,12 @@
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
 original="$here/../enter_msvc_environment.sh"
-tmp=$(mktemp -d "${TMPDIR:-/tmp}/enter_msvc_environment_selftest.XXXXXX")
-tmp=$(cd "$tmp" && pwd -P)
+tmp=$(cd "$(mktemp -d "${TMPDIR:-/tmp}/enter_msvc_environment_selftest.XXXXXX")" && pwd -P)
+readonly here original tmp
 trap 'rm -rf "$tmp"' EXIT
 
-drive=$tmp/c
-bin=$tmp/bin
+readonly drive=$tmp/c
+readonly bin=$tmp/bin
 mkdir -p "$bin"
 for tool in cp grep paste sed tr; do
   ln -s "$(command -v "$tool")" "$bin/$tool"
@@ -75,15 +75,16 @@ echo "\$*" >> "$tmp/choco_calls"
 STANDIN
 chmod +x "$bin"/*
 
-msvc='C:\VS\VC\Tools\MSVC\14.44\bin\HostX64\x64'
-kits='C:\Kits\10\bin\x64'
-vs_cmake='C:\VS\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin'
-vs_ninja='C:\VS\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja'
-runner_path='C:\Windows;C:\Program Files\Git\bin;C:\Users\runner\AppData\Local\Microsoft\WindowsApps'
+readonly msvc='C:\VS\VC\Tools\MSVC\14.44\bin\HostX64\x64'
+readonly kits='C:\Kits\10\bin\x64'
+readonly vs_cmake='C:\VS\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin'
+readonly vs_ninja='C:\VS\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja'
+readonly runner_path='C:\Windows;C:\Program Files\Git\bin;C:\Users\runner\AppData\Local\Microsoft\WindowsApps'
 forwarded_variables=$(printf '%s\n' \
   'INCLUDE=C:\VS\include' 'LIB=C:\VS\lib' 'LIBPATH=C:\VS\libpath' 'UCRTVersion=10.0.26100.0' \
   'UniversalCRTSdkDir=C:\Kits\10\' 'VCINSTALLDIR=C:\VS\VC\' 'VCToolsInstallDir=C:\VS\VC\Tools\MSVC\14.44\' \
   'VSINSTALLDIR=C:\VS\' 'WindowsSdkDir=C:\Kits\10\' 'WindowsSDKVersion=10.0.26100.0\')
+readonly forwarded_variables
 
 # Writes the dump that the stand-in for cmd prints: write_dump <PATH after>
 # [<variables>]. The dump names PATH as Path, as cmd's `set` does.
@@ -209,7 +210,7 @@ mutants=(
   'the whole PATH forwarded'      'grep -vxF -f <(printf '"'"'%s\n'"'"' "$before") | '  ''
   "Path not read"                 "grep -iE '^PATH='"  "grep -E '^PATH='"
   "CMake forwarded"               " | grep -vF 'CommonExtensions\\Microsoft\\CMake\\')"  ")"
-  'nothing forwarded to the env'  'printf '"'"'%s\n'"'"' "$variables" >> "$GITHUB_ENV"'  ':'
+  'nothing forwarded to the env'  'printf '"'"'%s\n'"'"' "$forwarded_variables" >> "$GITHUB_ENV"'  ':'
   'nothing forwarded to PATH'     'printf '"'"'%s\n'"'"' "$added" >> "$GITHUB_PATH"'  ':'
   'no installation accepted'      '[ -n "$root" ] ||'  'true ||'
   'no vcvars accepted'            '[ -f "$vcvars" ] ||'  'true ||'
@@ -221,7 +222,7 @@ mutants=(
   'ninja always installed'        'command -v ninja \'  'false \'
   'no variables refused late'     '|| { echo "::error::$vcvars set none'  '|| true || { echo "::error::$vcvars set none'
   'no entries accepted'           '|| { echo "::error::$vcvars added no entry'  '|| true || { echo "::error::$vcvars added no entry'
-  'forwarded before refusing'     '|| { echo "::error::$vcvars added no entry'  '|| { printf '"'"'%s\n'"'"' "$variables" >> "$GITHUB_ENV"; echo "::error::$vcvars added no entry'
+  'forwarded before refusing'     '|| { echo "::error::$vcvars added no entry'  '|| { printf '"'"'%s\n'"'"' "$forwarded_variables" >> "$GITHUB_ENV"; echo "::error::$vcvars added no entry'
   'a refusal not annotated'       'echo "::error::no VC toolset'  'echo "no VC toolset'
   'the batch file elsewhere'      'bat="$RUNNER_TEMP/vcvars_dump.bat"'  'bat="$RUNNER_TEMP/../vcvars_dump.bat"'
   'any installation'              '-requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \'  '\'

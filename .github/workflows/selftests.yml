@@ -41,8 +41,8 @@ jobs:
   selftests:
     name: Script selftests · ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
-    # Room for the fetches of scripts/install_apt_packages.sh to give up, and
-    # for the selftests, which took under 3 minutes on 2026-10-31.
+    # The timeout leaves room for scripts/install_apt_packages.sh's fetches to
+    # give up, and for the selftests, which took under 3 minutes on 2026-10-31.
     timeout-minutes: 35
     strategy:
       # Every platform reports, as in tests.yml.

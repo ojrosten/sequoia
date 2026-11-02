@@ -36,6 +36,7 @@ set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
 scripts=$(cd "$here/.." && pwd -P)
 tmp=$(mktemp -d "${TMPDIR:-/tmp}/install_apt_packages_selftest.XXXXXX")
+readonly here scripts tmp
 trap 'rm -rf "$tmp"' EXIT
 
 mkdir "$tmp/bin"
@@ -65,10 +66,12 @@ chmod +x "$tmp/bin"/*
 image_contents=$(printf '%s\t%s\n' \
   http://azure.archive.ubuntu.com/ubuntu/ priority:1 \
   https://archive.ubuntu.com/ubuntu/      priority:2)
+readonly image_contents
 demoted_contents=$(printf '%s\t%s\n' \
   http://azure.archive.ubuntu.com/ubuntu/ priority:3 \
   https://archive.ubuntu.com/ubuntu/      priority:2)
-error_text=-o\ Acquire::Progress::Ignore::ShowErrorText=true
+readonly demoted_contents
+readonly error_text=-o\ Acquire::Progress::Ignore::ShowErrorText=true
 
 fails=0
 fail() { echo "FAIL: $1"; fails=$((fails + 1)); }
@@ -182,10 +185,10 @@ run_controls() {
 mutants=(
   'no list removed'               'rm -f "$etc"'  ': "$etc"'
   "Microsoft's list kept"         ' "$etc"/sources.list.d/microsoft-prod.list'  ''
-  'the refresh not through retry' '"$retry" "$attempts" "$index_limit" -- '  'RETRY_ATTEMPT=1 '
-  'the download not through retry' '"$retry" "$attempts" "$download_limit" -- '  'RETRY_ATTEMPT=1 '
-  'the refresh straight to apt-get' '"$index_limit" -- "$apt_get_demoting"'  '"$index_limit" -- "$APT_GET"'
-  'the download straight to apt-get' '"$download_limit" -- "$apt_get_demoting"'  '"$download_limit" -- "$APT_GET"'
+  'the refresh not through retry' '"$retry" "$attempts" "$index_attempt_seconds" -- '  'RETRY_ATTEMPT=1 '
+  'the download not through retry' '"$retry" "$attempts" "$download_attempt_seconds" -- '  'RETRY_ATTEMPT=1 '
+  'the refresh straight to apt-get' '"$index_attempt_seconds" -- "$apt_get_demoting_preferred_mirrors_on_retry"'  '"$index_attempt_seconds" -- "$APT_GET"'
+  'the download straight to apt-get' '"$download_attempt_seconds" -- "$apt_get_demoting_preferred_mirrors_on_retry"'  '"$download_attempt_seconds" -- "$APT_GET"'
   'two attempts'                  'attempts=3'  'attempts=2'
   'a failed index a warning'      ' --error-on=any'  ''
   'silent'                        'update -q '  'update -qq '
@@ -196,9 +199,9 @@ mutants=(
   'an unknown name tolerated'     'available on this image"; exit 1; }'  'available on this image"; }'
   'no download first'             ' --download-only "$@"'  ' "$@"'
   'the install downloads'         ' --no-download "$@"'  ' "$@"'
-  'the install retried'           '"${APT_GET:-apt-get}" install'  '"$retry" "$attempts" "$download_limit" -- "$apt_get_demoting" install'
-  'recommends kept on download'   '${recommends[@]+"${recommends[@]}"} --download-only'  '--download-only'
-  'recommends kept on install'    '${recommends[@]+"${recommends[@]}"} --no-download'  '--no-download'
+  'the install retried'           '"${APT_GET:-apt-get}" install'  '"$retry" "$attempts" "$download_attempt_seconds" -- "$apt_get_demoting_preferred_mirrors_on_retry" install'
+  'recommends kept on download'   '${recommends_option[@]+"${recommends_option[@]}"} --download-only'  '--download-only'
+  'recommends kept on install'    '${recommends_option[@]+"${recommends_option[@]}"} --no-download'  '--no-download'
   'no package accepted'           '[ $# -ge 1 ] || usage'  'true'
   'options accepted'              '[[ $package != -* ]] || usage'  'true'
   'not root accepted'             '[ "$(id -u)" -eq 0 ] ||'  'true ||'

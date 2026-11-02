@@ -33,10 +33,11 @@ usage() {
   exit 2
 }
 
-recommends=()
 if [ "${1-}" = --no-install-recommends ]; then
-  recommends=(--no-install-recommends)
+  readonly -a recommends_option=(--no-install-recommends)
   shift
+else
+  readonly -a recommends_option=()
 fi
 [ $# -ge 1 ] || usage
 for package in "$@"; do
@@ -45,7 +46,8 @@ done
 [ "$(id -u)" -eq 0 ] || { echo "::error::$0 must run as root, with sudo"; exit 2; }
 
 here=$(dirname "$0")
-etc=${APT_ETC:-/etc/apt}
+readonly here
+readonly etc=${APT_ETC:-/etc/apt}
 
 # The hosted image ships Chrome's and Microsoft's apt repositories. A bad
 # index from either fails `apt-get update`.
@@ -68,11 +70,11 @@ rm -f "$etc"/sources.list.d/google-chrome.list "$etc"/sources.list.d/microsoft-p
 # 39767016365, its docs job). In another run, apt turned to archive.ubuntu.com
 # within one attempt, of its own accord, and fetched 95 MB from it in 6 s (run
 # 39772556372, attempt 2, its docs job).
-attempts=3
-index_limit=180
-download_limit=300
-retry=$here/retry.sh
-apt_get_demoting=$here/apt_get_demoting_preferred_mirrors_on_retry.sh
+readonly attempts=3
+readonly index_attempt_seconds=180
+readonly download_attempt_seconds=300
+readonly retry=$here/retry.sh
+readonly apt_get_demoting_preferred_mirrors_on_retry=$here/apt_get_demoting_preferred_mirrors_on_retry.sh
 
 # `apt-get update` reports an index it could not fetch as a warning, and exits
 # 0. The packages of that index are then missing from `apt-cache pkgnames`,
@@ -81,7 +83,7 @@ apt_get_demoting=$here/apt_get_demoting_preferred_mirrors_on_retry.sh
 # error, which scripts/retry.sh retries. The refresh is quiet (-q) rather
 # than silent (-qq), so that the log names the repository a slow index comes
 # from.
-"$retry" "$attempts" "$index_limit" -- "$apt_get_demoting" update -q --error-on=any
+"$retry" "$attempts" "$index_attempt_seconds" -- "$apt_get_demoting_preferred_mirrors_on_retry" update -q --error-on=any
 
 # `apt-cache pkgnames` lists names exactly. `apt-get install` does not match
 # names exactly: given a name with regex metacharacters that matches no
@@ -89,16 +91,18 @@ apt_get_demoting=$here/apt_get_demoting_preferred_mirrors_on_retry.sh
 # clang-15, flang-15 and llvm-15, and apt-get installs all three and exits 0.
 # -F because a name may hold a `.`, which a regex matches against any
 # character.
-names=$("${APT_CACHE:-apt-cache}" pkgnames)
+available=$("${APT_CACHE:-apt-cache}" pkgnames)
+readonly available
 for package in "$@"; do
-  grep -qFx -- "$package" <<< "$names" \
+  grep -qFx -- "$package" <<< "$available" \
     || { echo "::error::$package is not available on this image"; exit 1; }
 done
 
-# Only the download is retried. The install then runs once, from the
+# Only the download is retried; the install then runs once, from the
 # downloaded packages, with no download. apt-get runs dpkg in a session of its
-# own, so stopping an attempt leaves dpkg running and holding its lock. Every
-# later attempt then fails at once (run 39748507037, its docs job).
-"$retry" "$attempts" "$download_limit" -- "$apt_get_demoting" \
-  install -y ${recommends[@]+"${recommends[@]}"} --download-only "$@"
-"${APT_GET:-apt-get}" install -y ${recommends[@]+"${recommends[@]}"} --no-download "$@"
+# own, which retry.sh does not stop with an attempt. An install stopped at its
+# limit would leave dpkg running and holding its lock, and every retry would
+# then fail at once (run 39748507037, its docs job).
+"$retry" "$attempts" "$download_attempt_seconds" -- "$apt_get_demoting_preferred_mirrors_on_retry" \
+  install -y ${recommends_option[@]+"${recommends_option[@]}"} --download-only "$@"
+"${APT_GET:-apt-get}" install -y ${recommends_option[@]+"${recommends_option[@]}"} --no-download "$@"
