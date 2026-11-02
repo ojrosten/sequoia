@@ -162,6 +162,9 @@ if [ "$*" != --mutations ]; then
   exit 0
 fi
 
+# A mutant imports from metrics_gate.py, as the script does, from its own
+# directory.
+cp "$here/../metrics_gate.py" "$tmp/"
 source_text=$(cat "$script")
 controls "$script" > "$tmp/controls.txt" 2>&1
 echo "unmutated: $fails controls fail$([ "$fails" -eq 0 ] || echo '  <-- must be none')"

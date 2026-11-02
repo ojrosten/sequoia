@@ -22,20 +22,12 @@ and with status 0 otherwise. Arguments of any other form, and a <ref> which
 does not name a commit, are refused with status 2.
 """
 import argparse, json, subprocess, sys
+from metrics_gate import value_at
 
 
 def git(*arguments):
     """Returns the completed `git` command, its output as text."""
     return subprocess.run(["git", *arguments], capture_output=True, text=True)
-
-
-def value_at(record, path):
-    """Returns the value at `path`, a sequence of keys, in `record`, or None if
-    there is none."""
-    value = record
-    for key in path:
-        value = value.get(key) if isinstance(value, dict) else None
-    return value
 
 
 def is_whole_number(value):

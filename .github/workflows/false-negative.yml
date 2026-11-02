@@ -1,55 +1,57 @@
 name: false-negative
 
-# The control for the gate. A gate never seen to go red has not been shown to
-# see anything: each of its green runs is consistent with a suite that never
-# ran, a flag that never reached the runner, or a detector that fires on
-# nothing. sequoia's own test framework has a false-negative mode for this
-# reason, and the gate gets the same treatment.
+# The controls for CI's gates and alarms. A gate never seen to go red has not
+# been shown to see anything: each of its green runs is consistent with a
+# suite that never ran, a flag that never reached the runner, or a detector
+# that fires on nothing. sequoia's own test framework has a false-negative mode
+# for this reason, and CI gets the same treatment.
 #
-# Every gate and alarm of CI gets the same treatment, in one of three jobs.
-# Each job makes the change its subjects must fail on, dispatches the runs
-# which must fail, waits for them, and reads their jobs back. Each subject must
-# fail where its rule says, and for the reason its rule gives, read from the
-# finding it prints. A red for another reason proves nothing about whether the
-# subject can see, so the job fails on it too.
+# Each of the first two jobs makes a change that its subjects must fail on,
+# dispatches runs of the subjects on the change, waits for them, and reads
+# their jobs back. Each subject must fail at the step its rule names. The
+# subject's log must also hold the finding which its rule prints for the
+# change. A subject red for another reason proves nothing about whether it can
+# see, so the job fails on that too.
 #
 # `control` dispatches rigorous with `false_negative: true`, which corrupts the
 # checkout before building:
 #   - Each column has a versioned output and a prediction corrupted. Every
 #     column must have failed, its suite red and its drift step accounting for
 #     the corruption.
-#   - The docs job has a documentation comment with a command doxygen does not
-#     know. The gate on documentation defects must have failed, naming it.
+#   - The docs job has a documentation comment holding a command doxygen does
+#     not know. The gate on documentation defects must have failed, with
+#     doxygen's warning of the command.
 #   - The coverage job has a function of Source which nothing calls, and an
 #     entry of the baseline naming a function which does not exist. The gate on
-#     uncalled functions must have failed on the function, and given a notice
-#     of the entry, which is the notice baseline-tightener.yml acts on.
+#     uncalled functions must have failed, with an error naming the function.
+#     It must also have given a notice of the entry: baseline-tightener.yml
+#     removes the entries which such notices name.
 #   - The column audit within the run must have passed: the columns ran, and
 #     went red.
 #   - The run's audit, which checks every job's result against the run's mode,
 #     must have passed.
 #
-# `metrics` pushes two commits of its own, each on a branch of its own, and
-# deletes the branches when it is done:
-#   - a merge, into the commit it runs on, of a commit adding symbols with long
-#     names and work to prune's analysis. It dispatches metrics-gate.yml on
-#     the merge, which must fail all three series, symbols, the bytes of their
-#     names and prune's instructions, each on its rise.
-#   - the commit it runs on, with the mistake #182 fixed restored: each test's
-#     setup removes the previous run's materials itself. It dispatches
-#     symbol-table.yml on it, whose check of the setup cost of leftover
-#     materials must fail on that cost.
+# `metrics` pushes two commits, each on a branch of its own, and deletes the
+# branches when it is done:
+#   - A merge into the commit the job runs on. The merge adds symbols with long
+#     names, and work to prune's analysis. metrics-gate.yml, dispatched on the
+#     merge, must fail each of its three series on its rise: the symbols, the
+#     bytes of their names and prune's instructions.
+#   - The commit the job runs on, with #182's fix undone: each test's setup
+#     again removes the previous run's materials itself. symbol-table.yml,
+#     dispatched on it, must fail its check of the setup cost of leftover
+#     materials on that cost.
 #
-# `records` checks that the dashboard's data branch, `metrics`, holds a record
-# with every series of each commit that symbol-table.yml and
-# baseline-tightener.yml measured on staging in the last eight days. The jobs
-# storing them, and the steps adding prune's count and the cost of leftover
-# materials, are tolerated to fail, so a lost record turns nothing red but
-# this job.
+# `records` checks the dashboard's data branch, `metrics`. For each commit
+# which symbol-table.yml and baseline-tightener.yml measured on staging in the
+# last eight days, the branch must hold a record with every series. The steps
+# adding prune's count and the cost of leftover materials to a record are
+# tolerated to fail, as is baseline-tightener.yml's job storing its record. So
+# a lost series turns nothing red but this job.
 #
-# It runs weekly rather than nightly, since it costs a full rigorous run and
-# three builds of TestAll. It measures the subjects' ability to fail, which
-# changes only when the workflows or scripts do. Run it by hand after any
+# The workflow runs weekly rather than nightly, since it costs a full rigorous
+# run and three builds of TestAll. It measures the subjects' ability to fail,
+# which changes only when the workflows or scripts do. Run it by hand after any
 # change to them.
 #
 # GITHUB_TOKEN may dispatch: the guard that stops a GITHUB_TOKEN push or PR
@@ -373,9 +375,9 @@ jobs:
           REPLACE
           }
 
-          analyzing='stream() << "\nAnalyzing dependencies...\n" << std::flush;'
-          replace_once "$source" "$analyzing" \
-            "$analyzing for(volatile std::size_t i{}; i < 25'000'000; i = i + 1) {}"
+          analysis_banner='stream() << "\nAnalyzing dependencies...\n" << std::flush;'
+          replace_once "$source" "$analysis_banner" \
+            "$analysis_banner for(volatile std::size_t i{}; i < 25'000'000; i = i + 1) {}"
           namespace=false_negative_control_$(printf '%0340d' 0 | tr 0 x)
           { echo
             echo "namespace sequoia::$namespace"
