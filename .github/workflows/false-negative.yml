@@ -399,7 +399,14 @@ jobs:
           git commit -q -m "False-negative control: each test's setup removes the previous run's materials"
           leftover=$(git rev-parse HEAD)
 
-          git push -q origin "$merge:refs/heads/$METRICS_BRANCH" "$leftover:refs/heads/$LEFTOVER_BRANCH"
+          # GitHub refuses to let GITHUB_TOKEN create a branch whose workflows
+          # differ from main's: run 41437875246, from a branch which changed
+          # them, was refused both. A branch of main with a change to Source
+          # was accepted, from that branch (run 41439127441). The branches
+          # here are of the commit this job runs on, main on the schedule.
+          git push -q origin "$merge:refs/heads/$METRICS_BRANCH" "$leftover:refs/heads/$LEFTOVER_BRANCH" \
+            || { echo "::error::the branches were refused: GITHUB_TOKEN may not create a branch whose workflows" \
+                      "differ from main's, so this job runs only on a commit whose workflows are main's"; exit 1; }
           echo "pushed=true" >> "$GITHUB_OUTPUT"
           echo "$METRICS_BRANCH: $merge, the merge of $raising into $base"
           echo "$LEFTOVER_BRANCH: $leftover, on $base"
@@ -550,7 +557,10 @@ jobs:
       # the newest commit measured, so that no run judges nothing.
       #
       # A symbol-table record must hold every series which the dashboard
-      # plots and the gates read, and its leftover materials' counts.
+      # plots and the gates read, and its leftover materials' counts. So a
+      # series added to a record is required of every commit judged, and its
+      # check fails until eight days of records hold it, unless a backfill
+      # adds it to the earlier ones.
       - name: Check each record
         run: |
           since=$(date -u -d '8 days ago' +%Y-%m-%dT%H:%M:%S+00:00)
