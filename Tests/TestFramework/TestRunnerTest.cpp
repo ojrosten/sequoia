@@ -2386,48 +2386,47 @@ namespace sequoia::testing
 
   void test_runner_test::test_reference_root()
   {
-    auto commandlineWithReferenceRoot{
-      [this](const fs::path& referenceRoot) {
-        return fake_project_commandline(auxiliary_materials(), "--reference-root", referenceRoot.generic_string());
+    auto fakeProjectPaths{
+      [this](const auto&... arguments) {
+        commandline_arguments args{fake_project_commandline(auxiliary_materials(), arguments...)};
+        std::stringstream outputStream{};
+
+        return make_fake_project_runner(args, outputStream).proj_paths();
+      }
+    };
+
+    auto fakeProjectPathsWithReferenceRoot{
+      [&fakeProjectPaths](const fs::path& referenceRoot) {
+        return fakeProjectPaths("--reference-root", referenceRoot.generic_string());
       }
     };
 
     {
-      commandline_arguments args{fake_project_commandline(auxiliary_materials())};
-      std::stringstream outputStream{};
-
-      auto runner{make_fake_project_runner(args, outputStream)};
+      const auto projPaths{fakeProjectPaths()};
       check(equality,
             "Without --reference-root, the project has no reference root",
-            runner.proj_paths().reference_root(),
+            projPaths.reference_root(),
             std::optional<fs::path>{});
 
       check_exception_thrown<std::runtime_error>(
         "Without --reference-root, the project has no reference sequoia root",
-        [&runner]() { return reference_sequoia_root(runner.proj_paths()); });
+        [&projPaths]() { return reference_sequoia_root(projPaths); });
     }
 
     {
       const auto referenceRoot{auxiliary_materials()};
-      commandline_arguments args{commandlineWithReferenceRoot(referenceRoot)};
-      std::stringstream outputStream{};
-
-      auto runner{make_fake_project_runner(args, outputStream)};
       check(equality,
             "--reference-root gives the project the root it names",
-            runner.proj_paths().reference_root(),
+            fakeProjectPathsWithReferenceRoot(referenceRoot).reference_root(),
             std::optional<fs::path>{referenceRoot});
     }
 
     auto checkRefusal{
-      [this, &commandlineWithReferenceRoot](const reporter& description, const fs::path& referenceRoot) {
+      [this, &fakeProjectPathsWithReferenceRoot](const reporter& description, const fs::path& referenceRoot) {
         check_exception_thrown<std::runtime_error>(
           description,
-          [&commandlineWithReferenceRoot, &referenceRoot]() {
-            commandline_arguments args{commandlineWithReferenceRoot(referenceRoot)};
-            std::stringstream outputStream{};
-
-            auto runner{make_fake_project_runner(args, outputStream)};
+          [&fakeProjectPathsWithReferenceRoot, &referenceRoot]() {
+            return fakeProjectPathsWithReferenceRoot(referenceRoot);
           });
       }
     };
@@ -2443,26 +2442,28 @@ namespace sequoia::testing
     checkRefusal(reporter{"A reference root which is the project root, spelt otherwise"},
                  fakeProjectRoot / "TestShared" / "..");
 
-    auto referenceSequoiaRoot{
-      [&commandlineWithReferenceRoot](const fs::path& referenceRoot) {
-        commandline_arguments args{commandlineWithReferenceRoot(referenceRoot)};
-        std::stringstream outputStream{};
-
-        return reference_sequoia_root(make_fake_project_runner(args, outputStream).proj_paths());
+    // The project's paths are made outside the checked call, so that only
+    // reference_sequoia_root can make the refusal the check sees.
+    auto checkNoSequoiaTree{
+      [this, &fakeProjectPathsWithReferenceRoot](const reporter& description, const fs::path& referenceRoot) {
+        const auto projPaths{fakeProjectPathsWithReferenceRoot(referenceRoot)};
+        check_exception_thrown<std::runtime_error>(
+          description,
+          [&projPaths]() { return reference_sequoia_root(projPaths); });
       }
     };
 
-    check_exception_thrown<std::runtime_error>(
-      "A reference root whose Source/sequoia holds no CMakeLists.txt is no reference sequoia root",
-      [this, &referenceSequoiaRoot]() {
-        return referenceSequoiaRoot(auxiliary_materials() / "SequoiaTreeWithoutCMakeLists");
-      });
+    checkNoSequoiaTree(reporter{"A reference root whose Source/sequoia holds no CMakeLists.txt"},
+                       auxiliary_materials() / "SourceSequoiaWithoutCMakeLists");
+
+    checkNoSequoiaTree(reporter{"A reference root whose Source/sequoia/CMakeLists.txt is a directory"},
+                       auxiliary_materials() / "CMakeListsDirectory");
 
     {
       const auto sequoiaTree{auxiliary_materials() / "SequoiaTree"};
       check(equality,
             "A reference root which holds Source/sequoia/CMakeLists.txt is the reference sequoia root",
-            referenceSequoiaRoot(sequoiaTree),
+            reference_sequoia_root(fakeProjectPathsWithReferenceRoot(sequoiaTree)),
             sequoiaTree);
     }
   }
@@ -2629,17 +2630,21 @@ namespace sequoia::testing
     };
   }
 
-  /** A copy of the fake project lies in a directory whose name holds a space, and so does the name of
-      its executable. The executable is a script which stands in for the test runner in each sandbox: it
-      records its arguments, one per line, and creates the directory to which a sandboxed run writes its
-      analysis. The run selects a suite and a source, excludes a source, and names a reference root, each
-      named with a space. The shell splits an unquoted word at the space. So if the coordinator does not
-      quote the path, no sandbox runs, and if it does not quote a selection or the reference root, the
-      sandboxes record it as two arguments.
+  /** A copy of the fake project lies in a directory whose name holds a space,
+      and so does the name of its executable. The executable is a script which
+      stands in for the test runner in each sandbox: it records its arguments,
+      one per line, and creates the directory to which a sandboxed run writes
+      its analysis. Each run selects a suite and a source, and excludes a
+      source, each with a space in its name; the first also names a reference
+      root with a space in its name, and the second names none. The shell
+      splits an unquoted word at the space. So if the coordinator does not
+      quote the executable's path, no sandbox runs, and if it does not quote a
+      selection or the reference root, the sandboxes record it as two
+      arguments.
 
-      The selected test's file of execution records starts with an earlier
-      run's record. The script executes no test, so only the coordinator can
-      empty the file.
+      Before each run, the selected test's file of execution records holds
+      an earlier run's record. The script executes no test, so only the
+      coordinator can empty the file.
    */
   void test_runner_test::test_instability_analysis_in_sandboxes_from_a_path_with_a_space()
   {
@@ -2649,64 +2654,88 @@ namespace sequoia::testing
     fs::remove_all(spacedProject);
     fs::copy(fake_project_root(auxiliary_materials()), spacedProject, fs::copy_options::recursive);
 
-    const auto spacedReference{scratchpad_materials() /= "Spaced Reference"};
-    fs::create_directories(spacedReference);
-
-    const auto outputDir{working_materials() /= "SandboxesFromAPathWithASpace"};
-    fs::create_directory(outputDir);
-
-    const auto quotedArgumentsFile{quote_for_shell((outputDir / "Arguments.txt").string())},
-               quotedAnalysisDir{quote_for_shell(output_paths::instability_analysis(fs::canonical(spacedProject)).string())};
-
     const auto executable{spacedProject / "build/CMade" / (with_windows_v ? "Run Tests.bat" : "Run Tests")};
-    const auto script{
-      with_windows_v ? std::format("@echo off\n"
-                                   "mkdir {} 2>nul\n"
-                                   "for %%a in (%*) do >>{} echo %%~a\n"
-                                   "exit /b 0\n",
-                                   quotedAnalysisDir,
-                                   quotedArgumentsFile)
-                     : std::format("#!/bin/sh\n"
-                                   "mkdir -p {}\n"
-                                   "printf '%s\\n' \"$@\" >> {}\n",
-                                   quotedAnalysisDir,
-                                   quotedArgumentsFile)
+    const auto quotedAnalysisDir{
+      quote_for_shell(output_paths::instability_analysis(fs::canonical(spacedProject)).string())
     };
 
-    write_to_file(executable, script, std::ios_base::out);
-    fs::permissions(executable, fs::perms::owner_exec, fs::perm_options::add);
+    auto launchSandboxes{
+      [this, &executable, &quotedAnalysisDir](std::string_view description,
+                                              std::string_view outputDirName,
+                                              const auto&... referenceRootArguments) {
+        const auto outputDir{working_materials() /= outputDirName};
+        fs::create_directory(outputDir);
 
-    std::stringstream outputStream{};
-    commandline_arguments args{{executable.generic_string(),
-                                "locate", "2", "--sandbox",
-                                "test", "Spaced Suite",
-                                "select", selected_in_spaced_suite_free_test::source_file().generic_string(),
-                                "exclude", excluded_from_spaced_suite_free_test::source_file().generic_string(),
-                                "--reference-root", spacedReference.generic_string()}};
+        const auto quotedArgumentsFile{quote_for_shell((outputDir / "Arguments.txt").string())};
 
-    auto runner{make_fake_project_runner(args, outputStream)};
+        const auto script{
+          with_windows_v ? std::format("@echo off\n"
+                                       "mkdir {} 2>nul\n"
+                                       "for %%a in (%*) do >>{} echo %%~a\n"
+                                       "exit /b 0\n",
+                                       quotedAnalysisDir,
+                                       quotedArgumentsFile)
+                         : std::format("#!/bin/sh\n"
+                                       "mkdir -p {}\n"
+                                       "printf '%s\\n' \"$@\" >> {}\n",
+                                       quotedAnalysisDir,
+                                       quotedArgumentsFile)
+        };
 
-    const test_execution_record_path executionRecordPath{selected_in_spaced_suite_free_test::source_file(),
-                                                         test_name<selected_in_spaced_suite_free_test>(),
-                                                         runner.proj_paths()};
+        write_to_file(executable, script, std::ios_base::out);
+        fs::permissions(executable, fs::perms::owner_exec, fs::perm_options::add);
 
-    fs::create_directories(executionRecordPath.file_path().parent_path());
-    write_to_file(executionRecordPath.file_path(), to_string(test_execution_record{}), std::ios_base::binary);
+        std::stringstream outputStream{};
+        commandline_arguments args{{executable.generic_string(),
+                                    "locate", "2", "--sandbox",
+                                    "test", "Spaced Suite",
+                                    "select", selected_in_spaced_suite_free_test::source_file().generic_string(),
+                                    "exclude", excluded_from_spaced_suite_free_test::source_file().generic_string(),
+                                    std::string{referenceRootArguments}...}};
 
-    runner.register_test<selected_in_spaced_suite_free_test>();
-    runner.register_test<excluded_from_spaced_suite_free_test>();
+        auto runner{make_fake_project_runner(args, outputStream)};
 
-    check(equality, "Both sandboxes run, and the run succeeds", runner.execute(), return_code::success);
-    check(equivalence,
-          "Each sandbox is given the repetitions, its runner id, the selections and the reference root, each as "
-          "one argument",
-          outputDir,
-          predictive_materials() /= "SandboxesFromAPathWithASpace");
+        const test_execution_record_path executionRecordPath{selected_in_spaced_suite_free_test::source_file(),
+                                                             test_name<selected_in_spaced_suite_free_test>(),
+                                                             runner.proj_paths()};
 
-    check(equality,
-          "The run which launches the sandboxes empties the file of execution records of each test to be run",
-          read_test_execution_records(executionRecordPath.file_path()),
-          std::vector<test_execution_record>{});
+        fs::create_directories(executionRecordPath.file_path().parent_path());
+        write_to_file(executionRecordPath.file_path(), to_string(test_execution_record{}), std::ios_base::binary);
+
+        runner.register_test<selected_in_spaced_suite_free_test>();
+        runner.register_test<excluded_from_spaced_suite_free_test>();
+
+        check(equality,
+              append_lines(description, "Both sandboxes run, and the run succeeds"),
+              runner.execute(),
+              return_code::success);
+
+        check(equivalence,
+              append_lines(description,
+                           "Each sandbox is given the repetitions, its runner id, the selections and any reference "
+                           "root, each as one argument"),
+              outputDir,
+              predictive_materials() /= outputDirName);
+
+        check(equality,
+              append_lines(description,
+                           "The run which launches the sandboxes empties the file of execution records of each test "
+                           "to be run"),
+              read_test_execution_records(executionRecordPath.file_path()),
+              std::vector<test_execution_record>{});
+      }
+    };
+
+    const auto spacedReferenceRoot{scratchpad_materials() /= "Spaced Reference"};
+    fs::create_directories(spacedReferenceRoot);
+
+    launchSandboxes("With --reference-root",
+                    "SandboxesFromAPathWithASpace",
+                    "--reference-root",
+                    spacedReferenceRoot.generic_string());
+
+    launchSandboxes("Without --reference-root",
+                    "SandboxesFromAPathWithASpaceWithoutAReferenceRoot");
   }
 
   /** A runner given a runner id is one sandbox. The sandbox writes its

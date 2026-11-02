@@ -33,8 +33,9 @@ namespace sequoia::testing
         the previous run's materials on each test's own thread took 1.08 to
         1.25 times as long, and a bound of 1.1 let it pass on some hosts. On
         hosted macOS runners, the same mutant passed at 1.1 on every host, so
-        macOS is not gated. No measured regression stands behind the bound for
-        a request for help alone.
+        macOS is not gated. For a request for help alone, no regression near
+        the bound has been measured. A 50 ms delay at start-up, taking from
+        2.4 to 12.5 times as long, failed the check on every host.
      */
     constexpr double slowdown_bound{1.05};
 
@@ -133,8 +134,10 @@ namespace sequoia::testing
       }
     };
 
-    /** The net duration excludes the costs which both runs share: starting
-        the process, constructing the runner and stopping the process.
+    /** The serial run's duration, net of the request for help's, excludes
+        the costs which both runs share: starting the process, constructing
+        the runner and stopping the process. It is also short by the cost of
+        printing the help, which the serial run does not incur.
      */
     [[nodiscard]]
     task_with_baseline<workload_command, workload_command> serial_run_net_of_help(const workload_build& build)

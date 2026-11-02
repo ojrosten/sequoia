@@ -18,9 +18,12 @@ namespace sequoia::testing
       The test builds one project of tests which do little twice: against
       this tree's sequoia and against the reference tree's. The test fails if
       the runner built from this tree, the candidate, takes distinguishably
-      longer than a fixed multiple of the reference's time to run the tests.
+      longer than a fixed multiple of the reference's time to run the tests,
+      net of a request for help, or to answer a request for help alone.
 
-      The runner's option `--reference-root` names the reference tree's root.
+      The runner which runs this test takes the reference tree's root from
+      its option `--reference-root`. The root must hold
+      `Source/sequoia/CMakeLists.txt`.
    */
   class runner_performance_against_reference_test final : public performance_test
   {
