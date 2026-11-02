@@ -13,10 +13,22 @@
 #     that the script cannot clobber the runner's own environment;
 #   - PATH through GITHUB_PATH, in Windows form, which a later bash step's
 #     start-up translates.
+#
+# The script fails with status 1 and an ::error::, and forwards nothing, when:
+#   - vswhere reports no installation with the VC toolset;
+#   - the installation has no vcvars64.bat;
+#   - vcvars64.bat fails;
+#   - vcvars64.bat sets none of the variables forwarded;
+#   - vcvars64.bat adds no entry to PATH other than Visual Studio's CMake and
+#     Ninja.
+# Where neither the forwarded entries nor the script's own PATH hold ninja,
+# the script installs ninja with Chocolatey.
+#
+# VSWHERE replaces the path of vswhere.exe, for the selftest.
 
 set -euo pipefail
 
-vswhere="/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
+vswhere=${VSWHERE:-"/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"}
 root=$("$vswhere" -latest -products '*' \
          -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \
          -property installationPath)
@@ -30,8 +42,10 @@ vcvars="$(cygpath -u "$root")/VC/Auxiliary/Build/vcvars64.bat"
 # batch file's own path has no spaces, so MSYS has nothing to re-quote.
 bat="$RUNNER_TEMP/vcvars_dump.bat"
 printf '@echo off\r\necho PATH_BEFORE=%%PATH%%\r\ncall "%s" >nul || exit /b 1\r\nset\r\n' "$(cygpath -w "$vcvars")" > "$bat"
-dump=$(cmd //c "$(cygpath -w "$bat")" | tr -d '\r')
-printf '%s\n' "$dump" | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINSTALLDIR|VSINSTALLDIR|WindowsSdkDir|WindowsSDKVersion|UCRTVersion|UniversalCRTSdkDir)=' >> "$GITHUB_ENV"
+dump=$(cmd //c "$(cygpath -w "$bat")" | tr -d '\r') || { echo "::error::$vcvars failed"; exit 1; }
+variables=$(printf '%s\n' "$dump" \
+              | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINSTALLDIR|VSINSTALLDIR|WindowsSdkDir|WindowsSDKVersion|UCRTVersion|UniversalCRTSdkDir)=') \
+  || { echo "::error::$vcvars set none of the variables forwarded"; exit 1; }
 
 # The script forwards only the PATH entries vcvars added. Forwarding the whole
 # PATH would put the runner's own entries ahead of themselves in a new order:
@@ -44,11 +58,13 @@ printf '%s\n' "$dump" | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINST
 # run asks about the generator and nothing else.
 before=$(printf '%s\n' "$dump" | grep '^PATH_BEFORE=' | sed 's/^[^=]*=//' | tr ';' '\n')
 after=$(printf '%s\n' "$dump"  | grep -iE '^PATH='     | sed 's/^[^=]*=//' | tr ';' '\n')
-added=$(printf '%s\n' "$after" | grep -vxF -f <(printf '%s\n' "$before") | grep -v '^$' | grep -vF 'CommonExtensions\Microsoft\CMake\')
+added=$(printf '%s\n' "$after" | grep -vxF -f <(printf '%s\n' "$before") | grep -v '^$' | grep -vF 'CommonExtensions\Microsoft\CMake\') \
+  || { echo "::error::$vcvars added no entry to PATH other than Visual Studio's CMake and Ninja"; exit 1; }
 printf '%s\n' "$added"
+printf '%s\n' "$variables" >> "$GITHUB_ENV"
 printf '%s\n' "$added" >> "$GITHUB_PATH"
 
 # GITHUB_PATH reaches only later steps, so the script looks for ninja where a
 # later step will: in the forwarded entries, then in the script's own PATH.
-PATH="$(cygpath -pu "$(printf '%s\n' "$added" | paste -sd ';')"):$PATH" command -v ninja \
+PATH="$(cygpath -pu "$(printf '%s\n' "$added" | paste -sd ';' -)"):$PATH" command -v ninja \
   || { echo "no ninja on the forwarded PATH or the image's; installing one"; choco install ninja -y; }
