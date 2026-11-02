@@ -56,6 +56,14 @@ name: performance-against-reference
 #     both passes on a Xeon 8573C, and 38 of 40 on Windows, both passes on an
 #     EPYC 9V74. The check of a request for help alone, whose work the mutant
 #     does not touch, failed none of 80 and 40.
+# A start-up mutant, 2026-11-02: a 50 ms sleep at the top of test_runner's
+# constructor, in the candidate alone, each check 5 times per job:
+#   - The check of a request for help alone failed 20 of 20 on Linux (EPYC
+#     7763 and 9V45), at speed-ups from 0.08 to 0.12, and 20 of 20 on Windows
+#     (EPYC 7763 and 9V74), from 0.37 to 0.41. The serial-run check, net of a
+#     request for help, failed none of 20 and 20.
+#   - Without the mutant, neither check failed in 10 runs on Linux (EPYC 7763
+#     and 9V45), nor in 10 on Windows (EPYC 7763 and 9V74).
 #
 # The workflow runs on every pull request whose change the suite reads, as
 # scope.yml decides, and on every scheduled or dispatched run. With nothing to
