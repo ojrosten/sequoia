@@ -129,8 +129,8 @@ namespace sequoia::testing
     };
 
     /** The four spaces formed from one space, in the order `count_and_combine` depends on: it
-        folds only the head of the counted list, so cancellation requires them to be contiguous
-        *and* in this order.
+        folds only the head of the counted list, so cancellation requires them to be
+        contiguous *and* in this order.
 
         Asserted for **every** space in the list rather than for one of them, because the
         convention is invisible to the laws below: permuting the enumerators of `space_formation`
