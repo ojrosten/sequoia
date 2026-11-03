@@ -52,8 +52,8 @@ namespace sequoia::testing
       : m_Name{name}
       , m_ProjectPaths{std::move(projPaths)}
       , m_Materials{std::move(materials)}
-      , m_ReferenceRoot{std::move(referenceRoot)}
       , m_Diagnostics{m_ProjectPaths, m_Name, srcFile, mode, outputDiscriminator}
+      , m_ReferenceRoot{std::move(referenceRoot)}
     {}
 
     test_base(const test_base&)            = delete;
@@ -122,6 +122,12 @@ namespace sequoia::testing
       return m_ProjectPaths;
     }
 
+    [[nodiscard]]
+    const individual_diagnostics_paths& diagnostics_file_paths() const noexcept
+    {
+      return m_Diagnostics;
+    }
+
     /** \brief The root of the tree against which to compare the test's
                project, if the test was given one.
      */
@@ -129,12 +135,6 @@ namespace sequoia::testing
     const std::optional<std::filesystem::path>& reference_root() const noexcept
     {
       return m_ReferenceRoot;
-    }
-
-    [[nodiscard]]
-    const individual_diagnostics_paths& diagnostics_file_paths() const noexcept
-    {
-      return m_Diagnostics;
     }
 
     [[nodiscard]]
@@ -160,8 +160,8 @@ namespace sequoia::testing
     std::string m_Name{};
     project_paths m_ProjectPaths{};
     individual_materials_paths m_Materials{};
-    std::optional<std::filesystem::path> m_ReferenceRoot{};
     individual_diagnostics_paths m_Diagnostics{};
+    std::optional<std::filesystem::path> m_ReferenceRoot{};
   };
 
   /** \brief class template from which all concrete tests should derive.
