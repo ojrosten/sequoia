@@ -1494,7 +1494,9 @@ namespace sequoia::testing
                     "Leave out the test defined in a source file"
                   }}},
                   {{{"--reference-root", {}, {"path"},
-                    [this](const arg_list& args) { m_ReferenceRoot = reference_root(args.front(), proj_paths().project_root()); },
+                    [this](const arg_list& args) {
+                      m_ReferenceRoot = reference_root(args.front(), proj_paths().project_root());
+                    },
                     {},
                     "Name the root of the tree against which tests compare this project"
                   }}},

@@ -2386,8 +2386,8 @@ namespace sequoia::testing
 
   namespace
   {
-    /// Passes if its reference root is its project's `TestShared`, however spelt
-    class shared_reference_root_free_test final : public free_test
+    /// Passes if its reference root names its project's `TestShared`
+    class reference_root_free_test final : public free_test
     {
     public:
       using free_test::free_test;
@@ -2395,7 +2395,7 @@ namespace sequoia::testing
       [[nodiscard]]
       static std::filesystem::path source_file()
       {
-        return make_fake_file_path<shared_reference_root_free_test>();
+        return make_fake_file_path<reference_root_free_test>();
       }
 
       void run_tests()
@@ -2425,10 +2425,10 @@ namespace sequoia::testing
     };
   }
 
-  /** The runner's tests are what receive its reference root, so each run
-      registers one fake test, which checks the root it receives, and its
-      return code is that test's alone. Each fake test also runs where it
-      fails, so that a test which never ran cannot pass for one which did.
+  /** Each run registers one fake test, which checks the reference root it
+      receives, so that the run's return code is that test's alone. Each fake
+      test also runs where it should fail, so that a test which never ran
+      cannot pass for one which did.
    */
   void test_runner_test::test_reference_root()
   {
@@ -2444,7 +2444,7 @@ namespace sequoia::testing
     };
 
     const auto fakeProjectRoot{fake_project_root(auxiliary_materials())};
-    const auto sharedRoot{(fakeProjectRoot / "TestShared").generic_string()};
+    const auto testShared{(fakeProjectRoot / "TestShared").generic_string()};
 
     check(equality,
           "Without --reference-root, a test has no reference root",
@@ -2453,17 +2453,17 @@ namespace sequoia::testing
 
     check(equality,
           "--reference-root gives a test the root it names",
-          runAlone(std::type_identity<shared_reference_root_free_test>{}, "--reference-root", sharedRoot),
+          runAlone(std::type_identity<reference_root_free_test>{}, "--reference-root", testShared),
           return_code::success);
 
     check(equality,
           "With --reference-root, a test which requires no reference root fails",
-          runAlone(std::type_identity<no_reference_root_free_test>{}, "--reference-root", sharedRoot),
+          runAlone(std::type_identity<no_reference_root_free_test>{}, "--reference-root", testShared),
           return_code::soft_failures);
 
     check(equality,
           "Without --reference-root, a test which requires the root named fails",
-          runAlone(std::type_identity<shared_reference_root_free_test>{}),
+          runAlone(std::type_identity<reference_root_free_test>{}),
           return_code::soft_failures);
 
     check_exception_thrown<std::runtime_error>(
@@ -3129,9 +3129,11 @@ namespace sequoia::testing
     constexpr auto name{test_name<scratch_writing_free_test>()};
     const auto summaryDiscriminator{get_discriminator<summary_discriminator_probe, scratch_writing_free_test>(cache)};
 
-    test_to_run testToRun{test_vessel{make_test<scratch_writing_free_test>(projPaths, cache, recovery_mode::none, std::nullopt)},
-                          test_summary_path{source, name, projPaths, summaryDiscriminator},
-                          test_execution_record_path{source, name, projPaths}};
+    test_to_run testToRun{
+      test_vessel{make_test<scratch_writing_free_test>(projPaths, cache, recovery_mode::none, std::nullopt)},
+      test_summary_path{source, name, projPaths, summaryDiscriminator},
+      test_execution_record_path{source, name, projPaths}
+    };
 
     const auto& materials{testToRun.materials_paths()};
     fs::remove_all(materials.discarded_materials_root());

@@ -114,7 +114,8 @@ namespace sequoia::testing
         const auto source{projPaths.tests().repo() / "Materials" / std::format("{}.cpp", sourceStem)};
         const individual_materials_paths materials{source, "fake_test", projPaths, null_discriminator};
         std::ignore = prepare_materials(materials, remover);
-        return std::pair{fake_test{"fake_test", source, projPaths, materials, {}, std::nullopt, null_discriminator}, materials};
+        return std::pair{fake_test{"fake_test", source, projPaths, materials, {}, std::nullopt, null_discriminator},
+                         materials};
       }
     };
 

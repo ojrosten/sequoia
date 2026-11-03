@@ -694,7 +694,10 @@ namespace sequoia::testing
       const bool toRun{m_Filter(source, enclosing_suites(source), testKind) && in_mode(runner_mode::test)};
       auto testToRun{
         toRun ? std::optional<test_to_run>{std::in_place,
-                                           test_vessel{make_test<T>(m_ProjPaths, m_CMakeCache, m_RecoveryMode, m_ReferenceRoot)},
+                                           test_vessel{make_test<T>(m_ProjPaths,
+                                                                    m_CMakeCache,
+                                                                    m_RecoveryMode,
+                                                                    m_ReferenceRoot)},
                                            summaryFile,
                                            executionRecordFile}
               : std::nullopt

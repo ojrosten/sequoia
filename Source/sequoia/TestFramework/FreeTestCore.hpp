@@ -122,7 +122,7 @@ namespace sequoia::testing
       return m_ProjectPaths;
     }
 
-    /** \brief The root of the tree against which the test compares its
+    /** \brief The root of the tree against which to compare the test's
                project, if the test was given one.
      */
     [[nodiscard]]
