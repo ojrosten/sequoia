@@ -647,6 +647,18 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    fs::path reference_root(fs::path root, const fs::path& projectRoot)
+    {
+      throw_unless_directory(root, "\nThe reference root must be a directory");
+      if(fs::equivalent(root, projectRoot))
+        throw std::runtime_error{
+          std::format("Reference root {} is the project root, {}", root.generic_string(), projectRoot.generic_string())
+        };
+
+      return root;
+    }
+
+    [[nodiscard]]
     std::string to_reference_root_option(const std::optional<fs::path>& referenceRoot)
     {
       auto toOption{
@@ -1482,7 +1494,7 @@ namespace sequoia::testing
                     "Leave out the test defined in a source file"
                   }}},
                   {{{"--reference-root", {}, {"path"},
-                    [this](const arg_list& args) { m_ProjPaths.set_reference_root(args.front()); },
+                    [this](const arg_list& args) { m_ReferenceRoot = reference_root(args.front(), proj_paths().project_root()); },
                     {},
                     "Name the root of the tree against which tests compare this project"
                   }}},
@@ -1750,7 +1762,7 @@ namespace sequoia::testing
 
     const auto selection{selection_options()},
                async{to_async_option(m_ConcurrencyMode, m_PoolSize)},
-               referenceRootOption{to_reference_root_option(proj_paths().reference_root())};
+               referenceRootOption{to_reference_root_option(m_ReferenceRoot)};
 
     auto code{return_code::success};
     for(std::size_t i{}; i < m_NumReps; ++i)

@@ -646,20 +646,6 @@ namespace sequoia::testing
       return m_Discovered;
     }
 
-    /** \brief The root of the tree against which to compare this project, if
-               `set_reference_root` set one.
-     */
-    [[nodiscard]]
-    const std::optional<std::filesystem::path>& reference_root() const noexcept
-    {
-      return m_ReferenceRoot;
-    }
-
-    /** \throws std::runtime_error if `root` is not a directory, or is
-        equivalent to `project_root()`
-     */
-    void set_reference_root(std::filesystem::path root);
-
     [[nodiscard]]
     prune_paths prune() const;
 
@@ -681,7 +667,5 @@ namespace sequoia::testing
     build_system_paths   m_BuildSystem;
 
     std::vector<main_paths> m_AncillaryMainCpps{};
-
-    std::optional<std::filesystem::path> m_ReferenceRoot{};
   };
 }

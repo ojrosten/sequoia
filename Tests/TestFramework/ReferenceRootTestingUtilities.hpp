@@ -16,22 +16,20 @@
 
 namespace sequoia::testing
 {
-  /** \throws std::runtime_error if `projPaths` holds no reference root, or
-      if the reference root holds no regular file
-      `Source/sequoia/CMakeLists.txt`
+  /** \throws std::runtime_error if `referenceRoot` holds no root, or holds a
+      root with no regular file `Source/sequoia/CMakeLists.txt`
    */
   [[nodiscard]]
-  inline std::filesystem::path reference_sequoia_root(const project_paths& projPaths)
+  inline std::filesystem::path reference_sequoia_root(const std::optional<std::filesystem::path>& referenceRoot)
   {
-    const auto& root{projPaths.reference_root()};
-    if(!root)
+    if(!referenceRoot)
       throw std::runtime_error{
         "No reference root given: run with --reference-root <path>, the root of a sequoia tree to compare against"
       };
 
-    throw_unless_regular_file(source_paths{*root, "sequoia"}.cmake_lists(),
+    throw_unless_regular_file(source_paths{*referenceRoot, "sequoia"}.cmake_lists(),
                               "\nThe reference root must be the root of a sequoia tree");
 
-    return *root;
+    return *referenceRoot;
   }
 }

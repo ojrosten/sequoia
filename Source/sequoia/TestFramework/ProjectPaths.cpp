@@ -410,17 +410,6 @@ namespace sequoia::testing
     throw_unless_regular_file(main().common_includes(), "\nCommon includes not found");
   }
 
-  void project_paths::set_reference_root(fs::path root)
-  {
-    throw_unless_directory(root, "\nThe reference root must be a directory");
-    if(fs::equivalent(root, project_root()))
-      throw std::runtime_error{
-        std::format("Reference root {} is the project root, {}", root.generic_string(), project_root().generic_string())
-      };
-
-    m_ReferenceRoot = std::move(root);
-  }
-
   [[nodiscard]]
   prune_paths project_paths::prune() const
   {

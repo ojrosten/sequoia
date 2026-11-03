@@ -60,7 +60,7 @@ namespace sequoia::testing
     const auto rebasedSource{rebase_from(source_file(), get_project_paths().project_root())};
 
     {
-      const fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, null_discriminator};
+      const fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, std::nullopt, null_discriminator};
 
       check(equality,
             reporter{"Exceptions File Path"},
@@ -69,7 +69,7 @@ namespace sequoia::testing
     }
 
     {
-      const fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, {""}};
+      const fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, std::nullopt, {""}};
 
       check(equality,
             reporter{"Exceptions File Path"},
@@ -84,6 +84,7 @@ namespace sequoia::testing
         projPaths,
         {},
         {},
+        std::nullopt,
         {"baz"}
       };
 
@@ -113,7 +114,7 @@ namespace sequoia::testing
         const auto source{projPaths.tests().repo() / "Materials" / std::format("{}.cpp", sourceStem)};
         const individual_materials_paths materials{source, "fake_test", projPaths, null_discriminator};
         std::ignore = prepare_materials(materials, remover);
-        return std::pair{fake_test{"fake_test", source, projPaths, materials, {}, null_discriminator}, materials};
+        return std::pair{fake_test{"fake_test", source, projPaths, materials, {}, std::nullopt, null_discriminator}, materials};
       }
     };
 
@@ -200,6 +201,7 @@ namespace sequoia::testing
         projPaths,
         individual_materials_paths{},
         {},
+        std::nullopt,
         null_discriminator
       };
 

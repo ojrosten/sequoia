@@ -314,8 +314,8 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2412
-Without --reference-root, the project has no reference sequoia root
+Tests/TestFramework/TestRunnerTest.cpp, Line 2470
+Without a reference root, there is no reference sequoia root
 
 Expected Exception Type:
 [std::runtime_error]
@@ -323,7 +323,7 @@ No reference root given: run with --reference-root <path>, the root of a sequoia
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2436
+Tests/TestFramework/TestRunnerTest.cpp, Line 2488
 A reference root which does not exist
 
 Expected Exception Type:
@@ -334,7 +334,7 @@ The reference root must be a directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2439
+Tests/TestFramework/TestRunnerTest.cpp, Line 2491
 A reference root which is a regular file
 
 Expected Exception Type:
@@ -345,7 +345,7 @@ The reference root must be a directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2442
+Tests/TestFramework/TestRunnerTest.cpp, Line 2494
 A reference root which is the project root, spelt otherwise
 
 Expected Exception Type:
@@ -354,7 +354,7 @@ Reference root output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runne
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2456
+Tests/TestFramework/TestRunnerTest.cpp, Line 2505
 A reference root whose Source/sequoia holds no CMakeLists.txt
 
 Expected Exception Type:
@@ -365,7 +365,7 @@ The reference root must be the root of a sequoia tree
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2459
+Tests/TestFramework/TestRunnerTest.cpp, Line 2508
 A reference root whose Source/sequoia/CMakeLists.txt is a directory
 
 Expected Exception Type:
@@ -376,7 +376,7 @@ The reference root must be the root of a sequoia tree
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3140
+Tests/TestFramework/TestRunnerTest.cpp, Line 3189
 Exit status 1 is not a runner's
 
 Expected Exception Type:
@@ -386,7 +386,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3140
+Tests/TestFramework/TestRunnerTest.cpp, Line 3189
 Exit status 2 is not a runner's
 
 Expected Exception Type:
@@ -396,7 +396,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3140
+Tests/TestFramework/TestRunnerTest.cpp, Line 3189
 Exit status 23 is not a runner's
 
 Expected Exception Type:
@@ -406,7 +406,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3140
+Tests/TestFramework/TestRunnerTest.cpp, Line 3189
 Exit status 64 is not a runner's
 
 Expected Exception Type:
@@ -416,7 +416,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3140
+Tests/TestFramework/TestRunnerTest.cpp, Line 3189
 Exit status 66 is not a runner's
 
 Expected Exception Type:
@@ -426,7 +426,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3140
+Tests/TestFramework/TestRunnerTest.cpp, Line 3189
 Exit status 77 is not a runner's
 
 Expected Exception Type:
@@ -436,7 +436,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3140
+Tests/TestFramework/TestRunnerTest.cpp, Line 3189
 Exit status 78 is not a runner's
 
 Expected Exception Type:
@@ -446,7 +446,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3140
+Tests/TestFramework/TestRunnerTest.cpp, Line 3189
 Exit status 80 is not a runner's
 
 Expected Exception Type:
@@ -456,7 +456,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3140
+Tests/TestFramework/TestRunnerTest.cpp, Line 3189
 Exit status 112 is not a runner's
 
 Expected Exception Type:
@@ -466,7 +466,7 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3184
+Tests/TestFramework/TestRunnerTest.cpp, Line 3233
 Bits no flag occupies
 
 Expected Exception Type:
@@ -475,7 +475,7 @@ Unrecognized bits in return_code: 64
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 3302
+Tests/TestFramework/TestRunnerTest.cpp, Line 3351
 A wall clock shorter than the critical path's tests
 
 Expected Exception Type:

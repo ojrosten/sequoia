@@ -155,7 +155,7 @@ namespace sequoia::testing
   void runner_performance_against_reference_test::run_tests()
   {
     const auto& build{get_project_paths().build()};
-    const auto referenceRoot{reference_sequoia_root(get_project_paths())},
+    const auto referenceRoot{reference_sequoia_root(reference_root())},
                workload{auxiliary_materials() / "Workload"},
                scratchpad{scratchpad_materials()};
 

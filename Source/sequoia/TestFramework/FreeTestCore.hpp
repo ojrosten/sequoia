@@ -47,10 +47,12 @@ namespace sequoia::testing
               const normal_path& srcFile,
               project_paths projPaths,
               individual_materials_paths materials,
+              std::optional<std::filesystem::path> referenceRoot,
               const std::optional<std::string>& outputDiscriminator)
       : m_Name{name}
       , m_ProjectPaths{std::move(projPaths)}
       , m_Materials{std::move(materials)}
+      , m_ReferenceRoot{std::move(referenceRoot)}
       , m_Diagnostics{m_ProjectPaths, m_Name, srcFile, mode, outputDiscriminator}
     {}
 
@@ -120,6 +122,15 @@ namespace sequoia::testing
       return m_ProjectPaths;
     }
 
+    /** \brief The root of the tree against which the test compares its
+               project, if the test was given one.
+     */
+    [[nodiscard]]
+    const std::optional<std::filesystem::path>& reference_root() const noexcept
+    {
+      return m_ReferenceRoot;
+    }
+
     [[nodiscard]]
     const individual_diagnostics_paths& diagnostics_file_paths() const noexcept
     {
@@ -149,6 +160,7 @@ namespace sequoia::testing
     std::string m_Name{};
     project_paths m_ProjectPaths{};
     individual_materials_paths m_Materials{};
+    std::optional<std::filesystem::path> m_ReferenceRoot{};
     individual_diagnostics_paths m_Diagnostics{};
   };
 
@@ -180,8 +192,15 @@ namespace sequoia::testing
                project_paths projPaths,
                individual_materials_paths materials,
                active_recovery_files files,
+               std::optional<std::filesystem::path> referenceRoot,
                const std::optional<std::string>& outputDiscriminator)
-      : test_base{name, Mode, srcFile, std::move(projPaths), std::move(materials), outputDiscriminator}
+      : test_base{name,
+                  Mode,
+                  srcFile,
+                  std::move(projPaths),
+                  std::move(materials),
+                  std::move(referenceRoot),
+                  outputDiscriminator}
       , checker<Mode, Extender>{std::move(files)}
     {}
 
