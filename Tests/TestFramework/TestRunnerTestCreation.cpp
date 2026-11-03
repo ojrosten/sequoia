@@ -8,7 +8,6 @@
 #include "TestRunnerTestCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
-#include "Utilities/TestUtilities.hpp"
 
 #include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
@@ -352,7 +351,7 @@ namespace sequoia::testing
         replace_all(thrown,
                     std::format("--preset {}`", runtime::quote_for_shell(preset)),
                     std::format("--preset {}`", runtime::quote_for_shell("<preset>")));
-        return relative_to_root(projPaths, std::move(thrown));
+        return default_exception_message_postprocessor{}(projPaths, std::move(thrown));
       }
     };
 
