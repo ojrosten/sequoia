@@ -61,6 +61,12 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
+  std::string root_displacement_message(std::string_view method)
+  {
+    return std::format("{}a tree's root is node 0, and may not move", error_prefix(method));
+  }
+
+  [[nodiscard]]
   std::string edge_index_range_message(std::string_view method, const edge_indices edgeIndices, std::string_view indexName, const std::size_t size, const std::size_t index)
   {
     return std::format("{}{} index {} out of range - max index is {}",

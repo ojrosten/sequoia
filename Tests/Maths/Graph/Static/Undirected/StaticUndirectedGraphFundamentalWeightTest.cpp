@@ -7,6 +7,7 @@
 
 #include "StaticUndirectedGraphFundamentalWeightTest.hpp"
 #include "Maths/Graph/GraphTestingUtilities.hpp"
+#include "Maths/Graph/GraphSortStabilityTestingUtilities.hpp"
 
 #include "sequoia/Maths/Graph/StaticGraph.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
@@ -56,6 +57,8 @@ namespace sequoia::testing
     test_node_1_node_0();
     test_node_1_1_node_0_0();
     test_node_1_2_node_0_2_node_0_1();
+
+    check_sort_nodes_is_stable<static_undirected_graph<0, stability_check_node_count, null_weight, std::size_t>>(*this);
   }
 
   template<class EdgeWeight, class NodeWeight>
