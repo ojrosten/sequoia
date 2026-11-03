@@ -28,6 +28,7 @@ namespace sequoia::testing
     test_replace();
     test_replace_all();
     test_replace_all_recursive();
+    test_replace_all_recursive_refusals();
   }
 
   void substitutions_free_test::test_camel_case()
@@ -163,5 +164,26 @@ namespace sequoia::testing
 
     // Nothing is written, so the rewriting terminates
     check(equality, "Empty from, empty to", replace_all_recursive("ab", "", ""), "ab"s);
+
+    // The occurrence at the start of a replacement is not searched for again
+    check(equality, "From at the start of to only", replace_all_recursive("a", "a", "ab"), "ab"s);
+    check(equality, "From beyond the first character of to, absent from the text", replace_all_recursive("c", "a", "ba"), "c"s);
+    check(equality, "Empty from, absent from the text, empty to", replace_all_recursive("", "a", ""), ""s);
+  }
+
+  void substitutions_free_test::test_replace_all_recursive_refusals()
+  {
+    // Each refusal has from in the text, and in to beyond its first character,
+    // and no other cause
+    check_exception_thrown<std::invalid_argument>("From at the end of to", [](){ return replace_all_recursive("a", "a", "ba"); });
+    check_exception_thrown<std::invalid_argument>("From in the middle of to", [](){ return replace_all_recursive("a", "a", "bab"); });
+    check_exception_thrown<std::invalid_argument>("From at the start and end of to", [](){ return replace_all_recursive("a", "a", "aa"); });
+    check_exception_thrown<std::invalid_argument>("Longer from", [](){ return replace_all_recursive("xabx", "ab", "cab"); });
+    check_exception_thrown<std::invalid_argument>("Empty from, non-empty to", [](){ return replace_all_recursive("ab", "", "X"); });
+    check_exception_thrown<std::invalid_argument>("Empty from in empty text, non-empty to", [](){ return replace_all_recursive("", "", "X"); });
+
+    std::string text{"xax"};
+    check_exception_thrown<std::invalid_argument>("In place", [&text](){ return replace_all_recursive(text, "a", "ba"); });
+    check(equality, "In place refusal leaves the text unchanged", text, "xax"s);
   }
 }

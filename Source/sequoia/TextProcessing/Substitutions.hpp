@@ -108,9 +108,14 @@ namespace sequoia
 
   /** \brief Replaces every occurrence of `from`, including those beginning after the first character of a replacement.
 
-      \pre The rewriting terminates. It does not, once a replacement has been made, if `from`
-           occurs in `to` beyond the first character, since each replacement then writes the next
-           occurrence; an empty `from` with a non-empty `to` is the simplest case.
+      The search for the next occurrence starts one character after the start
+      of the last replacement. So if `from` occurs in `to` beyond its first
+      character, each replacement writes the next occurrence, and the
+      rewriting never ends.
+
+      \throws std::invalid_argument if `from` occurs in `text` and in `to`
+              beyond its first character, in which case `text` is unchanged.
+              An empty `from` with a non-empty `to` is the simplest case.
    */
   std::string& replace_all_recursive(std::string& text, std::string_view from, std::string_view to);
 

@@ -1,0 +1,63 @@
+Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 178
+From at the end of to
+
+Expected Exception Type:
+[std::invalid_argument]
+Replacing "a" with "ba" does not terminate, since each replacement writes the next occurrence
+
+=======================================
+
+Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 179
+From in the middle of to
+
+Expected Exception Type:
+[std::invalid_argument]
+Replacing "a" with "bab" does not terminate, since each replacement writes the next occurrence
+
+=======================================
+
+Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 180
+From at the start and end of to
+
+Expected Exception Type:
+[std::invalid_argument]
+Replacing "a" with "aa" does not terminate, since each replacement writes the next occurrence
+
+=======================================
+
+Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 181
+Longer from
+
+Expected Exception Type:
+[std::invalid_argument]
+Replacing "ab" with "cab" does not terminate, since each replacement writes the next occurrence
+
+=======================================
+
+Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 182
+Empty from, non-empty to
+
+Expected Exception Type:
+[std::invalid_argument]
+Replacing "" with "X" does not terminate, since each replacement writes the next occurrence
+
+=======================================
+
+Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 183
+Empty from in empty text, non-empty to
+
+Expected Exception Type:
+[std::invalid_argument]
+Replacing "" with "X" does not terminate, since each replacement writes the next occurrence
+
+=======================================
+
+Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 186
+In place
+
+Expected Exception Type:
+[std::invalid_argument]
+Replacing "a" with "ba" does not terminate, since each replacement writes the next occurrence
+
+=======================================
+
