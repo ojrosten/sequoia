@@ -642,8 +642,8 @@ namespace sequoia::testing
                get_discriminator<materials_discriminator_probe, T>(cache)
              },
              make_active_recovery_paths(mode, projPaths),
-             referenceRoot,
-             get_discriminator<output_discriminator_probe, T>(cache)};
+             get_discriminator<output_discriminator_probe, T>(cache),
+             referenceRoot};
   }
 
   /** \brief Consumes command-line arguments and holds all test suites.

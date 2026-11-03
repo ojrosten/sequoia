@@ -47,8 +47,8 @@ namespace sequoia::testing
               const normal_path& srcFile,
               project_paths projPaths,
               individual_materials_paths materials,
-              std::optional<std::filesystem::path> referenceRoot,
-              const std::optional<std::string>& outputDiscriminator)
+              const std::optional<std::string>& outputDiscriminator,
+              std::optional<std::filesystem::path> referenceRoot)
       : m_Name{name}
       , m_ProjectPaths{std::move(projPaths)}
       , m_Materials{std::move(materials)}
@@ -192,15 +192,15 @@ namespace sequoia::testing
                project_paths projPaths,
                individual_materials_paths materials,
                active_recovery_files files,
-               std::optional<std::filesystem::path> referenceRoot,
-               const std::optional<std::string>& outputDiscriminator)
+               const std::optional<std::string>& outputDiscriminator,
+               std::optional<std::filesystem::path> referenceRoot)
       : test_base{name,
                   Mode,
                   srcFile,
                   std::move(projPaths),
                   std::move(materials),
-                  std::move(referenceRoot),
-                  outputDiscriminator}
+                  outputDiscriminator,
+                  std::move(referenceRoot)}
       , checker<Mode, Extender>{std::move(files)}
     {}
 
