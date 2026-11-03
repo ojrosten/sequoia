@@ -2386,8 +2386,8 @@ namespace sequoia::testing
 
   namespace
   {
-    /// Passes if its reference root names its project's `TestShared`
-    class reference_root_free_test final : public free_test
+    /// Passes if its reference root is its project's `TestShared`
+    class reference_root_requiring_free_test final : public free_test
     {
     public:
       using free_test::free_test;
@@ -2395,7 +2395,7 @@ namespace sequoia::testing
       [[nodiscard]]
       static std::filesystem::path source_file()
       {
-        return make_fake_file_path<reference_root_free_test>();
+        return make_fake_file_path<reference_root_requiring_free_test>();
       }
 
       void run_tests()
@@ -2407,7 +2407,7 @@ namespace sequoia::testing
     };
 
     /// Passes if it has no reference root
-    class no_reference_root_free_test final : public free_test
+    class reference_root_refusing_free_test final : public free_test
     {
     public:
       using free_test::free_test;
@@ -2415,7 +2415,7 @@ namespace sequoia::testing
       [[nodiscard]]
       static std::filesystem::path source_file()
       {
-        return make_fake_file_path<no_reference_root_free_test>();
+        return make_fake_file_path<reference_root_refusing_free_test>();
       }
 
       void run_tests()
@@ -2427,8 +2427,8 @@ namespace sequoia::testing
 
   /** Each run registers one fake test, which checks the reference root it
       receives, so that the run's return code is that test's alone. Each fake
-      test also runs where it should fail, so that a test which never ran
-      cannot pass for one which did.
+      test also runs where it should fail, so that a run in which the test
+      never executed cannot be mistaken for one in which it passed.
    */
   void test_runner_test::test_reference_root()
   {
@@ -2444,26 +2444,30 @@ namespace sequoia::testing
     };
 
     const auto fakeProjectRoot{fake_project_root(auxiliary_materials())};
-    const auto testShared{(fakeProjectRoot / "TestShared").generic_string()};
+    const auto testShared{fakeProjectRoot / "TestShared"};
 
     check(equality,
           "Without --reference-root, a test has no reference root",
-          runAlone(std::type_identity<no_reference_root_free_test>{}),
+          runAlone(std::type_identity<reference_root_refusing_free_test>{}),
           return_code::success);
 
     check(equality,
           "--reference-root gives a test the root it names",
-          runAlone(std::type_identity<reference_root_free_test>{}, "--reference-root", testShared),
+          runAlone(std::type_identity<reference_root_requiring_free_test>{},
+                   "--reference-root",
+                   testShared.generic_string()),
           return_code::success);
 
     check(equality,
           "With --reference-root, a test which requires no reference root fails",
-          runAlone(std::type_identity<no_reference_root_free_test>{}, "--reference-root", testShared),
+          runAlone(std::type_identity<reference_root_refusing_free_test>{},
+                   "--reference-root",
+                   testShared.generic_string()),
           return_code::soft_failures);
 
     check(equality,
-          "Without --reference-root, a test which requires the root named fails",
-          runAlone(std::type_identity<reference_root_free_test>{}),
+          "Without --reference-root, a test which requires a reference root fails",
+          runAlone(std::type_identity<reference_root_requiring_free_test>{}),
           return_code::soft_failures);
 
     check_exception_thrown<std::runtime_error>(
@@ -2471,16 +2475,13 @@ namespace sequoia::testing
       []() { return reference_sequoia_root(std::nullopt); });
 
     auto checkRefusal{
-      [this](const reporter& description, const fs::path& referenceRoot) {
+      [this, &runAlone](const reporter& description, const fs::path& referenceRoot) {
         check_exception_thrown<std::runtime_error>(
           description,
-          [this, &referenceRoot]() {
-            std::stringstream outputStream{};
-            commandline_arguments args{
-              fake_project_commandline(auxiliary_materials(), "--reference-root", referenceRoot.generic_string())
-            };
-
-            const auto runner{make_fake_project_runner(args, outputStream)};
+          [&runAlone, &referenceRoot]() {
+            return runAlone(std::type_identity<reference_root_refusing_free_test>{},
+                            "--reference-root",
+                            referenceRoot.generic_string());
           });
       }
     };

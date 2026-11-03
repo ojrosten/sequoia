@@ -631,6 +631,20 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    fs::path reference_root(fs::path referenceRoot, const fs::path& projectRoot)
+    {
+      throw_unless_directory(referenceRoot, "\nThe reference root must be a directory");
+      if(fs::equivalent(referenceRoot, projectRoot))
+        throw std::runtime_error{
+          std::format("Reference root {} is the project root, {}",
+                      referenceRoot.generic_string(),
+                      projectRoot.generic_string())
+        };
+
+      return referenceRoot;
+    }
+
+    [[nodiscard]]
     std::string to_async_option(concurrency_mode mode, std::size_t threadPoolSize)
     {
       switch(mode)
@@ -644,18 +658,6 @@ namespace sequoia::testing
       }
 
       throw std::logic_error{"Illegal option for concurrency_mode"};
-    }
-
-    [[nodiscard]]
-    fs::path reference_root(fs::path root, const fs::path& projectRoot)
-    {
-      throw_unless_directory(root, "\nThe reference root must be a directory");
-      if(fs::equivalent(root, projectRoot))
-        throw std::runtime_error{
-          std::format("Reference root {} is the project root, {}", root.generic_string(), projectRoot.generic_string())
-        };
-
-      return root;
     }
 
     [[nodiscard]]

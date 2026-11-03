@@ -16,8 +16,10 @@
 
 namespace sequoia::testing
 {
-  /** \throws std::runtime_error if `referenceRoot` holds no root, or holds a
-      root with no regular file `Source/sequoia/CMakeLists.txt`
+  /** \brief Returns the root that `referenceRoot` holds.
+
+      \throws std::runtime_error if `referenceRoot` holds no root, or holds a
+               root with no regular file `Source/sequoia/CMakeLists.txt`
    */
   [[nodiscard]]
   inline std::filesystem::path reference_sequoia_root(const std::optional<std::filesystem::path>& referenceRoot)

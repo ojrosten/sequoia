@@ -618,8 +618,9 @@ namespace sequoia::testing
   /** \brief Makes a test of type `T` for the project at `projPaths`.
 
       The test's discriminators are read from `cache`, `mode` chooses its
-      recovery files, and `referenceRoot` is its reference root. An exception
-      which a discriminator hook of `T` throws propagates.
+      recovery files, and `referenceRoot` is what its `reference_root()`
+      returns. An exception which a discriminator hook of `T` throws
+      propagates.
    */
   template<concrete_test T>
   [[nodiscard]]
