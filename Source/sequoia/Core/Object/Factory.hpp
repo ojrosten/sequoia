@@ -35,7 +35,7 @@ namespace sequoia::object
   {
   public:
     using value_type = std::string;
-    using reference  = value_type;
+    using reference  = const value_type&;
 
     constexpr factory_dereference_policy() = default;
     constexpr factory_dereference_policy(const factory_dereference_policy&) = default;
@@ -88,6 +88,11 @@ namespace sequoia::object
     using storage = std::array<element, size()>;
     using const_storage_iterator = storage::const_iterator;
   public:
+    /** \brief Iterator over the products' names.
+
+        Dereferencing gives a reference to a name held by the factory, not a
+        copy. The reference is valid only while the factory lives.
+     */
     using names_iterator = utilities::iterator<const_storage_iterator, factory_dereference_policy<const_storage_iterator>>;
 
     factory()
@@ -225,6 +230,11 @@ namespace sequoia::object
     using storage = std::map<key, creator, std::ranges::less>;
     using const_storage_iterator = storage::const_iterator;
   public:
+    /** \brief Iterator over the products' names.
+
+        Dereferencing gives a reference to a name held by the factory, not a
+        copy. The reference is valid only while the factory lives.
+     */
     using names_iterator = utilities::iterator<const_storage_iterator, factory_dereference_policy<const_storage_iterator>>;
 
     /** \brief Registers a product, throwing if the name is empty or already taken. */

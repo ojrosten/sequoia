@@ -43,6 +43,7 @@ namespace sequoia::testing
   void partition_iterator_test::run_tests()
   {
     test_index_type_constraint();
+    test_comparisons_with_const_iterators();
     test_iterators();
   }
 
@@ -63,6 +64,19 @@ namespace sequoia::testing
     STATIC_CHECK( const_reverse_partition_iterator_admits<unsigned char>);
     STATIC_CHECK(!const_reverse_partition_iterator_admits<char>);
     STATIC_CHECK(!const_reverse_partition_iterator_admits<bool>);
+  }
+
+  void partition_iterator_test::test_comparisons_with_const_iterators()
+  {
+    using p_i_t     = partition_iterator<std::vector<int>, std::size_t>;
+    using c_p_i_t   = const_partition_iterator<std::vector<int>, std::size_t>;
+    using r_p_i_t   = reverse_partition_iterator<std::vector<int>, std::size_t>;
+    using c_r_p_i_t = const_reverse_partition_iterator<std::vector<int>, std::size_t>;
+
+    STATIC_CHECK(std::sentinel_for<c_p_i_t, p_i_t>);
+    STATIC_CHECK(std::sentinel_for<p_i_t, c_p_i_t>);
+    STATIC_CHECK(std::sentinel_for<c_r_p_i_t, r_p_i_t>);
+    STATIC_CHECK(std::sentinel_for<r_p_i_t, c_r_p_i_t>);
   }
 
   void partition_iterator_test::test_iterators()

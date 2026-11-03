@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <list>
+#include <memory>
 
 namespace sequoia::testing
 {
@@ -135,9 +136,24 @@ namespace sequoia::testing
     using iterator_with_comparable_data_policy
       = utilities::iterator<Iterator, utilities::identity_dereference_policy<Iterator, comparable_data_policy>>;
 
+    struct element_with_overloaded_address_of
+    {
+      constexpr std::nullptr_t operator&() const noexcept { return nullptr; }
+    };
+
     template<class I>
     constexpr bool has_arrow_operator_v{
       requires (I i) { i.operator->(); }
+    };
+
+    template<class I, class J>
+    constexpr bool has_equality_with_v{
+      requires (const I& i, const J& j) { i == j; }
+    };
+
+    template<class I, class J>
+    constexpr bool has_three_way_comparison_with_v{
+      requires (const I& i, const J& j) { i <=> j; }
     };
   }
 
@@ -151,7 +167,9 @@ namespace sequoia::testing
   {
     test_nested_bidirectional_iterator();
     test_comparisons_the_base_iterator_lacks();
+    test_comparisons_with_a_const_iterator();
     test_stashing_input_iterator();
+    test_arrow_operator_with_overloaded_address_of();
 
     test_iterator();
     test_const_iterator();
@@ -194,6 +212,57 @@ namespace sequoia::testing
     STATIC_CHECK(!std::three_way_comparable<iter_without_ordering_t>);
   }
 
+  void iterator_test::test_comparisons_with_a_const_iterator()
+  {
+    using namespace utilities;
+
+    using i_t  = std::array<int, 3>::iterator;
+    using ci_t = std::array<int, 3>::const_iterator;
+
+    using custom_iter_t  = iterator<i_t,  identity_dereference_policy<i_t>>;
+    using custom_citer_t = iterator<ci_t, identity_dereference_policy<ci_t>>;
+
+    STATIC_CHECK(std::equality_comparable_with<custom_iter_t, custom_citer_t>);
+    STATIC_CHECK(std::equality_comparable_with<custom_citer_t, custom_iter_t>);
+    STATIC_CHECK(std::three_way_comparable_with<custom_iter_t, custom_citer_t>);
+    STATIC_CHECK(std::three_way_comparable_with<custom_citer_t, custom_iter_t>);
+    STATIC_CHECK(std::sentinel_for<custom_citer_t, custom_iter_t>);
+    STATIC_CHECK(std::sentinel_for<custom_iter_t, custom_citer_t>);
+
+    STATIC_CHECK([](){
+      std::array<int, 3> a{};
+      const custom_iter_t  i{a.begin()};
+      const custom_citer_t ci{a.cbegin()}, cj{a.cbegin() + 1};
+      return (i == ci) && (ci == i) && (i != cj) && (cj != i) && ((i <=> cj) < 0) && ((cj <=> i) > 0);
+    }());
+
+    // Unlike null_data_policy, comparable_data_policy declares <=>.
+    using comparable_data_iter_t  = iterator_with_comparable_data_policy<i_t>;
+    using comparable_data_citer_t = iterator_with_comparable_data_policy<ci_t>;
+
+    STATIC_CHECK(std::three_way_comparable_with<comparable_data_iter_t, comparable_data_citer_t>);
+    STATIC_CHECK(std::three_way_comparable_with<comparable_data_citer_t, comparable_data_iter_t>);
+
+    STATIC_CHECK([](){
+      std::array<int, 3> a{};
+      const comparable_data_iter_t  i{a.begin()};
+      const comparable_data_citer_t cj{a.cbegin() + 1};
+      return (i != cj) && (cj != i) && ((i <=> cj) < 0) && ((cj <=> i) > 0);
+    }());
+
+    // The base iterators compare, but neither iterator converts to the other.
+    using scaling_citer_t = iterator<ci_t, scaling_dereference_policy<ci_t>>;
+
+    STATIC_CHECK( has_equality_with_v<custom_iter_t, custom_citer_t>);
+    STATIC_CHECK( has_equality_with_v<custom_citer_t, custom_iter_t>);
+    STATIC_CHECK(!has_equality_with_v<custom_iter_t, scaling_citer_t>);
+    STATIC_CHECK(!has_equality_with_v<scaling_citer_t, custom_iter_t>);
+    STATIC_CHECK( has_three_way_comparison_with_v<custom_iter_t, custom_citer_t>);
+    STATIC_CHECK( has_three_way_comparison_with_v<custom_citer_t, custom_iter_t>);
+    STATIC_CHECK(!has_three_way_comparison_with_v<custom_iter_t, scaling_citer_t>);
+    STATIC_CHECK(!has_three_way_comparison_with_v<scaling_citer_t, custom_iter_t>);
+  }
+
   void iterator_test::test_stashing_input_iterator()
   {
     using namespace utilities;
@@ -205,6 +274,20 @@ namespace sequoia::testing
     STATIC_CHECK([](){
       const iter_t i{stashing_input_iterator{3}};
       return (*i == 3) && (*i.operator->() == 3);
+    }());
+  }
+
+  void iterator_test::test_arrow_operator_with_overloaded_address_of()
+  {
+    using namespace utilities;
+
+    using i_t    = std::array<element_with_overloaded_address_of, 2>::iterator;
+    using iter_t = iterator<i_t, identity_dereference_policy<i_t>>;
+
+    STATIC_CHECK([](){
+      std::array<element_with_overloaded_address_of, 2> a{};
+      const iter_t i{a.begin() + 1};
+      return i.operator->() == std::addressof(a[1]);
     }());
   }
 

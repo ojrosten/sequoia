@@ -229,8 +229,18 @@ namespace sequoia::testing
 
   void factory_test::test_names_iterator_concepts()
   {
-    STATIC_CHECK(std::input_iterator<factory<int, double>::names_iterator>);
-    STATIC_CHECK(std::input_iterator<erasing_factory<std::variant<int, double>>::names_iterator>);
+    using factory_t         = factory<int, double>;
+    using erasing_factory_t = erasing_factory<std::variant<int, double>>;
+
+    STATIC_CHECK(std::is_same_v<std::iter_reference_t<factory_t::names_iterator>, const std::string&>);
+    STATIC_CHECK(std::random_access_iterator<factory_t::names_iterator>);
+    STATIC_CHECK(std::is_same_v<std::iterator_traits<factory_t::names_iterator>::iterator_category,
+                                std::random_access_iterator_tag>);
+
+    STATIC_CHECK(std::is_same_v<std::iter_reference_t<erasing_factory_t::names_iterator>, const std::string&>);
+    STATIC_CHECK(std::bidirectional_iterator<erasing_factory_t::names_iterator>);
+    STATIC_CHECK(std::is_same_v<std::iterator_traits<erasing_factory_t::names_iterator>::iterator_category,
+                                std::bidirectional_iterator_tag>);
   }
 
   void factory_test::test_erasing_factory()
