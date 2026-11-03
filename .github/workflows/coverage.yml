@@ -24,6 +24,11 @@ on:
         description: 'A branch which the job merges into the checked-out commit before building, as tests.yml''s input of the same name does. Empty tests the checked-out commit itself.'
         required: true
         type: string
+      false_negative:
+        description: 'Corrupt the checkout so that the gate on uncalled functions must go red. The control for the gate: see false-negative.yml.'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   coverage:
@@ -205,6 +210,22 @@ jobs:
       - name: Test the tracefile checks
         if: env.NEEDS_TESTING == 'true'
         run: scripts/tests/check_tracefile_selftest.sh
+
+      # The step makes two corruptions, one for each finding of the gate:
+      #   - a function of Source which nothing calls, an error;
+      #   - an entry of the baseline naming a function which does not exist, a
+      #     notice, which baseline-tightener.yml acts on.
+      # The step checks that the source it adds to exists first: a control that
+      # corrupts nothing is the false negative it exists to catch.
+      - name: Corrupt the tree, so that the gate must go red
+        if: ${{ inputs.false_negative && env.NEEDS_TESTING == 'true' }}
+        run: |
+          source=Source/sequoia/TestFramework/TestRunner.cpp
+          [ -f "$source" ] || { echo "::error::$source is not where the control expects it"; exit 1; }
+          printf '%s\n' '' 'namespace sequoia::testing' '{' '  void false_negative_control_uncalled() {}' '}' >> "$source"
+          printf '%s\n' "$source" '    sequoia::testing::false_negative_control_absent()' \
+            >> coverage_reports/uncalled_functions.txt
+          git diff --stat
 
       - name: Configure and build
         if: env.NEEDS_TESTING == 'true'
