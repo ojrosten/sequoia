@@ -185,10 +185,9 @@ jobs:
 
       # tests.yml is the tiers' one recipe for building and running the
       # suite. This job runs no suite, so it copies the steps it needs from
-      # tests.yml's "Install the toolchain (Linux)", "Configure" and "Build",
-      # which say why each part exists. A change to how tests.yml installs
-      # (the retries, the repositories removed) belongs here too; a change of
-      # toolchain does not, as above.
+      # tests.yml's "Install the toolchain (Linux)", "Configure" and "Build".
+      # Those steps, and the scripts they call, say why each part exists. A
+      # change of toolchain there does not belong here, as above.
       #
       # The copy leaves out gdb, which reads a failed suite's stacks. It
       # configures without EXEC_ARGS, which only the `run` target reads, and
@@ -196,19 +195,7 @@ jobs:
       - name: Install the toolchain
         working-directory: tooling
         run: |
-          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
-                     /etc/apt/sources.list.d/microsoft-prod.list
-          sudo scripts/retry.sh 3 180 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh update -qq --error-on=any \
-            || { echo "::error::apt-get update failed: each attempt above says why"; exit 1; }
-          packages=("$CXX" ninja-build libtbb-dev)
-          names=$(apt-cache pkgnames)
-          for pkg in "${packages[@]}"; do
-            grep -qFx -- "$pkg" <<< "$names" \
-              || { echo "::error::$pkg is not available on this image"; exit 1; }
-          done
-          sudo scripts/retry.sh 3 300 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh \
-            install -y --download-only "${packages[@]}"
-          sudo apt-get install -y --no-download "${packages[@]}"
+          sudo scripts/install_apt_packages.sh "$CXX" ninja-build libtbb-dev
           "$CXX" --version
           cmake --version
 
@@ -253,19 +240,10 @@ jobs:
       # demangled name, which may or may not carry the parameter list, so the
       # pattern ends in `*`. A count of zero means no function matched, as when
       # prune is renamed, and the record has no field.
-      #
-      # As in "Install the toolchain", only the download is retried, each
-      # later attempt from another mirror first, and the install then runs
-      # once. Unretried, the step took 562-630 s in three of eight runs from
-      # 2026-10-26 to 10-28: one download of 26.5 MB ran at 46.5 kB/s (run
-      # 40501869274).
       - name: Install valgrind
         continue-on-error: true
         working-directory: tooling
-        run: |
-          sudo scripts/retry.sh 3 300 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh \
-            install -y --download-only valgrind
-          sudo apt-get install -y --no-download valgrind
+        run: sudo scripts/install_apt_packages.sh valgrind
 
       - name: Give git an identity
         continue-on-error: true

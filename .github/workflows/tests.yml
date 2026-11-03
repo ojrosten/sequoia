@@ -161,81 +161,18 @@ jobs:
           echo "false-negative control: the test must fail against this" > "$prediction"
           git diff --stat
 
-      # The step checks each package against `apt-cache pkgnames`, which lists
-      # names exactly. `apt-get install` does not match names exactly: given a
-      # name with regex metacharacters that matches no package, it treats the
-      # name as a regex. So `g++-15` on noble resolves to clang-15, flang-15
-      # and llvm-15, and apt-get installs all three and exits 0.
+      # g++-15 comes from the Ubuntu archive. The Linux columns run on
+      # ubuntu-26.04, whose archive carries it. ubuntu-24.04's archive stops at
+      # g++-14, so a column there needs the toolchain PPA on Launchpad, whose
+      # index has answered 503 for hours. The tiers name ubuntu-26.04 rather
+      # than ubuntu-latest, so that the release changes only in a PR.
       #
-      # The step reads the list once into a variable, and searches for each
-      # name there. A pipe from apt-cache into `grep -q` fails: grep quits at
-      # its first match, apt-cache dies of SIGPIPE mid-list, and the job's
-      # pipefail fails the check although the name is listed. On ubuntu-26.04
-      # the pipe failed this way for g++-15 on every Linux column. -F because a
-      # name may hold a `.`, which a regex matches against any character.
-      #
-      # This step's removal of the Chrome and Microsoft lists, retry
-      # paragraphs, `apt-get update` and exact-name package check are repeated
-      # in coverage.yml's "Install the toolchain", and in part in
-      # symbol-table.yml, docs.yml and selftests.yml; change them all.
+      # gdb reads the stacks for a hung suite's snapshot and for a crash's
+      # core; the image has none.
       - name: Install the toolchain (Linux)
         if: inputs.needs_testing == 'true' && runner.os == 'Linux'
         run: |
-          # The hosted image ships Chrome's and Microsoft's apt repositories,
-          # which nothing here installs from. A bad index from either fails
-          # `apt-get update`, and with it the job.
-          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
-                     /etc/apt/sources.list.d/microsoft-prod.list
-          # g++-15 comes from the Ubuntu archive. The Linux columns run on
-          # ubuntu-26.04, whose archive carries it. ubuntu-24.04's archive
-          # stops at g++-14, so a column there needs the toolchain PPA on
-          # Launchpad, whose index has answered 503 for hours. The tiers name
-          # ubuntu-26.04 rather than ubuntu-latest, so that the release changes
-          # only in a PR.
-          #
-          # The archive is a live dependency of every Linux column, and an
-          # index refresh has hung until the job's timeout, before any compiler
-          # ran. So scripts/retry.sh runs each apt command that fetches: an
-          # attempt that fails, or runs past its limit, is retried a bounded
-          # number of times. The script runs as root, so that stopping an
-          # attempt reaches the processes apt starts. A whole install step
-          # takes 22-126 s, so the limits leave room for every retry within the
-          # job.
-          #
-          # The command retried is
-          # scripts/apt_get_demoting_preferred_mirrors_on_retry.sh, so
-          # that a later attempt fetches from another mirror first. On
-          # 2026-10-22, azure.archive.ubuntu.com, the mirror the image prefers,
-          # stalled most of an attempt, and the retry fetched from it again,
-          # too slowly to finish (run 39767016365, its docs job). In another
-          # run, apt turned to archive.ubuntu.com within one attempt, of its
-          # own accord, and fetched 95 MB from it in 6 s (run 39772556372,
-          # attempt 2, its docs job).
-          #
-          # Only the download is retried. The install then runs once, from the
-          # downloaded packages, with no download. apt-get runs dpkg in a
-          # session of its own, so stopping an attempt leaves dpkg running and
-          # holding its lock. Every later attempt then fails at once (run
-          # 39748507037, its docs job).
-          #
-          # `apt-get update` reports an index it could not fetch as a warning,
-          # and exits 0. The packages of that index are then missing from the
-          # list, and the check below blames the image, as it did for the PPA
-          # in runs 39614191959 and 39617611706. `--error-on=any` turns a
-          # failed index into an error, which scripts/retry.sh retries.
-          sudo scripts/retry.sh 3 180 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh update -qq --error-on=any \
-            || { echo "::error::apt-get update failed: each attempt above says why"; exit 1; }
-          # gdb reads the stacks for a hung suite's snapshot and for a crash's
-          # core; the image has none.
-          packages=("${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev gdb)
-          names=$(apt-cache pkgnames)
-          for pkg in "${packages[@]}"; do
-            grep -qFx -- "$pkg" <<< "$names" \
-              || { echo "::error::$pkg is not available on this image"; exit 1; }
-          done
-          sudo scripts/retry.sh 3 300 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh \
-            install -y --download-only "${packages[@]}"
-          sudo apt-get install -y --no-download "${packages[@]}"
+          sudo scripts/install_apt_packages.sh "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev gdb
           echo "CC=${{ matrix.cc }}"   >> "$GITHUB_ENV"
           echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
 
@@ -248,56 +185,9 @@ jobs:
           echo "CC=$(brew --prefix llvm)/bin/clang"    >> "$GITHUB_ENV"
           echo "CXX=$(brew --prefix llvm)/bin/clang++" >> "$GITHUB_ENV"
 
-      # With the Visual Studio generator, CMake finds the toolset itself. With
-      # Ninja, CMake looks for cl.exe on PATH, and nothing puts it there.
-      # vcvars does, but only within the cmd session that runs it. So the step
-      # captures what vcvars sets, and hands it to later steps:
-      #   - named variables through GITHUB_ENV, rather than the whole `set`
-      #     dump, so that the step cannot clobber the runner's own
-      #     environment;
-      #   - PATH through GITHUB_PATH, in Windows form, which a later bash
-      #     step's start-up translates.
       - name: Enter the MSVC environment (Windows, Ninja)
         if: inputs.needs_testing == 'true' && runner.os == 'Windows' && matrix.configure == 'msvc-ninja'
-        run: |
-          vswhere="/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
-          root=$("$vswhere" -latest -products '*' \
-                   -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \
-                   -property installationPath)
-          [ -n "$root" ] || { echo "::error::no VC toolset reported by vswhere"; exit 1; }
-          vcvars="$(cygpath -u "$root")/VC/Auxiliary/Build/vcvars64.bat"
-          [ -f "$vcvars" ] || { echo "::error::$vcvars does not exist"; exit 1; }
-
-          # vcvars runs from a batch file in RUNNER_TEMP, not through
-          # `cmd //c "call ... && set"`: Git bash's MSYS layer re-quotes an
-          # argument holding spaces and quotes, and cmd then reads the escaping
-          # literally. The batch file's own path has no spaces, so MSYS has
-          # nothing to re-quote.
-          bat="$RUNNER_TEMP/vcvars_dump.bat"
-          printf '@echo off\r\necho PATH_BEFORE=%%PATH%%\r\ncall "%s" >nul || exit /b 1\r\nset\r\n' "$(cygpath -w "$vcvars")" > "$bat"
-          dump=$(cmd //c "$(cygpath -w "$bat")" | tr -d '\r')
-          printf '%s\n' "$dump" | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINSTALLDIR|VSINSTALLDIR|WindowsSdkDir|WindowsSDKVersion|UCRTVersion|UniversalCRTSdkDir)=' >> "$GITHUB_ENV"
-
-          # The step forwards only the PATH entries vcvars added. Forwarding
-          # the whole PATH would put the runner's own entries ahead of
-          # themselves in a new order: WindowsApps then precedes Git\bin, and
-          # `shell: bash` resolves to the WSL stub in every later step.
-          #
-          # Nor does the step forward Visual Studio's bundled CMake and Ninja,
-          # which would otherwise come ahead of the image's. This column then
-          # builds with the same cmake as the msbuild columns, so that a red
-          # run here asks about the generator and nothing else.
-          before=$(printf '%s\n' "$dump" | grep '^PATH_BEFORE=' | sed 's/^[^=]*=//' | tr ';' '\n')
-          after=$(printf '%s\n' "$dump"  | grep -iE '^PATH='     | sed 's/^[^=]*=//' | tr ';' '\n')
-          added=$(printf '%s\n' "$after" | grep -vxF -f <(printf '%s\n' "$before") | grep -v '^$' | grep -vF 'CommonExtensions\Microsoft\CMake\')
-          printf '%s\n' "$added"
-          printf '%s\n' "$added" >> "$GITHUB_PATH"
-
-          # GITHUB_PATH reaches only later steps, so the step looks for ninja
-          # where a later step will: in the forwarded entries, then in this
-          # step's own PATH.
-          PATH="$(cygpath -pu "$(printf '%s\n' "$added" | paste -sd ';')"):$PATH" command -v ninja \
-            || { echo "no ninja on the forwarded PATH or the image's; installing one"; choco install ninja -y; }
+        run: scripts/enter_msvc_environment.sh
 
       # An install's exit status says that the installer ran, not that it
       # installed what was asked for. So this step prints the compiler and the
