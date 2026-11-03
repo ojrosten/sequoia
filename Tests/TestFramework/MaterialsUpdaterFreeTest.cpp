@@ -15,14 +15,6 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
-  namespace
-  {
-    // The wording and the form of the path are the standard library's, so only the type is witnessed
-    const auto elide_message{
-      [](const project_paths&, std::string) { return std::string{"[Message elided: it varies by standard library]"}; }
-    };
-  }
-
   [[nodiscard]]
   fs::path materials_updater_free_test::source_file()
   {
@@ -187,7 +179,7 @@ namespace sequoia::testing
           throw;
         }
       },
-      elide_message);
+      elide_standard_library_message);
 
     check(equality, "Deletion recorded before the throw", deleted, std::vector<fs::path>{to / "A/old.txt"});
   }

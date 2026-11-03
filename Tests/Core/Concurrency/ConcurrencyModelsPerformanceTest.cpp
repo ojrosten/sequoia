@@ -215,16 +215,16 @@ namespace sequoia::testing
   void threading_models_performance_test::test_waiting_task(const std::chrono::milliseconds millisecs)
   {
     {
-      waiting_task_with_baseline<wait, thread_pool<void>>        threadPoolTask{2u, millisecs, 2u};
-      waiting_task_with_baseline<wait, thread_pool<void, false>> threadPoolMonoTask{2u, millisecs, 2u};
-      waiting_task_with_baseline<wait, serial<void>>             nullThreadTask{2u, millisecs};
-      waiting_task_with_baseline<wait, asynchronous<void>>       asyncTask{2u, millisecs};
+      waiting_task_with_baseline<wait, thread_pool<void>>                   threadPoolTask{2u, millisecs, 2u};
+      waiting_task_with_baseline<wait, thread_pool_with_shared_queue<void>> sharedQueueTask{2u, millisecs, 2u};
+      waiting_task_with_baseline<wait, serial<void>>                        nullThreadTask{2u, millisecs};
+      waiting_task_with_baseline<wait, asynchronous<void>>                  asyncTask{2u, millisecs};
 
-      check_relative_performance("Two Waiting tasks; pool_2/null",
+      check_relative_performance("Two Waiting tasks; pool_2M/null",
                                  threadPoolTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
-      check_relative_performance("Two Waiting tasks; pool_2M/null",
-                                 threadPoolMonoTask.by_reference(), nullThreadTask.by_reference(),
+      check_relative_performance("Two Waiting tasks; pool_2/null",
+                                 sharedQueueTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
       check_relative_performance("Two Waiting tasks; async/null",
                                  asyncTask.by_reference(), nullThreadTask.by_reference(),
@@ -232,28 +232,28 @@ namespace sequoia::testing
     }
 
     {
-      waiting_task_with_baseline<wait, thread_pool<void>>        threadPoolTask{4u, millisecs, 2u};
-      waiting_task_with_baseline<wait, thread_pool<void, false>> threadPoolMonoTask{4u, millisecs, 2u};
-      waiting_task_with_baseline<wait, serial<void>>             nullThreadTask{4u, millisecs};
+      waiting_task_with_baseline<wait, thread_pool<void>>                   threadPoolTask{4u, millisecs, 2u};
+      waiting_task_with_baseline<wait, thread_pool_with_shared_queue<void>> sharedQueueTask{4u, millisecs, 2u};
+      waiting_task_with_baseline<wait, serial<void>>                        nullThreadTask{4u, millisecs};
 
-      check_relative_performance("Four Waiting tasks; pool_2/null",
+      check_relative_performance("Four Waiting tasks; pool_2M/null",
                                  threadPoolTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
-      check_relative_performance("Four Waiting tasks; pool_2M/null",
-                                 threadPoolMonoTask.by_reference(), nullThreadTask.by_reference(),
+      check_relative_performance("Four Waiting tasks; pool_2/null",
+                                 sharedQueueTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
     }
 
     {
-      waiting_task_with_baseline<wait, thread_pool<void>>        threadPoolTask{4u, millisecs, 4u};
-      waiting_task_with_baseline<wait, thread_pool<void, false>> threadPoolMonoTask{4u, millisecs, 4u};
-      waiting_task_with_baseline<wait, serial<void>>             nullThreadTask{4u, millisecs};
+      waiting_task_with_baseline<wait, thread_pool<void>>                   threadPoolTask{4u, millisecs, 4u};
+      waiting_task_with_baseline<wait, thread_pool_with_shared_queue<void>> sharedQueueTask{4u, millisecs, 4u};
+      waiting_task_with_baseline<wait, serial<void>>                        nullThreadTask{4u, millisecs};
 
-      check_relative_performance("Four Waiting tasks; pool_4/null",
+      check_relative_performance("Four Waiting tasks; pool_4M/null",
                                  threadPoolTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{3.5}, .upper{4.1}}});
-      check_relative_performance("Four Waiting tasks; pool_4M/null",
-                                 threadPoolMonoTask.by_reference(), nullThreadTask.by_reference(),
+      check_relative_performance("Four Waiting tasks; pool_4/null",
+                                 sharedQueueTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{3.5}, .upper{4.1}}});
     }
   }
@@ -261,16 +261,16 @@ namespace sequoia::testing
   void threading_models_performance_test::test_waiting_task_return(const std::chrono::milliseconds millisecs)
   {
     {
-      waiting_task_with_baseline<wait_and_return, thread_pool<int>>        threadPoolTask{2u, millisecs, 2u};
-      waiting_task_with_baseline<wait_and_return, thread_pool<int, false>> threadPoolMonoTask{2u, millisecs, 2u};
-      waiting_task_with_baseline<wait_and_return, serial<int>>             nullThreadTask{2u, millisecs};
-      waiting_task_with_baseline<wait_and_return, asynchronous<int>>       asyncTask{2u, millisecs};
+      waiting_task_with_baseline<wait_and_return, thread_pool<int>>                   threadPoolTask{2u, millisecs, 2u};
+      waiting_task_with_baseline<wait_and_return, thread_pool_with_shared_queue<int>> sharedQueueTask{2u, millisecs, 2u};
+      waiting_task_with_baseline<wait_and_return, serial<int>>                        nullThreadTask{2u, millisecs};
+      waiting_task_with_baseline<wait_and_return, asynchronous<int>>                  asyncTask{2u, millisecs};
 
-      check_relative_performance("Two Waiting tasks; pool_2/null",
+      check_relative_performance("Two Waiting tasks; pool_2M/null",
                                  threadPoolTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
-      check_relative_performance("Two Waiting tasks; pool_2M/null",
-                                 threadPoolMonoTask.by_reference(), nullThreadTask.by_reference(),
+      check_relative_performance("Two Waiting tasks; pool_2/null",
+                                 sharedQueueTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
       check_relative_performance("Two Waiting tasks; async/null",
                                  asyncTask.by_reference(), nullThreadTask.by_reference(),
