@@ -165,16 +165,14 @@ namespace sequoia::testing
     // Nothing is written, so the rewriting terminates
     check(equality, "Empty from, empty to", replace_all_recursive("ab", "", ""), "ab"s);
 
-    // The occurrence at the start of a replacement is not searched for again
+    // The occurrence at the start of a replacement is not searched for
     check(equality, "From at the start of to only", replace_all_recursive("a", "a", "ab"), "ab"s);
     check(equality, "From beyond the first character of to, absent from the text", replace_all_recursive("c", "a", "ba"), "c"s);
-    check(equality, "Empty from, absent from the text, empty to", replace_all_recursive("", "a", ""), ""s);
+    check(equality, "From absent from an empty text", replace_all_recursive("", "a", "ba"), ""s);
   }
 
   void substitutions_free_test::test_replace_all_recursive_refusals()
   {
-    // Each refusal has from in the text, and in to beyond its first character,
-    // and no other cause
     check_exception_thrown<std::invalid_argument>("From at the end of to", [](){ return replace_all_recursive("a", "a", "ba"); });
     check_exception_thrown<std::invalid_argument>("From in the middle of to", [](){ return replace_all_recursive("a", "a", "bab"); });
     check_exception_thrown<std::invalid_argument>("From at the start and end of to", [](){ return replace_all_recursive("a", "a", "aa"); });

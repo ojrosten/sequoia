@@ -130,10 +130,12 @@ namespace sequoia
 
   std::string& replace_all_recursive(std::string& text, std::string_view from, std::string_view to)
   {
-    if((text.find(from) != std::string::npos) && (to.find(from, 1) != std::string::npos))
+    if((to.find(from, 1) != std::string::npos) && text.contains(from))
+    {
       throw std::invalid_argument{
-        std::format("Replacing \"{}\" with \"{}\" does not terminate, since each replacement writes the next occurrence", from, to)
+        std::format("Replacing \"{0}\" with \"{1}\" would never terminate: \"{0}\" occurs in \"{1}\" beyond its first character", from, to)
       };
+    }
 
     std::string::size_type pos{};
     while((pos = text.find(from, pos)) != std::string::npos)

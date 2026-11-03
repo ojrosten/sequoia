@@ -1,63 +1,63 @@
-Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 178
+Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 176
 From at the end of to
 
 Expected Exception Type:
 [std::invalid_argument]
-Replacing "a" with "ba" does not terminate, since each replacement writes the next occurrence
+Replacing "a" with "ba" would never terminate: "a" occurs in "ba" beyond its first character
 
 =======================================
 
-Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 179
+Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 177
 From in the middle of to
 
 Expected Exception Type:
 [std::invalid_argument]
-Replacing "a" with "bab" does not terminate, since each replacement writes the next occurrence
+Replacing "a" with "bab" would never terminate: "a" occurs in "bab" beyond its first character
 
 =======================================
 
-Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 180
+Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 178
 From at the start and end of to
 
 Expected Exception Type:
 [std::invalid_argument]
-Replacing "a" with "aa" does not terminate, since each replacement writes the next occurrence
+Replacing "a" with "aa" would never terminate: "a" occurs in "aa" beyond its first character
 
 =======================================
 
-Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 181
+Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 179
 Longer from
 
 Expected Exception Type:
 [std::invalid_argument]
-Replacing "ab" with "cab" does not terminate, since each replacement writes the next occurrence
+Replacing "ab" with "cab" would never terminate: "ab" occurs in "cab" beyond its first character
 
 =======================================
 
-Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 182
+Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 180
 Empty from, non-empty to
 
 Expected Exception Type:
 [std::invalid_argument]
-Replacing "" with "X" does not terminate, since each replacement writes the next occurrence
+Replacing "" with "X" would never terminate: "" occurs in "X" beyond its first character
 
 =======================================
 
-Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 183
+Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 181
 Empty from in empty text, non-empty to
 
 Expected Exception Type:
 [std::invalid_argument]
-Replacing "" with "X" does not terminate, since each replacement writes the next occurrence
+Replacing "" with "X" would never terminate: "" occurs in "X" beyond its first character
 
 =======================================
 
-Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 186
+Tests/TextProcessing/SubstitutionsFreeTest.cpp, Line 184
 In place
 
 Expected Exception Type:
 [std::invalid_argument]
-Replacing "a" with "ba" does not terminate, since each replacement writes the next occurrence
+Replacing "a" with "ba" would never terminate: "a" occurs in "ba" beyond its first character
 
 =======================================
 
