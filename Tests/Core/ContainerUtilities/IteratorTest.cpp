@@ -13,6 +13,7 @@
 #include <cstdint>
 #include <list>
 #include <memory>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -136,6 +137,28 @@ namespace sequoia::testing
     using iterator_with_comparable_data_policy
       = utilities::iterator<Iterator, utilities::identity_dereference_policy<Iterator, comparable_data_policy>>;
 
+    struct aggregate_data_policy
+    {
+      int datum{};
+    };
+
+    template<std::input_iterator Iterator>
+    using iterator_with_aggregate_data_policy
+      = utilities::iterator<Iterator, utilities::identity_dereference_policy<Iterator, aggregate_data_policy>>;
+
+    // A dereference policy other than the identity. Like the policy of
+    // iterator_with_comparable_data_policy, it derives from
+    // comparable_data_policy.
+    template<std::input_or_output_iterator Iterator>
+    struct negating_dereference_policy : comparable_data_policy
+    {
+      using value_type = std::iter_value_t<Iterator>;
+      using reference  = value_type;
+
+      [[nodiscard]]
+      constexpr static reference get(const Iterator& i) { return -*i; }
+    };
+
     struct element_with_overloaded_address_of
     {
       constexpr std::nullptr_t operator&() const noexcept { return nullptr; }
@@ -168,6 +191,8 @@ namespace sequoia::testing
     test_nested_bidirectional_iterator();
     test_comparisons_the_base_iterator_lacks();
     test_comparisons_with_a_const_iterator();
+    test_comparisons_without_a_conversion();
+    test_aggregate_data_policy();
     test_stashing_input_iterator();
     test_arrow_operator_with_overloaded_address_of();
 
@@ -261,6 +286,62 @@ namespace sequoia::testing
     STATIC_CHECK( has_three_way_comparison_with_v<custom_citer_t, custom_iter_t>);
     STATIC_CHECK(!has_three_way_comparison_with_v<custom_iter_t, scaling_citer_t>);
     STATIC_CHECK(!has_three_way_comparison_with_v<scaling_citer_t, custom_iter_t>);
+  }
+
+  void iterator_test::test_comparisons_without_a_conversion()
+  {
+    using namespace utilities;
+
+    // In each pair, neither iterator converts to the other. Both share a
+    // public base class declaring the comparison.
+    using vec_i_t  = std::vector<int>::iterator;
+    using list_i_t = std::list<int>::iterator;
+
+    using custom_vec_iter_t  = iterator<vec_i_t,  identity_dereference_policy<vec_i_t>>;
+    using custom_list_iter_t = iterator<list_i_t, identity_dereference_policy<list_i_t>>;
+
+    STATIC_CHECK(!has_equality_with_v<custom_vec_iter_t, custom_list_iter_t>);
+    STATIC_CHECK(!has_equality_with_v<custom_list_iter_t, custom_vec_iter_t>);
+
+    // Unlike the first pair's, these base iterators compare.
+    using i_t  = std::array<int, 3>::iterator;
+    using ci_t = std::array<int, 3>::const_iterator;
+
+    using comparable_data_iter_t = iterator_with_comparable_data_policy<i_t>;
+    using negating_citer_t       = iterator<ci_t, negating_dereference_policy<ci_t>>;
+
+    STATIC_CHECK(!has_equality_with_v<comparable_data_iter_t, negating_citer_t>);
+    STATIC_CHECK(!has_equality_with_v<negating_citer_t, comparable_data_iter_t>);
+    STATIC_CHECK(!has_three_way_comparison_with_v<comparable_data_iter_t, negating_citer_t>);
+    STATIC_CHECK(!has_three_way_comparison_with_v<negating_citer_t, comparable_data_iter_t>);
+  }
+
+  void iterator_test::test_aggregate_data_policy()
+  {
+    using namespace utilities;
+
+    using i_t  = std::array<int, 3>::iterator;
+    using ci_t = std::array<int, 3>::const_iterator;
+
+    using custom_iter_t          = iterator<i_t,  identity_dereference_policy<i_t>>;
+    using custom_citer_t         = iterator<ci_t, identity_dereference_policy<ci_t>>;
+    using aggregate_data_iter_t  = iterator_with_aggregate_data_policy<i_t>;
+    using aggregate_data_citer_t = iterator_with_aggregate_data_policy<ci_t>;
+
+    STATIC_CHECK( std::convertible_to<aggregate_data_iter_t, aggregate_data_citer_t>);
+    STATIC_CHECK(!std::convertible_to<custom_iter_t, aggregate_data_citer_t>);
+    STATIC_CHECK(!std::convertible_to<aggregate_data_iter_t, custom_citer_t>);
+
+    STATIC_CHECK(!has_equality_with_v<custom_iter_t, aggregate_data_citer_t>);
+    STATIC_CHECK(!has_equality_with_v<aggregate_data_citer_t, custom_iter_t>);
+    STATIC_CHECK(!has_equality_with_v<aggregate_data_iter_t, custom_citer_t>);
+    STATIC_CHECK(!has_equality_with_v<custom_citer_t, aggregate_data_iter_t>);
+
+    STATIC_CHECK([](){
+      std::array<int, 3> a{};
+      const aggregate_data_citer_t ci{a.cbegin(), 2};
+      return ci.datum == 2;
+    }());
   }
 
   void iterator_test::test_stashing_input_iterator()
