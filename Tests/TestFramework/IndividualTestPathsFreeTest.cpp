@@ -34,7 +34,8 @@ namespace sequoia::testing
 
     // Default project paths give no absolute root. The roots of summaries and
     // diagnostics are empty; the root of execution records is relative but
-    // not empty.
+    // not empty. The record's source is absolute, and the others' relative,
+    // so that the checks reach the refusal from both kinds of source.
     check_exception_thrown<std::invalid_argument>(
       reporter{"A summary needs an absolute output root"},
       []() {

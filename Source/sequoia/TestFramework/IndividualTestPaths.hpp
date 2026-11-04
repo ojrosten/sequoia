@@ -123,7 +123,10 @@ namespace sequoia::testing
                                const std::optional<std::string>& materialsDiscriminator);
   };
 
-  /** \brief Paths of the files holding a test's diagnostics. */
+  /** \brief Paths of the files holding a test's diagnostics.
+
+      A default-constructed instance holds two empty paths.
+   */
   class individual_diagnostics_paths
   {
   public:
