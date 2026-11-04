@@ -300,43 +300,46 @@
     The relationships between the structures introduced above form a DAG, in
     which refinements appear below that which they refine:
     @verbatim
-                partial M-torsor
-               /                \
-     (M-convex space)       M-affine space
-            |                 /        \
-       convex space   affine space   free module
-                             \          /
-                             vector space
+                    partial M-torsor
+                   /                \
+     (M-convex space)           M-affine space
+            |                     /        \
+       convex space - - - affine space   free module
+                                 \          /
+                                 vector space
     @endverbatim
     The bracketed entry marks where an M-convex space would sit, were the
     generalizations of convexity alluded to above pursued. Note also that
     affine spaces are not, in general, convex spaces: the latter require an
     ordered field, whereas there is nothing untoward about an affine space
-    over the complex numbers.
-    **Worth mentioning a real affine space**
+    over the complex numbers. Over an ordered field, such as the reals, an
+    affine space is a convex space: since the sum of any point and any vector
+    is defined, so is every point lying between any two. The dashed line marks
+    this overlap, which is not a refinement in either direction.
 
-    The diagram orders the structures by refinement, whereas the order in
-    which they must be defined runs the other way: a partial M-torsor is a
-    set together with a free module acting on it. Therefore, from a definitional
-    perspective, free module must come before the DAG elements above it.
-    Similarly, as discussed above, a vector space must be defined before
-    an affine space.
-    **I don't understand this!**
-    There is no circularity: free modules and vector spaces appear as
-    nodes at all only because a free module is an M-affine space over itself.
+    The diagram orders the structures by refinement, which for most of them
+    is also the order in which they are defined. Free modules and vector
+    spaces are the exception: a partial M-torsor is a set together with a
+    free module acting on it, so free modules must be defined first, even
+    though they are drawn below it. There is no circularity: a free module is
+    defined in its own right, and appears in the diagram only because, acting
+    on itself by addition, it is an M-affine space. Vector spaces and affine
+    spaces are related in the same way, as discussed above.
 
-    **This paragraph seems dubious**
     Nor are the edges all of a kind. Most impose a condition: that the action
-    is total, or that the ring is a field or an ordered field. The two edges
-    descending into a free module and into a vector space are not of this
-    sort: every M-affine space can be turned into a free module by nominating
-    any one of its points as the origin and transporting the structure there.
-    What separates a free module from an M-affine space is therefore not a
-    condition but a choice. The distinction manifests if the diagram is read
-    upwards. A vector space regarded as a free module is the very same object,
-    with a requirement merely no longer in force; regarded as an affine space,
-    it has given up its origin and with it the ability to add one point to
-    another. That is the sense in which an affine space is a vector space
+    is total, that the space is convex, or that the ring is a field or an
+    ordered field. The edges from M-affine space to free module, and from
+    affine space to vector space, are not of this sort: every M-affine space
+    can be turned into a free module by nominating any one of its points as
+    the origin and transporting the structure there. What separates a free
+    module from an M-affine space is therefore not a condition but a choice;
+    in the language of category theory, a condition is a property and a choice
+    is structure. The difference shows when the diagram is read upwards.
+    Regarding a vector space as a free module forgets a property: the set, the
+    ring and the operations are unchanged, and only the requirement that the
+    ring be a field is dropped. Regarding it as an affine space forgets
+    structure: it gives up its origin and with it the ability to add one point
+    to another. That is the sense in which an affine space is a vector space
     which has forgotten its origin.
 
     We now turn to the important question of how to deal with translations
@@ -371,15 +374,19 @@
 
     @par Exceptional behaviour **reword this**
     Two things are in play here - the mathematics and its C++ representation -
-    and it is worth being clear about which is which. A partial function is the
-    same thing as a total function whose codomain has been enlarged by a single
-    extra element, \f$ \bot \f$, signalling that there is no result. To widen
-    the codomain in this sense is not to change the mathematics but to restate  <<--- I don't understand this
-    it: the space is untouched, and \f$ \bot \f$ is emphatically not a point of
-    it, so nothing can be translated from it. Gratifyingly, C++ can transcribe
-    the mathematics exactly, by having `operator+` return `std::expected`;
-    specifying it to throw expresses the same thing through a different
-    mechanism. Note, though, that `operator+=` cannot return anything of the
+    and it is worth being clear about which is which. A partial function from
+    X to Y can be recast, with nothing gained or lost, as a total function
+    from X to \f$ Y \cup \{\bot\} \f$, taking the value \f$ \bot \f$ wherever
+    the original is undefined. Applied to the sum of a point and a vector,
+    this enlarges only the set of possible results, not the space:
+    \f$ \bot \f$ is emphatically not a point of it, so nothing can be
+    translated from it. Gratifyingly, C++ can transcribe
+    the mathematics exactly, by having `operator+` return `std::optional`.
+    (`std::expected` adjoins one value for each reason the sum may fail,
+    rather than the single \f$ \bot \f$, but each of them still means that
+    there is no result.) Specifying it to throw expresses the same thing
+    through a different mechanism. Note, though, that `operator+=` cannot
+    return anything of the
     sort, since it must write its result back into a point: either it throws,
     or the extra element is admitted into the space itself, which brings us to
     the next option.
