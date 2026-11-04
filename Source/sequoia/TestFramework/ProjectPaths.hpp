@@ -25,8 +25,6 @@ namespace sequoia::testing
   class discoverable_paths
   {
   public:
-    discoverable_paths() = default;
-
     discoverable_paths(int argc, char** argv);
 
     [[nodiscard]]
@@ -63,8 +61,6 @@ namespace sequoia::testing
   class main_paths
   {
   public:
-    main_paths() = default;
-
     main_paths(std::filesystem::path file, std::filesystem::path commonIncludes);
 
     explicit main_paths(std::filesystem::path file);
@@ -102,8 +98,6 @@ namespace sequoia::testing
   class source_paths
   {
   public:
-    source_paths() = default;
-
     explicit source_paths(const std::filesystem::path& projectRoot, const std::optional<std::filesystem::path>& folderName = {});
 
     [[nodiscard]]
@@ -135,8 +129,6 @@ namespace sequoia::testing
   class tests_paths
   {
   public:
-    tests_paths() = default;
-
     explicit tests_paths(std::filesystem::path projectRoot);
 
     [[nodiscard]]
@@ -156,8 +148,6 @@ namespace sequoia::testing
   class dependencies_paths
   {
   public:
-    dependencies_paths() = default;
-
     explicit dependencies_paths(std::filesystem::path projectRoot);
 
     [[nodiscard]]
@@ -180,8 +170,6 @@ namespace sequoia::testing
   class test_materials_paths
   {
   public:
-    test_materials_paths() = default;
-
     explicit test_materials_paths(std::filesystem::path projectRoot);
 
     [[nodiscard]]
@@ -201,8 +189,6 @@ namespace sequoia::testing
   class build_system_paths
   {
   public:
-    build_system_paths() = default;
-
     explicit build_system_paths(std::filesystem::path projectRoot);
 
     [[nodiscard]]
@@ -222,8 +208,6 @@ namespace sequoia::testing
   class build_paths
   {
   public:
-    build_paths() = default;
-
     build_paths(std::filesystem::path projectRoot, std::filesystem::path executableDir, std::filesystem::path cmakeCacheDir);
 
     [[nodiscard]]
@@ -264,8 +248,6 @@ namespace sequoia::testing
   class auxiliary_paths
   {
   public:
-    auxiliary_paths() = default;
-
     auxiliary_paths(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
@@ -452,8 +434,6 @@ namespace sequoia::testing
   class output_paths
   {
   public:
-    output_paths() = default;
-
     explicit output_paths(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
@@ -555,8 +535,6 @@ namespace sequoia::testing
 
       std::filesystem::path common_includes{main_paths::default_main_cpp_from_root()};
     };
-
-    project_paths() = default;
 
     project_paths(int argc, char** argv, const customizer& customization);
 

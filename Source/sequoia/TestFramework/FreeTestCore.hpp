@@ -40,8 +40,6 @@ namespace sequoia::testing
   class test_base
   {
   public:
-    test_base() = default;
-
     test_base(std::string_view name,
               test_mode mode,
               const normal_path& srcFile,
@@ -146,10 +144,10 @@ namespace sequoia::testing
                                              const std::filesystem::path& original,
                                              std::filesystem::path usable) const;
 
-    std::string m_Name{};
-    project_paths m_ProjectPaths{};
-    individual_materials_paths m_Materials{};
-    individual_diagnostics_paths m_Diagnostics{};
+    std::string m_Name;
+    project_paths m_ProjectPaths;
+    individual_materials_paths m_Materials;
+    individual_diagnostics_paths m_Diagnostics;
   };
 
   /** \brief class template from which all concrete tests should derive.
@@ -172,8 +170,6 @@ namespace sequoia::testing
   public:
     using checker_type = checker<Mode, Extender>;
     constexpr static test_mode mode{Mode};
-
-    basic_test() = default;
 
     basic_test(std::string_view name,
                const normal_path& srcFile,

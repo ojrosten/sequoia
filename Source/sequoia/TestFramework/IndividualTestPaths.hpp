@@ -58,8 +58,6 @@ namespace sequoia::testing
   class individual_materials_paths
   {
   public:
-    individual_materials_paths() = default;
-
     individual_materials_paths(const std::filesystem::path& sourceFile,
                                std::string_view testName,
                                const project_paths& projPaths,
@@ -130,8 +128,6 @@ namespace sequoia::testing
   class individual_diagnostics_paths
   {
   public:
-    individual_diagnostics_paths() = default;
-
     /** \throws std::invalid_argument if `source` is empty
         \throws std::invalid_argument if `projPaths.output().diagnostics()` is
                 not absolute

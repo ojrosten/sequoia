@@ -725,8 +725,6 @@ namespace sequoia::testing
     constexpr static test_mode mode{Mode};
     using logger_type = test_logger<Mode>;
 
-    checker() = default;
-
     checker(const checker&)            = delete;
     checker& operator=(const checker&) = delete;
 

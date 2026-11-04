@@ -32,6 +32,19 @@ namespace sequoia::testing
     STATIC_CHECK(!std::is_default_constructible_v<drift_paths>);
     STATIC_CHECK(!std::is_default_constructible_v<prune_paths>);
     STATIC_CHECK(!std::is_default_constructible_v<execution_record_paths>);
+
+    // A default would name no project: each path it held would be empty
+    STATIC_CHECK(!std::is_default_constructible_v<project_paths>);
+    STATIC_CHECK(!std::is_default_constructible_v<discoverable_paths>);
+    STATIC_CHECK(!std::is_default_constructible_v<main_paths>);
+    STATIC_CHECK(!std::is_default_constructible_v<source_paths>);
+    STATIC_CHECK(!std::is_default_constructible_v<build_paths>);
+    STATIC_CHECK(!std::is_default_constructible_v<auxiliary_paths>);
+    STATIC_CHECK(!std::is_default_constructible_v<output_paths>);
+    STATIC_CHECK(!std::is_default_constructible_v<dependencies_paths>);
+    STATIC_CHECK(!std::is_default_constructible_v<tests_paths>);
+    STATIC_CHECK(!std::is_default_constructible_v<test_materials_paths>);
+    STATIC_CHECK(!std::is_default_constructible_v<build_system_paths>);
   }
 
   void project_paths_free_test::test_build_configuration()
@@ -53,10 +66,6 @@ namespace sequoia::testing
     check(equality,
           "An executable directory outside the build tree gives no configuration",
           build_paths{root, root / "Release", tree}.configuration(),
-          std::string{});
-    check(equality,
-          "Default-constructed build paths give no configuration",
-          build_paths{}.configuration(),
           std::string{});
   }
 }
