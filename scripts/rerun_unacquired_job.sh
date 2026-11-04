@@ -15,27 +15,51 @@
 # it.
 #
 # A job is lost if it concluded `cancelled` or `failure` with no steps and no
-# runner, and GitHub's annotation says so. A job that ran and failed is never
-# re-run, so a real failure stays red, unless it needs a lost job.
+# runner, and GitHub's annotation on its original says so. A job is its own
+# original, unless it is a copy. A job that ran and failed is never re-run, so
+# a real failure stays red, unless it needs a lost job.
 #
-# GitHub re-runs a job together with every job that needs it. The script asks
-# for the lost job with the lowest id. In every run read, that job needed no
-# other lost job: within an attempt, GitHub creates a job only after the jobs
-# it needs, and a re-run attempt creates the job re-run before the jobs it
-# copies. One request covers every loss seen so far.
+# A re-run attempt copies from the attempt before each job that it does not
+# re-run. A copy keeps the job's conclusion and completion time, but has no
+# annotations. A copy's original is the job of an earlier attempt that is not
+# a copy, and has the copy's name and completion time. A copy is a job that
+# completed before it was created. Of 107 jobs in 12 attempts of five runs,
+# read on 2026-11-04, each of the 36 copies completed before it was created,
+# and no other job did. If a copy's name and completion time match no
+# original, or several, the script fails with an error naming the copy, and
+# re-runs nothing.
+#
+# GitHub's API re-runs a run's jobs in one of three ways: one job with the
+# jobs that need it, every failed job with the jobs that need them, or every
+# job. The second and third would re-run a job that ran and failed. So the
+# script asks for one lost job per attempt, and each lost job that the new
+# attempt does not re-run is copied into it, still lost. GitHub starts this
+# script's workflow again when an attempt the script asked for finishes, and
+# the script then asks for the next lost job. Run 41874199305 lost two jobs
+# that need neither other in attempt 1; attempt 2 re-ran one, and copied the
+# other. Run 39478109862 lost its macOS column in attempts 1 and 2, and the
+# script asked for attempts 2 and 3.
+#
+# The script asks for the lost job whose original has the lowest id. That job
+# needs no other lost job, since a job's original has a higher id than the
+# original of each job it needs:
+#   - GitHub re-runs a job whenever it re-runs a job that it needs. So a job's
+#     original is of the same attempt as the original of each job it needs, or
+#     of a later one.
+#   - Within an attempt, GitHub creates a job only after the jobs it needs.
+#     Each attempt's ids exceed the last's.
 #
 # The script re-runs nothing if a newer run of the same workflow, branch and
 # event exists. A re-run joins its workflow's concurrency group, and so could
 # cancel that newer run.
 #
-# GitHub starts this script's workflow again when an attempt the script asked
-# for finishes, so the script re-runs a job lost in that attempt too. Once
-# <attempt> reaches max_attempts, the script re-runs nothing, and warns. Run
-# 39478109862 lost its macOS column in attempts 1 and 2, and the script asked
-# for attempts 2 and 3.
+# Once <attempt> reaches max_attempts, the script re-runs nothing, and warns.
+# The bound counts the run's attempts, whichever lost job each re-ran.
 #
-# The jobs are read through read_settled_jobs.sh, beside this script, which
-# waits for every job to have a conclusion, since the jobs API can lag.
+# The latest attempt's jobs are read through read_settled_jobs.sh, beside this
+# script, which waits for every job to have a conclusion, since the jobs API
+# can lag. The jobs of every attempt are read once more, for the originals,
+# with no wait: the attempts before the latest finished before it began.
 #
 # <run id> and <attempt> are positive whole numbers with no leading zero.
 # Arguments of any other form, and an unset or empty $GH_REPO, are refused with
@@ -67,23 +91,43 @@ if [ "$newest" != "$run_id" ]; then
   exit 0
 fi
 
-jobs=$(mktemp)
-trap 'rm -f "$jobs"' EXIT
+scratch=$(mktemp -d)
+trap 'rm -rf "$scratch"' EXIT
+jobs=$scratch/jobs.json every_attempt_jobs=$scratch/every_attempt_jobs.ndjson
 "$(dirname "$0")/read_settled_jobs.sh" "$run_id" "$jobs" '[.[] | select(.conclusion == null) | .name] | join(", ")'
+gh api "repos/$GH_REPO/actions/runs/$run_id/jobs?filter=all&per_page=100" --paginate --jq '.jobs[]' \
+  > "$every_attempt_jobs"
 
-candidates=$(jq -r '
+# A candidate's line holds the id of its original, or null for a copy that
+# matches no original, or several.
+candidates=$(jq -r --slurpfile every_attempt "$every_attempt_jobs" '
+  def copy: .completed_at < .created_at;
   [ .[]
     | select((.conclusion == "cancelled" or .conclusion == "failure")
              and (.steps | length) == 0
-             and (.runner_name // "") == "") ]
-  | sort_by(.id)
+             and (.runner_name // "") == "")
+    | . as $job
+    | .original_id = if copy
+                     then [ $every_attempt[]
+                            | select(.name == $job.name
+                                     and .completed_at == $job.completed_at
+                                     and (copy | not))
+                            | .id ]
+                          | if length == 1 then .[0] else null end
+                     else .id end ]
+  | sort_by(.original_id)
   | .[]
-  | "\(.id)\t\(.name | gsub("[\r\n]"; " "))"' "$jobs")
+  | "\(.original_id)\t\(.id)\t\(.name | gsub("[\r\n]"; " "))"' "$jobs")
 
 lost=
-while IFS=$'\t' read -r job_id job_name; do
+while IFS=$'\t' read -r original_id job_id job_name; do
   [ -n "$job_id" ] || continue
-  messages=$(gh api "repos/$GH_REPO/check-runs/$job_id/annotations" --jq '.[].message')
+  if [ "$original_id" = null ]; then
+    echo "::error::Job $job_name of run $run_id is a copy, and its name and completion time match no job" \
+         "of an earlier attempt, or several. Nothing is re-run."
+    exit 1
+  fi
+  messages=$(gh api "repos/$GH_REPO/check-runs/$original_id/annotations" --jq '.[].message')
   if grep -qE 'not acquired by Runner|failed to be acquired' <<< "$messages"; then
     lost+=$job_id$'\t'$job_name$'\n'
   fi
