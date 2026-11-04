@@ -15,16 +15,15 @@
     disciplines. Superficially, they are easy to handle in a programming
     language such as C++; however, to do so in a way which reflects the
     mathematical struture as faithfully as possible is surprisingly subtle.
-    Moreover, a vector space is just one of a family of mathematical structures 
+    Moreover, a vector space is just one of a family of mathematical structures
     which, though not necesarily quite as familiar, are just as prevalent.
     Affine spaces are like vector spaces without a distinguished origin; an
-    example being Euclidean space.
-    Convex spaces support linear interpolation between pairs of points but,
-    unlike affine spaces, may have a boundary. A disc with a slice removed
-    can be embedded in a convex or affine space but is neither. In this section
-    we will elucidate the various mathematical structures, arriving at something
-    sufficiently general to represent the cases of physical interest with
-    which this library is primarily concerned.
+    example being Euclidean space. Convex spaces support linear interpolation
+    between pairs of points but, unlike affine spaces, may have a boundary. A
+    disc with a slice removed can be embedded in a convex or affine space but
+    is neither. In this section we will elucidate the various mathematical
+    structures, arriving at something sufficiently general to represent the
+    cases of physical interest with which this library is primarily concerned.
     
     Representing abstract algebraic structures in C++ presents an interesting
     challenge. At root, the fundamental abstraction is a set; indeed, a vector
@@ -124,13 +123,13 @@
     vector via the coordinates with respect to a particular basis. This
     distinction can be further reinforced by pointing out that two observers
     who agree they are talking about the same vector (i.e. set element) will
-    nevertheless disagree on the coordinates if they are using different bases
-    - as they are entirely entitled to do! To further add to the confusion, the
-    coordinates may be referred to as a coordinate vector which is perhaps
-    unfortunate. (To add to the fun, in the case of \f$ \bb{R}^d \f$, a tuple
-    of values \f$ (v(0), \ldots, v(d-1)) \f$ can have a different
-    interpretation, which we shall gloss over for now but return to in
-    \ref Basis "Basis".)
+    nevertheless disagree on the coordinates if they are using different
+    bases - as they are entirely entitled to do! To further add to the
+    confusion, the coordinates may be referred to as a coordinate vector which
+    is perhaps unfortunate. (To add to the fun, in the case of
+    \f$ \bb{R}^d \f$, a tuple of values \f$ (v(0), \ldots, v(d-1)) \f$ can have
+    a different interpretation, which we shall gloss over for now but return to
+    in \ref Basis "Basis".)
 
     Regardless, from the perspective of performing actual calculations, the
     coordinates are key. A crucial point to make is that, when dealing with the
@@ -160,8 +159,8 @@
     spaces, which comprise a set, A, together with a vector space, V, whose
     additive group acts freely and transitively on A. Intuitively, we can start
     at any point in A and translate to any other point by adding a unique
-    vector. \anchor FreeTransitiveAction There are three separate
-    things being asserted:
+    vector. \anchor FreeTransitiveAction There are three separate things being
+    asserted:
     -# That V acts at all: adding any vector in V to any point of A gives a
        point of A;
 
@@ -202,13 +201,14 @@
     action is similarly free and transitive. Thus, an affine space is a torsor
     over a vector space.
 
-    With this in mind, it will be useful for our purposes to generalize affine spaces. To start,
-    consider taking a convex subset, C, of an affine space. We may translate
-    from any point in C to any other by adding the appropriate vector from V.
-    However, there are elements of V which, when added to a point in C, will
-    take us outside of C and into the broader affine space of which it is a
-    part. Yet we do not want to define such a space via an embedding in a
-    bigger one; we would like to characterize it in its own right.
+    With this in mind, it will be useful for our purposes to generalize affine
+    spaces. To start, consider taking a convex subset, C, of an affine space.
+    We may translate from any point in C to any other by adding the appropriate
+    vector from V. However, there are elements of V which, when added to a
+    point in C, will take us outside of C and into the broader affine space of
+    which it is a part. Yet we do not want to define such a space via an
+    embedding in a bigger one; we would like to characterize it in its own
+    right.
 
     The way forward is to relax the requirement that the action of V be defined
     for every combination of point and vector. Of the three properties relating
@@ -272,30 +272,30 @@
     affine space is over a vector space.
 
     Convexity remains a useful refinement, and appears as one in the code: a
-    convex space is a partial M-torsor for which, whenever two points belong
-    to the space, so do the points lying between them. Intuitively, this
+    convex space is a partial M-torsor for which, whenever two points belong to
+    the space, so do the points lying between them. Intuitively, this
     corresponds to being able to linearly interpolate (lerp): given two points
-    p and q and a parameter t in the range [0, 1], we may construct intermediate
-    points, r, using the recipe
+    p and q and a parameter t in the range [0, 1], we may construct
+    intermediate points, r, using the recipe
     \f[
         r = (1 - t)p + t q.
     \f]
-    However, any notion that r is between p and q requires the ring to
-    which t belongs
+    However, any notion that r is between p and q requires the ring to which t
+    belongs
     -# To be ordered;
 
-    -# To admit values between zero and one other than these two. Indeed, if
-       t is an element of the integers, the above formula degenerates to only
+    -# To admit values between zero and one other than these two. Indeed, if t
+       is an element of the integers, the above formula degenerates to only
        ever producing p or q.
 
     While there are useful generalizations of convexity that apply when the
-    second condition is not satisfied, we do not pursue them. However, there
-    is nothing to prohibit appropriate concepts being added in the future.
-    Therefore, we define convex spaces to be refinements of a partial
-    M-torsor for which the commutative ring is an ordered field. (Note: this
-    rules out the case of the dyadic rationals which satisfy both
-    conditions above but constitutes a ring but not a field; if a use case for
-    these ever arises the framework can be enhanced.)
+    second condition is not satisfied, we do not pursue them. However, there is
+    nothing to prohibit appropriate concepts being added in the future.
+    Therefore, we define convex spaces to be refinements of a partial M-torsor
+    for which the commutative ring is an ordered field. (Note: this rules out
+    the case of the dyadic rationals which satisfy both conditions above but
+    constitutes a ring but not a field; if a use case for these ever arises the
+    framework can be enhanced.)
 
     The relationships between the structures introduced above form a DAG, in
     which refinements appear below that which they refine:
@@ -311,36 +311,36 @@
     The bracketed entry marks where an M-convex space would sit, were the
     generalizations of convexity alluded to above pursued. Note also that
     affine spaces are not, in general, convex spaces: the latter require an
-    ordered field, whereas there is nothing untoward about an affine space
-    over the complex numbers. Over an ordered field, such as the reals, an
-    affine space is a convex space: since the sum of any point and any vector
-    is defined, so is every point lying between any two. The dashed line marks
-    this overlap, which is not a refinement in either direction.
+    ordered field, whereas there is nothing untoward about an affine space over
+    the complex numbers. Over an ordered field, such as the reals, an affine
+    space is a convex space: since the sum of any point and any vector is
+    defined, so is every point lying between any two. The dashed line marks
+    this overlap.
 
-    The diagram orders the structures by refinement, which for most of them
-    is also the order in which they are defined. Free modules and vector
-    spaces are the exception: a partial M-torsor is a set together with a
-    free module acting on it, so free modules must be defined first, even
-    though they are drawn below it. There is no circularity: a free module is
-    defined in its own right, and appears in the diagram only because, acting
-    on itself by addition, it is an M-affine space. Vector spaces and affine
-    spaces are related in the same way, as discussed above.
+    The diagram orders the structures by refinement, which for most of them is
+    also the order in which they are defined. Free modules and vector spaces
+    are the exception: a partial M-torsor is a set together with a free module
+    acting on it, so free modules must be defined first, even though they are
+    drawn below it. There is no circularity: a free module is defined in its
+    own right, and appears in the diagram only because, acting on itself by
+    addition, it is an M-affine space. Vector spaces and affine spaces are
+    related in the same way, as discussed above.
 
     Nor are the edges all of a kind. Most impose a condition: that the action
     is total, that the space is convex, or that the ring is a field or an
     ordered field. The edges from M-affine space to free module, and from
     affine space to vector space, are not of this sort: every M-affine space
-    can be turned into a free module by nominating any one of its points as
-    the origin and transporting the structure there. What separates a free
-    module from an M-affine space is therefore not a condition but a choice;
-    in the language of category theory, a condition is a property and a choice
-    is structure. The difference shows when the diagram is read upwards.
-    Regarding a vector space as a free module forgets a property: the set, the
-    ring and the operations are unchanged, and only the requirement that the
-    ring be a field is dropped. Regarding it as an affine space forgets
-    structure: it gives up its origin and with it the ability to add one point
-    to another. That is the sense in which an affine space is a vector space
-    which has forgotten its origin.
+    can be turned into a free module by nominating any one of its points as the
+    origin and transporting the structure there. What separates a free module
+    from an M-affine space is therefore not a condition but a choice; in the
+    language of category theory, a condition is a property and a choice is
+    structure. The difference shows when the diagram is read upwards. Regarding
+    a vector space as a free module forgets a property: the set, the ring and
+    the operations are unchanged, and only the requirement that the ring be a
+    field is dropped. Regarding it as an affine space forgets structure: it
+    gives up its origin and with it the ability to add one point to another.
+    That is the sense in which an affine space is a vector space which has
+    forgotten its origin.
 
     We now turn to the important question of how to deal with translations
     which would take us outside the underlying space. Up to this point of our
@@ -372,24 +372,22 @@
     but in a sense which maps rather well onto our intuition. Since C++26, this
     precondition may be expressible in code.
 
-    @par Exceptional behaviour **reword this**
-    Two things are in play here - the mathematics and its C++ representation -
-    and it is worth being clear about which is which. A partial function from
-    X to Y can be recast, with nothing gained or lost, as a total function
-    from X to \f$ Y \cup \{\bot\} \f$, taking the value \f$ \bot \f$ wherever
-    the original is undefined. Applied to the sum of a point and a vector,
-    this enlarges only the set of possible results, not the space:
-    \f$ \bot \f$ is emphatically not a point of it, so nothing can be
-    translated from it. Gratifyingly, C++ can transcribe
-    the mathematics exactly, by having `operator+` return `std::optional`.
-    (`std::expected` adjoins one value for each reason the sum may fail,
-    rather than the single \f$ \bot \f$, but each of them still means that
-    there is no result.) Specifying it to throw expresses the same thing
-    through a different mechanism. Note, though, that `operator+=` cannot
-    return anything of the
-    sort, since it must write its result back into a point: either it throws,
-    or the extra element is admitted into the space itself, which brings us to
-    the next option.
+    @par Exceptional behaviour
+    Reporting failure, rather than leaving it undefined, has an exact
+    mathematical counterpart. A partial function from X to Y can be recast,
+    with nothing gained or lost, as a total function from X to
+    \f$ Y \cup \{\bot\} \f$, taking the value \f$ \bot \f$ wherever the
+    original is undefined. Applied to the sum of a point and a vector, this
+    enlarges only the set of possible *results*, not the *space*: \f$ \bot \f$
+    is emphatically not a point of it, so nothing can be translated from it.
+    Having `operator+` return `std::optional` transcribes this directly.
+    (`std::expected` adjoins one value for each reason the sum may fail, rather
+    than the single \f$ \bot \f$, but each of them still means that there is no
+    result.) Specifying it to throw expresses the same thing through a
+    different mechanism. Note, though, that `operator+=` cannot return
+    `std::optional` or similar, since it must write its result back into a
+    point: either it throws, or the extra element is admitted into the space
+    itself.
 
     @par Absorbing states
     We can supplement the set underpinning the space in question with an
@@ -438,9 +436,9 @@
        which M acts.
        **Can we not rephrase this as a twisted torsor over M/L?**
 
-    Of the six possibilities elucidated, only the first two - which between them
-    leave the mathematics as the partial torsor - keep M acting on the set by
-    translations. The absorbing state and clamping retain totality at the
+    Of the six possibilities elucidated, only the first two - which between
+    them leave the mathematics as the partial torsor - keep M acting on the set
+    by translations. The absorbing state and clamping retain totality at the
     expense of the group law, while the two periodic remappings retain the
     group law by changing the space and, with it, the group which acts. This is
     why it is the partial torsor, rather than any of the alternatives, which
@@ -459,7 +457,7 @@
     a partial_m_torsor. To define such a space just requires introducing a
     struct exposing a small amount of data known at compile time. These data
     determine whether we intend to model a vector space, a free module over a
-    commutative ring, an affine space or whatever. This is  sufficient for the
+    commutative ring, an affine space or whatever. This is sufficient for the
     coordinates implementation to expose the correct set of operations, giving
     a high degree of both type safety and expressivity.
  */
