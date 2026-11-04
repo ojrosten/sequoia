@@ -144,7 +144,7 @@ namespace sequoia::testing
                                    std::string_view numRuns,
                                    return_code expected,
                                    std::initializer_list<std::string_view> extraArgs,
-                                   Ts&&... ts);
+                                   std::type_identity<Ts>...);
 
     void write(std::string_view dirName, std::stringstream& output) const;
 
