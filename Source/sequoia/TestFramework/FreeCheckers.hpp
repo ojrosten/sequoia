@@ -306,8 +306,6 @@ namespace sequoia::testing
     std::string operator()(const project_paths& projPaths, std::string message) const
     {
       const auto root{projPaths.project_root().generic_string()};
-      if(root.empty())
-        return message;
 
       // The separator is matched too, so that a root which merely begins another path's name is left
       const auto rootDirectory{root + '/'};

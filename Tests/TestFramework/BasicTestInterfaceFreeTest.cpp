@@ -59,7 +59,7 @@ namespace sequoia::testing
 
   void basic_test_interface_free_test::test_no_default_construction()
   {
-    // A default would hold empty paths, so would name no project and no test
+    // A default would name no project and no test: its paths would be empty
     STATIC_CHECK(!std::is_default_constructible_v<fake_test>);
   }
 
@@ -67,21 +67,21 @@ namespace sequoia::testing
   {
     const auto rebasedSource{rebase_from(source_file(), get_project_paths().project_root())};
 
-    auto materialsOf{
-      [&projPaths](std::string_view testName) {
-        return individual_materials_paths{source_file(), testName, projPaths, null_discriminator};
+    const auto fakeTest{
+      [&projPaths]<class Test>(std::type_identity<Test>, const std::optional<std::string>& outputDiscriminator) {
+        return Test{
+          test_name<Test>(),
+          source_file(),
+          projPaths,
+          individual_materials_paths{source_file(), test_name<Test>(), projPaths, null_discriminator},
+          {},
+          outputDiscriminator
+        };
       }
     };
 
     {
-      const fake_test t{
-        test_name<fake_test>(),
-        source_file(),
-        projPaths,
-        materialsOf(test_name<fake_test>()),
-        {},
-        null_discriminator
-      };
+      const auto t{fakeTest(std::type_identity<fake_test>{}, null_discriminator)};
 
       check(equality,
             reporter{"Exceptions File Path"},
@@ -90,14 +90,7 @@ namespace sequoia::testing
     }
 
     {
-      const fake_test t{
-        test_name<fake_test>(),
-        source_file(),
-        projPaths,
-        materialsOf(test_name<fake_test>()),
-        {},
-        {""}
-      };
+      const auto t{fakeTest(std::type_identity<fake_test>{}, "")};
 
       check(equality,
             reporter{"Exceptions File Path"},
@@ -106,14 +99,7 @@ namespace sequoia::testing
     }
 
     {
-      const fake_test_with_discriminated_exceptions t{
-        test_name<fake_test_with_discriminated_exceptions>(),
-        source_file(),
-        projPaths,
-        materialsOf(test_name<fake_test_with_discriminated_exceptions>()),
-        {},
-        {"baz"}
-      };
+      const auto t{fakeTest(std::type_identity<fake_test_with_discriminated_exceptions>{}, "baz")};
 
       check(equality,
             reporter{"Exceptions File Path"},

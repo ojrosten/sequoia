@@ -33,7 +33,7 @@ namespace sequoia::testing
     STATIC_CHECK(!std::is_default_constructible_v<prune_paths>);
     STATIC_CHECK(!std::is_default_constructible_v<execution_record_paths>);
 
-    // A default would name no project: each path it held would be empty
+    // A default would name no project: its paths would be empty
     STATIC_CHECK(!std::is_default_constructible_v<project_paths>);
     STATIC_CHECK(!std::is_default_constructible_v<discoverable_paths>);
     STATIC_CHECK(!std::is_default_constructible_v<main_paths>);

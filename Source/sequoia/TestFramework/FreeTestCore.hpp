@@ -142,7 +142,7 @@ namespace sequoia::testing
   };
 
   /** \brief class template from which all concrete tests should derive.
-  
+
       The design is such that additional checking functionality should be provided
       by the Extender (which will become variadic once variadic friends are adopted).
       Other customization - such as the bespoke summarization of basic_performance_test -

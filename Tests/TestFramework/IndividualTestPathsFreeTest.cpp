@@ -33,15 +33,23 @@ namespace sequoia::testing
     test_ancillary_main_cpps();
 
     {
-      // A path to the executable relative to the current directory
-      const auto executable{fs::relative(fake_project_executable(working_materials()))};
-      commandline_arguments args{{executable.generic_string()}};
+      // Relative to the current directory
+      const auto relativeExecutable{fs::relative(fake_project_executable(working_materials()))};
+      commandline_arguments args{{relativeExecutable.generic_string()}};
       const project_paths projPaths{args.size(), args.get(), {}};
 
-      check("An absolute project root",              projPaths.project_root().is_absolute());
-      check("An absolute root of summaries",         projPaths.output().test_summaries().is_absolute());
-      check("An absolute root of diagnostics",       projPaths.output().diagnostics().is_absolute());
-      check("An absolute root of execution records", projPaths.execution_records().dir().is_absolute());
+      check("A relative executable gives an absolute executable",
+            projPaths.executable().is_absolute());
+      check("A relative executable gives an absolute CMake cache",
+            projPaths.discovered().cmake_cache().is_absolute());
+      check("A relative executable gives an absolute project root",
+            projPaths.project_root().is_absolute());
+      check("A relative executable gives an absolute root of summaries",
+            projPaths.output().test_summaries().is_absolute());
+      check("A relative executable gives an absolute root of diagnostics",
+            projPaths.output().diagnostics().is_absolute());
+      check("A relative executable gives an absolute directory of execution records",
+            projPaths.execution_records().dir().is_absolute());
     }
 
     {

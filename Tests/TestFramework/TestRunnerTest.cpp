@@ -2460,8 +2460,7 @@ namespace sequoia::testing
                               std::type_identity<consistently_passing_free_test>{},
                               std::type_identity<consistently_failing_free_test>{},
                               std::type_identity<flipper_free_test>{},
-                              std::type_identity<multi_periodic_free_test>{}
-                             );
+                              std::type_identity<multi_periodic_free_test>{});
   }
 
   template<concrete_test... Ts>

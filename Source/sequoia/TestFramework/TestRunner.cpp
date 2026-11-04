@@ -905,8 +905,6 @@ namespace sequoia::testing
   discarded_materials_remover::future_type prepare_materials(const individual_materials_paths& materials,
                                                              discarded_materials_remover& remover)
   {
-    const auto& temporaryRoot{materials.temporary_materials_root()};
-
     // Moving or removing the whole of this test's temporary tree, or of its
     // discarded root, is safe because `test_runner::register_test` admits each
     // name once, ignoring case, and no source whose materials prefix nests
@@ -916,6 +914,8 @@ namespace sequoia::testing
     // A run which died, or which could not remove it, leaves the discarded
     // root behind, and the move cannot replace it
     const auto leftoverFailure{try_remove_all(discardedRoot)};
+
+    const auto& temporaryRoot{materials.temporary_materials_root()};
 
     // The move is one metadata operation, whereas a removal visits every
     // entry. The move fails if the temporary root does not exist and, under
