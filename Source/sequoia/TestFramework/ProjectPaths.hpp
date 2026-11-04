@@ -522,7 +522,7 @@ namespace sequoia::testing
 
   /** \brief Paths used by the project.
 
-      Each path that it holds or returns is absolute.
+      Each path that `project_paths` holds, or returns, is absolute.
    */
 
   class project_paths

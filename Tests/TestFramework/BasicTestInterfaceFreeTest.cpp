@@ -59,7 +59,7 @@ namespace sequoia::testing
 
   void basic_test_interface_free_test::test_no_default_construction()
   {
-    // A default would name no test: its paths would be empty
+    // A default would hold empty paths, so would name no project and no test
     STATIC_CHECK(!std::is_default_constructible_v<fake_test>);
   }
 
@@ -90,7 +90,14 @@ namespace sequoia::testing
     }
 
     {
-      const fake_test t{test_name<fake_test>(), source_file(), projPaths, materialsOf(test_name<fake_test>()), {}, {""}};
+      const fake_test t{
+        test_name<fake_test>(),
+        source_file(),
+        projPaths,
+        materialsOf(test_name<fake_test>()),
+        {},
+        {""}
+      };
 
       check(equality,
             reporter{"Exceptions File Path"},

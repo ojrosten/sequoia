@@ -1,4 +1,4 @@
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 153
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 160
 No predictions
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ No predictions for test 'fake_test'; they belong in output/TestsTemporaryData/Te
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 157
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 164
 No auxiliary materials
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ No auxiliary materials for test 'fake_test'; they belong in output/TestsTemporar
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 185
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 192
 No materials
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ No materials for test 'fake_test'; they belong in output/TestsTemporaryData/Test
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 210
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 217
 Stray original materials
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ The materials in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeT
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 255
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 262
 An empty discriminator
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ The materials discriminator "" must not be empty
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 255
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 262
 A discriminator naming the parent
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ The materials discriminator ".." must name a directory of its own
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 255
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 262
 An absolute discriminator
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ The materials discriminator "/Platypus" must not contain '/'
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 255
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 262
 A discriminator holding a separator
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ The materials discriminator "Platypus/Echidna" must not contain '/'
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 255
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 262
 A discriminator holding a colon
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ The materials discriminator "Platypus:Echidna" must not contain ':'
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 255
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 262
 A discriminator ending in a dot
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ The materials discriminator "Platypus." must not end in a dot or a space
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 255
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 262
 A discriminator naming a Windows device
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ The materials discriminator "COM1" must not be a device name on Windows
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 255
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 262
 A Windows device numbered with superscript one
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ The materials discriminator "COM¹" must not be a device name on Windows
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 255
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 262
 A Windows device numbered with superscript two
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ The materials discriminator "Lpt²" must not be a device name on Windows
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 255
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 262
 A Windows device numbered with superscript three
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ The materials discriminator "lpt³.txt" must not be a device name on Windows
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 255
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 262
 A discriminator naming a kind of material
 
 Expected Exception Type:
@@ -133,7 +133,7 @@ The materials discriminator "prediction" must not name a kind of material
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 255
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 262
 A discriminator differing only in case from a sibling
 
 Expected Exception Type:
@@ -142,7 +142,7 @@ The materials discriminator "platypus" must not differ only in case from Platypu
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 291
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 298
 Materials beside the discriminated directories
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ The materials in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeT
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 376
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 383
 A removal in place which fails after the leftover's names both roots
 
 Expected Exception Type:

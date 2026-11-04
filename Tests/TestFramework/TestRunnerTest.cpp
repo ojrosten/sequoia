@@ -1321,14 +1321,24 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{"Invalid repetitions for instability analysis"},
       [this](){
-        test_instability_analysis("", "", "foo", return_code::critical_failures, {}, std::type_identity<critical_free_test>{});
+        test_instability_analysis("",
+                                  "",
+                                  "foo",
+                                  return_code::critical_failures,
+                                  {},
+                                  std::type_identity<critical_free_test>{});
       }
     );
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Insufficient repetitions for instability analysis"},
       [this](){
-        test_instability_analysis("", "",  "1", return_code::critical_failures, {}, std::type_identity<critical_free_test>{});
+        test_instability_analysis("",
+                                  "",
+                                  "1",
+                                  return_code::critical_failures,
+                                  {},
+                                  std::type_identity<critical_free_test>{});
       }
     );
   }

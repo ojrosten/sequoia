@@ -114,11 +114,13 @@ namespace sequoia::testing
                                const std::optional<std::string>& materialsDiscriminator);
   };
 
-  /** \brief Paths of the files holding a test's diagnostics. */
+  /** \brief Paths of the files holding a test's diagnostics.
+
+      \throws std::invalid_argument if `source` is empty
+   */
   class individual_diagnostics_paths
   {
   public:
-    /** \throws std::invalid_argument if `source` is empty */
     individual_diagnostics_paths(const project_paths& projPaths, std::string_view testName, const std::filesystem::path& source, test_mode mode, const std::optional<std::string>& platform);
 
     [[nodiscard]]

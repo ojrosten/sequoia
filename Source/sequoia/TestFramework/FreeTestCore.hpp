@@ -135,9 +135,9 @@ namespace sequoia::testing
                                              const std::filesystem::path& original,
                                              std::filesystem::path usable) const;
 
-    std::string m_Name;
-    project_paths m_ProjectPaths;
-    individual_materials_paths m_Materials;
+    std::string                  m_Name;
+    project_paths                m_ProjectPaths;
+    individual_materials_paths   m_Materials;
     individual_diagnostics_paths m_Diagnostics;
   };
 
@@ -147,10 +147,6 @@ namespace sequoia::testing
       by the Extender (which will become variadic once variadic friends are adopted).
       Other customization - such as the bespoke summarization of basic_performance_test -
       should be done via inheritance.
-
-      The semantics are such that, of the special member functions, only explicit construction from a
-      string_view is publicly available. Destruction and moves are protected; copy
-      contruction / assignment are deleted.
 
       \anchor basic_test_primary
    */
