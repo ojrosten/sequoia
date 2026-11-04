@@ -79,8 +79,11 @@ case "$method $path" in
   'GET '*/check-runs/*/annotations)
     failing annotations
     id=${path#*check-runs/}
-    jq -r --argjson id "${id%/annotations}" '.[] | select(.id == $id) | .annotation // empty' "$FAKE/every_attempt.json";;
-  'GET '*/runs/7/jobs'?filter=all'*) failing every_attempt; jq -c '.[]' "$FAKE/every_attempt.json";;
+    jq -r --argjson id "${id%/annotations}" '.[] | select(.id == $id) | .annotation // empty' \
+       "$FAKE/every_attempt.json";;
+  'GET '*/runs/7/jobs'?filter=all'*)
+    failing every_attempt
+    jq -c '.[]' "$FAKE/every_attempt.json";;
   'GET '*/runs/7/jobs*)            failing jobs; jq -c '.[]' "$FAKE/jobs.json";;
   'GET '*/runs/7)                  failing run; cat "$FAKE/run.json";;
   *)                               echo "the fake gh has no answer for: $method $path" >&2; exit 1;;
@@ -101,6 +104,9 @@ job() {
        runner_name: (if $runner == "" then null else $runner end),
        annotation: (if $annotation == "" then null else $annotation end)}'
 }
+
+# joined <jobs>...: the jobs lists, as one list.
+joined() { printf '%s\n' "$@" | jq -s add; }
 
 # stamped <created> <completed>: the job on standard input, created and
 # completed at those times of 2026-11-04.
@@ -163,38 +169,54 @@ run_41874199305_attempt_2=$(
 # Three jobs lost in attempt 1, each needing none of the others. Attempt 2
 # re-runs a, and gives the copy of b a lower id than the copy of c, though c's
 # original has the lower id. Attempt 3 re-runs c, and copies b again.
-three_lost_attempt_1=$({ job 10 success   3 r1 scope                  | stamped 10:00:00 10:00:10
-                         job 20 cancelled 0 '' a "$not_acquired"      | stamped 10:00:10 10:15:10
-                         job 21 cancelled 0 '' c "$not_acquired"      | stamped 10:00:10 10:15:10
-                         job 22 cancelled 0 '' b "$not_acquired"      | stamped 10:00:10 10:15:10
-                         job 30 failure   5 r2 'Every job ran'        | stamped 10:15:10 10:15:20; } | jq -s .)
-three_lost_attempt_2=$({ job 40 success   9 r3 a                      | stamped 11:00:00 11:10:00
-                         job 41 cancelled 0 '' b                      | stamped 11:00:00 10:15:10
-                         job 42 cancelled 0 '' c                      | stamped 11:00:00 10:15:10
-                         job 43 success   3 r1 scope                  | stamped 11:00:00 10:00:10
-                         job 44 failure   5 r4 'Every job ran'        | stamped 11:10:00 11:10:10; } | jq -s .)
-three_lost_attempt_3=$({ job 50 success   9 r5 c                      | stamped 12:00:00 12:10:00
-                         job 51 success   9 r3 a                      | stamped 12:00:00 11:10:00
-                         job 52 cancelled 0 '' b                      | stamped 12:00:00 10:15:10
-                         job 53 success   3 r1 scope                  | stamped 12:00:00 10:00:10
-                         job 54 failure   5 r6 'Every job ran'        | stamped 12:10:00 12:10:10; } | jq -s .)
+three_losses_attempt_1=$(
+  { job 10 success   3 r1 scope                   | stamped 10:00:00 10:00:10
+    job 20 cancelled 0 '' a "$not_acquired"       | stamped 10:00:10 10:15:10
+    job 21 cancelled 0 '' c "$not_acquired"       | stamped 10:00:10 10:15:10
+    job 22 cancelled 0 '' b "$not_acquired"       | stamped 10:00:10 10:15:10
+    job 30 failure   5 r2 'Every job ran'         | stamped 10:15:10 10:15:20
+  } | jq -s .)
+three_losses_attempt_2=$(
+  { job 40 success   9 r3 a                       | stamped 11:00:00 11:10:00
+    job 41 cancelled 0 '' b                       | stamped 11:00:00 10:15:10
+    job 42 cancelled 0 '' c                       | stamped 11:00:00 10:15:10
+    job 43 success   3 r1 scope                   | stamped 11:00:00 10:00:10
+    job 44 failure   5 r4 'Every job ran'         | stamped 11:10:00 11:10:10
+  } | jq -s .)
+three_losses_attempt_3=$(
+  { job 50 success   9 r5 c                       | stamped 12:00:00 12:10:00
+    job 51 success   9 r3 a                       | stamped 12:00:00 11:10:00
+    job 52 cancelled 0 '' b                       | stamped 12:00:00 10:15:10
+    job 53 success   3 r1 scope                   | stamped 12:00:00 10:00:10
+    job 54 failure   5 r6 'Every job ran'         | stamped 12:10:00 12:10:10
+  } | jq -s .)
 # A job lost in attempt 1, re-run in attempt 2 and cancelled in the second it
 # was created, with no annotation; and copied, so cancelled, into attempt 3,
 # which re-ran another job.
-cancelled_attempt_1=$({ job 10 success   3 r1 scope                   | stamped 10:00:00 10:00:10
-                        job 20 cancelled 0 '' a "$not_acquired"       | stamped 10:00:10 10:15:10
-                        job 21 success   9 r2 d                       | stamped 10:00:10 10:05:10; } | jq -s .)
-cancelled_attempt_2=$({ job 30 cancelled 0 '' a                       | stamped 11:00:00 11:00:00
-                        job 31 success   3 r1 scope                   | stamped 11:00:00 10:00:10
-                        job 32 success   9 r2 d                       | stamped 11:00:00 10:05:10; } | jq -s .)
-cancelled_attempt_3=$({ job 40 success   9 r3 d                       | stamped 12:00:00 12:05:00
-                        job 41 cancelled 0 '' a                       | stamped 12:00:00 11:00:00
-                        job 42 success   3 r1 scope                   | stamped 12:00:00 10:00:10; } | jq -s .)
-# Two jobs of attempt 1 with one name, lost in one second, and a copy of
-# either.
-two_originals=$({ job 20 cancelled 0 '' a "$not_acquired"             | stamped 10:00:10 10:15:10
-                  job 21 cancelled 0 '' a "$not_acquired"             | stamped 10:00:10 10:15:10; } | jq -s .)
-two_originals_copied=$({ job 30 cancelled 0 '' a                      | stamped 11:00:00 10:15:10; } | jq -s .)
+loss_then_cancellation_attempt_1=$(
+  { job 10 success   3 r1 scope                   | stamped 10:00:00 10:00:10
+    job 20 cancelled 0 '' a "$not_acquired"       | stamped 10:00:10 10:15:10
+    job 21 success   9 r2 d                       | stamped 10:00:10 10:05:10
+  } | jq -s .)
+loss_then_cancellation_attempt_2=$(
+  { job 30 cancelled 0 '' a                       | stamped 11:00:00 11:00:00
+    job 31 success   3 r1 scope                   | stamped 11:00:00 10:00:10
+    job 32 success   9 r2 d                       | stamped 11:00:00 10:05:10
+  } | jq -s .)
+loss_then_cancellation_attempt_3=$(
+  { job 40 success   9 r3 d                       | stamped 12:00:00 12:05:00
+    job 41 cancelled 0 '' a                       | stamped 12:00:00 11:00:00
+    job 42 success   3 r1 scope                   | stamped 12:00:00 10:00:10
+  } | jq -s .)
+# Two jobs of attempt 1 with one name, lost in one second, and in attempt 2 a
+# copy of either.
+two_originals_attempt_1=$(
+  { job 20 cancelled 0 '' a "$not_acquired"       | stamped 10:00:10 10:15:10
+    job 21 cancelled 0 '' a "$not_acquired"       | stamped 10:00:10 10:15:10
+  } | jq -s .)
+two_originals_attempt_2=$(
+  { job 30 cancelled 0 '' a                       | stamped 11:00:00 10:15:10
+  } | jq -s .)
 real_failure=$({ job 10 success 3 r1 scope
                  job 20 failure 32 r2 'fine / Windows'
                  job 40 failure 5 r3 'Every job ran'; } | jq -s .)
@@ -255,6 +277,12 @@ reran() {
 # succeeded.
 reran_none() {
   [ "$status" -eq 0 ] && [ -z "$reruns" ] || fail "$1: status $status, re-runs: ${reruns:-none}"
+}
+
+# failed_without_rerun <description>: whether the last run asked for no
+# re-run, and failed.
+failed_without_rerun() {
+  [ "$status" -ne 0 ] && [ -z "$reruns" ] || fail "$1: status $status, re-runs: ${reruns:-none}"
 }
 
 # refused <description> <env argument>...
@@ -321,34 +349,37 @@ controls() {
         "^  selftests / Script selftests · macOS$" "$dir/out.txt"
 
   run run_41874199305_attempt_2 "$run_41874199305_attempt_2" 2 \
-      "$(jq -s add <<< "$run_41874199305_attempt_1$run_41874199305_attempt_2")"
+      "$(joined "$run_41874199305_attempt_1" "$run_41874199305_attempt_2")"
   reran "run 41874199305's attempt 2, which copied a lost job" 126751480875
   check "run 41874199305's attempt 2 names the copy" yes "^  selftests / Script selftests · macOS$" "$dir/out.txt"
 
-  run three_lost_attempt_1 "$three_lost_attempt_1"
+  run three_losses_attempt_1 "$three_losses_attempt_1"
   reran "three lost jobs, in attempt 1" 20
 
-  run three_lost_attempt_2 "$three_lost_attempt_2" 2 "$(jq -s add <<< "$three_lost_attempt_1$three_lost_attempt_2")"
+  run three_losses_attempt_2 "$three_losses_attempt_2" 2 \
+      "$(joined "$three_losses_attempt_1" "$three_losses_attempt_2")"
   reran "three lost jobs, in attempt 2: the copy whose original has the lower id" 42
 
-  run three_lost_attempt_3 "$three_lost_attempt_3" 3 \
-      "$(jq -s add <<< "$three_lost_attempt_1$three_lost_attempt_2$three_lost_attempt_3")"
+  run three_losses_attempt_3 "$three_losses_attempt_3" 3 \
+      "$(joined "$three_losses_attempt_1" "$three_losses_attempt_2" "$three_losses_attempt_3")"
   reran "three lost jobs, in attempt 3: the job copied twice" 52
 
-  run cancelled_attempt_2 "$cancelled_attempt_2" 2 "$(jq -s add <<< "$cancelled_attempt_1$cancelled_attempt_2")"
-  reran_none "a lost job re-run, then cancelled in the second it was created"
+  run loss_then_cancellation_attempt_2 "$loss_then_cancellation_attempt_2" 2 \
+      "$(joined "$loss_then_cancellation_attempt_1" "$loss_then_cancellation_attempt_2")"
+  reran_none "a lost job re-run and cancelled in the second it was created"
 
-  run cancelled_attempt_3 "$cancelled_attempt_3" 3 \
-      "$(jq -s add <<< "$cancelled_attempt_1$cancelled_attempt_2$cancelled_attempt_3")"
-  reran_none "a copy of a lost job re-run, then cancelled"
+  run loss_then_cancellation_attempt_3 "$loss_then_cancellation_attempt_3" 3 \
+      "$(joined "$loss_then_cancellation_attempt_1" "$loss_then_cancellation_attempt_2" "$loss_then_cancellation_attempt_3")"
+  reran_none "a copy of a lost job re-run and cancelled"
 
   run copy_without_original "$run_41874199305_attempt_2" 2
-  [ "$status" -ne 0 ] && [ -z "$reruns" ] || fail "a copy with no original: status $status, re-runs: ${reruns:-none}"
+  failed_without_rerun "a copy with no original"
   check "a copy with no original is named in an error" yes \
         "^::error::Job selftests / Script selftests · macOS of run 7 is a copy" "$dir/out.txt"
 
-  run copy_of_two_originals "$two_originals_copied" 2 "$(jq -s add <<< "$two_originals$two_originals_copied")"
-  [ "$status" -ne 0 ] && [ -z "$reruns" ] || fail "a copy with two originals: status $status, re-runs: ${reruns:-none}"
+  run copy_of_two_originals "$two_originals_attempt_2" 2 \
+      "$(joined "$two_originals_attempt_1" "$two_originals_attempt_2")"
+  failed_without_rerun "a copy with two originals"
 
   run real_failure "$real_failure"
   reran_none "a column that ran and failed"
@@ -384,18 +415,16 @@ controls() {
   check "an attempt before the last does not warn" no "::warning::" "$dir/out.txt"
 
   failing_run run_fails run "$lost_column"
-  [ "$status" -ne 0 ] && [ -z "$reruns" ] || fail "a failed read of the run: status $status, re-runs: ${reruns:-none}"
+  failed_without_rerun "a failed read of the run"
 
   failing_run jobs_fail jobs "$lost_column"
-  [ "$status" -ne 0 ] && [ -z "$reruns" ] || fail "a failed read of the jobs: status $status, re-runs: ${reruns:-none}"
+  failed_without_rerun "a failed read of the jobs"
 
   failing_run every_attempt_fails every_attempt "$lost_column"
-  [ "$status" -ne 0 ] && [ -z "$reruns" ] \
-    || fail "a failed read of every attempt's jobs: status $status, re-runs: ${reruns:-none}"
+  failed_without_rerun "a failed read of every attempt's jobs"
 
   failing_run annotations_fail annotations "$lost_column"
-  [ "$status" -ne 0 ] && [ -z "$reruns" ] \
-    || fail "a failed read of the annotations: status $status, re-runs: ${reruns:-none}"
+  failed_without_rerun "a failed read of the annotations"
 
   failing_run rerun_fails rerun "$lost_column"
   [ "$status" -ne 0 ] || fail "a failed re-run did not fail the script"
@@ -445,16 +474,16 @@ mutations=(
   'the latest attempt read alone'   'jobs?filter=all&'                 'jobs?'
   'a failed read of every attempt ignored'
                                     '  > "$every_attempt_jobs"'        '  > "$every_attempt_jobs" || :'
-  'no job a copy'                   'def copy: .completed_at < .created_at;'
-                                    'def copy: false;'
-  'every job a copy'                'def copy: .completed_at < .created_at;'
-                                    'def copy: true;'
+  'no job a copy'                   'def copied: .completed_at < .created_at;'
+                                    'def copied: false;'
+  'every job a copy'                'def copied: .completed_at < .created_at;'
+                                    'def copied: true;'
   'a job completed as created a copy'
                                     '.completed_at < .created_at'      '.completed_at <= .created_at'
   'an original found by name alone' $'\n                                     and .completed_at == $job.completed_at' ''
   'an original found by completion alone'
                                     $'.name == $job.name\n                                     and ' ''
-  'a copy taken for an original'    $'\n                                     and (copy | not))' ')'
+  'a copy taken for an original'    $'\n                                     and (copied | not))' ')'
   'the first of two originals taken'
                                     'if length == 1 then .[0] else null end'
                                     '.[0]'

@@ -100,18 +100,18 @@ gh api "repos/$GH_REPO/actions/runs/$run_id/jobs?filter=all&per_page=100" --pagi
 
 # A candidate's line holds the id of its original, or null for a copy that
 # matches no original, or several.
-candidates=$(jq -r --slurpfile every_attempt "$every_attempt_jobs" '
-  def copy: .completed_at < .created_at;
+candidates=$(jq -r --slurpfile every_attempt_jobs "$every_attempt_jobs" '
+  def copied: .completed_at < .created_at;
   [ .[]
     | select((.conclusion == "cancelled" or .conclusion == "failure")
              and (.steps | length) == 0
              and (.runner_name // "") == "")
     | . as $job
-    | .original_id = if copy
-                     then [ $every_attempt[]
+    | .original_id = if copied
+                     then [ $every_attempt_jobs[]
                             | select(.name == $job.name
                                      and .completed_at == $job.completed_at
-                                     and (copy | not))
+                                     and (copied | not))
                             | .id ]
                           | if length == 1 then .[0] else null end
                      else .id end ]
