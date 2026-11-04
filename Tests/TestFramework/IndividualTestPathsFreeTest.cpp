@@ -27,26 +27,39 @@ namespace sequoia::testing
   {
     using namespace std::string_literals;
 
-    test_absent_default_construction();
+    test_no_default_construction();
     test_project_folder_deduction();
     test_materials_paths();
     test_ancillary_main_cpps();
 
-    // Default project paths have no absolute root: the summaries' root is
-    // empty, and the execution records' root is relative but not empty
+    // Default project paths give no absolute root. The roots of summaries and
+    // diagnostics are empty; the root of execution records is relative but
+    // not empty.
     check_exception_thrown<std::invalid_argument>(
       reporter{"A summary needs an absolute output root"},
-      []() { return test_summary_path{"Tests/Foo.cpp", "foo_test", project_paths{}, null_discriminator}; }
+      []() {
+        return test_summary_path{"Tests/Foo.cpp", "foo_test", project_paths{}, null_discriminator};
+      }
     );
 
     check_exception_thrown<std::invalid_argument>(
       reporter{"An execution record needs an absolute output root"},
-      [this]() { return test_execution_record_path{working_materials() / "Tests" / "Foo.cpp", "foo_test", project_paths{}}; }
+      [this]() {
+        return test_execution_record_path{working_materials() / "Tests" / "Foo.cpp", "foo_test", project_paths{}};
+      }
     );
 
     check_exception_thrown<std::invalid_argument>(
       reporter{"Diagnostics need an absolute output root"},
-      []() { return individual_diagnostics_paths{project_paths{}, "foo_test", "Tests/Foo.cpp", test_mode::standard, std::nullopt}; }
+      []() {
+        return individual_diagnostics_paths{
+                 project_paths{},
+                 "foo_test",
+                 "Tests/Foo.cpp",
+                 test_mode::standard,
+                 std::nullopt
+               };
+      }
     );
 
     {
@@ -60,7 +73,8 @@ namespace sequoia::testing
 
       auto summaryFileName{
         [&projPaths](const std::optional<std::string>& discriminator) {
-          return test_summary_path{"Tests/Foo.cpp", "foo_test", projPaths, discriminator}.file_path().filename().generic_string();
+          const test_summary_path summary{"Tests/Foo.cpp", "foo_test", projPaths, discriminator};
+          return summary.file_path().filename().generic_string();
         }
       };
 
@@ -112,10 +126,9 @@ namespace sequoia::testing
     }
   }
 
-  void individual_test_paths_free_test::test_absent_default_construction()
+  void individual_test_paths_free_test::test_no_default_construction()
   {
-    // A default would hold an empty path, which would resolve against the
-    // current directory
+    // A default would name no file: its path would be empty
     STATIC_CHECK(!std::is_default_constructible_v<test_summary_path>);
     STATIC_CHECK(!std::is_default_constructible_v<test_execution_record_path>);
   }

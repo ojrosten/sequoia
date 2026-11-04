@@ -20,11 +20,11 @@ namespace sequoia::testing
 
   void project_paths_free_test::run_tests()
   {
-    test_absent_default_construction();
+    test_no_default_construction();
     test_build_configuration();
   }
 
-  void project_paths_free_test::test_absent_default_construction()
+  void project_paths_free_test::test_no_default_construction()
   {
     // A default would hold an empty directory, so each file within it would
     // resolve against the current directory
