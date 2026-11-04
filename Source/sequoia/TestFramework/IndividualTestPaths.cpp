@@ -103,7 +103,7 @@ namespace sequoia::testing
                           .concat((platform && !platform->empty()) ? "_" + platform.value() : "")
                           .concat(".txt")};
 
-      return test_output_directory(source, output_paths::diagnostics(projectPaths.project_root()), projectPaths) /= file;
+      return test_output_directory(source, projectPaths.output().diagnostics(), projectPaths) /= file;
     }
 
     [[nodiscard]]

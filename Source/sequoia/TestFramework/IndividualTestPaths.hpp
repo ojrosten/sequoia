@@ -146,11 +146,12 @@ namespace sequoia::testing
     friend bool operator==(const individual_diagnostics_paths&, const individual_diagnostics_paths&) noexcept = default;
   private:
     std::filesystem::path
-      m_Diagnostics,
-      m_CaughtExceptions;
+      m_Diagnostics{},
+      m_CaughtExceptions{};
   };
 
-  class test_summary_path {
+  class test_summary_path
+  {
   public:
     test_summary_path(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projectPaths, const std::optional<std::string>& summaryDiscriminator);
 
@@ -160,7 +161,7 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator==(const test_summary_path&, const test_summary_path&) noexcept = default;
   private:
-    std::filesystem::path m_Summary;
+    std::filesystem::path m_Summary{};
   };
 
   /** \brief The path to where a test writes the records of its executions.
