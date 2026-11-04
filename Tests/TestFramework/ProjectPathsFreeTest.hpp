@@ -23,6 +23,8 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+    void test_absent_default_construction();
+
     void test_build_configuration();
   };
 }

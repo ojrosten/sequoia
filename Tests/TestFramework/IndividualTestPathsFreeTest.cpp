@@ -27,6 +27,7 @@ namespace sequoia::testing
   {
     using namespace std::string_literals;
 
+    test_absent_default_construction();
     test_project_folder_deduction();
     test_materials_paths();
     test_ancillary_main_cpps();
@@ -91,6 +92,14 @@ namespace sequoia::testing
         projPaths.output().dir() / "ExecutionRecords" / "Foo" / "CMade" / "Tests" / "foo_test.txt"
       );
     }
+  }
+
+  void individual_test_paths_free_test::test_absent_default_construction()
+  {
+    // A default would hold an empty path, which would resolve against the
+    // current directory
+    STATIC_CHECK(!std::is_default_constructible_v<test_summary_path>);
+    STATIC_CHECK(!std::is_default_constructible_v<test_execution_record_path>);
   }
 
   void individual_test_paths_free_test::test_project_folder_deduction()

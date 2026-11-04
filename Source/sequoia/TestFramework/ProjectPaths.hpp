@@ -322,8 +322,6 @@ namespace sequoia::testing
   class recovery_paths
   {
   public:
-    recovery_paths() = default;
-
     explicit recovery_paths(const std::filesystem::path& outputDir);
 
     [[nodiscard]]
@@ -360,8 +358,6 @@ namespace sequoia::testing
   class drift_paths
   {
   public:
-    drift_paths() = default;
-
     explicit drift_paths(const std::filesystem::path& outputDir);
 
     [[nodiscard]]
@@ -387,8 +383,6 @@ namespace sequoia::testing
   class prune_paths
   {
   public:
-    prune_paths() = default;
-
     prune_paths(std::filesystem::path outputDir, const std::filesystem::path& buildRoot, const std::filesystem::path& buildDir);
 
     [[nodiscard]]
@@ -432,8 +426,6 @@ namespace sequoia::testing
   class execution_record_paths
   {
   public:
-    execution_record_paths() = default;
-
     execution_record_paths(std::filesystem::path outputDir,
                            const std::filesystem::path& buildRoot,
                            const std::filesystem::path& executableDir);

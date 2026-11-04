@@ -505,8 +505,8 @@ namespace sequoia::testing
     log_summary write_versioned_output(log_summary::duration executionDuration) const;
 
     test_vessel m_Vessel;
-    test_summary_path m_SummaryFile{};
-    test_execution_record_path m_ExecutionRecord{};
+    test_summary_path m_SummaryFile;
+    test_execution_record_path m_ExecutionRecord;
     discarded_materials_remover::future_type m_DiscardedMaterialsRemovalFailureFuture{};
   };
 

@@ -152,8 +152,6 @@ namespace sequoia::testing
 
   class test_summary_path {
   public:
-    test_summary_path() = default;
-
     test_summary_path(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projectPaths, const std::optional<std::string>& summaryDiscriminator);
 
     [[nodiscard]]
@@ -172,8 +170,6 @@ namespace sequoia::testing
   class test_execution_record_path
   {
   public:
-    test_execution_record_path() = default;
-
     test_execution_record_path(const std::filesystem::path& sourceFile,
                                std::string_view testName,
                                const project_paths& projectPaths);
