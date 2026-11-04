@@ -67,8 +67,6 @@ namespace sequoia::testing
         If the test has materials but no working copy, returns an empty
         directory.
 
-        \throws std::logic_error if the test was constructed with no materials
-                paths
         \throws std::runtime_error if the test has no materials, naming where
                 they belong
      */
@@ -77,7 +75,6 @@ namespace sequoia::testing
 
     /** \brief The test's original predictions: predictions have no temporary copy.
 
-        \throws std::logic_error if the test was constructed with no materials paths
         \throws std::runtime_error if there are none, naming where they belong
      */
     [[nodiscard]]
@@ -85,7 +82,6 @@ namespace sequoia::testing
 
     /** \brief The temporary copy of the test's original auxiliary materials.
 
-        \throws std::logic_error if the test was constructed with no materials paths
         \throws std::runtime_error if there are none, naming where they belong
      */
     [[nodiscard]]
@@ -99,9 +95,6 @@ namespace sequoia::testing
 
         It is the root beneath which those copies are made, so `WorkingCopy`
         and `Auxiliary` are reserved names within it; nothing enforces this.
-
-        \throws std::logic_error if the test was constructed with no materials
-                paths
      */
     [[nodiscard]]
     std::filesystem::path scratchpad_materials() const;
@@ -137,8 +130,6 @@ namespace sequoia::testing
 
     void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index, const failure_output& output) const;
   private:
-    void throw_if_no_materials_paths() const;
-
     [[nodiscard]]
     std::filesystem::path materials_or_throw(std::string_view kind,
                                              const std::filesystem::path& original,

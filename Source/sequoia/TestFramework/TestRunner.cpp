@@ -906,8 +906,6 @@ namespace sequoia::testing
                                                              discarded_materials_remover& remover)
   {
     const auto& temporaryRoot{materials.temporary_materials_root()};
-    if(temporaryRoot.empty())
-      throw std::logic_error{"Unable to prepare materials whose paths name no test"};
 
     // Moving or removing the whole of this test's temporary tree, or of its
     // discarded root, is safe because `test_runner::register_test` admits each

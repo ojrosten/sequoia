@@ -47,13 +47,6 @@ namespace sequoia::testing
       `Prediction` and `Auxiliary` under the original root. `working()` and `auxiliary()` are the
       paths of `WorkingCopy` and `Auxiliary` under the temporary root. `Prediction` has no temporary
       counterpart, since the predictions are not part of the test's execution context.
-
-      A default-constructed instance names no test, and its original and
-      temporary roots are empty.
-
-      \throws std::logic_error if a default-constructed instance is asked for
-      the discarded root, or for the path of `WorkingCopy`, `Prediction` or
-      `Auxiliary`.
    */
   class individual_materials_paths
   {
@@ -121,10 +114,7 @@ namespace sequoia::testing
                                const std::optional<std::string>& materialsDiscriminator);
   };
 
-  /** \brief Paths of the files holding a test's diagnostics.
-
-      A default-constructed instance holds two empty paths.
-   */
+  /** \brief Paths of the files holding a test's diagnostics. */
   class individual_diagnostics_paths
   {
   public:
