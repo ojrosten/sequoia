@@ -123,11 +123,16 @@ namespace sequoia::testing
                                const std::optional<std::string>& materialsDiscriminator);
   };
 
+  /** \brief Paths of the files holding a test's diagnostics. */
   class individual_diagnostics_paths
   {
   public:
     individual_diagnostics_paths() = default;
 
+    /** \throws std::runtime_error if `source` is empty
+        \throws std::invalid_argument if `projPaths.output().diagnostics()` is
+                not absolute
+     */
     individual_diagnostics_paths(const project_paths& projPaths, std::string_view testName, const std::filesystem::path& source, test_mode mode, const std::optional<std::string>& platform);
 
     [[nodiscard]]
@@ -150,6 +155,12 @@ namespace sequoia::testing
       m_CaughtExceptions{};
   };
 
+  /** \brief The path of the file holding a test's summary.
+
+      \throws std::runtime_error if `sourceFile` is empty
+      \throws std::invalid_argument if `projectPaths.output().test_summaries()`
+              is not absolute
+   */
   class test_summary_path
   {
   public:
@@ -164,9 +175,11 @@ namespace sequoia::testing
     std::filesystem::path m_Summary{};
   };
 
-  /** \brief The path to where a test writes the records of its executions.
+  /** \brief The path of the file holding the records of a test's executions.
 
-      The path is empty for default project paths.
+      \throws std::runtime_error if `sourceFile` is empty
+      \throws std::invalid_argument if `projectPaths.execution_records().dir()`
+              is not absolute
    */
   class test_execution_record_path
   {

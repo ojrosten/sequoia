@@ -1,4 +1,4 @@
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 197
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 215
 No test: no discarded materials root
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Empty materials root: '.discarded' would resolve against the current directory
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 199
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 217
 No test: no original working copy
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Empty materials root: 'WorkingCopy' would resolve against the current directory
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 201
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 219
 No test: no temporary working copy
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Empty materials root: 'WorkingCopy' would resolve against the current directory
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 203
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 221
 No test: no predictions
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Empty materials root: 'Prediction' would resolve against the current directory
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 205
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 223
 No test: no original auxiliary
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Empty materials root: 'Auxiliary' would resolve against the current directory
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 207
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 225
 No test: no temporary auxiliary
 
 Expected Exception Type:
@@ -52,7 +52,34 @@ Empty materials root: 'Auxiliary' would resolve against the current directory
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 36
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 38
+A summary needs an absolute output root
+
+Expected Exception Type:
+[std::invalid_argument]
+The output root is not absolute
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 43
+An execution record needs an absolute output root
+
+Expected Exception Type:
+[std::invalid_argument]
+The output root is not absolute
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 48
+Diagnostics need an absolute output root
+
+Expected Exception Type:
+[std::invalid_argument]
+The output root is not absolute
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 57
 Empty file
 
 Expected Exception Type:

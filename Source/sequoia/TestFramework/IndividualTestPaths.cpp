@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <format>
+#include <stdexcept>
 
 namespace sequoia::testing
 {
@@ -67,12 +68,15 @@ namespace sequoia::testing
       if(sourceFile.empty())
         throw std::runtime_error{"Source files should have a non-trivial name!"};
 
+      // A relative root would put the directory relative to the current
+      // directory or, for an absolute source, at the source's own directory
+      if(!outputRoot.is_absolute())
+        throw std::invalid_argument{"The output root is not absolute"};
+
       if(!sourceFile.is_absolute())
       {
-        if(const auto testRepo{projectPaths.tests().repo()}; !testRepo.empty())
-          return (outputRoot / back(testRepo) / rebase_from(sourceFile, testRepo)).parent_path();
-
-        return sourceFile.parent_path();
+        const auto& testRepo{projectPaths.tests().repo()};
+        return (outputRoot / back(testRepo) / rebase_from(sourceFile, testRepo)).parent_path();
       }
 
       auto dir{outputRoot};
