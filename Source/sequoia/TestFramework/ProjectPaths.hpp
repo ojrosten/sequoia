@@ -520,7 +520,10 @@ namespace sequoia::testing
       m_InstabilityAnalysis{};
   };
 
-  /** \brief Paths used by the project */
+  /** \brief Paths used by the project.
+
+      Each path that it holds or returns is absolute.
+   */
 
   class project_paths
   {

@@ -50,11 +50,6 @@ namespace sequoia::testing
       if(sourceFile.empty())
         throw std::invalid_argument{"Source files should have a non-trivial name!"};
 
-      // A relative root would put the directory relative to the current
-      // directory or, for an absolute source, at the source's own directory
-      if(!outputRoot.is_absolute())
-        throw std::invalid_argument{"The output root is not absolute"};
-
       if(!sourceFile.is_absolute())
       {
         const auto& testRepo{projectPaths.tests().repo()};

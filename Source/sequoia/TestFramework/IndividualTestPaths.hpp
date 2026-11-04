@@ -118,10 +118,7 @@ namespace sequoia::testing
   class individual_diagnostics_paths
   {
   public:
-    /** \throws std::invalid_argument if `source` is empty
-        \throws std::invalid_argument if `projPaths.output().diagnostics()` is
-                not absolute
-     */
+    /** \throws std::invalid_argument if `source` is empty */
     individual_diagnostics_paths(const project_paths& projPaths, std::string_view testName, const std::filesystem::path& source, test_mode mode, const std::optional<std::string>& platform);
 
     [[nodiscard]]
@@ -147,8 +144,6 @@ namespace sequoia::testing
   /** \brief The path of the file holding a test's summary.
 
       \throws std::invalid_argument if `sourceFile` is empty
-      \throws std::invalid_argument if `projectPaths.output().test_summaries()`
-              is not absolute
    */
   class test_summary_path
   {
@@ -167,8 +162,6 @@ namespace sequoia::testing
   /** \brief The path of the file holding the records of a test's executions.
 
       \throws std::invalid_argument if `sourceFile` is empty
-      \throws std::invalid_argument if `projectPaths.execution_records().dir()`
-              is not absolute
    */
   class test_execution_record_path
   {
