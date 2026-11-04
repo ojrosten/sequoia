@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <format>
+#include <stdexcept>
 
 namespace sequoia::testing
 {
@@ -65,14 +66,17 @@ namespace sequoia::testing
     fs::path test_output_directory(const fs::path& sourceFile, const fs::path& outputRoot, const project_paths& projectPaths)
     {
       if(sourceFile.empty())
-        throw std::runtime_error{"Source files should have a non-trivial name!"};
+        throw std::invalid_argument{"Source files should have a non-trivial name!"};
+
+      // A relative root would put the directory relative to the current
+      // directory or, for an absolute source, at the source's own directory
+      if(!outputRoot.is_absolute())
+        throw std::invalid_argument{"The output root is not absolute"};
 
       if(!sourceFile.is_absolute())
       {
-        if(const auto testRepo{projectPaths.tests().repo()}; !testRepo.empty())
-          return (outputRoot / back(testRepo) / rebase_from(sourceFile, testRepo)).parent_path();
-
-        return sourceFile.parent_path();
+        const auto& testRepo{projectPaths.tests().repo()};
+        return (outputRoot / back(testRepo) / rebase_from(sourceFile, testRepo)).parent_path();
       }
 
       auto dir{outputRoot};
@@ -103,7 +107,7 @@ namespace sequoia::testing
                           .concat((platform && !platform->empty()) ? "_" + platform.value() : "")
                           .concat(".txt")};
 
-      return test_output_directory(source, output_paths::diagnostics(projectPaths.project_root()), projectPaths) /= file;
+      return test_output_directory(source, projectPaths.output().diagnostics(), projectPaths) /= file;
     }
 
     [[nodiscard]]

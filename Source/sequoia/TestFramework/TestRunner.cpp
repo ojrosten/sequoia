@@ -776,8 +776,6 @@ namespace sequoia::testing
       void to_file(const test_summary_path& summaryFile, const log_summary& summary)
       {
         const auto& filename{summaryFile.file_path()};
-        if(filename.empty()) return;
-
         fs::create_directories(filename.parent_path());
 
         write_to_file(filename,

@@ -27,28 +27,62 @@ namespace sequoia::testing
   {
     using namespace std::string_literals;
 
+    test_no_default_construction();
     test_project_folder_deduction();
     test_materials_paths();
     test_ancillary_main_cpps();
 
-    check_exception_thrown<std::runtime_error>(
-      reporter{"Empty file"},
-      []() { return test_summary_path{"", "foo_test", project_paths{}, null_discriminator}; }
+    // Default project paths give no absolute root. The roots of summaries and
+    // diagnostics are empty; the root of execution records is relative but
+    // not empty. The record's source is absolute, and the others' relative,
+    // so that the checks reach the refusal from both kinds of source.
+    check_exception_thrown<std::invalid_argument>(
+      reporter{"A summary needs an absolute output root"},
+      []() {
+        return test_summary_path{"Tests/Foo.cpp", "foo_test", project_paths{}, null_discriminator};
+      }
     );
 
-    auto summaryFileName{
-      [](const std::optional<std::string>& discriminator) {
-        return test_summary_path{"Foo.cpp", "foo_test", project_paths{}, discriminator}.file_path().generic_string();
+    check_exception_thrown<std::invalid_argument>(
+      reporter{"An execution record needs an absolute output root"},
+      [this]() {
+        return test_execution_record_path{working_materials() / "Tests" / "Foo.cpp", "foo_test", project_paths{}};
       }
-    };
+    );
 
-    check(equality, "Summary with no discriminator",       summaryFileName(null_discriminator), "foo_test.txt"s);
-    check(equality, "Summary with an empty discriminator", summaryFileName(""),                 "foo_test.txt"s);
-    check(equality, "Summary with a discriminator",        summaryFileName("xyz"),              "foo_test_xyz.txt"s);
+    check_exception_thrown<std::invalid_argument>(
+      reporter{"Diagnostics need an absolute output root"},
+      []() {
+        return individual_diagnostics_paths{
+                 project_paths{},
+                 "foo_test",
+                 "Tests/Foo.cpp",
+                 test_mode::standard,
+                 std::nullopt
+               };
+      }
+    );
 
     {
       commandline_arguments args{fake_project_commandline(working_materials())};
       const project_paths projPaths{args.size(), args.get(), {}};
+
+      check_exception_thrown<std::invalid_argument>(
+        reporter{"Empty file"},
+        [&projPaths]() { return test_summary_path{"", "foo_test", projPaths, null_discriminator}; }
+      );
+
+      auto summaryFileName{
+        [&projPaths](const std::optional<std::string>& discriminator) {
+          const test_summary_path summary{"Tests/Foo.cpp", "foo_test", projPaths, discriminator};
+          return summary.file_path().filename().generic_string();
+        }
+      };
+
+      check(equality, "Summary with no discriminator",       summaryFileName(null_discriminator), "foo_test.txt"s);
+      check(equality, "Summary with an empty discriminator", summaryFileName(""),                 "foo_test.txt"s);
+      check(equality, "Summary with a discriminator",        summaryFileName("xyz"),              "foo_test_xyz.txt"s);
+
       check(
         equality,
         reporter{"Absolute Path"},
@@ -91,6 +125,13 @@ namespace sequoia::testing
         projPaths.output().dir() / "ExecutionRecords" / "Foo" / "CMade" / "Tests" / "foo_test.txt"
       );
     }
+  }
+
+  void individual_test_paths_free_test::test_no_default_construction()
+  {
+    // A default would name no file: its path would be empty
+    STATIC_CHECK(!std::is_default_constructible_v<test_summary_path>);
+    STATIC_CHECK(!std::is_default_constructible_v<test_execution_record_path>);
   }
 
   void individual_test_paths_free_test::test_project_folder_deduction()
