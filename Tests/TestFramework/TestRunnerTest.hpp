@@ -138,28 +138,12 @@ namespace sequoia::testing
 
     void test_wall_clock_apportionment();
 
-    template<std::invocable<test_runner&> Manipulator, concrete_test... Ts>
-    void test_instability_analysis(std::string_view message,
-                                   std::string_view outputDirName,
-                                   std::string_view numRuns,
-                                   return_code expected,
-                                   std::initializer_list<std::string_view> extraArgs,
-                                   Manipulator manipulator,
-                                   Ts&&... ts);
-
     template<concrete_test... Ts>
     void test_instability_analysis(std::string_view message,
                                    std::string_view outputDirName,
                                    std::string_view numRuns,
                                    return_code expected,
                                    std::initializer_list<std::string_view> extraArgs,
-                                   Ts&&... ts);
-
-    template<concrete_test... Ts>
-    void test_instability_analysis(std::string_view message,
-                                   std::string_view outputDirName,
-                                   std::string_view numRuns,
-                                   return_code expected,
                                    Ts&&... ts);
 
     void write(std::string_view dirName, std::stringstream& output) const;

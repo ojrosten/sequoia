@@ -1321,14 +1321,14 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{"Invalid repetitions for instability analysis"},
       [this](){
-        test_instability_analysis("", "", "foo", return_code::critical_failures, critical_free_test{});
+        test_instability_analysis("", "", "foo", return_code::critical_failures, {}, critical_free_test{});
       }
     );
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Insufficient repetitions for instability analysis"},
       [this](){
-        test_instability_analysis("", "",  "1", return_code::critical_failures, critical_free_test{});
+        test_instability_analysis("", "",  "1", return_code::critical_failures, {}, critical_free_test{});
       }
     );
   }
@@ -2454,13 +2454,12 @@ namespace sequoia::testing
                              );
   }
 
-  template<std::invocable<test_runner&> Manipulator, concrete_test... Ts>
+  template<concrete_test... Ts>
   void test_runner_test::test_instability_analysis(std::string_view message,
                                                    std::string_view outputDirName,
                                                    std::string_view numRuns,
                                                    return_code expected,
                                                    std::initializer_list<std::string_view> extraArgs,
-                                                   Manipulator manipulator,
                                                    Ts&&...)
   {
     std::stringstream outputStream{};
@@ -2479,8 +2478,6 @@ namespace sequoia::testing
 
     (runner.register_test<std::remove_cvref_t<Ts>>(), ...);
 
-    manipulator(runner);
-
     check(equality, reporter{append_lines(message, "Return code")}, runner.execute(), expected);
 
     const auto outputDir{working_materials() /= outputDirName};
@@ -2491,27 +2488,6 @@ namespace sequoia::testing
     check(equivalence, reporter(append_lines(message, make_type_info<Ts...>())),
                       outputDir,
                       predictive_materials() /= outputDirName);
-  }
-
-  template<concrete_test... Ts>
-  void test_runner_test::test_instability_analysis(std::string_view message,
-                                                   std::string_view outputDirName,
-                                                   std::string_view numRuns,
-                                                   return_code expected,
-                                                   std::initializer_list<std::string_view> extraArgs,
-                                                   Ts&&... ts)
-  {
-    test_instability_analysis(message, outputDirName, numRuns, expected, extraArgs, [](test_runner&){}, std::forward<Ts>(ts)...);
-  }
-
-  template<concrete_test... Ts>
-  void test_runner_test::test_instability_analysis(std::string_view message,
-                                                   std::string_view outputDirName,
-                                                   std::string_view numRuns,
-                                                   return_code expected,
-                                                   Ts&&... ts)
-  {
-    test_instability_analysis(message, outputDirName, numRuns, expected, {}, [](test_runner&){}, std::forward<Ts>(ts)...);
   }
 
   namespace
