@@ -53,7 +53,7 @@ namespace sequoia::testing
       commandline_arguments args{fake_project_commandline(working_materials())};
       const project_paths projPaths{args.size(), args.get(), {}};
 
-      check_exception_thrown<std::runtime_error>(
+      check_exception_thrown<std::invalid_argument>(
         reporter{"Empty file"},
         [&projPaths]() { return test_summary_path{"", "foo_test", projPaths, null_discriminator}; }
       );

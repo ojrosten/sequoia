@@ -66,7 +66,7 @@ namespace sequoia::testing
     fs::path test_output_directory(const fs::path& sourceFile, const fs::path& outputRoot, const project_paths& projectPaths)
     {
       if(sourceFile.empty())
-        throw std::runtime_error{"Source files should have a non-trivial name!"};
+        throw std::invalid_argument{"Source files should have a non-trivial name!"};
 
       // A relative root would put the directory relative to the current
       // directory or, for an absolute source, at the source's own directory

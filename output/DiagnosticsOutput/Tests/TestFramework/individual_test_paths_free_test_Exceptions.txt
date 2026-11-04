@@ -83,7 +83,7 @@ Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 57
 Empty file
 
 Expected Exception Type:
-[std::runtime_error]
+[std::invalid_argument]
 Source files should have a non-trivial name!
 
 =======================================
