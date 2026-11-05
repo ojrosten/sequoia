@@ -8,6 +8,9 @@
 #pragma once
 
 /** @file
+    @warning The declarations in this header are experimental: their design
+    is unsettled, so they may change fundamentally or be removed.
+
     @brief Abstractions pertaining to vector spaces, affine spaces and their
            generalizations.
 
@@ -15,10 +18,6 @@
     challenge. At root, the fundamental abstraction is a set; indeed, a vector
     space is nothing but a set with some additional structure defined. However,
     sets of objects are not straightforward to represent, in general, in C++.
-
-    \warning The spaces declared here are experimental: their design is
-    unsettled, so their interfaces may change fundamentally, as may this
-    documentation.
 
     Consider the real numbers. In C++ we can give a name to the set by using
     the type system.

@@ -8,9 +8,8 @@
 #pragma once
 
 /** \file
-    \warning The physical values declared here are experimental: their
-    design is unsettled, so their interfaces may change fundamentally, as may
-    this documentation.
+    \warning The declarations in this header are experimental: their design
+    is unsettled, so they may change fundamentally or be removed.
  */
 
 #include "sequoia/Physics/PhysicalValuesDetails.hpp"
