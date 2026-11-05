@@ -20,7 +20,18 @@ namespace sequoia::testing
 
   void project_paths_free_test::run_tests()
   {
+    test_no_default_construction();
     test_build_configuration();
+  }
+
+  void project_paths_free_test::test_no_default_construction()
+  {
+    // A default would hold an empty directory, so each file within it would
+    // resolve against the current directory
+    STATIC_CHECK(!std::is_default_constructible_v<recovery_paths>);
+    STATIC_CHECK(!std::is_default_constructible_v<drift_paths>);
+    STATIC_CHECK(!std::is_default_constructible_v<prune_paths>);
+    STATIC_CHECK(!std::is_default_constructible_v<execution_record_paths>);
   }
 
   void project_paths_free_test::test_build_configuration()
