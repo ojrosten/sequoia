@@ -16,6 +16,10 @@
     space is nothing but a set with some additional structure defined. However,
     sets of objects are not straightforward to represent, in general, in C++.
 
+    \warning The spaces declared here are experimental: their design is
+    unsettled, so their interfaces may change fundamentally, as may this
+    documentation.
+
     Consider the real numbers. In C++ we can give a name to the set by using
     the type system.
 

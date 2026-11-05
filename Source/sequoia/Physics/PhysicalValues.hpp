@@ -7,7 +7,11 @@
 
 #pragma once
 
-/** \file */
+/** \file
+    \warning The physical values declared here are experimental: their
+    design is unsettled, so their interfaces may change fundamentally, as may
+    this documentation.
+ */
 
 #include "sequoia/Physics/PhysicalValuesDetails.hpp"
 
