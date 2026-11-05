@@ -21,7 +21,7 @@ which is spelt as written by lcov. gcc emits the C2 and D2 variants of a
 constructor and destructor in sequoia's own tracefiles, and they are the C1 and
 D1 names with the variant letter changed.
 """
-import argparse, contextlib, io, itertools, os, stat, subprocess, sys, tempfile, types, unittest
+import argparse, contextlib, io, itertools, json, os, stat, subprocess, sys, tempfile, types, unittest
 from collections import Counter
 
 HERE        = os.path.dirname(os.path.abspath(__file__))
@@ -457,6 +457,28 @@ class Verdict(unittest.TestCase):
                                                           SOURCE_FILE))
         self.assertEqual((status, out), (0, 'notice: now called, so it can leave the baseline: '
                                             'Source/sequoia/ns.hpp: ns::box::set\n'))
+
+    def test_count_is_the_baseline_s_keys_with_multiplicity_and_its_header(self):
+        baseline = self.make_baseline([(10, [(SET_INT, 0)]), (11, [(SET2_INT, 0)]), (20, [(CONVERT_VIEW, 1)])],
+                                      SOURCE_FILE)
+        status, out, err = run_main(['count', '--baseline', baseline])
+        self.assertEqual((status, err), (0, ''))
+        counted = json.loads(out)
+        self.assertEqual(counted['uncalled_functions'], 2)
+        header = script.read_baseline(baseline)[0]
+        self.assertEqual(counted['toolchain'],
+                         {'demanglers': [line.removeprefix('demangler: ') for line in header if line.startswith('demangler: ')],
+                          'tools':      [line.removeprefix('tool: ') for line in header if line.startswith('tool: ')]})
+        self.assertTrue(counted['toolchain']['demanglers'] and counted['toolchain']['tools'])
+
+    def test_count_refuses_a_header_line_which_is_no_tool(self):
+        status, out, err = run_main(['count', '--baseline', written('# colour: red\n', '.txt')])
+        self.assertEqual((status, out), (2, ''))
+        self.assertIn('neither a demangler nor a tool', err)
+
+    def test_count_of_a_baseline_with_no_key_is_zero(self):
+        status, out, _ = run_main(['count', '--baseline', written('# tool: t 1\n', '.txt')])
+        self.assertEqual((status, json.loads(out)['uncalled_functions']), (0, 0))
 
     def test_a_regression_cannot_hide_behind_an_improvement(self):
         status, _, _ = self.verdict([(10, [(CONVERT_STRING, 0)]), (20, [(CONVERT_VIEW, 1)])],

@@ -40,7 +40,7 @@ namespace sequoia::testing
       std::string dump{};
       for(const auto check : checks)
       {
-        dump.append(std::format("{}\n{}", check, dump_format::check_separator));
+        dump.append(std::format("{}\n{}", check, separator_after_check));
       }
 
       return dump;
@@ -90,6 +90,10 @@ namespace sequoia::testing
 
     check_exception_thrown<std::runtime_error>("A dump which does not exist", [this](){
       return read_dump(scratchpad_materials() /= "Absent.txt");
+    });
+
+    check_exception_thrown<std::runtime_error>("A dump which is a directory", [this](){
+      return read_dump(scratchpad_materials());
     });
   }
 

@@ -66,9 +66,9 @@ namespace sequoia::testing
     using value_type     = T;
     using allocator_type = Allocator;
 
-    orderable_move_only_beast(std::initializer_list<T> list) : x{list} {}
+    orderable_move_only_beast(std::initializer_list<T> list) : x(list) {}
 
-    orderable_move_only_beast(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    orderable_move_only_beast(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     orderable_move_only_beast(const allocator_type& a) : x(a) {}
 
@@ -115,7 +115,7 @@ namespace sequoia::testing
     using     value_type = T;
     using allocator_type = Allocator;
 
-    move_only_orderable_specified_moved_from_beast(std::initializer_list<T> list) : x{list} {}
+    move_only_orderable_specified_moved_from_beast(std::initializer_list<T> list) : x(list) {}
 
     move_only_orderable_specified_moved_from_beast(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -174,9 +174,9 @@ namespace sequoia::testing
     using     value_type = int;
     using allocator_type = Allocator;
 
-    move_only_broken_less(std::initializer_list<T> list) : x{list} {}
+    move_only_broken_less(std::initializer_list<T> list) : x(list) {}
 
-    move_only_broken_less(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    move_only_broken_less(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     move_only_broken_less(const allocator_type& a) : x(a) {}
 
@@ -229,9 +229,9 @@ namespace sequoia::testing
     using     value_type = T;
     using allocator_type = Allocator;
 
-    move_only_broken_lesseq(std::initializer_list<T> list) : x{list} {}
+    move_only_broken_lesseq(std::initializer_list<T> list) : x(list) {}
 
-    move_only_broken_lesseq(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    move_only_broken_lesseq(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     move_only_broken_lesseq(const allocator_type& a) : x(a) {}
 
@@ -284,9 +284,9 @@ namespace sequoia::testing
     using     value_type = T;
     using allocator_type = Allocator;
 
-    move_only_broken_greater(std::initializer_list<T> list) : x{list} {}
+    move_only_broken_greater(std::initializer_list<T> list) : x(list) {}
 
-    move_only_broken_greater(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    move_only_broken_greater(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     move_only_broken_greater(const allocator_type& a) : x(a) {}
 
@@ -339,9 +339,9 @@ namespace sequoia::testing
     using     value_type = T;
     using allocator_type = Allocator;
 
-    move_only_broken_greatereq(std::initializer_list<T> list) : x{list} {}
+    move_only_broken_greatereq(std::initializer_list<T> list) : x(list) {}
 
-    move_only_broken_greatereq(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    move_only_broken_greatereq(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     move_only_broken_greatereq(const allocator_type& a) : x(a) {}
 
@@ -394,9 +394,9 @@ namespace sequoia::testing
     using     value_type = T;
     using allocator_type = Allocator;
 
-    move_only_inverted_comparisons(std::initializer_list<T> list) : x{list} {}
+    move_only_inverted_comparisons(std::initializer_list<T> list) : x(list) {}
 
-    move_only_inverted_comparisons(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    move_only_inverted_comparisons(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     move_only_inverted_comparisons(const allocator_type& a) : x(a) {}
 
@@ -473,9 +473,9 @@ namespace sequoia::testing
     using     value_type = T;
     using allocator_type = Allocator;
 
-    move_only_broken_spaceship(std::initializer_list<T> list) : x{list} {}
+    move_only_broken_spaceship(std::initializer_list<T> list) : x(list) {}
 
-    move_only_broken_spaceship(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    move_only_broken_spaceship(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     move_only_broken_spaceship(const allocator_type& a) : x(a) {}
 

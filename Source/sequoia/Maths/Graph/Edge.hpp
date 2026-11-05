@@ -46,7 +46,7 @@ namespace sequoia
         edges is done at the level of the graph.
     */
 
-    template<class WeightHandler, std::integral IndexType>
+    template<class WeightHandler, integer IndexType>
       requires object::handler<WeightHandler>
     class weighting
     {
@@ -125,7 +125,7 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, std::integral IndexType>
+    template<class WeightHandler, integer IndexType>
       requires (object::handler<WeightHandler> && std::is_empty_v<typename WeightHandler::value_type>)
     class weighting<WeightHandler, IndexType>
     {
@@ -153,7 +153,7 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, std::integral IndexType>
+    template<class WeightHandler, integer IndexType>
       requires object::handler<WeightHandler>
     class partial_edge_base : public weighting<WeightHandler, IndexType>
     {
@@ -194,7 +194,7 @@ namespace sequoia
 
     //===================================Decorated Partial Edge Base===================================//
 
-    template<class WeightHandler, class MetaData, std::integral IndexType>
+    template<class WeightHandler, class MetaData, integer IndexType>
       requires object::handler<WeightHandler>
     class decorated_partial_edge_base : public partial_edge_base<WeightHandler, IndexType>
     {
@@ -217,7 +217,7 @@ namespace sequoia
       constexpr decorated_partial_edge_base& operator=(decorated_partial_edge_base&&) noexcept = default;
     };
 
-    template<class WeightHandler, class MetaData, std::integral IndexType>
+    template<class WeightHandler, class MetaData, integer IndexType>
       requires object::handler<WeightHandler> && (!std::is_empty_v<MetaData>)
     class decorated_partial_edge_base<WeightHandler, MetaData, IndexType> : public partial_edge_base<WeightHandler, IndexType>
     {
@@ -307,7 +307,7 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, class MetaData, std::integral IndexType=std::size_t>
+    template<class WeightHandler, class MetaData, integer IndexType=std::size_t>
       requires object::handler<WeightHandler>
     class partial_edge : public decorated_partial_edge_base<WeightHandler, MetaData, IndexType>
     {
@@ -332,7 +332,7 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, class MetaData, std::integral IndexType=std::size_t>
+    template<class WeightHandler, class MetaData, integer IndexType=std::size_t>
       requires object::handler<WeightHandler>
     class embedded_partial_edge : public decorated_partial_edge_base<WeightHandler, MetaData, IndexType>
     {

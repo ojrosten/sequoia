@@ -70,12 +70,6 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code to_return_code(const log_summary& summary) noexcept;
 
-  /** \brief Returns `message` as compared by the runner across runs in a
-             search for instabilities: with its measurements set to zero.
-   */
-  [[nodiscard]]
-  std::string instability_projection(std::string_view message);
-
   /** \brief The thread which executed a test, and the test's durations. */
   struct execution_info
   {
@@ -367,7 +361,7 @@ namespace sequoia::testing
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
-  /** \brief A test to run, with the paths of the files which the runner
+  /** \brief A test to run, and the paths of the files which the runner
              writes for it.
    */
   class test_to_run
@@ -511,8 +505,8 @@ namespace sequoia::testing
     log_summary write_versioned_output(log_summary::duration executionDuration) const;
 
     test_vessel m_Vessel;
-    test_summary_path m_SummaryFile{};
-    test_execution_record_path m_ExecutionRecord{};
+    test_summary_path m_SummaryFile;
+    test_execution_record_path m_ExecutionRecord;
     discarded_materials_remover::future_type m_DiscardedMaterialsRemovalFailureFuture{};
   };
 
@@ -912,8 +906,6 @@ namespace sequoia::testing
     void check_argument_consistency();
 
     void check_for_missing_tests();
-
-    void check_for_coarse_sleeps();
 
     void write_run_stamp() const;
 

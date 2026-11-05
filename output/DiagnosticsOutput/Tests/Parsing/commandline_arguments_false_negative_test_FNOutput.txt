@@ -24,7 +24,7 @@ No bound function object
 Expected Exception Type:
 [int]
 Unexpected exception thrown (caught by std::exception&):
-"  Error: Commandline option not bound to a function object"
+"  Error: option "--async" is not bound to a function object"
 
 =======================================
 

@@ -1,0 +1,990 @@
+#!/bin/bash
+# Controls for docs/dashboard/symbol_dashboard.js, and a mutation check of the
+# controls.
+#
+#   symbol_dashboard_selftest.sh [--mutations]
+#
+# Without --mutations, the selftest runs the controls. With it, the selftest
+# runs the controls against the script and against each mutant of the script.
+# The script must fail no control, and each mutant at least one.
+#
+# The controls run the script under node, which must be on PATH. They read
+# the fixture in symbol_dashboard/, which mirrors what GitHub serves:
+#   - tree.json, the git trees API's listing of the metrics branch;
+#   - commits/<start>.json, the commits API's first page of the history from
+#     the commit <start>, or from staging's head;
+#   - symbol-table/<column>/<commit>.json, the records.
+# Every record is a record CI stored, of 680,086 symbols, with its commit and
+# counts changed. Two hold the counts of CI's symbol_table_report runs
+# 39655485487 and 39655484504 unchanged: the second is that of a build with
+# SEQUOIA_FORCE_INLINE removed from erased_target's constructor, and gained
+# 12,982 symbols, in 56 objects. The history is ten commits, a merge of a
+# topic branch among them, and staging's first parent passes through six of
+# the eight records, in an order the listing does not follow. The claims:
+#
+#   - the records are those listed under symbol-table/<column>/, and nothing
+#     else listed there; a truncated listing is an error;
+#   - the points are ordered by staging's first-parent history, not by the
+#     listing, and a record of a commit off that history is a problem;
+#   - the history is fetched from staging's head, then from each commit at
+#     which the walk leaves what is known, until every record's commit is
+#     found, the walk reaches a root, or the limit of listings is reached.
+#     Commits already known are not fetched, and a listing lacking the
+#     commit it starts at is an error;
+#   - a run of points ends where the toolchain changes, and the first point
+#     of the next run names each difference. A toolchain whose keys are
+#     reordered is the same toolchain;
+#   - the movers between two records are every object whose count differs,
+#     the largest change first; for the regression they are the 56 objects
+#     an independent reading of the two records finds, in the same order;
+#   - a record which cannot be fetched, names another commit, or lacks a
+#     count is a problem, and the others still load;
+#   - a record is no problem with a CPU model in a measured section, or with
+#     none;
+#   - a record's prune_dependency_analysis and runner_setup are read where it
+#     has them, and are null where it has not; a malformed one is a problem;
+#     a record with the cost of leftover materials and no runner_setup is no
+#     problem;
+#     a point is plotted whatever the exit status of its runs;
+#   - a record's leftover_materials_setup gives the instructions per leftover
+#     entry, or null where the section is absent or has no entries, which
+#     leaves the measurement blind. Its exit status is the first non-zero one
+#     of its two runs. A malformed section is a problem, as is one whose runs
+#     executed different numbers of tests. Its boundary breaks the line
+#     independently of the runner_setup's;
+#   - the counts of uncalled functions join the points of their commits, with
+#     a toolchain of their own; a record of them which has a problem, or lies
+#     at no plotted commit, is listed;
+#   - a scale encloses its values, and down to zero where it includes zero, in
+#     steps of 1, 2, 2.5 or 5 times a power of ten;
+#   - the time axis places points linearly in time over whole UTC days, ticks
+#     each date once, at a midnight, and the point nearest a position is the
+#     earliest of equals;
+#   - a missing metrics branch, and one holding no records, are each
+#     reported as such.
+
+set -u
+here=$(cd "$(dirname "$0")" && pwd -P)
+script="$here/../../docs/dashboard/symbol_dashboard.js"
+fixture="$here/symbol_dashboard"
+tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
+verbose=yes
+
+command -v node > /dev/null || { echo "node is not on PATH"; exit 1; }
+
+# The oracle: the regression's movers, read from the two records by Python,
+# so that the controls do not check the script against itself.
+python3 - "$fixture" > "$tmp/oracle.json" <<'EOF' || { echo "the oracle could not read the fixture"; exit 1; }
+import json, os, sys
+directory = os.path.join(sys.argv[1], 'symbol-table', 'linux-gcc-debug')
+def counts(commit):
+    with open(os.path.join(directory, commit + '.json'), encoding='utf-8') as f:
+        return json.load(f)['defined_symbols_by_object']
+before = counts('8072fccffa4c9dbd5ffe7ee50b0a2ed8aa036dba')
+after  = counts('4e12898486c1307225e017a1b562ec93b54f28ef')
+movers = [{'object': o, 'before': before.get(o), 'after': after.get(o), 'delta': after.get(o, 0) - before.get(o, 0)}
+          for o in sorted(set(before) | set(after)) if after.get(o, 0) != before.get(o, 0)]
+movers.sort(key=lambda m: -abs(m['delta']))
+json.dump(movers, sys.stdout)
+EOF
+
+cat > "$tmp/controls.js" <<'EOF'
+'use strict';
+const fs     = require('fs');
+const path   = require('path');
+const assert = require('assert');
+const [script, fixture, oraclePath, verbose] = process.argv.slice(2);
+const dashboard = require(script);
+const oracle = JSON.parse(fs.readFileSync(oraclePath, 'utf-8'));
+
+const c = {
+  R0: 'c154eb088cf2795f40599b78637521955a9bb887', F1: '1d68bd6f04e16bc552900ae56a03496818a64578',
+  F2: '6219e699cb3631d5af8d256566f7d25ea90f12de', B1: 'a66349a6fa81867de91660d5ff44a3c88c799f2e',
+  B2: '700628c1e857d9d4a5779960b522096bd326020f', F3: '00a9d02bda0162b540fbcf1d00b5ece04dd8d1ab', F4: '8072fccffa4c9dbd5ffe7ee50b0a2ed8aa036dba',
+  F5: '4e12898486c1307225e017a1b562ec93b54f28ef', F6: '42bb757493728752cd9717784df9767ec67a2faf',
+  F7: 'df6451817a6dd749a9187c7a277dc8b45290cb5b'
+};
+const read = file => JSON.parse(fs.readFileSync(path.join(fixture, file), 'utf-8'));
+const recordOf = name => read(`symbol-table/linux-gcc-debug/${c[name]}.json`);
+const listingFrom = start => read(`commits/${start || 'staging'}.json`);
+const allCommits = new Map([null, c.F3, c.F1].flatMap(listingFrom).map(commit => [commit.sha, dashboard.summarise(commit)]));
+
+// A source reading the fixture, which records each call made through it.
+function fixtureSource(changes = {}) {
+  const calls = [];
+  return {
+    calls,
+    tree:    async ()           => { calls.push(['tree']); return 'tree' in changes ? changes.tree : read('tree.json'); },
+    commits: async start => {
+      calls.push(['commits', start]);
+      return changes.commits ? changes.commits(start) : listingFrom(start);
+    },
+    record:  async recordPath   => {
+      calls.push(['record', recordPath]);
+      if (changes.record) return changes.record(recordPath);
+      return read(recordPath);
+    }
+  };
+}
+
+let total = 0, fails = 0;
+async function control(name, body) {
+  ++total;
+  try { await body(); }
+  catch (error) { ++fails; if (verbose === 'yes') console.log(`FAIL: ${name}: ${error.message}`); }
+}
+const names = commits => commits.map(commit => Object.keys(c).find(key => c[key] === commit) || commit);
+
+(async () => {
+  await control('the listing yields the records under symbol-table/<column>/ alone', () => {
+    const listing = dashboard.recordsInTree(read('tree.json'));
+    assert.deepStrictEqual([...listing.keys()], ['linux-gcc-debug']);
+    assert.deepStrictEqual(names(listing.get('linux-gcc-debug').map(entry => entry.commit)).sort(),
+                           ['B1', 'F1', 'F2', 'F4', 'F5', 'F6', 'F7', 'R0']);
+  });
+
+  await control('a truncated listing is an error', () => {
+    assert.throws(() => dashboard.recordsInTree({...read('tree.json'), truncated: true}), /truncated/);
+  });
+
+  await control('the walk follows first parents through a merge', () => {
+    const walk = dashboard.walkFirstParents(allCommits, c.F7, new Set([c.F1, c.F4, c.B1]));
+    assert.deepStrictEqual(names(walk.found), ['F4', 'F1']);
+    assert.strictEqual(walk.unknown, null);
+  });
+
+  await control('the walk stops once every wanted commit is found', () => {
+    const known = new Map(allCommits);
+    known.delete(c.F2);
+    const walk = dashboard.walkFirstParents(known, c.F7, new Set([c.F4]));
+    assert.deepStrictEqual(names(walk.found), ['F4']);
+    assert.strictEqual(walk.unknown, null);
+  });
+
+  await control('the walk names the commit at which it leaves what is known', () => {
+    const known = new Map(allCommits);
+    known.delete(c.F2);
+    const walk = dashboard.walkFirstParents(known, c.F7, new Set([c.F1]));
+    assert.deepStrictEqual(walk.found, []);
+    assert.strictEqual(walk.unknown, c.F2);
+  });
+
+  await control('the points follow staging\'s first-parent history, not the listing', async () => {
+    const loaded = await dashboard.loadHistory(fixtureSource(), new Map());
+    assert.strictEqual(loaded.state, 'loaded');
+    assert.strictEqual(loaded.head, c.F7);
+    assert.deepStrictEqual(names(loaded.columns[0].points.map(point => point.commit)),
+                           ['F1', 'F2', 'F4', 'F5', 'F6', 'F7']);
+    assert.strictEqual(loaded.columns[0].points[3].subject,
+                       'Merge pull request #5 from ojrosten/inline: SEQUOIA_FORCE_INLINE removed from erased_target');
+    assert.strictEqual(loaded.columns[0].points[3].date, '2026-10-17T12:00:00Z');
+  });
+
+  await control('a record off the first-parent history, or naming another commit, is a problem', async () => {
+    const loaded = await dashboard.loadHistory(fixtureSource(), new Map());
+    const problems = new Map(loaded.columns[0].problems.map(p => [names([p.path.slice(-45, -5)])[0], p.problems]));
+    assert.deepStrictEqual([...problems.keys()].sort(), ['B1', 'R0']);
+    assert.deepStrictEqual(problems.get('B1'), ['it is not on staging\'s first-parent history']);
+    assert.deepStrictEqual(problems.get('R0'), [`it names commit ${c.F1}`]);
+  });
+
+  await control('history is fetched from each commit at which the walk leaves what is known', async () => {
+    const source = fixtureSource();
+    const loaded = await dashboard.loadHistory(source, new Map());
+    assert.deepStrictEqual(source.calls.filter(call => call[0] === 'commits'),
+                           [['commits', null], ['commits', c.F3], ['commits', c.F1]]);
+    assert.strictEqual(loaded.pages, 3);
+    assert.strictEqual(source.calls.filter(call => call[0] === 'tree').length, 1);
+  });
+
+  await control('commits already known are not fetched', async () => {
+    const source = fixtureSource();
+    await dashboard.loadHistory(source, new Map(allCommits));
+    assert.deepStrictEqual(source.calls.filter(call => call[0] === 'commits'), [['commits', null]]);
+  });
+
+  await control('the commits fetched become known', async () => {
+    const known = new Map();
+    await dashboard.loadHistory(fixtureSource(), known);
+    assert.deepStrictEqual(names([...known.keys()]).sort(), ['B1', 'B2', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'R0']);
+  });
+
+  await control('a listing lacking the commit it starts at is an error', async () => {
+    const source = fixtureSource({commits: start => start === null ? listingFrom(null) : listingFrom(c.F1)});
+    await assert.rejects(dashboard.loadHistory(source, new Map()), new RegExp(`listing of the history from ${c.F3} lacks that commit`));
+  });
+
+  await control('the walk fetches the history from where the known commits end', async () => {
+    const known = new Map(allCommits);
+    known.delete(c.F1);
+    const source = fixtureSource();
+    const loaded = await dashboard.loadHistory(source, known);
+    assert.deepStrictEqual(source.calls.filter(call => call[0] === 'commits'), [['commits', null], ['commits', c.F1]]);
+    assert.deepStrictEqual(names(loaded.columns[0].points.map(point => point.commit)), ['F1', 'F2', 'F4', 'F5', 'F6', 'F7']);
+  });
+
+  await control('the walk fetches no more than the limit of pages', async () => {
+    // An endless history in which no record's commit lies.
+    const sha = n => n.toString(16).padStart(40, '0');
+    const listing = start => {
+      const from = start === null ? 1 : parseInt(start, 16);
+      return [from, from + 1].map(k => ({sha: sha(k), parents: [{sha: sha(k + 1)}],
+                                         commit: {committer: {date: '2026-01-01T00:00:00Z'}, message: 'm'}}));
+    };
+    let listings = 0;
+    const source = fixtureSource({commits: start => {
+      if (++listings > dashboard.maxCommitPages + 5) throw new Error('the walk went on past the limit of listings');
+      return listing(start);
+    }});
+    const loaded = await dashboard.loadHistory(source, new Map());
+    assert.strictEqual(source.calls.filter(call => call[0] === 'commits').length, dashboard.maxCommitPages);
+    assert.strictEqual(loaded.pages, dashboard.maxCommitPages);
+    assert.strictEqual(loaded.columns[0].points.length, 0);
+    assert.ok(loaded.columns[0].problems[0].problems.includes(
+      `the walk along staging's first parents stopped after ${dashboard.maxCommitPages} pages of history, before reaching it`));
+  });
+
+  await control('a run ends where the toolchain changes, and its successor names the change', async () => {
+    const points = (await dashboard.loadHistory(fixtureSource(), new Map())).columns[0].points;
+    assert.deepStrictEqual(points.map(point => point.run), [0, 0, 1, 1, 1, 1]);
+    assert.deepStrictEqual(points[2].toolchainChange,
+                           [{path: 'compiler.package.version', before: '15.2.0-14ubuntu1', after: '15.2.0-16ubuntu1'}]);
+    assert.deepStrictEqual(points.filter((point, i) => i !== 2).map(point => point.toolchainChange),
+                           [null, null, null, null, null]);
+  });
+
+  await control('a toolchain with its keys reordered is the same toolchain', () => {
+    const before = recordOf('F4');
+    const after  = recordOf('F6');
+    after.toolchain = Object.fromEntries(Object.entries(after.toolchain).reverse());
+    const summary = {date: 'd', subject: 's'};
+    const points = dashboard.pointsOf([{commit: c.F4, summary, record: before}, {commit: c.F6, summary, record: after}]);
+    assert.deepStrictEqual(points.map(point => point.run), [0, 0]);
+  });
+
+  const setupOf = tests => ({boundary: 'x', exit_status: 0, tests, instructions: 4000, syscalls: 40});
+
+  await control('the runner\'s setup breaks the line at a change of its boundary, among the points which have one', () => {
+    const summary = {date: 'd', subject: 's'};
+    const withBoundary = boundary => {
+      const record = recordOf('F4');
+      if (boundary !== null) record.runner_setup = {...setupOf(4), boundary};
+      return {commit: c.F4, summary, record};
+    };
+    const points = dashboard.pointsOf([withBoundary(null), withBoundary('a'), withBoundary('a'), withBoundary(null),
+                                       withBoundary('b'), withBoundary('b'), withBoundary('a')]);
+    assert.deepStrictEqual(points.map(point => point.boundaryChange), [false, false, false, false, true, false, true]);
+    assert.deepStrictEqual(points.map(point => point.setupRun), [0, 0, 0, 0, 1, 1, 2]);
+    assert.deepStrictEqual(points.map(point => point.run), [0, 0, 0, 0, 0, 0, 0]);
+  });
+
+  await control('a record whose boundary is no text neither starts nor ends a series of boundaries', () => {
+    const summary = {date: 'd', subject: 's'};
+    const withSetup = setup => {
+      const record = recordOf('F4');
+      record.runner_setup = setup;
+      return {commit: c.F4, summary, record};
+    };
+    const points = dashboard.pointsOf([withSetup({...setupOf(4), boundary: 'a'}), withSetup({...setupOf(4), boundary: 5}),
+                                       withSetup({...setupOf(4), boundary: 'a'})]);
+    assert.deepStrictEqual(points.map(point => point.boundaryChange), [false, false, false]);
+  });
+
+  await control('a leaf absent from one toolchain is a difference', () => {
+    assert.deepStrictEqual(dashboard.differences({a: {b: 1}}, {a: {}}), [{path: 'a.b', before: 1, after: undefined}]);
+  });
+
+  await control('the regression\'s movers are those the records show, in order', () => {
+    const movers = dashboard.movers(recordOf('F4'), recordOf('F5'));
+    assert.strictEqual(movers.length, 56);
+    assert.deepStrictEqual(movers, oracle);
+    assert.deepStrictEqual(movers[0], {object: 'Tests/Physics/AbsolutePhysicalValueTest.cpp',
+                                       before: movers[0].before, after: movers[0].before + 795, delta: 795});
+  });
+
+  await control('records with equal counts have no movers', () => {
+    assert.deepStrictEqual(dashboard.movers(recordOf('F4'), recordOf('F6')), []);
+  });
+
+  await control('an object in one record alone moves by its whole count', () => {
+    const movers = dashboard.movers({defined_symbols_by_object: {a: 1}}, {defined_symbols_by_object: {b: 2}});
+    assert.deepStrictEqual(movers, [{object: 'b', before: null, after: 2, delta: 2},
+                                    {object: 'a', before: 1, after: null, delta: -1}]);
+  });
+
+  await control('movers of equal change are ordered by path', () => {
+    const movers = dashboard.movers({defined_symbols_by_object: {b: 1, a: 3, c: 1}},
+                                    {defined_symbols_by_object: {b: 2, a: 2, c: 0}});
+    assert.deepStrictEqual(movers.map(mover => mover.object), ['a', 'b', 'c']);
+  });
+
+  await control('a record which is not an object is a problem, and the others load', async () => {
+    const source = fixtureSource({record: recordPath => recordPath.includes(c.F6) ? null : read(recordPath)});
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.deepStrictEqual(column.problems.find(p => p.path.includes(c.F6)).problems, ['it is not a JSON object']);
+    assert.strictEqual(column.points.length, 5);
+  });
+
+  await control('objects named as the prototype\'s properties move as any other', () => {
+    const movers = dashboard.movers({defined_symbols_by_object: {}}, {defined_symbols_by_object: {constructor: 3}});
+    assert.deepStrictEqual(movers, [{object: 'constructor', before: null, after: 3, delta: 3}]);
+  });
+
+  await control('a stored record has no problem', () => {
+    assert.deepStrictEqual(dashboard.problemsWith(recordOf('F5'), c.F5), []);
+  });
+
+  for (const [name, change, problem] of [
+    ['no toolchain',              r => { delete r.toolchain; },                       'it has no toolchain'],
+    ['a tree not clean',          r => { r.clean = false; },                          'it was not measured on a clean tree'],
+    ['no count of symbols',       r => { delete r.executable.symbols; },              'it has no count of the executable\'s symbols'],
+    ['a fractional count',        r => { r.executable.symbols = 1.5; },               'it has no count of the executable\'s symbols'],
+    ['a negative count of bytes', r => { r.executable.symbol_name_bytes = -1; },      'it has no count of the executable\'s name bytes'],
+    ['no executable',             r => { delete r.executable; },                      'it has no count of the executable\'s symbols'],
+    ['no objects',                r => { delete r.defined_symbols_by_object; },       'it has no count of defined symbols for each object'],
+    ['an object without a count', r => { r.defined_symbols_by_object.x = '1'; },      'it has no count of defined symbols for each object']
+  ]) {
+    await control(`a record with ${name} is a problem`, () => {
+      const record = recordOf('F5');
+      change(record);
+      assert.ok(dashboard.problemsWith(record, c.F5).includes(problem));
+    });
+  }
+
+  for (const [name, analysis] of [
+    ['no count',           {invocation: 'x'}],
+    ['a fractional count', {invocation: 'x', instructions: 1.5}],
+    ['a text count',       {invocation: 'x', instructions: '5'}],
+    ['no invocation',      {instructions: 5}],
+    ['null',               null]
+  ]) {
+    await control(`a record with a prune_analysis of ${name} is a problem`, () => {
+      const record = recordOf('F5');
+      record.prune_analysis = analysis;
+      assert.deepStrictEqual(dashboard.problemsWith(record, c.F5),
+                             ['it has a prune_analysis with no invocation, or no count of instructions']);
+    });
+  }
+
+  const analysisOf = (instructions, stamping_exit_status) =>
+    ({function: 'sequoia::testing::test_runner::prune*', instructions, stamping_exit_status});
+
+  await control('points lacking the count keep their place, and the count is read where present', async () => {
+    const source = fixtureSource({record: recordPath => {
+      const record = read(recordPath);
+      if (recordPath.includes(c.F5)) record.prune_dependency_analysis = analysisOf(777, 0);
+      return record;
+    }});
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    const counts = column.points.map(point => dashboard.pruneInstructions(point.record));
+    assert.deepStrictEqual(counts, column.points.map(point => point.commit === c.F5 ? 777 : null));
+    assert.ok(counts.includes(777));
+  });
+
+  await control('a record has no problem with the CPU model of a measured section, or without one', () => {
+    const record = recordOf('F5');
+    record.prune_dependency_analysis = analysisOf(777, 0);
+    record.runner_setup = setupOf(4);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+    record.prune_dependency_analysis.cpu_model = 'AMD EPYC 7763 64-Core Processor';
+    record.runner_setup.cpu_model = 'Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz';
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  await control('prune\'s dependency analysis is plotted whatever its stamping run\'s exit status', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.pruneInstructions(record), null);
+    record.prune_dependency_analysis = analysisOf(123, 0);
+    assert.strictEqual(dashboard.pruneInstructions(record), 123);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+    record.prune_dependency_analysis = analysisOf(123, 1);
+    assert.strictEqual(dashboard.pruneInstructions(record), 123);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  for (const [name, analysis] of [
+    ['zero instructions', analysisOf(0, 0)],
+    ['no function',       {instructions: 5, stamping_exit_status: 0}],
+    ['no exit status',    {function: 'f', instructions: 5}],
+    ['a text exit status', analysisOf(5, '0')],
+    ['a fractional count', analysisOf(1.5, 0)],
+    ['null',              null]
+  ]) {
+    await control(`a record with a prune_dependency_analysis of ${name} is a problem`, () => {
+      const record = recordOf('F5');
+      record.prune_dependency_analysis = analysis;
+      assert.deepStrictEqual(dashboard.problemsWith(record, c.F5),
+        ['it has a prune_dependency_analysis with no function, no positive count of instructions, or no exit status']);
+    });
+  }
+
+  await control('the runner\'s setup is plotted whatever its run\'s exit status', () => {
+    const record = recordOf('F5');
+    record.runner_setup = {...setupOf(4), exit_status: 8};
+    assert.strictEqual(dashboard.runnerSetupPerTest(record, 'instructions'), 1000);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  await control('the exit statuses and the number of tests are null in a record without their measurement, and read from it otherwise', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.pruneStampingExitStatus(record), null);
+    assert.strictEqual(dashboard.runnerSetupExitStatus(record), null);
+    assert.strictEqual(dashboard.runnerSetupTests(record), null);
+    record.prune_dependency_analysis = analysisOf(123, 82);
+    record.runner_setup = {...setupOf(4), exit_status: 8};
+    assert.strictEqual(dashboard.pruneStampingExitStatus(record), 82);
+    assert.strictEqual(dashboard.runnerSetupExitStatus(record), 8);
+    assert.strictEqual(dashboard.runnerSetupTests(record), 4);
+  });
+
+  await control('a runner_setup without an exit status is a problem', () => {
+    const record = recordOf('F5');
+    record.runner_setup = setupOf(4);
+    delete record.runner_setup.exit_status;
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), ['it has a runner_setup with no exit status']);
+  });
+
+  await control('a record with the cost of leftover materials and no runner_setup is no problem, and has no runner setup to plot', () => {
+    const record = recordOf('F5');
+    const run = {exit_status: 0, tests: 4, instructions: 4000};
+    record.leftover_materials_setup = {boundary: 'x', leftover_entries: 0, without_leftovers: run, with_leftovers: run, cpu_model: 'm'};
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+    for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
+  });
+
+  const leftoverOf = (entries, withoutInstructions = 50000, withInstructions = 54000, tests = 4) => ({
+    boundary: 'x', leftover_entries: entries, cpu_model: 'm',
+    without_leftovers: {instructions: withoutInstructions, tests, exit_status: 0},
+    with_leftovers:    {instructions: withInstructions,    tests, exit_status: 0}
+  });
+
+  await control('the instructions per leftover entry are the difference of the two runs over the entries, and null without a section', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.leftoverMaterialsSetupPerEntry(record), null);
+    record.leftover_materials_setup = leftoverOf(10);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupPerEntry(record), 400);
+    record.leftover_materials_setup = leftoverOf(8, 54000, 50000);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupPerEntry(record), -500);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  await control('a section with no leftover entries is blind: it has no value, and is a problem for none', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.leftoverMaterialsSetupBlindLabel(record), null);
+    record.leftover_materials_setup = leftoverOf(0);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupBlindLabel(record), 'blind');
+    assert.strictEqual(dashboard.leftoverMaterialsSetupPerEntry(record), null);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+    record.leftover_materials_setup = leftoverOf(1);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupBlindLabel(record), null);
+  });
+
+  await control('a blind point is labelled failed if either of its runs exited non-zero', () => {
+    for (const runName of ['without_leftovers', 'with_leftovers']) {
+      const record = recordOf('F5');
+      record.leftover_materials_setup = leftoverOf(0);
+      record.leftover_materials_setup[runName].exit_status = 2;
+      assert.strictEqual(dashboard.leftoverMaterialsSetupBlindLabel(record), 'blind, failed');
+      record.leftover_materials_setup.leftover_entries = 1;
+      assert.strictEqual(dashboard.leftoverMaterialsSetupBlindLabel(record), null);
+    }
+  });
+
+  await control('the entries and runs of a section are read from it, and are null in a record without one', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.leftoverMaterialsSetupEntries(record), null);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupRuns(record), null);
+    record.leftover_materials_setup = leftoverOf(7, 100, 200, 3);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupEntries(record), 7);
+    assert.deepStrictEqual(dashboard.leftoverMaterialsSetupRuns(record), {
+      without_leftovers: {instructions: 100, tests: 3, exit_status: 0},
+      with_leftovers:    {instructions: 200, tests: 3, exit_status: 0}});
+    assert.deepStrictEqual(dashboard.leftoverMaterialsSetupRunNames, ['without_leftovers', 'with_leftovers']);
+  });
+
+  await control('the exit status of a section is the non-zero one of its runs, and is plotted whatever it is', () => {
+    const record = recordOf('F5');
+    assert.strictEqual(dashboard.leftoverMaterialsSetupFirstFailure(record), null);
+    record.leftover_materials_setup = leftoverOf(10);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupFirstFailure(record), 0);
+    record.leftover_materials_setup.with_leftovers.exit_status = 3;
+    assert.strictEqual(dashboard.leftoverMaterialsSetupFirstFailure(record), 3);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupPerEntry(record), 400);
+    record.leftover_materials_setup.without_leftovers.exit_status = 5;
+    assert.strictEqual(dashboard.leftoverMaterialsSetupFirstFailure(record), 5);
+    record.leftover_materials_setup.with_leftovers.exit_status = 0;
+    assert.strictEqual(dashboard.leftoverMaterialsSetupFirstFailure(record), 5);
+    assert.strictEqual(dashboard.leftoverMaterialsSetupPerEntry(record), 400);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  const leftoverProblem = text => `it has a leftover_materials_setup ${text}`;
+  const without = (object, key) => Object.fromEntries(Object.entries(object).filter(([name]) => name !== key));
+  for (const [name, section, problems] of [
+    ['null',                      null,                                 ['with no boundary']],
+    ['a boundary which is no text', {...leftoverOf(10), boundary: 5},   ['with no boundary']],
+    ['negative entries',          leftoverOf(-1),                       ['whose leftover_entries is not a non-negative integer']],
+    ['fractional entries',        leftoverOf(1.5),                      ['whose leftover_entries is not a non-negative integer']],
+    ['text entries',              leftoverOf('3'),                      ['whose leftover_entries is not a non-negative integer']],
+    ['absent entries',            without(leftoverOf(10), 'leftover_entries'), ['whose leftover_entries is not a non-negative integer']],
+    ['no run without leftovers',  without(leftoverOf(10), 'without_leftovers'), ['with no without_leftovers']],
+    ['a null run with leftovers', {...leftoverOf(10), with_leftovers: null}, ['with no with_leftovers']],
+    ['different numbers of tests', {...leftoverOf(10), with_leftovers: {...leftoverOf(10).with_leftovers, tests: 5}},
+                                                                        ['whose runs executed different numbers of tests']]
+  ]) {
+    await control(`a record with a leftover_materials_setup of ${name} is a problem naming it, and no other`, () => {
+      const record = recordOf('F5');
+      record.leftover_materials_setup = section;
+      assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), problems.map(leftoverProblem));
+    });
+  }
+
+  for (const runName of ['without_leftovers', 'with_leftovers']) {
+    for (const [name, key, value, problem] of [
+      ['no exit status',       'exit_status',  undefined, 'has no exit status'],
+      ['a text exit status',   'exit_status',  '0',       'has no exit status'],
+      ['zero tests',           'tests',        0,         'has a number of tests which is not a positive integer'],
+      ['fractional tests',     'tests',        1.5,       'has a number of tests which is not a positive integer'],
+      ['no tests',             'tests',        undefined, 'has a number of tests which is not a positive integer'],
+      ['zero instructions',    'instructions', 0,         'has no positive count of instructions'],
+      ['negative instructions', 'instructions', -1,       'has no positive count of instructions'],
+      ['text instructions',    'instructions', '5',       'has no positive count of instructions'],
+      ['no instructions',      'instructions', undefined, 'has no positive count of instructions']
+    ]) {
+      await control(`a leftover_materials_setup whose ${runName} has ${name} is a problem naming it, and no other`, () => {
+        const record = recordOf('F5');
+        record.leftover_materials_setup = leftoverOf(10);
+        if (value === undefined) delete record.leftover_materials_setup[runName][key];
+        else record.leftover_materials_setup[runName][key] = value;
+        assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), [leftoverProblem(`whose ${runName} ${problem}`)]);
+      });
+    }
+  }
+
+  await control('the leftover materials\' boundary breaks the line independently of the runner\'s setup\'s', () => {
+    const summary = {date: 'd', subject: 's'};
+    const point = (setupBoundary, leftoverBoundary) => {
+      const record = recordOf('F4');
+      if (setupBoundary !== null) record.runner_setup = {...setupOf(4), boundary: setupBoundary};
+      if (leftoverBoundary !== null) record.leftover_materials_setup = {...leftoverOf(10), boundary: leftoverBoundary};
+      return {commit: c.F4, summary, record};
+    };
+    const points = dashboard.pointsOf([point('a', 'p'), point('b', 'p'), point(null, 'q'), point('b', null), point('b', 'q')]);
+    assert.deepStrictEqual(points.map(p => p.boundaryChange),         [false, true,  false, false, false]);
+    assert.deepStrictEqual(points.map(p => p.setupRun),               [0,     1,     1,     1,     1]);
+    assert.deepStrictEqual(points.map(p => p.leftoverBoundaryChange), [false, false, true,  false, false]);
+    assert.deepStrictEqual(points.map(p => p.leftoverRun),            [0,     0,     1,     1,     1]);
+  });
+
+  await control('each event is null in a record without the runner\'s setup, and per test otherwise', () => {
+    const record = recordOf('F5');
+    for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
+    record.runner_setup = setupOf(4);
+    assert.strictEqual(dashboard.runnerSetupPerTest(record, 'instructions'), 1000);
+    assert.strictEqual(dashboard.runnerSetupPerTest(record, 'syscalls'), 10);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  await control('the older runner_overhead is neither a problem nor plotted', () => {
+    const record = recordOf('F5');
+    record.runner_overhead = {invocation: 'x', exit_status: 0, tests: 4, syscalls: {opens: 60}};
+    for (const event of dashboard.runnerSetupEvents) assert.strictEqual(dashboard.runnerSetupPerTest(record, event), null);
+    assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), []);
+  });
+
+  await control('the events are the two the workflow records', () => {
+    assert.deepStrictEqual(dashboard.runnerSetupEvents, ['instructions', 'syscalls']);
+  });
+
+  for (const [name, setup, problem] of [
+    ['null',             null,                                    'it has a runner_setup with no boundary'],
+    ['no boundary',      {...setupOf(4), boundary: 5},            'it has a runner_setup with no boundary'],
+    ['zero tests',       setupOf(0),                              'it has a runner_setup whose number of tests is not a positive integer'],
+    ['null tests',       setupOf(null),                           'it has a runner_setup whose number of tests is not a positive integer'],
+    ['fractional tests', setupOf(1.5),                            'it has a runner_setup whose number of tests is not a positive integer'],
+    ['text tests',       setupOf('4'),                            'it has a runner_setup whose number of tests is not a positive integer'],
+    ['absent tests',     (({tests, ...rest}) => rest)(setupOf(4)), 'it has a runner_setup whose number of tests is not a positive integer']
+  ]) {
+    await control(`a record with a runner_setup of ${name} is a problem`, () => {
+      const record = recordOf('F5');
+      record.runner_setup = setup;
+      assert.ok(dashboard.problemsWith(record, c.F5).includes(problem), dashboard.problemsWith(record, c.F5).join('; '));
+    });
+  }
+
+  for (const event of ['instructions', 'syscalls']) {
+    for (const [name, value] of [['missing', undefined], ['zero', 0], ['fractional', 1.5], ['negative', -1], ['text', '3']]) {
+      await control(`a runner_setup with ${event} ${name} is a problem naming it, and no other`, () => {
+        const record = recordOf('F5');
+        record.runner_setup = setupOf(4);
+        if (value === undefined) delete record.runner_setup[event];
+        else record.runner_setup[event] = value;
+        assert.deepStrictEqual(dashboard.problemsWith(record, c.F5), [`it has a runner_setup with no positive count of ${event}`]);
+      });
+    }
+  }
+
+  await control('points lacking the runner\'s setup keep their place, and it is read where present', async () => {
+    const source = fixtureSource({record: recordPath => {
+      const record = read(recordPath);
+      if (recordPath.includes(c.F5)) record.runner_setup = setupOf(2);
+      return record;
+    }});
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    const counts = column.points.map(point => dashboard.runnerSetupPerTest(point.record, 'syscalls'));
+    assert.deepStrictEqual(counts, column.points.map(point => point.commit === c.F5 ? 20 : null));
+    assert.ok(counts.includes(20));
+  });
+
+  const treeWith = (...commits) => ({...read('tree.json'), tree: read('tree.json').tree.concat(commits.map(commit =>
+    ({path: `uncalled-functions/linux-gcc/${commit}.json`, type: 'blob'})))});
+  // The fixture's own records have problems of their own, which these controls leave aside
+  const uncalledProblems = column => column.problems.filter(entry => entry.path.startsWith('uncalled-functions/'));
+  const uncalledRecord = (name, count, tools = ['g++-15 15.2.0']) =>
+    ({commit: c[name], clean: true, uncalled_functions: count, toolchain: {demanglers: ['c++filt 2.46'], tools}});
+
+  await control('a record of uncalled functions without a problem has none, and with one has it named', () => {
+    assert.deepStrictEqual(dashboard.problemsWithUncalled(uncalledRecord('F5', 0), c.F5), []);
+    assert.deepStrictEqual(dashboard.problemsWithUncalled(uncalledRecord('F5', 5), c.F4), [`it names commit ${c.F5}`]);
+  });
+
+  for (const [name, change, problem] of [
+    ['a tree not clean',         r => { r.clean = false; },                     'it was not measured on a clean tree'],
+    ['no count',                 r => { delete r.uncalled_functions; },         'it has no count of uncalled functions'],
+    ['a fractional count',       r => { r.uncalled_functions = 1.5; },          'it has no count of uncalled functions'],
+    ['a text count',             r => { r.uncalled_functions = '5'; },          'it has no count of uncalled functions'],
+    ['a negative count',         r => { r.uncalled_functions = -1; },           'it has no count of uncalled functions'],
+    ['no toolchain',             r => { delete r.toolchain; },                  'it has no toolchain of demanglers and tools'],
+    ['tools of numbers',         r => { r.toolchain.tools = [1]; },             'it has no toolchain of demanglers and tools'],
+    ['no demanglers',            r => { delete r.toolchain.demanglers; },       'it has no toolchain of demanglers and tools']
+  ]) {
+    await control(`a record of uncalled functions with ${name} is a problem`, () => {
+      const record = uncalledRecord('F5', 5);
+      change(record);
+      assert.ok(dashboard.problemsWithUncalled(record, c.F5).includes(problem));
+    });
+  }
+
+  await control('the nightly counts join the points of their commits, with their own toolchain runs', async () => {
+    const records = new Map([[c.F2, uncalledRecord('F2', 7)], [c.F4, uncalledRecord('F4', 6)],
+                             [c.F6, uncalledRecord('F6', 6, ['g++-16 16.1.0'])]]);
+    const source = fixtureSource({
+      tree: treeWith(...records.keys()),
+      record: recordPath => {
+        const found = [...records].find(([commit]) => recordPath === `uncalled-functions/linux-gcc/${commit}.json`);
+        return found ? found[1] : read(recordPath);
+      }
+    });
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.deepStrictEqual(uncalledProblems(column), []);
+    assert.deepStrictEqual(column.points.map(point => dashboard.uncalledCount(point.record)),
+                           column.points.map(point => records.has(point.commit) ? records.get(point.commit).uncalled_functions : null));
+    const [first, second, third] = column.points.filter(point => records.has(point.commit)).map(point => point.record.uncalled);
+    assert.deepStrictEqual([first.toolchainChange, second.toolchainChange, first.run, second.run, third.run],
+                           [null, null, 0, 0, 1]);
+    assert.deepStrictEqual(third.toolchainChange.map(change => change.path), ['tools']);
+  });
+
+  await control('a record of uncalled functions with a problem is listed, and the others load', async () => {
+    const source = fixtureSource({
+      tree: treeWith(c.F2),
+      record: recordPath => recordPath.startsWith('uncalled-functions/') ? {...uncalledRecord('F2', 1), clean: false} : read(recordPath)
+    });
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.deepStrictEqual(uncalledProblems(column).map(entry => entry.path), [`uncalled-functions/linux-gcc/${c.F2}.json`]);
+    assert.strictEqual(column.points.filter(point => dashboard.uncalledCount(point.record) !== null).length, 0);
+  });
+
+  await control('a record is null as a count where no measurement is, never zero', () => {
+    assert.strictEqual(dashboard.uncalledCount(recordOf('F5')), null);
+  });
+
+  await control('a record of uncalled functions at no plotted commit is listed', async () => {
+    const absent = '0'.repeat(40);
+    const source = fixtureSource({
+      tree: treeWith(absent),
+      record: recordPath => recordPath.startsWith('uncalled-functions/') ? {...uncalledRecord('F2', 1), commit: absent} : read(recordPath)
+    });
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.strictEqual(uncalledProblems(column).length, 1);
+    assert.ok(uncalledProblems(column)[0].problems.length >= 1);
+  });
+
+  await control('a record which cannot be fetched is a problem, and the others load', async () => {
+    const source = fixtureSource({record: recordPath => {
+      if (recordPath.includes(c.F6)) throw new Error('404 for the record');
+      return read(recordPath);
+    }});
+    const column = (await dashboard.loadHistory(source, new Map())).columns[0];
+    assert.deepStrictEqual(names(column.points.map(point => point.commit)), ['F1', 'F2', 'F4', 'F5', 'F7']);
+    assert.deepStrictEqual(column.problems.find(p => p.path.includes(c.F6)).problems,
+                           ['it could not be fetched: 404 for the record']);
+  });
+
+  const day = 24 * 60 * 60 * 1000, t0 = Date.parse('2026-10-20T00:00:00Z');
+  await control('points of one day are close, and days without a point leave a gap', () => {
+    const {xs} = dashboard.timeAxis([t0, t0 + 3600e3, t0 + 6 * day], 0, 700, 80);
+    assert.ok(xs[1] - xs[0] < 10);
+    assert.ok(Math.abs((xs[2] - xs[1]) - 6 * 100) < 10);
+    assert.ok(xs[0] >= 0 && xs[2] <= 700);
+  });
+
+  await control('a time outside the days of the points lies outside the axis, and one inside within it', () => {
+    const {x} = dashboard.timeAxis([t0 + 2 * day, t0 + 4 * day], 0, 600, 80);
+    assert.ok(x(t0 + day) < 0);
+    assert.ok(x(t0 + 5 * day + 3600e3) > 600);
+    assert.ok(x(t0 + 3 * day) > 0 && x(t0 + 3 * day) < 600);
+  });
+
+  await control('a date is ticked once, at a midnight, with ticks at least the gap apart', () => {
+    for (const span of [0, 1, 5, 40, 400]) {
+      const times = [t0, t0 + 17 * 3600e3, t0 + span * day];
+      const {ticks} = dashboard.timeAxis(times, 0, 600, 80);
+      const labels = ticks.map(tick => new Date(tick.time).toISOString().slice(0, 10));
+      assert.strictEqual(new Set(labels).size, labels.length);
+      assert.ok(ticks.every(tick => tick.time % day === 0));
+      assert.ok(ticks.every((tick, i) => i === 0 || tick.x - ticks[i - 1].x >= 80 - 1e-9));
+    }
+  });
+
+  await control('the midnight which ends the last day is ticked, at the right edge, when it falls on the step', () => {
+    const {ticks} = dashboard.timeAxis([t0 + 23 * 3600e3, t0 + day + 22 * 3600e3], 0, 600, 80);
+    assert.deepStrictEqual(ticks.map(tick => tick.time), [t0, t0 + day, t0 + 2 * day]);
+    assert.strictEqual(ticks[2].x, 600);
+  });
+
+  await control('points all on one day are spread over the axis in time order', () => {
+    const {xs} = dashboard.timeAxis([t0 + 12 * 3600e3, t0 + 6 * 3600e3, t0 + 18 * 3600e3], 0, 600, 80);
+    assert.deepStrictEqual(xs.map(Math.round), [300, 150, 450]);
+  });
+
+  await control('the smallest gap is that of neighbours in x, whatever the order of the points', () => {
+    assert.strictEqual(dashboard.smallestGap([30, 0, 10, 100]), 10);
+    assert.strictEqual(dashboard.smallestGap([5, 5]), 0);
+    assert.strictEqual(dashboard.smallestGap([5]), Infinity);
+  });
+
+  await control('a scale fitted to the values ends at multiples of its step, which enclose them', () => {
+    const {low, high, step, ticks} = dashboard.scaleOf([27, 80], false);
+    assert.deepStrictEqual([low, high, step], [20, 80, 20]);
+    assert.deepStrictEqual(ticks, [20, 40, 60, 80]);
+  });
+
+  await control('a scale which includes zero starts at it, or below a value which lies below it', () => {
+    assert.deepStrictEqual(dashboard.scaleOf([27, 80], true).ticks, [0, 20, 40, 60, 80]);
+    assert.deepStrictEqual(dashboard.scaleOf([1650, 1700], true).ticks, [0, 500, 1000, 1500, 2000]);
+    assert.deepStrictEqual(dashboard.scaleOf([-5, 50], true).ticks, [-20, 0, 20, 40, 60]);
+  });
+
+  await control('a scale of equal values is padded', () => {
+    for (const includesZero of [false, true]) {
+      const {low, high} = dashboard.scaleOf([50, 50], includesZero);
+      assert.ok(low <= (includesZero ? 0 : 49.9) && high >= 50.05);
+    }
+  });
+
+  await control('a commit with a date which is not a date is refused', () => {
+    const commit = date => ({sha: c.F1, parents: [], commit: {committer: {date}, message: 'm'}});
+    assert.strictEqual(dashboard.summarise(commit('2026-10-17T12:00:00Z')).date, '2026-10-17T12:00:00Z');
+    assert.throws(() => dashboard.summarise(commit('yesterday')), /not a date/);
+  });
+
+  await control('a single point is placed on the axis, between the midnights which bound its day', () => {
+    const {xs, ticks} = dashboard.timeAxis([t0 + 5 * 3600e3], 0, 600, 80);
+    assert.deepStrictEqual([xs.length, ticks.length], [1, 2]);
+    assert.ok(Number.isFinite(xs[0]));
+  });
+
+  await control('hover picks the point nearest in x, the earliest of equals', () => {
+    const xs = [10, 12, 100];
+    assert.deepStrictEqual([0, 10, 11.5, 50, 60, 1000].map(offset => dashboard.nearestPoint(xs, offset)), [0, 0, 1, 1, 2, 2]);
+    assert.strictEqual(dashboard.nearestPoint([5, 5], 5), 0);
+  });
+
+  await control('a missing metrics branch is reported as absent', async () => {
+    const source = fixtureSource({tree: null});
+    assert.deepStrictEqual(await dashboard.loadHistory(source, new Map()), {state: 'absent'});
+  });
+
+  await control('a metrics branch without records is reported as empty', async () => {
+    const tree = read('tree.json');
+    tree.tree = tree.tree.filter(entry => !entry.path.endsWith('.json'));
+    assert.ok(tree.tree.length > 0);
+    assert.deepStrictEqual(await dashboard.loadHistory(fixtureSource({tree}), new Map()), {state: 'empty'});
+  });
+
+  console.log(`${total} ${fails}`);
+})();
+EOF
+
+# run_controls <script>: the controls' count in $total, and their failures in
+# $fails. A run which does not finish within a minute fails.
+run_controls() {
+  local summary
+  summary=$(perl -e 'alarm 60; exec @ARGV' node "$tmp/controls.js" "$1" "$fixture" "$tmp/oracle.json" "$verbose" 2>&1)
+  if [[ $verbose == yes ]]; then sed '$d' <<< "$summary"; fi
+  read -r total fails <<< "$(tail -n 1 <<< "$summary")"
+  if ! [[ $total =~ ^[0-9]+$ && $fails =~ ^[0-9]+$ ]]; then
+    echo "the controls did not report a count${summary:+: $summary}"
+    total=1 fails=1
+  fi
+}
+
+# mutants <directory>: writes each mutant of the script to <directory>/<n>/,
+# and prints a line for each: n, how often its text occurs, its description
+mutants() {
+  python3 - "$script" "$1" <<'EOF'
+import os, sys
+script, directory = sys.argv[1], sys.argv[2]
+MUTATIONS = [
+    ('a truncated listing accepted',      'if (tree.truncated) {', 'if (false) {'),
+    ('any path listed as a record',       'const match = recordPathPattern.exec(entry.path);',
+                                          'const match = /^(.*)\\/([^/]*)\\.json$/.exec(entry.path);'),
+    ('the last parent followed',          'commit = summary.parents[0];', 'commit = summary.parents[summary.parents.length - 1];'),
+    ('the walk stops at the first find',  'while (found.length < wanted.size) {', 'while (found.length < 1) {'),
+    ('an unknown commit ends the walk',   'if (!summary) return {found, unknown: commit};', 'if (!summary) return {found, unknown: null};'),
+    ('the points in listing order',       'const historyOrder = walk.found.slice().reverse();', 'const historyOrder = [...wanted];'),
+    ('the points newest first',           'const historyOrder = walk.found.slice().reverse();', 'const historyOrder = walk.found.slice();'),
+    ('records off the history plotted',   'if (!walk.found.includes(entry.commit)) entryProblems.push(notFound);', ''),
+    ('no limit of listings',              'while (walk.unknown && pages < maxCommitPages) {', 'while (walk.unknown) {'),
+    ('a listing at the limit too many',   'while (walk.unknown && pages < maxCommitPages) {', 'while (walk.unknown && pages <= maxCommitPages) {'),
+    ('later listings from staging',       'learn(await source.commits(walk.unknown));', 'learn(await source.commits(null));'),
+    ('a listing lacking its start kept',  'if (!known.has(walk.unknown)) throw', 'if (false) throw'),
+    ('the known commits ignored',         'let walk  = walkFirstParents(known, head, wanted);',
+                                          'let walk  = {unknown: head};'),
+    ('fetched commits not kept',          'for (const commit of listing) known.set(commit.sha, summarise(commit));', ''),
+    ('toolchains compared as written',    'canonical(previous.record.toolchain) !== canonical(record.toolchain)',
+                                          'JSON.stringify(previous.record.toolchain) !== JSON.stringify(record.toolchain)'),
+    ('keys left unsorted',                'Object.keys(value).sort().map(', 'Object.keys(value).map('),
+    ('no break at a toolchain change',    'if (toolchainChange) ++run;', ''),
+    ('absent leaves ignored',             "return canonical(before) === canonical(after) ? [] : [{path: prefix, before, after}];",
+                                          "return before === undefined || after === undefined || canonical(before) === canonical(after) ? [] : [{path: prefix, before, after}];"),
+    ('movers by signed change',           'Math.abs(b.delta) - Math.abs(a.delta)', 'b.delta - a.delta'),
+    ('ties unordered',                    '|| (a.object < b.object ? -1 : a.object > b.object ? 1 : 0)', ''),
+    ('objects of the later record alone', 'new Set([...Object.keys(countsBefore), ...Object.keys(countsAfter)])',
+                                          'new Set(Object.keys(countsAfter))'),
+    ('unmoved objects kept',              '.filter(mover => mover.delta !== 0)', ''),
+    ('the commit not checked',            "if (record.commit !== commit) problems.push", "if (false) problems.push"),
+    ('a record not an object read',       "if (!isObject(record)) return ['it is not a JSON object'];", "if (false) return [];"),
+    ('a dirty tree accepted',             "if (record.clean !== true) problems.push", "if (false) problems.push"),
+    ('prototype keys counted',            'Object.hasOwn(countsBefore, object)', 'object in countsBefore'),
+    ('any toolchain accepted',            "if (record.toolchain === null || typeof record.toolchain !== 'object')", 'if (false)'),
+    ('fractions accepted',                'Number.isInteger(value) && value >= 0', "typeof value === 'number' && value >= 0"),
+    ('negative counts accepted',          'Number.isInteger(value) && value >= 0', 'Number.isInteger(value)'),
+    ('bytes not checked',                 "if (!isCount(executable.symbol_name_bytes)) problems.push", "if (false) problems.push"),
+    ('objects not checked',               '!Object.values(objects).every(isCount)', 'false'),
+    ('a failed fetch fails the load',     'catch (error) { outcomes[index] = {error}; }', 'catch (error) { throw error; }'),
+    ('an absent branch read as empty',    "if (tree === null) return {state: 'absent'};", "if (tree === null) return {state: 'empty'};"),
+    ('a missing analysis plotted as zero', "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;\n    return record.prune_dependency_analysis.instructions;", "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return 0;\n    return record.prune_dependency_analysis.instructions;"),
+    ('a failed stamping run left out',    "if (!Object.hasOwn(record, 'prune_dependency_analysis')) return null;\n    return record.prune_dependency_analysis.instructions;", "if (!Object.hasOwn(record, 'prune_dependency_analysis') || record.prune_dependency_analysis.stamping_exit_status !== 0) return null;\n    return record.prune_dependency_analysis.instructions;"),
+    ('a failed setup run left out',        "if (!Object.hasOwn(record, 'runner_setup')) return null;\n    const setup = record.runner_setup;", "if (!Object.hasOwn(record, 'runner_setup') || record.runner_setup.exit_status !== 0) return null;\n    const setup = record.runner_setup;"),
+    ('the exit status of the setup unchecked', "if (!isCount(setup.exit_status)) problems.push", "if (false) problems.push"),
+    ('the dependency analysis not checked', "if (Object.hasOwn(record, 'prune_dependency_analysis')) {", 'if (false) {'),
+    ('zero instructions accepted',         "|| analysis.instructions === 0\n", "\n"),
+    ('the stamping status unchecked',      "|| !isCount(analysis.stamping_exit_status)) {", ") {"),
+    ('the function unchecked',             "|| typeof analysis.function !== 'string'", ""),
+    ('the analysis not checked',          "if (Object.hasOwn(record, 'prune_analysis')) {", 'if (false) {'),
+    ('the count not checked',             '|| !isCount(analysis.instructions)\n', '\n'),
+    ('the new count not checked',         'typeof analysis !== \'object\' || !isCount(analysis.instructions) ||', 'typeof analysis !== \'object\' ||'),
+    ('the invocation not checked',        "|| typeof analysis.invocation !== 'string'", ''),
+    ('no break at a change of boundary',   "const change = typeof boundary === 'string' && previous !== null && boundary !== previous;", "const change = false;"),
+    ('a first boundary a change',          "typeof boundary === 'string' && previous !== null &&", "typeof boundary === 'string' &&"),
+    ('the boundary forgotten at a gap',    "if (typeof boundary === 'string') previous = boundary;", "previous = typeof boundary === 'string' ? boundary : null;"),
+    ('the series not counted',             "if (change) ++run;", ""),
+    ('a boundary which is no text read',   "typeof boundary === 'string' && previous !== null", "boundary !== null && previous !== null"),
+    ('a missing setup throws',    "if (!Object.hasOwn(record, 'runner_setup')) return null;\n    const setup = record.runner_setup;", "const setup = record.runner_setup;"),
+    ('the setup not checked',              "if (Object.hasOwn(record, 'runner_setup')) {", 'if (false) {'),
+    ('the setup\'s boundary not checked',  "|| typeof setup.boundary !== 'string') {", ') {'),
+    ('the number of tests not checked',     "if (!(isCount(setup.tests) && setup.tests > 0)) problems.push", 'if (false) problems.push'),
+    ('zero tests accepted',                 "isCount(setup.tests) && setup.tests > 0", 'isCount(setup.tests)'),
+    ('zero counts accepted',                "isCount(setup[event]) && setup[event] > 0", 'isCount(setup[event])'),
+    ('the instructions unchecked',          "const runnerSetupEvents = ['instructions', ", "const runnerSetupEvents = ["),
+    ('the system calls unchecked',          "'instructions', 'syscalls']", "'instructions']"),
+    ('totals plotted, not per test',        "return setup[event] / setup.tests;", "return setup[event];"),
+    ('the wrong event read',                "return setup[event] / setup.tests;", "return setup.instructions / setup.tests;"),
+    ('a runner_setup required',            "if (Object.hasOwn(record, 'runner_setup')) {", 'if (true) {'),
+    ('the cost of leftover materials a problem', "const objects = record.defined_symbols_by_object;", "if (Object.hasOwn(record, 'leftover_materials_setup')) problems.push('x');\n    const objects = record.defined_symbols_by_object;"),
+    ('a blind point plotted',              "if (section.leftover_entries === 0) return null;", "if (section.leftover_entries === 0) return 0;"),
+    ('the runs subtracted the wrong way',  "(section.with_leftovers.instructions - section.without_leftovers.instructions)", "(section.without_leftovers.instructions - section.with_leftovers.instructions)"),
+    ('the total plotted, not per entry',   "section.without_leftovers.instructions) / section.leftover_entries;", "section.without_leftovers.instructions);"),
+    ('a missing section throws in the value', "if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;\n    const section = record.leftover_materials_setup;\n    if (section.leftover_entries === 0)", "const section = record.leftover_materials_setup;\n    if (section.leftover_entries === 0)"),
+    ('blindness never found',              "if (record.leftover_materials_setup.leftover_entries !== 0) return null;", "return null;"),
+    ('a section with entries blind',       "if (record.leftover_materials_setup.leftover_entries !== 0) return null;", ""),
+    ('a failed blind point not labelled',  "=== 0 ? 'blind' : 'blind, failed'", "=== 0 || true ? 'blind' : 'blind, failed'"),
+    ('only one run judged for the label',  "return leftoverMaterialsSetupFirstFailure(record) === 0 ?", "return record.leftover_materials_setup.with_leftovers.exit_status === 0 ?"),
+    ('a missing section blind',            "if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;\n    if (record.leftover_materials_setup.leftover_entries !== 0) return null;", "if (record.leftover_materials_setup.leftover_entries !== 0) return null;"),
+    ('a missing section has entries',       "if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;\n    return record.leftover_materials_setup.leftover_entries;", "if (!Object.hasOwn(record, 'leftover_materials_setup')) return 0;\n    return record.leftover_materials_setup.leftover_entries;"),
+    ('a missing section has runs',          "if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;\n    return Object.fromEntries(", "return Object.fromEntries("),
+    ('the runs named wrongly',              "const leftoverMaterialsSetupRunNames = ['without_leftovers', 'with_leftovers'];", "const leftoverMaterialsSetupRunNames = ['with_leftovers', 'without_leftovers'];"),
+    ('only the run without leftovers judged', "section.without_leftovers.exit_status !== 0 ? section.without_leftovers.exit_status : section.with_leftovers.exit_status", "section.without_leftovers.exit_status"),
+    ('only the run with leftovers judged',  "section.without_leftovers.exit_status !== 0 ? section.without_leftovers.exit_status : section.with_leftovers.exit_status", "section.with_leftovers.exit_status"),
+    ('a failed run left out of the leftover cost', "const section = record.leftover_materials_setup;\n    if (section.leftover_entries === 0) return null;", "const section = record.leftover_materials_setup;\n    if (section.leftover_entries === 0 || leftoverMaterialsSetupFirstFailure(record) !== 0) return null;"),
+    ('a missing section has an exit status', "if (!Object.hasOwn(record, 'leftover_materials_setup')) return null;\n    const section = record.leftover_materials_setup;\n    return section.without", "const section = record.leftover_materials_setup;\n    return section.without"),
+    ('the leftover section not checked',    "if (Object.hasOwn(record, 'leftover_materials_setup')) problems.push(", "if (false) problems.push("),
+    ('the leftover boundary not checked',   "if (!isObject(section) || typeof section.boundary !== 'string') return", "if (!isObject(section)) return"),
+    ('the leftover entries not checked',    "if (!isCount(section.leftover_entries)) problems.push", "if (false) problems.push"),
+    ('fractional leftover entries accepted', "if (!isCount(section.leftover_entries)) problems.push", "if (!(typeof section.leftover_entries === 'number' && section.leftover_entries >= 0)) problems.push"),
+    ('a run absent from the leftover section accepted', "if (!isObject(run)) { problems.push(`${name} with no ${runName}`); return; }", "if (!isObject(run)) return;"),
+    ('the leftover exit status not checked', "if (!isCount(run.exit_status)) problems.push", "if (false) problems.push"),
+    ('the leftover tests not checked',      "if (!(isCount(run.tests) && run.tests > 0)) problems.push", "if (false) problems.push"),
+    ('zero leftover tests accepted',        "if (!(isCount(run.tests) && run.tests > 0)) problems.push", "if (!isCount(run.tests)) problems.push"),
+    ('the leftover instructions not checked', "if (!(isCount(run.instructions) && run.instructions > 0)) problems.push", "if (false) problems.push"),
+    ('zero leftover instructions accepted', "if (!(isCount(run.instructions) && run.instructions > 0)) problems.push", "if (!isCount(run.instructions)) problems.push"),
+    ('only one leftover run checked',       "const leftoverMaterialsSetupRunNames = ['without_leftovers', 'with_leftovers'];", "const leftoverMaterialsSetupRunNames = ['without_leftovers'];"),
+    ('different numbers of tests accepted', "&& runs[0].tests !== runs[1].tests) {", "&& false) {"),
+    ('the leftover boundary read from the runner\'s setup', "leftoverBoundaryCounter(Object.hasOwn(record, 'leftover_materials_setup') ? record.leftover_materials_setup.boundary : null)", "leftoverBoundaryCounter(Object.hasOwn(record, 'runner_setup') ? record.runner_setup.boundary : null)"),
+    ('one count of boundaries for both sections', "const leftoverBoundaryCounter = boundaryCounter();", "const leftoverBoundaryCounter = setupBoundaryCounter;"),
+    ('the leftover series not counted',     "toolchainChange, setupRun, boundaryChange,\n              leftoverRun, leftoverBoundaryChange};", "toolchainChange, setupRun, boundaryChange,\n              leftoverRun: 0, leftoverBoundaryChange};"),
+    ('the older overhead checked',          "if (Object.hasOwn(record, 'runner_setup')) {", "if (Object.hasOwn(record, 'runner_overhead')) { problems.push('x'); }\n    if (Object.hasOwn(record, 'runner_setup')) {"),
+    ('a missing uncalled count plotted as zero',    "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : null", "Object.hasOwn(record, 'uncalled') ? record.uncalled.count : 0"),
+    ('the uncalled count not checked',      '|| record.uncalled_functions < 0', '|| false'),
+    ('the uncalled toolchain not checked',  '|| !isNames(toolchain.tools)', ''),
+    ('the toolchain change dropped',       'toolchainChange: found.toolchainChange}', 'toolchainChange: null}'),
+    ('the run of the symbol table used',   'run: found.run,', 'run: point.run,'),
+    ('x by index, not time',             'return {xs: times.map(x), ticks, x};', 'return {xs: times.map((time, i) => left + (i + 0.5) * (right - left) / times.length), ticks, x};'),
+    ('times outside the days clamped',   'return {xs: times.map(x), ticks, x};', 'return {xs: times.map(x), ticks, x: time => Math.min(right, Math.max(left, x(time)))};'),
+    ('the last nearest point taken',     'if (Math.abs(x - offset) < Math.abs(xs[nearest] - offset))', 'if (Math.abs(x - offset) <= Math.abs(xs[nearest] - offset))'),
+    ('the farthest point taken',         'if (Math.abs(x - offset) < Math.abs(xs[nearest] - offset))', 'if (Math.abs(x - offset) > Math.abs(xs[nearest] - offset))'),
+    ('the end of the last day unticked', 'day <= last + 1; day += step', 'day <= last; day += step'),
+    ('ticks at every day',               'candidate * (right - left) / days >= minGap) ??', 'true) ??'),
+    ('ticks at a fixed step in points',  'for (let day = first; day <= last + 1; day += step)', 'for (let day = first; day <= last + 1; day += 1)'),
+    ('the smallest gap taken unsorted',  'const sorted = xs.slice().sort((a, b) => a - b);', 'const sorted = xs.slice();'),
+    ('an unreadable date accepted',      'if (!Number.isFinite(Date.parse(commit.commit.committer.date))) {', 'if (false) {'),
+    ('an empty branch loaded',            "if (listing.size === 0) return {state: 'empty'};", ''),
+    ('zero never included in the scale',  'Math.min(...values, ...(includesZero ? [0] : []))', 'Math.min(...values)'),
+    ('zero always included in the scale', 'Math.min(...values, ...(includesZero ? [0] : []))', 'Math.min(...values, 0)'),
+    ('a scale which starts at zero clipped', 'Math.min(...values, ...(includesZero ? [0] : []))', 'includesZero ? 0 : Math.min(...values)'),
+    ('the scale not padded',               'if (low === high) {', 'if (false) {'),
+    ('the scale\'s step not nice',         'return unit * ([1, 2, 2.5, 5, 10].find(m => m * unit >= raw) ?? 10);', 'return raw;'),
+]
+with open(script, encoding='utf-8') as f:
+    source = f.read()
+for n, (description, old, new) in enumerate(MUTATIONS):
+    os.makedirs(os.path.join(directory, str(n)))
+    with open(os.path.join(directory, str(n), 'symbol_dashboard.js'), 'w', encoding='utf-8') as f:
+        f.write(source.replace(old, new))
+    print(n, source.count(old), description)
+EOF
+}
+
+if [[ ${1:-} == --mutations ]]; then
+  verbose=no survivors=0
+  run_controls "$script"
+  echo "unmutated: $fails of $total controls fail$( ((fails)) && echo '  <-- must be none')"
+  if ((fails)); then survivors=1; fi
+  mutants "$tmp/mutants" > "$tmp/mutants.txt" || exit 1
+  while read -r n occurrences description; do
+    if [[ $occurrences -ne 1 ]]; then
+      echo "$description: the text to mutate occurs $occurrences times"; survivors=1; continue
+    fi
+    run_controls "$tmp/mutants/$n/symbol_dashboard.js"
+    echo "$description: $fails of $total controls fail$( ((fails)) || echo '  <-- SURVIVED')"
+    if ((fails == 0)); then survivors=1; fi
+  done < "$tmp/mutants.txt"
+  exit $survivors
+fi
+
+run_controls "$script"
+if [[ $fails -eq 0 ]]; then echo "symbol_dashboard selftest: all $total controls pass"; else
+  echo "symbol_dashboard selftest: $fails of $total controls failed"; fi
+exit $((fails > 0))

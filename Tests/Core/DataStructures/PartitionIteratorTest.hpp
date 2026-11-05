@@ -23,6 +23,7 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+    void test_index_type_constraint();
 
     template<class Container, std::bidirectional_iterator I>
     void test_generic_iterator_properties();

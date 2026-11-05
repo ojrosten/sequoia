@@ -1,0 +1,45 @@
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 228
+Subtrees beneath a node the tree lacks
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cedges: node index 4 out of range - graph order is 4
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 251
+root_weight of an empty tree's adaptor
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::root_weight_iter: node index 0 out of range - graph order is 0
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 253
+root_weight_iter of an empty tree's adaptor
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::root_weight_iter: node index 0 out of range - graph order is 0
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 262
+root_weight of an adaptor at a node its tree has lost
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::root_weight_iter: node index 0 out of range - graph order is 0
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTest.cpp, Line 266
+mutate_root_weight of an adaptor beyond the end of its tree
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::root_weight_iter: node index 2 out of range - graph order is 0
+
+=======================================
+

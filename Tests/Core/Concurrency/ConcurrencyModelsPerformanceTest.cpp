@@ -7,6 +7,7 @@
 
 #include "ConcurrencyModelsPerformanceTest.hpp"
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
+#include "sequoia/PlatformSpecific/Helpers.hpp"
 
 #include <functional>
 
@@ -16,6 +17,31 @@ namespace sequoia::testing
 
   namespace
   {
+    class wait
+    {
+      std::chrono::milliseconds m_Wait{};
+    public:
+      wait(const std::chrono::milliseconds millisecs) : m_Wait{millisecs} {}
+
+      void operator()() const
+      {
+        precise_sleep_for(m_Wait);
+      }
+    };
+
+    class wait_and_return
+    {
+      wait m_Wait;
+    public:
+      wait_and_return(const std::chrono::milliseconds millisecs) : m_Wait{millisecs} {}
+
+      int operator()() const
+      {
+        m_Wait();
+        return 42;
+      }
+    };
+
     template<std::invocable Task, class ThreadModel>
     class waiting_task
     {
@@ -113,6 +139,35 @@ namespace sequoia::testing
       std::size_t m_NumTasks{};
       Task m_Task;
     };
+
+    /** A waiting_task whose tasks sleep, paired with a baseline.
+
+        The baseline is a waiting_task with a model of its own, of the same
+        kind, and as many tasks. None of its tasks sleeps.
+     */
+    template<std::invocable Task, class ThreadModel>
+      requires std::constructible_from<Task, std::chrono::milliseconds>
+    class waiting_task_with_baseline
+    {
+    public:
+      using waiting_task_type = waiting_task<Task, ThreadModel>;
+      using by_reference_type = task_with_baseline<std::reference_wrapper<waiting_task_type>,
+                                                   std::reference_wrapper<waiting_task_type>>;
+
+      template<class... ModelArgs>
+      waiting_task_with_baseline(const std::size_t nTasks,
+                                 const std::chrono::milliseconds sleepDuration,
+                                 const ModelArgs&... args)
+        : m_Task{nTasks, Task{sleepDuration}, args...}
+        , m_Baseline{nTasks, Task{std::chrono::milliseconds::zero()}, args...}
+      {}
+
+      [[nodiscard]]
+      by_reference_type by_reference() { return {.task{m_Task}, .baseline{m_Baseline}}; }
+    private:
+      waiting_task_type m_Task,
+                        m_Baseline;
+    };
   }
 
   [[nodiscard]]
@@ -127,64 +182,78 @@ namespace sequoia::testing
     test_waiting_task_return(std::chrono::milliseconds{15});
   }
 
-  /* Each pool is constructed before its checks. The checks take the pool's
-     waiting_task by reference, so no trial times the start or join of the
+  /* Each check subtracts each baseline's duration from its task's, and judges
+     the speed-up by what remains. The purpose of a baseline is to dispatch
+     its tasks and collect their results as the sleeping waiting_task does, so
+     that the cost of doing so is not judged.
+
+     A baseline pushes each of its tasks while no task sleeps. The sleeping
+     waiting_task of a concurrent model pushes all but its first task while
+     earlier tasks sleep, and so hides the cost of those pushes. The check
+     subtracts that cost anyway. So, for a model whose pushes are costly, the
+     check measures a speed-up above the ideal, by a fraction which grows as
+     the sleep shortens.
+
+     Each pool is constructed before its checks. The checks take the pool's
+     waiting_tasks by reference, so no trial times the start or join of the
      pool's threads.
 
-     The lower bounds sit further below the ideal speed-up than a symmetric tolerance would put
-     them, because a pool of N on a machine with N hardware threads has no headroom: the pool's
-     threads and the thread waiting on them are N+1 runnable entities on N cores, and
-     instrumentation costs the rest. A tighter bound does not distinguish a pool which failed to
-     parallelise from a machine with nothing spare, which is the distinction these checks exist
-     to make.
+     The lower bounds sit further below the ideal speed-up than a symmetric
+     tolerance would put them, because a pool of N on a machine with N hardware
+     threads has no headroom: the pool's threads and the thread waiting on them
+     are N+1 runnable entities on N cores, and instrumentation costs the rest.
+     A tighter bound does not distinguish a pool which failed to parallelise
+     from a machine with nothing spare, which is the distinction these checks
+     exist to make.
 
-     The upper bounds are not slack: exceeding the ideal would mean the serial baseline was wrong.
+     The upper bounds are not slack: exceeding the ideal by more than the cost
+     of the hidden pushes would mean the serial tasks' durations were wrong.
 
-     This is a holding position. Bounds which have to be widened whenever the hardware changes are
-     measuring the machine as much as the code.
+     This is a holding position. Bounds which have to be widened whenever the
+     hardware changes are measuring the machine as much as the code.
   */
   void threading_models_performance_test::test_waiting_task(const std::chrono::milliseconds millisecs)
   {
     {
-      waiting_task<wait, thread_pool<void>>        threadPoolTask{2u, wait{millisecs}, 2u};
-      waiting_task<wait, thread_pool<void, false>> threadPoolMonoTask{2u, wait{millisecs}, 2u};
-      const waiting_task<wait, serial<void>>       nullThreadTask{2u, wait{millisecs}};
-      waiting_task<wait, asynchronous<void>>       asyncTask{2u, wait{millisecs}};
+      waiting_task_with_baseline<wait, thread_pool<void>>        threadPoolTask{2u, millisecs, 2u};
+      waiting_task_with_baseline<wait, thread_pool<void, false>> threadPoolMonoTask{2u, millisecs, 2u};
+      waiting_task_with_baseline<wait, serial<void>>             nullThreadTask{2u, millisecs};
+      waiting_task_with_baseline<wait, asynchronous<void>>       asyncTask{2u, millisecs};
 
       check_relative_performance("Two Waiting tasks; pool_2/null",
-                                 std::ref(threadPoolTask), std::ref(nullThreadTask),
+                                 threadPoolTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
       check_relative_performance("Two Waiting tasks; pool_2M/null",
-                                 std::ref(threadPoolMonoTask), std::ref(nullThreadTask),
+                                 threadPoolMonoTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
       check_relative_performance("Two Waiting tasks; async/null",
-                                 std::ref(asyncTask), std::ref(nullThreadTask),
+                                 asyncTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
     }
 
     {
-      waiting_task<wait, thread_pool<void>>        threadPoolTask{4u, wait{millisecs}, 2u};
-      waiting_task<wait, thread_pool<void, false>> threadPoolMonoTask{4u, wait{millisecs}, 2u};
-      const waiting_task<wait, serial<void>>       nullThreadTask{4u, wait{millisecs}};
+      waiting_task_with_baseline<wait, thread_pool<void>>        threadPoolTask{4u, millisecs, 2u};
+      waiting_task_with_baseline<wait, thread_pool<void, false>> threadPoolMonoTask{4u, millisecs, 2u};
+      waiting_task_with_baseline<wait, serial<void>>             nullThreadTask{4u, millisecs};
 
       check_relative_performance("Four Waiting tasks; pool_2/null",
-                                 std::ref(threadPoolTask), std::ref(nullThreadTask),
+                                 threadPoolTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
       check_relative_performance("Four Waiting tasks; pool_2M/null",
-                                 std::ref(threadPoolMonoTask), std::ref(nullThreadTask),
+                                 threadPoolMonoTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
     }
 
     {
-      waiting_task<wait, thread_pool<void>>        threadPoolTask{4u, wait{millisecs}, 4u};
-      waiting_task<wait, thread_pool<void, false>> threadPoolMonoTask{4u, wait{millisecs}, 4u};
-      const waiting_task<wait, serial<void>>       nullThreadTask{4u, wait{millisecs}};
+      waiting_task_with_baseline<wait, thread_pool<void>>        threadPoolTask{4u, millisecs, 4u};
+      waiting_task_with_baseline<wait, thread_pool<void, false>> threadPoolMonoTask{4u, millisecs, 4u};
+      waiting_task_with_baseline<wait, serial<void>>             nullThreadTask{4u, millisecs};
 
       check_relative_performance("Four Waiting tasks; pool_4/null",
-                                 std::ref(threadPoolTask), std::ref(nullThreadTask),
+                                 threadPoolTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{3.5}, .upper{4.1}}});
       check_relative_performance("Four Waiting tasks; pool_4M/null",
-                                 std::ref(threadPoolMonoTask), std::ref(nullThreadTask),
+                                 threadPoolMonoTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{3.5}, .upper{4.1}}});
     }
   }
@@ -192,22 +261,19 @@ namespace sequoia::testing
   void threading_models_performance_test::test_waiting_task_return(const std::chrono::milliseconds millisecs)
   {
     {
-      auto waitReturnVal{ [millisecs](){ wait{millisecs}(); return 42; } };
-      using wait_return = decltype(waitReturnVal);
-
-      waiting_task<wait_return, thread_pool<int>>        threadPoolTask{2u, waitReturnVal, 2u};
-      waiting_task<wait_return, thread_pool<int, false>> threadPoolMonoTask{2u, waitReturnVal, 2u};
-      const waiting_task<wait_return, serial<int>>       nullThreadTask{2u, waitReturnVal};
-      waiting_task<wait_return, asynchronous<int>>       asyncTask{2u, waitReturnVal};
+      waiting_task_with_baseline<wait_and_return, thread_pool<int>>        threadPoolTask{2u, millisecs, 2u};
+      waiting_task_with_baseline<wait_and_return, thread_pool<int, false>> threadPoolMonoTask{2u, millisecs, 2u};
+      waiting_task_with_baseline<wait_and_return, serial<int>>             nullThreadTask{2u, millisecs};
+      waiting_task_with_baseline<wait_and_return, asynchronous<int>>       asyncTask{2u, millisecs};
 
       check_relative_performance("Two Waiting tasks; pool_2/null",
-                                 std::ref(threadPoolTask), std::ref(nullThreadTask),
+                                 threadPoolTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
       check_relative_performance("Two Waiting tasks; pool_2M/null",
-                                 std::ref(threadPoolMonoTask), std::ref(nullThreadTask),
+                                 threadPoolMonoTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
       check_relative_performance("Two Waiting tasks; async/null",
-                                 std::ref(asyncTask), std::ref(nullThreadTask),
+                                 asyncTask.by_reference(), nullThreadTask.by_reference(),
                                  {.prediction{.lower{1.8}, .upper{2.1}}});
     }
   }

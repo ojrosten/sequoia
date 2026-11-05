@@ -6,12 +6,9 @@ Comparison performed using:
 Checking for weak equivalence with:
 [std::function<void ()>]
 
+  [bool]
   Obtained : not null
   Predicted: null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 
@@ -23,12 +20,9 @@ Comparison performed using:
 Checking for weak equivalence with:
 [std::function<void ()>]
 
+  [bool]
   Obtained : null
   Predicted: not null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 
@@ -40,12 +34,9 @@ Comparison performed using:
 Checking for weak equivalence with:
 [std::function<int ()>]
 
+  [bool]
   Obtained : not null
   Predicted: null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 
@@ -57,12 +48,9 @@ Comparison performed using:
 Checking for weak equivalence with:
 [std::function<int ()>]
 
+  [bool]
   Obtained : null
   Predicted: not null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 
@@ -74,12 +62,9 @@ Comparison performed using:
 Checking for weak equivalence with:
 [std::function<void (int)>]
 
+  [bool]
   Obtained : not null
   Predicted: null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 
@@ -91,12 +76,9 @@ Comparison performed using:
 Checking for weak equivalence with:
 [std::function<void (int)>]
 
+  [bool]
   Obtained : null
   Predicted: not null
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
 
 =======================================
 

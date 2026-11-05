@@ -85,7 +85,10 @@ namespace sequoia::testing
 
     failure_output outputReadBack{};
     outputStream >> outputReadBack;
-    check(equality, "A hexadecimal stream does not change a failure_output's text", outputReadBack, failure_output{tenth});
+    check(equality,
+          "A hexadecimal stream does not change a failure_output's text",
+          outputReadBack,
+          failure_output{tenth});
   }
 
   void failure_info_test::check_end_of_stream()

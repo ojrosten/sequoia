@@ -205,3 +205,21 @@ connectivity::insert_join: insertion position 2 out of range for node 0 - max in
 
 =======================================
 
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 1519
+Sorting a range which ends beyond the last node throws
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::sort_nodes: node index 3 out of range - graph order is 3
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 1606
+The comparator's exception escapes the sort
+
+Expected Exception Type:
+[std::runtime_error]
+The second comparison throws
+
+=======================================
+

@@ -14,7 +14,9 @@
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 #include "sequoia/TestFramework/Output.hpp"
 
+#include <concepts>
 #include <format>
+#include <functional>
 #include <memory>
 
 namespace sequoia::testing
@@ -115,6 +117,36 @@ namespace sequoia::testing
 #endif
 #endif
   };
+
+  /** \brief The number of allocations made, by `allocator` or any allocator
+             sharing its count, while `f` runs.
+   */
+  template<class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap, std::invocable F>
+  [[nodiscard]]
+  int allocations_made_by(const shared_counting_allocator<T, PropagateCopy, PropagateMove, PropagateSwap>& allocator, F f)
+  {
+    const int before{allocator.allocs()};
+    std::invoke(f);
+    return allocator.allocs() - before;
+  }
+
+  /** \brief The number of allocations made, by `allocator` or any allocator
+             sharing its count, in constructing an empty `Container` with it.
+
+      A test predicting a count of allocations itself, rather than through
+      `check_semantics`, can add this for each construction of a container it
+      predicts. For a `std::vector` it is zero unless `_ITERATOR_DEBUG_LEVEL` is
+      non-zero, when MSVC's standard library allocates a container proxy for
+      every vector it constructs, by move included.
+   */
+  template<class Container, class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    requires (   std::uses_allocator_v<Container, shared_counting_allocator<T, PropagateCopy, PropagateMove, PropagateSwap>>
+              && std::constructible_from<Container, const shared_counting_allocator<T, PropagateCopy, PropagateMove, PropagateSwap>&>)
+  [[nodiscard]]
+  int allocations_made_by_empty_construction(const shared_counting_allocator<T, PropagateCopy, PropagateMove, PropagateSwap>& allocator)
+  {
+    return allocations_made_by(allocator, [&allocator]() { Container empty(allocator); });
+  }
 
   template<class T>
   struct type_demangler;

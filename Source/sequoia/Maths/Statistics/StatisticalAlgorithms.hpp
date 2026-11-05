@@ -29,7 +29,6 @@
 
 namespace sequoia::maths
 {
-  /** \brief `T`, or the value type of `Data` if `T` is `void`. */
   template<class T, std::ranges::forward_range Data>
     requires std::same_as<T, std::remove_cvref_t<T>>
   using statistic_value_type_t = std::conditional_t<std::is_void_v<T>, std::ranges::range_value_t<Data>, T>;

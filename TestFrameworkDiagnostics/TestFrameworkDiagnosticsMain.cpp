@@ -50,6 +50,9 @@ int main(int argc, char** argv)
     runner.register_test<elementary_false_positive_free_diagnostics>();
     runner.register_test<exceptions_false_negative_free_diagnostics>();
     runner.register_test<exceptions_false_positive_free_diagnostics>();
+    runner.register_test<exception_safety_test_utilities_free_test>();
+    runner.register_test<exception_safety_test_utilities_false_negative_free_diagnostics>();
+    runner.register_test<exception_safety_test_utilities_false_positive_free_diagnostics>();
     runner.register_test<chrono_false_negative_free_diagnostics>();
     runner.register_test<chrono_false_positive_free_diagnostics>();
     runner.register_test<complex_false_negative_free_diagnostics>();
@@ -92,6 +95,7 @@ int main(int argc, char** argv)
     runner.register_test<orderable_regular_allocation_false_negative_diagnostics>();
     runner.register_test<performance_false_negative_diagnostics>();
     runner.register_test<performance_false_positive_diagnostics>();
+    runner.register_test<performance_real_clock_false_positive_diagnostics>();
     runner.register_test<performance_utilities_free_test>();
     runner.register_test<relational_false_negative_diagnostics>();
     runner.register_test<relational_false_positive_diagnostics>();
@@ -119,6 +123,10 @@ int main(int argc, char** argv)
     runner.register_test<critical_path_durations_false_negative_test>();
     runner.register_test<critical_path_durations_regular_test>();
     runner.register_test<instability_analysis_free_test>();
+    runner.register_test<test_runner_reported_durations_free_test>();
+    runner.register_test<coarse_sleeps_free_test>();
+    runner.register_test<test_runner_serial_execution_free_test>();
+    runner.register_test<test_runner_performance_check_outcomes_free_test>();
 
     code = runner.execute();
   }

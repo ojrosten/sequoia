@@ -38,15 +38,6 @@ namespace sequoia::testing
     template<class Graph>
     using transition_graph_type = transition_checker<Graph>::transition_graph;
 
-    template<class Graph, class Mutation>
-    void add_fallible_transition(transition_graph_type<Graph>& trg,
-                                 std::string_view context,
-                                 std::size_t host,
-                                 std::size_t target,
-                                 std::string description,
-                                 std::size_t predictedFallibleSteps,
-                                 Mutation mutation);
-
     template<class Graph>
     void check_transitions(std::string_view context, const transition_graph_type<Graph>& trg);
   };

@@ -57,8 +57,9 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string to_string(const test_execution_completion& completion);
 
-  /** \brief The start time of a test's execution, and its completion if the
-             test has finished.
+  /** \brief The start time and completion of a test's execution.
+
+      `completion` is `std::nullopt` if the execution has not finished.
 
       `operator>>` reads back what `operator<<` writes, provided that the
       start time lies in the years 0 to 32767 and that no duration is

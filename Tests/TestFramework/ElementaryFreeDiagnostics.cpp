@@ -110,9 +110,10 @@ namespace sequoia::testing
       int x{42}, y{42}, z{43};
       int* p{};
       check(equality, "Equality for null vs. non-null pointer", p, &x);
-      check(equality, "Equality for non-null vs null pointer", &x, p);
+      check(equality, "Equality for non-null vs. null pointer", &x, p);
       check(equality, "Equality for different pointers", &x, &y);
       check(equivalence, "Equivalence for null vs. non-null pointer", p, &x);
+      check(equivalence, "Equivalence for non-null vs. null pointer", &x, p);
       check(equivalence, "Different pointers pointing to different values", &x, &z);
     }
 
@@ -120,9 +121,10 @@ namespace sequoia::testing
       const int x{42}, y{42}, z{43};
       const int* p{};
       check(equality, "Equality for null vs. non-null pointer", p, &x);
-      check(equality, "Equality for non-null vs null pointer", &x, p);
+      check(equality, "Equality for non-null vs. null pointer", &x, p);
       check(equality, "Equality for different pointers", &x, &y);
       check(equivalence, "Equivalence for null vs. non-null pointer", p, &x);
+      check(equivalence, "Equivalence for non-null vs. null pointer", &x, p);
       check(equivalence, "Different pointers pointing to different values", &x, &z);
     }
 
@@ -130,9 +132,10 @@ namespace sequoia::testing
       int x{42}, y{42}, z{43};
       int* const p{};
       check(equality, "Equality for null vs. non-null pointer", p, &x);
-      check(equality, "Equality for non-null vs null pointer", &x, p);
+      check(equality, "Equality for non-null vs. null pointer", &x, p);
       check(equality, "Equality for different pointers", &x, &y);
       check(equivalence, "Equivalence for null vs. non-null pointer", p, &x);
+      check(equivalence, "Equivalence for non-null vs. null pointer", &x, p);
       check(equivalence, "Different pointers pointing to different values", &x, &z);
     }
 
@@ -140,9 +143,10 @@ namespace sequoia::testing
       const int x{42}, y{42}, z{43};
       const int* const p{};
       check(equality, "Equality for null vs. non-null pointer", p, &x);
-      check(equality, "Equality for non-null vs null pointer", &x, p);
+      check(equality, "Equality for non-null vs. null pointer", &x, p);
       check(equality, "Equality for different pointers", &x, &y);
       check(equivalence, "Equivalence for null vs. non-null pointer", p, &x);
+      check(equivalence, "Equivalence for non-null vs. null pointer", &x, p);
       check(equivalence, "Different pointers pointing to different values", &x, &z);
     }
 
@@ -150,7 +154,7 @@ namespace sequoia::testing
       volatile int x{42}, y{42};
       volatile int* p{};
       check(equality, "Equality for null vs. non-null pointer", p, &x);
-      check(equality, "Equality for non-null vs null pointer", &x, p);
+      check(equality, "Equality for non-null vs. null pointer", &x, p);
       check(equality, "Equality for different pointers", &x, &y);
     }
 
@@ -158,7 +162,7 @@ namespace sequoia::testing
       const volatile int x{42}, y{42};
       const volatile int* p{};
       check(equality, "Equality for null vs. non-null pointer", p, &x);
-      check(equality, "Equality for non-null vs null pointer", &x, p);
+      check(equality, "Equality for non-null vs. null pointer", &x, p);
       check(equality, "Equality for different pointers", &x, &y);
     }
 
@@ -357,6 +361,7 @@ namespace sequoia::testing
       int* p{};
 
       check(equality, "Equality of null pointer with itself", p, p);
+      check(equivalence, "Equivalence of null pointer with itself", p, p);
       check(equality, "Equality of non-null pointer with itself", &x, &x);
       check(equivalence, "Different pointers pointing to the same values", &x, &y);
     }

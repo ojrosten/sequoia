@@ -26,5 +26,7 @@ namespace sequoia::testing
     void test_dynamic_node_storage();
 
     void test_static_node_storage();
+
+    void test_weights_constructible_from_anything();
   };
 }

@@ -84,7 +84,7 @@ A file which does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to open file output/TestsTemporaryData/TestFramework/TestExecutionRecordRegularTest/test_execution_record_regular_test/WorkingCopy/Missing.txt for reading
+Unable to read file output/TestsTemporaryData/TestFramework/TestExecutionRecordRegularTest/test_execution_record_regular_test/WorkingCopy/Missing.txt
 
 =======================================
 

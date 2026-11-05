@@ -12,7 +12,10 @@
 
  */
 
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
+
+#include <cstddef>
 
 namespace sequoia::maths
 {
@@ -25,7 +28,7 @@ namespace sequoia::maths
     std::size_t pos{};
     while(pos < subGraph.order())
     {
-      if(!nodePred(*(subGraph.cbegin_node_weights() + pos)))
+      if(!nodePred(*(subGraph.cbegin_node_weights() + numeric::unchecked_conversion_to<std::ptrdiff_t>(pos))))
       {
         subGraph.erase_node(pos);
       }

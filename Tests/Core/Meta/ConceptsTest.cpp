@@ -12,8 +12,12 @@
 #include <complex>
 #include <sstream>
 #include <cstdint>
+#include <forward_list>
+#include <iterator>
+#include <list>
 #include <set>
 #include <map>
+#include <ranges>
 #include <vector>
 
 
@@ -62,6 +66,26 @@ namespace sequoia::testing
       neither_copyable_nor_movable(neither_copyable_nor_movable&&)      = delete;
     };
 
+    // Readable, so that only its output category keeps a range over it from
+    // being an input range; such a range still has a value type
+    struct output_only_iterator
+    {
+      using value_type       = int;
+      using difference_type  = std::ptrdiff_t;
+      using iterator_concept = std::output_iterator_tag;
+
+      int* ptr{};
+
+      [[nodiscard]]
+      int& operator*() const { return *ptr; }
+
+      output_only_iterator& operator++() { ++ptr; return *this; }
+
+      output_only_iterator operator++(int) { auto previous{*this}; ++ptr; return previous; }
+    };
+
+    using output_only_range_t = std::ranges::subrange<output_only_iterator, std::unreachable_sentinel_t>;
+
     [[nodiscard]] neither_copyable_nor_movable make_immovable() { return {}; }
     [[nodiscard]] const std::vector<int>&  shared_vector()   { static const std::vector<int> v{}; return v; }
     [[nodiscard]] std::vector<int>         fresh_vector()    { return {}; }
@@ -97,6 +121,7 @@ namespace sequoia::testing
     test_initializable_from();
     test_character();
     test_integer();
+    test_range_of_integers();
     test_invocable_r_concepts();
   }
 
@@ -261,5 +286,23 @@ namespace sequoia::testing
     STATIC_CHECK(!integer<bar>);
     STATIC_CHECK(!integer<int*>);
     STATIC_CHECK(!integer<int&>);
+  }
+
+  void concepts_test::test_range_of_integers()
+  {
+    STATIC_CHECK(range_of_integers<std::vector<int>>);
+    STATIC_CHECK(range_of_integers<const std::vector<int>&>);
+    STATIC_CHECK(range_of_integers<std::list<long>>);
+    STATIC_CHECK(range_of_integers<std::ranges::iota_view<std::size_t, std::size_t>>);
+
+    // The concept requires neither a size nor the multi-pass guarantee
+    STATIC_CHECK(range_of_integers<std::forward_list<unsigned char>>);
+    STATIC_CHECK(range_of_integers<std::ranges::istream_view<int>>);
+
+    STATIC_CHECK(!range_of_integers<std::vector<bool>>);
+    STATIC_CHECK(!range_of_integers<std::vector<char>>);
+    STATIC_CHECK(!range_of_integers<std::vector<double>>);
+    STATIC_CHECK(!range_of_integers<int>);
+    STATIC_CHECK(!range_of_integers<output_only_range_t>);
   }
 }

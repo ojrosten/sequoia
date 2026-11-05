@@ -9,14 +9,14 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "PerformanceTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class performance_exceptions_test final : public performance_test
+  class performance_exceptions_test final : public scripted_clock_test
   {
   public:
-    using performance_test::performance_test;
+    using scripted_clock_test::scripted_clock_test;
 
     [[nodiscard]]
     static std::filesystem::path source_file();
@@ -33,6 +33,8 @@ namespace sequoia::testing
     void test_attempt_with_too_few_trials();
 
     void test_non_positive_durations();
+
+    void test_attempt_number_out_of_range();
 
     void test_more_atypical_trials_than_trials();
 

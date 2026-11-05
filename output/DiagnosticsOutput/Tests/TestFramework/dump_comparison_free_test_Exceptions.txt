@@ -7,3 +7,12 @@ Unable to read the dump output/TestsTemporaryData/TestFramework/DumpComparisonFr
 
 =======================================
 
+Tests/TestFramework/DumpComparisonFreeTest.cpp, Line 95
+A dump which is a directory
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read the dump output/TestsTemporaryData/TestFramework/DumpComparisonFreeTest/dump_comparison_free_test
+
+=======================================
+

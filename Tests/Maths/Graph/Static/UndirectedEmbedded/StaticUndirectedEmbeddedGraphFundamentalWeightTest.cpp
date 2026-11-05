@@ -41,6 +41,8 @@ namespace sequoia::testing
 
   void static_undirected_embedded_graph_fundamental_weight_test::run_tests()
   {
+    test_sort_nodes_in_constant_evaluation();
+
     test_empty<float, double>();
     test_empty<null_weight, double>();
     test_empty<float, null_weight>();
@@ -57,6 +59,38 @@ namespace sequoia::testing
     test_node_1_node_0();
     test_node_1_1_node_0_0();
     test_node_1_1_node_0_0interleaved();
+  }
+
+  void static_undirected_embedded_graph_fundamental_weight_test::test_sort_nodes_in_constant_evaluation()
+  {
+    using graph_t     = static_embedded_graph<7, 5, float, double>;
+    using edge_init_t = graph_t::edge_init_type;
+
+    // The partitions are not all one size. Node 1 holds a loop, and moves to
+    // position 4. So each edge's complementary index remains valid only if
+    // the edge's partition moves whole, in order.
+    STATIC_CHECK(
+      []() {
+        graph_t g{{{edge_init_t{1, 0, 1.0f}, edge_init_t{2, 0, 2.0f}, edge_init_t{4, 1, 6.0f}},
+                   {edge_init_t{0, 0, 1.0f}, edge_init_t{1, 2, 3.0f}, edge_init_t{1, 1, 3.0f}, edge_init_t{3, 2, 7.0f}},
+                   {edge_init_t{0, 1, 2.0f}, edge_init_t{3, 0, 4.0f}},
+                   {edge_init_t{2, 1, 4.0f}, edge_init_t{4, 0, 5.0f}, edge_init_t{1, 3, 7.0f}},
+                   {edge_init_t{3, 1, 5.0f}, edge_init_t{0, 2, 6.0f}}},
+                  {3.0, 4.0, 1.0, 0.0, 2.0}};
+
+        g.sort_nodes([&g](auto i, auto j){ return g.cbegin_node_weights()[i] < g.cbegin_node_weights()[j]; });
+
+        return g == graph_t{{{edge_init_t{1, 1, 4.0f}, edge_init_t{2, 0, 5.0f}, edge_init_t{4, 3, 7.0f}},
+                             {edge_init_t{3, 1, 2.0f}, edge_init_t{0, 0, 4.0f}},
+                             {edge_init_t{0, 1, 5.0f}, edge_init_t{3, 2, 6.0f}},
+                             {edge_init_t{4, 0, 1.0f}, edge_init_t{1, 0, 2.0f}, edge_init_t{2, 1, 6.0f}},
+                             {edge_init_t{3, 0, 1.0f},
+                              edge_init_t{4, 2, 3.0f},
+                              edge_init_t{4, 1, 3.0f},
+                              edge_init_t{0, 2, 7.0f}}},
+                            {0.0, 1.0, 2.0, 3.0, 4.0}};
+      }()
+    );
   }
 
   template<class EdgeWeight, class NodeWeight>

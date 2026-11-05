@@ -1,4 +1,4 @@
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 30
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 31
 Invariant violated by initialization
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ monotonic_sequence_base::monotonic_sequence_base - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 39
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 40
 
 Expected Exception Type:
 [std::logic_error]
@@ -15,7 +15,7 @@ monotonic_sequence_base::push_back - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 42
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 43
 Invariant violated by attempted insertion at beginning
 
 Expected Exception Type:
@@ -24,7 +24,7 @@ monotonic_sequence_base::insert - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 51
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 52
 Invariant violated by attempted insertion in middle
 
 Expected Exception Type:
@@ -33,7 +33,7 @@ monotonic_sequence_base::insert - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 88
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 89
 
 Expected Exception Type:
 [std::logic_error]
@@ -41,7 +41,7 @@ monotonic_sequence::mutate - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 103
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 104
 Invariant violated by initialization
 
 Expected Exception Type:
@@ -50,7 +50,7 @@ monotonic_sequence_base::monotonic_sequence_base - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 145
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 146
 
 Expected Exception Type:
 [std::logic_error]
@@ -58,11 +58,38 @@ monotonic_sequence::mutate - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 152
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 153
 
 Expected Exception Type:
 [std::logic_error]
 monotonic_sequence::mutate - monotonicity violated
+
+=======================================
+
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 170
+Overwriting with fewer values throws
+
+Expected Exception Type:
+[std::logic_error]
+monotonic_sequence::overwrite - the number of values differs from the size
+
+=======================================
+
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 177
+Overwriting with more values throws
+
+Expected Exception Type:
+[std::logic_error]
+monotonic_sequence::overwrite - the number of values differs from the size
+
+=======================================
+
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 184
+Overwriting with values that are not monotonic throws
+
+Expected Exception Type:
+[std::logic_error]
+monotonic_sequence::overwrite - monotonicity violated
 
 =======================================
 

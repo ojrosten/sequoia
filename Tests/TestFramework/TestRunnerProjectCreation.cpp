@@ -7,6 +7,7 @@
 
 #include "TestRunnerProjectCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
+#include "FakeProjectTestingUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 #include "Runtime/ShellCommandsTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
@@ -43,7 +44,11 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{"Project name with space"},
       [this]() {
-        commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "Generated Project").string(), "  "}};
+        commandline_arguments args{fake_project_commandline(working_materials(),
+                                                            "init",
+                                                            "Oliver Jacob Rosten",
+                                                            (working_materials() /= "Generated Project").string(),
+                                                            "  ")};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
@@ -54,7 +59,11 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{"Project name with $"},
       [this]() {
-        commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "Generated$Project").string(), "  "}};
+        commandline_arguments args{fake_project_commandline(working_materials(),
+                                                            "init",
+                                                            "Oliver Jacob Rosten",
+                                                            (working_materials() /= "Generated$Project").string(),
+                                                            "  ")};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", make_project_paths(), outputStream};
@@ -65,7 +74,11 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{"Project path that is not absolute"},
       [this]() {
-        commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", "Generated_Project", "  "}};
+        commandline_arguments args{fake_project_commandline(working_materials(),
+                                                            "init",
+                                                            "Oliver Jacob Rosten",
+                                                            "Generated_Project",
+                                                            "  ")};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
@@ -76,7 +89,11 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{"Empty project path"},
       [this]() {
-        commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", "", "  "}};
+        commandline_arguments args{fake_project_commandline(working_materials(),
+                                                            "init",
+                                                            "Oliver Jacob Rosten",
+                                                            "",
+                                                            "  ")};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
@@ -87,7 +104,11 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{"Project name clash"},
       [this]() {
-        commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", working_materials().string(), "  "}};
+        commandline_arguments args{fake_project_commandline(working_materials(),
+                                                            "init",
+                                                            "Oliver Jacob Rosten",
+                                                            working_materials().string(),
+                                                            "  ")};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
@@ -98,7 +119,11 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{"Illegal indent"},
       [this]() {
-        commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "GeneratedProject").string(), "  "}};
+        commandline_arguments args{fake_project_commandline(working_materials(),
+                                                            "init",
+                                                            "Oliver Jacob Rosten",
+                                                            (working_materials() /= "GeneratedProject").string(),
+                                                            "  ")};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "\t  x ",  make_project_paths(), outputStream};
@@ -109,7 +134,11 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{"Illegal init indent"},
       [this]() {
-        commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "GeneratedProject").string(), "\n"}};
+        commandline_arguments args{fake_project_commandline(working_materials(),
+                                                            "init",
+                                                            "Oliver Jacob Rosten",
+                                                            (working_materials() /= "GeneratedProject").string(),
+                                                            "\n")};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
@@ -124,44 +153,47 @@ namespace sequoia::testing
     return {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}};
   }
 
-  [[nodiscard]]
-  fs::path test_runner_project_creation::fake_project() const
-  {
-    return working_materials() /= "FakeProject";
-  }
-
-  [[nodiscard]]
-  std::string test_runner_project_creation::zeroth_arg() const
-  {
-    return (fake_project() / "build/CMade/FakeExe.txt").generic_string();
-  }
-
   void test_runner_project_creation::test_project_creation()
   {
-    fs::copy(auxiliary_paths::repo(get_project_paths().project_root()), auxiliary_paths::repo(fake_project()), fs::copy_options::recursive);
+    const auto fakeProjectRoot{fake_project_root(working_materials())};
+    fs::copy(auxiliary_paths::repo(get_project_paths().project_root()),
+             auxiliary_paths::repo(fakeProjectRoot),
+             fs::copy_options::recursive);
 
     {
       const auto hostDir{working_materials() /= "GeneratedProject"};
-      commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", hostDir.string(), "  ", "--no-git", "--no-build"}};
+      commandline_arguments args{fake_project_commandline(working_materials(),
+                                                          "init",
+                                                          "Oliver Jacob Rosten",
+                                                          hostDir.string(),
+                                                          "  ",
+                                                          "--no-git",
+                                                          "--no-build")};
 
       std::stringstream outputStream{};
       test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "\t ",  make_project_paths(), outputStream};
 
       check(equality, "Project creation return code", tr.execute(), return_code::success);
 
-      write_to_file(fake_project() / "output" / "io.txt", outputStream.str(), std::ios_base::out);
+      write_to_file(fakeProjectRoot / "output" / "io.txt", outputStream.str(), std::ios_base::out);
 
       check(equivalence, "", hostDir, predictive_materials() /= "GeneratedProject");
-      check(equivalence, "", fake_project(), predictive_materials() /= "FakeProject");
+      check(equivalence, "", fakeProjectRoot, predictive_materials() /= "FakeProject");
     }
 
     {
       const auto hostDir{working_materials() /= "Another_Generated-Project"};
-      commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ", "--no-git", "--no-build"}};
+      commandline_arguments args{fake_project_commandline(working_materials(),
+                                                          "init",
+                                                          "Oliver Jacob Rosten",
+                                                          hostDir.generic_string(),
+                                                          "  ",
+                                                          "--no-git",
+                                                          "--no-build")};
 
       // The .git of a worktree or of a submodule checkout is a file. It is made here because git cannot track a path
       // named .git, and before the runner because constructing the runner performs the init.
-      const transient_file gitFile{fake_project() / "dependencies/sequoia/.git",
+      const transient_file gitFile{fakeProjectRoot / "dependencies/sequoia/.git",
                                    "gitdir: ../../.git/modules/dependencies/sequoia\n"};
 
       std::stringstream outputStream{};
@@ -185,9 +217,13 @@ namespace sequoia::testing
           [&]() {
             const auto argList{
               [&]() {
-                std::vector<std::string> list{zeroth_arg(),
-                                              "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ",
-                                              "--to-files", "GenerationOutput.txt"};
+                auto list{fake_project_commandline(working_materials(),
+                                                   "init",
+                                                   "Oliver Jacob Rosten",
+                                                   hostDir.generic_string(),
+                                                   "  ",
+                                                   "--to-files",
+                                                   "GenerationOutput.txt")};
                 list.append_range(options);
                 return list;
               }()
@@ -209,7 +245,7 @@ namespace sequoia::testing
 
     // Each trigger goes in the fake project's template. test_project_creation has copied the
     // template in.
-    const auto fakeTemplate{auxiliary_paths::project_template(fake_project())};
+    const auto fakeTemplate{auxiliary_paths::project_template(fake_project_root(working_materials()))};
 
     {
       // A `.git` which is a file but not a gitfile makes `git init` fail. git's configuration
@@ -282,8 +318,9 @@ namespace sequoia::testing
     const auto newProjectRoot{working_materials() /= "GeneratedProject"};
     const auto newProjectBuildDir{newProjectRoot / "build/CMade"};
 
-    const transient_directory visualStudioBuild{fake_project() / "build/VisualStudio"},
-                              ninjaBuild{fake_project() / "build/Ninja"};
+    const auto fakeProjectRoot{fake_project_root(working_materials())};
+    const transient_directory visualStudioBuild{fakeProjectRoot / "build/VisualStudio"},
+                              ninjaBuild{fakeProjectRoot / "build/Ninja"};
 
     // CMake records the installation with forward slashes, on every platform
     const auto installation{(visualStudioBuild.path() / "Installation").generic_string()};

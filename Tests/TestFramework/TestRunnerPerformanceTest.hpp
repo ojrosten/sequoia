@@ -28,21 +28,9 @@ namespace sequoia::testing
 
     void test_thread_pool_acceleration();
 
-    void test_serial_execution();
-
-    void test_runner_overhead_reported_apart();
-
-    void test_execution_duration_of_busiest_thread();
-
-    void test_recording_of_performance_check_attempts();
-
-    void test_summary_of_performance_checks_within_other_checks();
-
-    [[nodiscard]]
-    std::filesystem::path fake_project() const;
-
-    [[nodiscard]]
-    std::filesystem::path minimal_fake_path() const;
+    void check_speedup_over_serial_execution(std::string_view description,
+                                             const std::vector<std::string>& arguments,
+                                             relative_performance_interval prediction);
 
     void write(std::string_view dirName, std::string_view printedOutput) const;
 

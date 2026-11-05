@@ -12,6 +12,7 @@
                                  --demangler <tool>...
                                  --recorded-tool <tool>...
                                  --baseline <file>
+  uncalled_functions.py count    --baseline <file>
 
 `baseline` prints, for each file within `<root>/Source`, the keys of the
 file's uncalled functions. `compare` reads a baseline, and counts each key per
@@ -28,6 +29,13 @@ functions is seen. A file with records of lines alone has a record.
 `tighten` prints the baseline with each key of each file counted no more often
 than the file's uncalled functions in the tracefile count it. So `tighten`
 only removes keys, and it drops a file left with none.
+`count` prints, as JSON, `uncalled_functions`, the number of keys the baseline
+lists, a key listed twice counting twice. It also prints `toolchain`: the
+header's lines, sorted into `demanglers` and `tools`. Together they name the
+tools that measured the baseline. It reads no tracefile. The gate fails on an uncalled
+function the baseline lacks, so a tightened baseline made from a run which
+passed the gate lists as many keys as the run found uncalled functions.
+`count` refuses a header line which is neither a demangler nor a tool.
 Each mode exits with status 2 if it refuses its input, or if a tool it runs
 fails.
 
@@ -72,7 +80,7 @@ The tracefile's counts must be gcov's. With check_data_consistency on, lcov
 repairs counts whenever it reads a tracefile, and marks an uncalled lambda as
 called if the lambda's first line ran.
 """
-import argparse, pathlib, re, subprocess, sys
+import argparse, json, pathlib, re, subprocess, sys
 from collections import Counter
 from enum import Enum
 
@@ -170,7 +178,7 @@ def version_of(tool):
     bracketed groups, and with its whitespace collapsed.
 
     Distributions put a package revision in parentheses, as in
-    `g++-15 (Ubuntu 15.2.0-14ubuntu1~24~ppa1) 15.2.0`, so a new revision of
+    `g++-15 (Ubuntu 15.2.0-16ubuntu1) 15.2.0`, so a new revision of
     one release, which may carry fixes from the release branch, records as
     that release: `g++-15 15.2.0`. A prerelease's date and an `-rc` suffix lie
     outside the groups, and are kept. The vendor in a group is lost, so
@@ -491,9 +499,24 @@ def main():
         options.add_argument('--recorded-tool', required=True, action='append')
         if mode != 'baseline':
             options.add_argument('--baseline',  required=True)
+    counting = modes.add_parser('count')
+    counting.add_argument('--baseline', required=True)
     arguments = parser.parse_args()
 
     try:
+        if arguments.mode == 'count':
+            baseline_header, baseline = read_baseline(arguments.baseline)
+            toolchain = {'demanglers': [], 'tools': []}
+            for line in baseline_header:
+                if line.startswith('demangler: '):
+                    toolchain['demanglers'].append(line.removeprefix('demangler: '))
+                elif line.startswith('tool: '):
+                    toolchain['tools'].append(line.removeprefix('tool: '))
+                else:
+                    raise Refusal(f'{arguments.baseline}: the header line is neither a demangler nor a tool: {line}')
+            print(json.dumps({'uncalled_functions': sum(sum(keys.values()) for keys in baseline.values()),
+                              'toolchain':          toolchain}, indent=2))
+            return 0
         traced    = read_tracefile(arguments.tracefile, arguments.repository.rstrip('/') + '/Source')
         functions = {file: starts for file, starts in traced.items() if starts}
         if not functions:

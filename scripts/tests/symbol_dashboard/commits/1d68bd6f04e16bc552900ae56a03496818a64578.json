@@ -1,0 +1,26 @@
+[
+  {
+    "sha": "1d68bd6f04e16bc552900ae56a03496818a64578",
+    "parents": [
+      {
+        "sha": "c154eb088cf2795f40599b78637521955a9bb887"
+      }
+    ],
+    "commit": {
+      "committer": {
+        "date": "2026-10-11T12:00:00Z"
+      },
+      "message": "Merge pull request #1 from ojrosten/one\n\nThe body of the message."
+    }
+  },
+  {
+    "sha": "c154eb088cf2795f40599b78637521955a9bb887",
+    "parents": [],
+    "commit": {
+      "committer": {
+        "date": "2026-10-10T12:00:00Z"
+      },
+      "message": "The root\n\nThe body of the message."
+    }
+  }
+]

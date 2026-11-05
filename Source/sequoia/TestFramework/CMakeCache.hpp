@@ -20,7 +20,11 @@
 
 namespace sequoia::testing
 {
-  /** \brief The families of generator whose project files the framework can recognise; every other generator is `other`. */
+  /** \brief The families of generator whose project files the framework can
+             recognise.
+
+      Every other generator's family is `other`.
+   */
   enum class cmake_generator_family { visual_studio, ninja, other };
 
   /** \brief The variables a build tree's CMakeCache.txt records, read once at construction.

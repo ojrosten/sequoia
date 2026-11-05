@@ -11,9 +11,11 @@
 
 #include "Maths/Graph/GraphTestingUtilities.hpp"
 
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 
+#include <cstddef>
 #include <format>
 
 namespace sequoia::testing
@@ -46,7 +48,11 @@ namespace sequoia::testing
         if constexpr (link_dir != maths::tree_link_direction::backward)
         {
           if constexpr(!std::is_empty_v<node_weight_type>)
-            check(flavour, std::format("Node weight for node {}", node), logger, actual.cbegin_node_weights()[node], prediction.node);
+            check(flavour,
+                  std::format("Node weight for node {}", node),
+                  logger,
+                  actual.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(node)],
+                  prediction.node);
 
           if (auto optIter{ check_num_edges(logger, node, parent, actual, prediction) })
           {
@@ -68,7 +74,11 @@ namespace sequoia::testing
           if (auto optIter{ check_num_edges(logger, node, parent, actual, prediction) })
           {
             if constexpr(!std::is_empty_v<node_weight_type>)
-              check(flavour, std::format("Node weight for node {}", node), logger, actual.cbegin_node_weights()[node], prediction.node);
+              check(flavour,
+                    std::format("Node weight for node {}", node),
+                    logger,
+                    actual.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(node)],
+                    prediction.node);
 
             for (const auto& child : prediction.children)
             {

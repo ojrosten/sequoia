@@ -25,6 +25,7 @@
 #     which ignores SIGTERM (killed 10 s later, even when its parent has
 #     died), and, run through sudo, a grandchild running as root;
 #   - the command's arguments arrive intact, and its standard input is empty;
+#   - each attempt's command finds the attempt's number in RETRY_ATTEMPT;
 #   - nothing outlives the script: no stand-in, no watcher, no flag directory;
 #   - the pause unit is 15 s.
 #
@@ -50,12 +51,13 @@ trap 'clean_up; sudo -n rm -rf "$tmp" 2> /dev/null; rm -rf "$tmp"' EXIT
 tenths() { perl -MTime::HiRes=time -e 'printf "%d\n", time * 10'; }
 
 # The stand-in reads its plan from $tmp/plan, one behaviour per line, takes the
-# line for this run, and records the run, its child or grandchild, and its
-# standard input.
+# line for this run, and records the run, its attempt's number, its child or
+# grandchild, and its standard input.
 cat > "$tmp/standin" <<'STANDIN'
 #!/bin/bash
 dir=$(dirname "$0")
 echo "$$ $*" >> "$dir/runs"
+echo "${RETRY_ATTEMPT-unset}" >> "$dir/attempts"
 cat > "$dir/stdin.$$"
 run=$(wc -l < "$dir/runs")
 behaviour=$(sed -n "${run}p" "$dir/plan")
@@ -81,7 +83,7 @@ retry() {
   local plan=$1
   shift
   printf '%s\n' $plan > "$tmp/plan"
-  rm -f "$tmp/runs" "$tmp"/stdin.* "$tmp/descendant"
+  rm -f "$tmp/runs" "$tmp/attempts" "$tmp"/stdin.* "$tmp/descendant"
   local began
   began=$(tenths)
   TMPDIR="$tmp/temporary" RETRY_PAUSE_SECONDS=${pause-0} ${as_root-} bash "$script" "$@" \
@@ -153,6 +155,7 @@ run_controls() {
   has "the second pause is two units" yes '^Retrying in 2 s$' "$tmp/out"
   [ "$elapsed" -ge 30 ] || fail "the pauses are taken (3 s expected, took $elapsed tenths)"
   has "no error is raised on a success" no '::error::' "$tmp/out"
+  expect "each attempt's command is told its number" "$(tr '\n' ' ' < "$tmp/attempts")" "1 2 3 "
 
   retry "fail-3 fail-3 fail-3 succeed" 3 5 -- "$tmp/standin"
   expect "every attempt failing exits 1" "$status" 1
@@ -249,14 +252,16 @@ mutants=(
   'success when all fail'          'exit 1'  'exit 0'
   'the watcher outlives'           "trap 'kill \"\$sleeper\" 2> /dev/null; exit 0' TERM"  "trap 'exit 0' TERM"
   'the flag directory kept'        "trap 'rm -rf \"\$flag\"' EXIT"  ':'
-  'arguments joined'               '  "$@" < /dev/null &'  '  $* < /dev/null &'
-  'standard input inherited'       '  "$@" < /dev/null &'  '  "$@" &'
+  'arguments joined'               ' "$@" < /dev/null &'  ' $* < /dev/null &'
+  'standard input inherited'       ' "$@" < /dev/null &'  ' "$@" &'
+  'the attempt not told'           'RETRY_ATTEMPT=$attempt "$@"'  '"$@"'
+  'the attempt told from 0'        'RETRY_ATTEMPT=$attempt "$@"'  'RETRY_ATTEMPT=$((attempt - 1)) "$@"'
   'job control left on'            '  set +m
 '  '  :
 '
   'no process group'               '  set -m
-  "$@"'  '  :
-  "$@"'
+  RETRY_ATTEMPT'  '  :
+  RETRY_ATTEMPT'
   'another pause unit'             'pause=${RETRY_PAUSE_SECONDS:-15}'  'pause=${RETRY_PAUSE_SECONDS:-5}'
   'another grace'                  'grace=10'  'grace=3'
 )

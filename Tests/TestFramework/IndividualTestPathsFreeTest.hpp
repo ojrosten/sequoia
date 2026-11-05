@@ -23,16 +23,12 @@ namespace sequoia::testing
 
     void run_tests();
 
+    void test_no_default_construction();
+
     void test_project_folder_deduction();
 
     void test_materials_paths();
 
     void test_ancillary_main_cpps();
-
-    [[nodiscard]]
-    std::filesystem::path fake_project() const;
-
-    [[nodiscard]]
-    std::filesystem::path minimal_fake_path() const;
   };
 }

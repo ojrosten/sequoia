@@ -1,0 +1,66 @@
+{
+  "sha": "80655da8d80aaaf92ce5357e7828dc09adb00993",
+  "tree": [
+    {
+      "path": ".gitattributes",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "symbol-table",
+      "mode": "040000",
+      "type": "tree"
+    },
+    {
+      "path": "symbol-table/linux-gcc-debug",
+      "mode": "040000",
+      "type": "tree"
+    },
+    {
+      "path": "symbol-table/linux-gcc-debug/1d68bd6f04e16bc552900ae56a03496818a64578.json",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "symbol-table/linux-gcc-debug/42bb757493728752cd9717784df9767ec67a2faf.json",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "symbol-table/linux-gcc-debug/4e12898486c1307225e017a1b562ec93b54f28ef.json",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "symbol-table/linux-gcc-debug/6219e699cb3631d5af8d256566f7d25ea90f12de.json",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "symbol-table/linux-gcc-debug/8072fccffa4c9dbd5ffe7ee50b0a2ed8aa036dba.json",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "symbol-table/linux-gcc-debug/a66349a6fa81867de91660d5ff44a3c88c799f2e.json",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "symbol-table/linux-gcc-debug/c154eb088cf2795f40599b78637521955a9bb887.json",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "symbol-table/linux-gcc-debug/df6451817a6dd749a9187c7a277dc8b45290cb5b.json",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "symbol-table/linux-gcc-debug/notes.txt",
+      "mode": "100644",
+      "type": "blob"
+    }
+  ],
+  "truncated": false
+}

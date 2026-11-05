@@ -44,6 +44,7 @@ namespace sequoia::testing
     test_index_type_constraint();
     test_static_storage();
     test_index_type_limit();
+    test_permute_partitions();
   }
 
   void static_partitioned_sequence_test::test_index_type_constraint()
@@ -157,5 +158,38 @@ namespace sequoia::testing
       "Partitions each within the index type, but together beyond it, throw",
       [&makeTwoEqualPartitions]() { return makeTwoEqualPartitions(std::make_index_sequence<limit / 2 + 1>{}); }
     );
+  }
+
+  void static_partitioned_sequence_test::test_permute_partitions()
+  {
+    {
+      using ndc = no_default_constructor;
+      using prediction_t = std::initializer_list<std::initializer_list<ndc>>;
+      using storage_t = static_partitioned_sequence<ndc, 3, 5>;
+
+      constexpr auto storage{
+        [](){
+          storage_t s{{ndc{1}, ndc{1}}, {ndc{0}}, {ndc{2}, ndc{4}}};
+          s.permute_partitions(std::vector<std::size_t>{2, 0, 1});
+          return s;
+        }()
+      };
+
+      check(equivalence,
+            "Permuting partitions in a constant expression moves each whole, though "
+            "the elements have no default constructor",
+            storage,
+            prediction_t{{ndc{0}}, {ndc{2}, ndc{4}}, {ndc{1}, ndc{1}}});
+    }
+
+    {
+      using storage_t = static_partitioned_sequence<int, 2, 3>;
+      storage_t storage{};
+      storage.permute_partitions(std::vector<std::size_t>{1, 0});
+      check(equality,
+            "Permuting partitions which hold none of the elements leaves the sequence unchanged",
+            storage,
+            storage_t{});
+    }
   }
 }

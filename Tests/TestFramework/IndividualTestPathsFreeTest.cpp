@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "IndividualTestPathsFreeTest.hpp"
+#include "FakeProjectTestingUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/IndividualTestPaths.hpp"
@@ -22,44 +23,66 @@ namespace sequoia::testing
     return std::source_location::current().file_name();
   }
 
-  [[nodiscard]]
-  fs::path individual_test_paths_free_test::fake_project() const
-  {
-    return working_materials() /= "FakeProject";
-  }
-
-  [[nodiscard]]
-  fs::path individual_test_paths_free_test::minimal_fake_path() const
-  {
-    return fake_project().append("build/CMade/FakeExe.txt");
-  }
-
   void individual_test_paths_free_test::run_tests()
   {
     using namespace std::string_literals;
 
+    test_no_default_construction();
     test_project_folder_deduction();
     test_materials_paths();
     test_ancillary_main_cpps();
 
-    check_exception_thrown<std::runtime_error>(
-      reporter{"Empty file"},
-      []() { return test_summary_path{"", "foo_test", project_paths{}, null_discriminator}; }
+    // Default project paths give no absolute root. The roots of summaries and
+    // diagnostics are empty; the root of execution records is relative but
+    // not empty. The record's source is absolute, and the others' relative,
+    // so that the checks reach the refusal from both kinds of source.
+    check_exception_thrown<std::invalid_argument>(
+      reporter{"A summary needs an absolute output root"},
+      []() {
+        return test_summary_path{"Tests/Foo.cpp", "foo_test", project_paths{}, null_discriminator};
+      }
     );
 
-    auto summaryFileName{
-      [](const std::optional<std::string>& discriminator) {
-        return test_summary_path{"Foo.cpp", "foo_test", project_paths{}, discriminator}.file_path().generic_string();
+    check_exception_thrown<std::invalid_argument>(
+      reporter{"An execution record needs an absolute output root"},
+      [this]() {
+        return test_execution_record_path{working_materials() / "Tests" / "Foo.cpp", "foo_test", project_paths{}};
       }
-    };
+    );
 
-    check(equality, "Summary with no discriminator",       summaryFileName(null_discriminator), "foo_test.txt"s);
-    check(equality, "Summary with an empty discriminator", summaryFileName(""),                 "foo_test.txt"s);
-    check(equality, "Summary with a discriminator",        summaryFileName("xyz"),              "foo_test_xyz.txt"s);
+    check_exception_thrown<std::invalid_argument>(
+      reporter{"Diagnostics need an absolute output root"},
+      []() {
+        return individual_diagnostics_paths{
+                 project_paths{},
+                 "foo_test",
+                 "Tests/Foo.cpp",
+                 test_mode::standard,
+                 std::nullopt
+               };
+      }
+    );
 
     {
-      commandline_arguments args{{minimal_fake_path().generic_string()}};
+      commandline_arguments args{fake_project_commandline(working_materials())};
       const project_paths projPaths{args.size(), args.get(), {}};
+
+      check_exception_thrown<std::invalid_argument>(
+        reporter{"Empty file"},
+        [&projPaths]() { return test_summary_path{"", "foo_test", projPaths, null_discriminator}; }
+      );
+
+      auto summaryFileName{
+        [&projPaths](const std::optional<std::string>& discriminator) {
+          const test_summary_path summary{"Tests/Foo.cpp", "foo_test", projPaths, discriminator};
+          return summary.file_path().filename().generic_string();
+        }
+      };
+
+      check(equality, "Summary with no discriminator",       summaryFileName(null_discriminator), "foo_test.txt"s);
+      check(equality, "Summary with an empty discriminator", summaryFileName(""),                 "foo_test.txt"s);
+      check(equality, "Summary with a discriminator",        summaryFileName("xyz"),              "foo_test_xyz.txt"s);
+
       check(
         equality,
         reporter{"Absolute Path"},
@@ -91,7 +114,9 @@ namespace sequoia::testing
 
     {
       // As under a multi-config generator, the executable sits a level below its build tree
-      commandline_arguments args{{fake_project().append("build/Foo/CMade/FakeExe.txt").generic_string()}};
+      commandline_arguments args{
+        {fake_project_root(working_materials()).append("build/Foo/CMade/FakeExe.txt").generic_string()}
+      };
       const project_paths projPaths{args.size(), args.get(), {}};
       check(
         equality,
@@ -100,6 +125,13 @@ namespace sequoia::testing
         projPaths.output().dir() / "ExecutionRecords" / "Foo" / "CMade" / "Tests" / "foo_test.txt"
       );
     }
+  }
+
+  void individual_test_paths_free_test::test_no_default_construction()
+  {
+    // A default would name no file: its path would be empty
+    STATIC_CHECK(!std::is_default_constructible_v<test_summary_path>);
+    STATIC_CHECK(!std::is_default_constructible_v<test_execution_record_path>);
   }
 
   void individual_test_paths_free_test::test_project_folder_deduction()
@@ -158,7 +190,7 @@ namespace sequoia::testing
   }
   void individual_test_paths_free_test::test_materials_paths()
   {
-    commandline_arguments args{{minimal_fake_path().generic_string()}};
+    commandline_arguments args{fake_project_commandline(working_materials())};
     const project_paths projPaths{args.size(), args.get(), {}};
 
     const auto source{projPaths.tests().repo() / "Foo" / "Bar.cpp"};
@@ -210,7 +242,7 @@ namespace sequoia::testing
 
   void individual_test_paths_free_test::test_ancillary_main_cpps()
   {
-    commandline_arguments args{{minimal_fake_path().generic_string()}};
+    commandline_arguments args{fake_project_commandline(working_materials())};
     const project_paths projPaths{
       args.size(),
       args.get(),
@@ -223,6 +255,8 @@ namespace sequoia::testing
       }
     };
 
+    const auto fakeProjectRoot{fake_project_root(working_materials())};
+
     auto fileOf{[](const main_paths& ancillaryMain) { return ancillaryMain.file(); }};
     const auto files{
       projPaths.ancillary_main_cpps() | std::views::transform(fileOf) | std::ranges::to<std::vector>()
@@ -232,8 +266,8 @@ namespace sequoia::testing
       equality,
       "Each ancillary main is located from the project root",
       files,
-      std::vector<fs::path>{fake_project() / "TestChamber/TestChamberMain.cpp",
-                            fake_project() / "TestFrameworkDiagnostics/TestFrameworkDiagnosticsMain.cpp"}
+      std::vector<fs::path>{fakeProjectRoot / "TestChamber/TestChamberMain.cpp",
+                            fakeProjectRoot / "TestFrameworkDiagnostics/TestFrameworkDiagnosticsMain.cpp"}
     );
 
     auto commonIncludesOf{[](const main_paths& ancillaryMain) { return ancillaryMain.common_includes(); }};
@@ -245,7 +279,7 @@ namespace sequoia::testing
       equality,
       "Each ancillary main shares the common includes of the main",
       commonIncludes,
-      std::vector<fs::path>(2, fake_project() / "TestCommon/TestIncludes.hpp")
+      std::vector<fs::path>(2, fakeProjectRoot / "TestCommon/TestIncludes.hpp")
     );
   }
 }

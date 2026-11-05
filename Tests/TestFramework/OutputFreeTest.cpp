@@ -195,6 +195,19 @@ namespace sequoia::testing
     check(equality, "", tidy_name("<1ul, 0f>",    clang_type{}), "<1, 0>"s);
     check(equality, "", tidy_name("<2ul, 1f>",    clang_type{}), "<2, 1>"s);
     check(equality, "", tidy_name("<textued_2d>", clang_type{}), "<textued_2d>"s);
+
+    check(equality,
+          "A hexadecimal float, as libc++abi writes one",
+          tidy_name("value_holder<0x1.8p+0>", clang_type{}),
+          "value_holder<1.500000>"s
+    );
+
+    check(equality,
+          "A negative hexadecimal float with a suffix",
+          tidy_name("value_holder<-0x1p-2f>", clang_type{}),
+          "value_holder<-0.250000>"s
+    );
+
     check(equality, "", tidy_name("struct foo", msvc_type{}), "foo"s);
     check(equality, "MSVC function type",         tidy_name("int __cdecl(void)",    msvc_type{}), "int ()"s);
     check(equality, "MSVC pointer to function",   tidy_name("int (__cdecl*)(void)", msvc_type{}), "int (*)()"s);

@@ -39,8 +39,13 @@ namespace sequoia::testing
     friend bool operator==(const dump_comparison&, const dump_comparison&) noexcept = default;
   };
 
-  /** \brief The top-level checks recorded in a dump, each with its nested checks, without
-             surrounding newlines, in the order run. A check which recorded nothing is not among them.
+  /** \brief Reads the top-level checks recorded in `dump`, in the order run.
+
+      Each check is read with its nested checks, and without surrounding
+      newlines. A check which recorded nothing is not among them.
+
+      \throws std::runtime_error if `dump` is not a regular file,
+              or cannot be opened.
    */
   [[nodiscard]]
   std::vector<std::string> read_dump(const std::filesystem::path& dump);
@@ -49,13 +54,18 @@ namespace sequoia::testing
 
       \returns The checks in the baseline and not the dump (`missing`), and in the dump and not
                the baseline (`added`), each in the order they appear in the dump which holds them.
-      \throws std::runtime_error if either file cannot be read.
+      \throws std::runtime_error if `baseline` or `dump` is not a regular file,
+              or cannot be opened.
    */
   [[nodiscard]]
   dump_comparison compare_dumps(const std::filesystem::path& baseline, const std::filesystem::path& dump);
 
-  /** \brief A report of a comparison, naming the baseline: a summary line, then the missing and
-             added checks under headings, each as its location and the first line after it.
+  /** \brief Returns a report of `comparison`.
+
+      The report names `baselineName` as the baseline, counts the missing and
+      added checks, and lists each group under a heading. Each check is shown
+      as its location and, if there is one, the first non-empty line after the
+      location.
    */
   [[nodiscard]]
   std::string to_string(const dump_comparison& comparison, std::string_view baselineName);

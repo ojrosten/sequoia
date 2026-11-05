@@ -67,7 +67,7 @@ namespace sequoia::testing
     using value_type     = T;
     using allocator_type = Allocator;
 
-    move_only_beast(std::initializer_list<T> list) : x{list} {}
+    move_only_beast(std::initializer_list<T> list) : x(list) {}
 
     move_only_beast(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -100,9 +100,10 @@ namespace sequoia::testing
     friend bool operator==(const move_only_beast&, const move_only_beast&) noexcept = default;
 
     template<class Stream>
+      requires serializable<T>
     friend Stream& operator<<(Stream& s, const move_only_beast& b)
     {
-      for(const auto& i : b.x) s << i << '\n';
+      for(const auto& i : b.x) s << serializer<T>::make(i) << '\n';
       return s;
     }
   };
@@ -116,7 +117,7 @@ namespace sequoia::testing
     using     value_type = T;
     using allocator_type = Allocator;
 
-    move_only_specified_moved_from_beast(std::initializer_list<T> list) : x{list} {}
+    move_only_specified_moved_from_beast(std::initializer_list<T> list) : x(list) {}
 
     move_only_specified_moved_from_beast(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -175,7 +176,7 @@ namespace sequoia::testing
     using value_type     = T;
     using allocator_type = Allocator;
 
-    move_only_broken_equality(std::initializer_list<T> list) : x{list} {}
+    move_only_broken_equality(std::initializer_list<T> list) : x(list) {}
 
     move_only_broken_equality(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -225,7 +226,7 @@ namespace sequoia::testing
     using     value_type = T;
     using allocator_type = Allocator;
 
-    move_only_broken_inequality(std::initializer_list<T> list) : x{list} {}
+    move_only_broken_inequality(std::initializer_list<T> list) : x(list) {}
 
     move_only_broken_inequality(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -275,7 +276,7 @@ namespace sequoia::testing
     using value_type     = T;
     using allocator_type = Allocator;
 
-    move_only_broken_move(std::initializer_list<T> list) : x{list} {}
+    move_only_broken_move(std::initializer_list<T> list) : x(list) {}
 
     move_only_broken_move(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -329,7 +330,7 @@ namespace sequoia::testing
     using value_type     = T;
     using allocator_type = Allocator;
 
-    move_only_broken_move_assignment(std::initializer_list<T> list) : x{list} {}
+    move_only_broken_move_assignment(std::initializer_list<T> list) : x(list) {}
 
     move_only_broken_move_assignment(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -384,7 +385,7 @@ namespace sequoia::testing
     using value_type     = T;
     using allocator_type = Allocator;
 
-    move_only_broken_swap(std::initializer_list<T> list) : x{list} {}
+    move_only_broken_swap(std::initializer_list<T> list) : x(list) {}
 
     move_only_broken_swap(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -434,7 +435,7 @@ namespace sequoia::testing
     using value_type     = T;
     using allocator_type = Allocator;
 
-    move_only_inefficient_move(std::initializer_list<T> list) : x{list} {}
+    move_only_inefficient_move(std::initializer_list<T> list) : x(list) {}
 
     move_only_inefficient_move(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
@@ -495,7 +496,7 @@ namespace sequoia::testing
     using value_type     = T;
     using allocator_type = Allocator;
 
-    move_only_inefficient_move_assignment(std::initializer_list<T> list) : x{list} {}
+    move_only_inefficient_move_assignment(std::initializer_list<T> list) : x(list) {}
 
     move_only_inefficient_move_assignment(std::initializer_list<T> list, const allocator_type& a)
       : x(list, a)

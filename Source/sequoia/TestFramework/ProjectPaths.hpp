@@ -241,11 +241,14 @@ namespace sequoia::testing
       return m_CMakeCacheDir;
     }
 
-    /** \brief The name of `executable_dir()` if its parent is `cmake_cache_dir()`; otherwise empty.
+    /** \brief Returns the name of `executable_dir()` if its parent is
+               `cmake_cache_dir()`.
 
-        By default, a multi-config build puts each configuration's executable in a directory named
-        after the configuration, directly within the build tree. For such a build, the name is the
-        executable's configuration.
+        Otherwise, returns an empty string.
+
+        By default, a multi-config build puts each configuration's executable
+        in a directory named after the configuration, directly within the build
+        tree. For such a build, the name is the executable's configuration.
      */
     [[nodiscard]]
     std::string configuration() const;
@@ -319,8 +322,6 @@ namespace sequoia::testing
   class recovery_paths
   {
   public:
-    recovery_paths() = default;
-
     explicit recovery_paths(const std::filesystem::path& outputDir);
 
     [[nodiscard]]
@@ -357,8 +358,6 @@ namespace sequoia::testing
   class drift_paths
   {
   public:
-    drift_paths() = default;
-
     explicit drift_paths(const std::filesystem::path& outputDir);
 
     [[nodiscard]]
@@ -384,8 +383,6 @@ namespace sequoia::testing
   class prune_paths
   {
   public:
-    prune_paths() = default;
-
     prune_paths(std::filesystem::path outputDir, const std::filesystem::path& buildRoot, const std::filesystem::path& buildDir);
 
     [[nodiscard]]
@@ -429,8 +426,6 @@ namespace sequoia::testing
   class execution_record_paths
   {
   public:
-    execution_record_paths() = default;
-
     execution_record_paths(std::filesystem::path outputDir,
                            const std::filesystem::path& buildRoot,
                            const std::filesystem::path& executableDir);

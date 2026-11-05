@@ -21,6 +21,7 @@ namespace sequoia::testing
     test_decreasing_sequence();
     test_static_decreasing_sequence();
     test_static_increasing_sequence();
+    test_overwrite();
   }
 
   void monotonic_sequence_test::test_decreasing_sequence()
@@ -153,5 +154,51 @@ namespace sequoia::testing
         u.mutate(u.begin()+1, u.begin()+4,[](const int i){ return i*2;});});
 
     check(equivalence, "", u, std::initializer_list<int>{2,3,3,4,4,5});
+  }
+
+  void monotonic_sequence_test::test_overwrite()
+  {
+    using namespace maths;
+
+    monotonic_sequence<int> s{8, 4, 3};
+    s.overwrite(std::array{9, 9, 1});
+    check(equivalence,
+          "Overwriting with as many monotonic values replaces every element",
+          s,
+          std::initializer_list<int>{9, 9, 1});
+
+    check_exception_thrown<std::logic_error>("Overwriting with fewer values throws",
+                                             [&s](){ s.overwrite(std::array{7, 7}); });
+    check(equivalence,
+          "Overwriting with fewer values leaves the sequence unchanged",
+          s,
+          std::initializer_list<int>{9, 9, 1});
+
+    check_exception_thrown<std::logic_error>("Overwriting with more values throws",
+                                             [&s](){ s.overwrite(std::array{9, 9, 1, 0}); });
+    check(equivalence,
+          "Overwriting with more values leaves the sequence unchanged",
+          s,
+          std::initializer_list<int>{9, 9, 1});
+
+    check_exception_thrown<std::logic_error>("Overwriting with values that are not monotonic throws",
+                                             [&s](){ s.overwrite(std::array{1, 9, 9}); });
+    check(equivalence,
+          "Overwriting with values that are not monotonic leaves the sequence unchanged",
+          s,
+          std::initializer_list<int>{9, 9, 1});
+
+    constexpr auto t{
+      [](){
+        static_monotonic_sequence<int, 3, std::greater<int>> u{1, 2, 3};
+        u.overwrite(std::array{0, 4, 4});
+        return u;
+      }()
+    };
+
+    check(equivalence,
+          "Overwriting a static sequence in a constant expression replaces every element",
+          t,
+          std::initializer_list<int>{0, 4, 4});
   }
 }

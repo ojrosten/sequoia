@@ -125,6 +125,34 @@ namespace sequoia::testing
       fs::file_time_type m_DirectoryTime{};
     };
 
+    /** An RAII wrapper to make a directory symlink. The destructor removes
+        the symlink, and restores the modification time of the symlink's
+        directory.
+     */
+    class directory_symlink_for_scope
+    {
+    public:
+      directory_symlink_for_scope(const fs::path& target, fs::path symlink)
+        : m_Symlink{std::move(symlink)}
+        , m_DirectoryTime{fs::last_write_time(m_Symlink.parent_path())}
+      {
+        fs::create_directory_symlink(target, m_Symlink);
+      }
+
+      directory_symlink_for_scope(const directory_symlink_for_scope&)            = delete;
+      directory_symlink_for_scope& operator=(const directory_symlink_for_scope&) = delete;
+
+      ~directory_symlink_for_scope()
+      {
+        std::error_code error{};
+        fs::remove(m_Symlink, error);
+        fs::last_write_time(m_Symlink.parent_path(), m_DirectoryTime, error);
+      }
+    private:
+      fs::path m_Symlink{};
+      fs::file_time_type m_DirectoryTime{};
+    };
+
     [[nodiscard]]
     constexpr fs::file_time_type stamp_at(std::chrono::milliseconds sinceEpoch)
     {
@@ -247,9 +275,11 @@ namespace sequoia::testing
      includes. The fake project has the layout of a project which `init` created, so the sequoia
      headers which its tests include lie within the project's copy of sequoia.
 
-     The fake build names a directory of the real sequoia as one of the toolchain's. The toolchain
-     headers which a unit reads from that directory therefore exist, and lie outside the fake project,
-     as a toolchain's headers would.
+     Every file the fake build reads from outside the fake project is the
+     toolchain's. Some units read headers of the real sequoia's: files which
+     exist, and which lie outside the fake project. Every unit reads a
+     stand-in for a header of the compiler's. The stand-in lies beside the
+     fake project, so outside the fake project's root.
    */
   namespace
   {
@@ -311,11 +341,43 @@ namespace sequoia::testing
       return units;
     }
 
-    /// The fake project's stand-in for a toolchain header, read by every unit, which the tests may touch
+    /** The stand-in for a header of the compiler's. Every unit reads the
+        stand-in, and the tests may touch it. The stand-in lies beside `fake`,
+        so outside the fake project's root.
+     */
     [[nodiscard]]
     fs::path fake_toolchain_header(const fs::path& fake)
     {
-      return fake / "Toolchain" / "include" / "vector";
+      return fake.parent_path() / "Toolchain" / "include" / "vector";
+    }
+
+    /** The fake project's path through a symlink. The tests make the symlink
+        beside `fake`, so outside the fake project's root.
+     */
+    [[nodiscard]]
+    fs::path fake_project_via_symlink(const fs::path& fake)
+    {
+      return fake.parent_path() / "LinkedFakeProject";
+    }
+
+    /** Where a copy of the fake project's `Stuff/Foo.cpp` goes: beside the
+        stand-in toolchain header's directory, so outside the fake project's
+        root.
+     */
+    [[nodiscard]]
+    fs::path foo_cpp_outside_the_root(const fs::path& fake)
+    {
+      return fake.parent_path() / "Toolchain" / "src" / "Foo.cpp";
+    }
+
+    /** The path of the stand-in toolchain header's directory through a
+        symlink. The tests make the symlink within `fake`, so within the fake
+        project's root.
+     */
+    [[nodiscard]]
+    fs::path toolchain_header_directory_via_symlink(const fs::path& fake)
+    {
+      return fake / "LinkedToolchainDirectory";
     }
   }
 
@@ -390,7 +452,24 @@ namespace sequoia::testing
       [sources, &isTest](const unit& u) { return (sources != recorded_sources::all_but_the_tests) || !isTest(u); }
     };
 
-    const auto root{(sources == recorded_sources::all_under_another_root) ? fake.parent_path() / "AnotherRoot" : fake};
+    auto compiledFromOutside{
+      [sources](const unit& u) {
+        return (sources == recorded_sources::foo_cpp_compiled_from_outside)
+            && (u.source == "Source/fakeProject/Stuff/Foo.cpp");
+      }
+    };
+
+    const auto root{
+        (sources == recorded_sources::all_under_another_root) ? fake.parent_path() / "AnotherRoot"
+      : (sources == recorded_sources::through_symlinks)       ? fake_project_via_symlink(fake)
+      :                                                         fake
+    };
+
+    const auto recordedToolchainHeader{
+        (sources == recorded_sources::through_symlinks)
+      ? toolchain_header_directory_via_symlink(fake) / fake_toolchain_header(fake).filename()
+      : fake_toolchain_header(fake)
+    };
 
     // Under `sources_relative`, the record spells the paths of the fake project's sources as a build given relative
     // paths spells them: relative to the build directory, and not lexically normal
@@ -418,19 +497,31 @@ namespace sequoia::testing
           {
             record.inputs.push_back(realSequoiaSourceRepo / input);
           }
-          record.inputs.push_back(fake_toolchain_header(fake));
+          if(compiledFromOutside(u))
+          {
+            record.inputs.front() = foo_cpp_outside_the_root(fake);
+            record.inputs.push_back(recordedPath("Source/fakeProject/Stuff/Baz.hpp"));
+          }
+          record.inputs.push_back(recordedToolchainHeader);
           return record;
         };
       }
     };
 
-    // What the build tree says of itself; the fake project's source dir is itself, and two directories stand in for
-    // the toolchain's: one of the real sequoia's, and one of the fake project's own
+    if(const auto copy{foo_cpp_outside_the_root(fake)};
+       (sources == recorded_sources::foo_cpp_compiled_from_outside) && !fs::exists(copy))
+    {
+      // Once, like the stand-in header
+      fs::create_directories(copy.parent_path());
+      fs::copy_file(fake / "Source/fakeProject/Stuff/Foo.cpp", copy);
+      fs::last_write_time(copy, m_ResetTime);
+    }
     if(const auto header{fake_toolchain_header(fake)}; !fs::exists(header))
     {
       // Once: the artefacts are written several times over, and the header's modification time is the tests' to set
       fs::create_directories(header.parent_path());
       write_to_file(header, "", std::ios_base::out);
+      fs::last_write_time(header, m_ResetTime);
     }
     fs::remove_all(buildDir / "CMakeFiles");
     fs::remove_all(buildDir / "TestAll.dir");
@@ -444,14 +535,10 @@ namespace sequoia::testing
     {
       fs::create_directories(buildDir / objects_of(system, target, visualStudioConfiguration).directory);
     }
-    fs::create_directories(buildDir / "CMakeFiles" / "4.1.2");
+    // The salient properties of the fake build tree. The fake project is
+    // its own source directory
     write_to_file(buildDir / "CMakeCache.txt",
                   std::format("# Fake\nCMAKE_GENERATOR:INTERNAL={}\nCMAKE_HOME_DIRECTORY:INTERNAL={}\n", ninja ? "Ninja" : "Visual Studio 18 2026", fake.generic_string()),
-                  std::ios_base::out);
-    write_to_file(buildDir / "CMakeFiles" / "4.1.2" / "CMakeCXXCompiler.cmake",
-                  std::format("set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"{};{}\")\n",
-                              (realSequoiaSourceRepo / "sequoia" / "TextProcessing").generic_string(),
-                              fake_toolchain_header(fake).parent_path().generic_string()),
                   std::ios_base::out);
 
     if(ninja)
@@ -478,10 +565,22 @@ namespace sequoia::testing
       statements.append(std::format("build {}/unrelated{}: CXX_COMPILER unrelated.cpp\n",
                                     testAllObjects.directory.generic_string(),
                                     testAllObjects.extension));
-      auto logged{records};
+
+      /* The first record is superseded by the record of the same object which
+         follows it. It, and the retired object's record, each name a header of
+         a toolchain directory since removed: prune must not refuse on account
+         of a file which no current compilation reads.
+       */
+      const auto removedToolchainDirectory{fake_toolchain_header(fake).parent_path() / "RemovedVersion"};
+      std::vector<compilation_record> logged{
+        {.object{records.front().object}, .inputs{records.front().inputs.front(), removedToolchainDirectory / "chrono"}}
+      };
+      logged.insert(logged.end(), records.begin(), records.end());
       logged.push_back({.object{testAllObjects.directory
                                   / std::format("Tests/Retired/RetiredTest.cpp{}", testAllObjects.extension)},
-                        .inputs{fake / "Tests/Retired/RetiredTest.cpp", fake / "Tests/Retired/Gone.hpp"}});
+                        .inputs{fake / "Tests/Retired/RetiredTest.cpp",
+                                fake / "Tests/Retired/Gone.hpp",
+                                removedToolchainDirectory / "ratio"}});
 
       // MSVC reports the headers it read but not the source, which the statement supplies
       if(system == build_system::ninja_with_msvc)
@@ -583,6 +682,8 @@ namespace sequoia::testing
 
     test_exceptions(projPaths);
     test_recorded_sources(projPaths);
+    test_paths_recorded_through_symlinks(projPaths);
+    test_object_compiled_from_outside_the_root(projPaths);
     test_dependencies(projPaths);
     test_sequoia_sources();
     test_sequoia_change(projPaths, build_system::ninja);
@@ -651,7 +752,9 @@ namespace sequoia::testing
           stamp_at(-3000ms));
   }
 
-  /// The out-of-date message names a file and two time stamps, none of which is stable across machines
+  /** The out-of-date message names two time stamps, which are not stable
+      across machines, and a file, which is masked if it is the fake project's
+   */
   std::string dependency_analyzer_free_test::normalise_out_of_date_message(const project_paths& paths, std::string message)
   {
     message = default_exception_message_postprocessor{}(paths, std::move(message));
@@ -727,6 +830,17 @@ namespace sequoia::testing
       },
       normalise_out_of_date_message
     );
+
+    // A toolchain header a current compilation reads is still refused when unreadable: the files no current
+    // compilation reads are dropped for being unread, not for being missing
+    check_exception_thrown<std::runtime_error>(
+      "A toolchain header the build read cannot be read",
+      [&projPaths, &toolchainHeader]() {
+        const hidden_for_scope hidden{toolchainHeader};
+        return tests_to_run(projPaths);
+      },
+      normalise_out_of_date_message
+    );
   }
 
   /* A project with no tests selects nothing and says nothing, so that the runner can say "try creating
@@ -770,6 +884,85 @@ namespace sequoia::testing
     fs::last_write_time(toolchainHeader, m_ResetTime);
 
     fs::remove_all(anotherRoot);
+    write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
+  }
+
+  /* Prune classifies each file the build read by the file's resolved path.
+     Here the record spells the fake project through a symlink outside the
+     fake project's root. The record spells the stand-in toolchain header
+     through a symlink within that root. If prune classified each file as
+     spelled by the record:
+     -# The project's files would be the toolchain's, so a change to a
+        test's source would run every test;
+     -# The stand-in header would be the project's, so a change to the
+        stand-in would select every test through the graph, rather than
+        fall back to running every test.
+     The check of the stand-in also fails if a file is the project's when
+     either of its spellings lies within the root.
+   */
+  void dependency_analyzer_free_test::test_paths_recorded_through_symlinks(const project_paths& projPaths)
+  {
+    const auto fake{auxiliary_materials() /= "FakeProject"};
+    fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
+
+    const auto toolchainHeader{fake_toolchain_header(fake)};
+    {
+      const directory_symlink_for_scope projectSymlink{fake, fake_project_via_symlink(fake)};
+      const directory_symlink_for_scope toolchainSymlink{toolchainHeader.parent_path(),
+                                                         toolchain_header_directory_via_symlink(fake)};
+      write_build_artefacts(fake, build_system::ninja, recorded_sources::through_symlinks);
+
+      check_tests_to_run("Test cpp stale, recorded through a symlink to the project",
+                         projPaths,
+                         {.stale{{{projPaths.tests().repo() / "HouseAllocationTest.cpp"}, modification_time::early}},
+                           .to_run{{"HouseAllocationTest.cpp"}}},
+                         {},
+                         {});
+
+      fs::last_write_time(toolchainHeader, m_ResetTime + earlyEditOffset);
+      check(equality,
+            "Toolchain header stale, recorded through a symlink within the project: every test runs",
+            (tests_to_run(projPaths)),
+            test_selection{prune_fallback_reason::toolchain_changed});
+      fs::last_write_time(toolchainHeader, m_ResetTime);
+    }
+
+    write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
+  }
+
+  /* The record compiles `Stuff/Foo.cpp` from a copy outside the fake
+     project's root, and the compilation reads the project's `Foo.hpp` and
+     `Baz.hpp`. The copy is the toolchain's, so a change to it runs every
+     test. The object compiled from the copy is a node, which the stem rule
+     joins to `Foo.hpp`. So a change to `Baz.hpp` selects the tests which read
+     `Foo.hpp`, besides `BarFreeTest`, which reads `Baz.hpp` itself.
+   */
+  void dependency_analyzer_free_test::test_object_compiled_from_outside_the_root(const project_paths& projPaths)
+  {
+    const auto fake{auxiliary_materials() /= "FakeProject"};
+    fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
+
+    write_build_artefacts(fake, build_system::ninja, recorded_sources::foo_cpp_compiled_from_outside);
+
+    const auto copy{foo_cpp_outside_the_root(fake)};
+    fs::last_write_time(copy, m_ResetTime + earlyEditOffset);
+    check(equality,
+          "Copy of a source outside the project stale: every test runs",
+          (tests_to_run(projPaths)),
+          test_selection{prune_fallback_reason::toolchain_changed});
+    fs::last_write_time(copy, m_ResetTime);
+
+    check_tests_to_run("Header read only by an object compiled from outside the project",
+                       projPaths,
+                       {.stale{{{projPaths.source().project() / "Stuff" / "Baz.hpp"}, modification_time::early}},
+                         .to_run{{"Stuff/BarFreeTest.cpp"},
+                                 {"Stuff/FooTest.cpp"},
+                                 {"Stuff/FooTestingDiagnostics.cpp"},
+                                 {"Utilities/Thing/UniqueThingTest.cpp"},
+                                 {"Utilities/Thing/UniqueThingTestingDiagnostics.cpp"}}},
+                       {},
+                       {});
+
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
   }
 
@@ -1090,8 +1283,9 @@ namespace sequoia::testing
       check(equality,
             "A record which names no object compiled from sequoia's sources",
             warningFor(toolchain.parent_path()),
-            std::format("{}the build's record names no object compiled from within FakeProject/Toolchain/include\n",
-                        notCheckedPreface));
+            std::format("{}the build's record names no object compiled from within {}\n",
+                        notCheckedPreface,
+                        toolchain.parent_path().generic_string()));
     }
 
     {

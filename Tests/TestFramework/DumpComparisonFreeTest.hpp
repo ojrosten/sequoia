@@ -9,7 +9,7 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/DumpFormat.hpp"
+#include "sequoia/TestFramework/SeparatorAfterCheck.hpp"
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 
 namespace sequoia::testing

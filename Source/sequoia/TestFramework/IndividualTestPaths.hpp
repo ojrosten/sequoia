@@ -77,8 +77,8 @@ namespace sequoia::testing
       return m_MaterialsDiscriminator;
     }
 
-    /** \brief The original root: `original_test_root()`, followed by the materials discriminator if one
-        was given.
+    /** \brief Returns `original_test_root()`, followed by the materials
+               discriminator if one was given.
      */
     [[nodiscard]]
     std::filesystem::path original_materials_root() const;
@@ -123,11 +123,19 @@ namespace sequoia::testing
                                const std::optional<std::string>& materialsDiscriminator);
   };
 
+  /** \brief Paths of the files holding a test's diagnostics.
+
+      A default-constructed instance holds two empty paths.
+   */
   class individual_diagnostics_paths
   {
   public:
     individual_diagnostics_paths() = default;
 
+    /** \throws std::invalid_argument if `source` is empty
+        \throws std::invalid_argument if `projPaths.output().diagnostics()` is
+                not absolute
+     */
     individual_diagnostics_paths(const project_paths& projPaths, std::string_view testName, const std::filesystem::path& source, test_mode mode, const std::optional<std::string>& platform);
 
     [[nodiscard]]
@@ -146,14 +154,19 @@ namespace sequoia::testing
     friend bool operator==(const individual_diagnostics_paths&, const individual_diagnostics_paths&) noexcept = default;
   private:
     std::filesystem::path
-      m_Diagnostics,
-      m_CaughtExceptions;
+      m_Diagnostics{},
+      m_CaughtExceptions{};
   };
 
-  class test_summary_path {
-  public:
-    test_summary_path() = default;
+  /** \brief The path of the file holding a test's summary.
 
+      \throws std::invalid_argument if `sourceFile` is empty
+      \throws std::invalid_argument if `projectPaths.output().test_summaries()`
+              is not absolute
+   */
+  class test_summary_path
+  {
+  public:
     test_summary_path(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projectPaths, const std::optional<std::string>& summaryDiscriminator);
 
     [[nodiscard]]
@@ -162,18 +175,18 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator==(const test_summary_path&, const test_summary_path&) noexcept = default;
   private:
-    std::filesystem::path m_Summary;
+    std::filesystem::path m_Summary{};
   };
 
-  /** \brief The path to where a test writes the records of its executions.
+  /** \brief The path of the file holding the records of a test's executions.
 
-      The path is empty for default project paths.
+      \throws std::invalid_argument if `sourceFile` is empty
+      \throws std::invalid_argument if `projectPaths.execution_records().dir()`
+              is not absolute
    */
   class test_execution_record_path
   {
   public:
-    test_execution_record_path() = default;
-
     test_execution_record_path(const std::filesystem::path& sourceFile,
                                std::string_view testName,
                                const project_paths& projectPaths);

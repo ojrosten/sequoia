@@ -29,6 +29,10 @@ name: fine-on-retarget
 # except that a pull request's opened, synchronize or reopened event starts
 # one that waits for approval.
 #
+# A dispatched run's checks do not count towards required checks, so the
+# dispatch sets fine's `report_as_status`. fine's audit then also posts its
+# outcome as a commit status, which counts; the audit's last step says why.
+#
 # Why the dispatched run makes its own merge. Even a pull_request run would
 # test the wrong tree: GitHub's merge ref can stay merged into the old base
 # for minutes after a retarget. On scratch PR #201 the ref was still stale
@@ -58,9 +62,11 @@ name: fine-on-retarget
 #     workflows from the merge commit, and after a retarget that is the stale
 #     merge. If neither the head nor the old base holds this file, nothing
 #     runs, and the pull request waits as before. If this file runs but the
-#     head's fine.yml has no workflow_dispatch, GitHub is documented to refuse
-#     the dispatch, and the job fails. Neither case has been seen here. A push
-#     starts fine in both.
+#     head's fine.yml has no `report_as_status` input, GitHub refuses the
+#     dispatch, and the job fails. A push starts fine in both.
+#   - A status that fine's audit fails to post. The audit goes red in the
+#     dispatched run, which shows on no pull request, so the pull request
+#     waits as before. A push starts fine.
 #   - A pull request that conflicts with its new base. GitHub starts no
 #     pull_request run for such a pull request, so neither this workflow nor
 #     fine runs. Resolving the conflict needs a push, and the push starts fine.
@@ -95,7 +101,8 @@ jobs:
           # The run's details come back from the dispatch itself, so a dispatch
           # that started nothing cannot pass for one that did.
           if ! run=$(gh api -X POST "repos/$GH_REPO/actions/workflows/fine.yml/dispatches" \
-                       -f ref="$HEAD_REF" -F return_run_details=true --jq .workflow_run_id); then
+                       -f ref="$HEAD_REF" -f 'inputs[report_as_status]=true' \
+                       -F return_run_details=true --jq .workflow_run_id); then
             echo "::error::GitHub refused to dispatch fine on $HEAD_REF: push to the pull request to start fine"
             exit 1
           fi

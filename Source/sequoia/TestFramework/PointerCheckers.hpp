@@ -44,13 +44,9 @@ namespace sequoia::testing
       }
       else
       {
-        const auto obtainedIsNull{static_cast<bool>(obtained)}, predictionIsNull{static_cast<bool>(prediction)};
+        const auto obtainedHoldsValue{static_cast<bool>(obtained)}, predictedHoldsValue{static_cast<bool>(prediction)};
 
-        check(equality,
-              nullable_type_message(obtainedIsNull, predictionIsNull),
-              logger,
-              obtainedIsNull,
-              predictionIsNull);
+        check(both_or_neither_null(), "", logger, obtainedHoldsValue, predictedHoldsValue);
       }
     }
   };

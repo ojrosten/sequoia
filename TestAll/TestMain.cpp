@@ -51,6 +51,9 @@ int main(int argc, char** argv)
     runner.register_test<elementary_false_positive_free_diagnostics>();
     runner.register_test<exceptions_false_negative_free_diagnostics>();
     runner.register_test<exceptions_false_positive_free_diagnostics>();
+    runner.register_test<exception_safety_test_utilities_free_test>();
+    runner.register_test<exception_safety_test_utilities_false_negative_free_diagnostics>();
+    runner.register_test<exception_safety_test_utilities_false_positive_free_diagnostics>();
     runner.register_test<chrono_false_negative_free_diagnostics>();
     runner.register_test<chrono_false_positive_free_diagnostics>();
     runner.register_test<complex_false_negative_free_diagnostics>();
@@ -93,6 +96,7 @@ int main(int argc, char** argv)
     runner.register_test<orderable_regular_allocation_false_negative_diagnostics>();
     runner.register_test<performance_false_negative_diagnostics>();
     runner.register_test<performance_false_positive_diagnostics>();
+    runner.register_test<performance_real_clock_false_positive_diagnostics>();
     runner.register_test<performance_utilities_free_test>();
     runner.register_test<relational_false_negative_diagnostics>();
     runner.register_test<relational_false_positive_diagnostics>();
@@ -140,12 +144,12 @@ int main(int argc, char** argv)
     runner.register_test<partitioned_sequence_allocation_test>();
     runner.register_test<static_partitioned_sequence_test>();
     runner.register_test<static_linearly_partitioned_sequence_test>();
-    runner.register_test<test_static_stack_false_negatives>();
-    runner.register_test<test_static_stack>();
-    runner.register_test<test_static_queue_false_negatives>();
-    runner.register_test<test_static_queue>();
-    runner.register_test<test_static_priority_queue_false_negatives>();
-    runner.register_test<test_static_priority_queue>();
+    runner.register_test<stack_false_negative_test>();
+    runner.register_test<stack_regular_test>();
+    runner.register_test<queue_false_negative_test>();
+    runner.register_test<queue_regular_test>();
+    runner.register_test<priority_queue_false_negative_test>();
+    runner.register_test<priority_queue_regular_test>();
     runner.register_test<test_graph_false_negatives>();
     runner.register_test<test_graph_meta>();
     runner.register_test<test_edge_false_negatives>();
@@ -236,7 +240,7 @@ int main(int argc, char** argv)
     runner.register_test<saturating_mul_free_test>();
     runner.register_test<saturating_add_free_test>();
     runner.register_test<vector_nonlinear_representations_free_test>();
-    runner.register_test<arithmetic_casts_free_test>();
+    runner.register_test<integer_conversions_free_test>();
     runner.register_test<build_artefacts_free_test>();
     runner.register_test<dump_comparison_free_test>();
     runner.register_test<erased_function_regular_test>();
@@ -256,6 +260,12 @@ int main(int argc, char** argv)
     runner.register_test<critical_path_durations_false_negative_test>();
     runner.register_test<critical_path_durations_regular_test>();
     runner.register_test<instability_analysis_free_test>();
+    runner.register_test<test_runner_reported_durations_free_test>();
+    runner.register_test<coarse_sleeps_free_test>();
+    runner.register_test<test_runner_serial_execution_free_test>();
+    runner.register_test<test_runner_performance_check_outcomes_free_test>();
+    runner.register_test<dynamic_graph_performance_test>();
+    runner.register_test<container_adaptor_utilities_free_test>();
     code = runner.execute();
   }
   catch(const std::exception& e)

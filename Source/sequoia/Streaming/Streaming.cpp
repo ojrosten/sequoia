@@ -21,7 +21,7 @@ namespace sequoia
   [[nodiscard]]
   std::string report_failed_read(const std::filesystem::path& file)
   {
-    return std::format("Unable to open file {} for reading\n", file.generic_string());
+    return std::format("Unable to read file {}\n", file.generic_string());
   }
 
   [[nodiscard]]
@@ -34,6 +34,9 @@ namespace sequoia
   std::optional<std::string> read_to_string(const std::filesystem::path& file, std::ios_base::openmode mode)
   {
     std::error_code error{};
+    if(!std::filesystem::is_regular_file(file, error))
+      return std::nullopt;
+
     const auto size{std::filesystem::file_size(file, error)};
     if(error)
       return std::nullopt;
@@ -46,9 +49,14 @@ namespace sequoia
        */
       std::string text(size, '\0');
       ifile.read(text.data(), static_cast<std::streamsize>(size));
-      text.resize(static_cast<std::size_t>(ifile.gcount()));
 
-      return text;
+      // A read which delivers fewer characters than it asks for sets
+      // failbit, so only badbit can mark an error.
+      if(!ifile.bad())
+      {
+        text.resize(static_cast<std::size_t>(ifile.gcount()));
+        return text;
+      }
     }
 
     return std::nullopt;

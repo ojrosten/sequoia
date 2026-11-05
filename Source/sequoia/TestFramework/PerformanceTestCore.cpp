@@ -9,10 +9,12 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/PathCheckers.hpp"
 
+#include "sequoia/Core/Numeric/IntegerConversions.hpp"
 #include "sequoia/Maths/Statistics/StatisticalAlgorithms.hpp"
 
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
 #include <format>
 #include <functional>
 #include <ranges>
@@ -75,8 +77,9 @@ namespace sequoia::testing
         maths::winsorized_sample_variance(data, numTrimmed).variance
       };
 
-      const std::ranges::subrange kept{data.cbegin() + numTrimmed, data.cend() - numTrimmed};
-      const double fractionKept{1.0 - 2.0 * numTrimmed / n};
+      const std::ranges::subrange kept{data.cbegin() + numeric::unchecked_conversion_to<std::ptrdiff_t>(numTrimmed),
+                                       data.cend()   - numeric::unchecked_conversion_to<std::ptrdiff_t>(numTrimmed)};
+      const double fractionKept{1.0 - 2.0 * static_cast<double>(numTrimmed) / static_cast<double>(n)};
 
       return {
         .mean{maths::mean(kept).value()},
@@ -195,8 +198,10 @@ namespace sequoia::testing
       }
     };
 
-    /** \brief The reason a speed-up departs from the prediction, if it does,
-               and the estimate of the speed-up.
+    /** \brief The estimate of a speed-up, and the reason the speed-up departs
+               from the prediction.
+
+        `failure` is `std::nullopt` if there is no departure.
      */
     struct speedup_judgement
     {
@@ -217,37 +222,42 @@ namespace sequoia::testing
       // The gate takes confidence_multiplier on every attempt, not
       // overlapMultiplier. An early attempt's overlapMultiplier is smaller,
       // and with it tasks of equal speed would too often pass the gate.
-      const double gateLower    {mean - confidence_multiplier * standardError},
-                   gateUpper    {mean + confidence_multiplier * standardError},
-                   intervalLower{mean - overlapMultiplier * standardError},
-                   intervalUpper{mean + overlapMultiplier * standardError};
+      const double gateLower{mean - confidence_multiplier * standardError},
+                   gateUpper{mean + confidence_multiplier * standardError};
+
+      const relative_performance_estimate estimate{
+        .speedup{std::exp(mean)},
+        .interval{
+          .lower{std::exp(mean - overlapMultiplier * standardError)},
+          .upper{std::exp(mean + overlapMultiplier * standardError)}
+        }
+      };
+
+      // The gate keeps tasks of equal speed from passing a prediction lying
+      // wholly above 1. check_speedup refuses a prediction lying wholly below
+      // 1, so any other prediction includes 1, and has no gate.
+      const bool predictsFaster{prediction.lower > 1};
 
       const auto failure{
-        [gateLower, gateUpper, intervalLower, intervalUpper, prediction]()
+        [gateLower, gateUpper, interval{estimate.interval}, prediction, predictsFaster]()
           -> std::optional<relative_performance_failure> {
-          if(!(gateLower > 0))
+          if(predictsFaster && !(gateLower > 0))
           {
             return gateUpper < 0 ? relative_performance_failure::slower
                                  : relative_performance_failure::not_distinguishably_faster;
           }
 
-          if(intervalUpper < std::log(prediction.lower))
-            return relative_performance_failure::faster_but_less_than_predicted;
+          if(interval.upper < prediction.lower)
+            return relative_performance_failure::speedup_less_than_predicted;
 
-          if(intervalLower > std::log(prediction.upper))
-            return relative_performance_failure::suspiciously_fast;
+          if(interval.lower > prediction.upper)
+            return relative_performance_failure::speedup_greater_than_predicted;
 
           return std::nullopt;
         }()
       };
 
-      return {
-        .failure{failure},
-        .estimate{
-          .speedup{std::exp(mean)},
-          .interval{.lower{std::exp(intervalLower)}, .upper{std::exp(intervalUpper)}}
-        }
-      };
+      return {.failure{failure}, .estimate{estimate}};
     }
 
     void throw_if_too_few_trials(std::size_t numTrials)
@@ -543,13 +553,10 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view postprocess(std::string_view testOutput,
-                               std::string_view referenceOutput,
-                               attempt_count_stability attemptCountStability)
+  std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput)
   {
     const bool differOnlyInMeasurements{
-         text_with_zeroed_measurements(testOutput,      attemptCountStability)
-      == text_with_zeroed_measurements(referenceOutput, attemptCountStability)
+      text_with_zeroed_measurements(testOutput) == text_with_zeroed_measurements(referenceOutput)
     };
 
     return differOnlyInMeasurements ? referenceOutput : testOutput;
@@ -560,37 +567,32 @@ namespace sequoia::testing
   log_summary basic_performance_test<Mode>::summarize(duration delta) const
   {
     if constexpr(Mode == test_mode::standard)
+    {
       return base_type::summarize(delta);
+    }
     else
-      return summarize(delta, attempt_count_stability::fluctuating);
-  }
+    {
+      auto summary{base_type::summarize(delta)};
 
-  template<test_mode Mode>
-  [[nodiscard]]
-  log_summary basic_performance_test<Mode>::summarize(duration delta,
-                                                      attempt_count_stability attemptCountStability) const
-    requires (Mode != test_mode::standard)
-  {
-    auto summary{base_type::summarize(delta)};
+      const auto referenceOutput{
+        [filename{this->diagnostics_file_paths().false_positive_or_negative_file_path()}]() -> std::string {
+          if(std::filesystem::exists(filename))
+          {
+            if(auto contents{read_to_string(filename, std::ios_base::in | std::ios_base::binary)})
+              return std::move(*contents);
 
-    const auto referenceOutput{
-      [filename{this->diagnostics_file_paths().false_positive_or_negative_file_path()}]() -> std::string {
-        if(std::filesystem::exists(filename))
-        {
-          if(auto contents{read_to_string(filename, std::ios_base::in | std::ios_base::binary)})
-            return std::move(*contents);
+            throw std::runtime_error{report_failed_read(filename)};
+          }
 
-          throw std::runtime_error{report_failed_read(filename)};
-        }
+          return "";
+        }()
+      };
 
-        return "";
-      }()
-    };
+      std::string outputToUse{postprocess(summary.diagnostics_output(), referenceOutput)};
+      summary.diagnostics_output(std::move(outputToUse));
 
-    std::string outputToUse{postprocess(summary.diagnostics_output(), referenceOutput, attemptCountStability)};
-    summary.diagnostics_output(std::move(outputToUse));
-
-    return summary;
+      return summary;
+    }
   }
 
   template class basic_performance_test<test_mode::standard>;

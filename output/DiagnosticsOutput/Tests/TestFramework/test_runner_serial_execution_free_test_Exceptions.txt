@@ -1,0 +1,9 @@
+Tests/TestFramework/TestRunnerSerialExecutionFreeTest.cpp, Line 125
+A steady clock interval which ends before it starts is refused
+
+Expected Exception Type:
+[std::invalid_argument]
+A steady clock interval cannot end before it starts
+
+=======================================
+

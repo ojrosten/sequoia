@@ -1,0 +1,27 @@
+Tests/TestFramework/CoarseSleepsFreeTest.cpp, Line 141
+An unobserved outcome without a request
+
+Expected Exception Type:
+[std::logic_error]
+An outcome other than not_made, for a platform which makes no timer request
+
+=======================================
+
+Tests/TestFramework/CoarseSleepsFreeTest.cpp, Line 142
+A failed outcome without a request
+
+Expected Exception Type:
+[std::logic_error]
+An outcome other than not_made, for a platform which makes no timer request
+
+=======================================
+
+Tests/TestFramework/CoarseSleepsFreeTest.cpp, Line 143
+A granted outcome without a request
+
+Expected Exception Type:
+[std::logic_error]
+An outcome other than not_made, for a platform which makes no timer request
+
+=======================================
+

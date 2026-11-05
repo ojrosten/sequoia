@@ -9,7 +9,7 @@
 
 #include "Maths/Graph/GraphTestingUtilities.hpp"
 #include "sequoia/Maths/Graph/StaticGraph.hpp"
-#include "sequoia/Maths/Graph/StaticGraphTraversals.hpp"
+#include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 
 namespace sequoia::testing
 {

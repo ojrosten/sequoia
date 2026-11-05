@@ -58,7 +58,7 @@ namespace sequoia::testing::impl
   {
     auto make{
       [&logger, &y](const allocation_info<T, Getters>&... allocInfo){
-        T u{y, allocInfo.make_allocator()...};
+        T u(y, allocInfo.make_allocator()...);
         if(check(equality, "Inconsistent para-copy construction", logger, u, y))
         {
           check_para_copy_y_allocation(logger, u, std::tuple_cat(make_allocation_checkers(allocInfo)...));
@@ -70,7 +70,7 @@ namespace sequoia::testing::impl
 
     if(auto c{make(info...)}; c)
     {
-      T v{std::move(*c), info.make_allocator()...};
+      T v(std::move(*c), info.make_allocator()...);
 
       if(check(equality, "Inconsistent para-move construction", logger, v, y))
       {
@@ -122,8 +122,8 @@ namespace sequoia::testing::impl
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
 
-    auto x{xFn()};
-    auto y{yFn()};
+    auto x(xFn());
+    auto y(yFn());
 
     check_initialization_allocations(logger, x, y, info...);
     check_semantics("", logger, actions, x, y, std::move(yMutator), info...);

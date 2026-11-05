@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 153
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 179
 Pushing back to non-existent partition throws
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ bucketed_sequence::push_back_to_partition: index 0 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 161
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 187
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ bucketed_sequence::insert_to_partition: index 18446744073709551615 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 169
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 195
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ bucketed_sequence::insert_to_partition: index 0 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 284
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 310
 Pushing back to non-existent partition throws
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ bucketed_sequence::push_back_to_partition: index 1 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 292
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 318
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ bucketed_sequence::insert_to_partition: index 18446744073709551615 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 300
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 326
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ bucketed_sequence::insert_to_partition: index 1 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 360
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 386
 
 Expected Exception Type:
 [std::domain_error]
@@ -60,7 +60,7 @@ bucketed_sequence::erase - Invalid range specified by iterators belonging to par
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 368
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 394
 
 Expected Exception Type:
 [std::domain_error]
@@ -68,7 +68,7 @@ bucketed_sequence::erase - Invalid range specified by iterators belonging to par
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 558
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 584
 Inserting beyond the end of a partition throws
 
 Expected Exception Type:
@@ -77,7 +77,7 @@ bucketed_sequence::insert_to_partition: pos 2 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 762
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 788
 
 Expected Exception Type:
 [std::domain_error]
@@ -85,7 +85,7 @@ bucketed_sequence::erase - Invalid range specified by iterators belonging to par
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 1017
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 1051
 Inserting beyond the end of a partition other than the last throws
 
 Expected Exception Type:
@@ -94,12 +94,21 @@ bucketed_sequence::insert_to_partition: pos 2 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 1028
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 1062
 Inserting beyond the end of a partition other than the first throws
 
 Expected Exception Type:
 [std::out_of_range]
 bucketed_sequence::insert_to_partition: pos 2 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 1125
+Permuting two partitions to one destination throws
+
+Expected Exception Type:
+[std::invalid_argument]
+sequoia::permute: the destinations are not a permutation of the range's positions
 
 =======================================
 
