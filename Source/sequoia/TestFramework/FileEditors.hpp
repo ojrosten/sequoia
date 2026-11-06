@@ -53,6 +53,11 @@ namespace sequoia::testing
 
   /** \brief Registers each of `tests` in `file`, skipping any already registered there.
 
+      \pre A line of `file` begins, leading blanks aside, with
+           `runner.register_test<T>();` precisely when `file` registers `T`
+           with `runner`, whether or not a preprocessor condition encloses
+           the registration.
+
       \throws std::logic_error if `tests` is empty.
       \throws std::runtime_error if `file` cannot be read, does not contain `runner.execute`, or cannot be
               opened to write a registration.
