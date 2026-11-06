@@ -17,6 +17,7 @@ Commands:
 Options:
   --check-versioned-output              Fail the run if it changes anything versioned under output
   --exclude-performance                 Leave out the performance tests
+  --reference-root <path>               Name the root of the tree against which tests compare this project
   --serial                              Run the tests on one thread
   --thread-pool <threads>               Run the tests on a pool of the given number of threads
   --verbose, -v                         Print the suites and their tests as a tree

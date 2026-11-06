@@ -8,6 +8,8 @@ test
 Spaced Suite
 exclude
 /Users/oliver/sequoia-quote-paths/Tests/Spaced Suite/excluded_from_spaced_suite_free_test.cpp
+--reference-root
+/Users/oliver/sequoia-quote-paths/output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Spaced Reference
 locate
 2
 --runner-id
@@ -18,3 +20,5 @@ test
 Spaced Suite
 exclude
 /Users/oliver/sequoia-quote-paths/Tests/Spaced Suite/excluded_from_spaced_suite_free_test.cpp
+--reference-root
+/Users/oliver/sequoia-quote-paths/output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Spaced Reference

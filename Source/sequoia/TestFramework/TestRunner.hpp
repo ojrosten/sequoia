@@ -617,13 +617,17 @@ namespace sequoia::testing
 
   /** \brief Makes a test of type `T` for the project at `projPaths`.
 
-      The test's discriminators are read from `cache`, and `mode` chooses its
-      recovery files. An exception which a discriminator hook of `T` throws
+      The test's discriminators are read from `cache`, `mode` chooses its
+      recovery files, and `referenceRoot` is what its `reference_root()`
+      returns. An exception which a discriminator hook of `T` throws
       propagates.
    */
   template<concrete_test T>
   [[nodiscard]]
-  T make_test(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode)
+  T make_test(const project_paths& projPaths,
+              const cmake_cache& cache,
+              recovery_mode mode,
+              const std::optional<std::filesystem::path>& referenceRoot)
   {
     constexpr std::string_view name{test_name<T>()};
     const auto source{T::source_file()};
@@ -638,7 +642,8 @@ namespace sequoia::testing
                get_discriminator<materials_discriminator_probe, T>(cache)
              },
              make_active_recovery_paths(mode, projPaths),
-             get_discriminator<output_discriminator_probe, T>(cache)};
+             get_discriminator<output_discriminator_probe, T>(cache),
+             referenceRoot};
   }
 
   /** \brief Consumes command-line arguments and holds all test suites.
@@ -690,7 +695,10 @@ namespace sequoia::testing
       const bool toRun{m_Filter(source, enclosing_suites(source), testKind) && in_mode(runner_mode::test)};
       auto testToRun{
         toRun ? std::optional<test_to_run>{std::in_place,
-                                           test_vessel{make_test<T>(m_ProjPaths, m_CMakeCache, m_RecoveryMode)},
+                                           test_vessel{make_test<T>(m_ProjPaths,
+                                                                    m_CMakeCache,
+                                                                    m_RecoveryMode,
+                                                                    m_ReferenceRoot)},
                                            summaryFile,
                                            executionRecordFile}
               : std::nullopt
@@ -900,6 +908,8 @@ namespace sequoia::testing
     std::size_t m_NumReps{1},
                 m_RunnerID{},
                 m_PoolSize{8};
+
+    std::optional<std::filesystem::path> m_ReferenceRoot{};
 
     void process_args(int argc, char** argv);
 

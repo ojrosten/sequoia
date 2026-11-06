@@ -257,6 +257,9 @@ jobs:
       #     environment;
       #   - PATH through GITHUB_PATH, in Windows form, which a later bash
       #     step's start-up translates.
+      #
+      # performance-against-reference.yml holds a shortened copy; a change here
+      # belongs there too.
       - name: Enter the MSVC environment (Windows, Ninja)
         if: inputs.needs_testing == 'true' && runner.os == 'Windows' && matrix.configure == 'msvc-ninja'
         run: |
