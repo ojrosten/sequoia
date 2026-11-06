@@ -7,7 +7,10 @@
 
 #pragma once
 
-/** \file */
+/** \file
+    \warning The declarations in this header are experimental: their design
+    is unsettled, so they may change fundamentally or be removed.
+ */
 
 #include "sequoia/Physics/PhysicalValuesDetails.hpp"
 
