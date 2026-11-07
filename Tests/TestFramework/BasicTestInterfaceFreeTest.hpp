@@ -23,6 +23,8 @@ namespace sequoia::testing
 
     void run_tests();
 
+    void test_no_default_construction();
+
     void test_file_paths(const project_paths& projPaths);
 
     void test_materials(const project_paths& projPaths);

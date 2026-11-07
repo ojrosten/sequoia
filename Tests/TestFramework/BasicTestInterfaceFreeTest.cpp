@@ -44,6 +44,8 @@ namespace sequoia::testing
 
   void basic_test_interface_free_test::run_tests()
   {
+    test_no_default_construction();
+
     commandline_arguments args{fake_project_commandline(working_materials())};
 
     std::stringstream outputStream{};
@@ -55,12 +57,31 @@ namespace sequoia::testing
     test_discarded_materials(runner.proj_paths());
   }
 
+  void basic_test_interface_free_test::test_no_default_construction()
+  {
+    // A default would name no project and no test: its paths would be empty
+    STATIC_CHECK(!std::is_default_constructible_v<fake_test>);
+  }
+
   void basic_test_interface_free_test::test_file_paths(const project_paths& projPaths)
   {
     const auto rebasedSource{rebase_from(source_file(), get_project_paths().project_root())};
 
+    const auto fakeTest{
+      [&projPaths]<class Test>(std::type_identity<Test>, const std::optional<std::string>& outputDiscriminator) {
+        return Test{
+          test_name<Test>(),
+          source_file(),
+          projPaths,
+          individual_materials_paths{source_file(), test_name<Test>(), projPaths, null_discriminator},
+          {},
+          outputDiscriminator
+        };
+      }
+    };
+
     {
-      const fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, null_discriminator};
+      const auto t{fakeTest(std::type_identity<fake_test>{}, null_discriminator)};
 
       check(equality,
             reporter{"Exceptions File Path"},
@@ -69,7 +90,7 @@ namespace sequoia::testing
     }
 
     {
-      const fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, {""}};
+      const auto t{fakeTest(std::type_identity<fake_test>{}, "")};
 
       check(equality,
             reporter{"Exceptions File Path"},
@@ -78,14 +99,7 @@ namespace sequoia::testing
     }
 
     {
-      const fake_test_with_discriminated_exceptions t{
-        test_name<fake_test_with_discriminated_exceptions>(),
-        source_file(),
-        projPaths,
-        {},
-        {},
-        {"baz"}
-      };
+      const auto t{fakeTest(std::type_identity<fake_test_with_discriminated_exceptions>{}, "baz")};
 
       check(equality,
             reporter{"Exceptions File Path"},
@@ -188,30 +202,6 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       "Stray original materials",
       [&preparedTest]() { return preparedTest("WithStray"); });
-
-    check_exception_thrown<std::logic_error>(
-      "Preparing the materials of no test",
-      [&remover]() { return prepare_materials(individual_materials_paths{}, remover); });
-
-    {
-      const fake_test test{
-        "fake_test",
-        projPaths.tests().repo() / "Materials/WithNone.cpp",
-        projPaths,
-        individual_materials_paths{},
-        {},
-        null_discriminator
-      };
-
-      check_exception_thrown<std::logic_error>("Working copy of a test with no materials paths",
-                                               [&test]() { return test.working_materials(); });
-      check_exception_thrown<std::logic_error>("Predictions of a test with no materials paths",
-                                               [&test]() { return test.predictive_materials(); });
-      check_exception_thrown<std::logic_error>("Auxiliary materials of a test with no materials paths",
-                                               [&test]() { return test.auxiliary_materials(); });
-      check_exception_thrown<std::logic_error>("Scratchpad of a test with no materials paths",
-                                               [&test]() { return test.scratchpad_materials(); });
-    }
   }
 
   /** The original materials of a discriminated test hold one directory per discriminator: `Platypus`

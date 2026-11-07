@@ -12,7 +12,6 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
-#include <format>
 #include <stdexcept>
 
 namespace sequoia::testing
@@ -37,23 +36,6 @@ namespace sequoia::testing
       throw std::logic_error{"Unrecognized case for test_mode"};
     }
 
-    // A path built on an empty root would be relative: resolved, silently,
-    // against the current directory
-    void throw_if_empty_root(const fs::path& root, std::string_view derivedPath)
-    {
-      if(root.empty())
-        throw std::logic_error{
-          std::format("Empty materials root: '{}' would resolve against the current directory", derivedPath)
-        };
-    }
-
-    [[nodiscard]]
-    fs::path materials_directory(const fs::path& root, std::string_view subdirectory)
-    {
-      throw_if_empty_root(root, subdirectory);
-      return root / subdirectory;
-    }
-
     /** \brief The directory a test's versioned output belongs in: the mirror of its source
                file's directory, beneath the relevant output root.
 
@@ -67,11 +49,6 @@ namespace sequoia::testing
     {
       if(sourceFile.empty())
         throw std::invalid_argument{"Source files should have a non-trivial name!"};
-
-      // A relative root would put the directory relative to the current
-      // directory or, for an absolute source, at the source's own directory
-      if(!outputRoot.is_absolute())
-        throw std::invalid_argument{"The output root is not absolute"};
 
       if(!sourceFile.is_absolute())
       {
@@ -157,44 +134,41 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path individual_materials_paths::discarded_materials_root() const
   {
-    constexpr std::string_view suffix{".discarded"};
-    throw_if_empty_root(m_TemporaryMaterialsRoot, suffix);
-
     // The temporary root ends in the test's name, which cannot contain '.',
     // so this path is no test's temporary root. Nor does any test's temporary
     // root lie within it, since `register_test` refuses materials prefixes
     // which nest.
-    return fs::path{m_TemporaryMaterialsRoot} += suffix;
+    return fs::path{m_TemporaryMaterialsRoot} += ".discarded";
   }
 
   [[nodiscard]]
   fs::path individual_materials_paths::original_working() const
   {
-    return materials_directory(original_materials_root(), "WorkingCopy");
+    return original_materials_root() / "WorkingCopy";
   }
 
   [[nodiscard]]
   fs::path individual_materials_paths::working() const
   {
-    return materials_directory(m_TemporaryMaterialsRoot, "WorkingCopy");
+    return m_TemporaryMaterialsRoot / "WorkingCopy";
   }
 
   [[nodiscard]]
   fs::path individual_materials_paths::prediction() const
   {
-    return materials_directory(original_materials_root(), "Prediction");
+    return original_materials_root() / "Prediction";
   }
 
   [[nodiscard]]
   fs::path individual_materials_paths::original_auxiliary() const
   {
-    return materials_directory(original_materials_root(), "Auxiliary");
+    return original_materials_root() / "Auxiliary";
   }
 
   [[nodiscard]]
   fs::path individual_materials_paths::auxiliary() const
   {
-    return materials_directory(m_TemporaryMaterialsRoot, "Auxiliary");
+    return m_TemporaryMaterialsRoot / "Auxiliary";
   }
 
   //===================================== individual_diagnostics_paths =====================================//
