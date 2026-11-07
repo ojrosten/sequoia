@@ -8,6 +8,9 @@
 #pragma once
 
 /** @file
+    @warning The declarations in this header are experimental: their design
+    is unsettled, so they may change fundamentally or be removed.
+
     @brief Abstractions pertaining to vector spaces, affine spaces and their
            generalizations.
 
