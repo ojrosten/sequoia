@@ -24,7 +24,7 @@ jobs:
   doxygen:
     name: Docs · Doxygen
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v7
         with:
@@ -52,12 +52,15 @@ jobs:
       # failure this job exists to catch.
       #
       # This step's limit makes a slow mirror fail the step by name, rather
-      # than run on until the job's limit cancels the job. The job's limit
-      # exceeds the step's by more than checkout and generation take, about a
-      # minute.
+      # than run on until the job's limit cancels the job. It holds 1845 s for
+      # every attempt that scripts/retry.sh makes below, each run to its own
+      # limit and stopped, with the pauses between; and 45 s for the install,
+      # which runs once and took that on the nightlies of 2026-11-08 and
+      # 2026-11-09. The job's limit exceeds the step's by more than checkout
+      # and generation take, about a minute.
       - name: Install doxygen
         if: inputs.needs_testing == 'true'
-        timeout-minutes: 30
+        timeout-minutes: 35
         run: |
           # The hosted image ships Chrome's and Microsoft's apt repositories,
           # which nothing here installs from. A bad index from either fails
@@ -89,10 +92,17 @@ jobs:
           # doxygen on PATH is the one installed. Otherwise a distro copy could
           # shadow it, and the gate would pass on the wrong version until a
           # modules build arrived.
+          #
+          # doxygen's release is a live dependency, as Ubuntu's archive is, so
+          # scripts/retry.sh retries its download, a minute an attempt: the
+          # 78 MB tarball took 2 s to fetch and check on the nightly of
+          # 2026-11-08.
           version=1.15.0
           sha256=0ec2e5b2c3cd82b7106d19cb42d8466450730b8cb7a9e85af712be38bf4523a1
+          tag=Release_${version//./_}
+          url=https://github.com/doxygen/doxygen/releases/download/$tag/doxygen-$version.linux.bin.tar.gz
           cd "$RUNNER_TEMP"
-          curl -fsSL -o doxygen.tgz "https://github.com/doxygen/doxygen/releases/download/Release_${version//./_}/doxygen-$version.linux.bin.tar.gz"
+          "$GITHUB_WORKSPACE/scripts/retry.sh" 3 60 -- curl -fsSL -o doxygen.tgz "$url"
           echo "$sha256  doxygen.tgz" | sha256sum -c -
           tar xzf doxygen.tgz "doxygen-$version/bin/doxygen"
           sudo install "doxygen-$version/bin/doxygen" /usr/local/bin/doxygen

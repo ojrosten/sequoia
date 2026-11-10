@@ -140,12 +140,16 @@ jobs:
           # lcov. The tarball has no apt signature behind it, so its
           # checksum is pinned. Each tool prints the version and, after a
           # hyphen, the release number from the tarball's .version file.
+          #
+          # lcov's release is a live dependency, as Ubuntu's archive is, so
+          # scripts/retry.sh retries its download, a minute an attempt for the
+          # 6 MB tarball.
           lcov_version=2.6
           lcov_release=0
           lcov_sha256=67a45db99b8ef0260c3fac9a2e3749fd8fa350a15e235dd3c29b356d97755c75
           lcov_tarball=$RUNNER_TEMP/lcov.tar.gz
           lcov_url=https://github.com/linux-test-project/lcov/releases/download/v$lcov_version/lcov-$lcov_version.tar.gz
-          if ! curl -fsSL -o "$lcov_tarball" "$lcov_url"; then echo "::error::lcov $lcov_version could not be fetched from its release page"; exit 1; fi
+          scripts/retry.sh 3 60 -- curl -fsSL -o "$lcov_tarball" "$lcov_url"
           if ! echo "$lcov_sha256  $lcov_tarball" | sha256sum --check --quiet; then echo "::error::The lcov tarball does not match its published checksum"; exit 1; fi
           tar -xzf "$lcov_tarball" -C "$RUNNER_TEMP"
           # --old-file=doc stops install rebuilding the documentation the
