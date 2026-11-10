@@ -26,8 +26,10 @@ name: watchdog
 # itself stops being read.
 #
 # The watchdog shares the failure mode it watches, a cron, but as an
-# independent instance: a day on which both are dropped is still followed by
-# a day on which this one fires and finds the gap. The one cause it shares
+# independent instance. A weekly tick is judged by a week of this workflow's
+# runs, so if the first of them is dropped too, a later one finds the gap. A
+# daily tick is judged by one run alone, so if that run is dropped too, the
+# daily tick goes unjudged. The one cause it shares
 # outright is GitHub switching off every schedule in a public repository
 # after sixty days without activity, this one included. Nothing here can see
 # that.
