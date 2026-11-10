@@ -23,7 +23,7 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    // TO DO: infer D
+    // TODO: infer D
     template<class Set, class Field, std::size_t D, class Representation, class Validator>
       requires maths::identifies_as_field_v<Field>
     void test_vec();

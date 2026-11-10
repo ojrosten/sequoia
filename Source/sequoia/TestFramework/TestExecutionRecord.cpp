@@ -68,7 +68,7 @@ namespace sequoia::testing
     // the entry's writer reprints the entry exactly from that value.
     constexpr auto extractor_for_start_time{
       [](std::string_view entry) -> std::optional<test_execution_record::start_time_type> {
-        // TO DO: std::chrono::parse reads the start time, once libc++ provides it
+        // TODO: std::chrono::parse reads the start time, once libc++ provides it
         using namespace std::chrono;
         constexpr std::size_t fieldsOfStart{7};
         if(const auto numbers{extract_numbers_from<unsigned, fieldsOfStart>(entry)})

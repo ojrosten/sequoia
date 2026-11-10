@@ -194,7 +194,7 @@ namespace sequoia::testing
       maths::validator_for<my_vec_space, Representation> Validator,
       std::floating_point ValType=Representation::value_type
     >
-    // TO DO:  requires is_orthonormal_basis_v<Basis>
+    // TODO:  requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr ValType inner_product(
       const maths::vector_coordinates<my_vec_space, Basis, Representation, Validator>& lhs,
@@ -205,7 +205,7 @@ namespace sequoia::testing
 
       return
         std::ranges::fold_left(
-          std::views::zip(lhs.values(), rhs.values()), // TO DO: use Representation
+          std::views::zip(lhs.values(), rhs.values()), // TODO: use Representation
           value_t{},
           [](value_t f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); }
        );
@@ -217,7 +217,7 @@ namespace sequoia::testing
       maths::validator_for<my_vec_space, Representation> Validator,
       class ValType=Representation::value_type
     >
-    requires is_complex_v<ValType> // TO DO && is_orthonormal_basis_v<Basis>
+    requires is_complex_v<ValType> // TODO && is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr ValType inner_product(
       const maths::vector_coordinates<my_vec_space, Basis, Representation, Validator>& lhs,
@@ -228,7 +228,7 @@ namespace sequoia::testing
 
       return
         std::ranges::fold_left(
-          std::views::zip(lhs.values(), rhs.values()), // TO DO: use Representation
+          std::views::zip(lhs.values(), rhs.values()), // TODO: use Representation
           value_t{},
           [](value_t f, const auto& z){ return f + conj(std::get<0>(z)) * std::get<1>(z); });
     }

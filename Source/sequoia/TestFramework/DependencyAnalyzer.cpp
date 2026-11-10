@@ -82,7 +82,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool in_repo(const fs::path& file, const fs::path& repo)
     {
-      // TO DO: ranges::starts_with says the same, from libstdc++ 16
+      // TODO: ranges::starts_with says the same, from libstdc++ 16
       return std::ranges::mismatch(repo, file).in1 == repo.end();
     }
 

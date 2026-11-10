@@ -34,7 +34,7 @@ namespace sequoia::testing
     using module_type         = coords_type::free_module_type;
     using disp_value_type     = coords_type::displacement_value_type;
     using representation_type = coords_type::representation_type;
-    using value_type          = representation_type::value_type; // TO DO: only just made distinct from disp_value_type. Needs to be properly reasoned through
+    using value_type          = representation_type::value_type; // TODO: only just made distinct from disp_value_type. Needs to be properly reasoned through
     using validator_type      = coords_type::validator_type;
     using frame_type          = coords_type::frame_type;
     using variant_type        = std::conditional_t<std::same_as<coords_type, disp_type>, std::variant<coords_type>, std::variant<coords_type, disp_type>>;
@@ -628,7 +628,7 @@ namespace sequoia::testing
       // (2) --> (1)
 
       if constexpr(maths::vector_space<module_type>
-                   // TO DO: remove this: it's a temporary hack while the field / commutative_ring concepts are sorted out
+                   // TODO: remove this: it's a temporary hack while the field / commutative_ring concepts are sorted out
     && (!std::integral<value_type>)
                    )
       {
@@ -787,7 +787,7 @@ namespace sequoia::testing
         add_dim_2_distinguished_origin_transitions(g, test);
       }
 
-      // TO DO: relax last condition, but test values will need ammending.
+      // TODO: relax last condition, but test values will need ammending.
       // E.g. (1, 1) -> (sqrt(2), pi/4)
       // multiplying last cmpt by 0 -> (sqrt(2), 0)
       if constexpr(Coordinates::has_freely_mutable_components_v && has_canonical_rep_v)

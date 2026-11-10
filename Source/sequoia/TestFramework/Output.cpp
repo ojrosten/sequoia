@@ -273,7 +273,7 @@ namespace sequoia::testing
           }
         };
 
-        // TO DO: std::views::chunk(2), handing each pair to toByte, once libc++ has chunk (P2442)
+        // TODO: std::views::chunk(2), handing each pair to toByte, once libc++ has chunk (P2442)
         std::array<std::byte, sizeof(T)> bytes{};
         std::ranges::copy_backward(hex | std::views::stride(2) | std::views::transform(toByte), bytes.end());
 

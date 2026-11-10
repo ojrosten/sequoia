@@ -19,7 +19,7 @@ namespace sequoia::testing
       std::floating_point T,
       physical_unit UnitOfLength = si::units::metre_t,
       physical_unit UnitOfAngle  = si::units::radian_t
-      // TO DO: separate bounds for radius and angle, which are propagated
+      // TODO: separate bounds for radius and angle, which are propagated
     >
     struct physical_polar_representation
     {

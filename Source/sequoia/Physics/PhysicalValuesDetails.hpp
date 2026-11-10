@@ -204,7 +204,7 @@ namespace sequoia::physics::impl
     using type = tensor_product<type_counter<T, I-1>, type_counter<Ts, Is>...>;
   };
   
-  // TO DO: associated_displacement_space is specific to physical quantities so
+  // TODO: associated_displacement_space is specific to physical quantities so
   // doesn't recognize euc_vec as the displacement space of euc_half
 
   /// Promote all T to associated_displacement_space<T>
@@ -236,7 +236,7 @@ namespace sequoia::physics::impl
   };
 
   /// Unpack counted types into direct products
-  /// TO DO: Consider whether the unpacking roundtrip is necessary;
+  /// TODO: Consider whether the unpacking roundtrip is necessary;
   /// it may be better just work in terms of type_counter.
   template<class...>
   struct unpack {};
@@ -349,9 +349,9 @@ namespace sequoia::physics::impl
   template<partial_m_torsor... Ts, int... Is>
   struct reduce<tensor_product<type_counter<Ts, Is>...>>
   {
-    // TO DO; potential problem here if reducible modules are floating-point but everything else is integral
+    // TODO; potential problem here if reducible modules are floating-point but everything else is integral
     // Depends where we do any arithmetic promotions; ideally below using common_type
-    // TO DO: At some point this may need generalizing to finite segments with a distinguished origin
+    // TODO: At some point this may need generalizing to finite segments with a distinguished origin
     constexpr static bool anyOfNotReducibleFreeModule     {(( free_module<Ts>               && !potentially_prunable_v<type_counter<Ts, Is>>) || ...)};
     constexpr static bool anyOfNotReducibleHalfLine       {(( is_non_negative_orthant_v<Ts> && !potentially_prunable_v<type_counter<Ts, Is>>) || ...)};
     constexpr static bool allOfNotReducibleOrNotFreeModule{((!free_module<Ts>               || !potentially_prunable_v<type_counter<Ts, Is>>) && ...)};

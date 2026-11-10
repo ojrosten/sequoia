@@ -38,7 +38,7 @@ namespace sequoia::testing
       Test::template execute_tests<int, double>();
       Test::template execute_tests<double, unsigned>();
       Test::template execute_tests<unsigned, double>();
-      // TO DO
+      // TODO
       /*Test::template execute_tests<float, int>();
       Test::template execute_tests<int, float>();
       Test::template execute_tests<float, unsigned>();

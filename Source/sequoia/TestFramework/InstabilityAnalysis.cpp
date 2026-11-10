@@ -229,7 +229,7 @@ namespace sequoia::testing
       }
     };
 
-    // TO DO: files | std::views::chunk(trials), in place of the stride and
+    // TODO: files | std::views::chunk(trials), in place of the stride and
     // the subspan, once libc++ has chunk (P2442)
     const auto message{
         std::views::iota(std::size_t{}, files.size())

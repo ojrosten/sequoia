@@ -24,7 +24,7 @@ namespace sequoia::testing
 
     test_refined<float, identity_validator>();
 
-    // TO DO: test different bounds
+    // TODO: test different bounds
   }
 
   template<class Set, class Field, std::size_t D, class Representation, class Validator>

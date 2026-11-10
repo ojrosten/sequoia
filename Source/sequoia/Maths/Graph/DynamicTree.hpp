@@ -62,7 +62,7 @@ namespace sequoia::maths
     tree_base(const tree_base&)            = default;
     tree_base& operator=(const tree_base&) = default;
 
-    // TO DO: think about depth-like vs breadth-like initialization
+    // TODO: think about depth-like vs breadth-like initialization
     tree_base(tree_initializer<NodeWeight> tree)
       : base_type{tree, tree_link_direction_constant<TreeLinkDir>{}}
     {}

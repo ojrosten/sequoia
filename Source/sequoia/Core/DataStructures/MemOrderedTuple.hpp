@@ -93,7 +93,7 @@ namespace sequoia
     #endif
   };
 
-  // TO DO: restore direct use of pack-indexing, once MSVC supports it
+  // TODO: restore direct use of pack-indexing, once MSVC supports it
   template<std::size_t I, class... Ts>
   [[nodiscard]]
   constexpr mem_ordered_tuple_element_t<I, mem_ordered_tuple<Ts...>>& get(mem_ordered_tuple<Ts...>& t) noexcept {
