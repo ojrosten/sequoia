@@ -8,18 +8,22 @@ name: watchdog
 # that no longer parses, never fires. The two look the same.
 #
 # So this workflow fires on its own schedule and asks the API whether each
-# watched schedule produced a run since its most recent tick. The tick is
-# read from the watched file's own `cron:` line, so each time is written in
+# watched schedule produced a run since the schedule's latest tick at or
+# before this workflow's tick. This workflow's tick is the latest that its
+# own `cron:` line gives at or before the moment its run starts, and a
+# dispatch judges at it too. Each schedule is read from its file's `cron:`
+# line as the file stood at this workflow's tick, so each time is written in
 # one place. A run that arrived is reported with how late it came, which is
 # the number to watch: the nightly is expected hours after its tick, not
 # minutes.
 #
 # Each watched schedule is checked every day, and a miss is reported once: by
-# the first scheduled run of this workflow after the tick, which goes red, and
-# the failure email is the alarm. Later runs find that earlier one, say so
-# with a link, and stay green on it. Otherwise a weekly tick missed on a
-# Saturday would turn every run red until the next Saturday: the same fact
-# seven times, and an alarm that repeats itself stops being read.
+# the first scheduled run of this workflow whose tick is at or after the
+# missed tick. That run goes red, and the failure email is the alarm. Later
+# runs find that earlier one, say so with a link, and stay green on it.
+# Otherwise a weekly tick missed on a Saturday would turn every run red until
+# the next Saturday: the same fact seven times, and an alarm that repeats
+# itself stops being read.
 #
 # The watchdog shares the failure mode it watches, a cron, but as an
 # independent instance: a day on which both are dropped is still followed by
@@ -54,6 +58,14 @@ on:
   # exceed the watched runs' delay. Over the 20 nights to 2026-10-07, GitHub
   # created the nightly 4h34m to 6h21m after its tick. The minute is off the
   # hour, as rigorous.yml's is.
+  #
+  # GitHub starts this workflow late too: over the 30 days to 2026-11-09,
+  # 3h8m to 9h52m after its tick. So its judgements count back from its tick,
+  # never from the moment its run starts. Otherwise a start soon after a
+  # watched tick, such as the baseline tightener's in the evening, would look
+  # for that tick's run within minutes of the tick, and report it missing.
+  # Counting back from ticks 24 h apart also gives each daily tick to exactly
+  # one run.
   schedule:
     - cron: '1 13 * * *'
   workflow_dispatch:
@@ -85,20 +97,21 @@ jobs:
           fetch-depth: 0
           filter: blob:none
 
-      - name: A run exists since each schedule's most recent tick
+      - name: A run exists since each schedule's latest tick at or before this workflow's
         run: |
           now=$(date -u +%s)
-          midnight=$(( now - now % 86400 ))
-          weekday=$(( (now / 86400 + 4) % 7 ))   # 1970-01-01 was a Thursday; 0 is Sunday, as in cron
+          timestamp() { date -u -d "@$1" +%Y-%m-%dT%H:%M:%S+00:00; }   # epoch second
 
-          # The epoch second of a cron expression's most recent tick. Only the
-          # two shapes in use are understood, `M H * * *` and `M H * * D`. Any
-          # other shape is an error here, rather than a window silently
-          # mis-sized.
-          last_tick() {   # workflow file, cron expression
+          # The epoch second of a cron expression's latest tick at or before a
+          # moment. Only the two shapes in use are understood, `M H * * *` and
+          # `M H * * D`. Any other shape is an error here, rather than a window
+          # silently mis-sized.
+          last_tick() {   # workflow file, cron expression, moment
             read -r minute hour dom month dow <<<"$2"
             [[ $minute =~ ^([0-9]|[1-5][0-9])$ && $hour =~ ^([0-9]|1[0-9]|2[0-3])$ && $dom = '*' && $month = '*' && $dow =~ ^([0-6]|\*)$ ]] \
               || { echo "::error::$1: cannot compute a tick from '$2'" >&2; return 1; }
+            midnight=$(( $3 - $3 % 86400 ))
+            weekday=$(( ($3 / 86400 + 4) % 7 ))   # 1970-01-01 was a Thursday; 0 is Sunday, as in cron
             tick=$(( midnight + hour * 3600 + minute * 60 ))
             if [ "$dow" = '*' ]; then
               period=86400
@@ -106,16 +119,22 @@ jobs:
               period=$(( 7 * 86400 ))
               tick=$(( tick - ((weekday - dow + 7) % 7) * 86400 ))
             fi
-            [ "$tick" -le "$now" ] || tick=$(( tick - period ))
+            [ "$tick" -le "$3" ] || tick=$(( tick - period ))
             echo "$tick"
           }
 
+          cron_of() {   # workflow file, moment
+            cron=$(scripts/cron_expression_at.sh ".github/workflows/$1" "$2") || return 1
+            [ -n "$cron" ] \
+              || { echo "::error::$1 carried no cron line on $GITHUB_REF_NAME at $(timestamp "$2")" >&2; return 1; }
+            echo "$cron"
+          }
+
           check() {   # workflow file, what to call it
-            cron=$(scripts/cron_expression_at.sh ".github/workflows/$1" "$now") || return 1
-            [ -n "$cron" ] || { echo "::error::$1 carries no cron line"; return 1; }
-            tick=$(last_tick "$1" "$cron") || return 1
+            cron=$(cron_of "$1" "$as_of") || return 1
+            tick=$(last_tick "$1" "$cron" "$as_of") || return 1
             if [ "$CONTROL" = true ]; then tick=$now; fi
-            since=$(date -u -d "@$tick" +%Y-%m-%dT%H:%M:%S+00:00)
+            since=$(timestamp "$tick")
             cron_at_tick=$(scripts/cron_expression_at.sh ".github/workflows/$1" "$tick") || return 1
             if [ "$cron_at_tick" != "$cron" ]; then
               echo "new   $2 was not scheduled '$cron' on $GITHUB_REF_NAME at its tick at $since, so nothing was due"
@@ -161,6 +180,14 @@ jobs:
             echo "ok    $2 fired $((minutes_late / 60))h$((minutes_late % 60))m after its tick at $since, $(jq -r '.conclusion // .status' <<<"$run"): https://github.com/$GH_REPO/actions/runs/$(jq -r .databaseId <<<"$run")"
           }
 
+          # The control looks for runs since now, so it reads no tick of this
+          # workflow's own.
+          if [ "$CONTROL" = true ]; then
+            as_of=$now
+          else
+            watchdog_cron=$(cron_of watchdog.yml "$now") || exit 1
+            as_of=$(last_tick watchdog.yml "$watchdog_cron" "$now") || exit 1
+          fi
           failed=0
           check rigorous.yml "the nightly" || failed=1
           check statistical.yml "the statistical run" || failed=1
