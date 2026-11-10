@@ -271,7 +271,7 @@ namespace sequoia::testing
         }
       };
 
-      // TO DO: taskCalls | std::views::chunk(callsPerTrial), once libc++ has
+      // TODO: taskCalls | std::views::chunk(callsPerTrial), once libc++ has
       // chunk (P2442)
       auto callsOfTrial{
         [&taskCalls](std::size_t trial) {

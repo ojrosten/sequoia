@@ -468,7 +468,7 @@ namespace sequoia::maths
 
     using base_type::join;
 
-    // TO DO: reinstate this, but implementation needs to be changed
+    // TODO: reinstate this, but implementation needs to be changed
     // using base_type::erase_edge;
   };
 

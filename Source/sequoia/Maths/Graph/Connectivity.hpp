@@ -407,7 +407,7 @@ namespace sequoia
         std::ranges::swap(m_Edges, rhs.m_Edges);
       }
 
-      // TO DO: change semantics to non-throwing?
+      // TODO: change semantics to non-throwing?
       constexpr void swap_edges(edge_index_type node, edge_index_type i, edge_index_type j)
       {
         graph_errors::check_edge_swap_indices(node, i, j, static_cast<std::size_t>(std::ranges::distance(cedges(node))));
@@ -416,7 +416,7 @@ namespace sequoia
                                begin_edges(node) + numeric::unchecked_conversion_to<std::ptrdiff_t>(j));
       }
 
-      // TO DO: change semantics to non-throwing?
+      // TODO: change semantics to non-throwing?
       constexpr void swap_nodes(edge_index_type i, edge_index_type j)
       {
         graph_errors::check_node_index_range("swap_nodes", order(), i, j);
@@ -435,7 +435,7 @@ namespace sequoia
 
         if constexpr(!is_directed(flavour))
         {
-          // TO DO: use concat_view when available
+          // TODO: use concat_view when available
           auto getTarget{[](const auto& e){ return e.target_node(); }};
           auto targetEdges{std::views::transform(edges(i), getTarget) | std::ranges::to<std::vector>()};
           std::ranges::transform(edges(j), std::back_inserter(targetEdges), getTarget);
@@ -537,7 +537,7 @@ namespace sequoia
         m_Edges.shrink_to_fit();
       }
 
-      // TO DO: Consider interaction of throwing semantics with that of edge storage class
+      // TODO: Consider interaction of throwing semantics with that of edge storage class
       [[nodiscard]]
       constexpr edge_iterator begin_edges(const edge_index_type node)
       {
@@ -649,7 +649,7 @@ namespace sequoia
 
             if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
             {
-              // TO DO: consider reversing iteration
+              // TODO: consider reversing iteration
               for(auto iter{m_Edges.begin_partition(partition)}; iter != m_Edges.end_partition(partition);)
               {
                 if(fn(*iter))
@@ -784,7 +784,7 @@ namespace sequoia
 
       void erase_edge(const_edge_iterator citer)
       {
-        // TO DO: ensure strong exception guarantee (maybe just insist on
+        // TODO: ensure strong exception guarantee (maybe just insist on
         // noexcept move assignment for m_Edges
 
         if(!order() || (citer == cend_edges(citer.partition_index()))) return;

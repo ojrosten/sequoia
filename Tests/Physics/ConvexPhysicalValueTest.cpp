@@ -178,7 +178,7 @@ namespace sequoia::testing
       >
     );
     STATIC_CHECK( can_multiply<value_t, units_t>);
-    // TO DO: think if this can be reinstated. The problem is that we
+    // TODO: think if this can be reinstated. The problem is that we
     // want to exclude for Celsius as a point but not as a Delta
     //STATIC_CHECK(!can_divide  <value_t, units_t>);
 

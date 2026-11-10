@@ -11,7 +11,7 @@ namespace sequoia::testing
 {
   using namespace maths;
 
-  // TO DO: move this to physics examples
+  // TODO: move this to physics examples
   /*namespace
   {
     template<std::size_t D, std::floating_point T>

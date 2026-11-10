@@ -43,7 +43,7 @@ namespace sequoia::physics
 
   struct no_unit_t : identity_isomorphism
   {
-    using is_unit = std::true_type; // TO DO: naming makes this peverse!
+    using is_unit = std::true_type; // TODO: naming makes this peverse!
   };
   
   inline constexpr no_unit_t no_unit{};
@@ -174,20 +174,20 @@ namespace sequoia::physics
     using type = impl::simplify_t<tensor_product<Ts...>, tensor_product<Us...>>;
   };
 
-  // Bounds TO DO: this is actually Reps
+  // Bounds TODO: this is actually Reps
   template<weak_commutative_ring LHRingRep, auto LHBounds, weak_commutative_ring RHRingRep, auto RHBounds>
     requires bounds_value<LHBounds> && bounds_value<RHBounds>
   struct reduction<tensor_product<canonical_representation<LHRingRep, LHBounds>, canonical_representation<RHRingRep, RHBounds>>>
   {
-    using value_type = std::common_type_t<LHRingRep, RHRingRep>; // TO DO: rethink this
+    using value_type = std::common_type_t<LHRingRep, RHRingRep>; // TODO: rethink this
     using type = canonical_representation<value_type, LHBounds * RHBounds>;
   };
 
-  // Representations - TO DO looks superflous
+  // Representations - TODO looks superflous
   template<representation R, representation S>
   struct reduction<tensor_product<R, S>>
   {
-    using value_type = std::common_type_t<typename R::value_type, typename S::value_type>; // TO DO: rethink this
+    using value_type = std::common_type_t<typename R::value_type, typename S::value_type>; // TODO: rethink this
     using type = canonical_representation<value_type, R::bounds_v * S::bounds_v>;
   };
 
@@ -509,7 +509,7 @@ namespace sequoia::physics
            && have_compatible_base_spaces_v<space_type, OtherValueSpace>
            && consistent_basis_data_v<basis_data_type, OtherBasisData>
     [[nodiscard]]
-    // TO DO: refine this
+    // TODO: refine this
     friend constexpr auto operator+(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasisData, representation_type, OtherOrigin, validator_type>& rhs)
     {
       using value_space_t    = to_base_space_t<space_type>;
@@ -527,7 +527,7 @@ namespace sequoia::physics
             && have_compatible_base_spaces_v<space_type, OtherValueSpace>
             && consistent_basis_data_v<basis_data_type, OtherBasisData>
     [[nodiscard]]
-    // TO DO: refine this
+    // TODO: refine this
     friend constexpr auto operator-(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasisData, representation_type, OtherOrigin, validator_type>& rhs)
       noexcept(has_identity_validator_v)
     {
@@ -550,9 +550,9 @@ namespace sequoia::physics
       representation_for<RHSValueSpace> RHSRepresentation,
       class RHSOrigin
     >
-      requires is_multiplicable_with_v<RHSValueSpace, RHSBasisData> // TO DO: include repr, origin
+      requires is_multiplicable_with_v<RHSValueSpace, RHSBasisData> // TODO: include repr, origin
     [[nodiscard]]
-    // TO DO: move to derived class
+    // TODO: move to derived class
     friend constexpr auto operator*(const physical_value& lhs,
                                     const physical_value<RHSValueSpace, RHSUnit, RHSBasisData, RHSRepresentation, RHSOrigin, validator_type>& rhs)
     {
@@ -573,7 +573,7 @@ namespace sequoia::physics
       class RHSOrigin,
       representation_for<RHSValueSpace> RHSRepresentation
     >
-    requires is_divisible_with_v<RHSValueSpace, RHSRepresentation, RHSBasisData> // TO DO: include origin
+    requires is_divisible_with_v<RHSValueSpace, RHSRepresentation, RHSBasisData> // TODO: include origin
     [[nodiscard]]
     friend constexpr auto operator/(const physical_value& lhs,
                                     const physical_value<RHSValueSpace, RHSUnit, RHSBasisData, RHSRepresentation, RHSOrigin, validator_type>& rhs)
@@ -632,7 +632,7 @@ namespace sequoia::physics
     constexpr physical_value convert_to(units_type) const noexcept { return *this; }
   };
     
-  // TO DO: rethink this. We probably don't need Rep.
+  // TODO: rethink this. We probably don't need Rep.
   // But this does beg the question about e.g. integral masses
 
   template<physical_unit Unit, class Rep>
@@ -662,7 +662,7 @@ namespace sequoia::physics
     using type = impl::to_composite_space_t<reduction_t<tensor_product<default_space_t<Ts, Rep>...>>>;
   };
 
-  // TO DO: a default valiator?
+  // TODO: a default valiator?
   template<class T, physical_unit Unit>
     requires has_default_space_v<Unit, T>
   physical_value(T, Unit)
@@ -774,7 +774,7 @@ namespace sequoia::physics
     using arena_type          = PhysicalValueSet::arena_type;
   };
 
-  // TO DO: probably want this inheriting from an elementary space? Maybe as an isomorphism...?
+  // TODO: probably want this inheriting from an elementary space? Maybe as an isomorphism...?
   template<class PhysicalValueSet, class Field, std::size_t D, class Derived>
   struct physical_value_vector_space
   {
@@ -1133,7 +1133,7 @@ namespace sequoia::physics
     using transform_type = coordinate_transform<Unit, dilatation<std::micro>, translation<0>>;
   };
   
-  // TO DO: these namespace have been made inline to workaround an MSVC bug
+  // TODO: these namespace have been made inline to workaround an MSVC bug
   // https://developercommunity.visualstudio.com/t/Overload-resolution-failing-with-a-class/10977207
   // It may be worth making them inline, regardless, and possibly abandoning
   // the inner namespace. I need to think about this.
@@ -1285,7 +1285,7 @@ namespace sequoia::physics
     using position = physical_value<position_space<D, Arena>, units::metre_t, BasisData, canonical_representation<T, no_bounds<T>>, Origin, Validator>;
   }
 
-  // TO DO: see comment above si namespace
+  // TODO: see comment above si namespace
   inline namespace non_si
   {
     inline namespace units
@@ -1342,7 +1342,7 @@ namespace sequoia::physics
     requires has_coordinate_transform_v<Unit> && (!is_coordinate_transform_v<Unit>) // Last condition only necessary for MSVC
   struct default_space<Unit, Rep> : default_space<root_transform_t<Unit>, Rep> {};
 
-  // TO DO: Probably want to get rid of T
+  // TODO: Probably want to get rid of T
   template<std::floating_point T>
   struct default_space<si::units::metre_t, T>
   {
@@ -1393,8 +1393,8 @@ namespace sequoia::physics
     return {std::abs(q.value()), Unit{}};
   }
 
-  // TO DO: constrain the unit to be a coordinate transformation of radians
-  // TO DO: tidy template params, make bounds a NTTP
+  // TODO: constrain the unit to be a coordinate transformation of radians
+  // TODO: tidy template params, make bounds a NTTP
   template<physical_unit Unit, std::floating_point T, class Validator=throwing_validator, class Arena=implicit_common_arena>
   [[nodiscard]]
   constexpr T sin(physical_value<angular_space<Arena>, Unit, default_basis_t<angular_space<Arena>, Unit>, canonical_representation<T, no_bounds<T>>, distinguished_origin, Validator> theta)
@@ -1595,7 +1595,7 @@ struct std::formatter<sequoia::physics::physical_value<ValueSpace, Unit, BasisDa
       return std::format_to(ctx.out(), "{}", v.value());
   }
 
-  // TO DO: reinstate when formatting is working for spans 
+  // TODO: reinstate when formatting is working for spans 
   /*auto format(const physical_value_type& v, auto& ctx) const
     requires (dimension > 1)
   {
