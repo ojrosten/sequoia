@@ -47,14 +47,14 @@ namespace sequoia::testing
     using euc_hf_space_t = euclidean_half_line<implicit_common_arena>;
     using euc_vec_space_t = euclidean_vector_space<1, implicit_common_arena>;
 
-    // TO DO: canonical basis should work here...?
+    // TODO: canonical basis should work here...?
     using unsafe_euc_half_space_qty = physical_value<euc_hf_space_t, no_unit_t, unit_defined_basis_data_for<euc_hf_space_t, no_unit_t>, canonical_representation<value_t, no_bounds<value_t>>, to_origin_type_t<euc_hf_space_t>, identity_validator>;
 
     using unsafe_euc_vec_space_qty = physical_value<euc_vec_space_t, no_unit_t, unit_defined_basis_data_for<euc_vec_space_t, no_unit_t>, canonical_representation<value_t, no_bounds<value_t>>, to_origin_type_t<euc_vec_space_t>, identity_validator>;
 
         
     check(equality, "", unsafe_qty_t{2.0, units_t{}}  / unsafe_qty_t {-1.0, units_t{}}, unsafe_euc_half_space_qty{-2.0f, no_unit});
-    // TO DO: possibly reinstate these at expense of last two...
+    // TODO: possibly reinstate these at expense of last two...
     // using euc_vec_space_qty         = euclidean_1d_vector_quantity<value_t>;
     //check(equality, "", unsafe_qty_t{-2.0, units_t{}} / delta_q_t{1.0, units_t{}},      euc_vec_space_qty{-2.0, no_unit});
     //check(equality, "", delta_q_t{-2.0, units_t{}}    / unsafe_qty_t{1.0, units_t{}},   euc_vec_space_qty{-2.0, no_unit});

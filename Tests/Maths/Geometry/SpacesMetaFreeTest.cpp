@@ -727,7 +727,7 @@ namespace sequoia::testing
     // Pairing, condition one: a supplied index set must have one index per basis element.
     STATIC_CHECK( has_consistent_index_set_v<mismatched_basis_data, euclidean_vector_space<7>>);
     STATIC_CHECK(!has_consistent_index_set_v<mismatched_basis_data, euclidean_vector_space<3>>);
-    // TO DO: false once the enumerators can be counted; pinned so that the day they can,
+    // TODO: false once the enumerators can be counted; pinned so that the day they can,
     // this line fails and says so.
     STATIC_CHECK( has_consistent_index_set_v<enumerated_basis_data, euclidean_vector_space<3>>);
     // Neither sized nor an enumeration, so not an index set: rejected rather than waved through.
@@ -768,7 +768,7 @@ namespace sequoia::testing
     STATIC_CHECK(!basis_data_for<int, euclidean_vector_space<3>>);
 
     /* Orthonormality is declared by the basis data, and gates the inner product,
-       the dot product and the norm on euclidean_vector_space. TO DO: nothing in
+       the dot product and the norm on euclidean_vector_space. TODO: nothing in
        Source declares it, so those three hidden friends are unreachable today and
        the four traits built on them are false for every space. The fixture supplies
        the only positive case there is; the negatives below record the gap, and will
@@ -870,7 +870,7 @@ namespace sequoia::testing
     STATIC_CHECK(std::is_same_v<bounds_value_type_t<coordinate_bounds<double>>, double>);
     STATIC_CHECK(std::is_same_v<bounds_value_type_t<coordinate_bounds<float>>,  float>);
 
-    /* TO DO: bounds_value_type has a partial specialization for std::array<Bounds, D>,
+    /* TODO: bounds_value_type has a partial specialization for std::array<Bounds, D>,
        intended for the per-component bounds of a multi-dimensional space. Both the
        primary and the alias are constrained on `bounds`, which an array of bounds is
        not, so nothing can name it. Pinned as unreachable so that the day the

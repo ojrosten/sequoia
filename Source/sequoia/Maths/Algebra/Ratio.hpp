@@ -39,7 +39,7 @@ namespace sequoia::maths
     using num_type = std::remove_cv_t<decltype(Num)>;
     using den_type = std::remove_cv_t<decltype(Den)>;
     
-    // TO DO: once constexpr fmod / remainder is supported,
+    // TODO: once constexpr fmod / remainder is supported,
     // consider more general reductions
     constexpr static bool is_identity_v{Num == Den};
     constexpr static auto num{is_identity_v ? num_type(1) : Num};

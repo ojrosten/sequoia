@@ -1175,7 +1175,7 @@ namespace sequoia::maths
 
   struct identity_isomorphism {};
 
-  // TO DO: temporary. A stand-in for a genuine element of GL(S) - the
+  // TODO: temporary. A stand-in for a genuine element of GL(S) - the
   // automorphism negating every coordinate - pending machinery for specifying
   // such elements. It exists to exercise the client experience of a
   // non-identity automorphism.
@@ -1248,7 +1248,7 @@ namespace sequoia::maths
       if constexpr(requires { index_set_t::size(); })
         return index_set_t::size() == rank_of_v<M>;
       else if constexpr(std::is_enum_v<index_set_t>)
-        // TO DO std::meta::enumerators_of(^^index_set_t).size() == rank_of_v<M>;
+        // TODO std::meta::enumerators_of(^^index_set_t).size() == rank_of_v<M>;
         return true;
       else
         return false;
@@ -1873,7 +1873,7 @@ namespace sequoia::maths
       && requires (const Bounds& b) {
            { b.lower } -> std::convertible_to<typename Bounds::value_type>;
            { b.upper } -> std::convertible_to<typename Bounds::value_type>;
-           // TO DO
+           // TODO
          };
 
   template<auto Bounds>
@@ -2052,7 +2052,7 @@ namespace sequoia::maths
 
    */
 
-  // TO DO free mod value_type as well
+  // TODO free mod value_type as well
   template<class R, class Space>
   inline constexpr bool representation_for_single_value{
         (dimension_of_v<Space> == 1)
@@ -2099,7 +2099,7 @@ namespace sequoia::maths
   template<class Rep, class Algebra>
   concept weak_representation_for = weakly_represented_by_v<Algebra, Rep>;
   
-  // TO DO constrain coordinates_type to hold things satisfying a coords concept?
+  // TODO constrain coordinates_type to hold things satisfying a coords concept?
   template<class R>
   concept representation = std::default_initializable<R>
                         && has_value_type_v<R>
@@ -2110,7 +2110,7 @@ namespace sequoia::maths
   concept representation_for
     =    partial_m_torsor<Space>
       && representation<R>
-    // TO DO not this, since the set could be anything and the rep applies to the coordinates
+    // TODO not this, since the set could be anything and the rep applies to the coordinates
     // but maybe something along these lines
     // && weak_representation_for<value_type_of_t<R>, set_type_of_t<Space>>
       && bounds_for<decltype(R::bounds_v), Space>
@@ -2179,7 +2179,7 @@ namespace sequoia::maths
   using displacement_representation_t = displacement_representation<Space, Representation>::type;
 
   template<representation Representation, class... Ts>
-  // TO DO: constrain Ts to a coordinates concept
+  // TODO: constrain Ts to a coordinates concept
   inline constexpr bool consistent_representation_v{
     requires {
       typename Representation::coordinates_type;
@@ -2282,7 +2282,7 @@ namespace sequoia::maths
   template<class V, partial_m_torsor Space, representation_for<Space> Representation>
   inline constexpr bool validator_for_single_value{
        (dimension_of_v<Space> == 1)
-       // TO DO: also free module val type? Also define value_type_of
+       // TODO: also free module val type? Also define value_type_of
        && requires(V& v, const typename Representation::value_type& val) { { v(Representation::bounds_v, val) } -> std::convertible_to<decltype(val)>; }
   };
 
@@ -2310,7 +2310,7 @@ namespace sequoia::maths
     && representation_for<Representation, Space>
     && std::default_initializable<V>
     && std::constructible_from<V, V>
-    && (    (   has_coordinates_type_v<Representation>) // TO DO 
+    && (    (   has_coordinates_type_v<Representation>) // TODO 
          || (  !has_coordinates_type_v<Representation>
              && (validator_for_single_value<V, Space, Representation> || validator_for_array<V, Space, Representation>)));
 
@@ -2341,7 +2341,7 @@ namespace sequoia::maths
       return validate(bnds, vals);
     }
 
-    // TO DO: consider moving this elsewhere
+    // TODO: consider moving this elsewhere
     template<bounds Bounds, arithmetic T, std::size_t D>
     constexpr const std::array<T, D>& operator()(const std::array<Bounds, D>& bnds, const std::array<T, D>& vals) const
     {
@@ -2494,7 +2494,7 @@ namespace sequoia::maths
   template<partial_m_torsor... Ts>
     requires (sizeof...(Ts) >= 1)
   && (has_distinguished_origin_v<Ts> && ...)
-  // TO DO: distinguished origin
+  // TODO: distinguished origin
           && ((!affine_space<Ts> && ...) || ((free_module<Ts> || ...) && (!free_module<Ts> || ...)))
   struct tensor_product<Ts...>
   {
@@ -2577,7 +2577,7 @@ namespace sequoia::maths
         without additional work, rings and fields do not satisfy the partial_m_torsor
         concept as introduced, above.
 
-        TO DO: now that the domain is a partial M-torsor rather than a convex
+        TODO: now that the domain is a partial M-torsor rather than a convex
         space, the name of this template overstates what it holds.
      */
     template<partial_m_torsor From, class To>
@@ -2685,7 +2685,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-  requires (!partial_m_torsor<T>) || (partial_m_torsor<T> /* TO DO && weak_field<commutative_ring_type_of_t<T>>*/)
+  requires (!partial_m_torsor<T>) || (partial_m_torsor<T> /* TODO && weak_field<commutative_ring_type_of_t<T>>*/)
   struct dual_of<dual<T>> {
     using type = T;
   };
@@ -2967,7 +2967,7 @@ namespace sequoia::maths
         : theta + pi;
     }
 
-    // TO DO: unary minus, with corresponding change to coordinates_base
+    // TODO: unary minus, with corresponding change to coordinates_base
       
     [[nodiscard]]
     static constexpr std::array<T, 2> mul(std::span<const T, 2> lhs, T scale)
@@ -3078,9 +3078,9 @@ namespace sequoia::maths
 
     template<class... Coords>
       requires (sizeof...(Coords) > 1)
-               // TO DO: requires that these fulfill a coords concept
+               // TODO: requires that these fulfill a coords concept
             && ((0 + ... + Coords::dimension) == dimension)
-            && ((Coords::dimension == 1) && ...) // TO DO: ultimately remove this restriction
+            && ((Coords::dimension == 1) && ...) // TODO: ultimately remove this restriction
             && (consistent_basis_data_v<basis_data_type, typename Coords::basis_data_type> && ...)
             && consistent_representation_v<representation_type, Coords...>
             && (std::same_as<validator_type, typename Coords::validator_type> && ...)
@@ -3120,7 +3120,7 @@ namespace sequoia::maths
 
     template<class Self>
       requires (!std::same_as<Self, coordinates_base>)  && vector_space<free_module_type>
-    // TO DO: remove this: it's a temporary hack while the field / commutative_ring concepts are sorted out
+    // TODO: remove this: it's a temporary hack while the field / commutative_ring concepts are sorted out
     && (!std::integral<value_type>)
     constexpr Self& operator/=(this Self& self, value_type u)
     {
@@ -3143,7 +3143,7 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr Self operator-(this const Self& self) noexcept(has_identity_validator_v)
     {
-      // TO DO: enable refinement through representation
+      // TODO: enable refinement through representation
       return Self{self}.for_each_element([](value_type& t) { t = -t; });
     }
 
@@ -3347,7 +3347,7 @@ namespace sequoia::maths
 
     template<class Derived>
       requires std::derived_from<Derived, coordinates_base> && vector_space<free_module_type> && has_distinguished_origin_v
-    // TO DO: remove this: it's a temporary hack while the field / commutative_ring concepts are sorted out
+    // TODO: remove this: it's a temporary hack while the field / commutative_ring concepts are sorted out
     && (!std::integral<value_type>)
     [[nodiscard]]
     friend constexpr Derived operator/(const Derived& v, value_type u)
@@ -3389,7 +3389,7 @@ namespace sequoia::maths
     constexpr value_type& value() noexcept requires (D == 1) && has_freely_mutable_components_v { return m_Values[0]; }
 
     /// This is explicit since otherwise, given two vectors a,b, a/b is well-formed due to implicit boolean conversion
-    // TO DO: consider restricting to spaces with a privileged origin
+    // TODO: consider restricting to spaces with a privileged origin
     [[nodiscard]]
     constexpr explicit operator bool() const noexcept requires (D == 1) && std::convertible_to<value_type, bool>
     {
@@ -3402,7 +3402,7 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr value_type& operator[](std::size_t i) requires has_freely_mutable_components_v { return m_Values[i]; }
 
-    // TO DO: reconsider these (and the above, related, functions) for physical values
+    // TODO: reconsider these (and the above, related, functions) for physical values
     // (more generally, when the basis isomorphism type is non-trivial). The const
     // overloads could use a custom iterator that dereferences to a 'quantity'. But
     // what of the mutable ones?
@@ -3511,7 +3511,7 @@ SEQUOIA_GCC_SUPPRESS_END
       {
         auto tmp{to_underlying(self.m_Values)};
         std::ranges::for_each(tmp, f);
-        // TO DO: ideally untangle the logic. This is all rather implicit
+        // TODO: ideally untangle the logic. This is all rather implicit
         // The assumption is that if the representation defines coordinate_type,
         // then from_underlying goes via said coordinates, which perform their
         // own validation. But this is opaque & perhaps brittle. At the very least,
@@ -3719,7 +3719,7 @@ SEQUOIA_GCC_SUPPRESS_END
   template<class From, class To>
   inline constexpr bool has_coordinate_transformation_v{
     requires (const From& f){
-      { std::declval<coordinate_transformation<From, To>>()(f) };// TO DO  -> std::convertible_to<To>;
+      { std::declval<coordinate_transformation<From, To>>()(f) };// TODO  -> std::convertible_to<To>;
     }
   };
 
@@ -3739,7 +3739,7 @@ SEQUOIA_GCC_SUPPRESS_END
     template<std::size_t N>
     struct Z
     {
-      // TO DO: rename --> rank
+      // TODO: rename --> rank
       constexpr static std::size_t dimension{N};
     };
 
@@ -3908,7 +3908,7 @@ SEQUOIA_GCC_SUPPRESS_END
   template<class V>
   concept inner_product_space = vector_space<V> && has_inner_product_v<V>;
 
-  // TO DO: reconsider whether this is necessary
+  // TODO: reconsider whether this is necessary
   struct mathematical_arena {};
 
   template<std::size_t D, class Arena=mathematical_arena>
@@ -3931,7 +3931,7 @@ SEQUOIA_GCC_SUPPRESS_END
     {
       return
         std::ranges::fold_left(
-          std::views::zip(v.values(), w.values()), // TO DO: transform_view using repr. or be smarter... e.g. for polar
+          std::views::zip(v.values(), w.values()), // TODO: transform_view using repr. or be smarter... e.g. for polar
           field_type{},
           [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); }
         );
@@ -3953,7 +3953,7 @@ SEQUOIA_GCC_SUPPRESS_END
     [[nodiscard]]
     friend constexpr field_type norm(const vector_coordinates<euclidean_vector_space, BasisData, Representation, Validator>& v)
     {
-      // TO DO: transform_view using repr. or be smarter...
+      // TODO: transform_view using repr. or be smarter...
       if constexpr(D == 1)
       {
         return std::abs(v.value());
@@ -4072,7 +4072,7 @@ SEQUOIA_GCC_SUPPRESS_END
   template<class...>
   struct orthogonal_similarity_transformation;
 
-  template<class Ratio> // TO DO: reflections and rotations
+  template<class Ratio> // TODO: reflections and rotations
   struct orthogonal_similarity_transformation<dilatation<Ratio>>
   {
     using dilatation_type = dilatation<Ratio>;

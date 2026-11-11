@@ -212,7 +212,7 @@ namespace sequoia::maths
       std::ranges::swap(m_NodeWeights, rhs.m_NodeWeights);
     }
 
-    // TO DO: consider throwing semantics
+    // TODO: consider throwing semantics
     constexpr void swap_nodes(const size_type i, const size_type j)
     {
       if((i >= size()) || (j >= size()))

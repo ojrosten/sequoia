@@ -54,7 +54,7 @@ namespace sequoia::testing
     using propagate_on_container_swap            = std::bool_constant<PropagateSwap>;
     using is_always_equal = std::false_type;
 
-    // TO DO: Remove when libc++ is updated
+    // TODO: Remove when libc++ is updated
     template< class U > struct rebind
     {
       using other = shared_counting_allocator<U, PropagateCopy, PropagateMove, PropagateSwap>;

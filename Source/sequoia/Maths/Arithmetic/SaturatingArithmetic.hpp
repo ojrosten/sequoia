@@ -43,7 +43,7 @@ namespace sequoia::maths
 #endif
   }
 
-  // TO DO: refine this, esp for mixed floating-point / integral
+  // TODO: refine this, esp for mixed floating-point / integral
   // The current logic is adapted to the fact that the impl uses
   // std::common_type. The common type of int and unsigned is
   // unsigned - wich is undesriable - whereas that of long and

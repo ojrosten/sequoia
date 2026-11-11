@@ -80,7 +80,7 @@ namespace sequoia::testing
       return lhs.x >= rhs.x;
     }
 
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    // TODO: default this and remove most of the above when libc++ rolls out <=> to std
     friend std::weak_ordering operator<=>(const orderable_regular_beast& lhs, const orderable_regular_beast& rhs) noexcept
     {
       if(lhs < rhs) return std::weak_ordering::less;
@@ -230,7 +230,7 @@ namespace sequoia::testing
       return lhs.x >= rhs.x;
     }
 
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    // TODO: default this and remove most of the above when libc++ rolls out <=> to std
     friend std::weak_ordering operator<=>(const regular_broken_less& lhs, const regular_broken_less& rhs) noexcept
     {
       if(lhs < rhs) return std::weak_ordering::less;
@@ -309,7 +309,7 @@ namespace sequoia::testing
       return lhs.x >= rhs.x;
     }
 
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    // TODO: default this and remove most of the above when libc++ rolls out <=> to std
     friend std::weak_ordering operator<=>(const regular_broken_lesseq& lhs, const regular_broken_lesseq& rhs) noexcept
     {
       if(lhs < rhs) return std::weak_ordering::less;
@@ -391,7 +391,7 @@ namespace sequoia::testing
       return lhs.x >= rhs.x;
     }
 
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    // TODO: default this and remove most of the above when libc++ rolls out <=> to std
     friend std::weak_ordering operator<=>(const regular_broken_greater& lhs, const regular_broken_greater& rhs) noexcept
     {
       if(lhs < rhs) return std::weak_ordering::less;
@@ -473,7 +473,7 @@ namespace sequoia::testing
       return lhs.x >= rhs.x;
     }
 
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    // TODO: default this and remove most of the above when libc++ rolls out <=> to std
     friend std::weak_ordering operator<=>(const regular_broken_greatereq& lhs, const regular_broken_greatereq& rhs) noexcept
     {
       if(lhs < rhs) return std::weak_ordering::less;
@@ -555,7 +555,7 @@ namespace sequoia::testing
       return lhs.x <= rhs.x;
     }
 
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    // TODO: default this and remove most of the above when libc++ rolls out <=> to std
     friend std::weak_ordering operator<=>(const regular_inverted_comparisons& lhs, const regular_inverted_comparisons& rhs) noexcept
     {
       if(lhs < rhs) return std::weak_ordering::less;
@@ -637,7 +637,7 @@ namespace sequoia::testing
       return lhs.x >= rhs.x;
     }
 
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    // TODO: default this and remove most of the above when libc++ rolls out <=> to std
     friend std::weak_ordering operator<=>(const regular_broken_spaceship& lhs, const regular_broken_spaceship& rhs) noexcept
     {
       if(lhs < rhs) return std::weak_ordering::greater;
@@ -721,7 +721,7 @@ namespace sequoia::testing
       return lhs.x >= rhs.x;
     }
 
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    // TODO: default this and remove most of the above when libc++ rolls out <=> to std
     friend std::weak_ordering operator<=>(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept
     {
       if(lhs < rhs) return std::weak_ordering::less;

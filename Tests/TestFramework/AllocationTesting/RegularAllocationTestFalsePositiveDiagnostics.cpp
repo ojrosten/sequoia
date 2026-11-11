@@ -85,7 +85,7 @@ namespace sequoia::testing
       check_semantics("", beast{{1,2}}, beast{{5}, allocator{}}, mutator, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_anp,1_awp,0_manp,0_ma}}});
     }
 
-    /* TO DO: enable test once there's a fix for this libc++ bug https://bugs.llvm.org/show_bug.cgi?id=48439 {
+    /* TODO: enable test once there's a fix for this libc++ bug https://bugs.llvm.org/show_bug.cgi?id=48439 {
       using beast = perfectly_stringy_beast<char, shared_counting_allocator<char, PropagateCopy, PropagateMove, PropagateSwap>>;
 
       auto allocGetter{

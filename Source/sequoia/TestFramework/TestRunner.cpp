@@ -518,7 +518,7 @@ namespace sequoia::testing
         [&projectRoot](const removal_failure& failure) { return removal_failure_message(failure, projectRoot); }
       };
 
-      // TO DO: std::views::concat | std::ranges::to<std::vector>, once the
+      // TODO: std::views::concat | std::ranges::to<std::vector>, once the
       // MS STL has concat (P2542)
 
       std::vector<std::string> messages{trackerFailures.begin(), trackerFailures.end()};
@@ -652,7 +652,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::vector<fs::path> concatenate(std::span<const fs::path> first, std::span<const fs::path> second)
     {
-      // TO DO: std::views::concat | std::ranges::to<std::vector>, once the
+      // TODO: std::views::concat | std::ranges::to<std::vector>, once the
       // MS STL has concat (P2542)
       std::vector<fs::path> both{first.begin(), first.end()};
       both.append_range(second);
