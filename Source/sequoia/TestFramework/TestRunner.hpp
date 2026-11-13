@@ -154,7 +154,6 @@ namespace sequoia::testing
          `enqueue_removal`, if the temporary root was moved;
       -# Otherwise, a ready future holding the leftover's failure, if any.
 
-      \throws std::logic_error if `materials` names no test
       \throws std::filesystem::filesystem_error if the temporary root cannot be
                removed in place; if the leftover could not be removed either,
                a `std::runtime_error` naming both

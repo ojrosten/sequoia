@@ -32,36 +32,25 @@ namespace sequoia::testing
     test_materials_paths();
     test_ancillary_main_cpps();
 
-    // Default project paths give no absolute root. The roots of summaries and
-    // diagnostics are empty; the root of execution records is relative but
-    // not empty. The record's source is absolute, and the others' relative,
-    // so that the checks reach the refusal from both kinds of source.
-    check_exception_thrown<std::invalid_argument>(
-      reporter{"A summary needs an absolute output root"},
-      []() {
-        return test_summary_path{"Tests/Foo.cpp", "foo_test", project_paths{}, null_discriminator};
-      }
-    );
+    {
+      // Relative to the current directory
+      const auto relativeExecutable{fs::relative(fake_project_executable(working_materials()))};
+      commandline_arguments args{{relativeExecutable.generic_string()}};
+      const project_paths projPaths{args.size(), args.get(), {}};
 
-    check_exception_thrown<std::invalid_argument>(
-      reporter{"An execution record needs an absolute output root"},
-      [this]() {
-        return test_execution_record_path{working_materials() / "Tests" / "Foo.cpp", "foo_test", project_paths{}};
-      }
-    );
-
-    check_exception_thrown<std::invalid_argument>(
-      reporter{"Diagnostics need an absolute output root"},
-      []() {
-        return individual_diagnostics_paths{
-                 project_paths{},
-                 "foo_test",
-                 "Tests/Foo.cpp",
-                 test_mode::standard,
-                 std::nullopt
-               };
-      }
-    );
+      check("A relative executable gives an absolute executable",
+            projPaths.executable().is_absolute());
+      check("A relative executable gives an absolute CMake cache",
+            projPaths.discovered().cmake_cache().is_absolute());
+      check("A relative executable gives an absolute project root",
+            projPaths.project_root().is_absolute());
+      check("A relative executable gives an absolute root of summaries",
+            projPaths.output().test_summaries().is_absolute());
+      check("A relative executable gives an absolute root of diagnostics",
+            projPaths.output().diagnostics().is_absolute());
+      check("A relative executable gives an absolute directory of execution records",
+            projPaths.execution_records().dir().is_absolute());
+    }
 
     {
       commandline_arguments args{fake_project_commandline(working_materials())};
@@ -132,6 +121,10 @@ namespace sequoia::testing
     // A default would name no file: its path would be empty
     STATIC_CHECK(!std::is_default_constructible_v<test_summary_path>);
     STATIC_CHECK(!std::is_default_constructible_v<test_execution_record_path>);
+
+    // A default would name no test: its paths would be empty
+    STATIC_CHECK(!std::is_default_constructible_v<individual_materials_paths>);
+    STATIC_CHECK(!std::is_default_constructible_v<individual_diagnostics_paths>);
   }
 
   void individual_test_paths_free_test::test_project_folder_deduction()
@@ -220,24 +213,6 @@ namespace sequoia::testing
     check(equality, "Platypus: original auxiliary",     platypus.original_auxiliary(),       variant / "Auxiliary");
     check(equality, "Platypus: temporary working copy", platypus.working(),                  temporary / "WorkingCopy");
     check(equality, "Platypus: temporary auxiliary",    platypus.auxiliary(),                temporary / "Auxiliary");
-
-    const individual_materials_paths none{};
-    check("No test: no test root",                none.original_test_root().empty());
-    check("No test: no original materials root",  none.original_materials_root().empty());
-    check("No test: no temporary materials root", none.temporary_materials_root().empty());
-
-    check_exception_thrown<std::logic_error>("No test: no discarded materials root",
-                                             [&none]() { return none.discarded_materials_root(); });
-    check_exception_thrown<std::logic_error>("No test: no original working copy",
-                                             [&none]() { return none.original_working(); });
-    check_exception_thrown<std::logic_error>("No test: no temporary working copy",
-                                             [&none]() { return none.working(); });
-    check_exception_thrown<std::logic_error>("No test: no predictions",
-                                             [&none]() { return none.prediction(); });
-    check_exception_thrown<std::logic_error>("No test: no original auxiliary",
-                                             [&none]() { return none.original_auxiliary(); });
-    check_exception_thrown<std::logic_error>("No test: no temporary auxiliary",
-                                             [&none]() { return none.auxiliary(); });
   }
 
   void individual_test_paths_free_test::test_ancillary_main_cpps()

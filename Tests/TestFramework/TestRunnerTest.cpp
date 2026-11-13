@@ -1321,14 +1321,24 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{"Invalid repetitions for instability analysis"},
       [this](){
-        test_instability_analysis("", "", "foo", return_code::critical_failures, critical_free_test{});
+        test_instability_analysis("",
+                                  "",
+                                  "foo",
+                                  return_code::critical_failures,
+                                  {},
+                                  std::type_identity<critical_free_test>{});
       }
     );
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Insufficient repetitions for instability analysis"},
       [this](){
-        test_instability_analysis("", "",  "1", return_code::critical_failures, critical_free_test{});
+        test_instability_analysis("",
+                                  "",
+                                  "1",
+                                  return_code::critical_failures,
+                                  {},
+                                  std::type_identity<critical_free_test>{});
       }
     );
   }
@@ -2390,78 +2400,76 @@ namespace sequoia::testing
                               "2",
                               return_code::soft_failures,
                               {"--serial"},
-                              flipper_free_test{});
+                              std::type_identity<flipper_free_test>{});
 
     test_instability_analysis("Instability comprising pass/multiple distinct failures",
                               "MultiInstabilityAnalysis",
                               "4",
                               return_code::soft_failures,
                               {"--serial"},
-                              periodic_free_test{});
+                              std::type_identity<periodic_free_test>{});
 
     test_instability_analysis("Instability comprising failures from two checks",
                               "MultiCheckInstabilityAnalysis",
                               "6",
                               return_code::soft_failures,
                               {"--serial"},
-                              multi_periodic_free_test{});
+                              std::type_identity<multi_periodic_free_test>{});
 
     test_instability_analysis("Instability following consistent failure",
                               "BinaryInstabilityFollowingFailures",
                               "2",
                               return_code::soft_failures,
                               {"--serial"},
-                              failing_plus_instabilities_free_test{});
+                              std::type_identity<failing_plus_instabilities_free_test>{});
 
     test_instability_analysis("Failure but no instability",
                               "ConsistentFailureNoInstability",
                               "2",
                               return_code::soft_failures,
                               {"--serial"},
-                              consistently_failing_free_test{});
+                              std::type_identity<consistently_failing_free_test>{});
 
     test_instability_analysis("Always passes",
                               "ConsistentSuccessNoInstability",
                               "2",
                               return_code::success,
                               {"--serial"},
-                              consistently_passing_free_test{});
+                              std::type_identity<consistently_passing_free_test>{});
 
     test_instability_analysis("Critical failure instability",
                               "CriticalFailureInstability",
                               "2",
                               return_code::critical_failures,
                               {"--serial"},
-                              critical_free_test{});
+                              std::type_identity<critical_free_test>{});
 
     test_instability_analysis("Two tests always passing",
                               "ConsistentSuccessTwoTests",
                               "2",
                               return_code::success,
                               {"--serial"},
-                              consistently_passing_free_test{},
-                              another_consistently_passing_free_test{});
+                              std::type_identity<consistently_passing_free_test>{},
+                              std::type_identity<another_consistently_passing_free_test>{});
 
     test_instability_analysis("Consistent success/consistent failure/instability",
                               "MixedBag",
                               "6",
                               return_code::soft_failures,
                               {"--serial"},
-                              consistently_passing_free_test{},
-                              consistently_failing_free_test{},
-                              flipper_free_test{},
-                              multi_periodic_free_test{}
-                             );
+                              std::type_identity<consistently_passing_free_test>{},
+                              std::type_identity<consistently_failing_free_test>{},
+                              std::type_identity<flipper_free_test>{},
+                              std::type_identity<multi_periodic_free_test>{});
   }
 
-  template<std::invocable<test_runner&> Manipulator, concrete_test... Ts>
+  template<concrete_test... Ts>
   void test_runner_test::test_instability_analysis(std::string_view message,
                                                    std::string_view outputDirName,
                                                    std::string_view numRuns,
                                                    return_code expected,
                                                    std::initializer_list<std::string_view> extraArgs,
-                                                   Manipulator manipulator,
-                                                   Ts&&...)
+                                                   std::type_identity<Ts>...)
   {
     std::stringstream outputStream{};
 
@@ -2477,9 +2485,7 @@ namespace sequoia::testing
 
     auto runner{make_fake_project_runner(args, outputStream)};
 
-    (runner.register_test<std::remove_cvref_t<Ts>>(), ...);
-
-    manipulator(runner);
+    (runner.register_test<Ts>(), ...);
 
     check(equality, reporter{append_lines(message, "Return code")}, runner.execute(), expected);
 
@@ -2491,27 +2497,6 @@ namespace sequoia::testing
     check(equivalence, reporter(append_lines(message, make_type_info<Ts...>())),
                       outputDir,
                       predictive_materials() /= outputDirName);
-  }
-
-  template<concrete_test... Ts>
-  void test_runner_test::test_instability_analysis(std::string_view message,
-                                                   std::string_view outputDirName,
-                                                   std::string_view numRuns,
-                                                   return_code expected,
-                                                   std::initializer_list<std::string_view> extraArgs,
-                                                   Ts&&... ts)
-  {
-    test_instability_analysis(message, outputDirName, numRuns, expected, extraArgs, [](test_runner&){}, std::forward<Ts>(ts)...);
-  }
-
-  template<concrete_test... Ts>
-  void test_runner_test::test_instability_analysis(std::string_view message,
-                                                   std::string_view outputDirName,
-                                                   std::string_view numRuns,
-                                                   return_code expected,
-                                                   Ts&&... ts)
-  {
-    test_instability_analysis(message, outputDirName, numRuns, expected, {}, [](test_runner&){}, std::forward<Ts>(ts)...);
   }
 
   namespace

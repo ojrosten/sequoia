@@ -102,8 +102,6 @@ namespace sequoia::testing
       return m_Results.last_check_exit_info;
     }
   protected:
-    test_logger_base() = default;
-
     explicit test_logger_base(active_recovery_files recovery)
       : m_Recovery{std::move(recovery)}
     {}
@@ -199,8 +197,6 @@ namespace sequoia::testing
   {
   public:
     constexpr static test_mode mode{Mode};
-
-    test_logger() = default;
 
     explicit test_logger(active_recovery_files recoveryFiles)
       : test_logger_base{recoveryFiles}
