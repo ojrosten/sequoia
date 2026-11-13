@@ -308,7 +308,7 @@ namespace sequoia::testing
       [[nodiscard]]
       static const file_info& node_of(const graph_type& g, node_index i)
       {
-        maths::graph_errors::check_node_index_range("dependency_graph::node", g.order(), i);
+        maths::graph_errors::check_node_index_range("dependency_graph::node_of", g.order(), i);
         return g.cbegin_node_weights()[numeric::unchecked_conversion_to<std::ptrdiff_t>(i)];
       }
 
