@@ -29,5 +29,8 @@ namespace sequoia::testing
 
     template<maths::dynamic_network Graph>
     void test_build_time_scales_linearly(std::string_view graphName);
+
+    template<maths::dynamic_network Graph>
+    void test_sort_time_scales_as_n_log_n(std::string_view graphName);
   };
 }
