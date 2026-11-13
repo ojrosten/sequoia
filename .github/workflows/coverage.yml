@@ -91,50 +91,13 @@ jobs:
       - name: Install the toolchain
         if: env.NEEDS_TESTING == 'true'
         run: |
-          # This removal of the Chrome and Microsoft lists, the retry
-          # paragraph, the `apt-get update` and the exact-name package check
-          # below repeat tests.yml's "Install the toolchain (Linux)", which
-          # also says why `--error-on=any` is passed and why packages are
-          # matched by exact name; change both.
-          #
-          # The hosted image ships Chrome's and Microsoft's apt repositories,
-          # which nothing here installs from. A bad index from either fails
-          # `apt-get update`, and with it the job.
-          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
-                     /etc/apt/sources.list.d/microsoft-prod.list
-          # The archive is a live dependency of this job, and an index refresh
-          # has hung until the job's timeout, before any compiler ran. So
-          # scripts/retry.sh runs each apt command that fetches: an attempt
-          # that fails, or runs past its limit, is retried a bounded number of
-          # times. The script runs as root, so that stopping an attempt reaches
-          # the processes apt starts. A whole install step takes 22-126 s, so
-          # the limits leave room for every retry within the job.
-          #
-          # The command retried is
-          # scripts/apt_get_demoting_preferred_mirrors_on_retry.sh, so
-          # that a later attempt fetches from another mirror first.
-          #
-          # Only the download is retried. The install then runs once, from the
-          # downloaded packages, with no download. apt-get runs dpkg in a
-          # session of its own, so stopping an attempt leaves dpkg running and
-          # holding its lock. Every later attempt then fails at once.
-          sudo scripts/retry.sh 3 180 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh update -qq --error-on=any \
-            || { echo "::error::apt-get update failed: each attempt above says why"; exit 1; }
           # The Perl packages are for lcov, installed below from its release.
           # Without Capture::Tiny, DateTime, Date::Parse and
           # Devel::StackTrace, lcov's tools do not start. geninfo reads gcov's
           # output with JSON::XS in preference to the core, pure-Perl
           # JSON::PP.
-          packages=(g++-15 ninja-build libtbb-dev
-                    libcapture-tiny-perl libdatetime-perl libdevel-stacktrace-perl libjson-xs-perl libtimedate-perl)
-          names=$(apt-cache pkgnames)
-          for pkg in "${packages[@]}"; do
-            grep -qFx -- "$pkg" <<< "$names" \
-              || { echo "::error::$pkg is not available on this image"; exit 1; }
-          done
-          sudo scripts/retry.sh 3 300 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh \
-            install -y --download-only "${packages[@]}"
-          sudo apt-get install -y --no-download "${packages[@]}"
+          sudo scripts/install_apt_packages.sh g++-15 ninja-build libtbb-dev \
+            libcapture-tiny-perl libdatetime-perl libdevel-stacktrace-perl libjson-xs-perl libtimedate-perl
           # lcov comes from its release rather than apt (2.4 on ubuntu-26.04),
           # at the version Homebrew installs, so that CI and a Mac run the same
           # lcov. The tarball has no apt signature behind it, so its

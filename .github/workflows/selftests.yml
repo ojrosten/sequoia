@@ -19,7 +19,10 @@ name: selftests
 #
 # No job runs on Windows. snapshot_at_deadline runs on every Windows column,
 # but its selftest compiles a POSIX stand-in, so nothing controls its Windows
-# branch.
+# branch. enter_msvc_environment runs on Windows alone. The script's selftest
+# runs on Linux, with stand-ins for vswhere, cygpath, cmd and choco. The other
+# tools the script runs come from Linux, whose cp, grep, paste, sed and tr are
+# GNU's, as Git Bash's are.
 #
 # The coverage job runs the tracefile and uncalled-functions selftests itself,
 # with the lcov release and the demanglers it installs.
@@ -39,7 +42,9 @@ jobs:
   selftests:
     name: Script selftests · ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    # The timeout leaves room for scripts/install_apt_packages.sh's fetches to
+    # give up, and for "Run the selftests".
+    timeout-minutes: 35
     strategy:
       # Every platform reports, as in tests.yml.
       fail-fast: false
@@ -51,7 +56,7 @@ jobs:
             os: ubuntu-latest
             packages: gdb
             selftests: apt_get_demoting_preferred_mirrors_on_retry compile_time_report cron_expression_at
-              generate_coverage_report leftover_materials_setup_record metrics_gate
+              enter_msvc_environment generate_coverage_report install_apt_packages leftover_materials_setup_record metrics_gate
               propose_tightened_baseline read_settled_jobs rerun_unacquired_job retry runner_setup_record
               snapshot_at_deadline store_symbol_table_record symbol_dashboard symbol_table_provenance
               symbol_table_report
@@ -82,32 +87,13 @@ jobs:
           fi
           echo "Nothing to test; the scope job's summary says why."
 
-      # As in tests.yml's "Install the toolchain (Linux)", which says why:
-      #   - the step removes Chrome's and Microsoft's apt repositories;
-      #   - `--error-on=any` turns a failed index into an error;
-      #   - each package is checked by exact name first;
-      #   - scripts/retry.sh retries each apt command that fetches, through
-      #     scripts/apt_get_demoting_preferred_mirrors_on_retry.sh, with
-      #     limits that leave room for every retry within the job;
-      #   - the install then runs once, from the downloaded packages.
       # Recommendations are left out: gdb's include libc6-dbg, most of the
       # download, which no selftest needs.
       - name: Install the packages the selftests need
         if: inputs.needs_testing == 'true' && matrix.packages != ''
         env:
           PACKAGES: ${{ matrix.packages }}
-        run: |
-          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
-                     /etc/apt/sources.list.d/microsoft-prod.list
-          sudo scripts/retry.sh 3 120 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh update -qq --error-on=any
-          names=$(apt-cache pkgnames)
-          for package in $PACKAGES; do
-            grep -qFx -- "$package" <<< "$names" \
-              || { echo "::error::$package is not available on this image"; exit 1; }
-          done
-          sudo scripts/retry.sh 3 120 -- scripts/apt_get_demoting_preferred_mirrors_on_retry.sh \
-            install -y --no-install-recommends --download-only $PACKAGES
-          sudo apt-get install -y --no-install-recommends --no-download $PACKAGES
+        run: sudo scripts/install_apt_packages.sh --no-install-recommends $PACKAGES
 
       # The dashboard's script is checked against its JSDoc types by the
       # pinned release of tsc, which reads docs/dashboard/tsconfig.json, emits
@@ -122,8 +108,12 @@ jobs:
       # Every selftest runs, whichever fail, and the step names each that failed.
       # A selftest passes when it exits 0 and its last line says its controls
       # pass: one that ran nothing exits 0 too.
+      #
+      # The selftests took under 3 minutes on 2026-10-31, so the step's limit
+      # stops a hung selftest long before the job's.
       - name: Run the selftests
         if: inputs.needs_testing == 'true'
+        timeout-minutes: 10
         env:
           SELFTESTS: ${{ matrix.selftests }}
         run: |
