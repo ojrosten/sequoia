@@ -1,1 +1,2 @@
 [^\n"]*(?=Tests/Spaced Suite/)
+[^\n"]*(?=output/TestsTemporaryData/)

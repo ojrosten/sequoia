@@ -55,7 +55,8 @@ name: watchdog
 # cannot see.
 on:
   # This tick is twelve hours after those of the nightly and the statistical
-  # run, and fifteen after the baseline tightener's. A watched run that GitHub
+  # run, fifteen after the baseline tightener's, and eleven after the weekly
+  # performance comparison's. A watched run that GitHub
   # has not created when this one looks is reported missing, so the gap must
   # exceed the watched runs' delay. Over the 20 nights to 2026-10-07, GitHub
   # created the nightly 4h34m to 6h21m after its tick. The minute is off the
@@ -195,4 +196,5 @@ jobs:
           check statistical.yml "the statistical run" || failed=1
           check false-negative.yml "the false-negative control" || failed=1
           check baseline-tightener.yml "the baseline tightener" || failed=1
+          check performance-against-reference.yml "the anchored performance comparison" || failed=1
           exit $failed

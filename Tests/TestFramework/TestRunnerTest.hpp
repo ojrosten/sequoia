@@ -10,6 +10,7 @@
 /** \file */
 
 #include "FakeProjectTestingUtilities.hpp"
+#include "ReferenceRootTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
@@ -125,6 +126,8 @@ namespace sequoia::testing
     void test_dump_comparison();
 
     void test_thread_pool();
+
+    void test_reference_root();
 
     void test_instability_analysis();
 

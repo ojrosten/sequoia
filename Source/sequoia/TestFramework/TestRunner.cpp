@@ -631,6 +631,20 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    fs::path reference_root(fs::path referenceRoot, const fs::path& projectRoot)
+    {
+      throw_unless_directory(referenceRoot, "\nThe reference root must be a directory");
+      if(fs::equivalent(referenceRoot, projectRoot))
+        throw std::runtime_error{
+          std::format("Reference root {} is the project root, {}",
+                      referenceRoot.generic_string(),
+                      projectRoot.generic_string())
+        };
+
+      return referenceRoot;
+    }
+
+    [[nodiscard]]
     std::string to_async_option(concurrency_mode mode, std::size_t threadPoolSize)
     {
       switch(mode)
@@ -644,6 +658,18 @@ namespace sequoia::testing
       }
 
       throw std::logic_error{"Illegal option for concurrency_mode"};
+    }
+
+    [[nodiscard]]
+    std::string to_reference_root_option(const std::optional<fs::path>& referenceRoot)
+    {
+      auto toOption{
+        [](const fs::path& root) {
+          return std::format(" --reference-root {}", runtime::quote_for_shell(root.generic_string()));
+        }
+      };
+
+      return referenceRoot.transform(toOption).value_or("");
     }
 
     const std::string& convert(const std::string& s) { return s; }
@@ -1467,6 +1493,13 @@ namespace sequoia::testing
                     {},
                     "Leave out the test defined in a source file"
                   }}},
+                  {{{"--reference-root", {}, {"path"},
+                    [this](const arg_list& args) {
+                      m_ReferenceRoot = reference_root(args.front(), proj_paths().project_root());
+                    },
+                    {},
+                    "Name the root of the tree against which tests compare this project"
+                  }}},
                   {{{"--serial",  {}, {},
                     [this](const arg_list&) { m_ConcurrencyMode = concurrency_mode::serial; },
                     {},
@@ -1730,17 +1763,19 @@ namespace sequoia::testing
       throw std::runtime_error{"Unable to run in sandbox mode, as executable cannot be found"};
 
     const auto selection{selection_options()},
-               async{to_async_option(m_ConcurrencyMode, m_PoolSize)};
+               async{to_async_option(m_ConcurrencyMode, m_PoolSize)},
+               referenceRootOption{to_reference_root_option(m_ReferenceRoot)};
 
     auto code{return_code::success};
     for(std::size_t i{}; i < m_NumReps; ++i)
     {
-      const auto command{std::format("{} locate {} --runner-id {}{}{}",
+      const auto command{std::format("{} locate {} --runner-id {}{}{}{}",
                                      runtime::quote_for_shell(proj_paths().executable().string()),
                                      m_NumReps,
                                      i,
                                      selection,
-                                     async)};
+                                     async,
+                                     referenceRootOption)};
 
       code |= child_return_code(invoke(runtime::shell_command{command}),
                                 std::format("Sandbox run {}, {},", i, command));

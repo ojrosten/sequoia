@@ -47,11 +47,13 @@ namespace sequoia::testing
               const normal_path& srcFile,
               project_paths projPaths,
               individual_materials_paths materials,
-              const std::optional<std::string>& outputDiscriminator)
+              const std::optional<std::string>& outputDiscriminator,
+              std::optional<std::filesystem::path> referenceRoot)
       : m_Name{name}
       , m_ProjectPaths{std::move(projPaths)}
       , m_Materials{std::move(materials)}
       , m_Diagnostics{m_ProjectPaths, m_Name, srcFile, mode, outputDiscriminator}
+      , m_ReferenceRoot{std::move(referenceRoot)}
     {}
 
     test_base(const test_base&)            = delete;
@@ -126,6 +128,15 @@ namespace sequoia::testing
       return m_Diagnostics;
     }
 
+    /** \brief The root of the tree against which to compare the test's
+               project, if the test was given one.
+     */
+    [[nodiscard]]
+    const std::optional<std::filesystem::path>& reference_root() const noexcept
+    {
+      return m_ReferenceRoot;
+    }
+
     [[nodiscard]]
     std::string report(const reporter& rep) const
     {
@@ -150,6 +161,7 @@ namespace sequoia::testing
     project_paths m_ProjectPaths{};
     individual_materials_paths m_Materials{};
     individual_diagnostics_paths m_Diagnostics{};
+    std::optional<std::filesystem::path> m_ReferenceRoot{};
   };
 
   /** \brief class template from which all concrete tests should derive.
@@ -180,8 +192,15 @@ namespace sequoia::testing
                project_paths projPaths,
                individual_materials_paths materials,
                active_recovery_files files,
-               const std::optional<std::string>& outputDiscriminator)
-      : test_base{name, Mode, srcFile, std::move(projPaths), std::move(materials), outputDiscriminator}
+               const std::optional<std::string>& outputDiscriminator,
+               std::optional<std::filesystem::path> referenceRoot)
+      : test_base{name,
+                  Mode,
+                  srcFile,
+                  std::move(projPaths),
+                  std::move(materials),
+                  outputDiscriminator,
+                  std::move(referenceRoot)}
       , checker<Mode, Extender>{std::move(files)}
     {}
 
