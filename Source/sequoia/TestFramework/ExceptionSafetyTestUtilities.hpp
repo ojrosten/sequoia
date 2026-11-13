@@ -46,13 +46,8 @@ namespace sequoia::testing
   public:
     /// \throws std::logic_error if another monitor is alive on this thread
     explicit fallible_step_monitor(std::optional<std::size_t> failingStep)
-      : m_ThreadMonitoring{current_monitoring()}
-    {
-      if(m_ThreadMonitoring)
-        throw std::logic_error{"A fallible_step_monitor is already alive on this thread"};
-
-      m_ThreadMonitoring = monitoring{.failing_step{failingStep}};
-    }
+      : m_ThreadMonitoring{engage_monitoring(failingStep)}
+    {}
 
     ~fallible_step_monitor() { m_ThreadMonitoring.reset(); }
 
@@ -79,6 +74,17 @@ namespace sequoia::testing
     };
 
     std::optional<monitoring>& m_ThreadMonitoring;
+
+    [[nodiscard]]
+    static std::optional<monitoring>& engage_monitoring(std::optional<std::size_t> failingStep)
+    {
+      auto& current{current_monitoring()};
+      if(current)
+        throw std::logic_error{"A fallible_step_monitor is already alive on this thread"};
+
+      current = monitoring{.failing_step{failingStep}};
+      return current;
+    }
 
     [[nodiscard]]
     static std::optional<monitoring>& current_monitoring() noexcept
