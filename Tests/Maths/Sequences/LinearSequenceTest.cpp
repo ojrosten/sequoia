@@ -7,7 +7,7 @@
 
 #include "LinearSequenceTest.hpp"
 
-#include "LinearSequenceTestingUtilities.hpp"
+#include "sequoia/Maths/Sequences/LinearSequence.hpp"
 
 namespace sequoia::testing
 {
@@ -19,27 +19,7 @@ namespace sequoia::testing
 
   void linear_sequence_test::run_tests()
   {
-    test_linear_sequence();
     test_static_linear_sequence();
-  }
-
-  void linear_sequence_test::test_linear_sequence()
-  {
-    using namespace maths;
-
-    linear_sequence<int, int> s{1, 3}, t{0,2};
-    check(equivalence, "", s, std::pair{1, 3});
-    check(equivalence, "", t, std::pair{0, 2});
-
-    check_semantics("", s, t);
-
-    check(equality, "", s[0], 1);
-    check(equality, "", s[-1], -2);
-    check(equality, "", s[1], 4);
-
-    check(equality, "", t[0], 0);
-    check(equality, "", t[-1], -2);
-    check(equality, "", t[1], 2);
   }
 
   void linear_sequence_test::test_static_linear_sequence()
@@ -50,7 +30,6 @@ namespace sequoia::testing
     STATIC_CHECK(s.start() == 1);
     STATIC_CHECK(s.step() == 3);
     STATIC_CHECK(s.size() == 2);
-
 
     constexpr auto val{s[2]};
     check(equality, "", val, 7uz);

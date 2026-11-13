@@ -42,12 +42,12 @@ namespace sequoia::testing
 
     check(equality, "Sequences of size 2 with different elements should compare different", s, t);
 
-    t.mutate(t.begin(), t.end(), [](const int& i){ return i * 3; });
+    t.translate(t.begin(), t.begin() + 1, 2);
     // 3, 2 ; 3, 0
 
     check(equality, "Sequences of size 2 with different final elements should compare different", s, t);
 
-    t.mutate(t.begin(), t.end(), [](const int& i){ return i + 2; });
+    t.translate(t.begin(), t.end(), 2);
     // 3, 2 ; 5, 2
 
     check(equality, "Sequences of size 2 with different first elements should compare different", s, t);
