@@ -15,8 +15,11 @@
 #include "sequoia/TestFramework/TestRunner.hpp"
 
 #include <format>
+#include <functional>
+#include <ranges>
 #include <sstream>
 #include <stdexcept>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -35,6 +38,15 @@ namespace sequoia::testing
                        "  ",
                        fake_project_customization(),
                        outputStream};
+  }
+
+  /** Returns a reference to each of `tests`, in order, as `execute_tests`
+      takes them.
+   */
+  [[nodiscard]]
+  inline std::vector<std::reference_wrapper<test_to_run>> references_to(std::vector<test_to_run>& tests)
+  {
+    return tests | std::ranges::to<std::vector<std::reference_wrapper<test_to_run>>>();
   }
 
   /** Reads the completion of the last record `runner` keeps for `Test`. */

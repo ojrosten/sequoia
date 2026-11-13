@@ -7,6 +7,7 @@
 
 #include "TestRunnerTest.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
+#include "TestRunnerConcurrencyTestingUtilities.hpp"
 #include "CriticalPathDurationsTestingUtilities.hpp"
 #include "TestExecutionRecordTestingUtilities.hpp"
 #include "TestRunnerTestingUtilities.hpp"
@@ -1024,6 +1025,7 @@ namespace sequoia::testing
     test_exit_statuses();
     test_return_code_names();
     test_wall_clock_apportionment();
+    test_execution_outside_a_runner();
   }
 
   void test_runner_test::test_discriminator_hooks()
@@ -3191,5 +3193,148 @@ namespace sequoia::testing
             .spent_in_tests     {.execution_duration{0ms}, .runner_overhead{0ms}},
             .scheduling_overhead{2ms}
           });
+  }
+
+  namespace
+  {
+    struct ordering_family {};
+
+    using ordering_family_base = test_which_sleeps_base<ordering_family>;
+
+    class parallelizable_sleeper_0 final : public ordering_family_base
+    {
+    public:
+      using test_which_sleeps_base::test_which_sleeps_base;
+
+      void run_tests() { sleep_and_check(0); }
+    };
+
+    class unparallelizable_sleeper_1 final : public ordering_family_base
+    {
+    public:
+      using parallelizable_type = std::false_type;
+
+      using test_which_sleeps_base::test_which_sleeps_base;
+
+      void run_tests() { sleep_and_check(1); }
+    };
+
+    class parallelizable_sleeper_2 final : public ordering_family_base
+    {
+    public:
+      using test_which_sleeps_base::test_which_sleeps_base;
+
+      void run_tests() { sleep_and_check(2); }
+    };
+  }
+
+  /** The test which is not parallelizable sits between two which are. So
+      each summary is at its test's position only if `execute_tests` maps
+      each execution back to its test, though it executes the middle test
+      first. The intervals for which the tests slept show the order in
+      which they ran.
+   */
+  void test_runner_test::test_execution_outside_a_runner()
+  {
+    using namespace std::chrono_literals;
+
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
+    const project_paths projPaths{args.size(), args.get(), fake_project_customization()};
+
+    auto makeTests{
+      [&projPaths]() {
+        return make_tests_which_sleep<ordering_family,
+                                      parallelizable_sleeper_0,
+                                      unparallelizable_sleeper_1,
+                                      parallelizable_sleeper_2>(projPaths);
+      }
+    };
+
+    struct outcome
+    {
+      std::vector<std::string>           summary_names{};
+      std::vector<steady_clock_interval> sleep_intervals{};
+    };
+
+    auto executeFreshTests{
+      [&makeTests](concurrency_mode concurrencyMode, std::size_t poolSize) {
+        auto freshTests{makeTests()};
+        ordering_family_base::prepare_run(freshTests.size(), 5ms);
+        const auto execution{execute_tests(references_to(freshTests), concurrencyMode, poolSize, std::nullopt)};
+
+        return outcome{
+          .summary_names{
+              execution.summaries
+            | std::views::transform(&log_summary::name)
+            | std::ranges::to<std::vector<std::string>>()
+          },
+          .sleep_intervals{ordering_family_base::sleep_intervals()}
+        };
+      }
+    };
+
+    auto inOrder{
+      [](std::span<const steady_clock_interval> intervals) {
+        return (intervals[0].end_time() <= intervals[1].start_time())
+            && (intervals[1].end_time() <= intervals[2].start_time());
+      }
+    };
+
+    auto unparallelizableFirst{
+      [](std::span<const steady_clock_interval> intervals) {
+        return intervals[1].end_time() <= std::ranges::min(intervals[0].start_time(), intervals[2].start_time());
+      }
+    };
+
+    const auto tests{makeTests()};
+    const auto namesOfTests{
+      tests | std::views::transform(&test_to_run::name) | std::ranges::to<std::vector<std::string>>()
+    };
+
+    check("The middle test is not parallelizable, and the others are",
+          !tests[1].parallelizable() && tests[0].parallelizable() && tests[2].parallelizable());
+
+    {
+      const auto serial{executeFreshTests(concurrency_mode::serial, {})};
+      check(equality, "Serial execution gives each summary at its test's position", serial.summary_names, namesOfTests);
+      check("Serial execution executes the tests in order", inOrder(serial.sleep_intervals));
+    }
+
+    {
+      const auto dynamic{executeFreshTests(concurrency_mode::dynamic, {})};
+      check(equality,
+            "Dynamic concurrent execution gives each summary at its test's position",
+            dynamic.summary_names,
+            namesOfTests);
+
+      check("Dynamic concurrent execution finishes the test which is not parallelizable before starting the others",
+            unparallelizableFirst(dynamic.sleep_intervals));
+    }
+
+    {
+      const auto pool{executeFreshTests(concurrency_mode::fixed, 2)};
+      check(equality,
+            "Execution on a pool of two threads gives each summary at its test's position",
+            pool.summary_names,
+            namesOfTests);
+
+      check("A pool of two threads finishes the test which is not parallelizable before starting the others",
+            unparallelizableFirst(pool.sleep_intervals));
+    }
+
+    check_exception_thrown<std::invalid_argument>(
+      "A pool of no threads is refused",
+      [&makeTests]() {
+        auto freshTests{makeTests()};
+        return execute_tests(references_to(freshTests), concurrency_mode::fixed, 0, std::nullopt);
+      });
+
+    check_exception_thrown<std::invalid_argument>(
+      "Two tests which share a summary file are refused",
+      [&makeTests]() {
+        auto freshTests{makeTests()};
+        const std::array twice{std::ref(freshTests[0]), std::ref(freshTests[0])};
+        return execute_tests(twice, concurrency_mode::serial, {}, std::nullopt);
+      });
   }
 }
