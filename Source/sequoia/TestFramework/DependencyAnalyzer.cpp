@@ -226,10 +226,15 @@ namespace sequoia::testing
       };
 
       /** Every file the build read is checked once against the executable's
-          stamp.
+          stamp, and every project file against each object file whose
+          compilation read it.
 
-          \throws std::runtime_error if a file is no older than the executable,
-          or a file's modification time cannot be read.
+          \throws std::runtime_error if any of:
+          -# A file is no older than the executable;
+          -# A project file is newer than an object file whose compilation
+             read it;
+          -# The modification time of a file, or of an object file, cannot be
+             read.
        */
       dependency_graph(const build_tree& tree, const project_paths& projPaths)
         : dependency_graph{tree, projPaths, get_stamp(projPaths.executable())}
@@ -350,8 +355,12 @@ namespace sequoia::testing
           `TestMain.cpp` is read by no test's translation unit, and is the case
           which made the executable stale without prune noticing.
 
-          \throws std::runtime_error if a file is no older than the executable,
-          or a file's modification time cannot be read.
+          \throws std::runtime_error if any of:
+          -# A file is no older than the executable;
+          -# A project file is newer than an object file whose compilation
+             read it;
+          -# The modification time of a file, or of an object file, cannot be
+             read.
        */
       [[nodiscard]]
       std::vector<fs::file_time_type> modification_times(std::optional<fs::file_time_type> executableStamp) const
@@ -362,7 +371,62 @@ namespace sequoia::testing
           }
         };
 
-        return m_Graph.cnode_weights() | std::views::transform(modificationTime) | std::ranges::to<std::vector>();
+        const auto times{
+          m_Graph.cnode_weights() | std::views::transform(modificationTime) | std::ranges::to<std::vector>()
+        };
+        throw_if_compiled_before_an_input(times);
+        return times;
+      }
+
+      /** Checks each object file against the project's files which its
+          compilation read.
+
+          An edit made during a build, after the edited file's compilation and
+          before the link, leaves the executable newer than the edit, though
+          the executable lacks it. Only the object file shows this.
+
+          \throws std::runtime_error if a project file is newer than an object
+          file whose compilation read it, or an object file's modification
+          time cannot be read.
+       */
+      void throw_if_compiled_before_an_input(std::span<const fs::file_time_type> times) const
+      {
+        auto isObjectFile{[this](node_index i){ return node(i).is_object_file(); }};
+
+        for(const auto object : std::views::iota(node_index{}, file_count()) | std::views::filter(isObjectFile))
+        {
+          const auto compiledAt{object_modification_time(file(object))};
+          auto isNewer{[&times, compiledAt](const auto& edge){ return times[edge.target_node()] > compiledAt; }};
+
+          const auto edges{m_Graph.cedges(object)};
+          if(const auto newer{std::ranges::find_if(edges, isNewer)}; newer != edges.end())
+            throw std::runtime_error{
+              std::format("Executable is out of date; please build it!\n{} time stamp: {}\n{} time stamp: {}\n",
+                          file(object).generic_string(),
+                          compiledAt,
+                          file(newer->target_node()).generic_string(),
+                          times[newer->target_node()])
+            };
+        }
+      }
+
+      /** \throws std::runtime_error if the modification time of `object`
+          cannot be read
+       */
+      [[nodiscard]]
+      static fs::file_time_type object_modification_time(const fs::path& object)
+      {
+        std::error_code error{};
+        const auto time{fs::last_write_time(object, error)};
+        if(error)
+          throw std::runtime_error{
+            std::format("{} was written by the build but its modification time cannot be read: {}\n"
+                        "Build the executable again\n",
+                        object.generic_string(),
+                        error.message())
+          };
+
+        return time;
       }
 
       /** The nodes of the object files whose source lies in the tests

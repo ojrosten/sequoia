@@ -535,6 +535,15 @@ namespace sequoia::testing
     {
       fs::create_directories(buildDir / objects_of(system, target, visualStudioConfiguration).directory);
     }
+    // A build leaves behind each object file it compiles, written after every
+    // point of the timeline
+    auto writeObject{
+      [](const fs::path& object) {
+        fs::create_directories(object.parent_path());
+        write_to_file(object, "", std::ios_base::out);
+      }
+    };
+
     // The salient properties of the fake build tree. The fake project is
     // its own source directory
     write_to_file(buildDir / "CMakeCache.txt",
@@ -552,6 +561,11 @@ namespace sequoia::testing
         | std::views::transform(compiledIn(std::string_view{}))
         | std::ranges::to<std::vector>()
       };
+
+      for(const auto& record : records)
+      {
+        writeObject(buildDir / record.object);
+      }
 
       // What the build currently has: a statement per object naming its source
       std::string statements{};
@@ -604,9 +618,7 @@ namespace sequoia::testing
           for(auto& record : tracked)
           {
             record.object = buildDir / record.object;
-
-            fs::create_directories(record.object.parent_path());
-            write_to_file(record.object, "", std::ios_base::out);
+            writeObject(record.object);
           }
 
           const auto objectDirectory{objects_of(system, target, configuration).directory};
@@ -659,6 +671,13 @@ namespace sequoia::testing
     m_ResetTime = std::chrono::file_clock::now() + resetOffset;
 
     const auto fake{auxiliary_materials() /= "FakeProject"};
+    for(auto& entry : fs::recursive_directory_iterator(fake))
+    {
+      fs::last_write_time(entry.path(), m_ResetTime);
+    }
+
+    // After the reset, so that the object files are newer than every point
+    // of the timeline
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
 
     const main_paths main{fake / main_paths::default_main_cpp_from_root()};
@@ -670,14 +689,6 @@ namespace sequoia::testing
     const auto prunePaths{projPaths.prune()};
     fs::create_directories(prunePaths.dir());
     { std::ofstream s{prunePaths.stamp()}; }
-
-    for(auto& entry : fs::recursive_directory_iterator(fake))
-    {
-      fs::last_write_time(entry.path(), m_ResetTime);
-    }
-
-    // The loop above reaches the stamp too, since the prune directory is inside the fake project;
-    // set it afterwards so that it, rather than the reset time, marks the start of the run.
     fs::last_write_time(prunePaths.stamp(), m_ResetTime + pruneStampOffset);
 
     test_exceptions(projPaths);
@@ -806,6 +817,35 @@ namespace sequoia::testing
     );
 
     fs::last_write_time(orphan, m_ResetTime);
+
+    /* An edit made during a build, after the edited file's compilation and
+       before the link: the executable is newer than the edit, but the object
+       file compiled from the edited file is older
+     */
+    const auto testSource{projPaths.tests().repo() / "Stuff" / "BarFreeTest.cpp"};
+    const auto testObject{projPaths.executable().parent_path()
+                            / object_compiled_from(build_system::ninja, "Tests/Stuff/BarFreeTest.cpp", {})};
+    check_exception_thrown<std::runtime_error>(
+      "Executable out of date on account of a source edited after its compilation",
+      [this, projPaths, &testSource, &testObject]() {
+        fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
+        const modified_for_scope compiled{testObject, m_ResetTime};
+        const modified_for_scope edited{testSource, m_ResetTime + earlyEditOffset};
+        return tests_to_run(projPaths);
+      },
+      normalise_out_of_date_message
+    );
+
+    // An object file the build wrote which cannot be read now: the reason is
+    // the platform's, and the normaliser masks it
+    check_exception_thrown<std::runtime_error>(
+      "An object file the build wrote cannot be read",
+      [&projPaths, &testObject]() {
+        const hidden_for_scope hidden{testObject};
+        return tests_to_run(projPaths);
+      },
+      normalise_out_of_date_message
+    );
 
     // A toolchain header newer than the executable: the executable was built with an older toolchain
     const auto toolchainHeader{fake_toolchain_header(projPaths.project_root())};

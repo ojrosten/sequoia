@@ -1835,11 +1835,16 @@ namespace sequoia::testing
     fs::create_directories(build.toolchainHeader.parent_path());
     write_to_file(build.source, "", std::ios_base::out);
     write_to_file(build.toolchainHeader, "", std::ios_base::out);
+    const fs::path object{"CMakeFiles/x.dir/ThingTest.cpp.o"};
     write_to_file(buildDir / "build.ninja",
-                  std::format("build CMakeFiles/x.dir/ThingTest.cpp.o: CXX_COMPILER {}\n", build.source.generic_string()),
+                  std::format("build {}: CXX_COMPILER {}\n", object.generic_string(), build.source.generic_string()),
                   std::ios_base::out);
     write_ninja_deps(buildDir / ".ninja_deps",
-                     std::vector<compilation_record>{{"CMakeFiles/x.dir/ThingTest.cpp.o", {build.source, build.toolchainHeader}}});
+                     std::vector<compilation_record>{{object, {build.source, build.toolchainHeader}}});
+
+    // The compilation's product, written after the files it read
+    fs::create_directories((buildDir / object).parent_path());
+    write_to_file(buildDir / object, "", std::ios_base::out);
 
     return build;
   }
