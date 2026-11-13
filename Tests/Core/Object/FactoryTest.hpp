@@ -23,6 +23,8 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+    void test_names_iterator_concepts();
+
     void test_erasing_factory();
 
     /** Checks bulk creation against the same prediction the individual `make` checks use, so the
