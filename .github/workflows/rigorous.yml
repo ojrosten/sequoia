@@ -127,7 +127,7 @@ on:
   workflow_dispatch:
     inputs:
       false_negative:
-        description: 'Corrupt the checkout so that every column must go red. The control for the gate: see false-negative.yml.'
+        description: 'Corrupt the checkout so that every column, the docs job and the coverage job must go red. The control for the gate: see false-negative.yml.'
         required: false
         type: boolean
         default: false
@@ -204,6 +204,7 @@ jobs:
     uses: ./.github/workflows/docs.yml
     with:
       needs_testing: ${{ needs.scope.outputs.documentation }}
+      false_negative: ${{ inputs.false_negative == true }}
 
   # The gate on functions of Source that no test calls, and the published
   # coverage figures; coverage.yml says what the job does.
@@ -214,6 +215,7 @@ jobs:
     with:
       needs_testing: ${{ needs.scope.outputs.coverage }}
       merge_into: ''
+      false_negative: ${{ inputs.false_negative == true }}
 
   # Opens the promotion PR and sets it to merge itself once the gate is green.
   # It needs a token other than GITHUB_TOKEN: a PR that token opens triggers no
@@ -310,7 +312,8 @@ jobs:
   #   - In gate mode the columns, docs and coverage must have run, and promote
   #     must not.
   #   - In promote mode, the reverse.
-  #   - In the false-negative control the columns must have failed.
+  #   - In the false-negative control the columns, docs and coverage must
+  #     have failed.
   #
   # The branch main requires this job and none of the others, so a job
   # missing from this job's `needs` would gate nothing, however red. The
@@ -321,12 +324,12 @@ jobs:
   # second and third steps run even when an earlier step fails, so each
   # reports independently.
   #
-  # In the false-negative control this job passes on red columns, so it takes
+  # In the false-negative control this job passes on red jobs, so it takes
   # another name there, and the third step insists main does not require that
   # name. If main did, the control would satisfy main's rule for the commit it
   # ran on: a promotion PR's head, if the control was dispatched on staging.
   audit:
-    name: ${{ inputs.false_negative == true && 'Every column failed, as the false-negative control requires' || 'Every job ran as this run''s mode requires' }}
+    name: ${{ inputs.false_negative == true && 'Every gate failed, as the false-negative control requires' || 'Every job ran as this run''s mode requires' }}
     needs: [staging, scope, rigorous, docs, coverage, promote]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
@@ -360,9 +363,10 @@ jobs:
           expect scope success
           case "$mode" in
             gate)
-              if [ "$FALSE_NEGATIVE" = true ]; then expect rigorous failure; else expect rigorous success; fi
-              expect docs success
-              expect coverage success
+              if [ "$FALSE_NEGATIVE" = true ]; then verdict=failure; else verdict=success; fi
+              expect rigorous "$verdict"
+              expect docs "$verdict"
+              expect coverage "$verdict"
               expect promote skipped;;
             promote)
               expect promote success

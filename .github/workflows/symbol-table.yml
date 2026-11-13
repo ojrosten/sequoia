@@ -50,7 +50,7 @@ name: symbol-table
 # as a dispatch does, with the scripts of the commit which the caller names
 # as `tooling`. A called run stores nothing, and counts the setup cost of
 # leftover materials only when the caller asks. The last step checks that
-# count on each push to staging.
+# count on each push to staging, and in a dispatched run which asks.
 on:
   push:
     branches:
@@ -64,6 +64,10 @@ on:
           If empty, that commit.
         type: string
         default: ''
+      check_leftover_materials:
+        description: 'Check the setup cost of leftover materials, as a push to staging does. A backfill leaves this off.'
+        type: boolean
+        default: false
   workflow_call:
     inputs:
       commits:
@@ -506,8 +510,9 @@ jobs:
       # about five times the dearest record, and a quarter of the mistake.
       # No pull request is gated on the count, since measuring it adds 9 to
       # 16 minutes to the job, which would then outlast most of fine's
-      # columns. Nor is a dispatch checked, since a backfill measures older
-      # commits, and those from #115 to #182 carry the mistake.
+      # columns. Nor is a dispatch checked unless it asks, since a backfill
+      # measures older commits, and those from #115 to #182 carry the mistake.
+      # false-negative.yml's control asks.
       - name: Check the setup cost of leftover materials
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || inputs.check_leftover_materials == true
         run: python3 -B tooling/scripts/metrics_gate.py leftover-materials "$SYMBOL_TABLE_RECORD"
