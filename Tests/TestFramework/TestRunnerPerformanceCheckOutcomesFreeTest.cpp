@@ -13,6 +13,7 @@
 #include "sequoia/TestFramework/TestExecutionRecord.hpp"
 
 #include <chrono>
+#include <format>
 #include <stdexcept>
 #include <vector>
 
@@ -244,6 +245,117 @@ namespace sequoia::testing
       }
     };
 
+    /** Makes a performance check which fails, and two checks which pass:
+        -# A speed-up of 1 never passes.
+        -# A speed-up of 8 passes at once.
+        -# 42 equals 42.
+     */
+    class failing_performance_check_test final : public scripted_clock_test
+    {
+    public:
+      using scripted_clock_test::scripted_clock_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return std::source_location::current().file_name();
+      }
+
+      void run_tests()
+      {
+        scripted_clock clock{};
+
+        check_relative_performance("A speed-up of 1",
+                                   counted_scripted_task{clock, unit_duration},
+                                   counted_scripted_task{clock, unit_duration},
+                                   {.prediction{.lower{2}, .upper{40}}},
+                                   clock);
+
+        check_relative_performance("A speed-up of 8",
+                                   counted_scripted_task{clock, unit_duration},
+                                   counted_scripted_task{clock, 8 * unit_duration},
+                                   {.prediction{.lower{2}, .upper{40}}},
+                                   clock);
+
+        check(equality, "Not a performance check", 42, 42);
+      }
+    };
+
+    /** In false-positive mode, where a check is meant to pass, makes a
+        performance check which fails, and two checks which pass:
+        -# A speed-up of 1 never passes.
+        -# A speed-up of 8 passes at once.
+        -# 42 equals 42.
+     */
+    class failing_performance_check_false_positive_test final : public scripted_clock_false_positive_test
+    {
+    public:
+      using scripted_clock_false_positive_test::scripted_clock_false_positive_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return std::source_location::current().file_name();
+      }
+
+      void run_tests()
+      {
+        scripted_clock clock{};
+
+        check_relative_performance("A speed-up of 1",
+                                   counted_scripted_task{clock, unit_duration},
+                                   counted_scripted_task{clock, unit_duration},
+                                   {.prediction{.lower{2}, .upper{40}}},
+                                   clock);
+
+        check_relative_performance("A speed-up of 8",
+                                   counted_scripted_task{clock, unit_duration},
+                                   counted_scripted_task{clock, 8 * unit_duration},
+                                   {.prediction{.lower{2}, .upper{40}}},
+                                   clock);
+
+        check(equality, "Not a performance check", 42, 42);
+      }
+    };
+
+    /** In false-negative mode, where a check is meant to fail, makes a
+        performance check which passes, and so fails in this mode, and two
+        checks which fail, as meant:
+        -# A speed-up of 8 passes at once.
+        -# A speed-up of 1 never passes.
+        -# 42 does not equal 43.
+     */
+    class failing_performance_check_false_negative_test final : public scripted_clock_false_negative_test
+    {
+    public:
+      using scripted_clock_false_negative_test::scripted_clock_false_negative_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return std::source_location::current().file_name();
+      }
+
+      void run_tests()
+      {
+        scripted_clock clock{};
+
+        check_relative_performance("A speed-up of 8",
+                                   counted_scripted_task{clock, unit_duration},
+                                   counted_scripted_task{clock, 8 * unit_duration},
+                                   {.prediction{.lower{2}, .upper{40}}},
+                                   clock);
+
+        check_relative_performance("A speed-up of 1",
+                                   counted_scripted_task{clock, unit_duration},
+                                   counted_scripted_task{clock, unit_duration},
+                                   {.prediction{.lower{2}, .upper{40}}},
+                                   clock);
+
+        check(equality, "Not a performance check", 42, 43);
+      }
+    };
+
     /** A scripted-clock test which makes no performance check. */
     class scripted_clock_test_without_performance_checks final : public scripted_clock_test
     {
@@ -273,6 +385,31 @@ namespace sequoia::testing
   {
     test_recording_of_performance_check_attempts();
     test_summary_of_performance_checks_within_other_checks();
+    test_summary_of_failing_performance_checks();
+  }
+
+  /// Runs `Tests`, expecting soft failures, and compares their summaries with the predictions in `directory`
+  template<concrete_test... Tests>
+  void test_runner_performance_check_outcomes_free_test::check_summaries(const reporter& description,
+                                                                         std::string_view directory)
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
+    auto runner{make_fake_project_runner(args, outputStream)};
+
+    (runner.register_test<Tests>(), ...);
+
+    check(equality,
+          std::format("The return code of the run for {}", directory),
+          runner.execute(),
+          return_code::soft_failures);
+
+    const auto outputDir{working_materials() /= directory};
+    fs::create_directory(outputDir);
+
+    (copy_summary<Tests>(runner, outputDir), ...);
+
+    check(equivalence, description, outputDir, predictive_materials() /= directory);
   }
 
   /** `attempt_counting_test`'s checks make 2, 1 and 3 attempts: distinct
@@ -305,31 +442,27 @@ namespace sequoia::testing
 
   void test_runner_performance_check_outcomes_free_test::test_summary_of_performance_checks_within_other_checks()
   {
-    using standard_test       = performance_checks_within_other_checks_test;
-    using false_positive_test = performance_checks_within_other_checks_false_positive_test;
-    using false_negative_test = performance_checks_within_other_checks_false_negative_test;
+    check_summaries<performance_checks_within_other_checks_test,
+                    performance_checks_within_other_checks_false_positive_test,
+                    performance_checks_within_other_checks_false_negative_test>(
+      "A performance check within another check is counted as part of the other",
+      "PerformanceChecksWithinOtherChecks"
+    );
+  }
 
-    std::stringstream outputStream{};
-    commandline_arguments args{fake_project_commandline(auxiliary_materials())};
-    auto runner{make_fake_project_runner(args, outputStream)};
-    runner.register_test<standard_test>();
-    runner.register_test<false_positive_test>();
-    runner.register_test<false_negative_test>();
-    check(equality,
-          "Performance checks within other checks return code",
-          runner.execute(),
-          return_code::soft_failures);
-
-    const auto outputDir{working_materials() /= "PerformanceChecksWithinOtherChecks"};
-    fs::create_directory(outputDir);
-
-    copy_summary<standard_test>(runner, outputDir);
-    copy_summary<false_positive_test>(runner, outputDir);
-    copy_summary<false_negative_test>(runner, outputDir);
-
-    check(equivalence,
-          "A performance check within another check is counted as part of the other",
-          outputDir,
-          predictive_materials() /= "PerformanceChecksWithinOtherChecks");
+  /** Each test's performance check fails in its mode and its other check
+      passes, as does one more performance check. So a summary which counted
+      the performance failure among the other checks' failures, or not at
+      all, or which counted the performance checks as failures, differs from
+      the prediction.
+   */
+  void test_runner_performance_check_outcomes_free_test::test_summary_of_failing_performance_checks()
+  {
+    check_summaries<failing_performance_check_test,
+                    failing_performance_check_false_positive_test,
+                    failing_performance_check_false_negative_test>(
+      "A failing performance check is counted apart from the other checks' failures",
+      "FailingPerformanceChecks"
+    );
   }
 }

@@ -11,6 +11,8 @@
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 
+#include <string_view>
+
 namespace sequoia::testing
 {
   class test_runner_performance_check_outcomes_free_test final : public free_test
@@ -27,5 +29,10 @@ namespace sequoia::testing
     void test_recording_of_performance_check_attempts();
 
     void test_summary_of_performance_checks_within_other_checks();
+
+    void test_summary_of_failing_performance_checks();
+
+    template<concrete_test... Tests>
+    void check_summaries(const reporter& description, std::string_view directory);
   };
 }

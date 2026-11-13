@@ -264,6 +264,7 @@ int main(int argc, char** argv)
     runner.register_test<coarse_sleeps_free_test>();
     runner.register_test<test_runner_serial_execution_free_test>();
     runner.register_test<test_runner_performance_check_outcomes_free_test>();
+    runner.register_test<test_logger_free_test>();
     runner.register_test<dynamic_graph_performance_test>();
     runner.register_test<container_adaptor_utilities_free_test>();
     code = runner.execute();

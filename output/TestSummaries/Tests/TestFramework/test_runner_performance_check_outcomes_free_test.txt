@@ -1,2 +1,2 @@
 test_runner_performance_check_outcomes_free_test
-Standard Top Level Checks:                 5;  Failures:  0  [Deep checks: 31]
+Standard Top Level Checks:                 7;  Failures:  0  [Deep checks: 54]

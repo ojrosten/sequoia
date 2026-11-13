@@ -82,6 +82,7 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/TestExecutionCompletionRegularTest.cpp
                ${TestDir}/TestFramework/TestExecutionRecordRegularTest.cpp
                ${TestDir}/TestFramework/TestExecutionRecordTestingDiagnostics.cpp
+               ${TestDir}/TestFramework/TestLoggerFreeTest.cpp
                ${TestDir}/TestFramework/TestRunnerConcurrencyTestingUtilities.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnosticsUtilities.cpp
