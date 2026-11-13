@@ -1,58 +1,59 @@
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 338
-pool_2M
-
-Expected Exception Type:
-[std::runtime_error]
-Error!
-
-=======================================
-
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 338
-pool_2
-
-Expected Exception Type:
-[std::runtime_error]
-Error!
-
-=======================================
-
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 338
-async
-
-Expected Exception Type:
-[std::runtime_error]
-Error!
-
-=======================================
-
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 338
-pool_2M
-
-Expected Exception Type:
-[std::runtime_error]
-Error!
-
-=======================================
-
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 338
-pool_2
-
-Expected Exception Type:
-[std::runtime_error]
-Error!
-
-=======================================
-
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 338
-async
-
-Expected Exception Type:
-[std::runtime_error]
-Error!
-
-=======================================
-
 Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 362
+A push to a finished queue throws
+
+Expected Exception Type:
+[std::logic_error]
+A task cannot be pushed to a finished task_queue
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 368
+A try-push to a finished queue throws once it takes the mutex
+
+Expected Exception Type:
+[std::logic_error]
+A task cannot be pushed to a finished task_queue
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 374
+A thread pool with a queue for each thread refuses zero threads
+
+Expected Exception Type:
+[std::invalid_argument]
+A thread pool requires at least one thread
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 377
+A thread pool with a shared queue refuses zero threads
+
+Expected Exception Type:
+[std::invalid_argument]
+A thread pool requires at least one thread
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 474
+A push after join to a pool with a queue for each thread throws
+
+Expected Exception Type:
+[std::logic_error]
+A task cannot be pushed to a finished task_queue
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 474
+A push after join to a pool with a shared queue throws
+
+Expected Exception Type:
+[std::logic_error]
+A task cannot be pushed to a finished task_queue
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 486
+pool_2M
 
 Expected Exception Type:
 [std::runtime_error]
@@ -60,7 +61,60 @@ Error!
 
 =======================================
 
-Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 363
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 486
+pool_2
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 486
+async
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 486
+pool_2M
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 486
+pool_2
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 486
+async
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 510
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 511
 
 Expected Exception Type:
 [std::runtime_error]
