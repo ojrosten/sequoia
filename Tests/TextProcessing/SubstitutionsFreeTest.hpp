@@ -39,5 +39,7 @@ namespace sequoia::testing
     void test_replace_all();
 
     void test_replace_all_recursive();
+
+    void test_replace_all_recursive_refusals();
   };
 }
