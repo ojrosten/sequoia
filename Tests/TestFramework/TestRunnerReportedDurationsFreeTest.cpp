@@ -19,8 +19,13 @@
 #include <array>
 #include <chrono>
 #include <format>
+#include <mutex>
 #include <ranges>
 #include <stdexcept>
+#include <string>
+#include <string_view>
+#include <thread>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -98,6 +103,59 @@ namespace sequoia::testing
      */
     constexpr double_precision_milliseconds printed_duration_tolerance{1};
 
+    // SCRATCH, not for merging: a timeline of the fake run, printed when the
+    // scheduling overhead check fails, to tell a misattributed summarizing
+    // sleep from a stall of the host.
+    struct timeline_event
+    {
+      std::chrono::steady_clock::time_point at{};
+      std::thread::id                       thread{};
+      std::string                           who{},
+                                            what{};
+    };
+
+    std::mutex                  timeline_mutex{};
+    std::vector<timeline_event> timeline{};
+
+    void record_event(std::string_view who, std::string_view what)
+    {
+      const auto now{std::chrono::steady_clock::now()};
+      const std::scoped_lock lock{timeline_mutex};
+      timeline.push_back({now, std::this_thread::get_id(), std::string{who}, std::string{what}});
+    }
+
+    [[nodiscard]]
+    std::string timeline_report()
+    {
+      const std::scoped_lock lock{timeline_mutex};
+      if(timeline.empty())
+        return "No timeline";
+
+      std::vector<std::thread::id> threads{};
+      auto threadIndex{
+        [&threads](std::thread::id id) {
+          auto found{std::ranges::find(threads, id)};
+          if(found == threads.end())
+            found = threads.insert(threads.end(), id);
+
+          return std::ranges::distance(threads.begin(), found);
+        }
+      };
+
+      const auto origin{timeline.front().at};
+      std::string report{"Timeline (ms since the first event, thread index, who, what):\n"};
+      for(const auto& e : timeline)
+      {
+        report.append(std::format("  {:9.3f}  t{}  {}  {}\n",
+                                  double_precision_milliseconds{e.at - origin}.count(),
+                                  threadIndex(e.thread),
+                                  e.who,
+                                  e.what));
+      }
+
+      return report;
+    }
+
     /** Sleeps while its tests run, and sleeps again while the runner summarizes it. The runner summarizes a test after
         its tests have run, so the first sleep falls in the test's execution duration and the second in the runner's
         overhead.
@@ -115,15 +173,20 @@ namespace sequoia::testing
 
       void run_tests()
       {
+        record_event(name(), "run begins");
         precise_sleep_for(std::chrono::duration_cast<std::chrono::nanoseconds>(execution_sleep));
         check("Slept", true);
+        record_event(name(), "run ends");
       }
 
       [[nodiscard]]
       log_summary summarize(duration delta) const
       {
+        record_event(name(), "summary begins");
         precise_sleep_for(std::chrono::duration_cast<std::chrono::nanoseconds>(summarization_sleep));
-        return free_test::summarize(delta);
+        auto summary{free_test::summarize(delta)};
+        record_event(name(), "summary ends");
+        return summary;
       }
     protected:
       ~slow_to_summarize_test_base() = default;
@@ -244,7 +307,14 @@ namespace sequoia::testing
     runner.register_test<slow_to_summarize_test_0>();
     runner.register_test<slow_to_summarize_test_1>();
     runner.register_test<slow_to_summarize_test_2>();
-    check(equality, "Busiest thread return code", runner.execute(), return_code::success);
+    {
+      const std::scoped_lock lock{timeline_mutex};
+      timeline.clear();
+    }
+    record_event("runner", "execute begins");
+    const auto returnCode{runner.execute()};
+    record_event("runner", "execute ends");
+    check(equality, "Busiest thread return code", returnCode, return_code::success);
 
     check_output(report({"Busiest Thread Output"}), "BusiestThreadOutput", outputStream);
 
@@ -283,8 +353,28 @@ namespace sequoia::testing
           get_grand_total(outputStream.view(), "Runner Overhead"),
           3 * summarization_sleep);
 
+    auto recordedLine{
+      [&runner]<class Test>(std::string_view who) {
+        const auto completion{get_recorded_completion<Test>(runner)};
+        return std::format("  {}: execution {}, runner overhead {}\n",
+                           who,
+                           in_milliseconds(completion.execution_duration),
+                           in_milliseconds(completion.runner_overhead));
+      }
+    };
+
+    const auto diagnosis{
+      std::format("The scheduling overhead excludes every summarizing sleep\n{}Recorded:\n{}{}{}{}Printed:\n{}",
+                  timeline_report(),
+                  recordedLine.template operator()<unparallelizable_slow_to_summarize_test>("unparallelizable"),
+                  recordedLine.template operator()<slow_to_summarize_test_0>("test_0"),
+                  recordedLine.template operator()<slow_to_summarize_test_1>("test_1"),
+                  recordedLine.template operator()<slow_to_summarize_test_2>("test_2"),
+                  outputStream.view().substr(outputStream.view().find("-----------Grand Totals")))
+    };
+
     check(std::ranges::less{},
-          "The scheduling overhead excludes every summarizing sleep",
+          diagnosis,
           get_grand_total(outputStream.view(), "Scheduling Overhead"),
           summarization_sleep);
   }
