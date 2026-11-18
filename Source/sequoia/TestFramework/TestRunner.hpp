@@ -31,12 +31,14 @@
 #include <chrono>
 #include <filesystem>
 #include <format>
+#include <functional>
 #include <future>
 #include <iostream>
 #include <map>
 #include <optional>
 #include <set>
 #include <span>
+#include <string_view>
 #include <thread>
 #include <utility>
 #include <vector>
@@ -69,6 +71,11 @@ namespace sequoia::testing
 {
   [[nodiscard]]
   return_code to_return_code(const log_summary& summary) noexcept;
+
+  // SCRATCH, not for merging: a fixed-size pool's run, started on this thread,
+  // passes a stamp of each step of its teardown to the observer; an empty
+  // observer stops the stamps.
+  void observe_pool_teardown(std::function<void(std::string_view)> observer);
 
   /** \brief The thread which executed a test, and the test's durations. */
   struct execution_info

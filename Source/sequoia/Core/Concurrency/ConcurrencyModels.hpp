@@ -22,7 +22,10 @@
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+#include <format>
+#include <functional>
 #include <future>
+#include <string_view>
 
 namespace sequoia::concurrency
 {
@@ -271,6 +274,14 @@ namespace sequoia::concurrency
       join_all();
       joined = true;
     }
+
+    // SCRATCH, not for merging: joins, passing a stamp of each step of the
+    // teardown to the observer.
+    void join_observed(std::function<void(std::string_view)> observer)
+    {
+      m_ScratchObserver = std::move(observer);
+      join();
+    }
   private:
     using task_type   = impl::queue_details<R, MultiPipeline>::task_type;
     using Queues_type = impl::queue_details<R, MultiPipeline>::queue_type;
@@ -278,6 +289,7 @@ namespace sequoia::concurrency
     Queues_type m_Queues;
     std::vector<std::thread> m_Threads;
     bool joined{};
+    std::function<void(std::string_view)> m_ScratchObserver{};
 
     std::size_t m_QueueIndex{};
 
@@ -294,7 +306,10 @@ namespace sequoia::concurrency
               if(task.valid())
                 task();
               else
+              {
+                stamp(std::format("worker {} leaves its loop", q));
                 return;
+              }
             }
 
             while(true)
@@ -321,7 +336,10 @@ namespace sequoia::concurrency
               if(task.valid())
                 task();
               else
+              {
+                stamp(std::format("worker {} leaves its loop", q));
                 break;
+              }
 
             }
           }
@@ -333,12 +351,26 @@ namespace sequoia::concurrency
 
     void join_all()
     {
+      stamp("queues finishing");
       if constexpr(MultiPipeline)
         for(auto& q : m_Queues) q.finish();
       else
         m_Queues.finish();
 
-      for(auto& t : m_Threads) t.join();
+      stamp("queues finished");
+      for(std::size_t i{}; i < m_Threads.size(); ++i)
+      {
+        m_Threads[i].join();
+        stamp(std::format("thread {} joined", i));
+      }
+    }
+
+    // SCRATCH: the observer is set before the queues finish, and a worker
+    // stamps only after a pop that saw them finished, under the queue's mutex.
+    void stamp(std::string_view what) const
+    {
+      if(m_ScratchObserver)
+        m_ScratchObserver(what);
     }
   };
 }

@@ -311,9 +311,11 @@ namespace sequoia::testing
       const std::scoped_lock lock{timeline_mutex};
       timeline.clear();
     }
+    observe_pool_teardown([](std::string_view what) { record_event("pool", what); });
     record_event("runner", "execute begins");
     const auto returnCode{runner.execute()};
     record_event("runner", "execute ends");
+    observe_pool_teardown({});
     check(equality, "Busiest thread return code", returnCode, return_code::success);
 
     check_output(report({"Busiest Thread Output"}), "BusiestThreadOutput", outputStream);

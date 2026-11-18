@@ -190,18 +190,47 @@ namespace sequoia::testing
       std::size_t num{8};
     };
 
+    // SCRATCH, not for merging: see observe_pool_teardown.
+    thread_local std::function<void(std::string_view)> t_PoolTeardownObserver{};
+
     template<class Weight, class UnaryFn>
     void accelerate(thread_pool_policy p, std::span<Weight> weights, UnaryFn fn)
     {
       if(const auto num{weights.size()}; num > 1)
       {
-        concurrency::thread_pool<void> pool{std::ranges::min(num, p.num)};
-        auto futures{
-              std::views::transform(weights, [&pool, fn](auto& wt){ return pool.push([&wt, fn](){ return fn(wt); }); })
-            | std::ranges::to<std::vector>()
+        const auto observer{t_PoolTeardownObserver};
+        auto stamp{
+          [&observer](std::string_view what) {
+            if(observer)
+              observer(what);
+          }
         };
 
-        for(auto& f : futures) f.get();
+        {
+          concurrency::thread_pool<void> pool{std::ranges::min(num, p.num)};
+          auto pushTask{
+            [&pool, fn, observer](auto& wt) {
+              return pool.push([&wt, fn, observer]() {
+                fn(wt);
+                if(observer)
+                  observer("task returns");
+              });
+            }
+          };
+
+          auto futures{std::views::transform(weights, pushTask) | std::ranges::to<std::vector>()};
+
+          for(std::size_t i{}; i < futures.size(); ++i)
+          {
+            futures[i].get();
+            stamp(std::format("future {} ready", i));
+          }
+
+          if(observer)
+            pool.join_observed(observer);
+        }
+
+        stamp("pool destroyed");
       }
       else if(num > 0)
       {
@@ -846,6 +875,11 @@ namespace sequoia::testing
     inline constexpr bool acts_on_every_alternative_v<Act, std::variant<Nascents...>>{
       (std::invocable<const Act&, Nascents&, const parsing::commandline::arg_list&> && ...)
     };
+  }
+
+  void observe_pool_teardown(std::function<void(std::string_view)> observer)
+  {
+    t_PoolTeardownObserver = std::move(observer);
   }
 
   [[nodiscard]]
