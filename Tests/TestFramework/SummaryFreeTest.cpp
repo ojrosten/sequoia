@@ -58,7 +58,7 @@ namespace sequoia::testing
   {
     using namespace std::chrono;
 
-    const durations_of_run durationsOfRun{
+    constexpr durations_of_run durationsOfRun{
       .total_run_time{700ms},
       .critical_path{
         .spent_in_tests{.execution_duration{110ms}, .runner_overhead{230ms}},

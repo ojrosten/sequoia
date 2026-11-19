@@ -260,6 +260,7 @@ namespace sequoia::testing
           }
         };
 
+        const auto firstValue{valueOf(firstCompletion)};
         const std::array pairedValues{
           valueOf(otherCompletions[0]) + valueOf(otherCompletions[1]),
           valueOf(otherCompletions[0]) + valueOf(otherCompletions[2]),
@@ -267,12 +268,12 @@ namespace sequoia::testing
         };
 
         auto distanceFromPrinted{
-          [printed, firstValue{valueOf(firstCompletion)}](double_precision_milliseconds paired) {
+          [printed, firstValue](double_precision_milliseconds paired) {
             return std::chrono::abs(printed - (firstValue + paired));
           }
         };
 
-        return valueOf(firstCompletion) + std::ranges::min(pairedValues, std::ranges::less{}, distanceFromPrinted);
+        return firstValue + std::ranges::min(pairedValues, std::ranges::less{}, distanceFromPrinted);
       }
     };
 
