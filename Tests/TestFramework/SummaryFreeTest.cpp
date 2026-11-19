@@ -7,6 +7,7 @@
 
 #include "SummaryFreeTest.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
+#include "sequoia/Streaming/Streaming.hpp"
 
 namespace sequoia::testing
 {
@@ -19,6 +20,7 @@ namespace sequoia::testing
   void summary_free_test::run_tests()
   {
     test_stringify_duration();
+    test_durations_report();
   }
 
   void summary_free_test::test_stringify_duration()
@@ -46,5 +48,26 @@ namespace sequoia::testing
     check(equality, "Seconds, to three figures",                stringified(1'234'567'890ns),     "1.23s"s);
     check(equality, "A thousand seconds and more",              stringified(1'234'567'890'000ns), "1.23e+03s"s);
     check(equality, "The longest duration",                     stringified(nanoseconds::max()),  "9.22e+09s"s);
+  }
+
+  /** The run's durations differ from one another and from each sum and
+      difference of two of them, so a report that prints the wrong one shows
+      a different number.
+   */
+  void summary_free_test::test_durations_report()
+  {
+    using namespace std::chrono;
+
+    const durations_of_run durationsOfRun{
+      .total_run_time{700ms},
+      .critical_path{
+        .spent_in_tests{.execution_duration{110ms}, .runner_overhead{230ms}},
+        .scheduling_overhead{40ms}
+      }
+    };
+
+    const auto reportFile{working_materials() /= "DurationsReport.txt"};
+    write_to_file(reportFile, durations_report(durationsOfRun), std::ios_base::out);
+    check(equivalence, "The report of a run's durations", reportFile, predictive_materials() /= "DurationsReport.txt");
   }
 }

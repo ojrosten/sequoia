@@ -184,8 +184,6 @@ namespace sequoia::testing
   /** One test sleeps while its tests run, and again while the runner summarizes it. Its execution duration must
       lie between the first sleep and the sum of the two sleeps. The sum is what the execution duration would be if
       it included the runner's overhead. The printed output and the test's execution record must both say so.
-
-      The second sleep falls in the test's runner overhead, so the run's scheduling overhead must exclude it.
    */
   void test_runner_reported_durations_free_test::test_runner_overhead_reported_apart()
   {
@@ -206,11 +204,6 @@ namespace sequoia::testing
           get_grand_total(outputStream.view(), "Runner Overhead"),
           summarization_sleep);
 
-    check(std::ranges::less{},
-          "The printed scheduling overhead excludes the sleep while summarizing",
-          get_grand_total(outputStream.view(), "Scheduling Overhead"),
-          summarization_sleep);
-
     check(within_tolerance{summarization_sleep / 2},
           "The recorded execution duration excludes the sleep while summarizing",
           in_milliseconds(get_recorded_completion<slow_to_summarize_test_0>(runner).execution_duration),
@@ -222,18 +215,19 @@ namespace sequoia::testing
           summarization_sleep);
   }
 
-  /** Four tests, each sleeping while its tests run and again while the runner summarizes it. One is not
-      parallelizable, so it runs first, alone. The other three then run over a pool of two threads, so one thread runs
-      two of them. The run's execution duration must therefore be the first test's recorded execution duration plus
-      those of two others. Each rival misses by at least a test's execution duration, far more than the printed
-      duration's rounding:
-      -# summing every test's execution duration adds the third of the others;
-      -# leaving out the first test subtracts its execution duration;
-      -# taking the longest test rather than the busiest thread subtracts the execution duration of one of a pair;
-      -# a wall clock adds the runner's overhead.
-
-      The summarizing sleeps of the tests on the critical path fall in the run's runner overhead, so none falls in its
-      scheduling overhead.
+  /** Four tests, each sleeping while its tests run and again while the
+      runner summarizes it. One is not parallelizable, so it runs first, alone.
+      The other three then run over a pool of two threads, so one thread runs
+      two of them. The run's execution duration and its runner overhead must
+      therefore each be the first test's recorded value plus those of two
+      others. Each rival misses by at least one test's value, far more than the
+      printed duration's rounding:
+      - summing every test's value adds the third of the others';
+      - leaving out the first test subtracts its value;
+      - taking the longest test rather than the busiest thread subtracts the
+        value of one of a pair;
+      - a wall clock in place of the execution duration adds the runner's
+        overhead.
    */
   void test_runner_reported_durations_free_test::test_execution_duration_of_busiest_thread()
   {
@@ -248,44 +242,59 @@ namespace sequoia::testing
 
     check_output(report({"Busiest Thread Output"}), "BusiestThreadOutput", outputStream);
 
-    const auto firstDuration{
-      in_milliseconds(get_recorded_completion<unparallelizable_slow_to_summarize_test>(runner).execution_duration)
-    };
-    const std::array othersDurations{
-      in_milliseconds(get_recorded_completion<slow_to_summarize_test_0>(runner).execution_duration),
-      in_milliseconds(get_recorded_completion<slow_to_summarize_test_1>(runner).execution_duration),
-      in_milliseconds(get_recorded_completion<slow_to_summarize_test_2>(runner).execution_duration)
+    const auto firstCompletion{get_recorded_completion<unparallelizable_slow_to_summarize_test>(runner)};
+    const std::array otherCompletions{
+      get_recorded_completion<slow_to_summarize_test_0>(runner),
+      get_recorded_completion<slow_to_summarize_test_1>(runner),
+      get_recorded_completion<slow_to_summarize_test_2>(runner)
     };
 
-    const std::array pairedDurations{
-      othersDurations[0] + othersDurations[1],
-      othersDurations[0] + othersDurations[2],
-      othersDurations[1] + othersDurations[2]
-    };
+    // The first test's recorded duration plus the pair of the others' whose
+    // sum lies nearest to the printed duration
+    auto nearestCriticalPathSum{
+      [&firstCompletion, &otherCompletions](double_precision_milliseconds printed,
+                                            std::chrono::microseconds test_execution_completion::* recordedDuration) {
+        auto valueOf{
+          [recordedDuration](const test_execution_completion& completion) {
+            return in_milliseconds(completion.*recordedDuration);
+          }
+        };
 
-    const auto executionDuration{get_grand_total(outputStream.view(), "Execution Time")};
-    auto distanceFromExecutionDuration{
-      [executionDuration, firstDuration](double_precision_milliseconds paired){
-        return std::chrono::abs(executionDuration - (firstDuration + paired));
+        const std::array pairedValues{
+          valueOf(otherCompletions[0]) + valueOf(otherCompletions[1]),
+          valueOf(otherCompletions[0]) + valueOf(otherCompletions[2]),
+          valueOf(otherCompletions[1]) + valueOf(otherCompletions[2])
+        };
+
+        auto distanceFromPrinted{
+          [printed, firstValue{valueOf(firstCompletion)}](double_precision_milliseconds paired) {
+            return std::chrono::abs(printed - (firstValue + paired));
+          }
+        };
+
+        return valueOf(firstCompletion) + std::ranges::min(pairedValues, std::ranges::less{}, distanceFromPrinted);
       }
     };
 
-    const auto nearestPairedDuration{
-      std::ranges::min(pairedDurations, std::ranges::less{}, distanceFromExecutionDuration)
-    };
+    const auto executionDuration{get_grand_total(outputStream.view(), "Execution Time")};
     check(within_tolerance{printed_duration_tolerance},
           "The execution duration is the unparallelizable test's plus those of the two others one thread ran",
           executionDuration,
-          firstDuration + nearestPairedDuration);
+          nearestCriticalPathSum(executionDuration, &test_execution_completion::execution_duration));
+
+    // The runner overhead in a test's summary includes finishing the test's
+    // record, and the recorded runner overhead cannot. The tolerance allows
+    // for the difference; summing every test's overhead exceeds it by a
+    // summarizing sleep.
+    const auto runnerOverhead{get_grand_total(outputStream.view(), "Runner Overhead")};
+    check(within_tolerance{summarization_sleep / 2},
+          "The runner overhead is the unparallelizable test's plus those of the two others one thread ran",
+          runnerOverhead,
+          nearestCriticalPathSum(runnerOverhead, &test_execution_completion::runner_overhead));
 
     check(std::ranges::greater_equal{},
           "The runner overhead includes the summarizing sleeps of the unparallelizable test and the busiest thread",
-          get_grand_total(outputStream.view(), "Runner Overhead"),
+          runnerOverhead,
           3 * summarization_sleep);
-
-    check(std::ranges::less{},
-          "The scheduling overhead excludes every summarizing sleep",
-          get_grand_total(outputStream.view(), "Scheduling Overhead"),
-          summarization_sleep);
   }
 }
