@@ -50,9 +50,9 @@ namespace sequoia::testing
     check(equality, "The longest duration",                     stringified(nanoseconds::max()),  "9.22e+09s"s);
   }
 
-  /** The run's durations differ from one another and from each sum and
-      difference of two of them, so a report that prints the wrong one shows
-      a different number.
+  /** No signed sum of two or more of the run's durations equals any of them,
+      so a report that prints the wrong one, or a combination of them, shows a
+      different number.
    */
   void summary_free_test::test_durations_report()
   {
@@ -60,8 +60,8 @@ namespace sequoia::testing
 
     constexpr durations_of_run durationsOfRun{
       .total_run_time{700ms},
-      .critical_path{
-        .spent_in_tests{.execution_duration{110ms}, .runner_overhead{230ms}},
+      .critical_path {
+        .spent_in_tests     {.execution_duration{110ms}, .runner_overhead{230ms}},
         .scheduling_overhead{40ms}
       }
     };
