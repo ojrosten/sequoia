@@ -24,5 +24,7 @@ namespace sequoia::testing
     void run_tests();
   private:
     void test_stringify_duration();
+
+    void test_durations_report();
   };
 }
