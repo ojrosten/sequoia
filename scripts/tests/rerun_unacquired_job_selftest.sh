@@ -23,14 +23,16 @@
 #   - a job is lost only if it concluded `cancelled` or `failure` with no steps
 #     and no runner, and an annotation on its original says it was not
 #     acquired; a job lacking any one of those is never re-run;
-#   - a job's original is the one job of any attempt that is not a copy, and
-#     has the job's name and completion time; a job that completed in the
-#     second it was created is not a copy, and a copy made in the second its
-#     original completed matches two originals;
+#   - a job of the first attempt is its own original, whatever its times; the
+#     original of a job of a later attempt is the one job of its name and
+#     completion time in the earliest attempt that has such a job, though the
+#     job completed in, or before, the second it was created, and though a copy
+#     was made in the second its original completed;
 #   - over a run's attempts, each lost job is re-run in an attempt of its own,
 #     a job copied through two attempts included;
-#   - a job whose name and completion time match no original, or several,
-#     fails the script, with an error naming it, and nothing is re-run;
+#   - a job of a later attempt with no original or several, or that completed
+#     before its attempt began and has no original of an earlier attempt, fails
+#     the script, with an error naming it, and nothing is re-run;
 #   - with no lost job, nothing is re-run, and the log says so;
 #   - nothing is re-run while another run of the workflow and branch is live,
 #     older or newer, whatever its event or status, and the log says so; the
@@ -140,13 +142,14 @@ not_acquired='The job was not acquired by Runner of type hosted even after multi
 failed_to_be_acquired='The job was not started because it repeatedly failed to be acquired (5 attempts).'
 
 # job <id> <conclusion> <step count> <runner> <name> [<annotation>]: one job of
-# a jobs list.
+# a jobs list, created and completed at fixed times.
 job() {
   jq -n --argjson id "$1" --arg conclusion "$2" --argjson step_count "$3" --arg runner "$4" --arg name "$5" \
         --arg annotation "${6:-}" \
      '{id: $id, name: $name, conclusion: $conclusion,
        steps: [range(1; $step_count + 1) | tostring],
        runner_name: (if $runner == "" then null else $runner end),
+       created_at: "2026-11-04T10:00:10Z", completed_at: "2026-11-04T10:15:10Z",
        annotation: (if $annotation == "" then null else $annotation end)}'
 }
 
@@ -160,8 +163,9 @@ workflow_run() {
        created_at: (now - $days * 24 * 3600 | todate)}'
 }
 
-# joined <jobs>...: the jobs lists, as one list.
-joined() { printf '%s\n' "$@" | jq -s add; }
+# joined <jobs>...: the jobs lists of a run's attempts, the first attempt's
+# first, as one list.
+joined() { printf '%s\n' "$@" | jq -s '[to_entries[] | (.key + 1) as $attempt | .value[] | .run_attempt = $attempt]'; }
 
 # stamped <created> <completed>: the job on standard input, created and
 # completed at those times of 2026-11-04.
@@ -282,6 +286,23 @@ same_second_copy_attempt_1=$(
 same_second_copy_attempt_2=$(
   { job 30 cancelled 0 '' a                       | stamped 10:15:10 10:15:10
   } | jq -s .)
+# A cancelled job can complete a second before its creation: one of a first
+# attempt, at its start or later, and one of a second attempt, each beside a
+# lost job.
+cancelled_at_start=$(
+  { job 10 cancelled 0 '' scope                   | stamped 10:00:00 09:59:59
+    job 20 cancelled 0 '' a "$not_acquired"       | stamped 10:00:00 10:15:10
+  } | jq -s .)
+cancelled_before_creation_attempt_1=$(
+  { job 10 success   3 r1 scope                   | stamped 10:00:00 10:00:10
+    job 20 cancelled 0 '' a "$not_acquired"       | stamped 10:00:10 10:15:10
+    job 30 cancelled 0 '' 'Every job ran'         | stamped 10:15:11 10:15:10
+  } | jq -s .)
+cancelled_before_creation_attempt_2=$(
+  { job 40 cancelled 0 '' a "$not_acquired"       | stamped 11:00:00 11:15:10
+    job 41 success   3 r1 scope                   | stamped 11:00:00 10:00:10
+    job 42 cancelled 0 '' 'Every job ran'         | stamped 11:15:11 11:15:10
+  } | jq -s .)
 real_failure=$({ job 10 success 3 r1 scope
                  job 20 failure 32 r2 'fine / Windows'
                  job 40 failure 5 r3 'Every job ran'; } | jq -s .)
@@ -315,14 +336,18 @@ serve() {
 # run <case> <jobs> [<attempt> [<jobs of every attempt>]]
 # Runs the script in a directory of its own, $dir, serving <jobs> for attempt
 # <attempt> of run 7, by default the first, a push to branch b, the one run of
-# its workflow and branch. <jobs of every attempt> is by default <jobs>. Files
-# placed in $dir beforehand stay. Sets $status, and $reruns to the paths
-# re-run, one per line.
+# its workflow and branch. The attempt began when the first of <jobs> was
+# created. <jobs of every attempt> is by default <jobs>. Files placed in $dir
+# beforehand stay. Sets $status, and $reruns to the paths re-run, one per line.
 run() {
   dir=$cases/$1
   mkdir -p "$dir"
-  serve "$2" "${4:-$2}"
-  [ -f "$dir/run.json" ] || workflow_run 7 completed > "$dir/run.json"
+  local jobs
+  jobs=$(jq --argjson attempt "${3:-1}" 'map(.run_attempt = $attempt)' <<< "$2")
+  serve "$jobs" "${4:-$jobs}"
+  [ -f "$dir/run.json" ] \
+    || workflow_run 7 completed | jq --argjson jobs "$jobs" '.run_started_at = ($jobs | map(.created_at) | min)' \
+       > "$dir/run.json"
   [ -f "$dir/runs.json" ] || workflow_run 7 completed | jq -s . > "$dir/runs.json"
   (cd "$dir" && FAKE=$dir PATH="$tmp/bin:$PATH" GH_REPO=owner/repo \
      bash "$cases/rerun_unacquired_job.sh" 7 "${3:-1}" > out.txt 2>&1)
@@ -464,9 +489,23 @@ controls() {
 
   run same_second_copy "$same_second_copy_attempt_2" 2 \
       "$(joined "$same_second_copy_attempt_1" "$same_second_copy_attempt_2")"
-  failed_without_rerun "a copy made in the second its original completed"
-  check "a copy made in the second its original completed is named in an error" yes \
-        "^::error::Job a of run 7 has no single original" "$dir/out.txt"
+  reran "a copy made in the second its original completed" 30
+
+  run cancelled_at_start "$cancelled_at_start"
+  reran "a lost job, beside a job that completed before its first attempt began" 20
+
+  run cancelled_before_creation_attempt_1 "$cancelled_before_creation_attempt_1"
+  reran "a lost job, beside a job of a first attempt that completed before its creation" 20
+
+  run cancelled_before_creation_attempt_2 "$cancelled_before_creation_attempt_2" 2 \
+      "$(joined "$cancelled_before_creation_attempt_1" "$cancelled_before_creation_attempt_2")"
+  reran "a lost job, beside a job of a second attempt that completed before its creation" 40
+
+  run unsettled_attempt_1 "$lost_column" 1 "$(jq 'map(.completed_at = null)' <<< "$lost_column")"
+  reran "a lost job of a first attempt, whose record among every attempt's has not settled" 20
+
+  run unsettled_attempt_2 "$lost_column" 2 "$(jq 'map(.run_attempt = 2 | .completed_at = null)' <<< "$lost_column")"
+  failed_without_rerun "a lost job of a second attempt, whose record among every attempt's has not settled"
 
   run real_failure "$real_failure"
   reran_none "a column that ran and failed"
@@ -656,23 +695,31 @@ mutations=(
   'the latest attempt read alone'   'jobs?filter=all&'                 'jobs?'
   'a failed read of every attempt ignored'
                                     '  > "$every_attempt_jobs"'        '  > "$every_attempt_jobs" || :'
-  'no job a copy'                   'def copied: .completed_at < .created_at;'
-                                    'def copied: false;'
-  'every job a copy'                'def copied: .completed_at < .created_at;'
-                                    'def copied: true;'
-  'a job completed in its creation second a copy'
-                                    '.completed_at < .created_at'      '.completed_at <= .created_at'
-  'an original found by name alone' $'\n                                 and .completed_at == $job.completed_at' ''
+  'a job of the first attempt searched for'
+                                    'if .run_attempt == 1'             'if false'
+  'every job its own original'      'if .run_attempt == 1'             'if true'
+  'no job a copy'                   ' or .completed_at >= $attempt_began' ' or true'
+  'every job a copy'                ' or .completed_at >= $attempt_began' ''
+  'a copy told by its creation, in any attempt'
+                                    'if .run_attempt == 1
+                      then .id
+                      elif ($originals | length) == 1
+                           and ($earliest < .run_attempt or .completed_at >= $attempt_began)'
+                                    'if ($originals | length) == 1
+                           and ($earliest < .run_attempt or .completed_at >= .created_at)'
+  'a copy told by its creation'     '.completed_at >= $attempt_began'  '.completed_at >= .created_at'
+  'a job completed as its attempt began a copy'
+                                    '.completed_at >= $attempt_began'  '.completed_at > $attempt_began'
+  'an original found by name alone' $'\n                 and .completed_at == $job.completed_at' ''
   'an original found by completion alone'
-                                    $'.name == $job.name\n                                 and ' ''
-  'a copy taken for an original'    $'\n                                 and (copied | not))' ')'
-  'a non-copy its own original, unsearched'
-                                    '| if length == 1 then .[0] else null end)'
-                                    '| if ($job | copied) then (if length == 1 then .[0] else null end)
-                                         else $job.id end)'
+                                    $'.name == $job.name\n                 and ' ''
+  'an original sought in every attempt'
+                                    'map(select(.run_attempt == $earliest))' '.'
+  'an original sought in the latest attempt'
+                                    '(map(.run_attempt) | min)'        '(map(.run_attempt) | max)'
+  'a copy with an original refused' '$earliest < .run_attempt or '     ''
   'the first of two originals taken'
-                                    'if length == 1 then .[0] else null end'
-                                    '.[0]'
+                                    '($originals | length) == 1'       '($originals | length) >= 1'
   'a copy read for its own annotations'
                                     'check-runs/$original_id/annotations'
                                     'check-runs/$job_id/annotations'

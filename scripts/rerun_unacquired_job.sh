@@ -16,15 +16,19 @@
 #
 # A re-run attempt holds a copy of each job of the previous attempt that it
 # does not re-run. A copy keeps the job's conclusion, steps, runner and
-# completion time, but has no annotations. A copy's completion time precedes
-# its creation time, and no other job's does. That held for each of the 107
-# jobs read on 2026-11-04 from runs 37364856636, 37365728782, 38425439632 and
-# 39478109862, and from the first three attempts of run 41874199305. A job's
-# original is the one job of any attempt that is not a copy, and has the
-# job's name and completion time: a copy's original ran in an earlier
-# attempt, and any other job is its own original. If a job's name and
-# completion time match no such job, or several, the script fails with an
-# error naming the job, and re-runs nothing.
+# completion time, but not its annotations. So the annotations are read from a
+# job's original. A job of the first attempt is its own original. The original
+# of a job of a later attempt is the one job of its name and completion time in
+# the earliest attempt that has such a job: an earlier attempt for a copy, and
+# the job's own for any other job.
+#
+# A job of a later attempt is a copy if it completed before its attempt began.
+# A copy that has no original of an earlier attempt, and a job that has several
+# originals, fail the script with an error naming the job, and nothing is
+# re-run. Those two rules held for each of the 1036 completed jobs, 380 of them
+# copies, of the 56 runs of several attempts read on 2026-11-24. A job's
+# creation time tells no copy: a job cancelled before it starts can complete a
+# second before its creation, as 7 of the 656 other jobs did.
 #
 # A job is lost if it concluded `cancelled` or `failure` with no steps and no
 # runner, and GitHub's annotation on its original says so. A job that ran and
@@ -75,9 +79,9 @@
 # The latest attempt's jobs are read through read_settled_jobs.sh, beside this
 # script, which waits for every job to have a conclusion, since the jobs API
 # can lag. The jobs of every attempt are read too, for the originals, with no
-# wait: the attempts before the latest finished before it began, and a job of
-# the latest whose record has not settled matches no original, so fails the
-# script.
+# wait. The attempts before the latest finished before it began, so their
+# records have settled. A job of the latest, where that is not the first, has
+# no original until its record there settles, so fails the script.
 #
 # <run id> and <attempt> are positive whole numbers with no leading zero.
 # Arguments of any other form, and an unset or empty $GH_REPO, are refused with
@@ -132,21 +136,27 @@ jobs=$reads/jobs.json every_attempt_jobs=$reads/every_attempt_jobs.ndjson
 gh api "repos/$GH_REPO/actions/runs/$run_id/jobs?filter=all&per_page=100" --paginate --jq '.jobs[]' \
   > "$every_attempt_jobs"
 
-# A candidate's line holds the id of its original, or null where it matches no
-# original, or several.
-candidates=$(jq -r --slurpfile every_attempt_jobs "$every_attempt_jobs" '
-  def copied: .completed_at < .created_at;
+attempt_began=$(jq -r .run_started_at <<< "$run")
+# A candidate's line holds the id of its original, or null where it has no
+# single original.
+candidates=$(jq -r --slurpfile every_attempt_jobs "$every_attempt_jobs" --arg attempt_began "$attempt_began" '
   [ .[]
     | select((.conclusion == "cancelled" or .conclusion == "failure")
              and (.steps | length) == 0
              and (.runner_name // "") == "")
     | . as $job
-    | .original_id = ([ $every_attempt_jobs[]
-                        | select(.name == $job.name
-                                 and .completed_at == $job.completed_at
-                                 and (copied | not))
-                        | .id ]
-                      | if length == 1 then .[0] else null end) ]
+    | [ $every_attempt_jobs[]
+        | select(.name == $job.name
+                 and .completed_at == $job.completed_at) ]
+    | (map(.run_attempt) | min) as $earliest
+    | map(select(.run_attempt == $earliest)) as $originals
+    | $job
+    | .original_id = (if .run_attempt == 1
+                      then .id
+                      elif ($originals | length) == 1
+                           and ($earliest < .run_attempt or .completed_at >= $attempt_began)
+                      then $originals[0].id
+                      else null end) ]
   | sort_by(.original_id)
   | .[]
   | "\(.original_id)\t\(.id)\t\(.name | gsub("[\r\n]"; " "))"' "$jobs")
@@ -155,8 +165,8 @@ lost=
 while IFS=$'\t' read -r original_id job_id job_name; do
   [ -n "$job_id" ] || continue
   if [ "$original_id" = null ]; then
-    echo "::error::Job $job_name of run $run_id has no single original: its name and completion time match" \
-         "no job that is not a copy, or several. Nothing is re-run."
+    echo "::error::Job $job_name of run $run_id has no single original among the jobs of the run's attempts." \
+         "Nothing is re-run."
     exit 1
   fi
   messages=$(gh api "repos/$GH_REPO/check-runs/$original_id/annotations" --jq '.[].message')
