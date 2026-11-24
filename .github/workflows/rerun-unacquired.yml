@@ -10,9 +10,9 @@ name: rerun-unacquired
 # that ran and failed is re-run only if it needs a lost job, so a real failure
 # stays red.
 #
-# A run superseded by a newer push is cancelled too, and the script leaves it
-# alone: a newer run of its workflow exists, and its jobs carry no annotation
-# saying they lacked a runner.
+# A run superseded by a newer push is cancelled too. The script leaves it alone
+# while the newer run is live. Once the newer run has finished, the script
+# re-runs a job of the older one that never got a runner.
 #
 # GitHub starts a workflow_run workflow from the default branch's copy of the
 # file, and the checkout is of the default branch. So a change here takes
@@ -37,7 +37,8 @@ jobs:
       github.event.workflow_run.conclusion == 'failure' ||
       github.event.workflow_run.conclusion == 'cancelled'
     runs-on: ubuntu-latest
-    # Long enough for the wait in scripts/read_settled_jobs.sh.
+    # Longer than the wait in scripts/read_settled_jobs.sh, by enough for the
+    # script's other reads.
     timeout-minutes: 10
     env:
       GH_TOKEN: ${{ github.token }}
