@@ -54,9 +54,20 @@
 #   - Within an attempt, GitHub creates each job that it runs only after the
 #     jobs it needs. Each attempt's ids exceed the previous attempt's.
 #
-# The script re-runs nothing if a newer run of the same workflow, branch and
-# event exists. A re-run joins its workflow's concurrency group, and so could
-# cancel that newer run.
+# The script re-runs nothing while another run of the same workflow and branch
+# is live, whatever its event. A re-run joins its workflow's concurrency group,
+# and so could cancel that run. The script cannot tell whether the two share a
+# group, so a lost job stays lost beside a live run of another group, as a
+# scheduled run of rigorous beside another. The script assumes that no group
+# holds runs of several workflows or branches, and no group of sequoia's does.
+# A run created more than 35 days ago, the longest that GitHub lets a run last,
+# is not live, whatever its status. If the list of the workflow's and branch's
+# runs does not hold the run to re-run, the script fails.
+#
+# The script looks for a live run before it reads the jobs, so that a run
+# superseded by a newer push is left alone without the wait below. The script
+# looks again just before it asks for a re-run, since a run may have begun in
+# between. A run that begins after the second look can still be cancelled.
 #
 # Once <attempt> reaches max_attempts, the script re-runs nothing, and warns.
 # The bound counts the run's attempts, whichever lost job each re-ran.
@@ -83,23 +94,39 @@ usage() {
 
 positive() { [[ $1 =~ ^[1-9][0-9]*$ ]]; }
 
+# exit_if_another_run_is_live [<prefix>]: ends the script if another run of the
+# workflow and branch of $run is live, with a message that <prefix> opens.
+exit_if_another_run_is_live() {
+  local workflow_id branch earliest live_id
+  if ! { workflow_id=$(jq -r .workflow_id <<< "$run") \
+         && branch=$(jq -r .head_branch <<< "$run") \
+         && earliest=$(jq -nr 'now - 35 * 24 * 3600 | todate') \
+         && gh api -X GET "repos/$GH_REPO/actions/workflows/$workflow_id/runs" \
+              -f branch="$branch" -f created=">=$earliest" -F per_page=100 --paginate > "$reads/runs.json" \
+         && live_id=$(jq -rs --argjson run_id "$run_id" '
+              map(.workflow_runs[])
+              | if any(.id == $run_id) then . else error("run \($run_id) is not listed") end
+              | map(select(.id != $run_id and .status != "completed").id)
+              | first // empty' "$reads/runs.json"); }; then
+    echo "::error::No list of the runs of run $run_id's workflow and branch that holds run $run_id could be read." \
+         "Nothing is re-run."
+    exit 1
+  fi
+  if [ -n "$live_id" ]; then
+    echo "${1:-}Run $live_id, of the same workflow and branch, is live. Run $run_id is not re-run."
+    exit 0
+  fi
+}
+
 [ $# -eq 2 ] && [ -n "${GH_REPO:-}" ] || usage
 run_id=$1 attempt=$2
 positive "$run_id" && positive "$attempt" || usage
 
 run=$(gh api "repos/$GH_REPO/actions/runs/$run_id")
-workflow_id=$(jq -r .workflow_id <<< "$run")
-branch=$(jq -r .head_branch <<< "$run")
-event=$(jq -r .event <<< "$run")
-newest=$(gh api -X GET "repos/$GH_REPO/actions/workflows/$workflow_id/runs" \
-           -f branch="$branch" -f event="$event" -F per_page=1 --jq '.workflow_runs[0].id')
-if [ "$newest" != "$run_id" ]; then
-  echo "Run $newest has superseded run $run_id, which is not re-run."
-  exit 0
-fi
-
 reads=$(mktemp -d)
 trap 'rm -rf "$reads"' EXIT
+exit_if_another_run_is_live
+
 jobs=$reads/jobs.json every_attempt_jobs=$reads/every_attempt_jobs.ndjson
 "$(dirname "$0")/read_settled_jobs.sh" "$run_id" "$jobs" '[.[] | select(.conclusion == null) | .name] | join(", ")'
 gh api "repos/$GH_REPO/actions/runs/$run_id/jobs?filter=all&per_page=100" --paginate --jq '.jobs[]' \
@@ -153,5 +180,6 @@ if [ "$attempt" -ge "$max_attempts" ]; then
 fi
 
 IFS=$'\t' read -r job_id job_name <<< "$lost"
+exit_if_another_run_is_live ::notice::
 gh api -X POST "repos/$GH_REPO/actions/jobs/$job_id/rerun" > /dev/null
 echo "Re-running $job_name, and the jobs that need it."

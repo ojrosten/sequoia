@@ -32,8 +32,16 @@
 #   - a job whose name and completion time match no original, or several,
 #     fails the script, with an error naming it, and nothing is re-run;
 #   - with no lost job, nothing is re-run, and the log says so;
-#   - a run superseded by a newer run of its workflow, branch and event is not
-#     re-run, and its jobs are not read;
+#   - nothing is re-run while another run of the workflow and branch is live,
+#     older or newer, whatever its event or status, and the log says so; the
+#     script looks before it reads a job, and again just before the re-run,
+#     where a notice says so;
+#   - a run that has completed, is of another workflow or branch, or was
+#     created more than 35 days ago stops no re-run, and nor does the run
+#     itself;
+#   - a list of the runs that cannot be read, is empty or malformed, or lacks
+#     the run itself fails the script with an error, and so does a run with no
+#     workflow or branch;
 #   - at the last attempt allowed, or later, nothing is re-run, and a warning
 #     says why; at the attempt before it, the re-run is still asked for;
 #   - the jobs are read through read_settled_jobs.sh, every page of the run
@@ -57,15 +65,19 @@ case "$*" in
   *) echo "Usage: $0 [--mutations]" >&2; exit 2;;
 esac
 
-# The fake gh serves $FAKE/run.json for the run, $FAKE/newest as the newest run
-# of its workflow, $FAKE/jobs.json for the jobs, and
-# $FAKE/every_attempt_jobs.json for the jobs of every attempt, each job on a
-# line of its own; and the `annotation` field of each job in
-# $FAKE/every_attempt_jobs.json as that job's annotations. The fake appends the
-# path of each POST to $FAKE/reruns, and every call's arguments to
-# $FAKE/calls. A file
-# $FAKE/<run|jobs|every_attempt_jobs|annotations|rerun>_fails makes that call
-# fail as gh does on an HTTP error.
+# The fake gh serves $FAKE/run.json for the run, $FAKE/jobs.json for the jobs,
+# and $FAKE/every_attempt_jobs.json for the jobs of every attempt, each job on
+# a line of its own; and the `annotation` field of each job in
+# $FAKE/every_attempt_jobs.json as that job's annotations. From
+# $FAKE/runs.json, the fake serves the runs of the workflow, branch and
+# creation times asked for, the first on a page of its own and the rest on a
+# second. When the jobs are read, $FAKE/runs_after_jobs.json, where there is
+# one, takes the place of $FAKE/runs.json. The fake appends the path of each
+# POST to $FAKE/reruns, and every call's arguments to $FAKE/calls. A file
+# $FAKE/<run|runs|jobs|every_attempt_jobs|annotations|rerun>_fails makes that
+# call fail as gh does on an HTTP error, whose status the file can hold. A file
+# $FAKE/runs_empty or $FAKE/runs_malformed makes the list of runs an empty
+# answer, or one whose second page holds no list.
 mkdir "$tmp/bin"
 cat > "$tmp/bin/gh" <<'GH'
 #!/bin/bash
@@ -74,10 +86,38 @@ shift
 method=GET
 if [ "$1" = -X ]; then method=$2; shift 2; fi
 path=$1
-failing() { [ -f "$FAKE/$1_fails" ] && { echo '{"message":"Server Error","status":"502"}'; exit 1; }; }
+failing() {
+  [ -f "$FAKE/$1_fails" ] || return 1
+  local status
+  status=$(cat "$FAKE/$1_fails")
+  echo "{\"message\":\"An error\",\"status\":\"${status:-502}\"}"
+  exit 1
+}
 case "$method $path" in
   'POST '*/rerun)                  failing rerun; echo "$path" >> "$FAKE/reruns";;
-  'GET '*/actions/workflows/*/runs) cat "$FAKE/newest";;
+  'GET '*/actions/workflows/*/runs|'GET '*/actions/runs)
+    failing runs
+    if [ -f "$FAKE/runs_empty" ]; then exit 0; fi
+    if [ -f "$FAKE/runs_malformed" ]; then jq '{workflow_runs: .}' "$FAKE/runs.json"; echo '{}'; exit 0; fi
+    branch= earliest= event= pages=1
+    for argument in "$@"; do
+      case $argument in
+        branch=*)      branch=${argument#branch=};;
+        'created=>='*) earliest=${argument#created=>=};;
+        event=*)       event=${argument#event=};;
+        --paginate)    pages=2;;
+      esac
+    done
+    workflow_id=
+    if [[ $path == */workflows/*/runs ]]; then workflow_id=${path%/runs} workflow_id=${workflow_id##*/}; fi
+    jq --arg workflow_id "$workflow_id" --arg branch "$branch" --arg earliest "$earliest" --arg event "$event" \
+       'map(select(($workflow_id == "" or (.workflow_id | tostring) == $workflow_id)
+                   and ($branch == "" or .head_branch == $branch)
+                   and ($event == "" or .event == $event)
+                   and .created_at >= $earliest))
+        | (.[:1], .[1:])
+        | {workflow_runs: .}' "$FAKE/runs.json" \
+      | jq -s --argjson pages $pages '.[:$pages][]';;
   'GET '*/check-runs/*/annotations)
     failing annotations
     id=${path#*check-runs/}
@@ -86,7 +126,10 @@ case "$method $path" in
   'GET '*/runs/7/jobs'?filter=all'*)
     failing every_attempt_jobs
     jq -c '.[]' "$FAKE/every_attempt_jobs.json";;
-  'GET '*/runs/7/jobs*)            failing jobs; jq -c '.[]' "$FAKE/jobs.json";;
+  'GET '*/runs/7/jobs*)
+    failing jobs
+    jq -c '.[]' "$FAKE/jobs.json"
+    if [ -f "$FAKE/runs_after_jobs.json" ]; then mv "$FAKE/runs_after_jobs.json" "$FAKE/runs.json"; fi;;
   'GET '*/runs/7)                  failing run; cat "$FAKE/run.json";;
   *)                               echo "the fake gh has no answer for: $method $path" >&2; exit 1;;
 esac
@@ -105,6 +148,16 @@ job() {
        steps: [range(1; $step_count + 1) | tostring],
        runner_name: (if $runner == "" then null else $runner end),
        annotation: (if $annotation == "" then null else $annotation end)}'
+}
+
+# workflow_run <run id> <status> [<workflow id> [<branch> [<event> [<days>]]]]:
+# one run, by default of workflow 3, branch b and a push, created <days> days
+# ago, by default 0.
+workflow_run() {
+  jq -n --argjson id "$1" --arg status "$2" --argjson workflow_id "${3:-3}" --arg head_branch "${4:-b}" \
+        --arg event "${5:-push}" --argjson days "${6:-0}" \
+     '{id: $id, status: $status, workflow_id: $workflow_id, head_branch: $head_branch, event: $event,
+       created_at: (now - $days * 24 * 3600 | todate)}'
 }
 
 # joined <jobs>...: the jobs lists, as one list.
@@ -261,16 +314,16 @@ serve() {
 
 # run <case> <jobs> [<attempt> [<jobs of every attempt>]]
 # Runs the script in a directory of its own, $dir, serving <jobs> for attempt
-# <attempt> of run 7, by default the first, a push to branch b, the newest of
-# its workflow unless $newest says otherwise. <jobs of every attempt> is by
-# default <jobs>. Files placed in $dir beforehand stay. Sets $status, and
-# $reruns to the paths re-run, one per line.
+# <attempt> of run 7, by default the first, a push to branch b, the one run of
+# its workflow and branch. <jobs of every attempt> is by default <jobs>. Files
+# placed in $dir beforehand stay. Sets $status, and $reruns to the paths
+# re-run, one per line.
 run() {
   dir=$cases/$1
   mkdir -p "$dir"
   serve "$2" "${4:-$2}"
-  echo '{"id": 7, "workflow_id": 3, "head_branch": "b", "event": "push"}' > "$dir/run.json"
-  echo "${newest:-7}" > "$dir/newest"
+  [ -f "$dir/run.json" ] || workflow_run 7 completed > "$dir/run.json"
+  [ -f "$dir/runs.json" ] || workflow_run 7 completed | jq -s . > "$dir/runs.json"
   (cd "$dir" && FAKE=$dir PATH="$tmp/bin:$PATH" GH_REPO=owner/repo \
      bash "$cases/rerun_unacquired_job.sh" 7 "${3:-1}" > out.txt 2>&1)
   status=$?
@@ -282,6 +335,15 @@ failing_run() {
   mkdir -p "$cases/$1"
   touch "$cases/$1/$2_fails"
   run "$1" "$3"
+}
+
+# run_beside <case> <run>...: runs <case>, which lost a column, among the runs.
+run_beside() {
+  local name=$1
+  shift
+  mkdir -p "$cases/$name"
+  printf '%s\n' "$@" | jq -s . > "$cases/$name/runs.json"
+  run "$name" "$lost_column"
 }
 
 # reran <description> <job id>: whether the last run asked for exactly one
@@ -342,8 +404,7 @@ controls() {
         "^api repos/owner/repo/actions/runs/7/jobs\?per_page=100 --paginate --jq \.jobs\[\]$" "$dir/calls"
   check "the jobs of every attempt are asked for, every page" yes \
         "^api repos/owner/repo/actions/runs/7/jobs\?filter=all&per_page=100 --paginate --jq \.jobs\[\]$" "$dir/calls"
-  check "the newest run asked for is of the run's workflow, branch and event" yes \
-        "^api -X GET repos/owner/repo/actions/workflows/3/runs -f branch=b -f event=push -F per_page=1 " "$dir/calls"
+  check "every page of the runs is asked for" yes "/workflows/3/runs .* -F per_page=100 --paginate$" "$dir/calls"
 
   run lost_all "$lost_all"
   reran "scope and every job after it lost" 10
@@ -417,12 +478,74 @@ controls() {
   run all_success "$all_success"
   reran_none "every job succeeded"
 
-  newest=8
-  run superseded "$lost_column"
-  unset newest
-  reran_none "a superseded run"
-  check "a superseded run is logged" yes "^Run 8 has superseded run 7, which is not re-run\.$" "$dir/out.txt"
-  check "a superseded run's jobs are not read" no "/jobs" "$dir/calls"
+  local this_run
+  this_run=$(workflow_run 7 completed)
+  run_beside newer_run "$(workflow_run 8 in_progress)" "$this_run"
+  reran_none "a newer live run"
+  check "a newer live run is logged" yes \
+        "^Run 8, of the same workflow and branch, is live\. Run 7 is not re-run\.$" "$dir/out.txt"
+  check "beside a run live at the start, no job is read" no "/jobs" "$dir/calls"
+
+  run_beside older_run "$this_run" "$(workflow_run 6 in_progress)"
+  reran_none "an older live run"
+
+  run_beside run_of_another_event "$(workflow_run 8 in_progress 3 b workflow_dispatch)" "$this_run"
+  reran_none "a live run of another event"
+
+  for live_status in queued pending waiting requested; do
+    run_beside "run_$live_status" "$(workflow_run 8 $live_status)" "$this_run"
+    reran_none "a run that is $live_status"
+  done
+
+  run_beside completed_run "$(workflow_run 8 completed)" "$this_run"
+  reran "a newer run that has completed" 20
+
+  run_beside run_of_another_workflow "$(workflow_run 8 in_progress 4)" "$this_run"
+  reran "a live run of another workflow" 20
+
+  run_beside run_of_another_branch "$(workflow_run 8 in_progress 3 c)" "$this_run"
+  reran "a live run of another branch" 20
+
+  run_beside run_of_under_35_days "$(workflow_run 8 queued 3 b push 34.9)" "$this_run"
+  reran_none "a live run created 34.9 days ago"
+
+  run_beside run_of_over_35_days "$(workflow_run 8 queued 3 b push 35.1)" "$this_run"
+  reran "a run queued since 35.1 days ago" 20
+
+  run_beside the_run_itself "$(workflow_run 7 in_progress)"
+  reran "the run itself, listed as live" 20
+
+  mkdir -p "$cases/begun_during_wait"
+  { workflow_run 8 queued; workflow_run 7 completed; } | jq -s . > "$cases/begun_during_wait/runs_after_jobs.json"
+  run begun_during_wait "$lost_column"
+  reran_none "a run begun while the jobs were read"
+  check "a run begun while the jobs were read gives a notice" yes "^::notice::Run 8, " "$dir/out.txt"
+  check "a lost job left alone is named" yes "^  coarse / macOS$" "$dir/out.txt"
+
+  run_beside this_run_unlisted "$(workflow_run 8 completed)"
+  failed_without_rerun "a list of the runs that lacks the run itself"
+  check "a list of the runs that lacks the run itself is an error" yes "^::error::No list of the runs " "$dir/out.txt"
+
+  for fault in runs_empty runs_malformed runs_fails; do
+    mkdir -p "$cases/$fault"
+    touch "$cases/$fault/$fault"
+    run "$fault" "$lost_column"
+    failed_without_rerun "a list of the runs, by $fault"
+    check "a list of the runs, by $fault, is an error" yes "^::error::No list of the runs " "$dir/out.txt"
+  done
+
+  mkdir -p "$cases/runs_forbidden"
+  echo 403 > "$cases/runs_forbidden/runs_fails"
+  run runs_forbidden "$lost_column"
+  failed_without_rerun "a list of the runs that is forbidden"
+
+  for member in workflow_id head_branch; do
+    mkdir -p "$cases/no_$member"
+    workflow_run 7 completed | jq --arg member "$member" '.[$member] = null' > "$cases/no_$member/run.json"
+    run "no_$member" "$lost_column"
+    failed_without_rerun "a run with no $member"
+    check "a run with no $member is an error" yes "^::error::No list of the runs " "$dir/out.txt"
+  done
 
   run newline_name "$newline_name"
   reran "a lost job whose name holds a newline" 20
@@ -480,10 +603,41 @@ mutations=(
   'a refusal fails as any error'    '  exit 2'                         '  exit 1'
   'the usage on standard output'    '<attempt>" >&2'                   '<attempt>"'
   'errors ignored'                  'set -eu'                          'set -u'
-  'a superseded run re-run'         'if [ "$newest" != "$run_id" ]; then'
-                                    'if false; then'
+  'a live run ignored'              'if [ -n "$live_id" ]; then'       'if false; then'
+  'a live run always found'         'if [ -n "$live_id" ]; then'       'if true; then'
+  'a live run newer alone'          '.id != $run_id'                   '.id > $run_id'
+  'the run itself another'          '.id != $run_id and '              ''
+  'a completed run live'            ' and .status != "completed"'      ''
+  'only a run in progress live'     '.status != "completed"'           '.status == "in_progress"'
+  'the first page read alone'       ' --paginate > "$reads/runs.json"' ' > "$reads/runs.json"'
+  'a page of another size'          '-F per_page=100'                  '-F per_page=30'
   'the branch not asked'            ' -f branch="$branch"'             ''
-  'the event not asked'             ' -f event="$event"'               ''
+  'the workflow not asked'          'actions/workflows/$workflow_id/'  'actions/'
+  'a run of 35 days dead'           '35 * 24'                          '34 * 24'
+  'a run of more than 35 days live' '35 * 24'                          '36 * 24'
+  'the event asked'                 ' -f created='                     ' -f event=push -f created='
+  'a list that lacks the run itself accepted'
+                                    'if any(.id == $run_id) then . else error("run \($run_id) is not listed") end'
+                                    '.'
+  'every list taken to lack the run itself'
+                                    'if any(.id == $run_id) then'      'if false then'
+  'a malformed list of runs taken for none'
+                                    'map(.workflow_runs[])'            'map(.workflow_runs[]?)'
+  'a failed list of runs passed over'
+                                    '> "$reads/runs.json" \'
+                                    '> "$reads/runs.json" \
+                                       || echo "{\"workflow_runs\":[{\"id\":7,\"status\":\"completed\"}]}" \
+                                            > "$reads/runs.json" \'
+  'a list that cannot be read not an error'
+                                    'echo "::error::No list'           'echo "error: No list'
+  'a list that cannot be read succeeds'
+                                    $'"Nothing is re-run."\n    exit 1\n  fi\n  if'
+                                    $'"Nothing is re-run."\n    exit 0\n  fi\n  if'
+  'a run left alone fails'          $'is not re-run."\n    exit 0'     $'is not re-run."\n    exit 1'
+  'a run left alone not logged'     'echo "${1:-}Run $live_id'         ': "${1:-}Run $live_id'
+  'the first look not made'         $'exit_if_another_run_is_live\n\njobs' $'\njobs'
+  'the second look not made'        $'exit_if_another_run_is_live ::notice::\n' ''
+  'no notice of a lost job left'    'exit_if_another_run_is_live ::notice::' 'exit_if_another_run_is_live'
   'the jobs read once, unsettled'   '"$(dirname "$0")/read_settled_jobs.sh" "$run_id" "$jobs"'
                                     'gh api "repos/$GH_REPO/actions/runs/$run_id/jobs" --jq .jobs > "$jobs" #'
   'a skipped job lost'              '(.conclusion == "cancelled" or .conclusion == "failure")'
